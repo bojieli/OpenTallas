@@ -1,0 +1,145 @@
+Breakpoint 1 at 0x11251
+Breakpoint 2 at 0xfd86
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000011251 <Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root*)::_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024root.Frame*) [clone .actor]+2333>
+        silent
+        set $frame = *(unsigned long long*)($rbp-0x48)
+        set $root = *(unsigned long long*)($frame+0x40)
+        printf "D1_FATAL_FIELD fault_r=0x%x\n", *( unsigned char*)($root+0x28021)
+        printf "D1_FATAL_FIELD dbg_fs=0x%x\n", *( unsigned int*)($root+0x5f0fc)
+        printf "D1_FATAL_FIELD violations=0x%x\n", *( unsigned char*)($root+0x27fe2)
+        printf "D1_FATAL_FIELD descriptor_fault=0x%x\n", *( unsigned char*)($root+0x27fea)
+        printf "D1_FATAL_FIELD rope_fault=0x%x\n", *( unsigned char*)($root+0x27fec)
+        printf "D1_FATAL_FIELD unsupported_read=0x%x\n", *( unsigned char*)($root+0x28028)
+        printf "D1_FATAL_FIELD bad_block=0x%x\n", *( unsigned char*)($root+0x28029)
+        printf "D1_FATAL_FIELD pf_fault=0x%x\n", *( unsigned char*)($root+0x2e325)
+        printf "D1_FATAL_FIELD merge_fault=0x%x\n", *( unsigned char*)($root+0x2e328)
+        printf "D1_FATAL_FIELD schedule_fault=0x%x\n", *( unsigned char*)($root+0x2e331)
+        printf "D1_FATAL_FIELD rst_s=0x%x\n", *( unsigned char*)($root+0x27fed)
+        printf "D1_FATAL_FIELD external_rst_n=0x%x\n", *( unsigned char*)($root+0x1a31)
+        printf "D1_FATAL_FIELD clock=0x%x\n", *( unsigned char*)($root+0x1a30)
+        printf "D1_FATAL_FIELD bench_prime_v=0x%x\n", *( unsigned char*)($root+0x1a33)
+        printf "D1_FATAL_FIELD bench_prime_row=0x%x\n", *( unsigned int*)($root+0x5f104)
+        printf "D1_FATAL_FIELD source_prime_ready=0x%x\n", *( unsigned char*)($root+0x2802a)
+        printf "D1_FATAL_FIELD prime_ready_i=0x%x\n", *( unsigned char*)($root+0x2e329)
+        printf "D1_FATAL_FIELD window_prime_v=0x%x\n", *( unsigned char*)($root+0x2e335)
+        printf "D1_FATAL_FIELD prefetch_row=0x%x\n", *( unsigned int*)($root+0x1a5910)
+        printf "D1_FATAL_FIELD prefetch_v=0x%x\n", *( unsigned char*)($root+0x2e323)
+        printf "D1_FATAL_FIELD prefetch_ready=0x%x\n", *( unsigned char*)($root+0x2e324)
+        printf "D1_FATAL_FIELD window_state=0x%x\n", *( unsigned char*)($root+0x2e338)
+        printf "D1_FATAL_FIELD window_user=0x%x\n", *( unsigned short*)($root+0x5e09a)
+        printf "D1_FATAL_FIELD window_active_row=0x%x\n", *( unsigned int*)($root+0x1a618c)
+        printf "D1_FATAL_FIELD row_valid[word0]=0x%08x\n", *(unsigned int*)($root+0x1a61a0)
+        printf "D1_FATAL_FIELD row_valid[word1]=0x%08x\n", *(unsigned int*)($root+0x1a61a4)
+        printf "D1_FATAL_FIELD row_valid[word2]=0x%08x\n", *(unsigned int*)($root+0x1a61a8)
+        printf "D1_FATAL_FIELD row_valid[word3]=0x%08x\n", *(unsigned int*)($root+0x1a61ac)
+        printf "D1_FATAL_FIELD row_active[word0]=0x%08x\n", *(unsigned int*)($root+0x1a6190)
+        printf "D1_FATAL_FIELD row_active[word1]=0x%08x\n", *(unsigned int*)($root+0x1a6194)
+        printf "D1_FATAL_FIELD row_active[word2]=0x%08x\n", *(unsigned int*)($root+0x1a6198)
+        printf "D1_FATAL_FIELD row_active[word3]=0x%08x\n", *(unsigned int*)($root+0x1a619c)
+        printf "D1_FATAL_FIELD row_tag[0]=0x%x\n", *(unsigned int*)($root+0xb21ae70)
+        printf "D1_FATAL_FIELD row_tag[1]=0x%x\n", *(unsigned int*)($root+0xb21ae74)
+        printf "D1_FATAL_FIELD row_tag[127]=0x%x\n", *(unsigned int*)($root+0xb21b06c)
+        printf "D1_FATAL_FIELD row_user[0]=0x%x\n", *(unsigned short*)($root+0xb21ad70)
+        printf "D1_FATAL_FIELD row_user[1]=0x%x\n", *(unsigned short*)($root+0xb21ad72)
+        printf "D1_FATAL_FIELD row_user[127]=0x%x\n", *(unsigned short*)($root+0xb21ae6e)
+        printf "D1_FATAL_FIELD block_valid[0]=0x%04x\n", *(unsigned short*)($root+0xb21ac70)
+        continue
+2       breakpoint     keep y   0x000000000000fd86 <Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0(Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0(Vtb_D1_scope_core___024root*)::_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0P27Vtb_D1_scope_core___024root.Frame*) [clone .actor]+1433>
+        silent
+        set $primeframe = *(unsigned long long*)($rbp-0x28)
+        set $root = *(unsigned long long*)($primeframe+0x40)
+        if *( unsigned int*)($root+0x5f104) == 0
+          printf "D1_FIRST_PRIME_READY_SAMPLE clock=0x%x\n", *( unsigned char*)($root+0x1a30)
+          printf "D1_FIRST_PRIME_READY_SAMPLE external_rst_n=0x%x\n", *( unsigned char*)($root+0x1a31)
+          printf "D1_FIRST_PRIME_READY_SAMPLE rst_s=0x%x\n", *( unsigned char*)($root+0x27fed)
+          printf "D1_FIRST_PRIME_READY_SAMPLE bench_prime_v=0x%x\n", *( unsigned char*)($root+0x1a33)
+          printf "D1_FIRST_PRIME_READY_SAMPLE bench_prime_row=0x%x\n", *( unsigned int*)($root+0x5f104)
+          printf "D1_FIRST_PRIME_READY_SAMPLE source_prime_ready=0x%x\n", *( unsigned char*)($root+0x2802a)
+          printf "D1_FIRST_PRIME_READY_SAMPLE prime_ready_i=0x%x\n", *( unsigned char*)($root+0x2e329)
+          printf "D1_FIRST_PRIME_READY_SAMPLE window_prime_v=0x%x\n", *( unsigned char*)($root+0x2e335)
+          disable 2
+        end
+        continue
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+D1_HEARTBEAT evals=1 time_ps=0 cycles=0
+D1_HEARTBEAT evals=2 time_ps=500 cycles=0
+D1_HEARTBEAT evals=3 time_ps=1000 cycles=0
+D1_HEARTBEAT evals=4 time_ps=1500 cycles=0
+D1_HEARTBEAT evals=5 time_ps=2000 cycles=0
+D1_HEARTBEAT evals=6 time_ps=2500 cycles=0
+D1_HEARTBEAT evals=7 time_ps=3000 cycles=0
+D1_HEARTBEAT evals=8 time_ps=3500 cycles=0
+D1_HEARTBEAT evals=9 time_ps=4000 cycles=0
+D1_HEARTBEAT evals=10 time_ps=4500 cycles=1
+D1_HEARTBEAT evals=11 time_ps=4501 cycles=1
+D1_HEARTBEAT evals=12 time_ps=5000 cycles=1
+D1_FIRST_PRIME_READY_SAMPLE clock=0x1
+D1_FIRST_PRIME_READY_SAMPLE external_rst_n=0x1
+D1_FIRST_PRIME_READY_SAMPLE rst_s=0x1
+D1_FIRST_PRIME_READY_SAMPLE bench_prime_v=0x1
+D1_FIRST_PRIME_READY_SAMPLE bench_prime_row=0x0
+D1_FIRST_PRIME_READY_SAMPLE source_prime_ready=0x1
+D1_FIRST_PRIME_READY_SAMPLE prime_ready_i=0x1
+D1_FIRST_PRIME_READY_SAMPLE window_prime_v=0x1
+D1_HEARTBEAT evals=13 time_ps=5500 cycles=2
+D1_HEARTBEAT evals=14 time_ps=5501 cycles=2
+D1_HEARTBEAT evals=15 time_ps=6000 cycles=2
+D1_HEARTBEAT evals=16 time_ps=6500 cycles=3
+D1_HEARTBEAT evals=64 time_ps=22500 cycles=19
+D1_HEARTBEAT evals=128 time_ps=43501 cycles=40
+D1_HEARTBEAT evals=192 time_ps=65000 cycles=61
+D1_HEARTBEAT evals=256 time_ps=86500 cycles=83
+D1_HEARTBEAT evals=320 time_ps=107501 cycles=104
+D1_HEARTBEAT evals=384 time_ps=129000 cycles=125
+D1_REAL_GATE time=140000 pc=0 me_ready=1 kv_ok=0 kvd_v=1 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_REAL_DESCRIPTOR time=140000 generation=1 rows=128
+D1_REAL_DROP_KV_OK_COUNTEREXAMPLE source_issue=0 mutated_predicate=1
+D1_REAL_GATE time=141000 pc=0 me_ready=1 kv_ok=0 kvd_v=0 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_REAL_DROP_KV_OK_COUNTEREXAMPLE source_issue=0 mutated_predicate=1
+D1_REAL_GATE time=142000 pc=0 me_ready=1 kv_ok=0 kvd_v=0 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_FATAL_FIELD fault_r=0x40
+D1_FATAL_FIELD dbg_fs=0x0
+D1_FATAL_FIELD violations=0x0
+D1_FATAL_FIELD descriptor_fault=0x1
+D1_FATAL_FIELD rope_fault=0x0
+D1_FATAL_FIELD unsupported_read=0x0
+D1_FATAL_FIELD bad_block=0x0
+D1_FATAL_FIELD pf_fault=0x1
+D1_FATAL_FIELD merge_fault=0x0
+D1_FATAL_FIELD schedule_fault=0x1
+D1_FATAL_FIELD rst_s=0x3
+D1_FATAL_FIELD external_rst_n=0x1
+D1_FATAL_FIELD clock=0x1
+D1_FATAL_FIELD bench_prime_v=0x0
+D1_FATAL_FIELD bench_prime_row=0x7f
+D1_FATAL_FIELD source_prime_ready=0x0
+D1_FATAL_FIELD prime_ready_i=0x1
+D1_FATAL_FIELD window_prime_v=0x0
+D1_FATAL_FIELD prefetch_row=0x0
+D1_FATAL_FIELD prefetch_v=0x0
+D1_FATAL_FIELD prefetch_ready=0x1
+D1_FATAL_FIELD window_state=0x0
+D1_FATAL_FIELD window_user=0x0
+D1_FATAL_FIELD window_active_row=0x0
+D1_FATAL_FIELD row_valid[word0]=0xfffffffe
+D1_FATAL_FIELD row_valid[word1]=0xffffffff
+D1_FATAL_FIELD row_valid[word2]=0xffffffff
+D1_FATAL_FIELD row_valid[word3]=0xffffffff
+D1_FATAL_FIELD row_active[word0]=0xfffffffe
+D1_FATAL_FIELD row_active[word1]=0xffffffff
+D1_FATAL_FIELD row_active[word2]=0xffffffff
+D1_FATAL_FIELD row_active[word3]=0xffffffff
+D1_FATAL_FIELD row_tag[0]=0x0
+D1_FATAL_FIELD row_tag[1]=0x1
+D1_FATAL_FIELD row_tag[127]=0x7f
+D1_FATAL_FIELD row_user[0]=0x0
+D1_FATAL_FIELD row_user[1]=0x0
+D1_FATAL_FIELD row_user[127]=0x0
+D1_FATAL_FIELD block_valid[0]=0x0000
+[142000] %Fatal: ot_v41_rt_die_D1_scope.sv:263: Assertion failed in TOP.tb_D1_scope_core.probe.g_D1_current: D1_SOURCE_OR_LEDGER_FAULT
+%Error: /tmp/opentallas-D1-parent-scope-frontend-20261002-r2/rtl/test/w17_D1_scope_corrected_probe/ot_v41_rt_die_D1_scope.sv:263: Verilog $stop
+Aborting...
+[Inferior 1 (process 1522476) exited with code 01]
+D1_INFERIOR_EXIT code=1

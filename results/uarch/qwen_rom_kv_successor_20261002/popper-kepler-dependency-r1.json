@@ -1,0 +1,101 @@
+{
+  "model": "model-r7.json",
+  "model_sha256": "b47d505ce39511508e815652a5ef5c69c8806dcffda9eb84a36450e356708c05",
+  "source_parent": "6bb3ac9e7b05185e3e87ca0cdbe2dd8df1909359",
+  "status": "BLOCKING_SOURCE_CONTRACT_NOT_ADOPTION",
+  "owners": [
+    "Popper",
+    "Kepler"
+  ],
+  "controller": {
+    "plan": "One1R1W request RAM/PC retained. Capture at most16 whole472bit records into indexed valid cache at1read/edge; holes/sequence stay immutable, oldest bypass<=16, refill at1read/edge. No per-selection wholeRAM SWAP. Register16candidate eligibility tree atfour levels, revalidate epoch/deadline/alias/credit at final339bit command accept; serial oldfreeze/scan and singlepending state are replaced, not given freeII1.",
+    "pending": "Reserve shared64combined pending+raw+held output credits before RD. Exact tag/beat/sector/producer/transport, source25edge due; associative pending match and471bit mux priced. Stage response through one1R1W return RAM write/edge and held macro read/capture; credit releases on owned consume. Out-of-order arrivals do not alter identity; duplicates/refused early returns cannot mutate state.",
+    "hazards": "32banks/sourcePC, sharedgroupowner/remaining_PC/live_tags and allocation/retirement unchanged. Read/write aliases in16lookahead compare against older entries and pending sectors; four finalstack command selectors must revalidate transient deadlines and cache generation. Write data slot reservation precedes WR; current4slot source write protection/ACK joins remain mandatory.",
+    "command_counts": {
+      "ACT": 197644,
+      "RD": 4709088,
+      "PREALL": 13240,
+      "REF": 13240,
+      "WR": 4896,
+      "PRE": 4244
+    },
+    "commands_per_shared_path": [
+      [
+        308991,
+        308797,
+        308845,
+        308955
+      ],
+      [
+        308991,
+        308797,
+        308845,
+        308955
+      ],
+      [
+        308991,
+        308797,
+        308845,
+        308955
+      ],
+      [
+        308991,
+        308797,
+        308845,
+        308955
+      ]
+    ],
+    "reserved_same_path_collision_free": true,
+    "command_event_digest": "a05bd5d84de0dd77a565088972dd32bbca87389ec618eadd2c094643ecde3898",
+    "max_lazy_refresh_lateness_edges": 651,
+    "refresh_scope": "Address-only source-native deadlines and refresh debt explicitly charged. Idle-PC refresh placement/strictdeadline/sourceeligible-cache/provider/SSFF remain admission gates; deferred debt is never sustainablePHYproof.",
+    "original_single_pending_read_II28_removed_only_in_candidate": true,
+    "native_deadlines_retained": true,
+    "actual_source_controller_replacement_instantiated": false
+  },
+  "configuration": {
+    "return_groups_per_stack": 8,
+    "PCs_per_group": 4,
+    "column_paths_per_stack": 4,
+    "global_fill_lanes": 7,
+    "tiles": 1536,
+    "tiles_per_lane": [
+      220,
+      220,
+      220,
+      219,
+      219,
+      219,
+      219
+    ],
+    "pending_entries_per_PC": 64,
+    "lookahead_whole_records_per_PC": 16,
+    "request_return_RAMs_replicated": 0,
+    "context_RAMs_per_stack": 32,
+    "context_RAMs_replicated": 0,
+    "group_burst_credits": 16,
+    "stack_burst_credits": 128,
+    "global_matched_cohorts": 128,
+    "central_assembly_entries": 4480,
+    "assembly_group_lane_pools": 56,
+    "assembly_slots_per_pool": 80,
+    "flight_output_credits_per_group": 32,
+    "lookup_latency_edges": 12,
+    "context_capture_edge": 1,
+    "read_provider_due_edges": 25,
+    "cold_lookahead_read_capture_edges": 17,
+    "eligibility_register_edges": 4,
+    "per_PC_command_accept_II_lower_edges": 5,
+    "raw_response_stage_and_RAM_capture_edges": 3,
+    "request_paths_per_stack": 1,
+    "source_tag_namespace_copied": false
+  },
+  "requirements": [
+    "Review ONE finite PC replacement:actual64slot request/return1R1W RAMs retained,16whole472bit readcache with1read/edge+capture,freelist/order/generation/holes and16maximum oldest bypass; no fullRAM swap or oldsinglepending read gate.",
+    "64combinedpending/raw/held outputcredits beforeRD; source25edge due retained;3rawstage/RAMcapture edges and12ownerlookup retained. Provider nativepv/ptag16/pbeat5/pdata restoresector/epochs fromimmutablepending metadata, validateupper4tagzero and allocateidentity, never invent provider metadata.",
+    "Fourregistered eligibility levels andfinalcommand revalidation conservatively reserveperPCII5. Actualcache eligibility/forwarding/deadline/alias/update and acceptance phases must be source-owned; these Pythonfixtures do not establish physicalII5/II1.",
+    "Sourcebank32/PC retainsPRE/ACT/PREALL/REF/RD/WR deadlines,read-write turnaround/RAS/RP/FAW/RRD/burst2/bg3 andsourceREF3900/RFC350. Allmaintenance sharesfour339bit stackpaths; aggregatecount boundstill4, returngroup boundstill8. No mathematicalcase for5commands or9returns fromthisoneorder miss.",
+    "Calendar explicitlycharges deferredrefresh debt andrecordsmaximumlateness; strictidlePCrefreshpriority andactualdeadline compliance remain FAIL/open. Current4write slots/PC require actualreserve/ACK lifetime joins beforeWR. Outputcredit release onlyafterconsumedownedreturn; context/tagquarantine followsactualreversegrant/readers.",
+    "Actualsustained113.135616GB/s/stack inclclosingwrites remainsunknown. Fourcolumn paths,32PCresponses andPHYfootprints do not prove it. Bind actualPHY/controller/timing/protection plus producerdrain before build."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/execution_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_request.v1"
+    },
+    "token_ids": {
+      "items": {
+        "items": {
+          "maximum": 129279,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxItems": 256,
+        "minItems": 1,
+        "type": "array"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "build_id",
+    "model_id",
+    "schema",
+    "token_ids"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup execution request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

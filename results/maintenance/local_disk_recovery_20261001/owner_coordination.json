@@ -1,0 +1,32 @@
+{
+  "qcnam_owner_thread": "01a0f697-9c82-7572-8900-dd7b15d59ebf",
+  "qwen_owner_thread": "01a0f697-9c19-7280-ac5b-92ffbd41ea66",
+  "parent_thread": "01a0f695-ec83-78d3-b082-6d4313249a6c",
+  "protected": [
+    "/tmp/opentallas-parent-integration",
+    "/tmp/opentallas-qcnam-w16-recovery",
+    "/tmp/w11-hub-recovery-89eace",
+    "/home/ubuntu/qwen-integration-20261001",
+    "/home/ubuntu/w15b-codex-sram-20261001",
+    "/tmp/claude-1000/wt/w12tm",
+    "/tmp/claude-1000/wt/w19-qwen-hbm",
+    "/tmp/claude-1000/wt/qcnam-run",
+    "/tmp/claude-1000/qcnam/runs",
+    "all locked/live source trees",
+    "/home/ubuntu/w19-production",
+    "/home/ubuntu/qwen-partition-recovery-run",
+    "/home/ubuntu/qwen-recovery-jobs",
+    "/tmp/claude-1000/qcnam/readiness-watch-72b3718d1",
+    "/home/ubuntu/w15bwt7",
+    "/home/ubuntu/w15bwt8",
+    "/home/ubuntu/w15bwt9",
+    "/home/ubuntu/w15bwt13",
+    "/home/ubuntu/w15bwt14"
+  ],
+  "held_ambiguous": [
+    "/tmp/claude-1000/wt/qcnam-finalize: untracked long_admission files not QC owner work",
+    "/tmp/claude-1000/w11land: checkpoint owner confirmation pending",
+    "/home/ubuntu/w10qjobs: checkpoint owner confirmation pending"
+  ],
+  "w16b_owner_evidence": "results/quality/qcnam_w16_recovery_20261001/recovery.json: all six model/record blobs identical pinned main"
+}

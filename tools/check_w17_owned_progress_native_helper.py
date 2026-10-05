@@ -1,0 +1,69 @@
+"""Bounded native host-helper test; no Verilator, DUT classes, or runtime credit."""
+import argparse,hashlib,json,os,random,resource,subprocess,time
+from pathlib import Path
+from simulation_observation_api import encode,decode
+from prepare_simulation_observation_wrapper import layout
+ROOT=Path(__file__).resolve().parents[1]
+SOURCE=ROOT/'tests/native/w17_owned_progress_packet_check.cpp'
+
+def limits():
+    resource.setrlimit(resource.RLIMIT_AS,(2<<30,2<<30))
+    resource.setrlimit(resource.RLIMIT_CPU,(30,30))
+    resource.setrlimit(resource.RLIMIT_FSIZE,(1<<20,1<<20))
+    os.sched_setaffinity(0,set(sorted(os.sched_getaffinity(0))[:2]))
+
+def packets(fields):return ''.join(f'{encode(f):0256x}\n' for f in fields)
+def execute(argv,*,data=None,log=None):
+    start=time.monotonic()
+    if log:
+        with log.open('xb') as f:
+            p=subprocess.run(argv,stdout=f,stderr=subprocess.STDOUT,timeout=30,preexec_fn=limits())
+        output=log.read_text()
+    else:
+        p=subprocess.run(argv,input=data,text=True,capture_output=True,timeout=10,preexec_fn=limits());output=p.stdout+p.stderr
+    return dict(argv=list(map(str,argv)),returncode=p.returncode,seconds=time.monotonic()-start,output=output)
+
+def check(out):
+    out.mkdir(exist_ok=False);compiler=Path('/usr/bin/g++').resolve()
+    version=execute([str(compiler),'--version'])
+    compile_result=execute([str(compiler),'-std=c++17','-O2','-Wall','-Wextra','-Werror',str(SOURCE),'-o',str(out/'packet_check')],log=out/'compile.log')
+    receipts=[compile_result]
+    if compile_result['returncode']:status='NATIVE_HELPER_COMPILE_FAIL'
+    else:
+        rng=random.Random(20261002)
+        fields=[{f['name']:rng.randrange(1<<f['width']) for f in layout()} for _ in range(80)]
+        fields += [{f['name']:((1<<f['width'])-1 if bit else 0) for f in layout()} for bit in [0,1]]
+        result=execute([str(out/'packet_check'),'decode'],data=packets(fields));receipts.append(result)
+        got=[[int(x,0) for x in row.split()] for row in result['output'].splitlines()]
+        expected=[[f[x['name']] for x in layout()] for f in fields]
+        assert result['returncode']==0 and got==expected,'native ABI field mapping'
+        def frame(cycle,**kw):return dict(epoch=1,rank=0,cycle=cycle,**kw)
+        healthy=[frame(1,source_accept=1,source_gen=7,source_count=128),frame(2,window_prefetch_accept=1,window_prefetch_row=5,window_prefetch_user=2)]
+        cycle=3
+        for sector in range(17):
+            healthy += [frame(cycle,window_req_take=1,window_req_offer=1,window_req_ready=1,window_req_tag=sector,window_state=5,window_row=5,window_active_user=2,window_sector=sector),frame(cycle+1,window_rsp_take=1,window_reply_ok=1,window_rsp_tag=sector,window_state=6,window_row=5,window_active_user=2,window_sector=sector,window_row_publish=int(sector==16))];cycle+=2
+        healthy += [frame(cycle,source_done=1)]
+        result=execute([str(out/'packet_check'),'sample'],data=packets(healthy));receipts.append(result)
+        assert result['returncode']==0 and result['output'].splitlines()[-1].split()==['17','0','0','36','0','0','0']
+        negatives=[]
+        for label,mutation in [('wrong_tag',dict(window_rsp_tag=9)),('poison',dict(window_rsp_poison=1)),('wrong_beat',dict(window_rsp_beat=1)),('wrong_row',dict(window_row=6)),('no_qualifier',dict(window_reply_ok=0)),('early_publish',dict(window_row_publish=1))]:
+            case=[dict(x) for x in healthy[:4]];case[-1].update(mutation)
+            result=execute([str(out/'packet_check'),'sample'],data=packets(case));receipts.append(result)
+            assert result['returncode']==3 and 'REJECT' in result['output'],label
+            negatives.append(label)
+        ckv=[frame(1,ckv_available=1,ckv_select_accept=1),frame(2,ckv_available=1,ckv_fetch_accept=1),frame(3,ckv_available=1,ckv0_req_take=1,ckv0_req_offer=1,ckv0_req_ready=1,ckv0_req_tag=0),frame(4,ckv_available=1,ckv0_rsp_take=1,ckv0_rsp_tag=0)]
+        result=execute([str(out/'packet_check'),'sample'],data=packets(ckv));receipts.append(result)
+        assert result['returncode']==0 and result['output'].splitlines()[-1].split()[:4]==['0','0','1','0']
+        status='NATIVE_HELPER_ONLY_PASS'
+    pins={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [SOURCE,ROOT/'tools/runtime/w17_successor_owned_capture.hpp',ROOT/'tools/runtime/w17_successor_packet_fields.hpp',Path(__file__)]}
+    receipt=dict(status=status,compiler=str(compiler),compiler_sha256=hashlib.sha256(compiler.read_bytes()).hexdigest(),version=version,source_sha256=pins,caps=dict(AS_GiB=2,CPU=2,compile_wall_seconds=30,case_wall_seconds=10,log_MiB=1),receipts=receipts,actual_generated_DUT_link=False,hardware_or_runtime_or_fulltoken_credit=False,source_commit='4e38326d6f361bc85e660f48c59c355e2bb95274')
+    with (out/'receipt.json').open('x') as f:f.write(json.dumps(receipt,indent=2)+'\n')
+    return receipt
+
+if __name__=='__main__':
+    ap=argparse.ArgumentParser();ap.add_argument('--scratch',type=Path,required=True);a=ap.parse_args()
+    try:print(check(a.scratch)['status'])
+    except BaseException as error:
+        if a.scratch.is_dir():
+            with (a.scratch/'failure.json').open('x') as f:f.write(json.dumps(dict(status='NATIVE_HELPER_CHECK_FAIL',error=str(error),source_sha256=hashlib.sha256(SOURCE.read_bytes()).hexdigest(),runtime_or_fulltoken_credit=False),indent=2)+'\n')
+        raise

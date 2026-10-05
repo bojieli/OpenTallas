@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/ds_hbm_source_prefix_r39.py", line 99, in <module>
+    if __name__=='__main__':main()
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/ds_hbm_source_prefix_r39.py", line 93, in main
+    record.update(status='RUNNING_ACTUAL_SOURCE_PREFIX',model=priced,disk_available_bytes=free,manifest_sha256=sha(args.out/'actual_manifest.json.gz'));save();record.update(engine.run(stop_after=args.stop));record['status']='PASS_SOURCE_NATIVE_PREFIX_RETIRED_UNCOMPARED'
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source", line 85, in run
+    self.execute_operation(op)
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source", line 72, in execute_operation
+    self.run_buffer(op,owned,owned['template'],op['provider_bindings'][owned['template']],views,op['writes'])
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/ds_hbm_source_prefix_r39.py", line 72, in run_buffer
+    receipt=self.provider.publish(identity,fields,view)
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/h3_ds_connected_provider_r37.py", line 68, in publish
+    receipt=super().publish(identity,fields,source_store_view)
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/h3_ds_query_provider_r36.py", line 64, in publish
+    if not compound:return super().publish(identity,fields,source_store_view)
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/h3_ds_history_provider_r36.py", line 30, in publish
+    receipt=super().publish(identity,fields,source_store_view)
+  File "/tmp/kepler-ds-r39-prefix-pinned-20261002/tools/h3_ds_checkpoint_provider_r30.py", line 232, in publish
+    if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+ValueError: persistent output needs concrete physical home directory

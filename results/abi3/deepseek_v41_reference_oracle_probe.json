@@ -1,0 +1,1826 @@
+{
+  "argv": [
+    "--output",
+    "results/abi3/deepseek_v41_reference_oracle_probe.json"
+  ],
+  "candidate_pool": {
+    "all_untied_rows_agree": true,
+    "disagreements": [],
+    "grade": "executed",
+    "reference": "runtime.reference.candidate_pool.select_candidate_blocks",
+    "rows": [
+      {
+        "block_size": 8,
+        "compress_lens": 4,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 0,
+        "vendor_population": 8,
+        "width": 112
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 58,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 7,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 64,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 1,
+        "vendor_population": 64,
+        "width": 249
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 41,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 5,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 48,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 2,
+        "vendor_population": 48,
+        "width": 66
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 27,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 3,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 32,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 3,
+        "vendor_population": 32,
+        "width": 259
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 85,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 10,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 88,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 4,
+        "vendor_population": 88,
+        "width": 196
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 24,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 2,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 24,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 5,
+        "vendor_population": 24,
+        "width": 141
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 77,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 9,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 80,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 6,
+        "vendor_population": 80,
+        "width": 254
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 136,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 16,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 136,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 7,
+        "vendor_population": 136,
+        "width": 271
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 4,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 8,
+        "vendor_population": 8,
+        "width": 64
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 276,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 34,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 280,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 9,
+        "vendor_population": 280,
+        "width": 281
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 13,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 10,
+        "vendor_population": 16,
+        "width": 42
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 56,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 6,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 56,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 11,
+        "vendor_population": 56,
+        "width": 59
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 15,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 12,
+        "vendor_population": 16,
+        "width": 180
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 87,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 10,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 88,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 13,
+        "vendor_population": 88,
+        "width": 181
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 81,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 10,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 88,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 14,
+        "vendor_population": 88,
+        "width": 110
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 60,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 7,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 64,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 15,
+        "vendor_population": 64,
+        "width": 183
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 215,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 26,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 216,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 16,
+        "vendor_population": 216,
+        "width": 272
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 191,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 23,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 192,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 17,
+        "vendor_population": 192,
+        "width": 297
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 10,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 18,
+        "vendor_population": 16,
+        "width": 82
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 1,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 19,
+        "vendor_population": 8,
+        "width": 19
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 37,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 4,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 40,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 20,
+        "vendor_population": 40,
+        "width": 84
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 196,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 24,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 200,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 21,
+        "vendor_population": 200,
+        "width": 301
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 125,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 15,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 128,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 22,
+        "vendor_population": 128,
+        "width": 262
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 16,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 23,
+        "vendor_population": 16,
+        "width": 135
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 6,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 24,
+        "vendor_population": 8,
+        "width": 32
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 3,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 25,
+        "vendor_population": 8,
+        "width": 33
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 71,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 8,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 72,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 26,
+        "vendor_population": 72,
+        "width": 170
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 8,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 27,
+        "vendor_population": 8,
+        "width": 11
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 104,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 12,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 104,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 28,
+        "vendor_population": 104,
+        "width": 260
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 70,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 8,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 72,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 29,
+        "vendor_population": 72,
+        "width": 253
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 16,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 30,
+        "vendor_population": 16,
+        "width": 86
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 86,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 10,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 88,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 31,
+        "vendor_population": 88,
+        "width": 231
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 168,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 20,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 168,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 32,
+        "vendor_population": 168,
+        "width": 208
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 116,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 14,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 120,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 33,
+        "vendor_population": 120,
+        "width": 281
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 101,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 12,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 104,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 34,
+        "vendor_population": 104,
+        "width": 170
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 8,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 35,
+        "vendor_population": 8,
+        "width": 11
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 84,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 10,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 88,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 36,
+        "vendor_population": 88,
+        "width": 100
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 9,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 37,
+        "vendor_population": 16,
+        "width": 53
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 16,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 38,
+        "vendor_population": 16,
+        "width": 126
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 35,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 4,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 40,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 39,
+        "vendor_population": 40,
+        "width": 263
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 2,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 40,
+        "vendor_population": 8,
+        "width": 24
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 198,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 24,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 200,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 41,
+        "vendor_population": 200,
+        "width": 289
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 39,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 4,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 40,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 42,
+        "vendor_population": 40,
+        "width": 234
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 38,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 4,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 40,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 43,
+        "vendor_population": 40,
+        "width": 235
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 41,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 5,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 48,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 44,
+        "vendor_population": 48,
+        "width": 60
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 34,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 4,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 40,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 45,
+        "vendor_population": 40,
+        "width": 61
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 18,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 2,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 24,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 46,
+        "vendor_population": 24,
+        "width": 54
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 48,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 5,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 48,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 47,
+        "vendor_population": 48,
+        "width": 303
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 1,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": true,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 48,
+        "vendor_population": 8,
+        "width": 8
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 71,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 8,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 72,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 49,
+        "vendor_population": 72,
+        "width": 81
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 19,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 2,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 24,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 50,
+        "vendor_population": 24,
+        "width": 34
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 134,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 16,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 136,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 51,
+        "vendor_population": 136,
+        "width": 235
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 4,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 0,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 8,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 52,
+        "vendor_population": 8,
+        "width": 12
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 29,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 3,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 32,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 53,
+        "vendor_population": 32,
+        "width": 149
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 158,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 19,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 160,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 54,
+        "vendor_population": 160,
+        "width": 238
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 10,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 55,
+        "vendor_population": 16,
+        "width": 143
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 157,
+        "masks_identical": true,
+        "partial_final_block": false,
+        "pinned_block": 19,
+        "pinned_block_is_axis_last": true,
+        "reference_population": 160,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 56,
+        "vendor_population": 160,
+        "width": 160
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 46,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 5,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 48,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 57,
+        "vendor_population": 48,
+        "width": 89
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 48,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 5,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 48,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 58,
+        "vendor_population": 48,
+        "width": 74
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 49,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 6,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 56,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 59,
+        "vendor_population": 56,
+        "width": 243
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 72,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 8,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 72,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 60,
+        "vendor_population": 72,
+        "width": 228
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 12,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 1,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 16,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 61,
+        "vendor_population": 16,
+        "width": 237
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 57,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 7,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 64,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 62,
+        "vendor_population": 64,
+        "width": 94
+      },
+      {
+        "block_size": 8,
+        "compress_lens": 261,
+        "masks_identical": true,
+        "partial_final_block": true,
+        "pinned_block": 32,
+        "pinned_block_is_axis_last": false,
+        "reference_population": 264,
+        "tie_at_threshold": false,
+        "topk_blocks": 2048,
+        "trial": 63,
+        "vendor_population": 264,
+        "width": 295
+      }
+    ],
+    "tied_rows_not_counted": 0,
+    "trials": 64,
+    "untied_agreements": 64,
+    "vendor_symbol": "model.select_candidate_blocks"
+  },
+  "checkpoint_lock": {
+    "lock_id": "3035f90f54bdb46150c7c45a0fa8224c459583d0849c51d2c24fdb055e627a53",
+    "path": "/home/ubuntu/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json",
+    "payload_bytes": 510286023000,
+    "present": true,
+    "schema": "opentallas.checkpoint_lock.v1",
+    "shard_count": 48,
+    "tensor_content_sha256": "312df8e2f3f7abf5868da7403cfb0e9c54c3f58736c35fb3d4ade344efcd53e6",
+    "tensor_count": 96085
+  },
+  "elapsed_seconds": 9.443,
+  "engram_gate": {
+    "adaptations": [
+      {
+        "change": "the table is allocated with 4,096 rows",
+        "fidelity": "the row WIDTH is measured from the buffer and is unchanged; the gate arithmetic depends on the row VALUES, not the row count. This stage is therefore evidence about the gate expression and the wrap, and NOT about any released row",
+        "id": "engram_table_rows_reduced",
+        "reason": "the released table for this layer is 384,006,168 rows of 264 B, about 101 GB, and ParallelEngramEmbedding.forward calls F.embedding over the whole table, so it cannot be materialised on this device",
+        "vendor_symbol": "model.ParallelEngramEmbedding"
+      }
+    ],
+    "device": "cuda",
+    "divergences": [
+      {
+        "changes_value": "yes",
+        "contract_v1": "1e-6 applied to the norm product, i.e. the denominator",
+        "id": "D1_clamp_target",
+        "pinned": "clamp_min(1e-6) applied to |dot|, the normalised dot, before sqrt"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "dot / max(sqrt(sum q^2) * sqrt(sum k^2), 1e-6); no eps term",
+        "id": "D2_mean_not_sum",
+        "pinned": "rsqrt(mean(h^2) + norm_eps) * rsqrt(mean(key^2) + norm_eps), then * dim**-0.5; norm_eps = 1e-20"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "dot is q . k; hidden_codes take no part in the gate",
+        "id": "D3_operand_roles",
+        "pinned": "dot is h . (q_weight * k_weight * key); h is both gate query and residual"
+      },
+      {
+        "changes_value": "yes",
+        "contract_v1": "h + gate * (key * value), elementwise",
+        "id": "D4_gated_term",
+        "pinned": "h + gate * value, value shared across the hc_mult copies"
+      }
+    ],
+    "engram_forward_calls_this_stage": 1,
+    "grade": "executed",
+    "measured_row_bytes": 264,
+    "pinned_form_against_contract_v1": {
+      "contract_v1": "engram_gate_fp32_v1",
+      "divergences": [
+        {
+          "changes_value": "yes",
+          "contract_v1": "1e-6 applied to the norm product, i.e. the denominator",
+          "id": "D1_clamp_target",
+          "pinned": "clamp_min(1e-6) applied to |dot|, the normalised dot, before sqrt"
+        },
+        {
+          "changes_value": "yes",
+          "contract_v1": "dot / max(sqrt(sum q^2) * sqrt(sum k^2), 1e-6); no eps term",
+          "id": "D2_mean_not_sum",
+          "pinned": "rsqrt(mean(h^2) + norm_eps) * rsqrt(mean(key^2) + norm_eps), then * dim**-0.5; norm_eps = 1e-20"
+        },
+        {
+          "changes_value": "yes",
+          "contract_v1": "dot is q . k; hidden_codes take no part in the gate",
+          "id": "D3_operand_roles",
+          "pinned": "dot is h . (q_weight * k_weight * key); h is both gate query and residual"
+        },
+        {
+          "changes_value": "yes",
+          "contract_v1": "h + gate * (key * value), elementwise",
+          "id": "D4_gated_term",
+          "pinned": "h + gate * value, value shared across the hc_mult copies"
+        }
+      ],
+      "gate_codes_differ": true,
+      "outputs_differ": true,
+      "pinned_first_output_code": 1050220432,
+      "pinned_form": "engram_gate_pinned_dsv41_form",
+      "pinned_gate_code": 1061731455,
+      "pinned_gate_value": 0.7841262221336365,
+      "v1_first_output_code": 1050008070,
+      "v1_gate_code": 1060032557,
+      "v1_gate_value": 0.6828640103340149,
+      "width": 8
+    },
+    "released_values_used": {
+      "clamp_value": 1e-06,
+      "dim": 5120,
+      "engram_head_dim": 256,
+      "engram_max_ngram_size": 4,
+      "engram_n_heads": 8,
+      "hc_mult": 4,
+      "n_hash_cols": 24,
+      "norm_eps": 1e-20
+    },
+    "seconds": 0.132,
+    "transcription_check": {
+      "identical": true,
+      "max_abs_difference": 0.0,
+      "what_this_shows": "the module evaluated the expression DAG recorded in runtime.reference.engram's D1-D4 comment; it does NOT show agreement with an independent numeric reference, because both sides here are torch"
+    },
+    "vendor_symbol": "model.Engram.forward",
+    "wrap_fired": true
+  },
+  "entry_widths": {
+    "comparison": {
+      "all_agree": false,
+      "note": "the measured width is what the vendor's own cache holds; the recipe width is what the profile charges. Both are reported. NEITHER is corrected into the other here: a storage format the accelerator chooses is a design decision, and the ratio is the size of that decision",
+      "rows": [
+        {
+          "agrees": false,
+          "measured_entry_bytes": 1024,
+          "measured_grade": "executed",
+          "measured_over_recipe": 3.5555555555555554,
+          "recipe_entry_bytes": 288.0,
+          "recipe_grade": "read_from_profile",
+          "role": "main"
+        },
+        {
+          "agrees": false,
+          "measured_entry_bytes": 256,
+          "measured_grade": "executed",
+          "measured_over_recipe": 3.764705882352941,
+          "recipe_entry_bytes": 68.0,
+          "recipe_grade": "read_from_profile",
+          "role": "index"
+        },
+        {
+          "agrees": false,
+          "measured_entry_bytes": 1024,
+          "measured_grade": "executed",
+          "measured_over_recipe": 1.9393939393939394,
+          "recipe_entry_bytes": 528.0,
+          "recipe_grade": "read_from_profile",
+          "role": "window"
+        }
+      ]
+    },
+    "measured": {
+      "allocation_only_arguments": {
+        "max_batch_size": 1,
+        "max_seq_len": 4096,
+        "note": "these size the allocation, not the width: an entry width is the last-axis extent times the element size and neither depends on either value"
+      },
+      "grade": "executed",
+      "measured": {
+        "index": {
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "entry_bytes": 256,
+          "last_axis_extent": 128,
+          "read_from": "Indexer.k_cache, layer 20",
+          "shape": [
+            1,
+            4096,
+            128
+          ]
+        },
+        "main": {
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "entry_bytes": 1024,
+          "last_axis_extent": 512,
+          "read_from": "Attention.compress_kv_cache, layer 20",
+          "shape": [
+            1,
+            4096,
+            512
+          ]
+        },
+        "window": {
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "entry_bytes": 1024,
+          "last_axis_extent": 512,
+          "read_from": "Attention.window_kv_cache, layer 24",
+          "shape": [
+            1,
+            128,
+            512
+          ]
+        }
+      },
+      "measured_entry_bytes": {
+        "index": 256,
+        "main": 1024,
+        "window": 1024
+      },
+      "method": "constructed the pinned vendor Attention/Indexer at the released geometry and read buffer.size(-1) * buffer.element_size() off each registered cache; no width is transcribed in this program",
+      "per_layer_class": [
+        {
+          "compress_ratio": 0,
+          "is_index_source": false,
+          "is_kv_source": false,
+          "layer_id": 0,
+          "measured": {
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 0",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "compress_ratio": 2,
+          "is_index_source": true,
+          "is_kv_source": true,
+          "layer_id": 2,
+          "measured": {
+            "index": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 256,
+              "last_axis_extent": 128,
+              "read_from": "Indexer.k_cache, layer 2",
+              "shape": [
+                1,
+                2048,
+                128
+              ]
+            },
+            "main": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.compress_kv_cache, layer 2",
+              "shape": [
+                1,
+                2048,
+                512
+              ]
+            },
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 2",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "compress_ratio": 2,
+          "is_index_source": false,
+          "is_kv_source": false,
+          "layer_id": 3,
+          "measured": {
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 3",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "compress_ratio": 1,
+          "is_index_source": true,
+          "is_kv_source": true,
+          "layer_id": 20,
+          "measured": {
+            "index": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 256,
+              "last_axis_extent": 128,
+              "read_from": "Indexer.k_cache, layer 20",
+              "shape": [
+                1,
+                4096,
+                128
+              ]
+            },
+            "main": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.compress_kv_cache, layer 20",
+              "shape": [
+                1,
+                4096,
+                512
+              ]
+            },
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 20",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "compress_ratio": 1,
+          "is_index_source": false,
+          "is_kv_source": false,
+          "layer_id": 21,
+          "measured": {
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 21",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        },
+        {
+          "compress_ratio": 1,
+          "is_index_source": true,
+          "is_kv_source": false,
+          "layer_id": 24,
+          "measured": {
+            "window": {
+              "dtype": "torch.bfloat16",
+              "element_size_bytes": 2,
+              "entry_bytes": 1024,
+              "last_axis_extent": 512,
+              "read_from": "Attention.window_kv_cache, layer 24",
+              "shape": [
+                1,
+                128,
+                512
+              ]
+            }
+          }
+        }
+      ],
+      "torch_default_dtype": "torch.bfloat16",
+      "torch_default_dtype_note": "inference/generate.py calls torch.set_default_dtype(torch.bfloat16) before constructing the Transformer, and every cache is registered with torch.zeros at the default dtype, so this IS the released launch's storage dtype"
+    },
+    "recipe": {
+      "groups": [
+        {
+          "count": 2,
+          "entry_bytes": 528.0,
+          "index_entry_bytes": 0.0,
+          "kind": "window",
+          "label": "swa",
+          "window_entry_bytes": 0.0
+        },
+        {
+          "count": 3,
+          "entry_bytes": 288.0,
+          "index_entry_bytes": 68.0,
+          "kind": "compressed_sparse",
+          "label": "csa2-2-full",
+          "window_entry_bytes": 528.0
+        },
+        {
+          "count": 15,
+          "entry_bytes": 288.0,
+          "index_entry_bytes": 68.0,
+          "kind": "compressed_sparse",
+          "label": "csa2-2-reuse",
+          "window_entry_bytes": 528.0
+        },
+        {
+          "count": 1,
+          "entry_bytes": 288.0,
+          "index_entry_bytes": 68.0,
+          "kind": "compressed_sparse",
+          "label": "csa2-1-full",
+          "window_entry_bytes": 528.0
+        },
+        {
+          "count": 15,
+          "entry_bytes": 288.0,
+          "index_entry_bytes": 68.0,
+          "kind": "compressed_sparse",
+          "label": "csa2-1-reuse",
+          "window_entry_bytes": 528.0
+        },
+        {
+          "count": 4,
+          "entry_bytes": 288.0,
+          "index_entry_bytes": 68.0,
+          "kind": "compressed_sparse",
+          "label": "csa2-1-reindex",
+          "window_entry_bytes": 528.0
+        }
+      ],
+      "num_layers": 40,
+      "profile_path": "configs/models/candidates/deepseek-v4.1-flash.json",
+      "recipe_entry_bytes": {
+        "index": 68.0,
+        "main": 288.0,
+        "window": 528.0
+      }
+    }
+  },
+  "environment": {
+    "compute_capability": [
+      12,
+      0
+    ],
+    "cuda_available": true,
+    "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "device_allocation_verified": true,
+    "device_total_memory_bytes": 101973491712,
+    "nvcc_on_path": {
+      "path": "/usr/local/cuda/bin/nvcc",
+      "release": "Cuda compilation tools, release 12.8, V12.8.93"
+    },
+    "nvml": "",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "torch": "2.10.0+cu128",
+    "torch_cuda": "12.8"
+  },
+  "evidence_class": {
+    "executed": [
+      "entry_widths",
+      "fp4_kv",
+      "index_scans",
+      "candidate_pool",
+      "engram_gate"
+    ],
+    "not_run": [
+      "tokens"
+    ],
+    "statement": "nothing in this report is a TPOT, a throughput or a token. The widths and the comparisons are executed measurements of the vendor's own pinned code; the token ladder did not run"
+  },
+  "fp4_kv": {
+    "comparison": "exact rational equality, not a tolerance",
+    "contract": "fp4_e2m1_s16_e4m3_to_fp8_v1",
+    "element_packing_order": "low_nibble_first",
+    "grade": "executed",
+    "latent_elements": 512,
+    "orders_tried": {
+      "high_nibble_first": {
+        "elements_checked": 4096,
+        "exact_agreement": false,
+        "first_mismatch": {
+          "element": 0,
+          "reference_exact_product": "-9/8",
+          "row": 0,
+          "vendor_value": "4.5"
+        },
+        "mismatches": 3816
+      },
+      "low_nibble_first": {
+        "elements_checked": 4096,
+        "exact_agreement": true,
+        "first_mismatch": null,
+        "mismatches": 0
+      }
+    },
+    "packing_order_determined": true,
+    "reference": "runtime.reference.fp4_kv.dequantize_to_bf16_values",
+    "reference_reproduces_vendor_dequantize": true,
+    "rows": 8,
+    "scale_dtype": "torch.float8_e4m3fn",
+    "scale_group": 16,
+    "seconds": 0.926,
+    "storage_note": "fp4_act_quant(inplace=True) writes DEQUANTIZED values back at the INPUT dtype, so on the vendor's own reference path the compressed KV cache holds bfloat16 round-tripped values and the FP4 codes are never stored. That is why the measured main entry width is the bfloat16 width and not the FP4 serving recipe",
+    "vendor_symbol": "kernel.fp4_act_quant",
+    "what_this_does_not_establish": [
+      "the FORWARD direction: quantize_group_to_fp4 is documented as representative and is not compared here",
+      "any released latent value: the input is a sample, not a checkpoint row",
+      "that the accelerator's FP8 destination format loses nothing; the reference states BF16 represents every product exactly and that is what is checked, not the FP8 rounding"
+    ],
+    "what_this_establishes": "the E2M1 and E4M3FN field definitions in runtime/reference/fp4_kv.py reproduce the pinned kernel's own dequantized reconstruction exactly, over every element checked, for the released latent extent and the released scale group"
+  },
+  "generated_at": "2026-09-13T14:45:32Z",
+  "index_scans": {
+    "adaptations": [
+      {
+        "change": "Indexer.forward is called directly, with `qr` and `latent` produced by the same vendor modules Attention.forward produces them with, and `offset` the value Attention.forward passes",
+        "fidelity": "the indexer body is the pinned body, unmodified, and the counts come from its own operands. What is NOT established is any value downstream of it: no attention output, no logit and no token is produced or claimed",
+        "id": "indexer_exercised_without_sparse_attn",
+        "reason": "model.sparse_attn cannot launch on this device (see sparse_attn_device_limit), so the enclosing Attention.forward cannot complete",
+        "vendor_symbol": "model.Indexer.forward"
+      },
+      {
+        "change": "the indexer's parameters are a small normal sample",
+        "fidelity": "a scan WIDTH is set by the released shapes and the released selection rules, not by a weight value, and no value produced by these parameters is reported. WHICH positions win is weight-dependent and is NOT claimed here",
+        "id": "index_scan_weights_not_released",
+        "reason": "streaming the released indexer rows needs the layer-streaming engine the token stage lists as absent",
+        "vendor_symbol": "model.Indexer"
+      }
+    ],
+    "allocation": {
+      "max_batch_size": 1,
+      "max_seq_len": 24576
+    },
+    "bound_derivation": "candidate_topk_blocks * candidate_block_size, both read from the released config at run time",
+    "candidate_pool_position_bound": 16384,
+    "finding": "the pinned Indexer.forward scores every reachable compressed position and masks afterwards, so a pool-consuming layer's SCAN is the full reachable width while its ADMITTED population is bounded by candidate_topk_blocks * candidate_block_size. These are different measurements and both are reported",
+    "grade": "executed",
+    "rows": [
+      {
+        "candidate_mask_shape": [
+          1,
+          256,
+          256
+        ],
+        "candidate_pool_position_bound": 16384,
+        "compress_ratio": 1,
+        "index_bytes_scored": 16777216,
+        "index_positions_admitted_total": null,
+        "index_positions_scored_per_query": 256.0,
+        "index_positions_scored_total": 65536,
+        "index_topk_configured": 512,
+        "layer_id": 20,
+        "layer_running_total_positions_scored": 65536,
+        "measured_index_entry_bytes": 256,
+        "owns_index_keys": true,
+        "phase": "prefill",
+        "queries": 256,
+        "reachable_compressed_positions_per_query": 256,
+        "role": "candidate_source",
+        "scan_exceeds_pool_bound": false,
+        "seconds": 0.242,
+        "selected_per_query": 256,
+        "start_pos": 0
+      },
+      {
+        "candidate_mask_shape": [
+          1,
+          256,
+          256
+        ],
+        "candidate_pool_position_bound": 16384,
+        "compress_ratio": 1,
+        "index_bytes_scored": 16777216,
+        "index_positions_admitted_total": 33792,
+        "index_positions_scored_per_query": 256.0,
+        "index_positions_scored_total": 65536,
+        "index_topk_configured": 512,
+        "layer_id": 24,
+        "layer_running_total_positions_scored": 65536,
+        "measured_index_entry_bytes": 256,
+        "owns_index_keys": false,
+        "phase": "prefill",
+        "queries": 256,
+        "reachable_compressed_positions_per_query": 256,
+        "role": "pool_consumer",
+        "scan_exceeds_pool_bound": false,
+        "seconds": 0.002,
+        "selected_per_query": 256,
+        "start_pos": 0
+      },
+      {
+        "candidate_mask_shape": [
+          1,
+          1,
+          20001
+        ],
+        "candidate_pool_position_bound": 16384,
+        "compress_ratio": 1,
+        "index_bytes_scored": 5120256,
+        "index_positions_admitted_total": null,
+        "index_positions_scored_per_query": 20001.0,
+        "index_positions_scored_total": 20001,
+        "index_topk_configured": 512,
+        "layer_id": 20,
+        "layer_running_total_positions_scored": 85537,
+        "measured_index_entry_bytes": 256,
+        "owns_index_keys": true,
+        "phase": "decode",
+        "queries": 1,
+        "reachable_compressed_positions_per_query": 20001,
+        "role": "candidate_source",
+        "scan_exceeds_pool_bound": true,
+        "seconds": 0.01,
+        "selected_per_query": 512,
+        "start_pos": 20000
+      },
+      {
+        "candidate_mask_shape": [
+          1,
+          1,
+          20001
+        ],
+        "candidate_pool_position_bound": 16384,
+        "compress_ratio": 1,
+        "index_bytes_scored": 5120256,
+        "index_positions_admitted_total": 16377,
+        "index_positions_scored_per_query": 20001.0,
+        "index_positions_scored_total": 20001,
+        "index_topk_configured": 512,
+        "layer_id": 24,
+        "layer_running_total_positions_scored": 85537,
+        "measured_index_entry_bytes": 256,
+        "owns_index_keys": false,
+        "phase": "decode",
+        "queries": 1,
+        "reachable_compressed_positions_per_query": 20001,
+        "role": "pool_consumer",
+        "scan_exceeds_pool_bound": true,
+        "seconds": 0.005,
+        "selected_per_query": 512,
+        "start_pos": 20000
+      }
+    ],
+    "rungs_where_scan_exceeds_the_pool_bound": 2,
+    "vendor_symbol": "model.Indexer.forward",
+    "wrapped_before_first_run": true
+  },
+  "instrumentation": {
+    "counters": {
+      "attention_forward_calls": 0,
+      "engram_forward_calls": 1,
+      "indexer_forward_calls": 4,
+      "measured_widths": {
+        "engram_row": {
+          "entry_bytes": 264,
+          "read_from": "ParallelEngramEmbedding.weight/.scale inside Engram.forward at layer 1",
+          "scale_bytes": 8,
+          "scale_dtype": "torch.float8_e8m0fnu",
+          "shape": [
+            4096,
+            256
+          ],
+          "value_bytes": 256,
+          "value_dtype": "torch.float8_e4m3fn"
+        },
+        "index": {
+          "dtype": "torch.bfloat16",
+          "element_size_bytes": 2,
+          "entry_bytes": 256,
+          "last_axis_extent": 128,
+          "read_from": "Indexer.k_cache handed to Indexer.forward at layer 24",
+          "shape": [
+            1,
+            24576,
+            128
+          ]
+        }
+      },
+      "per_layer": {
+        "1": {
+          "engram_bytes_gathered": 19008,
+          "engram_calls": 1,
+          "engram_row_bytes": 264,
+          "engram_rows_gathered": 72,
+          "engram_tokens": 3,
+          "index_bytes_scored": 0,
+          "index_calls": 0,
+          "index_positions_admitted": null,
+          "index_positions_scored": 0,
+          "index_queries": 0,
+          "index_selected_per_query": null
+        },
+        "20": {
+          "engram_bytes_gathered": 0,
+          "engram_calls": 0,
+          "engram_row_bytes": null,
+          "engram_rows_gathered": 0,
+          "engram_tokens": 0,
+          "index_bytes_scored": 21897472,
+          "index_calls": 2,
+          "index_positions_admitted": null,
+          "index_positions_scored": 85537,
+          "index_queries": 257,
+          "index_selected_per_query": 512
+        },
+        "24": {
+          "engram_bytes_gathered": 0,
+          "engram_calls": 0,
+          "engram_row_bytes": null,
+          "engram_rows_gathered": 0,
+          "engram_tokens": 0,
+          "index_bytes_scored": 21897472,
+          "index_calls": 2,
+          "index_positions_admitted": 16377,
+          "index_positions_scored": 85537,
+          "index_queries": 257,
+          "index_selected_per_query": 512
+        }
+      }
+    },
+    "observed_calls": {
+      "Attention.forward": 0,
+      "Engram.forward": 1,
+      "Indexer.forward": 4
+    },
+    "required_symbols": [
+      "Engram.forward",
+      "Indexer.forward"
+    ],
+    "unexercised_symbols": [
+      "Attention.forward"
+    ],
+    "verification": {
+      "all_installed": true,
+      "checks": {
+        "Attention.forward": {
+          "current_qualname": "install_counters.<locals>.counted_attention",
+          "installed_is_current": true
+        },
+        "Engram.forward": {
+          "current_qualname": "install_counters.<locals>.counted_engram",
+          "installed_is_current": true
+        },
+        "Indexer.forward": {
+          "current_qualname": "install_counters.<locals>.counted_indexer",
+          "installed_is_current": true
+        }
+      }
+    },
+    "wrapped_before_first_run": true,
+    "wrapped_symbols": [
+      "Attention.forward",
+      "Engram.forward",
+      "Indexer.forward"
+    ],
+    "zero_is_not_a_count_note": "a wrapped symbol with zero calls was NOT exercised by the stages that ran; it is listed rather than reported as zero, because a zero index-scan count is indistinguishable from an implementation that declined to scan (the V4 failure)"
+  },
+  "model_id": "deepseek-v4.1-flash",
+  "notes": [
+    "vendor sources verified: config.json=8be45ce04760, inference/engram.py=11f35ecbead8, inference/model.py=4e9ae23620ed",
+    "checkpoint lock 3035f90f54bdb461: 96,085 tensors, 510,286,023,000 bytes",
+    "wrapped BEFORE the first run and verified by identity: Attention.forward, Engram.forward, Indexer.forward",
+    "  main entry: measured 1024 B (grade executed) against recipe 288.0 B (ratio 3.5556)",
+    " index entry: measured 256 B (grade executed) against recipe 68.0 B (ratio 3.7647)",
+    "window entry: measured 1024 B (grade executed) against recipe 528.0 B (ratio 1.9394)",
+    "fp4 main KV: reference dequantize reproduces the pinned kernel exactly on 4,096 elements (low_nibble_first), mismatches 0",
+    "sparse_attn launch attempted at the released n_heads/head_dim: runnable=False; InternalError: Failed to set the allowed dynamic shared memory size to 141312; device allows 101376 B of opt-in shared memory per block",
+    "  layer 20 prefill candidate_source scored    65,536 positions (256/query), admitted None, pool bound 16,384, selected 256/query",
+    "  layer 24 prefill pool_consumer    scored    65,536 positions (256/query), admitted 33792, pool bound 16,384, selected 256/query",
+    "  layer 20 decode  candidate_source scored    20,001 positions (20,001/query), admitted None, pool bound 16,384, selected 512/query",
+    "  layer 24 decode  pool_consumer    scored    20,001 positions (20,001/query), admitted 16377, pool bound 16,384, selected 512/query",
+    "rungs where the scan exceeds the pool bound: 2",
+    "candidate pool: 64/64 untied rows identical, 0 rows tied at the threshold and not counted, 0 disagreements",
+    "Engram.forward ran on cuda in 0.132 s; the wrap fired 1 time(s); measured row width 264 B",
+    "pinned gate form against engram_gate_fp32_v1: gate codes differ = True, outputs differ = True",
+    "wrap calls observed: Attention.forward=0, Engram.forward=1, Indexer.forward=4",
+    "NOT exercised by these stages (reported as unexercised, not as zero): Attention.forward",
+    "token stage BLOCKED, missing: streaming_engine, engram_table_residency"
+  ],
+  "producer": {
+    "source_map": {
+      "runtime/reference/candidate_pool.py": "3a4681bf78f61f2f425925599c861cf0d6ee0b665cddfcf60f3f07367ce4690a",
+      "runtime/reference/engram.py": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0",
+      "runtime/reference/fp4_kv.py": "7b1e216e89a7df717a23ebc2d0f358b44de314ca9898a226c1e487465220ed4a",
+      "tools/run_deepseek_v41_reference_oracle.py": "8339288c26c144255938baa54dafdace4fa6c7cf2432e89dffed0112c978c5b7"
+    },
+    "source_map_sha256": "3775ec00f35cf356586b503e53dd4e835e0ff76c96c94b31d3bcceac4b7c044e",
+    "tool": "tools/run_deepseek_v41_reference_oracle.py",
+    "tool_source_sha256": "8339288c26c144255938baa54dafdace4fa6c7cf2432e89dffed0112c978c5b7"
+  },
+  "released_geometry": {
+    "candidate_block_size": 8,
+    "candidate_source_layer": 20,
+    "candidate_topk_blocks": 2048,
+    "dim": 5120,
+    "engram_layer_ids": [
+      1,
+      14
+    ],
+    "engram_num_embeddings": [
+      384006168,
+      384016682
+    ],
+    "head_dim": 512,
+    "index_head_dim": 128,
+    "index_source_layers": [
+      2,
+      8,
+      14,
+      20,
+      24,
+      28,
+      32,
+      36
+    ],
+    "index_topk": 512,
+    "kv_source_layers": [
+      2,
+      8,
+      14,
+      20
+    ],
+    "n_layers": 40,
+    "note": "read at run time; nothing above is transcribed in this tool",
+    "source": "config.json:text_config at the pinned revision",
+    "window_size": 128
+  },
+  "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "role": "external_reference_oracle",
+  "role_note": "an external comparator over the vendor's own pinned code. It never produces accelerator tokens and never supplies an activation (ADR-003 section 18)",
+  "schema": "opentallas.abi3.reference_oracle.v1",
+  "sparse_attn_device_limit": {
+    "attempted": true,
+    "compute_capability": [
+      12,
+      0
+    ],
+    "consequence": "model.sparse_attn cannot launch on this device, so the complete Attention.forward and therefore the greedy token ladder cannot run here. Indexer.forward runs BEFORE sparse_attn inside Attention.forward and is exercised directly below",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "error_type": "InternalError",
+    "error_verbatim": "Failed to set the allowed dynamic shared memory size to 141312",
+    "launched_at": {
+      "head_dim": 512,
+      "n_heads": 64,
+      "note": "n_heads and head_dim are the released values",
+      "queries": 1,
+      "topk": 64
+    },
+    "runnable": false,
+    "shared_memory_per_block_bytes": 49152,
+    "shared_memory_per_block_optin_bytes": 101376
+  },
+  "stages_requested": [
+    "candidate_pool",
+    "engram_gate",
+    "fp4_kv",
+    "index_scans",
+    "instrumentation",
+    "tokens",
+    "widths"
+  ],
+  "status": "completed",
+  "tokens": {
+    "artifacts_not_produced": {
+      "context_ladder": "results/abi3/deepseek_v41_reference_oracle_context_ladder.json",
+      "prefix": "results/abi3/deepseek_v41_reference_oracle_prefix.json"
+    },
+    "blocked": true,
+    "command_that_would_run_it": "PATH=/usr/local/cuda/bin:$PATH tools/run_deepseek_v41_reference_oracle.py --stage tokens --snapshot /home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277 --lock /home/ubuntu/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json --only TA-DS41-CHAT-1-P32 --max-new-tokens 32 --output results/abi3/deepseek_v41_reference_oracle_prefix.json",
+    "grade": "not_run",
+    "missing_prerequisites": [
+      "streaming_engine",
+      "engram_table_residency"
+    ],
+    "note": "no number in this record is a token, a TPOT or a measurement of the model's output. Planned behaviour is not implemented evidence",
+    "prerequisites": [
+      {
+        "id": "streaming_engine",
+        "path": "runtime/reference/deepseek_v41_oracle.py",
+        "present": false,
+        "requirement": "a V4.1 layer-streaming engine, the analogue of runtime/reference/deepseek_v4_oracle.py::StreamingDeepSeekV4, that materialises one block and one routed expert at a time from the 48 released shards",
+        "why_needed": "the released checkpoint is 510,286,023,000 bytes of weights against 101.97 GB of device memory, so no run holds the model"
+      },
+      {
+        "id": "engram_table_residency",
+        "path": null,
+        "present": false,
+        "requirement": "a residency policy for the two Engram tables (202.76 GB) that ParallelEngramEmbedding.forward's F.embedding over the whole table can be served from",
+        "why_needed": "plan section 3.4 decides where the tables live; a host-gather adaptation would have to be declared and is not written"
+      },
+      {
+        "id": "tokenizer_for_compressed_map",
+        "path": "compiler/frontend/deepseek_v41_tokenizer.py",
+        "present": true,
+        "requirement": "a tokenizer NgramHashState.__init__ can build the compressed token map from, asserting 99,092 compressed ids",
+        "why_needed": "every Engram hash multiplier derives from the compressed vocab size, so a mismatch rehashes the whole table"
+      },
+      {
+        "id": "workload_documents",
+        "path": "build/workloads/deepseek-v4.1-flash/index.json",
+        "present": true,
+        "requirement": "the pinned V4.1 workload documents and index",
+        "why_needed": "the prompts the ladder decodes"
+      }
+    ],
+    "selection_rule_that_would_be_used": "greedy_lowest_token_id_argmax",
+    "tokens_produced": 0
+  },
+  "vendor_sources": {
+    "all_match": true,
+    "observed_sha256": {
+      "config.json": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+      "inference/engram.py": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+      "inference/model.py": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+    },
+    "pinned_sha256": {
+      "config.json": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+      "inference/engram.py": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+      "inference/model.py": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+    },
+    "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277"
+  }
+}

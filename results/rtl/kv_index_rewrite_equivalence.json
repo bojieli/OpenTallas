@@ -1,0 +1,33 @@
+{
+ "answer": "yes, on every vector the miter drove",
+ "bench": "rtl/test/tb_a3_kv_index_equiv.sv",
+ "equivalent": true,
+ "not_a_claim": [
+  "this is equivalence over the vectors the BENCH drives, not a formal proof; the bench's own coverage is the strength of the claim",
+  "it says nothing about timing, area or power -- a route says that"
+ ],
+ "question": "does ot_a3_attention_kv_index as it now stands compute what it computed at HEAD~2?",
+ "reference_module": "ot_a3_attention_kv_index_ref",
+ "reference_revision": "HEAD~2",
+ "reference_revision_sha": "8852d04856f83076ba68d4af4f37922578e238fe",
+ "runs": [
+  {
+   "at": 8,
+   "compiled": true,
+   "passed": true,
+   "verdict": "PASS kv_equiv SLOTS=8: 65536 vectors, the reduction tree and the serial accumulate agree on every output"
+  },
+  {
+   "at": 64,
+   "compiled": true,
+   "passed": true,
+   "verdict": "PASS kv_equiv SLOTS=64: 4259 vectors, the reduction tree and the serial accumulate agree on every output"
+  }
+ ],
+ "schema": "opentallas.derived.rtl_rewrite_equivalence.v1",
+ "sources": [
+  "rtl/abi3/ot_a3_engine_pkg.sv",
+  "rtl/abi3/ot_a3_attention_kv_index.sv"
+ ],
+ "top": "ot_a3_attention_kv_index"
+}

@@ -1,0 +1,38 @@
+abi3 (unittest.loader._FailedTest) ... ERROR
+test_cell_reservation_replaces_once_and_not_occupied_area (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_cold_fresh_replay_no_git_or_owner_path (test_model_dsrom_selector_join_admissibility.Joined) ... FAIL
+test_delayed_output_or_UDP_backend_mutant_refused (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_existing_incremental_state_disjoint (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_finite_slot_does_not_silently_hide_clock (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_independent_clock_floor_no_core_omission (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_official_binary_capture_and_reset_mutants_refused (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_source_backend_exception_and_scope_exact (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_source_exact_instance_and_fence_deadline_null (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+test_tracks_guards_and_present_counts_not_physical_credit (test_model_dsrom_selector_join_admissibility.Joined) ... ok
+
+======================================================================
+ERROR: abi3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: abi3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 470, in _find_test_path
+    package = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/abi3/__init__.py", line 31, in <module>
+    from runtime.abi3.capability import Capability
+ModuleNotFoundError: No module named 'runtime.abi3'
+
+
+======================================================================
+FAIL: test_cold_fresh_replay_no_git_or_owner_path (test_model_dsrom_selector_join_admissibility.Joined)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/test_model_dsrom_selector_join_admissibility.py", line 104, in test_cold_fresh_replay_no_git_or_owner_path
+    self.assertEqual(p.read_bytes(),(T.BASE/'model.json').read_bytes())
+AssertionError: b'{\n[12234 chars]n  "slot": {\n    "clock_floor_may_not_borrow_[4139 chars]n}\n' != b'{\n[12234 chars]n  "source_pins": {\n    "results/rtl/dsrom_ba[3624 chars]n}\n'
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.093s
+
+FAILED (failures=1, errors=1)

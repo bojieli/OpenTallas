@@ -1,0 +1,43 @@
+{
+  "actual_token_cycles": null,
+  "artifact_checks": [
+    {
+      "actual_commands_per_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "artifact_sha256": "cb701e3ea43063232272c8f28bf6e53ebf3912406662b9a4f919b2f80b78e43d",
+      "minimum_stack_cycles": 144,
+      "position": 0,
+      "rows": 72
+    },
+    {
+      "actual_commands_per_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "artifact_sha256": "fd2c250d622255597f4aa751362a6b6872338e7dc1ede77ac83ec574abc9159c",
+      "minimum_stack_cycles": 144,
+      "position": 1,
+      "rows": 72
+    }
+  ],
+  "focused_tests": {
+    "passed": 4,
+    "scope": "Regenerates pinned8d68 actualall72writers at both positions; no checkpoint reads",
+    "seconds": 0.37
+  },
+  "old_failure_retained": "review.json",
+  "owner_commits": [
+    "df92353aa78854e0a61ff35863cfa9f218a75f3e",
+    "4e71ed44ba74e35e676aff3e48d5feec7eab932d"
+  ],
+  "physical_provider_bound": false,
+  "schema": "opentallas.parent.qwen-packed-KV-RMW-skew-correction-review.v1",
+  "speed_credit": 0,
+  "verdict": "PASS_SOURCE_BOUND_CORRECTION_NO_HARDWARE_ADMISSION"
+}

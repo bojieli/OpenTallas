@@ -1,0 +1,173 @@
+{
+  "admission": "prepared_not_admitted",
+  "admission_prerequisites": [
+    "all equivalent local/remote jobs absent; allAGI newdispatch disabled",
+    "legacy250 campaign terminal, independently validated and committed archive; failed functional gate blocks measurement-only retry",
+    "clean new source pin and all current model/HDL/golden/runner hashes match this preflight",
+    "new immutable output/build paths; parent coordination required for fleet resources"
+  ],
+  "area": {
+    "basis": "pessimistic DFF accounting for bounded testbench landing FIFOs; hardware macro/slot fit pending; no new engine implementation",
+    "endpoint_fifo_dff_mm2": 1.9564167168000002
+  },
+  "arithmetic": "LAT3 binary32 RNE; package adjacent-pair, fixed pairwise package tree; W19 8-rank aligned subtrees, zero on inactive ranks; BF16 boundary checked separately by golden",
+  "boundaries_bits_pc": {
+    "endpoint": 546,
+    "multicast_aggregate": 26208
+  },
+  "campaign_launched": false,
+  "cases": [
+    {
+      "basis": "serial word admission, two external+two package hops, LAT3 package/tree, 200-stage switch, 64-cycle consumer stall allowance; measured cycles replace this bound only at this scope",
+      "composed_ns_upper_bound": 514957.7777777778,
+      "composed_serial_cycles_upper_bound": 463462,
+      "endpoint_credit_reservation": 1,
+      "mode": 0,
+      "name": "w19_oreduce",
+      "payload_bytes_per_rank": 32768,
+      "physical_bytes_per_rank": 32768,
+      "records_per_endpoint": 512,
+      "words_per_rank": 512
+    },
+    {
+      "basis": "serial word admission, two external+two package hops, LAT3 package/tree, 200-stage switch, 64-cycle consumer stall allowance; measured cycles replace this bound only at this scope",
+      "composed_ns_upper_bound": 5556.666666666667,
+      "composed_serial_cycles_upper_bound": 5001,
+      "endpoint_credit_reservation": 96,
+      "mode": 1,
+      "name": "expert_intermediate",
+      "payload_bytes_per_rank": 288,
+      "physical_bytes_per_rank": 320,
+      "records_per_endpoint": 480,
+      "words_per_rank": 5
+    },
+    {
+      "basis": "serial word admission, two external+two package hops, LAT3 package/tree, 200-stage switch, 64-cycle consumer stall allowance; measured cycles replace this bound only at this scope",
+      "composed_ns_upper_bound": 71125.55555555556,
+      "composed_serial_cycles_upper_bound": 64013,
+      "endpoint_credit_reservation": 96,
+      "mode": 1,
+      "name": "index_candidates",
+      "payload_bytes_per_rank": 4096,
+      "physical_bytes_per_rank": 4096,
+      "records_per_endpoint": 6144,
+      "words_per_rank": 64
+    }
+  ],
+  "clocks": {
+    "hold_uncertainty_ps": 25,
+    "serial_ns": 1.1111111111111112,
+    "setup_uncertainty_ps": 60,
+    "streaming_ns": 0.833
+  },
+  "defaults_unchanged": true,
+  "excluded_claims": [
+    "full-token RTL",
+    "product rate",
+    "hardware adoption",
+    "SS/FF contextual closure"
+  ],
+  "finite_buffers": {
+    "endpoint_records": 128,
+    "endpoint_storage_bits": 6709248,
+    "forwarding_records": 128,
+    "multicast_landing_records": 128,
+    "package_queue_records": 64,
+    "rx_entries": 64,
+    "switch_records_per_port": 512,
+    "tx_entries": 8
+  },
+  "fixture_scope": "Synthetic production-shaped FP32 collective operands, not checkpoint matvec or connected full96 SM runtime. W19 old prerequisites snapshot is retained audit input only; Euler owns accepted256B descriptors and actual producer/result composition.",
+  "fp32_adds_per_serial_cycle": 1520,
+  "hardware_change": "none; only testbench counters, negative checker coverage and admission prerequisites",
+  "lanes": 16,
+  "legacy_source_commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+  "macs_per_cycle": 0,
+  "measurement": {
+    "bits": 64,
+    "campaign_sum_cycles": 532476,
+    "campaign_sum_required_bits": 20,
+    "effective_core_period_ps": 1112,
+    "integer_time": "elapsed_ps = elapsed_cycles * 1112",
+    "legacy_latency": "pending_unqualified; never repaired by this preflight",
+    "max_round_cycles": 463462,
+    "max_round_required_bits": 19,
+    "model_clock_basis": "ideal0.9GHz serial; existing1ps simulation rounds bench period to1112ps. No physical constraint change.",
+    "nominal_timeout_cycles": 7200000,
+    "overflow": "fatal",
+    "protocol_bits": 16,
+    "timeout_required_bits": 23
+  },
+  "model_call": "v41_hbm_n(96, 4, economics, gated_alike, clock_hz=1.2e9)",
+  "model_shape": {
+    "capacity_users_1m": 7763,
+    "dies": 96,
+    "sm_per_die": 32,
+    "stacks_per_die": 4
+  },
+  "mux_demux_fanout": {
+    "endpoint_fanout": 2,
+    "gather_mux_bit_equivalents": 25662,
+    "gather_mux_inputs": 48,
+    "multicast_fanout": 48
+  },
+  "negative_contract": {
+    "actual_RTL_negative_gate": "pending_not_run",
+    "coverage": "Exactly once per die0..95, op0,index0, plus matching NEG_DONE and nonzero expected fatal. Partial/duplicate/wrong-kind/timeout rejected.",
+    "normal_default": "BAD_ORDER=0 and BAD_TAG=0; no datapath, rounding or transport changes",
+    "operations": [
+      "order",
+      "tag"
+    ],
+    "order": "Swap both valid and records on existing switch ports1,2. Witness native1(0x3f800000) vs swapped2(0x40000000) binary32 on every lane; each endpoint checks actual arriving result.",
+    "required_rejecting_endpoints": 96,
+    "tag": "Flip operation bit on leader0 before native CRC TX; expectedop1 arrives through existing switch multicast and partner forwarding at everyendpoint; payload still golden-exact."
+  },
+  "packages": 48,
+  "ports_Bpc": {
+    "endpoint_read": 64,
+    "endpoint_write": 64,
+    "switch_per_port": 64
+  },
+  "ranks": 96,
+  "replicas": {
+    "actual_link_rx": 192,
+    "actual_link_tx": 192,
+    "endpoints": 96,
+    "package_adders": 768,
+    "switch_adders": 752
+  },
+  "routing": {
+    "analytical_fit": true,
+    "basis": "ASSUMED 64um /80nm pitch, four layers; actual hub routing-layer acceptance pending",
+    "capacity_tracks": 3200,
+    "tracks_per_local_duplex_boundary": 1092
+  },
+  "schema": "w15_tp96_measurement_preflight_v1",
+  "scope": "All 96 RTL endpoints, actual bytes; endpoint credit reservation is harness admission, not implemented rank runtime. No switch bandwidth slot compression.",
+  "source_sha256": {
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "results/rtl/w15_tp96_w19_prerequisites_input_20261001.json": "7229fe83f1dd636409e070bb3975dd614656e084998eeb2977902e0e30573ff8",
+    "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
+    "results/uarch/economics_levers.json": "e0992d14d084a80c1cc1ef99cb3561a84b349f9c2c8285111e602b91f2b157df",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+    "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+    "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+    "rtl/test/tb_w15_tp96_exact.sv": "5c2b5685ec3f8aaa4381fdce4ea0125041fd1a96c74bf22f71738485ab37695c",
+    "rtl/test/w15_tp96_measure_counter.sv": "bc4eafc867dca2d3120ba7225b75f339e46595a8ad321185423f40936208e44b",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w15_collectives.py": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a",
+    "tools/w15_tp96_exact.py": "db99494cdef22a64f4fe5ca2461e0232a70f0dee8c4fcff93fb2f4d6f179a048",
+    "tools/w15_tp96_measurement_admission.py": "820490f0d86839f1ddcb89a8c064b19c7e1842a006800d1884e58e6f85cc0d60",
+    "tools/w15_tp96_measurement_preflight.py": "b8dc24a651883674fc3623c70debf922eb7846d18462acb41732cab018777090",
+    "tools/w15_tp96_preflight.py": "43dd83d5452f5fc03d01d16b6151f59186b9619f6744ec0199ba4e3d7f99a587",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+  },
+  "source_tree_base": "5787da6085d1440f2a423af2a8246fc522245f9e"
+}

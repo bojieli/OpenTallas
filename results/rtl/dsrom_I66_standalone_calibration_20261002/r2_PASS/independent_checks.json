@@ -1,0 +1,116 @@
+{
+  "actual_mutant_controls": {
+    "phase_retire_421": {
+      "categories": {
+        "phase_retire": {
+          "extra": 1,
+          "missing": 1
+        }
+      },
+      "expected_events": 322308,
+      "extra_events": 1,
+      "first_extra": [
+        [
+          [
+            "phase_retire",
+            421,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "first_missing": [
+        [
+          [
+            "phase_retire",
+            422,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "missing_events": 1,
+      "nonzero_oracle_mismatches": 0,
+      "observed_events": 322308,
+      "result": "FAIL"
+    },
+    "spine_idle_11": {
+      "categories": {
+        "spine_idle": {
+          "extra": 1,
+          "missing": 1
+        }
+      },
+      "expected_events": 322308,
+      "extra_events": 1,
+      "first_extra": [
+        [
+          [
+            "spine_idle",
+            11,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "first_missing": [
+        [
+          [
+            "spine_idle",
+            421,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "missing_events": 1,
+      "nonzero_oracle_mismatches": 0,
+      "observed_events": 322308,
+      "result": "FAIL"
+    },
+    "spine_idle_420": {
+      "categories": {
+        "spine_idle": {
+          "extra": 1,
+          "missing": 1
+        }
+      },
+      "expected_events": 322308,
+      "extra_events": 1,
+      "first_extra": [
+        [
+          [
+            "spine_idle",
+            420,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "first_missing": [
+        [
+          [
+            "spine_idle",
+            421,
+            -1,
+            -1
+          ],
+          1
+        ]
+      ],
+      "missing_events": 1,
+      "nonzero_oracle_mismatches": 0,
+      "observed_events": 322308,
+      "result": "FAIL"
+    }
+  },
+  "fresh_generator_replay": "BYTE_IDENTICAL",
+  "fresh_preparation": "/tmp/dsrom-I66-retirement-replay-k7dc81xz/preparation",
+  "noncompletion_actual_events_vs_original": "EXACT_COUNTER_EQUAL_EXCLUDING_ORDINAL",
+  "original_FAIL_manifest": "UNCHANGED"
+}

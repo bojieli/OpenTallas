@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.deepseek.hbm.canonical-recalendar-qualification.v2",
+  "source_commit": "6cb02bccaf0e2205f93b6a0a57f81e1fb0772603",
+  "calendar_sha256": "c86fbf9a33f7b8f90d246e81a3c6602d4289d972b806dc2f2756500e27977b04",
+  "legacy_timing_source": "7d1c70523",
+  "legacy_scalar_recipe_record_sha256": "6009d6455953709b460c74a0c60145d6cd0c6355174f1c2229d077de677cb081",
+  "legacy_numerical_proofs_preserved": true,
+  "legacy_INT3_SHFL3_timing_admitted": false,
+  "canonical_basis": "RF2+ADD/MUL/INTadd/FCMP7=9;SHFL5+RF2=7;scalarDIV19coreII1+RF2 active lanes serialized",
+  "fullwarp_DIV_last_RFvisible_after_RFread": 52,
+  "unbound_variants": "AND OR XOR SHR SHL IEQ INE F2I CLZ IMUL MOV WIDEN, plus reconvergence and production service event maps; no zero cost",
+  "ordinary_arithmetic_bindings": 489,
+  "full_program_op_count": 2213,
+  "historical_execution_source": "066dad0094fbba015d447eeea9593ce1cf57bd0a",
+  "historical_execution_SHA": "15ae3e9197c1ad4e2860cb3b127e7c045a5e61c7d15e3186b2b94f85e413e59e",
+  "historical_semantic_callbacks_not_physical": true,
+  "prospective_new_lowering_executed_on_checkpoint": false,
+  "whole_program_physical_admission": "FAIL_CLOSED"
+}

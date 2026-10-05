@@ -1,0 +1,68 @@
+{
+  "origins": [
+    {
+      "archive_path": "inputs/92a6c63b1d3ee8370859a2190111abb2b001c5dc/results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/model.json",
+      "bytes": 22090,
+      "commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+      "path": "results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/model.json",
+      "sha256": "2c3dd3adbca319edb23480ac2e54e6d59f825497e9a44a28c79a1783856f1bed"
+    },
+    {
+      "archive_path": "inputs/92a6c63b1d3ee8370859a2190111abb2b001c5dc/results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/field.json.gz",
+      "bytes": 24580,
+      "commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+      "path": "results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/field.json.gz",
+      "sha256": "54e5fb9576da1dafa53c6a9946a5987b29fbbc430a7d8b88949c2193adb09664"
+    },
+    {
+      "archive_path": "inputs/92a6c63b1d3ee8370859a2190111abb2b001c5dc/results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/macros.json.gz",
+      "bytes": 110475,
+      "commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+      "path": "results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/macros.json.gz",
+      "sha256": "8e66ecb3bf13963f6acfae60e99f2a5d6cbb6120d306159a8cf36bd5014c3b17"
+    },
+    {
+      "archive_path": "inputs/92a6c63b1d3ee8370859a2190111abb2b001c5dc/results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/cfg.json.gz",
+      "bytes": 171580,
+      "commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+      "path": "results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/cfg.json.gz",
+      "sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b"
+    },
+    {
+      "archive_path": "inputs/92a6c63b1d3ee8370859a2190111abb2b001c5dc/results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/bands.json.gz",
+      "bytes": 270,
+      "commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+      "path": "results/uarch/dsrom_I66_terminal_destination_review_20261002/composed-r1/bands.json.gz",
+      "sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3"
+    },
+    {
+      "archive_path": "inputs/c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea/rtl/chip/ot_w15_coll_dma.sv",
+      "bytes": 11631,
+      "commit": "c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea",
+      "path": "rtl/chip/ot_w15_coll_dma.sv",
+      "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab"
+    },
+    {
+      "archive_path": "inputs/c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea/rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "bytes": 71199,
+      "commit": "c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea",
+      "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663"
+    },
+    {
+      "archive_path": "inputs/c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea/rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+      "bytes": 36513,
+      "commit": "c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea",
+      "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+      "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6"
+    },
+    {
+      "archive_path": "inputs/c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea/rtl/chip/ot_coll_topk_merge.sv",
+      "bytes": 16678,
+      "commit": "c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea",
+      "path": "rtl/chip/ot_coll_topk_merge.sv",
+      "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+    }
+  ],
+  "schema": "EXACT_SOURCE_CONTEXT_ARCHIVE_V1"
+}

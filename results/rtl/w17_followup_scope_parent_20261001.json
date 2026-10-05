@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.w17.followup-scope.parent.v1",
+  "source_image_root": "/home/ubuntu/w17work/die/ctx1048576_s20260930",
+  "per_rank": {
+    "r0": {
+      "weights_sha256": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd",
+      "layer_ids": [
+        0
+      ],
+      "program_words": 113,
+      "weight_entries": 28
+    },
+    "r1": {
+      "weights_sha256": "467a32e2ee0784afb547d051ab806f0eac93fe762dfecdee223d285befb42411",
+      "layer_ids": [
+        0
+      ],
+      "program_words": 113,
+      "weight_entries": 28
+    },
+    "r2": {
+      "weights_sha256": "e04e420d42f977ef0ad4c6b4f6b7e86211f589c5d336e5f3770f261ab79b831a",
+      "layer_ids": [
+        0
+      ],
+      "program_words": 113,
+      "weight_entries": 28
+    },
+    "r3": {
+      "weights_sha256": "95a6818a028a96311a1f3e5eef64651bcea42c777df8ed7b7659efe6abccf455",
+      "layer_ids": [
+        0
+      ],
+      "program_words": 113,
+      "weight_entries": 28
+    }
+  },
+  "actual_scope": "Full-shape TP4 layer0 execution and complete layer0 VM comparison only",
+  "full_40_layer_token_qualified": false,
+  "head_qualified": false,
+  "source_is_product_final": false,
+  "adopted": false,
+  "live_followup_directory": "/home/ubuntu/w17-fulltoken-unchanged-20261001-r1",
+  "directory_name_is_not_coverage_evidence": true,
+  "required_next": "After L0 and indexed L20 exact gates, compose and execute all40layers+head using qualified current sources; physical signoff separate",
+  "original_receipts_preserved": true
+}

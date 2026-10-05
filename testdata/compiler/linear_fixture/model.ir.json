@@ -1,0 +1,94 @@
+{
+  "model_id": "fixture.linear_bias.v1",
+  "numeric_profile": "int_exact_fixture_v1",
+  "operations": [
+    {
+      "id": "project",
+      "inputs": [
+        "hidden",
+        "projection_weight"
+      ],
+      "kind": "ROM_MATMUL",
+      "output": "projected"
+    },
+    {
+      "id": "add_bias",
+      "inputs": [
+        "projected",
+        "projection_bias"
+      ],
+      "kind": "VECTOR_ADD",
+      "output": "logits"
+    }
+  ],
+  "outputs": [
+    "logits"
+  ],
+  "schema": "opentallas.semantic_ir.v1",
+  "tensors": [
+    {
+      "dtype": "i8",
+      "id": "hidden",
+      "shape": [
+        1,
+        4
+      ],
+      "storage": "input"
+    },
+    {
+      "dtype": "i8",
+      "id": "projection_weight",
+      "shape": [
+        3,
+        4
+      ],
+      "storage": "rom",
+      "values": [
+        1,
+        2,
+        -1,
+        0,
+        0,
+        -1,
+        3,
+        2,
+        2,
+        0,
+        1,
+        -2
+      ]
+    },
+    {
+      "dtype": "i32",
+      "id": "projection_bias",
+      "shape": [
+        1,
+        3
+      ],
+      "storage": "rom",
+      "values": [
+        1,
+        -3,
+        5
+      ]
+    },
+    {
+      "dtype": "i32",
+      "id": "projected",
+      "shape": [
+        1,
+        3
+      ],
+      "storage": "activation"
+    },
+    {
+      "dtype": "i32",
+      "id": "logits",
+      "shape": [
+        1,
+        3
+      ],
+      "storage": "output"
+    }
+  ]
+}

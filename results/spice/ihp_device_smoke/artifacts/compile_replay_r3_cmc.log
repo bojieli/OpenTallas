@@ -1,0 +1,30 @@
+warning[L015]: call to $simparam in a constant is evaluted before the simulation
+    --> /home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc_macros.include:191:20
+    |
+191 | `define SIMPARSHRI $simparam("shrink",0.0)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^ call to $simparam in a constant
+    |
+    = help: the value of paramaeters like "gmin' or "sourceScaleFactor" may vary between iterations
+    = variant_const_simparam is set to warn by default
+
+warning[L015]: call to $simparam in a constant is evaluted before the simulation
+    --> /home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc_macros.include:192:20
+    |
+192 | `define SIMPARRTHR $simparam("rthresh",1.0e-3)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to $simparam in a constant
+    |
+    = help: the value of paramaeters like "gmin' or "sourceScaleFactor" may vary between iterations
+    = variant_const_simparam is set to warn by default
+
+warning[L015]: call to $simparam in a constant is evaluted before the simulation
+    --> /home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc_macros.include:189:20
+    |
+189 | `define SIMPARIMAX $simparam("imax",1.0)
+    |                    ^^^^^^^^^^^^^^^^^^^^^ call to $simparam in a constant
+    |
+    = help: the value of paramaeters like "gmin' or "sourceScaleFactor" may vary between iterations
+    = variant_const_simparam is set to warn by default
+
+warning: `r3_cmc.va` generated 3 warning
+
+Finished building r3_cmc.va in 0.20s

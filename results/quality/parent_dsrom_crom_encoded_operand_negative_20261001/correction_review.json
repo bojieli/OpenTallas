@@ -1,0 +1,33 @@
+{
+  "baseline_all_four_templates_pass": true,
+  "bound_checkpoint_operands_per_rank": 729,
+  "corrected_source_commit": "bf3c756d8",
+  "encoded_templates_per_rank": 4778,
+  "failed_parent_review_commit": "404c11335",
+  "focused_tests_passed": 16,
+  "full_program_executable": false,
+  "full_token_RTL": false,
+  "generated_Engram_operands_unbound_per_rank": 2,
+  "negative_case_replay": [
+    {
+      "mutant": "CROM_stride_exceeds_tensor",
+      "reason": "decoded CROM extent differs from authoritative binding",
+      "rejected": true
+    },
+    {
+      "mutant": "CROM_source_changed_to_VM",
+      "reason": "encoded CROM source class differs from checkpoint binding",
+      "rejected": true
+    },
+    {
+      "mutant": "CROM_dynamic_address_enabled",
+      "reason": "dynamic or paired addressing on static checkpoint CROM operand",
+      "rejected": true
+    }
+  ],
+  "physical_home_and_port_qualification": false,
+  "schema": "opentallas.parent.dsrom-crom-encoded-operand-correction.v1",
+  "source_template_binaries_changed": false,
+  "token_rate": null,
+  "verdict": "PASS_corrected_encoded_checkpoint_operand_gate"
+}

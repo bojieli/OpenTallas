@@ -1,0 +1,69 @@
+{
+  "lease": {
+    "host": "155.103.253.226",
+    "pid": 2283193,
+    "threads": 8,
+    "slot_gib": 32,
+    "source_head": "796508cad2877dd42238050e3b66afbd81002879",
+    "purpose": "releasedcheckpointQwenKVoperatoronly; nofulltoken/nohardwarejob",
+    "time": 1790983125.8051846,
+    "keeper_host": "ubuntu",
+    "keeper_cwd": "/home/ubuntu/OpenTallas",
+    "keeper_start_ticks": 318798152,
+    "keeper_boot_id": "dd8d7231-d8d5-4f25-bfd4-f3390877d2eb",
+    "keeper_cmdline": "python3 /tmp/h1-qwen-kv-operator-vm-20261002-r1/lease_keeper.py ",
+    "keeper_script_sha256": "f2dc8df6d4cedb1eae5744fd9f4b703263a90f4698e9d18f9a5c6eb81184b16d",
+    "revalidated_at": 1790984615.9062722
+  },
+  "pricing": {
+    "admit": true,
+    "reasons": [],
+    "slot_request_gib": 32,
+    "aggregate_peak_ram_gib": 32,
+    "effective_ram_budget_gib": 96,
+    "live_free_after_peak_gib": 71.92630386352539,
+    "reserved_headroom_gib": 24,
+    "reserved_threads": 0,
+    "observed_compute_threads": 0,
+    "request_threads": 8,
+    "conservative_aggregate_threads": 8,
+    "thread_cap": 48
+  },
+  "observed": {
+    "observed_at": 1790984615.8932056,
+    "total_gib": 125.7047004699707,
+    "free_gib": 103.92630386352539,
+    "load": 0.12109375,
+    "cpus": 64,
+    "compute_threads": 0
+  },
+  "prior_leases": [
+    {
+      "host": "155.103.253.226",
+      "pid": 2283193,
+      "threads": 8,
+      "slot_gib": 32,
+      "source_head": "PENDING_REVIEWED_CLEAN_CAMPAIGN_GO",
+      "purpose": "releasedcheckpointQwenKVoperatoronly; nofulltoken/nohardwarejob",
+      "time": 1790983125.8051846
+    }
+  ],
+  "held_lock_files": [
+    "/tmp/claude-1000/agd_slots/155.103.253.226.1",
+    "/tmp/claude-1000/agd_slots/155.103.253.226.2",
+    "/tmp/claude-1000/agd_slots/155.103.253.226.3",
+    "/tmp/claude-1000/agd_slots/155.103.253.226.4",
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/155.103.253.226.2283193"
+  ],
+  "kernel_slot_owners": {
+    "2283193": [
+      "155.103.253.226.2",
+      "155.103.253.226.3",
+      "155.103.253.226.4",
+      "155.103.253.226.1"
+    ]
+  },
+  "execution_admitted": false,
+  "awaits_parent_source_model_GO": true,
+  "memory_policy": "32GiB scheduling reservation only; no job memory/swap caps; no forcedOOMstop"
+}

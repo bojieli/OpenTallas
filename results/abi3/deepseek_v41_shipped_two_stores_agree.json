@@ -1,0 +1,52 @@
+{
+  "answer": "Shared.  The ROM ARRAY-64 and the ROM WAFER, built from the same graph at the same 8,192-token context and walked on the same 32-token prompt, both emit **305**.  Two independent stores agree with each other and both disagree with the oracle, so the cause is in something both lanes do -- the graph, or a lowering they share -- and not in either store's own machinery.",
+  "not_a_claim": [
+    "neither cell closes: a cell closes on an oracle-matched token and 305 is not 13806",
+    "agreement between two stores does not make either correct; it locates the cause, it does not excuse it",
+    "the array walk cost 5h36m of wall time and 1d02h of CPU for one token, so this instrument is not a loop to iterate a hypothesis in"
+  ],
+  "question": "The shipped V4.1 ROM wafer emits 305 against the oracle's 13806, and the token is prompt-dependent so the input is read.  Is the numeric divergence shared between the two ROM stores, or specific to one of them?",
+  "schema": "opentallas.result.v41_shipped_two_stores_agree.v1",
+  "state_of_the_three_v41_cells": {
+    "closed": 0,
+    "hbm": "does not build: the program names 2,442 distinct completion levels against a 2,048-entry hardware scoreboard, and ABI 3.0 events are single-assignment levels so the count cannot be recycled down",
+    "rom_array_64": "executes on the SHIPPED vehicle, 32-token prefill, emits 305, disagrees",
+    "rom_wafer": "executes on the SHIPPED vehicle, 32-token prefill, emits 305, disagrees"
+  },
+  "the_decode_blocker_is_also_shared_and_scales_with_the_lane": {
+    "array_64": "GROUPED_CONCAT output view 2679 dims (128, 512) vs concatenation (384, 512)",
+    "reading": "Same operator, same shape of failure, and the row counts differ exactly as the lanes' compressed planes do: 4,224 = 128 + 4,096 on the wafer and 384 = 128 + 256 on the 64-node array, while BOTH outputs resolve to the 128-row window.  That is one defect -- the phase-split join's output declared as the window alone -- rendered at two shardings, which is stronger evidence for that reading than either lane alone.",
+    "wafer": "GROUPED_CONCAT output view 2655 dims (128, 512) vs concatenation (4224, 512)"
+  },
+  "the_two_walks": {
+    "oracle": [
+      13806,
+      345,
+      7472,
+      49665
+    ],
+    "rom_array_64": {
+      "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+      "decode_failure": "decode step 1 failed: GROUPED_CONCAT output view 2679 dims (128, 512) differ from the axis-0 concatenation (384, 512)",
+      "decode_steps": 1,
+      "deployment": "v41_array_c8192",
+      "emitted": [
+        305
+      ],
+      "prefill_tokens": 32,
+      "wall_seconds": 21592.0
+    },
+    "rom_wafer": {
+      "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+      "decode_failure": "decode step 1 failed: GROUPED_CONCAT output view 2655 dims (128, 512) differ from the axis-0 concatenation (4224, 512)",
+      "decode_steps": 1,
+      "deployment": "v41_wafer_c8192",
+      "emitted": [
+        305
+      ],
+      "prefill_tokens": 32,
+      "wall_seconds": 7241.0
+    }
+  },
+  "why_the_agreement_is_evidence": "The wafer is a 2-node logical device and the array is 64 nodes; their programs, descriptor tables, memory geometry and link plans differ throughout, and they are produced by different backend entry points.  A defect in one lane's addressing, sharding or collectives would not reproduce the OTHER lane's token exactly.  Agreeing on 305 therefore points upstream of both."
+}

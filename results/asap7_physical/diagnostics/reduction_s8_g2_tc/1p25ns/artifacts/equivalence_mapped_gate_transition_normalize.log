@@ -1,0 +1,702 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/equivalence_mapped_gate_transition_normalize.ys' --
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+Imported 42 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+Imported 37 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Ignoring cell ICGx1_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx3_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5p33DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx6p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx8DC_ASAP7_75t_R with missing function on output IQ.
+Imported 23 cell types from liberty file.
+<suppressed ~2 debug messages>
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /work/results/asap7/opentallas_reduction_s8_g2_tc/base/1_2_yosys.v
+Parsing Verilog input from `/work/results/asap7/opentallas_reduction_s8_g2_tc/base/1_2_yosys.v' to AST representation.
+Generating RTLIL representation for module `\ot_reduction_endpoint'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_reduction_endpoint
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \DFFHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \HAxp5_ASAP7_75t_R
+Used module:     \FAx1_ASAP7_75t_R
+Used module:     \AO21x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \OR2x2_ASAP7_75t_R
+Used module:     \AO22x1_ASAP7_75t_R
+Used module:     \NOR2x1_ASAP7_75t_R
+Used module:     \OA211x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \AOI221x1_ASAP7_75t_R
+Used module:     \OR4x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+Used module:     \OA31x2_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \OAI21x1_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \AOI211x1_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \AO31x2_ASAP7_75t_R
+Used module:     \XOR2x2_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \AND5x1_ASAP7_75t_R
+Used module:     \OR5x1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \AO211x2_ASAP7_75t_R
+Used module:     \NAND3x1_ASAP7_75t_R
+Used module:     \AO221x1_ASAP7_75t_R
+Used module:     \AO32x1_ASAP7_75t_R
+Used module:     \BUFx3_ASAP7_75t_R
+Used module:     \NOR2x2_ASAP7_75t_R
+Used module:     \OAI22x1_ASAP7_75t_R
+Used module:     \OA22x2_ASAP7_75t_R
+Used module:     \OA222x2_ASAP7_75t_R
+Used module:     \AO222x2_ASAP7_75t_R
+Used module:     \AOI22x1_ASAP7_75t_R
+Used module:     \OA221x2_ASAP7_75t_R
+Used module:     \NOR3x1_ASAP7_75t_R
+Used module:     \OA33x2_ASAP7_75t_R
+Used module:     \AO21x2_ASAP7_75t_R
+Used module:     \AND2x4_ASAP7_75t_R
+Used module:     \BUFx6f_ASAP7_75t_R
+Used module:     \OR4x2_ASAP7_75t_R
+Used module:     \XOR2x1_ASAP7_75t_R
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_reduction_endpoint
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \DFFHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \HAxp5_ASAP7_75t_R
+Used module:     \FAx1_ASAP7_75t_R
+Used module:     \AO21x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \OR2x2_ASAP7_75t_R
+Used module:     \AO22x1_ASAP7_75t_R
+Used module:     \NOR2x1_ASAP7_75t_R
+Used module:     \OA211x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \AOI221x1_ASAP7_75t_R
+Used module:     \OR4x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+Used module:     \OA31x2_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \OAI21x1_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \AOI211x1_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \AO31x2_ASAP7_75t_R
+Used module:     \XOR2x2_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \AND5x1_ASAP7_75t_R
+Used module:     \OR5x1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \AO211x2_ASAP7_75t_R
+Used module:     \NAND3x1_ASAP7_75t_R
+Used module:     \AO221x1_ASAP7_75t_R
+Used module:     \AO32x1_ASAP7_75t_R
+Used module:     \BUFx3_ASAP7_75t_R
+Used module:     \NOR2x2_ASAP7_75t_R
+Used module:     \OAI22x1_ASAP7_75t_R
+Used module:     \OA22x2_ASAP7_75t_R
+Used module:     \OA222x2_ASAP7_75t_R
+Used module:     \AO222x2_ASAP7_75t_R
+Used module:     \AOI22x1_ASAP7_75t_R
+Used module:     \OA221x2_ASAP7_75t_R
+Used module:     \NOR3x1_ASAP7_75t_R
+Used module:     \OA33x2_ASAP7_75t_R
+Used module:     \AO21x2_ASAP7_75t_R
+Used module:     \AND2x4_ASAP7_75t_R
+Used module:     \BUFx6f_ASAP7_75t_R
+Used module:     \OR4x2_ASAP7_75t_R
+Used module:     \XOR2x1_ASAP7_75t_R
+Removing unused module `\XOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XNOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XNOR2x1_ASAP7_75t_R'.
+Removing unused module `\TIELOx1_ASAP7_75t_R'.
+Removing unused module `\OR5x2_ASAP7_75t_R'.
+Removing unused module `\OR3x4_ASAP7_75t_R'.
+Removing unused module `\OR3x2_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\OR2x4_ASAP7_75t_R'.
+Removing unused module `\NOR5xp2_ASAP7_75t_R'.
+Removing unused module `\NOR4xp75_ASAP7_75t_R'.
+Removing unused module `\NOR4xp25_ASAP7_75t_R'.
+Removing unused module `\NOR3xp33_ASAP7_75t_R'.
+Removing unused module `\NOR3x2_ASAP7_75t_R'.
+Removing unused module `\NOR2xp67_ASAP7_75t_R'.
+Removing unused module `\NOR2xp33_ASAP7_75t_R'.
+Removing unused module `\NOR2x1p5_ASAP7_75t_R'.
+Removing unused module `\NAND5xp2_ASAP7_75t_R'.
+Removing unused module `\NAND4xp75_ASAP7_75t_R'.
+Removing unused module `\NAND4xp25_ASAP7_75t_R'.
+Removing unused module `\NAND3xp33_ASAP7_75t_R'.
+Removing unused module `\NAND3x2_ASAP7_75t_R'.
+Removing unused module `\NAND2xp67_ASAP7_75t_R'.
+Removing unused module `\NAND2xp5_ASAP7_75t_R'.
+Removing unused module `\NAND2xp33_ASAP7_75t_R'.
+Removing unused module `\NAND2x2_ASAP7_75t_R'.
+Removing unused module `\NAND2x1p5_ASAP7_75t_R'.
+Removing unused module `\MAJx3_ASAP7_75t_R'.
+Removing unused module `\MAJx2_ASAP7_75t_R'.
+Removing unused module `\MAJIxp5_ASAP7_75t_R'.
+Removing unused module `\AND5x2_ASAP7_75t_R'.
+Removing unused module `\AND4x2_ASAP7_75t_R'.
+Removing unused module `\AND3x4_ASAP7_75t_R'.
+Removing unused module `\AND3x2_ASAP7_75t_R'.
+Removing unused module `\AND2x6_ASAP7_75t_R'.
+Removing unused module `\SDFLx4_ASAP7_75t_R'.
+Removing unused module `\SDFLx3_ASAP7_75t_R'.
+Removing unused module `\SDFLx2_ASAP7_75t_R'.
+Removing unused module `\SDFLx1_ASAP7_75t_R'.
+Removing unused module `\SDFHx4_ASAP7_75t_R'.
+Removing unused module `\SDFHx3_ASAP7_75t_R'.
+Removing unused module `\SDFHx2_ASAP7_75t_R'.
+Removing unused module `\SDFHx1_ASAP7_75t_R'.
+Removing unused module `\DLLx3_ASAP7_75t_R'.
+Removing unused module `\DLLx2_ASAP7_75t_R'.
+Removing unused module `\DLLx1_ASAP7_75t_R'.
+Removing unused module `\DHLx3_ASAP7_75t_R'.
+Removing unused module `\DHLx2_ASAP7_75t_R'.
+Removing unused module `\DHLx1_ASAP7_75t_R'.
+Removing unused module `\DFFLQx4_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFHQx4_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx2_ASAP7_75t_R'.
+Removing unused module `\OAI33xp33_ASAP7_75t_R'.
+Removing unused module `\OAI333xp33_ASAP7_75t_R'.
+Removing unused module `\OAI332xp33_ASAP7_75t_R'.
+Removing unused module `\OAI331xp33_ASAP7_75t_R'.
+Removing unused module `\OAI32xp33_ASAP7_75t_R'.
+Removing unused module `\OAI322xp33_ASAP7_75t_R'.
+Removing unused module `\OAI321xp33_ASAP7_75t_R'.
+Removing unused module `\OAI31xp67_ASAP7_75t_R'.
+Removing unused module `\OAI31xp33_ASAP7_75t_R'.
+Removing unused module `\OAI311xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22xp5_ASAP7_75t_R'.
+Removing unused module `\OAI22xp33_ASAP7_75t_R'.
+Removing unused module `\OAI222xp33_ASAP7_75t_R'.
+Removing unused module `\OAI221xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp33_ASAP7_75t_R'.
+Removing unused module `\OAI211xp5_ASAP7_75t_R'.
+Removing unused module `\OA333x2_ASAP7_75t_R'.
+Removing unused module `\OA333x1_ASAP7_75t_R'.
+Removing unused module `\OA332x2_ASAP7_75t_R'.
+Removing unused module `\OA332x1_ASAP7_75t_R'.
+Removing unused module `\OA331x2_ASAP7_75t_R'.
+Removing unused module `\OA331x1_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Removing unused module `\INVxp67_ASAP7_75t_R'.
+Removing unused module `\INVxp33_ASAP7_75t_R'.
+Removing unused module `\INVx8_ASAP7_75t_R'.
+Removing unused module `\INVx6_ASAP7_75t_R'.
+Removing unused module `\INVx5_ASAP7_75t_R'.
+Removing unused module `\INVx4_ASAP7_75t_R'.
+Removing unused module `\INVx3_ASAP7_75t_R'.
+Removing unused module `\INVx2_ASAP7_75t_R'.
+Removing unused module `\INVx13_ASAP7_75t_R'.
+Removing unused module `\INVx11_ASAP7_75t_R'.
+Removing unused module `\HB4xp67_ASAP7_75t_R'.
+Removing unused module `\HB3xp67_ASAP7_75t_R'.
+Removing unused module `\HB2xp67_ASAP7_75t_R'.
+Removing unused module `\HB1xp67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx9p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx8_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx6p67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx5p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx20_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx16_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx14_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx12_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx11_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx10_ASAP7_75t_R'.
+Removing unused module `\BUFx8_ASAP7_75t_R'.
+Removing unused module `\BUFx5_ASAP7_75t_R'.
+Removing unused module `\BUFx4f_ASAP7_75t_R'.
+Removing unused module `\BUFx4_ASAP7_75t_R'.
+Removing unused module `\BUFx24_ASAP7_75t_R'.
+Removing unused module `\BUFx16f_ASAP7_75t_R'.
+Removing unused module `\BUFx12f_ASAP7_75t_R'.
+Removing unused module `\BUFx12_ASAP7_75t_R'.
+Removing unused module `\BUFx10_ASAP7_75t_R'.
+Removing unused module `\AOI33xp33_ASAP7_75t_R'.
+Removing unused module `\AOI333xp33_ASAP7_75t_R'.
+Removing unused module `\AOI332xp33_ASAP7_75t_R'.
+Removing unused module `\AOI331xp33_ASAP7_75t_R'.
+Removing unused module `\AOI32xp33_ASAP7_75t_R'.
+Removing unused module `\AOI322xp5_ASAP7_75t_R'.
+Removing unused module `\AOI321xp33_ASAP7_75t_R'.
+Removing unused module `\AOI31xp67_ASAP7_75t_R'.
+Removing unused module `\AOI31xp33_ASAP7_75t_R'.
+Removing unused module `\AOI311xp33_ASAP7_75t_R'.
+Removing unused module `\AOI22xp5_ASAP7_75t_R'.
+Removing unused module `\AOI22xp33_ASAP7_75t_R'.
+Removing unused module `\AOI222xp33_ASAP7_75t_R'.
+Removing unused module `\AOI221xp5_ASAP7_75t_R'.
+Removing unused module `\AOI21xp5_ASAP7_75t_R'.
+Removing unused module `\AOI21xp33_ASAP7_75t_R'.
+Removing unused module `\AOI211xp5_ASAP7_75t_R'.
+Removing unused module `\AO33x2_ASAP7_75t_R'.
+Removing unused module `\AO333x2_ASAP7_75t_R'.
+Removing unused module `\AO333x1_ASAP7_75t_R'.
+Removing unused module `\AO332x2_ASAP7_75t_R'.
+Removing unused module `\AO332x1_ASAP7_75t_R'.
+Removing unused module `\AO331x2_ASAP7_75t_R'.
+Removing unused module `\AO331x1_ASAP7_75t_R'.
+Removing unused module `\AO32x2_ASAP7_75t_R'.
+Removing unused module `\AO322x2_ASAP7_75t_R'.
+Removing unused module `\AO22x2_ASAP7_75t_R'.
+Removing unused module `\AO221x2_ASAP7_75t_R'.
+Removing unused module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Removing unused module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Removed 144 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module BUFx3_ASAP7_75t_R.
+Optimizing module BUFx2_ASAP7_75t_R.
+Optimizing module OA221x2_ASAP7_75t_R.
+Optimizing module OA21x2_ASAP7_75t_R.
+Optimizing module OA211x2_ASAP7_75t_R.
+Optimizing module DFFASRHQNx1_ASAP7_75t_R.
+Optimizing module AND2x2_ASAP7_75t_R.
+Optimizing module NAND3x1_ASAP7_75t_R.
+Optimizing module OR4x1_ASAP7_75t_R.
+Optimizing module XNOR2x2_ASAP7_75t_R.
+Optimizing module NOR3x1_ASAP7_75t_R.
+Optimizing module XOR2x2_ASAP7_75t_R.
+Optimizing module OR3x1_ASAP7_75t_R.
+Optimizing module NAND2x1_ASAP7_75t_R.
+Optimizing module NOR2x2_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module XOR2x1_ASAP7_75t_R.
+Optimizing module NOR2x1_ASAP7_75t_R.
+Optimizing module HAxp5_ASAP7_75t_R.
+Optimizing module AOI22x1_ASAP7_75t_R.
+Optimizing module OAI22x1_ASAP7_75t_R.
+Optimizing module FAx1_ASAP7_75t_R.
+Optimizing module AOI221x1_ASAP7_75t_R.
+Optimizing module TIEHIx1_ASAP7_75t_R.
+Optimizing module AND5x1_ASAP7_75t_R.
+Optimizing module AOI21x1_ASAP7_75t_R.
+Optimizing module OR2x2_ASAP7_75t_R.
+Optimizing module AOI211x1_ASAP7_75t_R.
+Optimizing module OAI21x1_ASAP7_75t_R.
+Optimizing module AND4x1_ASAP7_75t_R.
+Optimizing module OA33x2_ASAP7_75t_R.
+Optimizing module ot_reduction_endpoint.
+Optimizing module OR5x1_ASAP7_75t_R.
+Optimizing module AND3x1_ASAP7_75t_R.
+Optimizing module OR4x2_ASAP7_75t_R.
+Optimizing module AND2x4_ASAP7_75t_R.
+Optimizing module AO32x1_ASAP7_75t_R.
+Optimizing module DFFHQNx1_ASAP7_75t_R.
+Optimizing module AO31x2_ASAP7_75t_R.
+Optimizing module BUFx6f_ASAP7_75t_R.
+Optimizing module AO22x1_ASAP7_75t_R.
+Optimizing module AO222x2_ASAP7_75t_R.
+Optimizing module OA31x2_ASAP7_75t_R.
+Optimizing module AO221x1_ASAP7_75t_R.
+Optimizing module AO21x2_ASAP7_75t_R.
+Optimizing module AO21x1_ASAP7_75t_R.
+Optimizing module AO211x2_ASAP7_75t_R.
+Optimizing module OA22x2_ASAP7_75t_R.
+Optimizing module OA222x2_ASAP7_75t_R.
+
+9. Executing MEMORY pass.
+
+9.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+9.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+9.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+9.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+9.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+9.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \BUFx3_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFASRHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \HAxp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \FAx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIEHIx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI211x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA33x2_ASAP7_75t_R..
+Finding unused cells or wires in module \ot_reduction_endpoint..
+Finding unused cells or wires in module \OR5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x1_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx6f_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA222x2_ASAP7_75t_R..
+Removed 5 unused cells and 49 unused wires.
+<suppressed ~51 debug messages>
+
+9.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+9.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+9.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \BUFx3_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFASRHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \HAxp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \FAx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIEHIx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI211x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA33x2_ASAP7_75t_R..
+Finding unused cells or wires in module \ot_reduction_endpoint..
+Finding unused cells or wires in module \OR5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x1_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx6f_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA222x2_ASAP7_75t_R..
+
+9.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+9.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing FLATTEN pass (flatten design).
+Deleting now unused module BUFx3_ASAP7_75t_R.
+Deleting now unused module BUFx2_ASAP7_75t_R.
+Deleting now unused module OA221x2_ASAP7_75t_R.
+Deleting now unused module OA21x2_ASAP7_75t_R.
+Deleting now unused module OA211x2_ASAP7_75t_R.
+Deleting now unused module DFFASRHQNx1_ASAP7_75t_R.
+Deleting now unused module AND2x2_ASAP7_75t_R.
+Deleting now unused module NAND3x1_ASAP7_75t_R.
+Deleting now unused module OR4x1_ASAP7_75t_R.
+Deleting now unused module XNOR2x2_ASAP7_75t_R.
+Deleting now unused module NOR3x1_ASAP7_75t_R.
+Deleting now unused module XOR2x2_ASAP7_75t_R.
+Deleting now unused module OR3x1_ASAP7_75t_R.
+Deleting now unused module NAND2x1_ASAP7_75t_R.
+Deleting now unused module NOR2x2_ASAP7_75t_R.
+Deleting now unused module INVx1_ASAP7_75t_R.
+Deleting now unused module XOR2x1_ASAP7_75t_R.
+Deleting now unused module NOR2x1_ASAP7_75t_R.
+Deleting now unused module HAxp5_ASAP7_75t_R.
+Deleting now unused module AOI22x1_ASAP7_75t_R.
+Deleting now unused module OAI22x1_ASAP7_75t_R.
+Deleting now unused module FAx1_ASAP7_75t_R.
+Deleting now unused module AOI221x1_ASAP7_75t_R.
+Deleting now unused module TIEHIx1_ASAP7_75t_R.
+Deleting now unused module AND5x1_ASAP7_75t_R.
+Deleting now unused module AOI21x1_ASAP7_75t_R.
+Deleting now unused module OR2x2_ASAP7_75t_R.
+Deleting now unused module AOI211x1_ASAP7_75t_R.
+Deleting now unused module OAI21x1_ASAP7_75t_R.
+Deleting now unused module AND4x1_ASAP7_75t_R.
+Deleting now unused module OA33x2_ASAP7_75t_R.
+Deleting now unused module OR5x1_ASAP7_75t_R.
+Deleting now unused module AND3x1_ASAP7_75t_R.
+Deleting now unused module OR4x2_ASAP7_75t_R.
+Deleting now unused module AND2x4_ASAP7_75t_R.
+Deleting now unused module AO32x1_ASAP7_75t_R.
+Deleting now unused module DFFHQNx1_ASAP7_75t_R.
+Deleting now unused module AO31x2_ASAP7_75t_R.
+Deleting now unused module BUFx6f_ASAP7_75t_R.
+Deleting now unused module AO22x1_ASAP7_75t_R.
+Deleting now unused module AO222x2_ASAP7_75t_R.
+Deleting now unused module OA31x2_ASAP7_75t_R.
+Deleting now unused module AO221x1_ASAP7_75t_R.
+Deleting now unused module AO21x2_ASAP7_75t_R.
+Deleting now unused module AO21x1_ASAP7_75t_R.
+Deleting now unused module AO211x2_ASAP7_75t_R.
+Deleting now unused module OA22x2_ASAP7_75t_R.
+Deleting now unused module OA222x2_ASAP7_75t_R.
+<suppressed ~6747 debug messages>
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+Removed 20 unused cells and 6733 unused wires.
+<suppressed ~25 debug messages>
+
+12. Executing ASYNC2SYNC pass.
+Replacing ot_reduction_endpoint.$flatten\seen[1][4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[0][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[0][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\poison_mem[1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\poison_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\poison_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\poison_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\poison_mem[1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\poison_mem[0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\poison_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\poison_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\poison_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\poison_mem[0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_valid$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_valid$_DFF_PN0_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[9]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[9]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[9]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[8]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[8]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[8]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[15]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[15]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[15]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[14]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[14]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[14]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[13]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[13]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[13]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[12]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[12]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[12]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[11]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[11]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[11]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[10]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[10]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[10]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_tag[0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_tag[0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_tag[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_tag[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_tag[0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_poison$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_poison$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_poison$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_poison$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_poison$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[9]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[9]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[9]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[8]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[8]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[8]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[31]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[31]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[31]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[31]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[31]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[30]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[30]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[30]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[30]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[30]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[29]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[29]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[29]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[29]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[29]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[28]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[28]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[28]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[28]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[28]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[27]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[27]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[27]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[27]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[27]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[26]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[26]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[26]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[26]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[26]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[25]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[25]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[25]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[25]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[25]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[24]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[24]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[24]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[24]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[24]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[23]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[23]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[23]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[23]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[23]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[22]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[22]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[22]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[22]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[22]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[21]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[21]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[21]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[21]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[21]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[20]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[20]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[20]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[20]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[20]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[19]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[19]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[19]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[19]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[19]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[18]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[18]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[18]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[18]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[18]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[17]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[17]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[17]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[17]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[17]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[16]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[16]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[16]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[16]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[16]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[15]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[15]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[15]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[14]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[14]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[14]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[13]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[13]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[13]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[12]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[12]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[12]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[11]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[11]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[11]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[10]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[10]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[10]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\out_data[0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_data[0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_data[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_data[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_data[0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\last_mem[1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\last_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\last_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\last_mem[1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\last_mem[1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\last_mem[0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\last_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\last_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\last_mem[0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\last_mem[0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_valid[1]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_valid[1]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_valid[1]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_valid[1]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_valid[1]$_DFF_PN0_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_valid[0]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_valid[0]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_valid[0]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_valid[0]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_valid[0]$_DFF_PN0_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][9]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][9]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][9]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][8]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][8]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][8]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][15]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][15]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][15]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][14]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][14]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][14]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][13]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][13]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][13]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][12]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][12]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][12]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][11]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][11]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][11]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][10]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][10]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][10]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[1][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[1][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][9]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][9]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][9]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][9]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][8]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][8]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][8]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][8]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][4]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][4]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][4]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][3]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][3]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][3]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][2]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][2]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][2]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][1]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][1]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][1]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][15]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][15]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][15]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][15]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][14]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][14]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][14]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][14]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][13]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][13]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][13]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][13]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][12]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][12]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][12]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][12]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][11]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][11]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][11]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][11]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][10]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][10]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][10]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][10]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\group_tag[0][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\group_tag[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\group_tag[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\group_tag[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\group_tag[0][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\expected[1][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\expected[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\expected[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\expected[1][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\expected[1][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\expected[0][0]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\expected[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\expected[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\expected[0][0]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\expected[0][0]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\duplicate_error$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\duplicate_error$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\duplicate_error$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\duplicate_error$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\duplicate_error$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][5]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][5]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][5]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][6]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][6]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][6]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\seen[1][7]$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\seen[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\seen[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\seen[1][7]$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\seen[1][7]$_DFFE_PN0P_.IQN
+Replacing ot_reduction_endpoint.$flatten\unexpected_error$_DFFE_PN0P_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\unexpected_error$_DFFE_PN0P_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\unexpected_error$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\unexpected_error$_DFFE_PN0P_.$auto$rtlil.cc:3504:NotGate$2848, Q=\unexpected_error$_DFFE_PN0P_.IQN
+
+13. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+14. Executing TECHMAP pass (map to technology primitives).
+
+14.1. Executing Verilog-2005 frontend: /work/fine_to_coarse.v
+Parsing Verilog input from `/work/fine_to_coarse.v' to AST representation.
+Generating RTLIL representation for module `$_DFF_P_'.
+Generating RTLIL representation for module `$_DFF_N_'.
+Successfully finished Verilog frontend.
+
+14.2. Continuing TECHMAP pass.
+Using template $_DFF_P_ for cells of type $_DFF_P_.
+No more expansions possible.
+<suppressed ~624 debug messages>
+
+15. Executing SPLITNETS pass (splitting up multi-bit signals).
+
+16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+Removed 0 unused cells and 1860 unused wires.
+<suppressed ~1 debug messages>
+
+17. Executing CHECK pass (checking for obvious problems).
+Checking module ot_reduction_endpoint...
+Found and reported 0 problems.
+
+18. Executing RTLIL backend.
+Output filename: /work/equivalence_mapped_gate_transition_normalized.il
+
+19. Executing JSON backend.
+
+End of script. Logfile hash: b898e2a304, time: 1.02s, user: 1.33s, system: 0.06s, MEM: 111.45 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 29% 4x opt_clean (0 sec), 21% 10x read_liberty (0 sec), ...

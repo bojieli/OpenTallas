@@ -1,0 +1,207 @@
+{
+  "scope": "Existing WINDOW LA stage measurements collected; current source hookup emitted only",
+  "archived_source_commit": "9112dd8ee3775f447fb917bda9e9046b9a87fcd5",
+  "archived_cases": 352,
+  "archived_cases_pass": 352,
+  "position": 1048575,
+  "model_clock_ps": 833,
+  "component_boundary": "WINDOW source -> K mux -> karb -> wide wmux -> HBM stack -> staged rows -> merge",
+  "archived_operand_scope": "127 representative synthetic prior rows plus golden current-row bytes supplied to historical byte-transport bench; NOT native-produced current row or I55",
+  "current_source_qualified": false,
+  "native_I55_selected": false,
+  "SS_FF_qualified": false,
+  "source_comparison": [
+    {
+      "path": "rtl/chip/ot_dsrom_window_stream_la.sv",
+      "archived_run_sha256": "1f12dd61d8a986c21c9a8d64d59664172d1cd3414962ac01d2c86ab27b5019fa",
+      "current_sha256": "1f12dd61d8a986c21c9a8d64d59664172d1cd3414962ac01d2c86ab27b5019fa",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv",
+      "archived_run_sha256": "45efc7372715e87308e9abdb5fb391354375c3b45323e56a2a7c239f9dfbd4f8",
+      "current_sha256": "45efc7372715e87308e9abdb5fb391354375c3b45323e56a2a7c239f9dfbd4f8",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
+      "archived_run_sha256": "649110ca45ce9ccc303ddbc3dddcc55815e0d794d1280ea0b665df2931311f5e",
+      "current_sha256": "649110ca45ce9ccc303ddbc3dddcc55815e0d794d1280ea0b665df2931311f5e",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+      "archived_run_sha256": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+      "current_sha256": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_window_retention.sv",
+      "archived_run_sha256": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+      "current_sha256": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+      "archived_run_sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+      "current_sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_window_stage4.sv",
+      "archived_run_sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+      "current_sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_window_stream.sv",
+      "archived_run_sha256": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89",
+      "current_sha256": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+      "archived_run_sha256": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+      "current_sha256": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/c8/ot_chip_v41x_kv_rope_reqmux_c8.sv",
+      "archived_run_sha256": "9ffd5df82f4a7c70ce8fac700fa045d9c1c354f822eb16b796717424fa181a75",
+      "current_sha256": "9ffd5df82f4a7c70ce8fac700fa045d9c1c354f822eb16b796717424fa181a75",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/c8/ot_chip_v41x_kv_reqmux_c8.sv",
+      "archived_run_sha256": "4c631434ad83256f0237e3030a04de57af52a0b28062a36be48de860b8702489",
+      "current_sha256": "4c631434ad83256f0237e3030a04de57af52a0b28062a36be48de860b8702489",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+      "archived_run_sha256": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+      "current_sha256": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+      "equal": true
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+      "archived_run_sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
+      "current_sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/c8/ot_hdc_v41x_idx_hbm_c8.sv",
+      "archived_run_sha256": "9bc17f3a1bb5e2a6460ac12fb3084561af5e6786d3b51716b0d1aa1f4cf93845",
+      "current_sha256": "9bc17f3a1bb5e2a6460ac12fb3084561af5e6786d3b51716b0d1aa1f4cf93845",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_kgather.sv",
+      "archived_run_sha256": "0d4b41add2e98afde8503d5393d642fdc6e3c367de299631ce9758d3473eb01c",
+      "current_sha256": "0d4b41add2e98afde8503d5393d642fdc6e3c367de299631ce9758d3473eb01c",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv",
+      "archived_run_sha256": "cf171ef4f5d1e0214caef83f528fa499e0f990ab4136787ba80485f0bfdc0f51",
+      "current_sha256": "cf171ef4f5d1e0214caef83f528fa499e0f990ab4136787ba80485f0bfdc0f51",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv",
+      "archived_run_sha256": "6dff79412d7472f4c168d2eb1c57031555975c09e83cef0e9a0e95c1e9061b47",
+      "current_sha256": "acb0239e7efe013a8b7de891abcf200963a83d8d997fa4cf950a521fb94d378f",
+      "equal": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv",
+      "archived_run_sha256": "df6c3c7983c33cfb0c741049c8aae373c56939bc64f9e13a88880026dc59e5d7",
+      "current_sha256": "9aae6031f31cff1292171d7dee225aac783d6d16025cb2563b0b1c5dd2d977ac",
+      "equal": false
+    },
+    {
+      "path": "rtl/test/dsrom_sys/s81_window_la/tb_dsrom_s81_window_la.sv",
+      "archived_run_sha256": "e7cb9a9a51e6b0cfdf3cb5832c653ed2eabccfdb7511734df5323460fb852fea",
+      "current_sha256": "e7cb9a9a51e6b0cfdf3cb5832c653ed2eabccfdb7511734df5323460fb852fea",
+      "equal": true
+    },
+    {
+      "path": "tools/dsrom_s81_window_la.py",
+      "archived_run_sha256": "c714bb44d571e7614ef6cbffa1dbe7ff8417a1b64e97cef2b0e554576b9eb9a9",
+      "current_sha256": "3a3710496859dc1b2a127b4ace144484c63f2d3fd6dd7ccc7b5b0db3233a36fb",
+      "equal": false
+    }
+  ],
+  "retained_binaries": [
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_asbuilt_c1/Vtb_dsrom_s81_window_la",
+      "sha256": "5d64d03ca01769b1d996650ee1f25f956821d2bbbc6953519cdda5dbf78fc2cf",
+      "bytes": 1355880
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_asbuilt_c8/Vtb_dsrom_s81_window_la",
+      "sha256": "23380100cfafe657d7527e34f3adb8297178c6f024b4c8b80876695a6a193b43",
+      "bytes": 1355880
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_asbuilt_c8_scan/Vtb_dsrom_s81_window_la",
+      "sha256": "8d45a9c6f56c54c394dbbda403a16da7685a1d5be4d710609aa5fff914e43ae8",
+      "bytes": 1400936
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la/Vtb_dsrom_s81_window_la",
+      "sha256": "f53871c6a99580a1d7d9304411499d04a5da70fa3bb9ad58894366f20058918f",
+      "bytes": 4092344
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la_bg/Vtb_dsrom_s81_window_la",
+      "sha256": "ac6b295bd1d1adbfe9c520861fadd9c02bd9dbdc9b52316327369c314674df61",
+      "bytes": 4137400
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la_kg_p1/Vtb_dsrom_s81_window_la",
+      "sha256": "1fa8b002336315e3948299b42584c1d1b0c5d9091f1fdfa6329d4da428d9d93c",
+      "bytes": 5018360
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la_kg_p2/Vtb_dsrom_s81_window_la",
+      "sha256": "e915ef23aadda6777a10c5bb4cb88ad34c0a81e103509c22b6e3f6483ca83e5c",
+      "bytes": 5018360
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la_kgcon_p2/Vtb_dsrom_s81_window_la",
+      "sha256": "6722ef17a4242f8dafc535635ac4092c315bff33864cc35c15d82e6f1959ce09",
+      "bytes": 5018360
+    },
+    {
+      "path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/out3/obj_la_scan/Vtb_dsrom_s81_window_la",
+      "sha256": "00050b4307c12111dd7ba03ed0bfb24e6e837c310ff56eb8434dfbfdae88b8d6",
+      "bytes": 4137400
+    }
+  ],
+  "archived_files": {
+    "historical_runs_r1_failed.json": "8550ecd6856f70c32a4971784cd27ef5f22706c3e9d18117155e91226b41f8a5",
+    "historical_runs_r2.json": "c982064381e2bd4e0845347b2a8e7e0a6e090ebe2f535dfb3cf45ef5475b9ff2",
+    "historical_runs_r3.json": "0e21b23c365386b99779f2d35a1803f19816ca26c626d4a409317c4579f75920",
+    "historical_window_load.json": "efb8307039f0b22cef040b75d6c690661d4f9a39db6e9c1827a4e53ff0a4b0d9",
+    "historical_bind_missing_include_failed.json": "57f8199c71f2db85663a6f68883005046ab9f4999ac3df84e22349e0bc770a96",
+    "historical_bind_reduced.json": "cb87dd1e7bd610726dfb23021162bb2d23be1d9d1331e7b9b0afb85d46bc215e",
+    "historical_vectors.json": "857d7493613896554bed1538f4314783f2450d5cd46dae00b3df429a6b68d7ea",
+    "historical_screen_synthesis_failed.log": "ae44ecb5294df9e8678561d59648dce8e39a8d0d12b5af2449d82e37684d6708"
+  },
+  "measurements": {
+    "L20_la_scan_staging_mean_cycles": 268.9,
+    "L20_la_scan_stream_mean_cycles": 399.9,
+    "L20_la_scan_own_row_write_mean_cycles": 3466.3,
+    "L20_asbuilt_c8_scan_staging_mean_cycles": 25082
+  },
+  "failures_preserved": [
+    "historical_runs_r1_failed.json",
+    "historical_bind_missing_include_failed.json",
+    "historical_screen_synthesis_failed.log"
+  ],
+  "remaining_I55_hook": "Noether current VDsromPackedWindow has only original single K port; LA successor needs its 32PC wide request/response ports wired to SAME native backend under sole caller clock before any native LA claim",
+  "current_executable": "python3 tools/dsrom_s81_window_la.py emit --out <fresh-directory> [--kgather 0|1]",
+  "validation": "emit r3 PASS; runtime wrapper forwards WINDOW_STREAM_LA and actual kgw ports, all source files present; r1 refused missing sparse macro file then included existing tracked macros. No build/lint/runtime launched.",
+  "emitted_example": "/tmp/goodall-s81-window-la-emitted-20261004-r3/selection.json"
+}

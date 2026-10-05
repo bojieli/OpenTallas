@@ -1,0 +1,148 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_long_generation_control_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_session_id": {"$ref": "#/$defs/sha256"},
+    "build_id": {"const": "6445ef52a940af167f3bde52e0a326258bb8c8da013d4bb25a3b16e18f171bad"},
+    "checkpoint_lock_id": {"const": "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "changes_model_forward_execution": {"const": false},
+        "eos_terminated_decode_control": {"const": true},
+        "semantic_natural_language_quality": {"const": false},
+        "token_legitimacy_fail_closed": {"const": true},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "changes_model_forward_execution",
+        "eos_terminated_decode_control",
+        "semantic_natural_language_quality",
+        "token_legitimacy_fail_closed",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "control_id": {"$ref": "#/$defs/sha256"},
+    "control_version": {"const": "tensor-accelerator-qwen-long-generation-control-0.1.0"},
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "prefixItems": [{"const": 151645}, {"const": 151643}],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "eos_token_included_in_generated_sequence": {"const": true},
+        "maximum_generated_token_count": {"const": 32},
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "stop_rule": {"const": "first_eos_or_maximum_generated_token_count"},
+        "undecodable_token_policy": {"const": "fail_closed"}
+      },
+      "required": [
+        "eos_token_ids",
+        "eos_token_included_in_generated_sequence",
+        "maximum_generated_token_count",
+        "selection",
+        "stop_rule",
+        "undecodable_token_policy"
+      ],
+      "type": "object"
+    },
+    "graph_id": {"const": "738f3cd8cb5db1ce400c0a44c12385cef6c42ddb2854e22d473251e97a1a51e3"},
+    "model_id": {"const": "qwen3-8b"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_long_generation_control.v1"},
+    "source_files": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {"$ref": "#/$defs/config_source"},
+        "generation_config": {"$ref": "#/$defs/generation_source"},
+        "tokenizer": {"$ref": "#/$defs/tokenizer_source"},
+        "tokenizer_config": {"$ref": "#/$defs/tokenizer_config_source"}
+      },
+      "required": ["config", "generation_config", "tokenizer", "tokenizer_config"],
+      "type": "object"
+    },
+    "tokenizer_contract": {
+      "additionalProperties": false,
+      "properties": {
+        "base_vocabulary_size": {"const": 151643},
+        "explicit_vocabulary_size": {"const": 151669},
+        "model_vocabulary_size": {"const": 151936},
+        "padded_model_token_id_end_exclusive": {"const": 151936},
+        "padded_model_token_id_start": {"const": 151669},
+        "padded_model_token_policy": {"const": "reject_if_selected_for_generation"}
+      },
+      "required": [
+        "base_vocabulary_size",
+        "explicit_vocabulary_size",
+        "model_vocabulary_size",
+        "padded_model_token_id_end_exclusive",
+        "padded_model_token_id_start",
+        "padded_model_token_policy"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "base_session_id",
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "control_id",
+    "control_version",
+    "generation",
+    "graph_id",
+    "model_id",
+    "schema",
+    "source_files",
+    "tokenizer_contract"
+  ],
+  "title": "Qwen EOS-terminated generation and token-legitimacy control",
+  "type": "object",
+  "$defs": {
+    "config_source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "config.json"},
+        "sha256": {"const": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"},
+        "size_bytes": {"const": 728}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "generation_source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "generation_config.json"},
+        "sha256": {"const": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2"},
+        "size_bytes": {"const": 239}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tokenizer_config_source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "tokenizer_config.json"},
+        "sha256": {"const": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"},
+        "size_bytes": {"const": 9732}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "tokenizer_source": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "tokenizer.json"},
+        "sha256": {"const": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"},
+        "size_bytes": {"const": 11422654}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "commit": "e26442d73651df0b23314131e06f66df194a88b2",
+    "path": "results/uarch/qwen_rom_q2_g0_20261002_r2/proposal.json",
+    "sha256": "05af4f6cbaa1e34eaedbc3b7966ab7c18ce004ee2afcdb212ec52560af9368a1",
+    "snapshot": "g0.json"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "results/uarch/qwen_rom_kv_transport_20261002/candidate_r1.json",
+    "sha256": "173de9bdd9b9963c428ba80479250a98f34d5b4ec4a2ff847bc7013a4a8aefeb",
+    "snapshot": "candidate.json"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "tools/qwen_rom_physical_dimension_gate.py",
+    "sha256": "ab1f2a9c9282c337361670400c43bd4ab416855125532474680ceb3c9294e3f3",
+    "snapshot": "dimension.py"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "tools/qwen_hbm_inventory_timers_r9.py",
+    "sha256": "171d73318cb4081ffc5e06b5ebaaa12bae8de43245f7c9873ba5878bbd144ca4",
+    "snapshot": "area_proxy.py"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+    "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "snapshot": "ot_hbm_r14_pkg.sv"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+    "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "snapshot": "ot_hbm_r14_tag_owner.sv"
+  },
+  {
+    "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+    "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+    "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "snapshot": "ot_hbm_causal_command_provider.sv"
+  }
+]

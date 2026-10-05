@@ -1,0 +1,28 @@
+{
+  "owner_commits": [
+    "9fbe2693ab92ad534075a18830b2e57f68e26fb0",
+    "c62c7e80c75eff1d377cbf46e76c453cf79753f4"
+  ],
+  "candidate_independent_byte_replay_equal": true,
+  "inventory_independent_byte_replay_equal": true,
+  "inventory_replay_scope": "Exact source except fresh outputdestination only; inputandgeneratorbytes unchanged",
+  "candidate_sha256": "b9143a1b1a5215f19e5abf0f9a286cbca1c83d705c71e4aa28201160bb0443eb",
+  "inventory_sha256": "7aa35fbcc4b93426f37a609f99647566bbf756e0927cebcb821bbe34c4288b86",
+  "independent_home_macro_inverse_mappings_checked": 1500067,
+  "exclusive_candidate_homes": 96,
+  "held_clock_state_FF_bits": 2073575326,
+  "max_home_storage_FF_bits": 21825717,
+  "rejected48home_raw_macro_area_mm2": 467.6565947733333,
+  "owner_field_bound_mm2": 457.96549650802586,
+  "local_row_service_cycles_conditional": 124,
+  "admission_gaps": [
+    "HoldMUX/CTS/reset/PHYarea and source typed fullclock/power join",
+    "Actual signal layers/intersections/macro pins/clockmacro capture within4.33ps residual",
+    "96homes/package/link/consumer placement and fulltoken calendar",
+    "Framing CRC finiteendpointcredit and selectedresponse visibility",
+    "L1 generatedoperand source remainsNULL"
+  ],
+  "physical_fit_proven": false,
+  "whole_token_qualified": false,
+  "admission": false
+}

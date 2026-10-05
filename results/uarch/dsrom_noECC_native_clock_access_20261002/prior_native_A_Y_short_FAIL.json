@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_69_DISTINCT_CLOCK_NET_SHORT_PAIRS",
+  "model_sha256": "c079d21fe138b3a09b47b4702860b6933c6315bc6914bd028617cc5111c95c69",
+  "short_pairs_per_case": 69,
+  "OBS_PG_intersections_per_case": 0,
+  "cause": "M8 parent-to-BUF.A bridge crossed the same BUF.Y native landing metal on the same track. Same source domain does not permit shorting different buffer-driven nets.",
+  "physical_measurement": false
+}

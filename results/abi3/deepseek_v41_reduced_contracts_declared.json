@@ -1,0 +1,156 @@
+{
+  "not_a_claim": [
+    "that the deployment admits: it was not reached, because the runner refuses before executing when the reference cannot be bound",
+    "that the contracts are CHARACTERISED -- declaring a contract a vehicle honours is not the same as measuring that it does, and the gap record's own not_a_claim says characterising them is not mechanical",
+    "that the reduced gold should simply be replaced with an oracle's output; which sequence is authoritative is a decision about the fixture, not a measurement"
+  ],
+  "producer": {
+    "git": {
+      "commit": "f75491cef6b709d439e069ccd381eed0fc91b0c3"
+    },
+    "tool": "manual, from the capability set and the reduced fixtures"
+  },
+  "question": "can the reduced DeepSeek V4.1 graph be deployed, and what stops it?",
+  "schema": "opentallas.result.v41_reduced_contracts_declared_gold_is_not.v1",
+  "the_contract_gap_is_closed": {
+    "contracts_the_graph_uses": 80,
+    "every_added_name_was_already_declared_elsewhere": true,
+    "it_declares": 80,
+    "names_added": 38,
+    "new_capability": "configs/hardware/abi3_capability/hbm_sram_cluster_32_v41_reduced_comparator.json",
+    "provenance_of_the_added_names": {
+      "candidate_mask_admission_plane_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "candidate_mask_block_maximum_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "candidate_mask_block_top_k_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "candidate_mask_view_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "engram_gate_fp32_v1": "rom_deepseek_v41_array_64.json",
+      "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "fp8_swiglu_bf16_quantize_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_block_scaled_contraction_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_group_axis_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_group_columns_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_group_contraction_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_group_join_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "grouped_output_project_bf16_quantize_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "hyper_connection_hc_collapse_bf16_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "hyper_connection_hc_pre_bf16_branch_collapse_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "hyper_connection_hc_pre_bf16_branch_weight_plane_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "hyper_connection_hc_pre_bf16_residual_weight_plane_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "index_key_write_bf16_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "lookup_compressed_token_ids_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "lookup_engram_row_fp8_e4m3_reconstruct_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "lookup_engram_row_fp8_e4m3_row_read_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "matrix_bf16_linear_bf16_softmax_and_head_scale_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "matrix_dense_fp8_linear_bf16_quantize_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "mxfp4_swiglu_bf16_quantize_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "ngram_hash_u32_column_join_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "ngram_hash_u32_order2_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "ngram_hash_u32_order3_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "ngram_hash_u32_order4_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "rope_apply_bf16_coefficient_rows_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "rope_apply_bf16_rotate_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "rope_inverse_bf16_rotate_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "sampling_deepseek_v41_sample_binary32_greedy_argmax_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "sampling_deepseek_v41_sample_binary32_temperature_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "sampling_deepseek_v41_sample_binary32_token_append_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "selection_index_topk_indices_window_then_compressed_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "selection_shared_index_view_v1": "hbm_sram_cluster_n_comparator_8_e4096.json",
+      "selection_shared_index_view_window_then_compressed_v1": "hbm_sram_cluster_n_comparator_8_e4096.json"
+    },
+    "taken_unchanged_from_the_base": [
+      "abi",
+      "engines",
+      "features",
+      "limits",
+      "link",
+      "memory",
+      "schema",
+      "technology_view",
+      "topology_class"
+    ],
+    "the_closest_shipped_capability_declared": 68,
+    "why_that_is_legitimate": "a capability declares which numeric contracts a vehicle honours. Every one of the 38 added names is already declared by a shipped capability -- 37 by hbm_sram_cluster_n_comparator_8_e4096.json and engram_gate_fp32_v1 by the ROM V4.1 capabilities -- so none is invented, and the builder refuses any name no shipped capability declares. The shipped records are untouched; this is a new comparator file, which is how an un-deployed model is deployed in this project."
+  },
+  "the_usable_reference_that_does_exist": {
+    "byte_identical_across_two_independent_numeric_paths": true,
+    "fp4_dequant_path": [
+      3118,
+      3583,
+      2357,
+      276,
+      3270,
+      44,
+      790,
+      223,
+      2498,
+      1741,
+      858,
+      2588,
+      983,
+      1289,
+      2967,
+      2084
+    ],
+    "fp8_path": [
+      3118,
+      3583,
+      2357,
+      276,
+      3270,
+      44,
+      790,
+      223,
+      2498,
+      1741,
+      858,
+      2588,
+      983,
+      1289,
+      2967,
+      2084
+    ],
+    "vehicle": "deepseek-v4.1-flash-reduced-v2",
+    "why_it_matters": "two numeric paths agreeing on all sixteen tokens is a reference worth grading against; the workload's own gold_token_ids is not."
+  },
+  "what_blocks_the_deployment_now_is_the_FIXTURE": {
+    "first_gate": "run_accelerator_tokens.py requires the workload/reference pair to bind a 64-hex tokenizer_sha256 and neither the reduced workload nor any reduced reference oracle carries one; run_deepseek_v41_reduced_reference_oracle.py never emits it. Every FULL-model oracle does.",
+    "second_and_deeper_gate": {
+      "and_it_is_byte_identical_in_two_different_model_directories": "build/workloads/deepseek-v4.1-flash-reduced-v1 and -reduced-v2 hold the same file, model_id deepseek-v4.1-flash-reduced-v1, digest 1608c71f. Two different reduced models cannot have one gold.",
+      "derived_from_path": "build/workloads/deepseek-v4.1-flash/TA-DS41-EOS-1.json",
+      "derived_from_rule": "token_id % vocab_size",
+      "gold_token_ids": [
+        1638,
+        1638,
+        1638,
+        226,
+        226,
+        1638,
+        3808,
+        226,
+        1638,
+        226,
+        226,
+        4010,
+        4010,
+        4010,
+        4010,
+        226
+      ],
+      "it_fails_its_own_documented_checks": [
+        "metadata says 'the last generated token is an official reduced EOS id'; gold[-1] is 226 and the official EOS set is [0, 1]",
+        "metadata says 'generation stops before the cap; a cap stop is a failed gold'; the gold is 16 tokens against max_new_tokens 16, which IS the cap"
+      ],
+      "no_reference_reproduces_it": [
+        "deepseek_v41_reduced_reference_oracle.json -> 1638, 930, 2587, ...",
+        "deepseek_v41_reduced_reference_oracle_fp8_experts.json -> 1224, 510, 1183, ...",
+        "deepseek_v41_reduced_v2_reference_oracle_fp8.json -> 3118, 3583, 2357, ..."
+      ],
+      "official_eos_token_ids": [
+        0,
+        1
+      ],
+      "the_reduced_workload_gold_is_not_a_reduced_reference": true
+    }
+  }
+}

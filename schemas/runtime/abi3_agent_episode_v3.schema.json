@@ -1,0 +1,967 @@
+{
+  "$id": "https://opentallas.org/schemas/runtime/abi3_agent_episode_v3.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answer": {
+      "anyOf": [
+        {"minLength": 1, "type": "string"},
+        {"type": "null"}
+      ]
+    },
+    "backend": {
+      "enum": ["hbm_sram", "rom_deepseek_v4", "rom_qwen3"]
+    },
+    "command_policy": {"$ref": "#/$defs/commandPolicy"},
+    "counter_scope": {"$ref": "#/$defs/counterScope"},
+    "counters": {"$ref": "#/$defs/counterMap"},
+    "engine_coverage": {"$ref": "#/$defs/engineCoverage"},
+    "evidence_class": {"const": "functional_artifact_only"},
+    "executed_association": {"$ref": "#/$defs/executedAssociation"},
+    "executed_command_count": {"minimum": 0, "type": "integer"},
+    "expected_total": {"const": 239},
+    "generation_policy": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "maxProperties": 0,
+          "type": "object"
+        },
+        {"$ref": "#/$defs/generationPolicy"}
+      ]
+    },
+    "generation_policy_digest": {
+      "oneOf": [
+        {"const": ""},
+        {"$ref": "#/$defs/sha256"}
+      ]
+    },
+    "implementation_identity": {"$ref": "#/$defs/implementationIdentity"},
+    "inputs": {"$ref": "#/$defs/inputs"},
+    "lowering_seconds": {"minimum": 0, "type": "number"},
+    "model": {"$ref": "#/$defs/model"},
+    "node_counters": {
+      "items": {"$ref": "#/$defs/counterMap"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "not_a_claim": {
+      "items": false,
+      "maxItems": 7,
+      "minItems": 7,
+      "prefixItems": [
+        {"const": "rtl_execution"},
+        {"const": "cycle_execution"},
+        {"const": "physical_execution"},
+        {"const": "timing_or_performance"},
+        {"const": "power_or_energy"},
+        {"const": "silicon_execution"},
+        {"const": "general_shell_or_os_network_isolation"}
+      ],
+      "type": "array"
+    },
+    "note": {"minLength": 1, "type": "string"},
+    "oracle_agreement": {"type": "boolean"},
+    "problems": {
+      "items": {"type": "string"},
+      "type": "array"
+    },
+    "reference": {"$ref": "#/$defs/reference"},
+    "schema": {"const": "opentallas.abi3.agent_episode.v3"},
+    "source_sha256": {"$ref": "#/$defs/sourceMap"},
+    "status": {
+      "enum": ["diverged", "failed", "pass", "protocol_violation"]
+    },
+    "stop_reason": {
+      "enum": [
+        "answered",
+        "context_exhausted",
+        "failed",
+        "max_turns",
+        "oracle_divergence",
+        "oracle_exhausted",
+        "protocol_violation"
+      ]
+    },
+    "target": {"$ref": "#/$defs/target"},
+    "target_profile": {"$ref": "#/$defs/targetProfile"},
+    "task_solved": {"type": "boolean"},
+    "tool": {"const": "tools/run_abi3_agent_episode.py"},
+    "turn_count": {"minimum": 0, "type": "integer"},
+    "turns": {
+      "items": {"$ref": "#/$defs/turn"},
+      "type": "array"
+    },
+    "verification": {"$ref": "#/$defs/verification"},
+    "wall_seconds": {"minimum": 0, "type": "number"},
+    "workload": {"$ref": "#/$defs/workload"}
+  },
+  "required": [
+    "answer",
+    "backend",
+    "command_policy",
+    "counter_scope",
+    "counters",
+    "engine_coverage",
+    "evidence_class",
+    "executed_association",
+    "executed_command_count",
+    "expected_total",
+    "generation_policy",
+    "generation_policy_digest",
+    "implementation_identity",
+    "inputs",
+    "lowering_seconds",
+    "model",
+    "node_counters",
+    "not_a_claim",
+    "note",
+    "oracle_agreement",
+    "problems",
+    "reference",
+    "schema",
+    "source_sha256",
+    "status",
+    "stop_reason",
+    "target",
+    "target_profile",
+    "task_solved",
+    "tool",
+    "turn_count",
+    "turns",
+    "verification",
+    "wall_seconds",
+    "workload"
+  ],
+  "title": "OpenTallas source-bound ABI 3 closed-loop agent episode v3",
+  "type": "object",
+  "$defs": {
+    "commandPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_input": {"const": "inventory.txt"},
+        "general_shell_access": {"const": false},
+        "os_network_namespace_isolation": {"const": false},
+        "policy_id": {"const": "inventory_read_only_shell_v1"}
+      },
+      "required": [
+        "allowed_input",
+        "general_shell_access",
+        "os_network_namespace_isolation",
+        "policy_id"
+      ],
+      "type": "object"
+    },
+    "counterMap": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "propertyNames": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "counterScope": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {"const": "cluster_total"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "node_counters_index": {"const": "NODE_ID"},
+        "per_node": {"const": "engine_work_by_node_id"},
+        "reconciliation": {
+          "const": "cluster total equals per-node engine work plus cluster-only LINK, STATE, control, and host bookkeeping"
+        }
+      },
+      "required": [
+        "aggregate",
+        "node_count",
+        "node_counters_index",
+        "per_node",
+        "reconciliation"
+      ],
+      "type": "object"
+    },
+    "engineCoverage": {
+      "additionalProperties": false,
+      "properties": {
+        "implemented_count": {"minimum": 0, "type": "integer"},
+        "missing": {
+          "items": {"minLength": 1, "type": "string"},
+          "type": "array",
+          "uniqueItems": true
+        },
+        "missing_count": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["implemented_count", "missing", "missing_count"],
+      "type": "object"
+    },
+    "executedAssociation": {
+      "additionalProperties": false,
+      "properties": {
+        "association_policy": {
+          "const": "implementation_and_executed_shape_pinned"
+        },
+        "blocked_call_count": {"minimum": 0, "type": "integer"},
+        "distinct_association_count": {"minimum": 0, "type": "integer"},
+        "entries": {
+          "items": {"$ref": "#/$defs/executedAssociationEntry"},
+          "type": "array"
+        },
+        "implementation_identity": {
+          "$ref": "#/$defs/implementationIdentity"
+        },
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "schema": {"const": "opentallas.abi3.executed_association.v1"}
+      },
+      "required": [
+        "association_policy",
+        "blocked_call_count",
+        "distinct_association_count",
+        "entries",
+        "implementation_identity",
+        "manifest_sha256",
+        "schema"
+      ],
+      "type": "object"
+    },
+    "executedAssociationEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_shape": {"$ref": "#/$defs/shape"},
+        "call_count": {"minimum": 1, "type": "integer"},
+        "numeric_contract": {"minLength": 1, "type": "string"},
+        "output_shape": {"$ref": "#/$defs/shape"},
+        "weight_shape": {"$ref": "#/$defs/shape"}
+      },
+      "required": [
+        "activation_shape",
+        "call_count",
+        "numeric_contract",
+        "output_shape",
+        "weight_shape"
+      ],
+      "type": "object"
+    },
+    "fileIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {"minimum": 0, "type": "integer"},
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["bytes", "path", "sha256"],
+      "type": "object"
+    },
+    "generationPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "counter_class_id": {"minimum": 0, "type": "integer"},
+        "eos_count": {"maximum": 8, "minimum": 1, "type": "integer"},
+        "eos_token_0": {"minimum": 0, "type": "integer"},
+        "eos_token_1": {"minimum": 0, "type": "integer"},
+        "eos_token_2": {"minimum": 0, "type": "integer"},
+        "eos_token_3": {"minimum": 0, "type": "integer"},
+        "eos_token_4": {"minimum": 0, "type": "integer"},
+        "eos_token_5": {"minimum": 0, "type": "integer"},
+        "eos_token_6": {"minimum": 0, "type": "integer"},
+        "eos_token_7": {"minimum": 0, "type": "integer"},
+        "max_new_tokens": {"minimum": 1, "type": "integer"},
+        "rng_seed_hi": {"minimum": 0, "type": "integer"},
+        "rng_seed_lo": {"minimum": 0, "type": "integer"},
+        "selection_mode": {"minimum": 0, "type": "integer"},
+        "tie_rule": {"minimum": 0, "type": "integer"},
+        "token_ring_object_id": {"minimum": 0, "type": "integer"},
+        "vocabulary_size": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "counter_class_id",
+        "eos_count",
+        "eos_token_0",
+        "eos_token_1",
+        "eos_token_2",
+        "eos_token_3",
+        "eos_token_4",
+        "eos_token_5",
+        "eos_token_6",
+        "eos_token_7",
+        "max_new_tokens",
+        "rng_seed_hi",
+        "rng_seed_lo",
+        "selection_mode",
+        "tie_rule",
+        "token_ring_object_id",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "implementationFlags": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "MKL_NUM_THREADS": {"type": "string"},
+        "NUMEXPR_NUM_THREADS": {"type": "string"},
+        "OMP_NUM_THREADS": {"type": "string"},
+        "OPENBLAS_NUM_THREADS": {"type": "string"},
+        "VECLIB_MAXIMUM_THREADS": {"type": "string"},
+        "allow_tf32": {"type": "boolean"},
+        "cublas_workspace_config": {"type": "string"},
+        "float32_matmul_precision": {"minLength": 1, "type": "string"},
+        "torch.backends.cuda.matmul.allow_tf32": {"type": "boolean"},
+        "torch.backends.cudnn.allow_tf32": {"type": "boolean"},
+        "torch_num_interop_threads": {"minimum": 1, "type": "integer"},
+        "torch_num_threads": {"minimum": 1, "type": "integer"}
+      },
+      "type": "object"
+    },
+    "implementationIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"enum": ["numpy", "torch_cpu", "torch_cuda"]},
+        "blas": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {"minLength": 1, "type": "string"},
+            "version": {"minLength": 1, "type": "string"}
+          },
+          "required": ["name", "version"],
+          "type": "object"
+        },
+        "blocked_association": {"minLength": 1, "type": "string"},
+        "compute_capability": {"minLength": 1, "type": "string"},
+        "cuda_version": {"minLength": 1, "type": "string"},
+        "device": {"minLength": 1, "type": "string"},
+        "device_memory_bytes": {
+          "additionalProperties": false,
+          "properties": {
+            "free": {"minimum": 0, "type": "integer"},
+            "total": {"minimum": 1, "type": "integer"}
+          },
+          "required": ["free", "total"],
+          "type": "object"
+        },
+        "device_name": {"minLength": 1, "type": "string"},
+        "flags": {"$ref": "#/$defs/implementationFlags"},
+        "library": {"enum": ["numpy", "torch"]},
+        "library_version": {"minLength": 1, "type": "string"}
+      },
+      "required": [
+        "backend",
+        "blocked_association",
+        "device",
+        "device_name",
+        "flags",
+        "library",
+        "library_version"
+      ],
+      "type": "object"
+    },
+    "inputs": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {"$ref": "#/$defs/fileIdentity"},
+        "checkpoint_root": {"$ref": "#/$defs/checkpointRoot"},
+        "kernel_ir": {"$ref": "#/$defs/fileIdentity"},
+        "published_deployment": {"$ref": "#/$defs/publishedDeployment"},
+        "reference": {"$ref": "#/$defs/fileIdentity"},
+        "tokenizer_files": {"$ref": "#/$defs/tokenizerFiles"},
+        "workload": {"$ref": "#/$defs/workloadFileIdentity"},
+        "workload_index": {"$ref": "#/$defs/fileIdentity"}
+      },
+      "required": [
+        "capability",
+        "checkpoint_root",
+        "kernel_ir",
+        "published_deployment",
+        "reference",
+        "tokenizer_files",
+        "workload",
+        "workload_index"
+      ],
+      "type": "object"
+    },
+    "checkpointRoot": {
+      "additionalProperties": false,
+      "properties": {
+        "content_binding": {
+          "const": "authenticated deployment object segment SHA-256 values"
+        },
+        "deployment_digest_binding": {"$ref": "#/$defs/sha256"},
+        "identity": {"$ref": "#/$defs/checkpointIdentity"},
+        "kind": {"const": "read_only_directory"},
+        "path": {"$ref": "#/$defs/path"}
+      },
+      "required": [
+        "content_binding",
+        "deployment_digest_binding",
+        "identity",
+        "kind",
+        "path"
+      ],
+      "type": "object"
+    },
+    "checkpointIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {"$ref": "#/$defs/checkpointFiles"},
+        "source": {"$ref": "#/$defs/fileIdentity"}
+      },
+      "required": ["files", "source"],
+      "type": "object"
+    },
+    "checkpointFiles": {
+      "additionalProperties": false,
+      "properties": {
+        "config.json": {"$ref": "#/$defs/fileIdentity"},
+        "generation_config.json": {"$ref": "#/$defs/fileIdentity"},
+        "model.safetensors.index.json": {"$ref": "#/$defs/fileIdentity"},
+        "tokenizer.json": {"$ref": "#/$defs/fileIdentity"},
+        "tokenizer_config.json": {"$ref": "#/$defs/fileIdentity"}
+      },
+      "required": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors.index.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "graph_id": {"$ref": "#/$defs/sha256"},
+        "model_id": {
+          "enum": ["deepseek-v4-flash-0731", "qwen3-8b"]
+        },
+        "numeric_profile": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["graph_id", "model_id", "numeric_profile"],
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {"minLength": 1, "type": "string"},
+        "exit_code": {"type": "integer"},
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"},
+        "timed_out": {"type": "boolean"},
+        "truncated": {"type": "boolean"}
+      },
+      "required": [
+        "command",
+        "exit_code",
+        "stderr",
+        "stdout",
+        "timed_out",
+        "truncated"
+      ],
+      "type": "object"
+    },
+    "oracleComparisonGenerated": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_exact": {"type": "boolean"},
+        "oracle_generated_token_count": {"minimum": 1, "type": "integer"},
+        "prompt_exact": {"const": true},
+        "rendered_prompt_exact": {"const": true},
+        "stop_reason_exact": {"type": "boolean"},
+        "token_limit_exact": {"const": true}
+      },
+      "required": [
+        "generated_exact",
+        "oracle_generated_token_count",
+        "prompt_exact",
+        "rendered_prompt_exact",
+        "stop_reason_exact",
+        "token_limit_exact"
+      ],
+      "type": "object"
+    },
+    "oracleComparisonPrompt": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_exact": {"const": false},
+        "prompt_exact": {"type": "boolean"},
+        "rendered_prompt_exact": {"type": "boolean"},
+        "stop_reason_exact": {"const": false},
+        "token_limit_exact": {"type": "boolean"}
+      },
+      "required": [
+        "generated_exact",
+        "prompt_exact",
+        "rendered_prompt_exact",
+        "stop_reason_exact",
+        "token_limit_exact"
+      ],
+      "type": "object"
+    },
+    "parsedTurn": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "answer": {"type": "null"},
+            "command": {"minLength": 1, "type": "string"},
+            "kind": {"const": "command"}
+          },
+          "required": ["answer", "command", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "answer": {"minLength": 1, "type": "string"},
+            "command": {"type": "null"},
+            "kind": {"const": "answer"}
+          },
+          "required": ["answer", "command", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "answer": {"type": "null"},
+            "command": {"minLength": 1, "type": "string"},
+            "kind": {"const": "command"},
+            "tool_name": {"const": "run_shell"}
+          },
+          "required": ["answer", "command", "kind", "tool_name"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "answer": {"minLength": 1, "type": "string"},
+            "command": {"type": "null"},
+            "kind": {"const": "answer"},
+            "tool_name": {"type": "null"}
+          },
+          "required": ["answer", "command", "kind", "tool_name"],
+          "type": "object"
+        }
+      ]
+    },
+    "path": {"minLength": 1, "type": "string"},
+    "perStep": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_reason": {"minimum": 0, "type": "integer"},
+        "final_token_id": {
+          "anyOf": [
+            {"minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "instructions_predicated_off": {"minimum": 0, "type": "integer"},
+        "instructions_retired": {"minimum": 0, "type": "integer"},
+        "phase": {"enum": ["decode", "prefill"]},
+        "produced_tokens": {
+          "items": {"minimum": 0, "type": "integer"},
+          "maxItems": 1,
+          "minItems": 0,
+          "type": "array"
+        },
+        "retired_work": {"minimum": 0, "type": "integer"},
+        "status": {"minLength": 1, "type": "string"},
+        "step": {"minimum": 0, "type": "integer"},
+        "transaction_id": {"minimum": 1, "type": "integer"},
+        "trap": {"minLength": 1, "type": "string"},
+        "wall_seconds": {"minimum": 0, "type": "number"}
+      },
+      "required": [
+        "eos_reason",
+        "final_token_id",
+        "instructions_predicated_off",
+        "instructions_retired",
+        "phase",
+        "produced_tokens",
+        "retired_work",
+        "status",
+        "step",
+        "transaction_id",
+        "trap",
+        "wall_seconds"
+      ],
+      "type": "object"
+    },
+    "promptDivergenceTurn": {
+      "additionalProperties": false,
+      "properties": {
+        "max_new_tokens": {"minimum": 1, "type": "integer"},
+        "oracle_comparison": {"$ref": "#/$defs/oracleComparisonPrompt"},
+        "outcome": {"const": "oracle_prompt_divergence"},
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "prompt_token_ids": {"$ref": "#/$defs/tokenArray"},
+        "rendered_prompt_sha256": {"$ref": "#/$defs/sha256"},
+        "rendered_prompt_text": {"minLength": 1, "type": "string"},
+        "turn": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "max_new_tokens",
+        "oracle_comparison",
+        "outcome",
+        "prompt_token_count",
+        "prompt_token_ids",
+        "rendered_prompt_sha256",
+        "rendered_prompt_text",
+        "turn"
+      ],
+      "type": "object"
+    },
+    "publishedDeployment": {
+      "additionalProperties": false,
+      "properties": {
+        "descriptors": {"$ref": "#/$defs/fileIdentity"},
+        "manifest": {"$ref": "#/$defs/fileIdentity"},
+        "path": {"$ref": "#/$defs/path"},
+        "program": {"$ref": "#/$defs/fileIdentity"}
+      },
+      "required": ["descriptors", "manifest", "path", "program"],
+      "type": "object"
+    },
+    "reference": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {"$ref": "#/$defs/path"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence_class": {"const": "external_reference_comparator"},
+        "note": {"minLength": 1, "type": "string"},
+        "oracle_turn_count": {"minimum": 2, "type": "integer"},
+        "schema": {"const": "opentallas.abi3.reference_oracle.v1"},
+        "workload_digest": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "artifact",
+        "artifact_sha256",
+        "evidence_class",
+        "note",
+        "oracle_turn_count",
+        "schema",
+        "workload_digest"
+      ],
+      "type": "object"
+    },
+    "shape": {
+      "items": {"minimum": 1, "type": "integer"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sourceMap": {
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 1,
+      "propertyNames": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {"$ref": "#/$defs/identifier"},
+        "capability": {"$ref": "#/$defs/path"},
+        "capability_digest": {"$ref": "#/$defs/sha256"},
+        "deployment_digest": {"$ref": "#/$defs/sha256"},
+        "node_count": {"minimum": 1, "type": "integer"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "technology_view": {"$ref": "#/$defs/identifier"},
+        "topology_class": {"maximum": 2, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "backend",
+        "capability",
+        "capability_digest",
+        "deployment_digest",
+        "node_count",
+        "target_id",
+        "technology_view",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "targetProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_capability_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_kernel_ir_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_reference_sha256": {"$ref": "#/$defs/sha256"},
+        "profile_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "expected_capability_sha256",
+        "expected_kernel_ir_sha256",
+        "expected_reference_sha256",
+        "profile_id"
+      ],
+      "type": "object"
+    },
+    "tokenArray": {
+      "items": {"minimum": 0, "type": "integer"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "tokenizerFiles": {
+      "additionalProperties": false,
+      "properties": {
+        "generation_config.json": {"$ref": "#/$defs/fileIdentity"},
+        "tokenizer.json": {"$ref": "#/$defs/fileIdentity"},
+        "tokenizer_config.json": {"$ref": "#/$defs/fileIdentity"}
+      },
+      "required": [
+        "generation_config.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "type": "object"
+    },
+    "turn": {
+      "oneOf": [
+        {"$ref": "#/$defs/promptDivergenceTurn"},
+        {"$ref": "#/$defs/generatedTurn"}
+      ]
+    },
+    "generatedTurn": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "enum": ["answered", "executed", "oracle_parse_divergence"]
+              }
+            },
+            "required": ["outcome"]
+          },
+          "then": {
+            "required": [
+              "parsed",
+              "raw_decoded_text",
+              "thinking_text",
+              "visible_text"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {"outcome": {"const": "executed"}},
+            "required": ["outcome"]
+          },
+          "then": {"required": ["observation"]},
+          "else": {"not": {"required": ["observation"]}}
+        },
+        {
+          "if": {
+            "properties": {"outcome": {"const": "protocol_violation"}},
+            "required": ["outcome"]
+          },
+          "then": {"required": ["protocol_violation"]}
+        }
+      ],
+      "properties": {
+        "counter_delta": {"$ref": "#/$defs/counterMap"},
+        "counters_after": {"$ref": "#/$defs/counterMap"},
+        "counters_before": {"$ref": "#/$defs/counterMap"},
+        "decode_steps": {"minimum": 0, "type": "integer"},
+        "driver_counters": {"$ref": "#/$defs/counterMap"},
+        "eos_token_id": {
+          "anyOf": [
+            {"minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "failure": {
+          "anyOf": [
+            {"type": "string"},
+            {"type": "null"}
+          ]
+        },
+        "generated_token_count": {"minimum": 0, "type": "integer"},
+        "generated_token_ids": {"items": {"minimum": 0, "type": "integer"}, "type": "array"},
+        "max_new_tokens": {"minimum": 1, "type": "integer"},
+        "node_counter_delta": {
+          "items": {"$ref": "#/$defs/counterMap"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "node_counters_after": {
+          "items": {"$ref": "#/$defs/counterMap"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "node_counters_before": {
+          "items": {"$ref": "#/$defs/counterMap"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "observation": {"$ref": "#/$defs/observation"},
+        "oracle_comparison": {"$ref": "#/$defs/oracleComparisonGenerated"},
+        "outcome": {
+          "enum": [
+            "answered",
+            "executed",
+            "invalid_execution_evidence",
+            "oracle_parse_divergence",
+            "oracle_token_divergence",
+            "protocol_violation"
+          ]
+        },
+        "parsed": {"$ref": "#/$defs/parsedTurn"},
+        "per_step": {
+          "items": {"$ref": "#/$defs/perStep"},
+          "type": "array"
+        },
+        "prefill_tokens": {"minimum": 0, "type": "integer"},
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "prompt_token_ids": {"$ref": "#/$defs/tokenArray"},
+        "protocol_violation": {"minLength": 1, "type": "string"},
+        "raw_decoded_text": {"type": "string"},
+        "rendered_prompt_sha256": {"$ref": "#/$defs/sha256"},
+        "rendered_prompt_text": {"minLength": 1, "type": "string"},
+        "session_id": {"minimum": 1, "type": "integer"},
+        "stop_reason": {"enum": ["eos", "failed", "max_new_tokens"]},
+        "thinking_text": {
+          "anyOf": [
+            {"type": "string"},
+            {"type": "null"}
+          ]
+        },
+        "token_legitimacy_problems": {
+          "items": {"type": "string"},
+          "type": "array"
+        },
+        "transactions": {"minimum": 0, "type": "integer"},
+        "turn": {"minimum": 0, "type": "integer"},
+        "visible_text": {"type": "string"}
+      },
+      "required": [
+        "counter_delta",
+        "counters_after",
+        "counters_before",
+        "decode_steps",
+        "driver_counters",
+        "eos_token_id",
+        "failure",
+        "generated_token_count",
+        "generated_token_ids",
+        "max_new_tokens",
+        "node_counter_delta",
+        "node_counters_after",
+        "node_counters_before",
+        "oracle_comparison",
+        "outcome",
+        "per_step",
+        "prefill_tokens",
+        "prompt_token_count",
+        "prompt_token_ids",
+        "rendered_prompt_sha256",
+        "rendered_prompt_text",
+        "session_id",
+        "stop_reason",
+        "token_legitimacy_problems",
+        "transactions",
+        "turn"
+      ],
+      "type": "object"
+    },
+    "verification": {
+      "additionalProperties": false,
+      "properties": {
+        "admitted": {"const": true},
+        "checks": {
+          "additionalProperties": {"type": "boolean"},
+          "minProperties": 1,
+          "type": "object"
+        },
+        "declared_retired_work": {"minimum": 0, "type": "integer"},
+        "descriptor_count": {"minimum": 1, "type": "integer"},
+        "errors": {
+          "items": {"type": "string"},
+          "maxItems": 0,
+          "type": "array"
+        },
+        "event_count": {"minimum": 0, "type": "integer"},
+        "instruction_count": {"minimum": 1, "type": "integer"},
+        "loop_depth": {"minimum": 0, "type": "integer"},
+        "proved_retired_work": {"minimum": 0, "type": "integer"},
+        "state_resources": {"minimum": 0, "type": "integer"},
+        "warnings": {
+          "items": {"type": "string"},
+          "type": "array"
+        }
+      },
+      "required": [
+        "admitted",
+        "checks",
+        "declared_retired_work",
+        "descriptor_count",
+        "errors",
+        "event_count",
+        "instruction_count",
+        "loop_depth",
+        "proved_retired_work",
+        "state_resources",
+        "warnings"
+      ],
+      "type": "object"
+    },
+    "workload": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "agent"},
+        "max_new_tokens_per_turn": {"minimum": 1, "type": "integer"},
+        "max_turns": {"minimum": 2, "type": "integer"},
+        "prompt_token_count": {"minimum": 1, "type": "integer"},
+        "prompt_token_ids": {"$ref": "#/$defs/tokenArray"},
+        "rendered_text_sha256": {"$ref": "#/$defs/sha256"},
+        "session_context_capacity": {"minimum": 1, "type": "integer"},
+        "tokenizer_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"enum": ["TA-DS-AGENT-1", "TA-QW-AGENT-2"]}
+      },
+      "required": [
+        "kind",
+        "max_new_tokens_per_turn",
+        "max_turns",
+        "prompt_token_count",
+        "prompt_token_ids",
+        "rendered_text_sha256",
+        "session_context_capacity",
+        "tokenizer_sha256",
+        "workload_digest",
+        "workload_id"
+      ],
+      "type": "object"
+    },
+    "workloadFileIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {"minimum": 0, "type": "integer"},
+        "declared_workload_digest": {"$ref": "#/$defs/sha256"},
+        "path": {"$ref": "#/$defs/path"},
+        "prompt_token_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "bytes",
+        "declared_workload_digest",
+        "path",
+        "prompt_token_ids_sha256",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    }
+  }
+}

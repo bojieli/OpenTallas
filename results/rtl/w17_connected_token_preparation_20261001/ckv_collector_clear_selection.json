@@ -1,0 +1,19 @@
+{
+  "original_commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+  "original_path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+  "original_sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25",
+  "companion_path": "rtl/w17_runtime/chip/ckv_count_clear/ot_chip_v41x_ckv_die_service.sv",
+  "companion_sha256": "178194b789c82b7731383447539097492c43c67646d927e3bc9a6c2893499cf6",
+  "selection": "Replace original service source exactly once; enable COLLECTOR_CLEAR_PRIORITY=1 explicitly on service instance. Parameter default is 0. No containing-die/live source lists changed.",
+  "model_commit": "5d8931239",
+  "original_failure": "ef81265e7",
+  "parent_failure_review": "06d1541ad6556d082c3a26fa5ad16dd96d9087f4",
+  "scope": "Mandatory local priority correction; all five collector writes/count/stat updates excluded during admitted selection clear. Same-edge valid arrivals fault. Existing !rd_act admission is NOT safe whole-epoch retirement.",
+  "added_state_bits": 0,
+  "added_ports": 0,
+  "added_cycles": 0,
+  "model_control_area_um2": 35.92512,
+  "SS_FF_qualified": false,
+  "fulltoken_qualified": false,
+  "tooling_recovery": "Results directory was absent after sparse trial picks; initial receipt write raised FileNotFoundError, recreated directory without changing scientific evidence."
+}

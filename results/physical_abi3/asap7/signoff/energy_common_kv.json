@@ -1,0 +1,18 @@
+{
+  "schema": "hdc-common-hbm-kv-energy-v1",
+  "source": "results/physical_abi3/asap7/signoff/energy_per_token.json",
+  "source_sha256": "4d463a228d85799ab7cedefe37b4cde0ef9d7083428ca397c8b3192e0b8f3ac8",
+  "evidence": "derived: routed ASAP7 reduced-core activity plus modeled per-byte HBM KV and interface idle",
+  "boundary": "same 263168-byte reduced Qwen3 KV step on both cores; neither result is full-size system energy",
+  "common_kv_bytes": 263168,
+  "terms_j": {
+    "rom_original": 2.1146535832263468e-05,
+    "remove_rom_kv_sram": -6.842367999999999e-07,
+    "add_hbm_kv": 2.7601059840000002e-05,
+    "add_shared_streamer_logic": 5.897325814313058e-07,
+    "add_hbm_interface_idle": 1.0166625e-05
+  },
+  "rom_common_hbm_kv_j": 5.881971645369477e-05,
+  "hbm_comparator_j": 0.00033534915005369476,
+  "hbm_over_rom": 5.701305111147467
+}

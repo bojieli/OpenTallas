@@ -1,0 +1,24 @@
+
+==================================== ERRORS ====================================
+____________ ERROR collecting tests/test_w19_qwen_hbm_checkpoint.py ____________
+ImportError while importing test module '/home/ubuntu/qwen-companion-additive-20261001/tests/test_w19_qwen_hbm_checkpoint.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_w19_qwen_hbm_checkpoint.py:9: in <module>
+    import w19_qwen_hbm_checkpoint as C
+tools/w19_qwen_hbm_checkpoint.py:22: in <module>
+    from w19_qwen_hbm_preflight import ROOT, sha, sm_snapshot
+tools/w19_qwen_hbm_preflight.py:10: in <module>
+    import uarch_model as U
+tools/uarch_model.py:36: in <module>
+    import arch_budget_v41 as A  # noqa: E402
+tools/arch_budget_v41.py:64: in <module>
+    import decode_critical_path as D  # noqa: E402
+tools/decode_critical_path.py:64: in <module>
+    from opentallas.critical_path import PackageLevel  # noqa: E402
+E   ModuleNotFoundError: No module named 'opentallas'
+=========================== short test summary info ============================
+ERROR tests/test_w19_qwen_hbm_checkpoint.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!

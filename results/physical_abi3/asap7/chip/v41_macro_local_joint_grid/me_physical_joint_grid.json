@@ -1,0 +1,149 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T05:21:22.550449+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_me_macro_local_cut",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41_me_macro_local_cut.sv",
+        "sha256": "3e9cdcb2af81f7bc381b13a00c9cc0fe2b11a0c9de2e4fe1bf70a219d3cde51b",
+        "size_bytes": 1418
+      }
+    ],
+    "top": "ot_v41_me_macro_local_cut"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nD at location (56.484um, 66.960um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[62\\]$_DFF_P_/VDD at location (56.484um, 67.500um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[84\\]$_DFF_P_/VDD at location (56.484um, 68.040um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[106\\]$_DFF_P_/VDD at location (56.484um, 68.580um).\n[WARNING PSM-0039] Unconnected instance rq_plg_r\\[0\\]$_DFF_P_/VDD at location (56.484um, 69.120um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[2\\]$_DFF_P_/VDD at location (56.484um, 69.660um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[24\\]$_DFF_P_/VDD at location (56.484um, 70.200um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[46\\]$_DFF_P_/VDD at location (56.484um, 70.740um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[68\\]$_DFF_P_/VDD at location (56.484um, 71.280um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[90\\]$_DFF_P_/VDD at location (56.484um, 71.820um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[112\\]$_DFF_P_/VDD at location (56.484um, 72.360um).\n[WARNING PSM-0039] Unconnected instance hit_q$_DFF_P_/VDD at location (57.780um, 62.640um).\n[WARNING PSM-0039] Unconnected instance pre_d_r\\[21\\]$_DFF_P_/VDD at location (57.780um, 63.180um).\n[WARNING PSM-0039] Unconnected instance pre_d_r\\[43\\]$_DFF_P_/VDD at location (57.780um, 63.720um).\n[WARNING PSM-0039] Unconnected instance pre_d_r\\[65\\]$_DFF_P_/VDD at location (57.780um, 64.260um).\n[WARNING PSM-0039] Unconnected instance pre_d_r\\[87\\]$_DFF_P_/VDD at location (57.780um, 64.800um).\n[WARNING PSM-0039] Unconnected instance pre_d_r\\[109\\]$_DFF_P_/VDD at location (57.780um, 65.340um).\n[WARNING PSM-0039] Unconnected instance pre_e_r\\[9\\]$_DFF_P_/VDD at location (57.780um, 65.880um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[17\\]$_DFF_P_/VDD at location (57.780um, 66.420um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[39\\]$_DFF_P_/VDD at location (57.780um, 66.960um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[61\\]$_DFF_P_/VDD at location (57.780um, 67.500um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[83\\]$_DFF_P_/VDD at location (57.780um, 68.040um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[105\\]$_DFF_P_/VDD at location (57.780um, 68.580um).\n[WARNING PSM-0039] Unconnected instance q_local_r\\[127\\]$_DFF_P_/VDD at location (57.780um, 69.120um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[1\\]$_DFF_P_/VDD at location (57.780um, 69.660um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[23\\]$_DFF_P_/VDD at location (57.780um, 70.200um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[45\\]$_DFF_P_/VDD at location (57.780um, 70.740um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[67\\]$_DFF_P_/VDD at location (57.780um, 71.280um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[89\\]$_DFF_P_/VDD at location (57.780um, 71.820um).\n[WARNING PSM-0039] Unconnected instance wd_q\\[111\\]$_DFF_P_/VDD at location (57.780um, 72.360um).\n[ERROR PSM-0069] Check connectivity failed on VDD.\nError: final_report.tcl, 7 PSM-0069\n\nElapsed time: 0:02.69[h:]min:sec. CPU time: user 2.54 sys 0.15 (99%). Peak memory: 206440KB.\nElapsed time: 0:02.98[h:]min:sec. CPU time: user 2.85 sys 0.19 (101%). Peak memory: 226512KB.\nElapsed time: 0:05.21[h:]min:sec. CPU time: user 11.47 sys 0.17 (223%). Peak memory: 234988KB.\nElapsed time: 0:02.67[h:]min:sec. CPU time: user 2.49 sys 0.18 (99%). Peak memory: 205500KB.\nElapsed time: 0:03.50[h:]min:sec. CPU time: user 3.32 sys 0.18 (99%). Peak memory: 220224KB.\nElapsed time: 0:06.40[h:]min:sec. CPU time: user 14.65 sys 0.26 (232%). Peak memory: 317256KB.\nElapsed time: 0:02.92[h:]min:sec. CPU time: user 2.74 sys 0.18 (99%). Peak memory: 212948KB.\nElapsed time: 0:08.82[h:]min:sec. CPU time: user 18.56 sys 0.39 (214%). Peak memory: 498668KB.\nElapsed time: 0:03.44[h:]min:sec. CPU time: user 3.38 sys 0.28 (106%). Peak memory: 231292KB.\nElapsed time: 0:03.89[h:]min:sec. CPU time: user 3.82 sys 0.26 (104%). Peak memory: 323796KB.\nElapsed time: 0:06.00[h:]min:sec. CPU time: user 6.01 sys 0.42 (107%). Peak memory: 333664KB.\nElapsed time: 0:13.39[h:]min:sec. CPU time: user 22.85 sys 0.75 (176%). Peak memory: 688640KB.\nElapsed time: 2:10.04[h:]min:sec. CPU time: user 386.79 sys 11.11 (305%). Peak memory: 1989168KB.\nElapsed time: 0:03.50[h:]min:sec. CPU time: user 3.24 sys 0.26 (99%). Peak memory: 365592KB.\nElapsed time: 0:02.96[h:]min:sec. CPU time: user 2.63 sys 0.32 (99%). Peak memory: 252340KB.\nElapsed time: 0:25.13[h:]min:sec. CPU time: user 24.36 sys 0.76 (99%). Peak memory: 1019160KB.\nmake[1]: *** [Makefile:654: do-6_report] Error 1\nmake: *** [Makefile:654: /work/logs/asap7/opentallas_ot_v41_me_macro_local_cut_asap7_v41memicrojoint/base/6_report.log] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T05:17:09.120374+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41_me_macro_local_cut",
+      "--source",
+      "rtl/chip/physical/ot_v41_me_macro_local_cut.sv",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--false-path-io",
+      "--die-area",
+      "0",
+      "0",
+      "220",
+      "160",
+      "--core-area",
+      "10",
+      "10",
+      "210",
+      "150",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/abi3/v41_macro_local_place_tracks.tcl",
+      "--max-transition-ns",
+      "0.32",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "pnr",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41_me_macro_local/physical_joint_grid.json",
+      "--keep-workdir",
+      "/tmp/v41_me_microblock_joint_grid",
+      "--nickname-tag",
+      "v41memicrojoint"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/v41-microblocks-tracks-20260929/source/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/home/ubuntu/v41-microblocks-tracks-20260929/source"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-5.15.0-194-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/v41-microblocks-tracks-20260929/source"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

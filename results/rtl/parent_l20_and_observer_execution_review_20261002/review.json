@@ -1,0 +1,26 @@
+{
+  "status": "PASS_SCOPED_EXECUTION_REVIEW",
+  "l20_owner": "edf71d58028b4a2db4044e2a38abd9d767d511e4",
+  "l20_evidence_hashes_verified": 10,
+  "l20_terminal": "PASS 21088 beats including full512 rows, sidebands, optoff equality, invalid fault",
+  "l20_scope": "isolated quantizer only",
+  "observer_receipt_sha256": "b94879209ff7f8e28362c5109c136373db31de2dc1eaa4d14e876b035952df59",
+  "observer_all_step_logs_hash_verified": 7,
+  "observer_full_baselines": 2,
+  "observer_negative_controls": 4,
+  "observer_baseline_seconds": [
+    182.926,
+    193.109
+  ],
+  "observer_baseline_peak_rss_kib": [
+    33395580,
+    35022408
+  ],
+  "observer_scope": "full source hierarchy lint only, strict copied-wrapper warnings absent, wrong-path/parameter controls rejected",
+  "no_token_or_timing_credit": true,
+  "causal_deadlines": "BOUND_MISSING",
+  "prior_failures_preserved": true,
+  "observer_committed_owner": "ed6d9e7cd6aee97cb60d36a3c0ab5bd4d3eb739a",
+  "observer_committed_artifact_hashes_verified": 19,
+  "observer_protected_source_hashes_verified": 131
+}

@@ -1,0 +1,222 @@
+{
+  "argv": [
+    "./obj_q/Vtb_q"
+  ],
+  "case": "q",
+  "comparison_samples_minimum": 270780,
+  "coverage": {
+    "BF": 0,
+    "cycles": 90260,
+    "gated": 2307,
+    "issues": 3520,
+    "loads": 275,
+    "opened": 87949,
+    "partials": 176
+  },
+  "elapsed_seconds": 0.5422766897827387,
+  "explicit_DIFF": false,
+  "failure_kinds": [],
+  "log": "positive_q_simulate.log",
+  "log_sha256": "d4c188cafab8aa42a0e1378d02c7e7ec069a7d3dd357e821076ff6f78c75ed3e",
+  "metrics": {
+    "cgroup.procs": "3276434",
+    "cpu.max": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "1586020352",
+    "memory.swap.max": "0"
+  },
+  "numerical_completion": {
+    "events": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ],
+      [
+        4,
+        1,
+        8,
+        1,
+        40,
+        80
+      ],
+      [
+        5,
+        6,
+        8,
+        1,
+        136,
+        272
+      ],
+      [
+        6,
+        6,
+        4,
+        1,
+        184,
+        368
+      ],
+      [
+        7,
+        6,
+        4,
+        1,
+        232,
+        464
+      ],
+      [
+        9,
+        6,
+        4,
+        2,
+        280,
+        560
+      ],
+      [
+        10,
+        6,
+        4,
+        2,
+        328,
+        656
+      ],
+      [
+        1,
+        1,
+        8,
+        1,
+        344,
+        688
+      ]
+    ],
+    "expected_counters": [
+      [
+        0,
+        344,
+        688,
+        352
+      ]
+    ],
+    "expected_events": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ],
+      [
+        4,
+        1,
+        8,
+        1,
+        40,
+        80
+      ],
+      [
+        5,
+        6,
+        8,
+        1,
+        136,
+        272
+      ],
+      [
+        6,
+        6,
+        4,
+        1,
+        184,
+        368
+      ],
+      [
+        7,
+        6,
+        4,
+        1,
+        232,
+        464
+      ],
+      [
+        9,
+        6,
+        4,
+        2,
+        280,
+        560
+      ],
+      [
+        10,
+        6,
+        4,
+        2,
+        328,
+        656
+      ],
+      [
+        1,
+        1,
+        8,
+        1,
+        344,
+        688
+      ]
+    ],
+    "fatal_or_DIFF": false,
+    "legacy_terminal": [
+      [
+        0,
+        90260,
+        176,
+        3520,
+        2307,
+        87949,
+        275
+      ]
+    ],
+    "malformed_marker": false,
+    "pass_counters": [
+      [
+        0,
+        344,
+        688,
+        352
+      ]
+    ],
+    "valid": true,
+    "wake_terminal": [
+      [
+        0,
+        1444160,
+        90256
+      ]
+    ],
+    "wake_valid": true
+  },
+  "pass_marker": "PASS actual-element BF=0 cycles=90260 partials=176 issues=3520 gated=2307 opened=87949 loads=275",
+  "phase": "simulate",
+  "remaining_seconds_at_start": 60.0,
+  "returncode": 0,
+  "variant": "positive"
+}

@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-01T09:02:02.156710+00:00",
+  "action": "SIGSTOP supervisor PID only, no process-group signal; checked no children and no dispatch event after stop",
+  "handle": {
+    "pid": 3047316,
+    "start_ticks": "304527912",
+    "state": "T"
+  },
+  "cmdline": "python3 /tmp/claude-1000/w13jobs/chain15/w13_chain_successor.py /tmp/claude-1000/w13jobs/chain15/config.json ",
+  "columns_preserved": {
+    "2089594": {
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    "1901598": {
+      "start_ticks": "302086726",
+      "state": "S"
+    }
+  },
+  "events_sha256": "c7c5c1a4e9cd688fab31190aacc431ad873a6e006181987cf218b3c7c111e512"
+}

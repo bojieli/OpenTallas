@@ -1,0 +1,391 @@
+{
+  "adoption": false,
+  "claim_boundary": "Checkpoint producer/component gate preparation, not a full RTL token or an adopted performance lever.",
+  "clock_status": "inherited analytical clock; 1.2 GHz SS/FF headline remains unqualified",
+  "design": {
+    "barrier": {
+      "arrive_cycles": 25,
+      "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)",
+      "boundary_cycles": 64,
+      "levels": 2,
+      "max_leaf_um": 4253.5,
+      "max_trunk_um": 6489.3,
+      "measured_round_trip_cycles": 48,
+      "release_cycles": 24,
+      "round_trip_cycles": 49,
+      "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+      "x_broadcast_tail_cycles": 16
+    },
+    "bulk_copy": {
+      "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+      "descriptor_bytes": 4096,
+      "in_flight_B_die": 1800000.0,
+      "in_flight_B_sm": 56250.0,
+      "measured": [
+        {
+          "B_per_cycle": 1.6,
+          "outstanding_lines": 7,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 3.7,
+          "outstanding_lines": 16,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 14.9,
+          "outstanding_lines": 64,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 59.5,
+          "outstanding_lines": 256,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 101.0,
+          "outstanding_lines": 440,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 102.5,
+          "outstanding_lines": 512,
+          "share_B_per_cycle": 102.4
+        }
+      ],
+      "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+      "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512",
+      "outstanding_descriptors_sm": 14,
+      "outstanding_lines_sm": 512,
+      "outstanding_sectors_sm": 879
+    },
+    "clock_hz": 1098640000.0,
+    "die_fit": {
+      "core_avail_mm2": 688.44,
+      "dedicated_mm2": 0.0,
+      "fits": true,
+      "l2_mm2": 4.13,
+      "sm_array_mm2": 150.85,
+      "used_mm2": 154.98
+    },
+    "drain_basis": "measured (RTL)",
+    "drain_cycles": 89,
+    "drain_formula_cycles": 108,
+    "element": {
+      "bf16_lanes": 0,
+      "blockdot_lanes": 0,
+      "cols": 16,
+      "il": 8,
+      "ingest_Bpc": 128,
+      "int8_lanes": 128,
+      "k_max": 12288,
+      "scratch_kb": 64,
+      "simt_lanes": 128,
+      "stack_levels": 5,
+      "subparts": 4,
+      "x_bytes": 2
+    },
+    "hbm_Bpc": 3276.8,
+    "l2": {
+      "macros": 256,
+      "mb_per_slice": 2,
+      "mm2": 4.13,
+      "role": "x/result gather and broadcast, TP-exchange staging, KV-write coalescing; weights bypass it (bulk copy lands in SM SMEM, no reuse at decode)",
+      "slices": 4
+    },
+    "measured": {
+      "qwen_barrier_cycles": 48,
+      "qwen_drain_cycles": 89,
+      "sources": [
+        "results/rtl/gpu_sm_exact.json",
+        "results/rtl/gpu_sm_exact.json",
+        "results/rtl/gpu_sm_blockdot_exact.json",
+        "results/rtl/gpu_supply_barrier.json"
+      ],
+      "v41_barrier_cycles": 62,
+      "v41_drain_cycles": 95
+    },
+    "model": "qwen",
+    "noc": {
+      "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die",
+      "result_gather_bits_per_sm": 256,
+      "weight_port_bits_per_sm": 1088,
+      "weight_wires_per_quadrant": 8704,
+      "x_broadcast_bits": 2048
+    },
+    "sm_area": {
+      "footprint_logic_mm2": 4.359,
+      "hardened_columns": {},
+      "logic_mm2": 2.179,
+      "logic_um2": {
+        "blockdot_and_trees": 0,
+        "mma_lanes_and_trees": 1965738,
+        "row_scale": 12532,
+        "simt": 149605,
+        "stack": 32428,
+        "x_operand_regs": 19110
+      },
+      "macs_per_clk": 2048,
+      "sram_kb": {
+        "scratch": 64,
+        "staging": 128,
+        "x_store": 384.0
+      },
+      "sram_macros": {
+        "scratch": 2,
+        "staging": 4,
+        "x_store": 16
+      },
+      "sram_mm2": 0.355,
+      "total_mm2": 4.714
+    },
+    "sm_count": 32,
+    "sm_count_basis": "8 per stack quadrant; >= the 0.5%-of-unbounded minimum",
+    "sm_count_min": 28,
+    "sm_count_sweep": [
+      {
+        "cycles": 4081061,
+        "n_sm": 8,
+        "tokens_s_pkg": 269.2
+      },
+      {
+        "cycles": 2750369,
+        "n_sm": 12,
+        "tokens_s_pkg": 399.5
+      },
+      {
+        "cycles": 2085023,
+        "n_sm": 16,
+        "tokens_s_pkg": 526.9
+      },
+      {
+        "cycles": 1685815,
+        "n_sm": 20,
+        "tokens_s_pkg": 651.7
+      },
+      {
+        "cycles": 1419677,
+        "n_sm": 24,
+        "tokens_s_pkg": 773.9
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 28,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 32,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 36,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 40,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 44,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 48,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 52,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 56,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 60,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 64,
+        "tokens_s_pkg": 880.5
+      }
+    ],
+    "staging_kb_per_sm": 128,
+    "staging_sweep": [
+      {
+        "cycles": 1299389,
+        "staging_kb_per_sm": 16,
+        "tokens_s": 845.5
+      },
+      {
+        "cycles": 1273842,
+        "staging_kb_per_sm": 32,
+        "tokens_s": 862.5
+      },
+      {
+        "cycles": 1257262,
+        "staging_kb_per_sm": 64,
+        "tokens_s": 873.8
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 128,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 256,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 512,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 1024,
+        "tokens_s": 880.5
+      }
+    ],
+    "token": {
+      "additive_model_tokens_s": 871.6,
+      "boundaries": 181,
+      "chain_cycles_if_serial": 1087004,
+      "cycles": 1247686,
+      "exposed_over_hbm_cycles": 154,
+      "hbm_cycles": 1247532,
+      "note": "the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the last op's tail are exposed",
+      "tokens_s": 880.5
+    }
+  },
+  "operation": {
+    "K": 4096,
+    "arithmetic": "BF16 input; sequential contiguous K chunks; pairwise FP32 tree; one BF16 row-scale FP32 multiply",
+    "arithmetic_intensity_macs_per_weight_byte": 1,
+    "chunk_len": 16,
+    "groups": 2,
+    "physical_cols": 16,
+    "replica_policy": "one SM tested; 32 per die, two TP dies",
+    "result_bits": 32,
+    "row_scale_bytes": 2,
+    "rows_die": 3072,
+    "rows_sm": 96,
+    "split": 256,
+    "stage": "layer0.qkv",
+    "tested_cols": 1,
+    "weight_Bpc": 128,
+    "weight_bytes": 393216,
+    "weight_lines": 3072,
+    "x_fragment_bits": 2048,
+    "x_macro_words": 96
+  },
+  "physical_status": "existing model only; no new hardware, SS/FF or routing claim",
+  "remaining_full_token_exit": [
+    "All 32 SM row slices per die, all 36 layers and vocabulary head",
+    "RTL norm/QK/RoPE/FP8 KV/attention/SFU/residual and ordered TP scale composition",
+    "L2 gather, x broadcast and 32-SM barrier runtime; physical 16-column element",
+    "Bit-exact reference token and every checkpoint boundary with connected RTL cycle count fed to unified model",
+    "In-context SS setup/FF hold, 60ps/25ps uncertainties and hub routing gate"
+  ],
+  "schema": "opentallas.w19-qwen-hbm-preflight.v1",
+  "sm_snapshot": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "prefix_equivalence": {
+      "path": "results/rtl/ot_hdc_prefix_vec_equiv.json",
+      "sha256": "79a9889cf3ab92fc043baab9afc035629a110206a5bf6e3404f53fb1252ca4ce",
+      "widths": [
+        {
+          "W": 28,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 9,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 12,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 24,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        },
+        {
+          "W": 25,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        }
+      ]
+    },
+    "source_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+      "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+      "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+      "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+      "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e",
+      "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    }
+  },
+  "source_sha256": {
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "results/floorplan/hbm_gpu/qwen_hbm_die.json": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+    "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+    "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "933efd1766f008560fd01b14e40723ef3249adb85667c85b03382839d9a85c59",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "d603cb58d074295c1e50799aac5b6e3990f872d5e3d9ac32f230bd00f8fa3976",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_qwen_int8_image.py": "22498c68d20ebffdf0f6282d325215f75a9f1ad3af00f26665f5725fa8990875",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+    "tools/uarch_model.py": "c85d9588ffd08641af364151bc7e0923324eea3520a63d41451e11716a62312f",
+    "tools/w19_qwen_hbm_preflight.py": "db31df559bb45cf461c61bda84b64a068813a666b2d7dba38d71c113b09260d6"
+  },
+  "status": "model_composed_before_build",
+  "tp": 2
+}

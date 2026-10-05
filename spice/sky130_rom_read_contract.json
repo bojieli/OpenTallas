@@ -1,0 +1,226 @@
+{
+  "acceptance": {
+    "absent_bitline_fraction_min": 0.75,
+    "discharge_delay_ns_max": 4.0,
+    "inactive_leakage_ua_max": 1000.0,
+    "masked_bitline_fraction_min": 0.75,
+    "present_bitline_fraction_max": 0.25,
+    "read_energy_fj_max": 10000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.5,
+    "sense_high_fraction_min": 0.75,
+    "sense_low_fraction_max": 0.25,
+    "unexpected_warnings_max": 0
+  },
+  "campaigns": [
+    {
+      "dimensions": [
+        "process_corner",
+        "vdd_v",
+        "temperature_c"
+      ],
+      "fixed": {
+        "array_rows": 256,
+        "output_load_ff": 20.0
+      },
+      "name": "full_pvt_nominal_load"
+    },
+    {
+      "dimensions": [
+        "array_rows",
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "tt",
+        "temperature_c": 25.0,
+        "vdd_v": 1.8
+      },
+      "name": "array_and_port_load_nominal_pvt"
+    },
+    {
+      "dimensions": [
+        "array_rows",
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ss",
+        "temperature_c": 125.0,
+        "vdd_v": 1.62
+      },
+      "name": "array_and_port_load_slow_low_hot"
+    },
+    {
+      "dimensions": [
+        "array_rows",
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ff",
+        "temperature_c": -40.0,
+        "vdd_v": 1.98
+      },
+      "name": "array_and_port_load_fast_high_cold"
+    }
+  ],
+  "claim_boundary": {
+    "evidence_class": "simulated",
+    "establishes": [
+      "via-present versus via-absent NOR-ROM read topology",
+      "transistor-level expert-wordline masking and static sense polarity",
+      "deterministic sensitivity to the declared PVT and synthetic capacitive loads",
+      "a reproducible open-PDK/ngspice circuit-methodology path"
+    ],
+    "forbidden_inferences": [
+      "N7 or N4 ROM density, delay, energy, leakage, bandwidth, yield, or cost",
+      "full-array simultaneous-read current, IR drop, noise, or thermal feasibility",
+      "extracted decoder, wordline, bitline, sense-amplifier, repair, or port timing",
+      "statistical sense offset, mismatch yield, aging, electromigration, or silicon correlation",
+      "wafer-scale inference throughput or GPU speedup"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited_without_a_separately_reviewed_physics_based_rule_and_target_macro_correlation"
+  },
+  "dimensions": {
+    "array_rows": [
+      64,
+      256,
+      1024
+    ],
+    "output_load_ff": [
+      5.0,
+      20.0,
+      80.0
+    ],
+    "process_corner": [
+      "ss",
+      "tt",
+      "ff"
+    ],
+    "temperature_c": [
+      -40.0,
+      25.0,
+      125.0
+    ],
+    "vdd_v": [
+      1.62,
+      1.8,
+      1.98
+    ]
+  },
+  "experiment_id": "sky130_via_nor_read_v1",
+  "netlist": {
+    "bitline_fixed_cap_ff": 5.0,
+    "bitline_per_row_cap_ff": 0.12,
+    "device_geometry_um": {
+      "channel_length": 0.15,
+      "precharge_pfet_width": 2.0,
+      "read_nfet_width": 1.0,
+      "sense_nfet_width": 1.0,
+      "sense_pfet_width": 1.0,
+      "wordline_gate_nfet_width": 1.0,
+      "wordline_gate_pfet_width": 1.0
+    },
+    "parasitic_status": "synthetic_lumped_capacitance_not_extracted_layout",
+    "timing_ns": {
+      "precharge_release": 2.0,
+      "read_sample": 5.0,
+      "simulation_stop": 10.0,
+      "wordline_assert": 2.2,
+      "wordline_deassert": 7.0
+    },
+    "topology": "three matched precharged bitlines: selected via-present cell, selected via-absent dummy, and via-present cell behind a transistor-level expert wordline mask; static CMOS inverter senses each bitline"
+  },
+  "pdk": {
+    "annotated_tag_object": "a0efde9b7b9f6847fbcc42b15c8fcae962c4fca7",
+    "cache_environment_variable": "OPENTALLAS_SKY130_PR_ROOT",
+    "commit": "d717cd4d8d93cce6a8d7534f6a40432f0045039f",
+    "files": [
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8.pm3.spice",
+        "sha256": "a11bcf1a0c5b0b2822f464c0c55885e17850505c8c8680f9580067ed9430a83c",
+        "size_bytes": 407758
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__ff.corner.spice",
+        "sha256": "8ee5013771732c9bec0da1084ef80190455d9c0d84761890c308d1f098b8a565",
+        "size_bytes": 67074
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__ss.corner.spice",
+        "sha256": "88f06a72f0dd1f954fe35d328779f1157fa0ef10fc5c9cb2f7dc252697abfc00",
+        "size_bytes": 67125
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__tt.corner.spice",
+        "sha256": "270aa2fe27c8dd4bc392cb3f63e3dd522d4c7fe5978575fb66788db192915366",
+        "size_bytes": 66380
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ff.corner.spice",
+        "sha256": "30ba71bde4024ff291a68352930bf2fc3e07f627efb090e1575b9dbd7b6e75da",
+        "size_bytes": 792
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ff.pm3.spice",
+        "sha256": "7c701f17c39f0649fbc64397f64df00f04355e8aade2f16a375ff17a16966fe8",
+        "size_bytes": 790636
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ss.corner.spice",
+        "sha256": "8d8b59726b48aa7a435b8f9bf0d0ecce0cef9f6359d4bb206f0a31306712e310",
+        "size_bytes": 790
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ss.pm3.spice",
+        "sha256": "52afa3f88f9c2ed7069990160e13aab8ae464b047a9efea7ef51a93510986e60",
+        "size_bytes": 788935
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__tt.corner.spice",
+        "sha256": "641d251a08bf9ddcfc67ba4bd4698ae1978d09447eb6ebf90055fdf3d21917ab",
+        "size_bytes": 796
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__tt.pm3.spice",
+        "sha256": "bf40d8c358fc11998f60f3734208dce44c206b0007a51c7bb5680f55d41a5c55",
+        "size_bytes": 787521
+      },
+      {
+        "path": "models/parameters/invariant.spice",
+        "sha256": "9f47fd02e7d4010fc3eccc59420bf8f2ec86aa8b5ee68d677d150a6ff405f12e",
+        "size_bytes": 371970
+      },
+      {
+        "path": "models/corners/ff/nonfet.spice",
+        "sha256": "8b6237c8cb7601af952dc7c1ccd033096e008766f75f630f1aee9d34745b0e4f",
+        "size_bytes": 1821
+      },
+      {
+        "path": "models/corners/ss/nonfet.spice",
+        "sha256": "b26f1ce3a77d18807c766de9b9963c90185f605074a960f81ce101e935708a95",
+        "size_bytes": 1819
+      },
+      {
+        "path": "models/corners/tt/nonfet.spice",
+        "sha256": "63fdbb8e8fee2a45bf91dd5a56748a00874b741e66beec8649b024859d4dd755",
+        "size_bytes": 1745
+      }
+    ],
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google/skywater-pdk-libs-sky130_fd_pr",
+    "tag": "v0.20.1"
+  },
+  "reports": {
+    "json": "results/spice/sky130_rom_read.json",
+    "markdown": "results/spice/ROM_READ_REPORT.md"
+  },
+  "schema_version": 1,
+  "toolchain": {
+    "ngspice": {
+      "canonical_executable_sha256": "5d0793e89377619b8ae2895d32464c4900acf3a65f6861e246e00d8e4483f773",
+      "canonical_package": "ngspice 36+ds-1ubuntu0.1",
+      "compatibility_mode": "hsa",
+      "version_contains": "ngspice-36"
+    }
+  }
+}

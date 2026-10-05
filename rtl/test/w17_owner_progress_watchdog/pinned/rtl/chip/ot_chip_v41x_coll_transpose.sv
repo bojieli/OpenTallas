@@ -1,0 +1,226 @@
+`timescale 1ns/1ps
+// Transpose four index-major gather ranks into rank-major VM writes.
+// One accepted input beat contains ranks 0..3 for one index.  Four indices
+// form a tile. On input, each rank word is stored in its destination bank
+// slot, selected by VM word-address[1:0]. Each output lane is wired to one
+// static bank and emits the corresponding rank-major word and address. This
+// avoids a 2048-bit rotate immediately before the VM write ports. Two tiles
+// permit sustained one-beat/cycle input and output; backpressure is returned
+// through in_ready without dropping data.
+module ot_chip_v41x_coll_transpose #(
+    parameter integer WA = 19,
+    parameter integer FW = 512,
+    parameter integer WRITE_SEG = 16,
+    // Full die ties out_ready high; register bank-local output selection.
+    // OUT_PIPE=0 retains the elastic output for the standalone stall tests.
+    parameter integer OUT_PIPE = 0
+) (
+    input  wire clk, rst_n,
+    input  wire start,
+    input  wire [WA-1:0] dst, n,
+    output wire in_ready,
+    input  wire in_valid,
+    input  wire [4*FW-1:0] in_data,
+    input  wire in_last,
+    input  wire out_ready,
+    output wire out_valid,
+    output wire [3:0] out_we,
+    output wire [4*WA-1:0] out_addr,
+    output wire [4*FW-1:0] out_data,
+    output wire out_last,
+    output reg done, fault
+);
+    reg active, wr_sel, rd_sel;
+    reg [WA-1:0] n_r, received;
+    reg [WA-1:0] rank_addr [0:3];
+    reg [WA-1:0] rank_addr_q [0:3];
+    reg [FW-1:0] in_data_q [0:3];
+    reg accept_q, slot_q, tile_end_q, last_q;
+    reg [2:0] fill [0:1];
+    reg tile_ready [0:1], tile_last [0:1];
+    reg [1:0] drain_rank;
+    reg [FW-1:0] tile [0:1][0:3][0:3];
+    reg [WA-1:0] tile_addr [0:1][0:3][0:3];
+    reg [3:0] tile_mask [0:1][0:3];
+
+    assign in_ready = active && !fault && !tile_ready[wr_sel] && received < n_r;
+    wire take_in = in_valid && in_ready;
+    wire pipe_fetch = active && !fault && tile_ready[rd_sel];
+    wire pipe_v, pipe_last;
+    assign out_valid = (OUT_PIPE != 0) ? pipe_v : pipe_fetch;
+    wire take_out = out_valid && out_ready;
+    wire advance = (OUT_PIPE != 0) ? pipe_fetch : take_out;
+    assign out_last = (OUT_PIPE != 0) ? (pipe_v && pipe_last) :
+                      (out_valid && tile_last[rd_sel] && drain_rank == 2'd3);
+
+    genvar k, slot, rank, bank, seg;
+    // Static cells and one registered local write enable per WRITE_SEG bits
+    // avoid a shared 2048-bit data-path enable. Encode each enable with the
+    // segment's first data bit; decoding against the registered data bit gives
+    // the original enable, while making the registers functionally distinct.
+    // Identical keep-marked enable flops were merged by synthesis.
+    generate for (slot = 0; slot < 2; slot = slot + 1) begin : g_slot
+        for (rank = 0; rank < 4; rank = rank + 1) begin : g_rank
+            for (bank = 0; bank < 4; bank = bank + 1) begin : g_bank
+                wire wr_cell = take_in && wr_sel == 1'(slot) && rank_addr[rank][1:0] == 2'(bank);
+                wire clear_cell = start || (advance && drain_rank == 2'd3 && rd_sel == 1'(slot));
+                wire commit_cell;
+                for (seg = 0; seg < FW/WRITE_SEG; seg = seg + 1) begin : g_seg
+                    reg en_code;
+                    wire en_local = en_code ^ in_data_q[rank][seg*WRITE_SEG];
+                    always @(posedge clk or negedge rst_n)
+                        if (!rst_n) en_code <= 1'b0;
+                        else en_code <= wr_cell ^ in_data[rank*FW + seg*WRITE_SEG];
+                    always @(posedge clk) if (en_local)
+                        tile[slot][rank][bank][seg*WRITE_SEG +: WRITE_SEG] <=
+                            in_data_q[rank][seg*WRITE_SEG +: WRITE_SEG];
+                end
+                assign commit_cell = g_seg[0].en_local;
+                always @(posedge clk) if (commit_cell)
+                    tile_addr[slot][rank][bank] <= rank_addr_q[rank];
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) tile_mask[slot][rank][bank] <= 1'b0;
+                    else if (clear_cell) tile_mask[slot][rank][bank] <= 1'b0;
+                    else if (commit_cell) tile_mask[slot][rank][bank] <= 1'b1;
+            end
+        end
+    end endgenerate
+
+    generate if (OUT_PIPE != 0) begin : g_out_pipe
+        reg valid_q, last_out_q;
+        assign pipe_v = valid_q;
+        assign pipe_last = last_out_q;
+        wire [2:0] next_sel = advance ?
+            ((drain_rank == 2'd3) ? {~rd_sel, 2'b00} : {rd_sel, drain_rank + 2'd1}) :
+            {rd_sel, drain_rank};
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin valid_q <= 0; last_out_q <= 0; end
+            else if (start) begin valid_q <= 0; last_out_q <= 0; end
+            else begin
+                valid_q <= pipe_fetch;
+                last_out_q <= pipe_fetch && tile_last[rd_sel] && drain_rank == 2'd3;
+            end
+        for (k = 0; k < 4; k = k + 1) begin : g_bank_out
+            reg [WA-1:0] addr_q;
+            reg mask_q;
+            always @(posedge clk) begin
+                addr_q <= tile_addr[rd_sel][drain_rank][k];
+                mask_q <= tile_mask[rd_sel][drain_rank][k];
+            end
+            assign out_we[k] = valid_q && mask_q;
+            assign out_addr[k*WA +: WA] = addr_q;
+            for (seg = 0; seg < FW/WRITE_SEG; seg = seg + 1) begin : g_seg_out
+                reg [2:0] salt_q, code_q;
+                reg [WRITE_SEG-1:0] data_q;
+                wire [2:0] salt_in = in_data[k*FW + seg*WRITE_SEG +: 3];
+                wire [2:0] local_sel = code_q ^ salt_q;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) begin salt_q <= 0; code_q <= 0; end
+                    else begin
+                        salt_q <= salt_in;
+                        code_q <= next_sel ^ salt_in;
+                    end
+                always @(posedge clk)
+                    data_q <= tile[local_sel[2]][local_sel[1:0]][k][seg*WRITE_SEG +: WRITE_SEG];
+                assign out_data[k*FW + seg*WRITE_SEG +: WRITE_SEG] = data_q;
+            end
+        end
+    end else begin : g_out_elastic
+        assign pipe_v = 1'b0;
+        assign pipe_last = 1'b0;
+        for (k = 0; k < 4; k = k + 1) begin : g_bank_out
+            assign out_we[k] = take_out && tile_mask[rd_sel][drain_rank][k];
+            assign out_addr[k*WA +: WA] = tile_addr[rd_sel][drain_rank][k];
+            assign out_data[k*FW +: FW] = tile[rd_sel][drain_rank][k];
+        end
+    end endgenerate
+
+    integer r;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            active <= 1'b0; wr_sel <= 1'b0; rd_sel <= 1'b0;
+            n_r <= 0; received <= 0; drain_rank <= 0;
+            accept_q <= 0; slot_q <= 0; tile_end_q <= 0; last_q <= 0;
+            for (r = 0; r < 4; r = r + 1) begin
+                rank_addr[r] <= 0;
+                rank_addr_q[r] <= 0;
+                in_data_q[r] <= 0;
+            end
+            fill[0] <= 0; fill[1] <= 0;
+            tile_ready[0] <= 0; tile_ready[1] <= 0;
+            tile_last[0] <= 0; tile_last[1] <= 0;
+            done <= 0; fault <= 0;
+        end else begin
+            done <= 0;
+            accept_q <= take_in;
+            // Unconditional capture avoids a single take_in clock-enable net
+            // driving all 2,048 data flops. Local valid/enable flops decide
+            // whether this pipeline beat commits to a tile one cycle later.
+            for (r = 0; r < 4; r = r + 1) begin
+                rank_addr_q[r] <= rank_addr[r];
+                in_data_q[r] <= in_data[r*FW +: FW];
+            end
+            if (take_in) begin
+                slot_q <= wr_sel;
+                tile_end_q <= fill[wr_sel] == 3 || in_last;
+                last_q <= in_last;
+            end
+            if (start) begin
+                if (active || n == 0) fault <= 1;
+                else begin
+                    accept_q <= 0;
+                    active <= 1; n_r <= n; received <= 0;
+                    rank_addr[0] <= dst;
+                    rank_addr[1] <= dst + n;
+                    rank_addr[2] <= dst + (n << 1);
+                    rank_addr[3] <= dst + (n << 1) + n;
+                    wr_sel <= 0; rd_sel <= 0; drain_rank <= 0;
+                    fill[0] <= 0; fill[1] <= 0;
+                    tile_ready[0] <= 0; tile_ready[1] <= 0;
+                    tile_last[0] <= 0; tile_last[1] <= 0;
+                end
+            end else if (active) begin
+                if (accept_q && tile_end_q) begin
+                    tile_last[slot_q] <= last_q;
+                    tile_ready[slot_q] <= 1;
+                end
+                if (take_in) begin
+                    for (r = 0; r < 4; r = r + 1)
+                        rank_addr[r] <= rank_addr[r] + 1'b1;
+                    received <= received + 1'b1;
+                    if (in_last != (received == n_r - 1'b1)) fault <= 1;
+                    if (fill[wr_sel] == 3 || in_last) begin
+                        wr_sel <= ~wr_sel;
+                    end else fill[wr_sel] <= fill[wr_sel] + 1'b1;
+                end
+                if (OUT_PIPE != 0 && pipe_v && pipe_last) begin
+                    active <= 0; done <= 1;
+                end
+                if (advance) begin
+                    if (drain_rank == 2'd3) begin
+                        tile_ready[rd_sel] <= 0;
+                        fill[rd_sel] <= 0;
+                        rd_sel <= ~rd_sel;
+                        drain_rank <= 0;
+                        if (OUT_PIPE == 0 && tile_last[rd_sel]) begin active <= 0; done <= 1; end
+                    end else drain_rank <= drain_rank + 1'b1;
+                end
+            end
+        end
+    end
+`ifndef SYNTHESIS
+    integer i, j;
+    always @(posedge clk) if (rst_n && OUT_PIPE != 0 && out_valid && !out_ready)
+        $fatal(1, "pipelined collective transpose requires an always-ready bank sink");
+    always @(posedge clk) if (rst_n && take_out) begin
+        for (i = 0; i < 4; i = i + 1)
+            for (j = i + 1; j < 4; j = j + 1)
+                if (out_we[i] && out_we[j] &&
+                    out_addr[i*WA +: 2] == out_addr[j*WA +: 2])
+                    $fatal(1, "collective transpose VM bank collision");
+        for (i = 0; i < 4; i = i + 1)
+            if (out_we[i] && out_addr[i*WA +: 2] != 2'(i))
+                $fatal(1, "collective transpose output lane is not its static VM bank");
+    end
+`endif
+endmodule

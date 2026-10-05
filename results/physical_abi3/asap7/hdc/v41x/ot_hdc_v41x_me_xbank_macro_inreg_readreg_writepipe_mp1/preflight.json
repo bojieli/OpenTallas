@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.physical.v41x_me_mp1_rl5_bankwrite_preflight.v1",
+  "status": "cts_hold_fail",
+  "claim_scope": "MP1 eight analytical SRAM macro local store cut; pre-CTS place passes setup/hold but CTS cannot close hold under the generic top-port IO min/max model; not a routed cluster/die result.",
+  "target_period_ns": 0.92,
+  "view": "ASAP7 TT RVT academic predictive",
+  "openroad_version": "26Q3-1510-g6cb3f2b704",
+  "pin_placement": {
+    "io_pins": 2297,
+    "available_slots": 20772,
+    "passed": true
+  },
+  "detailed_place": {
+    "setup_wns_ns": 0.202618,
+    "hold_wns_ns": 0.0434142,
+    "fmax_hz": 1393960000.0,
+    "total_cell_area_um2": 33872.8,
+    "sram_macro_area_um2": 31132.6
+  },
+  "cts": {
+    "completed": false,
+    "error": "RSZ-0060 max buffer count reached",
+    "hold_buffers_inserted": 7584,
+    "remaining_hold_worst_ns": -0.024932,
+    "remaining_hold_tns_ns": -6.374932,
+    "worst_endpoint": "u_store.rq_q_r[45] D; earlier pre_d_r and wr_d_r endpoints; top-port min-delay to local input FF under routed clock skew"
+  },
+  "route_completed": false,
+  "source_sha256": {
+    "rtl/test/ot_hdc_v41x_me_xbank_macro_inreg_readreg_writepipe_mp1.sv": "a306dafa14d5da08cfaba171be4de48598ccc9b18fe2d54d1ce72116d9fcf52d",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg_writepipe.sv": "ab1b3b7ca71186d6087abb10b52781184293ff43fd4028d964b03e39b0db61e6",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_readreg_writepipe.sv": "e96dcb99e08f0a43ece1b698ba2cf3dd7966a3cbbefd913772ff1ef1bb9ac917",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+  },
+  "flow_files_sha256": {
+    "config.mk": "4724fb48046c9cacfcb0b9d1792565ffde102e90a638324e9226615930071ae3",
+    "constraint.sdc": "6fc0dd65b7b577c1beffd041fb8d26d0ea1ba2a51f144bfc05a6e4ce6fafc9a6",
+    "detailed_place_metrics": "eefcaac932d56b916c375607f1e97a47aef9993fab5844b24f8167ececde13bd",
+    "cts_log": "449e304033a8e24f526cb8252e6733c69026e563bcf9d5789b7085256a56ed22"
+  }
+}

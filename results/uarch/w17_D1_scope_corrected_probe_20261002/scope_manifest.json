@@ -1,0 +1,199 @@
+{
+  "authority_limit": "Marked observation block only, bounded lexical scope checks; actual frontend elaboration still required",
+  "branch_parameters": {
+    "FULL_SHAPE": 1,
+    "WINDOW_HBM_ATTENTION": 1,
+    "WIN_STACK": 0
+  },
+  "declaration_locations": {
+    "WINDOW": {
+      "w_addr": [
+        {
+          "line": 594,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_rdy": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_s_beat": [
+        {
+          "line": 595,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_s_tag": [
+        {
+          "line": 596,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_srdy": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_sv": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_tag": [
+        {
+          "line": 596,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_v": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_wdone": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ],
+      "w_we": [
+        {
+          "line": 593,
+          "scope": [
+            "g_packed_kv"
+          ]
+        }
+      ]
+    },
+    "core": {
+      "d_skip": [
+        {
+          "line": 449,
+          "scope": []
+        }
+      ],
+      "d_unit": [
+        {
+          "line": 445,
+          "scope": []
+        }
+      ],
+      "kv_ok": [
+        {
+          "line": 126,
+          "scope": []
+        }
+      ],
+      "kvd_v": [
+        {
+          "line": 126,
+          "scope": []
+        }
+      ],
+      "m0_gate": [
+        {
+          "line": 795,
+          "scope": []
+        }
+      ],
+      "me_cls": [
+        {
+          "line": 836,
+          "scope": []
+        }
+      ],
+      "me_go": [
+        {
+          "line": 406,
+          "scope": []
+        },
+        {
+          "line": 493,
+          "scope": []
+        }
+      ],
+      "me_ready": [
+        {
+          "line": 407,
+          "scope": []
+        }
+      ],
+      "pc": [
+        {
+          "line": 400,
+          "scope": []
+        }
+      ],
+      "q_gate": [
+        {
+          "line": 787,
+          "scope": []
+        }
+      ],
+      "st": [
+        {
+          "line": 399,
+          "scope": []
+        }
+      ],
+      "waited": [
+        {
+          "line": 495,
+          "scope": []
+        }
+      ],
+      "win_idle": [
+        {
+          "line": 415,
+          "scope": []
+        }
+      ]
+    }
+  },
+  "instances": [
+    {
+      "module": "ot_chip_v41x_die",
+      "path": "dut"
+    },
+    {
+      "module": "ot_chip_v41x_tile",
+      "path": "dut.u_tile"
+    },
+    {
+      "module": "ot_hdc_core_v41x",
+      "path": "dut.u_tile.u_core"
+    },
+    {
+      "module": "ot_chip_v41x_window_attn_source",
+      "path": "dut.g_packed_kv.g_window_hbm_attention.u_source"
+    },
+    {
+      "module": "ot_chip_v41x_window_kv_prefetch",
+      "path": "dut.g_packed_kv.g_window_hbm_attention.u_source.u_window"
+    }
+  ],
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274"
+}

@@ -1,0 +1,11 @@
+{
+  "status": "integrated_functional_pass_standalone_tree_route_pass_containing_physical_pending",
+  "checks": {
+    "iverilog": "169 exact products at four chunk widths pass.",
+    "transcendental": "4200 exp/sigmoid cases, 6637132 checks pass, 3212 max cycles; reset and output stalls included.",
+    "softmax": "9 numerical cases and 2 refusals pass, unchanged 767158 cycles, 276 physical evaluations and 121 reuse hits.",
+    "source_body": "Integrated arithmetic exactly matches qualified tree candidate after removing comments/whitespace; retained proof in body_equivalence.json.",
+    "historical_chain": "Differential candidate test now uses retained before.sv rather than updated production module, preventing self-comparison."
+  },
+  "decision": "Use tree16 in existing public multiplier. No step-width/default latency change. Tree32 pending, not selected."
+}

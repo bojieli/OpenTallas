@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_PRESERVED_FIXTURE_PORT_WIDTH",
+  "source_commit": "14b7b44a5",
+  "terminal": "BLOCKED id_done=1 count=512 enc_done=0 enc_busy=0 got=0000 go=1 wr_act=1 wr_pending=1 wr_k=0 cv=8 cr=0 cwd=0 accepted=1 visible=0",
+  "cause": "Diagnostic omitted LENW override: retained backend default5 does not match actual parent arbiter LENW4. Packed lengths were repartitioned across pseudochannels, accepted one request but enqueued no beat.",
+  "source_contract": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv uses .LENW(4), .BEATW(4). Successor matches actual parent, no backend source scheduling or timing changes.",
+  "scope": "No claim of two-position or physical PASS"
+}

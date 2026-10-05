@@ -1,0 +1,110 @@
+{
+  "L2_reservation_installed": false,
+  "actual_PC9_missing_refusal_preserved": true,
+  "bound_home_rows": 290730,
+  "dependencies": [
+    "3498aa186a3d65fd9f02990ab41f711952b7159a",
+    "d386fbabc"
+  ],
+  "files": {
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/HANDOFF.md": {
+      "bytes": 4850,
+      "sha256": "6046d2fa0704298a0fc9414094044bdf83ea434c76d103cd12636317fbd4a2cf"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/cold_replay.log": {
+      "bytes": 242,
+      "sha256": "a651285bc55f4d62e39d70e6fd5c218af9328c6de3bcff6ddea93874908e4751"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ds_hbm_finite_state_homes_r30.py.gz": {
+      "bytes": 1864,
+      "sha256": "49177cb80fcf185864064ad40375c2a0d07baafa2c6cafe061e16dd59c73fd43"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ds_hbm_storage_home_binding_r41.py.gz": {
+      "bytes": 1670,
+      "sha256": "67b0332f3c24ceb75350a8acd7a396edeb80372255fbb8b3d79728afba41d350"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/generation.log": {
+      "bytes": 242,
+      "sha256": "a651285bc55f4d62e39d70e6fd5c218af9328c6de3bcff6ddea93874908e4751"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/lineage_proof.json": {
+      "bytes": 2443,
+      "sha256": "62b2b7f0daefb8a17ae9434a4138d27bb633ce729fa465a9aabc677a7117859c"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ot_gpu_full_sm_service.sv.gz": {
+      "bytes": 1615,
+      "sha256": "012986032fbed5886e7ae993a9931ba4d869787c42bc2dfb110245e903fa054d"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ot_gpu_hbm_rf_shared_context.sv.gz": {
+      "bytes": 1226,
+      "sha256": "a01696b7c0de332198b4af16bdbdd837b705c6950f0eb4b0046bd082514c7d0a"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ot_gpu_rf_service.sv.gz": {
+      "bytes": 916,
+      "sha256": "cb9494b62955ec0ba79fad073322d57b37669ad0394d0dc998da66e69b43ec95"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ot_gpu_rf_visibility_fence.sv.gz": {
+      "bytes": 1098,
+      "sha256": "9f1dd080e90265f5e7750f6e0c9cc78c691d5939089b59edb1c56b81e6f44271"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/ot_gpu_scratch_service.sv.gz": {
+      "bytes": 581,
+      "sha256": "47e0c60983b643271f0fe7cbe70ad103bf0d22466ddf8a537bc30679f20ed3e8"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/replay.py": {
+      "bytes": 3326,
+      "sha256": "ca8381f13e51bcf7e36c1c12fa029c72d0b202d076ff36169fa808f90d2efbd5"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/tests.log": {
+      "bytes": 182,
+      "sha256": "a1c56d62b55d8f7b3e4e9bd3417d6eb13f94a3fcd40c4dc5bf5a1ee35fcf8886"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/tests_wait_final.log": {
+      "bytes": 184,
+      "sha256": "82722c25a6569099af8bf946f435f7ff5c2bce16caf8a2ecbe9d05d4f60bb1af"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/wait_cold_replay.log": {
+      "bytes": 257,
+      "sha256": "4171bbdb6419cf1ec50fdf5853d5c6d8981850764b31d7ab817b2bb495c47518"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/wait_generation.log": {
+      "bytes": 257,
+      "sha256": "4171bbdb6419cf1ec50fdf5853d5c6d8981850764b31d7ab817b2bb495c47518"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/wait_obligations.json": {
+      "bytes": 6695,
+      "sha256": "2ed1269d6cffcc1eb35e5ea76a5f673b1d4bf6b8f27590ab52d7eb539ade476e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/pc10_exact_home_lineage_r1/wait_replay.py": {
+      "bytes": 2183,
+      "sha256": "79eb54a9e7bd9566eb52dd331bf0bb0d428195e4c7899acd5c8dc450e53eec37"
+    },
+    "tests/test_h3_complete_native_calendar.py": {
+      "bytes": 128100,
+      "sha256": "317fbaa3c9536bdbba3a4456b36782e9e9225812c521e426393a6c5079c2259f"
+    },
+    "tools/h3_complete_native_calendar.py": {
+      "bytes": 399369,
+      "sha256": "93325b183e4c3039da336cf61b56b9255410cdca924629e37220615428595ed3"
+    }
+  },
+  "full_provider_arbiter_implemented": false,
+  "hardware_qualified": false,
+  "lineage_replay": "BYTE_EXACT_PASS",
+  "old_cost_recharged": 0,
+  "original_home_rows": 286114,
+  "original_homes_exact": true,
+  "primitive_shared_unknown": 193316,
+  "production_physical_bound_calls": 0,
+  "schema": "H4_PC10_LINEAGE_H1_WAIT_SOURCE_MILESTONE_V1",
+  "software_tick_conversion": false,
+  "source_edges_are_measured_context": false,
+  "source_leaf_read_edges": 3,
+  "source_leaf_write_edges": 2,
+  "state_extension_regenerated": 4616,
+  "tests_passed": 84,
+  "tests_seconds": 30.879,
+  "unbounded_RF_credit_hold_self_loops": 2,
+  "wait_replay": "BYTE_EXACT_PASS_EXPECTED_FAIL_FINITE_PRODUCTION_WAIT_ADMISSION",
+  "whole_token_latency_ns": null
+}

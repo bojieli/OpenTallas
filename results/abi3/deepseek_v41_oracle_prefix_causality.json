@@ -1,0 +1,376 @@
+{
+ "answer": "NO.  The shared rows are exactly identical only in the layers that do not compress (attn00, attn01); the first layer that differs is attn02 at 0.142% of its own peak if any, and the difference grows with depth to 14.224% at attn27.  So a prefix is not a prefix of the computation, the two lengths are independent tests, and the bracket is not a threshold.",
+ "environment": {
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "python": "3.10.12",
+  "torch": "2.10.0+cu128"
+ },
+ "first_tap_that_differs": {
+  "max_abs_diff": 0.0078125,
+  "max_abs_value": 5.5,
+  "relative": 0.0014204545454545455,
+  "rows_that_differ": 1,
+  "shared_rows": 9,
+  "tap": "attn02"
+ },
+ "largest_relative_difference": {
+  "max_abs_diff": 0.515625,
+  "max_abs_value": 3.625,
+  "relative": 0.14224137931034483,
+  "rows_that_differ": 7,
+  "shared_rows": 9,
+  "tap": "attn27"
+ },
+ "longer": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json",
+ "not_a_claim": [
+  "this is not a defect in the vendor's model: each prompt is its own request and the release never claims one prefill extends another",
+  "it says nothing about whether the DEVICE is right at either length",
+  "it does invalidate reading a pass at one prefix length and a failure at the next as a threshold in anything"
+ ],
+ "per_tap": [
+  {
+   "max_abs_diff": 0.0,
+   "max_abs_value": 7.5625,
+   "relative": 0.0,
+   "rows_that_differ": 0,
+   "shared_rows": 9,
+   "tap": "attn00"
+  },
+  {
+   "max_abs_diff": 0.0,
+   "max_abs_value": 7.28125,
+   "relative": 0.0,
+   "rows_that_differ": 0,
+   "shared_rows": 9,
+   "tap": "attn01"
+  },
+  {
+   "max_abs_diff": 0.0078125,
+   "max_abs_value": 5.5,
+   "relative": 0.0014204545454545455,
+   "rows_that_differ": 1,
+   "shared_rows": 9,
+   "tap": "attn02"
+  },
+  {
+   "max_abs_diff": 0.02734375,
+   "max_abs_value": 4.8125,
+   "relative": 0.005681818181818182,
+   "rows_that_differ": 4,
+   "shared_rows": 9,
+   "tap": "attn03"
+  },
+  {
+   "max_abs_diff": 0.06451416015625,
+   "max_abs_value": 3.84375,
+   "relative": 0.01678417174796748,
+   "rows_that_differ": 4,
+   "shared_rows": 9,
+   "tap": "attn04"
+  },
+  {
+   "max_abs_diff": 0.072265625,
+   "max_abs_value": 5.0,
+   "relative": 0.014453125,
+   "rows_that_differ": 4,
+   "shared_rows": 9,
+   "tap": "attn05"
+  },
+  {
+   "max_abs_diff": 0.08203125,
+   "max_abs_value": 3.0625,
+   "relative": 0.026785714285714284,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn06"
+  },
+  {
+   "max_abs_diff": 0.09814453125,
+   "max_abs_value": 2.90625,
+   "relative": 0.03377016129032258,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn07"
+  },
+  {
+   "max_abs_diff": 0.3125,
+   "max_abs_value": 22.0,
+   "relative": 0.014204545454545454,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn08"
+  },
+  {
+   "max_abs_diff": 0.175048828125,
+   "max_abs_value": 6.34375,
+   "relative": 0.027593903940886698,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn09"
+  },
+  {
+   "max_abs_diff": 0.26953125,
+   "max_abs_value": 6.8125,
+   "relative": 0.03956422018348624,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn10"
+  },
+  {
+   "max_abs_diff": 0.3251953125,
+   "max_abs_value": 2.8125,
+   "relative": 0.115625,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn11"
+  },
+  {
+   "max_abs_diff": 0.2578125,
+   "max_abs_value": 8.0625,
+   "relative": 0.03197674418604651,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn12"
+  },
+  {
+   "max_abs_diff": 0.234375,
+   "max_abs_value": 4.5,
+   "relative": 0.052083333333333336,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn13"
+  },
+  {
+   "max_abs_diff": 0.5625,
+   "max_abs_value": 16.125,
+   "relative": 0.03488372093023256,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn14"
+  },
+  {
+   "max_abs_diff": 0.875,
+   "max_abs_value": 45.75,
+   "relative": 0.01912568306010929,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn15"
+  },
+  {
+   "max_abs_diff": 0.40625,
+   "max_abs_value": 7.0625,
+   "relative": 0.05752212389380531,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn16"
+  },
+  {
+   "max_abs_diff": 0.25,
+   "max_abs_value": 2.296875,
+   "relative": 0.10884353741496598,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn17"
+  },
+  {
+   "max_abs_diff": 0.265625,
+   "max_abs_value": 2.671875,
+   "relative": 0.09941520467836257,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn18"
+  },
+  {
+   "max_abs_diff": 0.36328125,
+   "max_abs_value": 6.21875,
+   "relative": 0.05841708542713568,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn19"
+  },
+  {
+   "max_abs_diff": 0.3304443359375,
+   "max_abs_value": 4.34375,
+   "relative": 0.07607351618705036,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn20"
+  },
+  {
+   "max_abs_diff": 0.328125,
+   "max_abs_value": 31.875,
+   "relative": 0.010294117647058823,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn21"
+  },
+  {
+   "max_abs_diff": 0.458984375,
+   "max_abs_value": 4.34375,
+   "relative": 0.10566546762589928,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn22"
+  },
+  {
+   "max_abs_diff": 0.46142578125,
+   "max_abs_value": 4.375,
+   "relative": 0.10546875,
+   "rows_that_differ": 6,
+   "shared_rows": 9,
+   "tap": "attn23"
+  },
+  {
+   "max_abs_diff": 0.3359375,
+   "max_abs_value": 3.890625,
+   "relative": 0.08634538152610442,
+   "rows_that_differ": 7,
+   "shared_rows": 9,
+   "tap": "attn24"
+  },
+  {
+   "max_abs_diff": 0.3671875,
+   "max_abs_value": 4.28125,
+   "relative": 0.08576642335766424,
+   "rows_that_differ": 7,
+   "shared_rows": 9,
+   "tap": "attn25"
+  },
+  {
+   "max_abs_diff": 0.40625,
+   "max_abs_value": 6.21875,
+   "relative": 0.06532663316582915,
+   "rows_that_differ": 7,
+   "shared_rows": 9,
+   "tap": "attn26"
+  },
+  {
+   "max_abs_diff": 0.515625,
+   "max_abs_value": 3.625,
+   "relative": 0.14224137931034483,
+   "rows_that_differ": 7,
+   "shared_rows": 9,
+   "tap": "attn27"
+  },
+  {
+   "max_abs_diff": 0.40625,
+   "max_abs_value": 6.0625,
+   "relative": 0.06701030927835051,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn28"
+  },
+  {
+   "max_abs_diff": 0.37109375,
+   "max_abs_value": 4.78125,
+   "relative": 0.07761437908496732,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn29"
+  },
+  {
+   "max_abs_diff": 0.220703125,
+   "max_abs_value": 8.5,
+   "relative": 0.025965073529411766,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn30"
+  },
+  {
+   "max_abs_diff": 0.5185546875,
+   "max_abs_value": 6.0625,
+   "relative": 0.08553479381443299,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn31"
+  },
+  {
+   "max_abs_diff": 0.43359375,
+   "max_abs_value": 6.25,
+   "relative": 0.069375,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn32"
+  },
+  {
+   "max_abs_diff": 0.287109375,
+   "max_abs_value": 9.875,
+   "relative": 0.029074367088607594,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn33"
+  },
+  {
+   "max_abs_diff": 0.5,
+   "max_abs_value": 10.0625,
+   "relative": 0.049689440993788817,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn34"
+  },
+  {
+   "max_abs_diff": 0.35546875,
+   "max_abs_value": 5.71875,
+   "relative": 0.06215846994535519,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn35"
+  },
+  {
+   "max_abs_diff": 0.6171875,
+   "max_abs_value": 38.25,
+   "relative": 0.01613562091503268,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn36"
+  },
+  {
+   "max_abs_diff": 0.77734375,
+   "max_abs_value": 11.0,
+   "relative": 0.07066761363636363,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn37"
+  },
+  {
+   "max_abs_diff": 0.42578125,
+   "max_abs_value": 30.5,
+   "relative": 0.013960040983606557,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn38"
+  },
+  {
+   "max_abs_diff": 1.15625,
+   "max_abs_value": 41.25,
+   "relative": 0.02803030303030303,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "attn39"
+  },
+  {
+   "max_abs_diff": 0.235748291015625,
+   "max_abs_value": 2.03125,
+   "relative": 0.11606069711538461,
+   "rows_that_differ": 8,
+   "shared_rows": 9,
+   "tap": "norm"
+  }
+ ],
+ "prompt_token_counts": [
+  9,
+  10
+ ],
+ "question": "the V4.1 prefix bracket reads 'passes at 9, fails at 10' as a threshold in the device.  Does the comparator compute the same thing for the positions the two prompts share?",
+ "schema": "opentallas.abi3.deepseek_v41_oracle_prefix_causality.v1",
+ "shorter": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P9.json",
+ "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "taps_exactly_identical": [
+  "attn00",
+  "attn01"
+ ],
+ "tokens": [
+  1320,
+  56538
+ ]
+}

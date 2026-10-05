@@ -1,0 +1,57 @@
+{
+  "record": "results/physical_abi3/asap7/weight_layout_cursor/pnr_admission_pipeline_cts12_1ns.json",
+  "sha256": "4061a42481cf52783eb7cb4fe82d8048a6e4deb661dfb04e9e751affc22b717b",
+  "view": "asap7",
+  "top": "ot_a3_weight_layout_cursor",
+  "parameters": {},
+  "corner": "TT",
+  "tested_period_ns": 1.0,
+  "verified_current_frequency_mhz": 1000.0,
+  "routed_checks_pass": true,
+  "current_source_and_artifact_verified": true,
+  "source_issues": [],
+  "artifact_issues": [],
+  "missing_metrics": [],
+  "violations": [],
+  "setup_wns_ns": 0.056120199999999995,
+  "hold_wns_ns": 0.0514614,
+  "standard_cell_area_um2": 1359.88,
+  "false_path_from_ports": [],
+  "signal_integrity_constraints": {
+    "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+    "library_declares_fanout_limit": false,
+    "library_default_max_fanout": [
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      }
+    ],
+    "max_fanout": 16,
+    "max_fanout_source": "command line",
+    "sdc_lines": [
+      "set_max_fanout 16 [current_design]"
+    ]
+  },
+  "overall_record_status": "pass"
+}

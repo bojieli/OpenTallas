@@ -1,0 +1,52 @@
+Oct 02 12:32:56 vm-xry57mhfyn sshd-session[74437]: Received disconnect from 155.103.252.95 port 34432:11: disconnected by user
+Oct 02 12:32:56 vm-xry57mhfyn sshd-session[74437]: Disconnected from user ubuntu 155.103.252.95 port 34432
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74565]: Received disconnect from 155.103.252.95 port 60000:11: disconnected by user
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74565]: Disconnected from user ubuntu 155.103.252.95 port 60000
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74680]: Received disconnect from 155.103.252.95 port 60012:11: disconnected by user
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74680]: Disconnected from user ubuntu 155.103.252.95 port 60012
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74795]: Received disconnect from 155.103.252.95 port 60026:11: disconnected by user
+Oct 02 12:32:57 vm-xry57mhfyn sshd-session[74795]: Disconnected from user ubuntu 155.103.252.95 port 60026
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[74910]: Received disconnect from 155.103.252.95 port 60034:11: disconnected by user
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[74910]: Disconnected from user ubuntu 155.103.252.95 port 60034
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[75053]: Received disconnect from 155.103.252.95 port 60044:11: disconnected by user
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[75053]: Disconnected from user ubuntu 155.103.252.95 port 60044
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[75168]: Received disconnect from 155.103.252.95 port 60058:11: disconnected by user
+Oct 02 12:32:59 vm-xry57mhfyn sshd-session[75168]: Disconnected from user ubuntu 155.103.252.95 port 60058
+Oct 02 12:33:00 vm-xry57mhfyn systemd[71579]: Started hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py.
+Oct 02 12:33:00 vm-xry57mhfyn sshd-session[75283]: Received disconnect from 155.103.252.95 port 60074:11: disconnected by user
+Oct 02 12:33:00 vm-xry57mhfyn sshd-session[75283]: Disconnected from user ubuntu 155.103.252.95 port 60074
+Oct 02 12:33:00 vm-xry57mhfyn sshd-session[75400]: Received disconnect from 155.103.252.95 port 60078:11: disconnected by user
+Oct 02 12:33:00 vm-xry57mhfyn sshd-session[75400]: Disconnected from user ubuntu 155.103.252.95 port 60078
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Activating special unit exit.target...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped target default.target - Main User Target.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopping hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: hbm-qwen-trained-byte-conversion-20261002-r1.service: Consumed 10.300s CPU time over 10.274s wall clock time, 1.1G memory peak.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped target basic.target - Basic System.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped target paths.target - Paths.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped target sockets.target - Sockets.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped target timers.target - Timers.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped launchpadlib-cache-clean.timer - Clean up old files in the Launchpadlib cache.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed dbus.socket - D-Bus User Message Bus Socket.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed dirmngr.socket - GnuPG network certificate management daemon.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed gpg-agent-browser.socket - GnuPG cryptographic agent and passphrase cache (access for web browsers).
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed gpg-agent-extra.socket - GnuPG cryptographic agent and passphrase cache (restricted).
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopping gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emulation)...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopping gpg-agent.socket - GnuPG cryptographic agent and passphrase cache...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed keyboxd.socket - GnuPG public key management service.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed pk-debconf-helper.socket - debconf communication socket.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed snapd.session-agent.socket - REST API socket for snapd user session agent.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopping ssh-agent.socket - OpenSSH Agent socket...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed systemd-ask-password.socket - Query the User Interactively for a Password.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed gpg-agent.socket - GnuPG cryptographic agent and passphrase cache.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed ssh-agent.socket - OpenSSH Agent socket.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Closed gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emulation).
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Removed slice app.slice - User Application Slice.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: app.slice: Consumed 10.409s CPU time over 7min 2.770s wall clock time, 1.1G memory peak.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Reached target shutdown.target - Shutdown.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Finished systemd-exit.service - Exit the Session.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Reached target exit.target - Exit the Session.
+Oct 02 12:33:10 vm-xry57mhfyn (sd-pam)[71581]: pam_unix(systemd-user:session): session closed for user ubuntu
+318 1000 ubuntu - 76235 manager - no -
+320 1000 ubuntu - 76497 user    - no -
+386 1000 ubuntu - 84583 user    - no -

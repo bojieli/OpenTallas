@@ -1,0 +1,136 @@
+{
+  "additional_contract_pins_verified": 8,
+  "artifact_pins": {
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/ICG_pipeline_source_bound.json": "fe881ff1df500142c267ad2e6b0534654cee53e78a4b65358feb5a8b6df58136",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/bench.diff": "996cc666a7b6e77c495fae571958a1667e8ec76269583fff93d52c4603831a9d",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/independent_expected.json": "94c05c46d56980f2d88642b6ece7075d7863f5d21246701b6c28875cdffd26be",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/input_fixture.json": "53f246827d4aad5fe3162ea82b5b759d6099fcaca9aafb77616d8ec15697c089",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/model.json": "74ef20d77e618f1d52294206cfebeafcbecd14321099447785e9c841f98d8fe9",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/oracle_validation.json": "472bc2e523dfd320471954ad9a4fc5ba47e55458a791fdaf8ddbd12b84befe41",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/preparation_receipt.json": "9ab540b7ee2770d639e17c6e86aa1a2ccd3353cc754ebc48dd83c501e875d400",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/sourceplan.json": "51f3bb1da9f7d13e985b60f7280a8cb9cd36dd6d8eb4f6604eab2489f46ace4e",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/static_tests_r1.log": "8ac945e87cc92c04851a9c406306f80625187b9e44c8640bfacdbaa402cd09e4"
+  },
+  "base_commit": "3a89958cacaa742eaa0fbf716180d35530fc8d28",
+  "cases": {
+    "bfcolumn": {
+      "BF16": 1,
+      "XF": 8
+    },
+    "q": {
+      "BF16": 0,
+      "XF": 4
+    }
+  },
+  "claims": {
+    "adoption": false,
+    "arithmetic_PASS": false,
+    "fullfield_PASS": false,
+    "fulltoken": false,
+    "hardware_timing": false
+  },
+  "clock_scope": "Existing ICG and FAST/PP source paths/pipeline service bounds mapped; fixture833ps remains test scheduling. TrueSSsetup/FFhold/ICGENA/minpulse/extractedclock closure remains pending.",
+  "dataflow_isolation": "C++ backend generated from input-only packed ROM/config image. Stimulus functions are input-only. Numerical expected table used exactly once in assertion task; no expected values drive DUT ports.",
+  "engine_source_files_unchanged": 40,
+  "execution_gate": "Parent review of model, independent arithmetic/order validation, packed ROM/stimulus/expected isolation, bench/source/package hashes and fresh runner GO before ANY compiler/simulator. No field/die/physical RTL work.",
+  "generated_files": 44,
+  "model_sha256": "74ef20d77e618f1d52294206cfebeafcbecd14321099447785e9c841f98d8fe9",
+  "model_written_before_artifacts": true,
+  "new_artifact_pins": {
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/independent_expected.json": "94c05c46d56980f2d88642b6ece7075d7863f5d21246701b6c28875cdffd26be",
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/input_fixture.json": "53f246827d4aad5fe3162ea82b5b759d6099fcaca9aafb77616d8ec15697c089",
+    "rtl/test/dsrom_actual_element_numerical_expected.svh": "52013a613284d7eb775c2f9100c7a96ea0c131f2d7d29ac87a7037ee8c172aad",
+    "rtl/test/dsrom_actual_element_numerical_rom.cpp": "a54615b2b8f6130e1ae5fbef79de99d4d21899a68041fad5e57ea6d93ab4b3cc",
+    "rtl/test/dsrom_actual_element_numerical_stimulus.svh": "0e6e1d91add3263e7b4531b9af83c215d60bc1b3e570d64ece8ee1673be65dc3",
+    "rtl/test/tb_dsrom_actual_element_numerical.sv": "0eb183ace3b0c0168aa32cefe997522202de587bf2f922d166003b38ca159202",
+    "tests/test_dsrom_actual_element_numerical.py": "cd0fb2d15dd94c63c4cbced98abce7335337d95bd5f4517745ba812447954318",
+    "tools/dsrom_actual_element_numerical_oracle.py": "058a008e92797efb285de03f822fcad83066a37c7a92cc24fe674dac2ea81daf",
+    "tools/prepare_dsrom_actual_element_numerical.py": "a2b1f70cb0368158c5c38b0b76b3ab443c0443a6c5f3ddb7a8cf3ec6d4e3ffa7"
+  },
+  "numerical_table_scope": {
+    "bf16": {
+      "distinct_expected_publicpartials": 112,
+      "negative": 54,
+      "nonzero": 108,
+      "nseg_values": [
+        1,
+        2
+      ],
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "fp4": {
+      "distinct_expected_publicpartials": 112,
+      "negative": 59,
+      "nonzero": 112,
+      "nseg_values": [
+        1,
+        2
+      ],
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "fp8": {
+      "distinct_expected_publicpartials": 216,
+      "negative": 126,
+      "nonzero": 216,
+      "nseg_values": [
+        1,
+        2
+      ],
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  },
+  "parent_scope": "Software publicpartial-to-return-tag/left-first parent tree and BF16 RNE mapping only; real field/return RTL not instantiated. Actual numerical DUT gate remains unexecuted.",
+  "preserved_files_verified": 108,
+  "source_case": {
+    "BP": 0,
+    "CG": 1,
+    "CUT": 379,
+    "DRAIN": 127,
+    "EARLY": 1,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8,
+    "LV": 5,
+    "MTP": 1,
+    "NB": 2,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1
+  },
+  "source_pins_verified": 20,
+  "status": "MODEL_AND_NUMERICAL_PREPARED_STATIC_PASS_NOT_COMPILED",
+  "tests": {
+    "log": "static_tests_r1.log",
+    "method": "Independent exact-Fraction numerical oracle crosschecked against pinned golden chunk8; no RTL compiler/simulator or checkpoint payload",
+    "pass_count": 10,
+    "seconds": 11.009
+  },
+  "versions": {
+    "git": "git version 2.34.1",
+    "numpy": "2.2.6",
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]"
+  }
+}

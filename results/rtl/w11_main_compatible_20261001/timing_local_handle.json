@@ -1,0 +1,16 @@
+{
+  "source_commit": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+  "pid": 460201,
+  "worker": "local",
+  "orfs_threads": 4,
+  "prior_waiter_pid": 398790,
+  "prior_waiter_status": "withdrawn_pre_admission_no_remote_process_or_workdir",
+  "status": "running",
+  "observed_at": "2026-10-01T08:55:33.162236+00:00",
+  "measured_headroom": {
+    "available_RAM_GiB": 132,
+    "free_disk_GiB": 211,
+    "load1": 24.6,
+    "CPUs": 32
+  }
+}

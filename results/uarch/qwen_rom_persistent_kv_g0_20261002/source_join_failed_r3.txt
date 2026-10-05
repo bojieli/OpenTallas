@@ -1,0 +1,33 @@
+"""Independent source issue/address checks for the transport successor."""
+import sys
+from pathlib import Path
+import unittest
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
+from qwen_rom_persistent_kv_g0 import Homes
+
+class SourceJoinTests(unittest.TestCase):
+    def test_fill_destinations_follow_emitted_split_issue_order(self):
+        import hdc_golden as golden
+        import qwen_o4_kv_slice_map_w12 as source
+        sk,sv = golden.attn_splits(128,6144)
+        self.assertEqual((sk,sv),(128,512))
+        source.KV_NH=2; source.KV_VB=2<<16
+        homes=Homes()
+        for kind in ('K','V'):
+            for head in range(2):
+                for position in (0,15,16,511,512,8191):
+                    for dim in range(128):
+                        if kind=='K':
+                            q,c=position//16%48,dim
+                            group=q*sk+c
+                            word=((head*512+position//16)*128+dim)
+                            lane=position%16
+                        else:
+                            q,c=dim//16,position%sv
+                            group=q*sv+c
+                            word=(2<<16)+(head*8192+position)*8+dim//16
+                            lane=dim%16
+                        expected=(group//4,source.local(word,6144),(group%4)*16+lane)
+                        self.assertEqual(homes.tile(kind,head,position,dim),expected,
+                                         (kind,head,position,dim))
+if __name__=='__main__': unittest.main()

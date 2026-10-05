@@ -1,0 +1,39 @@
+{
+  "actual_packing_and_physical_admission": false,
+  "added_capture_edges": 0,
+  "area_additions_independently_summed": true,
+  "artifact_hashes_verified": 23,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cold_regeneration": "byte-identical current r7 model and compiled-site stream",
+  "compiled_sites": 4096,
+  "existing_WAKE_recharged": false,
+  "focused_tests_passed": 28,
+  "hold_screen_margins_ps": [
+    12.318559999999998,
+    10.916059999999995
+  ],
+  "minimal_hold_repair": "two noninverting BUF cells per valid/bank replica D network; source-table timing conditional on prescribed wire envelopes",
+  "nine_combined_cycles": 3312,
+  "owner_commits": [
+    "37cc30db9ebe1e290b4d39df8a122af8dabd1686",
+    "b32857642896e6f15333682feafaf9c0b3011061"
+  ],
+  "owner_enable_snapshot_is_archived_uncommitted": true,
+  "parent_base": "e9d42e96d",
+  "physical_weight_macros": 16384,
+  "remaining": [
+    "same-edge BST resettable1632bit replication and QN restoration full circuit/D/hold cost and proof",
+    "exact source c_v/c_a/c_d reset/held loader and cfgGO driver max/min with finite full shared branch wire placement",
+    "enable clone CLK/reset root union, actual D min/max fanout and every strip PG/via/pin escape",
+    "selector226 circuit actual cell sites/global clock/PG/reset; pin-only48007 clockBUF cannot reach full die",
+    "source parent return/output loads and clock skew/pulse/recovery/removal; registered fullconeSS60/FF25 closure"
+  ],
+  "repair_debit_um2_per_element_50pct": 39.59928,
+  "reticle_mm2": 858,
+  "schema": "opentallas.parent.ds-selected-caller-review.v1",
+  "scope": "Static default-off source binding and conditional construction/area ledger; no actual source elaboration, extracted timing or rate credit.",
+  "screen_mm2": 754.9337664632458,
+  "selector_service_cycles_per_call": 142,
+  "selector_station_cycles_per_call": 226,
+  "whole_token_no_loss_qualified": false
+}

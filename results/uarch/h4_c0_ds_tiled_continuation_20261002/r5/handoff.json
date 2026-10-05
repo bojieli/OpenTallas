@@ -1,0 +1,60 @@
+{
+  "actual_test_scope": {
+    "addressed_source_spans": 512,
+    "b212_span_checks": 512,
+    "mirrored_RF_writer_and_addressed_readback": true,
+    "missing_backing_quarantines_source_lease": true,
+    "r36_compound_query_and_native_history_consumer": true,
+    "source_lease_release_after_result_reverse": true,
+    "stale_writer_before_requests": true,
+    "tests_PASS": 4,
+    "tiles_executed": 64,
+    "unchanged_native_tree_and_BF16_rounding": true
+  },
+  "already_present_dependencies": {
+    "Dewey_receiver": "b2120f45d9a9fc419bc78d52d3224065483e4c87",
+    "Kepler_r36": "bf0984bbff10b15c13dc09fd97abd86b6737064b",
+    "group_operand_tiles": "2d05f616ab964100bf69b0ecfbe7ed7673fa8703"
+  },
+  "budgets": {
+    "operand_and_unpublished_result_data_bound_bytes": 41472,
+    "physical_compilation_or_jobs_launched": false,
+    "retained_64KiB_shared_port_executed": false,
+    "test_journal_bytes": 1073741824
+  },
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "immutable_original_files_changed": [],
+  "invocation": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python -m unittest tools/test_h4_c0_ds_tiled_continuation.py -v",
+  "main_compared": "65040dfb8fdfb25078fd5bc8a627faf320ac708b",
+  "minimal_missing_runtime_paths": [
+    {
+      "origin": "626f2dd19f562150a02b3c1dc583676274f7df95",
+      "path": "tools/h4_c0_producer_extents.py"
+    },
+    {
+      "origin": "6924fad3a6138e6e32b5566bc9e21598fc6088dd",
+      "path": "tools/h4_c0_ds_source_views.py"
+    }
+  ],
+  "native_input": {
+    "complete_native_checked_against_provider": true,
+    "path": "/tmp/kepler-ds-r34-provider-joined-sealed/native.json.gz",
+    "sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264"
+  },
+  "parent_worktree_HEAD": "2d05f616ab964100bf69b0ecfbe7ed7673fa8703",
+  "production_calls_closed": 0,
+  "remaining_actual_gaps": [
+    "Wire current full-native driver all40 corrected PC dispatches to this opt-in continuation instead of full LOAD materialization; execute all96 rank calls with actual retained producer outputs.",
+    "Connect actual compressor and index_q numerical source outputs to r36 paired append and compound publication; directed controls do not prove those producers.",
+    "Tile remaining index_scores fullrank operand host view4371200B and selectedKV F32 view1048576B/encoded593920B into64KiB spans, preserving codec/order and paired leases.",
+    "Complete PC18/42/51 producer source views and ordered expert/scalar bindings on actual trained producers across all layers, not only seeded addressed controls.",
+    "Bind288 remaining Kepler auxiliary references: checkpoint Engram/expert/state payloads; no fallback or callback substitution.",
+    "Physical AW34 HBM translation, finite shared64B port and AtomicV1 read/write owner gateway remain unqualified; software AW27 backing translation is not installed hardware.",
+    "Export complete production journals, dependent-consumer version retirement and all193316 unknown movement calls before once-only whole-token latency composition."
+  ],
+  "retained_drafts": "/tmp/claude-1000/queue/h4-c0-bridge-20261002/tiled-continuation-drafts",
+  "source_payload_scope": "seeded group protocol bytes plus retained r36 history/query directed controls; not actual trained compressor/query outputs",
+  "status": "READY_EXECUTABLE_ADDRESSED_TILED_SOFTWARE_CONTROLS_NOT_FULL_TOKEN",
+  "unknown_calls_retained": 193316
+}

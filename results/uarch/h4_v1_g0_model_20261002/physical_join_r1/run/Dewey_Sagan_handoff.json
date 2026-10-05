@@ -1,0 +1,136 @@
+{
+  "RTL_allowed": false,
+  "entrypoint": "tools/h4_v1_physical_join.py",
+  "models": {
+    "DeepSeek": {
+      "replicas": 3072,
+      "routing": {
+        "C0_command512_already_in_V1": true,
+        "H1_existing_track_incidence_upper": 25718,
+        "V1_channels_required": 3,
+        "V1_incremental_track_incidence_upper": 6848,
+        "actual_distributed_cut_allocation": null,
+        "additional_C0_routes_unknown": true,
+        "basis": "H1 existing M7-M9 50% track budget; incidences are screening bounds, not unique global nets; no extra layers or PG credit",
+        "combined_channels_screen_lower_bound": 14,
+        "existing_outline_channel_tracks": 2430,
+        "shared_channel_fits": false
+      },
+      "slot": {
+        "C0_incremental_logic_um2": 54656.43720000001,
+        "H1_logic_um2": 164005.99040000004,
+        "V1_incremental_logic_um2_range": [
+          137377.2544,
+          362452.4544
+        ],
+        "composed_footprint_mm2_range": [
+          0.712079364,
+          1.1622297639999999
+        ],
+        "composed_logic_um2_range": [
+          356039.68200000003,
+          581114.882
+        ],
+        "deficit_cell_um2_range": [
+          196945.05480000004,
+          422020.2548
+        ],
+        "existing_logic_cell_capacity_um2": 159094.6272,
+        "existing_slot_fits_any_bound": false,
+        "expanded_H1_rectangle_is_spare": false,
+        "geometry_context": "H1 service outline only; die-floorplan macro shape not interchangeable",
+        "occupancy_credit_um2": 0,
+        "physical_slot_admitted": false,
+        "rectangle_conflict_checked": false,
+        "rectangle_inside_retained_outline_range": [
+          false,
+          false
+        ],
+        "required_rectangle_um_range": [
+          [
+            1572.8,
+            1208.71,
+            2395.76,
+            2074.87
+          ],
+          [
+            1572.8,
+            1208.71,
+            2395.76,
+            2621.3500000000004
+          ]
+        ],
+        "retained_service_outline_um": [
+          2397.6000000000004,
+          1641.6000000000001
+        ]
+      }
+    },
+    "Qwen": {
+      "replicas": 64,
+      "routing": {
+        "C0_command512_already_in_V1": true,
+        "H1_existing_track_incidence_upper": 25718,
+        "V1_channels_required": 3,
+        "V1_incremental_track_incidence_upper": 6848,
+        "actual_distributed_cut_allocation": null,
+        "additional_C0_routes_unknown": true,
+        "basis": "H1 existing M7-M9 50% track budget; incidences are screening bounds, not unique global nets; no extra layers or PG credit",
+        "combined_channels_screen_lower_bound": 13,
+        "existing_outline_channel_tracks": 2702,
+        "shared_channel_fits": false
+      },
+      "slot": {
+        "C0_incremental_logic_um2": 54358.32520000001,
+        "H1_logic_um2": 164005.99040000004,
+        "V1_incremental_logic_um2_range": [
+          137377.2544,
+          362452.4544
+        ],
+        "composed_footprint_mm2_range": [
+          0.7114831400000001,
+          1.16163354
+        ],
+        "composed_logic_um2_range": [
+          355741.57000000007,
+          580816.77
+        ],
+        "deficit_cell_um2_range": [
+          196646.9428000001,
+          421722.14280000003
+        ],
+        "existing_logic_cell_capacity_um2": 159094.62719999996,
+        "existing_slot_fits_any_bound": false,
+        "expanded_H1_rectangle_is_spare": false,
+        "geometry_context": "H1 service outline only; die-floorplan macro shape not interchangeable",
+        "occupancy_credit_um2": 0,
+        "physical_slot_admitted": false,
+        "rectangle_conflict_checked": false,
+        "rectangle_inside_retained_outline_range": [
+          true,
+          false
+        ],
+        "required_rectangle_um_range": [
+          [
+            2392.24,
+            1247.5900000000001,
+            3215.2,
+            2113.75
+          ],
+          [
+            2392.24,
+            1247.5900000000001,
+            3215.2,
+            2660.2300000000005
+          ]
+        ],
+        "retained_service_outline_um": [
+          3216.2400000000002,
+          2501.28
+        ]
+      }
+    }
+  },
+  "owner": "C0 ticket / Dewey existing interval reconciliation",
+  "protocol": "SerializedOwner"
+}

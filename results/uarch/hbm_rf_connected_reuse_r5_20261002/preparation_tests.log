@@ -1,0 +1,21 @@
+test_affinity_exact_with_no_CPU_controller_claim (__main__.Reuse) ... ok
+test_all_source_tool_receipt_pins_current (__main__.Reuse) ... ok
+test_changed_generated_content_rejected_old_untouched (__main__.Reuse) ... ok
+test_changed_source_tool_or_receipt_refused (__main__.Reuse) ... ok
+test_cold_make_overrides_and_original_flags (__main__.Reuse) ... ok
+test_complete_manifest_shape_and_positive_frontend (__main__.Reuse) ... ok
+test_copy_timeout_is_failure_without_old_mutation (__main__.Reuse) ... ok
+test_exclusive_all_file_copy_no_hardlink (__main__.Reuse) ... ok
+test_existing_destination_refused (__main__.Reuse) ... ok
+test_fresh_go_binds_inventory_receipt_and_source (__main__.Reuse) ... ok
+test_fresh_qwen_and_no_DS_frontend_command (__main__.Reuse) ... ok
+test_make_dependency_override_ignores_absolute_old_targets (__main__.Reuse) ... ok
+test_missing_extra_symlink_stale_objects_rejected (__main__.Reuse) ... ok
+test_mocked_complete_reuse_and_Qwen_lifecycle (__main__.Reuse) ... ok
+test_mocked_copy_failure_preserved_before_CXX (__main__.Reuse) ... ok
+test_proposal_regenerates_immutable (__main__.Reuse) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.397s
+
+OK

@@ -1,0 +1,35 @@
+progress cyc=2000 ops=24 writes=508 idle r/m/a=100
+progress cyc=4000 ops=55 writes=992 idle r/m/a=000
+progress cyc=6000 ops=82 writes=1696 idle r/m/a=000
+progress cyc=8000 ops=106 writes=2080 idle r/m/a=000
+progress cyc=10000 ops=139 writes=2632 idle r/m/a=000
+progress cyc=12000 ops=168 writes=3168 idle r/m/a=100
+progress cyc=14000 ops=195 writes=3792 idle r/m/a=000
+progress cyc=16000 ops=226 writes=4360 idle r/m/a=000
+progress cyc=18000 ops=251 writes=4744 idle r/m/a=000
+progress cyc=20000 ops=283 writes=5296 idle r/m/a=000
+FAIL result write event 0 differs
+FAIL result write event 2 differs
+FAIL result write event 4 differs
+FAIL result write event 6 differs
+FAIL result write event 8 differs
+FAIL result write event 10 differs
+FAIL result write event 12 differs
+FAIL result write event 14 differs
+FAIL result write event 16 differs
+FAIL result write event 17 differs
+FAIL result write event 18 differs
+FAIL result write event 19 differs
+FAIL result write event 20 differs
+FAIL result write event 21 differs
+FAIL result write event 22 differs
+FAIL result write event 23 differs
+FAIL result write event 48 differs
+FAIL result write event 49 differs
+FAIL result write event 50 differs
+FAIL result write event 51 differs
+FAIL errors=2804 writes=5704
+- /home/ubuntu/qwen-partition-recovery-run/rtl/test/tb_qwen_me_partition.sv:383: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43us; walltime 36.492 s; speed 1.181 us/s
+- Verilator: cpu 36.487 s on 1 threads; allocated 42 MB

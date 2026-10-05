@@ -1,0 +1,66 @@
+{
+  "status": "SOURCE_PREPARED_FULLTOKEN_CONNECTION_AND_OWNER_BINDINGS_BLOCKED_AWAIT_REVIEW",
+  "base_commit": "770638ec7c326fb3d80597a57f18f54b5e122848",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "host_copy": "rtl/test/v41_runtime/w17_connected_observation_die_rt.cpp",
+  "host_base": "rtl/test/v41_runtime/w17_future_validated_fastpp_die_rt.cpp",
+  "headers": [
+    "tools/runtime/w17_connected_observation_capture.hpp",
+    "tools/runtime/w17_future_driver_validation.hpp"
+  ],
+  "wrapper_modes": [
+    {
+      "mode": "WINDOW",
+      "top": "ot_v41_rt_die_sim_observe_l0_window_widths",
+      "copy": "rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window_widths.sv",
+      "source_stage": "layer0"
+    },
+    {
+      "mode": "CKV",
+      "top": "ot_v41_rt_die_l20_sim_observe_widths",
+      "copy": "rtl/test/v41_runtime/ot_v41_rt_die_l20_sim_observe_widths.sv",
+      "source_stage": "layer20"
+    }
+  ],
+  "future_generated_class_prefixes": [
+    "Vdie0",
+    "Vdie1",
+    "Vdie2",
+    "Vdie3"
+  ],
+  "required_defines": [
+    "W17_FULLTOKEN_OBSERVATION_OPT_IN=1",
+    "W17_FUTURE_DRIVER_VALIDATION_OPT_IN=1",
+    "W17_FUTURE_BIND_DBG_FS=1",
+    "ROM_PHW=6",
+    "CL_PW_BITS=547"
+  ],
+  "field_binding": "Reuse only exact4e FAST1 PP1 CUT379 LAT8 field and attention manifests after owner hashes reviewed; no rebuild/substitution authorized.",
+  "clock": "Original driver tick,ROM/attn edges,links unchanged. Registered observation drain after joined rising tasks, before propagation.",
+  "source_sha256": {
+    "rtl/test/v41_runtime/w17_future_validated_fastpp_die_rt.cpp": "194b6cf5550445dfc8cd389bfc888636c32fa182ca6d791bdf24064464484aca",
+    "rtl/test/v41_runtime/w17_connected_observation_die_rt.cpp": "68df9c35fc67da916e40646d2743817ae3f16435caceadc7a4a9aa9c6895667b",
+    "tools/runtime/w17_connected_observation_capture.hpp": "3900ee080d9c09391e9304e7ab7e7393834e8d928c0d6d883eac362b14249d16",
+    "tools/prepare_w17_connected_observation_driver.py": "5589cdb7990dc4014d2f8e61f4e4fd3e84de7bd4badb1cd7b2a57e3b2b4d105b",
+    "tools/w17_connected_observation_model.py": "3de91dd64ed6ad3beae8cb9da69275a656aecf193c20a2102cb49a63ec132579",
+    "tools/plan_w17_connected_observation.py": "81883e477263414e095744c41e6806a6d23ff2759240d0135b4e6f7761c55cf3",
+    "tools/check_w17_connected_observation_trace.py": "774d40c207531d0d4ef0d283b86a2ddf18e22506f24657950ee5f98fe109c53b"
+  },
+  "qualifications": {
+    "hierarchy_lint": "retained two fullshape baselines +4mutants PASS, not runtime",
+    "new_host_compile": false,
+    "new_simulation": false,
+    "fulltoken": false,
+    "causal_deadline": false
+  },
+  "launch_allowed": false,
+  "fresh_review_GO_required": true,
+  "scope": "Real connected capture artifact for source4e current TP4 group. All40 connected fulltoken remains blocked by actual source connection/ownership gaps; no layer-only relabeling.",
+  "causal_deadlines": "BOUND_MISSING",
+  "artifact_paths": {
+    "source_build_manifest": "results/rtl/w17_connected_observation_fulltoken_preparation_20261002/source_build_plan.json",
+    "offline_checker": "tools/check_w17_connected_observation_trace.py",
+    "guard_model": "tools/w17_connected_observation_model.py",
+    "owner_handoff": "results/rtl/w17_connected_observation_fulltoken_preparation_20261002/owner_handoff.json"
+  }
+}

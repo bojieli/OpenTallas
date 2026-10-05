@@ -1,0 +1,36 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_context_profile_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_graph_id": {"const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "check_schema_version": {"const": 1},
+    "checks": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_row_arithmetic": {"const": true},
+        "base_graph_identity": {"const": true},
+        "checkpoint_bindings_unchanged": {"const": true},
+        "context_capacity_within_model_positions": {"const": true},
+        "entrypoint_bounds_expanded_exactly": {"const": true},
+        "graph_identity_recomputed": {"const": true},
+        "numeric_and_state_semantics_unchanged": {"const": true},
+        "profile_identity_and_claim_boundary": {"const": true}
+      },
+      "required": ["acceptance_row_arithmetic", "base_graph_identity", "checkpoint_bindings_unchanged", "context_capacity_within_model_positions", "entrypoint_bounds_expanded_exactly", "graph_identity_recomputed", "numeric_and_state_semantics_unchanged", "profile_identity_and_claim_boundary"],
+      "type": "object"
+    },
+    "expanded_graph_id": {"$ref": "#/$defs/sha256"},
+    "profile_id": {"$ref": "#/$defs/sha256"},
+    "required_committed_rows": {"const": 8031},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_context_profile_check.v1"},
+    "status": {"const": "pass"}
+  },
+  "required": ["base_graph_id", "check_id", "check_schema_version", "checks", "expanded_graph_id", "profile_id", "required_committed_rows", "schema", "status"],
+  "title": "OpenTallas Qwen3-8B long-context independent check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

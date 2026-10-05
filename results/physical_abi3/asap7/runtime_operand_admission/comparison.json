@@ -1,0 +1,28 @@
+{
+  "scope": "Matched standalone ASAP7 TT synthesis and pre-layout STA at 1 ns; no routed closure claim",
+  "baseline_record": "prelayout_baseline_1ns.json",
+  "optimized_record": "prelayout_optimized_1ns.json",
+  "unscaled_admission_cycles": {
+    "baseline": 19,
+    "optimized": 3
+  },
+  "scaled_admission_cycles": 19,
+  "mapped_area_um2": {
+    "baseline": 741.145,
+    "optimized": 741.145
+  },
+  "setup_wns_ns": {
+    "baseline": -1.4173519081741472,
+    "optimized": -1.3885105343251902
+  },
+  "integrated_final_completion_counter": {
+    "baseline": 14375,
+    "optimized": 14357
+  },
+  "integrated_accepted_outputs": 584,
+  "limitations": [
+    "Both pre-layout timing checks fail at 1 ns.",
+    "Integrated counter includes stalls and fault transactions; not a model-token speedup.",
+    "No power or routed area improvement established."
+  ]
+}

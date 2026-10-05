@@ -1,0 +1,26 @@
+{
+  "status": "CONDITIONAL_PROXY_NOT_SELECTED_NOT_COMPARABLE_PRODUCT_FIT",
+  "source_path": "/home/ubuntu/hbm-tc-column-model-20261001/results/uarch/dsrom_l20_constrained_partition_20261002/model-r7.json.gz",
+  "source_sha256": "d0468ff75dd15a9a65c7471c80b36da7a7d7ac2fbf2c855a6edb69f4e5e8671a",
+  "candidate_NP": 1024,
+  "candidate_stages": 224,
+  "candidate_dies": 940,
+  "reference_us": 358.8374129458871,
+  "candidate_before_return_and_index_corrections_us": 540.8107127561991,
+  "candidate_after_corrections_us": 4004.5855483117716,
+  "inventory_preserved_pairs": 917504,
+  "uniform_BF_capable_element_area_proxy": true,
+  "actual_mixed_q_BF_product_selection": false,
+  "compiler_stage_owner_mapping_qualified": false,
+  "required_next_action": [
+    "mixed q/BF capacity and field return ledger",
+    "same finite index calendar across reference/candidates",
+    "partition-only versus return/index correction factorial latency rows",
+    "actual golden stage ownership and no-queue bounds",
+    "26x33 full physical slot closure"
+  ],
+  "independent_findings": [
+    "Full latency delta mixes partitioning with mandatory index-service recalibration. It is not the penalty of adding dies alone.",
+    "Conservative uniform BF area proxy must not be admitted as selected product."
+  ]
+}

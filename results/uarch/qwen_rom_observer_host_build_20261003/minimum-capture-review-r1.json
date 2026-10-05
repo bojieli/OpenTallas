@@ -1,0 +1,75 @@
+{
+  "L0_limits": "No144owner/full36/calendar rate qualification; source association uses serialized latestaccepted ME, no effective mask/Owner/generation/drain/PHY claim.",
+  "L0_value": "Actual accepted programs,512writes/owner,all KV host port read returns and final512scalar snapshots for4 owners; retained four X outputs/fault/cycle contract also checked.",
+  "calendar_composed_conditional_s": 0.0003610713,
+  "cheaper_than_L0_candidates": [
+    {
+      "candidate": "retained traces or binary postprocess",
+      "result": "No accepted/write/read/state journal or serialized process checkpoint in retained capture. Terminal counts and endX cannot recover actual KV payload/issue/read edges."
+    },
+    {
+      "candidate": "static emitter or ISA/golden replay",
+      "result": "Useful for shape/numerical projection, cannot prove actual RTL acceptance or read response edge; not substitute."
+    },
+    {
+      "candidate": "stopafterKV or descriptor0",
+      "result": "All3KVproducer PCs3/8/10 and KVconsumer PCs11/13 are in descriptor0 [PC0..17]. A semantic stopafterconsumer drain could be cheaper; reviewed d42 host has no such stop/snapshot terminal. Requires separately reviewed host-only variant/gate; no attempt or launch."
+    },
+    {
+      "candidate": "independent layer prefixes from saved priorX",
+      "result": "Could avoid unrelated post-attention work across36. Not ruled out. Need actual source readbeforewrite and saved VM/register/collective boundary equivalence; savedX alone is not complete continuation state. No fabricated state or exactsource fullchain credit."
+    }
+  ],
+  "decision": "Do not launch35.785h fullprefix based only on absence of archive. Parent can approve L0-only validation with alreadybuilt binary or request descriptor0-only successor before any numerical execution.",
+  "full36_necessity_proven": false,
+  "full36_proposal_journal_reservation_B": 8589934592,
+  "minimal_currently_supported_execution": {
+    "binary": "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/qwen_rom_rt_observed",
+    "binary_sha256": "9d024fc9ae60507bccc339be0dada6af01a0b92abdca12b2bee5c54eb7255ba3",
+    "head": false,
+    "journal_capacity_reservation_B": 536870912,
+    "layers": 1,
+    "other_memory_reference_RSS_KiB": 1796596,
+    "position": 0,
+    "ranks": 4,
+    "raw_body_reads": 393216,
+    "reference_cycles": 4676,
+    "reservation_is_not_cap": true,
+    "retained_wall_s": 4008
+  },
+  "model_r4_sha256": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+  "no_physical_adoption": true,
+  "proposed_command": [
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/qwen_rom_rt_observed",
+    "--stages",
+    "<newexclusive>/stages-L0-only.txt",
+    "<newexclusive>",
+    "<newexclusive>/preload.hex",
+    "9223372036854775807"
+  ],
+  "proposed_environment": {
+    "RT_QROM_JOURNAL": "<newexclusive>/accepted-state.raw",
+    "RT_SCALE_LOCAL": "0",
+    "RT_THREADS": "14"
+  },
+  "proposed_runtime_lease": {
+    "active_heavy_sim_processes_to_refresh_before_GO": true,
+    "archive_source_before_after_pins_required": true,
+    "fresh_L0_payload_image_pins_before_after_required": true,
+    "host": "ot-pve1",
+    "live_runtime_PID": null,
+    "new_exclusive_output_directory": "/home/ubuntu/w12/qrom-observer-L0-parent-GO-REPLACE_WITH_LEASE",
+    "owner": "Euclid",
+    "runtime_authorized": false,
+    "supervisor_kind": "detached process with raw PID/child/command/return receipt, unlimited CPU/FSIZE/AS and no elapsed-time timeout",
+    "threads": 14
+  },
+  "retained_artifact_census": {
+    "accepted_PC_W_R_raw_files": [],
+    "files": 328,
+    "original_binary_has_no_observer_hooks": true,
+    "saved_X_only": "all148 output vectors; no full VM/register/provider-state serialized continuation"
+  },
+  "status": "FULL36_RUN_HELD_CHEAPER_L0_PROBE_READY_FOR_REVIEW",
+  "validation": "python3 tools/qwen_rom_source_observer_verify.py --layers 1 --workdir NEW_L0_OUTPUT --bundle results/uarch/qwen_rom_program_identity_20261002/retained-reproduction-final.json.gz --out NEW_L0_TERMINAL_JSON"
+}

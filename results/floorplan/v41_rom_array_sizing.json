@@ -1,0 +1,183 @@
+{
+ "schema": "opentallas.v41-rom-array-sizing.v0",
+ "status": "PARTIAL: analytical derivation only; W8 halted by root before RTL/verification/physical",
+ "tool": "tools/v41_rom_array_sizing.py",
+ "source_sha256": {
+  "results/floorplan/v41_die_bankmap_busiest_expanded_woa.json": "f8e58287d28714bdcaaf3df3b682b15fbaed58dd7db2caec879e51394c92b8b9",
+  "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
+  "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+  "tools/v41_rom_array_sizing.py": "f556aaa1423649328b5b23f400c796f75fd311488ef7e7341d988e0b5b1cf270"
+ },
+ "model_config": {
+  "hidden": 5120,
+  "moe_inter": 2304,
+  "n_routed": 384,
+  "topk": 6,
+  "q_lora": 1280,
+  "heads": 64,
+  "head_dim": 512,
+  "o_groups": 8,
+  "o_lora": 1024,
+  "layers": 40,
+  "mtp_layers": 3,
+  "index_heads": 32,
+  "index_head_dim": 128
+ },
+ "tp": 4,
+ "clock_hz": 1087000000.0,
+ "busiest_die": {
+  "stage": 1,
+  "rank": 3,
+  "rom_macros": 13798,
+  "experts_per_layer_on_die": {
+   "1": 232,
+   "2": 321
+  },
+  "dense_and_me": {
+   "attn.indexer.wq_b.weight": {
+    "macros": 24,
+    "rank_shape": [
+     4096,
+     1280
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "attn.wkv.weight": {
+    "macros": 8,
+    "rank_shape": [
+     128,
+     5120
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "attn.wo_a.weight": {
+    "macros": 64,
+    "rank_shape": [
+     2048,
+     4096
+    ],
+    "representation": "bf16_expanded_256bit_8bank"
+   },
+   "attn.wo_b.weight": {
+    "macros": 40,
+    "rank_shape": [
+     5120,
+     2048
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "attn.wq_a.weight": {
+    "macros": 8,
+    "rank_shape": [
+     320,
+     5120
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "attn.wq_b.weight": {
+    "macros": 40,
+    "rank_shape": [
+     8192,
+     1280
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "ffn.shared_experts.w1.weight": {
+    "macros": 16,
+    "rank_shape": [
+     576,
+     5120
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "ffn.shared_experts.w2.weight": {
+    "macros": 16,
+    "rank_shape": [
+     1280,
+     2304
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   },
+   "ffn.shared_experts.w3.weight": {
+    "macros": 16,
+    "rank_shape": [
+     576,
+     5120
+    ],
+    "representation": "fp8_264bit_rowscale_8bank"
+   }
+  }
+ },
+ "per_expert_per_die": {
+  "w1_w3_rows": 576,
+  "w1_w3_blocks_per_row": 160,
+  "w2_rows": 1280,
+  "w2_blocks_per_row": 72,
+  "block_dots": 276480,
+  "macs": 8847360,
+  "rom_words_fp4_pair": 138240,
+  "rows_per_macro_contiguous": 5760
+ },
+ "active_experts_on_die": {
+  "expected_uniform_routing": {
+   "1": 3.625,
+   "2": 5.015625
+  },
+  "worst_case": {
+   "1": 6,
+   "2": 6
+  }
+ },
+ "rom_words_per_token": {
+  "experts_expected": 1194480.0,
+  "experts_worst": 1658880,
+  "dense_fp8_incl_shared": 1443840,
+  "wo_a_bf16": 524288,
+  "total_expected": 3162608.0,
+  "total_worst": 3627008
+ },
+ "read_floor_cycles_per_token": {
+  "contiguous_one_expert_matrix_sweep": 5760,
+  "contiguous_moe_chain_w13_then_w2": 11520,
+  "contiguous_wq_b": 8192.0,
+  "contiguous_wo_a_64_macros": 8192.0,
+  "striped_all_macros_expected": 229.20771126250182,
+  "striped_all_macros_worst": 262.86476300913176
+ },
+ "budget": {
+  "weight_sweep_us_per_token_design_point_1M": 8.548,
+  "stages": 28,
+  "weight_sweep_cycles_per_stage": 331.84557142857136,
+  "source": "results/arch/v41_lanes.json design_point.1048576.breakdown_us.weight_sweep"
+ },
+ "element_per_macro": {
+  "fp4_block_dot_lanes": 2,
+  "fp4_macs": 64,
+  "fp8_block_dot_lanes": 1,
+  "bf16_macs": 16
+ },
+ "die_totals_sharing_1": {
+  "block_dot_macs": 883072,
+  "bf16_macs": 220768
+ },
+ "ledger": {
+  "weight_macs": 529920,
+  "bf16_macs": 83328,
+  "lane_mult_mtp": 2,
+  "note": "ledger 1,059,840 = 529,920 spatial MACs x MTP positions m=2 (one weight read feeds 2 MAC lanes); 529,920 / 32 = 16,560 block-dot lanes"
+ },
+ "sharing_factor_latency": {
+  "1": {
+   "striped_expected_cycles": 229.20771126250182,
+   "striped_worst_cycles": 262.86476300913176
+  },
+  "2": {
+   "striped_expected_cycles": 458.41542252500363,
+   "striped_worst_cycles": 525.7295260182635
+  },
+  "4": {
+   "striped_expected_cycles": 916.8308450500073,
+   "striped_worst_cycles": 1051.459052036527
+  }
+ }
+}

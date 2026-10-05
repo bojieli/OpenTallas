@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "mismatches": 0,
+  "rows": 16,
+  "K": 4096,
+  "golden_split": 64,
+  "full_token": false,
+  "scope": "Actual INT8 products, ordered circulating sums and two independent64 trees; no row scale, shared service, attention or connected token",
+  "qualified_snapshot": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "source_sha256": {
+      "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+      "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+      "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e"
+    },
+    "prefix_equivalence": {
+      "path": "results/rtl/ot_hdc_prefix_vec_equiv.json",
+      "sha256": "79a9889cf3ab92fc043baab9afc035629a110206a5bf6e3404f53fb1252ca4ce",
+      "widths": [
+        {
+          "module": "ot_hdc_ksadd_k",
+          "W": 28,
+          "equivalent": true
+        },
+        {
+          "module": "ot_hdc_ksadd_k",
+          "W": 9,
+          "equivalent": true
+        },
+        {
+          "module": "ot_hdc_ksadd_k",
+          "W": 12,
+          "equivalent": true
+        },
+        {
+          "module": "ot_hdc_inc_k",
+          "W": 24,
+          "equivalent": true
+        },
+        {
+          "module": "ot_hdc_inc_k",
+          "W": 25,
+          "equivalent": true
+        }
+      ]
+    }
+  },
+  "source_sha256": {
+    "rtl/gpu/ot_gpu_qwen_gu64_pair.sv": "b855904a727aa4808efed8d0db521daaf2a204c42b1452a8b8d656846d30174b",
+    "tools/rtl_qwen_gu64_pair_gate.py": "1ad7ab827486e42e613dd46817b2a1ebf64e1f628cc09e9e2381f4a04e342f9a",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "execution": {
+    "compile_rc": 0,
+    "run_rc": 0,
+    "elapsed_host_seconds": 175.68611486203736,
+    "prepared_sha256": "d7f4079a11c6189d66540aa1dec708595aca80a3712ccf7c6dcf73f486b9352f",
+    "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_log_sha256": "56310abde7d45f5e44f46be979c5efad9c0dad5797d7412e69dc97bef78502b2",
+    "executable_sha256": "0fd7297f6bc6f6edc146f912b4ef1ffde405b91f9ce19dbd7aeed9b76de90f68"
+  },
+  "output_sha256": {
+    "companion.sv": "b855904a727aa4808efed8d0db521daaf2a204c42b1452a8b8d656846d30174b",
+    "execute.py": "4b4c6dc07169bd37e9979fd81ef358c7d415fd9302c791615e5bdfbc41ae6680",
+    "expected.npy": "23034f31123719f12577222263f6432579eec57ccc2350fc5f55d0fdeda67e72",
+    "sim.vvp": "0fd7297f6bc6f6edc146f912b4ef1ffde405b91f9ce19dbd7aeed9b76de90f68",
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prepare_receipt.json": "a7db57fafdd67db3bd4a4bd5ddacefeddfc75f57e10f1525354fb87e745f2301",
+    "weights.hex": "77eb4e718345a0c3bce0ee3389aaf762852bc6b897723ea7b74503f8e1638800",
+    "launch.json": "bad1031a399c450f628b4135f34a348d2ac39464e06c9279a35534663e246e8c",
+    "launch_identity.json": "f4a2b9b281285ce39545ea5a5d00f3c4f666fd2c084db7e4a2d1d35c74ff17e0",
+    "prepared.json": "d7f4079a11c6189d66540aa1dec708595aca80a3712ccf7c6dcf73f486b9352f",
+    "x.hex": "954a75c62b0c716ac0cdd2bc28bb4ed63b5aebdc016eafd8cc8d8d28b1e1efca",
+    "execution.json": "e15b18ceb8922af918694859271a011269c4d1c22e9d8f67e4ce15e7fca327a9",
+    "tb.sv": "3130efb96a32ecba24ea208b14d7b47a16b648edc1934e44fdbef25a44e308ed",
+    "run.log": "56310abde7d45f5e44f46be979c5efad9c0dad5797d7412e69dc97bef78502b2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_INDEPENDENT_CURRENT_MAIN_ONLY_SUCCESSOR",
+  "main_base": "c590940e4d8b362e846f154a2c68baa0d3499841",
+  "source_package_commit": "09b39d72dc99486e6a371814f577de35c004c4af",
+  "independent_cherry_pick": "9b45b9f9f",
+  "tested_tree": "3d5a421537f098e923874fd9ae490d50e8b29665",
+  "independent_checkout": "/tmp/opentallas-D1-independent-main-replay-20261002",
+  "tests_pass": 63,
+  "private_ROOT_attempts": [],
+  "actual_subprocess_attempts": [],
+  "plan_replay": "PASS",
+  "model_fields_identical": [
+    "d1",
+    "r2"
+  ],
+  "frozen_plan_sha256": "e14517ada980e4c4d19a762117b62e4215b75ba3d7c288c35a8ca3a88a9fcdcb",
+  "post_review_changes": "Only additive independent replay receipts; source/fixture/runner/test/prerequisite bytes unchanged.",
+  "compiler_invocations": 0,
+  "simulations": 0,
+  "fresh_GO_required": true,
+  "original_failure_preserved": true
+}

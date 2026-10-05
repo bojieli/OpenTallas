@@ -1,0 +1,12 @@
+{
+  "GO": false,
+  "launches": 0,
+  "main_base": "6abacfbb0",
+  "old_failed_GO_records_unchanged": true,
+  "reason": "Earlier main56c helper lacks final provenance crosscheck in worker76f/10e6; GO hashes copied from main differ from frozenworker. Preserve failedGOs andadmittedproposals; align publishedhelper/proposals/templates/review to exactfrozenworker.",
+  "requires": "Fresh parentGOs must bind frozen10e6 and workerproposal hashes, not priorfailedmain proposals. Distinctunits/outputr2; no automaticretry.",
+  "schema": "opentallas.H1.r8.main-frozen-binding-repair.v1",
+  "tests": "10PASS;main reviewprepare bothbyteidentical;currentmain candidate proposals byteidentical to frozenworker;all gate-toolpins match;no actualDUT executed.",
+  "worker_mutations": 0,
+  "worker_source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954"
+}

@@ -1,0 +1,244 @@
+{
+  "area_FF50_proxy_sum_mm2": 0.5159407104,
+  "area_proxy_provenance": "area_proxy.py:timers .2916um2/bit at .50 occupancy; inherited area-only proxy, not synthesis or SS/FF closure.",
+  "area_structural_price": {
+    "assembly_payload_bits": {
+      "FF50_proxy_mm2": 0.0293746176,
+      "bits": 50368
+    },
+    "burst_record_payload_bits": {
+      "FF50_proxy_mm2": 0.0088086528,
+      "bits": 15104
+    },
+    "conditional_command_output_bits": {
+      "FF50_proxy_mm2": 0.0063265536,
+      "bits": 10848
+    },
+    "conditional_owner_pipeline_bits": {
+      "FF50_proxy_mm2": 0.104136192,
+      "bits": 178560
+    },
+    "conditional_return_pipeline_bits": {
+      "FF50_proxy_mm2": 0.0615299328,
+      "bits": 105504
+    },
+    "sector_response_payload_bits": {
+      "FF50_proxy_mm2": 0.3057647616,
+      "bits": 524288
+    }
+  },
+  "build_admitted": false,
+  "calibrated_rate": false,
+  "clock_scope": "Cycles interpreted in one prospective 1.2GHz streaming domain; actual CORE/PHY clock ratios and CDC are unbound. Timing scenarios are legacy analytical assumptions, not measured bounds.",
+  "conditional_successor_interface": {
+    "PC_rule": "pc_of/bank_of and legal shoreline command lanes must bind actual addresses. A PC-bank ownership plan must prove hot-PC conflicts and allocation/lookup/commit arbitration; equal stack traffic is a conditional bound.",
+    "PCs_per_stack": 32,
+    "addressed_fill_bits_per_cycle": 16768,
+    "assembly_issue": "Four 64B destination writes/stack/cycle need independently selected tile macros, mask/codec visibility and read/write collision ownership; bulk SRAM capacity alone does not prove ports.",
+    "balanced_fill_lanes_per_stack": 4,
+    "burst_rule": "1024B descriptor can amortize allocation only; source enqueues and commands sectors serially. No burst service latency or aggregate HBM bandwidth transfer.",
+    "command_boundary_bits_per_cycle": 10848,
+    "fixed_four_stacks": true,
+    "id": "Q2-conditional-balanced-throughput-interface-NOT-SELECTED",
+    "owned_boundary_bits_per_cycle": 14880,
+    "owner_lookup_accepts_per_stack_cycle": 8,
+    "payload_bits_per_cycle": 8192,
+    "returned_sectors_per_stack_cycle": 8,
+    "rowconflict_PRE_ACT_RD_command_lanes_per_stack": 22,
+    "rowhit_RD_commands_per_stack_cycle": 8,
+    "sector_lanes_per_stack": 8,
+    "unchanged_source_cannot_supply_interface": true
+  },
+  "exactness_contract": [
+    "Identity192 plus physical tag and beat survive unchanged; TP4 versus source die1-bit mapping requires actual provider binding.",
+    "Every beat validated against immutable base/LEN/PC, allocation generation and duplicate mask.",
+    "Pipeline concurrent seen/remaining_PC updates require same-tag interlocks or merged atomic updates; duplicate/stale beats fault.",
+    "Hold output under backpressure; reserve output/assembly/write credits before accepting commands.",
+    "Do not reuse physical tag on lookup/output delivery: quarantine through matching destination-visible completion and validated reverse credit.",
+    "Raw E4M3 byte codes retained; BF16 read-window path cannot substitute without exact repack proof.",
+    "Tail writeback publication and local-window reader drain are distinct fences; no forced K RMW on every token."
+  ],
+  "finite_candidate": {
+    "credits_per_stack": 512,
+    "equal_stack_split_proven": false,
+    "id": "c88cf277c-16bursts-stack-32sectors-NOT-PRODUCT",
+    "lower_bounds_not_additive": "max of independent throughput bounds; exact dependency calendar needed for startup/drain and shared stalls",
+    "queue_capacity_admits_target_throughput": false,
+    "source_owner_floor_cycles": 393216,
+    "source_return_arb_floor_cycles": 229376,
+    "source_rowhit_command_floor_cycles": 32768
+  },
+  "full_token_repeat": false,
+  "hardware_implemented": false,
+  "local_window": {
+    "addressed_two_window_and_tail_lease_allocation_proven": false,
+    "capacity_only": true,
+    "existing_tile_capacity_bytes": 12582912,
+    "one_padded_window_bytes": 786432,
+    "prefetch_rule": "Derive available cycles from accepted prefetch to dependent local-read permission in the actual ctx8K graph. Do not invent full-layer overlap or prefetch past unavailable owners.",
+    "source_padded_local_words_per_tile": 8,
+    "two_padded_windows_bytes": 1572864,
+    "two_unpadded_layer_windows_bytes": 8388608
+  },
+  "mandatory_missing_costs": [
+    "actual decoder/CAM/update logic and additional SRAM ports/replicas",
+    "clock/hold/control/CDC and quarantine storage",
+    "route tracks, legal shoreline widths and mux area",
+    "tile write ports/raw-code codec and visibility latency",
+    "actual context8K dependency window"
+  ],
+  "measured_or_physical_credit": false,
+  "mux_demux": {
+    "cell_area_mm2": null,
+    "command_32_to_8_bit_mux_equivalents": 336288,
+    "owner_32_to_8_bit_mux_equivalents": 461280,
+    "owner_context_storage": "Retain existing 32x128x256 SRAM/stack and tag/CAM/seen state; additional ports/replicas/bank conflicts unpriced, no replacement credit.",
+    "required_fanout": "32 candidate PC heads per output lane; grants and decoders must arbitrate exclusive source/destination ownership.",
+    "return_32_to_8_bit_mux_equivalents": 467232,
+    "scope": "Direct replicated 32:1 binary selection estimate, not optimized shared crossbar or placement. Separate from staged data bits."
+  },
+  "reference": {
+    "actual_context8K_available_prefetch_cycles": null,
+    "cycles": 4668,
+    "scope": "Original TP4 SU64 context-zero host-serviced reference only; not an actual context-8K prefetch window.",
+    "source": "dimension.py:size cycle_reference_scope"
+  },
+  "scenarios": {
+    "row_conflict": {
+      "balanced_burst_records_per_stack": 19,
+      "balanced_fill_64B_lanes_per_stack": 4,
+      "balanced_minimum_sector_credits_per_stack": 583,
+      "balanced_sector_return_lanes_per_stack": 8,
+      "burst_allocation_records": 4096,
+      "command_lanes_per_stack": 22,
+      "conditional_window_cycles": 4668,
+      "fill_64B_lanes_global": 15,
+      "layer_bytes": 4194304,
+      "minimum_sector_credits_global": 2331,
+      "payload_bytes_per_cycle_exact": "1048576/1167",
+      "sector_rate_exact": "32768/1167",
+      "sector_return_lanes_global": 29,
+      "sectors": 131072,
+      "single_II1_lane_per_stack_floor_cycles": 32768,
+      "sixteen_burst_credits_satisfy_service_only_bound": false,
+      "source_floor_cycles": {
+        "command": 98304,
+        "owner": 393216,
+        "return_arb": 229376
+      },
+      "source_nonpipelined_owner_engines_per_stack": 85,
+      "source_nonpipelined_return_engines_per_stack": 50,
+      "source_sector_command_count": 393216,
+      "source_service_cycles": 83
+    },
+    "row_conflict_plus_refresh": {
+      "balanced_burst_records_per_stack": 111,
+      "balanced_fill_64B_lanes_per_stack": 4,
+      "balanced_minimum_sector_credits_per_stack": 3531,
+      "balanced_sector_return_lanes_per_stack": 8,
+      "burst_allocation_records": 4096,
+      "command_floor_scope": "RD-only floor; PRE/ACT/REF commands and refresh stalls remain additional.",
+      "command_lanes_per_stack": 8,
+      "conditional_window_cycles": 4668,
+      "fill_64B_lanes_global": 15,
+      "layer_bytes": 4194304,
+      "minimum_sector_credits_global": 14124,
+      "payload_bytes_per_cycle_exact": "1048576/1167",
+      "sector_rate_exact": "32768/1167",
+      "sector_return_lanes_global": 29,
+      "sectors": 131072,
+      "single_II1_lane_per_stack_floor_cycles": 32768,
+      "sixteen_burst_credits_satisfy_service_only_bound": false,
+      "source_floor_cycles": {
+        "command": 32768,
+        "owner": 393216,
+        "return_arb": 229376
+      },
+      "source_nonpipelined_owner_engines_per_stack": 85,
+      "source_nonpipelined_return_engines_per_stack": 50,
+      "source_sector_command_count": 131072,
+      "source_service_cycles": 503
+    },
+    "row_hit": {
+      "balanced_burst_records_per_stack": 9,
+      "balanced_fill_64B_lanes_per_stack": 4,
+      "balanced_minimum_sector_credits_per_stack": 288,
+      "balanced_sector_return_lanes_per_stack": 8,
+      "burst_allocation_records": 4096,
+      "command_lanes_per_stack": 8,
+      "conditional_window_cycles": 4668,
+      "fill_64B_lanes_global": 15,
+      "layer_bytes": 4194304,
+      "minimum_sector_credits_global": 1152,
+      "payload_bytes_per_cycle_exact": "1048576/1167",
+      "sector_rate_exact": "32768/1167",
+      "sector_return_lanes_global": 29,
+      "sectors": 131072,
+      "single_II1_lane_per_stack_floor_cycles": 32768,
+      "sixteen_burst_credits_satisfy_service_only_bound": true,
+      "source_floor_cycles": {
+        "command": 32768,
+        "owner": 393216,
+        "return_arb": 229376
+      },
+      "source_nonpipelined_owner_engines_per_stack": 85,
+      "source_nonpipelined_return_engines_per_stack": 50,
+      "source_sector_command_count": 131072,
+      "source_service_cycles": 41
+    }
+  },
+  "schema": "opentallas.qwen-rom-transport-concurrency.v1",
+  "source_receipts": [
+    {
+      "commit": "e26442d73651df0b23314131e06f66df194a88b2",
+      "path": "results/uarch/qwen_rom_q2_g0_20261002_r2/proposal.json",
+      "sha256": "05af4f6cbaa1e34eaedbc3b7966ab7c18ce004ee2afcdb212ec52560af9368a1",
+      "snapshot": "g0.json"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "results/uarch/qwen_rom_kv_transport_20261002/candidate_r1.json",
+      "sha256": "173de9bdd9b9963c428ba80479250a98f34d5b4ec4a2ff847bc7013a4a8aefeb",
+      "snapshot": "candidate.json"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "tools/qwen_rom_physical_dimension_gate.py",
+      "sha256": "ab1f2a9c9282c337361670400c43bd4ab416855125532474680ceb3c9294e3f3",
+      "snapshot": "dimension.py"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "tools/qwen_hbm_inventory_timers_r9.py",
+      "sha256": "171d73318cb4081ffc5e06b5ebaaa12bae8de43245f7c9873ba5878bbd144ca4",
+      "snapshot": "area_proxy.py"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+      "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+      "snapshot": "ot_hbm_r14_pkg.sv"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+      "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "snapshot": "ot_hbm_r14_tag_owner.sv"
+    },
+    {
+      "commit": "c88cf277cd92d82d9c70f490753434eb53c75853",
+      "path": "results/uarch/qwen_rom_kv_transport_20261002/provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+      "snapshot": "ot_hbm_causal_command_provider.sv"
+    }
+  ],
+  "status": "BLOCKED_ACTUAL_WINDOW_AND_THROUGHPUT_PROVIDER",
+  "tool_sha256": "3162baf12ef815cc2a82a8907bb8ea559817a5c1a06268fe969d193bdeaba977",
+  "traffic": {
+    "accounting": "Price acceptance/visibility/stalls against existing read charge once. Never sum 36 serialized refills plus the already charged 144MiB bandwidth term.",
+    "existing_bytes_per_die_token": 150994944,
+    "incremental_bulk_bytes": 0,
+    "layer_bytes": 4194304,
+    "layers": 36
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "verdict": "FAIL_LAUNCHER_CHILD_FRESHNESS_BEFORE_HDL",
+  "GO_commit": "18c39312bcae959b472f22e0be62e075c4f1d6ac",
+  "source_runner_commit": "190ccbf504441fec37acef5bcc3babfe57e6719e",
+  "unit": "dsrom-upstream-pair-cadence-3653406.service",
+  "compiler_invocations": 0,
+  "RTL_simulation_invocations": 0,
+  "actual_cadence_verdict": null,
+  "root_cause": "capped child calls fresh_paths after parent creates launcher receipt; legitimate parent artifacts falsely rejected",
+  "retry": false,
+  "original_failure_preserved": true,
+  "required_next": "Correct launch/child path validation and add regression; independent review, regenerated pins, fresh GO/output for successor only",
+  "artifacts_sha256": {
+    "opentallas-upstream-pair-cadence-execution-20261002-r1_launcher.json": "1f80166294306e1a8f82c420539660aae33a80f76d2998c43f2cfee65a5e707a",
+    "opentallas-upstream-pair-cadence-execution-20261002-r1_host_admission.json": "2172ce2b32d9040b3cd9ca6d9b2d5701588c6e31493463494353f24e01772e23",
+    "opentallas-upstream-pair-cadence-execution-20261002-r1_launcher.log": "d8b1828a6997b395be909d28a959fff7e058860be35ba44bca46dd0bd9619c98"
+  }
+}

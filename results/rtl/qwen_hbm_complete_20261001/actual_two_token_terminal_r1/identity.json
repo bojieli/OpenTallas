@@ -1,0 +1,38 @@
+{
+  "pid": 1425410,
+  "start_ticks": 307379801,
+  "ppid": 1425387,
+  "rss_bytes": 0,
+  "cwd": "/home/ubuntu/qwen-hbm-complete-20261001",
+  "state": "R",
+  "source_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "command": [
+    "/usr/bin/python3",
+    "/home/ubuntu/qwen-hbm-complete-20261001/tools/qwen_hbm_complete_checkpoint.py",
+    "--snapshot",
+    "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+    "--out",
+    "/home/ubuntu/qwen-hbm-complete-runs-20261001/checkpoint_full36_two_tokens_defc45332_r1/execution",
+    "--token",
+    "9707",
+    "--steps",
+    "2",
+    "--layers",
+    "36",
+    "--admission-gate",
+    "/home/ubuntu/qwen-hbm-complete-runs-20261001/checkpoint_full36_two_tokens_defc45332_r1/execution_gate.json"
+  ],
+  "supervisor": {
+    "pid": 1425387,
+    "start_ticks": 307379795,
+    "ppid": 1,
+    "rss_bytes": 17039360,
+    "cwd": "/home/ubuntu/qwen-hbm-complete-20261001",
+    "state": "R"
+  },
+  "timestamp": "2026-10-01T15:35:41.710241+00:00",
+  "status": "LIVE",
+  "out": "/home/ubuntu/qwen-hbm-complete-runs-20261001/checkpoint_full36_two_tokens_defc45332_r1",
+  "CPU_budget": 4,
+  "RSS_budget_bytes": 12884901888
+}

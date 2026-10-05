@@ -1,0 +1,21 @@
+{
+  "qwen_source_pins": [
+    {
+      "source_git": "defc45332c52a173d47f882595ddd78c4ce22fde",
+      "path": "tools/qwen_hbm_complete_program.py",
+      "sha256": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1"
+    },
+    {
+      "source_git": "defc45332c52a173d47f882595ddd78c4ce22fde",
+      "path": "compiler/models/qwen3-8b/config.json",
+      "sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb"
+    },
+    {
+      "source_git": "defc45332c52a173d47f882595ddd78c4ce22fde",
+      "path": "compiler/models/qwen3-8b/checkpoint_source.json",
+      "sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607"
+    }
+  ],
+  "scope": "Read-only pinnedQwencompiler reproduction with exact config/lock; semantic program only, no new lowering/cost model. Syntheticcontrol graphs are explicitlyreviewfixtures, not product evidence.",
+  "qwen_instructions": 1737
+}

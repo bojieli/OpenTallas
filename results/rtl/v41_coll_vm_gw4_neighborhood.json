@@ -1,0 +1,58 @@
+{
+ "record": "V4.1 collective GW4 -> VM static-bank neighborhood exact gate",
+ "workstream": "W2(d)",
+ "date": "2026-09-29",
+ "simulator": "Icarus Verilog 11.0",
+ "sources_sha256": {
+  "rtl/chip/physical/ot_v41_coll_vm_gw4_neighborhood.sv": "65dd92a728c30db3076b019ec32b7380510ad41a0be17b662d8648d53a37a447",
+  "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+  "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv": "7825281eb10daef8ca1a04819968b310bd264a358077126a4659685d5ca92955",
+  "rtl/test/tb_v41_coll_vm_gw4_neighborhood.sv": "0547e193209546eee2cd44b0319afc2d35ef7b0321b89a0e0b5ac51f1d607a9c",
+  "rtl/test/tb_v41_vm_bank4_macro_pipe.sv": "76d2978bbd97ac3e3baf0e571419ee55a67a5c55b4a4d7ca8cd668b84dd9c3e7",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+ },
+ "scope": "ot_v41_coll_vm_gw4_neighborhood: pipelined transpose (OUT_PIPE=1, always-ready static-bank sink) writing the registered four-bank macro VM; two back-to-back gathers without reset (5 words then NW words per rank, random input stalls ~20%), every written word read back through the 4-word VM read service (physical-bank order + rotation) and compared bit-exact; any transpose/VM fault is fatal",
+ "cases": [
+  {
+   "NW": 266,
+   "DEPTH_GROUPS": 1,
+   "DST0": 3,
+   "DST1": 40,
+   "result": "PASS coll->VM GW4 neighborhood G=1 NW=266 words=1084 beats=276 cycles=684"
+  },
+  {
+   "NW": 80,
+   "DEPTH_GROUPS": 1,
+   "DST0": 0,
+   "DST1": 21,
+   "result": "PASS coll->VM GW4 neighborhood G=1 NW=80 words=340 beats=86 cycles=246"
+  },
+  {
+   "NW": 266,
+   "DEPTH_GROUPS": 3,
+   "DST0": 4642,
+   "DST1": 5000,
+   "result": "PASS coll->VM GW4 neighborhood G=3 NW=266 words=1084 beats=356 cycles=764"
+  }
+ ],
+ "also": "tb_v41_vm_bank4_macro_pipe (3-group slice, rotations 2/3/0, depth carry, range/bank/collision faults) PASS on the packed-partial RTL",
+ "latency_note": "no service stage added: transpose and VM keep their own registered edges (VM write commit 3 edges after its port, read fill 5 edges)",
+ "all_pass": true,
+ "landing_20260929": {
+  "integration_branch": "claude/land-frozen-20260929",
+  "action": "revalidated_by_rerun_on_other_simulator",
+  "reason": "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv was added on both main (04f4edde, pinned by 7 main records) and claude/w2-vmcoll (packed-partial variant, identical logic, an Icarus 11 workaround). The integration keeps main's file, so sources_sha256 above pins a variant not in the tree.",
+  "rerun": {
+   "simulator": "Verilator 5.050 --binary --timing",
+   "vm_bank4_macro_pipe_sha256": "a149e8877eae9919cd4539f14206eae431ac71e0c3a49ba1e0d8c16eda99a121",
+   "cases": [
+    "PASS coll->VM GW4 neighborhood G=1 NW=266 words=1084 beats=276 cycles=681",
+    "PASS coll->VM GW4 neighborhood G=1 NW=80 words=340 beats=86 cycles=248",
+    "PASS coll->VM GW4 neighborhood G=3 NW=266 words=1084 beats=356 cycles=761"
+   ],
+   "cycles_note": "cycles differ from the Icarus run by <=3 because the bench's random input stalls come from the simulator's $random",
+   "icarus_11_with_main_file": "FAIL: 1084 / 340 / 1084 mismatches (the stale continuous assign over the unpacked partial array the branch worked around); tb_v41_vm_bank4_macro_pipe alone still PASSes under Icarus",
+   "not_committed_as_a_new_verdict": "the Icarus verdict is not re-recorded; this block is the refresh evidence"
+  }
+ }
+}

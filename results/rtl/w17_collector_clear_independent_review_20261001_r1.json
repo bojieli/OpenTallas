@@ -1,0 +1,12 @@
+{
+  "status": "PASS_INDEPENDENT_ORIGINAL_FAILURE_REPLAY",
+  "owner_commit": "ef81265e7307f17f10ecd5c852e3105c61677031",
+  "owner_tool_sha256": "01f27e01ecb66fb5b40bb11531671407010d3e864ab1c4158054fa02c4906aa5",
+  "source_pins_verified": 7,
+  "actual_returncode": 0,
+  "observed_failure": "REPRODUCED_CLEAR_FAILURE old_count=1 new_present=0 new_count=1 expected_new_count=0",
+  "evidence_sha256": "eee695b8a5e5c30d1ecc97212573f2500589668090c4ce7c88ca271ebe676af0",
+  "scope": "Counterexample proof only; correctedRTL/regression pendingGodel. K512 is serviceconfiguration; onlyonepriorrow in fixture.",
+  "hardware_admission": false,
+  "adopt": false
+}

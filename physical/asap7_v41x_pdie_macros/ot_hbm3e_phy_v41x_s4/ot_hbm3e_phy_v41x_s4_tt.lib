@@ -1,0 +1,937 @@
+library(ot_hbm3e_phy_v41x_s4) {
+    technology (cmos);
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    leakage_power_unit : "1uW";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1,pf);
+    nom_process : 1;
+    nom_temperature : 25.000;
+    nom_voltage : 0.7;
+    operating_conditions(tt_0p7_25) { process : 1; temperature : 25.000; voltage : 0.7; tree_type : balanced_tree; }
+    default_operating_conditions : tt_0p7_25;
+    default_max_transition : 0.320;
+    default_fanout_load : 1;
+    default_input_pin_cap : 0.0;
+    default_output_pin_cap : 0.0;
+    default_inout_pin_cap : 0.0;
+    default_cell_leakage_power : 0;
+    default_leakage_power_density : 0.0;
+    slew_lower_threshold_pct_rise : 20.000;
+    slew_upper_threshold_pct_rise : 80.000;
+    slew_lower_threshold_pct_fall : 20.000;
+    slew_upper_threshold_pct_fall : 80.000;
+    input_threshold_pct_rise : 50.000;
+    input_threshold_pct_fall : 50.000;
+    output_threshold_pct_rise : 50.000;
+    output_threshold_pct_fall : 50.000;
+    lu_table_template(ot_hbm3e_phy_v41x_s4_delay) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_hbm3e_phy_v41x_s4_slew) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_hbm3e_phy_v41x_s4_check) { variable_1 : related_pin_transition; variable_2 : constrained_pin_transition; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    type (ot_hbm3e_phy_v41x_s4_bus6) { base_type : array; data_type : bit; bit_width : 6; bit_from : 5; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus8) { base_type : array; data_type : bit; bit_width : 8; bit_from : 7; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus10) { base_type : array; data_type : bit; bit_width : 10; bit_from : 9; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus24) { base_type : array; data_type : bit; bit_width : 24; bit_from : 23; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus32) { base_type : array; data_type : bit; bit_width : 32; bit_from : 31; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus40) { base_type : array; data_type : bit; bit_width : 40; bit_from : 39; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus64) { base_type : array; data_type : bit; bit_width : 64; bit_from : 63; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus80) { base_type : array; data_type : bit; bit_width : 80; bit_from : 79; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus128) { base_type : array; data_type : bit; bit_width : 128; bit_from : 127; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus544) { base_type : array; data_type : bit; bit_width : 544; bit_from : 543; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus896) { base_type : array; data_type : bit; bit_width : 896; bit_from : 895; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus1024) { base_type : array; data_type : bit; bit_width : 1024; bit_from : 1023; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus2048) { base_type : array; data_type : bit; bit_width : 2048; bit_from : 2047; bit_to : 0; downto : true; }
+    type (ot_hbm3e_phy_v41x_s4_bus8192) { base_type : array; data_type : bit; bit_width : 8192; bit_from : 8191; bit_to : 0; downto : true; }
+    cell(ot_hbm3e_phy_v41x_s4) {
+        area : 625336.258;
+        interface_timing : true;
+        dont_use : true;
+        dont_touch : true;
+        pin(clk) { direction : input; capacitance : 0.020; clock : true; }
+        pin(rst_n) {
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_v) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_rdy) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(k_addr) { bus_type : ot_hbm3e_phy_v41x_s4_bus896;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_len) { bus_type : ot_hbm3e_phy_v41x_s4_bus128;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_tag) { bus_type : ot_hbm3e_phy_v41x_s4_bus544;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_we) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_wdata) { bus_type : ot_hbm3e_phy_v41x_s4_bus8192;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_wstrb) { bus_type : ot_hbm3e_phy_v41x_s4_bus1024;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(k_wr_done) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(kr_v) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(kr_rdy) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(kr_tag) { bus_type : ot_hbm3e_phy_v41x_s4_bus544;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(kr_beat) { bus_type : ot_hbm3e_phy_v41x_s4_bus128;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(kr_data) { bus_type : ot_hbm3e_phy_v41x_s4_bus8192;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        pin(w_v) {
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        pin(w_rdy) {
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(w_addr) { bus_type : ot_hbm3e_phy_v41x_s4_bus24;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(w_len) { bus_type : ot_hbm3e_phy_v41x_s4_bus6;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(w_tag) { bus_type : ot_hbm3e_phy_v41x_s4_bus10;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(w_room) { bus_type : ot_hbm3e_phy_v41x_s4_bus8;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(wr_v) { bus_type : ot_hbm3e_phy_v41x_s4_bus8;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(wr_rdy) { bus_type : ot_hbm3e_phy_v41x_s4_bus8;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0650, 0.0650", "0.0650, 0.0650");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            fall_constraint(ot_hbm3e_phy_v41x_s4_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0310, 0.0310", "0.0310, 0.0310");
+            }
+            }
+        }
+        bus(wr_tag) { bus_type : ot_hbm3e_phy_v41x_s4_bus80;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(wr_beat) { bus_type : ot_hbm3e_phy_v41x_s4_bus40;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(wr_data) { bus_type : ot_hbm3e_phy_v41x_s4_bus2048;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        pin(k_oor) {
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(refreshes) { bus_type : ot_hbm3e_phy_v41x_s4_bus64;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+        bus(w_reads) { bus_type : ot_hbm3e_phy_v41x_s4_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            cell_fall(ot_hbm3e_phy_v41x_s4_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1170, 0.1170", "0.1170, 0.1170");
+            }
+            rise_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_hbm3e_phy_v41x_s4_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+    }
+}

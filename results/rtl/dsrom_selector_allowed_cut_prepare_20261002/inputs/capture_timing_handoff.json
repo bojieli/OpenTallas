@@ -1,0 +1,66 @@
+{
+  "4096_selected": false,
+  "FF_feedback_hold_margin_ps": -37.51240000000001,
+  "calendar": {
+    "calendar_is_conditional_not_admitted": true,
+    "downstream_accept_first": 425,
+    "downstream_accept_last": 1000,
+    "final_output_postNBA_first": 424,
+    "full_program_consumer_deadline": null,
+    "intermediate_capture_first": 423,
+    "maximum_outstanding_read_requests": 2,
+    "maximum_scalar_requests_per_edge": 1,
+    "pipeline_stages": 2,
+    "read_request_first": 423,
+    "read_request_last": 998,
+    "selector_preparation": "bank0/position0 context is reserved beforeGO; scalar selectors stable before stage1 acceptance; subsequent selectors advance on acceptance"
+  },
+  "checks": "49 tests PASS including source LUT, domain, omission mutants and finite held two-credit edge oracle; cold byteexact model PASS",
+  "commands": [
+    "python -m pytest -q tests/test_dsrom_I66_capture_timing.py tests/test_dsrom_I66_capture_cells.py tests/test_dsrom_I66_capture_banks.py",
+    "python tools/dsrom_I66_capture_timing.py --out results/uarch/dsrom_I66_capture_timing_20261002/model.json --verify"
+  ],
+  "consumer_deadline": null,
+  "cost": {
+    "async_control_FF_bits": 39,
+    "cell_body_delta_um2": 1569.9744,
+    "data_FF_bits": 2277,
+    "extra_TIEHI_cells": 39,
+    "extra_clock_BUF": 330,
+    "extra_clock_pin_SS_fF": 1033.920024,
+    "extra_global_root_select_BUF": 20,
+    "extra_reset_BUF": 5,
+    "extra_reset_pin_SS_fF": 27.456975,
+    "hold_mux_INV_upper_cells": 2316,
+    "hold_mux_NAND2_cells": 6948,
+    "reservation_delta_mm2_at50pct": 0.0031399488000000003,
+    "restoring_INV_cells": 2316,
+    "vector_hold_BUF": 420
+  },
+  "default1024FAIL_preserved": true,
+  "draft_corrections": "Source binding and clock-edge/feedback omissions corrected before freeze, never fitted against a new runtime. Original draft models and generators archived unchanged.",
+  "failure_scope": "Conditional conservative LUT/positive-wire screen FAIL, not actual STA or proof all implementations impossible. No frequency/uncertainty relaxation.",
+  "new_runtime_build_or_live_edit": false,
+  "next_gate": "Model a causal registered selector/stall distribution and feedback hold repair with positive route/clock/reset debit; bind consumer required edges/slot before any RTL. Current balanced-cut candidate must not be built/admitted.",
+  "no_RTL_GO": true,
+  "parent_prerequisite_intake": "f8ba4ffe0",
+  "prerequisite_commit": "b991b7b67c3329bbd770010f972ab3f5a2c16e7a",
+  "preserved_drafts": [
+    "attempt1_global_pos_fanout_draft_FAIL.json",
+    "attempt2_launch_edge_draft_FAIL.json",
+    "attempt3_feedback_path_omission_draft_FAIL.json"
+  ],
+  "proposal": "ONE balanced cut after logical mux level5; stages2, intermediate32 raw69bit streams plus final stream; no sweep",
+  "source_binding": "Bank-local readindex3bits x128; shared bankID rootnode counts64,32,16,8,4,2,1. QNrestore and2NAND feedback mux included. All per-cell input slew/load/wire bounds recorded for SS and FF. No characterized-domain extrapolation.",
+  "timing_ps": {
+    "stage1_bank_local_position_bit0": 1349.004250633922,
+    "stage1_payload": 833.7421297624473,
+    "stage1_shared_root_bank_bit0": 1294.0576707433856,
+    "stage1_shared_root_bank_bit1": 1205.6587400283693,
+    "stage2_payload": 833.7421297624473,
+    "stage2_shared_root_bank_bit2": 1559.2544628884348,
+    "stage2_shared_root_bank_bit6": 981.0764770023893
+  },
+  "unknown_deadline_not_zero": true,
+  "verdict": "FAIL_ONE_BALANCED_CUT_CONDITIONAL_SS"
+}

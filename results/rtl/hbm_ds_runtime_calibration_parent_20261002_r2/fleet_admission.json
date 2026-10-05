@@ -1,0 +1,118 @@
+{
+  "utc": "2026-10-02T08:21:58.209253+00:00",
+  "host": "localhost",
+  "state": "FRESH_R2_RESOURCE_ADMISSION",
+  "reservation_active": true,
+  "reserved_cpus": [
+    0,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "prepared": {
+    "DS": {
+      "path": "/home/ubuntu/OpenTallas/results/uarch/hbm_runtime_calibration_r8_20261002/DS_prepared_gate.json",
+      "sha256": "28e31b0143115e7d19989b4226d999813378a9ed13d62965387954316ad0e388",
+      "caps": {
+        "FSIZE_bytes": 1073741824,
+        "build_jobs": 1,
+        "disk_min_free_GiB": 12,
+        "fresh_parent_admission_required": true,
+        "memory_GiB": 32,
+        "no_PVE2_PVE3": true,
+        "output_cap_GiB": 8,
+        "proposed_local_CPUs": [
+          0
+        ],
+        "sequential_targets": true,
+        "swap_GiB": 0,
+        "whole_timeout_s": 7110
+      },
+      "worker_sha256": "436881cbd0e02fb52b2548f608685f32cb1f96bdc22e3a146c45e5cb19dc2b7b"
+    },
+    "Qwen": {
+      "path": "/home/ubuntu/OpenTallas/results/uarch/hbm_runtime_calibration_r8_20261002/Qwen_prepared_gate.json",
+      "sha256": "e29e6e2c847164686409185770c3fe3c593b95c26229c3b60eec79d1eb6759da",
+      "caps": {
+        "FSIZE_bytes": 1073741824,
+        "build_jobs": 16,
+        "disk_min_free_GiB": 12,
+        "fresh_parent_admission_required": true,
+        "memory_GiB": 32,
+        "no_PVE2_PVE3": true,
+        "output_cap_GiB": 8,
+        "proposed_local_CPUs": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        "sequential_targets": true,
+        "swap_GiB": 0,
+        "whole_timeout_s": 2130
+      },
+      "worker_sha256": "436881cbd0e02fb52b2548f608685f32cb1f96bdc22e3a146c45e5cb19dc2b7b"
+    }
+  },
+  "caps": {
+    "memory_GiB": 64,
+    "output_GiB": 16,
+    "swap_bytes": 0
+  },
+  "resources": {
+    "mem_available_GiB": 158.04838943481445,
+    "root_available_GiB": 447.74037170410156,
+    "load": [
+      2.66162109375,
+      2.619140625,
+      2.8046875
+    ]
+  },
+  "RAM_after_full_caps_GiB": 94.04838943481445,
+  "disk_after_output_caps_GiB": 431.74037170410156,
+  "conflicting_reservations": [],
+  "new_task_CPU_ownership": "CPU0 DS;CPU8-23 Qwen; no other active coordination reservation overlaps. Existing attention/TP96 broad affinity competes unchanged.",
+  "exclusive_physical_CPU_claim": false,
+  "cpu_quota_claim": false,
+  "source_binding": {
+    "worker_original_commit": "10e6bcde1",
+    "parity_fix_intake_parent_refs": [
+      "9efe",
+      "6287188"
+    ],
+    "execution_source_root": "/home/ubuntu/OpenTallas-hbm-rf-service",
+    "worker_path": "/home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_runtime_calibration_r8.py",
+    "worker_sha256": "436881cbd0e02fb52b2548f608685f32cb1f96bdc22e3a146c45e5cb19dc2b7b"
+  },
+  "execution_hold": true,
+  "hold_reason": "Parent14tests and fresh matching r2GOs; prepared hashes above are exact binding",
+  "execution_started": false,
+  "old_units_drain_receipt": "/tmp/claude-1000/queue/h1-r8-parallel-calendar-20261002/r8-terminal-drain.receipt.json",
+  "pve23_new_tasks": false,
+  "job_changes": 0
+}

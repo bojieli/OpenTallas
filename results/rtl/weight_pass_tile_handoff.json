@@ -1,0 +1,216 @@
+{
+  "status": "pass",
+  "scope": "Bank-service cycles from final restarted operation including fixed ten-tick drain check; not inference latency",
+  "records": [
+    {
+      "interleave": 1,
+      "rows": 3,
+      "local_cols": 3,
+      "depth": 1024,
+      "reuse": 0,
+      "before": {
+        "fills": 9216,
+        "outputs": 9216,
+        "cycles": 16956
+      },
+      "after": {
+        "fills": 9216,
+        "outputs": 9216,
+        "cycles": 16956
+      }
+    },
+    {
+      "interleave": 1,
+      "rows": 3,
+      "local_cols": 3,
+      "depth": 1024,
+      "reuse": 1,
+      "before": {
+        "fills": 3072,
+        "outputs": 9216,
+        "cycles": 17557
+      },
+      "after": {
+        "fills": 3072,
+        "outputs": 9216,
+        "cycles": 17557
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 1,
+      "local_cols": 7,
+      "depth": 160,
+      "reuse": 0,
+      "before": {
+        "fills": 1120,
+        "outputs": 1120,
+        "cycles": 2203
+      },
+      "after": {
+        "fills": 1120,
+        "outputs": 1120,
+        "cycles": 2203
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 1,
+      "local_cols": 7,
+      "depth": 160,
+      "reuse": 1,
+      "before": {
+        "fills": 1120,
+        "outputs": 1120,
+        "cycles": 2203
+      },
+      "after": {
+        "fills": 1120,
+        "outputs": 1120,
+        "cycles": 2203
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 2,
+      "depth": 1,
+      "reuse": 0,
+      "before": {
+        "fills": 6,
+        "outputs": 6,
+        "cycles": 38
+      },
+      "after": {
+        "fills": 6,
+        "outputs": 6,
+        "cycles": 38
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 2,
+      "depth": 1,
+      "reuse": 1,
+      "before": {
+        "fills": 2,
+        "outputs": 6,
+        "cycles": 36
+      },
+      "after": {
+        "fills": 2,
+        "outputs": 6,
+        "cycles": 36
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 341,
+      "reuse": 0,
+      "before": {
+        "fills": 7161,
+        "outputs": 7161,
+        "cycles": 13193
+      },
+      "after": {
+        "fills": 7161,
+        "outputs": 7161,
+        "cycles": 13193
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 341,
+      "reuse": 1,
+      "before": {
+        "fills": 2387,
+        "outputs": 7161,
+        "cycles": 14117
+      },
+      "after": {
+        "fills": 2387,
+        "outputs": 7161,
+        "cycles": 14117
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 342,
+      "reuse": 0,
+      "before": {
+        "fills": 7182,
+        "outputs": 7182,
+        "cycles": 13315
+      },
+      "after": {
+        "fills": 7182,
+        "outputs": 7182,
+        "cycles": 13315
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 3,
+      "local_cols": 7,
+      "depth": 342,
+      "reuse": 1,
+      "before": {
+        "fills": 6498,
+        "outputs": 7182,
+        "cycles": 13643
+      },
+      "after": {
+        "fills": 6498,
+        "outputs": 7182,
+        "cycles": 13643
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 6,
+      "local_cols": 7,
+      "depth": 160,
+      "reuse": 0,
+      "before": {
+        "fills": 6720,
+        "outputs": 6720,
+        "cycles": 12380
+      },
+      "after": {
+        "fills": 6720,
+        "outputs": 6720,
+        "cycles": 12380
+      }
+    },
+    {
+      "interleave": 3,
+      "rows": 6,
+      "local_cols": 7,
+      "depth": 160,
+      "reuse": 1,
+      "before": {
+        "fills": 1120,
+        "outputs": 6720,
+        "cycles": 13489
+      },
+      "after": {
+        "fills": 1120,
+        "outputs": 6720,
+        "cycles": 13489
+      }
+    }
+  ],
+  "tests": 14,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_weight_pass_scheduler.sv": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+    "tests/test_weight_pass_reuse.py": "a910d9019964737e2402e6a20721aaef78bedeca7c70ba4d4748112bdaf8e557",
+    "results/physical_abi3/asap7/weight_pass_scheduler/tile_handoff/before.sv": "c826c8b71a8091a45c45eaafa135bb4aea7f41261ddc6c17c2f7e97b173160e0"
+  }
+}

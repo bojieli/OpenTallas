@@ -1,0 +1,287 @@
+{
+ "schema": "opentallas.result.v41_state_read_results_were_unbound.v1",
+ "question": "with the streamed select's query row derived at HEAD (route.py, dea2695f), do the V4.1 cells emit the oracle's tokens beyond 8-9 prompt positions, and if not, what is left?",
+ "answer": "NO at HEAD, and the select was not the last fault. HEAD's HBM P12 run with the streamed-row derivation live emits exactly what it emitted before it, [2052, 223, 19, 17]: the derivation fires (layer 2's L02.ffn_norm cosine at position 7 rises 0.8949 -> 0.99945) and the collapse moves one layer down, to L03.ffn_norm at 0.798. The cause is not in the select at all: every STATE_READ result the V4.1 graph names role=activation -- 72 of them, every non-owning layer's compressed_view.valid, indexer.reuse.selection and pool_read.admission -- was bound to no state by either backend and became an activation buffer. Layer 3's reused selection read HBM object 1032 (ROM wafer object 3100), which NO operator writes: every query joined 512 copies of KV row 0. With the results bound, HBM emits the oracle's first token at 12 and 16 prompt tokens and diverges only where the oracle's own top-2 margin is 0.15-0.41 logits.",
+ "root_cause_chain": [
+  {
+   "fault": "streamed ROUTE.INDEX_TOPK computed query position 0 on every issue (POSITION_START + row with a one-row plane)",
+   "status": "already fixed at HEAD by the output-view row derivation in runtime/sim/engines/route.py (landed in dea2695f); measured live here",
+   "evidence": "concat probe of op 3333 (layer 2 index join) at P10: rows now carry rebased compressed indices 10, 10..11, ... ; route.topk_candidates rose 1,946,016 -> 1,946,880"
+  },
+  {
+   "fault": "STATE_READ results named role=activation were unbound (compiler/backends/hbm_sram/plan.py::_bind_state_tensors keyed on tensor role; compiler/backends/rom/common/program.py::_state_tensors owned only role=state)",
+   "status": "FIXED (4c38994e HBM, 730eaec3 ROM)",
+   "evidence": "HBM: 72 unbound STATE_READ outputs -> 0; zero-initialised objects read by an operator and written by none: HBM 2 -> 0 (object 1032 read by the 10 reuse joins; object 1520 read by layer 24's select mask), ROM wafer 3 -> 1 (the remaining one is the host-written token ring, read by kernels 0-1), ROM array64 4 -> 2 (host ring and a pre-existing routed-matmul object, not a reuse). Runtime concat probe of op 3960 (layer 3 reuse join) at P10 before the fix: in1 rows all 0, joined valid counts 513..522."
+  },
+  {
+   "fault": "HBM band layer term was one window per iteration unconditionally, so a band whose iterations REUSE one resource (layers 15-19 read layer 14's KV; 21-23 read layer 20's) addressed pooled replicas nothing writes",
+   "status": "FIXED (4c38994e): the stride is read off the band's own iteration bindings, constant -> no term, arithmetic progression -> its stride, anything else refused",
+   "evidence": "binding alone left the c512 cell unadmittable: 'view 9044: maximum element 2359295 needs 4718592 bytes but object 1637 is 4194304 bytes'; with the derived stride it admits with 0 errors"
+  }
+ ],
+ "deployment_digests": {
+  "v41_hbm_c512": {
+   "before": "82aec784d3824b0537efa549699b2ec310e7ce91fb906ca7215e12361e6d8069",
+   "after": "8f47989d15024629ec8ada255e5ac676e41ef20a507e3cfed0aa46ff9aaad462"
+  },
+  "v41_rom_wafer_c8192": {
+   "before": "c7ef0ad40bfb2626f5b4d4bac0b878234018ddccc18d53d6bd86a29cef41aa61",
+   "after": "2402cd125afef5fd320ce05cabc02d67bb09852ae71c9f4f71039d3af7804c0b"
+  },
+  "v41_rom_array64_c8192": {
+   "before": "acfc266ae717320b68499a20c9b55968970c73fa7e54385bf1a9d484f989be2f",
+   "after": "082b8212fb7ebffc3b09f812b19093d38ca59a59dd5871ad0b0e0b5a5cdad84b"
+  },
+  "unchanged": {
+   "v4_hbm_cluster32": "65f3554acd31a7e3034d10b55989bf2a992f1e1f5dadce4181ff491a7c8f3977",
+   "qwen3_hbm_single_chip": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+   "v4_rom_wafer": "59a719de96a9e1453b187a3337beeb5ee9d0912434710ac8f5efee3e7abfc0c7",
+   "v4_rom_array32": "4a56012ce29dfdc3fda45b3f9ec5648ebbf10d67477547111ef9ba1eae1703b1",
+   "qwen3_rom": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a"
+  }
+ },
+ "tokens": {
+  "hbm_c512_p12_before": {
+   "device": [
+    2052,
+    223,
+    19,
+    17
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 0,
+   "failure": null,
+   "deployment_digest": "82aec784d3824b0537efa549699b2ec310e7ce91fb906ca7215e12361e6d8069",
+   "wall_seconds": 2581.333
+  },
+  "hbm_c512_p12": {
+   "device": [
+    983,
+    344,
+    1902,
+    11300
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "deployment_digest": "8f47989d15024629ec8ada255e5ac676e41ef20a507e3cfed0aa46ff9aaad462",
+   "wall_seconds": 2280.829
+  },
+  "hbm_c512_p16": {
+   "device": [
+    436,
+    295,
+    223,
+    26
+   ],
+   "oracle": [
+    436,
+    295,
+    223,
+    24
+   ],
+   "first_divergence_index": 3,
+   "failure": null,
+   "deployment_digest": "8f47989d15024629ec8ada255e5ac676e41ef20a507e3cfed0aa46ff9aaad462",
+   "wall_seconds": 3288.08
+  },
+  "hbm_c512_p32": {
+   "device": [
+    305,
+    260,
+    19268,
+    22105
+   ],
+   "oracle": [
+    13806,
+    345,
+    7472,
+    49665,
+    436,
+    295,
+    223,
+    736,
+    4343,
+    16,
+    2052,
+    710,
+    2038,
+    44158,
+    477,
+    6818
+   ],
+   "first_divergence_index": 0,
+   "failure": null,
+   "deployment_digest": "8f47989d15024629ec8ada255e5ac676e41ef20a507e3cfed0aa46ff9aaad462",
+   "wall_seconds": 4910.979
+  },
+  "rom_wafer_c8192_p12": {
+   "device": [
+    334
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 0,
+   "failure": "decode step 1 failed: GROUPED_CONCAT output view 6781 dims (16384, 512) differ from the axis-0 concatenation (8320, 512)",
+   "deployment_digest": "2402cd125afef5fd320ce05cabc02d67bb09852ae71c9f4f71039d3af7804c0b",
+   "wall_seconds": 5707.968
+  }
+ },
+ "where_the_hbm_tokens_still_differ_the_oracle_is_a_near_tie": {
+  "p12_index_2": {
+   "oracle_top3_after_decode": [
+    [
+     11300,
+     27.16888
+    ],
+    [
+     1902,
+     26.76227
+    ],
+    [
+     223,
+     26.08743
+    ]
+   ],
+   "device": 1902,
+   "note": "the device picks the oracle's second choice, 0.41 logits behind; the oracle's own prefill-14 of the same tokens puts it 0.19 behind. Fed 1902, the device then emits 11300, which is what the oracle emits after 1902 (prefill-15 top: [[11300, 33.41281], [56164, 32.51023]])"
+  },
+  "p16_index_3": {
+   "oracle_top3": [
+    [
+     24,
+     29.3392
+    ],
+    [
+     26,
+     29.1909
+    ],
+    [
+     1484,
+     28.6876
+    ]
+   ],
+   "device": 26,
+   "note": "the device picks the oracle's second choice, 0.148 logits behind"
+  }
+ },
+ "p32_is_not_gradeable_against_the_committed_gold": {
+  "committed_gold": [
+   13806,
+   345,
+   7472,
+   49665
+  ],
+  "fresh_run_of_the_committed_producer_today": [
+   305,
+   13806
+  ],
+  "oracle_prefix_scan_top3_at_32": [
+   [
+    305,
+    29.67187
+   ],
+   [
+    13806,
+    28.48975
+   ],
+   [
+    260,
+    28.13395
+   ]
+  ],
+  "device_hbm_p32": [
+   305,
+   260,
+   19268,
+   22105
+  ],
+  "reading": "the same producer, same workload, same snapshot now emits 305 first, 1.18 logits ahead of 13806; the device emits 305. results/abi3/deepseek_v41_oracle_nondeterminism.json already records the oracle disagreeing with itself past position 7 at cosine 0.596. Neither 305 nor 13806 is claimed here."
+ },
+ "layer_residual_position7_p10": {
+  "tool": "tools/compare_deepseek_v41_layer_residual.py against device taps of every width-5120 RMS_NORM input (scratch probe, no dedupe by descriptor)",
+  "hbm_before": {
+   "L02.ffn_norm": 0.999452,
+   "L03.ffn_norm": 0.797962,
+   "L15.ffn_norm": 0.099622
+  },
+  "hbm_after": {
+   "L02.ffn_norm": 0.999452,
+   "L03.ffn_norm": 0.999374,
+   "L14.ffn_norm": 0.997218,
+   "L24.ffn_norm": 0.992185,
+   "L39.ffn_norm": 0.945022
+  },
+  "rom_wafer_after": {
+   "L20.attn_norm": 0.995973,
+   "L20.ffn_norm": 0.987282,
+   "L39.ffn_norm": 0.856393
+  },
+  "reading": "the step collapses are gone on HBM: a ramp, no layer below cosine 0.94 at depth 40. ROM and HBM taps are BIT-IDENTICAL through L20.attn_norm and first differ at L20.ffn_norm, rows 1-8 only (rows 0 and 9 identical)"
+ },
+ "open": [
+  {
+   "what": "ROM ratio-1 prefill KV join is emitted per row and INTERLEAVES the two segments",
+   "where": "compiler/backends/rom/common/program.py phase-split CONCAT (main.layerNN.attention.key_value_view, layers 20-39): the prefill operator writes out [2, 512] per row-loop iteration with term stride 1024, i.e. [cur_r, comp_r] at rows 2r, 2r+1, while ATTENTION.SPARSE's indices address [cur 0..S-1 | comp 0..G-1]. HBM emits the same join as one [2S, 512] block (extent numerator 2) and is right",
+   "evidence": "ROM vs HBM taps identical to L20.attn_norm, diverge at L20.ffn_norm rows 1-8; a query that sees every row (0 and 9) is permutation-invariant. ROM P12 first token 334 = the oracle's second choice (1.08 behind 983)",
+   "status": "pre-existing (HEAD's base view is the same per-row form over an arena); not fixed here"
+  },
+  {
+   "what": "ROM decode traps at the first decode step",
+   "where": "the decode KV join's context loop has bound_divisor 1,048,576 while the compressed plane is 8,192 (4,096) rows, so runtime/sim/memory.py::_walks_extent_axis (3d33a008: 'a term cannot walk an axis too small to hold one iteration') refuses to resolve it: 'GROUPED_CONCAT output view ... dims (12288, 512) differ from the axis-0 concatenation (4224, 512)'",
+   "status": "pre-existing at HEAD with the unmodified ROM lowering (same failure at layer 2); not fixed here"
+  },
+  {
+   "what": "decode Engram n-grams see no history on HBM",
+   "where": "compiler/backends/hbm_sram: the token ring (main.compressed_token_ids.committed, token_ring class) is written by EMBEDDING_LOOKUP at rows [0, span) and read by DMA.NGRAM_HASH over rows [0, span), both with only the token-block loop term -- no POSITION_START offset on the write and no CONTEXT_LENGTH extent on the read. In decode the hash therefore sees one id at ring row 0 (and overwrites token 0)",
+   "evidence": "device decode at context 14 vs device prefill over the same 14 tokens: L00 taps bit-identical, first divergence L01.attn_norm cosine 0.8866 -- immediately after the layer-1 Engram (NGRAM_HASH -> ENGRAM_GATE) and before any attention",
+   "status": "not fixed here; the ROM lowering has the analogous problem (its ring writer reads the host id window over [0, CONTEXT_LENGTH))"
+  }
+ ],
+ "commands": [
+  "python3 tools/run_accelerator_tokens.py --kernel-ir build/ir-v3/deepseek-v4.1-flash-c512-amE10/kernel_ir.v3.json --backend hbm_sram --capability configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json --workload build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P{12,16}.json --reference results/abi3/deepseek_v41_reference_oracle_p{12,16}.json --checkpoint <V4.1 snapshot dba1be0a> --publish /tmp/claude-1000/<session>/scratchpad/runs/pub_<tag>_p<N> --expert-numeric-path fp8 --max-new-tokens 4 --output <out> --force",
+  "same with --workload build/workloads/deepseek-v4.1-flash/TA-DS41-CHAT-1-P32.json --reference results/abi3/deepseek_v41_reference_oracle_prefix.json",
+  "python3 tools/run_accelerator_tokens.py --kernel-ir build/ir-v3/deepseek-v4.1-flash-c8192-amE10/kernel_ir.v3.json --backend rom_deepseek_v41 --capability configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json --workload .../TA-DS41-CHAT-1-P12.json --reference results/abi3/deepseek_v41_reference_oracle_p12.json ... --expert-numeric-path fp8 --max-new-tokens 4",
+  "PATH=/usr/local/cuda/bin:$PATH python3 tools/run_deepseek_v41_reference_oracle_tokens.py --workload build/workloads/deepseek-v4.1-flash/TA-DS41-CHAT-1-P32.json --max-new-tokens 2 --output <out>  (run with the V4-vs-V4.1 tokenizer delta proof skipped: the V4 snapshot is no longer in the HF cache; the V4.1 tokenizer file is still authenticated by hash)",
+  "PATH=/usr/local/cuda/bin:$PATH python3 tools/compare_deepseek_v41_layer_residual.py --device-taps <taps> --tap-position 7 --output <out>  (same tokenizer note)",
+  "python3 -m pytest -q tests/compiler/test_v41_state_read_binding.py tests/compiler/test_hbm_sram_backend.py tests/compiler/test_rom_backend.py tests/test_deepseek_v41_rom_backend.py tests/compiler/test_deepseek_v41_hbm_comparator.py tests/sim/test_engines_dma_route.py -k 'not test_the_new_contracts_are_the_front_ends_own_names'"
+ ],
+ "not_a_claim": [
+  "runtime.sim, not RTL",
+  "no V4.1 cell is closed: every graded record still fails oracle_token_identity somewhere in its four tokens",
+  "the oracle-margin and prefix-scan records come from scratch drivers of the committed StreamingDeepSeekV41, recorded beside the committed golds, not replacing them",
+  "the three HBM token records share one deployment digest (8f47989d); their source_sha256 fields pin the sources they ran"
+ ],
+ "producer": {
+  "git": {
+   "commit": "730eaec331d947263df5e1e84d4d1e82ef55bab2"
+  },
+  "records": [
+   "hbm_c512_p12.json",
+   "hbm_c512_p12_before.json",
+   "hbm_c512_p16.json",
+   "hbm_c512_p32.json",
+   "layer_residual_hbm_p10_position7.json",
+   "layer_residual_hbm_p10_position7_before.json",
+   "layer_residual_rom_wafer_p10_position7.json",
+   "oracle_margins_p12_p16.json",
+   "oracle_p32_fresh_run.json",
+   "oracle_prefix_scan_chat1.json",
+   "rom_wafer_c8192_p12.json"
+  ]
+ }
+}

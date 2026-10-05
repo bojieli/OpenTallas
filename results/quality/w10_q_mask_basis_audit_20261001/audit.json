@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.w10.q.mask.nand.basis.audit.v1",
+  "mask_fix": "Explicit combined Q/BF [128,7168] domain check before any source/allocator calls; no assertions, clamp or geometry change.",
+  "source_sha256": {
+    "tools/w17_conservative_geometry_search.py": "ba50d47cbc3bc586e71925c3356d03678cc3d830278ed312b88593a721653b03",
+    "tests/test_w17_geometry_mask_domain.py": "509c0d139383b667f5a4f2de8cafcbc9c60da64c4ec4aacb366d3798eebad86a",
+    "results/quality/w10_q_mask_basis_audit_20261001/reproduce.py": "8b28d18061ab66f9051d6fd3624ecf0a69a0b9a13e7d5a5af9a26785b2aa949c",
+    "tests/test_w10_q_nand_basis_audit.py": "e7df621cbca5893350f900fe54505ce633a2c49d3426f742d0522e398dd795fd",
+    "tools/w10_q_constructive_area_bound.py": "3ca30a894172a506ae0e62a905b3c248dc81e38a3e99080cc259fab93cf0895f",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "results/uarch/w10_q_elaboration_inventory_r1/inventory.json": "06bada78345cfaa8aa283ccf956f1e9fe490c7538eef49aa2758f9ea9c2ad255",
+    "results/uarch/w10_q_elaboration_inventory_r1/construction.json": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+  },
+  "historical_construction_pin": "6da3c7a60af782e769f9e4c62c44e1f0d13b0fd6",
+  "coarse_netlist_sha256": "9739ef29a2cb4b494e47c6ae19d4215486a46eaac91973188c3eefeb98037b2f",
+  "OR_basis_witness": {
+    "inputs_truth_masks": {
+      "A": 12,
+      "B": 10
+    },
+    "target_OR_truth_mask": 14,
+    "all_up_to_two_gate_acyclic_NAND2_networks_exhausted": true,
+    "free_constants_allowed": [
+      0,
+      15
+    ],
+    "two_gate_implementations": 0,
+    "three_gate_positive_truth_masks": [
+      3,
+      5,
+      14
+    ],
+    "qualification": "Generic independent input OR, NAND2 only, no free complemented input; not a mapped lower bound for the whole coarse netlist."
+  },
+  "source_defect": {
+    "operator": "$or",
+    "current_NAND2_per_generic_output_bit": 2,
+    "necessary_NAND2_for_independent_inputs_without_complements": 3,
+    "observed_operator_cells": 3937,
+    "charged_output_bits": 18827
+  },
+  "local_repricing_sensitivity": {
+    "additional_NAND2": 18827,
+    "additional_standard_cell_um2": "1646.98596",
+    "additional_50pct_placement_um2": "3293.97192",
+    "hypothetical_OR_only_adjusted_pair_mm2": "0.24984048888",
+    "additional_q1024_reservation_mm2": "3.37302724608",
+    "qualification": "Replace generic OR2 coefficient by OR3 only. Not a complete corrected construction, actual netlist minimum, power or timing qualification."
+  },
+  "unresolved_firstprinciples": [
+    "Shared complements/constant folding not proven by isolated per-operator costs",
+    "Signed/bidirectional shift and multiport/reset lowering have coefficients but no emitted equivalent NAND construction",
+    "Actual fanout, wire, ICG load, clock phase and contextual SS/FF remain outside Boolean gate counts"
+  ],
+  "original_records_preserved": true,
+  "geometry_default_receipt_byte_identical": true,
+  "construction_tool_and_record_unchanged": true,
+  "physical_admission": false,
+  "jobs_launched": 0,
+  "ram_whole_candidate_pin": "64c6bffe0442cdf9126a6eaac752591b6a8e8389",
+  "coordination": "Ram owns whole composition; join any later corrected construction/power receipt explicitly. Do not promote original generic OR coefficient as a proven bound or duplicate allocator/RTL."
+}

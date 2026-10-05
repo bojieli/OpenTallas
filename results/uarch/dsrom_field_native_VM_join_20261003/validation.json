@@ -1,0 +1,18 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_dsrom_MTP_selected_parent_containment.py",
+    "tests/test_dsrom_field_native_VM_join.py",
+    "tests/test_dsrom_field_parent_component.py",
+    "tests/test_dsrom_field_bridge_parent.py",
+    "tests/test_dsrom_field_tree_bridge_model.py"
+  ],
+  "exit_code": 0,
+  "new_physical_jobs": 0,
+  "source_job_preserved": "dsrom-global-clock-constraints-20261003-r1.service",
+  "tests": 129,
+  "two_cold_models_byte_identical": true
+}

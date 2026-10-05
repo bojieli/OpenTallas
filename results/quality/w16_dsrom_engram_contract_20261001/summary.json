@@ -1,0 +1,58 @@
+{
+  "demand": {
+    "TP4_BF16_delivery_bytes_if_four_copies": 98304,
+    "TP4_raw_row_delivery_bytes_if_four_copies": 50688,
+    "bytes_per_stored_row": 264,
+    "decoded_BF16_rows_bytes_per_token": 24576,
+    "full_table_backing_bytes": 202758032400,
+    "keys_and_value_BF16_per_layer_bytes": 51200,
+    "lookups_per_layer": 24,
+    "lookups_per_token": 48,
+    "projection_MACs_per_layer": 157286400,
+    "projection_and_constants_bytes": 315043840,
+    "reference_int64_ids_bytes_per_token": 384,
+    "separate_checkpoint_region_reads": 96,
+    "stored_table_read_bytes_per_token": 12672,
+    "table_read_commands_with_fused_codes_and_scales": 48,
+    "total_checkpoint_engram_bytes": 203073076240,
+    "working_buffers_double_buffer_four_reference_copies_bytes": 196608,
+    "working_buffers_double_buffer_one_shared_copy_bytes": 49152
+  },
+  "mandatory_gaps": [
+    "Current gather RTL latches scale onbeat0 and reuses it; actual header+golden requires8distinct scales perrow. Existing scaled-row exactness does not qualify checkpoint decoder.",
+    "Physical table home, banking to dies, mapping/multiplier ROM, memory read latency and SS/FF port throughput remain unqualified.",
+    "Legacy ROM plan codes_and_scale_257B omits7scale bytes perrow; padded264B total equals actual8scale bytes but byte meaning differs.",
+    "Small per-token working set is an access demand, not full immutable backing capacity.",
+    "TP4 reference image replication is not proof that four complete tables are required.",
+    "Historical rack slack and model on-critical-path verdict need replay after actual codec/home and boundary binding."
+  ],
+  "port_budget": {
+    "SS_FF_port_closure": null,
+    "corrected_264bit_row_stream": {
+      "beat_bits": 264,
+      "beats_per_row": 8,
+      "codes_per_beat": 32,
+      "cycles_both_layers_serial": 384,
+      "cycles_both_layers_with_independent_ports": 192,
+      "cycles_per_layer": 192,
+      "decode_buffer_write_bits": 512,
+      "qualification": "required corrected candidate; no RTL implementation or timing credit",
+      "scale_byte_from_matching_32_column_block": true,
+      "scale_bytes_per_beat": 1,
+      "serialization_at_1p2GHz_ns": 320.0
+    },
+    "mandatory_decode_scale_bytes": 8,
+    "packed_256bit_stream": {
+      "bytes_per_cycle": 32,
+      "packed_stream_cycles": 396,
+      "row_aligned_cycles": 432,
+      "serialization_at_1p2GHz_ns": 330.0
+    },
+    "physical_port_count": null,
+    "quarter_slack_ns": 892.5,
+    "random_row_latency": null,
+    "required_bytes_per_cycle_1p2GHz_for_both_layers_quarter_slack": 11.831932773109244,
+    "required_memory_bandwidth_Bps_at_user_token_rate": "12672 * tokens_per_second",
+    "slack_reference_us": 3.57
+  }
+}

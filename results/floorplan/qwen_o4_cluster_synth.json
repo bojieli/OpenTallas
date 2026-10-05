@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.qwen-o4-cluster-synth.v1",
+ "status": "ESTIMATE_NOT_SYNTHESISED",
+ "note": "tools/qwen_o4_cluster_synth.py was stopped at the 2026-09-29 halt before yosys/ABC finished (>50 min on the flat G4 W16 matvec). These cell areas are an estimate: 64 bmul + 64 fadd + 48 qadd + 64 fmul from results/floorplan/qwen_o4_unit_areas.json = 65,259 um2, plus ~40,000 um2 assumed for flops (MEM_PIPE, s2/s3, tree hold, output registers), argmax and control. The VM cut value is the ORFS synth_stat of the stopped route (171,051.8 um2 includes its 32 macros: logic = 171,051.8 - 32 x 5,170.651 = 5,590.9 um2).",
+ "clusters": {
+  "rommac_port": {"cell_area_um2": 110000, "basis": "estimate"},
+  "rommac_plain": {"cell_area_um2": 105000, "basis": "estimate"},
+  "vm_cut": {"cell_area_um2": 5590.9, "basis": "ORFS synth_stat of the stopped vm_cut route minus macro area"}
+ }
+}

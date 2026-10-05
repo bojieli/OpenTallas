@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "HDL_launched": false,
+      "command": "python3 tools/dsrom_selector_physical_join.py",
+      "diagnosis": "Initial new join tool used nonexistent guard key additional_50pct_reservation_mm2; KeyError, no model record emitted. Corrected to source key AND2x2_reservation_mm2_at50pct."
+    },
+    {
+      "HDL_launched": false,
+      "command": "python3 -m unittest discover -s tests -p test_dsrom_selector_physical_join.py -v",
+      "diagnosis": "Discovery also imported tests/abi3/__init__.py: ModuleNotFoundError No module named runtime.abi3. Direct targeted entrypoint used; no source enforcement changed.",
+      "result": "11 targeted tests passed; unrelated abi3 package import error"
+    }
+  ],
+  "overwritten": false
+}

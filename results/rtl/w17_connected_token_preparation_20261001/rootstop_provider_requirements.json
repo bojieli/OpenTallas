@@ -1,0 +1,141 @@
+{
+  "status": "BLOCKED_CONNECTED_ROOTSTOP_PROVIDERS_AND_MODEL",
+  "token_runtime_source_commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+  "clock_contract_commit": "850d9c79bc3767b4ad4ca5d5106b9c97aecf08cc",
+  "source_pins": {
+    "rtl/v41die/ot_v41_spine_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41die/ot_v41_spine_w17w10.sv",
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/chip/ot_chip_v41x_die.sv",
+      "sha256": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/chip/ot_chip_v41x_pdie.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/chip/ot_chip_v41x_pdie.sv",
+      "sha256": "a437bb187205e34ae3a72c22aaaf9bbedd80438c60f23da5b59b7aa5a9fd8546"
+    },
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+      "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+    },
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41die/ot_v41_fieldtop_w17w10.sv",
+      "sha256": "e2d372c5388535c1cc08ae1648c367fcfc721ecb96579646b962edf3698d8ec8"
+    }
+  },
+  "current_top_PG_controller_instantiations": {
+    "rtl/chip/ot_chip_v41x_die.sv": 0,
+    "rtl/chip/ot_chip_v41x_pdie.sv": 0,
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": 0,
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": 0
+  },
+  "event_providers": [
+    {
+      "event": "configuration",
+      "observed_sources": [
+        "spine f_cfg_go after broadcast stages",
+        "host bcast m.cfg_go/m.cfg_ph/m.cfg_np",
+        "pair ld_run"
+      ],
+      "binding": "signal identities only",
+      "missing": "configuration outstanding counter/walker completion and broadcast pipeline occupancy exported in hardware to root controller"
+    },
+    {
+      "event": "go",
+      "observed_sources": [
+        "spine go",
+        "f_go",
+        "f_go_bf",
+        "pair go && act"
+      ],
+      "binding": "signal identities only",
+      "missing": "hardware go acceptance plus pending propagation and active selected-stage work, not host bus_go helper"
+    },
+    {
+      "event": "beat",
+      "observed_sources": [
+        "spine f_xs_v/f_xb_v",
+        "host pair xs_v/xb_v"
+      ],
+      "binding": "signal identities only",
+      "missing": "beat-quiet covers producer, all broadcast pipeline stages and pending downstream beats before req_off"
+    },
+    {
+      "event": "drain",
+      "observed_sources": [
+        "pair busy/quiet/pv",
+        "return node quiet/o_v",
+        "spine r_v and w_we"
+      ],
+      "binding": "partial signal candidates only",
+      "missing": "synthesizable all-element/all-return-stage drain completion and committed VM writes; runtime-only retn quiet branch cannot transfer to root-stop"
+    },
+    {
+      "event": "outputcredit",
+      "observed_sources": [
+        "return r_v",
+        "VM w_we"
+      ],
+      "binding": "UNBOUND",
+      "missing": "no return ready/credit port in current spine; require actual acknowledged credits or model-bound fixed-rate consumer acceptance/port reservation and outstanding-write count"
+    },
+    {
+      "event": "prewake",
+      "observed_sources": [],
+      "binding": "UNBOUND",
+      "missing": "producer/router-owned next physicalstage request, powered-clock/rail acknowledgement and finite forward/CDC horizon; current L0 has no connected multi-stage provider"
+    }
+  ],
+  "stop_condition_requirements": [
+    "no outstanding cfg/go/beat in producer or transport",
+    "all element/walker partials and return pipelines drained",
+    "consumer acceptance/completion and output credits accounted, no pending writes",
+    "persistent KV/state retained or priced protocol; no reset of currenttoken state",
+    "nextstage prewake request/ack/horizon bound to actualproducer decisions before data arrival"
+  ],
+  "model_required": {
+    "cfg_load_cycles": null,
+    "go_delivery_cycles": null,
+    "beat_and_return_drain_cycles": null,
+    "consumer_accept_and_reverse_credit_cycles": null,
+    "CDC_cycles": null,
+    "prewake_cycles": null,
+    "root_clock_RC_energy": null,
+    "SSFF_in_context": null,
+    "physical_stage_profile": null
+  },
+  "clock_model_scope": "Existing PG wake/BET estimates and standalone controller bench are not connected-root service bounds. Price provider fanout/control/retention area, ports, CDC, cycles and RC/energy beforeRTL.",
+  "host_RT_SKIP_is_physical_rootstop": false,
+  "standalone_PG_bench_transfer": false,
+  "root_stop_ready": false,
+  "actual_root_stop_waveform": null,
+  "connected_token_rate": null,
+  "launch_allowed": false,
+  "adopt": false,
+  "source_checks": {
+    "required_runtime_signal_names": true,
+    "all_four_current_tops_no_PG_instance": true,
+    "return_ready_credit_provider_absent": true
+  }
+}

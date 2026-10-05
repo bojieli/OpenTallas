@@ -1,0 +1,1589 @@
+{
+  "$defs": {
+    "companionSource": {
+      "additionalProperties": false,
+      "properties": {
+        "analytical_antecedent": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_class": {
+          "enum": [
+            "executed_comparison_artifact",
+            "analytical_projection"
+          ]
+        },
+        "field": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "per_role": {
+          "const": true
+        }
+      },
+      "required": [
+        "analytical_antecedent",
+        "evidence_class",
+        "field",
+        "per_role"
+      ],
+      "type": "object"
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "batch": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "batch_profile_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "concurrency": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "context_tokens": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "evidence_scope": {
+          "const": "full_workload"
+        },
+        "generation": {
+          "$ref": "#/$defs/generation"
+        },
+        "phases": {
+          "items": {
+            "enum": [
+              "prefill",
+              "decode"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": "prefill"
+            },
+            {
+              "const": "decode"
+            }
+          ],
+          "type": "array"
+        },
+        "tpot_acceptance": {
+          "$ref": "#/$defs/tpotAcceptance"
+        }
+      },
+      "required": [
+        "batch",
+        "concurrency",
+        "context_tokens",
+        "evidence_scope",
+        "generation",
+        "phases"
+      ],
+      "type": "object"
+    },
+    "externalOracle": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "locked"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "producer": {
+                "properties": {
+                  "source_sha256": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "source_sha256": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "pending"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "producer": {
+                "properties": {
+                  "source_sha256": {
+                    "type": "null"
+                  }
+                }
+              },
+              "source_sha256": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "evidence_class": {
+          "const": "external_reference_comparator"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "producer": {
+          "additionalProperties": false,
+          "properties": {
+            "source_sha256": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "tool": {
+              "$ref": "#/$defs/path"
+            }
+          },
+          "required": [
+            "source_sha256",
+            "tool"
+          ],
+          "type": "object"
+        },
+        "schema": {
+          "const": "opentallas.abi3.reference_oracle.v1"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "locked",
+            "pending"
+          ]
+        }
+      },
+      "required": [
+        "evidence_class",
+        "path",
+        "producer",
+        "schema",
+        "source_sha256",
+        "status"
+      ],
+      "type": "object"
+    },
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "include_eos_in_output": {
+          "const": true
+        },
+        "max_new_tokens": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "selection_mode": {
+          "const": "greedy_argmax_lowest_id"
+        },
+        "stop_condition": {
+          "const": "first_official_eos_or_maximum_new_tokens"
+        },
+        "tie_rule": {
+          "const": "lowest_token_id"
+        },
+        "vocabulary_size": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "eos_token_ids",
+        "include_eos_in_output",
+        "max_new_tokens",
+        "selection_mode",
+        "stop_condition",
+        "tie_rule",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "grade": {
+      "description": "The evidence grade of an external or derived number, in the vocabulary of configs/hardware/technology.json grade_definitions plus the two grades a contract needs before any deployment exists: derived (arithmetic on graded inputs, stated here) and unavailable (no artifact produces it yet, and the field is null).",
+      "enum": [
+        "published",
+        "datasheet",
+        "measured",
+        "characterized",
+        "derived",
+        "assumed",
+        "unavailable"
+      ]
+    },
+    "granularityCorrection": {
+      "additionalProperties": false,
+      "description": "The correction rule 2 of the iso-area rule demands when the two sides' silicon is outside tolerance. It states the node count whose silicon would be within tolerance, that count's silicon and ratio, and whether such a build exists. Stating the correction is what makes the out-of-tolerance pair publishable as the control it is; it does not convert the pair into an iso-area pair.",
+      "properties": {
+        "admissible_node_counts": {
+          "description": "Every node count of the corrected side whose silicon is within the tolerance, with its area and ratio. More than one may qualify at a 0.02 tolerance and an 815 mm2 quantum.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "node_count": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "ratio_to_denominator": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "silicon_area_mm2": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "node_count",
+              "ratio_to_denominator",
+              "silicon_area_mm2"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "built": {
+          "description": "Whether a deployment at the nearest admissible node count exists in this repository.",
+          "type": "boolean"
+        },
+        "corrected_role": {
+          "enum": [
+            "rom",
+            "hbm",
+            "rom_array"
+          ]
+        },
+        "nearest_node_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "quantum_mm2": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "rule": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "what_the_built_pair_is": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "admissible_node_counts",
+        "built",
+        "corrected_role",
+        "nearest_node_count",
+        "quantum_mm2",
+        "rule",
+        "what_the_built_pair_is"
+      ],
+      "type": "object"
+    },
+    "hbmTarget": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/target"
+        },
+        {
+          "properties": {
+            "role": {
+              "const": "hbm"
+            },
+            "storage_class": {
+              "const": "HBM"
+            }
+          },
+          "required": [
+            "role",
+            "storage_class"
+          ]
+        }
+      ],
+      "description": "The HBM side of the storage-class pair: a target whose role is hbm and whose immutable weight storage is HBM. An hbm slot carrying any other role or storage class is refused."
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "isoArea": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "pending"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ratio": {
+                "type": "null"
+              },
+              "within_tolerance": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "locked"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ratio": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "within_tolerance": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "within_tolerance": {
+                "const": false
+              }
+            },
+            "required": [
+              "within_tolerance"
+            ]
+          },
+          "then": {
+            "properties": {
+              "granularity_correction": {
+                "$ref": "#/$defs/granularityCorrection"
+              }
+            }
+          }
+        }
+      ],
+      "description": "The iso-area governance of this pair. status locked means both sides carry a derived silicon area and the ratio is computed from them; status pending means at least one side's area or node count is still null, the ratio is null, and no ratio may be published from this contract. within_tolerance is the recorded comparison of ratio against tolerance, never an assertion that the pair is iso-area by construction.",
+      "properties": {
+        "denominator_role": {
+          "enum": [
+            "rom",
+            "hbm",
+            "rom_array"
+          ]
+        },
+        "granularity_correction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/granularityCorrection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "numerator_role": {
+          "enum": [
+            "rom",
+            "hbm",
+            "rom_array"
+          ]
+        },
+        "ratio": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rule": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "locked",
+            "pending"
+          ]
+        },
+        "tolerance": {
+          "const": 0.02
+        },
+        "within_tolerance": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "denominator_role",
+        "granularity_correction",
+        "note",
+        "numerator_role",
+        "ratio",
+        "rule",
+        "status",
+        "tolerance",
+        "within_tolerance"
+      ],
+      "type": "object"
+    },
+    "lock": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "locked",
+            "pending"
+          ]
+        }
+      },
+      "required": [
+        "digest",
+        "path",
+        "source_sha256",
+        "status"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "locked"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "graph_id": {
+                "$ref": "#/$defs/sha256"
+              },
+              "kernel_ir_source_sha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "pending_reason": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "pending"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "graph_id": {
+                "type": "null"
+              },
+              "kernel_ir_source_sha256": {
+                "type": "null"
+              },
+              "pending_reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "pending_reason"
+            ]
+          }
+        }
+      ],
+      "description": "The authoritative Kernel IR this pair compares against. status locked requires both digests; status pending means the exporter for this model does not emit an IR yet, both digests are null, pending_reason quotes what refuses, and every source-bound check that reads the IR reports false. A pending model binding is publishable as a pair identity and is not executable evidence.",
+      "properties": {
+        "graph_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kernel_ir_path": {
+          "$ref": "#/$defs/path"
+        },
+        "kernel_ir_source_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "numeric_profile": {
+          "$ref": "#/$defs/identifier"
+        },
+        "pending_reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "locked",
+            "pending"
+          ]
+        }
+      },
+      "required": [
+        "graph_id",
+        "kernel_ir_path",
+        "kernel_ir_source_sha256",
+        "model_id",
+        "numeric_profile",
+        "pending_reason",
+        "status"
+      ],
+      "type": "object"
+    },
+    "nodeCountDerivation": {
+      "additionalProperties": false,
+      "description": "Why a target's node count is not a number yet, and exactly what fixes it. Required of, and only of, a target whose node_count is null. A node count is a physical property of the compared object: guessing one would invent the denominator of every per-node figure the comparison publishes.",
+      "properties": {
+        "fixed_by_gate": {
+          "$ref": "#/$defs/identifier"
+        },
+        "fixed_by_work_package": {
+          "$ref": "#/$defs/identifier"
+        },
+        "inputs": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "rule": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "fixed_by_gate",
+        "fixed_by_work_package",
+        "inputs",
+        "rule"
+      ],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "policy": {
+      "additionalProperties": false,
+      "properties": {
+        "clock": {
+          "additionalProperties": false,
+          "properties": {
+            "comparison_frequency_hz": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "policy_id": {
+              "$ref": "#/$defs/identifier"
+            },
+            "same_frequency_required": {
+              "const": true
+            }
+          },
+          "required": [
+            "comparison_frequency_hz",
+            "policy_id",
+            "same_frequency_required"
+          ],
+          "type": "object"
+        },
+        "evidence_class": {
+          "$ref": "#/$defs/identifier"
+        },
+        "external_fabric_policy": {
+          "$ref": "#/$defs/identifier"
+        },
+        "external_memory_policy": {
+          "$ref": "#/$defs/identifier"
+        },
+        "latency_boundary": {
+          "$ref": "#/$defs/identifier"
+        },
+        "pvt": {
+          "additionalProperties": false,
+          "properties": {
+            "corner_id": {
+              "$ref": "#/$defs/identifier"
+            },
+            "process": {
+              "$ref": "#/$defs/identifier"
+            },
+            "temperature_c": {
+              "type": "number"
+            },
+            "voltage_v": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          },
+          "required": [
+            "corner_id",
+            "process",
+            "temperature_c",
+            "voltage_v"
+          ],
+          "type": "object"
+        },
+        "state_boundary": {
+          "$ref": "#/$defs/identifier"
+        },
+        "technology_claim": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "technology_view": {
+          "enum": [
+            "asap7",
+            "sky130"
+          ]
+        }
+      },
+      "required": [
+        "clock",
+        "evidence_class",
+        "external_fabric_policy",
+        "external_memory_policy",
+        "latency_boundary",
+        "pvt",
+        "state_boundary",
+        "technology_claim",
+        "technology_view"
+      ],
+      "type": "object"
+    },
+    "referenceSet": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "reference_set_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "const": "locked"
+        },
+        "workload_set_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "path",
+        "reference_set_id",
+        "schema",
+        "source_sha256",
+        "status",
+        "workload_set_id"
+      ],
+      "type": "object"
+    },
+    "reporting": {
+      "additionalProperties": false,
+      "description": "What a published ratio from this pair must be printed beside. Gate DS41-CMP11: each published ratio appears beside its binding constraint and its resident-session count, both per role. The companions are read from the executed comparison artifact; an analytical antecedent may be named but never substituted for the executed field, and a contract whose iso_area.status is pending publishes no ratio at all.",
+      "properties": {
+        "companion_sources": {
+          "additionalProperties": false,
+          "properties": {
+            "binding_constraint": {
+              "$ref": "#/$defs/companionSource"
+            },
+            "resident_session_count": {
+              "$ref": "#/$defs/companionSource"
+            }
+          },
+          "required": [
+            "binding_constraint",
+            "resident_session_count"
+          ],
+          "type": "object"
+        },
+        "gate_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "published_ratios": {
+          "description": "Every ratio this pair is allowed to publish. A ratio not named here may not be published from this contract.",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "ratio_publication_rule": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "required_companions": {
+          "items": {
+            "enum": [
+              "binding_constraint",
+              "resident_session_count"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": "binding_constraint"
+            },
+            {
+              "const": "resident_session_count"
+            }
+          ],
+          "type": "array"
+        }
+      },
+      "required": [
+        "companion_sources",
+        "gate_id",
+        "published_ratios",
+        "ratio_publication_rule",
+        "required_companions"
+      ],
+      "type": "object"
+    },
+    "romArrayTarget": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/target"
+        },
+        {
+          "properties": {
+            "role": {
+              "const": "rom_array"
+            },
+            "storage_class": {
+              "const": "ROM"
+            }
+          },
+          "required": [
+            "role",
+            "storage_class"
+          ]
+        }
+      ],
+      "description": "The second ROM role of a ROM-versus-ROM pair: a target whose role is rom_array and whose immutable weight storage is ROM. A rom_array target with any other storage class is refused."
+    },
+    "romTarget": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/target"
+        },
+        {
+          "properties": {
+            "role": {
+              "const": "rom"
+            },
+            "storage_class": {
+              "const": "ROM"
+            }
+          },
+          "required": [
+            "role",
+            "storage_class"
+          ]
+        }
+      ],
+      "description": "The ROM side present in both pair shapes: a target whose role is rom and whose immutable weight storage is ROM. A rom slot carrying any other role or storage class is refused."
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "silicon": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "die_area_grade": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "die_area_grade"
+            ]
+          },
+          "then": {
+            "properties": {
+              "die_area_mm2_per_node": {
+                "type": "null"
+              },
+              "silicon_area_mm2": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "die_area_mm2_per_node": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "die_area_mm2_per_node"
+            ]
+          },
+          "then": {
+            "properties": {
+              "silicon_area_mm2": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "description": "The area denominator of one side, per the iso-area rule of DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17: accelerator die area per node times node count. HBM stacks, package, switch silicon and board are named in excluded_from_denominator and reported beside the ratio, never inside it. A side whose die area or node count is not yet derivable carries null with grade unavailable and states what will fix it; it may not carry a placeholder number.",
+      "properties": {
+        "die_area_grade": {
+          "$ref": "#/$defs/grade"
+        },
+        "die_area_mm2_per_node": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "die_area_source": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "excluded_from_denominator": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "silicon_area_mm2": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "die_area_grade",
+        "die_area_mm2_per_node",
+        "die_area_source",
+        "excluded_from_denominator",
+        "silicon_area_mm2"
+      ],
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "node_count": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "node_count"
+            ]
+          },
+          "then": {
+            "properties": {
+              "node_count_derivation": {
+                "$ref": "#/$defs/nodeCountDerivation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "topology_class": {
+                "const": 2
+              }
+            },
+            "required": [
+              "topology_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "node_class": {
+                "const": "WAFER"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "topology_class": {
+                "const": 1
+              }
+            },
+            "required": [
+              "topology_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "node_class": {
+                "const": "DIE"
+              },
+              "node_count": {
+                "const": 32
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "backend": {
+          "$ref": "#/$defs/identifier"
+        },
+        "capability": {
+          "$ref": "#/$defs/lock"
+        },
+        "cost_policy": {
+          "additionalProperties": false,
+          "properties": {
+            "cost_table_id": {
+              "$ref": "#/$defs/identifier"
+            },
+            "lock": {
+              "$ref": "#/$defs/lock"
+            },
+            "policy_id": {
+              "$ref": "#/$defs/identifier"
+            }
+          },
+          "required": [
+            "cost_table_id",
+            "lock",
+            "policy_id"
+          ],
+          "type": "object"
+        },
+        "deployment": {
+          "$ref": "#/$defs/lock"
+        },
+        "node_class": {
+          "description": "Amendment AM-R1 NodeClass: what one node of this topology is. DIE is every pre-AM-R1 topology descriptor. WAFER is a wafer logical device, itself an internally distributed machine, so a node count above one of them is a fabric between wafers and not a relabelled wafer.",
+          "enum": [
+            "DIE",
+            "WAFER"
+          ]
+        },
+        "node_count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "node_count_derivation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/nodeCountDerivation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "role": {
+          "description": "The slot this target fills. rom and hbm are the storage-class pair; rom_array is the second ROM role of the packaging pair. Each role is admitted only under the targets key of the same name, which also pins its storage class.",
+          "enum": [
+            "rom",
+            "hbm",
+            "rom_array"
+          ]
+        },
+        "silicon": {
+          "$ref": "#/$defs/silicon"
+        },
+        "storage_class": {
+          "enum": [
+            "ROM",
+            "HBM"
+          ]
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "topology_class": {
+          "description": "runtime/abi3/constants.py TopologyClass: 0 SINGLE_CHIP, 1 CLUSTER_32 (exactly 32 nodes), 2 WAFER_LOGICAL_DEVICE (exactly one), 3 CLUSTER_N (amendment AM-R1, the node count is a capability value).",
+          "maximum": 3,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "backend",
+        "capability",
+        "cost_policy",
+        "deployment",
+        "node_class",
+        "node_count",
+        "node_count_derivation",
+        "role",
+        "silicon",
+        "storage_class",
+        "target_id",
+        "topology_class"
+      ],
+      "type": "object"
+    },
+    "targets": {
+      "additionalProperties": false,
+      "description": "Exactly one of two pair shapes. {rom, hbm} is the storage-class comparison (a ROM target against an HBM target). {rom, rom_array} is the packaging comparison (two ROM targets, for example one wafer-scale logical device against an N-node ROM array). Every slot pins its target: the role must equal the slot name and the storage class must be that role's storage (rom and rom_array: ROM; hbm: HBM), so a mislabelled role or a target under the wrong slot is refused here, not only by the tool. hbm and rom_array never appear together, and rom is present in both shapes.",
+      "oneOf": [
+        {
+          "required": [
+            "hbm"
+          ]
+        },
+        {
+          "required": [
+            "rom_array"
+          ]
+        }
+      ],
+      "properties": {
+        "hbm": {
+          "$ref": "#/$defs/hbmTarget"
+        },
+        "rom": {
+          "$ref": "#/$defs/romTarget"
+        },
+        "rom_array": {
+          "$ref": "#/$defs/romArrayTarget"
+        }
+      },
+      "required": [
+        "rom"
+      ],
+      "type": "object"
+    },
+    "template": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "none_plain_text",
+            "source_file"
+          ]
+        },
+        "path": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/path"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "template_id": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "mode",
+        "path",
+        "source_sha256",
+        "template_id"
+      ],
+      "type": "object"
+    },
+    "tpotAcceptance": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "metric": {
+          "const": "per_sequence_steady_state_decode_step_latency_seconds"
+        },
+        "roles": {
+          "additionalProperties": false,
+          "description": "One budget per target role, in the same pair shape as targets: {rom, hbm} or {rom, rom_array}. A budget for only one side is refused.",
+          "oneOf": [
+            {
+              "required": [
+                "hbm"
+              ]
+            },
+            {
+              "required": [
+                "rom_array"
+              ]
+            }
+          ],
+          "properties": {
+            "hbm": {
+              "$ref": "#/$defs/tpotRoleBudget"
+            },
+            "rom": {
+              "$ref": "#/$defs/tpotRoleBudget"
+            },
+            "rom_array": {
+              "$ref": "#/$defs/tpotRoleBudget"
+            }
+          },
+          "required": [
+            "rom"
+          ],
+          "type": "object"
+        },
+        "schema": {
+          "const": "opentallas.abi3.tpot_acceptance_budget.v1"
+        },
+        "steady_state_start_decode_step": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "batch_size",
+        "metric",
+        "roles",
+        "schema",
+        "steady_state_start_decode_step"
+      ],
+      "type": "object"
+    },
+    "tpotRoleBudget": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_dependent_evidence_allowed": {
+          "type": "boolean"
+        },
+        "eligible_measurement_classes": {
+          "items": {
+            "enum": [
+              "abi3_cycle_model_execution",
+              "post_layout_timing_simulation",
+              "rtl_bound_accelerated_cosimulation",
+              "rtl_cycle_simulation",
+              "silicon_measurement"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "maximum_seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "statistic": {
+          "enum": [
+            "max",
+            "p50",
+            "p95",
+            "p99"
+          ]
+        }
+      },
+      "required": [
+        "assumption_dependent_evidence_allowed",
+        "eligible_measurement_classes",
+        "maximum_seconds",
+        "statistic"
+      ],
+      "type": "object"
+    },
+    "version": {
+      "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$",
+      "type": "string"
+    },
+    "workload": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "index_path": {
+          "$ref": "#/$defs/path"
+        },
+        "index_schema": {
+          "$ref": "#/$defs/identifier"
+        },
+        "index_source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kind": {
+          "$ref": "#/$defs/identifier"
+        },
+        "max_new_tokens": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "prompt_token_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "rendered_text_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "template": {
+          "$ref": "#/$defs/template"
+        },
+        "tokenizer_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "workload_id": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "digest",
+        "index_path",
+        "index_schema",
+        "index_source_sha256",
+        "kind",
+        "max_new_tokens",
+        "path",
+        "prompt_token_count",
+        "rendered_text_sha256",
+        "source_sha256",
+        "template",
+        "tokenizer_sha256",
+        "workload_id"
+      ],
+      "type": "object"
+    },
+    "workloadSet": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "schema": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "const": "locked"
+        },
+        "workload_set_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "path",
+        "schema",
+        "source_sha256",
+        "status",
+        "workload_set_id"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/abi3/comparison_contract_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "reference_set"
+            ]
+          },
+          {
+            "required": [
+              "workload_set"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "execution": {
+          "not": {
+            "required": [
+              "batch_profile_id"
+            ]
+          }
+        }
+      },
+      "required": [
+        "external_oracle",
+        "workload"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "external_oracle"
+            ]
+          },
+          {
+            "required": [
+              "workload"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "execution": {
+          "required": [
+            "batch_profile_id"
+          ]
+        }
+      },
+      "required": [
+        "reference_set",
+        "workload_set"
+      ]
+    }
+  ],
+  "properties": {
+    "comparison_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "execution": {
+      "$ref": "#/$defs/execution"
+    },
+    "external_oracle": {
+      "$ref": "#/$defs/externalOracle"
+    },
+    "iso_area": {
+      "$ref": "#/$defs/isoArea"
+    },
+    "model": {
+      "$ref": "#/$defs/model"
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    },
+    "reference_set": {
+      "$ref": "#/$defs/referenceSet"
+    },
+    "reporting": {
+      "$ref": "#/$defs/reporting"
+    },
+    "schema": {
+      "const": "opentallas.abi3.comparison_contract.v2"
+    },
+    "targets": {
+      "$ref": "#/$defs/targets"
+    },
+    "version": {
+      "$ref": "#/$defs/version"
+    },
+    "workload": {
+      "$ref": "#/$defs/workload"
+    },
+    "workload_set": {
+      "$ref": "#/$defs/workloadSet"
+    }
+  },
+  "required": [
+    "comparison_id",
+    "execution",
+    "iso_area",
+    "model",
+    "policy",
+    "reporting",
+    "schema",
+    "targets",
+    "version"
+  ],
+  "title": "OpenTallas ABI 3.0 authoritative comparison contract v2",
+  "type": "object"
+}

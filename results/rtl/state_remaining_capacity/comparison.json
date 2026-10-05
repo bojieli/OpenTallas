@@ -1,0 +1,33 @@
+{
+  "scope": "Retained non-saturating slot remaining capacity; existing overlap apply stages refresh metadata with cursor retirement. No new transaction cycles.",
+  "baseline": "results/physical_abi3/asap7/state_controller/apply_counter_synth_sta_1ns.json",
+  "baseline_sha256": "7d63f007a08c307596bc9666d7a90a7a695226ffd4c135cb470b2dc7525b4f58",
+  "record": "results/physical_abi3/asap7/state_controller/remaining_capacity_synth_sta_1ns.json",
+  "record_sha256": "e728adc876dc0278cfb5de2e387429f3a91091f8e39ffe9711dd28e1a1eed04b",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+      "size_bytes": 19703
+    },
+    {
+      "path": "results/rtl/state_remaining_capacity/candidate.sv",
+      "sha256": "aebdadd9616986e5806646fa4500c91539c55174aee7a190007d135e00bf151d",
+      "size_bytes": 22770
+    }
+  ],
+  "baseline_area_um2": 3394.953,
+  "area_um2": 3729.17,
+  "area_increase_percent": 9.84452509357272,
+  "baseline_global_slack_ns": -3.602739898596739,
+  "global_slack_ns": -3.5126528493050047,
+  "counter_endpoint_slack_ns": {
+    "before": -1.4849601,
+    "after": -0.732954
+  },
+  "counter_report_units": "ASAP7 library ps; divided by 1000 for ns",
+  "verification": "Ten passing differential tests in both simulators: 90 transactions, 21 cancellations, counter carry/wrap, 120 refusal cases and 18 repeated-commit/post-retirement scenarios each. Full microsequencer campaign: 65 cases and 4555 checks per simulator; all source hashes verified.",
+  "decision": "Candidate only: materially shorter admission endpoint, but area increases and global timing still fails. Await final extracted route.",
+  "physical_pending": "results/physical_abi3/asap7/state_controller/pnr_remaining_capacity_cts12_1ns.json",
+  "test_sha256": "05827457861a006d8e2d64ae0d516a41d8fa6c96b5361579bdd2116613c75085"
+}

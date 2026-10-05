@@ -1,0 +1,39 @@
+{
+  "status": "PARENT_ACTUAL_CORE_SU_QE_OWNER_CANCEL_SINGLE_GATE_GO",
+  "requested_status": "PARENT_ACTUAL_CORE_SU_QE_OWNER_CANCEL_SINGLE_GATE_GO",
+  "plan_sha256": "b06a02849995b347b1fc99ab206405d18b9176328b3c461339bd83f75346e982",
+  "runner_sha256": "53616f232e0aec678bd6c8235ddca40dcf4b5dbb35c46fa356881e91106b7ef6",
+  "model_sha256": "557c6bfec635be9603409cdc1a72cda6d7d45031a2d34c3ced71fff68774df40",
+  "source_digest": "3e67f89e386723c47df3b74f3b6c7f370a3bd5066edc7f9f25723a18c228daba",
+  "jobs_digest": "7049f75143e4cace69236607239e2a82df3c92175c93cc14d06d93abd943f821",
+  "caps": {
+    "MemoryMax": 4294967296,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 268435456,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 180,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 130,
+    "runtime_shared_seconds": 26,
+    "reserve_seconds": 24,
+    "whole_seconds": 180,
+    "aggregate_generated_output_bytes": 268435456,
+    "no_retry": true
+  },
+  "parent_review": {
+    "preflight": "12 passed in 3.83s after exact source hydration",
+    "scope": "source-extracted actual active core + SUN256/SUM64 SU + QE + selected-owner cancellation; not full core/token or causal PHY qualification",
+    "no_retry": true,
+    "dedicated_clean_execution_worktree": true,
+    "runtime_cone_extraction_hashes_checked": true,
+    "prior_missing_dependency_failure_preserved": true
+  }
+}

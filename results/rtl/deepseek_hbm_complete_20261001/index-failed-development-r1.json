@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL",
+  "stage": "index full32head numerical harness",
+  "test": "test_full32head128dim_score_order_exact",
+  "failure": "unwritten register @U16 in static reduction BF16 instruction program",
+  "scope": "decoder and block rounding tests passed; final head-reduction constant bank incomplete",
+  "correction": "bind exact integer BF16 constants @U16 @U1 @U7FFF @UFFFF0000; no golden or historical pins changed"
+}

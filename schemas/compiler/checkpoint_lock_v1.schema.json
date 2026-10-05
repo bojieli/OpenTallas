@@ -1,0 +1,220 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/checkpoint_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checkpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "shard_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tensor_content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "payload_bytes",
+        "shard_count",
+        "tensor_content_sha256",
+        "tensor_count"
+      ],
+      "type": "object"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/file"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.checkpoint_lock.v1"
+    },
+    "shards": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "data_size_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "file_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "file_size_bytes": {
+            "minimum": 10,
+            "type": "integer"
+          },
+          "header_length_bytes": {
+            "minimum": 2,
+            "type": "integer"
+          },
+          "header_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path": {
+            "$ref": "#/$defs/path"
+          },
+          "tensor_count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "tensors": {
+            "items": {
+              "$ref": "#/$defs/tensor"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "data_size_bytes",
+          "file_sha256",
+          "file_size_bytes",
+          "header_length_bytes",
+          "header_sha256",
+          "metadata",
+          "path",
+          "tensor_count",
+          "tensors"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "source": {
+      "$ref": "checkpoint_source_v1.schema.json"
+    }
+  },
+  "required": [
+    "checkpoint",
+    "files",
+    "lock_id",
+    "schema",
+    "shards",
+    "source"
+  ],
+  "title": "OpenTallas checkpoint lock v1",
+  "type": "object",
+  "$defs": {
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?/)(?!.*//)[^\\u0000\\\\]+$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "tensor": {
+      "additionalProperties": false,
+      "properties": {
+        "data_offsets": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "dtype": {
+          "enum": [
+            "BF16",
+            "BOOL",
+            "F16",
+            "F32",
+            "F64",
+            "F8_E4M3",
+            "F8_E5M2",
+            "F8_E8M0",
+            "I16",
+            "I32",
+            "I64",
+            "I8",
+            "U16",
+            "U32",
+            "U64",
+            "U8"
+          ]
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "data_offsets",
+        "dtype",
+        "name",
+        "payload_sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS_LEAN_MAPPED_WAKE_TRANSITIONS",
+  "returncode": 0,
+  "cycles": 256,
+  "resets": 13,
+  "source_mapped_json_sha256": "85be375ec7b1713753a4e06784f84e44d04fcd2be140a970056b0998d8208859",
+  "scope": "actual lean ASAP7 mapped connectivity, zero-delay library FF behavior; not full-column GLS or ICG skew/hold signoff",
+  "files": {
+    "run.txt": "2df7479370b1dfc86619117d60b4a79012d71e9ea01528fe75442b4c0c151b9e",
+    "sim": "659f3cc9f16e61156ffffca2ac56f4fe5a4c50bc3cec49125429df48e8015b18",
+    "tb.sv": "669ffc10d616a0d8c893e66d69ed23c1cf0a813b0e0ec9e72532ef9d90fa2994",
+    "mapped.v": "668585c9ea688a0f2551e65cacf924afc19e6972bb07fc7ada5abe9ddc2266d5"
+  },
+  "adopted": false,
+  "physical_admission": false
+}

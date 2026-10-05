@@ -1,0 +1,135 @@
+{
+ "reviewer": "claude independent review",
+ "date": "2026-10-03",
+ "commit": "8c6d4a3f3d7fcb39dafe21eb9e2621641c8c0664",
+ "parent": "7c3fb3e43479fda6caf454c7f76b294b5fba6caa",
+ "one_commit_atop_baseline": true,
+ "changed_paths": [
+  "results/rtl/pve1_new_source_constraint_successor_20261003/live_preservation_snapshot.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/manifest.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/new_source_constraint.sdc",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/new_source_resize_entry.tcl",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/openroad_binary_pin.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/plan.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/preparation.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/source_bindings.json",
+  "results/rtl/pve1_new_source_constraint_successor_20261003/validation.json",
+  "tests/test_pve1_source_constraint_successor.py",
+  "tools/pve1_source_constraint_successor.py"
+ ],
+ "modified_preexisting_paths": [],
+ "tests": {
+  "focused": {
+   "command": "python3 tests/test_pve1_source_constraint_successor.py -v",
+   "result": "9/9 PASS",
+   "log": "chandra-tests.log"
+  },
+  "discover": {
+   "command": "python3 -m unittest discover -s tests -p test_pve1_source_constraint_successor.py -v",
+   "result": "9/9 PASS in full checkout (record's ERROR was sparse-checkout only, as disclosed)",
+   "log": "chandra-discover.log"
+  },
+  "git_diff_check": "PASS",
+  "manifest_hashes": "10/10 bytes+sha256 match"
+ },
+ "cold_replay": {
+  "default_off": "REFUSED rc=2 without --enable-new-source-constraints (chandra-replay-defaultoff.log)",
+  "enabled": "source root rebuilt from fb5df1ac git objects (12 RTL files); bundle at chandra-replay/bundle",
+  "hashes": {
+   "new_source_constraint.sdc": "360040de...f044 MATCH",
+   "new_source_resize_entry.tcl": "bb81e232...501c MATCH",
+   "preparation.json": "b7d4e1b3...d6bc649 MATCH (byte-identical)"
+  },
+  "sdc_regenerated_from_original_driver": "sdc_text() of tools/run_abi3_physical.py at fb5df1ac (sha256 1238d123... = plan original_driver_sha256) applied to the design block in the original sc_r7 failure record (historical_timeout_FAIL.json) at --clock-period-ns 1.111, asap7 view: byte-IDENTICAL to new_source_constraint.sdc (chandra-sdc-regen.log, chandra-replay/regen_from_driver.sdc)"
+ },
+ "constraint_value_check": [
+  {
+   "item": "clock period",
+   "successor": "1111 ps on core_clk/clk",
+   "source": "argv --clock-period-ns 1.111 (sc_r7 historical record)",
+   "policy": "block ot_hdc_v41x_vec_red1024 is a reducer -> serial-chain domain 0.9 GHz = 1.111 ns (AGENTS.md; uarch_model W11_SERIAL_MEASURED period_ns=1.111)",
+   "ok": true
+  },
+  {
+   "item": "setup uncertainty",
+   "successor": "60 ps",
+   "source": "--clock-uncertainty-ns 0.06",
+   "policy": "60 ps at SS",
+   "ok": true
+  },
+  {
+   "item": "hold uncertainty",
+   "successor": "25 ps",
+   "source": "--clock-uncertainty-hold-ns 0.025",
+   "policy": "25 ps at FF",
+   "ok": true
+  },
+  {
+   "item": "input/output delay",
+   "successor": "0 * period",
+   "source": "--io-delay-fraction 0",
+   "policy": "no relaxation (unchanged from original)",
+   "ok": true
+  },
+  {
+   "item": "reset exception",
+   "successor": "set_false_path -from [get_ports rst_n] only",
+   "source": "--false-path-from rst_n; false_path_io false",
+   "policy": "no added exceptions",
+   "ok": true
+  },
+  {
+   "item": "output load",
+   "successor": "3.898",
+   "source": "asap7 view output_load_ff 3.898 / cap_unit 1",
+   "policy": "n/a",
+   "ok": true
+  },
+  {
+   "item": "max fanout",
+   "successor": "32",
+   "source": "driver DEFAULT_MAX_FANOUT, no --max-fanout/--max-transition given",
+   "policy": "n/a",
+   "ok": true
+  },
+  {
+   "item": "corners",
+   "successor": "WC=SS setup, BC=FF hold, full SS/FF required",
+   "source": "--orfs-corner WC --hold-corners WC,BC; CORNERS=WC BC",
+   "policy": "setup SS / hold FF",
+   "ok": true
+  }
+ ],
+ "overclaim_check": {
+  "labels_successor": true,
+  "historical_sdc_equivalence_claim": false,
+  "closure_or_qualification_claimed": false,
+  "qualification": "NOT_RUN",
+  "execution_performed": false,
+  "model_added_cycles": 0,
+  "notes": "plan/preparation/validation all state preparation-only; refuses equivalence flag; original timeout FAIL preserved; constraint.sdc confirmed absent from retained PVE1 work (read-only ls)."
+ },
+ "verdict": "INTAKE_OK",
+ "issues": [
+  {
+   "severity": "advisory",
+   "text": "source_bindings.json/plan.json do not name the original job's later-stage knobs that a CTS/GR successor must reuse: PRE_CTS_TCL and PRE_GLOBAL_ROUTE_TCL (physical/abi3/v41x_karb_repair_buffer_cap.tcl, repair_timing -max_buffer_percent 100; no SDC commands), SLEW_MARGIN=40, HOLD_SLACK_MARGIN=10 (--hold-margin-ns 0.01), MIN/MAX_ROUTING_LAYER M2/M6. Plan's generic 'pin all sourced dependencies before admission' covers it, but the next stage-driver review should enumerate them explicitly."
+  },
+  {
+   "severity": "advisory",
+   "text": "original job's argv labels 1.111 ns 'a characterisation probe, not an operating-point requirement'; any eventual closure claim should still be stated against the 0.9 GHz serial-chain policy."
+  },
+  {
+   "severity": "info",
+   "text": "source commit fb5df1ac is not an ancestor of main; RTL pins are verified against its git objects, which exist locally."
+  }
+ ],
+ "logs": [
+  "chandra-tests.log",
+  "chandra-discover.log",
+  "chandra-replay.log",
+  "chandra-replay-defaultoff.log",
+  "chandra-sdc-regen.log",
+  "chandra-replay/"
+ ]
+}

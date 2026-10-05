@@ -1,0 +1,136 @@
+{
+  "L2_archive": {
+    "actual_RTL_content_commit": "8924de5aa",
+    "all6artifact_hashes_and_original_RTL_Git_pin_verified": true,
+    "checked_words": 3584,
+    "parent_receipt_sha256": "5d26a3ab25f692c876c87bbbc28255ae8cb75677b1386a4d3ab42bb123bad6c9",
+    "parent_reran_campaign": false,
+    "producer_executed": false,
+    "publication_or_reader_fence_proof": false,
+    "raw_source_revision_scope": "Fixture lineage only; it does not identify the RTL source. Original raw verdict preserved, actual content attributed by hash/Git separately; clean8924launch not inferred.",
+    "raw_verdict_source_revision": "4535be1001d69bc43669e0fdf0401896be4034a6",
+    "reviewed_commit": "3815a24cd"
+  },
+  "W10": {
+    "ICGs": 8,
+    "additional_buffer_um2": 903.49344,
+    "all_source_hashes_verified": {
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+      "results/uarch/w10_allport_necessary_access/inspection.log": "16c238a09bffed4b5f1a4e35681ee0c0a1ca38f46c14a8fb1fc987989677a430",
+      "results/uarch/w10_baseline_wake/local_fit_r1/audit.json": "222e9ee350684b325ecd08abeac5fb444f63536b7c1ecb71eabc37ac90512039",
+      "results/uarch/w10_baseline_wake/local_fit_r1/selected_cell_SS_liberty.txt": "32939e30e3f8f7542c20aac153273767228bf77e6797eca3354f6a0746cdb8ab",
+      "results/uarch/w10_baseline_wake/local_fit_r1/selected_cell_lef.txt": "a99b29ba699e4ec6c759e28da122cd3d0711318161e0efd14d1b74fa7fcf4fa3",
+      "results/uarch/w10_clock_tree_site_budget_r1/README.txt": "b6375d793cced267b38fe89a8def7acdeb8c2bb7e4d42b8cc99bdf7b25aed4a6",
+      "results/uarch/w10_clock_tree_site_budget_r1/buffer.lef.txt": "21f84ba503bff5b525c9bc72d3ef75be14c65eed98e5feeea0f3570063e4e2cf",
+      "results/uarch/w10_clock_tree_site_budget_r1/buffer_SS.lib.txt": "1e6481c1a39ce446941ec337e863834b3344a1b88a0d9935f872aaede7f0b82a",
+      "results/uarch/w10_clock_tree_site_budget_r1/initial_validation_failure.txt": "a7e30d2a0c9dc4f02a72b0fcb2fdeec3af99f23e0821ff2bcb4397d8666e0673",
+      "results/uarch/w10_clock_tree_site_budget_r1/library_origin.json": "fc9d6fa8d29d627ddef2d2766a21ffd2498be52fdc3b20ab43989848e6ef098b",
+      "results/uarch/w10_clock_tree_site_budget_r1/library_units.json": "1d2d6b991a103281a607a639962d4f14824f62cf12b5614da19363733ecf1471",
+      "results/uarch/w10_clock_tree_site_budget_r1/mapped_clock_endpoints.json": "9591e42681e7b943069c0478cf66a48670460149665e57d4bfe7e1158c1cc692",
+      "results/uarch/w10_clock_tree_site_budget_r1/platform_source.txt": "2acb47bc02ad16ef5d3a715efd3e9144758133fe887735c55c2a656cbded1d9e",
+      "results/uarch/w10_clock_tree_site_budget_r1/rc_source.txt": "04cb632b0f0656eeb0a88c2458f63ab2f9e68033314c17f65c29d93bde6b1087",
+      "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "tools/w10_clock_site_budget.py": "12d9acbc1f5f56176199cad36aeb5c2ca0c63441560d6e939b90bb3db3f58f9f",
+      "tools/w10_fullmap_slot_fit.py": "980c73119cd73e2cc01e07a31a032605647804d0d035213c7d0bd517913adb5d"
+    },
+    "buffer_SS_cell_matches_pinned_image_library": true,
+    "buffer_replicas": 3873,
+    "buffer_sites": 61968,
+    "clock_phase_alignment": "UNQUALIFIED seven ungated vs fourteen gated buffer stages plusICG; slew/table-domain and source/wire constraints unresolved",
+    "conditional45stage224die_geometry_adopted": false,
+    "conditional_rows": 625,
+    "density": 0.5,
+    "endpoint_pins": 91745,
+    "full_INVBUF_SS_library_and_gzip_hashes_verified": true,
+    "image_SEQ_SS_hash_matches_worker": true,
+    "mapped_flops": 91733,
+    "new_PnR": false,
+    "old617row_reserve_fits": false,
+    "original_netlist_checked": "/home/ubuntu/w10-w18-recovery/baseline_wake/fullmap_r2/1_2_yosys.v",
+    "original_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea",
+    "outline_um": [
+      1002.89,
+      173.07
+    ],
+    "receipt_byteidentical_replay": true,
+    "receipt_sha256": "5a9a7b679cb7f518d37e299fc66afecf7e11395f04376dc36b90536951942f21",
+    "source_commit": "0cdd92fd35f142c8f0fa170426113a5b2a64e153",
+    "unpriced": "Spatial channels/terminal leaf cuts, generated PG/EOL/cuts/extractedRC/IR/EM, protocolphase, tap/endcap/holdrepairs and SS60ps/FF25ps closure"
+  },
+  "W12": {
+    "GT16_hash_image_partition": {
+      "cycles": 21550,
+      "mutant_errors": 2804,
+      "operations": 300,
+      "result_writes": 5704,
+      "scope": "Original pinned reduced partition/pruning/wire-stage dense/KV gate only; no checkpoint fulltoken/productSU1024/clock qualification."
+    },
+    "archive_verifier": "PASS all15artifact hashes +source/reference pins +rawlogs/terminal identity receipts",
+    "retained_DUT_binary_sha256_verified": "64d766f147b04cbc4849b5b37674cf2c40b67e7fdc16342b4ba03c8d7dbcab4d",
+    "retained_mutant_binary_sha256_verified": "1cb1d98ac96152aec496dafda675521e3cebf77969bd8273031ebf062fc18e4e",
+    "spine": {
+      "constraint_relax_or_retry": false,
+      "corner": "TT",
+      "status": "TERMINAL_ERROR_SYNTHESIS_TIMEOUT",
+      "timeout_seconds": 86400,
+      "timing_or_area_result": false
+    },
+    "verification_sha256": "ade94ab07d5731e295900fed33d8eea7dda9582d9bb6c627e2c01313e2c0a9d9"
+  },
+  "W17": {
+    "actual_checkpoint_header_offset_and_firstblock_replay_byteidentical": true,
+    "consumer_source_sha256": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
+    "quantized_firstblock_words_equal_original_Mat_block_word": 8,
+    "record_sha256": "5d049b5d3d145de5a4b7dc474f4d68a343136131937c47f9018c9b78412b77f9",
+    "reviewed_commit": "96b76afaf7b7aea1f43f13528a23fb5128f5e60c",
+    "scope": "Layer0 dense and experts374/375 coarse boundary intake only, headers and samples. Complete payload provenance, TP ranks/ROM bank/physical addresses/full stage images/programs/finitehop/state mapping are unbound.",
+    "tensor_families": 9
+  },
+  "attention": {
+    "current_full_JSON_reproduction": "PASS",
+    "profiles_rows": [
+      128,
+      640
+    ],
+    "record_sha256": "dab97caf5855aa62ded049895bb62297f2df703bca7d648eabeab6e8f13f6174",
+    "reviewed_commit": "827fe71aa412e30324385a6d7d97fb1a6fa2f5f3",
+    "scope": "Local GPU dependent instruction/port calendars, including exact EXP recipe, unrounded denominator, BF16 PV probability, divider lane serialization and inverseRoPE. Numerical opcode proof is assigned separately; NoC/CDC/collectors/regrouping/coefficient service/drains/fences/ports/physical closure remain unpriced. No fullattention cost or build admission.",
+    "source_operator_bindings": 40,
+    "source_pins_verified": {
+      "results/rtl/w19_checkpoint_production_20261001/gpu-attention-dots-r1.json": "c881f50c04a6428120521dbde5212396e1284dcfc8321a0c0cf4570e0287663d",
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "tools/w19_gpu_attention_finish.py": "3c98573a2dad2d5680fc90da3d38fb70afcffbda710b54e7f08970a76382bbc5",
+      "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+      "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+    }
+  },
+  "full_token_qualified": false,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "historical_finite_review": {
+    "all6profile_hashes_match_current_versioned_r2": true,
+    "original_helper_equal_versioned_r2": true,
+    "original_replay_source": "20e93a52e",
+    "original_script_replay_scope": "Use originalclean20epin; current main r1 graph intentionally unchanged. Current r2 parent replay independently archived in w19_versioned_composition_parent_intake.",
+    "review_commit": "936064415"
+  },
+  "model_generator_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "physical_qualified": false,
+  "schema": "opentallas.w10-w12-attention-address-parent-intake.v1",
+  "tests": {
+    "attention": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 19
+    },
+    "clock_slot": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 13
+    }
+  }
+}

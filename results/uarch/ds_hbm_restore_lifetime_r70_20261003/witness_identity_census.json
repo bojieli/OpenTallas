@@ -1,0 +1,44 @@
+{
+  "RAM_admission": false,
+  "actual_observations": false,
+  "boundary_seen_keys": {
+    "PC0": 384,
+    "PC1": 576
+  },
+  "combined_seen_key_SHA256": "19f9b92e09cb3316c07f2b5633e0219e0181c26d574c6e33c3f0357d2eda5f70",
+  "combined_seen_key_canonical_bytes": 22885,
+  "complete_source_phase_bounds": false,
+  "counts": {
+    "0": {
+      "nonempty_ranks": 96,
+      "outputs": 384,
+      "writes": 4
+    },
+    "1": {
+      "nonempty_ranks": 96,
+      "outputs": 192,
+      "writes": 2
+    }
+  },
+  "generation": 1,
+  "generation_source": "pinned PC1 independent reference; actual constructor generation must match",
+  "provider_closure_bound_complete": false,
+  "remaining": [
+    "actual provider/quiescent closure metadata typed upper bounds",
+    "witness provenance and journal-summary object allocation bounds",
+    "JSON parse/scanner/allocator and serialization coexistence bounds",
+    "physical RAM and peer growth lease",
+    "exact persistent staging and refreshed disk"
+  ],
+  "remote_GO": false,
+  "required_actual_seen_equality": true,
+  "schema": "R70_SOURCE_PC01_WITNESS_IDENTITY_CENSUS",
+  "scope": "Source-required keys only; no observed payload or producer closure supplied.",
+  "source_sha256": {
+    "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+    "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/independent_prefix_expected_outputs.json": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+    "tools/ds_hbm_checkpoint_phases_r70.py": "fb4cc63be34a373cf7111c3fb7fedba73c6b8f9c2a60cad19f0e174ddb67221b",
+    "tools/ds_hbm_pc01_child_r70.py": "223441da9dcdba9c4ed19a6446f58c585733eec126c7de44be543f4e160ba027",
+    "tools/ds_hbm_prefix_observed_outputs_r42.py": "c1068f2e82ff8fb0b6ad4677eaadbbb28351e03631142bf05f850d577a38de74"
+  }
+}

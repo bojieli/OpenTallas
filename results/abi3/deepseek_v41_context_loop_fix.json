@@ -1,0 +1,23 @@
+{
+  "gated_against_both_shipped_models": {
+    "deepseek_v4_flash_rom": "IDENTICAL to the A18-only build (0e7cc36b...), so this change moves nothing of V4-Flash's.  No V4-Flash kernel has a context-form phase layout -- consistent with its layer-00 KV join carrying only the span and the 128-row window, with no compressed prefix.",
+    "qwen3_8b_rom": "UNMOVED under BOTH fixes together (233784898066e8d2...)",
+    "reading": "So the blast radius of this change is exactly the models that have a context-derived phase layout, which today is V4.1 alone.  V4-Flash's tokens were already re-walked for the A18 part and match."
+  },
+  "it_is_a_PARTIAL_fix_and_decode_still_refuses": {
+    "remaining": "GROUPED_CONCAT output view 2827 dims (132, 32) differ from the axis-0 concatenation (192, 32).  The output is now right and the compressed INPUT is still wrong: it presents its full declared 64 where the context gives 4.",
+    "why": "The input's term names loop 2814, which is the kernel's ROW loop -- span-bound, divisor 128 -- not a context loop at all.  A trace of every _open_context_loop call shows 2814 is not among them.  So the same span-versus-context mismatch exists one level down, in the generic operand path: _row_term reads the tensor's leading axis (context_groups_ratio2, so CONTEXT_LENGTH) and attaches the term to the ROW loop.  Fixing that is a change to _operand_view rather than to the context-loop choice, and it is the next step."
+  },
+  "measured_effect": {
+    "after": "join output view 2827 resolves to 132 -- floor(1 * context / 2) + 128 with context = 9",
+    "before": "join output view 2827 resolved to 128 -- floor(1 * span / 2) + 128 with span = 1",
+    "predicted_value_was_132": true,
+    "the_loop_changed_as_intended": "loop 2815 bound_symbol SPAN_TOKENS divisor 128 -> CONTEXT_LENGTH divisor 1048576"
+  },
+  "not_a_claim": [
+    "no V4.1 cell closes: decode step 1 still refuses",
+    "prefill is unaffected and still completes 8 tokens on the reduced vehicle"
+  ],
+  "schema": "opentallas.result.v41_context_loop_fix.v1",
+  "the_change": "When a kernel's phase layout needs a CONTEXT form, the loop that resolves its operands' A18 extents is opened on CONTEXT_LENGTH over the capability's declared context -- instead of taking its bound symbol from the first request-sized plane, which gives a SPAN-bound loop whenever that plane leads on the span.  The no-plane branch immediately below already did exactly this, for the same stated reason; this makes the plane branch agree with it."
+}

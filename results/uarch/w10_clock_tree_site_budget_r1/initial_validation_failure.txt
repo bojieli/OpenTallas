@@ -1,0 +1,5 @@
+Initial targeted verification: 18 passed, 1 failed.
+test_negative_depth_and_old_slot expected buffer-only rows624; exact integer
+site arithmetic produced623. This was a test expectation error, not a physical
+candidate failure or a changed hypothesis. Corrected assertion to623 and reran.
+Original c8 / FRONT_PAR / bankmap terminal failure records are unchanged.

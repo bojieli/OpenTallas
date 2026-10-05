@@ -1,0 +1,226 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/tensor_manifest_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base": { "$ref": "#/$defs/base" },
+    "model_parallel": { "const": 4 },
+    "projection": { "$ref": "#/$defs/projection" },
+    "scale": { "$ref": "#/$defs/scale" },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_tensors.v1" },
+    "total_unique_payload_bytes": { "const": 1572972 }
+  },
+  "required": [
+    "base",
+    "model_parallel",
+    "projection",
+    "scale",
+    "schema",
+    "total_unique_payload_bytes"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE tensor manifest v1",
+  "type": "object",
+  "$defs": {
+    "base": {
+      "additionalProperties": false,
+      "properties": {
+        "content_address": { "$ref": "#/$defs/contentAddress" },
+        "dtype": { "const": "F32" },
+        "encoding": { "const": "ieee754_binary32_little_endian" },
+        "layout": { "const": "c_contiguous_row_major" },
+        "memory_map": { "$ref": "#/$defs/map96" },
+        "name": { "const": "layers.0.hc_attn_base" },
+        "path": { "$ref": "#/$defs/payloadPath" },
+        "replicated_ranks": { "$ref": "#/$defs/ranks" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shape": { "$ref": "#/$defs/shape24" },
+        "size_bytes": { "const": 96 },
+        "source_assignment_paths": { "$ref": "#/$defs/baseSources" }
+      },
+      "required": [
+        "content_address",
+        "dtype",
+        "encoding",
+        "layout",
+        "memory_map",
+        "name",
+        "path",
+        "replicated_ranks",
+        "sha256",
+        "shape",
+        "size_bytes",
+        "source_assignment_paths"
+      ],
+      "type": "object"
+    },
+    "baseSources": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": "ranks/rank-000/layers.0.hc_attn_base.bin" },
+        { "const": "ranks/rank-001/layers.0.hc_attn_base.bin" },
+        { "const": "ranks/rank-002/layers.0.hc_attn_base.bin" },
+        { "const": "ranks/rank-003/layers.0.hc_attn_base.bin" }
+      ],
+      "type": "array"
+    },
+    "contentAddress": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "map12": {
+      "additionalProperties": false,
+      "properties": {
+        "length_bytes": { "const": 12 },
+        "offset_bytes": { "const": 0 }
+      },
+      "required": ["length_bytes", "offset_bytes"],
+      "type": "object"
+    },
+    "map96": {
+      "additionalProperties": false,
+      "properties": {
+        "length_bytes": { "const": 96 },
+        "offset_bytes": { "const": 0 }
+      },
+      "required": ["length_bytes", "offset_bytes"],
+      "type": "object"
+    },
+    "mapProjection": {
+      "additionalProperties": false,
+      "properties": {
+        "length_bytes": { "const": 1572864 },
+        "offset_bytes": { "const": 0 }
+      },
+      "required": ["length_bytes", "offset_bytes"],
+      "type": "object"
+    },
+    "payloadPath": {
+      "pattern": "^payloads/sha256/[0-9a-f]{64}\\.f32le$",
+      "type": "string"
+    },
+    "projection": {
+      "additionalProperties": false,
+      "properties": {
+        "content_address": { "$ref": "#/$defs/contentAddress" },
+        "dtype": { "const": "F32" },
+        "encoding": { "const": "ieee754_binary32_little_endian" },
+        "layout": { "const": "c_contiguous_row_major" },
+        "memory_map": { "$ref": "#/$defs/mapProjection" },
+        "name": { "const": "layers.0.hc_attn_fn" },
+        "path": { "$ref": "#/$defs/payloadPath" },
+        "replicated_ranks": { "$ref": "#/$defs/ranks" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shape": { "$ref": "#/$defs/shapeProjection" },
+        "size_bytes": { "const": 1572864 },
+        "source_assignment_paths": { "$ref": "#/$defs/projectionSources" }
+      },
+      "required": [
+        "content_address",
+        "dtype",
+        "encoding",
+        "layout",
+        "memory_map",
+        "name",
+        "path",
+        "replicated_ranks",
+        "sha256",
+        "shape",
+        "size_bytes",
+        "source_assignment_paths"
+      ],
+      "type": "object"
+    },
+    "projectionSources": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": "ranks/rank-000/layers.0.hc_attn_fn.bin" },
+        { "const": "ranks/rank-001/layers.0.hc_attn_fn.bin" },
+        { "const": "ranks/rank-002/layers.0.hc_attn_fn.bin" },
+        { "const": "ranks/rank-003/layers.0.hc_attn_fn.bin" }
+      ],
+      "type": "array"
+    },
+    "ranks": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": 0 },
+        { "const": 1 },
+        { "const": 2 },
+        { "const": 3 }
+      ],
+      "type": "array"
+    },
+    "scale": {
+      "additionalProperties": false,
+      "properties": {
+        "content_address": { "$ref": "#/$defs/contentAddress" },
+        "dtype": { "const": "F32" },
+        "encoding": { "const": "ieee754_binary32_little_endian" },
+        "layout": { "const": "c_contiguous_row_major" },
+        "memory_map": { "$ref": "#/$defs/map12" },
+        "name": { "const": "layers.0.hc_attn_scale" },
+        "path": { "$ref": "#/$defs/payloadPath" },
+        "replicated_ranks": { "$ref": "#/$defs/ranks" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shape": { "$ref": "#/$defs/shape3" },
+        "size_bytes": { "const": 12 },
+        "source_assignment_paths": { "$ref": "#/$defs/scaleSources" }
+      },
+      "required": [
+        "content_address",
+        "dtype",
+        "encoding",
+        "layout",
+        "memory_map",
+        "name",
+        "path",
+        "replicated_ranks",
+        "sha256",
+        "shape",
+        "size_bytes",
+        "source_assignment_paths"
+      ],
+      "type": "object"
+    },
+    "scaleSources": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": "ranks/rank-000/layers.0.hc_attn_scale.bin" },
+        { "const": "ranks/rank-001/layers.0.hc_attn_scale.bin" },
+        { "const": "ranks/rank-002/layers.0.hc_attn_scale.bin" },
+        { "const": "ranks/rank-003/layers.0.hc_attn_scale.bin" }
+      ],
+      "type": "array"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "shape24": {
+      "items": false,
+      "maxItems": 1,
+      "minItems": 1,
+      "prefixItems": [{ "const": 24 }],
+      "type": "array"
+    },
+    "shape3": {
+      "items": false,
+      "maxItems": 1,
+      "minItems": 1,
+      "prefixItems": [{ "const": 3 }],
+      "type": "array"
+    },
+    "shapeProjection": {
+      "items": false,
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [{ "const": 24 }, { "const": 16384 }],
+      "type": "array"
+    }
+  }
+}

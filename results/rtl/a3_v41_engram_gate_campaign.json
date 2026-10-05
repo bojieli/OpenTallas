@@ -1,0 +1,457 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "aggregate": {
+    "cases_per_leg": 37,
+    "checks_per_leg": {
+      "g0": 10770,
+      "g1": 10770,
+      "g2": 10780,
+      "g3": 10785
+    },
+    "checks_per_simulator": 43105,
+    "elements_reduced_per_simulator": 5486,
+    "geometries": 4,
+    "initiation_interval_checks_per_simulator": 465,
+    "output_words_compared_per_simulator": 5018,
+    "refusal_sites_covered": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      11,
+      12
+    ],
+    "refusal_sites_unreachable": [
+      "10_sigmoid",
+      "6_norm_sqrt",
+      "7_denominator",
+      "8_divide",
+      "9_signed_sqrt"
+    ],
+    "scalar_words_compared_per_simulator": 2220,
+    "sentinel_words_checked_per_simulator": 35238,
+    "simulator_legs": 8,
+    "total_word_comparisons": 86210
+  },
+  "claim_boundary": {
+    "bit_exact_against_an_independent_python_reference": true,
+    "covers_a_normalised_dot_whose_magnitude_exceeds_one": false,
+    "covers_refusal_sites_6_to_10": false,
+    "dual_simulator": true,
+    "establishes_a_token_a_layer_or_a_tpot": false,
+    "establishes_area_or_power": false,
+    "establishes_rounding_tie_coverage_of_the_residual_add": false,
+    "establishes_target_frequency_or_timing_closure": false,
+    "establishes_the_fp8_engram_key_value_projection": false,
+    "establishes_the_operand_role_mapping_of_the_vendor_module": false,
+    "establishes_vendor_engram_forward_equivalence": false,
+    "executes_the_engram_row_gather_or_the_ngram_hash": false,
+    "exhausts_the_binary32_input_space": false,
+    "geometry_swept_over_four_parameter_sets": true,
+    "initiation_interval_of_one_measured_at_both_ports": true,
+    "integrates_the_engine_issue_bridge_or_a_descriptor_decode": false,
+    "is_placed_or_routed": false,
+    "reported_cycles_are_verification_cost_only": true,
+    "synthesizable_elaboration": true,
+    "vendor_inference_engram_py_present_in_this_checkout": false
+  },
+  "claim_boundary_notes": {
+    "frequency": "each combine-phase stage is one qualified binary32 operation from ot_fp32_rne_pkg, a block class rtl/proto measures at 174 MHz standalone.  No frequency is established by simulation; the >500 MHz question is WP-M physical work.",
+    "normalised_dot_magnitude": "Cauchy-Schwarz bounds the unclamped normalised dot by one and the clamp only shrinks it, so no case in this campaign presents the signed square root with an argument above one.",
+    "reduction_convention": "engram_gate_fp32_v1 specifies the three reductions as EXACT sums rounded once, which makes them order independent.  A vendor implementation that rounds per addition would differ in the last bits; that difference is unmeasured here.",
+    "refusal_sites_6_to_10": "structurally unreachable rather than untested: each is bounded by the exactness-window parameters, and the bounds are recorded in refusal_sites_unreachable_reasons.",
+    "vendor_equivalence": "inference/engram.py at revision dba1be0a40aa45a94ad051997016db3960a90277 is not in this checkout.  The contract implemented here is the mechanism the plan states, written as an explicit deterministic target adaptation.  Confirming the operand roles and the reduction convention against the vendor source is WP-H work and is open."
+  },
+  "geometry": {
+    "lane_count_changes_no_computed_code": true,
+    "legs": [
+      {
+        "acc_exp_max": 64,
+        "geometry": "g0",
+        "lanes": 4,
+        "vector_width": 256
+      },
+      {
+        "acc_exp_max": 64,
+        "geometry": "g1",
+        "lanes": 8,
+        "vector_width": 256
+      },
+      {
+        "acc_exp_max": 64,
+        "geometry": "g2",
+        "lanes": 4,
+        "vector_width": 272
+      },
+      {
+        "acc_exp_max": 128,
+        "geometry": "g3",
+        "lanes": 4,
+        "vector_width": 272
+      }
+    ],
+    "parameterised": [
+      "VECTOR_WIDTH",
+      "LANES",
+      "ACC_EXP_MIN",
+      "ACC_EXP_MAX",
+      "GATE_EPSILON_CODE",
+      "SQRT_FRAC_SHIFT"
+    ],
+    "row_length_source": "cfg_count operand field, not a parameter",
+    "rows_longer_than_the_v41_width_accepted_when_built_for_them": true,
+    "same_case_list_on_every_geometry": true
+  },
+  "legs": [
+    {
+      "acc_exp_max": 64,
+      "geometry": "g0",
+      "icarus_checks": 10770,
+      "icarus_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1107,
+        "geometry_lanes": 4,
+        "geometry_width": 256,
+        "illegal_write_checks": 991,
+        "initiation_interval_checks": 110,
+        "max_cycles": 312,
+        "output_word_checks": 991,
+        "output_words_written": 991,
+        "refused": 15,
+        "retiring": 22,
+        "scalar_checks": 555,
+        "sentinel_checks": 9073,
+        "write_beats": 991
+      },
+      "lanes": 4,
+      "simulators_agree": true,
+      "vector_width": 256,
+      "verilator_checks": 10770,
+      "verilator_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1107,
+        "geometry_lanes": 4,
+        "geometry_width": 256,
+        "illegal_write_checks": 991,
+        "initiation_interval_checks": 110,
+        "max_cycles": 312,
+        "output_word_checks": 991,
+        "output_words_written": 991,
+        "refused": 15,
+        "retiring": 22,
+        "scalar_checks": 555,
+        "sentinel_checks": 9073,
+        "write_beats": 991
+      }
+    },
+    {
+      "acc_exp_max": 64,
+      "geometry": "g1",
+      "icarus_checks": 10770,
+      "icarus_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1107,
+        "geometry_lanes": 8,
+        "geometry_width": 256,
+        "illegal_write_checks": 983,
+        "initiation_interval_checks": 110,
+        "max_cycles": 249,
+        "output_word_checks": 983,
+        "output_words_written": 983,
+        "refused": 15,
+        "retiring": 22,
+        "scalar_checks": 555,
+        "sentinel_checks": 9081,
+        "write_beats": 983
+      },
+      "lanes": 8,
+      "simulators_agree": true,
+      "vector_width": 256,
+      "verilator_checks": 10770,
+      "verilator_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1107,
+        "geometry_lanes": 8,
+        "geometry_width": 256,
+        "illegal_write_checks": 983,
+        "initiation_interval_checks": 110,
+        "max_cycles": 249,
+        "output_word_checks": 983,
+        "output_words_written": 983,
+        "refused": 15,
+        "retiring": 22,
+        "scalar_checks": 555,
+        "sentinel_checks": 9081,
+        "write_beats": 983
+      }
+    },
+    {
+      "acc_exp_max": 64,
+      "geometry": "g2",
+      "icarus_checks": 10780,
+      "icarus_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1636,
+        "geometry_lanes": 4,
+        "geometry_width": 272,
+        "illegal_write_checks": 1520,
+        "initiation_interval_checks": 120,
+        "max_cycles": 320,
+        "output_word_checks": 1520,
+        "output_words_written": 1520,
+        "refused": 13,
+        "retiring": 24,
+        "scalar_checks": 555,
+        "sentinel_checks": 8544,
+        "write_beats": 1520
+      },
+      "lanes": 4,
+      "simulators_agree": true,
+      "vector_width": 272,
+      "verilator_checks": 10780,
+      "verilator_summary": {
+        "acc_exp_max": 64,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1636,
+        "geometry_lanes": 4,
+        "geometry_width": 272,
+        "illegal_write_checks": 1520,
+        "initiation_interval_checks": 120,
+        "max_cycles": 320,
+        "output_word_checks": 1520,
+        "output_words_written": 1520,
+        "refused": 13,
+        "retiring": 24,
+        "scalar_checks": 555,
+        "sentinel_checks": 8544,
+        "write_beats": 1520
+      }
+    },
+    {
+      "acc_exp_max": 128,
+      "geometry": "g3",
+      "icarus_checks": 10785,
+      "icarus_summary": {
+        "acc_exp_max": 128,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1636,
+        "geometry_lanes": 4,
+        "geometry_width": 272,
+        "illegal_write_checks": 1524,
+        "initiation_interval_checks": 125,
+        "max_cycles": 320,
+        "output_word_checks": 1524,
+        "output_words_written": 1524,
+        "refused": 12,
+        "retiring": 25,
+        "scalar_checks": 555,
+        "sentinel_checks": 8540,
+        "write_beats": 1524
+      },
+      "lanes": 4,
+      "simulators_agree": true,
+      "vector_width": 272,
+      "verilator_checks": 10785,
+      "verilator_summary": {
+        "acc_exp_max": 128,
+        "acc_exp_min": -126,
+        "cases": 37,
+        "clamped": 3,
+        "elements_reduced": 1636,
+        "geometry_lanes": 4,
+        "geometry_width": 272,
+        "illegal_write_checks": 1524,
+        "initiation_interval_checks": 125,
+        "max_cycles": 320,
+        "output_word_checks": 1524,
+        "output_words_written": 1524,
+        "refused": 12,
+        "retiring": 25,
+        "scalar_checks": 555,
+        "sentinel_checks": 8540,
+        "write_beats": 1524
+      }
+    }
+  ],
+  "log_sha256": {
+    "g0_iverilog": "170f33353ad7df363d70cd6519bd7717d96a9c7d35a215ff45b5464546c0f90b",
+    "g0_verilator": "3db8230b2f1e11ea74424bb10f0c9e650d91d66f25a4c27b7b6955401e41d8da",
+    "g0_verilator_compile": "68960fbb050d5662e1e6421caec0c6dbd6eba07f9e0cd8840e586aef1284515a",
+    "g1_iverilog": "660c666f9691b5bac1ea5da8680a275b1aa89330c1c8f5a66960cdafa14bf46c",
+    "g1_verilator": "e3c506f59713cee50cbaadd05e392c94a75234403502a4f97ce5273918b0231e",
+    "g1_verilator_compile": "9424cb5eaab8a31c60b3e4e4519f873c8eaa43af95f12e5f1ca3e680c627cc1d",
+    "g2_iverilog": "be15772541d7aaa8b854ef53f7b7e2d52743c1125f58b1110ff841668696d325",
+    "g2_verilator": "5350fb96c9a21e44e03e3ad0df32f12ee6e6d828475cfbc845739b3d6f217e70",
+    "g2_verilator_compile": "706b004228608155fedffeffb63d29bc3c8ebbb965aae69ba63040931a7189f0",
+    "g3_iverilog": "daaf74dc1cd26b58cdd9e92e94b8489b6c3f16d5a94d3d7250aa8d4e97861c7d",
+    "g3_verilator": "b9cbea3c60b128e66bb29d51b770abb6c97e223b33e583f8879d31ed5fa772d1",
+    "g3_verilator_compile": "2d0c5782b231a879eee9850fa9ce8fbe73262937a6bb8390aff4fe25691a66ae",
+    "yosys": "2e2bdd5237879dd7e29a8b6a21c6b588021a47d4bc27a8dce5dd970192b5d50a"
+  },
+  "pipeline": {
+    "combinational_path_spanning_a_whole_vector": false,
+    "combine_phase_initiation_interval_groups_per_cycle": 1,
+    "combine_phase_stages": 5,
+    "initiation_interval_measured": true,
+    "initiation_interval_measurement": "issue count and issue span of both streaming phases, and the write-port span, per retiring case",
+    "multi_cycle_reused_blocks": [
+      "ot_a3_fp32_div_rne",
+      "ot_a3_fp32_transcendental_cr_rne"
+    ],
+    "reduction_phase_initiation_interval_elements_per_cycle": "LANES",
+    "reduction_phase_initiation_interval_groups_per_cycle": 1,
+    "reduction_phase_stages": "4 + clog2(LANES); six at LANES=4",
+    "registered_reduction_tree": true,
+    "serial_accumulator_over_one_float_adder": false,
+    "square_root_evaluations_per_transaction": 3,
+    "square_root_initiation_interval": 1,
+    "square_root_stages": "FRAC_SHIFT + 15; thirty at FRAC_SHIFT=15"
+  },
+  "reference": {
+    "derivation": "written from the mechanism semantics of the V4.1 plan section 5 row 6 and the exact binary32 primitives of runtime/reference/formats.py; no RTL was transcribed",
+    "function": "engram_gate",
+    "function_sha256": "7d2b660e9b89cea4e934b93af5130dc73ed63095aaba7641b0e99116b430608b",
+    "independent_square_root": "math.isqrt candidate plus an exact midpoint-square comparison, which is neither the RTL digit recurrence nor the code-space bisection in runtime/reference/sqrt_softplus.py",
+    "module": "runtime/reference/engram.py",
+    "shared_file_digest_moves_when_ngram_hash_lands": true,
+    "shared_with_other_unit": true
+  },
+  "refusal_sites_unreachable_reasons": {
+    "10_sigmoid": "Cauchy-Schwarz bounds the unclamped normalised dot by one and the clamp only shrinks it, so the sigmoid argument stays in a range the certifying engine rounds without widening",
+    "6_norm_sqrt": "the square root refuses only a nonfinite or negative argument; a squared-norm sum is a sum of squares and is neither",
+    "7_denominator": "both norms are at most sqrt(max accepted sum), so their product cannot leave binary32 range for any window with ACC_EXP_MAX + clog2(MAX_TERMS) <= 128",
+    "8_divide": "the denominator is clamped at 1e-6 and the numerator is a finite accepted sum, so the quotient stays finite",
+    "9_signed_sqrt": "the argument is the magnitude of a finite quotient"
+  },
+  "schema": "opentallas.rtl.a3_v41_engram_gate_campaign.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_engram_exact_dot_tree.sv": "0402d3189194eaaf11bc54a19f74682b3bcd0a2786c396840eedaf7d5f554dc6",
+    "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv": "a80fcae168fa258dc60fd6075ced1ee260db94424d93e5396998f4672c0007d3",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/abi3/ot_a3_vector_engram_gate.sv": "0a14360f50a121a1e83ea975aee1cd12dd8c2960a8b70f70d3fb96b1e53b4533",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/test/tb_a3_v41_engram_gate.sv": "4490feaff15971ed5752f6c58a5f4997f4ff0f92ad4dd175dd2a316c8e407cf0",
+    "runtime/reference/engram.py": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+    "tools/build_a3_v41_engram_gate_vectors.py": "74e43faf358cfd67df51e7de77124a1c487b13864faa22e3a6e6f4a8b1f00299",
+    "tools/run_a3_v41_engram_gate_rtl_campaign.py": "b3823c0af08b752677c07c959ac652e1920476c0e9627c1278d77c7052f63bc3"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic synthesizable elaboration only; no library mapping, no PPA, no token latency and no TPOT claim",
+    "top": "ot_a3_vector_engram_gate"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "unit": {
+    "amendment": "AM-E10",
+    "engine": "VECTOR",
+    "ir_kind": "ENGRAM_GATE",
+    "ir_signature": "ENGRAM_GATE(h, key, value, q, k) -> h_out",
+    "numeric_contract": "engram_gate_fp32_v1",
+    "sub_opcode": "0x0d",
+    "sub_opcode_name": "A3_VECTOR_ENGRAM_GATE",
+    "top_module": "ot_a3_vector_engram_gate",
+    "work_package": "WP-K"
+  },
+  "vector_manifest": {
+    "case_count": 37,
+    "epsilon_binary32": "0x358637bd",
+    "exactness_window": {
+      "acc_exp_max": 64,
+      "acc_exp_min": -126
+    },
+    "geometry_independence": {
+      "computed_codes_identical_across_lanes": true,
+      "fields_permitted_to_differ": [
+        "written_words",
+        "output_codes"
+      ],
+      "observed_differing_fields": [
+        "output_codes",
+        "written_words"
+      ],
+      "output_rows_are_prefixes_of_each_other": true
+    },
+    "schema": "opentallas.rtl.a3_v41_engram_gate_vectors.v1",
+    "vector_limit": 272
+  },
+  "vector_sha256": {
+    "cases.hex": "96c20f72b22188dca66e99024d05c1a1570c21a27f7c13344c459b54f0efcad9",
+    "expect_g0.hex": "6bfe235fb1c900560fa0f0f2a3f826fa102846b7b585708dea01408c17882ba3",
+    "expect_g1.hex": "d4f8f14d92e65f6e034b7aae6edf492a931d33d23b86dcbacab8a58a46cfbb19",
+    "expect_g2.hex": "871f9782be70193be9dbbbed0dee9215efe6235aae162bb09b8f422f28513de3",
+    "expect_g3.hex": "f0e63a6fb6c5c7a98faee1d58c8fa36bf1a9d5d8350d2d9e76717a36402b23bc",
+    "index.json": "5a18476ec0a034d765946c435fa1dcd82c853af7f7e154c9e798121355ae61d8",
+    "input.hex": "29ca4516fbf2acb0b2f960c8fe6e404760d6ec1874b835c1393a4aa47f0c8419",
+    "meta.hex": "8a40398cadbc467e0f7068fada04c5b57e2c86e5f27664d54f27c8c9df613b5c"
+  },
+  "verification_wall_seconds": {
+    "g0_iverilog_compile": 0.030508689116686583,
+    "g0_iverilog_simulation": 2.8051261538639665,
+    "g0_verilator_compile": 24.7537649970036,
+    "g0_verilator_simulation": 0.05670091696083546,
+    "g1_iverilog_compile": 0.031003111973404884,
+    "g1_iverilog_simulation": 3.0371728129684925,
+    "g1_verilator_compile": 31.522456188919023,
+    "g1_verilator_simulation": 0.0833787270821631,
+    "g2_iverilog_compile": 0.18599735503084958,
+    "g2_iverilog_simulation": 2.8459460937883705,
+    "g2_verilator_compile": 25.385799458948895,
+    "g2_verilator_simulation": 0.06184895499609411,
+    "g3_iverilog_compile": 0.06078333291225135,
+    "g3_iverilog_simulation": 2.9769784309901297,
+    "g3_verilator_compile": 25.787024955032393,
+    "g3_verilator_simulation": 0.06627611303701997,
+    "yosys_elaboration": 162.90583163499832
+  }
+}

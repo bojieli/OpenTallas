@@ -1,0 +1,21 @@
+{
+  "status": "known_failure",
+  "scope": "Generic partial final resident row: 92 issue words over 31-word stored row. Current G2 always commands complete passes; not an integrated configuration regression.",
+  "cause": "Prefetch requires exact tile_words==acquire_words; scheduler publishes shorter final extent.",
+  "before_and_after": [
+    {
+      "version": "before",
+      "scheduler_source": "results/physical_abi3/asap7/weight_pass_scheduler/parallel_extent/before.sv",
+      "scheduler_sha256": "0c9b2243cf186636003b4ede868ebdf76cfe5bb9fa1db1f3a76e1bac4f3acf3b",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/results/rtl/partial_replay_extent_gap/tb.sv:75: timeout\n       Time: 2000000000 Scope: tb\n"
+    },
+    {
+      "version": "after",
+      "scheduler_source": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "scheduler_sha256": "bab84da38682c7f6ff29c076700e15317a6b8b6df4807c227422d78996c13570",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/OpenTallas/results/rtl/partial_replay_extent_gap/tb.sv:75: timeout\n       Time: 2000000000 Scope: tb\n"
+    }
+  ]
+}

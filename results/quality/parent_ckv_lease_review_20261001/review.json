@@ -1,0 +1,36 @@
+{
+  "RTL_persistence_qualified": false,
+  "baseline_failures": [
+    "d4391b2e0 actual mux write rejection",
+    "a5839799b legacy column visibility 6649ps early in one-sector witness"
+  ],
+  "nine_retained_burst_visibility_events_verified": true,
+  "nine_sector_cycles": 2952,
+  "nine_sector_ns": 2460,
+  "physical_admission": false,
+  "receipt_identical": true,
+  "reviewed_commit": "2723dbc74a3f0b86e6a5f93b4e61743a4bd40e96",
+  "scope": "model-only sourcebinding+burst-provider deterministic test; noactualRTL/provider/persistence qualification",
+  "source_pins": {
+    "backend": {
+      "commit": "6e1158394262bc47773993e04efce0672ac4552e",
+      "path": "tools/common_hbm_backend_provider_contract.py",
+      "sha256": "3c8edcb4cd4764f7fb6e230771790204d74571f5cedf8062f0b1bbc984f09759"
+    },
+    "legacy_idx": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+    },
+    "negative_early_visibility": "a5839799b",
+    "negative_mux": "d4391b2e0"
+  },
+  "unresolved_admission_inputs": [
+    "prelease queue/return/owner drain service and bounded destination acceptance",
+    "exact clock crossing and publication/consumer completion",
+    "physical slots and added ports/route/contextSSFF",
+    "actual source-selected delayed backing provider integration"
+  ],
+  "verdict": "PASS_REGENERATED_PARTIAL_LEASE_MODEL",
+  "whole_path_bound_qualified": false
+}

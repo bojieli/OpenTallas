@@ -1,0 +1,24 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_ot_rom_oneshot_die_px_asap7_codex_v41x_collective_fifo128/base/2_3_floorplan_tapcell.odb
+Took 8 seconds: read_db /work/results/asap7/opentallas_ot_rom_oneshot_die_px_asap7_codex_v41x_collective_fifo128/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_rom_oneshot_die_px_asap7_codex_v41x_collective_fifo128/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_1).
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 15.85s
+Design area 208468 um^2 32% utilization.
+write_db /work/results/asap7/opentallas_ot_rom_oneshot_die_px_asap7_codex_v41x_collective_fifo128/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:41.27[h:]min:sec. CPU time: user 38.45 sys 2.81 (99%). Peak memory: 3028484KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb           41           2957 3cd93c6071daf24ca3ff

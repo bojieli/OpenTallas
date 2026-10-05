@@ -1,0 +1,42 @@
+{
+  "schema": "R69_STAGING_AND_STREAMED_CHECKPOINT_SUCCESSOR_HANDOFF",
+  "parent_source_commit": "915558caaa3742e32ab46343fef9c437807a1f28",
+  "minimal_ordered_dependencies": [
+    "Reviewed R68 source chain ending915558caaa3742e32ab46343fef9c437807a1f28",
+    "Peirce f85a68631ccde322c8380436250a755ec8c8912c",
+    "Parent647d3cec5ee359ef0809256cd5b24db72fd59064",
+    "This additive R69 milestone"
+  ],
+  "scope": "Additive checkpoint source integration+component equivalence+staging proof. Actual released PC01 smoke still required only after full phase/physical/peer/staging admission.",
+  "tests": "python -m pytest -q tests/test_ds_hbm_checkpoint_phases_r69.py tests/test_ds_hbm_streamed_checkpoint_r69.py tests/test_ds_checkpoint_streamed_state_r2.py tests/test_ds_hbm_staging_r69.py",
+  "verify_command": "python tools/ds_hbm_staging_r69.py --source-root /tmp/kepler-ds-pc01-r68-mainbase-20261003 --original-integrity results/uarch/ds_hbm_staging_r69_20261003/inputs/original_integrity.json --verify results/uarch/ds_hbm_staging_r69_20261003/inventory.json",
+  "inventory_files": 2541,
+  "constructor_metadata_count": 57,
+  "metadata_only_additional_bytes": 31412212,
+  "unique_staging_file_bytes": 8810418580,
+  "known_staging_plus_run_bytes": 36561492166,
+  "missing_for_admission": [
+    "receiver filesystem block/inode allocation",
+    "archive plus unpack overlap",
+    "atomic transfer temporary coexistence",
+    "additional dynamic metadata dependencies",
+    "physical filecache/page-table/kernel exposure",
+    "protected peer disk/RAM growth"
+  ],
+  "complete_dynamic_dependency_closure": false,
+  "physical_admission": false,
+  "next_action": "Peirce/Chandra join exact destinations, filesystem allocation, atomic staging lifetime, complete touched-page/peer-growth bounds; frozen915 enrollment still requires positive constructor AND runtime proofs.",
+  "preserved_failure": "preserved_first_walk_failure.json",
+  "source_identity": "Frozen model and original integrity receipt hard-pinned in verifier; all2403 helpers, all111 arrays, catalog enrolled records and both selected shards rehashed; checkpoint index equals actual provider manifest.",
+  "selected_stream_helper": "tools/ds_checkpoint_streamed_state_r2.py",
+  "selected_stream_helper_sha256": "9c6cf76363ce0f95a2794c1afeda755aeb8119c6313f57eaa07c020f6492fcbb",
+  "checkpoint_implementation": "tools/ds_hbm_streamed_checkpoint_r69.py default-off selected R2 save + original V3 project/restore and R67 atomic parser",
+  "actual_child": "tools/ds_hbm_pc01_child_r69.py --streamed-save-r69 --phase-proof REVIEWED_POSITIVE_PHASE_PROOF --plan ENROLLED_PLAN --pc 0 (or --pc 1); --constructor-only before either PC. Original guards remain; selected R69 allocation must also fit both reviewed page proof and fresh guest headroom.",
+  "constructor_and_run_resource_state": "Original715 guard not lowered; explicit source-phase proof needed before additive child reads provider; candidate43899508682 not complete or admitted.",
+  "phase_verify_command": "python tools/ds_hbm_checkpoint_phases_r69.py --verify results/uarch/ds_hbm_staging_r69_20261003/phase_ledger.json",
+  "tests_pass": 42,
+  "persistent_staging_map": "persistent_staging_map.json",
+  "added_runtime_and_audit_bytes": 36428,
+  "resource_proof_inputs": "phase_ledger.json required_positive_phase_fields; live phase increments composed by maximum, retained allocator/COW paid separately, no guest+host sums or cache-release credit",
+  "phase_proof_additional_identity": "phase_source_model_sha256 must equal phase_ledger.json hash; selected_source_sha256 must exactly enroll four new runtime modules including parent R2 helper."
+}

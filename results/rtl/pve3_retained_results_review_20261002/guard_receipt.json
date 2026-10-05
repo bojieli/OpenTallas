@@ -1,0 +1,13 @@
+{
+  "host": "ot-pve3",
+  "modified_launcher": "/tmp/claude-1000/w11st/attn_d8/at_eng3.py",
+  "preserved_original": "/tmp/claude-1000/pve23-user-drain-20261002/at_eng3.py.before",
+  "before_sha256": "2b62ac72a761dadd483f59761b7a3bb2a51ae90d6b52045fc35cf4d1ee69826a",
+  "after_sha256": "20ce0ec6af480559318730c668b66851f8958dddd3b239b2ba55f87b1023e45e",
+  "existing_python_pid": 4000495,
+  "existing_job_untouched": true,
+  "blocked_variant": "7 6 8",
+  "signals_sent": 0,
+  "reason": "Explicit user drain: no new experiments after current 7 6 6 job",
+  "time_utc": "2026-10-02T03:26:17.372730+00:00"
+}

@@ -1,0 +1,58 @@
+{
+  "cost": {
+    "device_build_seconds": 397.5,
+    "note": "2h01m of generation for one token and one refused decode step",
+    "wall_seconds": 7241.0
+  },
+  "not_a_claim": [
+    "this does NOT close the V4.1 ROM wafer cell: a cell closes on an oracle-matched token and this token does not match",
+    "one emitted token is not a correctness result; it is evidence that the path executes"
+  ],
+  "schema": "opentallas.result.v41_shipped_wafer_first_token.v1",
+  "two_defects_remain_and_they_are_different": {
+    "1_the_token_disagrees": {
+      "emitted": [
+        305
+      ],
+      "next": "The established method in this tree is a depth bisection against the oracle's per-layer activations (results/abi3/deepseek_v41_oracle_depth_bisection_deep.json is the V4.1 precedent).  At 7,241 s per walk the loop is expensive, so the bisection wants instrumenting once rather than re-walking per hypothesis.",
+      "oracle": [
+        13806,
+        345,
+        7472,
+        49665
+      ],
+      "why_this_is_NOT_the_reduced_vehicle's_problem": "The reduced V4.1 cells disagree because their router is near-tied: the reduced fixture's first-token margin is 0.00515, so sub-ulp differences at ffn_norm flip a routing decision and the token with it.  The SHIPPED release's first-token margin is **2.494688**, 484 times larger.  A disagreement at that margin cannot be amplified rounding, so this is a real defect in the lowering or the execution -- which makes it diagnosable rather than attributable, and is exactly why the shipped vehicle was worth reaching."
+    },
+    "2_decode_step_1_refuses": {
+      "not_yet_investigated": true,
+      "reading": "GROUPED_CONCAT's output view declares 128 rows and its inputs sum to 4,224 = 4,096 + 128 on axis 0.  4,096 is a compressed-prefix plane and 128 is the sliding window, so the join is the prefix-plus-window concatenation and the output was sized as the WINDOW alone.  Prefill did not hit it; decode does, which points at the phase-dependent form of the join rather than at the join itself.",
+      "refusal": "decode step 1 failed: GROUPED_CONCAT output view 2655 dims (128, 512) differ from the axis-0 concatenation (4224, 512)"
+    }
+  },
+  "walk": {
+    "agrees_with_oracle": false,
+    "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+    "decode_steps": 1,
+    "deployment": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41_wafer_c8192",
+    "emitted_token_ids": [
+      305
+    ],
+    "failure": "decode step 1 failed: GROUPED_CONCAT output view 2655 dims (128, 512) differ from the axis-0 concatenation (4224, 512)",
+    "oracle_token_ids": [
+      13806,
+      345,
+      7472,
+      49665
+    ],
+    "prefill_tokens": 32,
+    "stop_reason": "failed",
+    "wall_seconds": 7241.0,
+    "workload_id": "TA-DS41-CHAT-1-P32"
+  },
+  "what_happened": "The SHIPPED DeepSeek-V4.1-Flash ROM wafer, built at an 8,192-token deployment context, completed a 32-token prefill and emitted a token.  That is the first time the shipped V4.1 path has produced a token on the accelerator at all; every prior attempt refused during prefill.",
+  "what_this_run_establishes": [
+    "the Engram row-scale width fix is load-bearing: prefill now passes the EMBED_LOOKUP that refused with '(32, 24, 1); expected (768, 8)'",
+    "the 8,192-token context avoids the candidate-mask 32-bit stride overflow, as predicted from the descriptor tables rather than hoped for",
+    "the shipped V4.1 graph executes 32 rows of prefill end to end on the ROM wafer"
+  ]
+}

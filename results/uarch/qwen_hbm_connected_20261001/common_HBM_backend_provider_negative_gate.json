@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.common-backend-provider-contract-negative-gate.v1",
+  "status": "MODEL_CONTRACT_TESTS_PASS_ACTUAL_RTL_PROVIDER_UNBOUND",
+  "actual_controller_executed": false,
+  "full_token": false,
+  "engine_RTL_build_ready": false,
+  "physical_build_ready": false,
+  "adoption": false,
+  "actual_test_command": "python3 -m pytest -q tests/test_common_hbm_backend_provider_contract.py",
+  "actual_test_rc": 0,
+  "tests_passed": 9,
+  "scope": "Contract model with synthetic WRissue inputs. Internal scheduled burst end performs finite fulladdress model backing update; this is not an actualDRAM or RTL measurement. No WRissue means no backing action regardless elapsedtime.",
+  "source_sha256": {
+    "tools/common_hbm_backend_provider_contract.py": "3c8edcb4cd4764f7fb6e230771790204d74571f5cedf8062f0b1bbc984f09759",
+    "tests/test_common_hbm_backend_provider_contract.py": "e5a5e7b5503d2c8398528456443e71003143554eea0fe7ca297357547cc74552",
+    "results/uarch/qwen_hbm_connected_20261001/common_HBM_backend_provider_binding_r2.json": "ecc6baef8ccdbe2350e9f3e516fd44426da35048dec8cf32ebd3220ba8ddc408"
+  },
+  "historical_provider_contract_retained": "4eb62cf0d common_HBM_backend_provider_binding.json",
+  "cost_correction_scope": "Earlier uncommitted440bit-slot suggestion omitted actual-visible timestamp/PC/pendingflags. Final512bits/slot8192bits acrossfourcontrollers plusbackend callback fanout/compare/mux costs are explicitlycharged .0443039744mm2; nofrontend reuse/doublecharge."
+}

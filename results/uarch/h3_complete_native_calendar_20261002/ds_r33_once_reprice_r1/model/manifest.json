@@ -1,0 +1,51 @@
+{
+  "cycle_input_sha256": "2d9b8f74b2ffd05cb694c2d280f57ef0e702667f16231ab80a0c576c098303ac",
+  "hardware_admitted": false,
+  "output_sha256": {
+    "all_PC_native_component_successor.json.gz": "a81785c3557c42da8f198baeb0a986ddc5669a9bd2a037e86129aabf7706840b",
+    "initial_LOAD_boundary_reservations.json.gz": "e4e04bf6a9d7d19e06b7c5a93cfa6e42e91485a5358b93b1f45483dca12ed401",
+    "once_reprice_receipt.json": "835d77172c8120aee14fc04090569d4dc21c514c0725eaca1db0f9a1abed9c15",
+    "summary.json": "970c4b68a88c879ae780d3c842c9225109fdc19b8323ce83ce7050a097e4a279"
+  },
+  "schema": "H4_R33_ONCE_ONLY_CALENDAR_MANIFEST_V1",
+  "source_bulk_duplicated": false,
+  "source_pins": {
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/summary.json": {
+      "commit": "781046c9",
+      "sha256": "7a83e719e7bdb99df7e07af8bfa86fc7575015bc6e4d4a8642fec3d30dbbaa97"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_current_catalog.json.gz": {
+      "commit": "2e76d4f96",
+      "sha256": "32549052a636a2cb0ca0205186a8d540723f97d30ab4e1c5fc76f8e2eb9d4e4c"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_source_overlay.json.gz": {
+      "commit": "2e76d4f96",
+      "sha256": "c1f50827fc95911911396101b718944ace12b2ab69420436ecdc5f25a64f848e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_window_provider_join.json.gz": {
+      "commit": "2e76d4f96",
+      "sha256": "5f4946ca704fca130c64a5ad25385be4b361fdfca3cdd9b06051d8598215337d"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/source_count_adapter.json.gz": {
+      "commit": "2e76d4f96",
+      "sha256": "04b83bc02e8883b9a02f2618b1a076c0ab541869f4e63a820d6f59b611f8470d"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/V1_native_component_successor.json.gz": {
+      "commit": "a67150839",
+      "sha256": "c4407012d640966413431c48e9c8d6eac86a583ec32d157a6999ea562107f10c"
+    },
+    "results/uarch/h4_c0_r33_source_adapter_20261002/r1/model/source_adapter.json": {
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "sha256": "e1e72c421ca990bfbf7de4b33bd999c57feaa94892bb0670d483a0789ba9c878"
+    },
+    "results/uarch/h4_c0_r33_source_adapter_20261002/r1/model/source_catalog.json.gz": {
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "sha256": "6d666abb02debea7bc802244f56ffec7b71fce6e43ed811f7866b605bba2d50d"
+    },
+    "results/uarch/native_software_parent_intake_20261002/Qwen_reset_source_parent_review.json": {
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "sha256": "3d6a9c0f2bf82ddb28301d0302ad0ffed02ee5a9b58f3964f6ddf4723e4cc371"
+    }
+  },
+  "tool_sha256": "6c41b051bcef110fbdcd973a02226fb7a9e0065800e22956ad22d459641ca894"
+}

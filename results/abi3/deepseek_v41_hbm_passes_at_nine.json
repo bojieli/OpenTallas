@@ -1,0 +1,61 @@
+{
+ "a_hypothesis_of_mine_refuted_by_it": {
+  "what_I_proposed": "that the defect appears as soon as a PARTIAL second candidate block exists, since candidate_block_size is 8 and the engine's contract singles the partial last block out ('its block maximum was taken over a partially filled block whose absent tail is minus-infinity padding')",
+  "why_it_is_wrong": "nine tokens already have a partial second block -- one position in block 1 -- and nine PASSES.  So a partial block is not sufficient, and the break is at ten, eleven or twelve."
+ },
+ "answer": "YES at eight and nine prompt tokens -- status pass, contract accepted -- and the break is between NINE and TWELVE.",
+ "not_a_claim": [
+  "a cell is not closed by a 9-token workload; the pinned matrix workload is 32 tokens",
+  "the P9 comparison is ONE token, because the P9 gold's later tokens do not reproduce"
+ ],
+ "question": "does any V4.1 cell pass the governed oracle-prefix contract, and where exactly does prefill stop being right?",
+ "schema": "opentallas.result.v41_hbm_passes_at_nine.v1",
+ "the_bracket": {
+  "10": "running",
+  "11": "running",
+  "12": "differs at token 1",
+  "16": "differs at token 1",
+  "32": "differs at token 1",
+  "8": "pass",
+  "9": "pass"
+ },
+ "the_passing_runs": {
+  "p8": {
+   "agreement": true,
+   "compared": 2,
+   "device": [
+    14,
+    1320,
+    42250,
+    294
+   ],
+   "note": "status failed only because the run stopped before four tokens; the oracle-prefix contract was ACCEPTED on the tokens compared",
+   "oracle": [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   "status": "failed",
+   "terminal_accepted": true
+  },
+  "p9": {
+   "agreement": true,
+   "compared": 1,
+   "device": [
+    1320
+   ],
+   "first_divergence_index": null,
+   "note": "status PASS.  One token, because only the first P9 gold token reproduces, and that token matches.",
+   "oracle": [
+    1320,
+    16,
+    42250,
+    16
+   ],
+   "status": "pass",
+   "terminal_accepted": true
+  }
+ },
+ "what_this_means_for_the_v41_row": "the V4.1 datapath computes the shipped model correctly at short context.  The three cells are not closed on their 32-token workloads, but 'V4.1 emits the wrong token' is now false as a general statement: it emits the RIGHT token at eight and nine, under mandatory admission, against a gold verified reproducible twice."
+}

@@ -1,0 +1,109 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/semantic_slice_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_boundary": { "minLength": 1, "type": "string" },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "block_size": { "const": 128 },
+        "input_features": {
+          "maximum": 65536,
+          "minimum": 128,
+          "multipleOf": 128,
+          "type": "integer"
+        },
+        "output_features": {
+          "maximum": 65536,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "selected_output_rows": {
+          "items": { "minimum": 0, "type": "integer" },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "block_size",
+        "input_features",
+        "output_features",
+        "selected_output_rows"
+      ],
+      "type": "object"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_profile": {
+      "const": "deepseek_v4_dense_fp8_selected_rows_v1"
+    },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "input": { "const": "input_bf16_codes" },
+        "kind": { "const": "FP8_LINEAR_SELECTED_ROWS" },
+        "output": { "const": "output_bf16_codes" },
+        "scale_resource": { "const": "layers.0.attn.wq_a.scale" },
+        "weight_resource": { "const": "layers.0.attn.wq_a.weight" }
+      },
+      "required": [
+        "input",
+        "kind",
+        "output",
+        "scale_resource",
+        "weight_resource"
+      ],
+      "type": "object"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_fp8_linear_slice.v1" },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "application_id": { "$ref": "#/$defs/sha256" },
+        "application_status": {
+          "enum": [
+            "complete_official_transform_application",
+            "development_fixture_application_not_release_evidence",
+            "partial_official_transform_application_not_release_evidence"
+          ]
+        },
+        "checkpoint_lock_id": { "$ref": "#/$defs/sha256" },
+        "evidence_scope": {
+          "enum": ["development_fixture", "official_checkpoint"]
+        },
+        "repository": { "minLength": 1, "type": "string" },
+        "revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "verification_id": { "$ref": "#/$defs/sha256" }
+      },
+      "required": [
+        "application_id",
+        "application_status",
+        "checkpoint_lock_id",
+        "evidence_scope",
+        "repository",
+        "revision",
+        "verification_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "claim_boundary",
+    "dimensions",
+    "model_id",
+    "numeric_profile",
+    "operation",
+    "schema",
+    "source"
+  ],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 semantic slice v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

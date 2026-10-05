@@ -1,0 +1,137 @@
+{
+  "schema": "opentallas.w17.unchangedbinary.pc21_observation.v1",
+  "observed_at": "2026-10-01T10:55:30.939641+00:00",
+  "status": "LIVE_OBSERVATION_ONLY",
+  "process": {
+    "pid": 620383,
+    "start_ticks": "305304190",
+    "state": "S",
+    "argv": "/home/ubuntu/w17work/dierun2/v41_die_rt /home/ubuntu/w17work/die/ctx1048576_s20260930 /home/ubuntu/w17-fulltoken-unchanged-20261001-r1 200000"
+  },
+  "source_commit": "d2e6290288a15f498461f0309225884aefcdac7f",
+  "binary_sha256": "011c52ba8ae783fedc2c6695e29f37628963f58f5f2d3d9b05684ea60edf49f9",
+  "decoder_sha256": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+  "core_sha256": "35c23d5038d91d98609c8dc265a6770e46fed6a781a2338504e0fe57bd2f69e5",
+  "launch_sha256": "efca96e8a0c7e07c92b9d180e2679497d39f5b9d699fc75b551ff083dac52302",
+  "progress_line": "CYC 22200 wall 3856.8 s pc 21 21 21 21",
+  "cycle": 22200,
+  "instructions": {
+    "0": {
+      "programme_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "decoded": {
+        "20": {
+          "unit": 3,
+          "wait": 2,
+          "qe_mode": 1,
+          "qe_xbase": 54720,
+          "qe_nb": 16,
+          "qe_obase": 55232
+        },
+        "21": {
+          "unit": 2,
+          "wait": 4,
+          "su_nout": 1,
+          "su_nin": 512,
+          "a_base": 55232,
+          "a_si": 1,
+          "dst": 3,
+          "o_d": 49,
+          "su_vec": 1
+        }
+      }
+    },
+    "1": {
+      "programme_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "decoded": {
+        "20": {
+          "unit": 3,
+          "wait": 2,
+          "qe_mode": 1,
+          "qe_xbase": 54720,
+          "qe_nb": 16,
+          "qe_obase": 55232
+        },
+        "21": {
+          "unit": 2,
+          "wait": 4,
+          "su_nout": 1,
+          "su_nin": 512,
+          "a_base": 55232,
+          "a_si": 1,
+          "dst": 3,
+          "o_d": 49,
+          "su_vec": 1
+        }
+      }
+    },
+    "2": {
+      "programme_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "decoded": {
+        "20": {
+          "unit": 3,
+          "wait": 2,
+          "qe_mode": 1,
+          "qe_xbase": 54720,
+          "qe_nb": 16,
+          "qe_obase": 55232
+        },
+        "21": {
+          "unit": 2,
+          "wait": 4,
+          "su_nout": 1,
+          "su_nin": 512,
+          "a_base": 55232,
+          "a_si": 1,
+          "dst": 3,
+          "o_d": 49,
+          "su_vec": 1
+        }
+      }
+    },
+    "3": {
+      "programme_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "decoded": {
+        "20": {
+          "unit": 3,
+          "wait": 2,
+          "qe_mode": 1,
+          "qe_xbase": 54720,
+          "qe_nb": 16,
+          "qe_obase": 55232
+        },
+        "21": {
+          "unit": 2,
+          "wait": 4,
+          "su_nout": 1,
+          "su_nin": 512,
+          "a_base": 55232,
+          "a_si": 1,
+          "dst": 3,
+          "o_d": 49,
+          "su_vec": 1
+        }
+      }
+    }
+  },
+  "finding": "PC20 requests QE_QDQ8; PC21 requests QE-drain wait bit4. It does not request HE drain. Actual cause of waiting is unproved without core/QE/window state.",
+  "source_context": "Historical core q_gate requires win_idle for FULL_SHAPE+KV_HBM QE_QDQ8; prior capture/retirement and dispatch state must be inspected if terminal, not inferred from PC alone.",
+  "watchdog": "41088",
+  "watchdog_scope": {
+    "HE_min_cycles": [
+      10240,
+      10240
+    ],
+    "formula": "load chunks + ceil(chunks/HHW8)*outputs*positions",
+    "watchdog": 41088,
+    "diagnostic_margin": "4x max image HE service +128; conservative diagnostic envelope, not calibrated performance"
+  },
+  "next_terminal_diagnosis": [
+    "S_DEC/S_ISS dispatch state and waited/unit_ready gates",
+    "QE QDQ8 start/busy/done and VM traffic",
+    "window idle/capture/retirement state and outstanding HBM traffic"
+  ],
+  "new_run_launched": false,
+  "full_token_qualified": false,
+  "numerical_verdict": null,
+  "failure_records_unchanged": true
+}

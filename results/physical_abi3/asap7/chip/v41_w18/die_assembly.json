@@ -1,0 +1,734 @@
+{
+ "schema": "opentallas.v41.w18_die_assembly.v1",
+ "die": {
+  "size_um": [
+   31799.952,
+   25628.4
+  ],
+  "floorplan": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch8.64.json",
+   "sha256": "a81dcc667cdfeb2f4046e4a78690801abaefd8cacdd04e0d3499ef14bf379c64"
+  },
+  "pairs": {
+   "pairs_needed": 7102,
+   "pair_slots": 7628,
+   "closes": true,
+   "short": 0,
+   "clusters_used": 464,
+   "clusters_total": 496,
+   "full_clusters_used": 407
+  },
+  "element": {
+   "name": "ot_v41_rom_elem_q",
+   "w": 513.756,
+   "h": 131.76,
+   "signal_pins": 734,
+   "pin_edges": {
+    "S": 734,
+    "N": 0,
+    "W": 0,
+    "E": 0
+   },
+   "power_layers": [
+    "M6"
+   ],
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+   ],
+   "pitch_um": [
+    522.72,
+    140.4
+   ],
+   "pack_pitch_um": [
+    485.13599999999997,
+    120.96000000000001
+   ],
+   "pitch_vs_pack": [
+    1.0775,
+    1.1607
+   ],
+   "note": "W10 p5 routed pair (not closed); pitch with an 8.64 um pin channel"
+  },
+  "placeholders": [
+   "hub partitions (W11 hardened hub elements pending)",
+   "HBM service bands (K-arb / KV streamer / index-key control)",
+   "SerDes lanes and UCIe-A modules (W15 link ports pending)"
+  ]
+ },
+ "hbm_phy": {
+  "view": "ot_hbm3e_phy_v41x_aw30_e8p5",
+  "orfs_check": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/orfs_check_e8p5_win_s0.json",
+   "sha256": "8b3db3383b3fb36fb903aae51bea93b16c5c4112a240312b8b2e80f1f0da04e7"
+  }
+ },
+ "collective": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/collective_lane_map.json",
+  "sha256": "dbee30be79b6bf950bac3ef6d819a8734b5a70c461d9fedf3385da2513849857",
+  "placement": "engine at the centre of each link edge (adopted free fix)",
+  "engines": {
+   "serdes": [
+    1000.1,
+    12813.1
+   ],
+   "ucie": [
+    30756.7,
+    12813.1
+   ]
+  },
+  "critical_peer_lanes": {
+   "serdes": [
+    "serdes_22",
+    "serdes_23",
+    "serdes_21",
+    "serdes_24"
+   ],
+   "ucie": [
+    "ucie_8",
+    "ucie_9",
+    "ucie_7",
+    "ucie_10"
+   ]
+  },
+  "vm_to_engine_cycles": {
+   "serdes": 30,
+   "ucie": 30
+  },
+  "lane_map": {
+   "serdes": [
+    {
+     "lane": "serdes_22",
+     "rank": 0,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 1
+    },
+    {
+     "lane": "serdes_23",
+     "rank": 1,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 1
+    },
+    {
+     "lane": "serdes_21",
+     "rank": 2,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 1
+    },
+    {
+     "lane": "serdes_24",
+     "rank": 3,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 2
+    },
+    {
+     "lane": "serdes_20",
+     "rank": 4,
+     "role": "other",
+     "engine_to_lane_cycles": 2
+    },
+    {
+     "lane": "serdes_25",
+     "rank": 5,
+     "role": "other",
+     "engine_to_lane_cycles": 3
+    },
+    {
+     "lane": "serdes_19",
+     "rank": 6,
+     "role": "other",
+     "engine_to_lane_cycles": 3
+    },
+    {
+     "lane": "serdes_26",
+     "rank": 7,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "serdes_18",
+     "rank": 8,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "serdes_27",
+     "rank": 9,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "serdes_17",
+     "rank": 10,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "serdes_28",
+     "rank": 11,
+     "role": "other",
+     "engine_to_lane_cycles": 5
+    },
+    {
+     "lane": "serdes_16",
+     "rank": 12,
+     "role": "other",
+     "engine_to_lane_cycles": 5
+    },
+    {
+     "lane": "serdes_29",
+     "rank": 13,
+     "role": "other",
+     "engine_to_lane_cycles": 6
+    },
+    {
+     "lane": "serdes_15",
+     "rank": 14,
+     "role": "other",
+     "engine_to_lane_cycles": 6
+    },
+    {
+     "lane": "serdes_30",
+     "rank": 15,
+     "role": "other",
+     "engine_to_lane_cycles": 7
+    },
+    {
+     "lane": "serdes_14",
+     "rank": 16,
+     "role": "other",
+     "engine_to_lane_cycles": 7
+    },
+    {
+     "lane": "serdes_31",
+     "rank": 17,
+     "role": "other",
+     "engine_to_lane_cycles": 8
+    },
+    {
+     "lane": "serdes_13",
+     "rank": 18,
+     "role": "other",
+     "engine_to_lane_cycles": 8
+    },
+    {
+     "lane": "serdes_32",
+     "rank": 19,
+     "role": "other",
+     "engine_to_lane_cycles": 8
+    },
+    {
+     "lane": "serdes_12",
+     "rank": 20,
+     "role": "other",
+     "engine_to_lane_cycles": 8
+    },
+    {
+     "lane": "serdes_33",
+     "rank": 21,
+     "role": "other",
+     "engine_to_lane_cycles": 9
+    },
+    {
+     "lane": "serdes_11",
+     "rank": 22,
+     "role": "other",
+     "engine_to_lane_cycles": 9
+    },
+    {
+     "lane": "serdes_34",
+     "rank": 23,
+     "role": "other",
+     "engine_to_lane_cycles": 10
+    },
+    {
+     "lane": "serdes_10",
+     "rank": 24,
+     "role": "other",
+     "engine_to_lane_cycles": 10
+    },
+    {
+     "lane": "serdes_35",
+     "rank": 25,
+     "role": "other",
+     "engine_to_lane_cycles": 11
+    },
+    {
+     "lane": "serdes_9",
+     "rank": 26,
+     "role": "other",
+     "engine_to_lane_cycles": 11
+    },
+    {
+     "lane": "serdes_36",
+     "rank": 27,
+     "role": "other",
+     "engine_to_lane_cycles": 12
+    },
+    {
+     "lane": "serdes_8",
+     "rank": 28,
+     "role": "other",
+     "engine_to_lane_cycles": 12
+    },
+    {
+     "lane": "serdes_37",
+     "rank": 29,
+     "role": "other",
+     "engine_to_lane_cycles": 12
+    },
+    {
+     "lane": "serdes_7",
+     "rank": 30,
+     "role": "other",
+     "engine_to_lane_cycles": 12
+    },
+    {
+     "lane": "serdes_38",
+     "rank": 31,
+     "role": "other",
+     "engine_to_lane_cycles": 13
+    },
+    {
+     "lane": "serdes_6",
+     "rank": 32,
+     "role": "other",
+     "engine_to_lane_cycles": 13
+    },
+    {
+     "lane": "serdes_39",
+     "rank": 33,
+     "role": "other",
+     "engine_to_lane_cycles": 14
+    },
+    {
+     "lane": "serdes_5",
+     "rank": 34,
+     "role": "other",
+     "engine_to_lane_cycles": 14
+    },
+    {
+     "lane": "serdes_40",
+     "rank": 35,
+     "role": "other",
+     "engine_to_lane_cycles": 15
+    },
+    {
+     "lane": "serdes_4",
+     "rank": 36,
+     "role": "other",
+     "engine_to_lane_cycles": 15
+    },
+    {
+     "lane": "serdes_41",
+     "rank": 37,
+     "role": "other",
+     "engine_to_lane_cycles": 16
+    },
+    {
+     "lane": "serdes_3",
+     "rank": 38,
+     "role": "other",
+     "engine_to_lane_cycles": 16
+    },
+    {
+     "lane": "serdes_42",
+     "rank": 39,
+     "role": "other",
+     "engine_to_lane_cycles": 16
+    },
+    {
+     "lane": "serdes_2",
+     "rank": 40,
+     "role": "other",
+     "engine_to_lane_cycles": 16
+    },
+    {
+     "lane": "serdes_43",
+     "rank": 41,
+     "role": "other",
+     "engine_to_lane_cycles": 17
+    },
+    {
+     "lane": "serdes_1",
+     "rank": 42,
+     "role": "other",
+     "engine_to_lane_cycles": 17
+    },
+    {
+     "lane": "serdes_44",
+     "rank": 43,
+     "role": "other",
+     "engine_to_lane_cycles": 18
+    },
+    {
+     "lane": "serdes_0",
+     "rank": 44,
+     "role": "other",
+     "engine_to_lane_cycles": 18
+    }
+   ],
+   "ucie": [
+    {
+     "lane": "ucie_8",
+     "rank": 0,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 0
+    },
+    {
+     "lane": "ucie_9",
+     "rank": 1,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 1
+    },
+    {
+     "lane": "ucie_7",
+     "rank": 2,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 1
+    },
+    {
+     "lane": "ucie_10",
+     "rank": 3,
+     "role": "critical_peer",
+     "engine_to_lane_cycles": 2
+    },
+    {
+     "lane": "ucie_6",
+     "rank": 4,
+     "role": "other",
+     "engine_to_lane_cycles": 2
+    },
+    {
+     "lane": "ucie_11",
+     "rank": 5,
+     "role": "other",
+     "engine_to_lane_cycles": 3
+    },
+    {
+     "lane": "ucie_5",
+     "rank": 6,
+     "role": "other",
+     "engine_to_lane_cycles": 3
+    },
+    {
+     "lane": "ucie_12",
+     "rank": 7,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "ucie_4",
+     "rank": 8,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "ucie_13",
+     "rank": 9,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "ucie_3",
+     "rank": 10,
+     "role": "other",
+     "engine_to_lane_cycles": 4
+    },
+    {
+     "lane": "ucie_14",
+     "rank": 11,
+     "role": "other",
+     "engine_to_lane_cycles": 5
+    },
+    {
+     "lane": "ucie_2",
+     "rank": 12,
+     "role": "other",
+     "engine_to_lane_cycles": 5
+    },
+    {
+     "lane": "ucie_15",
+     "rank": 13,
+     "role": "other",
+     "engine_to_lane_cycles": 6
+    },
+    {
+     "lane": "ucie_1",
+     "rank": 14,
+     "role": "other",
+     "engine_to_lane_cycles": 6
+    },
+    {
+     "lane": "ucie_16",
+     "rank": 15,
+     "role": "other",
+     "engine_to_lane_cycles": 7
+    },
+    {
+     "lane": "ucie_0",
+     "rank": 16,
+     "role": "other",
+     "engine_to_lane_cycles": 7
+    }
+   ]
+  }
+ },
+ "clock": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/clock_plan.json",
+  "sha256": "eae31875dcdcca9424190b91fb5bfdc3bf62f83573204236c9d080c826d56294",
+  "pll": {
+   "vco_ghz": 3.6,
+   "fast": {
+    "divide": 3,
+    "ghz": 1.2
+   },
+   "slow": {
+    "divide": 4,
+    "ghz": 0.9
+   },
+   "alignment": "rising edges coincide every 3.333 ns (4 fast = 3 slow); tightest fast/slow edge spacing 278 ps in either direction",
+   "basis": "one PLL per die, two dividers (AGENTS.md c0894b1c); the clocks are phase-related, so the crossings are timed synchronously by STA, not synchronised"
+  },
+  "slow_domain": {
+   "hub_partitions": [
+    "HUB_VM",
+    "HUB_SU_VECTOR",
+    "HUB_HC"
+   ],
+   "contiguous": true,
+   "area_mm2": 32.01,
+   "bbox_um": [
+    15562.8,
+    9903.6,
+    21541.248,
+    15722.64
+   ]
+  },
+  "cdc_latency": {
+   "SU -> attention p-words": 5,
+   "attention scores and PV -> VM": 4,
+   "VM x-gather -> field x broadcast": 5,
+   "field results -> VM": 4,
+   "collective DMA <-> VM": 4,
+   "VM -> indexer query": 5,
+   "index scores -> select": 4
+  }
+ },
+ "pdn_ir": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/ir/ir_stack.json",
+  "sha256": "f815aa68e6cd2cde05a74fc41dc27e0ac14ffe217d61dadc0303072da3a76129",
+  "scenarios": {
+   "peak_all_busy_1p2": {
+    "rail_to_rail_mv": 159.1,
+    "pct": 22.7
+   },
+   "peak_cap50_1p2": {
+    "rail_to_rail_mv": 104.3,
+    "pct": 14.9
+   },
+   "saturation_duty_1p2": {
+    "rail_to_rail_mv": 78.4,
+    "pct": 11.2
+   }
+  },
+  "budget": {
+   "ss_signoff_v": 0.63,
+   "budget_mv": 70.0,
+   "basis": "ASAP7 SS libraries are characterised at 0.63 V (-10%); static IR, first droop and regulator tolerance all spend it"
+  }
+ },
+ "route": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/route/die_route_k32_ph5.json",
+  "sha256": "7e74169fadaee28b81fc30cdc76472c1f5f63a053de330495bd527cfbdd916af",
+  "congestion": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/route/congestion_variants.json",
+   "sha256": "1d0ab4c6445fa47122a9f577947a80808d45385a7d135cb0a9b50da42d2d0c03"
+  },
+  "overflow_total": 0,
+  "reach": "W15 SS sweep at 0.833 ns: 504 um per register stage (fast domain)",
+  "crossings": {
+   "vm_xroot_to_farthest_cluster": 37,
+   "farthest_cluster_to_vm": 39,
+   "collective_to_farthest_serdes": 49,
+   "collective_to_farthest_ucie": 37,
+   "hbm_window": 30,
+   "idx_keys": 45,
+   "selected_kv": 27,
+   "idx_topk": 42,
+   "hub": 1
+  }
+ },
+ "current_management": {
+  "adopted": "50% concurrent-pair cap (ot_chip_v41_xcap) + 256-cycle schedule-driven pre-ramp (ot_chip_v41_preramp, holds through short gaps) + droop detector (ot_chip_v41_droop_ctrl)",
+  "peak_current": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/peak_current.json",
+   "sha256": "349b4cb7e66eb4ad0d78aedc659d2f6b9217f33b4a57e19a8ac2fde49622e269"
+  },
+  "droop": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/droop_schemes_1p2ghz.json",
+   "sha256": "ecfeef85cd7f63f587a2101b37b9fc54d683ff5bbe7ba69091d3e9a7ee8db8ae"
+  },
+  "package_spec": {
+   "requirement": "effective package + bump loop inductance seen by one die L_eff <= 2 pH with the adopted 50% cap + 256-cycle schedule-driven pre-ramp (<= 0.5 pH with the pre-ramp alone), for a first droop <= 35 mV at 1.2 GHz; per-die decap >= 5 uF (the swept minimum)",
+   "b200_class_reference": "no public L_eff figure for B200/GB200-class packages is known to this project; the requirement is ASSUMED feasible for a 2.5D CoWoS-class package with land-side / interposer capacitors and must be confirmed by the package owner",
+   "grade": "assumed"
+  },
+  "benches": [
+   {
+    "record": "results/physical_abi3/asap7/chip/v41_w18/field_ctrl_bench.json",
+    "sha256": "396bc875d010e8f76bd3d06227bd0f4853de3fbd279c3ce9d599712818894e3c"
+   },
+   {
+    "record": "results/physical_abi3/asap7/chip/v41_w18/pg_ctrl_bench.json",
+    "sha256": "2788ba06de1534ced446c8afd1ee9d46d8a7316878b68a4de973f2056ff07341"
+   }
+  ]
+ },
+ "blocks_1p2ghz": {
+  "ot_chip_v41_pg_ctrl": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_pg_ctrl/corner_sta.json",
+   "sha256": "11471299170d86d0f7e46b868c0ca414d6ed9e6d9fe16c0e62d383185900983b",
+   "ss_setup_reg_to_reg_ps": 16.12,
+   "ff_hold_reg_to_reg_ps": 14.3
+  },
+  "ot_chip_v41_droop_ctrl": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_droop_ctrl/corner_sta.json",
+   "sha256": "30caa7472455de8f8f8374155e5596546d1b29b9e36a072eb5d785ac7305ec90",
+   "ss_setup_reg_to_reg_ps": 49.11,
+   "ff_hold_reg_to_reg_ps": 14.51
+  },
+  "ot_chip_v41_preramp": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_preramp/corner_sta.json",
+   "sha256": "ef8f2fe48420e80c4fd5dd046cebd849ccb5704e8ddb1b7a1324c904cca63932",
+   "ss_setup_reg_to_reg_ps": 90.76,
+   "ff_hold_reg_to_reg_ps": 33.82
+  },
+  "ot_chip_v41_xcap": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_xcap/corner_sta.json",
+   "sha256": "2993e44384ef464d0fb19e8cb348ab4c48665b56ce44656258875d86cbaf2f70",
+   "ss_setup_reg_to_reg_ps": 272.58,
+   "ff_hold_reg_to_reg_ps": 14.82
+  },
+  "ot_chip_v41_ratio_fifo_2clk": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_ratio_fifo_2clk/corner_sta.json",
+   "sha256": "1814cd71519ec2ca638afbfb0d92822ae27596d337276f0651cefd4c2cc912fe",
+   "ss_setup_reg_to_reg_ps": 32.04,
+   "ff_hold_reg_to_reg_ps": 9.64
+  },
+  "karb/link_450um_w18e8p5_1p2": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/link_450um_w18e8p5_1p2/corner_sta.json",
+   "sha256": "67bbf4ea94bcc201fbf62e46d60437b0a07ed93a4abdab51ae8c3b16bc6db4e9",
+   "ss_setup_reg_to_reg_ps": 166.81,
+   "ff_hold_reg_to_reg_ps": -4.8
+  },
+  "karb/link_600um_w18e8p5_1p2": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/link_600um_w18e8p5_1p2/corner_sta.json",
+   "sha256": "e392790b31ec99443d191427909935148db8cf10caac1c93786b31366eabe68a",
+   "ss_setup_reg_to_reg_ps": 315.07,
+   "ff_hold_reg_to_reg_ps": -1.19
+  },
+  "karb/link_750um_w18e8p5_1p2": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/link_750um_w18e8p5_1p2/corner_sta.json",
+   "sha256": "dd72503f426ed2ecf0164e025a4372c71db9735411ed3f156b05f8e09ee5a953",
+   "ss_setup_reg_to_reg_ps": 188.58,
+   "ff_hold_reg_to_reg_ps": -0.06
+  },
+  "karb/link_900um_w18e8p5_1p2": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/link_900um_w18e8p5_1p2/corner_sta.json",
+   "sha256": "4ea9815690654c3ce49741074a67d8445a37cc50f67b3771e83230a2160cb988",
+   "ss_setup_reg_to_reg_ps": 41.86,
+   "ff_hold_reg_to_reg_ps": -1.88
+  },
+  "karb/pregion_aw30_w18e8p5_1p2_flatsel": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_flatsel/corner_sta.json",
+   "sha256": "1d507ab0a11a26aebf11cb5d33aacc604e2cffdde64dc822d49653b009ada7ae",
+   "ss_setup_reg_to_reg_ps": -257.91,
+   "ff_hold_reg_to_reg_ps": -3.56
+  },
+  "karb/pregion_aw30_w18e8p5_1p2_pairstage_statuscomb": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_pairstage_statuscomb/corner_sta.json",
+   "sha256": "29e2cc7afe9bcc9f00b97448b35b4b109461c446e4165e3c3472b1cc9ffc74b1",
+   "ss_setup_reg_to_reg_ps": -408.67,
+   "ff_hold_reg_to_reg_ps": 1.77
+  },
+  "karb/pregion_aw30_w18e8p5_1p2_statusreg": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_statusreg/corner_sta.json",
+   "sha256": "6b2f2116eb302b74bfac0fafeab022882726f91679efbc13121c31317c0cabb8",
+   "ss_setup_reg_to_reg_ps": -353.0,
+   "ff_hold_reg_to_reg_ps": -2.63
+  },
+  "karb/pslice_aw30_w18e8p5_1p2": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30_w18e8p5_1p2/corner_sta.json",
+   "sha256": "8f2d5b7e3142ce99c8a4205f3c2155e7d3dc3385454cbaf376973a850242e114",
+   "ss_setup_reg_to_reg_ps": 53.9,
+   "ff_hold_reg_to_reg_ps": 17.52
+  }
+ },
+ "head_and_table_dies": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/head_table_fit.json",
+  "sha256": "9edab497b2e66c5619b943ce1536b99388c9f50423b765f51100655838a66c14",
+  "head": {
+   "tile_um": [
+    476.0,
+    126.9
+   ],
+   "tile_pitch_um": [
+    476.064,
+    127.44
+   ],
+   "tiles_needed": 6992,
+   "mac_tiles": 6117,
+   "embed_tiles_conservative": 875,
+   "slots": 9360,
+   "overhead_fill_derate": 0.8467,
+   "usable_slots": 7925,
+   "margin_pct": 13.3,
+   "fits_one_quarter": true,
+   "dies": 4,
+   "vm_to_farthest_tile": {
+    "L_um": 18660.5,
+    "cycles": 38
+   },
+   "w16_analytical": {
+    "need_mm2": 479.0,
+    "usable_mm2": 481.0,
+    "head_dies_8192m8": 4,
+    "head_dies_4096m8": 8
+   },
+   "floorplan": {
+    "record": "results/physical_abi3/asap7/chip/v41_w18/head_die/die_floorplan_head.json",
+    "sha256": "474602c8178849fd9ee820cd811736b559887475fdbdf1a0b39d1ac3e1de2cf9"
+   },
+   "basis": "ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as full tiles (conservative)",
+   "label": "4 dies fit at both bases: ASAP7 feasibility margin 13.3%, product (analytical) 479.0 of 481.0 mm2 (W16)"
+  },
+  "table": {
+   "macro": "ot_rom_8192x274_m8",
+   "macro_pitch_um": [
+    130.032,
+    120.96
+   ],
+   "raw_slots": 48108,
+   "usable_macros": 37364,
+   "bytes_per_die_GB": 10.48,
+   "table_bytes_GB": 202.76,
+   "dies_asap7_geometry": 20,
+   "dies_w16_analytical": 36,
+   "dies_w16_asap7": 20,
+   "farthest_macro_to_link_edge": {
+    "L_um": 27627.7,
+    "cycles": 55,
+    "basis": "links on the east and west edges; a gather tree registers every 504 um; the switched table->layer path is inter-die (rack record)"
+   },
+   "note": "ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis",
+   "label": "ASAP7 feasibility: 20; product (analytical, storage-only 75 Mbit/mm2 + ECC): 36 (W16)"
+  }
+ },
+ "tool_sha256": "60804ddaa8998d53236f5b003bea06169cdf283a306548ff3f5f2b013e5560bd"
+}

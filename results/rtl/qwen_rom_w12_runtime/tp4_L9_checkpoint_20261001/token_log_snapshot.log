@@ -1,0 +1,34 @@
+images loaded in 12.6 s
+models constructed in 14.0 s (tiles/die=1536 nodes/die=1488)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=3s passes=3
+progress tick=4096 cyc=4097 pc_base=27/27 me_busy=2033/2033 wall=3960s passes=11063
+STAGE L0 done cycles=4669 start_cyc=7 end_cyc=4676 me_busy=2033/2033 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=1536 su_writes=30236 wall=4008s
+stage L1 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=8192 cyc=8193 pc_base=19/19 me_busy=4060/4060 wall=7001s passes=21986
+STAGE L1 done cycles=4668 start_cyc=4677 end_cyc=9345 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=3072 su_writes=60472 wall=7101s
+stage L2 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=12288 cyc=12289 pc_base=19/19 me_busy=5607/5607 wall=9463s passes=32700
+STAGE L2 done cycles=4668 start_cyc=9346 end_cyc=14014 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=4608 su_writes=90708 wall=10215s
+stage L3 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=16384 cyc=16385 pc_base=19/19 me_busy=7148/7148 wall=11728s passes=43466
+STAGE L3 done cycles=4668 start_cyc=14015 end_cyc=18683 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=6144 su_writes=120944 wall=13090s
+stage L4 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=20480 cyc=20481 pc_base=18/18 me_busy=9133/9133 wall=14496s passes=54447
+STAGE L4 done cycles=4668 start_cyc=18684 end_cyc=23352 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=7680 su_writes=151180 wall=16365s
+stage L5 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=24576 cyc=24577 pc_base=0/0 me_busy=11116/11116 wall=18690s passes=65368
+STAGE L5 done cycles=4668 start_cyc=23353 end_cyc=28021 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=9216 su_writes=181416 wall=21536s
+stage L6 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=28672 cyc=28673 pc_base=0/0 me_busy=12572/12572 wall=22542s passes=76049
+STAGE L6 done cycles=4668 start_cyc=28022 end_cyc=32690 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=10752 su_writes=211652 wall=27277s
+stage L7 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=32768 cyc=32769 pc_base=0/0 me_busy=14263/14263 wall=27503s passes=86965
+progress tick=36864 cyc=36865 pc_base=27/27 me_busy=16222/16222 wall=33508s passes=98019
+STAGE L7 done cycles=4668 start_cyc=32691 end_cyc=37359 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=12288 su_writes=241888 wall=33570s
+stage L8 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=40960 cyc=40961 pc_base=19/19 me_busy=18249/18249 wall=40392s passes=109013
+STAGE L8 done cycles=4668 start_cyc=37360 end_cyc=42028 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=13824 su_writes=272124 wall=40531s
+stage L9 loaded: code_words=1056 scale_words=50112 crom_words=541953
+progress tick=45056 cyc=45057 pc_base=19/19 me_busy=19849/19849 wall=45430s passes=119709
+STAGE L9 done cycles=4668 start_cyc=42029 end_cyc=46697 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=15360 su_writes=302360 wall=46812s
+stage L10 loaded: code_words=1056 scale_words=50112 crom_words=541953

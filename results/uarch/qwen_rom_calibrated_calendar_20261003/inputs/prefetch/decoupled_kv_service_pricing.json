@@ -1,0 +1,1154 @@
+{
+ "schema": "claude-review.decoupled-kv-service-pricing.v1",
+ "origin_main": "7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865",
+ "adoption": false,
+ "model_only": true,
+ "task1_why_wait": {
+  "verdict": "POLICY (per-layer cold service lease), not data dependence and not storage",
+  "evidence": [
+   "tools/uarch_model_qwen_kv_successor.py:312 begin=max(t,windows[layer%2]); t is previous layer end_ps = last reverse-grant retirement (tools/uarch_model_qwen_kv_credit_allocator.py:108,152)",
+   "tools/uarch_model_qwen_kv_credit_allocator.py:69-73 fresh cursors/credits/owner-slot sets per layer call; :150-151 every pending/write/group/global debt must retire before return (lease scope = one layer)",
+   "tools/uarch_model_qwen_kv_successor.py:366 lower_bound_scope: \"nextprefetch starts after previousservice drains ... No assumed early crosslayer producer/descriptor ownership\"; tools/uarch_model_qwen_kv_credit17.py:180 declared_overlap",
+   "data gates: only KW/VW writes (allocator :113,:143) and current-V tail cohort (:140) wait on prefix=compute(l-1)+451 cyc; past K/V reads gated by begin only",
+   "storage gate: windows[layer%2]=max(compute,t) (successor :314) = two 54-row tile windows (tools/uarch_model_qwen_parent_context.py:335-342,440-445; KV_AW=7 -> 128 rows, rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv:57); never binds in baseline (begin(l+1)=all_grants(l) >> compute_done(l-1))"
+  ]
+ },
+ "task2_storage": {
+  "tile_context_per_die_B": 12582912,
+  "window_B_per_die": 5308416,
+  "layer_KV_B_per_die": 4190208,
+  "existing_windows": 2,
+  "arrival_to_consumption": "layer l+1 lands in window (l+1)%2 while layer l attention reads the other; already provided",
+  "in_flight": {
+   "global_cohorts": 128,
+   "mean_hold_ns": 566.4577335252719,
+   "max_cohort_rate_per_us": 225.96566773554235,
+   "pitch_lower_us": 9.222639973958335,
+   "cohorts_needed_for_command_floor": 137.90852324399398,
+   "cohorts_needed_for_fill_floor": 151.02318763326227,
+   "inflight_bytes_needed_at_fill_rate": 304527.67754318623,
+   "inflight_bytes_needed_at_command_floor_rate": 277286.6590044,
+   "existing_inflight_bytes": {
+    "cohorts_128_x_2KiB": 262144,
+    "assembly_4480_words_x_64B": 286720,
+    "credit17_4760_words_x_64B": 304640
+   },
+   "note": "Hold time measured at 128 credits; deeper queues raise hold (credit17 at 136 gained only 0.69% in the all-grants calendar), so these are lower bounds on storage."
+  },
+  "attention_consumer": "Model starts attention at max(fill_end, prefix) (successor :314): whole-layer fill before attention, not streaming. Compute chain (2.56-4.53 us/layer after fill) < service pitch (9.6 us) so streaming attention would only shorten the last-layer tail; not needed for this policy."
+ },
+ "task3_candidate": {
+  "policy": "Lease handoff at last request issue: layer l+1 descriptor heads become eligible when all 8 layer-l heads have issued (credits, pending, write slots, assembly pools, owner-grant slots, fill lanes and PC service state shared and unchanged), gated also by tile window release compute_done(l-1); per-layer round-robin reset kept; per-group descriptor order, cohort contents and attention reduction order unchanged.",
+  "implementation": "/tmp/claude-review-20261003/prefetch/work/decoupled.py (merged 36-layer event loop copying credit_layer_calendar per-cohort logic); control mode all_grants reproduces 361.0713 us exactly",
+  "runs": {
+   "model": {
+    "label": "(a) calendar compute 3,338 cyc/layer (model)",
+    "rest_after_fill_ps": 2557300.0,
+    "control_all_grants_s": 0.0003610713,
+    "candidate_last_issue_s": 0.0003502673,
+    "rate_gain": 0.03084501465023992,
+    "candidate_layer_pitch_us": 9.591827777777779,
+    "control_layer_pitch_us": 9.91,
+    "candidate_mean_credit_hold_ns": 566.4577335252719,
+    "candidate_p90_credit_hold_ns": 776.0,
+    "peaks": {
+     "live_cohorts": 128,
+     "pending_per_PC": 64,
+     "write_slots_per_PC": 4,
+     "words_per_pool": 75
+    },
+    "tile_window_gate_bound_layers": 0,
+    "candidate_rows": [
+     {
+      "layer": 0,
+      "begin_ps": 0.0,
+      "last_issue_ps": 9594000.0,
+      "prefix_ready_ps": 375833.3333333333,
+      "fill_ready_ps": 9482333.333333334,
+      "all_grants_ps": 9760000.0,
+      "compute_done_ps": 12039633.333333334
+     },
+     {
+      "layer": 1,
+      "begin_ps": 9594000.0,
+      "last_issue_ps": 18962000.0,
+      "prefix_ready_ps": 12415466.666666666,
+      "fill_ready_ps": 19331333.333333332,
+      "all_grants_ps": 19427000.0,
+      "compute_done_ps": 21888633.333333332
+     },
+     {
+      "layer": 2,
+      "begin_ps": 18962000.0,
+      "last_issue_ps": 28490000.0,
+      "prefix_ready_ps": 22264466.666666668,
+      "fill_ready_ps": 28707333.333333332,
+      "all_grants_ps": 28888000.0,
+      "compute_done_ps": 31264633.333333332
+     },
+     {
+      "layer": 3,
+      "begin_ps": 28490000.0,
+      "last_issue_ps": 38056000.0,
+      "prefix_ready_ps": 31640466.666666668,
+      "fill_ready_ps": 38283333.333333336,
+      "all_grants_ps": 38396000.0,
+      "compute_done_ps": 40840633.333333336
+     },
+     {
+      "layer": 4,
+      "begin_ps": 38056000.0,
+      "last_issue_ps": 47637000.0,
+      "prefix_ready_ps": 41216466.666666664,
+      "fill_ready_ps": 47740333.333333336,
+      "all_grants_ps": 47839000.0,
+      "compute_done_ps": 50297633.333333336
+     },
+     {
+      "layer": 5,
+      "begin_ps": 47637000.0,
+      "last_issue_ps": 56845000.0,
+      "prefix_ready_ps": 50673466.666666664,
+      "fill_ready_ps": 57318500.0,
+      "all_grants_ps": 57385000.0,
+      "compute_done_ps": 59875800.0
+     },
+     {
+      "layer": 6,
+      "begin_ps": 56845000.0,
+      "last_issue_ps": 66522000.0,
+      "prefix_ready_ps": 60251633.333333336,
+      "fill_ready_ps": 66426333.333333336,
+      "all_grants_ps": 66699000.0,
+      "compute_done_ps": 68983633.33333333
+     },
+     {
+      "layer": 7,
+      "begin_ps": 66522000.0,
+      "last_issue_ps": 76175000.0,
+      "prefix_ready_ps": 69359466.66666667,
+      "fill_ready_ps": 76250333.33333333,
+      "all_grants_ps": 76339000.0,
+      "compute_done_ps": 78807633.33333333
+     },
+     {
+      "layer": 8,
+      "begin_ps": 76175000.0,
+      "last_issue_ps": 85626000.0,
+      "prefix_ready_ps": 79183466.66666667,
+      "fill_ready_ps": 85778333.33333333,
+      "all_grants_ps": 85893000.0,
+      "compute_done_ps": 88335633.33333333
+     },
+     {
+      "layer": 9,
+      "begin_ps": 85626000.0,
+      "last_issue_ps": 95202000.0,
+      "prefix_ready_ps": 88711466.66666667,
+      "fill_ready_ps": 95245333.33333333,
+      "all_grants_ps": 95425000.0,
+      "compute_done_ps": 97802633.33333333
+     },
+     {
+      "layer": 10,
+      "begin_ps": 95202000.0,
+      "last_issue_ps": 105074000.0,
+      "prefix_ready_ps": 98178466.66666667,
+      "fill_ready_ps": 104916333.33333333,
+      "all_grants_ps": 105242000.0,
+      "compute_done_ps": 107473633.33333333
+     },
+     {
+      "layer": 11,
+      "begin_ps": 105074000.0,
+      "last_issue_ps": 114369000.0,
+      "prefix_ready_ps": 107849466.66666667,
+      "fill_ready_ps": 114770333.33333333,
+      "all_grants_ps": 114873000.0,
+      "compute_done_ps": 117327633.33333333
+     },
+     {
+      "layer": 12,
+      "begin_ps": 114369000.0,
+      "last_issue_ps": 124048000.0,
+      "prefix_ready_ps": 117703466.66666667,
+      "fill_ready_ps": 123986333.33333333,
+      "all_grants_ps": 124224000.0,
+      "compute_done_ps": 126543633.33333333
+     },
+     {
+      "layer": 13,
+      "begin_ps": 124048000.0,
+      "last_issue_ps": 133675000.0,
+      "prefix_ready_ps": 126919466.66666667,
+      "fill_ready_ps": 133696333.33333333,
+      "all_grants_ps": 133839000.0,
+      "compute_done_ps": 136253633.33333334
+     },
+     {
+      "layer": 14,
+      "begin_ps": 133675000.0,
+      "last_issue_ps": 143193000.0,
+      "prefix_ready_ps": 136629466.66666666,
+      "fill_ready_ps": 143544333.33333334,
+      "all_grants_ps": 143618000.0,
+      "compute_done_ps": 146101633.33333334
+     },
+     {
+      "layer": 15,
+      "begin_ps": 143193000.0,
+      "last_issue_ps": 152847000.0,
+      "prefix_ready_ps": 146477466.66666666,
+      "fill_ready_ps": 153020333.33333334,
+      "all_grants_ps": 153211000.0,
+      "compute_done_ps": 155577633.33333334
+     },
+     {
+      "layer": 16,
+      "begin_ps": 152847000.0,
+      "last_issue_ps": 162271000.0,
+      "prefix_ready_ps": 155953466.66666666,
+      "fill_ready_ps": 162536000.0,
+      "all_grants_ps": 162652000.0,
+      "compute_done_ps": 165093300.0
+     },
+     {
+      "layer": 17,
+      "begin_ps": 162271000.0,
+      "last_issue_ps": 171578000.0,
+      "prefix_ready_ps": 165469133.33333334,
+      "fill_ready_ps": 171996333.33333334,
+      "all_grants_ps": 172156000.0,
+      "compute_done_ps": 174553633.33333334
+     },
+     {
+      "layer": 18,
+      "begin_ps": 171578000.0,
+      "last_issue_ps": 181419000.0,
+      "prefix_ready_ps": 174929466.66666666,
+      "fill_ready_ps": 181324333.33333334,
+      "all_grants_ps": 181609000.0,
+      "compute_done_ps": 183881633.33333334
+     },
+     {
+      "layer": 19,
+      "begin_ps": 181419000.0,
+      "last_issue_ps": 190912000.0,
+      "prefix_ready_ps": 184257466.66666666,
+      "fill_ready_ps": 190976333.33333334,
+      "all_grants_ps": 191079000.0,
+      "compute_done_ps": 193533633.33333334
+     },
+     {
+      "layer": 20,
+      "begin_ps": 190912000.0,
+      "last_issue_ps": 200445000.0,
+      "prefix_ready_ps": 193909466.66666666,
+      "fill_ready_ps": 200504333.33333334,
+      "all_grants_ps": 200623000.0,
+      "compute_done_ps": 203061633.33333334
+     },
+     {
+      "layer": 21,
+      "begin_ps": 200445000.0,
+      "last_issue_ps": 210073000.0,
+      "prefix_ready_ps": 203437466.66666666,
+      "fill_ready_ps": 210027333.33333334,
+      "all_grants_ps": 210614000.0,
+      "compute_done_ps": 212584633.33333334
+     },
+     {
+      "layer": 22,
+      "begin_ps": 210073000.0,
+      "last_issue_ps": 219986000.0,
+      "prefix_ready_ps": 212960466.66666666,
+      "fill_ready_ps": 219813333.33333334,
+      "all_grants_ps": 220150000.0,
+      "compute_done_ps": 222370633.33333334
+     },
+     {
+      "layer": 23,
+      "begin_ps": 219986000.0,
+      "last_issue_ps": 229298000.0,
+      "prefix_ready_ps": 222746466.66666666,
+      "fill_ready_ps": 229711333.33333334,
+      "all_grants_ps": 229810000.0,
+      "compute_done_ps": 232268633.33333334
+     },
+     {
+      "layer": 24,
+      "begin_ps": 229298000.0,
+      "last_issue_ps": 239061000.0,
+      "prefix_ready_ps": 232644466.66666666,
+      "fill_ready_ps": 238961333.33333334,
+      "all_grants_ps": 239237000.0,
+      "compute_done_ps": 241518633.33333334
+     },
+     {
+      "layer": 25,
+      "begin_ps": 239061000.0,
+      "last_issue_ps": 248594000.0,
+      "prefix_ready_ps": 241894466.66666666,
+      "fill_ready_ps": 248789333.33333334,
+      "all_grants_ps": 248848000.0,
+      "compute_done_ps": 251346633.33333334
+     },
+     {
+      "layer": 26,
+      "begin_ps": 248594000.0,
+      "last_issue_ps": 258123000.0,
+      "prefix_ready_ps": 251722466.66666666,
+      "fill_ready_ps": 258241333.33333334,
+      "all_grants_ps": 258371000.0,
+      "compute_done_ps": 260798633.33333334
+     },
+     {
+      "layer": 27,
+      "begin_ps": 258123000.0,
+      "last_issue_ps": 267706000.0,
+      "prefix_ready_ps": 261174466.66666666,
+      "fill_ready_ps": 267741333.33333334,
+      "all_grants_ps": 267897000.0,
+      "compute_done_ps": 270298633.3333333
+     },
+     {
+      "layer": 28,
+      "begin_ps": 267706000.0,
+      "last_issue_ps": 277740000.0,
+      "prefix_ready_ps": 270674466.6666667,
+      "fill_ready_ps": 277627333.3333333,
+      "all_grants_ps": 277904000.0,
+      "compute_done_ps": 280184633.3333333
+     },
+     {
+      "layer": 29,
+      "begin_ps": 277740000.0,
+      "last_issue_ps": 287222000.0,
+      "prefix_ready_ps": 280560466.6666667,
+      "fill_ready_ps": 287512333.3333333,
+      "all_grants_ps": 287709000.0,
+      "compute_done_ps": 290069633.3333333
+     },
+     {
+      "layer": 30,
+      "begin_ps": 287222000.0,
+      "last_issue_ps": 297178000.0,
+      "prefix_ready_ps": 290445466.6666667,
+      "fill_ready_ps": 297005333.3333333,
+      "all_grants_ps": 297342000.0,
+      "compute_done_ps": 299562633.3333333
+     },
+     {
+      "layer": 31,
+      "begin_ps": 297178000.0,
+      "last_issue_ps": 306730000.0,
+      "prefix_ready_ps": 299938466.6666667,
+      "fill_ready_ps": 306898333.3333333,
+      "all_grants_ps": 307062000.0,
+      "compute_done_ps": 309455633.3333333
+     },
+     {
+      "layer": 32,
+      "begin_ps": 306730000.0,
+      "last_issue_ps": 316474000.0,
+      "prefix_ready_ps": 309831466.6666667,
+      "fill_ready_ps": 316464333.3333333,
+      "all_grants_ps": 316805000.0,
+      "compute_done_ps": 319021633.3333333
+     },
+     {
+      "layer": 33,
+      "begin_ps": 316474000.0,
+      "last_issue_ps": 326062000.0,
+      "prefix_ready_ps": 319397466.6666667,
+      "fill_ready_ps": 326106333.3333333,
+      "all_grants_ps": 326226000.0,
+      "compute_done_ps": 328663633.3333333
+     },
+     {
+      "layer": 34,
+      "begin_ps": 326062000.0,
+      "last_issue_ps": 335518000.0,
+      "prefix_ready_ps": 329039466.6666667,
+      "fill_ready_ps": 335582333.3333333,
+      "all_grants_ps": 335770000.0,
+      "compute_done_ps": 338139633.3333333
+     },
+     {
+      "layer": 35,
+      "begin_ps": 335518000.0,
+      "last_issue_ps": 344843000.0,
+      "prefix_ready_ps": 338515466.6666667,
+      "fill_ready_ps": 345073333.3333333,
+      "all_grants_ps": 345143000.0,
+      "compute_done_ps": 347630633.3333333
+     }
+    ]
+   },
+   "4217": {
+    "label": "(b0) calibrated 4,668 cyc/layer, position 0 (measured)",
+    "rest_after_fill_ps": 3514166.6666666665,
+    "control_all_grants_s": 0.00036202816666666666,
+    "candidate_last_issue_s": 0.0003511531666666667,
+    "rate_gain": 0.030969391799115176,
+    "candidate_layer_pitch_us": 9.58946111111111,
+    "control_layer_pitch_us": 9.91,
+    "candidate_mean_credit_hold_ns": 566.3883290680316,
+    "candidate_p90_credit_hold_ns": 775.0,
+    "peaks": {
+     "live_cohorts": 128,
+     "pending_per_PC": 64,
+     "write_slots_per_PC": 4,
+     "words_per_pool": 75
+    },
+    "tile_window_gate_bound_layers": 0,
+    "candidate_rows": [
+     {
+      "layer": 0,
+      "begin_ps": 0.0,
+      "last_issue_ps": 9594000.0,
+      "prefix_ready_ps": 375833.3333333333,
+      "fill_ready_ps": 9482333.333333334,
+      "all_grants_ps": 9760000.0,
+      "compute_done_ps": 12996500.0
+     },
+     {
+      "layer": 1,
+      "begin_ps": 9594000.0,
+      "last_issue_ps": 18962000.0,
+      "prefix_ready_ps": 13372333.333333334,
+      "fill_ready_ps": 19331333.333333332,
+      "all_grants_ps": 19427000.0,
+      "compute_done_ps": 22845500.0
+     },
+     {
+      "layer": 2,
+      "begin_ps": 18962000.0,
+      "last_issue_ps": 28490000.0,
+      "prefix_ready_ps": 23221333.333333332,
+      "fill_ready_ps": 28707333.333333332,
+      "all_grants_ps": 28888000.0,
+      "compute_done_ps": 32221500.0
+     },
+     {
+      "layer": 3,
+      "begin_ps": 28490000.0,
+      "last_issue_ps": 38056000.0,
+      "prefix_ready_ps": 32597333.333333332,
+      "fill_ready_ps": 38283333.333333336,
+      "all_grants_ps": 38396000.0,
+      "compute_done_ps": 41797500.0
+     },
+     {
+      "layer": 4,
+      "begin_ps": 38056000.0,
+      "last_issue_ps": 47637000.0,
+      "prefix_ready_ps": 42173333.333333336,
+      "fill_ready_ps": 47740333.333333336,
+      "all_grants_ps": 47839000.0,
+      "compute_done_ps": 51254500.0
+     },
+     {
+      "layer": 5,
+      "begin_ps": 47637000.0,
+      "last_issue_ps": 56845000.0,
+      "prefix_ready_ps": 51630333.333333336,
+      "fill_ready_ps": 57318500.0,
+      "all_grants_ps": 57385000.0,
+      "compute_done_ps": 60832666.666666664
+     },
+     {
+      "layer": 6,
+      "begin_ps": 56845000.0,
+      "last_issue_ps": 66522000.0,
+      "prefix_ready_ps": 61208500.0,
+      "fill_ready_ps": 66426333.333333336,
+      "all_grants_ps": 66699000.0,
+      "compute_done_ps": 69940500.0
+     },
+     {
+      "layer": 7,
+      "begin_ps": 66522000.0,
+      "last_issue_ps": 76175000.0,
+      "prefix_ready_ps": 70316333.33333333,
+      "fill_ready_ps": 76250333.33333333,
+      "all_grants_ps": 76339000.0,
+      "compute_done_ps": 79764500.0
+     },
+     {
+      "layer": 8,
+      "begin_ps": 76175000.0,
+      "last_issue_ps": 85626000.0,
+      "prefix_ready_ps": 80140333.33333333,
+      "fill_ready_ps": 85778333.33333333,
+      "all_grants_ps": 85893000.0,
+      "compute_done_ps": 89292500.0
+     },
+     {
+      "layer": 9,
+      "begin_ps": 85626000.0,
+      "last_issue_ps": 95202000.0,
+      "prefix_ready_ps": 89668333.33333333,
+      "fill_ready_ps": 95245333.33333333,
+      "all_grants_ps": 95425000.0,
+      "compute_done_ps": 98759500.0
+     },
+     {
+      "layer": 10,
+      "begin_ps": 95202000.0,
+      "last_issue_ps": 105074000.0,
+      "prefix_ready_ps": 99135333.33333333,
+      "fill_ready_ps": 104916333.33333333,
+      "all_grants_ps": 105242000.0,
+      "compute_done_ps": 108430500.0
+     },
+     {
+      "layer": 11,
+      "begin_ps": 105074000.0,
+      "last_issue_ps": 114369000.0,
+      "prefix_ready_ps": 108806333.33333333,
+      "fill_ready_ps": 114770333.33333333,
+      "all_grants_ps": 114873000.0,
+      "compute_done_ps": 118284500.0
+     },
+     {
+      "layer": 12,
+      "begin_ps": 114369000.0,
+      "last_issue_ps": 124062000.0,
+      "prefix_ready_ps": 118660333.33333333,
+      "fill_ready_ps": 124188333.33333333,
+      "all_grants_ps": 124274000.0,
+      "compute_done_ps": 127702500.0
+     },
+     {
+      "layer": 13,
+      "begin_ps": 124062000.0,
+      "last_issue_ps": 133611000.0,
+      "prefix_ready_ps": 128078333.33333333,
+      "fill_ready_ps": 133837333.33333333,
+      "all_grants_ps": 133890000.0,
+      "compute_done_ps": 137351500.0
+     },
+     {
+      "layer": 14,
+      "begin_ps": 133611000.0,
+      "last_issue_ps": 143135000.0,
+      "prefix_ready_ps": 137727333.33333334,
+      "fill_ready_ps": 143483333.33333334,
+      "all_grants_ps": 143581000.0,
+      "compute_done_ps": 146997500.0
+     },
+     {
+      "layer": 15,
+      "begin_ps": 143135000.0,
+      "last_issue_ps": 152767000.0,
+      "prefix_ready_ps": 147373333.33333334,
+      "fill_ready_ps": 152916333.33333334,
+      "all_grants_ps": 152973000.0,
+      "compute_done_ps": 156430500.0
+     },
+     {
+      "layer": 16,
+      "begin_ps": 152767000.0,
+      "last_issue_ps": 162516000.0,
+      "prefix_ready_ps": 156806333.33333334,
+      "fill_ready_ps": 162448333.33333334,
+      "all_grants_ps": 162680000.0,
+      "compute_done_ps": 165962500.0
+     },
+     {
+      "layer": 17,
+      "begin_ps": 162516000.0,
+      "last_issue_ps": 171824000.0,
+      "prefix_ready_ps": 166338333.33333334,
+      "fill_ready_ps": 172271500.0,
+      "all_grants_ps": 172322000.0,
+      "compute_done_ps": 175785666.66666666
+     },
+     {
+      "layer": 18,
+      "begin_ps": 171824000.0,
+      "last_issue_ps": 181521000.0,
+      "prefix_ready_ps": 176161500.0,
+      "fill_ready_ps": 181455500.0,
+      "all_grants_ps": 181698000.0,
+      "compute_done_ps": 184969666.66666666
+     },
+     {
+      "layer": 19,
+      "begin_ps": 181521000.0,
+      "last_issue_ps": 191007000.0,
+      "prefix_ready_ps": 185345500.0,
+      "fill_ready_ps": 191166333.33333334,
+      "all_grants_ps": 191248000.0,
+      "compute_done_ps": 194680500.0
+     },
+     {
+      "layer": 20,
+      "begin_ps": 191007000.0,
+      "last_issue_ps": 200500000.0,
+      "prefix_ready_ps": 195056333.33333334,
+      "fill_ready_ps": 200695333.33333334,
+      "all_grants_ps": 200788000.0,
+      "compute_done_ps": 204209500.0
+     },
+     {
+      "layer": 21,
+      "begin_ps": 200500000.0,
+      "last_issue_ps": 210145000.0,
+      "prefix_ready_ps": 204585333.33333334,
+      "fill_ready_ps": 210174333.33333334,
+      "all_grants_ps": 210336000.0,
+      "compute_done_ps": 213688500.0
+     },
+     {
+      "layer": 22,
+      "begin_ps": 210145000.0,
+      "last_issue_ps": 219969000.0,
+      "prefix_ready_ps": 214064333.33333334,
+      "fill_ready_ps": 219901333.33333334,
+      "all_grants_ps": 220133000.0,
+      "compute_done_ps": 223415500.0
+     },
+     {
+      "layer": 23,
+      "begin_ps": 219969000.0,
+      "last_issue_ps": 229290000.0,
+      "prefix_ready_ps": 223791333.33333334,
+      "fill_ready_ps": 229713333.33333334,
+      "all_grants_ps": 229802000.0,
+      "compute_done_ps": 233227500.0
+     },
+     {
+      "layer": 24,
+      "begin_ps": 229290000.0,
+      "last_issue_ps": 239044000.0,
+      "prefix_ready_ps": 233603333.33333334,
+      "fill_ready_ps": 238963333.33333334,
+      "all_grants_ps": 239234000.0,
+      "compute_done_ps": 242477500.0
+     },
+     {
+      "layer": 25,
+      "begin_ps": 239044000.0,
+      "last_issue_ps": 248529000.0,
+      "prefix_ready_ps": 242853333.33333334,
+      "fill_ready_ps": 248640333.33333334,
+      "all_grants_ps": 248693000.0,
+      "compute_done_ps": 252154500.0
+     },
+     {
+      "layer": 26,
+      "begin_ps": 248529000.0,
+      "last_issue_ps": 258022000.0,
+      "prefix_ready_ps": 252530333.33333334,
+      "fill_ready_ps": 258221333.33333334,
+      "all_grants_ps": 258325000.0,
+      "compute_done_ps": 261735500.0
+     },
+     {
+      "layer": 27,
+      "begin_ps": 258022000.0,
+      "last_issue_ps": 267597000.0,
+      "prefix_ready_ps": 262111333.33333334,
+      "fill_ready_ps": 267754333.33333334,
+      "all_grants_ps": 268139000.0,
+      "compute_done_ps": 271268500.0
+     },
+     {
+      "layer": 28,
+      "begin_ps": 267597000.0,
+      "last_issue_ps": 277618000.0,
+      "prefix_ready_ps": 271644333.3333333,
+      "fill_ready_ps": 277475333.3333333,
+      "all_grants_ps": 277782000.0,
+      "compute_done_ps": 280989500.0
+     },
+     {
+      "layer": 29,
+      "begin_ps": 277618000.0,
+      "last_issue_ps": 287107000.0,
+      "prefix_ready_ps": 281365333.3333333,
+      "fill_ready_ps": 287364666.6666667,
+      "all_grants_ps": 287442000.0,
+      "compute_done_ps": 290878833.3333333
+     },
+     {
+      "layer": 30,
+      "begin_ps": 287107000.0,
+      "last_issue_ps": 296944000.0,
+      "prefix_ready_ps": 291254666.6666667,
+      "fill_ready_ps": 296816333.3333333,
+      "all_grants_ps": 297108000.0,
+      "compute_done_ps": 300330500.0
+     },
+     {
+      "layer": 31,
+      "begin_ps": 296944000.0,
+      "last_issue_ps": 306618000.0,
+      "prefix_ready_ps": 300706333.3333333,
+      "fill_ready_ps": 306592333.3333333,
+      "all_grants_ps": 306782000.0,
+      "compute_done_ps": 310106500.0
+     },
+     {
+      "layer": 32,
+      "begin_ps": 306618000.0,
+      "last_issue_ps": 316178000.0,
+      "prefix_ready_ps": 310482333.3333333,
+      "fill_ready_ps": 316321333.3333333,
+      "all_grants_ps": 316659000.0,
+      "compute_done_ps": 319835500.0
+     },
+     {
+      "layer": 33,
+      "begin_ps": 316178000.0,
+      "last_issue_ps": 325833000.0,
+      "prefix_ready_ps": 320211333.3333333,
+      "fill_ready_ps": 325912333.3333333,
+      "all_grants_ps": 325997000.0,
+      "compute_done_ps": 329426500.0
+     },
+     {
+      "layer": 34,
+      "begin_ps": 325833000.0,
+      "last_issue_ps": 335337000.0,
+      "prefix_ready_ps": 329802333.3333333,
+      "fill_ready_ps": 335478333.3333333,
+      "all_grants_ps": 335530000.0,
+      "compute_done_ps": 338992500.0
+     },
+     {
+      "layer": 35,
+      "begin_ps": 335337000.0,
+      "last_issue_ps": 344552000.0,
+      "prefix_ready_ps": 339368333.3333333,
+      "fill_ready_ps": 345002333.3333333,
+      "all_grants_ps": 345053000.0,
+      "compute_done_ps": 348516500.0
+     }
+    ]
+   },
+   "5437": {
+    "label": "(b8K) 4,668+1,220 cyc/layer at 8K (attention delta UNMEASURED)",
+    "rest_after_fill_ps": 4530833.333333333,
+    "control_all_grants_s": 0.0003664228333333333,
+    "candidate_last_issue_s": 0.0003622088333333333,
+    "rate_gain": 0.011634172367414264,
+    "candidate_layer_pitch_us": 9.875066666666665,
+    "control_layer_pitch_us": 10.000466666666666,
+    "candidate_mean_credit_hold_ns": 567.391474728087,
+    "candidate_p90_credit_hold_ns": 779.0,
+    "peaks": {
+     "live_cohorts": 128,
+     "pending_per_PC": 64,
+     "write_slots_per_PC": 4,
+     "words_per_pool": 75
+    },
+    "tile_window_gate_bound_layers": 0,
+    "candidate_rows": [
+     {
+      "layer": 0,
+      "begin_ps": 0.0,
+      "last_issue_ps": 9594000.0,
+      "prefix_ready_ps": 375833.3333333333,
+      "fill_ready_ps": 9482333.333333334,
+      "all_grants_ps": 9760000.0,
+      "compute_done_ps": 14013166.666666666
+     },
+     {
+      "layer": 1,
+      "begin_ps": 9594000.0,
+      "last_issue_ps": 19107000.0,
+      "prefix_ready_ps": 14389000.0,
+      "fill_ready_ps": 19470000.0,
+      "all_grants_ps": 19525000.0,
+      "compute_done_ps": 24000833.333333332
+     },
+     {
+      "layer": 2,
+      "begin_ps": 19107000.0,
+      "last_issue_ps": 29495000.0,
+      "prefix_ready_ps": 24376666.666666668,
+      "fill_ready_ps": 29577333.333333332,
+      "all_grants_ps": 29686000.0,
+      "compute_done_ps": 34108166.666666664
+     },
+     {
+      "layer": 3,
+      "begin_ps": 29495000.0,
+      "last_issue_ps": 39214000.0,
+      "prefix_ready_ps": 34484000.0,
+      "fill_ready_ps": 39402333.333333336,
+      "all_grants_ps": 39505000.0,
+      "compute_done_ps": 43933166.666666664
+     },
+     {
+      "layer": 4,
+      "begin_ps": 39214000.0,
+      "last_issue_ps": 49033000.0,
+      "prefix_ready_ps": 44309000.0,
+      "fill_ready_ps": 48953333.333333336,
+      "all_grants_ps": 49512000.0,
+      "compute_done_ps": 53484166.666666664
+     },
+     {
+      "layer": 5,
+      "begin_ps": 49033000.0,
+      "last_issue_ps": 58729000.0,
+      "prefix_ready_ps": 53860000.0,
+      "fill_ready_ps": 58789333.333333336,
+      "all_grants_ps": 58893000.0,
+      "compute_done_ps": 63320166.666666664
+     },
+     {
+      "layer": 6,
+      "begin_ps": 58729000.0,
+      "last_issue_ps": 68521000.0,
+      "prefix_ready_ps": 63696000.0,
+      "fill_ready_ps": 68705333.33333333,
+      "all_grants_ps": 68889000.0,
+      "compute_done_ps": 73236166.66666667
+     },
+     {
+      "layer": 7,
+      "begin_ps": 68521000.0,
+      "last_issue_ps": 78674000.0,
+      "prefix_ready_ps": 73612000.0,
+      "fill_ready_ps": 78565333.33333333,
+      "all_grants_ps": 78851000.0,
+      "compute_done_ps": 83096166.66666667
+     },
+     {
+      "layer": 8,
+      "begin_ps": 78674000.0,
+      "last_issue_ps": 88622000.0,
+      "prefix_ready_ps": 83472000.0,
+      "fill_ready_ps": 88434333.33333333,
+      "all_grants_ps": 88786000.0,
+      "compute_done_ps": 92965166.66666667
+     },
+     {
+      "layer": 9,
+      "begin_ps": 88622000.0,
+      "last_issue_ps": 98111000.0,
+      "prefix_ready_ps": 93341000.0,
+      "fill_ready_ps": 98201333.33333333,
+      "all_grants_ps": 98336000.0,
+      "compute_done_ps": 102732166.66666667
+     },
+     {
+      "layer": 10,
+      "begin_ps": 98111000.0,
+      "last_issue_ps": 108174000.0,
+      "prefix_ready_ps": 103108000.0,
+      "fill_ready_ps": 107986333.33333333,
+      "all_grants_ps": 108342000.0,
+      "compute_done_ps": 112517166.66666667
+     },
+     {
+      "layer": 11,
+      "begin_ps": 108174000.0,
+      "last_issue_ps": 117851000.0,
+      "prefix_ready_ps": 112893000.0,
+      "fill_ready_ps": 118032333.33333333,
+      "all_grants_ps": 118090000.0,
+      "compute_done_ps": 122563166.66666667
+     },
+     {
+      "layer": 12,
+      "begin_ps": 117851000.0,
+      "last_issue_ps": 128172000.0,
+      "prefix_ready_ps": 122939000.0,
+      "fill_ready_ps": 128169333.33333333,
+      "all_grants_ps": 128346000.0,
+      "compute_done_ps": 132700166.66666667
+     },
+     {
+      "layer": 13,
+      "begin_ps": 128172000.0,
+      "last_issue_ps": 137785000.0,
+      "prefix_ready_ps": 133076000.0,
+      "fill_ready_ps": 137966333.33333334,
+      "all_grants_ps": 138065000.0,
+      "compute_done_ps": 142497166.66666666
+     },
+     {
+      "layer": 14,
+      "begin_ps": 137785000.0,
+      "last_issue_ps": 147942000.0,
+      "prefix_ready_ps": 142873000.0,
+      "fill_ready_ps": 147891333.33333334,
+      "all_grants_ps": 148459000.0,
+      "compute_done_ps": 152422166.66666666
+     },
+     {
+      "layer": 15,
+      "begin_ps": 147942000.0,
+      "last_issue_ps": 157608000.0,
+      "prefix_ready_ps": 152798000.0,
+      "fill_ready_ps": 157718333.33333334,
+      "all_grants_ps": 157772000.0,
+      "compute_done_ps": 162249166.66666666
+     },
+     {
+      "layer": 16,
+      "begin_ps": 157608000.0,
+      "last_issue_ps": 167413000.0,
+      "prefix_ready_ps": 162625000.0,
+      "fill_ready_ps": 167336333.33333334,
+      "all_grants_ps": 167567000.0,
+      "compute_done_ps": 171867166.66666666
+     },
+     {
+      "layer": 17,
+      "begin_ps": 167413000.0,
+      "last_issue_ps": 177323000.0,
+      "prefix_ready_ps": 172243000.0,
+      "fill_ready_ps": 177157333.33333334,
+      "all_grants_ps": 177487000.0,
+      "compute_done_ps": 181688166.66666666
+     },
+     {
+      "layer": 18,
+      "begin_ps": 177323000.0,
+      "last_issue_ps": 187198000.0,
+      "prefix_ready_ps": 182064000.0,
+      "fill_ready_ps": 187085333.33333334,
+      "all_grants_ps": 187366000.0,
+      "compute_done_ps": 191616166.66666666
+     },
+     {
+      "layer": 19,
+      "begin_ps": 187198000.0,
+      "last_issue_ps": 196730000.0,
+      "prefix_ready_ps": 191992000.0,
+      "fill_ready_ps": 196815333.33333334,
+      "all_grants_ps": 197210000.0,
+      "compute_done_ps": 201346166.66666666
+     },
+     {
+      "layer": 20,
+      "begin_ps": 196730000.0,
+      "last_issue_ps": 206691000.0,
+      "prefix_ready_ps": 201722000.0,
+      "fill_ready_ps": 206503333.33333334,
+      "all_grants_ps": 206855000.0,
+      "compute_done_ps": 211034166.66666666
+     },
+     {
+      "layer": 21,
+      "begin_ps": 206691000.0,
+      "last_issue_ps": 216410000.0,
+      "prefix_ready_ps": 211410000.0,
+      "fill_ready_ps": 216579500.0,
+      "all_grants_ps": 216646000.0,
+      "compute_done_ps": 221110333.33333334
+     },
+     {
+      "layer": 22,
+      "begin_ps": 216410000.0,
+      "last_issue_ps": 226674000.0,
+      "prefix_ready_ps": 221486166.66666666,
+      "fill_ready_ps": 226672333.33333334,
+      "all_grants_ps": 226847000.0,
+      "compute_done_ps": 231203166.66666666
+     },
+     {
+      "layer": 23,
+      "begin_ps": 226674000.0,
+      "last_issue_ps": 236314000.0,
+      "prefix_ready_ps": 231579000.0,
+      "fill_ready_ps": 236429333.33333334,
+      "all_grants_ps": 236553000.0,
+      "compute_done_ps": 240960166.66666666
+     },
+     {
+      "layer": 24,
+      "begin_ps": 236314000.0,
+      "last_issue_ps": 246362000.0,
+      "prefix_ready_ps": 241336000.0,
+      "fill_ready_ps": 246312333.33333334,
+      "all_grants_ps": 246881000.0,
+      "compute_done_ps": 250843166.66666666
+     },
+     {
+      "layer": 25,
+      "begin_ps": 246362000.0,
+      "last_issue_ps": 256093000.0,
+      "prefix_ready_ps": 251219000.0,
+      "fill_ready_ps": 256019333.33333334,
+      "all_grants_ps": 256257000.0,
+      "compute_done_ps": 260550166.66666666
+     },
+     {
+      "layer": 26,
+      "begin_ps": 256093000.0,
+      "last_issue_ps": 265787000.0,
+      "prefix_ready_ps": 260926000.0,
+      "fill_ready_ps": 265765333.33333334,
+      "all_grants_ps": 265941000.0,
+      "compute_done_ps": 270296166.6666667
+     },
+     {
+      "layer": 27,
+      "begin_ps": 265787000.0,
+      "last_issue_ps": 275782000.0,
+      "prefix_ready_ps": 270672000.0,
+      "fill_ready_ps": 275843333.3333333,
+      "all_grants_ps": 275953000.0,
+      "compute_done_ps": 280374166.6666667
+     },
+     {
+      "layer": 28,
+      "begin_ps": 275782000.0,
+      "last_issue_ps": 285765000.0,
+      "prefix_ready_ps": 280750000.0,
+      "fill_ready_ps": 285948333.3333333,
+      "all_grants_ps": 286001000.0,
+      "compute_done_ps": 290479166.6666667
+     },
+     {
+      "layer": 29,
+      "begin_ps": 285765000.0,
+      "last_issue_ps": 295959000.0,
+      "prefix_ready_ps": 290855000.0,
+      "fill_ready_ps": 295871333.3333333,
+      "all_grants_ps": 296138000.0,
+      "compute_done_ps": 300402166.6666667
+     },
+     {
+      "layer": 30,
+      "begin_ps": 295959000.0,
+      "last_issue_ps": 306027000.0,
+      "prefix_ready_ps": 300778000.0,
+      "fill_ready_ps": 305914333.3333333,
+      "all_grants_ps": 306191000.0,
+      "compute_done_ps": 310445166.6666667
+     },
+     {
+      "layer": 31,
+      "begin_ps": 306027000.0,
+      "last_issue_ps": 315656000.0,
+      "prefix_ready_ps": 310821000.0,
+      "fill_ready_ps": 315689333.3333333,
+      "all_grants_ps": 316037000.0,
+      "compute_done_ps": 320220166.6666667
+     },
+     {
+      "layer": 32,
+      "begin_ps": 315656000.0,
+      "last_issue_ps": 325608000.0,
+      "prefix_ready_ps": 320596000.0,
+      "fill_ready_ps": 325420333.3333333,
+      "all_grants_ps": 325772000.0,
+      "compute_done_ps": 329951166.6666667
+     },
+     {
+      "layer": 33,
+      "begin_ps": 325608000.0,
+      "last_issue_ps": 335026000.0,
+      "prefix_ready_ps": 330327000.0,
+      "fill_ready_ps": 335232333.3333333,
+      "all_grants_ps": 335405000.0,
+      "compute_done_ps": 339763166.6666667
+     },
+     {
+      "layer": 34,
+      "begin_ps": 335026000.0,
+      "last_issue_ps": 345223000.0,
+      "prefix_ready_ps": 340139000.0,
+      "fill_ready_ps": 345138333.3333333,
+      "all_grants_ps": 345413000.0,
+      "compute_done_ps": 349669166.6666667
+     },
+     {
+      "layer": 35,
+      "begin_ps": 345223000.0,
+      "last_issue_ps": 354832000.0,
+      "prefix_ready_ps": 350045000.0,
+      "fill_ready_ps": 355041333.3333333,
+      "all_grants_ps": 355090000.0,
+      "compute_done_ps": 359572166.6666667
+     }
+    ]
+   }
+  },
+  "binding_constraint": "Finite in-flight credits (128 global / 16 per group == 64 pending per PC, all at peak) with 566 ns mean credit hold: Little-law pitch >= 9.22 us/layer vs 8.56 command-bus and 7.82 fill-lane pitch. At 8K calibrated compute the per-group order also stalls on prefix-gated head-0 KW/VW/current-V (prefix(l+1)=fill_end(l)+rest+451 cyc ~ 4.9 us after begin), cutting the gain to 1.16%."
+ },
+ "floors": {
+  "fill_lane_floor_us": 281.4,
+  "aggregate_fill_floor_us": 280.5942857142857,
+  "command_bus_floor_us": 308.16025,
+  "command_counts": {
+   "ACT": 189156,
+   "RD": 4709088,
+   "PREALL": 11176,
+   "REF": 11176,
+   "WR": 4896,
+   "PRE": 5072
+  },
+  "command_bus_basis": "4 shared command paths/stack x 4 stacks, 1 command/edge at 1 GHz service (tools/uarch_model_qwen_kv_successor.py:109-113, path=pc//8); RD 4,709,088 + ACT/PRE/REF/PREALL/WR",
+  "verdict": "280.6 us is unreachable with existing command paths: the command bus floor 308.16 us binds first",
+  "token_bounds": {
+   "model": {
+    "token_floor_existing_ports_infinite_inflight_us": 313.49738336,
+    "max_rate_gain_vs_control": 0.15175219687677322
+   },
+   "4217": {
+    "token_floor_existing_ports_infinite_inflight_us": 314.45425002666667,
+    "max_rate_gain_vs_control": 0.15129042344304633
+   },
+   "5437": {
+    "token_floor_existing_ports_infinite_inflight_us": 315.4709166933333,
+    "max_rate_gain_vs_control": 0.161510662136662
+   }
+  },
+  "compute_chain_us": {
+   "model": 100.14,
+   "calibrated_pos0": 140.04,
+   "calibrated_8K_unmeasured": 176.64
+  }
+ },
+ "task4_storage": {
+  "zero_extra_storage": {
+   "model": 0.03084501465023992,
+   "calibrated_pos0": 0.030969391799115176,
+   "calibrated_8K": 0.011634172367414264
+  },
+  "third_tile_window_one_extra_layer": {
+   "bits_per_tile": 27648,
+   "macros_per_tile": "2 x ot_sram_1r1w_128x256_m1_r2c2 (162 rows > 128 existing; minimum added depth is a new 128-row bank pair)",
+   "macro_area_um2": 3891.57696,
+   "area_mm2_per_die": 11.95492442112,
+   "conditional_remaining_mm2_r4": 3.3830481963400767,
+   "fits": false,
+   "gain": 0.0,
+   "reason": "tile window gate never binds in the candidate (0 of 34 layers): begin(l+1) is set by layer-l last issue, which is >= compute_done(l-1) every layer"
+  },
+  "inflight_capacity_option": {
+   "proposal": "18 group / 144 global cohort credits, 72 pending/PC, 90 words/pool (not run; Little-law sized)",
+   "area_mm2_estimate": 1.50616706,
+   "area_basis": "2x the capacity-dependent state+select+collector deltas of credit17 (results/uarch/qwen_rom_kv_credit17_20261003/model-r3.json cells: FF 0.42282 um2, mux bit 0.34992 um2) + its fixed protection 0.173 mm2",
+   "gain_bound": "<= +15.2% (model compute) only if the hold time stays 566 ns; NOT modelled; unqualified"
+  }
+ },
+ "task5_assumptions": {
+  "qualified_in_model": [
+   "address-only PC deadlines, refresh, cold 21-edge per (layer,stack,PC)",
+   "all existing capacities and latencies of credit allocator r4"
+  ],
+  "unqualified": [
+   "sustained PHY bandwidth (actual_sustained_PHY_Bps=null)",
+   "loaded routes/channels (Ampere), CDC 1.0/1.2 GHz service/stream crossing",
+   "cross-layer lease RTL: layer-tagged descriptor epochs, two simultaneous layer epochs in credits/pending/owner slots, producer early release",
+   "prefix/current-V producer timing",
+   "refresh strictness with continuous service (lazy lateness)",
+   "4,668-cycle calibration applied as a uniform per-layer rest (position 0) and +1,220 8K attention delta (unmeasured); non-layer extra kept at model 2.637 us; serial-domain 0.9 GHz not re-derived"
+  ],
+  "overlap_assumed": "service and compute overlap as the model permits: attention(l) starts at max(fill_end(l),prefix(l)); service of l+1 runs during compute(l) and, in the candidate, overlaps layer l drain"
+ },
+ "sha256": {
+  "work/decoupled.py": "3c776a522b4f2bdae02a22c9ae55f9e238fd21c49d16daf19f55fe9f3970706a"
+ }
+}

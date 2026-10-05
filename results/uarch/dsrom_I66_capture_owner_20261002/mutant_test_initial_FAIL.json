@@ -1,0 +1,6 @@
+{
+  "verdict": "TEST_FIXTURE_FAIL",
+  "test": "test_mutated_core_width_fails",
+  "cause": "mutant attempted hist_pc_0, absent from actual declaration; source did not change, test assert correctly failed",
+  "repair": "mutate existing suffix_up_0 width; no model/original source change"
+}

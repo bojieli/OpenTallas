@@ -1,0 +1,273 @@
+{
+  "ECC_gate_equivalents_ASSUMED": 217792512,
+  "area_screen_only": true,
+  "compare_gate_equivalents_ASSUMED": 635904,
+  "context": {
+    "PCs": 128,
+    "RF_parent_assembly_row": {
+      "ECC_gate_equivalents_ASSUMED": 56832,
+      "payload_bits": 4677,
+      "protected_bits": 5328,
+      "words": 74
+    },
+    "arbiter_row": {
+      "ECC_gate_equivalents_ASSUMED": 768,
+      "payload_bits": 36,
+      "protected_bits": 72,
+      "words": 1
+    },
+    "assembly_dataflow_installed": false,
+    "clients_per_PC": 6,
+    "credit_per_client": 16,
+    "entries": 12288,
+    "entry_fields": {
+      "PC": 7,
+      "SM": 5,
+      "SRAM_bank_mask": 32,
+      "address": 32,
+      "client": 3,
+      "generation": 64,
+      "lease": 64,
+      "local_address": 10,
+      "original_client_tag": 32,
+      "phase": 3,
+      "provider_reference": 32,
+      "rank": 7,
+      "sector": 29,
+      "sequence": 40,
+      "write": 1
+    },
+    "held_control_queue_row": {
+      "ECC_gate_equivalents_ASSUMED": 14592,
+      "payload_bits": 1172,
+      "protected_bits": 1368,
+      "words": 19
+    },
+    "held_control_queues_per_PC": 4,
+    "held_local_owners": 64,
+    "held_local_row": {
+      "ECC_gate_equivalents_ASSUMED": 8448,
+      "payload_bits": 703,
+      "protected_bits": 792,
+      "words": 11
+    },
+    "protected_bits_per_entry": 1584,
+    "shared_parent_assembly_row": {
+      "ECC_gate_equivalents_ASSUMED": 7680,
+      "payload_bits": 586,
+      "protected_bits": 720,
+      "words": 10
+    },
+    "source_parent_grouping_bound": "one4096bit RF vector holds16sectors; one512bit shared beat holds2sectors; actual child->parent source journal required",
+    "storage_rows": {
+      "causal_state": {
+        "ECC_gate_equivalents_ASSUMED": 768,
+        "payload_bits": 8,
+        "protected_bits": 72,
+        "words": 1
+      },
+      "owner_metadata": {
+        "ECC_gate_equivalents_ASSUMED": 4608,
+        "payload_bits": 361,
+        "protected_bits": 432,
+        "words": 6
+      },
+      "provenance": {
+        "ECC_gate_equivalents_ASSUMED": 6144,
+        "payload_bits": 512,
+        "protected_bits": 576,
+        "words": 8
+      },
+      "read_capture_flag": {
+        "ECC_gate_equivalents_ASSUMED": 768,
+        "payload_bits": 1,
+        "protected_bits": 72,
+        "words": 1
+      },
+      "read_payload": {
+        "ECC_gate_equivalents_ASSUMED": 3072,
+        "payload_bits": 256,
+        "protected_bits": 288,
+        "words": 4
+      },
+      "slot_generation": {
+        "ECC_gate_equivalents_ASSUMED": 768,
+        "payload_bits": 25,
+        "protected_bits": 72,
+        "words": 1
+      },
+      "write_capture_flag": {
+        "ECC_gate_equivalents_ASSUMED": 768,
+        "payload_bits": 1,
+        "protected_bits": 72,
+        "words": 1
+      }
+    }
+  },
+  "design_opt_in": true,
+  "engine_build_ready": false,
+  "existing_R2_envelope_replaced_not_added_twice": true,
+  "finite_arbitration": {
+    "ACK_resource": "at most one owner per SM and RF/shared sink; shared across PCs, must not instantiate64 shadows perPC",
+    "acceptance": "one metadata update/PC/edge with cyclic4class arbitration; each held queue oneentry; completion planes independent",
+    "client_request": "existing eligible6client round robin; no admit without reserved free context",
+    "contention": "other accepted control updates<=3; downstream grant gap still requires source-bound interval",
+    "control_classes": [
+      "reserve",
+      "dispatch",
+      "local_ACK_fence_consumer",
+      "reverse"
+    ],
+    "installed": false,
+    "proposed": true
+  },
+  "footprint_mm2_per_die_ASSUMED": 158.7242151936,
+  "hardware_admitted": false,
+  "installed_source": false,
+  "latency": {
+    "domain": "streaming1.2GHz; exact CDC and serial0.9GHz dependency crossings separately required",
+    "event_keys": [
+      "reserve",
+      "completion_match",
+      "completion_capture",
+      "dispatch",
+      "local_ACK",
+      "visibility",
+      "consumer",
+      "reverse_match",
+      "credit_release"
+    ],
+    "per_operator_composed_ns": null,
+    "proposals_are_not_measured_SS_FF": true,
+    "proposed_pipeline_edges": {
+      "completion_capture": 1,
+      "completion_match": 2,
+      "consumer": 1,
+      "credit_release": 1,
+      "dispatch": 2,
+      "local_ACK": 2,
+      "reserve": 2,
+      "reverse_match": 2,
+      "visibility": 1
+    },
+    "required_lease_intervals": [
+      "reservation->backend capture",
+      "capture->local dispatch",
+      "local issue->common ACK accepted",
+      "ACK->visibility",
+      "visibility->consumer",
+      "consumer->matching reverse acceptance",
+      "slot reuse after credit release"
+    ],
+    "source_local_RF_read_ACK_min_edges": 2,
+    "source_local_RF_write_ACK_min_edges": 1,
+    "whole_token_ns": null
+  },
+  "mux_gate_equivalents_ASSUMED": 26265600,
+  "physical": {
+    "FF_hold_uncertainty_ps": 25,
+    "SRAM_macro_reuse_credited": false,
+    "SS_setup_uncertainty_ps": 60,
+    "clock_PG_via_cut_allocation": null,
+    "complete32SM_slot_allocation": null,
+    "endpoint_cuts_bits": {
+      "PC_backend_read": 291,
+      "PC_backend_write_done": 35,
+      "PC_request": 324,
+      "SM_common_ACK_owner": 35,
+      "reverse": 35
+    },
+    "source_bound_retained_context": {
+      "DeepSeek": {
+        "existing_contacts_do_not_cover_new_FFs": true,
+        "extra_clock_sinks": 20418048,
+        "fit": false,
+        "new_clock_PG_current_upper": null,
+        "retained_SMs": 32,
+        "retained_clock_contacts": 13248,
+        "retained_cut_count": 6692,
+        "retained_cuts_do_not_admit_new_endpoint_buses": true,
+        "retained_plus_unallocated_screen_mm2": 630.6042706137599,
+        "retained_reserved_die_mm2": 471.8800554201599,
+        "unallocated_candidate_area_mm2_ASSUMED": 158.7242151936
+      },
+      "Qwen": {
+        "existing_contacts_do_not_cover_new_FFs": true,
+        "extra_clock_sinks": 20418048,
+        "fit": false,
+        "new_clock_PG_current_upper": null,
+        "retained_SMs": 32,
+        "retained_clock_contacts": 12480,
+        "retained_cut_count": 6692,
+        "retained_cuts_do_not_admit_new_endpoint_buses": true,
+        "retained_plus_unallocated_screen_mm2": 616.2082065203199,
+        "retained_reserved_die_mm2": 457.48399132671994,
+        "unallocated_candidate_area_mm2_ASSUMED": 158.7242151936
+      }
+    },
+    "tracks_capacity": null
+  },
+  "ports": {
+    "ECC_implementation": "protected FF banks, separate completion planes; ECC decode/update are budgeted, not measured",
+    "capture_flag_write_ports_per_plane": 2,
+    "common_ACK_valid_ready_bits": 2,
+    "held_control_message_bits": 1172,
+    "local_RF_pair_response_bits": 8192,
+    "local_RF_payload_bits": 4096,
+    "metadata_dispatch_shares_control_read_port": true,
+    "metadata_reads_per_PC": 3,
+    "metadata_writes_per_PC": 1,
+    "per_PC_capture_max_bytes_per_edge": 32,
+    "physical_read_port_bits": 291,
+    "physical_write_done_port_bits": 35,
+    "proposed_client_write_done_payload_bits": 32,
+    "proposed_client_write_done_valid_ready_bits": 2,
+    "proposed_reverse_port_bits": 35,
+    "read_completion_capture_ports_per_PC": 1,
+    "read_valid_ready_bits": 2,
+    "request_port_bits": 324,
+    "request_valid_ready_bits": 2,
+    "reverse_valid_ready_bits": 2,
+    "shared_payload_bits": 512,
+    "write_completion_capture_ports_per_PC": 1,
+    "write_done_valid_bits": 1
+  },
+  "prerequisites": [
+    "emitted contender and lease intervals matched to exact source event IDs",
+    "protected storage/logic full-context slot, clock/PG and cut allocation",
+    "bounded ECC and owner mux stage timing at target; simultaneous completion and control ports verified"
+  ],
+  "protected_FF_cell_area_um2_ASSUMED": 5953902.796800001,
+  "schema": "HBM_CONNECTED_PC_COMPLETION_ACK_OWNER_G0_R1",
+  "scope": "both HBM models;128PC envelope source-bound to Qwen installed services; DS adapter/geometry must be separately matched",
+  "source_change": {
+    "ACK": "RF common two-copy ACK/shared done matched to held local accepted-request owner; valid/ready required",
+    "completion": "match exact tag and direction; indexed reserved sink always captures valid write done, duplicate/unmatched faults without retire",
+    "generation": "no modulo wrap; exhaustion refuses new request; reset requires externally proven quiescence",
+    "held_client_completion": "new c_wr_done_ready accepts held restored original tag; backend p_wr_done still no-ready and captured independently; read capture held through c_rsp_ready",
+    "request": "reserve context before p_req_v; physical tag client3:gen25:slot7; retain original32bit client tag",
+    "retire": "replace installed rsp/write counter decrement with exact post-consumer reverse grant"
+  },
+  "source_sha256": {
+    "PC.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "RF.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "context_geometry.json.gz": "7345715dd286663c250837f496f8fd753e29a2ca877a0ba8e1c72a82c9d91f38",
+    "installed_model.json": "a15297e010ca1e16d36f217eb13b8a9124362cd6edbed0567018477606162b45",
+    "shared.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "system.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "status": "CONNECTED_DESIGN_SIZED_CALENDAR_PHYSICAL_ALLOCATION_BLOCKED",
+  "storage_bits_per_die": 20418048,
+  "unified_model_join": {
+    "SMs": 32,
+    "automatic_latency_delta": false,
+    "component_key": "PC_completion_ACK_causal_owner",
+    "model_keys": [
+      "qwen",
+      "v41"
+    ],
+    "source": "tools/uarch_model.py",
+    "source_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  }
+}

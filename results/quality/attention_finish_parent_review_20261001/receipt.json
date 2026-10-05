@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.parent-attention-finish-review.v1",
+  "status": "PASS_SOURCE_BOUND_LOCAL_INSTRUCTION_CALENDARS",
+  "reviewed_commit": "827fe71aa412e30324385a6d7d97fb1a6fa2f5f3",
+  "focused_tests": 19,
+  "source_pins_verified": {
+    "tools/w19_gpu_attention_finish.py": "3c98573a2dad2d5680fc90da3d38fb70afcffbda710b54e7f08970a76382bbc5",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/rtl/w19_checkpoint_production_20261001/gpu-attention-dots-r1.json": "c881f50c04a6428120521dbde5212396e1284dcfc8321a0c0cf4570e0287663d"
+  },
+  "record_sha256": "dab97caf5855aa62ded049895bb62297f2df703bca7d648eabeab6e8f13f6174",
+  "graph_operator_bindings": 40,
+  "profiles": [
+    {
+      "rows": 128,
+      "phase_cycles": {
+        "score_scale": 14,
+        "max_local": 21,
+        "max_global": 45,
+        "probabilities": 210,
+        "den_local": 77,
+        "den_global": 53,
+        "sink_den": 206,
+        "output_div_bf16": 55,
+        "inverse_rope": 62
+      }
+    },
+    {
+      "rows": 640,
+      "phase_cycles": {
+        "score_scale": 14,
+        "max_local": 45,
+        "max_global": 45,
+        "probabilities": 210,
+        "den_local": 293,
+        "den_global": 65,
+        "sink_den": 206,
+        "output_div_bf16": 55,
+        "inverse_rope": 62
+      }
+    }
+  ],
+  "exact_value_execution": false,
+  "full_token_cycles": null,
+  "physical_qualified": false,
+  "adopted": false,
+  "remaining": [
+    "Actual typed opcode value proof, including FMAX/FMIN zero/tie/NaN rules and EXP bit scaling",
+    "Actual NoC/CDC/collector/broadcast and contiguous denominator subtree staging costs",
+    "Resident position coefficient production and final output commit/fence events",
+    "Parent SM RF/shared allocation and contextual SS/FF closure"
+  ],
+  "scope": "Local per-phase model, distinct from complete attention, production SIMD RTL or full token"
+}

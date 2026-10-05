@@ -1,0 +1,4507 @@
+{
+  "schema": "opentallas.v41x.fullshape.program_bind.v1",
+  "status": "blocked",
+  "layer": 0,
+  "rank": 0,
+  "layout_path": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json",
+  "layout_sha256": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
+  "shard_path": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
+  "shard_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+  "qe_stream_path": "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json",
+  "qe_stream_sha256": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb",
+  "rope_mode": "sparse_fixture",
+  "context": 200000,
+  "position": 199999,
+  "constants_manifest": "results/rtl/v41_program_constants.json",
+  "constants_manifest_sha256": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
+  "rope_patch_sha256": "d8238d0e9b05cf6aa7ceb81a6bbbca2c79798e0f37119fe6eb871616e6458b02",
+  "rope_token_patch": {
+    "storage": "sparse_crom_fixture",
+    "position": 199999,
+    "base_word": 12532,
+    "absolute_first_word": 6412500,
+    "absolute_last_word": 6412531,
+    "file": "results/rtl/v41_rope_plain_ctx200000_token_patch.bin",
+    "sha256": "9745343dc1b7a72ee053530588f7a0df5c3e42c1f2587afbf64909946030eeb8",
+    "claim_boundary": "one-position input fixture only"
+  },
+  "rope_hbm_table": null,
+  "resource_trace": {
+    "qe_logical_qrom_words": 7191680,
+    "qe_direct_expanded_bytes": 3912273920,
+    "qe_packed_physical_bytes": 2087751680,
+    "other_engine_bytes": 39552928,
+    "packed_die_bytes": 2127304608,
+    "rom_capacity_bytes": 2714287356,
+    "direct_expanded_fits_die": false,
+    "packed_requires_fp4_port_adapter": true
+  },
+  "source_sha256": {
+    "tools/v41_fullshape_program_bind.py": "56fccd6e6daf22d4627e1e8e201ccab86f74195bc033d7676a6dcc69ffac90ab",
+    "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/v41_program_constants.py": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4",
+    "results/rtl/v41_program_constants.json": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+  },
+  "source_experts": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
+  "matrix_count": 29,
+  "constant_count": 11,
+  "instruction_count": 111,
+  "instruction_trace": [
+    {
+      "pc": 0,
+      "unit": 2,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "SSX"
+      ],
+      "writes": [
+        "RF"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 40960,
+        "m1": 5,
+        "imm1": 1184890880,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 40992,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_hc_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 1,
+      "unit": 5,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "H"
+      ],
+      "writes": [
+        "MIX"
+      ],
+      "fields": {
+        "unit": 5,
+        "he_nout": 24,
+        "he_k": 2560,
+        "he_wbase": 0,
+        "he_xbase": 0,
+        "he_obase": 41024,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 2,
+      "unit": 2,
+      "tag": "L0.attn_norm",
+      "reads": [
+        "H",
+        "PF"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41152,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41153,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 3,
+      "unit": 2,
+      "tag": "L0.attn_norm",
+      "reads": [
+        "H",
+        "PF",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41154,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 4,
+      "unit": 2,
+      "tag": "L0.attn_norm",
+      "reads": [
+        "H",
+        "PF",
+        "T"
+      ],
+      "writes": [
+        "SS",
+        "X"
+      ],
+      "fields": {
+        "su_nout": 8,
+        "su_nin": 640,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41155,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 41344,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 640,
+        "b_so": 0,
+        "c_so": 640,
+        "d_so": 0,
+        "o_so": 640,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 80
+      }
+    },
+    {
+      "pc": 5,
+      "unit": 2,
+      "tag": "L0.attn_norm",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1168113664,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 6,
+      "unit": 2,
+      "tag": "L0.attn_norm",
+      "reads": [
+        "RS",
+        "X"
+      ],
+      "writes": [
+        "XN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 41344,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 0,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 46464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 7,
+      "unit": 3,
+      "tag": "L0.attn",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "QAL"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 320,
+        "qe_tiles": 3,
+        "qe_wbase": 0,
+        "qe_obase": 419776,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 8,
+      "unit": 3,
+      "tag": "L0.attn",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "KVAL"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 128,
+        "qe_tiles": 1,
+        "qe_wbase": 3840,
+        "qe_obase": 420096,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 9,
+      "unit": 6,
+      "tag": "L0.attn.q_a_gather",
+      "reads": [
+        "QAL"
+      ],
+      "writes": [
+        "QA"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 419776,
+        "coll_dst": 51648,
+        "coll_n": 320,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 0,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 10,
+      "unit": 6,
+      "tag": "L0.attn.kv_gather",
+      "reads": [
+        "KVAL"
+      ],
+      "writes": [
+        "KVA"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 420096,
+        "coll_dst": 54208,
+        "coll_n": 128,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 1,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 11,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "QA"
+      ],
+      "writes": [
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 160,
+        "a_base": 51648,
+        "a_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 160,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 0,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 12,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1151336448,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_q_rank",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 13,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "QA",
+        "RS"
+      ],
+      "writes": [
+        "QR"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 51648,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 10240,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 52928,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 14,
+      "unit": 3,
+      "tag": "L0.attn",
+      "reads": [
+        "QR"
+      ],
+      "writes": [
+        "Q"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 52928,
+        "qe_nb": 40,
+        "qe_nout": 8192,
+        "qe_tiles": 64,
+        "qe_wbase": 5120,
+        "qe_obase": 55744,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 15,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVA"
+      ],
+      "writes": [
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 64,
+        "a_base": 54208,
+        "a_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 64,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 0,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 16,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1140850688,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_head_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 17,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVA",
+        "RS"
+      ],
+      "writes": [
+        "KVN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 54208,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 11520,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 54720,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 18,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVN"
+      ],
+      "writes": [
+        "KVN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 55168,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 12532,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 12532,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 55168,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 19,
+      "unit": 3,
+      "tag": "L0.attn",
+      "reads": [
+        "KVN"
+      ],
+      "writes": [
+        "KVQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 1,
+        "qe_xbase": 54720,
+        "qe_nb": 16,
+        "qe_obase": 55232,
+        "qe_d_obase": 0,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 20,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KT0"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 3,
+        "o_base": 0,
+        "o_d": "WINM1",
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 21,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KR0"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 2,
+        "o_base": 0,
+        "o_d": "WINM1_ROW",
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 22,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "Q"
+      ],
+      "writes": [
+        "Q"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 16,
+        "su_nin": 64,
+        "a_base": 56192,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 12532,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 12532,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 56192,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 23,
+      "unit": 1,
+      "tag": "L0.scores",
+      "reads": [
+        "KT0",
+        "Q"
+      ],
+      "writes": [
+        "S"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 512,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 512,
+        "me_ks": 1,
+        "me_js": 0,
+        "me_xbase": 55744,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 3996,
+        "me_ots": 1,
+        "me_ojs": 40,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "pred": 0,
+        "me_jsh": 3,
+        "me_xjs": 512,
+        "me_mmode": 1,
+        "me_d_nout": "T0",
+        "me_d_tiles": [
+          "ceil",
+          "T0",
+          32
+        ],
+        "me_hg": 1,
+        "me_ogs": 320,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 24,
+      "unit": 2,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "PA"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41024,
+        "c_base": 12032,
+        "d_base": 12056,
+        "sfu": 4,
+        "e1": 4,
+        "imm2": 897988541,
+        "o_base": 41056,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_eps"
+      }
+    },
+    {
+      "pc": 25,
+      "unit": 2,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "POA"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41028,
+        "c_base": 12036,
+        "d_base": 12060,
+        "sfu": 4,
+        "e1": 3,
+        "imm2": 1073741824,
+        "o_base": 41088,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_post_scale"
+      }
+    },
+    {
+      "pc": 26,
+      "unit": 2,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "CRAW",
+        "M4"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41032,
+        "a_so": 4,
+        "c_base": 12040,
+        "c_so": 4,
+        "d_base": 12064,
+        "d_so": 4,
+        "o_base": 41248,
+        "o_so": 4,
+        "red": 2,
+        "r_base": 41280,
+        "r_so": 1,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 4,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 27,
+      "unit": 2,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "CRAW",
+        "M4"
+      ],
+      "writes": [
+        "E16"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 4,
+        "a_base": 41248,
+        "a_so": 4,
+        "a_si": 1,
+        "b_base": 41280,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "dst": 1,
+        "o_base": 41312,
+        "o_so": 4,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 28,
+      "unit": 4,
+      "tag": "L0.hc_attn",
+      "reads": [
+        "E16"
+      ],
+      "writes": [
+        "CA"
+      ],
+      "fields": {
+        "xu_op": 1,
+        "xu_src": 41312,
+        "xu_dst": 41120,
+        "xu_n": 16,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 29,
+      "unit": 2,
+      "tag": "L0.softmax",
+      "reads": [
+        "S"
+      ],
+      "writes": [
+        "M",
+        "S"
+      ],
+      "fields": {
+        "m1": 3,
+        "imm1": 1026884851,
+        "red": 2,
+        "r_base": 74176,
+        "r_so": 1,
+        "su_nout": 16,
+        "su_nin": 0,
+        "su_d_nin": "T0",
+        "a_base": 63936,
+        "a_so": 640,
+        "a_si": 1,
+        "dst": 1,
+        "o_base": 63936,
+        "o_so": 640,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 1,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "attn_scale"
+      }
+    },
+    {
+      "pc": 30,
+      "unit": 2,
+      "tag": "L0.softmax",
+      "reads": [
+        "M",
+        "S"
+      ],
+      "writes": [
+        "S",
+        "Z"
+      ],
+      "fields": {
+        "b_base": 74176,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "red": 1,
+        "r_base": 74208,
+        "r_so": 1,
+        "su_nout": 16,
+        "su_nin": 0,
+        "su_d_nin": "T0",
+        "a_base": 63936,
+        "a_so": 640,
+        "a_si": 1,
+        "dst": 1,
+        "o_base": 63936,
+        "o_so": 640,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 31,
+      "unit": 1,
+      "tag": "L0.pv",
+      "reads": [
+        "KR0",
+        "S"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 512,
+        "me_tiles": 16,
+        "me_k": 0,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 1,
+        "me_ks": 32,
+        "me_js": 0,
+        "me_xbase": 63936,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 4642,
+        "me_ots": 1,
+        "me_ojs": 32,
+        "me_oen": 1,
+        "me_xcs": 5120,
+        "me_split": 0,
+        "me_jsh": 3,
+        "me_xjs": 640,
+        "me_mmode": 1,
+        "me_d_k": "T0",
+        "me_hg": 1,
+        "me_ogs": 256,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 32,
+      "unit": 2,
+      "tag": "L0.softmax",
+      "reads": [
+        "M",
+        "Z"
+      ],
+      "writes": [
+        "DEN"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 16,
+        "a_src": 1,
+        "a_base": 12128,
+        "a_si": 1,
+        "b_base": 74176,
+        "b_si": 1,
+        "ad": 3,
+        "sfu": 1,
+        "c_base": 74208,
+        "c_si": 1,
+        "e1": 2,
+        "dst": 1,
+        "o_base": 74240,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 33,
+      "unit": 2,
+      "tag": "L0.softmax",
+      "reads": [
+        "ACC",
+        "DEN"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "su_nout": 16,
+        "su_nin": 512,
+        "a_base": 74272,
+        "a_so": 512,
+        "a_si": 1,
+        "b_base": 74240,
+        "b_so": 1,
+        "m1": 4,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 74272,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 3,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 34,
+      "unit": 2,
+      "tag": "L0.softmax",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 16,
+        "su_nin": 64,
+        "a_base": 74720,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 12532,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 12532,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 4,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 74720,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 35,
+      "unit": 1,
+      "tag": "L0.out",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 1024,
+        "me_tiles": 2,
+        "me_k": 4096,
+        "me_wsrc": 0,
+        "me_wbase": 7680,
+        "me_ts": 32768,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 74272,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 5154,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 36,
+      "unit": 1,
+      "tag": "L0.out",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 1024,
+        "me_tiles": 2,
+        "me_k": 4096,
+        "me_wsrc": 0,
+        "me_wbase": 73216,
+        "me_ts": 32768,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 78368,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 5218,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 37,
+      "unit": 2,
+      "tag": "L0.out",
+      "reads": [
+        "ZA"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 2048,
+        "a_base": 82464,
+        "a_si": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 82464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 1,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 38,
+      "unit": 3,
+      "tag": "L0.out",
+      "reads": [
+        "ZA"
+      ],
+      "writes": [
+        "YTMP"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 82464,
+        "qe_nb": 64,
+        "qe_nout": 5120,
+        "qe_tiles": 40,
+        "qe_wbase": 25600,
+        "qe_obase": 420320,
+        "qe_unrounded": 1,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 39,
+      "unit": 6,
+      "tag": "L0.out.wo_b_reduce",
+      "reads": [
+        "YTMP"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 0,
+        "coll_src": 420320,
+        "coll_dst": 84512,
+        "coll_n": 5120,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 2,
+        "coll_rnd": 1
+      }
+    },
+    {
+      "pc": 40,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CA",
+        "H"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41120,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41124,
+        "d_so": 1,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 41,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CA",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41128,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 42,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CA",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41132,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 2560
+      }
+    },
+    {
+      "pc": 43,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "POA",
+        "T",
+        "Y"
+      ],
+      "writes": [
+        "H",
+        "SSX"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 84512,
+        "a_si": 1,
+        "b_base": 41088,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 0,
+        "o_so": 5120,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "red_tree": 1,
+        "r_base": 40960,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 640
+      }
+    },
+    {
+      "pc": 44,
+      "unit": 2,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "SSX"
+      ],
+      "writes": [
+        "RF"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 40960,
+        "m1": 5,
+        "imm1": 1184890880,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 40992,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_hc_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 45,
+      "unit": 5,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "H"
+      ],
+      "writes": [
+        "MIX"
+      ],
+      "fields": {
+        "unit": 5,
+        "he_nout": 24,
+        "he_k": 2560,
+        "he_wbase": 7680,
+        "he_xbase": 0,
+        "he_obase": 41024,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 46,
+      "unit": 2,
+      "tag": "L0.ffn_norm",
+      "reads": [
+        "H",
+        "PA"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41056,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41057,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 47,
+      "unit": 2,
+      "tag": "L0.ffn_norm",
+      "reads": [
+        "H",
+        "PA",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41058,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 48,
+      "unit": 2,
+      "tag": "L0.ffn_norm",
+      "reads": [
+        "H",
+        "PA",
+        "T"
+      ],
+      "writes": [
+        "SS",
+        "X"
+      ],
+      "fields": {
+        "su_nout": 8,
+        "su_nin": 640,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41059,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 41344,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 640,
+        "b_so": 0,
+        "c_so": 640,
+        "d_so": 0,
+        "o_so": 640,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 80
+      }
+    },
+    {
+      "pc": 49,
+      "unit": 2,
+      "tag": "L0.ffn_norm",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1168113664,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 50,
+      "unit": 2,
+      "tag": "L0.ffn_norm",
+      "reads": [
+        "RS",
+        "X"
+      ],
+      "writes": [
+        "XN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 41344,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 46464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 51,
+      "unit": 3,
+      "tag": "L0.shared",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 46080,
+        "qe_obase": 416768,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 52,
+      "unit": 3,
+      "tag": "L0.shared",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 52480,
+        "qe_obase": 417344,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 53,
+      "unit": 1,
+      "tag": "L0.router",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "G12"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 96,
+        "me_tiles": 1,
+        "me_k": 1280,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 10240,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 46464,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 22846,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 1280,
+        "me_split": 2,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 54,
+      "unit": 2,
+      "tag": "L0.shared",
+      "reads": [
+        "GU6",
+        "WGT"
+      ],
+      "writes": [
+        "ACT6"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 416768,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 417344,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 417920,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 55,
+      "unit": 6,
+      "tag": "L0.shared.act6_gather",
+      "reads": [
+        "ACT6"
+      ],
+      "writes": [
+        "ACTALL6"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 417920,
+        "coll_dst": 444384,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 3,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 56,
+      "unit": 3,
+      "tag": "L0.shared",
+      "reads": [
+        "ACTALL6",
+        "EID"
+      ],
+      "writes": [
+        "E6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 444384,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 58880,
+        "qe_obase": 418496,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 57,
+      "unit": 2,
+      "tag": "L0.router",
+      "reads": [
+        "G12"
+      ],
+      "writes": [
+        "SCL"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 96,
+        "a_base": 365536,
+        "a_si": 1,
+        "sfu": 6,
+        "dst": 1,
+        "o_base": 420224,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 58,
+      "unit": 6,
+      "tag": "L0.router.router_gather",
+      "reads": [
+        "SCL"
+      ],
+      "writes": [
+        "SC"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 420224,
+        "coll_dst": 365920,
+        "coll_n": 96,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 4,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 59,
+      "unit": 2,
+      "tag": "L0.router",
+      "reads": [
+        "SC"
+      ],
+      "writes": [
+        "BI"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 384,
+        "a_base": 365920,
+        "a_si": 1,
+        "d_src": 1,
+        "d_base": 12144,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_base": 366304,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 60,
+      "unit": 4,
+      "tag": "L0.router",
+      "reads": [
+        "BI"
+      ],
+      "writes": [
+        "EID"
+      ],
+      "fields": {
+        "xu_op": 0,
+        "xu_src": 366304,
+        "xu_dst": 366688,
+        "xu_n": 384,
+        "xu_k": 6,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 61,
+      "unit": 2,
+      "tag": "L0.router",
+      "reads": [
+        "EID",
+        "SC"
+      ],
+      "writes": [
+        "TOT"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 6,
+        "a_base": 365920,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 366688,
+        "red": 3,
+        "r_base": 366720,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 8,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 62,
+      "unit": 2,
+      "tag": "L0.router",
+      "reads": [
+        "TOT"
+      ],
+      "writes": [
+        "DEN1"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 366720,
+        "ad": 4,
+        "imm2": 507307272,
+        "dst": 1,
+        "o_base": 366752,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "router_den_eps"
+      }
+    },
+    {
+      "pc": 63,
+      "unit": 2,
+      "tag": "L0.router",
+      "reads": [
+        "DEN1",
+        "EID",
+        "SC"
+      ],
+      "writes": [
+        "WGT"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 6,
+        "a_base": 365920,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 366688,
+        "b_base": 366752,
+        "m1": 4,
+        "m2": 2,
+        "imm1": 1069547520,
+        "dst": 1,
+        "o_base": 366784,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "route_scale"
+      }
+    },
+    {
+      "pc": 64,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 398720,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 65,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 399296,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 66,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 401728,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 67,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 402304,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 68,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU0",
+        "WGT"
+      ],
+      "writes": [
+        "ACT0"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 398720,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 399296,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 399872,
+        "o_si": 1,
+        "b_base": 366784,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 69,
+      "unit": 6,
+      "tag": "L0.experts.act0_gather",
+      "reads": [
+        "ACT0"
+      ],
+      "writes": [
+        "ACTALL0"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 399872,
+        "coll_dst": 430560,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 5,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 70,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 404736,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 71,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 405312,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 72,
+      "unit": 2,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "PF"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41024,
+        "c_base": 12080,
+        "d_base": 12104,
+        "sfu": 4,
+        "e1": 4,
+        "imm2": 897988541,
+        "o_base": 41152,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_eps"
+      }
+    },
+    {
+      "pc": 73,
+      "unit": 2,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "POF"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41028,
+        "c_base": 12084,
+        "d_base": 12108,
+        "sfu": 4,
+        "e1": 3,
+        "imm2": 1073741824,
+        "o_base": 41184,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_post_scale"
+      }
+    },
+    {
+      "pc": 74,
+      "unit": 2,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "CRAW",
+        "M4"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41032,
+        "a_so": 4,
+        "c_base": 12088,
+        "c_so": 4,
+        "d_base": 12112,
+        "d_so": 4,
+        "o_base": 41248,
+        "o_so": 4,
+        "red": 2,
+        "r_base": 41280,
+        "r_so": 1,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 4,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 75,
+      "unit": 2,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "CRAW",
+        "M4"
+      ],
+      "writes": [
+        "E16"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 4,
+        "a_base": 41248,
+        "a_so": 4,
+        "a_si": 1,
+        "b_base": 41280,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "dst": 1,
+        "o_base": 41312,
+        "o_so": 4,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 76,
+      "unit": 4,
+      "tag": "L0.hc_ffn",
+      "reads": [
+        "E16"
+      ],
+      "writes": [
+        "CF"
+      ],
+      "fields": {
+        "xu_op": 1,
+        "xu_src": 41312,
+        "xu_dst": 41216,
+        "xu_n": 16,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 77,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL0",
+        "EID"
+      ],
+      "writes": [
+        "E0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 430560,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 400448,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 78,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU1",
+        "WGT"
+      ],
+      "writes": [
+        "ACT1"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 401728,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 402304,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 402880,
+        "o_si": 1,
+        "b_base": 366785,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 79,
+      "unit": 6,
+      "tag": "L0.experts.act1_gather",
+      "reads": [
+        "ACT1"
+      ],
+      "writes": [
+        "ACTALL1"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 402880,
+        "coll_dst": 432864,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 6,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 80,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 407744,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 81,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 408320,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 82,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL1",
+        "EID"
+      ],
+      "writes": [
+        "E1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 432864,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 403456,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 83,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU2",
+        "WGT"
+      ],
+      "writes": [
+        "ACT2"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 404736,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 405312,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 405888,
+        "o_si": 1,
+        "b_base": 366786,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 84,
+      "unit": 6,
+      "tag": "L0.experts.act2_gather",
+      "reads": [
+        "ACT2"
+      ],
+      "writes": [
+        "ACTALL2"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 405888,
+        "coll_dst": 435168,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 7,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 85,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 410752,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 86,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 411328,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 87,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL2",
+        "EID"
+      ],
+      "writes": [
+        "E2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 435168,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 406464,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 88,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU3",
+        "WGT"
+      ],
+      "writes": [
+        "ACT3"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 407744,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 408320,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 408896,
+        "o_si": 1,
+        "b_base": 366787,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 89,
+      "unit": 6,
+      "tag": "L0.experts.act3_gather",
+      "reads": [
+        "ACT3"
+      ],
+      "writes": [
+        "ACTALL3"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 408896,
+        "coll_dst": 437472,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 8,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 90,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 64640,
+        "qe_obase": 413760,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 91,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2522240,
+        "qe_obase": 414336,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 92,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL3",
+        "EID"
+      ],
+      "writes": [
+        "E3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 437472,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 409472,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 93,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU4",
+        "WGT"
+      ],
+      "writes": [
+        "ACT4"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 410752,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 411328,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 411904,
+        "o_si": 1,
+        "b_base": 366788,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 94,
+      "unit": 6,
+      "tag": "L0.experts.act4_gather",
+      "reads": [
+        "ACT4"
+      ],
+      "writes": [
+        "ACTALL4"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 411904,
+        "coll_dst": 439776,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 9,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 95,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL4",
+        "EID"
+      ],
+      "writes": [
+        "E4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 439776,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 412480,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 96,
+      "unit": 2,
+      "tag": "L0.experts",
+      "reads": [
+        "GU5",
+        "WGT"
+      ],
+      "writes": [
+        "ACT5"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 413760,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 414336,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 414912,
+        "o_si": 1,
+        "b_base": 366789,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 97,
+      "unit": 6,
+      "tag": "L0.experts.act5_gather",
+      "reads": [
+        "ACT5"
+      ],
+      "writes": [
+        "ACTALL5"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 414912,
+        "coll_dst": 442080,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 10,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 98,
+      "unit": 3,
+      "tag": "L0.experts",
+      "reads": [
+        "ACTALL5",
+        "EID"
+      ],
+      "writes": [
+        "E5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 442080,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4979840,
+        "qe_obase": 415488,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 99,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E0",
+        "E1"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 400448,
+        "a_si": 1,
+        "c_base": 403456,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 100,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E2",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 406464,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 101,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E3",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 409472,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 102,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E4",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 412480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 103,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E5",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 415488,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 104,
+      "unit": 2,
+      "tag": "L0.moe_sum",
+      "reads": [
+        "E6",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 418496,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 105,
+      "unit": 6,
+      "tag": "L0.moe_sum.y_gather",
+      "reads": [
+        "Y"
+      ],
+      "writes": [
+        "YALL"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 84512,
+        "coll_dst": 425440,
+        "coll_n": 1280,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 11,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 106,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CF",
+        "H"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41216,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41220,
+        "d_so": 1,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 107,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CF",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41224,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 108,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "CF",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41228,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 2560
+      }
+    },
+    {
+      "pc": 109,
+      "unit": 2,
+      "tag": "L0.hc_post",
+      "reads": [
+        "POF",
+        "T",
+        "YALL"
+      ],
+      "writes": [
+        "H",
+        "SSX"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 425440,
+        "a_si": 1,
+        "b_base": 41184,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 0,
+        "o_so": 5120,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "red_tree": 1,
+        "r_base": 40960,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 640
+      }
+    },
+    {
+      "pc": 110,
+      "unit": 0,
+      "tag": "end",
+      "reads": [],
+      "writes": [],
+      "fields": {
+        "unit": 0,
+        "wait": 31
+      }
+    }
+  ],
+  "qe_address_trace": [
+    {
+      "pc": 7,
+      "matrix": "wq_a",
+      "expert_id": null,
+      "start_word": 0,
+      "end_word_exclusive": 3840,
+      "image_end_word_exclusive": 3840,
+      "backed": true
+    },
+    {
+      "pc": 8,
+      "matrix": "wkv",
+      "expert_id": null,
+      "start_word": 3840,
+      "end_word_exclusive": 5120,
+      "image_end_word_exclusive": 5120,
+      "backed": true
+    },
+    {
+      "pc": 14,
+      "matrix": "wq_b",
+      "expert_id": null,
+      "start_word": 5120,
+      "end_word_exclusive": 25600,
+      "image_end_word_exclusive": 25600,
+      "backed": true
+    },
+    {
+      "pc": 38,
+      "matrix": "wo_b",
+      "expert_id": null,
+      "start_word": 25600,
+      "end_word_exclusive": 46080,
+      "image_end_word_exclusive": 46080,
+      "backed": true
+    },
+    {
+      "pc": 51,
+      "matrix": "shared.w1",
+      "expert_id": null,
+      "start_word": 46080,
+      "end_word_exclusive": 52480,
+      "image_end_word_exclusive": 52480,
+      "backed": true
+    },
+    {
+      "pc": 52,
+      "matrix": "shared.w3",
+      "expert_id": null,
+      "start_word": 52480,
+      "end_word_exclusive": 58880,
+      "image_end_word_exclusive": 58880,
+      "backed": true
+    },
+    {
+      "pc": 56,
+      "matrix": "shared.w2",
+      "expert_id": null,
+      "start_word": 58880,
+      "end_word_exclusive": 64640,
+      "image_end_word_exclusive": 64640,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 66,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 67,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 70,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 77,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 80,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 81,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 82,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 86,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 87,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 90,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 91,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 92,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 95,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 110,
+      "start_word": 5613440,
+      "end_word_exclusive": 5619200,
+      "image_end_word_exclusive": 5619200,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 112,
+      "start_word": 5624960,
+      "end_word_exclusive": 5630720,
+      "image_end_word_exclusive": 5630720,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 141,
+      "start_word": 5792000,
+      "end_word_exclusive": 5797760,
+      "image_end_word_exclusive": 5797760,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 144,
+      "start_word": 5809280,
+      "end_word_exclusive": 5815040,
+      "image_end_word_exclusive": 5815040,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 357,
+      "start_word": 7036160,
+      "end_word_exclusive": 7041920,
+      "image_end_word_exclusive": 7041920,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w2",
+      "expert_id": 361,
+      "start_word": 7059200,
+      "end_word_exclusive": 7064960,
+      "image_end_word_exclusive": 7064960,
+      "backed": true
+    }
+  ],
+  "me_wo_a_trace": [
+    {
+      "pc": 35,
+      "group": 0,
+      "output_first_row": 0,
+      "output_last_row_exclusive": 1024,
+      "image_start_word": 7680,
+      "expected_image_start_word": 7680,
+      "image_end_word_exclusive": 73216,
+      "x_first": 74272,
+      "required_x_first": 74272,
+      "x_last_exclusive": 78368,
+      "output_first": 82464,
+      "required_output_first": 82464,
+      "rows": 1024,
+      "xjs": 0
+    },
+    {
+      "pc": 36,
+      "group": 1,
+      "output_first_row": 1024,
+      "output_last_row_exclusive": 2048,
+      "image_start_word": 73216,
+      "expected_image_start_word": 73216,
+      "image_end_word_exclusive": 138752,
+      "x_first": 78368,
+      "required_x_first": 78368,
+      "x_last_exclusive": 82464,
+      "output_first": 83488,
+      "required_output_first": 83488,
+      "rows": 1024,
+      "xjs": 0
+    }
+  ],
+  "blockers": [
+    "packed FP4 QE words require a sector-to-16-lane port adapter; no exact RTL adapter gate",
+    "sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved"
+  ],
+  "claim_boundary": "Descriptor and source image address check; no RTL token or throughput verdict."
+}

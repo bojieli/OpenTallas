@@ -1,0 +1,65 @@
+{
+  "boundary": {
+    "available_tracks": 321,
+    "fullwidth341track_failure_preserved": true,
+    "proposed_margin": 11,
+    "proposed_tracks": 310,
+    "width_only_does_not_qualify_routing_or_service": true
+  },
+  "checkpoint_reads": 0,
+  "conditional_power": {
+    "all192_ungated_clock_W": "60013.58320389192640800",
+    "all_arcs_is_not_physical_minimum": true,
+    "complete_CTS_PHY_hub_RC_IR_bound": false,
+    "margin_before_serialized_data_PHY_hub_W": "155.29606005043388160",
+    "maximum_home_all_arcs_clock_leak_data_pin_allocation_W": "991.66438280324186000",
+    "maximum_home_clock_leak_W": "319.26393994956611840",
+    "serialized_selected_data_bound": false
+  },
+  "conditional_service": {
+    "full_program_critical_path_bound": false,
+    "maximum_local_row_cycles": 2360,
+    "no_old104_106cycle_credit": true,
+    "response_fragments_per_lookup_per_hop": 16
+  },
+  "full_token_latency": null,
+  "headline_rate": null,
+  "identity_admission": {
+    "candidate_epoch_bits": 8,
+    "fresh_typed_epoch8_power_applies_to_epoch32_candidate": false,
+    "physical_fragment_recipe": "epoch8,column5,layer1,beat3,valid1,lease6; tagvalid at bit6",
+    "required_model_epoch_bits": 32,
+    "stored_ACK_identity_epoch32_setup_reset_drained_reuse_bound": false,
+    "verdict": "REJECT_EPOCH8_ACK_PROVIDER_NOT_BOUND"
+  },
+  "jobs_launched": 0,
+  "next_correction": "Bind full generation and stored-ACK identity transport, price every added endpoint/setup bit and serialized data event; then compose actual external lease and consumer path.",
+  "physical_admission": false,
+  "schema": "opentallas.w17.DSROM-fragment-power-join.v1",
+  "source_pins": {
+    "consumed_once": {
+      "commit": "ca5a444d0",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/two_fragment_contract_consumed_once.json",
+      "sha256": "9746a102678fd6fc9ed372bb091e03011a0c6d2995c2f3dd5b86cf6e0727a085"
+    },
+    "identity_checker": {
+      "commit": "f69892ddd",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/fragment_credit_contract.json",
+      "sha256": "4797333108d08835b1104f06acd8a304a2e513999e5dab85b718aa8374941d41"
+    },
+    "typed_power": {
+      "commit": "7c0d2c556",
+      "path": "results/uarch/w10_engram_fragment_power_r1/budget.json",
+      "sha256": "e3a4af8e39025a61379dce75d1ecbb94c391cb78f7065fa9d61edc5e7fe7d674"
+    }
+  },
+  "state": {
+    "additional_FF_bits_per_endpoint": 318,
+    "additional_fragment_FF_bits": 1522003968,
+    "all_ungated_FF_bits": 3595629118,
+    "consumed_once_state_encoding": "288assembledword +24expectedtag +6exactcontrolFF:RXphase2(EMPTY/HALF/FULL/DRAIN) +ACKpending1 +ACKreturned1 +TXphase1 +creditlocked1. Preserve original288 response FF/mux and every original clock; no subtraction.",
+    "endpoint_count_per_home": 24928,
+    "homes": 192,
+    "physical_macros": 1500067
+  }
+}

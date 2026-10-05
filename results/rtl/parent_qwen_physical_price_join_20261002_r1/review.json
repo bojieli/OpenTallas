@@ -1,0 +1,16 @@
+{
+  "verdict": "EXPECTED_MODEL_PRICE_JOIN_FAIL_REPRODUCED",
+  "focused_tests": "44 passed",
+  "record_sha256": "ea4e29bc68977b73042f23c6ed9e096ba53ee7dd269ed4b4cee4cce45a416c55",
+  "target_extra": 55,
+  "current_model_extra": 54,
+  "token_cycles_missing": 217,
+  "contexts": [
+    1,
+    8192
+  ],
+  "actual_RTL_measurement": false,
+  "physical_acceptance": false,
+  "adopted": false,
+  "next": "Source-pinned successor model correction plus same-source arithmetic propagation and contextual physical acceptance; preserve original FAIL."
+}

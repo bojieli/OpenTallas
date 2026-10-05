@@ -1,0 +1,7 @@
+{
+  "status": "STATIC_TEST_PARSER_ERROR_NOT_RTL_FAILURE",
+  "cause": "Guard extractor unnecessarily required NB > 1 text; intentional bank-guard-removal mutant could not be parsed. Nine tests passed; bank mutant was not yet tested.",
+  "source_sha256": "5bc00eb753a256da14c0753092890d048c0cac4a0834fe7e34ab433bc08f770b",
+  "compile_or_simulation_executed": false,
+  "correction": "Extract generic single guard expression, then compare evaluated mutant to independent oracle."
+}

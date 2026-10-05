@@ -1,0 +1,242 @@
+{
+  "observed_at": "2026-10-01T08:42:06.449425+00:00",
+  "claim_boundary": "Immutable terminal snapshots and simulation intake. Local port_qwen is an older terminal record while another port_qwen route remains live; never use it as the live result. No physical closure adoption.",
+  "artifacts": [
+    {
+      "case": "port_board",
+      "file": "results/rtl/w15_current_recovery_20261001/physical/port_board/physical.json",
+      "sha256": "52170c43b39f59b7d6dfff36a35d771124487036f710c4979962893a42b7e9db",
+      "status": "error",
+      "source_commit": "50f5165ba84ed035d3062d091a7f6d7479a8e9d1",
+      "corner": {
+        "liberty": [
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+            "size_bytes": 22136706
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+            "size_bytes": 309886
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+            "size_bytes": 19915253
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+            "size_bytes": 1512690
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+            "size_bytes": 2306883
+          }
+        ],
+        "name": "TT",
+        "process": "typical",
+        "temperature_c": 0.0,
+        "voltage_v": 0.7
+      },
+      "flow_completed": false,
+      "timing": {}
+    },
+    {
+      "case": "port_qwen",
+      "file": "results/rtl/w15_current_recovery_20261001/physical/port_qwen/physical.json",
+      "sha256": "fb83d43cc9c3920f1877ff339a033eab96c679d1f2432cdd3beab15562c7edc4",
+      "status": "not_met",
+      "source_commit": "e9ec0311581c9bd5e097b31114d7ceef22c040b4",
+      "corner": {
+        "liberty": [
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+            "size_bytes": 22136706
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+            "size_bytes": 309886
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+            "size_bytes": 19915253
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+            "size_bytes": 1512690
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+            "size_bytes": 2306883
+          }
+        ],
+        "name": "TT",
+        "process": "typical",
+        "temperature_c": 0.0,
+        "voltage_v": 0.7
+      },
+      "flow_completed": true,
+      "timing": {}
+    },
+    {
+      "case": "port_qwen",
+      "file": "results/rtl/w15_current_recovery_20261001/physical/port_qwen/signoff_ssff.json",
+      "sha256": "e5e00553ca5df44fcad15a113f1db938387d637946708815fe5e283cfc5284d8",
+      "status": null,
+      "source_commit": null,
+      "corner": null,
+      "flow_completed": null,
+      "timing": {
+        "FF": {
+          "hold_tns_ns": -0.0022545854072575366,
+          "hold_wns_ns": -0.0018814672042566372,
+          "min_period": [
+            {
+              "clock": "core_clk",
+              "fmax_mhz": 1316.48,
+              "period_min_ns": 0.76
+            }
+          ],
+          "setup_tns_ns": 0.0,
+          "setup_wns_ns": 0.07339617802415432
+        },
+        "SS": {
+          "hold_tns_ns": 0.0,
+          "hold_wns_ns": 0.03355829503171037,
+          "min_period": [
+            {
+              "clock": "core_clk",
+              "fmax_mhz": 657.58,
+              "period_min_ns": 1.52
+            }
+          ],
+          "setup_tns_ns": -2932.3591661523096,
+          "setup_wns_ns": -0.6877323155407566
+        }
+      }
+    },
+    {
+      "case": "tm89_500",
+      "file": "results/rtl/w15_current_recovery_20261001/physical/tm89_500/physical.json",
+      "sha256": "614867b2c71c7a7c1b3719b750893bc35b8a46a0a49db3d5bb89765c99feacee",
+      "status": "not_met",
+      "source_commit": "7223e0ea4dba66d772ca08fb5fc1bdd2f6d21f9a",
+      "corner": {
+        "liberty": [
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+            "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+            "size_bytes": 22136706
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+            "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+            "size_bytes": 309886
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+            "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+            "size_bytes": 19915253
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+            "size_bytes": 1512690
+          },
+          {
+            "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+            "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+            "size_bytes": 2306883
+          }
+        ],
+        "name": "TT",
+        "process": "typical",
+        "temperature_c": 0.0,
+        "voltage_v": 0.7
+      },
+      "flow_completed": true,
+      "timing": {}
+    },
+    {
+      "case": "tm89_500",
+      "file": "results/rtl/w15_current_recovery_20261001/physical/tm89_500/signoff_ssff.json",
+      "sha256": "c7fb4eedf429e27d497216a49100a9a731304128f6d1b730c7fdcf476b6dfdd9",
+      "status": null,
+      "source_commit": null,
+      "corner": null,
+      "flow_completed": null,
+      "timing": {
+        "FF": {
+          "hold_tns_ns": 0.0,
+          "hold_wns_ns": 0.106394892895878,
+          "min_period": [
+            {
+              "clock": "core_clk",
+              "fmax_mhz": 2437.82,
+              "period_min_ns": 0.41
+            }
+          ],
+          "setup_tns_ns": 0.0,
+          "setup_wns_ns": 0.42279774126186
+        },
+        "SS": {
+          "hold_tns_ns": 0.0,
+          "hold_wns_ns": 0.2363073070554833,
+          "min_period": [
+            {
+              "clock": "core_clk",
+              "fmax_mhz": 1493.77,
+              "period_min_ns": 0.67
+            }
+          ],
+          "setup_tns_ns": 0.0,
+          "setup_wns_ns": 0.16355428122949434
+        }
+      }
+    },
+    {
+      "case": "topk_hbm96_p1024f64",
+      "source_commit": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+      "all_exact": true,
+      "pins_verified": true,
+      "sha256": "693cd1ee2e9cead40ef14423fd69ce4c4f9f5b318e7ecdc7b059bdda059a6271"
+    },
+    {
+      "case": "topk_hbm96_p1024f256",
+      "source_commit": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+      "all_exact": true,
+      "pins_verified": true,
+      "sha256": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e"
+    },
+    {
+      "case": "topk_hbm96_p64d8",
+      "source_commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "all_exact": true,
+      "pins_verified": true,
+      "sha256": "1dbb8faad3d94d3d33109ae86dac2b1a209fcd991c76eb538564d1c927e28443"
+    },
+    {
+      "case": "topk_hbm96_p1024f128",
+      "source_commit": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+      "all_exact": true,
+      "pins_verified": true,
+      "sha256": "e56e9fc8893c2cfc8210488fa41e43affea94e5b0c4dd3f10f1fc2d3a63555ab"
+    }
+  ],
+  "existing_queues": {
+    "lane_pve2a": "/home/ubuntu/w15bwt8|32|/tmp/claude-1000/w15p/logs/port_qwen.log|/tmp/claude-1000/w15p/out/port_qwen|/tmp/claude-1000/w15p/jobs/harden.sh port_qwen\n/home/ubuntu/w15bwt8|32|/tmp/claude-1000/w15p/logs/port_board.log|/tmp/claude-1000/w15p/out/port_board|/tmp/claude-1000/w15p/jobs/harden.sh port_board\n",
+    "lane_pve2b": "/home/ubuntu/w15bwt9|32|/tmp/claude-1000/w15p/logs/port_ucie.log|/tmp/claude-1000/w15p/out/port_ucie|/tmp/claude-1000/w15p/jobs/harden.sh port_ucie\n/home/ubuntu/w15bwt9|32|/tmp/claude-1000/w15p/logs/qwen256_sram.log|/tmp/claude-1000/w15p/out/qwen256_sram|/tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram\n",
+    "lane_pve2d": "/home/ubuntu/w15bwt7|32|/tmp/claude-1000/w15p/logs/topk_4_128_64_8.log|/tmp/claude-1000/w15p/out/topk_4_128_64_8|/tmp/claude-1000/w15p/jobs/harden.sh topk_4_128_64_8\n/home/ubuntu/w15bwt7|32|/tmp/claude-1000/w15p/logs/topk_4_128_64_4.log|/tmp/claude-1000/w15p/out/topk_4_128_64_4|/tmp/claude-1000/w15p/jobs/harden.sh topk_4_128_64_4\n",
+    "lane5_133h": "/home/ubuntu/w15bwt14|16|/tmp/claude-1000/w15p/logs/topk_4_256_1024_64_8.log|/tmp/claude-1000/w15p/out/topk_4_256_1024_64_8|/tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_64_8\n/home/ubuntu/w15bwt14|16|/tmp/claude-1000/w15p/logs/topk_4_256_1024_256_8.log|/tmp/claude-1000/w15p/out/topk_4_256_1024_256_8|/tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_256_8\n/home/ubuntu/w15bwt14|16|/tmp/claude-1000/w15p/logs/topk_4_256_256_64_8.log|/tmp/claude-1000/w15p/out/topk_4_256_256_64_8|/tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_256_64_8\n",
+    "lane6_133": "/home/ubuntu/w15bwt13|16|/tmp/claude-1000/w15p/logs/qwen256_sram.log|/tmp/claude-1000/w15p/out/qwen256_sram|/tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram\n/home/ubuntu/w15bwt13|16|/tmp/claude-1000/w15p/logs/tg89_1000.log|/tmp/claude-1000/w15p/out/tg89_1000|/tmp/claude-1000/w15p/jobs/harden.sh tg89_1000\n"
+  },
+  "remaining_policy": "Reuse five live W15 jobs. Do not duplicate HBM96 exact simulations or SRAM campaign. Board route exit247 requires resource review; no identical rerun on 13-18GiB available VM. Outstanding fullshape topk physical route remains prerequisite. tm89_500 SS/FF timing is positive but physical status not_met, not signoff PASS."
+}

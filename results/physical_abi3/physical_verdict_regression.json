@@ -1,0 +1,32 @@
+{
+  "scope": "Reevaluate an unchanged retained route with the stricter driver; no physical rerun or modification of historical record.",
+  "record": "results/physical_abi3/asap7/sinkhorn_handoff/pnr_baseline_cts12_2p4ns.json",
+  "record_sha256": "2745660689091e179fd288d9b78f266ea32817404a7b22ef474388222b179679",
+  "original_status": "pass",
+  "rechecked": {
+    "status": "not_met",
+    "reason": "did not meet in: place_and_route",
+    "checks": [
+      {
+        "stage": "place_and_route",
+        "scope": "post-route, extracted parasitics",
+        "met": false,
+        "timing_met": true,
+        "physically_clean": false,
+        "signal_integrity_clean": false,
+        "max_slew_violations": 0.0,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 1.0,
+        "setup_wns_ns": 0.46377999999999997,
+        "setup_violations": 0.0,
+        "hold_wns_ns": 0.0320207,
+        "hold_violations": 0.0,
+        "drc_errors": 0.0,
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0
+      }
+    ]
+  },
+  "driver_sha256": "c67588fc5be81b7bcd3dba6f6e21de1daccaae33229dd5a5cea874d402f43489",
+  "tests": "tests/test_abi3_physical_env.py tests/test_abi3_physical_sdc_constraints.py tests/test_current_physical_evidence.py completed with no failures; environment/historical-fixture skips retained."
+}

@@ -1,0 +1,39 @@
+{
+  "RF_shared_edges_kind": "DERIVED_SOURCE_CONTROL_CHECKED_BY_EXECUTED_STORAGE_CASES",
+  "SIMD_accept_through_sink_release_edges": 14,
+  "SIMD_done_after_accept_edges": 12,
+  "SIMD_edges_kind": "MEASURED_DIRECTED_RTL_BENCH12_PLUS_ACCEPT_AND_DONE_CONSUMPTION",
+  "SS_FF_verified": false,
+  "edge_definition": "accepted-edge counts as first edge; include one final sink-consumption edge",
+  "evidence": "MATCHING_RTL_FUNCTIONAL_HARNESS_NOT_PHYSICAL_CONTEXT",
+  "executed_logs": {
+    "actual_sim.log": "c1033d386839370e77b9136496867d3e4c46b46c23f1071ed0b11f49958bf383",
+    "storage_sim.log": "d2f6afa565c892e2588c43cdab50ca2152920e64a18210ae4d950923b0088015"
+  },
+  "full_parent_bridge_verified": false,
+  "hardware_clock_ns": null,
+  "hardware_qualified": false,
+  "local_reverse": "response/ACK/done consumption clears actual H1 held credit; outer C0/provider reverse is separate",
+  "native_SIMD_opcodes": [
+    "FADD",
+    "FMUL"
+  ],
+  "schema": "H4_H1_MATCHED_EXECUTION_EDGE_CONTRACT_V1",
+  "service_edges": {
+    "SIMD": 14,
+    "host_read": 3,
+    "host_write": 2,
+    "shared_read": 3,
+    "shared_write": 2
+  },
+  "sink_policy_required": "sink acceptance slot reserved before command admission; no external ready wait in this local service",
+  "source_commit": "b764cc45e57a632a8ea32284dad8ca30ebf8091a",
+  "source_pins": {
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "rtl/test/full_sm_service/tb_full_service_exact.sv": "2e871bfe29ac28b79aaf6c781d71f5c26bf6ec5c2bf6fb9446a4d29ea642e3c6",
+    "rtl/test/full_sm_service/tb_storage.sv": "38a17b671df8971ec53bac4267b25db046988ac691d7538699816b0cabd58c74"
+  },
+  "unsupported_V1_opcodes": "integer/convert/bit/predicate endpoints have no executed bridge in this receipt"
+}

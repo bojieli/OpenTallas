@@ -1,0 +1,225 @@
+{
+  "scope": "Balanced carry-save tree candidate and 32-bit multiplier chunk experiment. Functional and cycle results only; no current routed clock or area qualification yet. No production consumer default changed.",
+  "candidate_origin": "Recovered pre-existing workspace implementation; old 1 ns tree route source hash does not match current candidate and is not used to qualify it.",
+  "old_tree_route_source_sha256": "a0b4eb49fd18c1b3da861e8a60c4c5615932584d052746ff228a0966d7847540",
+  "candidate_sha256": "95b494676f51cd77510884f182d5f0427c15c4c5693f3b743aecd6c2b8d16ec5",
+  "test_sha256": "281543ee97564486a8492c1f1d245e3ae84b7ddc796ce0e419f56e791cd94618",
+  "unit_validation": {
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ],
+    "passing_tests_per_simulator": 6,
+    "widths_wa_wb_low": [
+      [
+        163,
+        161,
+        160
+      ],
+      [
+        163,
+        163,
+        160
+      ],
+      [
+        162,
+        170,
+        320
+      ]
+    ],
+    "chunk_sets": [
+      [
+        2,
+        4,
+        8,
+        16
+      ],
+      [
+        2,
+        4,
+        8,
+        32
+      ]
+    ],
+    "checks": "Exact full-width product high bits and discarded-bit OR; cycle-by-cycle busy/done and completed result equality with chain reference.",
+    "product_comparisons_per_simulator": 4072
+  },
+  "softmax": {
+    "baseline": {
+      "reuse": 1,
+      "cycles": 767158,
+      "physical_evals": 276,
+      "hits": 121
+    },
+    "candidate": {
+      "reuse": 1,
+      "cycles": 594908,
+      "physical_evals": 276,
+      "hits": 121
+    },
+    "cycle_reduction_percent": 22.45300185880874,
+    "checks": "Nine numerical reference cases and two refusals pass in each configuration. Same vectors and testbench.",
+    "baseline_sources": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+        "verilator_content_hash": "unhashed",
+        "workspace_sha256_at_audit": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+        "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6",
+        "workspace_sha256_at_audit": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94"
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+        "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr",
+        "workspace_sha256_at_audit": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8"
+      },
+      {
+        "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+        "verilator_content_hash": "KM2UrLJEpziKibOrzOIJnzEJ1eiqb4usk0nMibrO",
+        "workspace_sha256_at_audit": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE",
+        "workspace_sha256_at_audit": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+      },
+      {
+        "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+        "verilator_content_hash": "Gmi90xEIhUaKzWUEc5JRAzX4lp32HmgFrelMDc04",
+        "workspace_sha256_at_audit": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_seq.sv",
+        "verilator_content_hash": "odZJFSgYMU6bOIXfNXY3Q70H4ZVeDkeoHcIE3s55",
+        "workspace_sha256_at_audit": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_small_seq.sv",
+        "verilator_content_hash": "waCDiMXwmjiN9bL14tsrjzZNfpRIK6PA8YUGYuy9",
+        "workspace_sha256_at_audit": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+      },
+      {
+        "path": "rtl/lib/ot_wide_mul_seq.sv",
+        "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ",
+        "workspace_sha256_at_audit": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+      },
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei",
+        "workspace_sha256_at_audit": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4",
+        "workspace_sha256_at_audit": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+      },
+      {
+        "path": "rtl/test/tb_a3_softmax_block.sv",
+        "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh",
+        "workspace_sha256_at_audit": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181"
+      }
+    ],
+    "candidate_sources": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+        "verilator_content_hash": "unhashed",
+        "workspace_sha256_at_audit": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+        "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6",
+        "workspace_sha256_at_audit": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94"
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+        "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr",
+        "workspace_sha256_at_audit": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8"
+      },
+      {
+        "path": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_a3_fp32_exp_pos_cr_rne.sv",
+        "verilator_content_hash": "eBkqu0eEItUYlTJ5255E1cuDo4rjTw0yefDLMOao",
+        "workspace_sha256_at_audit": "7bf92abb478422d518953279db9e44d5cb83a38ae34f0d3279f0cb30e6a80b6f"
+      },
+      {
+        "path": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_a3_fp32_transcendental_cr_rne.sv",
+        "verilator_content_hash": "zeOqbw8oX6QBKtqBPd9hdOAWJWEgJLr3UGT4hFDd",
+        "workspace_sha256_at_audit": "cde3aa6f0f285fa4012adabf3ddf6174ef9625612024baf75064f88450dd819b"
+      },
+      {
+        "path": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_wide_mul_seq.sv",
+        "verilator_content_hash": "hCLajmZSin2CZuZh40pSI3Govnyp8gOWN8YTLLpX",
+        "workspace_sha256_at_audit": "8422da8e66528a7d8266e661e34a522371a8be7ca9f2039637c6132cba5718c7"
+      },
+      {
+        "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+        "verilator_content_hash": "KM2UrLJEpziKibOrzOIJnzEJ1eiqb4usk0nMibrO",
+        "workspace_sha256_at_audit": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE",
+        "workspace_sha256_at_audit": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_seq.sv",
+        "verilator_content_hash": "odZJFSgYMU6bOIXfNXY3Q70H4ZVeDkeoHcIE3s55",
+        "workspace_sha256_at_audit": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_small_seq.sv",
+        "verilator_content_hash": "waCDiMXwmjiN9bL14tsrjzZNfpRIK6PA8YUGYuy9",
+        "workspace_sha256_at_audit": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+      },
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei",
+        "workspace_sha256_at_audit": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4",
+        "workspace_sha256_at_audit": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+      },
+      {
+        "path": "rtl/test/tb_a3_softmax_block.sv",
+        "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh",
+        "workspace_sha256_at_audit": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181"
+      }
+    ],
+    "changed_or_added_source_basenames": [
+      "ot_a3_fp32_exp_pos_cr_rne.sv",
+      "ot_a3_fp32_transcendental_cr_rne.sv",
+      "ot_wide_mul_seq.sv"
+    ],
+    "source_difference_note": "Positive exp source explicitly parsed in candidate compilation, absent from baseline dependency list; negative exp uses same controller except MUL_BITS_PER_STEP 16 -> 32. Multiplier module uses tree implementation. Remaining Verilator source content hashes agree.",
+    "vector_hashes": {
+      "build/softmax_exp_reuse_vectors/cases.txt": "94186c9e9986ae4d60a425397c7dd4a41cc7885e30e65bf387a0cd6f7ad4d726",
+      "build/softmax_exp_reuse_vectors/probs_0.hex": "1ba2aff24917b5f90cd2ce1c1987e3a3e99e86f2d86f16badc6f8c488c5a2f69",
+      "build/softmax_exp_reuse_vectors/probs_1.hex": "78fb9c10d42a6f477f6e19d31dba3152673c9a1776519a07be901d6d08118109",
+      "build/softmax_exp_reuse_vectors/probs_2.hex": "18b34af2f2dbe86cf65af3c51e935546527bc9359dd5bf8bded27a2a39f639e5",
+      "build/softmax_exp_reuse_vectors/probs_3.hex": "d6de11fe58a507be05713acc8f1da41c5782a5c461be9d58589c4d01f8ed225c",
+      "build/softmax_exp_reuse_vectors/probs_4.hex": "d6de11fe58a507be05713acc8f1da41c5782a5c461be9d58589c4d01f8ed225c",
+      "build/softmax_exp_reuse_vectors/probs_5.hex": "5ec7469626efad5966e22777c312ced0a1d2abcc4fb41ad47d475ae3cc4ed54c",
+      "build/softmax_exp_reuse_vectors/probs_6.hex": "0f3aeaf1f851e11f6b93d596cce1499555759e22807432d66eede6dfb9483283",
+      "build/softmax_exp_reuse_vectors/probs_7.hex": "e116cfbe262b701b1e3ee283ae85ad199d24a9a60d4ad340160d61ec28ba6e3d",
+      "build/softmax_exp_reuse_vectors/probs_8.hex": "bffcae23a985d751a622c023d61b16c7c6397ad72d74fcda5e1e7352388b91f8",
+      "build/softmax_exp_reuse_vectors/scores_0.hex": "0d0b06a8a2b18c732487489f577d88abdc50a5dd58a3349435fe66c4c99c9559",
+      "build/softmax_exp_reuse_vectors/scores_1.hex": "2622e32bb7357185facd6daff1dd0cca4bc3754d4cea8461660140335b4bfb75",
+      "build/softmax_exp_reuse_vectors/scores_2.hex": "fa328991450d9b0a5e000cf40266b5dceba1b97c4eb89193752f4f3f5654e4d3",
+      "build/softmax_exp_reuse_vectors/scores_3.hex": "ad70039b4e68eea806f9ac080b4b4cc4fd35cea6cbac92531509676c0cff581d",
+      "build/softmax_exp_reuse_vectors/scores_4.hex": "ad70039b4e68eea806f9ac080b4b4cc4fd35cea6cbac92531509676c0cff581d",
+      "build/softmax_exp_reuse_vectors/scores_5.hex": "7ea62d7736a0fa63341a1d30b272ea8cf05ea057409ce7aeaa8a208b581c4002",
+      "build/softmax_exp_reuse_vectors/scores_6.hex": "a7b665d9d104a16b969069a3e96645c720a4e726f1878ff1ada2b47dddc5a911",
+      "build/softmax_exp_reuse_vectors/scores_7.hex": "9afc645e6f15bdcfb7b7069285896880a23aca289ad638a350ab096feb0d5b8d",
+      "build/softmax_exp_reuse_vectors/scores_8.hex": "f95492e78899d201d3f0d1d0034d9eb3bb15d6b6cc82e9156da26ae067beb0ce"
+    }
+  },
+  "physical_pending": [
+    "results/physical_abi3/asap7/wide_mul_chain/pnr_current_cts12_1ns.json",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_current_cts12_1ns.json",
+    "results/physical_abi3/asap7/wide_mul_tree/pnr_step32_cts12_1ns.json"
+  ],
+  "next_action": "Select chunk width from matched extracted timing and area, then integrate winning implementation and qualify containing exponential/softmax. General divider latency and softmax control fanout remain open."
+}

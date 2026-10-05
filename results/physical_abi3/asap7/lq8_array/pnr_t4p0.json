@@ -1,0 +1,218 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-15T10:43:08.200458+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_a3_lq8",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "size_bytes": 30130
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pipelined.sv",
+        "sha256": "d59e182e1c0b027bface225ce2da3586b48944b9b7588c20a86467dc5caf153e",
+        "size_bytes": 63881
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+        "sha256": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+        "size_bytes": 31338
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lq8.sv",
+        "sha256": "82d451ca5787a86573eb3a6b334eb12793fe068a1d50e2d30a6895b76cc134a4",
+        "size_bytes": 18987
+      }
+    ],
+    "top": "ot_a3_lq8"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\n\n /----------------------------------------------------------------------------\\\n |  yosys -- Yosys Open SYnthesis Suite                                       |\n |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |\n |  Distributed under an ISC-like license, type \"license\" to see terms        |\n \\----------------------------------------------------------------------------/\n Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\n\n-- Executing script file `/tmp/abi3-physical-kg6epp55/synth.ys' --\n\n1. Executing Verilog-2005 frontend: /home/ubuntu/OpenTallas/rtl/ot_fp32_rne_pkg.sv\nParsing SystemVerilog input from `/home/ubuntu/OpenTallas/rtl/ot_fp32_rne_pkg.sv' to AST representation.\nSuccessfully finished Verilog frontend.\n\n2. Executing Verilog-2005 frontend: /home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv\nParsing SystemVerilog input from `/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv' to AST representation.\nGenerating RTLIL representation for module `\\ot_a3_lane_pipelined'.\n\n/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv:412: ERROR: Can't resolve function name `\\ot_a3_lane_pkg::unpack_element'.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-15T10:43:07.930251+00:00",
+  "git": {
+    "commit": "b24b4e303297826134b5816711448e040dba723b",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/abi3/deepseek_v41_ds41_p3_build_attempt.json",
+      "results/abi3/deepseek_v41_hbm_contract_and_dtype_landing.json",
+      "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+      "results/derived/abi3_iso_area_three_level_audit.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M compiler/backends/hbm_sram/capability.py",
+      " M compiler/backends/hbm_sram/lower.py",
+      " M compiler/backends/hbm_sram/plan.py",
+      " M compiler/backends/rom/common/image.py",
+      " M compiler/backends/rom/common/inverse.py",
+      " M compiler/ir/v3/numeric.py",
+      " M docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md",
+      " M results/abi3/deepseek_v41_hbm_comparator_plan.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_block_max/physical.json",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/rtl/a3_v41_block_max_campaign.json",
+      " M results/rtl/a3_v41_candidate_mask_campaign.json",
+      " M rtl/abi3/ot_a3_communication_decoder.sv",
+      " M rtl/abi3/ot_a3_format_pkg.sv"
+    ]
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_a3_lq8",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lq8.sv",
+      "--clock-period-ns",
+      "4.0",
+      "--stages",
+      "synth,pnr",
+      "--purpose",
+      "signoff_target",
+      "--slew-margin-percent",
+      "60",
+      "--false-path-from",
+      "rst_n",
+      "--force",
+      "--output",
+      "results/physical_abi3/asap7/lq8_array/pnr_t4p0.json"
+    ],
+    "driver": {
+      "commit": "b24b4e303297826134b5816711448e040dba723b",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 4.0,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

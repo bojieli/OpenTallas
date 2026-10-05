@@ -1,0 +1,23 @@
+{
+  "scope": "Experimental containing softmax: balanced multiplier and 32-bit chunks; consumer workspace edits preserved in snapshots, no production defaults changed.",
+  "sources": [
+    {
+      "original": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "original_sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+      "candidate": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "candidate_sha256": "7bf92abb478422d518953279db9e44d5cb83a38ae34f0d3279f0cb30e6a80b6f"
+    },
+    {
+      "original": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "original_sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+      "candidate": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_a3_fp32_transcendental_cr_rne.sv",
+      "candidate_sha256": "cde3aa6f0f285fa4012adabf3ddf6174ef9625612024baf75064f88450dd819b"
+    },
+    {
+      "original": "rtl/lib/ot_wide_mul_tree_seq.sv",
+      "original_sha256": "95b494676f51cd77510884f182d5f0427c15c4c5693f3b743aecd6c2b8d16ec5",
+      "candidate": "results/rtl/wide_mul_tree_qualification/step32_sources/ot_wide_mul_seq.sv",
+      "candidate_sha256": "8422da8e66528a7d8266e661e34a522371a8be7ca9f2039637c6132cba5718c7"
+    }
+  ]
+}

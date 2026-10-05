@@ -1,0 +1,807 @@
+{
+  "PnR_jobs": 0,
+  "RTL_elaborations": 0,
+  "base_git": "86996e8f4a62f02f58b0f5592d3352b130dd57cb",
+  "build_GO": false,
+  "coordination": {
+    "Ampere": "bounded inventory and binding metadata only",
+    "Archimedes": "full macro abstracts, root clock/reset/PG/cuts and contextual physical admission",
+    "Dewey": "source accepted-demand event DAG and finite interval composition",
+    "Popper": "selected service/controller/ownership/CDC and once-only area join"
+  },
+  "default_enabled": false,
+  "evidence_classification": {
+    "checkpoint_payload": "NOT_READ_BY_THIS_RECEIPT",
+    "constructor_execution": "NOT_EXECUTED_BY_THIS_RECEIPT",
+    "inventory_and_constructor_free_metadata": "SOURCE_METADATA_ONLY",
+    "native_numerical": "NO_NEW_RUN_OR_PASS",
+    "physical": "UNKNOWN_NOT_QUALIFIED"
+  },
+  "hardware_admitted": false,
+  "historical_baseline": {
+    "RF_absent_from_baseline_sm_area": true,
+    "baseline_floorplans_have_abstract_SM_internal_macro_lists": true,
+    "floorplans": {
+      "DeepSeek": {
+        "abstract_LEF": "pending: harden die 1400 x 1640 um",
+        "abstract_SM_macros": [],
+        "die_um": [
+          31800.0,
+          25628.930817610064
+        ],
+        "physical_qualified": false,
+        "placed_counts": {
+          "ot_gpu_sm_v": 32,
+          "ot_hbm3e_phy": 4,
+          "ot_sram_1r1w_1024x256_m2_r2c2": 256
+        },
+        "rectangle_fit": true
+      },
+      "Qwen": {
+        "abstract_LEF": "pending: harden die 1900 x 2150 um",
+        "abstract_SM_macros": [],
+        "die_um": [
+          31800.0,
+          25628.930817610064
+        ],
+        "physical_qualified": false,
+        "placed_counts": {
+          "ot_gpu_sm_q": 32,
+          "ot_hbm3e_phy": 4,
+          "ot_sram_1r1w_1024x256_m2_r2c2": 256
+        },
+        "rectangle_fit": true
+      }
+    },
+    "historical_RF_debit_not_universally_missing": true,
+    "unified_model_byte_unchanged": true
+  },
+  "input_pin_manifest_sha256": "ba1fe93885ef449262171cd596c5a5ea257bbd7961601079f8e148145603696a",
+  "macro_views": {
+    "ot_hbm3e_phy": {
+      "abstract_only": true,
+      "area_um2": 10001960.015039999,
+      "contextual_SSFF": false,
+      "size_um": [
+        12000.096,
+        833.49
+      ],
+      "source": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef"
+    },
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "abstract_only": true,
+      "area_um2": 12314.20968,
+      "contextual_SSFF": false,
+      "size_um": [
+        174.744,
+        70.47
+      ],
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef"
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "abstract_only": true,
+      "area_um2": 3891.57696,
+      "contextual_SSFF": false,
+      "size_um": [
+        94.824,
+        41.04
+      ],
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef"
+    },
+    "ot_sram_1r1w_256x256_m2_r2c2": {
+      "abstract_only": true,
+      "area_um2": 7091.712,
+      "contextual_SSFF": false,
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef"
+    },
+    "ot_sram_1r1w_64x512_m1_r2c2": {
+      "abstract_only": true,
+      "area_um2": 13319.354880000003,
+      "contextual_SSFF": false,
+      "size_um": [
+        171.288,
+        77.76
+      ],
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef"
+    }
+  },
+  "models": {
+    "DeepSeek": {
+      "SM_replicas": 32,
+      "SRAM_macros_per_die": 8000,
+      "area": {
+        "RF_already_contained_in_service_envelope": true,
+        "RF_packing_debit_added_again": 0,
+        "RF_raw_mm2": 15.93989922816,
+        "charges": [
+          {
+            "additional_mm2": 471.8800554201599,
+            "charge_id": "selected_expanded_die",
+            "contained": false
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "RF",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "scratch",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "L2",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "PHY",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "capture",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_clock",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_controller",
+            "contained": true
+          }
+        ],
+        "complete_current_source_area": null,
+        "envelope_is_not_sum_of_raw_macro_areas": true,
+        "historical_RF_packed_mm2": 20.8812679888896,
+        "selected_reserved_occupancy_mm2": 471.8800554201599,
+        "service_envelope_mm2": 123.4944
+      },
+      "blockers": [
+        "complete selected SM source/parameter and macro ownership join",
+        "full matrix+service+shoreline clock/reset/PG sink census and balance",
+        "accepted-demand finite backend/consumer/reverse intervals",
+        "complete capture/protection/controller once-only allocation",
+        "PHY sustained bandwidth and contextual SS setup/FF hold, power/IR and routes"
+      ],
+      "capture": {
+        "accepted_demand_and_backpressure_proof": false,
+        "constructed_SRAM_bytes_per_SM": 262144,
+        "contracts_equivalent": false,
+        "historical_capture_cost_recharged": false,
+        "historical_full_operation_payload_bytes_per_SM": 131072
+      },
+      "clock": {
+        "FF_hold_uncertainty_ps": 25,
+        "SS_setup_uncertainty_ps": 60,
+        "balanced_CTS_and_contextual_SSFF": false,
+        "gateway_clock_is_full_parent_load": false,
+        "gateway_service_macro_endpoints_per_SM": 138,
+        "global_root_reset_release_PG_proof": false,
+        "retained_compute_macro_endpoints_per_SM": 64,
+        "retained_matrix_memory_macro_endpoints_per_SM": 104,
+        "serial_GHz": 0.9,
+        "stream_GHz": 1.2
+      },
+      "composition": {
+        "RF_I64_RMW_C0_recharged": false,
+        "build_GO": false,
+        "hardware_admitted": false,
+        "production_interval_bound_calls": 0,
+        "source_span_bound_calls": 3840,
+        "source_span_is_not_finite_service": true,
+        "whole_token_ns": null
+      },
+      "current_bridge_composition": {
+        "NC6_gross_upper_mm2_unreconciled": 6.62582757888,
+        "NC6_matched_old_debit_mm2": null,
+        "NC6_net_increment_mm2": null,
+        "NC6_once_only_rule": "F0old - exact matched oldW2 debit + grossNC6; no unrelated private context subtraction",
+        "W6_component_mm2": 0.054770585600000005,
+        "W6_subcomponent_added_again": false,
+        "actual_constructive_routes_and_PG_cuts": null,
+        "bridge_logic_upper_mm2_ASSUMED": 60.3190539108,
+        "bridge_upper_is_contained_in_slot_not_added_again": true,
+        "charges": [
+          {
+            "additional_mm2": 471.8800554201599,
+            "charge_id": "selected_expanded_die",
+            "contained": false
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "RF",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "scratch",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "L2",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "PHY",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "capture",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_clock",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_controller",
+            "contained": true
+          },
+          {
+            "additional_mm2": 89.28,
+            "charge_id": "current_W5_W10_disjoint_slot_envelope",
+            "contained": false
+          }
+        ],
+        "context_plus_reserved_slots_mm2": 561.1600554201599,
+        "current_single_shared_bus_cut_screen": true,
+        "exact_current_complete_area": null,
+        "old_rejected_single_bundle_cut_min_tracks": -1030,
+        "physical_admitted": false,
+        "reset_drain_upper_ns_prospective": 336549.9906666666,
+        "source_contract": "results/uarch/h4_hbm_baseline_bridge_20261003/w5_w10_r4/model.json",
+        "source_owned_reset_release_implemented": false
+      },
+      "die_count_scope": "per die; package/rank mapping requires owner calendar, not96 identical die inference",
+      "inventory": [
+        {
+          "count_per_die": 4096,
+          "evidence_scope": "source-sized service and 32SM reservation; not full mapped successor",
+          "owner": "SM RF",
+          "physical_bytes_per_die": 16777216,
+          "physical_qualified": false,
+          "ports": "1R1W per copy; two reads512B each; write512B mirrored",
+          "raw_macro_area_mm2": 15.93989922816,
+          "role": "RF"
+        },
+        {
+          "count_per_die": 64,
+          "evidence_scope": "source-sized64KiB/SM; finite64B port",
+          "owner": "SM shared",
+          "physical_bytes_per_die": 2097152,
+          "physical_qualified": false,
+          "ports": "two256b macros;64B read/write service",
+          "raw_macro_area_mm2": 0.78810941952,
+          "role": "scratch"
+        },
+        {
+          "count_per_die": 256,
+          "evidence_scope": "retained die placement inventory",
+          "owner": "L2",
+          "physical_bytes_per_die": 8388608,
+          "physical_qualified": false,
+          "ports": "1R1W256b per macro;128B line requires four bank reads",
+          "raw_macro_area_mm2": 3.15243767808,
+          "role": "L2"
+        },
+        {
+          "count_per_die": 4,
+          "evidence_scope": "external PHY abstract; sustained service/internal timing unknown",
+          "owner": "shoreline",
+          "physical_bytes_per_die": null,
+          "physical_qualified": false,
+          "ports": "retained AW31/LEN5/BEAT4 vs selected AW31/LEN6/BEAT5 requires exact provider join",
+          "raw_macro_area_mm2": 40.00784006016,
+          "role": "PHY"
+        },
+        {
+          "count_per_die": 3168,
+          "evidence_scope": "retained mapped-source inventory; not current full SM qualification",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 12976128,
+          "physical_qualified": false,
+          "ports": "DS full group fragment; Qwen buffered fragment",
+          "raw_macro_area_mm2": 12.328515809279999,
+          "role": "xstore"
+        },
+        {
+          "count_per_die": 160,
+          "evidence_scope": "retained source ring, depth1024; padded to256b macro lanes",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 5242880,
+          "physical_qualified": false,
+          "ports": "one source line/cycle only when actual flow permits",
+          "raw_macro_area_mm2": 1.9702735488,
+          "role": "staging"
+        },
+        {
+          "count_per_die": 0,
+          "evidence_scope": "retained source; Qwen BF16 scale layout",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 0,
+          "physical_qualified": false,
+          "ports": "256b1R1W macro; selected scale field",
+          "raw_macro_area_mm2": 0.0,
+          "role": "row_scale"
+        },
+        {
+          "count_per_die": 256,
+          "evidence_scope": "constructed DS8macros/SM; Qwen no additional SRAM in this contract",
+          "owner": "matrix capture",
+          "physical_bytes_per_die": 8388608,
+          "physical_qualified": false,
+          "ports": "accepted producer/consumer and owner intervals unqualified",
+          "raw_macro_area_mm2": 3.15243767808,
+          "role": "capture"
+        },
+        {
+          "count_per_die": 0,
+          "evidence_scope": "Qwen selected metadata reservation; DS missing implementation census",
+          "owner": "shoreline",
+          "physical_bytes_per_die": 0,
+          "physical_qualified": false,
+          "ports": "1R1W256b",
+          "raw_macro_area_mm2": 0.0,
+          "role": "shoreline_context"
+        },
+        {
+          "count_per_die": 0,
+          "evidence_scope": "Qwen selected request/return queues; DS complete provider census absent",
+          "owner": "shoreline",
+          "physical_bytes_per_die": 0,
+          "physical_qualified": false,
+          "ports": "1R1W512b; actual selected queue/controller qualification open",
+          "raw_macro_area_mm2": 0.0,
+          "role": "shoreline_queues"
+        }
+      ],
+      "protection": {
+        "ECC_or_parity_complete_selected_source_census": null,
+        "KV_ASSUMED_footprint_mm2": 0.1459150992,
+        "KV_area_added_to_selected_total": false,
+        "KV_constructive_state_bits_per_die": 81506,
+        "KV_installed": false,
+        "KV_parent_composition_total_upper": 473.56132270419187,
+        "KV_parent_total_is_different_scope": true,
+        "KV_source_operator_bound": false,
+        "RF_visibility_installed_in_selected_full_context": false,
+        "RF_visibility_payload_bits": 0,
+        "RF_visibility_state_bits_per_SM": 51,
+        "W6_frame_protected_bits": 147456,
+        "W6_frame_raw_bits": 131072,
+        "W6_same_index_sidecar_macro_alternative_count": 128,
+        "W6_sidecar_macro_alternative_selected": false,
+        "bridge_sidecar_realization": "protected FF upper substitute; source128x256 macro alternative not debited",
+        "bulk_response_queue_payload_bits_per_SM": 2176,
+        "bulk_ring_full_bits_per_SM": 1024,
+        "bulk_source_completion_flags_are_not_epoch_or_integrity_proof": true,
+        "complete_protection_physical_area": null,
+        "current_NC6_protected_state_bits": 1170432,
+        "current_NC6_raw_state_bits": 611712,
+        "current_bridge_protected_state_bits": 17075520,
+        "mutable_memory_and_link_protection_not_removed": true
+      },
+      "retained_source": {
+        "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+        "mapped_master_counts_per_SM": {
+          "ot_gpu_bd_col": 32,
+          "ot_gpu_tc16": 32,
+          "ot_sram_1r1w_1024x256_m2_r2c2": 5,
+          "ot_sram_1r1w_128x256_m1_r2c2": 99
+        },
+        "mapped_parent_FF_per_SM": 77192,
+        "params": {
+          "IL": 8,
+          "LBS": 2,
+          "LEV": 4,
+          "LSB": 16,
+          "MAX_OUT": 512,
+          "NC": 8,
+          "RMAX": 4096,
+          "SUB": 4,
+          "XD": 128
+        },
+        "source_geometry_is_historical": true
+      },
+      "routing": {
+        "L2_available_tracks": 12919,
+        "L2_demand_tracks": 11072,
+        "actual_complete_route": false,
+        "conditional_constructive_screen": true,
+        "distributed_cuts": 6688,
+        "minimum_margin_tracks": 991
+      },
+      "shoreline": {
+        "PHY_claim_boundary": "a placement and connection abstract for licensed IP; no PHY design, no GDS, no signal-integrity or bump-map analysis; footprint and timing are assumed",
+        "PHY_exact_interface_join": false,
+        "PHY_internal_physical_qualification": null,
+        "complete_DS_controller_storage_count": null,
+        "retained_PHY_interface_bits": {
+          "address_bits": 31,
+          "beat_bits": 4,
+          "len_bits": 5
+        },
+        "selected_controller_required_bits": {
+          "address_bits": 31,
+          "beat_bits": 5,
+          "len_bits": 6
+        },
+        "sustained_bandwidth_measurement": null
+      },
+      "staging": {
+        "context_summary_bytes_per_SM": 131072,
+        "context_summary_matches_source": false,
+        "depth": 1024,
+        "line_bits": 1088,
+        "physical_bytes_per_SM": 163840,
+        "useful_bytes_per_SM": 139264
+      }
+    },
+    "Qwen": {
+      "SM_replicas": 32,
+      "SRAM_macros_per_die": 5472,
+      "area": {
+        "RF_already_contained_in_service_envelope": true,
+        "RF_packing_debit_added_again": 0,
+        "RF_raw_mm2": 15.93989922816,
+        "charges": [
+          {
+            "additional_mm2": 457.48399132671994,
+            "charge_id": "selected_expanded_die",
+            "contained": false
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "RF",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "scratch",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "L2",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "PHY",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "capture",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_clock",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_controller",
+            "contained": true
+          }
+        ],
+        "complete_current_source_area": null,
+        "envelope_is_not_sum_of_raw_macro_areas": true,
+        "historical_RF_packed_mm2": 20.8812679888896,
+        "selected_reserved_occupancy_mm2": 457.48399132671994,
+        "service_envelope_mm2": 123.4944
+      },
+      "blockers": [
+        "complete selected SM source/parameter and macro ownership join",
+        "full matrix+service+shoreline clock/reset/PG sink census and balance",
+        "accepted-demand finite backend/consumer/reverse intervals",
+        "complete capture/protection/controller once-only allocation",
+        "PHY sustained bandwidth and contextual SS setup/FF hold, power/IR and routes"
+      ],
+      "capture": {
+        "accepted_demand_and_backpressure_proof": false,
+        "constructed_SRAM_bytes_per_SM": 0,
+        "contracts_equivalent": false,
+        "historical_capture_cost_recharged": false,
+        "historical_full_operation_payload_bytes_per_SM": 262144
+      },
+      "clock": {
+        "FF_hold_uncertainty_ps": 25,
+        "SS_setup_uncertainty_ps": 60,
+        "balanced_CTS_and_contextual_SSFF": false,
+        "gateway_clock_is_full_parent_load": false,
+        "gateway_service_macro_endpoints_per_SM": 130,
+        "global_root_reset_release_PG_proof": false,
+        "retained_compute_macro_endpoints_per_SM": 64,
+        "retained_matrix_memory_macro_endpoints_per_SM": 21,
+        "serial_GHz": 0.9,
+        "stream_GHz": 1.2
+      },
+      "composition": {
+        "RF_I64_RMW_C0_recharged": false,
+        "build_GO": false,
+        "hardware_admitted": false,
+        "production_interval_bound_calls": 0,
+        "source_span_bound_calls": 3840,
+        "source_span_is_not_finite_service": true,
+        "whole_token_ns": null
+      },
+      "current_bridge_composition": {
+        "NC6_gross_upper_mm2_unreconciled": 6.62582757888,
+        "NC6_matched_old_debit_mm2": null,
+        "NC6_net_increment_mm2": null,
+        "NC6_once_only_rule": "F0old - exact matched oldW2 debit + grossNC6; no unrelated private context subtraction",
+        "W6_component_mm2": 0.054770585600000005,
+        "W6_subcomponent_added_again": false,
+        "actual_constructive_routes_and_PG_cuts": null,
+        "bridge_logic_upper_mm2_ASSUMED": 60.3190539108,
+        "bridge_upper_is_contained_in_slot_not_added_again": true,
+        "charges": [
+          {
+            "additional_mm2": 457.48399132671994,
+            "charge_id": "selected_expanded_die",
+            "contained": false
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "RF",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "scratch",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "L2",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "PHY",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "capture",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_clock",
+            "contained": true
+          },
+          {
+            "additional_mm2": 0,
+            "charge_id": "gateway_controller",
+            "contained": true
+          },
+          {
+            "additional_mm2": 79.36,
+            "charge_id": "current_W5_W10_disjoint_slot_envelope",
+            "contained": false
+          }
+        ],
+        "context_plus_reserved_slots_mm2": 536.8439913267199,
+        "current_single_shared_bus_cut_screen": true,
+        "exact_current_complete_area": null,
+        "old_rejected_single_bundle_cut_min_tracks": -1287,
+        "physical_admitted": false,
+        "reset_drain_upper_ns_prospective": 336549.9906666666,
+        "source_contract": "results/uarch/h4_hbm_baseline_bridge_20261003/w5_w10_r4/model.json",
+        "source_owned_reset_release_implemented": false
+      },
+      "die_count_scope": "per die; package/rank mapping requires owner calendar, not96 identical die inference",
+      "inventory": [
+        {
+          "count_per_die": 4096,
+          "evidence_scope": "source-sized service and 32SM reservation; not full mapped successor",
+          "owner": "SM RF",
+          "physical_bytes_per_die": 16777216,
+          "physical_qualified": false,
+          "ports": "1R1W per copy; two reads512B each; write512B mirrored",
+          "raw_macro_area_mm2": 15.93989922816,
+          "role": "RF"
+        },
+        {
+          "count_per_die": 64,
+          "evidence_scope": "source-sized64KiB/SM; finite64B port",
+          "owner": "SM shared",
+          "physical_bytes_per_die": 2097152,
+          "physical_qualified": false,
+          "ports": "two256b macros;64B read/write service",
+          "raw_macro_area_mm2": 0.78810941952,
+          "role": "scratch"
+        },
+        {
+          "count_per_die": 256,
+          "evidence_scope": "retained die placement inventory",
+          "owner": "L2",
+          "physical_bytes_per_die": 8388608,
+          "physical_qualified": false,
+          "ports": "1R1W256b per macro;128B line requires four bank reads",
+          "raw_macro_area_mm2": 3.15243767808,
+          "role": "L2"
+        },
+        {
+          "count_per_die": 4,
+          "evidence_scope": "external PHY abstract; sustained service/internal timing unknown",
+          "owner": "shoreline",
+          "physical_bytes_per_die": null,
+          "physical_qualified": false,
+          "ports": "retained AW31/LEN5/BEAT4 vs selected AW31/LEN6/BEAT5 requires exact provider join",
+          "raw_macro_area_mm2": 40.00784006016,
+          "role": "PHY"
+        },
+        {
+          "count_per_die": 512,
+          "evidence_scope": "retained mapped-source inventory; not current full SM qualification",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 16777216,
+          "physical_qualified": false,
+          "ports": "DS full group fragment; Qwen buffered fragment",
+          "raw_macro_area_mm2": 6.30487535616,
+          "role": "xstore"
+        },
+        {
+          "count_per_die": 128,
+          "evidence_scope": "retained source ring, depth1024; padded to256b macro lanes",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 4194304,
+          "physical_qualified": false,
+          "ports": "one source line/cycle only when actual flow permits",
+          "raw_macro_area_mm2": 1.57621883904,
+          "role": "staging"
+        },
+        {
+          "count_per_die": 32,
+          "evidence_scope": "retained source; Qwen BF16 scale layout",
+          "owner": "matrix SM",
+          "physical_bytes_per_die": 262144,
+          "physical_qualified": false,
+          "ports": "256b1R1W macro; selected scale field",
+          "raw_macro_area_mm2": 0.226934784,
+          "role": "row_scale"
+        },
+        {
+          "count_per_die": 0,
+          "evidence_scope": "constructed DS8macros/SM; Qwen no additional SRAM in this contract",
+          "owner": "matrix capture",
+          "physical_bytes_per_die": 0,
+          "physical_qualified": false,
+          "ports": "accepted producer/consumer and owner intervals unqualified",
+          "raw_macro_area_mm2": 0.0,
+          "role": "capture"
+        },
+        {
+          "count_per_die": 128,
+          "evidence_scope": "Qwen selected metadata reservation; DS missing implementation census",
+          "owner": "shoreline",
+          "physical_bytes_per_die": 524288,
+          "physical_qualified": false,
+          "ports": "1R1W256b",
+          "raw_macro_area_mm2": 0.49812185088,
+          "role": "shoreline_context"
+        },
+        {
+          "count_per_die": 256,
+          "evidence_scope": "Qwen selected request/return queues; DS complete provider census absent",
+          "owner": "shoreline",
+          "physical_bytes_per_die": 1048576,
+          "physical_qualified": false,
+          "ports": "1R1W512b; actual selected queue/controller qualification open",
+          "raw_macro_area_mm2": 3.4097548492800005,
+          "role": "shoreline_queues"
+        }
+      ],
+      "protection": {
+        "ECC_or_parity_complete_selected_source_census": null,
+        "KV_ASSUMED_footprint_mm2": 0.1459150992,
+        "KV_area_added_to_selected_total": false,
+        "KV_constructive_state_bits_per_die": 81506,
+        "KV_installed": false,
+        "KV_parent_composition_total_upper": 461.7161707336318,
+        "KV_parent_total_is_different_scope": true,
+        "KV_source_operator_bound": true,
+        "RF_visibility_installed_in_selected_full_context": false,
+        "RF_visibility_payload_bits": 0,
+        "RF_visibility_state_bits_per_SM": 51,
+        "W6_frame_protected_bits": 147456,
+        "W6_frame_raw_bits": 131072,
+        "W6_same_index_sidecar_macro_alternative_count": 128,
+        "W6_sidecar_macro_alternative_selected": false,
+        "bridge_sidecar_realization": "protected FF upper substitute; source128x256 macro alternative not debited",
+        "bulk_response_queue_payload_bits_per_SM": 2048,
+        "bulk_ring_full_bits_per_SM": 1024,
+        "bulk_source_completion_flags_are_not_epoch_or_integrity_proof": true,
+        "complete_protection_physical_area": null,
+        "current_NC6_protected_state_bits": 1170432,
+        "current_NC6_raw_state_bits": 611712,
+        "current_bridge_protected_state_bits": 17075520,
+        "mutable_memory_and_link_protection_not_removed": true
+      },
+      "retained_source": {
+        "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+        "mapped_master_counts_per_SM": {
+          "ot_gpu_tc_col": 64,
+          "ot_sram_1r1w_1024x256_m2_r2c2": 20,
+          "ot_sram_1r1w_256x256_m2_r2c2": 1
+        },
+        "mapped_parent_FF_per_SM": 185341,
+        "params": {
+          "IL": 8,
+          "LEV": 5,
+          "LS": 32,
+          "MAX_OUT": 512,
+          "NC": 16,
+          "NXM": 16,
+          "RMAX": 4096,
+          "SUB": 4
+        },
+        "source_geometry_is_historical": true
+      },
+      "routing": {
+        "L2_available_tracks": 12919,
+        "L2_demand_tracks": 11072,
+        "actual_complete_route": false,
+        "conditional_constructive_screen": true,
+        "distributed_cuts": 6688,
+        "minimum_margin_tracks": 1648
+      },
+      "shoreline": {
+        "PHY_claim_boundary": "a placement and connection abstract for licensed IP; no PHY design, no GDS, no signal-integrity or bump-map analysis; footprint and timing are assumed",
+        "PHY_exact_interface_join": false,
+        "PHY_internal_physical_qualification": null,
+        "complete_DS_controller_storage_count": "Qwen source reservation only",
+        "retained_PHY_interface_bits": {
+          "address_bits": 31,
+          "beat_bits": 4,
+          "len_bits": 5
+        },
+        "selected_controller_required_bits": {
+          "address_bits": 31,
+          "beat_bits": 5,
+          "len_bits": 6
+        },
+        "sustained_bandwidth_measurement": null
+      },
+      "staging": {
+        "context_summary_bytes_per_SM": 131072,
+        "context_summary_matches_source": true,
+        "depth": 1024,
+        "line_bits": 1024,
+        "physical_bytes_per_SM": 131072,
+        "useful_bytes_per_SM": 131072
+      }
+    }
+  },
+  "payload_reads": 0,
+  "retained_source_equivalence": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "current_source_bytes_equal": true,
+    "does_not_transfer_physical_qualification": true,
+    "sha256": {
+      "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+      "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+      "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca"
+    }
+  },
+  "schema": "opentallas.hbm.fullsize-inventory-composition.v1"
+}

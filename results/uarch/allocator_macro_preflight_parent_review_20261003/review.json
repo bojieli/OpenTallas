@@ -1,0 +1,25 @@
+{
+  "base_main": "f829666927fa0bfdd28e162ed2c302565022089b",
+  "reviewed_commits": ["290d701b986ecafc81e59f5561c9701228f8077d", "b34324af68132493b9cd32503a1f16dae1cef219"],
+  "allocator": {
+    "independent_owner_replay": "PASS source inventory and symbolic checks; actual-native-caller FAIL retained",
+    "receipt_hashes_verified": 17,
+    "conservative_sector_children_per_SM": 128,
+    "conservative_RF_frame_equivalents_per_SM": 8,
+    "source_fragment_credit_full_frame_ACK_join": "Conditional deadlock requires actual continued-admission/deferred-reverse binding",
+    "hardware_admitted": false
+  },
+  "macro_preflight": {
+    "strict_tests_passed": 16,
+    "original_diagnostic_tests_passed": 7,
+    "independent_CLI_cases_receipt_identical": 14,
+    "artifact_hashes_verified": 36,
+    "scope": "Caller-supplied pinned instance snapshot",
+    "missing_for_complete_placement_claim": "Independent actual placement census join",
+    "DRC_PG_SSFF_qualified": false,
+    "live_hooks_changed": false
+  },
+  "check_figures": "PASS; terminal_ready=False, all four designs G0-G5 blocked",
+  "corrected_review_invocation": "Allocator relative receipt hash check initially used repository root; corrected r3 working directory passed",
+  "adopted": false
+}

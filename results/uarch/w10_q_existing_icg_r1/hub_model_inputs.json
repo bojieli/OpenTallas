@@ -1,0 +1,51 @@
+{
+  "CLOCK_J_MM2": 8.5e-11,
+  "COOLING_LIMIT_W": 474.56,
+  "E_MAC": {
+    "bf16": 3.3e-13,
+    "fp32": 1.09e-12,
+    "fp4": 2.3e-14,
+    "fp8": 5.4e-14,
+    "w4a8": 3.9e-14
+  },
+  "E_SRAM_B": 2.6e-12,
+  "HBM_IDLE_W_STACK": 2.8,
+  "LEAK": {
+    "logic": 0.1,
+    "rom_array": 0.0067,
+    "sram_array": 0.005
+  },
+  "PRODUCT_GEOM": "w10_refit_crot",
+  "PRODUCT_HUB": {
+    "block_mm2": 38.601,
+    "field_loss_mm2": 25.57,
+    "lane_array_mm2": 23.913,
+    "lane_side_um": 4890.1,
+    "network_footprint_mm2": 2.274,
+    "option": "C_rotate",
+    "sram_mm2": 10.893,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling 2026-10-01: the product's VM)",
+    "stream_unit_ledger_mm2": 14.249,
+    "switch_fraction": 0.05,
+    "vm_block_mm2": 14.688,
+    "vm_depth_um": 3003.7
+  },
+  "SFU_OPS_PER_ELEM": 10,
+  "att_macs": 32768,
+  "hub_logic_mm2": 75.861,
+  "idx_macs": 262144,
+  "model_commit": "d3469c6e835a15a2e59d9a30dafaf72baec725ff",
+  "qualification": "Existing unified-model coefficients and configured resource ceilings; uncalibrated physical reservation, no hub timing/power qualification",
+  "serdes_always_on_W": 30.576,
+  "sfu_lanes": 256,
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/arch/v41_rack.json": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "su_lanes": 1024,
+  "ucie_idle_W": 2.52,
+  "vm_read_elems": 64,
+  "vm_sram_mm2": 10.893,
+  "vm_write_elems": 128
+}

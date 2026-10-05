@@ -1,0 +1,208 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-02T05:10:31.269044+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 55390.294,
+    "block": "ot_w11_ring_port_nphys",
+    "cells": 430441,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.0,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_w11_ring_phys.sv",
+        "sha256": "674e061a4d4ed644030e6d13b867bee6f578f33d93b694aa1b3a3539bb59c7a2",
+        "size_bytes": 16720
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv",
+        "sha256": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15",
+        "size_bytes": 8942
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv",
+        "sha256": "bba9b5c064ccfcf2e198de955dc2bb6291fcf305c78ba5a708089e01b7d6f5a0",
+        "size_bytes": 12195
+      }
+    ],
+    "top": "ot_w11_ring_port_nphys"
+  },
+  "error": "TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/home/ubuntu/w11kc-wt2:/src:ro', '-v', '/home/ubuntu/w11tmp/abi3-physical-pggl5fgw/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', \"trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish metadata-generate\"]' timed out after 86400 seconds",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T00:27:14.950702+00:00",
+  "git": {
+    "commit": "4a7183a066dc41c6b68e2933837a6acfdbba00e2",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0",
+      "--false-path-from",
+      "rst_n",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "synth,pnr",
+      "--force",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--keep-heavy-artifacts",
+      "--hold-margin-ns",
+      "0.01",
+      "--nickname-tag",
+      "w11kc_portn3",
+      "--output",
+      "/tmp/claude-1000/w11s/hard/kc_portn3/physical.json",
+      "--top",
+      "ot_w11_ring_port_nphys",
+      "--source",
+      "rtl/chip/physical/ot_w11_ring_phys.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv",
+      "--core-utilization",
+      "30",
+      "--routing-layers",
+      "M2",
+      "M5"
+    ],
+    "driver": {
+      "commit": "4a7183a066dc41c6b68e2933837a6acfdbba00e2",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w11kc-wt2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/home/ubuntu/w11kc-wt2"
+    },
+    "platform": "Linux-5.15.0-194-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/w11kc-wt2"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 55390.294,
+    "cell_count": 430441,
+    "cell_types_used": 40,
+    "chip_area_um2": 55392.97752,
+    "combinational_cell_count": 418393,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "f26e795e9ddbc99f0c6f6cd7fb58cc43f77d8f05839dc511026908641ce781e9",
+      "raw_netlist_sha256": "f26e795e9ddbc99f0c6f6cd7fb58cc43f77d8f05839dc511026908641ce781e9",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 3538.94,
+    "sequential_cell_count": 12048,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

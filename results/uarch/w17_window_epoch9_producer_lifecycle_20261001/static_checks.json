@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS_STATIC_SPEC_ONLY",
+  "WR_column_phases_checked": 1000,
+  "visibility_guard_7cycles_sufficient": true,
+  "6cycle_guard_counterexample": true,
+  "producer_source_instructions": [
+    20,
+    21,
+    22
+  ],
+  "QK_PV_descriptors": [
+    24,
+    32
+  ],
+  "producer_payload_reads": false,
+  "RTL_build_or_write_bench": false
+}

@@ -1,0 +1,24 @@
+{
+  "local": {
+    "commands": [
+      "docker image inspect sha256:d7d4a8ff33fe73c006535591233e4af478ce5ea2b55ebea30c3dbbf133f6bae2",
+      "docker version --format \"{{json .}}\"",
+      "sudo cat /var/lib/docker/image/overlay2/imagedb/content/sha256/d7d4a8ff33fe73c006535591233e4af478ce5ea2b55ebea30c3dbbf133f6bae2"
+    ],
+    "layerdb_method": "Read diff,size,parent files for exactly3 recursive ChainIDs derived from known diffIDs; no container filesystem reads"
+  },
+  "no_compiler_or_runtime": true,
+  "no_import_retry": true,
+  "no_retag": true,
+  "remote": {
+    "SSH": "ssh -o BatchMode=yes ot-agidock128",
+    "blob_hash_method": "sudo Python hashlib.sha256 streamed 1MiB chunks for exactly5 selected blobs under /var/lib/containerd/io.containerd.content.v1.content/blobs/sha256; stat before/after size+mtime stable",
+    "commands": [
+      "docker image inspect sha256:760104a7f8f31f970fb3c1ff5bf91cfa0cb79ace21ada4454b157421df715555",
+      "docker version --format \"{{json .}}\"",
+      "sudo ctr --namespace moby content get sha256:760104a7f8f31f970fb3c1ff5bf91cfa0cb79ace21ada4454b157421df715555",
+      "sudo ctr --namespace moby content get sha256:d7d4a8ff33fe73c006535591233e4af478ce5ea2b55ebea30c3dbbf133f6bae2"
+    ],
+    "endpoint": "ot-agidock128 (155.103.253.226)"
+  }
+}

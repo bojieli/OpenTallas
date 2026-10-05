@@ -1,0 +1,55 @@
+{
+  "status": "proposal_not_adopted_no_routed_rate_claim",
+  "base": "9ac1d9be",
+  "source_pins": {
+    "rtl/test/tb_hdc_qwen_layer0_tp2.sv": "a3f0b98249aab1aa5a5db849812511b948b7668d26b6e38fe14280512bde3df3",
+    "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/global_route.json": "0c8ada5f0f072211aead44973685cc8ba6cc2eacd8ac6f12420a8c82c9f47793"
+  },
+  "widths": [
+    {
+      "groups": 4,
+      "int8_code_bits_per_issue": 512,
+      "activation_fp32_bits_per_issue": 128,
+      "scale_bf16_bits_max": 1024,
+      "kv_fp32_bits_max": 2048,
+      "result_fp32_bits_max": 2048,
+      "caveat": "interface maxima, not simultaneous sustained traffic"
+    },
+    {
+      "groups": 64,
+      "int8_code_bits_per_issue": 8192,
+      "activation_fp32_bits_per_issue": 2048,
+      "scale_bf16_bits_max": 16384,
+      "kv_fp32_bits_max": 32768,
+      "result_fp32_bits_max": 32768,
+      "caveat": "interface maxima, not simultaneous sustained traffic"
+    },
+    {
+      "groups": 6144,
+      "int8_code_bits_per_issue": 786432,
+      "activation_fp32_bits_per_issue": 196608,
+      "scale_bf16_bits_max": 1572864,
+      "kv_fp32_bits_max": 3145728,
+      "result_fp32_bits_max": 3145728,
+      "caveat": "interface maxima, not simultaneous sustained traffic"
+    }
+  ],
+  "proposed_region": {
+    "groups": 4,
+    "int8_code_bits": 512,
+    "activation_fp32_bits": 128,
+    "scale_bf16_bits_max": 1024,
+    "result_fp32_bits_max": 2048,
+    "regions_per_6144_die": 1536,
+    "placement": "ROM and scale banks next to operand registers and MACs; hierarchical reduction and banked writeback; no flat global bus",
+    "unresolved": [
+      "macro compiler geometry and port assignment",
+      "address-trace VM bank conflict proof",
+      "per-edge routed delay and register placement",
+      "clock/power distribution",
+      "HBM and collective concurrent service"
+    ]
+  }
+}

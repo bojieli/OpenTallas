@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.qcnam.checkpoint-owner-clearance.v1",
+  "observed_utc": "2026-10-01T11:28:47.483072+00:00",
+  "owner": "QC lane owner; user authorized exact three-directory cleanup clearance",
+  "integrated_main": "6f691ef74ba92718fa032118924db682ef1684b6",
+  "published_verdict_sha256": "f72b847c5ee38b616d40b16a3ced0da7399cba58fafc6c53e519818fcf979531",
+  "all_15_published_archive_inputs_match_original": true,
+  "gate_complete": true,
+  "gate_pass": false,
+  "adopted": false,
+  "released_exactly": [
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/core/work",
+      "owner_clearance": "RELEASED_NO_RESUME",
+      "logical_bytes": 27538453441,
+      "allocated_bytes": 27538575360,
+      "file_count": 9
+    },
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/mmlu1000/work",
+      "owner_clearance": "RELEASED_NO_RESUME",
+      "logical_bytes": 43512503073,
+      "allocated_bytes": 43512668160,
+      "file_count": 9
+    },
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/long/work",
+      "owner_clearance": "RELEASED_NO_RESUME",
+      "logical_bytes": 13495342841,
+      "allocated_bytes": 13495382016,
+      "file_count": 9
+    }
+  ],
+  "process_scan": {
+    "examined_processes": 751,
+    "observed_argv_fd_map_consumers": [],
+    "evaluation_supervisors": [],
+    "scope": "Accessible local proc entries; parent must recheck immediately before removal."
+  },
+  "manifest": {
+    "path": "/tmp/claude-1000/queue/QCNAM.manifest",
+    "before_sha256": "6bad2b7c62e1e6315c7c34fc791d3f36b81ab34aca624c6daf4173bec29261b4",
+    "after_sha256": "25f123b29aab6dfa9bcdab0c520e7f330d0d729b6b4c580166f26202b662b893",
+    "authoritative_clearance": "\nAUTHORITATIVE QC OWNER CHECKPOINT CLEARANCE 2026-10-01T11:28:47.483072+00:00\nFull original-rule all-lane verdict is complete: quality acceptable, stability FAIL, adopt=false. Published verdict SHA256 f72b847c5ee38b616d40b16a3ced0da7399cba58fafc6c53e519818fcf979531; main 6f691ef74ba92718fa032118924db682ef1684b6.\nAll earlier lane start/resume and wildcard cleanup lines above are historical and superseded. No lane rerun, attribution campaign, successor job or second finalization is authorized.\nQC lane owner RELEASES ONLY these completed no-resume work directories for parent bounded removal after its final identity/protection recheck:\nRELEASED_NO_RESUME | /tmp/claude-1000/qcnam/runs/core/work | full terminal inputs committed and hash-verified; no current process FD/map/argv consumer; no future QC dependency\nRELEASED_NO_RESUME | /tmp/claude-1000/qcnam/runs/mmlu1000/work | full terminal inputs committed and hash-verified; no current process FD/map/argv consumer; no future QC dependency\nRELEASED_NO_RESUME | /tmp/claude-1000/qcnam/runs/long/work | full terminal inputs committed and hash-verified; no current process FD/map/argv consumer; no future QC dependency\nNo other path is released. Preserve run/raw/status/log/gen files and all archives; qcnam-run@d2631dd9; dirty qcnam attribution source; admission watcher source/events; owner-held finalizer431062 source/state/hold; finalization-exclusive; model cache/weights. PREPARED attribution.sh is unlaunched, unauthorized, uses separate R/attrib/work and does not consume any released work directory.\nHeld finalizer431062 remains owned by Ram QC recovery and untouched. Original finalizer consumes terminal JSON only, not work checkpoints. Parent performs bounded removal/audit; QC owner deleted nothing.\n"
+  },
+  "queue_exact_path_matches_before_clearance": [
+    {
+      "path": "/tmp/claude-1000/queue/W11.QCNAM-retirement-handoff.json",
+      "sha256": "4f9966c6bc73179e6ab1f3023e9a970f81538f35e650f41affc06897b00764fe",
+      "work_paths": [
+        "/tmp/claude-1000/qcnam/runs/long/work"
+      ]
+    },
+    {
+      "path": "/tmp/claude-1000/queue/W11.qcnam-retirement-review/owner-handoff-1058/archive.json",
+      "sha256": "480aab057f4bd05b7b2d09b2de363b6e8767e1f9becb356f20a62e8d068b8107",
+      "work_paths": [
+        "/tmp/claude-1000/qcnam/runs/long/work"
+      ]
+    }
+  ],
+  "future_dependency_review": "Original finalizer consumes terminal run/raw JSON only. Complete evaluator needs no resume. No attribution/successor is authorized; prepared attribution uses separate R/attrib/work. Old queue entries are retained as history and explicitly superseded by this owner clearance.",
+  "watcher": {
+    "pid": 431062,
+    "state": "T",
+    "start_ticks": "304917012",
+    "owner": "Ram QC recovery",
+    "hold_receipt_sha256": "7f4a7ebc32e359d4b94437a46f6e94b0e6b30baf5daa1d7933a1de3cd4f450cb",
+    "protected": true,
+    "no_signal": true
+  },
+  "protected": [
+    "all terminal run/raw/status/log/gen outputs and archives",
+    "/tmp/claude-1000/wt/qcnam-run",
+    "/tmp/claude-1000/wt/qcnam dirty experimental source",
+    "/tmp/claude-1000/wt/qcnam-admission-watch and admission events",
+    "/tmp/opentallas-qcnam-w16-recovery",
+    "/tmp/claude-1000/qcnam/readiness-watch-72b3718d1",
+    "/tmp/claude-1000/qcnam/retirement-control",
+    "/tmp/claude-1000/qcnam/finalization-exclusive",
+    "all model weights/cache"
+  ],
+  "deletion_performed": false,
+  "parent_action": "May remove only the three released directories after immediate manifest/protection/process recheck; archive its bounded removal audit. No other QC campaign or watcher action."
+}

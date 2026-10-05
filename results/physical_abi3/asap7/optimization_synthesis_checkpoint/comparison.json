@@ -1,0 +1,103 @@
+{
+  "scope": "Intermediate mapped synthesis area and flop inventory. No routed timing/area closure, activity energy, or integrated deployment claim. Active physical flows retain the final acceptance requirement. Source bindings identify launch versions; completed route manifests must revalidate them.",
+  "records": [
+    {
+      "name": "state_combinational",
+      "workdir": "build/physical_state_combinational_modulo_1ns",
+      "mapped_area_um2": 3919.9788,
+      "mapped_flip_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3600
+      },
+      "retained_artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_combinational/synth_stat.txt": "726bbceb113369ee93608d3110749ff2b66a3403344f4f58cbac9b2fa456a093",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_combinational/config.mk": "65b1656a8d0669dcea104ed30d3c65f01df79d1440517099237feb0bb1d2c26b",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_combinational/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_combinational/synth_check.txt": "69030b938003d23032bd618814b9f768bf974ea403401c3737c4d780059369d6"
+      },
+      "launch_source_bindings": {
+        "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "results/rtl/state_cursor_modulo/before.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006"
+      }
+    },
+    {
+      "name": "state_sequential",
+      "workdir": "build/physical_state_sequential_modulo_1ns",
+      "mapped_area_um2": 3573.64548,
+      "mapped_flip_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3706
+      },
+      "retained_artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_sequential/synth_stat.txt": "9bb37a81f1feeb780dd33d9ce491963964617f3ff8eb99c9d7280d52459c4ae1",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_sequential/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_sequential/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_sequential/synth_check.txt": "69030b938003d23032bd618814b9f768bf974ea403401c3737c4d780059369d6"
+      },
+      "launch_source_bindings": {
+        "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "results/rtl/state_payload_capture/before.sv": "f5640be1d6bef809fb31f15c45bde568efe11b4fe2a76e4ea8e7b793c8a581df"
+      }
+    },
+    {
+      "name": "state_payload",
+      "workdir": "build/physical_state_payload_capture_1ns",
+      "mapped_area_um2": 3492.79938,
+      "mapped_flip_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 2618,
+        "DFFHQNx1_ASAP7_75t_R": 1088
+      },
+      "retained_artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_payload/synth_stat.txt": "89ca144d028683d7849bd58ece49070c882f282cfb697f57e8cf626f0d0cd78f",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_payload/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_payload/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/state_payload/synth_check.txt": "69030b938003d23032bd618814b9f768bf974ea403401c3737c4d780059369d6"
+      },
+      "launch_source_bindings": {
+        "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "rtl/abi3/ot_a3_state_controller.sv": "f60c152c5bdcae2c2db7e5fc1bc9317ed8bad1cdba4c0780afeb90b6d688ba6b"
+      }
+    },
+    {
+      "name": "transport_credit1",
+      "workdir": "build/physical_weight_transport_credits1_1ns",
+      "mapped_area_um2": 6031.746,
+      "mapped_flip_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 128,
+        "DFFHQNx1_ASAP7_75t_R": 6561
+      },
+      "retained_artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit1/synth_stat.txt": "2cc0edff492ab21b23ff5609b74b002ca5d3ccff17e75fc1c8d938656f7afdd2",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit1/config.mk": "a2c3f4f558d4265d481d997f982efed13d7b9fcaed101eadc9d741c3a6760212",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit1/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit1/synth_check.txt": "001b48521318c11794a98e485e569032b85a02d9dfba800d3ea1e1945f30a6c1"
+      },
+      "launch_source_bindings": {
+        "rtl/abi3/ot_a3_weight_layout_cursor.sv": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+        "rtl/abi3/ot_a3_bf16_weight_gather.sv": "cbe79cc217d9c52055195bf92f3f793cc9b5ba3885e82044e6b80ba1bd168cdb",
+        "rtl/abi3/ot_a3_bf16_weight_transport.sv": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10"
+      }
+    },
+    {
+      "name": "transport_credit4",
+      "workdir": "build/physical_weight_transport_credits4_1ns",
+      "mapped_area_um2": 5973.58638,
+      "mapped_flip_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 134,
+        "DFFHQNx1_ASAP7_75t_R": 6570
+      },
+      "retained_artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit4/synth_stat.txt": "a15281c4a0a9f8e1d8b870ec13697c5714d6abb12b55101807a94299815bdd1f",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit4/config.mk": "bd6fbb7f13a4976c596d54ef91f4f02a9e4e9cd8c35c3f660048e11962c04cc3",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit4/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/transport_credit4/synth_check.txt": "001b48521318c11794a98e485e569032b85a02d9dfba800d3ea1e1945f30a6c1"
+      },
+      "launch_source_bindings": {
+        "rtl/abi3/ot_a3_weight_layout_cursor.sv": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+        "rtl/abi3/ot_a3_bf16_weight_gather.sv": "cbe79cc217d9c52055195bf92f3f793cc9b5ba3885e82044e6b80ba1bd168cdb",
+        "rtl/abi3/ot_a3_bf16_weight_transport.sv": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10"
+      }
+    }
+  ],
+  "sequential_vs_combinational_area_reduction_percent": 8.835081455032356,
+  "payload_vs_sequential_area_reduction_percent": 2.2622865209338094,
+  "four_vs_one_credit_area_change_percent": -0.9642252840222465
+}

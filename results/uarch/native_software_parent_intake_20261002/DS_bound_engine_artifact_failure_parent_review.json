@@ -1,0 +1,13 @@
+{
+  "actual_constructor_preflight_scope": "provider and comparison witness only; NativeExecution/TiledContinuation not constructed",
+  "cause": "TiledContinuation requires original c65 bytes AND identical provider.native; addressed program changes only home_indices and requires explicit validated adapter",
+  "execution_status": "FAIL_CLOSED_PRESERVED",
+  "failed_receipt_sha256": "e5f7262b628b9ba342c6d640227dd436d51972e898c365d222633b1a7957c14e",
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "native_arithmetic_executed": false,
+  "next_action": "Add source-bound address-binding adapter retaining original c65 and complete only-home-index proof; verify actual group templates/provider/rank/writer contracts and preflight complete engine",
+  "reason": "complete provider native differs from pinned artifact",
+  "schema": "opentallas.parent.ds-bound-engine-artifact-failure.v1",
+  "source_commit": "d8cd591d1019afd75643890c35e12cfa47f826ec"
+}

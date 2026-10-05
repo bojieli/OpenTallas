@@ -1,0 +1,98 @@
+{
+  "R14": {
+    "clock_conversion_to_H1": null,
+    "full_program_owner_gate_connected": false,
+    "producer_av_can_block_lookup": true,
+    "tag_lookup_CORE_edges": 12,
+    "write_commit_min_CORE_edges": 8,
+    "write_visibility_can_block_read_return": true
+  },
+  "TP96_literal64B_rate_promoted": false,
+  "full_token_latency": null,
+  "hardware_qualified": false,
+  "installed_Qwen_PC": {
+    "PCs": 128,
+    "backend_ready_upper": null,
+    "clients": 6,
+    "full_generation_or_exact_tag_match": false,
+    "held_read_consumer_upper": null,
+    "logical_reverse_upper": null,
+    "per_PC_counter_and_RR_bits": 34,
+    "per_client_credit": 16,
+    "production_enable_and_connection_unproven": true,
+    "request_and_return_bytes": 32,
+    "source_present": true,
+    "total_count_credit": 12288,
+    "writes_have_completion_ready": false
+  },
+  "installed_RF_shared": {
+    "RF_banks_per_copy": 16,
+    "RF_mirrors": 2,
+    "SMs_per_die": 32,
+    "shared_banks": 2,
+    "source_read_ACK_after_accept_offset": 2,
+    "source_write_ACK_after_accept_offset": 1,
+    "these_offsets_are_local_lower_bounds_not_backpressure_upper": true
+  },
+  "installed_full_native_hardware_bridge": false,
+  "minimal_source_owner_successor": {
+    "area_and_routing_fit": null,
+    "area_method": "source G0 0.2916um2/FF and50percent utilization; full accepted-beat metadata envelope; not an adoption",
+    "conservative_FF_cell_area_um2_ASSUMED": 1160950.5792,
+    "conservative_FF_footprint_mm2_ASSUMED": 2.3219011584,
+    "conservative_no_sharing_context_upper": 12288,
+    "context_SS_FF": null,
+    "entry_bits": 324,
+    "entry_field_bits": {
+      "PC": 12,
+      "SM": 5,
+      "SRAM_bank_ACK_mask": 32,
+      "address_sector": 29,
+      "client": 3,
+      "client_tag": 32,
+      "generation": 64,
+      "lease": 64,
+      "phase": 3,
+      "provider_reference": 32,
+      "rank": 7,
+      "sequence": 40,
+      "write": 1
+    },
+    "existing_context_reuse_credited": false,
+    "installed": false,
+    "metadata_upper_bits": 3981312,
+    "provenance": "full installed accepted-beat credit envelope; actual emitted DAG may narrow with source proof",
+    "required_logic": [
+      "full source owner to unique physical tag mapping before acceptance",
+      "retain causal SRAM-common ACK and both-copy acceptances",
+      "held write-completion capture or admitted always-captured source sink; no ready pin exists",
+      "consumer then exact reverse CDC release with finite downstream terms",
+      "actual C0/SIMD/matrix/KV/L2 contenders share installed owner gate"
+    ]
+  },
+  "physical_wait_upper": null,
+  "schema": "HBM_INSTALLED_SOURCE_ACK_RETIREMENT_DELTA_R2",
+  "source_checks": {
+    "PC_old_value_counter_retire": true,
+    "PC_round_robin_accept": true,
+    "R14_input_alloc_priority": true,
+    "R14_tag_lookup12": true,
+    "R14_write_commit_floor8": true,
+    "R14_write_visibility_priority": true,
+    "RF_common_two_copy_ACK": true,
+    "external_owner_grants_only": true,
+    "shared_held_done": true
+  },
+  "source_sha256": {
+    "PC.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "R55_handoff.json": "18f4a2c7eda495f0cc72c2b80e4d2afbf16d83bab54a74f1f4f8a38ccfa0fe60",
+    "R55_runner.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "R55_storage.py": "f21057181b997b9871aa2ffe3e8e595ef38d732394be6341104c5af1264becca",
+    "RF.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "owner_r14.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "provider_r14.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "shared.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "system.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "wrapper.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+  }
+}

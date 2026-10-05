@@ -1,0 +1,6 @@
+{
+  "authoritative_model": "model_r2.json",
+  "prior_model": "model.json",
+  "change": "compiler opcode DIV retained (rather than internal DIV5120 label); lane type checks reject bool. Source hardware/pins/cost unchanged. Prior model/log retained.",
+  "launches": 0
+}

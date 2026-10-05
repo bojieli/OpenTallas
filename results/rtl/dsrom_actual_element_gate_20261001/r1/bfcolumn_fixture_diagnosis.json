@@ -1,0 +1,21 @@
+{
+  "status": "FAIL_FIXTURE",
+  "case": "bfcolumn",
+  "simulation_failure_time_ps": 834,
+  "assertion": "tb_dsrom_actual_element_gate.sv:52 gate latch behavior",
+  "explicit_DIFFERENTIAL_mismatch": false,
+  "diagnosis": "tick drives clk=0 and immediately invokes compare_all without an event-region settling delay. Its first predicate compares new clk against the previously propagated gated clock. Generated C++ assigns clk=0 then evaluates that predicate directly, with no suspension or gated-clock propagation between them. Failure occurs during the first held-reset tick before any configuration load/go/ROM read.",
+  "implementation_failure_established": false,
+  "source_fixture_error": true,
+  "measured_PASS_coverage": null,
+  "workload_outputs_reached": 0,
+  "workload_issues_reached": 0,
+  "comparison_sample_report": {
+    "runtime_counter_emitted": false,
+    "inferred_successful_compare_all_invocations_before_fatal": 3,
+    "basis": "initial reset #1 comparison; tick entry comparison; +416 rising edge plus #1 comparison; first falling edge invocation aborts before public comparison"
+  },
+  "no_retry": true,
+  "no_fixture_edit": true,
+  "qualification": false
+}

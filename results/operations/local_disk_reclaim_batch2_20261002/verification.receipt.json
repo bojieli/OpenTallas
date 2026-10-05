@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-02T09:56:04.535279+00:00",
+  "refs": [
+    {
+      "path": "/tmp/opentallas-v41-user-namespace",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-user-namespace",
+      "head": "e3ef0a2b7bdf97af71dd1a47a4714251e8edc018",
+      "verified": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-user-preflight",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-user-preflight",
+      "head": "b1aeb454618c8f7fb2d5cc0dc4e2a9b40b4da65e",
+      "verified": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-read",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-read",
+      "head": "f29cfe20b22fd9c54acad15747c5823be0a971c5",
+      "verified": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-read-fast",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-read-fast",
+      "head": "3ff5bf3eda92fa3ae818467411baac5bd8bf8a6d",
+      "verified": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-quarter-collect",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-quarter-collect",
+      "head": "c00a0141bf94b6e99c97ab766b93e6b044402740",
+      "verified": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-single-token-schedule",
+      "ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-single-token-schedule",
+      "head": "668912b0683a4b6b8ce98bf2476f8d5e9d725357",
+      "verified": true
+    }
+  ],
+  "protected_pids_live": {
+    "262712": true,
+    "2069324": true,
+    "3512826": true,
+    "3372358": true,
+    "3375835": true
+  },
+  "r10_service": "MainPID=262712\nActiveState=active\n",
+  "protected_roots_exist": {
+    "/home/ubuntu/OpenTallas-hbm-qwen-r9": true,
+    "/home/ubuntu/OpenTallas-hbm-qwen-cxx-r10": true,
+    "/home/ubuntu/OpenTallas-hbm-rf-service": true
+  },
+  "unique_changes_lost": 0,
+  "evidence_retained": "All tracked source/pass/failure bytes retained through HEAD refs; ignored caches fully archived; clean empty binary patches retained"
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.w16.w19_capacity_source_binding.v1",
+  "source_commit": "a9b898250c14587e483aa3d8e61a0fe8060f1d71",
+  "additive_model_commit": "b22e48b2904b4c72d338d05248f3817e85ef10c2",
+  "checks": {
+    "tools/uarch_model.py": {
+      "git_blob_sha256": "1b4d5fd2404b4af30207a06456702e02bf0790c23f00577165e4ebd368666312",
+      "external_clean_committed_match": true,
+      "worker_current_sha256": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+      "worker_matches_external": false
+    },
+    "tools/w19_checkpoint_pack.py": {
+      "git_blob_sha256": "128c91ae37184309ccde885b151b1a65493221bb03f88ab3b97dd8681d0d7785",
+      "external_clean_committed_match": true,
+      "worker_current_sha256": null,
+      "worker_matches_external": false
+    },
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": {
+      "git_blob_sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+      "external_clean_committed_match": true,
+      "worker_current_sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+      "worker_matches_external": true
+    },
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": {
+      "git_blob_sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+      "external_clean_committed_match": true,
+      "worker_current_sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+      "worker_matches_external": true
+    }
+  },
+  "source_functions": {
+    "gpu_checkpoint_sm_layout": "def gpu_checkpoint_sm_layout(rows, k, fmt, n_sm=32):\n    \"\"\"W19 host checkpoint layout in the existing SM issue geometry; no RTL/adoption.\n\n    Fixed ceil-sized contiguous row chunks put the busiest chunk at SM0, as\n    w19_sm_real_ops.sm_rows. Empty elements remain instantiated but launch no op.\n    \"\"\"\n    if rows < 0 or k <= 0 or fmt not in ('fp4','fp8','bf16') or n_sm != 32:\n        raise ValueError('Unsupported existing V4.1 SM geometry')\n    if fmt != 'bf16' and k % 32: raise ValueError('Quantised K must be block32 aligned')\n    lanes = {'fp4':8,'fp8':4,'bf16':64}[fmt]\n    chunks = math.ceil((k if fmt=='bf16' else k//32)/8)\n    groups = math.ceil(chunks/lanes)\n    if groups*8 > 128: raise ValueError('Existing XDEPTH128 cannot hold this operation')\n    per_sm = math.ceil(rows/32)\n    result=[]\n    for sm in range(32):\n        begin=min(sm*per_sm,rows);end=min(begin+per_sm,rows)\n        records=(end-begin)*groups*8\n        result.append(dict(sm=sm,rows=[begin,end],groups=groups,payloads=records,\n                           bytes=math.ceil(records*136/128)*128))\n    return result",
+    "gpu_checkpoint_schedule_budget": "def gpu_checkpoint_schedule_budget():\n    \"\"\"Price conservative legal scheduling on unchanged fetch configuration.\n\n    Existing fetch config is static while active. Golden program interleaves\n    w1/w3 by sorted selected expert, then gathers activations before w2. A whole\n    expert's w1/w3/w2 stream cannot retire in that order. The initial software\n    schedule therefore drains each operation before changing cfg offsets.\n    \"\"\"\n    return dict(enabled_default=False,hardware='Existing32-SM die, four8-SM fetch endpoints; no new RTL',\n        producer_host_buffer_bytes=167,decode_working_set='one bounded checkpoint record, at most code+scale mapped shards',\n        schedule='sorted expert ID: w1 then w3; SwiGLU; intermediate gather; sorted expert ID: w2; golden sum',\n        fetch_cfg_change='only after endpoint idle and adapter/SM drained',\n        descriptors_per_sm_layer=18,loaded_latency_ns_assumed=HBM_LOADED_LAT_NS,\n        serial_first_access_ns_layer=18*HBM_LOADED_LAT_NS,\n        incremental_ns_token_vs_one_fetch_per_layer=40*17*HBM_LOADED_LAT_NS,\n        basis='Conservative serial18 first accesses vs historical one fetch per layer; no overlap credited',\n        resident_address_port_bits=24,resident_bytes_per_stack_aperture=(1<<24)*32,\n        aperture='Bound resident image first; do not silently rebase/reload weights during decode',\n        staging_bytes_per_sm=128*1024,adapter=gpu_payload_transport_model(),\n        full96_host_profile='Measure offline packer separately; full32-SM rank compile/run profile remains unmeasured',\n        contention='Weights, KV, index, scale/metadata reads share controllers; standalone weights cannot price full token',\n        adoption='OFF: exact runtime, SS/FF, routing, composed token/gain required')"
+  },
+  "interpretation": "sm_layout bytes uses136-B compact records rounded to128 per segment. Rejected candidate is ineligible. W16 independently reconstructs payload counts and compact stack sizes, then counts256-B accepted baseline records. Static image capacity only, no runtime scheduling latency or headline adoption.",
+  "Euler_coordination": "Concrete source/evidence handoff for parent/Euler review; no communication tool is available, acknowledgment not asserted."
+}

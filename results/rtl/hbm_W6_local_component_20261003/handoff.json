@@ -1,0 +1,95 @@
+{
+  "actual_acceptances": 157,
+  "assertions": 611,
+  "exact_reexecution_argv": [
+    "python3",
+    "tools/hbm_w6_component_gate.py",
+    "--source-commit",
+    "e951f5097b852eeb94bf8511d86ecb5344dc9cd9",
+    "--cpu",
+    "2",
+    "--out",
+    "/tmp/hbm-w6-local-component-FRESH-EXCLUSIVE-DIR"
+  ],
+  "executed_source_commit": "e951f5097b852eeb94bf8511d86ecb5344dc9cd9",
+  "measured": {
+    "ACK_to_new_accept_minimum_model_edges": 19,
+    "bench_clock_ns": 10,
+    "measurements_are_component_protocol_only": true,
+    "retire_to_next_accept_edges": 2,
+    "stalled_host_ACK_to_retire_edges": 32,
+    "unstalled_internal_ACK_to_retire_edges": 17
+  },
+  "next_parent_join": "W4 source must retain owner55 for real host and internalSIMD completion; Popper caller/slot/allcopies/drain coordinator; W2/connector full16echo, bound parentref and validated aggregate reverse. W6 does not install these sources.",
+  "offline_replay": "PYTHONPATH=tools python3 -c \"from pathlib import Path; import hbm_w6_component_gate as G; print(G.verify_trace(Path('results/rtl/hbm_W6_local_component_20261003/r3_expanded_component_pass/simulation.log').read_text()))\"",
+  "original_sources_byteidentical": {
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_rf_visibility_fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+  },
+  "proposal_sha256": "3eb8466f6967e65f2461a74b665290b3322a669557223fba2890fdc930898782",
+  "reset_contract": "por_n coordinated cold initialization. rst_n synchronous runtime reset with synchronized release; owner retained. Reset-scope matched request/response plus current source-live all9 under admission-stop; delayed historical certificate forbidden. UE only coordinated global cold recovery.",
+  "schema": "W6_DEFAULT_OFF_LOCAL_RTL_HANDOFF_V1",
+  "scope_exclusions": [
+    "actual caller/RFslot allocator",
+    "identity-bearing originalRF ACK adapter",
+    "actual aggregate child reverse validator",
+    "source allcopies/currentlive admission-stop/reset producer",
+    "actual CDC queues or hardware CDC latency",
+    "RF payload/numerical comparison",
+    "composed parent/fulltoken or adoption",
+    "SS1.2GHz/FF/hub routing/P&R"
+  ],
+  "source_commits_in_order": [
+    "d44ce7b984410c4992be7aa5b2220038b07ec09d",
+    "261f490a54601a773b2e143d4244ff1407dce93e",
+    "f1ff1d1950db75f887ea3f640bb5cda47450f609",
+    "e951f5097b852eeb94bf8511d86ecb5344dc9cd9"
+  ],
+  "source_dependencies_already_parent_staged": [
+    "9b8ae395d4a1999962c8818cbece490c1bb31efe",
+    "a3b7e982424d29f1fa1804cba2138950aefe63db"
+  ],
+  "source_model": {
+    "RFslot": 9,
+    "cost_delta": "7 instead of5 identity match ports and256 instead of64 control proxy; no storage/payload/clock change. Fanout disclosure corrected to7 additively; no further gate cost change.",
+    "delta_mm2": 0.0052736,
+    "fanout": 7,
+    "fullwidth_owner": 46,
+    "model_before_RTL_commit": "d44ce7b984410c4992be7aa5b2220038b07ec09d",
+    "payload_ports": "Existing RF mirrored write1024B/cycle, operandpair read1024B/cycle and KV32B/cycle remain charged once to providers; W6 adds control only.",
+    "physical_protected_state_bits": 144,
+    "prior_slot_mm2_full32SM": 0.0547705856,
+    "prospective_slot_mm2_full32SM": 0.0600441856,
+    "raw_state_bits": 71,
+    "replicas": 32
+  },
+  "source_reexecution_requirement": "clean isolated worktree at executed SHA; exact proposal/toolpins; exclusive output dir; measured admission; no production ROOTguard relaxation",
+  "tests": {
+    "actual_cases": [
+      "C0 host ACK",
+      "KV5 internal SIMD retire",
+      "same-client generation15-to0 after retained reverse+source drain",
+      "visibility/source-drain/retirement backpressure",
+      "all9 source debt class omissions",
+      "6 fullidentity ACK field aliases",
+      "both wrong origin ACKs",
+      "9 warmreset phases",
+      "old normal certificate and wrong reset identity",
+      "old ACK copy under explicitly false source drain level",
+      "reversed/duplicate consumer and unsolicited drain",
+      "each reverse port wrong identity",
+      "all144 single-bit physical storage correction/scrub",
+      "double-bit failclosed inclruntime reset",
+      "defaultoff",
+      "reserved client6 refusal"
+    ],
+    "admitted_model_subtests": 8,
+    "admitted_model_tests": 23,
+    "compile_warning": "RTL package/module omit explicit time unit; they contain no delays; bench has10ns clock. No clock qualification from this test.",
+    "initial_test_failure": "packed originaltag mutant incorrectly used an unshifted substring; fixed to change packed wire bits; raw failing log retained",
+    "preflight_failure": "r1 rejected incorrect explicit SHA before compiler executed; failed verdict preserved",
+    "trace_guard_tests": 11
+  },
+  "verdict": "PASS_W6_LOCAL_COMPONENT_ONLY"
+}

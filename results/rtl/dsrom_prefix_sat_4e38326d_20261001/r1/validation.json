@@ -1,0 +1,85 @@
+{
+  "mutant_witness_numeric_replays": [
+    {
+      "mutation": "ksa_drop_carry",
+      "signals": {
+        "a": 191040077472767,
+        "actual": 120671400624128,
+        "b": 211106299862016,
+        "cin": 1,
+        "equal": 0,
+        "expected": 402146377334784
+      },
+      "verified": true
+    },
+    {
+      "mutation": "ksa_flip_sum_bit0",
+      "signals": {
+        "a": 0,
+        "actual": 1,
+        "b": 0,
+        "cin": 0,
+        "equal": 0,
+        "expected": 0
+      },
+      "verified": true
+    },
+    {
+      "mutation": "cadd_drop_s0_overflow",
+      "signals": {
+        "a": 2073673938056210,
+        "b": 6933525317588991,
+        "equal": 0,
+        "expected0": 9007199255645201,
+        "expected1": 9007199255645202,
+        "s0": 904209,
+        "s1": 9007199255645202
+      },
+      "verified": true
+    },
+    {
+      "mutation": "cadd_drop_s1_overflow",
+      "signals": {
+        "a": 5942098595099731,
+        "b": 6306254779894703,
+        "equal": 0,
+        "expected0": 12248353374994434,
+        "expected1": 12248353374994435,
+        "s0": 12248353374994434,
+        "s1": 3241154120253443
+      },
+      "verified": true
+    }
+  ],
+  "proof_record_sha256": "85aca989a60f0a3b2a5f7693384d1684513a0dc3ee596bcc79c72ffa080ab8e8",
+  "schema": "DSROM_prefix_SAT_validation_r1",
+  "scope": "Combinational prerequisite only; no sequential, hardware, timing, rate, adoption or stand-in-use qualification.",
+  "source_byte_identity_checks": [
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3"
+    }
+  ],
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "test_command": [
+    "/home/ubuntu/bin/python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "-q",
+    "tests/test_dsrom_prefix_sat.py"
+  ],
+  "test_count": 24,
+  "test_log_sha256": "a89067d4f49c8040dba9e0f72c65855141c6b89299afdaeccd1f4fbb4e7a4739",
+  "test_returncode": 0,
+  "tests_yosys_version": "Yosys 0.9 (git sha1 1979e0b)"
+}

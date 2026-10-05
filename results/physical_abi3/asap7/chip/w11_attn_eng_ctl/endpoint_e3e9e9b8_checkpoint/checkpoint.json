@@ -1,0 +1,69 @@
+{
+  "observed_at": "2026-10-01T09:23:12.591745+00:00",
+  "source_commit": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+  "parameters": {
+    "BREG": 1,
+    "D": 512,
+    "NSTAGE": 2,
+    "PHYS": 1,
+    "REPL": 2
+  },
+  "model": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 4,
+    "tiles": 64,
+    "products_per_cycle": 32768,
+    "latency_change_cycles": 0
+  },
+  "physical_stubs_characterization_only": true,
+  "real_engine_exactness": "Separate cached/full golden records, not exercised by physical stub vehicle.",
+  "mapped_guard": {
+    "expected_sequential": 338023,
+    "threshold": 270418,
+    "observed_sequential": 337084,
+    "normalized_netlist_sha256": "30d002634273c1ab0be146f0dfdcc9e3d8c8e19641aaccd6fbae33ecbc3fc0ff",
+    "verdict": "passed",
+    "check": "liberty-classified sequential cells after host synthesis"
+  },
+  "orfs_input_identity": "PASS",
+  "ORFS_netlist_sha256": "30d002634273c1ab0be146f0dfdcc9e3d8c8e19641aaccd6fbae33ecbc3fc0ff",
+  "historical_failed_guard": {
+    "observed": 102065,
+    "threshold": 270418,
+    "status": "aborted",
+    "preserved": true
+  },
+  "constraints": {
+    "period_ns": 0.833,
+    "setup_uncertainty_ns": 0.06,
+    "hold_uncertainty_ns": 0.025,
+    "ORFS_setup_corner": "WC/SS",
+    "ORFS_hold_corners": [
+      "WC",
+      "BC/FF"
+    ],
+    "routing_layers": [
+      "M2",
+      "M5"
+    ]
+  },
+  "status": "P&R running; no routed size/timing verdict yet",
+  "live": {
+    "launcher": 460201,
+    "driver": 460228,
+    "docker_client": 545035,
+    "container": "7d1c3af9deda",
+    "container_name": "affectionate_kapitsa",
+    "ORFS_threads": 4
+  },
+  "workdir": "/home/ubuntu/w11ctl_endpoint_e3e9e9b8/work",
+  "files_sha256": {
+    "config.mk": "0b66d40e91abde2e507071fa5e6d4275f4d0271646d91c47fd0bfb3b9ee84dbd",
+    "synth.ys": "cd52e31da13407d1a68f590a4f6b8eafbe5a553d5592ffc108e55c2b268fad9e",
+    "stat.txt": "521538027f0c98a37f715eb6a852cc5e3cb270b04838c279a1928040ebf21001",
+    "orfs_synth.log": "bcb464c470348db21f2e94fb630a11a657e9a6053ae645343c81474e5a8f4072",
+    "w11_endpoint_guard.json": "6e99adc2956c0216902d59182aa110e5f55434db8efcf48ec84d43cf88dd8938"
+  }
+}

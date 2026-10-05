@@ -1,0 +1,92 @@
+{
+  "PC24": {
+    "actual_completion_bound": null,
+    "conditional_WINDOW_coldread_cycles": [
+      123964,
+      125727
+    ],
+    "conditional_endpoint_cycles": [
+      136671,
+      138146
+    ],
+    "current_live_state_observed_here": false,
+    "original_PC_watchdog_possible_trigger": [
+      112202,
+      112401
+    ],
+    "parent_decode": "ME wait2 selects SU bit1; PC23 SU16x64, bhalf/cpair, Bsrc1/Dsrc2",
+    "scope": "WINDOW conditional replay not whole PC24 duration nor explanation of SU23 nonretirement",
+    "state5": "S_DEC can wait win_admit; no SU conclusion from PC alone",
+    "state6": "S_ISSUE waited0 with SUidle clear supports SU blocker; busy alone not movement"
+  },
+  "actual_core_QE_owner_join": {
+    "QE_accept": "qe_go_e && qe_ready_e",
+    "actual_runtime_tests_at_pinned_handoff": 0,
+    "authority": "Source-selected actual sequencer/DYN/decode and original QE fixture handoff; snapshot included",
+    "owner_commit": "dd2090993b136d4efaf175a233972277eb6b1825",
+    "physical_visibility": false,
+    "raw_idle": "qe_idle_e, not compound ROM/QE core idle",
+    "rearm": "Local ACK and raw good/poison terminal conservation remain distinct from selected-owner drain/delivery/visibility/provenance. Stale certificate or predicted backend timer cannot qualify current operation.",
+    "remaining": "Fresh owner runtime/cap receipt and explicit source selection policy; then physical provider association and finite bounds",
+    "selection": "No cancellation source copied into native relink or selected here"
+  },
+  "existing_port_copy": {
+    "observable": [
+      "PC",
+      "core_st",
+      "decoded_unit",
+      "idles",
+      "waited",
+      "busy",
+      "last_issued",
+      "fault",
+      "DONE",
+      "CDMA word counter"
+    ],
+    "ordering": "Original aggregate DONE then PC-only watchdog then fault preserved. This relink does not inherit future sticky-fault driver fix.",
+    "path": "rtl/test/v41_runtime/w17_existing_port_trace_die_rt.cpp",
+    "scope": "Existing public-port diagnostics only; enrolled native source unchanged",
+    "unavailable": [
+      "accepted WINDOW sector/owner identity",
+      "owned read retirement",
+      "provider write visibility",
+      "CKV issue/got/poison ownership"
+    ],
+    "watchdog_renewal": "Original ANY rank PC change; busy/counter prints do not renew service deadline"
+  },
+  "own_remote_actions": {
+    "Docker_invoked": false,
+    "compiler_invoked": false,
+    "direct_SSH_image_probe": "Permission denied (publickey); no fresh image verification obtained",
+    "input_transfer": false,
+    "lease_acquired": false,
+    "runtime_invoked": false
+  },
+  "parent_owns_local_image_bootstrap_and_relink": true,
+  "qualification": {
+    "causal_service": "BOUND_MISSING",
+    "connected_runtime": false,
+    "fulltoken": false,
+    "hardware": false,
+    "native_relink_execution": false,
+    "timing": false
+  },
+  "status": "RAW_OWNER_PROGRESS_INTERFACE_JOIN_ONLY_REMOTE_TRANSPORT_HELD",
+  "successor_interface": {
+    "CKV": "Raw matched reply associated to selection lifetime, not qualified provider completion; issue/got/poison certificate missing",
+    "causal_service": "BOUND_MISSING",
+    "conditional_guard": "128-row age125727 diagnostic only; sticky even at late source_done; does not terminate or certify service",
+    "fault_ordering": "monitor.sample latches sticky fault BEFORE any DONE/watchdog decision; continued diagnostics cannot clear failed verdict",
+    "operation_age": "Absolute source acceptance cycle; matched reply does not reset it; another rank cannot renew it",
+    "path": "rtl/test/v41_runtime/w17_owned_progress_die_rt.cpp",
+    "read": "Matched accepted tag/row/user/sector with reply_ok and beat0 and poison0 qualifies SOURCE-LOCAL read only",
+    "selection": "Separate opt-in future copy, NOT existing-port relink source",
+    "write": "Unique matched accepted write ACK is local receipt, not tWR/visibility/fence"
+  },
+  "unchanged": {
+    "all_prior_failure_records": true,
+    "live_PID1968071": true,
+    "native_bound_copies": true,
+    "pve2_pve3_no_new_jobs": true
+  }
+}

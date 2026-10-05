@@ -1,0 +1,26 @@
+read_verilog -sv -DSYNTHESIS /src/rtl/ot_numeric_dot.sv
+hierarchy -check -top ot_numeric_dot -chparam ACC_W 32 -chparam ACT_W 8 -chparam LANES 16 -chparam NUM_EXPERTS 4 -chparam REPORT_SATURATION_RISK 1 -chparam WEIGHT_W 4
+proc
+memory
+flatten
+async2sync
+dffunmap
+check -assert -nolatches
+select -assert-any t:$dff t:$_DFF_P_ t:$_DFF_N_
+tee -q -o /work/equivalence_mapped_gold_state.json stat -width -json
+techmap -map /work/ff_to_nextstate.v
+opt
+select -assert-none t:$dff t:$adff t:$adffe t:$sdff t:$sdffe t:$sdffce t:$dffe t:$dffsr t:$dffsre t:$dlatch t:$adlatch t:$dlatchsr t:$_DFF_* t:$_DFFE_* t:$_DFFSR_* t:$_DFFSRE_* t:$_SDFF_* t:$_SDFFE_* t:$_SDFFCE_* t:$_DLATCH_* t:$_DLATCHSR_*
+check -assert -nolatches
+scc -expect 0
+techmap
+opt
+abc -g AND
+clean
+aigmap
+clean
+check -assert -nolatches
+scc -expect 0
+hierarchy -check -top ot_numeric_dot
+write_aiger -symbols /work/equivalence_mapped_gold.aig
+write_aiger -ascii -symbols /work/equivalence_mapped_gold.aag

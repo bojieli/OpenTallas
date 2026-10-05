@@ -1,0 +1,809 @@
+{
+  "RTL_admission": false,
+  "compile": false,
+  "endpoint_contract": {
+    "channels": [
+      {
+        "capture": "Actual request acceptance; producer epoch supplied by issuing owner, never receiver-stamped.",
+        "domain": "controller",
+        "name": "accept_owner",
+        "pins": {
+          "owner": 265,
+          "ready": 1,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "Actual conventional GPU RF/shared commit; owned opcode completion must refer to this result.",
+        "domain": "consumer",
+        "name": "result_commit",
+        "pins": {
+          "IRS_serial": 32,
+          "IRS_slot": 5,
+          "owner": 265,
+          "ready": 1,
+          "result_visible_ps": 64,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "Actual matching addressed bit-store visible handshake; producer held until ready.",
+        "domain": "consumer",
+        "name": "sector_store",
+        "pins": {
+          "completion_bit": 1,
+          "owner": 265,
+          "ready": 1,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "Additive finite memory-tracker registered retirement after actual store visibility, separate from whole-opcode IRS completion.",
+        "domain": "consumer",
+        "name": "sector_retire",
+        "pins": {
+          "event": 404,
+          "ready": 1,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "Snapshot actual IRS output; reserve capture at owner issue because source IRS output has no ready. Filter mapped ownership, no fabricated pulse.",
+        "domain": "consumer",
+        "name": "opcode_retire_capture",
+        "pins": {
+          "event": 404,
+          "existing_IRS_fault": 1,
+          "existing_IRS_retire_valid": 1,
+          "existing_IRS_serial": 32,
+          "existing_IRS_slot": 5,
+          "held_ready": 1,
+          "held_valid": 1
+        }
+      },
+      {
+        "capture": "After272 sector retirement/reversecredit and true prior-generation availability.",
+        "domain": "consumer",
+        "name": "lease_acquire",
+        "pins": {
+          "event": 350,
+          "ready": 1,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "After actual SCORES and PV result-visible+IRS-retire snapshots and dependent operations.",
+        "domain": "consumer",
+        "name": "lease_release",
+        "pins": {
+          "event": 350,
+          "ready": 1,
+          "valid": 1
+        }
+      },
+      {
+        "capture": "Finite4 FIFO, three destination edges plus explicit route/capture readiness; no release on ACK/store alone.",
+        "domain": "consumer_to_controller",
+        "name": "reversecredit",
+        "pins": {
+          "event": 404,
+          "ready": 1,
+          "valid": 1
+        }
+      }
+    ],
+    "compile_GO": false,
+    "domains": {
+      "consumer": {
+        "actual_Qwen_IRS_domain_mapping": "REQUIRED_PROVIDER_INPUT",
+        "candidate_period_ps": "10000/9"
+      },
+      "controller": {
+        "actual_instantiation": "source_r5only",
+        "candidate_period_ps": 1000
+      },
+      "hub": {
+        "actual_stitched_endpoint": "ABSENT",
+        "candidate_period_ps": "2500/3"
+      }
+    },
+    "fields": {
+      "IRS": {
+        "event_id": 32,
+        "serial": 32,
+        "slot": 5
+      },
+      "event_width": 404,
+      "lease_width": 350,
+      "owner": {
+        "beat": 5,
+        "client": 6,
+        "die": 1,
+        "logical_tag": 64,
+        "ordinal": 9,
+        "physical_tag": 16,
+        "position": 21,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32,
+        "writer": 11
+      }
+    },
+    "geometry": {
+      "all_FIFO_control_instances": 8,
+      "capture_FIFO_depth_per_channel_per_die": 4,
+      "held_outputs_per_channel_per_die": 1,
+      "lease_shared_event_FIFO_per_die": 1,
+      "owned_opcode_contexts_per_die": 4,
+      "owned_sectors_per_die": 4,
+      "retire_channels_per_die": 2,
+      "reversecredit_FIFO_per_die": 1,
+      "source_IRS_is_pulse_capture_reserved_before_issue": true
+    },
+    "hardware_admission": false,
+    "source_endpoint_presence": false,
+    "status": "ADDITIVE_INTERFACE_PROPOSAL_SOURCE_ENDPOINT_ABSENT_NO_RTL",
+    "unsupported_legacy_paths": [
+      "Tag-only p_wr_done_v with no ready/epoch/address cannot carry these contracts.",
+      "KV adapter HAW32/PCS128 addr[6:0] selection differs from actual AW34 XOR PC map; no direct prototype capacity/identity transfer."
+    ]
+  },
+  "exact_blockers": [
+    "Floorplan recorded uarch_model hash stale; geometry source hashes match, regenerate after inventory review",
+    "No named inherited service-fabric component/area/instance removal proof: replacement credit0",
+    "Even removing all priced bank/timer state and compare logic leaves area overflow",
+    "Address-bearing sector-store and reader lease provider endpoints absent; actual result/IRS correlation required",
+    "Countdown equivalence and refresh debt/cadence policy unreviewed; unbounded ownership remains full width",
+    "Direct corridor/pin escape fails; actual via/PDN area and clock tree/SSFF inventory absent",
+    "AW31/LEN5/BEAT4 PHY blackbox incompatible with proposed AW34/LEN6/BEAT5;1000ps abstract minimum vs833.333ps target"
+  ],
+  "finite_graph_summary": {
+    "PV_dependencies": [
+      12,
+      14
+    ],
+    "RMW_sectors": 256,
+    "actual_input_events": [],
+    "blocked_without_inputs": {
+      "lease_ACKs": 0,
+      "max_accepted_sector_owners": 4,
+      "reader_acceptances": 0,
+      "remaining_sector_owners": 268,
+      "retirements": 0
+    },
+    "competing_weight_metadata": [
+      {
+        "dependencies": [
+          16
+        ],
+        "die": 0,
+        "instruction": 17,
+        "phase_provider": "MISSING accepted request address/length/order/time/client/tag/epochs/cache outcome; ranges do not imply requests",
+        "ranges": [
+          {
+            "extent": "L0.o.codes",
+            "global_base_bytes": 635222784,
+            "logical_bytes": 8388608,
+            "stacks": [
+              {
+                "first_local_sector": 4962680,
+                "line_count": 16384,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 0
+              },
+              {
+                "first_local_sector": 4962680,
+                "line_count": 16384,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 1
+              },
+              {
+                "first_local_sector": 4962676,
+                "line_count": 16384,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 2
+              },
+              {
+                "first_local_sector": 4962676,
+                "line_count": 16384,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 3
+              }
+            ]
+          },
+          {
+            "extent": "L0.o.scales",
+            "global_base_bytes": 643611392,
+            "logical_bytes": 8192,
+            "stacks": [
+              {
+                "first_local_sector": 5028216,
+                "line_count": 16,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 0
+              },
+              {
+                "first_local_sector": 5028216,
+                "line_count": 16,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 1
+              },
+              {
+                "first_local_sector": 5028212,
+                "line_count": 16,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 2
+              },
+              {
+                "first_local_sector": 5028212,
+                "line_count": 16,
+                "local_sector_stride": 4,
+                "sectors_per_line": 4,
+                "stack": 3
+              }
+            ]
+          }
+        ],
+        "weight": "L0.o.d0"
+      }
+    ],
+    "critical_path": "Per sector each service starts at max(predecessor visibility, resource availability, downstream reservation). Publication=max(all272 matching reversecredits, actual writer/fence retirement); reader=max(publication, prior publication, actual lease acquire). Release=max(actual SCORES/PV result/IRS retirement, held lease readiness), preserving EXP_SUM14. No total formed from serial sum of work floors.",
+    "opcode_IRS_separate": [
+      10,
+      11,
+      12,
+      13,
+      15
+    ],
+    "publication_dependencies": [
+      "credit:0",
+      "credit:1",
+      "credit:2",
+      "credit:3",
+      "credit:4",
+      "credit:5",
+      "credit:6",
+      "credit:7",
+      "credit:8",
+      "credit:9",
+      "credit:10",
+      "credit:11",
+      "credit:12",
+      "credit:13",
+      "credit:14",
+      "credit:15",
+      "credit:16",
+      "credit:17",
+      "credit:18",
+      "credit:19",
+      "credit:20",
+      "credit:21",
+      "credit:22",
+      "credit:23",
+      "credit:24",
+      "credit:25",
+      "credit:26",
+      "credit:27",
+      "credit:28",
+      "credit:29",
+      "credit:30",
+      "credit:31",
+      "credit:32",
+      "credit:33",
+      "credit:34",
+      "credit:35",
+      "credit:36",
+      "credit:37",
+      "credit:38",
+      "credit:39",
+      "credit:40",
+      "credit:41",
+      "credit:42",
+      "credit:43",
+      "credit:44",
+      "credit:45",
+      "credit:46",
+      "credit:47",
+      "credit:48",
+      "credit:49",
+      "credit:50",
+      "credit:51",
+      "credit:52",
+      "credit:53",
+      "credit:54",
+      "credit:55",
+      "credit:56",
+      "credit:57",
+      "credit:58",
+      "credit:59",
+      "credit:60",
+      "credit:61",
+      "credit:62",
+      "credit:63",
+      "credit:64",
+      "credit:65",
+      "credit:66",
+      "credit:67",
+      "credit:68",
+      "credit:69",
+      "credit:70",
+      "credit:71",
+      "credit:72",
+      "credit:73",
+      "credit:74",
+      "credit:75",
+      "credit:76",
+      "credit:77",
+      "credit:78",
+      "credit:79",
+      "credit:80",
+      "credit:81",
+      "credit:82",
+      "credit:83",
+      "credit:84",
+      "credit:85",
+      "credit:86",
+      "credit:87",
+      "credit:88",
+      "credit:89",
+      "credit:90",
+      "credit:91",
+      "credit:92",
+      "credit:93",
+      "credit:94",
+      "credit:95",
+      "credit:96",
+      "credit:97",
+      "credit:98",
+      "credit:99",
+      "credit:100",
+      "credit:101",
+      "credit:102",
+      "credit:103",
+      "credit:104",
+      "credit:105",
+      "credit:106",
+      "credit:107",
+      "credit:108",
+      "credit:109",
+      "credit:110",
+      "credit:111",
+      "credit:112",
+      "credit:113",
+      "credit:114",
+      "credit:115",
+      "credit:116",
+      "credit:117",
+      "credit:118",
+      "credit:119",
+      "credit:120",
+      "credit:121",
+      "credit:122",
+      "credit:123",
+      "credit:124",
+      "credit:125",
+      "credit:126",
+      "credit:127",
+      "credit:128",
+      "credit:129",
+      "credit:130",
+      "credit:131",
+      "credit:132",
+      "credit:133",
+      "credit:134",
+      "credit:135",
+      "credit:136",
+      "credit:137",
+      "credit:138",
+      "credit:139",
+      "credit:140",
+      "credit:141",
+      "credit:142",
+      "credit:143",
+      "credit:144",
+      "credit:145",
+      "credit:146",
+      "credit:147",
+      "credit:148",
+      "credit:149",
+      "credit:150",
+      "credit:151",
+      "credit:152",
+      "credit:153",
+      "credit:154",
+      "credit:155",
+      "credit:156",
+      "credit:157",
+      "credit:158",
+      "credit:159",
+      "credit:160",
+      "credit:161",
+      "credit:162",
+      "credit:163",
+      "credit:164",
+      "credit:165",
+      "credit:166",
+      "credit:167",
+      "credit:168",
+      "credit:169",
+      "credit:170",
+      "credit:171",
+      "credit:172",
+      "credit:173",
+      "credit:174",
+      "credit:175",
+      "credit:176",
+      "credit:177",
+      "credit:178",
+      "credit:179",
+      "credit:180",
+      "credit:181",
+      "credit:182",
+      "credit:183",
+      "credit:184",
+      "credit:185",
+      "credit:186",
+      "credit:187",
+      "credit:188",
+      "credit:189",
+      "credit:190",
+      "credit:191",
+      "credit:192",
+      "credit:193",
+      "credit:194",
+      "credit:195",
+      "credit:196",
+      "credit:197",
+      "credit:198",
+      "credit:199",
+      "credit:200",
+      "credit:201",
+      "credit:202",
+      "credit:203",
+      "credit:204",
+      "credit:205",
+      "credit:206",
+      "credit:207",
+      "credit:208",
+      "credit:209",
+      "credit:210",
+      "credit:211",
+      "credit:212",
+      "credit:213",
+      "credit:214",
+      "credit:215",
+      "credit:216",
+      "credit:217",
+      "credit:218",
+      "credit:219",
+      "credit:220",
+      "credit:221",
+      "credit:222",
+      "credit:223",
+      "credit:224",
+      "credit:225",
+      "credit:226",
+      "credit:227",
+      "credit:228",
+      "credit:229",
+      "credit:230",
+      "credit:231",
+      "credit:232",
+      "credit:233",
+      "credit:234",
+      "credit:235",
+      "credit:236",
+      "credit:237",
+      "credit:238",
+      "credit:239",
+      "credit:240",
+      "credit:241",
+      "credit:242",
+      "credit:243",
+      "credit:244",
+      "credit:245",
+      "credit:246",
+      "credit:247",
+      "credit:248",
+      "credit:249",
+      "credit:250",
+      "credit:251",
+      "credit:252",
+      "credit:253",
+      "credit:254",
+      "credit:255",
+      "credit:256",
+      "credit:257",
+      "credit:258",
+      "credit:259",
+      "credit:260",
+      "credit:261",
+      "credit:262",
+      "credit:263",
+      "credit:264",
+      "credit:265",
+      "credit:266",
+      "credit:267",
+      "credit:268",
+      "credit:269",
+      "credit:270",
+      "credit:271"
+    ],
+    "reader_sectors": 288,
+    "resource_caps": {
+      "PCs_per_stack": 32,
+      "QD": 64,
+      "RQD": 32,
+      "front_sector_owners": 4,
+      "lease_FIFO_per_die": 4,
+      "pending_WR_per_stack": 4,
+      "reader_owners": 4,
+      "sector_retire_FIFO_per_die": 4
+    },
+    "synthetic_event_transfer": false,
+    "weight_competition": "Actual1737 program matrix17 L0.o.d0 weight traffic shares PC queues/commands; acceptance phases unbound. No source-backed weight issuance before dependency16; prefetch candidate needs explicit actual release records. Retain r5 four-sectors/128-weight diagnostic only, not all272 actual schedule.",
+    "writer_sectors": 272
+  },
+  "hardware_rate_credit": 0,
+  "inventory": {
+    "PHY_clock_qualification": "FAIL_ABSTRACT_1000PS_MIN_PERIOD_VS_833_1_3PS_TARGET; no clock relaxation",
+    "PHY_min_period_ps": 1000.0,
+    "actual_floorplan_source_hashes_match": false,
+    "inherited_replacement_credit_mm2": 0,
+    "named_components": [
+      {
+        "name": "licensed PHY/controller boundary abstract",
+        "placement": "PHY strips OUTSIDE service regions",
+        "reason": "Blackbox has no internal component inventory or conventional command/WRvisible pins; AW31 LEN5 BEAT4 differs from AW34 LEN6 BEAT5.",
+        "replacement_credit_mm2": 0,
+        "replicas": 8,
+        "source": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy_bb.v"
+      },
+      {
+        "cell_or_macro_breakdown": null,
+        "name": "inherited controller fabric",
+        "placement": "service bands",
+        "reason": "20mm2 logic/die divided by .50 utilization and4 stacks; no netlist/component replacement mapping.",
+        "replacement_credit_mm2": 0,
+        "replicas": 8,
+        "reservation_mm2_per_stack": 10,
+        "source": "tools/qwen_o4_floorplan.py"
+      },
+      {
+        "name": "per-PC arbiter and stream heads",
+        "placement": "within inherited service reservation",
+        "reason": "Named in holds text only; no independent area or instantiated block in floorplan.",
+        "replacement_credit_mm2": 0,
+        "replicas": 256,
+        "source": "tools/hbm_gpu_floorplan.py"
+      },
+      {
+        "name": "GPU SM",
+        "placement": "core outside service regions",
+        "reason": "Cannot borrow core RF/shared/Tensor inventory into shoreline.",
+        "replacement_credit_mm2": 0,
+        "replicas": 64,
+        "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json"
+      },
+      {
+        "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "name": "L2 SRAM",
+        "placement": "four L2 slices/die outside service regions",
+        "reason": "Existing active L2 storage, not a free request/return macro.",
+        "replacement_credit_mm2": 0,
+        "replicas": 512,
+        "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json"
+      },
+      {
+        "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+        "name": "new request/return queues",
+        "placement": "64 macros/stack inside service regions",
+        "reason": "Additional1R1W queues with serialized18..35edge swaps/headprefetch; source floorplan has no existing instance to replace.",
+        "replacement_credit_mm2": 0,
+        "replicas": 512,
+        "source": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+        "source_commit": "4535be1001d69bc43669e0fdf0401896be4034a6"
+      }
+    ],
+    "source_hash_mismatches": {
+      "tools/uarch_model.py": {
+        "current": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+        "recorded": "d683f27c4d851fcf98b35538a63a5adee019732e2ae0f69aec53dad6ad9b7f16"
+      }
+    },
+    "source_pins": {
+      "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+      },
+      "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy_bb.v": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "sha256": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688"
+      },
+      "results/floorplan/hbm_gpu/qwen_hbm_die.json": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+      },
+      "tools/hbm_gpu_floorplan.py": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "sha256": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205"
+      },
+      "tools/qwen_o4_floorplan.py": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "sha256": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5"
+      }
+    },
+    "verdict": "NO_MATCHED_COMPONENT_REMOVAL_NO_REPLACEMENT_CREDIT"
+  },
+  "per_boundary": {
+    "MACs_per_cycle": 0,
+    "RD_packet_bits": 471,
+    "WR_arbiter_edges": 3,
+    "WR_visible_bits": 216,
+    "command_slots_per_PC": 1,
+    "lease_bits": 350,
+    "lease_flits_320_with_header64": 2,
+    "owned_retirement_bits": 404,
+    "queue_freeze_edges": "18..35+headprefetch1/empty2",
+    "read_arbiter_edges": 6,
+    "retirement_flits_320_with_header64": 2,
+    "sector_bytes": 32
+  },
+  "physical_admission": false,
+  "provider_PASS": false,
+  "resource_area": {
+    "applied_replacement_credit_mm2": 0,
+    "conditional_countdown_FF_only_mm2_per_stack": 11.183768601999999,
+    "conditional_countdown_overflow_mm2_per_stack": 1.167935002,
+    "failed_corridor": {
+      "all_stack_shared_bundle_bits": 4640,
+      "direct_macro_escape_tracks": 211.5072,
+      "owned_allstack_bundle_bits": 6792,
+      "owned_local_bundle_bits": 1698,
+      "pins_per_edge": 793,
+      "raw_return_bits": 15072,
+      "verdict": "FAIL_RETAINED_DIRECT_CORRIDOR_AND_PIN_ESCAPE",
+      "vertical_capacity": 2696
+    },
+    "fit": false,
+    "impossible_free_all_bank_timer_and_compare_mm2_per_stack": 11.1207141124,
+    "impossible_free_timer_overflow_mm2_per_stack": 1.1048805124000012,
+    "inherited_occupancy": 10.0,
+    "provider_FF_bits": 20940,
+    "provider_area_system_mm2": 0.013178608,
+    "r9_reader_FF_bits": 5928,
+    "r9_reader_area_system_mm2": 0.0034572096,
+    "r9_retained_plus_additive_mm2_per_stack": 11.3323399684,
+    "retained_r8_mm2_per_stack": 11.3319078172,
+    "routing_signal_escrow": 0.5,
+    "slot_mm2_per_stack": 10.015833599999999,
+    "timer_decrement_zero_detect_reload_mux_cost": "REQUIRED:256PC replicated countdown datapaths; row match19bits, deadline max logic, refresh due priority and scan invalidation; no decrement/mux/clock cost waived",
+    "verdict": "FAIL_EVEN_FREE_ALL_PRICED_TIMER_BANK_STATE_CANNOT_CLOSE_SLOT",
+    "via_PDN": "A_via_escape and PDN_grid_service_area must come from actual platform/cut/enclosure/net/pin geometry. Required_area >= known_additive +60352*A_via_escape +extra_PDN_area. Both are nonnegative, so current slot already fails without assigning either zero cost.",
+    "via_count_per_stack": 60352
+  },
+  "schema": "Qwen_component_inventory_bounded_timer_candidate_r9",
+  "source_bound_completion_events": 0,
+  "timers": {
+    "applied_width_reduction": false,
+    "bank_row_bits": 19,
+    "candidate_local_FF_bits": 346624,
+    "conditional_FF_area_saving_mm2": 1.1885709312,
+    "constraints": [
+      {
+        "count_per_PC": 32,
+        "countdown_bits": 5,
+        "max_edges": 24,
+        "max_ps": "19375",
+        "name": "bank_RCD",
+        "source_use": "b_act -> ACT-to-column remaining delay"
+      },
+      {
+        "count_per_PC": 32,
+        "countdown_bits": 9,
+        "max_edges": 420,
+        "max_ps": "350000",
+        "name": "bank_ACTok",
+        "source_use": "b_actok -> tRC/refresh exclusion"
+      },
+      {
+        "count_per_PC": 32,
+        "countdown_bits": 6,
+        "max_edges": 34,
+        "max_ps": "28125",
+        "name": "bank_PREok",
+        "source_use": "b_preok -> PRE exclusion"
+      },
+      {
+        "count_per_PC": 1,
+        "countdown_bits": 2,
+        "max_edges": 3,
+        "max_ps": "2500",
+        "name": "RRD_global",
+        "source_use": "last_act"
+      },
+      {
+        "count_per_PC": 4,
+        "countdown_bits": 3,
+        "max_edges": 4,
+        "max_ps": "3125",
+        "name": "RRD_BG",
+        "source_use": "last_act_bg"
+      },
+      {
+        "count_per_PC": 4,
+        "countdown_bits": 5,
+        "max_edges": 18,
+        "max_ps": "15000",
+        "name": "FAW",
+        "source_use": "four actual ACT deadlines retain order"
+      },
+      {
+        "count_per_PC": 1,
+        "countdown_bits": 2,
+        "max_edges": 2,
+        "max_ps": "1024",
+        "name": "CCD_global",
+        "source_use": "last_col"
+      },
+      {
+        "count_per_PC": 4,
+        "countdown_bits": 3,
+        "max_edges": 4,
+        "max_ps": "2560",
+        "name": "CCD_BG",
+        "source_use": "last_col_bg"
+      },
+      {
+        "count_per_PC": 1,
+        "countdown_bits": 4,
+        "max_edges": 12,
+        "max_ps": "9948",
+        "name": "RTW",
+        "source_use": "last_rd"
+      },
+      {
+        "count_per_PC": 1,
+        "countdown_bits": 5,
+        "max_edges": 17,
+        "max_ps": "13524",
+        "name": "WTR",
+        "source_use": "last_wr plus saved BG"
+      },
+      {
+        "count_per_PC": 1,
+        "countdown_bits": 14,
+        "max_edges": 9214,
+        "max_ps": "7678125",
+        "name": "refresh",
+        "source_use": "next_ref initialization stagger max PC31; recurring REFI"
+      }
+    ],
+    "countdown_bits_per_PC": 711,
+    "full_AW": 34,
+    "hardware_equivalence_proven": false,
+    "max_retained_local_deadline_edges": 9214,
+    "modular_counter_bits_if_expiring": 15,
+    "old_source_shaped_FF_bits": 2384640,
+    "proof": "For each command delay d, ceil(d/T) local edges cannot emit early. Decrement every streaming edge including idle/backpressure; saturate at0, clear expired constraints. For modular representation signed comparisons require every retained delta <2^(W-1); expiration is mandatory before reuse. Initial REF deadline <=ceil((63/32)*REFI/T). Refresh countdown saturates with sticky due, never wraps/reloads on stalled consumer; command issue cannot pass pending refresh.",
+    "quantization": "Each local command constraint adds <one streaming edge beyond continuous delay; causal ACT/PRE/REF/RD/WR emission remains mandatory. FRFCFS35edge scan and headprefetch bubbles retained; no absolute simulation-time field transferred into CDC hardware.",
+    "refresh_debt": "One sticky due until actual REF; next interval starts only at actual REF. Deferred cadence changes nominal source calendar: required refresh policy review; never adopt slipped cadence as a JEDEC proof.",
+    "source_pin": "4535be1001d69bc43669e0fdf0401896be4034a6:rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "unbounded_fields": [
+      "q_arr age under finite queue + unbounded ready stall",
+      "r_t/held return residence after data-ready",
+      "pending WR ownership until sector retirement/reversecredit",
+      "SCORES/PV lease residence",
+      "producer64/transport32/logicaltag64/IRSserial32"
+    ],
+    "unbounded_policy": "No width reduction. Ready deadline expires to ready bit; ownership never times out. FIFO/owner identity survives indefinitely. Arrival aging may saturate for fairness only after equivalent ordering proof; no such credit here."
+  }
+}

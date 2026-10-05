@@ -1,0 +1,12 @@
+{
+  "files": {
+    "calendar_codec_metadata.json.gz": "24c5c69a0bd2d95c2e6f35a6b91e5e7d8fee76b84b3086b29bca985f0ccf5706",
+    "calendar_source.py.snapshot": "586abc3b8e5069f457076f7c1e83471b4784f7bdc9bfe738b163875ba7e20533",
+    "source_manifest.json": "fc0064af83466949b5c8565c5c082a9e1586e057b316c6264c528987cdb7e1cf",
+    "source_proof.json": "ecf843bd7d05f140cccba0761898caafbb8f535fcbcf982972ded2103a052ffc",
+    "source_summary.json": "5440abf62105e997b8902cef817494df6fb92709f945f5e0dd7a442d91a6d418"
+  },
+  "original_generated_calendar_SHA256": "28beb8fd799cfca9efa74f8e1045969707bcc7f143d9c6e6a2d4cde11f5dcfbd",
+  "parent_calendar_commit": "5881a3b92730db25317b34929f13c7251e2167ef",
+  "projection_drops": "Only unused metadata; retained complete outer dependency/resource graph and all affected primitive schedules. Does not replicate giant native IR."
+}

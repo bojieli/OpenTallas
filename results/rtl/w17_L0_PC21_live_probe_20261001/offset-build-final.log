@@ -1,0 +1,10 @@
+In file included from /usr/include/strings.h:23,
+                 from /usr/include/string.h:462,
+                 from /usr/include/c++/11/cstring:42,
+                 from /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.h:55,
+                 from /home/ubuntu/w17work/dierun2/die0/Vdie0.h:11,
+                 from /home/ubuntu/w17-L0-live-probe-20261001/offsets.cpp:1:
+/home/ubuntu/w17-L0-live-probe-20261001/offsets.cpp: In function ‘int main()’:
+/home/ubuntu/w17-L0-live-probe-20261001/offsets.cpp:5:41: warning: ‘offsetof’ within non-standard-layout type ‘Vdie0’ is conditionally-supported [-Winvalid-offsetof]
+    5 | int main(){printf("ROOT %zu\n",offsetof(Vdie0,rootp));
+      |                                         ^

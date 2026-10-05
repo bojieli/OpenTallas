@@ -1,0 +1,32 @@
+{
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=w17-qdq8-connected-cap-probe-20261002-r1.service",
+    "--wait",
+    "--pipe",
+    "--property=MemoryMax=4294967296",
+    "--property=MemorySwapMax=0",
+    "--property=CPUAffinity=30 31",
+    "--property=RuntimeMaxSec=180",
+    "--property=KillMode=control-group",
+    "--property=KillSignal=SIGKILL",
+    "--property=OOMPolicy=kill",
+    "--property=LimitFSIZE=268435456",
+    "--property=LimitCORE=0",
+    "--property=Nice=10",
+    "--working-directory=/home/ubuntu/w17-window-epoch-candidate",
+    "/usr/bin/python3",
+    "/home/ubuntu/w17-window-epoch-candidate/tools/w17_window_qdq8_connected_run.py",
+    "--worker",
+    "--plan",
+    "/tmp/window-qdq8-connected-runner-plan-20261002-r1/plan.json",
+    "--out",
+    "/tmp/window-qdq8-connected-cap-probe-20261002-r1",
+    "--unit",
+    "w17-qdq8-connected-cap-probe-20261002-r1.service",
+    "--probe"
+  ],
+  "plan_sha256": "22388c4c9f01f334ef959a50d1077865a1f62e3ae335bb63905960e42e21aee1",
+  "no_retry_no_fallback": true
+}

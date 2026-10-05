@@ -1,0 +1,24 @@
+[
+  {
+    "job": "spine_s833b",
+    "state": "eligible_for_intake",
+    "snapshot": {
+      "host": {
+        "hostname": "ot-pve2",
+        "boot_id": "fb9336dd-a01d-4c05-9ae1-04f6e10f8beb"
+      },
+      "processes": {}
+    }
+  },
+  {
+    "job": "partition_product_attempt2",
+    "state": "eligible_for_intake",
+    "snapshot": {
+      "host": {
+        "hostname": "ubuntu",
+        "boot_id": "dd8d7231-d8d5-4f25-bfd4-f3390877d2eb"
+      },
+      "processes": {}
+    }
+  }
+]

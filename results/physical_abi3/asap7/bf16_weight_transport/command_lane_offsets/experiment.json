@@ -1,0 +1,20 @@
+{
+  "status": "candidate; matched containing route running",
+  "motivation": "Invariant-bound global route worst path from cursor.lane_stride to gather.addresses[7], -0.05124 ns at 1 ns; intermediate timing only",
+  "report_sha256": "c22a39cacda0d3c3667b82c9644736ee56ca085eb29057a904e7ba6337891bc7",
+  "baseline_sources": {
+    "ot_a3_bf16_weight_gather.sv": "a62e73540b89b95653b103df8e7a6ef8b9e80d4ef84ef5790602ad030f7ef15c",
+    "ot_a3_bf16_weight_transport.sv": "bfe361ac852db52de6bdf26da7a43654d5febeaaa37e74c93119c1395688baf9"
+  },
+  "candidate_sources": {
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0635dd8dc457734b7a4b402d53a54df53412157beddf937df1bd21b9f4b0924a",
+    "rtl/abi3/ot_a3_bf16_weight_transport.sv": "1e6040a98299ec31736b09cb6bc1e602887fdbf74ee85ab7c6ce834ea7b72bc3"
+  },
+  "cycle_change": 0,
+  "focused_cases": 14,
+  "loaded_strided_campaign_cycles": {
+    "resident": 110614,
+    "streaming": 387169
+  },
+  "route": "results/physical_abi3/asap7/bf16_weight_transport/pnr_command_lane_offsets_cts12_1ns.json"
+}

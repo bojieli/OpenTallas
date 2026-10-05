@@ -1,0 +1,285 @@
+{
+  "actual_program_phase_costs": null,
+  "case0_dependency_boundaries": [
+    {
+      "WR_REQ_boundary_ps": 94000,
+      "WR_accept_ps": 84000,
+      "actual_RMW_read_take_ps": 54000,
+      "column_reservation_ps": 94000,
+      "controlled_stimulus_delay_ps": 30000,
+      "earliest_column_CWL_burst_ps": 101274,
+      "known_request_head_lower_bound_ps": 94000,
+      "missing_composed_WR_visible_ACK_CDC_lease_ps": null,
+      "rmw_read_tag": 0,
+      "schedule_observe_ps": 84000,
+      "writer_tag": 4
+    },
+    {
+      "WR_REQ_boundary_ps": 99000,
+      "WR_accept_ps": 89000,
+      "actual_RMW_read_take_ps": 59000,
+      "column_reservation_ps": 99000,
+      "controlled_stimulus_delay_ps": 30000,
+      "earliest_column_CWL_burst_ps": 106274,
+      "known_request_head_lower_bound_ps": 99000,
+      "missing_composed_WR_visible_ACK_CDC_lease_ps": null,
+      "rmw_read_tag": 1,
+      "schedule_observe_ps": 94000,
+      "writer_tag": 5
+    },
+    {
+      "WR_REQ_boundary_ps": 114000,
+      "WR_accept_ps": 104000,
+      "actual_RMW_read_take_ps": 74000,
+      "column_reservation_ps": 114000,
+      "controlled_stimulus_delay_ps": 30000,
+      "earliest_column_CWL_burst_ps": 121274,
+      "known_request_head_lower_bound_ps": 114000,
+      "missing_composed_WR_visible_ACK_CDC_lease_ps": null,
+      "rmw_read_tag": 2,
+      "schedule_observe_ps": 104000,
+      "writer_tag": 6
+    },
+    {
+      "WR_REQ_boundary_ps": 121000,
+      "WR_accept_ps": 111000,
+      "actual_RMW_read_take_ps": 81000,
+      "column_reservation_ps": 121000,
+      "controlled_stimulus_delay_ps": 30000,
+      "earliest_column_CWL_burst_ps": 128274,
+      "known_request_head_lower_bound_ps": 121000,
+      "missing_composed_WR_visible_ACK_CDC_lease_ps": null,
+      "rmw_read_tag": 3,
+      "schedule_observe_ps": 114000,
+      "writer_tag": 7
+    }
+  ],
+  "cases": [
+    {
+      "WR": [
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 84000,
+          "backing_store_ps": 94000,
+          "bank": 7,
+          "column_ps": 94000,
+          "earliest_column_CWL_burst_ps": 101274,
+          "pc": 1,
+          "sector": 5618364,
+          "tag": 4,
+          "visible_completion_ps": null
+        },
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 89000,
+          "backing_store_ps": 99000,
+          "bank": 6,
+          "column_ps": 99000,
+          "earliest_column_CWL_burst_ps": 106274,
+          "pc": 1,
+          "sector": 5618365,
+          "tag": 5,
+          "visible_completion_ps": null
+        },
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 104000,
+          "backing_store_ps": 114000,
+          "bank": 5,
+          "column_ps": 114000,
+          "earliest_column_CWL_burst_ps": 121274,
+          "pc": 1,
+          "sector": 5618366,
+          "tag": 6,
+          "visible_completion_ps": null
+        },
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 111000,
+          "backing_store_ps": 121000,
+          "bank": 4,
+          "column_ps": 121000,
+          "earliest_column_CWL_burst_ps": 128274,
+          "pc": 1,
+          "sector": 5618367,
+          "tag": 7,
+          "visible_completion_ps": null
+        }
+      ],
+      "case": 0,
+      "event_counts": {
+        "ACCEPT_RD": 8,
+        "ACCEPT_WR": 4,
+        "ACT_RESERVATION": 132,
+        "BACKING_STORE": 4,
+        "ENQUEUE_RD": 132,
+        "ENQUEUE_WR": 4,
+        "RD_COLUMN_RESERVATION": 132,
+        "READ_TAKE": 132,
+        "RETURN_ENQUEUE": 132,
+        "SCHEDULE": 136,
+        "WR_COLUMN_RESERVATION": 4,
+        "WR_POP": 4
+      },
+      "failure_counts": {
+        "causal_command_time": 100,
+        "column_to_backing_visibility": 4
+      },
+      "interface": [
+        {
+          "count": 12,
+          "kind": "ACCEPT",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        },
+        {
+          "count": 132,
+          "kind": "READ_TAKE",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        }
+      ],
+      "journal_sha256": "d60120728abb66da489bad23aecb5e0561b49ae0cc099827491a148178f8570c",
+      "last_observed_model_ps": 121000
+    },
+    {
+      "WR": [],
+      "case": 1,
+      "event_counts": {
+        "ACCEPT_RD": 34,
+        "ACT_RESERVATION": 4,
+        "ENQUEUE_RD": 34,
+        "PREALL_RESERVATION": 1,
+        "RD_COLUMN_RESERVATION": 34,
+        "READ_TAKE": 34,
+        "REF_RESERVATION": 1,
+        "REORDER": 2,
+        "RETURN_ENQUEUE": 34,
+        "SCHEDULE": 34
+      },
+      "failure_counts": {
+        "causal_command_time": 2
+      },
+      "interface": [
+        {
+          "count": 34,
+          "kind": "ACCEPT",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        },
+        {
+          "count": 34,
+          "kind": "READ_TAKE",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        }
+      ],
+      "journal_sha256": "8717ba67bae97add694b1edae27a5caf5bafbb91eff6acbdfa2ca80f3b4cc8da",
+      "last_observed_model_ps": 4515000
+    },
+    {
+      "WR": [
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 1000,
+          "backing_store_ps": 21000,
+          "bank": 0,
+          "column_ps": 20375,
+          "earliest_column_CWL_burst_ps": 27649,
+          "pc": 0,
+          "sector": 0,
+          "tag": 0,
+          "visible_completion_ps": null
+        },
+        {
+          "ACK_CDC_RMW_lease_cost_ps": null,
+          "accept_ps": 2000,
+          "backing_store_ps": 74000,
+          "bank": 0,
+          "column_ps": 73899,
+          "earliest_column_CWL_burst_ps": 81173,
+          "pc": 0,
+          "sector": 4294967296,
+          "tag": 1,
+          "visible_completion_ps": null
+        }
+      ],
+      "case": 2,
+      "event_counts": {
+        "ACCEPT_RD": 2,
+        "ACCEPT_WR": 2,
+        "ACT_RESERVATION": 4,
+        "BACKING_STORE": 2,
+        "ENQUEUE_RD": 2,
+        "ENQUEUE_WR": 2,
+        "PRE_RESERVATION": 3,
+        "RD_COLUMN_RESERVATION": 2,
+        "READ_TAKE": 2,
+        "RETURN_ENQUEUE": 2,
+        "SCHEDULE": 4,
+        "WR_COLUMN_RESERVATION": 2,
+        "WR_POP": 2
+      },
+      "failure_counts": {
+        "column_to_backing_visibility": 2
+      },
+      "interface": [
+        {
+          "count": 4,
+          "kind": "ACCEPT",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        },
+        {
+          "count": 2,
+          "kind": "READ_TAKE",
+          "status": "PASS_EXACT_SOURCE_CLIENT_JOURNAL_MATCH"
+        }
+      ],
+      "journal_sha256": "39788d40534c5aeaecaaa687c9ce2b324785e65833266715221b1d2664022d19",
+      "last_observed_model_ps": 206000
+    }
+  ],
+  "clock_scope": "Source preset CLK_PS=1000, no target or universal-clock credit",
+  "fullprogram_KVread_after_WR": false,
+  "mutants": [
+    {
+      "after": 53898,
+      "before": 53899,
+      "case": 0,
+      "field": "logical_ps",
+      "name": "read_due_minus1",
+      "rule": "read_due_equation",
+      "status": "PASS_REJECTED_MUTANT"
+    },
+    {
+      "after": 0,
+      "before": 54000,
+      "case": 0,
+      "field": "observe_ps",
+      "name": "early_read_take",
+      "rule": "read_identity_due",
+      "status": "PASS_REJECTED_MUTANT"
+    },
+    {
+      "after": 2,
+      "before": 1,
+      "case": 1,
+      "field": "sector",
+      "name": "reorder_wrong_address",
+      "rule": "queue_reorder_origin",
+      "status": "PASS_REJECTED_MUTANT"
+    },
+    {
+      "name": "read_before_ACT_RCD",
+      "reason": "column row identity",
+      "status": "PASS_REJECTED_MUTANT"
+    }
+  ],
+  "provider_contract_status": "FAIL_CAUSAL_COMMAND_WR_VISIBILITY_FULLADDRESS; logical reservation timing inequalities and finite read interface checks are scoped passes",
+  "weight_competition": {
+    "qualification": "Actual source shared-PC calendar observations only. No 18..35 hardware serialized scan, finite write ACK/CDC or whole-system arbitration service measured.",
+    "weight_PCs": 32,
+    "weight_acceptance_policy": "Controlled next-matrix prefetch; not actual opcode17 issue or fullprogram phase.",
+    "weight_read_beats": 128,
+    "weight_read_beats_on_writer_PCs": 4,
+    "writer_PCs": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "actual_RTL": false,
+  "bytes": 8824912128,
+  "elapsed_s": 30.9999195500277,
+  "extents": 586,
+  "manifest_sha256": "83491cd2487ec026e86b5943e0420a4efcb6830aaf35f761e20190a469fd69e7",
+  "pages": 31518,
+  "status": "PASS_INDEPENDENT_ALL_EXTENT_PAGE_HASH_AND_GAP_FREE_COVERAGE",
+  "terminal_sha256": "ed7e992a11ad5e812510122a27823a5d96ce9a8ef47cc4b159dabb675b919f2e",
+  "trained_numerical_execution": false,
+  "immutable_refs_match_driver": true,
+  "all_base_and_byte_extents_match_actual_native": true,
+  "mutable_KV_images_not_used": true,
+  "provider_binding_pin_verified": true,
+  "run_root": "/home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r2",
+  "source_commit": "4c0828691a61ce30402f5b26044e6ca2aebb45ad",
+  "GO_commit": "6f3bb9e8bf793bb118719b75fc8e84468527af30",
+  "complete_native_source": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz",
+  "next_required": "fresh admitted full trained numerical driver, all native PC retire and post-execution independent numerical checks"
+}

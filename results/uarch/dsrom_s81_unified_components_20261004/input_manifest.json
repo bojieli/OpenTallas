@@ -1,0 +1,52 @@
+{
+  "capture_native.json": {
+    "origin": "/home/ubuntu/dsrom-s81-capture-native-map-20261004/results/physical/dsrom_s81_capture_native_map_20261004/r2_PASS/native_object.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "78adda37dbdbe673b6dda2edc735bebccd69d8533668ec82836b114e2dc2d64c"
+  },
+  "capture_parent.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_capture_parent_20261004/model.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "95edc6c57b0c97e5fca9203f04daa36e0e97f98087378e4e1adda22c7bb5359e"
+  },
+  "inventory.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+  },
+  "qframe_D_FAIL.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/rtl/dsrom_qframe_20261003/D_r2/signoff_ss_ff.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "6acf524a48bb7653aea2951abc56375c68e3475952f6da57824145db5689a258"
+  },
+  "qpipe_exact.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/rtl/dsrom_qpipe_20261003/exact.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "4fe7e3d331a81fb349092e6a843291aa0ee4d88ce8377db268e93d443f38d204"
+  },
+  "return.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/model.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "a0570bec0f02a35d288ecc39a964bebf8318e9c36e4848295f2837777eb4dbae"
+  },
+  "stage_map.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815"
+  },
+  "vm_r3.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_native_vm_ports_20261004/joint_r3/model.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "816e2b147d6a5af73f638a1a7ea2145952d9d1f45c31e2064029f4d30ffb789c"
+  },
+  "vm_r4.json": {
+    "origin": "/home/ubuntu/OpenTallas/results/uarch/dsrom_s81_native_vm_ports_20261004/joint_r4/model.json",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "3087b4fa3b193ea69c6f0d473f68b1c0932a084e617eeaf2ae8219e8b1b42a23"
+  },
+  "vm_selected_timing.py": {
+    "origin": "/home/ubuntu/OpenTallas/tools/dsrom_s81_vm_selected_timing.py",
+    "scope": "retained source receipt, not new measurement",
+    "sha256": "39d7ce98013396d820737f7c20deeb0cb32380289797625cecf0ece220a5f8a9"
+  }
+}

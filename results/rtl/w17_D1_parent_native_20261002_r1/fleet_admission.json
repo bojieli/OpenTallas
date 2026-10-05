@@ -1,0 +1,35 @@
+{
+  "CPU_exclusive": false,
+  "UTC": "2026-10-02T11:06:47.691276+00:00",
+  "disk_available_bytes": 1198999138304,
+  "existing_jobs_modified": false,
+  "fleet_receipt": "results/uarch/native_compile_cpu8_23_lease_20261002/receipt_r1.json",
+  "host_memory_reserve_bytes": 34359738368,
+  "known_existing_overlaps": [
+    2069324,
+    3512826
+  ],
+  "memory_available_bytes": 167003680768,
+  "native_affinity": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "native_memory_cap_bytes": 68719476736,
+  "parallel_Q_memory_reservation_bytes": 34359738368,
+  "parallel_Q_service": "MainPID=515879\nMemoryCurrent=2899050496\nActiveState=active\n",
+  "scope": "Fresh native compile only; shared CPU wall cap is not a completion guarantee"
+}

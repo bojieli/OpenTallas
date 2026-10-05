@@ -1,0 +1,136 @@
+{
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "composed_latency_contract": {
+    "calendar_owner": "Maxwell, samePAR2",
+    "exposed_criticalpath": "Dependent consumer can issue only after matching mainterminal; stalls propagate to source ordered descendants. Fullphaseprefetch need204800bits at worst, no freeworkspace/reuse/overlap.",
+    "no_default_service_latencies": true,
+    "read_service_lower_bound": "max(maxuniquerows_perleaf,ceil(uniqueRawReads/4))=400 rounds for worstphase before latency/serialization; not tokencycles.",
+    "required_calibrated_inputs": [
+      "accepted descriptor readiness",
+      "mainword sourcecaptureedges",
+      "rawreadII",
+      "actualcapturelatency",
+      "rawdecoderlatency",
+      "gatherdelivery",
+      "main decoderterminal latency",
+      "reversecredit",
+      "original dependent deadlines"
+    ],
+    "source_deadlines_not_bound": true
+  },
+  "finite_context": {
+    "accepted_event_order": [
+      "owner/config/descriptor ready",
+      "accepted canonical+local read identity",
+      "matched macro capture",
+      "protected256+10 raw good/corrected terminal",
+      "exactmatching8bit field paired to mainword",
+      "272+10 main terminal",
+      "arithmetic consumer acceptance",
+      "ordered consumerACK",
+      "all physical capture/read/main debts drained before lease/epochreuse"
+    ],
+    "allleaf_singlecycle_or_prefetch_overlap_guarantee": false,
+    "consumer_parity_bits_per_cycle_bound": 2048,
+    "corrected_gather_output_bits_per_cycle": 1024,
+    "max_phase_prefetch_data_bits": 204800,
+    "max_phase_prefetch_raw_reads": 800,
+    "max_phase_read_rounds_per_single_port_leaf": 400,
+    "max_phase_selected_leaf_banks": 4,
+    "phase_owner_leases": 1,
+    "raw266_412to4_mux2_nodes": 437304,
+    "raw_capture_seats": 4,
+    "raw_capture_state_bits": 1284,
+    "raw_decoder_input_bits_per_cycle": 1064,
+    "read_capture_prototype_not_executed_RTL": true,
+    "read_debt_per_selected_leaf": 1,
+    "request_identity_bits": 7680,
+    "request_seats": 128,
+    "shared_raw_decoder_replicas": 4,
+    "source": "Maxwell13cc full46509 allocation profile,46080FP4 records",
+    "source_available_leaves": 412,
+    "source_epoch_era_opseq_and_phase_fields": {
+      "era": 0,
+      "opseq": 0,
+      "phase": 0,
+      "rank": 0,
+      "shard": 1,
+      "stage": 0
+    }
+  },
+  "generator_sha256": "65e154b20948866742b392fa31bbec50b921438ad317adae7dfb2cec7b578d0d",
+  "historical_412local_decoder_model": "Four-shared prototype follows13cc storage proposal only, NOT selected physical topology. Maxwell0e123 r5 now carries412 leaf-local raw +256 main decoders; retained f934 geometry and allowances stay charged. Bit-order and finite debt tests remain reusable; four-seat service is not an admission or area credit.",
+  "input_receipt_sha256": "9601c2210e1f2cbf7886e885d1962f36e5411c605136ffad71b478f717ca1654",
+  "no_engine_RTL_compile_PR_jobs": 0,
+  "physical_clock": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "common_controller_plus2cycles": "Retain priorpriced diagnostic separately; no automatic overlap/decoder credit.",
+    "existing_macro_SS_capture_residual_before_setup_wire_ps": 29.37063310661025,
+    "mandatory_cone": "macroQ ->412:4 selector+wire ->capture; captureQ ->K256 SECDED ->parity gather; mainQ+parity ->K272 SECDED ->arithmetic accept",
+    "physical_context_needs": {
+      "decoder_order": "Exactconcat above is proposedproducerABI, requiresNash freeze/realencodedwords.",
+      "main_read_capture": "Actual unchanged element PP/MB/main274 capture pin source and eventedge; ownernewfault/ready connection missing.",
+      "placement": "4shareddecoders+412:4mux +128queues with actual pins/OBS/PG/vias must be placed within wholecandidate context.",
+      "raw_read_capture": "No source-owned selectedbank/capturewrapper currently connects K256 decoder; this is modelprep only."
+    },
+    "rejection": "No1cycle grant/read credit until actual select/load/route/capture setup+relativeclock insertion fits residual andFFhold. Keep rawcreditsuntilrealterminal. Sourcehold/multicycle requires actualscheduler proof.",
+    "target_Hz": 1200000000
+  },
+  "producer_contract": {
+    "actual_allocation_ROM_init_producer_missing": true,
+    "current_payload_packer_emits_no_protected_checks": true,
+    "decoder282": {
+      "assembly": "cw282={side8[7:0],main274[273:0]}",
+      "check0_8": [
+        272,
+        281
+      ],
+      "data": [
+        0,
+        272
+      ],
+      "overall": 281
+    },
+    "immutable_mirror_must_copy_full256plus10_source_word": true,
+    "main274": {
+      "data": [
+        0,
+        272
+      ],
+      "inline_check0_1": [
+        272,
+        274
+      ]
+    },
+    "no_payload_or_scale_reencoding": true,
+    "opt_in_default": false,
+    "side8": {
+      "check2_8": [
+        0,
+        7
+      ],
+      "overall_parity_bit": 7
+    },
+    "sidecar_protection": {
+      "check9": [
+        256,
+        265
+      ],
+      "data256": "32 source side8 fields packed increasinglinearbit; bytei at8*i",
+      "decoder266": "raw274[265:0]",
+      "overall": 265,
+      "physical274_reserved8": [
+        266,
+        274
+      ]
+    },
+    "status": "PROPOSED_SOURCE_ORDERED_PROTECTED_PRODUCER_NOT_EXISTING_IMAGE_ABI",
+    "unchanged_payload_range": [
+      0,
+      272
+    ]
+  },
+  "schema": "opentallas.dsrom.PAR2.decoder-adapter-prepare.v1",
+  "source_main_pin": "fd7220c1e55397dec90222e1f99a8bd95ae02e03"
+}

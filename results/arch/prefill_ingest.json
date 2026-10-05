@@ -1,0 +1,1220 @@
+{
+ "assumptions": {
+  "ep_layer_floor_s": 0.0002,
+  "fence_s": 1e-05,
+  "gpu_chunk": 8192,
+  "indexer_eff_sensitivity": 0.5,
+  "window_rings": "shipped (40 x 128 x 528 B = 2.70 MB), not re-derived by replay"
+ },
+ "citations": {
+  "cx7_gdr": {
+   "url": "https://github.com/NVIDIA/nccl/issues/2409",
+   "what": "ib_write_bw ConnectX-7 400G, GPUDirect RDMA from GPU HBM: 391.47 Gb/s (host memory 392.6)"
+  },
+  "deepseek_v3": {
+   "url": "https://arxiv.org/abs/2412.19437",
+   "what": "DeepSeek-V3: 671B total, 37B activated; 61 layers, 128 heads, MLA q/k head 192 (128 + 64 RoPE), v head 128, vocab 129,280 x hidden 7,168"
+  },
+  "deepseek_v4": {
+   "url": "https://arxiv.org/abs/2606.19348",
+   "what": "DeepSeek-V4-Flash 284B (13B activated), 1M context; V4-Pro needs 27% of V3.2's single-token FLOPs at 1M"
+  },
+  "dgx_b200": {
+   "url": "https://www.nvidia.com/en-us/data-center/dgx-b200/",
+   "what": "DGX B200: 8 B200, 1,440 GB HBM3E, FP8 72 PFLOPS (sparse) -> 4.5 PF dense per GPU; 8 x single-port ConnectX-7 400 Gb/s"
+  },
+  "gb200_nvl72": {
+   "url": "https://www.nvidia.com/en-us/data-center/gb200-nvl72/",
+   "what": "GB200 superchip (2 GPUs): FP8 20 PFLOPS sparse; dense = half sparse -> 5 PF per GPU"
+  },
+  "lmsys_gb200_dsv3": {
+   "url": "https://www.lmsys.org/blog/2025-09-25-gb200-part-2/",
+   "what": "DeepSeek-V3/R1 prefill on GB200 NVL72, 2,000-token inputs: 26,156 input tok/s per GPU (FP8 attention, NVFP4 MoE) and 18,471 (BF16 attention, FP8 MoE)"
+  },
+  "nim_llama8b": {
+   "url": "https://docs.nvidia.com/nim/benchmarking/llm/1.0.0/performance.html",
+   "what": "Llama-3.1-8B-Instruct FP8 TP1, concurrency 1, 20,000 input tokens: TTFT 403.2 ms (H100), 408.66 ms (H200)"
+  },
+  "nixl_llmd": {
+   "url": "https://llm-d.ai/blog/networking-for-distributed-inference-llm-d",
+   "what": "NIXL (UCX/UCCL) KV transfer between two H200 over 400G IB: ~49.5 GB/s, ~99% of line rate"
+  }
+ },
+ "decode_rates": {
+  "qwen_hbm_b1_int8": 880.7,
+  "qwen_rom_b1": 10967.9,
+  "sources": [
+   "results/arch/v41_lanes.json design_point",
+   "results/arch/v41_hbm_switched.json ratios_batch1",
+   "results/arch/qwen3_budget.json power_production B rom.ar_batch1 (Qwen ROM)",
+   "results/arch/qwen3_budget.json hbm_comparator 8192 rom_format_int8"
+  ],
+  "v41_hbm": {
+   "1048576": 3580.375802755708,
+   "200000": 3580.375802755708
+  },
+  "v41_rom": {
+   "1048576": 7049.079994455792,
+   "200000": 7285.665796379299
+  }
+ },
+ "dense_gpu_calibration": {
+  "b200_flops_modelled": 2165797329098390.2,
+  "basis": "cited NIM TTFT at 20K over Llama-3.1-8B's prompt FLOPs; B200 = H100 x FP8 dense-peak ratio (MODELLED: no cited single-B200 8B prefill)",
+  "h100_flops": 952469536507936.5,
+  "h100_mfu_fp8_dense": 0.48128829535519785,
+  "h200_flops": 939743838692311.4
+ },
+ "gpu_calibration": {
+  "basis": "LMSYS GB200 DeepSeek-V3 prefill tok/s per GPU x V3's FLOPs per 2K-prompt token (no embedding or head, causal MLA at the mean position), x B200/GB200 FP8 dense peak (4.5/5.0). Conservative = the BF16-attention/FP8-MoE configuration; optimistic = FP8/NVFP4 (V4.1's routed experts are FP4, so the optimistic one is the format match)",
+  "rates": {
+   "conservative": {
+    "b200_flops": 1251620144395776.0,
+    "b200_mfu_fp8_dense": 0.278137809865728,
+    "gb200_flops": 1390689049328640.0
+   },
+   "optimistic": {
+    "b200_flops": 1772366222555136.0,
+    "b200_mfu_fp8_dense": 0.393859160567808,
+    "gb200_flops": 1969295802839040.0
+   }
+  },
+  "v3_flops_per_token_2k": 75290403840.0
+ },
+ "ingest_engine": {
+  "beat_B": 64,
+  "beats_per_cycle": {
+   "qwen_bf16": 0.9688,
+   "v41_keys": 0.3413,
+   "v41_rows": 0.4999,
+   "v41_win": 0.4852
+  },
+  "git_head": "4e3be67a1806df8384188f95a9cc146bc101af88",
+  "qwen_in_Bps": 68119195648.0,
+  "record": "results/rtl/hdc_kv_ingest_campaign.json",
+  "v41_keys_in_Bps": 22583684480.0,
+  "v41_rows_in_Bps": 33078183040.0,
+  "v41_win_in_Bps": 32105489920.0
+ },
+ "policy": "GPU prefill for every prompt (cold and agent turns); the decode chips ingest the KV (user decision)",
+ "qwen_cold": [
+  {
+   "burst_s_bf16": 0.024685611709709555,
+   "burst_s_fp8": 0.012342805854854777,
+   "capacity": {
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
+   },
+   "context": 8192,
+   "design": "qwen_rom",
+   "first_decode_step_s": 9.117515659333145e-05,
+   "gpu": "1 x H200",
+   "gpu_prefill_s": 0.14216036099741977,
+   "hbm_share_at_link_rate": 0.006796354166666667,
+   "kv_bytes_bf16_on_wire": 1207959552,
+   "kv_bytes_fp8": 603979776,
+   "link": {
+    "goodput_Bps": 48933750000.0,
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
+   },
+   "prefill_flops": {
+    "attention": 19793625219072.0,
+    "total": 133594323353600.0,
+    "weights": 113800698134528
+   },
+   "stream": {
+    "exposed_last_layer_s": 0.000685711436380821,
+    "pace_Bps_needed": 8497161540.142154
+   },
+   "ttft_late_bind_fp8_wire_s": 0.15460434200886788,
+   "ttft_late_bind_s": 0.16694714786372267,
+   "ttft_stream_s": 0.14294724759039393,
+   "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
+  },
+  {
+   "burst_s_bf16": 0.024685611709709555,
+   "burst_s_fp8": 0.012342805854854777,
+   "capacity": {
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
+   },
+   "context": 8192,
+   "design": "qwen_rom",
+   "first_decode_step_s": 9.117515659333145e-05,
+   "gpu": "1 x B200",
+   "gpu_prefill_s": 0.06168366797700992,
+   "hbm_share_at_link_rate": 0.006796354166666667,
+   "kv_bytes_bf16_on_wire": 1207959552,
+   "kv_bytes_fp8": 603979776,
+   "link": {
+    "goodput_Bps": 48933750000.0,
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
+   },
+   "prefill_flops": {
+    "attention": 19793625219072.0,
+    "total": 133594323353600.0,
+    "weights": 113800698134528
+   },
+   "stream": {
+    "exposed_last_layer_s": 0.000685711436380821,
+    "pace_Bps_needed": 19583134265.786816
+   },
+   "ttft_late_bind_fp8_wire_s": 0.07412764898845803,
+   "ttft_late_bind_s": 0.08647045484331281,
+   "ttft_stream_s": 0.06247055456998408,
+   "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
+  },
+  {
+   "burst_s_bf16": 0.024685611709709555,
+   "burst_s_fp8": 0.012342805854854777,
+   "capacity": {
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
+   },
+   "context": 8192,
+   "design": "qwen_hbm",
+   "first_decode_step_s": 0.0011354604292040421,
+   "gpu": "1 x H200",
+   "gpu_prefill_s": 0.14216036099741977,
+   "hbm_share_at_link_rate": 0.006796354166666667,
+   "kv_bytes_bf16_on_wire": 1207959552,
+   "kv_bytes_fp8": 603979776,
+   "link": {
+    "goodput_Bps": 48933750000.0,
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
+   },
+   "prefill_flops": {
+    "attention": 19793625219072.0,
+    "total": 133594323353600.0,
+    "weights": 113800698134528
+   },
+   "stream": {
+    "exposed_last_layer_s": 0.000685711436380821,
+    "pace_Bps_needed": 8497161540.142154
+   },
+   "ttft_late_bind_fp8_wire_s": 0.1556486272814786,
+   "ttft_late_bind_s": 0.16799143313633338,
+   "ttft_stream_s": 0.14399153286300465,
+   "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
+  }
+ ],
+ "schema": "opentallas.arch-prefill-ingest.v2",
+ "slot_reservation": {
+  "1048576": {
+   "late_bind_reserved_fraction": 9.19332613481622e-05,
+   "session_decode_s": 104.01478191796338,
+   "session_output_tokens": 32768,
+   "stream_reserved_fraction": 0.04373684118986497,
+   "users_held": 866
+  },
+  "200000": {
+   "late_bind_reserved_fraction": 2.3989457273469066e-05,
+   "session_decode_s": 76.96564122651046,
+   "session_output_tokens": 32768,
+   "stream_reserved_fraction": 0.009440975980555485,
+   "users_held": 4516
+  }
+ },
+ "sustained": {
+  "qwen_rom@8K": {
+   "by_R": {
+    "1": {
+     "h200_needed": 0.22986076303947753,
+     "ingest_Bps": 878904115.1999999,
+     "link_fraction": 0.017961102821672157,
+     "prompt_tok_s": 11920.9
+    },
+    "20": {
+     "h200_needed": 4.597215260789551,
+     "ingest_Bps": 17578082304.0,
+     "link_fraction": 0.3592220564334432,
+     "prompt_tok_s": 238418.0
+    },
+    "4": {
+     "h200_needed": 0.9194430521579101,
+     "ingest_Bps": 3515616460.7999997,
+     "link_fraction": 0.07184441128668863,
+     "prompt_tok_s": 47683.6
+    }
+   },
+   "decode_aggregate_tok_s": 11920.9,
+   "flops_per_prompt_token": 18120295936.0,
+   "h200_prompt_tok_s": 51861.39575266545
+  },
+  "v41_rom@1M": {
+   "b200_prompt_tok_s": 22299.611971940547,
+   "by_batch": {
+    "b1": {
+     "1": {
+      "b200_needed": 0.3161077422928077,
+      "dgx_b200_needed": 0.03951346778660096,
+      "ingest_sent_Bps": 6273681.195065655,
+      "prompt_tok_s": 7049.079994455792,
+      "uplink_fraction_2x400G": 6.410382604098046e-05
+     },
+     "20": {
+      "b200_needed": 6.322154845856154,
+      "dgx_b200_needed": 0.7902693557320193,
+      "ingest_sent_Bps": 125473623.9013131,
+      "prompt_tok_s": 140981.59988911584,
+      "uplink_fraction_2x400G": 0.001282076520819609
+     },
+     "4": {
+      "b200_needed": 1.2644309691712308,
+      "dgx_b200_needed": 0.15805387114640385,
+      "ingest_sent_Bps": 25094724.78026262,
+      "prompt_tok_s": 28196.31997782317,
+      "uplink_fraction_2x400G": 0.0002564153041639218
+     },
+     "decode_aggregate_tok_s": 7049.079994455792
+    },
+    "fill28": {
+     "1": {
+      "b200_needed": 8.851016784198615,
+      "dgx_b200_needed": 1.1063770980248269,
+      "ingest_sent_Bps": 175663073.46183833,
+      "prompt_tok_s": 197374.23984476217,
+      "uplink_fraction_2x400G": 0.0017949071291474528
+     },
+     "20": {
+      "b200_needed": 177.0203356839723,
+      "dgx_b200_needed": 22.127541960496536,
+      "ingest_sent_Bps": 3513261469.236767,
+      "prompt_tok_s": 3947484.796895243,
+      "uplink_fraction_2x400G": 0.03589814258294906
+     },
+     "4": {
+      "b200_needed": 35.40406713679446,
+      "dgx_b200_needed": 4.4255083920993075,
+      "ingest_sent_Bps": 702652293.8473533,
+      "prompt_tok_s": 789496.9593790487,
+      "uplink_fraction_2x400G": 0.007179628516589811
+     },
+     "decode_aggregate_tok_s": 197374.23984476217
+    },
+    "sat1024": {
+     "1": {
+      "b200_needed": 12.234196679499318,
+      "dgx_b200_needed": 1.5292745849374147,
+      "ingest_sent_Bps": 242807876.47970206,
+      "prompt_tok_s": 272817.8387412383,
+      "uplink_fraction_2x400G": 0.0024809857866983634
+     },
+     "20": {
+      "b200_needed": 244.68393358998637,
+      "dgx_b200_needed": 30.585491698748296,
+      "ingest_sent_Bps": 4856157529.594041,
+      "prompt_tok_s": 5456356.7748247655,
+      "uplink_fraction_2x400G": 0.049619715733967264
+     },
+     "4": {
+      "b200_needed": 48.93678671799727,
+      "dgx_b200_needed": 6.117098339749659,
+      "ingest_sent_Bps": 971231505.9188082,
+      "prompt_tok_s": 1091271.3549649531,
+      "uplink_fraction_2x400G": 0.009923943146793453
+     },
+     "decode_aggregate_tok_s": 272817.8387412383
+    }
+   },
+   "flops_per_prompt_token_at_context": 56127440512.0,
+   "sent_B_per_prompt_token": 890.0
+  },
+  "v41_rom@200K": {
+   "b200_prompt_tok_s": 32301.0383383655,
+   "by_batch": {
+    "b1": {
+     "1": {
+      "b200_needed": 0.22555515770295725,
+      "dgx_b200_needed": 0.028194394712869657,
+      "ingest_sent_Bps": 6484242.558777575,
+      "prompt_tok_s": 7285.665796379299,
+      "uplink_fraction_2x400G": 6.62553202930245e-05
+     },
+     "20": {
+      "b200_needed": 4.511103154059145,
+      "dgx_b200_needed": 0.5638878942573932,
+      "ingest_sent_Bps": 129684851.1755515,
+      "prompt_tok_s": 145713.31592758597,
+      "uplink_fraction_2x400G": 0.00132510640586049
+     },
+     "4": {
+      "b200_needed": 0.902220630811829,
+      "dgx_b200_needed": 0.11277757885147863,
+      "ingest_sent_Bps": 25936970.2351103,
+      "prompt_tok_s": 29142.663185517195,
+      "uplink_fraction_2x400G": 0.000265021281172098
+     },
+     "decode_aggregate_tok_s": 7285.665796379299
+    },
+    "fill28": {
+     "1": {
+      "b200_needed": 6.315544415682804,
+      "dgx_b200_needed": 0.7894430519603505,
+      "ingest_sent_Bps": 181558791.64577213,
+      "prompt_tok_s": 203998.64229862037,
+      "uplink_fraction_2x400G": 0.0018551489682046862
+     },
+     "20": {
+      "b200_needed": 126.31088831365608,
+      "dgx_b200_needed": 15.78886103920701,
+      "ingest_sent_Bps": 3631175832.9154425,
+      "prompt_tok_s": 4079972.8459724076,
+      "uplink_fraction_2x400G": 0.03710297936409372
+     },
+     "4": {
+      "b200_needed": 25.262177662731215,
+      "dgx_b200_needed": 3.157772207841402,
+      "ingest_sent_Bps": 726235166.5830885,
+      "prompt_tok_s": 815994.5691944815,
+      "uplink_fraction_2x400G": 0.007420595872818745
+     },
+     "decode_aggregate_tok_s": 203998.64229862037
+    },
+    "sat1024": {
+     "1": {
+      "b200_needed": 13.4969772663129,
+      "dgx_b200_needed": 1.6871221582891125,
+      "ingest_sent_Bps": 388010078.3167863,
+      "prompt_tok_s": 435966.38013122056,
+      "uplink_fraction_2x400G": 0.003964646877837753
+     },
+     "20": {
+      "b200_needed": 269.939545326258,
+      "dgx_b200_needed": 33.74244316578225,
+      "ingest_sent_Bps": 7760201566.335726,
+      "prompt_tok_s": 8719327.60262441,
+      "uplink_fraction_2x400G": 0.07929293755675505
+     },
+     "4": {
+      "b200_needed": 53.9879090652516,
+      "dgx_b200_needed": 6.74848863315645,
+      "ingest_sent_Bps": 1552040313.2671452,
+      "prompt_tok_s": 1743865.5205248822,
+      "uplink_fraction_2x400G": 0.01585858751135101
+     },
+     "decode_aggregate_tok_s": 435966.38013122056
+    }
+   },
+   "flops_per_prompt_token_at_context": 38748604032.0,
+   "sent_B_per_prompt_token": 890.0
+  }
+ },
+ "switch_port_load": {
+  "engram_utilisation_fill_mtp": 0.08446226549590179,
+  "ingest_package_port_utilisation_2x400G": 0.37050066344279947,
+  "ingest_package_port_utilisation_8x400G": 1.0,
+  "requirement": "Engram gather in a strict-priority traffic class above KV ingest on the rack switch; ingest in a lower class so a burst cannot queue a token-path gather behind it"
+ },
+ "tool": "tools/arch_prefill.py",
+ "v41_cold": [
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.0030761654883790686,
+    "nic_s": 0.009563297315247656,
+    "package_port_s": 0.003543208,
+    "time_s": 0.009563297315247656
+   },
+   "busiest_die_bytes": 93458432.0,
+   "busiest_package_bytes": 186747904.0,
+   "busiest_stage_bytes": 373495808.0,
+   "bytes_sent": {
+    "owner_rows": 933232640,
+    "total": 935936000,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 7843682304.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
+    "per_user_bytes_busiest_die": 93458432.0,
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 1048576,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.00014186248429391,
+   "gpu_prefill_s": 4.7572473147502645,
+   "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0027146155452224653,
+    "fraction_stream": 5.457079238882997e-06,
+    "ingest_die_Bps_during_burst": 9772615962.800875
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 3377699720527872,
+    "indexer": 1.1817539969482752e+16,
+    "total": 4.763413256811315e+16,
+    "weights": 32438892878102528
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.009563297315247656,
+    "stream": 4.75734943486164
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.0020102585975708704,
+    "pace_Bps_needed": 196738983.29776716
+   },
+   "ttft_late_bind_s": 4.766962474549806,
+   "ttft_stream_s": 4.757501297345933
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.0030761654883790686,
+    "nic_s": 0.009563297315247656,
+    "package_port_s": 0.003543208,
+    "time_s": 0.009563297315247656
+   },
+   "busiest_die_bytes": 93458432.0,
+   "busiest_package_bytes": 186747904.0,
+   "busiest_stage_bytes": 373495808.0,
+   "bytes_sent": {
+    "owner_rows": 933232640,
+    "total": 935936000,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 7843682304.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
+    "per_user_bytes_busiest_die": 93458432.0,
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 1048576,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.00014186248429391,
+   "gpu_prefill_s": 3.359501267424382,
+   "gpu_prefill_s_indexer_at_half_rate": 4.192959091990541,
+   "gpu_rate_flops_per_gpu": 1772366222555136.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0027146155452224653,
+    "fraction_stream": 7.727538550821486e-06,
+    "ingest_die_Bps_during_burst": 9772615962.800875
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 3377699720527872,
+    "indexer": 1.1817539969482752e+16,
+    "total": 4.763413256811315e+16,
+    "weights": 32438892878102528
+   },
+   "rate_key": "optimistic",
+   "slot_reserved_s": {
+    "late_bind": 0.009563297315247656,
+    "stream": 3.359603387535757
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.002846641972717432,
+    "pace_Bps_needed": 278593733.2649233
+   },
+   "ttft_late_bind_s": 3.3692164272239236,
+   "ttft_stream_s": 3.359755250020051
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.0030761654883790686,
+    "nic_s": 0.009563297315247656,
+    "package_port_s": 0.003543208,
+    "time_s": 0.009563297315247656
+   },
+   "busiest_die_bytes": 93458432.0,
+   "busiest_package_bytes": 186747904.0,
+   "busiest_stage_bytes": 373495808.0,
+   "bytes_sent": {
+    "owner_rows": 933232640,
+    "total": 935936000,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 7843682304.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
+    "per_user_bytes_busiest_die": 93458432.0,
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 1048576,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.00014186248429391,
+   "gpu_prefill_s": 2.3786236573751323,
+   "gpu_prefill_s_indexer_at_half_rate": 2.9687358023416324,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "16 x B200 (2 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0027146155452224653,
+    "fraction_stream": 1.0914158477765994e-05,
+    "ingest_die_Bps_during_burst": 9772615962.800875
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 3377699720527872,
+    "indexer": 1.1817539969482752e+16,
+    "total": 4.763413256811315e+16,
+    "weights": 32438892878102528
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.009563297315247656,
+    "stream": 2.3787257774865074
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.004020517195141741,
+    "pace_Bps_needed": 393477966.5955343
+   },
+   "ttft_late_bind_s": 2.388338817174674,
+   "ttft_stream_s": 2.3788776399708014
+  },
+  {
+   "burst": {
+    "binding": "package_port",
+    "engine_s": 0.0030761654883790686,
+    "nic_s": 0.002390824328811914,
+    "package_port_s": 0.003543208,
+    "time_s": 0.003543208
+   },
+   "busiest_die_bytes": 93458432.0,
+   "busiest_package_bytes": 186747904.0,
+   "busiest_stage_bytes": 373495808.0,
+   "bytes_sent": {
+    "owner_rows": 933232640,
+    "total": 935936000,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 7843682304.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
+    "per_user_bytes_busiest_die": 93458432.0,
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 1048576,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.00014186248429391,
+   "gpu_prefill_s": 4.7572473147502645,
+   "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.007326884437931828,
+    "fraction_stream": 5.457079238882997e-06,
+    "ingest_die_Bps_during_burst": 26376783976.55458
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 8,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 391470000000.0
+   },
+   "prefill_flops": {
+    "attention": 3377699720527872,
+    "indexer": 1.1817539969482752e+16,
+    "total": 4.763413256811315e+16,
+    "weights": 32438892878102528
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.003543208,
+    "stream": 4.7572852599202085
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 3.794516994382022e-05,
+    "link_busy_fraction": 0.0005025646493927176,
+    "pace_Bps_needed": 196738983.29776716
+   },
+   "ttft_late_bind_s": 4.760942385234558,
+   "ttft_stream_s": 4.757437122404502
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.000590332446727553,
+    "nic_s": 0.00184640825606049,
+    "package_port_s": 0.0006773698571428572,
+    "time_s": 0.00184640825606049
+   },
+   "busiest_die_bytes": 17935168.0,
+   "busiest_package_bytes": 35701376.0,
+   "busiest_stage_bytes": 71402752.0,
+   "bytes_sent": {
+    "owner_rows": 178000000,
+    "total": 180703360,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 1499728128.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
+    "per_user_bytes_busiest_die": 17935168.0,
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 200000,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0001372558154529902,
+   "gpu_prefill_s": 0.7334541370403164,
+   "gpu_prefill_s_indexer_at_half_rate": 0.7846451694941851,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0026982066911576336,
+    "fraction_stream": 6.79250529721569e-06,
+    "ingest_die_Bps_during_burst": 9713544088.16748
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 644245094400000,
+    "indexer": 512573819453440.0,
+    "total": 7344047783280640.0,
+    "weights": 6187228869427200
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.00184640825606049,
+    "stream": 0.7335562571516915
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.0025174147404924884,
+    "pace_Bps_needed": 246373087.1151486
+   },
+   "ttft_late_bind_s": 0.7354478011118298,
+   "ttft_stream_s": 0.7337035129671444
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.000590332446727553,
+    "nic_s": 0.00184640825606049,
+    "package_port_s": 0.0006773698571428572,
+    "time_s": 0.00184640825606049
+   },
+   "busiest_die_bytes": 17935168.0,
+   "busiest_package_bytes": 35701376.0,
+   "busiest_stage_bytes": 71402752.0,
+   "bytes_sent": {
+    "owner_rows": 178000000,
+    "total": 180703360,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 1499728128.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
+    "per_user_bytes_busiest_die": 17935168.0,
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 200000,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0001372558154529902,
+   "gpu_prefill_s": 0.517955014729763,
+   "gpu_prefill_s_indexer_at_half_rate": 0.5541054031857735,
+   "gpu_rate_flops_per_gpu": 1772366222555136.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0026982066911576336,
+    "fraction_stream": 9.618578775051357e-06,
+    "ingest_die_Bps_during_burst": 9713544088.16748
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 644245094400000,
+    "indexer": 512573819453440.0,
+    "total": 7344047783280640.0,
+    "weights": 6187228869427200
+   },
+   "rate_key": "optimistic",
+   "slot_reserved_s": {
+    "late_bind": 0.00184640825606049,
+    "stream": 0.5180571348411381
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.0035648042852212403,
+    "pace_Bps_needed": 348878483.38388973
+   },
+   "ttft_late_bind_s": 0.5199486788012765,
+   "ttft_stream_s": 0.5182043906565911
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.000590332446727553,
+    "nic_s": 0.00184640825606049,
+    "package_port_s": 0.0006773698571428572,
+    "time_s": 0.00184640825606049
+   },
+   "busiest_die_bytes": 17935168.0,
+   "busiest_package_bytes": 35701376.0,
+   "busiest_stage_bytes": 71402752.0,
+   "bytes_sent": {
+    "owner_rows": 178000000,
+    "total": 180703360,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 1499728128.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
+    "per_user_bytes_busiest_die": 17935168.0,
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 200000,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0001372558154529902,
+   "gpu_prefill_s": 0.3667270685201582,
+   "gpu_prefill_s_indexer_at_half_rate": 0.39232258474709253,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "16 x B200 (2 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0026982066911576336,
+    "fraction_stream": 1.358501059443138e-05,
+    "ingest_die_Bps_during_burst": 9713544088.16748
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 644245094400000,
+    "indexer": 512573819453440.0,
+    "total": 7344047783280640.0,
+    "weights": 6187228869427200
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.00184640825606049,
+    "stream": 0.36682918863153324
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.005034829480984977,
+    "pace_Bps_needed": 492746174.2302972
+   },
+   "ttft_late_bind_s": 0.36872073259167165,
+   "ttft_stream_s": 0.36697644444698624
+  },
+  {
+   "burst": {
+    "binding": "package_port",
+    "engine_s": 0.000590332446727553,
+    "nic_s": 0.0004616020640151225,
+    "package_port_s": 0.0006773698571428572,
+    "time_s": 0.0006773698571428572
+   },
+   "busiest_die_bytes": 17935168.0,
+   "busiest_package_bytes": 35701376.0,
+   "busiest_stage_bytes": 71402752.0,
+   "bytes_sent": {
+    "owner_rows": 178000000,
+    "total": 180703360,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 1499728128.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
+    "per_user_bytes_busiest_die": 17935168.0,
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 200000,
+   "design": "v41_rom",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0001372558154529902,
+   "gpu_prefill_s": 0.7334541370403164,
+   "gpu_prefill_s_indexer_at_half_rate": 0.7846451694941851,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0073549052391039755,
+    "fraction_stream": 6.79250529721569e-06,
+    "ingest_die_Bps_during_burst": 26477658860.77431
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 8,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 391470000000.0
+   },
+   "prefill_flops": {
+    "attention": 644245094400000,
+    "indexer": 512573819453440.0,
+    "total": 7344047783280640.0,
+    "weights": 6187228869427200
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.0006773698571428572,
+    "stream": 0.7334921696072886
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 3.803256697219904e-05,
+    "link_busy_fraction": 0.0006293536851231221,
+    "pace_Bps_needed": 246373087.1151486
+   },
+   "ttft_late_bind_s": 0.7342787627129121,
+   "ttft_stream_s": 0.7336394254227415
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.0030761654883790686,
+    "nic_s": 0.009563297315247656,
+    "package_port_s": 0.003543208,
+    "time_s": 0.009563297315247656
+   },
+   "busiest_die_bytes": 93458432.0,
+   "busiest_package_bytes": 186747904.0,
+   "busiest_stage_bytes": 373495808.0,
+   "bytes_sent": {
+    "owner_rows": 933232640,
+    "total": 935936000,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 7843682304.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
+    "per_user_bytes_busiest_die": 93458432.0,
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 1048576,
+   "design": "v41_hbm",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0002793002899947905,
+   "gpu_prefill_s": 4.7572473147502645,
+   "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0027146155452224653,
+    "fraction_stream": 5.457079238882997e-06,
+    "ingest_die_Bps_during_burst": 9772615962.800875
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 3377699720527872,
+    "indexer": 1.1817539969482752e+16,
+    "total": 4.763413256811315e+16,
+    "weights": 32438892878102528
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.009563297315247656,
+    "stream": 4.75734943486164
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.0020102585975708704,
+    "pace_Bps_needed": 196738983.29776716
+   },
+   "ttft_late_bind_s": 4.767099912355507,
+   "ttft_stream_s": 4.757638735151634
+  },
+  {
+   "burst": {
+    "binding": "nic",
+    "engine_s": 0.000590332446727553,
+    "nic_s": 0.00184640825606049,
+    "package_port_s": 0.0006773698571428572,
+    "time_s": 0.00184640825606049
+   },
+   "busiest_die_bytes": 17935168.0,
+   "busiest_package_bytes": 35701376.0,
+   "busiest_stage_bytes": 71402752.0,
+   "bytes_sent": {
+    "owner_rows": 178000000,
+    "total": 180703360,
+    "window_rings": 2703360
+   },
+   "bytes_written_hbm_replicated": 1499728128.0,
+   "capacity": {
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
+    "per_user_bytes_busiest_die": 17935168.0,
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+   },
+   "context": 200000,
+   "design": "v41_hbm",
+   "fence_s": 1e-05,
+   "first_decode_step_s": 0.0002793002899947905,
+   "gpu_prefill_s": 0.7334541370403164,
+   "gpu_prefill_s_indexer_at_half_rate": 0.7846451694941851,
+   "gpu_rate_flops_per_gpu": 1251620144395776.0,
+   "gpus": "8 x B200 (1 DGX B200)",
+   "hbm_share": {
+    "fraction_of_die_hbm": 0.0026982066911576336,
+    "fraction_stream": 6.79250529721569e-06,
+    "ingest_die_Bps_during_burst": 9713544088.16748
+   },
+   "link": {
+    "nic_goodput_Bps": 48933750000.0,
+    "nics": 2,
+    "package_port_Bps": 52705882352.94118,
+    "uplink_Bps": 97867500000.0
+   },
+   "prefill_flops": {
+    "attention": 644245094400000,
+    "indexer": 512573819453440.0,
+    "total": 7344047783280640.0,
+    "weights": 6187228869427200
+   },
+   "rate_key": "conservative",
+   "slot_reserved_s": {
+    "late_bind": 0.00184640825606049,
+    "stream": 0.7335562571516915
+   },
+   "stream": {
+    "exposed_tail_bytes": 9994240,
+    "exposed_tail_s": 0.00010212011137507343,
+    "link_busy_fraction": 0.0025174147404924884,
+    "pace_Bps_needed": 246373087.1151486
+   },
+   "ttft_late_bind_s": 0.7355898455863716,
+   "ttft_stream_s": 0.7338455574416862
+  }
+ ],
+ "v41_turns": [
+  {
+   "context_readback_bytes": 935024640,
+   "context_readback_serial_s": 0.00955398513296038,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.008,
+   "ingest_s": 3.693483536414029e-05,
+   "new_bytes_sent": 3614720,
+   "new_tokens": 1024,
+   "prefill_flops": 57507704209408.0,
+   "resident": 1047552,
+   "ttft_prefix_cached_s": 0.00818879731965805,
+   "ttft_readback_layer_pipelined_s": 0.010570387939628929,
+   "ttft_readback_serial_s": 0.01774278245261843
+  },
+  {
+   "context_readback_bytes": 932290560,
+   "context_readback_serial_s": 0.009526048586098552,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.022960040768612754,
+   "ingest_s": 6.487138222596878e-05,
+   "new_bytes_sent": 6348800,
+   "new_tokens": 4096,
+   "prefill_flops": 229897996337152.0,
+   "resident": 1044480,
+   "ttft_prefix_cached_s": 0.02317677463513263,
+   "ttft_readback_layer_pipelined_s": 0.025551381118388054,
+   "ttft_readback_serial_s": 0.032702823221231185
+  },
+  {
+   "context_readback_bytes": 906772480,
+   "context_readback_serial_s": 0.009265307482054818,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.18271857333829902,
+   "ingest_s": 0.0003256124862697014,
+   "new_bytes_sent": 31866880,
+   "new_tokens": 32768,
+   "prefill_flops": 1829553977163776.0,
+   "resident": 1015808,
+   "ttft_prefix_cached_s": 0.18319604830886263,
+   "ttft_readback_layer_pipelined_s": 0.1855054695161071,
+   "ttft_readback_serial_s": 0.19246135579091744
+  },
+  {
+   "context_readback_bytes": 179792000,
+   "context_readback_serial_s": 0.0018370960737732138,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.008,
+   "ingest_s": 3.693483536414029e-05,
+   "new_bytes_sent": 3614720,
+   "new_tokens": 1024,
+   "prefill_flops": 39711775653888.0,
+   "resident": 198976,
+   "ttft_prefix_cached_s": 0.00818419065081713,
+   "ttft_readback_layer_pipelined_s": 0.008636559005991218,
+   "ttft_readback_serial_s": 0.010021286724590343
+  },
+  {
+   "context_readback_bytes": 177057920,
+   "context_readback_serial_s": 0.0018091595269113853,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.01585088363527537,
+   "ingest_s": 6.487138222596878e-05,
+   "new_bytes_sent": 6348800,
+   "new_tokens": 4096,
+   "prefill_flops": 158714282115072.0,
+   "resident": 195904,
+   "ttft_prefix_cached_s": 0.016063010832954326,
+   "ttft_readback_layer_pipelined_s": 0.016508395051412956,
+   "ttft_readback_serial_s": 0.01787217035986571
+  },
+  {
+   "context_readback_bytes": 151539840,
+   "context_readback_serial_s": 0.0015484184228676528,
+   "design": "v41_rom",
+   "ep_floor_s": 0.008,
+   "gpu_prefill_s": 0.12584531627159992,
+   "ingest_s": 0.0003256124862697014,
+   "new_bytes_sent": 31866880,
+   "new_tokens": 32768,
+   "prefill_flops": 1260084263387136.0,
+   "resident": 167232,
+   "ttft_prefix_cached_s": 0.1263181845733226,
+   "ttft_readback_layer_pipelined_s": 0.1266983835157703,
+   "ttft_readback_serial_s": 0.12786660299619027
+  }
+ ],
+ "v41_workload": {
+  "attention_macs_per_token": 1610612736,
+  "bytes": {
+   "1048576": {
+    "capacity": {
+     "capacity_efficiency": 0.9,
+     "hbm_users": 811,
+     "per_user_bytes_busiest_die": 93458432.0,
+     "rom_users": 866,
+     "rom_users_without_reserve": 962,
+     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+    },
+    "sent": {
+     "owner_rows": 933232640,
+     "total": 935936000,
+     "window_rings": 2703360
+    },
+    "written_replicated": 7843682304.0
+   },
+   "200000": {
+    "capacity": {
+     "capacity_efficiency": 0.9,
+     "hbm_users": 4228,
+     "per_user_bytes_busiest_die": 17935168.0,
+     "rom_users": 4516,
+     "rom_users_without_reserve": 5018,
+     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
+    },
+    "sent": {
+     "owner_rows": 178000000,
+     "total": 180703360,
+     "window_rings": 2703360
+    },
+    "written_replicated": 1499728128.0
+   }
+  },
+  "indexer_scan": [
+   {
+    "coeff": 0.5,
+    "kind": "lin"
+   },
+   {
+    "coeff": 0.5,
+    "kind": "lin"
+   },
+   {
+    "coeff": 0.5,
+    "kind": "lin"
+   },
+   {
+    "coeff": 1.0,
+    "kind": "lin"
+   },
+   {
+    "coeff": 16384,
+    "kind": "cap"
+   },
+   {
+    "coeff": 16384,
+    "kind": "cap"
+   },
+   {
+    "coeff": 16384,
+    "kind": "cap"
+   },
+   {
+    "coeff": 16384,
+    "kind": "cap"
+   }
+  ],
+  "sent_B_per_new_token": 890.0,
+  "weight_macs_per_token": 16129982464
+ }
+}

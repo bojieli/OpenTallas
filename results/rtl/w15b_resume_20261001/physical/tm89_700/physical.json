@@ -1,0 +1,221 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-01T03:02:19.780456+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 623.47,
+    "block": "ot_rom_express_link",
+    "cells": 3836,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": true,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "BOUNDARY_ADD": 0,
+      "LINK_UM": 1400,
+      "SPACING_UM": 700,
+      "W": 547
+    },
+    "sources": [
+      {
+        "path": "rtl/rom/ot_rom_express_link.sv",
+        "sha256": "8c782d84fe60293f3a111ad9620398e93811c6e44d170fa823b1aceed1c903f8",
+        "size_bytes": 8578
+      }
+    ],
+    "top": "ot_rom_express_link"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n] Init guide query.\n[INFO DRT-0035]   Complete Active (guide).\n[INFO DRT-0035]   Complete V0 (guide).\n[INFO DRT-0035]   Complete M1 (guide).\n[INFO DRT-0035]   Complete V1 (guide).\n[INFO DRT-0035]   Complete M2 (guide).\n[INFO DRT-0035]   Complete V2 (guide).\n[INFO DRT-0035]   Complete M3 (guide).\n[INFO DRT-0035]   Complete V3 (guide).\n[INFO DRT-0035]   Complete M4 (guide).\n[INFO DRT-0035]   Complete V4 (guide).\n[INFO DRT-0035]   Complete M5 (guide).\n[INFO DRT-0035]   Complete V5 (guide).\n[INFO DRT-0035]   Complete M6 (guide).\n[INFO DRT-0035]   Complete V6 (guide).\n[INFO DRT-0035]   Complete M7 (guide).\n[INFO DRT-0035]   Complete V7 (guide).\n[INFO DRT-0035]   Complete M8 (guide).\n[INFO DRT-0035]   Complete V8 (guide).\n[INFO DRT-0035]   Complete M9 (guide).\n[INFO DRT-0035]   Complete V9 (guide).\n[INFO DRT-0035]   Complete Pad (guide).\n[INFO DRT-0036] Active guide region query size = 0.\n[INFO DRT-0036] V0 guide region query size = 0.\n[INFO DRT-0036] M1 guide region query size = 25127.\n[INFO DRT-0036] V1 guide region query size = 0.\n[INFO DRT-0036] M2 guide region query size = 23356.\n[INFO DRT-0036] V2 guide region query size = 0.\n[INFO DRT-0036] M3 guide region query size = 18985.\n[INFO DRT-0036] V3 guide region query size = 0.\n[INFO DRT-0036] M4 guide region query size = 13783.\n[INFO DRT-0036] V4 guide region query size = 0.\n[INFO DRT-0036] M5 guide region query size = 9588.\n[INFO DRT-0036] V5 guide region query size = 0.\n[INFO DRT-0036] M6 guide region query size = 7620.\n[INFO DRT-0036] V6 guide region query size = 0.\n[INFO DRT-0036] M7 guide region query size = 6116.\n[INFO DRT-0036] V7 guide region query size = 0.\n[INFO DRT-0036] M8 guide region query size = 4710.\n[INFO DRT-0036] V8 guide region query size = 0.\n[INFO DRT-0036] M9 guide region query size = 1741.\n[INFO DRT-0036] V9 guide region query size = 0.\n[INFO DRT-0036] Pad guide region query size = 0.\n[INFO DRT-0179] Init gr pin query.\n[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 5170.65 (MB), peak = 7266.03 (MB)\n[INFO DRT-0245] skipped writing guide updates to database.\n[INFO DRT-0181] Start track assignment.\n[INFO DRT-0184] Done with 61557 vertical wires in 50 frboxes and 49469 horizontal wires in 15 frboxes.\n[INFO DRT-0186] Done with 2271 vertical wires in 50 frboxes and 5513 horizontal wires in 15 frboxes.\n[INFO DRT-0182] Complete track assignment.\n[INFO DRT-0267] cpu time = 00:02:06, elapsed time = 00:00:26, memory = 6368.81 (MB), peak = 7266.03 (MB)\n[INFO DRT-0187] Start routing data preparation.\n[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 6603.93 (MB), peak = 7266.03 (MB)\n[INFO DRT-0194] Start detail routing.\n[INFO DRT-0195] Start 0th optimization iteration.\n    Completing 10% with 364 violations.\n    elapsed time = 00:01:01, memory = 11242.21 (MB).\n    Completing 20% with 650 violations.\n    elapsed time = 00:02:05, memory = 11608.89 (MB).\n    Completing 30% with 1280 violations.\n    elapsed time = 00:02:59, memory = 11507.52 (MB).\n\nElapsed time: 0:05.71[h:]min:sec. CPU time: user 5.42 sys 0.29 (99%). Peak memory: 307336KB.\nElapsed time: 0:06.84[h:]min:sec. CPU time: user 6.38 sys 0.48 (100%). Peak memory: 333428KB.\nElapsed time: 0:04.30[h:]min:sec. CPU time: user 4.05 sys 0.24 (99%). Peak memory: 302676KB.\nElapsed time: 0:04.40[h:]min:sec. CPU time: user 4.12 sys 0.28 (99%). Peak memory: 325224KB.\nElapsed time: 0:19.28[h:]min:sec. CPU time: user 18.74 sys 0.53 (99%). Peak memory: 550716KB.\nElapsed time: 0:37.92[h:]min:sec. CPU time: user 93.85 sys 1.03 (250%). Peak memory: 868572KB.\nElapsed time: 0:05.04[h:]min:sec. CPU time: user 4.60 sys 0.44 (99%). Peak memory: 438564KB.\nElapsed time: 3:21.45[h:]min:sec. CPU time: user 677.46 sys 7.46 (339%). Peak memory: 4120020KB.\nElapsed time: 0:08.95[h:]min:sec. CPU time: user 10.98 sys 2.18 (147%). Peak memory: 472232KB.\nElapsed time: 0:15.63[h:]min:sec. CPU time: user 15.37 sys 4.49 (127%). Peak memory: 2385812KB.\nElapsed time: 0:25.28[h:]min:sec. CPU time: user 27.78 sys 4.56 (127%). Peak memory: 2424980KB.\nElapsed time: 25:37.41[h:]min:sec. CPU time: user 1626.84 sys 21.14 (107%). Peak memory: 8073196KB.\nElapsed time: 4:14.78[h:]min:sec. CPU time: user 1677.61 sys 185.72 (731%). Peak memory: 12065416KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 247\nmake: *** [Makefile:589: /work/results/asap7/opentallas_ot_rom_express_link_asap7_w15tm89_700/base/5_2_route.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T02:26:30.422657+00:00",
+  "git": {
+    "commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--top",
+      "ot_rom_express_link",
+      "--source",
+      "rtl/rom/ot_rom_express_link.sv",
+      "--param",
+      "W=547",
+      "--param",
+      "LINK_UM=1400",
+      "--param",
+      "SPACING_UM=700",
+      "--param",
+      "BOUNDARY_ADD=0",
+      "--die-area",
+      "0",
+      "0",
+      "1404",
+      "400",
+      "--core-area",
+      "2",
+      "2",
+      "1402",
+      "398",
+      "--step-tcl",
+      "POST_PDN=tools/rom_express_link_place.tcl",
+      "--pin-region",
+      "^in_=left",
+      "--pin-region",
+      "^(local|out)_=right",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--orfs-var",
+      "FASTROUTE_TCL=/src/tools/w15_trunk_m89.tcl",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--false-path-from",
+      "rst_n",
+      "--false-path-io",
+      "--max-fanout",
+      "16",
+      "--max-transition-ns",
+      "library",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "synth,pnr",
+      "--purpose",
+      "signoff_target",
+      "--hold-corners",
+      "WC,BC",
+      "--keep-workdir",
+      "/home/ubuntu/w15work/keep/tm89_700",
+      "--nickname-tag",
+      "w15tm89_700",
+      "--output",
+      "/tmp/claude-1000/w15p/out/tm89_700/physical.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w15bwt5/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/home/ubuntu/w15bwt5"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/w15bwt5"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 623.47,
+    "cell_count": 3836,
+    "cell_types_used": 5,
+    "chip_area_um2": 623.46996,
+    "combinational_cell_count": 2192,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "7c12092b5acd5d7170ac52c2afd48f1d933cda81713e128fb6be50b51ca4b271",
+      "raw_netlist_sha256": "7c12092b5acd5d7170ac52c2afd48f1d933cda81713e128fb6be50b51ca4b271",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 479.653,
+    "sequential_cell_count": 1644,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

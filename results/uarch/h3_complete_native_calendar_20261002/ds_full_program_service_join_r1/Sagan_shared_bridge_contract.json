@@ -1,0 +1,21 @@
+{
+  "schema": "H4_DS_NATIVE_SHARED_MOVEMENT_BRIDGE_V1",
+  "source_program_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "source_dispatch_sha256": "sha256 of sorted compact JSON serialization of actual forward_dispatch_milestone.json.gz content",
+  "bridge_source_sha256": "sha256 of producer source bytes supplied with --ds-shared-bridge-source",
+  "scratch_beat_bytes": 64,
+  "scratch_capacity_bytes": 65536,
+  "templates": {
+    "ACTUAL_NATIVE_TEMPLATE_ID": {
+      "execution_path": "exact retained execution_path",
+      "native_primitive_scalars": "exact retained executed_primitive_scalar_projection dictionary",
+      "ordered_movements": [
+        {"source_step": 0, "event": "acquire", "lease": "unique source version/generation", "base": 0, "bytes": 128},
+        {"source_step": 1, "event": "read64", "lease": "unique source version/generation", "byte_address": 0, "span_bytes": 128, "repetitions": 1, "native_instruction_ref": "source-pinned bridge/template/ordered native instruction reference"},
+        {"source_step": 2, "event": "write64_ACK", "lease": "unique source version/generation", "byte_address": 0, "span_bytes": 128, "repetitions": 1, "native_instruction_ref": "source-pinned bridge/template/ordered native instruction reference"},
+        {"source_step": 3, "event": "release_after_ACK_reverse", "lease": "unique source version/generation"}
+      ]
+    }
+  },
+  "note": "This is the interface example, NOT an actual producer bridge and NOT admission evidence. Unbound templates retain null shared counts. Empty movement needs zero_shared_reason=source-proved lane-local RF-only and nonempty zero_shared_proof_ref; do not insert a fabricated zero. Sagan owns producer extraction/command bridge. No agent messaging tool is available."
+}

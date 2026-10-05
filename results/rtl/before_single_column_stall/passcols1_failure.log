@@ -1,0 +1,7 @@
+program phase=1 complete=1 trap=0 cycles=143394
+phase latency phase=1 elapsed_cycles=143243
+program phase=2 complete=0 trap=8 cycles=144119
+phase latency phase=2 elapsed_cycles=723
+[64638000000] %Fatal: tb_a3_g2_runtime_program.sv:458: Assertion failed in tb_a3_g2_runtime_program: timeout
+%Error: /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:458: Verilog $stop
+Aborting...

@@ -1,0 +1,160 @@
+{
+  "FF_registered_hold_closed": false,
+  "Maxwell_admission_commit": "28913b8882d9dc9f712d7fc1035e6c10d86dd6a6",
+  "PG_via_OBS_clock_bound": false,
+  "PR_launched": false,
+  "SS_registered_capture_closed": false,
+  "all_ports_dynamic_fullwidth": true,
+  "area_scope": "cell-area lower bound only; existing named floors retained, no PG/control/clock/wire or collector containment credit",
+  "calendar_scope": "positive two-cycle price is provisional and insufficient for these unbuffered paths; owner must price validated cuts/delivery. No full-token dependency was used as a characterization gate.",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "fleet_jobs_owned": 0,
+  "mapped_total_decoder_cell_area_mm2": 0.10867716215999998,
+  "mapping_source_commit": "347beb640",
+  "new_engine_RTL": false,
+  "next_user_requested_characterization": "Existing syndrome+overall parity detector only, separate from full correction selector. Full-cone measurements are not normal fast-check latency. No error-frequency assumption, no unvalidated irreversible consume.",
+  "numerical_scope": "unchanged complete RTL mapped; no new arithmetic or executed RTL/golden-token qualification",
+  "prospective_options": {
+    "held_multicycle": {
+      "added_decoder_path_cycles_vs_provisional2plus2": 3,
+      "admission": false,
+      "main_II_if_single_held_seat": 3,
+      "main_cycles_diagnostic": 3,
+      "raw_II_if_single_held_seat": 4,
+      "raw_cycles_diagnostic": 4,
+      "reason": "period equivalents use out-of-range unbuffered LUT delay and omit capture CQ/setup/wire/skew; not a certified multicycle timing exception",
+      "required_contract": "Hold exact accepted cw and identity until captured good/fault terminal; prohibit CE/address/slot overwrite, retain reverse credit and cancel debt. Main282 assembled only after matching main274 plus8side checks. No existing scheduler hold guarantee bound."
+    },
+    "registered_balanced": {
+      "FF_cell_area_only_mm2": 0.2740176864,
+      "Maxwell_prior_full_pipeline_overlay_bits": 999360,
+      "admission": false,
+      "conservative_FF50_proxy_mm2": 0.71244598464,
+      "conservative_screen_with_replacement_overlay_mm2": 734.1089100172858,
+      "entries": [
+        {
+          "K": 256,
+          "assigned_II_diagnostic": 1,
+          "assigned_cycles_diagnostic": 3,
+          "correction_groups": 16,
+          "replicas": 412,
+          "semantics": "Boolean source functions and bit order unchanged; metadata accompanies every cut; fault suppresses arithmetic and read debt drains. Requires actual RTL exact proof before adoption.",
+          "stage1": "balanced source syndrome9 and overall, replicated10bits/group; retained payloadK and identity58",
+          "stage2": "source fix[K] plus replicated overall/group and corrected/uncorrectable; delayed payloadK and identity58",
+          "stage3": "source data[K] XOR gated fix plus same two flags; identity58 and terminal valid",
+          "state_bits_all_replicas": 567736,
+          "state_bits_per_instance": 1378,
+          "timing_bound": false
+        },
+        {
+          "K": 272,
+          "assigned_II_diagnostic": 1,
+          "assigned_cycles_diagnostic": 3,
+          "correction_groups": 17,
+          "replicas": 256,
+          "semantics": "Boolean source functions and bit order unchanged; metadata accompanies every cut; fault suppresses arithmetic and read debt drains. Requires actual RTL exact proof before adoption.",
+          "stage1": "balanced source syndrome9 and overall, replicated10bits/group; retained payloadK and identity58",
+          "stage2": "source fix[K] plus replicated overall/group and corrected/uncorrectable; delayed payloadK and identity58",
+          "stage3": "source data[K] XOR gated fix plus same two flags; identity58 and terminal valid",
+          "state_bits_all_replicas": 371968,
+          "state_bits_per_instance": 1453,
+          "timing_bound": false
+        }
+      ],
+      "extra_decoder_path_cycles_vs_provisional2plus2": 2,
+      "finite_seats_and_tags_need_source_owner_binding": true,
+      "new_full_pipeline_overlay_FF50_mm2": 1.1438329593599998,
+      "new_full_pipeline_overlay_bits": 1508696,
+      "prior_decoder_reference_bits": 430368,
+      "raw_credit_pipeline_min_if_II1_and3cycles": 3,
+      "remaining": "Source opt-in frozen implementation and Boolean/RTL exactness; per-cut SS/FF/load/buffer/clock/PG/OBS/wire; source finite producer acceptance and consumer deadlines. No assumed II1 guarantee or route-free slot.",
+      "replacement_scope": "Replace ONLY Maxwell two decoder-output stage reservations; keep all capture/gather/main-assembly reservations and all existing decoder logic floors.",
+      "total_added_reference_state_bits": 939704
+    }
+  },
+  "retained_decoder_allowance_mm2": 1.3275684864,
+  "rows": [
+    {
+      "FF_min_delay_ps": 10.008159,
+      "FF_virtual_min_hold_slack_ps": -14.991841,
+      "K": 256,
+      "N": 266,
+      "R": 9,
+      "SS_max_delay_ps": 2794.959717,
+      "SS_path_library_limit_exceeded": true,
+      "SS_virtual_setup_slack_ps": -2021.626221,
+      "area_credit_claimed_mm2": 0,
+      "corner_output_capture_D_load_fF": {
+        "ff": 0.62135,
+        "ss": 0.524726
+      },
+      "diagnostic_is_not_certified_pipeline_minimum": true,
+      "exceeds_two_times_setup_logic_window": true,
+      "existing_allowance_mm2": 0.7996465152,
+      "mapped_area_um2_per_instance": 158.64497999999998,
+      "mapped_cell_area_mm2_all_replicas": 0.06536173175999999,
+      "mapped_cells_per_instance": 1419,
+      "max_fanout_driver": "$abc$17317$auto$blifparse.cc:371:parse_blif$18220/Y",
+      "max_internal_pin_cap_fF": {
+        "ff": 119.1033699999999,
+        "ss": 99.80882499999976
+      },
+      "max_internal_sink_pins": 221,
+      "period_equivalent_only_diagnostic": 4,
+      "provisional_two_cycle_decoder_budget_cycles": 2,
+      "replicas_per_die": 412,
+      "required_next": "source-defined syndrome/overall/fix/data+fault aligned pipeline cuts and local fanout buffer model; measured capture CQ/setup, actual enabled/header and PG/OBS/route/clock context before hardening",
+      "retained_budget_mm2": 0.7996465152,
+      "source_pipeline_cycles": 0,
+      "source_state_bits": 0,
+      "warnings_on_unused_cells_only": [
+        "FAx1_ASAP7_75t_R",
+        "HAxp5_ASAP7_75t_R"
+      ]
+    },
+    {
+      "FF_min_delay_ps": 10.008159,
+      "FF_virtual_min_hold_slack_ps": -14.991841,
+      "K": 272,
+      "N": 282,
+      "R": 9,
+      "SS_max_delay_ps": 1898.452515,
+      "SS_path_library_limit_exceeded": true,
+      "SS_virtual_setup_slack_ps": -1125.119141,
+      "area_credit_claimed_mm2": 0,
+      "corner_output_capture_D_load_fF": {
+        "ff": 0.62135,
+        "ss": 0.524726
+      },
+      "diagnostic_is_not_certified_pipeline_minimum": true,
+      "exceeds_two_times_setup_logic_window": true,
+      "existing_allowance_mm2": 0.5279219712,
+      "mapped_area_um2_per_instance": 169.2009,
+      "mapped_cell_area_mm2_all_replicas": 0.0433154304,
+      "mapped_cells_per_instance": 1539,
+      "max_fanout_driver": "$abc$18305$auto$blifparse.cc:371:parse_blif$18590/Y",
+      "max_internal_pin_cap_fF": {
+        "ff": 102.79331199999974,
+        "ss": 87.15011600000005
+      },
+      "max_internal_sink_pins": 176,
+      "period_equivalent_only_diagnostic": 3,
+      "provisional_two_cycle_decoder_budget_cycles": 2,
+      "replicas_per_die": 256,
+      "required_next": "source-defined syndrome/overall/fix/data+fault aligned pipeline cuts and local fanout buffer model; measured capture CQ/setup, actual enabled/header and PG/OBS/route/clock context before hardening",
+      "retained_budget_mm2": 0.5279219712,
+      "source_pipeline_cycles": 0,
+      "source_state_bits": 0,
+      "warnings_on_unused_cells_only": [
+        "FAx1_ASAP7_75t_R",
+        "HAxp5_ASAP7_75t_R"
+      ]
+    }
+  ],
+  "schema": "opentallas.dsrom.secded.characterization-review.v1",
+  "source_decoder_sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+  "status": "MEASUREMENT_COMPLETE_UNPIPELINED_SS_SCREEN_FAIL_PHYSICAL_OPEN",
+  "terminal_record_sha256": "a4f56e1ed4a151f33220acd9d1cfb7319cc7986d2cb776dec1e5fbbd6922a6bb",
+  "timing_scope": "20ps input transition, one actual corner D-pin on every output, ideal wires; library limit extrapolation is present. Virtual FF min is not registered/contextual hold.",
+  "timing_source_commit": "612f450ae84d75743d7aee74d042ba807028ea9b"
+}

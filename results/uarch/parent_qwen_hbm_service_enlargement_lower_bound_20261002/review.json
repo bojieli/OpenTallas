@@ -1,0 +1,32 @@
+{
+  "status": "PARENT_GEOMETRIC_LOWER_BOUND_NOT_FIT_OR_PNR_QUALIFICATION",
+  "model_sha256": "eb78a6fa70f453a45d639c811c122c368f9bd07d91711aed0c1bd92c2b906d03",
+  "geometry_source": {
+    "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+    "path": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+    "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+  },
+  "scope": "Qwen HBM only: four stacks per die, two equal service bands, two stacks per band; eight stacks system",
+  "required_mm2_per_stack": "11.3323399684",
+  "current_mm2_per_stack": "10.0158336",
+  "fixed_band_width_um": "31760",
+  "current_band_depth_um": "630.72",
+  "minimum_band_depth_um_before_unpriced_via_PDN_CTS_margins": "713.6234237027707808564231738",
+  "minimum_depth_increment_um_per_band": "82.9034237027707808564231738",
+  "conditional_die_height_increment_um_if_preserving_all_current_interior": "165.8068474055415617128463476",
+  "conditional_die_area_increment_mm2": "5.272657747496221662468513854",
+  "sm_count_per_die_preserved_requirement": 32,
+  "l2_macro_count_per_die_preserved_requirement": 256,
+  "unpriced": [
+    "60352 via escapes/stack with actual cut/enclosure",
+    "extra PDN/CTS/halo and channel geometry",
+    "package/reticle feasibility of enlarged die",
+    "recomputed source-to-SM and PHY crossings",
+    "actual provider ports and SS/FF"
+  ],
+  "inherited_floorplan_clock_hz": 1098640000.0,
+  "clock_transfer_allowed": false,
+  "DS_area_transfer_allowed": false,
+  "fit": false,
+  "hardware_admission": false
+}

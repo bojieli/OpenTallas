@@ -1,0 +1,2228 @@
+{
+  "arith": "chunk8",
+  "benches": {
+    "mtp_m2_w512": {
+      "TL": 3,
+      "W": 512,
+      "fp_units": "dpi",
+      "lanes": 4096,
+      "memory_latency": 2,
+      "run": {
+        "cases": [
+          {
+            "case": 0,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L24 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L27 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L35 hc_ffn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L36 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 25,
+            "last_result_cycles": 206,
+            "name": "reduced L20 hc_attn x1",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              206
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "depth_cycles": 85,
+            "errors": 0,
+            "first_result_cycles": 187,
+            "issue_bound_cycles": 125,
+            "last_result_cycles": 210,
+            "name": "shipped typical x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              210
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "depth_cycles": 126,
+            "errors": 0,
+            "first_result_cycles": 187,
+            "issue_bound_cycles": 750,
+            "last_result_cycles": 876,
+            "name": "shipped typical x6 (MTP verify)",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              210,
+              344,
+              476,
+              610,
+              742,
+              876
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 83,
+            "issue_bound_cycles": 240,
+            "last_result_cycles": 318,
+            "name": "shipped wide-range raw x2",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              198,
+              318
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 83,
+            "issue_bound_cycles": 120,
+            "last_result_cycles": 198,
+            "name": "shipped subnormal raw x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              198
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 2,
+            "last_result_cycles": 183,
+            "name": "K=8 nout=1 x1",
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "depth_cycles": 387,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 18,
+            "last_result_cycles": 405,
+            "name": "K=24 nout=5 x3",
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              187,
+              296,
+              405
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 79,
+            "issue_bound_cycles": 3,
+            "last_result_cycles": 81,
+            "name": "K=8(W+1) wide raw x1 (last run of one chunk)",
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              81
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "depth_cycles": 119,
+            "errors": 0,
+            "first_result_cycles": 79,
+            "issue_bound_cycles": 48,
+            "last_result_cycles": 167,
+            "name": "K=8(8+1) wide raw x2",
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              102,
+              167
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 4096,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 6053
+      },
+      "stalled_consumer_40pct": {
+        "cases": [
+          {
+            "case": 0,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 893,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              226,
+              357,
+              500,
+              632,
+              767,
+              893
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 904,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              220,
+              361,
+              498,
+              631,
+              761,
+              904
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 908,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              217,
+              347,
+              495,
+              626,
+              771,
+              908
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 918,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              211,
+              358,
+              499,
+              636,
+              777,
+              918
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 221,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              221
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "errors": 0,
+            "first_result_cycles": 188,
+            "last_result_cycles": 213,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              213
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "errors": 0,
+            "first_result_cycles": 187,
+            "last_result_cycles": 901,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              229,
+              358,
+              503,
+              638,
+              767,
+              901
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "errors": 0,
+            "first_result_cycles": 84,
+            "last_result_cycles": 324,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              198,
+              324
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "errors": 0,
+            "first_result_cycles": 83,
+            "last_result_cycles": 198,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              198
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "errors": 0,
+            "first_result_cycles": 184,
+            "last_result_cycles": 184,
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              184
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "errors": 0,
+            "first_result_cycles": 184,
+            "last_result_cycles": 407,
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              190,
+              299,
+              407
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "last_result_cycles": 84,
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              84
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "errors": 0,
+            "first_result_cycles": 79,
+            "last_result_cycles": 188,
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              117,
+              188
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 4096,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 6368
+      },
+      "vectors": {
+        "results": 907,
+        "weight_words": 633,
+        "x_words": 82
+      }
+    },
+    "spec_w256": {
+      "TL": 4,
+      "W": 256,
+      "fp_units": "dpi",
+      "lanes": 2048,
+      "memory_latency": 2,
+      "run": {
+        "cases": [
+          {
+            "case": 0,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L24 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L27 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L35 hc_ffn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "depth_cycles": 696,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 150,
+            "last_result_cycles": 846,
+            "name": "reduced L36 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              206,
+              334,
+              462,
+              590,
+              718,
+              846
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 25,
+            "last_result_cycles": 206,
+            "name": "reduced L20 hc_attn x1",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              206
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 250,
+            "last_result_cycles": 328,
+            "name": "shipped typical x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              328
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "shipped typical x6 (MTP verify)",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 88,
+            "issue_bound_cycles": 480,
+            "last_result_cycles": 558,
+            "name": "shipped wide-range raw x2",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              318,
+              558
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 88,
+            "issue_bound_cycles": 240,
+            "last_result_cycles": 318,
+            "name": "shipped subnormal raw x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              318
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 2,
+            "last_result_cycles": 183,
+            "name": "K=8 nout=1 x1",
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "depth_cycles": 387,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 18,
+            "last_result_cycles": 405,
+            "name": "K=24 nout=5 x3",
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              187,
+              296,
+              405
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "issue_bound_cycles": 6,
+            "last_result_cycles": 84,
+            "name": "K=8(W+1) wide raw x1 (last run of one chunk)",
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              84
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "depth_cycles": 119,
+            "errors": 0,
+            "first_result_cycles": 79,
+            "issue_bound_cycles": 48,
+            "last_result_cycles": 167,
+            "name": "K=8(8+1) wide raw x2",
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              102,
+              167
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 2048,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 7236
+      },
+      "stalled_consumer_40pct": {
+        "cases": [
+          {
+            "case": 0,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 893,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              226,
+              357,
+              500,
+              632,
+              767,
+              893
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 904,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              220,
+              361,
+              498,
+              631,
+              761,
+              904
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 908,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              217,
+              347,
+              495,
+              626,
+              771,
+              908
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 918,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              211,
+              358,
+              499,
+              636,
+              777,
+              918
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 221,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              221
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 329,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              329
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "errors": 0,
+            "first_result_cycles": 193,
+            "last_result_cycles": 1578,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              579,
+              828,
+              1080,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "errors": 0,
+            "first_result_cycles": 88,
+            "last_result_cycles": 559,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              318,
+              559
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "errors": 0,
+            "first_result_cycles": 88,
+            "last_result_cycles": 321,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              321
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 183,
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 412,
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              190,
+              297,
+              412
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "last_result_cycles": 84,
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              84
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "errors": 0,
+            "first_result_cycles": 79,
+            "last_result_cycles": 178,
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              119,
+              178
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 2048,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 7513
+      },
+      "vectors": {
+        "results": 907,
+        "weight_words": 1116,
+        "x_words": 133
+      }
+    },
+    "tile_w8": {
+      "TL": 9,
+      "W": 8,
+      "fp_units": "rtl",
+      "lanes": 64,
+      "memory_latency": 2,
+      "run": {
+        "cases": [
+          {
+            "case": 0,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L24 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L27 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L35 hc_ffn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L36 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 250,
+            "last_result_cycles": 328,
+            "name": "reduced L20 hc_attn x1",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              328
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "issue_bound_cycles": 8000,
+            "last_result_cycles": 8078,
+            "name": "shipped typical x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              8078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "issue_bound_cycles": 48000,
+            "last_result_cycles": 48078,
+            "name": "shipped typical x6 (MTP verify)",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              8078,
+              16078,
+              24078,
+              32078,
+              40078,
+              48078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "issue_bound_cycles": 15360,
+            "last_result_cycles": 15438,
+            "name": "shipped wide-range raw x2",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              7758,
+              15438
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "issue_bound_cycles": 7680,
+            "last_result_cycles": 7758,
+            "name": "shipped subnormal raw x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              7758
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 2,
+            "last_result_cycles": 183,
+            "name": "K=8 nout=1 x1",
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "depth_cycles": 387,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 18,
+            "last_result_cycles": 405,
+            "name": "K=24 nout=5 x3",
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              187,
+              296,
+              405
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 111,
+            "issue_bound_cycles": 99,
+            "last_result_cycles": 177,
+            "name": "K=8(W+1) wide raw x1 (last run of one chunk)",
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              177
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "depth_cycles": 88,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "issue_bound_cycles": 96,
+            "last_result_cycles": 184,
+            "name": "K=8(8+1) wide raw x2",
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              126,
+              184
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 64,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 86966
+      },
+      "stalled_consumer_40pct": {
+        "cases": [
+          {
+            "case": 0,
+            "errors": 0,
+            "first_result_cycles": 193,
+            "last_result_cycles": 1580,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              829,
+              1078,
+              1328,
+              1580
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1578,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              330,
+              578,
+              828,
+              1079,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1579,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              579,
+              828,
+              1079,
+              1329,
+              1579
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1578,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              329,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 333,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              333
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "last_result_cycles": 8078,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              8078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "errors": 0,
+            "first_result_cycles": 720,
+            "last_result_cycles": 48078,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              8079,
+              16078,
+              24078,
+              32078,
+              40082,
+              48078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "last_result_cycles": 15438,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              7758,
+              15438
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "last_result_cycles": 7758,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              7758
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 183,
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 412,
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              189,
+              299,
+              412
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "errors": 0,
+            "first_result_cycles": 111,
+            "last_result_cycles": 177,
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              177
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "last_result_cycles": 186,
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              128,
+              186
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 64,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 86983
+      },
+      "vectors": {
+        "results": 907,
+        "weight_words": 32073,
+        "x_words": 3491
+      }
+    },
+    "tile_w8_dpi": {
+      "TL": 9,
+      "W": 8,
+      "fp_units": "dpi",
+      "lanes": 64,
+      "matches_rtl_units": {
+        "cases": 13,
+        "identical_results_and_cycles": true,
+        "note": "the tile with the real ot_hdc_fastfp units and with the host-float stand-ins, same vectors: both bit-exact against the golden, every per-position cycle equal"
+      },
+      "memory_latency": 2,
+      "run": {
+        "cases": [
+          {
+            "case": 0,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L24 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L27 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L35 hc_ffn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 1500,
+            "last_result_cycles": 1578,
+            "name": "reduced L36 hc_attn x6",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "issue_bound_cycles": 250,
+            "last_result_cycles": 328,
+            "name": "reduced L20 hc_attn x1",
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              328
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "issue_bound_cycles": 8000,
+            "last_result_cycles": 8078,
+            "name": "shipped typical x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              8078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "issue_bound_cycles": 48000,
+            "last_result_cycles": 48078,
+            "name": "shipped typical x6 (MTP verify)",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              8078,
+              16078,
+              24078,
+              32078,
+              40078,
+              48078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "issue_bound_cycles": 15360,
+            "last_result_cycles": 15438,
+            "name": "shipped wide-range raw x2",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              7758,
+              15438
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "issue_bound_cycles": 7680,
+            "last_result_cycles": 7758,
+            "name": "shipped subnormal raw x1",
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              7758
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "depth_cycles": 181,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 2,
+            "last_result_cycles": 183,
+            "name": "K=8 nout=1 x1",
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "depth_cycles": 387,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "issue_bound_cycles": 18,
+            "last_result_cycles": 405,
+            "name": "K=24 nout=5 x3",
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              187,
+              296,
+              405
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "depth_cycles": 78,
+            "errors": 0,
+            "first_result_cycles": 111,
+            "issue_bound_cycles": 99,
+            "last_result_cycles": 177,
+            "name": "K=8(W+1) wide raw x1 (last run of one chunk)",
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              177
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "depth_cycles": 88,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "issue_bound_cycles": 96,
+            "last_result_cycles": 184,
+            "name": "K=8(8+1) wide raw x2",
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              126,
+              184
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 64,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 86966
+      },
+      "stalled_consumer_40pct": {
+        "cases": [
+          {
+            "case": 0,
+            "errors": 0,
+            "first_result_cycles": 193,
+            "last_result_cycles": 1580,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              578,
+              829,
+              1078,
+              1328,
+              1580
+            ],
+            "scale": 1
+          },
+          {
+            "case": 1,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1578,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              330,
+              578,
+              828,
+              1079,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 2,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1579,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              328,
+              579,
+              828,
+              1079,
+              1329,
+              1579
+            ],
+            "scale": 1
+          },
+          {
+            "case": 3,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 1578,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              329,
+              578,
+              828,
+              1078,
+              1328,
+              1578
+            ],
+            "scale": 1
+          },
+          {
+            "case": 4,
+            "errors": 0,
+            "first_result_cycles": 192,
+            "last_result_cycles": 333,
+            "nchunk": 80,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              333
+            ],
+            "scale": 1
+          },
+          {
+            "case": 5,
+            "errors": 0,
+            "first_result_cycles": 718,
+            "last_result_cycles": 8078,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              8078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 6,
+            "errors": 0,
+            "first_result_cycles": 720,
+            "last_result_cycles": 48078,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 6,
+            "position_last_cycles": [
+              8079,
+              16078,
+              24078,
+              32078,
+              40082,
+              48078
+            ],
+            "scale": 1
+          },
+          {
+            "case": 7,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "last_result_cycles": 15438,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              7758,
+              15438
+            ],
+            "scale": 0
+          },
+          {
+            "case": 8,
+            "errors": 0,
+            "first_result_cycles": 398,
+            "last_result_cycles": 7758,
+            "nchunk": 2560,
+            "nout": 24,
+            "npos": 1,
+            "position_last_cycles": [
+              7758
+            ],
+            "scale": 0
+          },
+          {
+            "case": 9,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 183,
+            "nchunk": 1,
+            "nout": 1,
+            "npos": 1,
+            "position_last_cycles": [
+              183
+            ],
+            "scale": 1
+          },
+          {
+            "case": 10,
+            "errors": 0,
+            "first_result_cycles": 183,
+            "last_result_cycles": 412,
+            "nchunk": 3,
+            "nout": 5,
+            "npos": 3,
+            "position_last_cycles": [
+              189,
+              299,
+              412
+            ],
+            "scale": 1
+          },
+          {
+            "case": 11,
+            "errors": 0,
+            "first_result_cycles": 111,
+            "last_result_cycles": 177,
+            "nchunk": 257,
+            "nout": 3,
+            "npos": 1,
+            "position_last_cycles": [
+              177
+            ],
+            "scale": 0
+          },
+          {
+            "case": 12,
+            "errors": 0,
+            "first_result_cycles": 80,
+            "last_result_cycles": 186,
+            "nchunk": 9,
+            "nout": 24,
+            "npos": 2,
+            "position_last_cycles": [
+              128,
+              186
+            ],
+            "scale": 0
+          }
+        ],
+        "cases_run": 13,
+        "faults": 0,
+        "first_mismatches": [],
+        "lanes": 64,
+        "mismatches": 0,
+        "order_errors": 0,
+        "pass": true,
+        "results_compared": 907,
+        "total_cycles": 86983
+      },
+      "vectors": {
+        "results": 907,
+        "weight_words": 32073,
+        "x_words": 3491
+      }
+    }
+  },
+  "cases": [
+    {
+      "K": 640,
+      "name": "reduced L24 hc_attn x6",
+      "nout": 24,
+      "npos": 6,
+      "scale": 1
+    },
+    {
+      "K": 640,
+      "name": "reduced L27 hc_attn x6",
+      "nout": 24,
+      "npos": 6,
+      "scale": 1
+    },
+    {
+      "K": 640,
+      "name": "reduced L35 hc_ffn x6",
+      "nout": 24,
+      "npos": 6,
+      "scale": 1
+    },
+    {
+      "K": 640,
+      "name": "reduced L36 hc_attn x6",
+      "nout": 24,
+      "npos": 6,
+      "scale": 1
+    },
+    {
+      "K": 640,
+      "name": "reduced L20 hc_attn x1",
+      "nout": 24,
+      "npos": 1,
+      "scale": 1
+    },
+    {
+      "K": 20480,
+      "name": "shipped typical x1",
+      "nout": 24,
+      "npos": 1,
+      "scale": 1
+    },
+    {
+      "K": 20480,
+      "name": "shipped typical x6 (MTP verify)",
+      "nout": 24,
+      "npos": 6,
+      "scale": 1
+    },
+    {
+      "K": 20480,
+      "name": "shipped wide-range raw x2",
+      "nout": 24,
+      "npos": 2,
+      "scale": 0
+    },
+    {
+      "K": 20480,
+      "name": "shipped subnormal raw x1",
+      "nout": 24,
+      "npos": 1,
+      "scale": 0
+    },
+    {
+      "K": 8,
+      "name": "K=8 nout=1 x1",
+      "nout": 1,
+      "npos": 1,
+      "scale": 1
+    },
+    {
+      "K": 24,
+      "name": "K=24 nout=5 x3",
+      "nout": 5,
+      "npos": 3,
+      "scale": 1
+    },
+    {
+      "K": 2056,
+      "name": "K=8(W+1) wide raw x1 (last run of one chunk)",
+      "nout": 3,
+      "npos": 1,
+      "scale": 0
+    },
+    {
+      "K": 72,
+      "name": "K=8(8+1) wide raw x2",
+      "nout": 24,
+      "npos": 2,
+      "scale": 0
+    }
+  ],
+  "claim_boundary": "cycle-level Verilator simulation of ot_hdc_v41x_hcp with behavioural weight/x banks (fixed read latency) against tools/hdc_golden_v41.Model.hc_mixes under R-ARITH chunk8; the shipped-size fn is random (no shipped checkpoint in this repository), the reduced vehicle's fn and residuals are real.  Clock and area: results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_hcp*/physical.json.",
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "Pinned inputs moved after this record: tools/hdc_golden.py (8fb2059d), tools/hdc_golden_v41.py (43ea7573), rtl/hdc/v41x/ot_hdc_v41x_hcp.sv (6665aa95, routed-tile default W=8/TL=9), rtl/hdc/ot_hdc_sfu.sv (27d30c15, reciprocal saturation) and the campaign tool itself (52367cae, FP32 weights from HBM). A full re-run at HEAD 5aa6e609 was attempted and exceeded 40 min (killed by timeout at 2,401 s under load ~160 on 32 cores), so it is not a quick gate; not re-run.",
+    "stale_since": "8fb2059d",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
+  "fp_stand_in": {
+    "cases": 13,
+    "identical_results_and_cycles": true,
+    "note": "the tile with the real ot_hdc_fastfp units and with the host-float stand-ins, same vectors: both bit-exact against the golden, every per-position cycle equal"
+  },
+  "input_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "1ab70afb4f5dc23752388f39a8aeae1fb5e3ab6b9b5f91d24817f6f3bad831d6",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+    "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+    "rtl/test/tb_hdc_v41x_hcp.sv": "8eecc83a03bbe619c2fb1c32760b2cae819c5acf05b072afe09d1411225774f3",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+    "tools/rtl_hdc_v41x_hcp_campaign.py": "623cf60e79878932e448b24180062a42296f27f4bb56a9f16fc9bb92c4ffd484"
+  },
+  "mutations": [
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 339,
+      "mutation": "tail passes a stored sibling through instead of adding it"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": null,
+      "mismatches": null,
+      "mutation": "last run stored instead of moved up"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 323,
+      "mutation": "first-term flag one cycle late"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 16,
+      "mutation": "last run keeps every lane"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 304,
+      "mutation": "sum of squares weight is the ROM word"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 304,
+      "mutation": "Newton step uses +1.5 minus without the sign flip"
+    },
+    {
+      "caught": true,
+      "control": false,
+      "faults": 0,
+      "mismatches": 355,
+      "mutation": "run tree takes the right half twice"
+    },
+    {
+      "caught": false,
+      "control": true,
+      "faults": 0,
+      "mismatches": 0,
+      "mutation": "CONTROL: tree operands swapped (addition commutes)"
+    }
+  ],
+  "order_sensitivity": {
+    "K=24 nout=5 x3": {
+      "differ_from_sequential": 12,
+      "differ_from_sequential_chunk_sums": 0,
+      "results": 15
+    },
+    "K=8 nout=1 x1": {
+      "differ_from_sequential": 0,
+      "differ_from_sequential_chunk_sums": 0,
+      "results": 1
+    },
+    "K=8(8+1) wide raw x2": {
+      "differ_from_sequential": 28,
+      "differ_from_sequential_chunk_sums": 25,
+      "results": 48
+    },
+    "K=8(W+1) wide raw x1 (last run of one chunk)": {
+      "differ_from_sequential": 2,
+      "differ_from_sequential_chunk_sums": 3,
+      "results": 3
+    },
+    "reduced L20 hc_attn x1": {
+      "differ_from_sequential": 24,
+      "differ_from_sequential_chunk_sums": 21,
+      "results": 24
+    },
+    "reduced L24 hc_attn x6": {
+      "differ_from_sequential": 142,
+      "differ_from_sequential_chunk_sums": 118,
+      "results": 144
+    },
+    "reduced L27 hc_attn x6": {
+      "differ_from_sequential": 136,
+      "differ_from_sequential_chunk_sums": 120,
+      "results": 144
+    },
+    "reduced L35 hc_ffn x6": {
+      "differ_from_sequential": 133,
+      "differ_from_sequential_chunk_sums": 120,
+      "results": 144
+    },
+    "reduced L36 hc_attn x6": {
+      "differ_from_sequential": 139,
+      "differ_from_sequential_chunk_sums": 120,
+      "results": 144
+    },
+    "shipped subnormal raw x1": {
+      "differ_from_sequential": 24,
+      "differ_from_sequential_chunk_sums": 24,
+      "results": 24
+    },
+    "shipped typical x1": {
+      "differ_from_sequential": 23,
+      "differ_from_sequential_chunk_sums": 21,
+      "results": 24
+    },
+    "shipped typical x6 (MTP verify)": {
+      "differ_from_sequential": 142,
+      "differ_from_sequential_chunk_sums": 142,
+      "results": 144
+    },
+    "shipped wide-range raw x2": {
+      "differ_from_sequential": 46,
+      "differ_from_sequential_chunk_sums": 46,
+      "results": 48
+    }
+  },
+  "reduced_operand_stats": {
+    "fn_std": 0.019991358742117882,
+    "x_std": 1.6157482862472534
+  },
+  "schema": "opentallas.hdc-v41x-hcp-campaign.v1",
+  "spec": {
+    "lanes": 2048,
+    "latency_one_position_cycles": 1000,
+    "mtp_lane_work_cycles": 1440,
+    "mtp_positions": 6
+  },
+  "spec_check": {
+    "lanes": {
+      "measured": 2048,
+      "met": true,
+      "spec": 2048
+    },
+    "one_position_latency_cycles": {
+      "depth": 78,
+      "issue_bound": 250,
+      "measured": 328,
+      "met": true,
+      "spec": 1000
+    },
+    "six_positions_2048_lanes": {
+      "depth": 78,
+      "fits_body": false,
+      "fn_lane_cycles": 1440,
+      "lane_utilisation_during_issue": 1.0,
+      "measured": 1578,
+      "note": "2,048 lanes do 1,440 cycles of lane work for 6 positions: twice the body, which is why the budget itself puts hc_projection on the critical path at m = 1 (rom_m1 verify_path_us > 0)",
+      "position_last_cycles": [
+        328,
+        578,
+        828,
+        1078,
+        1328,
+        1578
+      ],
+      "spec_lane_work": 1440,
+      "sum_of_squares_task_cycles": 60
+    },
+    "six_positions_m2_4096_lanes": {
+      "body_cycles": 720.0,
+      "depth": 126,
+      "fits_body": false,
+      "issue_bound": 750,
+      "lanes": 4096,
+      "measured": 876,
+      "note": "the MTP design point m = 2 as 8 x 512 lanes (weights read at twice the rate; an m-way multiplier sharing one weight read has the same lane count and cycle count)",
+      "position_last_cycles": [
+        210,
+        344,
+        476,
+        610,
+        742,
+        876
+      ]
+    },
+    "sublayer_body": {
+      "body_cycles": 720.0,
+      "clock_hz": 1033900000.0,
+      "source": "results/arch/arch_budget_v41.json mtp.speculation.200000.rom_m1.classes.hc_projection (per op: / 80 hc ops per token)",
+      "verify_busy_cycles_m1": 1440.0,
+      "verify_on_path_cycles_m1": 720.0
+    }
+  },
+  "status": "pass",
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ",
+      "-Wno-PINCONNECTEMPTY",
+      "-Wno-TIMESCALEMOD"
+    ],
+    "messages": [],
+    "returncode": 0
+  }
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/tmp/h1-qwen-final-KV-reference-20261002-r1/lease_keeper.py", line 14, in <module>
+    assert threads==28 and st['compute_threads']==28, (threads,st)
+AssertionError: (0, {'observed_at': 1790980370.895067, 'total_gib': 235.94449615478516, 'free_gib': 149.65473175048828, 'load': 6.11376953125, 'cpus': 28, 'compute_threads': 28})

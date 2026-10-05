@@ -1,0 +1,85 @@
+{
+  "scope": "Matched ASAP7 TT 2 ns CTS12 fanout16. Baseline fails route; rounding stage and bounded powers pass route with all physical checks zero. Overall records fail prelayout. Bounded-power source hashes match current RTL.",
+  "records": [
+    {
+      "record": "pnr_baseline_cts12_2ns.json",
+      "sha256": "ae4a45058a259dabb6c2bf4da6262a5ecbf91565e3b5cbe1f417c8962ee3c9c9",
+      "standard_cell_area_um2": 1347.02,
+      "setup_wns_ns": -0.281717,
+      "hold_wns_ns": 0.0562981,
+      "setup_violations": 38,
+      "hold_violations": 0,
+      "max_slew_violations": 0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "drc_errors": 0,
+      "antenna_violating_nets": 0,
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "results/physical_abi3/asap7/fp32_div_normalized_compare/source_snapshots/baseline.sv",
+          "sha256": "bbd5ef82bf97b53be2d835b17b9466570cbf9179cddb7c7f75b231ea4e7633a5",
+          "size_bytes": 18070
+        }
+      ]
+    },
+    {
+      "record": "pnr_round_stage_cts12_2ns.json",
+      "sha256": "03b83ade4f70d6b434cda48cffb4d5fee6867dc7292e901aabdb9ad9c967cc99",
+      "standard_cell_area_um2": 1309.75,
+      "setup_wns_ns": 0.0827918,
+      "hold_wns_ns": 0.0526321,
+      "setup_violations": 0,
+      "hold_violations": 0,
+      "max_slew_violations": 0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "drc_errors": 0,
+      "antenna_violating_nets": 0,
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "sha256": "c26aaf34b19e36dfb3f52f5b92a7b3f0757cee57c7facbc35c124fb7a121afcb",
+          "size_bytes": 18422
+        }
+      ]
+    },
+    {
+      "record": "pnr_bounded_power_cts12_2ns.json",
+      "sha256": "bb1d53ab441e964adc6a92e36014860c1d23b963761d12c68b044e16af95a75b",
+      "standard_cell_area_um2": 1181.75,
+      "setup_wns_ns": 0.11535200000000001,
+      "hold_wns_ns": 0.0573598,
+      "setup_violations": 0,
+      "hold_violations": 0,
+      "max_slew_violations": 0,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "drc_errors": 0,
+      "antenna_violating_nets": 0,
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "size_bytes": 30130
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+          "size_bytes": 18599
+        }
+      ]
+    }
+  ],
+  "area_reduction_percent": 12.269305578239374,
+  "decision": "Retain midpoint rounding pipeline and bounded power registers. Standalone 2 ns routed pass; one extra cycle per nontrivial division, no parent configuration change or extrapolated Fmax claim."
+}

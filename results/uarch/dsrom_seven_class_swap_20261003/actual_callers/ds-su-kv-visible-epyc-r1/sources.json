@@ -1,0 +1,37 @@
+{
+  "owner_HEAD": "e87bdc97bbfc5d07ad7bf373bc7f251dcb1e05b0",
+  "main_source_join": "c473e971b161aa520b8d4a9bbb6cd1e54bb42cc3",
+  "immutable_content_snapshot": [
+    {
+      "original": "tests/rtl/dsrom_su_kv_visible/tb.sv",
+      "copy": "sources/0_tb.sv",
+      "sha256": "e28c9de9d24e733d9c2929ff5f60caa3ab86ed6c4d531140ce9bc50efdbf81c5"
+    },
+    {
+      "original": "rtl/model_ready_ds_seven_class_20261003/ot_ds_su_kv_related_visible.sv",
+      "copy": "sources/1_ot_ds_su_kv_related_visible.sv",
+      "sha256": "8fa12255317f2710834d79ab1ccfc7b5e69c6000730ef35fe2c6bc964fbd40a9"
+    },
+    {
+      "original": "rtl/model_ready_ds_seven_class_20261003/ot_chip_v41x_kv_prefetch_visible.sv",
+      "copy": "sources/2_ot_chip_v41x_kv_prefetch_visible.sv",
+      "sha256": "22f7bc033cf8bb7919f014fded51ff37c17eda52ef563cbfb04c43a602323d0e"
+    },
+    {
+      "original": "rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv",
+      "copy": "sources/3_ot_ds_owned_ratio_boundary.sv",
+      "sha256": "9a567e896e7fe2b203938c091ebc1b0714cd3cc8fe25c5242141d46786c0a3f8"
+    },
+    {
+      "original": "results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv",
+      "copy": "sources/4_ratio_fifo.sv",
+      "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+    },
+    {
+      "original": "results/uarch/dsrom_protected_VM_service_20261003/inputs/native_sram.v",
+      "copy": "sources/5_native_sram.v",
+      "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+    }
+  ],
+  "scope": "raw source-selected SU/KV visible control test; no HBM/protected/physical/full-parent credit"
+}

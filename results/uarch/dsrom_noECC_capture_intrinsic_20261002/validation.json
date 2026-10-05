@@ -1,0 +1,24 @@
+{
+  "actual_measurement_source_pin": "d24b2c4c1",
+  "actual_terminal": "/tmp/dsrom-noECC-capture-intrinsic-r4/record.json",
+  "all_4_corner_processes_terminal_returncode0": true,
+  "mapped_netlists_reused_exactly": "committed dsrom_noECC_WAKE_cell_retention_20261002/terminal/{q,bfcolumn}/retained_mapped.v.gz",
+  "model_regeneration_byteidentical": [
+    "priced_terminal.json",
+    "terminal_hashes.json"
+  ],
+  "new_PVE2_PVE3_jobs": 0,
+  "no_clock_relaxation_or_engine_RTL_edits": true,
+  "own_live_jobs": 0,
+  "parent_numeric_endpoints_and_finite_wire_clock_construction_still_required": true,
+  "physical_PnR_admitted": false,
+  "replay_command": "python3 tools/dsrom_noECC_capture_terminal.py --work /tmp/dsrom-noECC-capture-intrinsic-r4 --output /tmp/NEW_REPLAY_PATH",
+  "replay_scope": "Reads retained completed raw reports; no new STA/synthesis/P&R",
+  "same_loaded_source_table_diagnostic_preserved": true,
+  "schema": "opentallas.dsrom.capture-milestone-validation.v1",
+  "status": "PASS",
+  "terminal_status": "MEASURED_INTRINSIC_CAPTURE_ONLY_CONTEXT_OPEN",
+  "test_command": "python3 -m unittest discover -s tests -p 'test_dsrom_noECC*.py' -v",
+  "test_log_sha256": "bd2a13556e55cfe850fb043be54b4ea089f135254202357d7bc84e9c16b71b98",
+  "tests": 59
+}

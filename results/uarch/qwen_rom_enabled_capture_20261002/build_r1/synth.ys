@@ -1,0 +1,11 @@
+read_liberty -lib /tmp/qwen-enabled-capture-map-r1/merged_ss.lib
+read_liberty -lib /tmp/opentallas-qwen-rom-abstract-20261002/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib
+read_verilog /tmp/opentallas-qwen-rom-abstract-20261002/results/uarch/qwen_rom_enabled_capture_20261002/preparation_r1/exact_cone.v
+hierarchy -check -top qwen_current_enabled_capture
+synth -top qwen_current_enabled_capture
+ dfflibmap -liberty /tmp/qwen-enabled-capture-map-r1/merged_ss.lib
+abc -liberty /tmp/qwen-enabled-capture-map-r1/merged_ss.lib
+clean
+stat -liberty /tmp/qwen-enabled-capture-map-r1/merged_ss.lib
+write_verilog -noattr -noexpr /tmp/qwen-enabled-capture-map-r1/mapped.v
+write_json /tmp/qwen-enabled-capture-map-r1/mapped.json

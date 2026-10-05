@@ -1,0 +1,22 @@
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:222: warning: Anachronistic use of named begin/end to surround generate schemes.
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:265: error: Unknown module type: ot_qwen_w12_ksum
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:266: error: Unknown module type: ot_qwen_w12_ksum
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:285: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:286: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:287: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:288: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:289: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:290: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:291: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:292: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:293: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:294: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:295: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:296: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:297: error: Unknown module type: ot_qwen_w12_kadd
+/tmp/qrom-owned-binary-source-r1-20261002/fixture.sv:298: error: Unknown module type: ot_qwen_w12_kadd
+16 error(s) during elaboration.
+*** These modules were missing:
+        ot_qwen_w12_kadd referenced 14 times.
+        ot_qwen_w12_ksum referenced 2 times.
+***

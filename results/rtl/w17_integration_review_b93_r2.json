@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.w17.integration_review.v1",
+  "commits": [
+    "6e371c0ef48a92511d319dd00ad5a33926349ac2",
+    "8710d5a9d4665151ce3401417016c0c218274fe3"
+  ],
+  "ready_scope": "Main-compatible functional runtime source restoration, W15 companion bridge, existing main SU library coverage and fail-closed result processing. Parent owns landing/architecture-model review.",
+  "exact_evidence": {
+    "runtime_checker": "9 PASS tests (exact, truncated/extra/mismatched VM, fault, missing DONE, timeout, existing result preservation, source bindings)",
+    "orchestration": "8 PASS tests; whitelist unchanged",
+    "selected_CKV": "PASS 4096 exact rows at lat100 and259 each; own row nine-sector writes exact, zero faults/read misses",
+    "SU": "PASS N64 M16 HC-post/depths/external chain/mixed classes; no mismatch/fault/order failures. Full runtime SUN256/SUM64 legality PASS but SUN256 class simulation not claimed.",
+    "elaboration": "L0 reduced PASS at6e; L20 reduced first FAIL missing current-main library preserved, r2 PASS at8710 with K_MEM65536 SUN16 SUM8 X_IDX2 X_SEL1 IDX_RING1; not full geometry."
+  },
+  "pending": {
+    "field160": {
+      "source_commit": "6e371c0ef48a92511d319dd00ad5a33926349ac2",
+      "pid": 379015,
+      "work": "/tmp/claude-1000/w17-field-b93-r1",
+      "result": "/tmp/claude-1000/queue/w17jobs/field_b93_r1.json",
+      "state": "LIVE compiling flat reference jobs2; no duplicate"
+    },
+    "W10": "Requested owner audit; current W17 consumers do not request FAST/PP/BP and original W10 source bytes match historical W17. Companion/new-engine qualification must come from W10 owner; do not independently replay. FRONT_PAR not selected.",
+    "full_runtime": "Historical local L0 FAIL timeout5900 pc9 all; preserve. Remote L20 peers live and rank2 checked supervisor WAIT_LIVE_RANKS; no certified archive set yet.",
+    "timing": "No new physical closure claimed. Preserve SS1.2GHz/FF hold, streaming1.2GHz/serial0.9GHz, uncertainty60/25ps; exact default reduction/rounding unchanged.",
+    "W11": "kr u_mw tie-offs remain W11-owned; no kr path/source pin modified."
+  },
+  "coordination": "First W10 message delivered; later interagent tools failed HTTP transport (127.0.0.1:43895); retained consumer audit and this record for parent/owner review."
+}

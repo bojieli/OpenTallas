@@ -1,0 +1,106 @@
+{
+  "contract": {
+    "batch_one_dependency": "each next token follows terminal logits; all 40 wo_a nodes lie on the token DAG path",
+    "current_wo_a_descriptor": "invalid: splitj=8, xjs=2048 exceeds 8192-element ACC",
+    "fullshape_layers": 40,
+    "he_k_chunks_per_op": 2560,
+    "he_load_cycles_per_layer_if_unhidden": 5120,
+    "he_ops_per_layer": 2,
+    "me_activation_read_elements_per_cycle": 4,
+    "proposed_wo_a_k_per_op": 4096,
+    "proposed_wo_a_load_cycles_per_layer": 2048,
+    "proposed_wo_a_ops_per_layer": 2,
+    "tp_dies": 4
+  },
+  "limits": [
+    "The corrected two-operation wo_a program and exact image/token gate have not passed.",
+    "The wo_a mutation floors model issue time at 2048 cycles and retains its depth/control/wire; it does not establish a cycle-exact RTL schedule.",
+    "HE's two 2560-cycle LOADs may overlap other operators; the model prices no HE-load exposure yet.",
+    "Current HE KCMAX=128 and ME KMAX=512 defaults do not hold full-shape K=2560/4096; width/depth RTL gate is pending.",
+    "Current HCP HHW=8 differs from the design-point HW256/2048-lane geometry; a repacked image, exact bench and route are required.",
+    "MTP has no corrected six-position emitter or activation-load timing; no MTP result is reported.",
+    "G8/G16 read-width sensitivities require additional VM read banks/ports and corresponding area, power and route; they are not measured RTL.",
+    "GW4 is excluded until its exact stage record is integrated and source-pinned here, and four-word VM/CDMA and route close.",
+    "Sharded index delivery has not met the model's effective HBM bandwidth; no row is a delivered token rate."
+  ],
+  "me_read_width_sensitivity": {
+    "1048576": {
+      "16": {
+        "activation_load_cycles_per_layer": 512,
+        "conditional_ar_tok_s": 4627.216778198919,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      },
+      "4": {
+        "activation_load_cycles_per_layer": 2048,
+        "conditional_ar_tok_s": 3667.905330818357,
+        "gate": "current G4 adapter width plus corrected emitter and full-token gate"
+      },
+      "8": {
+        "activation_load_cycles_per_layer": 1024,
+        "conditional_ar_tok_s": 4256.1617047936625,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      }
+    },
+    "200000": {
+      "16": {
+        "activation_load_cycles_per_layer": 512,
+        "conditional_ar_tok_s": 4727.999068038911,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      },
+      "4": {
+        "activation_load_cycles_per_layer": 2048,
+        "conditional_ar_tok_s": 3730.946481340114,
+        "gate": "current G4 adapter width plus corrected emitter and full-token gate"
+      },
+      "8": {
+        "activation_load_cycles_per_layer": 1024,
+        "conditional_ar_tok_s": 4341.279998762682,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      }
+    }
+  },
+  "points": {
+    "1048576": {
+      "gw1_depth128_exact_stage": {
+        "before_wo_load_ar_tok_s": 5032.84495509468,
+        "proposed_wo_load_ar_tok_s": 3667.905330818357,
+        "proposed_wo_load_critical_path_us": 272.635171796238,
+        "status": "conditional model sensitivity, not full-shape RTL throughput"
+      }
+    },
+    "200000": {
+      "gw1_depth128_exact_stage": {
+        "before_wo_load_ar_tok_s": 5152.299209138362,
+        "proposed_wo_load_ar_tok_s": 3730.946481340114,
+        "proposed_wo_load_critical_path_us": 268.02850295531744,
+        "status": "conditional model sensitivity, not full-shape RTL throughput"
+      }
+    }
+  },
+  "schema": "v41_fullshape_load_floor_v1",
+  "source_sha256": {
+    "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
+    "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
+    "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/v41_fullshape_load_floor.py": "c2c179e8ebb5220342c105c523a47d123dd91f8fbb9c379d8bbcfb7ca144c2d4",
+    "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
+    "tools/v41_tp_rowsplit_measured_reprice.py": "3645f7229832955d28a618ffc80d1227ddb5e18d05230a69276010114e45ea2a"
+  },
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/hdc_replay_v41.py": {
+        "old": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+        "new": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
+      }
+    },
+    "historical_copy": null
+  }
+}

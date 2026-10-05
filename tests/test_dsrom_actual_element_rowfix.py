@@ -1,0 +1,101 @@
+"""Source inspection and decoder model tests only; never compile or execute RTL."""
+import importlib.util
+import json
+import math
+import re
+import unittest
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+def module(path,name):
+    spec=importlib.util.spec_from_file_location(name,ROOT/path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+PREP=module('tools/prepare_dsrom_actual_element_rowfix.py','rowfix_prepare')
+MODEL=json.loads(PREP.MODEL.read_text())
+SRC=(ROOT/MODEL['source_copies']['rtl/v41rom/ot_v41_rom_elem_w10.sv']).read_text()
+BENCH=(ROOT/MODEL['bench_path']).read_text()
+OLD=(ROOT/'rtl/test/tb_dsrom_actual_element_gate_r2.sv').read_text()
+def expression(text):
+    fix=text.split('if (FIX_SECOND_ROW_INDEX != 0) begin',1)[1].split('end else begin',1)[0]
+    guard=re.search(r'if \((.*?)\)',fix)[1]
+    index=re.search(r's_row\[(.*?)\] <= cfg_d_e\[15:0\]',fix)[1]
+    def translate(s):return s.replace("{27'd0, cfg_a_e}",'a').replace('&&',' and ')
+    return translate(guard),translate(index)
+def implementation(n,nb,a,v,text=SRC):
+    guard,index=expression(text)
+    # Existing enclosing cfg_v and prior first/class/control branches audited separately.
+    if not v or a<=2*n:return None
+    env=dict(NSEG=n,NB=nb,a=a)
+    return eval(index,{'__builtins__':{}},env) if eval(guard,{'__builtins__':{}},env) else None
+
+def oracle(n,nb,a,v):
+    # Enumerate semantic segment tuples; independent of subtraction implementation.
+    if nb!=2 or not v:return None
+    return {2*n+1+s:n+s for s in range(n)}.get(a)
+
+def mismatches(text):
+    return [(n,nb,a,v,implementation(n,nb,a,v,text),oracle(n,nb,a,v))
+            for n in range(1,11) for nb in (1,2) for a in range(32) for v in (False,True)
+            if implementation(n,nb,a,v,text)!=oracle(n,nb,a,v)]
+class RowfixTests(unittest.TestCase):
+    def test_all_representable_parameters_and_addresses(self):
+        self.assertEqual([],mismatches(SRC)) # 1280 combinations, not whole-engine qualification.
+    def test_every_last_boundary(self):
+        for n in range(1,11):self.assertEqual(2*n-1,implementation(n,2,3*n,True))
+    def test_original_negative_witness_and_canonical_parameters(self):
+        for n in (2,4,8):
+            a=3*n;old=n+(a&((1<<math.ceil(math.log2(n)))-1))-1
+            self.assertEqual(n-1,old);self.assertNotEqual(oracle(n,2,a,True),old)
+        self.assertEqual(15,oracle(8,2,24,True));self.assertEqual(7,8+(24&7)-1)
+    def test_truncation_mutant_rejected(self):
+        mutant=SRC.replace("{27'd0, cfg_a_e} - (NSEG + 1)",'NSEG + (cfg_a_e & (NSEG - 1)) - 1').replace('cfg_a_e &','a &')
+        failures=mismatches(mutant);self.assertTrue(failures)
+        self.assertTrue(any(x[:4]==(8,2,24,True) for x in failures))
+    def test_offbyone_mutants_rejected(self):
+        for constant in ('NSEG','NSEG + 2'):
+            self.assertTrue(mismatches(SRC.replace('(NSEG + 1)', '('+constant+')')))
+    def test_upper_boundary_and_bank_guards_mutants_rejected(self):
+        for guard in ('< 3 * NSEG','<= 3 * NSEG + 1'):
+            self.assertTrue(mismatches(SRC.replace('<= 3 * NSEG',guard)))
+        self.assertTrue(mismatches(SRC.replace('NB > 1 && ','')))
+    def test_source_context_and_default_off_exact_scope(self):
+        original=PREP.legacy().load_sources()['rtl/v41rom/ot_v41_rom_elem_w10.sv']
+        param='    parameter integer FIX_SECOND_ROW_INDEX = 0, // mandatory row decoder repair, opt-in preparation\n'
+        begin=SRC.index('            if (FIX_SECOND_ROW_INDEX != 0) begin')
+        end=SRC.index('\n            end',SRC.index('            end else begin',begin))+len('\n            end')
+        recovered=SRC[:begin]+'            s_row[NSEG + cfg_a_e[SW-1:0] - 1] <= cfg_d_e[15:0];'+SRC[end:]
+        self.assertEqual(original,recovered.replace(param,''))
+        self.assertIn('always @(posedge clk) if (cfg_v_e)',SRC)
+        self.assertIn("end else if ({27'd0, cfg_a_e} == 2 * NSEG)",SRC)
+        pair=(ROOT/MODEL['source_copies']['rtl/v41die/ot_v41_pair_w17w10.sv']).read_text()
+        recovered=pair.replace(param,'').replace('.FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX), ','')
+        self.assertEqual(PREP.legacy().load_sources()['rtl/v41die/ot_v41_pair_w17w10.sv'],recovered)
+    def test_diff_predicates_scores_schedule_and_payload_preserved(self):
+        task=lambda text: text.split('    task compare_all;',1)[1].split('    endtask',1)[0]
+        self.assertEqual(task(OLD),task(BENCH));self.assertEqual(72,task(BENCH).count('"DIFF '))
+        for fatal in re.findall(r'\$fatal\(.*?;',OLD):self.assertIn(fatal,BENCH)
+        score=OLD.split('          if(r_prow',1)[1].split('\n            $fatal',1)[0]
+        self.assertIn('          if(r_prow'+score,BENCH)
+        self.assertIn('#415;clk=0;#1;cycles=cycles+1;compare_all();',BENCH)
+        self.assertIn('rst_n=0;#1;compare_all();',BENCH)
+        self.assertEqual(2,BENCH.count('.FIX_SECOND_ROW_INDEX(1)'))
+        self.assertIn('gap(32);config_contract_oracle();phase_outputs=0;',BENCH)
+        self.assertIn('macro_id*8+segment_id',BENCH)
+        self.assertNotIn('cfg_a',BENCH.split('    function automatic [15:0] contract_row',1)[1].split('    task load_phase',1)[0])
+    def test_namespaces_same_fix_only_arithmetic_helpers_differ(self):
+        package=PREP.files();self.assertEqual(42,len(package))
+        for name,text in package.items():
+            if not name.startswith('ref_'):continue
+            cand=package['cand_'+name[4:]]
+            # Normalize namespace lexically with unchanged pinned algorithm.
+            names=set(re.findall(r'^\s*module\s+(\w+)', '\n'.join(t for n,t in package.items() if n.startswith('ref_')),re.M))
+            ref=PREP.legacy().namespace(text,names,'ZZ_')
+            for ident in names:ref=ref.replace('ZZ_'+ident,ident[4:])
+            cnames=set(re.findall(r'^\s*module\s+(\w+)', '\n'.join(t for n,t in package.items() if n.startswith('cand_')),re.M))
+            norm=PREP.legacy().namespace(cand,cnames,'ZZ_')
+            for ident in cnames:norm=norm.replace('ZZ_'+ident,ident[5:])
+            if name=='ref_ot_prefix.sv':ref=PREP.legacy().replace_helpers(ref)
+            self.assertEqual(ref,norm,name)
+        oldpackage=PREP.legacy().generate(PREP.legacy().load_sources())
+        for name,text in oldpackage.items():
+            if not name.endswith(('ot_v41_pair_w17w10.sv','ot_v41_rom_elem_w10.sv')):self.assertEqual(text,package[name],name)
+    def test_authoritative_and_preservation_pins(self):PREP.verify()
+if __name__=='__main__':unittest.main()

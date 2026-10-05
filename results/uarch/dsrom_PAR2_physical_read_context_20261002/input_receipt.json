@@ -1,0 +1,37 @@
+{
+  "inputs": {
+    "decoder.sv": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "rtl/dft/ot_rom_secded_dec.sv",
+      "sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795"
+    },
+    "ecc.py": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "tools/mem_compiler/ecc.py",
+      "sha256": "ed2d874e102f9b08ee951faf583d12c142e77cfd5e3e1a2511af1430e3f10cdf"
+    },
+    "raw_macro.lef": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+      "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+    },
+    "raw_macro.v": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada"
+    },
+    "raw_macro_ff.lib": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+      "sha256": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32"
+    },
+    "raw_macro_ss.lib": {
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+      "sha256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15"
+    }
+  },
+  "model_binding_prerequisite": "3010a732e6e9829c2b7dbf4cec353f7e658cb591",
+  "no_payload_read": true,
+  "source_main_pin": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd"
+}

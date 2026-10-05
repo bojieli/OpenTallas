@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_command_vectors_v1.schema.json",
+  "title": "Qwen production-command RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "abi_major",
+    "abi_minor",
+    "build_id",
+    "command_count",
+    "command_program_sha256",
+    "execution_report_id",
+    "negative_vectors",
+    "schema",
+    "vector_set_id",
+    "vectors"
+  ],
+  "properties": {
+    "abi_major": {"const": 2},
+    "abi_minor": {"const": 5},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "command_count": {"const": 924386},
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "execution_report_id": {"$ref": "#/$defs/sha256"},
+    "negative_vectors": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/vector"}
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_rtl_command_vectors.v1"},
+    "vector_set_id": {"$ref": "#/$defs/sha256"},
+    "vectors": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/vector"}
+    }
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "vector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major",
+        "abi_minor",
+        "expected_error",
+        "expected_fields",
+        "expected_index",
+        "name",
+        "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"maximum": 65535, "minimum": 0, "type": "integer"},
+        "abi_minor": {"maximum": 65535, "minimum": 0, "type": "integer"},
+        "expected_error": {"maximum": 6, "minimum": 0, "type": "integer"},
+        "expected_fields": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "auxiliary",
+            "destination",
+            "engine",
+            "flags",
+            "index",
+            "kernel_index",
+            "opcode",
+            "size0",
+            "size1",
+            "size2",
+            "size3",
+            "source0",
+            "source1"
+          ],
+          "properties": {
+            "auxiliary": {"maximum": 18446744073709551615, "minimum": 0, "type": "integer"},
+            "destination": {"maximum": 18446744073709551615, "minimum": 0, "type": "integer"},
+            "engine": {"maximum": 255, "minimum": 0, "type": "integer"},
+            "flags": {"maximum": 65535, "minimum": 0, "type": "integer"},
+            "index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "kernel_index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "opcode": {"maximum": 255, "minimum": 0, "type": "integer"},
+            "size0": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "size1": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "size2": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "size3": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+            "source0": {"maximum": 18446744073709551615, "minimum": 0, "type": "integer"},
+            "source1": {"maximum": 18446744073709551615, "minimum": 0, "type": "integer"}
+          }
+        },
+        "expected_index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "name": {"pattern": "^[a-z][a-z0-9_]{0,63}$", "type": "string"},
+        "record_hex": {"pattern": "^[0-9a-f]{128}$", "type": "string"}
+      }
+    }
+  }
+}

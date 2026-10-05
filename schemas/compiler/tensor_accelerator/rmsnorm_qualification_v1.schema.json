@@ -1,0 +1,78 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/rmsnorm_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "epsilon_additions": {"minimum": 1, "type": "integer"},
+        "final_weight_multiplications": {"minimum": 1, "type": "integer"},
+        "input_square_multiplications": {"minimum": 1, "type": "integer"},
+        "mean_divisions": {"minimum": 1, "type": "integer"},
+        "normalization_multiplications": {"minimum": 1, "type": "integer"},
+        "reciprocal_square_roots": {"minimum": 1, "type": "integer"},
+        "reduction_additions": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["epsilon_additions", "final_weight_multiplications", "input_square_multiplications", "mean_divisions", "normalization_multiplications", "reciprocal_square_roots", "reduction_additions"],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "epsilon_binary32_code": {"const": 897988541},
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "row_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "source_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "source_shape": {"items": {"minimum": 1, "type": "integer"}, "maxItems": 2, "minItems": 2, "type": "array"},
+        "tensor": {"minLength": 1, "type": "string"},
+        "token_id": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["row_payload_sha256", "source_payload_sha256", "source_shape", "tensor", "token_id"],
+      "type": "object"
+    },
+    "numeric_contract": {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "inverse_rms_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "mean_square_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_saturated_element_count": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "saturated_element_count": {"minimum": 0, "type": "integer"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "maxItems": 2, "minItems": 2, "type": "array"}
+      },
+      "required": ["inverse_rms_binary32_code", "mean_square_binary32_code", "normalized_payload_sha256", "normalized_saturated_element_count", "payload_sha256", "saturated_element_count", "shape"],
+      "type": "object"
+    },
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.rmsnorm_qualification.v1"},
+    "selected_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "element_indices": {"items": {"minimum": 0, "type": "integer"}, "minItems": 1, "type": "array", "uniqueItems": true},
+        "normalized_codes": {"items": {"maximum": 65535, "minimum": 0, "type": "integer"}, "minItems": 1, "type": "array"},
+        "output_codes": {"items": {"maximum": 65535, "minimum": 0, "type": "integer"}, "minItems": 1, "type": "array"},
+        "status": {"const": "exact_match"}
+      },
+      "required": ["element_indices", "normalized_codes", "output_codes", "status"],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "weight": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "maxItems": 1, "minItems": 1, "type": "array"},
+        "tensor": {"minLength": 1, "type": "string"}
+      },
+      "required": ["payload_sha256", "shape", "tensor"],
+      "type": "object"
+    }
+  },
+  "required": ["accounting", "checkpoint_lock_id", "epsilon_binary32_code", "input", "numeric_contract", "output", "report_id", "schema", "selected_reference", "status", "weight"],
+  "title": "Qwen RMSNorm real-checkpoint qualification v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

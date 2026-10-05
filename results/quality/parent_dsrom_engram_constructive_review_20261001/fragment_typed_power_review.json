@@ -1,0 +1,32 @@
+{
+  "all192_FF_bits": 3595629118,
+  "all192_extra_fragment_FF_bits": 1522003968,
+  "all192_leakage_upper_W": "269.778595161983266",
+  "all192_ungated_clock_W": "60013.58320389192640800",
+  "both_fresh_outputs_byte_identical": true,
+  "checkpoint_reads": 0,
+  "evidence_sha256": {
+    "results/uarch/w10_engram_fragment_power_r1/budget.json": "e3a4af8e39025a61379dce75d1ecbb94c391cb78f7065fa9d61edc5e7fe7d674",
+    "results/uarch/w10_engram_selected_data_budget_r1/budget.json": "8219a4bc45b2b4d89c484a852f6931e068bed51d1462caa21d87f002e414400f"
+  },
+  "focused_tests_passed": 6,
+  "headline_credit": null,
+  "independent_per_home_block_recalculation_matches_maximum_and_fleet": true,
+  "maximum_home_clock_plus_leak_W": "319.26393994956611840",
+  "maximum_home_margin_before_data_hub_PHY_W": "155.29606005043388160",
+  "new_RTL_or_PnR_jobs": false,
+  "owner_serialized_power_commit": "7c0d2c55664498414a3ad2e6125e3ac9af39ace6",
+  "owner_unsplit_event_budget_commit": "7515b490bf8061f570d08b15d315f09eae5f1f81",
+  "physical_admission": false,
+  "physical_power_minimum_claim": false,
+  "schema": "parent.engram.fragment-typed-power-review.v1",
+  "scope": "Typed conditional cell-construction reservation repriced from all actual candidate endpoint counts, preserved old FF/mux/demux and macros, all clocks ungated. Static components reproduce independently. The selected-path event budget is for earlier fullwidth341-track geometry and is not reused for16fragment timing/state. Full E32/image identity, ACK-wire/drain, new control data, raw disabled cone activity, actual RC/CTS/PHY/IR/SSFF and composed token remain open.",
+  "unsplit_data_events_do_not_qualify_serialized_path": true,
+  "unsplit_per_lookup_energy_J": {
+    "all_output_load_ceiling": "6.9093783069696E-8",
+    "input_pin": "3.359920871995996E-9",
+    "internal": "1.2707141321704E-8",
+    "total_including_ceiling": "8.5160845263395996E-8"
+  },
+  "whole_token_average_power_W": null
+}

@@ -1,0 +1,11 @@
+{
+  "independent_tests": "6 passed",
+  "proposal_regeneration": "byte-identical cmp exit0",
+  "available_RAM_bytes": 156359065600,
+  "available_disk_bytes": 581504593920,
+  "actual_arithmetic": true,
+  "lanes": 128,
+  "prior_compile_failure_preserved": true,
+  "physical_qualification": false,
+  "admission": "single bounded local run; no retries; CPUs28/29 memory8GiB swap0 wall1020s"
+}

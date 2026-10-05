@@ -1,0 +1,2095 @@
+{
+ "schema": "opentallas.gpu_sys.coll.v1",
+ "verdict": "PASS",
+ "sources": {
+  "rtl/gpu_sys/ot_gpu_coll_endpoint.sv": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+  "rtl/gpu_sys/ot_gpu_coll_fabric.sv": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/test/gpu_sys/tb_gpu_coll.sv": "759fda2314331901cffe1f3f1d1796f46dc570202cb26e5fb76eabf65a5026ec",
+  "tools/gpu_sys/run_coll.py": "a69d24ca4d252061338d01c62b80f26b7a25c00f5f6aa785720fe9dff5f0eaac"
+ },
+ "simulator": {
+  "name": "verilator",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "flags": "--binary --timing -j 2"
+ },
+ "config": {
+  "R": 2,
+  "NL": 128,
+  "LANES": 16,
+  "clk_sm_ps": 833,
+  "clk_link_ps": 900,
+  "SW_PIPE": 4,
+  "LINK_PIPE": 2,
+  "switch_DEPTH": 16,
+  "tx_AW": 3,
+  "rx_AW": 4,
+  "seed": 1,
+  "nt_random": 160,
+  "sw_pipe_note": "REDUCED switch latency for the end-to-end token simulation; the W15-priced switch core is ~250 ns (tools/w15_collectives.py HBM_SWITCH) -> SW_PIPE ~ round(250/0.9) - (2 + 3L)"
+ },
+ "lint": [
+  {
+   "top": "ot_gpu_coll_endpoint",
+   "enable": 0,
+   "pass": true,
+   "waived_unused": [],
+   "violations": [],
+   "reused_file_warnings": 1
+  },
+  {
+   "top": "ot_gpu_coll_endpoint",
+   "enable": 1,
+   "pass": true,
+   "waived_unused": [],
+   "violations": [],
+   "reused_file_warnings": 3
+  },
+  {
+   "top": "ot_gpu_coll_fabric",
+   "enable": 0,
+   "pass": true,
+   "waived_unused": [],
+   "violations": [],
+   "reused_file_warnings": 1
+  },
+  {
+   "top": "ot_gpu_coll_fabric",
+   "enable": 1,
+   "pass": true,
+   "waived_unused": [],
+   "violations": [],
+   "reused_file_warnings": 23
+  }
+ ],
+ "elaboration_refusals": [
+  {
+   "R": 4,
+   "refused": true,
+   "pass": true
+  },
+  {
+   "R": 3,
+   "refused": true,
+   "pass": true
+  }
+ ],
+ "bench": {
+  "completed": true,
+  "fault_free": true,
+  "enable0_inert": true,
+  "rsp_backpressure_cycles": 214,
+  "req_held_while_busy_cycles": 7021,
+  "n_cases": 164,
+  "n_fail": 0,
+  "n_all_reduce": 75,
+  "n_all_gather": 89,
+  "latency_all_cases_sm_cycles": {
+   "min": 17,
+   "max": 32
+  }
+ },
+ "latency": {
+  "ALL_REDUCE_count128": {
+   "per_rank_per_case": [
+    [
+     29,
+     31
+    ],
+    [
+     28,
+     31
+    ]
+   ],
+   "max_sm_cycles": 31,
+   "max_ns": 25.823
+  },
+  "ALL_GATHER_count64": {
+   "per_rank_per_case": [
+    [
+     23,
+     26
+    ],
+    [
+     23,
+     26
+    ]
+   ],
+   "max_sm_cycles": 26,
+   "max_ns": 21.658
+  }
+ },
+ "cases": [
+  {
+   "t": 0,
+   "mode": "ALL_REDUCE",
+   "count": 1,
+   "measure": false,
+   "latency_sm": [
+    25,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 1,
+   "mode": "ALL_REDUCE",
+   "count": 128,
+   "measure": false,
+   "latency_sm": [
+    29,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 2,
+   "mode": "ALL_GATHER",
+   "count": 1,
+   "measure": false,
+   "latency_sm": [
+    19,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 3,
+   "mode": "ALL_GATHER",
+   "count": 64,
+   "measure": false,
+   "latency_sm": [
+    26,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 4,
+   "mode": "ALL_REDUCE",
+   "count": 53,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 5,
+   "mode": "ALL_GATHER",
+   "count": 38,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 6,
+   "mode": "ALL_REDUCE",
+   "count": 66,
+   "measure": false,
+   "latency_sm": [
+    26,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 7,
+   "mode": "ALL_GATHER",
+   "count": 56,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 8,
+   "mode": "ALL_GATHER",
+   "count": 36,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 9,
+   "mode": "ALL_REDUCE",
+   "count": 58,
+   "measure": false,
+   "latency_sm": [
+    27,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 10,
+   "mode": "ALL_GATHER",
+   "count": 32,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 11,
+   "mode": "ALL_GATHER",
+   "count": 63,
+   "measure": false,
+   "latency_sm": [
+    25,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 12,
+   "mode": "ALL_GATHER",
+   "count": 45,
+   "measure": false,
+   "latency_sm": [
+    23,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 13,
+   "mode": "ALL_REDUCE",
+   "count": 35,
+   "measure": false,
+   "latency_sm": [
+    25,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 14,
+   "mode": "ALL_REDUCE",
+   "count": 14,
+   "measure": false,
+   "latency_sm": [
+    22,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 15,
+   "mode": "ALL_GATHER",
+   "count": 42,
+   "measure": false,
+   "latency_sm": [
+    23,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 16,
+   "mode": "ALL_GATHER",
+   "count": 5,
+   "measure": false,
+   "latency_sm": [
+    19,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 17,
+   "mode": "ALL_REDUCE",
+   "count": 7,
+   "measure": false,
+   "latency_sm": [
+    21,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 18,
+   "mode": "ALL_REDUCE",
+   "count": 69,
+   "measure": false,
+   "latency_sm": [
+    26,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 19,
+   "mode": "ALL_GATHER",
+   "count": 43,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 20,
+   "mode": "ALL_GATHER",
+   "count": 53,
+   "measure": false,
+   "latency_sm": [
+    26,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 21,
+   "mode": "ALL_GATHER",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    22,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 22,
+   "mode": "ALL_GATHER",
+   "count": 59,
+   "measure": false,
+   "latency_sm": [
+    26,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 23,
+   "mode": "ALL_GATHER",
+   "count": 19,
+   "measure": false,
+   "latency_sm": [
+    19,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 24,
+   "mode": "ALL_REDUCE",
+   "count": 24,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 25,
+   "mode": "ALL_GATHER",
+   "count": 19,
+   "measure": false,
+   "latency_sm": [
+    22,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 26,
+   "mode": "ALL_GATHER",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    19,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 27,
+   "mode": "ALL_REDUCE",
+   "count": 101,
+   "measure": false,
+   "latency_sm": [
+    27,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 28,
+   "mode": "ALL_REDUCE",
+   "count": 27,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 29,
+   "mode": "ALL_GATHER",
+   "count": 61,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 30,
+   "mode": "ALL_GATHER",
+   "count": 11,
+   "measure": false,
+   "latency_sm": [
+    20,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 31,
+   "mode": "ALL_GATHER",
+   "count": 19,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 32,
+   "mode": "ALL_REDUCE",
+   "count": 110,
+   "measure": false,
+   "latency_sm": [
+    28,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 33,
+   "mode": "ALL_GATHER",
+   "count": 23,
+   "measure": false,
+   "latency_sm": [
+    21,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 34,
+   "mode": "ALL_GATHER",
+   "count": 3,
+   "measure": false,
+   "latency_sm": [
+    20,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 35,
+   "mode": "ALL_GATHER",
+   "count": 20,
+   "measure": false,
+   "latency_sm": [
+    19,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 36,
+   "mode": "ALL_REDUCE",
+   "count": 35,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 37,
+   "mode": "ALL_GATHER",
+   "count": 17,
+   "measure": false,
+   "latency_sm": [
+    21,
+    20
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 38,
+   "mode": "ALL_REDUCE",
+   "count": 18,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 39,
+   "mode": "ALL_REDUCE",
+   "count": 95,
+   "measure": false,
+   "latency_sm": [
+    27,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 40,
+   "mode": "ALL_REDUCE",
+   "count": 126,
+   "measure": false,
+   "latency_sm": [
+    29,
+    31
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 41,
+   "mode": "ALL_GATHER",
+   "count": 57,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 42,
+   "mode": "ALL_GATHER",
+   "count": 24,
+   "measure": false,
+   "latency_sm": [
+    21,
+    20
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 43,
+   "mode": "ALL_GATHER",
+   "count": 4,
+   "measure": false,
+   "latency_sm": [
+    18,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 44,
+   "mode": "ALL_GATHER",
+   "count": 27,
+   "measure": false,
+   "latency_sm": [
+    20,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 45,
+   "mode": "ALL_GATHER",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    22,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 46,
+   "mode": "ALL_GATHER",
+   "count": 22,
+   "measure": false,
+   "latency_sm": [
+    19,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 47,
+   "mode": "ALL_REDUCE",
+   "count": 99,
+   "measure": false,
+   "latency_sm": [
+    27,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 48,
+   "mode": "ALL_REDUCE",
+   "count": 26,
+   "measure": false,
+   "latency_sm": [
+    22,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 49,
+   "mode": "ALL_REDUCE",
+   "count": 42,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 50,
+   "mode": "ALL_GATHER",
+   "count": 3,
+   "measure": false,
+   "latency_sm": [
+    19,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 51,
+   "mode": "ALL_GATHER",
+   "count": 19,
+   "measure": false,
+   "latency_sm": [
+    21,
+    20
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 52,
+   "mode": "ALL_REDUCE",
+   "count": 51,
+   "measure": false,
+   "latency_sm": [
+    27,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 53,
+   "mode": "ALL_REDUCE",
+   "count": 41,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 54,
+   "mode": "ALL_REDUCE",
+   "count": 44,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 55,
+   "mode": "ALL_GATHER",
+   "count": 35,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 56,
+   "mode": "ALL_REDUCE",
+   "count": 27,
+   "measure": false,
+   "latency_sm": [
+    23,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 57,
+   "mode": "ALL_GATHER",
+   "count": 62,
+   "measure": false,
+   "latency_sm": [
+    22,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 58,
+   "mode": "ALL_GATHER",
+   "count": 21,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 59,
+   "mode": "ALL_REDUCE",
+   "count": 36,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 60,
+   "mode": "ALL_REDUCE",
+   "count": 18,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 61,
+   "mode": "ALL_REDUCE",
+   "count": 49,
+   "measure": false,
+   "latency_sm": [
+    25,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 62,
+   "mode": "ALL_REDUCE",
+   "count": 75,
+   "measure": false,
+   "latency_sm": [
+    26,
+    30
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 63,
+   "mode": "ALL_REDUCE",
+   "count": 23,
+   "measure": false,
+   "latency_sm": [
+    23,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 64,
+   "mode": "ALL_GATHER",
+   "count": 2,
+   "measure": false,
+   "latency_sm": [
+    18,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 65,
+   "mode": "ALL_GATHER",
+   "count": 23,
+   "measure": false,
+   "latency_sm": [
+    21,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 66,
+   "mode": "ALL_REDUCE",
+   "count": 33,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 67,
+   "mode": "ALL_GATHER",
+   "count": 1,
+   "measure": false,
+   "latency_sm": [
+    20,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 68,
+   "mode": "ALL_GATHER",
+   "count": 13,
+   "measure": false,
+   "latency_sm": [
+    19,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 69,
+   "mode": "ALL_GATHER",
+   "count": 10,
+   "measure": false,
+   "latency_sm": [
+    19,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 70,
+   "mode": "ALL_GATHER",
+   "count": 37,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 71,
+   "mode": "ALL_REDUCE",
+   "count": 90,
+   "measure": false,
+   "latency_sm": [
+    27,
+    27
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 72,
+   "mode": "ALL_REDUCE",
+   "count": 5,
+   "measure": false,
+   "latency_sm": [
+    23,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 73,
+   "mode": "ALL_REDUCE",
+   "count": 34,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 74,
+   "mode": "ALL_REDUCE",
+   "count": 61,
+   "measure": false,
+   "latency_sm": [
+    26,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 75,
+   "mode": "ALL_GATHER",
+   "count": 36,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 76,
+   "mode": "ALL_GATHER",
+   "count": 40,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 77,
+   "mode": "ALL_REDUCE",
+   "count": 95,
+   "measure": false,
+   "latency_sm": [
+    27,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 78,
+   "mode": "ALL_GATHER",
+   "count": 46,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 79,
+   "mode": "ALL_REDUCE",
+   "count": 11,
+   "measure": false,
+   "latency_sm": [
+    21,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 80,
+   "mode": "ALL_GATHER",
+   "count": 41,
+   "measure": false,
+   "latency_sm": [
+    21,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 81,
+   "mode": "ALL_REDUCE",
+   "count": 44,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 82,
+   "mode": "ALL_GATHER",
+   "count": 13,
+   "measure": false,
+   "latency_sm": [
+    20,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 83,
+   "mode": "ALL_REDUCE",
+   "count": 96,
+   "measure": false,
+   "latency_sm": [
+    27,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 84,
+   "mode": "ALL_GATHER",
+   "count": 52,
+   "measure": false,
+   "latency_sm": [
+    26,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 85,
+   "mode": "ALL_REDUCE",
+   "count": 17,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 86,
+   "mode": "ALL_GATHER",
+   "count": 39,
+   "measure": false,
+   "latency_sm": [
+    20,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 87,
+   "mode": "ALL_GATHER",
+   "count": 45,
+   "measure": false,
+   "latency_sm": [
+    23,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 88,
+   "mode": "ALL_REDUCE",
+   "count": 27,
+   "measure": false,
+   "latency_sm": [
+    22,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 89,
+   "mode": "ALL_REDUCE",
+   "count": 69,
+   "measure": false,
+   "latency_sm": [
+    29,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 90,
+   "mode": "ALL_GATHER",
+   "count": 21,
+   "measure": false,
+   "latency_sm": [
+    21,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 91,
+   "mode": "ALL_GATHER",
+   "count": 33,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 92,
+   "mode": "ALL_REDUCE",
+   "count": 38,
+   "measure": false,
+   "latency_sm": [
+    24,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 93,
+   "mode": "ALL_GATHER",
+   "count": 29,
+   "measure": false,
+   "latency_sm": [
+    22,
+    20
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 94,
+   "mode": "ALL_GATHER",
+   "count": 64,
+   "measure": false,
+   "latency_sm": [
+    26,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 95,
+   "mode": "ALL_REDUCE",
+   "count": 101,
+   "measure": false,
+   "latency_sm": [
+    28,
+    31
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 96,
+   "mode": "ALL_REDUCE",
+   "count": 33,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 97,
+   "mode": "ALL_REDUCE",
+   "count": 75,
+   "measure": false,
+   "latency_sm": [
+    27,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 98,
+   "mode": "ALL_REDUCE",
+   "count": 48,
+   "measure": false,
+   "latency_sm": [
+    25,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 99,
+   "mode": "ALL_REDUCE",
+   "count": 120,
+   "measure": false,
+   "latency_sm": [
+    32,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 100,
+   "mode": "ALL_REDUCE",
+   "count": 18,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 101,
+   "mode": "ALL_REDUCE",
+   "count": 12,
+   "measure": false,
+   "latency_sm": [
+    26,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 102,
+   "mode": "ALL_REDUCE",
+   "count": 38,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 103,
+   "mode": "ALL_REDUCE",
+   "count": 48,
+   "measure": false,
+   "latency_sm": [
+    25,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 104,
+   "mode": "ALL_REDUCE",
+   "count": 95,
+   "measure": false,
+   "latency_sm": [
+    30,
+    27
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 105,
+   "mode": "ALL_GATHER",
+   "count": 8,
+   "measure": false,
+   "latency_sm": [
+    19,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 106,
+   "mode": "ALL_GATHER",
+   "count": 30,
+   "measure": false,
+   "latency_sm": [
+    22,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 107,
+   "mode": "ALL_GATHER",
+   "count": 22,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 108,
+   "mode": "ALL_REDUCE",
+   "count": 122,
+   "measure": false,
+   "latency_sm": [
+    31,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 109,
+   "mode": "ALL_GATHER",
+   "count": 61,
+   "measure": false,
+   "latency_sm": [
+    24,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 110,
+   "mode": "ALL_GATHER",
+   "count": 17,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 111,
+   "mode": "ALL_REDUCE",
+   "count": 23,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 112,
+   "mode": "ALL_REDUCE",
+   "count": 107,
+   "measure": false,
+   "latency_sm": [
+    28,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 113,
+   "mode": "ALL_GATHER",
+   "count": 3,
+   "measure": false,
+   "latency_sm": [
+    21,
+    17
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 114,
+   "mode": "ALL_GATHER",
+   "count": 62,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 115,
+   "mode": "ALL_GATHER",
+   "count": 42,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 116,
+   "mode": "ALL_REDUCE",
+   "count": 117,
+   "measure": false,
+   "latency_sm": [
+    29,
+    30
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 117,
+   "mode": "ALL_GATHER",
+   "count": 20,
+   "measure": false,
+   "latency_sm": [
+    22,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 118,
+   "mode": "ALL_GATHER",
+   "count": 40,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 119,
+   "mode": "ALL_GATHER",
+   "count": 39,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 120,
+   "mode": "ALL_GATHER",
+   "count": 2,
+   "measure": false,
+   "latency_sm": [
+    19,
+    18
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 121,
+   "mode": "ALL_GATHER",
+   "count": 40,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 122,
+   "mode": "ALL_GATHER",
+   "count": 22,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 123,
+   "mode": "ALL_REDUCE",
+   "count": 101,
+   "measure": false,
+   "latency_sm": [
+    28,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 124,
+   "mode": "ALL_REDUCE",
+   "count": 68,
+   "measure": false,
+   "latency_sm": [
+    25,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 125,
+   "mode": "ALL_GATHER",
+   "count": 60,
+   "measure": false,
+   "latency_sm": [
+    25,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 126,
+   "mode": "ALL_REDUCE",
+   "count": 14,
+   "measure": false,
+   "latency_sm": [
+    21,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 127,
+   "mode": "ALL_GATHER",
+   "count": 49,
+   "measure": false,
+   "latency_sm": [
+    24,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 128,
+   "mode": "ALL_REDUCE",
+   "count": 81,
+   "measure": false,
+   "latency_sm": [
+    31,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 129,
+   "mode": "ALL_GATHER",
+   "count": 63,
+   "measure": false,
+   "latency_sm": [
+    24,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 130,
+   "mode": "ALL_REDUCE",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    24,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 131,
+   "mode": "ALL_GATHER",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    21,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 132,
+   "mode": "ALL_GATHER",
+   "count": 11,
+   "measure": false,
+   "latency_sm": [
+    20,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 133,
+   "mode": "ALL_REDUCE",
+   "count": 28,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 134,
+   "mode": "ALL_GATHER",
+   "count": 47,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 135,
+   "mode": "ALL_REDUCE",
+   "count": 84,
+   "measure": false,
+   "latency_sm": [
+    26,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 136,
+   "mode": "ALL_REDUCE",
+   "count": 44,
+   "measure": false,
+   "latency_sm": [
+    24,
+    24
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 137,
+   "mode": "ALL_REDUCE",
+   "count": 61,
+   "measure": false,
+   "latency_sm": [
+    26,
+    25
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 138,
+   "mode": "ALL_GATHER",
+   "count": 46,
+   "measure": false,
+   "latency_sm": [
+    23,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 139,
+   "mode": "ALL_GATHER",
+   "count": 28,
+   "measure": false,
+   "latency_sm": [
+    21,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 140,
+   "mode": "ALL_GATHER",
+   "count": 45,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 141,
+   "mode": "ALL_REDUCE",
+   "count": 40,
+   "measure": false,
+   "latency_sm": [
+    27,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 142,
+   "mode": "ALL_GATHER",
+   "count": 47,
+   "measure": false,
+   "latency_sm": [
+    22,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 143,
+   "mode": "ALL_GATHER",
+   "count": 22,
+   "measure": false,
+   "latency_sm": [
+    21,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 144,
+   "mode": "ALL_GATHER",
+   "count": 27,
+   "measure": false,
+   "latency_sm": [
+    21,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 145,
+   "mode": "ALL_GATHER",
+   "count": 8,
+   "measure": false,
+   "latency_sm": [
+    19,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 146,
+   "mode": "ALL_REDUCE",
+   "count": 48,
+   "measure": false,
+   "latency_sm": [
+    26,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 147,
+   "mode": "ALL_GATHER",
+   "count": 59,
+   "measure": false,
+   "latency_sm": [
+    25,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 148,
+   "mode": "ALL_GATHER",
+   "count": 45,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 149,
+   "mode": "ALL_GATHER",
+   "count": 54,
+   "measure": false,
+   "latency_sm": [
+    25,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 150,
+   "mode": "ALL_GATHER",
+   "count": 26,
+   "measure": false,
+   "latency_sm": [
+    21,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 151,
+   "mode": "ALL_REDUCE",
+   "count": 76,
+   "measure": false,
+   "latency_sm": [
+    28,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 152,
+   "mode": "ALL_REDUCE",
+   "count": 39,
+   "measure": false,
+   "latency_sm": [
+    24,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 153,
+   "mode": "ALL_GATHER",
+   "count": 7,
+   "measure": false,
+   "latency_sm": [
+    18,
+    19
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 154,
+   "mode": "ALL_REDUCE",
+   "count": 101,
+   "measure": false,
+   "latency_sm": [
+    28,
+    28
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 155,
+   "mode": "ALL_REDUCE",
+   "count": 120,
+   "measure": false,
+   "latency_sm": [
+    30,
+    29
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 156,
+   "mode": "ALL_GATHER",
+   "count": 31,
+   "measure": false,
+   "latency_sm": [
+    20,
+    21
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 157,
+   "mode": "ALL_REDUCE",
+   "count": 88,
+   "measure": false,
+   "latency_sm": [
+    27,
+    27
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 158,
+   "mode": "ALL_REDUCE",
+   "count": 46,
+   "measure": false,
+   "latency_sm": [
+    23,
+    23
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 159,
+   "mode": "ALL_GATHER",
+   "count": 20,
+   "measure": false,
+   "latency_sm": [
+    19,
+    22
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 160,
+   "mode": "ALL_REDUCE",
+   "count": 128,
+   "measure": true,
+   "latency_sm": [
+    29,
+    31
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 161,
+   "mode": "ALL_GATHER",
+   "count": 64,
+   "measure": true,
+   "latency_sm": [
+    23,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 162,
+   "mode": "ALL_REDUCE",
+   "count": 128,
+   "measure": true,
+   "latency_sm": [
+    28,
+    31
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  },
+  {
+   "t": 163,
+   "mode": "ALL_GATHER",
+   "count": 64,
+   "measure": true,
+   "latency_sm": [
+    23,
+    26
+   ],
+   "pass_": true,
+   "bad_lanes": []
+  }
+ ]
+}

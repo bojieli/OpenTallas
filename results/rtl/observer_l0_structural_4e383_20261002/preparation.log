@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-observer-l0-structural-correction/tools/prepare_observer_l0_structural.py", line 90, in <module>
+    ap=argparse.ArgumentParser();ap.add_argument('--repo',default='.');a=ap.parse_args();plan=prepare(a.repo)
+  File "/tmp/opentallas-observer-l0-structural-correction/tools/prepare_observer_l0_structural.py", line 58, in prepare
+    assert_l0_only(corrected)
+  File "/tmp/opentallas-observer-l0-structural-correction/tools/prepare_observer_l0_structural.py", line 51, in assert_l0_only
+    raise ValueError('unsupported observer scope '+ref)
+ValueError: unsupported observer scope dut.g_hbm

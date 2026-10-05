@@ -1,0 +1,1330 @@
+[
+  {
+    "id": "L0.I66",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU0"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366688,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 398720,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 66,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "07c2d7407c2c14ae476f2f77c09207e3815946b1d15c55bfc28b5fae06d0ef4b"
+  },
+  {
+    "id": "L0.I67",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU0"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366688,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 399296,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 67,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "c9a5cdad46267eacf31a847c392a250f76e8e6dba3b0f0c9a2aaaa5f70f1a3e8"
+  },
+  {
+    "id": "L0.I68",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU1"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366689,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 401728,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 68,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "b04e747c42f6ccc8a23c691f6370c5d51837818cf9c8d2c1930df572e92055f8"
+  },
+  {
+    "id": "L0.I69",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU1"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366689,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 402304,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 69,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "a6595825ddb77bf2eaf4e76403f33a0fe100e8f7c15a8fb0c427fb45c8e68e6a"
+  },
+  {
+    "id": "L0.I70",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU0",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT0"
+      ],
+      "a_base": 398720,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366784,
+      "c_base": 399296,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 399872,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 2
+    },
+    "instruction_index": 70,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1"
+  },
+  {
+    "id": "L0.I71",
+    "instruction": {
+      "_reads": [
+        "ACT0"
+      ],
+      "_tag": "L0.experts.act0_gather",
+      "_writes": [
+        "ACTALL0"
+      ],
+      "coll_dst": 430560,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 5,
+      "coll_src": 399872,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 71,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "d234d6a59747643dd375a89c2d474c542b398e168440c52555598da9df0ea0bf"
+  },
+  {
+    "id": "L0.I72",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU2"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366690,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 404736,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 72,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "11c42508aef418ed6ca7f3ffcb52fc28ca8646577b75114a8ba4315ebe953416"
+  },
+  {
+    "id": "L0.I73",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU2"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366690,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 405312,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 73,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "db3e2a424ed7ab206fb692477a69af11072c8f665d3a4babba040f3449c7e6a9"
+  },
+  {
+    "id": "L0.I74",
+    "instruction": {
+      "_imm": {
+        "imm2": "hc_eps"
+      },
+      "_reads": [
+        "MIX",
+        "RF"
+      ],
+      "_tag": "L0.hc_ffn",
+      "_writes": [
+        "PF"
+      ],
+      "a_base": 41024,
+      "a_si": 1,
+      "ad": 5,
+      "b_base": 40992,
+      "c_base": 0,
+      "c_si": 1,
+      "c_src": 1,
+      "d_base": 0,
+      "d_si": 1,
+      "d_src": 1,
+      "dst": 1,
+      "e1": 4,
+      "imm2": 897988541,
+      "m1": 1,
+      "m2": 1,
+      "o_base": 41152,
+      "o_si": 1,
+      "sfu": 4,
+      "su_chase": 0,
+      "su_nin": 4,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 74,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "cae06be0df797d27ab7efc4cddeb046bafa70b5b05857422f0c2a56553c9221b"
+  },
+  {
+    "id": "L0.I75",
+    "instruction": {
+      "_imm": {
+        "imm2": "hc_post_scale"
+      },
+      "_reads": [
+        "MIX",
+        "RF"
+      ],
+      "_tag": "L0.hc_ffn",
+      "_writes": [
+        "POF"
+      ],
+      "a_base": 41028,
+      "a_si": 1,
+      "ad": 5,
+      "b_base": 40992,
+      "c_base": 4,
+      "c_si": 1,
+      "c_src": 1,
+      "d_base": 4,
+      "d_si": 1,
+      "d_src": 1,
+      "dst": 1,
+      "e1": 3,
+      "imm2": 1073741824,
+      "m1": 1,
+      "m2": 1,
+      "o_base": 41184,
+      "o_si": 1,
+      "sfu": 4,
+      "su_chase": 0,
+      "su_nin": 4,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 75,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "0d45a5689d7406a1b983c873d6c28ed06ada16cde70c1eea1d495b867d932e90"
+  },
+  {
+    "id": "L0.I76",
+    "instruction": {
+      "_reads": [
+        "MIX",
+        "RF"
+      ],
+      "_tag": "L0.hc_ffn",
+      "_writes": [
+        "CRAW",
+        "M4"
+      ],
+      "a_base": 41032,
+      "a_si": 1,
+      "a_so": 4,
+      "ad": 5,
+      "b_base": 40992,
+      "c_base": 8,
+      "c_si": 1,
+      "c_so": 4,
+      "c_src": 1,
+      "d_base": 8,
+      "d_si": 1,
+      "d_so": 4,
+      "d_src": 1,
+      "dst": 1,
+      "m1": 1,
+      "m2": 1,
+      "o_base": 41248,
+      "o_si": 1,
+      "o_so": 4,
+      "r_base": 41280,
+      "r_so": 1,
+      "red": 2,
+      "su_chase": 0,
+      "su_nin": 4,
+      "su_nout": 4,
+      "su_vec": 2,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 76,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "beb179e85222f6d0e4cdc1c4739eb1eec9ef013a35e6c8d809bb5efa11ca4a6c"
+  },
+  {
+    "id": "L0.I77",
+    "instruction": {
+      "_reads": [
+        "CRAW",
+        "M4"
+      ],
+      "_tag": "L0.hc_ffn",
+      "_writes": [
+        "E16"
+      ],
+      "a_base": 41248,
+      "a_si": 1,
+      "a_so": 4,
+      "ad": 3,
+      "b_base": 41280,
+      "b_so": 1,
+      "dst": 1,
+      "o_base": 41312,
+      "o_si": 1,
+      "o_so": 4,
+      "sfu": 1,
+      "su_chase": 0,
+      "su_nin": 4,
+      "su_nout": 4,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 2
+    },
+    "instruction_index": 77,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "4ed4e2d71bb869544530e00b0b3127a8dbc668ff2416fde75c9f06c190425362"
+  },
+  {
+    "id": "L0.I78",
+    "instruction": {
+      "_reads": [
+        "E16"
+      ],
+      "_tag": "L0.hc_ffn",
+      "_writes": [
+        "CF"
+      ],
+      "unit": 4,
+      "wait": 2,
+      "xu_dst": 41216,
+      "xu_n": 16,
+      "xu_op": 1,
+      "xu_src": 41312
+    },
+    "instruction_index": 78,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "d76edd15159c6d481fc356572cec4a70f09eac02cfa7f13f4bee02b16dedc276"
+  },
+  {
+    "id": "L0.I79",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL0",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E0"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366688,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 400448,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 430560,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 79,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "7cd2640c7d05a4328e7e16bfc7394fcb8d10d025f4d53523a68a61eab356f1a1"
+  },
+  {
+    "id": "L0.I80",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU1",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT1"
+      ],
+      "a_base": 401728,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366785,
+      "c_base": 402304,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 402880,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 80,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a"
+  },
+  {
+    "id": "L0.I81",
+    "instruction": {
+      "_reads": [
+        "ACT1"
+      ],
+      "_tag": "L0.experts.act1_gather",
+      "_writes": [
+        "ACTALL1"
+      ],
+      "coll_dst": 432864,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 6,
+      "coll_src": 402880,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 81,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "0f5732661a752a57bba02bbe182012125a57d11aed2e6bc229f27ebaadba9721"
+  },
+  {
+    "id": "L0.I82",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU3"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366691,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 407744,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 82,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "0145f7c35f1cb3907365622136b75c79cb6f5b2f4794826d0dcc181b8d08eeb0"
+  },
+  {
+    "id": "L0.I83",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU3"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366691,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 408320,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 83,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "ddf5472ac774a03451b398c64cf81036c9d747eefd341a9aace8ac5d5a485b10"
+  },
+  {
+    "id": "L0.I84",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL1",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E1"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366689,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 403456,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 432864,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 84,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "e0b2b843f3e017f9ca232a4c8a0c8a4345d7beb8d695f7bd7fac63fd3e672e78"
+  },
+  {
+    "id": "L0.I85",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU2",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT2"
+      ],
+      "a_base": 404736,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366786,
+      "c_base": 405312,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 405888,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 85,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079"
+  },
+  {
+    "id": "L0.I86",
+    "instruction": {
+      "_reads": [
+        "ACT2"
+      ],
+      "_tag": "L0.experts.act2_gather",
+      "_writes": [
+        "ACTALL2"
+      ],
+      "coll_dst": 435168,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 7,
+      "coll_src": 405888,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 86,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "dba3580571697991287dbaa0cc629fc40f3a5ea2e84c724465a010a4f1b16f48"
+  },
+  {
+    "id": "L0.I87",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU4"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366692,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 410752,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 87,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "74273333990d0482aa9aee2b261d8386764232a66e0d91cad2ffb5b4331d2921"
+  },
+  {
+    "id": "L0.I88",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU4"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366692,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 411328,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 88,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "33b4ca8b4c5f707e1ea619947a33612a30288dab9bb7d2f8512edb332999b046"
+  },
+  {
+    "id": "L0.I89",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL2",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E2"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366690,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 406464,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 435168,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 89,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "6c751d8f7ad75b20d72af939229a04e6b8cd6b3bcb760d17a323c0c780f800f0"
+  },
+  {
+    "id": "L0.I90",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU3",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT3"
+      ],
+      "a_base": 407744,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366787,
+      "c_base": 408320,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 408896,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 90,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c"
+  },
+  {
+    "id": "L0.I91",
+    "instruction": {
+      "_reads": [
+        "ACT3"
+      ],
+      "_tag": "L0.experts.act3_gather",
+      "_writes": [
+        "ACTALL3"
+      ],
+      "coll_dst": 437472,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 8,
+      "coll_src": 408896,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 91,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "0e69f7393e1d0dfac87b27a530a2b884d3cf942f8572ae0f3f9b406bfa5fee57"
+  },
+  {
+    "id": "L0.I92",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU5"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366693,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 413760,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 92,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "24aee41bc3096c3e77698d571775a380d0c9ec49bc30e845818b5de51e748af6"
+  },
+  {
+    "id": "L0.I93",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "EID",
+        "XN"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "GU5"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366693,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 160,
+      "qe_nout": 576,
+      "qe_obase": 414336,
+      "qe_tiles": 5,
+      "qe_wbase": 0,
+      "qe_xbase": 46464,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 93,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "f8d5a098e4155aecc7ea4f520426ba9b0715a29f91b2a1d1b3a55ffe36610ff5"
+  },
+  {
+    "id": "L0.I94",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL3",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E3"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366691,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 409472,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 437472,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 94,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "fe0edcfbdaa7bd9b794080e1624192d455bb27536e6d47c2ec75716b055ed6fe"
+  },
+  {
+    "id": "L0.I95",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU4",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT4"
+      ],
+      "a_base": 410752,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366788,
+      "c_base": 411328,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 411904,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 95,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7"
+  },
+  {
+    "id": "L0.I96",
+    "instruction": {
+      "_reads": [
+        "ACT4"
+      ],
+      "_tag": "L0.experts.act4_gather",
+      "_writes": [
+        "ACTALL4"
+      ],
+      "coll_dst": 439776,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 9,
+      "coll_src": 411904,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 96,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "53cbb440014e1f1cd8c24f9314e10c2a29abf171f066f5e69117d5f16e0833c7"
+  },
+  {
+    "id": "L0.I97",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL4",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E4"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366692,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 412480,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 439776,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 97,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "dfb42503ac4dc13fa6f3f1ebae2a376b996658fa1fcd49e49626745cc2359924"
+  },
+  {
+    "id": "L0.I98",
+    "instruction": {
+      "_imm": {
+        "imm3": "swiglu_limit"
+      },
+      "_reads": [
+        "GU5",
+        "WGT"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "ACT5"
+      ],
+      "a_base": 413760,
+      "a_min": 1,
+      "a_si": 1,
+      "b_base": 366789,
+      "c_base": 414336,
+      "c_clip": 1,
+      "c_si": 1,
+      "dst": 1,
+      "e1": 1,
+      "e2": 1,
+      "imm3": 1092616192,
+      "o_base": 414912,
+      "o_si": 1,
+      "rnd": 1,
+      "sfu": 5,
+      "su_chase": 0,
+      "su_nin": 576,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 98,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af"
+  },
+  {
+    "id": "L0.I99",
+    "instruction": {
+      "_reads": [
+        "ACT5"
+      ],
+      "_tag": "L0.experts.act5_gather",
+      "_writes": [
+        "ACTALL5"
+      ],
+      "coll_dst": 442080,
+      "coll_ibase": 0,
+      "coll_k": 0,
+      "coll_n": 576,
+      "coll_op": 1,
+      "coll_rnd": 0,
+      "coll_seq": 10,
+      "coll_src": 414912,
+      "unit": 6,
+      "wait": 31
+    },
+    "instruction_index": 99,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "7379dac1446484eb252d79e4fa4acfee45239b3c10ec9a3f658336106771afc5"
+  },
+  {
+    "id": "L0.I100",
+    "instruction": {
+      "_macs": 2949120,
+      "_reads": [
+        "ACTALL5",
+        "EID"
+      ],
+      "_tag": "L0.experts",
+      "_writes": [
+        "E5"
+      ],
+      "pred": 0,
+      "qe_fp4": 1,
+      "qe_ibase": 366693,
+      "qe_ind": 1,
+      "qe_istride": 1,
+      "qe_mode": 0,
+      "qe_nb": 72,
+      "qe_nout": 1280,
+      "qe_obase": 415488,
+      "qe_tiles": 10,
+      "qe_wbase": 0,
+      "qe_xbase": 442080,
+      "unit": 3,
+      "wait": 0
+    },
+    "instruction_index": 100,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "441a2ed57b62b1e3f8e334ea095c78031ba0e57d44d17b4ba255c2a9dbbe0007"
+  },
+  {
+    "id": "L0.I101",
+    "instruction": {
+      "_reads": [
+        "E0",
+        "E1"
+      ],
+      "_tag": "L0.moe_sum",
+      "_writes": [
+        "Y"
+      ],
+      "a_base": 400448,
+      "a_si": 1,
+      "ad": 2,
+      "c_base": 403456,
+      "c_si": 1,
+      "dst": 1,
+      "o_base": 84512,
+      "o_si": 1,
+      "rnd": 0,
+      "su_chase": 0,
+      "su_nin": 1280,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 101,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "5cde73f9869e90a2ddb5f2b2a3ead68523d9121336c0a1e788481b7d190ab9d7"
+  },
+  {
+    "id": "L0.I102",
+    "instruction": {
+      "_reads": [
+        "E2",
+        "Y"
+      ],
+      "_tag": "L0.moe_sum",
+      "_writes": [
+        "Y"
+      ],
+      "a_base": 84512,
+      "a_si": 1,
+      "ad": 2,
+      "c_base": 406464,
+      "c_si": 1,
+      "dst": 1,
+      "o_base": 84512,
+      "o_si": 1,
+      "rnd": 0,
+      "su_chase": 160,
+      "su_nin": 1280,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 102,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "b7363323197accd0b6dd4e45d1d09c2897ddc82149da802a1f2646d5a94fecc1"
+  },
+  {
+    "id": "L0.I103",
+    "instruction": {
+      "_reads": [
+        "E3",
+        "Y"
+      ],
+      "_tag": "L0.moe_sum",
+      "_writes": [
+        "Y"
+      ],
+      "a_base": 84512,
+      "a_si": 1,
+      "ad": 2,
+      "c_base": 409472,
+      "c_si": 1,
+      "dst": 1,
+      "o_base": 84512,
+      "o_si": 1,
+      "rnd": 0,
+      "su_chase": 160,
+      "su_nin": 1280,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 103,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "5976a8b00e9c462dea5d1dfff10e396ab151010e64b418d1c59224fc5768c581"
+  },
+  {
+    "id": "L0.I104",
+    "instruction": {
+      "_reads": [
+        "E4",
+        "Y"
+      ],
+      "_tag": "L0.moe_sum",
+      "_writes": [
+        "Y"
+      ],
+      "a_base": 84512,
+      "a_si": 1,
+      "ad": 2,
+      "c_base": 412480,
+      "c_si": 1,
+      "dst": 1,
+      "o_base": 84512,
+      "o_si": 1,
+      "rnd": 0,
+      "su_chase": 160,
+      "su_nin": 1280,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 0
+    },
+    "instruction_index": 104,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "fea2669b15d7d20309133b621e70c29bd70a9bfcb283b23f251f76831883ec36"
+  },
+  {
+    "id": "L0.I105",
+    "instruction": {
+      "_reads": [
+        "E5",
+        "Y"
+      ],
+      "_tag": "L0.moe_sum",
+      "_writes": [
+        "Y"
+      ],
+      "a_base": 84512,
+      "a_si": 1,
+      "ad": 2,
+      "c_base": 415488,
+      "c_si": 1,
+      "dst": 1,
+      "o_base": 84512,
+      "o_si": 1,
+      "rnd": 0,
+      "su_chase": 160,
+      "su_nin": 1280,
+      "su_nout": 1,
+      "su_vec": 1,
+      "unit": 2,
+      "wait": 4
+    },
+    "instruction_index": 105,
+    "kind": "instruction",
+    "scope": 0,
+    "template_word_sha256": "96d98045e4317364b1d8ecbee39f75b201c5256bef7c96fd546c3dbc054b4c13"
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "acceptance": {
+    "every_probed_dimension_must_fail": true,
+    "rom_nominal_drc_errors_max": 0,
+    "sram_macros_min": 18,
+    "sram_pitch_families_max": 1
+  },
+  "claim_boundary": {
+    "establishes": [
+      "the minimum DRC-legal drawn pitch of an independently implemented via1-programmed NOR mask-ROM bitcell under the exact installed public IHP SG13G2 Magic deck",
+      "that every dimension of that bitcell is at a deck floor, because reducing any one of them by 10 nm produces a named rule violation",
+      "the drawn placement pitch of the IHP SG13G2 foundry single-port and dual-port SRAM bitcells, cross-checked by requiring the bitcell instance count to equal the datasheet bit count in every shipped macro",
+      "the ratio of those two measured pitch areas at 130 nm",
+      "that the foundry SRAM bitcell is not legal under the installed public logic-rule deck, and which rules it violates"
+    ],
+    "evidence_class": "open_foundry_pdk_measured_bitcell_geometry",
+    "forbidden_inferences": [
+      "N7, N6, N5 or N4 bitcell area, density, ratio, delay, energy, leakage, yield, or cost",
+      "that the measured 130 nm area ratio transfers unchanged to any other node",
+      "availability or economics of target-foundry late-via ROM personalization",
+      "full-array decoder, wordline, bitline, sense, repair, simultaneous-read, IR-drop, noise, or thermal behavior",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off",
+      "that this is the smallest mask-ROM bitcell drawable under this deck: the floor probes vary one dimension at a time and prove each is at a floor given the others, which is local minimality for this topology, not a global minimum over all ROM topologies"
+    ],
+    "rule_set_asymmetry": "the ROM bitcell is drawn under the public logic-rule deck and is DRC clean; the foundry SRAM bitcell carries the PDK SRAM recognition layer and violates that same deck, so the measured ratio is an upper bound on the ratio that would be obtained with one rule set applied to both",
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "ihp_sg13g2_rom_sram_bitcell_ratio_v1",
+  "inputs": {
+    "gds_reader": "tools/ot_gds_reader.py",
+    "generator": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl"
+  },
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_bitcell/artifacts",
+    "json": "results/spice/ihp_sg13g2_bitcell/bitcell.json",
+    "markdown": "results/spice/ihp_sg13g2_bitcell/REPORT.md"
+  },
+  "rom_cell": {
+    "array_cols": 4,
+    "array_rows": 8,
+    "drc_style": "drc(full)",
+    "floor_probe_dimensions": [
+      "PX",
+      "WD",
+      "GS",
+      "DA",
+      "DG",
+      "PW"
+    ],
+    "floor_probe_step_nm": 10,
+    "nominal_nm": {
+      "CT": 160,
+      "DA": 340,
+      "DG": 210,
+      "GS": 380,
+      "PW": 130,
+      "PX": 510,
+      "WD": 300
+    },
+    "topology": "via1-programmed NOR mask ROM, one nMOS per bit, one independent programming via1 per bit"
+  },
+  "schema_version": 1,
+  "sram_reference": {
+    "drc_context_cell": "RM_IHPSG13_1P_BITKIT_16x2_SRAM",
+    "dual_port_bitcell": "RM_IHPSG13_2P_BITKIT_CELL",
+    "instance_count_must_equal_bit_count": true,
+    "library_subdir": "ihp-sg13g2/libs.ref/sg13g2_sram",
+    "single_port_bitcell": "RM_IHPSG13_1P_BITKIT_CELL"
+  }
+}

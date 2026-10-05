@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hdc-v41x-idx-kstream-range.v1",
+  "status": "pass",
+  "cases": [
+    {
+      "skip": 0,
+      "keys": 40,
+      "sectors": 85,
+      "cycles": 82,
+      "sectors_per_cycle": 1.036585
+    },
+    {
+      "skip": 8,
+      "keys": 40,
+      "sectors": 85,
+      "cycles": 81,
+      "sectors_per_cycle": 1.049383
+    },
+    {
+      "skip": 56,
+      "keys": 97,
+      "sectors": 207,
+      "cycles": 89,
+      "sectors_per_cycle": 2.325843
+    },
+    {
+      "skip": 1000,
+      "keys": 1050,
+      "sectors": 2232,
+      "cycles": 208,
+      "sectors_per_cycle": 10.730769
+    },
+    {
+      "skip": 1016,
+      "keys": 20,
+      "sectors": 43,
+      "cycles": 138,
+      "sectors_per_cycle": 0.311594
+    },
+    {
+      "skip": 1000,
+      "keys": 10000,
+      "sectors": 21250,
+      "cycles": 773,
+      "sectors_per_cycle": 27.490298
+    },
+    {
+      "skip": 1000,
+      "keys": 100000,
+      "sectors": 212500,
+      "cycles": 7205,
+      "sectors_per_cycle": 29.493407
+    }
+  ],
+  "long_range_stack_peak_sector_per_cycle": 31.25,
+  "long_range_fraction_of_raw_peak": 0.943789,
+  "coverage": "Every wanted key bit-exact against timed HBM sector pattern; skips 0, 8, 56, 1000 and 1016, intra-column starts, 1024-key boundary, exact sector count with no prefix rereads, and sustained 100k-key scan.",
+  "limitation": "One range on one stack, raw stream includes unrequested prefix placeholders. No stack/quarter multi-context arbiter, quarter-order collector, array token, or physical closure. Four-stack rate is not measured here.",
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_range.sv": "6e47d8e09370a84244b3e69de9438a6cd57fddecac357fa9f537198b2f88603d",
+    "rtl/test/tb_hdc_v41x_idx_kstream_range.sv": "95297b87f6ca8d00c3c8ece545eb113bbb70b1fb90a880091144907b44ced799",
+    "tools/rtl_v41x_idx_kstream_range.py": "c6f1cf5a905c0dc3f2944a3367378ae32c0bc9ed87bc64104162d40d0e950950"
+  }
+}

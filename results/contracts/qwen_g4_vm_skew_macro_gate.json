@@ -1,0 +1,24 @@
+{
+  "status": "PASS_candidate_physical_macro_model_only",
+  "scope": "not production-core integration, no physical timing, synthetic nonzero data",
+  "logical_words": 4096,
+  "checked_lane_reads": 16384,
+  "macro_instances": 32,
+  "capacity_bytes": 262144,
+  "accepted_trace_cycles": 5208,
+  "trace_sha256": "035eda1c535196d18e704ea0bd9b32caf94f8c2c303f852b23df35cd01bf311b",
+  "checks": [
+    "synthetic issued trace with nonzero generated data",
+    "full capacity",
+    "masked disjoint same-word merge",
+    "read-before-write",
+    "atomic overlapping write fault",
+    "conflicting read fault"
+  ],
+  "stdout": "PASS trace 5208 accepted cycles\nPASS G4 skew 4096 words,16384 lane reads, masked merge, read-before-write, conflict atomicity\n",
+  "source_pins": {
+    "rtl/test/tb_qwen_g4_vm_skew_candidate.sv": "21c3622251aad1ccfed15a4c5927454b40398041374ce2b7f37a2eed419c2df9",
+    "rtl/physical/ot_qwen_g4_vm_skew_candidate.sv": "3f8b64fad29862d4dd2eb0e52aa571abcf111b6ad09a2f1035f4c444a9b79291",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "affinity": [
+    31
+  ],
+  "cgroup": "/sys/fs/cgroup/system.slice/qwen-provider-r5-20261002.service",
+  "files": {
+    "cgroup.events": "populated 1\nfrozen 0\n",
+    "cpu.max": "100000 100000\n",
+    "cpu.stat": "usage_usec 18747624\nuser_usec 17384015\nsystem_usec 1363608\ncore_sched.force_idle_usec 0\nnr_periods 188\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+    "cpuset.cpus": "31\n",
+    "cpuset.cpus.effective": "31\n",
+    "memory.current": "164831232\n",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+    "memory.max": "4294967296\n",
+    "memory.peak": "578867200\n",
+    "memory.swap.max": "0\n"
+  },
+  "monotonic": 3106142.553636414,
+  "utc": "2026-10-02T00:34:46Z"
+}

@@ -1,0 +1,119 @@
+C0 full-native control bridge: model + software lowering, 2026-10-02
+
+Native source fd7220c1e55397dec90222e1f99a8bd95ae02e03; H1 RTL
+992c14a70f812028f9de5e46eb79d5688db9482b; reviewed H4 audit e844837ed;
+Dewey finite interface6e28f1a8b48ea0182aed59a09d65540a1b0b96b3.
+The C0 model was generated before implementing the software bridge. No RTL,
+place/route, trained-provider execution, remote jobs or fleet changes were made.
+This stream does not wait for ROM/native-C++ campaigns.
+
+Delivered scope
+All3950 source PCs decode with exact family, predecessor PC IDs, input/output
+version IDs and ordered leaf/template references. All21 Qwen and30 DeepSeek
+families retain explicit missing-hardware gates. Qwen NEG lowers in the existing
+VM's order BITCAST_U/XOR/BITCAST_F; MOV lowers to COPY. Every Qwen PC's lowered
+command histogram matches its committed native export, including control-only
+QKV_SPLIT and KV_FENCE. All1127 DS SSA templates and706903 source edges are
+checked without expanding huge tensors or inventing family callbacks.
+
+The lowering records are a complete STATIC dispatch/control lowering, not a
+full numeric payload run or a measured dynamic transaction trace. Qwen's
+existing TiledMachine procedural driver still owns actual loop order. DS's
+existing streaming/staged compiler paths still own bounded128lane continuations
+and exact source addresses. Logical source shapes are never issued as full
+arrays to H1. This distinction is encoded in every dispatch artifact.
+
+The software endpoint implements default-off admission; actual source homes;
+RF512-vector bounds; RF0..31 temporary workspace with compiler leases;
+128lane command bounds; PC predecessor completion; distinct issue/complete/
+two-mirror visibility ACK/done acceptance; stale-owner rejection; and held
+version ownership through all future source consumers plus reverse grant.
+Scratch uses one64B aligned transaction with10-bit beat address and matching
+frame lease/completion. No extra read/write port is inferred.
+
+The existing NativePrimitiveVM is reused for tiny arithmetic isolation tests.
+No numeric primitive, provider, calendar or engine is reimplemented. Dewey's
+exact pinned C0VersionScoreboard is reused as the shared lifecycle validator.
+The adapter keeps command credit through reverse retirement, preserves future
+readers and global HBM aliases across SMs, and retains positive generation
+identity. A shared32SM ledger must be passed to contexts using the same rank;
+per-SM512-entry caps remain enforced. Isolated test ledgers are not fleet leases.
+
+Actual encoding and storage
+The command envelope is512bits/64B, matching Dewey. Required scalar fields
+include native opcode, PC, family/template/microstep, logical scalar index,
+three source version/generation identities (including a predicate), physical
+RF addresses, active lanes, rank/SM, destination generation/version and bounded
+fragment sequence. Source attributes/rounding and shapes are fetched by pinned
+program/template/microstep identity, not silently omitted or charged as free.
+One256-bit source digest and program selector are retained per rank. External
+literal/attribute/provider metadata is explicitly excluded from the fixed-word
+dictionary estimate and remains a charged immutable-provider fetch boundary.
+
+Source-lifetime minima are7 resident versions/SM for Qwen and14 for DeepSeek.
+The adopted envelope remains512 entries of at least200bits perSM. Smaller
+8/16-entry tables are NOT adopted; they do not prove all dynamic compiler-frame
+or provider metadata occupancy.32 temporary RF tags, one command and response,
+a64B fetch window, loop/predicate state and scratch lease/address are counted.
+There are104 DS declared version references without resident RF homes. They
+remain provider-owned state and require typed owner/lease/visibility receipts;
+no fabricated RF address or zero-byte/free capacity is allocated.
+
+RF is256KiB logical /512KiB mirrored,512 vectors x128lanes x32bits; scratch is
+64KiB with64B beats. Matrix ingest remains a separate128B port. RF payload and
+mirrored-write storage are existing H1 resources and are not charged twice.
+Three-input operations require an extra serialized RF read/predicate capture;
+2R1W does not become a three-read-port RF by lowering SELECT or SCATTER.
+
+Cost, replicas and physical limits
+model.json contains exact bit widths, source intervals, per-domain peaks,
+metadata dictionary/frame demands, FF/mux assumptions and32SM replica cost.
+Dewey's positive provisional C0 costs are fetch2/decode2/home12/accept2/
+complete2/reverse-retire2 =22 software ticks per issued command. Existing RF,
+provider, movement and ACK costs are retained once. Extra descriptor/metadata
+fetch and third-operand reads remain explicit charges. No tick-to-Hz or token
+rate conversion is made. Full-token latency is a symbolic composition until
+actual ordered continuation/provider traces and measured costs exist.
+
+Area uses unified-model DFF0.2916um2, assumed0.2um2 bit mux,512um2 control
+and50% placement utilization. It is incremental C0 control only: no new SFU,
+reducer, gather or collective implementation is included. The local added
+control channel is1152 tracks against the existing assumed3200-track envelope.
+A single combined channel would need19072 tracks (six assumed channels), so
+the incremental result must not be reported as a full-SM routing pass.
+That is only an incremental assumption: total existing payload escape, actual
+SM slot fit, fanout buffering and contextual SS/FF remain unqualified. No hub
+routing layers are added.32SM command-fetch peak2048B/issue-cycle is an analytical
+ceiling, not sustainable HBM bandwidth; existing controller/route charges apply.
+
+Compiler workspace remains external
+DS retains the existing32MiB/rank bounded workspace contract, AW27, with base
+unassigned and physical certification false. It cannot be relabeled local64KiB
+scratch or multiplied by32 without a disjoint allocator and leases. Qwen retains
+RF32/shared17408B/32MiB spill contracts. Literal tables and frame storage need
+actual provider ownership. No wrap, free alias or implicit capacity is admitted.
+
+Next mandatory gates
+1. Existing compiler/runtime owners bind actual ordered128lane continuation
+   packets to these PC/template/version identities, including selected EIDs,
+   nonresident state, predicate/third reads and typed provider acknowledgements.
+2. Dewey consumes C0 model/dispatch artifacts in the single composed finite
+   model, with actual64B scratch, mirrored RF ACK, future readers and global
+   physical alias/retirement controls. Provisional costs remain separate.
+3. Complete actual provider/format/config bridges; retain DS H1 BF16/op_gs0/
+   LEV4 and Qwen row-scale/MUL ties as explicit exercised-scope limits.
+4. Implement V1/R1/S1/M1/T1/N1 only after unified model prices their complete
+   latency/area/routes. C0 alone does not implement any missing family hardware.
+5. Connected representative layers/full-rank tokens, state/liveness and same-
+   source SS setup/FF hold remain mandatory before hardware/performance claims.
+
+Artifact interpretation
+model.json: analytical C0 state/width/area/routing and51-family gates.
+dispatch_lowering.json.gz:3950 immutable source PC descriptors and1127 template
+catalog, normalized Qwen primitives, exact version/dependency identities and
+existing continuation-emitter references.
+lowering_validation.json: source coverage/SSA/count proof, payload execution=false.
+representative_control_traces.json: small CPU/control fixtures only.
+tests.r1/r3 retained failures caught missing fixture outputs/future reader release;
+they were corrected in tests without weakening the actual output/reader gates.
+All historical failure records are retained; final tests and replay are additive.

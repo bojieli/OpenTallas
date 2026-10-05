@@ -1,0 +1,104 @@
+{
+  "actual_provider_join": false,
+  "adoption": false,
+  "calendar_record": "results/uarch/qwen_rom_KV_owner_calendar_20261002/blocked_join_r2.json",
+  "calendar_sha256": "8db6d68131f34cca8bfceb049b4464b94d26eea0c39f614ad95cbc489d79d696",
+  "configuration": {
+    "context": 8192,
+    "groups": 6144,
+    "head_dim": 128,
+    "heads_per_die": 2,
+    "layers": 36,
+    "successor_arithmetic_extra": 55,
+    "tiles_per_die": 1536,
+    "tp": 4
+  },
+  "next_g0": [
+    {
+      "owner": "Euclid + Maxwell",
+      "task": "Re-pin seven runtime sources and +55 whole MLAT/tree/MUL/KV_PREP path to current unified model; retain +54 FAIL."
+    },
+    {
+      "owner": "Maxwell + Kepler",
+      "task": "Bind 72 logical homes to physical bases/stacks, TP4 rank identity, finite read/write credits, actual write visibility and reverse retirement. Price serialized service and tail ports once against existing KV byte ledger."
+    },
+    {
+      "owner": "Archimedes + Euclid",
+      "task": "Match exact tile/spine elaboration and macro views to source pins; price 1536 tiles/die with logic, halos, hub routing, clock/PG and service slots. Close SS setup 60ps and FF hold 25ps at 0.833333ns; historical TT or different arithmetic cannot transfer."
+    }
+  ],
+  "predecessor_commits": [
+    "475004314",
+    "36c0fb00e"
+  ],
+  "refill": {
+    "current_write_completion_input": false,
+    "incremental_aggregate_bytes": 0,
+    "outstanding_read_requests": 1,
+    "sector_bytes": 32,
+    "sectors_per_layer": 131072,
+    "source_timing_scenarios": {
+      "row_conflict": {
+        "cycles_at_1p2GHz": 83,
+        "serialized_service_only_cycles_per_4MiB_layer": 10878976,
+        "service_ps": 69149
+      },
+      "row_conflict_plus_refresh": {
+        "cycles_at_1p2GHz": 503,
+        "serialized_service_only_cycles_per_4MiB_layer": 65929216,
+        "service_ps": 419149
+      },
+      "row_hit": {
+        "cycles_at_1p2GHz": 41,
+        "serialized_service_only_cycles_per_4MiB_layer": 5373952,
+        "service_ps": 33524
+      }
+    },
+    "timing_boundary": "Legacy HBM model assumptions, including 10ns request and response paths; cycles converted analytically at 1.2GHz. Excludes FSM/codec/credit/CDC stalls. Scenarios are not measured latency or a worst-case bound.",
+    "unified_exposed_refill_cycles": null
+  },
+  "runtime_proposal": {
+    "engine_build_admitted": false,
+    "execution_admitted": false,
+    "full_token_repeat_queued": false,
+    "heavy_jobs_launched": 0,
+    "immediate": "Offline portable manifest replay and focused source/model tests only",
+    "live_handle": null,
+    "place_route_admitted": false,
+    "requested_local_hardcaps": {
+      "cpu": 2,
+      "disk_MiB": 256,
+      "memory_MiB": 2048,
+      "wall_seconds": 60
+    },
+    "resource_boundary": "Review caps only, not measured simulator requirements; no PVE2/PVE3 tasks. Any subsequent physical execution needs composed G0 and parent admission.",
+    "second_position_queued": false
+  },
+  "schema": "opentallas.qwen-rom-q2-g0-proposal.v1",
+  "source_identity_scope": "Seven current w12 runtime files separately pinned; not asserted equal to captured original or any physical netlist.",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_phys_arbiter.sv": "ee3152a27ee64ff7382f3724f5700c865a7081085840e8e6c59a4cf65323564f",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv": "24d973adf95ee82ee83dca2a511589b0f199959f51919b06df536b6d0f2d4bd5",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tools/qwen_rom_q2_g0_packet.py": "d403525150f1da11be048f52aaaaf0d4a32a6ef8d7917215524f09b64325c9d6",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "status": "BLOCKED_G0",
+  "storage": {
+    "finite_tail_ports_replicas_mux_area": null,
+    "layer_bytes": 4194304,
+    "macro_only_area_mm2_per_die": 129.67316324351998,
+    "persistent_logical_bytes_per_die": 150994944,
+    "physical_allocation_reserved": false,
+    "tile_sram_bytes_per_die": 12582912
+  }
+}

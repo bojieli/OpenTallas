@@ -1,0 +1,214 @@
+{
+  "RF_capacity_change_authorized": false,
+  "alias_guard_relaxed": false,
+  "birth_pc": 8,
+  "classification": "SOURCE_DERIVED_HYPOTHESIS_PENDING_COMPLETE_PROVIDER_LIFETIME_AUDIT",
+  "driver_source_path": "results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source",
+  "driver_source_sha256": "2ef4c0ea75bfe1781b58de80346bb6518e9e8bf807e095135e817d189e63bd8e",
+  "full_program_declared_read_PCs": [],
+  "home_retire_pc": 8,
+  "homes_path": "/tmp/kepler-ds-r43-PC0-9-execution-20261002/bound_homes.json.gz",
+  "homes_sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+  "native_path": "/tmp/kepler-ds-r43-PC0-9-execution-20261002/bound_native.json.gz",
+  "native_sha256": "1bca266785a062b9396f6704116982b5944a1f915b8acdad945000b3d7ba612d",
+  "next_rank0_homes": [
+    [
+      18,
+      {
+        "SM": 0,
+        "birth_pc": 9,
+        "home": {
+          "class": "RF",
+          "slot_first": 32,
+          "vectors": 2
+        },
+        "name": "zpart",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 10,
+        "version": "DeepSeek.9.zpart.67",
+        "word_count": 256
+      }
+    ],
+    [
+      3065,
+      {
+        "SM": 1,
+        "birth_pc": 9,
+        "home": {
+          "class": "RF",
+          "slot_first": 32,
+          "vectors": 2
+        },
+        "name": "zpart",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 10,
+        "version": "DeepSeek.9.zpart.67",
+        "word_count": 256
+      }
+    ],
+    [
+      4639,
+      {
+        "SM": 2,
+        "birth_pc": 9,
+        "home": {
+          "class": "RF",
+          "slot_first": 32,
+          "vectors": 2
+        },
+        "name": "zpart",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 10,
+        "version": "DeepSeek.9.zpart.67",
+        "word_count": 256
+      }
+    ],
+    [
+      5896,
+      {
+        "SM": 3,
+        "birth_pc": 9,
+        "home": {
+          "class": "RF",
+          "slot_first": 32,
+          "vectors": 2
+        },
+        "name": "zpart",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 10,
+        "version": "DeepSeek.9.zpart.67",
+        "word_count": 256
+      }
+    ]
+  ],
+  "not_proven": "Runtime conflicting-version identity is not serialized in failure; implicit auxiliary/group consumers and full retirement/debt obligations must be independently reconciled.",
+  "old_rank0_homes": [
+    [
+      16,
+      {
+        "SM": 0,
+        "birth_pc": 8,
+        "home": {
+          "class": "RF",
+          "slot_first": 34,
+          "vectors": 2
+        },
+        "name": "o",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 8,
+        "version": "DeepSeek.8.o.65",
+        "word_count": 256
+      }
+    ],
+    [
+      3063,
+      {
+        "SM": 1,
+        "birth_pc": 8,
+        "home": {
+          "class": "RF",
+          "slot_first": 32,
+          "vectors": 2
+        },
+        "name": "o",
+        "partition": "chunk32_block256",
+        "rank_group": [
+          0,
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21,
+          24,
+          27,
+          30
+        ],
+        "retire_pc": 8,
+        "version": "DeepSeek.8.o.65",
+        "word_count": 256
+      }
+    ]
+  ],
+  "old_version": "DeepSeek.8.o.65",
+  "overlapping_SM_slots": [
+    [
+      1,
+      32
+    ],
+    [
+      1,
+      33
+    ]
+  ],
+  "safe_next_step": "Bind actual complete uses and home retire point, release deadbirth outputs only after witnessed publication, root retirement, all leases and obligations closed. Preserve physical alias guard and source arithmetic.",
+  "schema": "parent-DS-R43-dead-output-retirement-diagnosis-v1",
+  "source_behavior": "Driver releases only versions in operation read list at last_use; a write-only output may remain published/located after its declared retirement.",
+  "successor_run_started": false
+}

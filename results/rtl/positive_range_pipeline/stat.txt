@@ -1,0 +1,58 @@
+
+11. Printing statistics.
+
+=== ot_a3_fp32_exp_pos_cr_rne ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    63968        - wires
+    63968        - wire bits
+       75        - public wires
+       75        - public wire bits
+       72        - ports
+       72        - port bits
+    63931  8397.03 cells
+     4574  400.134   AND2x2_ASAP7_75t_R
+     1323  115.736   AND3x1_ASAP7_75t_R
+      219   22.351   AND4x1_ASAP7_75t_R
+       99   11.547   AND5x1_ASAP7_75t_R
+      172   40.124   AO211x2_ASAP7_75t_R
+     5075  443.961   AO21x1_ASAP7_75t_R
+      212    30.91   AO221x1_ASAP7_75t_R
+      150   26.244   AO222x2_ASAP7_75t_R
+      196   25.719   AO22x1_ASAP7_75t_R
+       62   14.463   AO31x2_ASAP7_75t_R
+      609   71.034   AO32x1_ASAP7_75t_R
+        8    1.166   AO33x2_ASAP7_75t_R
+       70   12.247   AOI211x1_ASAP7_75t_R
+     1060  123.638   AOI21x1_ASAP7_75t_R
+       43    8.777   AOI221x1_ASAP7_75t_R
+       55    8.019   AOI22x1_ASAP7_75t_R
+     4529 1.72E+03   DFFASRHQNx1_ASAP7_75t_R
+      703  204.995   DFFHQNx1_ASAP7_75t_R
+     5438  237.858   INVx1_ASAP7_75t_R
+     2778  364.529   MAJx2_ASAP7_75t_R
+     4711  412.118   NAND2x1_ASAP7_75t_R
+      401   64.312   NAND3x1_ASAP7_75t_R
+     2132  186.507   NOR2x1_ASAP7_75t_R
+      148   23.736   NOR3x1_ASAP7_75t_R
+      775   90.396   OA211x2_ASAP7_75t_R
+     2000   204.12   OA21x2_ASAP7_75t_R
+       11    2.566   OA221x2_ASAP7_75t_R
+      310   54.238   OA222x2_ASAP7_75t_R
+      358   52.196   OA22x2_ASAP7_75t_R
+       94   20.558   OA31x2_ASAP7_75t_R
+       17    2.479   OA33x2_ASAP7_75t_R
+     2824  329.391   OAI21x1_ASAP7_75t_R
+     2874  419.029   OAI22x1_ASAP7_75t_R
+     4577  400.396   OR2x2_ASAP7_75t_R
+     1415  123.784   OR3x1_ASAP7_75t_R
+     1681  171.563   OR4x1_ASAP7_75t_R
+       41    4.782   OR5x1_ASAP7_75t_R
+     9917 1.59E+03   XNOR2x2_ASAP7_75t_R
+     2270  364.063   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_fp32_exp_pos_cr_rne': 8397.030240
+     of which used for sequential elements: 1921.848120 (22.89%)
+

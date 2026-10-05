@@ -1,0 +1,34 @@
+{
+  "default_preflight": "PASS_READ_ONLY_WITH_REVIEWED_THREAD_ENVIRONMENT",
+  "docs_changed": false,
+  "engine_RTL_changed": false,
+  "execution_claims": {
+    "adoption": false,
+    "arithmetic_domain_qualification": false,
+    "fullfield": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "expected": {
+    "edge_samples": 1029,
+    "emitted": 16,
+    "issues": 16,
+    "loader_samples": 1029,
+    "pops": 16,
+    "pushes": 16,
+    "rows": 2,
+    "valid_configuration_writes": 25
+  },
+  "full_program_calendar": {
+    "L0_delta_schedule_words_per_position": 224,
+    "L0_phase_count": 28,
+    "L20": "PENDING_RETAINED_METADATA_OWNER_HANDOFF",
+    "Maxwell": "PENDING_COMPOSED_CALENDAR_OWNER_JOIN"
+  },
+  "next_execution": "One fresh bounded build and one LAT8 positive simulation after parent source-bound GO; qualify new loader/admission checks on unchanged selected full-row RTL. No repeat production5 negative launch.",
+  "runner_tests": 12,
+  "source_commit": "dc1c9fbb49306480a30d552f80d3c364c173f020",
+  "source_prepare_tests": 14,
+  "stale_SMIN5_refusal_before_claim_service_compile": true,
+  "status": "RUNNER_PREPARED_NOT_EXECUTED"
+}

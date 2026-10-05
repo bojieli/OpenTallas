@@ -1,0 +1,40 @@
+.......F...........                                                      [100%]
+=================================== FAILURES ===================================
+________ test_original_group_contract_checks_remain_mandatory[template] ________
+
+owner = (<h3_ds_checkpoint_provider_r30.Provider object at 0x770be5272aa0>, PosixPath('/tmp/pytest-of-ubuntu/pytest-6928/bound-artifact0/bound_native.json.gz'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x770be5271900>
+field = 'template'
+
+    @pytest.mark.parametrize('field',['template','provider','writer','rank'])
+    def test_original_group_contract_checks_remain_mandatory(owner,monkeypatch,field):
+        p,path=owner;module=peer('h4_c0_ds_tiled_continuation');old=module.GroupOperandTiles
+        class Mutant(old):
+            def __init__(self):
+                super().__init__();self.parents=copy.deepcopy(self.parents);pc=next(iter(self.parents));row=self.parents[pc]
+                if field=='template':row['new_template']='unapproved'
+                if field=='provider':row['provider_bindings']={}
+                if field=='writer':row['writes']=[]
+                if field=='rank':row['actual_rank_template_bindings']=[]
+        monkeypatch.setattr(module,'GroupOperandTiles',Mutant)
+>       with pytest.raises(ValueError,match='actual current'):bound_tiled_class()(p,native_artifact_path=path,original_native_artifact_path=O)
+
+tests/test_ds_hbm_bound_engine_r43.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_hbm_bound_engine_r43.bound_tiled_class.<locals>.BoundTiled object at 0x770be5272860>
+provider = <h3_ds_checkpoint_provider_r30.Provider object at 0x770be5272aa0>
+
+    def __init__(self,provider,*,native_artifact_path,original_native_artifact_path):
+        self.lineage=validate_lineage(provider,original_native_artifact_path=original_native_artifact_path,bound_native_artifact_path=native_artifact_path)
+        self.provider=provider;self.plan=original.GroupOperandTiles()
+        self.bridge=original.SourceViews(provider,native_content_sha256=self.lineage['bound_native_content_sha256'])
+        # Preserve every original group template/provider/writer/rank check.
+        for pc,parent in self.plan.parents.items():
+            ops=[o for o in provider.native['instructions'] if o['pc']==pc];tid=parent['new_template']
+>           if len(ops)!=1 or provider.native['templates'].get(tid)!=self.plan.templates[tid]:raise ValueError('actual current arithmetic template mismatch')
+E           KeyError: 'unapproved'
+
+tools/ds_hbm_bound_engine_r43.py:35: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_bound_engine_r43.py::test_original_group_contract_checks_remain_mandatory[template]

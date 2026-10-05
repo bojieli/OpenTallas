@@ -1,0 +1,20 @@
+{
+  "actual_source_prefix_PID": 1791203,
+  "actual_source_prefix_commit": "1eea54934831c0f859f7f9a828cea2999ae98513",
+  "arithmetic_independence": "hdc_golden_v41 + hdc_golden + independent checkpoint and seeded initializer; no native Machine/compiler/provider arithmetic",
+  "comparison_observation_gap": "r39 validates actual publication hashes in memory but stores only version names in numeric-call events; complete source-bound observed output digest/bytes capture needed. Running job unchanged, no replay launched.",
+  "expected_outputs_sha256": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+  "future_use_state": "expected new128-row window and all rank-owned outputs included; no change to live provider leases",
+  "golden_PID": 1813602,
+  "golden_elapsed_s": 12.762012045,
+  "golden_returncode": 0,
+  "golden_session": 92234,
+  "input_manifest_sha256": "1e0c77e10c287d570d2062620514ca72ea44747e2051891bfc7d439c555e8424",
+  "native_writer_metadata_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+  "output_count": 1184,
+  "payload_file_bytes": 1017600,
+  "payload_file_count": 454,
+  "reference_tool_commit": "bd63179e6",
+  "scope": "layer0 PC1-9 only; immutable seeded entering context, not decoded million-token history; no hardware/fulltoken qualification",
+  "status": "INDEPENDENT_PC1_9_REFERENCE_READY_ACTUAL_COMPARISON_PENDING"
+}

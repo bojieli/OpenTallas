@@ -1,0 +1,36 @@
+--- protected/manifest_runner
++++ additive/RLIMIT_runner
+@@ -1,7 +1,7 @@
+ """Exactly one independently approved aggregate-capped native relink. No runtime."""
+ import argparse,hashlib,json,os,selectors,shutil,signal,subprocess,time,uuid
+ from pathlib import Path
+-import w17_manifest_bound_relink_plan as plans
++import w17_rlimit_bound_relink_plan as plans
+ ROOT=Path(__file__).resolve().parents[1]
+ 
+ def sha(path):
+@@ -16,7 +16,7 @@
+     if g.get('schema')!=plans.GO_SCHEMA or g.get('scope')!='NATIVE_RELINK_ONLY' or g.get('plan_sha256')!=sha(plan_path) or g.get('source_commit')!=p['source_commit'] or g.get('image_binding')!=p['image_binding'] or g.get('execution_allowed') is not True or g.get('runtime_allowed') is not False:raise ValueError('fresh independent relink GO')
+     cpu_ids=g.get('host_CPU_ids')
+     if not isinstance(cpu_ids,list) or len(cpu_ids)!=2 or any(type(x) is not int for x in cpu_ids) or len(set(cpu_ids))!=2 or not set(cpu_ids)<=os.sched_getaffinity(0):raise ValueError('fresh twoCPU local admission')
+-    expected_tools={name:sha(ROOT/name) for name in ['tools/run_w17_manifest_bound_native_relink.py','tools/w17_manifest_bound_relink_plan.py','tools/check_w17_pinned_image_identity.py']}
++    expected_tools={name:sha(ROOT/name) for name in ['tools/run_w17_rlimit_bound_native_relink.py','tools/w17_rlimit_bound_relink_plan.py','tools/w17_relink_rlimit_entry.py','tools/w17_manifest_bound_relink_plan.py','tools/check_w17_pinned_image_identity.py']}
+     if g.get('tool_sha256')!=expected_tools:raise ValueError('fresh GO runner/source pins')
+     for name,h in p['input_sha256'].items():
+         path=bundle/name.lstrip('/')
+@@ -39,13 +39,9 @@
+     raw=subprocess.check_output(['sudo','-n','cat',str(config)])
+     image_receipt=plans.validate_local_identity(p,inspected[0],raw,driver)
+     output.mkdir(exist_ok=False)
+-    name='w17-manifest-config-relink-'+uuid.uuid4().hex[:12];cpus=','.join(map(str,json.loads(go_path.read_text())['host_CPU_ids']))
+-    replacements={'FRESH_OWNED_RELINK_NAME':name,'TWO_ADMITTED_HOST_CPUS':cpus,'HOST_UID:HOST_GID':f'{os.getuid()}:{os.getgid()}','VERIFIED_INPUT_BUNDLE:/inputs:ro':f'{bundle.resolve()}:/inputs:ro','FRESH_OUTPUT:/output:rw':f'{output.resolve()}:/output:rw'}
++    name='w17-rlimit-relink-'+uuid.uuid4().hex[:12];cpus=','.join(map(str,json.loads(go_path.read_text())['host_CPU_ids']))
++    replacements={'FRESH_OWNED_RELINK_NAME':name,'TWO_ADMITTED_HOST_CPUS':cpus,'HOST_UID:HOST_GID':f'{os.getuid()}:{os.getgid()}','VERIFIED_INPUT_BUNDLE:/inputs:ro':f'{bundle.resolve()}:/inputs:ro','FRESH_OUTPUT:/output:rw':f'{output.resolve()}:/output:rw','VERIFIED_CAP_ENTRY:/launcher/entry.py:ro':f'{(ROOT/plans.ENTRY).resolve()}:/launcher/entry.py:ro'}
+     argv=[replacements.get(x,x) for x in p['future_container_argv']]
+-    # Tool identity commands and relink share this same capped container.
+-    image_index=argv.index(p['image'])
+-    tool_script='set -eu; g++ --version; sha256sum "$(readlink -f "$(command -v g++)")"; exec "$@"'
+-    argv=argv[:image_index+1]+['sh','-c',tool_script,'w17-native-relink']+argv[image_index+1:]
+     handle=dict(image_binding_verified=image_receipt,supervisor_PID=os.getpid(),owned_container=name,argv=argv,plan_sha256=sha(plan_path),go_sha256=sha(go_path))
+     with (output/'handle.json').open('x') as f:f.write(json.dumps(handle,indent=2)+'\n')
+     print(json.dumps(handle),flush=True)

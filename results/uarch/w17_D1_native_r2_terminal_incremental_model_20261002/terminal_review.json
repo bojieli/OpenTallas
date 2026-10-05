@@ -1,0 +1,24 @@
+{
+  "PCH_bytes": 1298798198,
+  "archive_count": 0,
+  "binary_present": false,
+  "causal_service_bound": "BOUND_MISSING",
+  "file_size_limits": [
+    -1,
+    -1
+  ],
+  "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+  "numerical_credit": false,
+  "object_bytes": 6655304,
+  "original_cause": "UNOBSERVED",
+  "peak_memory_bytes": 8058298368,
+  "physical_credit": false,
+  "runtime_invocations": 0,
+  "systemd_unit": "w17-D1-native-r2-owned-20261002-r1.service",
+  "terminal_receipt_sha256": "0a63333ce3b073ff65fc53f1619cbf406ce587c56a31ed213c4eef81fbf34aa5",
+  "termination_reason": "NATIVE_WALL_CAP",
+  "token_credit": false,
+  "verdict": "FAIL_NATIVE_BUILD",
+  "verified_object_count": 28,
+  "wall_s": 905.4017112981528
+}

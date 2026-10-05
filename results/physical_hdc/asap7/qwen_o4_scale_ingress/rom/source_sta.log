@@ -1,0 +1,103 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+ROM_SOURCE_TO_CAPTURE
+Startpoint: g_rom_u_scale_rom
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: _68804_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ g_rom_u_scale_rom/clk (ot_rom_8192x266_m8)
+ 786.01  786.01 v g_rom_u_scale_rom/rd_out[36] (ot_rom_8192x266_m8)
+ 302.66 1088.67 ^ _68596_/Y (NAND2xp33_ASAP7_75t_R)
+ 124.16 1212.83 v _68597_/Y (OAI21xp33_ASAP7_75t_R)
+   0.02 1212.85 v _68804_/D (DFFHQNx1_ASAP7_75t_R)
+        1212.85   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+   0.00  920.00   clock network delay (ideal)
+   0.00  920.00   clock reconvergence pessimism
+         920.00 ^ _68804_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -21.82  898.18   library setup time
+         898.18   data required time
+---------------------------------------------------------
+         898.18   data required time
+        -1212.85   data arrival time
+---------------------------------------------------------
+        -314.67   slack (VIOLATED)
+
+
+COMPLETED_SUM_TO_SCALE_LANE
+Startpoint: completed_sum[3] (input port clocked by core_clk)
+Endpoint: _69032_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ completed_sum[3] (in)
+  91.51  275.51 ^ _69032_/D (DFFHQNx1_ASAP7_75t_R)
+         275.51   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+   0.00  920.00   clock network delay (ideal)
+   0.00  920.00   clock reconvergence pessimism
+         920.00 ^ _69032_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -41.47  878.53   library setup time
+         878.53   data required time
+---------------------------------------------------------
+         878.53   data required time
+        -275.51   data arrival time
+---------------------------------------------------------
+         603.02   slack (MET)
+
+
+SCALE_GROUP_ENABLE
+Startpoint: scale_group_re (input port clocked by core_clk)
+Endpoint: _68996_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v scale_group_re (in)
+2128.86 2312.86 ^ _68212_/Y (NAND2xp33_ASAP7_75t_R)
+ 114.61 2427.47 v _68213_/Y (OAI21xp33_ASAP7_75t_R)
+   0.04 2427.51 v _68996_/D (DFFHQNx1_ASAP7_75t_R)
+        2427.51   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+   0.00  920.00   clock network delay (ideal)
+   0.00  920.00   clock reconvergence pessimism
+         920.00 ^ _68996_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -45.91  874.09   library setup time
+         874.09   data required time
+---------------------------------------------------------
+         874.09   data required time
+        -2427.51   data arrival time
+---------------------------------------------------------
+        -1553.42   slack (VIOLATED)
+
+

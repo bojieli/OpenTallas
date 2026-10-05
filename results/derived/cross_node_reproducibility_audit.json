@@ -1,0 +1,168 @@
+{
+  "all_reproduce": true,
+  "changes": [
+    {
+      "change": "BF16 add: ten-deep normalise cascade -> leading-zero count",
+      "node_offset_after": 8.172740654470164,
+      "node_offset_before": 10.438331335356166,
+      "nodes": {
+        "asap7": {
+          "after": {
+            "core_area_um2": 311.793,
+            "fmax_hz": 505247000.0,
+            "record": "results/physical_abi3/asap7/bf16_add/flat_lzc.json",
+            "standard_cell_count": 1549,
+            "status": "not_met"
+          },
+          "area_ratio": 0.48820790169232503,
+          "available": true,
+          "before": {
+            "core_area_um2": 638.648,
+            "fmax_hz": 363970000.0,
+            "record": "results/physical_abi3/asap7/bf16_add/rne_combinational.json",
+            "standard_cell_count": 3131,
+            "status": "not_met"
+          },
+          "cell_ratio": 0.49473011817310764,
+          "speedup": 1.3881556172211995
+        },
+        "sky130hd": {
+          "after": {
+            "core_area_um2": 18893.1,
+            "fmax_hz": 61821000.0,
+            "record": "results/physical_abi3/sky130hd/bf16_add/flat_lzc.json",
+            "standard_cell_count": 1145,
+            "status": "pass"
+          },
+          "area_ratio": 0.5851340260464252,
+          "available": true,
+          "before": {
+            "core_area_um2": 32288.5,
+            "fmax_hz": 34868600.0,
+            "record": "results/physical_abi3/sky130hd/bf16_add/rne_combinational.json",
+            "standard_cell_count": 2008,
+            "status": "pass"
+          },
+          "cell_ratio": 0.5702191235059761,
+          "speedup": 1.7729705236229731
+        }
+      },
+      "reproduces": true,
+      "speedup_agreement": 1.2772130888121127,
+      "why": "the same function, SAT-proven equivalent over all 2**32 input pairs; only the circuit structure differs"
+    },
+    {
+      "change": "BF16 add: combinational -> five-stage pipeline",
+      "node_offset_after": 8.160304348072595,
+      "node_offset_before": 10.438331335356166,
+      "nodes": {
+        "asap7": {
+          "after": {
+            "core_area_um2": 362.313,
+            "fmax_hz": 1439290000.0,
+            "record": "results/physical_abi3/asap7/bf16_add/pipe_5stage.json",
+            "standard_cell_count": 1386,
+            "status": "pass"
+          },
+          "area_ratio": 0.5673125101777504,
+          "available": true,
+          "before": {
+            "core_area_um2": 638.648,
+            "fmax_hz": 363970000.0,
+            "record": "results/physical_abi3/asap7/bf16_add/rne_combinational.json",
+            "standard_cell_count": 3131,
+            "status": "not_met"
+          },
+          "cell_ratio": 0.4426700734589588,
+          "speedup": 3.954419320273649
+        },
+        "sky130hd": {
+          "after": {
+            "core_area_um2": 22502.8,
+            "fmax_hz": 176377000.0,
+            "record": "results/physical_abi3/sky130hd/bf16_add/pipe_5stage.json",
+            "standard_cell_count": 1140,
+            "status": "pass"
+          },
+          "area_ratio": 0.6969292472552147,
+          "available": true,
+          "before": {
+            "core_area_um2": 32288.5,
+            "fmax_hz": 34868600.0,
+            "record": "results/physical_abi3/sky130hd/bf16_add/rne_combinational.json",
+            "standard_cell_count": 2008,
+            "status": "pass"
+          },
+          "cell_ratio": 0.5677290836653387,
+          "speedup": 5.058333285534837
+        }
+      },
+      "reproduces": true,
+      "speedup_agreement": 1.27915956196188,
+      "why": "the headline datapath change; same arithmetic, cut into stages"
+    },
+    {
+      "change": "reduction: serial accumulation -> balanced tree",
+      "node_offset_after": 7.512691836377429,
+      "node_offset_before": 6.790870565913338,
+      "nodes": {
+        "asap7": {
+          "after": {
+            "core_area_um2": 1624.97,
+            "fmax_hz": 1287450000.0,
+            "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr.json",
+            "standard_cell_count": 5195,
+            "status": "pass"
+          },
+          "area_ratio": 0.7253617948237228,
+          "available": true,
+          "before": {
+            "core_area_um2": 2240.22,
+            "fmax_hz": 455262000.0,
+            "record": "results/physical_abi3/asap7/reduction_s8_g2/pnr_serial_chain.json",
+            "standard_cell_count": 7507,
+            "status": "pass"
+          },
+          "cell_ratio": 0.6920207806047689,
+          "speedup": 2.8279320479196595
+        },
+        "sky130hd": {
+          "after": {
+            "core_area_um2": 98707.2,
+            "fmax_hz": 171370000.0,
+            "record": "results/physical_abi3/sky130hd/reduction_s8_g2/pnr.json",
+            "standard_cell_count": 4006,
+            "status": "pass"
+          },
+          "area_ratio": 0.7196920205319645,
+          "available": true,
+          "before": {
+            "core_area_um2": 137152.0,
+            "fmax_hz": 67040300.0,
+            "record": "results/physical_abi3/sky130hd/reduction_s8_g2/pnr_serial_chain.json",
+            "standard_cell_count": 7035,
+            "status": "pass"
+          },
+          "cell_ratio": 0.5694385216773277,
+          "speedup": 2.5562236445839295
+        }
+      },
+      "reproduces": true,
+      "speedup_agreement": 1.1062928918255723,
+      "why": "identical sum -- integer addition is associative and the combinational form is SAT-proven equivalent"
+    }
+  ],
+  "git": {
+    "commit": "6b9c1e8a524292869a4cb3fa703b607a01283f86",
+    "worktree_dirty": true
+  },
+  "node_offset_spread": 1.5371123973045806,
+  "question": "Do the redesign's speedups reproduce on a second, unrelated PDK, or are they an artefact of the ASAP7 vehicle?",
+  "refusals": [
+    "not-an-n7-calibration: two open nodes agreeing shows a change is about circuit structure rather than about one PDK. It says nothing about what TSMC N7 would measure, and it does not turn a predictive result into a silicon result.",
+    "ratio-argument-depends-on-a-uniform-offset: the claim that a node offset cancels out of a within-node ratio is only sound if the offset IS roughly uniform. node_offset_spread measures that rather than assuming it; a large spread would undermine the whole comparison.",
+    "three-changes-not-the-whole-design: the compute unit and the vector unit are not re-routed on SKY130 here, because the compute unit needs SRAM macros that differ between the platforms and a macro swap is a different design, not the same one on another node."
+  ],
+  "schema": "opentallas.audit.cross_node_reproducibility.v1",
+  "tolerance": 1.35
+}

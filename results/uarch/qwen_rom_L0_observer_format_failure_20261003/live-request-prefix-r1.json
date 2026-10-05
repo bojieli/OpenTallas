@@ -1,0 +1,35 @@
+{
+  "first_header": [
+    573,
+    0,
+    0,
+    7,
+    0,
+    28
+  ],
+  "full_return_gate_pass": false,
+  "last_four_accepted_issue_lines": [
+    "I 807 0 0 0 0 13 1 128 1 1 1 131072 1 4096 65536 16240 512 8192 1 2 9 8 1 5111 1 8 1 1 0 0 0\n",
+    "I 807 0 1 0 0 13 1 128 1 1 1 131072 1 4096 65536 16240 512 8192 1 2 9 8 1 5111 1 8 1 1 0 0 0\n",
+    "I 807 0 2 0 0 13 1 128 1 1 1 131072 1 4096 65536 16240 512 8192 1 2 9 8 1 5111 1 8 1 1 0 0 0\n",
+    "I 807 0 3 0 0 13 1 128 1 1 1 131072 1 4096 65536 16240 512 8192 1 2 9 8 1 5111 1 8 1 1 0 0 0\n"
+  ],
+  "last_header_in_file_order": [
+    857,
+    0,
+    3,
+    1517,
+    2,
+    200123
+  ],
+  "native_alive": true,
+  "observed_epoch": 1790989418.3405168,
+  "path": "/home/ubuntu/w12/qrom-observer-L0-review-f5-20261003-r1/accepted-state.raw",
+  "prefix_bytes": 65519616,
+  "prefix_sha256": "d3314c45e3f429397b47b24672ebd50329d223fa3cce682c26f20d1266114a99",
+  "provider_ACK_or_retire_observed": false,
+  "runtime_terminal_present": false,
+  "schema": "LIVE_APPEND_ONLY_PREFIX_OBSERVATION",
+  "source_request_headers": 393211,
+  "terminal_or_complete_request_coverage": false
+}

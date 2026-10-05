@@ -1,0 +1,69 @@
+{
+  "actual_production_policy_qualified": false,
+  "authoritative_model": "results/uarch/qwen_rom_parent_context_service_20261002/model-r4.json",
+  "blocking_dependency": "Captured original runtime path is absent; original capture has no KV_state_files or program_images. Current source truncates tag16 to12 and maps returns only on return_arb==6. Actual service successor/persistent production trace unavailable.",
+  "build_admitted": false,
+  "claim": "Finite source-sized candidate and explicit3k deficit only. No actual sustained PHY bandwidth or complete slot proof.",
+  "counterparty": "Kepler/Russell native service",
+  "default_enabled": false,
+  "finite": {
+    "assembly_slots_per_stack": 1024,
+    "burst_slots_per_stack": 16,
+    "held_response_bytes_per_stack": 16384,
+    "owner_outstanding_limit": 2,
+    "read_sectors_max_per_stack": 256,
+    "request_entries_per_PC": 64,
+    "return_entries_per_PC": 32,
+    "reverse_grant_and_reader_drain_required_before_reuse": true,
+    "slots_per_lane": "one each,second at0/1",
+    "tail_write_LEN": 1,
+    "write_residences_per_stack": 4
+  },
+  "fixed_interface": {
+    "PHY_abstract_command_bits": 344,
+    "actual_sustained_PHY_HBM_Bps": null,
+    "current_command_bits": 339,
+    "extra_PHY_ports_claimed": false,
+    "native_LEN6_to_PHY_LEN5": "LEN1..16 retain positive counts, BEAT0..15 zeroextends into native5; licensed PHY semantics and shim gate still required.",
+    "payload_B_per_command": 32,
+    "ports_per_stack": 1,
+    "proposed_command_bits": 343,
+    "source_column_ceiling_Bps_per_rank": 128000000000.0,
+    "source_tag_width_change": "command_t.tag12 ->16 to retain existing nativePC tag16 owner bits. Required additive source successor, not current-source fact.",
+    "stacks": 4,
+    "three_k_requirement_ref": "results/uarch/qwen_rom_kv_rate_risk_20261002/model_r3.json#/three_k_requirement"
+  },
+  "layer_rule": "36 sequential compute stages; previous-reader lease drain gates next reuse. Prefetch may occupy only the other54row window, all16 bursts/stack reserve assembly/write/grant credits; no whole-layer HBM reload independent of actual attention demand.",
+  "live_jobs": [],
+  "minimum_binding": [
+    "READ_EXPECT with actual owner,producerPC,absolute sector and32canonicalbytes from actual retained state; no constructed zeros or random final payload",
+    "ALLOC at actual valid&&ready with identity192, fullnative tag16, base,LEN1..16, IRSslot and ownerlane",
+    "CMD one32Bcolumn/stack/edge with fulltag16 in proposed343bit command, LEN/BEAT shim and real row/bank/refresh/turnaround/backpressure",
+    "OWNED_DATA or WRITE_VISIBLE, reverse404 consumed receipt, owner grant consumed, destination macro-visible commit, lastreader drain and tag quarantine release"
+  ],
+  "model_sha256": "5666f8fb189e02ce1e638a26a62993a766fb1da90c7dad8edc2f13d53496483d",
+  "next_necessary_output": "Actual producer/state/accepted-demand journal joined to finite command/owner/return/grant/global-fill/window calendar and named baseline slots. Preserve all original numerical and physical failures.",
+  "owns": [
+    "Actual persistent producer/state provider, allocation and tag receipts",
+    "Joint command/owner/fill/PHY calendar"
+  ],
+  "parent": "28d01b35ac5c82595e5c8a96200cd1f6ecb4269f",
+  "return_and_grant": {
+    "combined_ingress_mux_inputs_per_stack": 15,
+    "current_arbiter_lower_bound_s": 0.008249472,
+    "current_shared_return_arbiter_II_edges": 7,
+    "inherited_fixture_global_SER_arbiter_ceiling_data_Bps": 14400000000.0,
+    "necessary_successor": "Registered fair36-way read/visible-write arbiter, full16tag owner demux, per-owner ready; emit at most one lookup/edge. No allocation or write completion bypass.",
+    "new_mux_bits": 26152,
+    "new_mux_reservation_um2": 9151.10784,
+    "owned467_buses_per_stack": 1,
+    "proposed_arbiter_FF": 2432,
+    "proposed_arbiter_cell_reservation_um2": 14892.12864,
+    "proposed_arbiter_mux_bits": 39620,
+    "proposed_shared_return_arbiter_II_edges": 1,
+    "receipts_per_data_or_write_sector": 2,
+    "source_bus_core_ceiling_data_Bps_per_rank": 64000000000.0,
+    "source_successor_instantiated": false,
+    "target_endpoint": "Four independent STREAM stack assembly/grant endpoints; one global64Bfill. Serial producer remains separate. Native fixture globalSERresult arbiter is not sustainable production topology."
+  }
+}

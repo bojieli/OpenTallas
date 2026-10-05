@@ -1,0 +1,15 @@
+* NGSPICE file created from sky130_rom_slice.ext - technology: sky130A
+
+.subckt sky130_rom_slice VGND VPWR WL_PRESENT EN_PRESENT PRE_PRESENT Q_PRESENT WL_ABSENT
++ EN_ABSENT PRE_ABSENT Q_ABSENT
+X0 VGND EN_ABSENT NROW_ABSENT/S VGND sky130_fd_pr__nfet_01v8 ad=0.29 pd=2.58 as=0.29 ps=2.58 w=1 l=0.15
+X1 VPWR PRE_ABSENT BL_ABSENT VPWR sky130_fd_pr__pfet_01v8 ad=0.29 pd=2.58 as=0.29 ps=2.58 w=1 l=0.15
+X2 VPWR BL_PRESENT Q_PRESENT VPWR sky130_fd_pr__pfet_01v8 ad=1.16 pd=10.32 as=0.29 ps=2.58 w=1 l=0.15
+X3 VPWR PRE_PRESENT BL_PRESENT VPWR sky130_fd_pr__pfet_01v8 ad=0 pd=0 as=0.29 ps=2.58 w=1 l=0.15
+X4 NROW_PRESENT/S WL_PRESENT BL_PRESENT VGND sky130_fd_pr__nfet_01v8 ad=0.58 pd=5.16 as=0.29 ps=2.58 w=1 l=0.15
+X5 VPWR BL_ABSENT Q_ABSENT VPWR sky130_fd_pr__pfet_01v8 ad=0 pd=0 as=0.29 ps=2.58 w=1 l=0.15
+X6 VGND BL_PRESENT Q_PRESENT VGND sky130_fd_pr__nfet_01v8 ad=1.16 pd=10.32 as=0.29 ps=2.58 w=1 l=0.15
+X7 VGND BL_ABSENT Q_ABSENT VGND sky130_fd_pr__nfet_01v8 ad=0 pd=0 as=0.29 ps=2.58 w=1 l=0.15
+X8 VGND EN_PRESENT NROW_PRESENT/S VGND sky130_fd_pr__nfet_01v8 ad=0 pd=0 as=0 ps=0 w=1 l=0.15
+X9 NROW_ABSENT/S WL_ABSENT ROM_DRAIN_ABSENT VGND sky130_fd_pr__nfet_01v8 ad=0.58 pd=5.16 as=0.29 ps=2.58 w=1 l=0.15
+.ends

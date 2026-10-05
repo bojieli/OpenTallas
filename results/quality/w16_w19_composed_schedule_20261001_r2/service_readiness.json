@@ -1,0 +1,193 @@
+{
+  "schema": "opentallas.w19.composed-service-readiness.v1",
+  "graph_sha256": "ba0d17e0af29a02ba892d7a50f56cf45a07c82bb1adc6aef3204006ae467f9a6",
+  "source_pins": {
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/receipt.json": {
+      "commit": "a556ad457",
+      "sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b"
+    },
+    "results/rtl/w19_checkpoint_production_20261001/gpu-norm-calendar-r1.json": {
+      "commit": "5a55e676b",
+      "sha256": "eb20e7d3e58a1fc75f97f18bbfc6da1aae12307d49ea19514e68803a7a83e49f"
+    },
+    "results/quality/w16_w19_composed_schedule_20261001/moe_sum_calendar.json": {
+      "commit": "01088553b",
+      "sha256": "5139c782dd4392e5901309c789d8a581af811407aa058b7dff0af81d1a8f881f"
+    },
+    "results/uarch/w19_transport_contract_20261001/contract_r1.json": {
+      "commit": "685fdce29",
+      "sha256": "7c86ca6d2103dcd859876d33c00f11d319be46f95292e31deaebf71d877bfe6e"
+    },
+    "results/rtl/w19_checkpoint_production_20261001/write-commit-contract-r1.json": {
+      "commit": "f91b15c0c",
+      "sha256": "d650e7e027c29f817e034362273e3c0679f32dfb6a4e3bb0cf03009bee85f980"
+    }
+  },
+  "finite_service_calendar": {
+    "tool": "tools/w19_finite_service_calendar.py",
+    "profile_path": "finite_service_profile.json",
+    "profile": {
+      "schema": "opentallas.w19.finite-service-calendar-profile.v1",
+      "status": "EXECUTABLE_COMPONENT_CALENDAR_BACKEND_AND_CONSUMER_BINDINGS_PENDING",
+      "source_pins": {
+        "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json": {
+          "commit": "8625c420a",
+          "sha256": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c"
+        },
+        "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": {
+          "commit": "07a07ec5d",
+          "sha256": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+        },
+        "results/uarch/qwen_hbm_connected_20261001/publication_model_negative_gate.json": {
+          "commit": "66aa67ed1",
+          "sha256": "287d997d2a5aefe6267b58f3f6b4a853067e1df6fb430e29fd67ccaef3c92b19"
+        },
+        "results/rtl/w11_ckv_current_readmode_binding_20261001.json": {
+          "commit": "758d3425c",
+          "sha256": "b9ec0aec40b241da03dfa6b793df1ccb5d2a9ce99ef91dc3395003d84c5bb1b3"
+        }
+      },
+      "calendar_source_sha256": "f36094c77cf0a63c65d796ad2fd3df45f758c3bef8ccfbc5fa196992f879f6df",
+      "clocks": {
+        "fast_hz": 1200000000,
+        "consumer_hz": 900000000,
+        "phase_zero_candidate": true
+      },
+      "route": {
+        "capture_cycle": 0,
+        "local32_mux_cycle": 1,
+        "stack4_merge_cycle": 2,
+        "destination_landing_cycle": 3,
+        "macro_write_ready_cycle": 4,
+        "earliest_credit_cycle": 5,
+        "mandatory_baseline_landing_credits": 2,
+        "credits_include_inflight": true,
+        "ideal_no_stall_grants_per_bank": "2/5 cycles",
+        "corrected36client_ceiling_bytes_per_cycle": "1843.2",
+        "role": "Mandatory finite-resource baseline correction, not optional performance optimization"
+      },
+      "return_budget": {
+        "controllers": 4,
+        "PCs_per_controller": 32,
+        "PC_landing_entries": 2,
+        "client_sector_banks": 4,
+        "whole_sector_bits": 256,
+        "bytes_per_controller_cycle": 750,
+        "whole_sectors_per_cycle": 23,
+        "note": "Conservative no fractional-sector carry; same backend byte budget must include writes in a complete provider."
+      },
+      "cdc": {
+        "destination_sync_stages": 2,
+        "registered_delivery_stages": 1,
+        "priced_both_directions": true,
+        "physical_qualified": false,
+        "note": "Coincident edge conservatively uses next destination edge. Candidate phase/latency, exact rational calendar; no contextual closure."
+      },
+      "writes": {
+        "retained_transactions_per_controller": 4,
+        "ACK_reserved_slots": 4,
+        "actual_WR_schedule_and_visibility_required": true,
+        "CWL_plus_burst_ps": 7274,
+        "request_accept_is_completion": false,
+        "credit_release": "consumer complete followed by reverseCDC",
+        "RMW": "actual read/merge then write on same ingress; sector lock to consumer completion"
+      },
+      "publication_owner": "66aa67ed1; use stored row/epoch/producer commit+consumer reader refs, not echoed request epoch",
+      "crossbar_known_addons": {
+        "frozen_die_mm2": 165.8882032530048,
+        "independent_route_candidate_die_mm2": 166.0891271442048,
+        "floorplan_PASS": false,
+        "timing_PASS": false
+      },
+      "candidate": "Additional4route-entry geometry separate in owner record; not enabled or adopted here.",
+      "shared_controller_calendar_bound": false,
+      "actual_programme_descriptor_trace": null,
+      "DeepSeek_SM_clients": 32,
+      "DeepSeek_total_client_population": null,
+      "DeepSeek_service_endpoint_roles": "32 ordinary SM baseline; additional endpoint roles/ports remain unbound, no silent36-client copy",
+      "graph_integration": "Consumer contracts provide actual backend events and finite readiness. Until complete, wholegraph costs remain missing; component bounds cannot substitute a phase.",
+      "physical_admission": false,
+      "maximum_qualified_clock_hz": null,
+      "full_token_cycles": null,
+      "full_token_rate": null
+    },
+    "complete_phase_provider": false
+  },
+  "scope": "Entire2213-operation graph; nonzero HC local calendar bound, transport components not substituted for complete service.",
+  "bound_local_model_cost_nodes": 1245,
+  "missing_cost_nodes": 12384,
+  "HC_serialized_local_cycles_per_operator": 7007,
+  "HC_operations": 80,
+  "norm_compute_candidate_cycles": {
+    "hc_pre_norm": 558,
+    "final_norm": 558,
+    "hc_post": 530
+  },
+  "moe_sum_compute_candidate_cycles": 85,
+  "moe_sum_compute_operations": 40,
+  "norm_compute_scope": "Nonzero RF/shared/opcode calendar only; collector transport, pre/norm handoff, broadcast and fences remain missing.",
+  "HC_read_component_floors": {
+    "wave_read_commands_per_controller": [
+      384,
+      384,
+      192
+    ],
+    "wave_bytes_per_controller": [
+      196608,
+      196608,
+      98304
+    ],
+    "ingress_cycles_one_request_per_controller_cycle": [
+      384,
+      384,
+      192
+    ],
+    "return_cycles_32PC_times32B_peak": [
+      192,
+      192,
+      96
+    ],
+    "note": "Bandwidth/ingress lower bounds only, overlap unspecified. Not phase costs: PC ownership, banks, QD/RQD, refresh, return stalls, other clients, landing arbitration, swizzle and CDC pending."
+  },
+  "write_component_floors": {
+    "CWL_ps": 6250,
+    "burst_ps": 1024,
+    "earliest_visible_after_actual_WR_column_ps": 7274,
+    "minimum_registered_ACK_fabric_cycles": 1,
+    "live_transactions_per_controller": 4,
+    "note": "Actual scheduler WR timestamp/visibility event mandatory; these minima cannot replace queued service, physical visibility, CDC, consumer waits or fence."
+  },
+  "full_token_cycles": null,
+  "full_token_rate": null,
+  "physical_admission": false,
+  "maximum_qualified_clock_hz": null,
+  "hardware_adopted": false,
+  "physical_diagnostic": {
+    "status": "SOURCE_BOUND_TERMINAL_FAIL",
+    "source_commit": "000ba0898",
+    "SS_setup_slack_ps": -31.06,
+    "FF_hold_slack_ps": 5.22,
+    "target_period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "delay_derived_period_floor_ps": "864.06",
+    "delay_derived_frequency_ceiling_hz": "50000000000000/43203",
+    "note": "Diagnostic ceiling only; not a qualified clock, no rate credit, no retry. Streaming1.2GHz and serial0.9GHz assumptions unchanged. Immutable terminal receipt and raw corner reports preserved in a556ad457."
+  },
+  "common_service_geometry": {
+    "status": "OWNER_REPORTED_CORRECTION_NOT_ADMITTED",
+    "gather_macros": 400,
+    "area_mm2": "162.284",
+    "slot_fit": false,
+    "note": "Old200-macro layout excluded. Corrected source-bound geometry/area/routes/floorplan and service calendar still required."
+  },
+  "missing_admission": [
+    "finite read controller timing/credits/backpressure and all-client arbitration",
+    "landing/context bank collision ports, transpose/NoC and CDC latency",
+    "actual matrix accepted256/runtime expert descriptor/refill and finite row assignment",
+    "nonHC gather/KV/index/norm/SFU golden GPU instruction calendars",
+    "actual WR-visible ACK interface, RMW locks, paired code/scale commit and epoch fences",
+    "GPU RF/shared staging/SIMD and common service area/routes/floorplan fit",
+    "connected full-token exactness/calibration and contextual SS/FF closure"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "state": "PASS_FULLMAP_STRUCTURE_ONLY_NOT_PHYSICAL",
+  "started_at": "2026-10-01T10:41:39.191846+00:00",
+  "source_commit": "b046de7f0278bae6a28f2bd346303bbc25cc4bac",
+  "tool_commit": "424c00210",
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--cpus",
+    "2",
+    "--memory",
+    "6g",
+    "--memory-swap",
+    "6g",
+    "-v",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r3:/src:ro",
+    "-v",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/fullmap_r2/work:/work",
+    "-w",
+    "/OpenROAD-flow-scripts/flow",
+    "openroad/orfs:latest",
+    "bash",
+    "-lc",
+    "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=2 SYNTH_SCRIPT=/work/companion.tcl synth"
+  ],
+  "checkpoint_sha256": "43bd011874144ce030a170458df01763f3a9f3f9d4a63c5ba24b92327e77e8e8",
+  "script_sha256": "1e52773a57cc1d3e6e6321b323da10316c64bede8836097f0d4961bb50d6d538",
+  "physical_admission": false,
+  "returncode": 0,
+  "structure": {
+    "verdict": "PASS_STRUCTURE_ONLY",
+    "macros": [
+      "\\g_mac[0].g_pp.u_rom0",
+      "\\g_mac[0].g_pp.u_rom1",
+      "\\g_mac[1].g_pp.u_rom0",
+      "\\g_mac[1].g_pp.u_rom1"
+    ],
+    "icg_count": 8,
+    "distinct_wake_flops": [
+      "\\g_wake.g_leaf[0].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[1].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[2].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[3].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[4].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[5].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[6].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[7].wake$_DFF_PN1_"
+    ],
+    "flop_count": 91733,
+    "mapped_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea"
+  }
+}

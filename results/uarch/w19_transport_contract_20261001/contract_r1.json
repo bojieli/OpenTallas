@@ -1,0 +1,197 @@
+{
+  "W16_input_ack": {
+    "GPU_authority": "results/quality/w16_w19_gpu_mapping_scope_20261001/gpu_scope.json",
+    "HC_candidate_owner": "Turing",
+    "acknowledged": true,
+    "allocation_rebuilt": false,
+    "authority_sha256": "c2a43b8aa34543867f4ff8f1585ab791307fbb5fc31d2a0aa87101aac57cc39c",
+    "dedicated_HCP": false,
+    "qualification": "results/uarch/w16_w19_gpu_service_gate_20261001/qualification.json",
+    "sha256": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+    "transport_contract_owner": "W19"
+  },
+  "actual_RTL_gate": false,
+  "address": {
+    "destination_byte_bits": 32,
+    "endpoint_local_rank_and_stack": true,
+    "line_bits": 25,
+    "modulo_or_reload": false,
+    "physical_byte": "region.base[stack] + (virtual_byte // 512)*128 + virtual_byte%128",
+    "sector_bits": 27,
+    "sector_bytes": 32,
+    "stack": "(virtual_byte // 128) % 4",
+    "stripe_bytes": 128
+  },
+  "adopted_token_rate": null,
+  "applicable_designs": {
+    "qwen_HBM": "unqualified; no cost credit",
+    "qwen_ROM": "unchanged",
+    "v41_HBM": "analytical candidate",
+    "v41_ROM": "unchanged"
+  },
+  "arithmetic": {
+    "Engram": "Eight production block scales retained; current row-scale gather incompatible",
+    "MACs_per_cycle": 0,
+    "conversions": false
+  },
+  "critical_chain": {
+    "assembly_cycles": null,
+    "destination_cycles": null,
+    "fence_cycles": null,
+    "full_token_composed_cycles": null,
+    "grant_pipeline_cycles": null,
+    "shared_service_completed_cycles": null,
+    "write_commit_cycles": null
+  },
+  "enabled_default": false,
+  "full_resident_qualified": false,
+  "geometry": {
+    "RMW_slots": 1,
+    "bandwidth_delay_required_128B_slots": 3907,
+    "class_queue_depth": 16,
+    "classes": [
+      "weight",
+      "coefficient_table",
+      "state_read",
+      "state_write"
+    ],
+    "credit_bandwidth_ceiling_bytes_s": 1048575999999.9999,
+    "descriptor_bits": 160,
+    "descriptor_fields": {
+      "byte_mask": 32,
+      "destination_byte": 32,
+      "epoch": 16,
+      "opcode": 2,
+      "region": 8,
+      "sector": 27,
+      "sectors_minus_one": 4,
+      "sequence": 32,
+      "service_class": 2,
+      "sm_owner": 5
+    },
+    "loaded_latency_assumption_ns": 500.0,
+    "read_context_bits": 168,
+    "read_line_slots": 4096,
+    "region_bits": 8,
+    "scope": "Necessary bandwidth-delay storage only; no scheduler/service or token latency guarantee",
+    "sectors_per_line": 4,
+    "selected_slots_cover_bandwidth_delay": true,
+    "stack_bandwidth_assumption_bytes_s": 1000000000000.0,
+    "storage_bits_per_controller": {
+      "RMW_lock_bits": 32,
+      "accepted_sequence_bits": 32,
+      "arbitration_bits": 2,
+      "class_descriptor_bits": 10240,
+      "epoch_bits": 16,
+      "fence_epoch_and_valid_bits": 17,
+      "fence_sequence_bits": 32,
+      "partial_sector_RMW_bits": 256,
+      "queue_pointer_bits": 52,
+      "queued_write_payload_bits": 4096,
+      "read_context_bits": 688128,
+      "read_landing_bits": 4194304,
+      "write_context_bits": 2752,
+      "write_payload_bits": 4096
+    },
+    "total_storage_bits_per_controller": 4904055,
+    "total_storage_bytes_all96": 235394688,
+    "total_storage_bytes_per_rank": 2452028,
+    "write_slots": 16
+  },
+  "hardware_adopted": false,
+  "physical_model_inputs": {
+    "broadcast_rank_fence_fanout": 4,
+    "channel_capacity_tracks": null,
+    "context_update_ports_per_controller": 32,
+    "incremental_area_mm2": null,
+    "landing_read_ports_per_controller": 1,
+    "landing_write_ports_per_controller": 32,
+    "multi_PC_same_line_update": "Merge beat-valid updates before context write; bank collision schedule and cost pending",
+    "note": "No existing L2/RF/shared-memory credit claimed. Turing must bind banked SRAM/update collision handling, routing layers and critical chain before unified-model readiness.",
+    "request_SM_owner_mux_inputs": 8,
+    "request_class_mux_inputs": 4,
+    "return_SM_demux_outputs": 8,
+    "route_tracks": null,
+    "slot_fit": null,
+    "storage_implementation": null
+  },
+  "pins": {
+    "results/quality/w16_w19_gpu_mapping_scope_20261001/gpu_scope.json": "c2a43b8aa34543867f4ff8f1585ab791307fbb5fc31d2a0aa87101aac57cc39c",
+    "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json": "00f369307f174a3aa25bb6251b056d78b5df26cd091f460f573d6cd298d991f3",
+    "results/uarch/w16_w19_gpu_service_gate_20261001/qualification.json": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w19_transport_contract.py": "8f490bb2a197e088f96639f1781a8059576c805e67545a5b0021cc22fd19f02b"
+  },
+  "protocol": {
+    "SM": "Existing bulk-copy response has no ready: SM destination ring credit must also be reserved before grant; no borrowed nonSM buffer or lost response.",
+    "commit": "Controller emits tagged commit only after full-sector data is visible to subsequent reads; request ready and internal st_wr are not completion. Hold commit valid until ready.",
+    "compute_ready": "All required staged bytes and producer fences complete before SM/GPU instruction issue; no host golden data injection",
+    "credit": "Reserve a complete 128B landing slot before read grant; four 32B responses may arrive on different PC ports. Hold the assembled line until destination takes it.",
+    "fence": "Snapshot accepted sequence at all four controllers; complete only after every earlier queued or issued operation drains, destination delivery completes, and paired code/scale writes commit. Publish logical row last.",
+    "queue": "Four 16-entry descriptor queues/controller; oldest eligible round-robin. Ownership and same-sector hazards checked before grant.",
+    "writes": "Whole 32B sectors only. Partial byte updates use one serialized RMW lock/controller; read old sector, merge byte mask without conversion, retain lock through externally visible commit."
+  },
+  "ready_to_build": false,
+  "replica_count": {
+    "SMs_per_controller": 8,
+    "SMs_per_rank": 32,
+    "controllers_per_rank": 4,
+    "ranks": 96,
+    "total_transport_endpoints": 384
+  },
+  "schema": "opentallas.w19.finite_transport_model_contract.v1",
+  "source_ports": {
+    "SM_assembled_bytes_per_cycle": 128,
+    "controller_request_bits_per_cycle": 307,
+    "controller_response_bits_per_cycle": 8896,
+    "controller_room_bits_per_cycle": 32,
+    "existing_SM_response_ready": false,
+    "existing_commit": false,
+    "existing_request_signals": [
+      "req_v",
+      "req_rdy",
+      "req_we",
+      "req_addr",
+      "req_len",
+      "req_tag",
+      "req_wdata"
+    ],
+    "existing_response_signals": [
+      "rsp_v",
+      "rsp_rdy",
+      "rsp_tag",
+      "rsp_beat",
+      "rsp_data"
+    ],
+    "existing_write_mask": false,
+    "note": "Commit lanes mirror worst-case 32 simultaneous PC completions; these are new source-unimplemented boundary wires, not free debug-counter acknowledgments",
+    "proposed_commit_bits_per_cycle": 576,
+    "proposed_fence_command_bits": 50,
+    "proposed_fence_reply_bits": 18,
+    "proposed_signals": [
+      "commit_v[NPC]",
+      "commit_rdy[NPC]",
+      "commit_tag[NPC*16]",
+      "fence_v",
+      "fence_rdy",
+      "fence_tag[16]",
+      "fence_cut[32]",
+      "fence_done_v",
+      "fence_done_rdy",
+      "fence_done_tag[16]"
+    ],
+    "read_bytes_per_cycle_peak": 1024,
+    "request_write_bytes_per_cycle_peak": 32
+  },
+  "tags": {
+    "duplicate": "Reject duplicate/unissued sector or commit, stale epoch and out-of-range tag; do not count them as completed work",
+    "epoch_bits": 16,
+    "policy": "Wire bit15 distinguishes writes. Read bits11:0 index4096 slots and bits14:12 generation; write bits3:0 index16 slots and bits14:4 generation. No live slot reuse. Generation cannot wrap before a drained epoch transition. Admission reserves remaining generation budget so already accepted descriptors cannot deadlock at wrap.",
+    "read_slot_bits": 12,
+    "reset": "Quiesce ingress; drain descriptors, all read returns, writes and RMW locks; fence then increment epoch. Hard reset with outstanding work invalidates residence and forbids continuation.",
+    "wire_bits": 16
+  },
+  "unified_model_composed": false
+}

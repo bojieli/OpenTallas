@@ -1,0 +1,532 @@
+{
+  "actual_provider_constructor": false,
+  "commit": "0c31e5e0099ab080dafb84afa23b420298afcbfd",
+  "environment": {
+    "numpy": "2.2.6",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]"
+  },
+  "external_design_or_payload_reads": [],
+  "external_read_files": [
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/__config__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_array_api_info.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_add_newdocs.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_add_newdocs_scalars.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_asarray.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_dtype.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_dtype_ctypes.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_exceptions.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_internal.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_machar.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_methods.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_string_helpers.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_type_aliases.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/_ufunc_config.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/arrayprint.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/einsumfunc.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/fromnumeric.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/function_base.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/getlimits.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/memmap.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/multiarray.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/numeric.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/numerictypes.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/overrides.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/printoptions.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/records.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/shape_base.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/umath.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_distributor_init.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_expired_attrs_2_0.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_globals.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_pytesttester.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_array_like.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_char_codes.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_dtype_like.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_nbit.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_nbit_base.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_nested_sequence.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_scalars.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_shape.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_typing/_ufunc.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_utils/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_utils/_convertions.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_utils/_inspect.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/dtypes.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/exceptions.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_array_utils_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_arraypad_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_arraysetops_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_arrayterator_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_datasource.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_function_base_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_histograms_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_index_tricks_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_iotools.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_nanfunctions_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_npyio_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_polynomial_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_scimath_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_shape_base_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_stride_tricks_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_twodim_base_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_type_check_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_ufunclike_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_utils_impl.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/_version.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/array_utils.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/format.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/introspect.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/mixins.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/npyio.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/scimath.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/lib/stride_tricks.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/linalg/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/linalg/_linalg.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/linalg/linalg.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/matrixlib/__init__.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/matrixlib/defmatrix.py",
+    "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/version.py",
+    "/usr/lib/python3.10/__future__.py",
+    "/usr/lib/python3.10/_compat_pickle.py",
+    "/usr/lib/python3.10/_compression.py",
+    "/usr/lib/python3.10/argparse.py",
+    "/usr/lib/python3.10/ast.py",
+    "/usr/lib/python3.10/contextvars.py",
+    "/usr/lib/python3.10/copy.py",
+    "/usr/lib/python3.10/ctypes/__init__.py",
+    "/usr/lib/python3.10/ctypes/_endian.py",
+    "/usr/lib/python3.10/dataclasses.py",
+    "/usr/lib/python3.10/datetime.py",
+    "/usr/lib/python3.10/decimal.py",
+    "/usr/lib/python3.10/dis.py",
+    "/usr/lib/python3.10/fractions.py",
+    "/usr/lib/python3.10/gettext.py",
+    "/usr/lib/python3.10/gzip.py",
+    "/usr/lib/python3.10/heapq.py",
+    "/usr/lib/python3.10/inspect.py",
+    "/usr/lib/python3.10/linecache.py",
+    "/usr/lib/python3.10/numbers.py",
+    "/usr/lib/python3.10/opcode.py",
+    "/usr/lib/python3.10/pickle.py",
+    "/usr/lib/python3.10/sqlite3/__init__.py",
+    "/usr/lib/python3.10/sqlite3/dbapi2.py",
+    "/usr/lib/python3.10/struct.py",
+    "/usr/lib/python3.10/textwrap.py",
+    "/usr/lib/python3.10/token.py",
+    "/usr/lib/python3.10/tokenize.py",
+    "/usr/lib/python3.10/typing.py",
+    "/usr/lib/python3.10/uuid.py",
+    "/usr/lib/python3.10/weakref.py"
+  ],
+  "model_sha256": "a849fc2d18d8688aff2de9a2b3e654b65f2a3625078140fe2e6e784e721612a1",
+  "numeric_execution": false,
+  "repository_loaded_modules": {
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/deepseek_hbm_complete_memory.py": {
+      "git_tracked": true,
+      "sha256": "ea1bbe4f09973438323adad64154311d22bb493be13af2c68f3521af0aaa8719"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_complete_native.py": {
+      "git_tracked": true,
+      "sha256": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_streaming_linear.py": {
+      "git_tracked": true,
+      "sha256": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_versioned_lowering.py": {
+      "git_tracked": true,
+      "sha256": "900dec4186274cbe3e41cf2eea4abfa76d7d58182d96c3e6b55ea04409e58e91"
+    },
+    "tools/ds_full_checkpoint_continuation_plan.py": {
+      "git_tracked": true,
+      "sha256": "f0c372a1559a235ace39d9e166c8d066e8f56ac724fd9aba1a7742932aa1a3e7"
+    },
+    "tools/ds_hbm_attention_views_r37.py": {
+      "git_tracked": true,
+      "sha256": "f56262956693fd07c3ae9ebfb6edf10f9409062d7be385c086c6fce242c40c71"
+    },
+    "tools/ds_hbm_bound_engine_r43.py": {
+      "git_tracked": true,
+      "sha256": "7e2f296bc46619bfdae2679847b2dfbd04940f98a776851f4ca55797fe1dc47e"
+    },
+    "tools/ds_hbm_collective_continuations_r37.py": {
+      "git_tracked": true,
+      "sha256": "834807707285f70118a09c9878db86e501cd8420c9e744ba3b3dd4ce0ad1a84b"
+    },
+    "tools/ds_hbm_connected_prepare_r37.py": {
+      "git_tracked": true,
+      "sha256": "94cc0c4c1bb1eb01b6bf76cc6bb96992f4a1c9d9bfca5260fcb054a4d4e58511"
+    },
+    "tools/ds_hbm_finite_state_homes_r30.py": {
+      "git_tracked": true,
+      "sha256": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823"
+    },
+    "tools/ds_hbm_group_provider_r34.py": {
+      "git_tracked": true,
+      "sha256": "3650aeaec460723a29ca1d5fdff8295c2bc14ba4c8418135b33a9538400b4fb1"
+    },
+    "tools/ds_hbm_history_codec_r36.py": {
+      "git_tracked": true,
+      "sha256": "24e0a760b926b0b439120e757fbfffe5f42a2f72198e8794510b4acaf9b53dcf"
+    },
+    "tools/ds_hbm_history_store_r36.py": {
+      "git_tracked": true,
+      "sha256": "1735b0130f43a8b17df251fc87f8e0f5bef8d0c5095abc09b3b8b6f1de112aec"
+    },
+    "tools/ds_hbm_initialization_provenance_r42.py": {
+      "git_tracked": true,
+      "sha256": "e6ac0ddf57c518d3e6b056868dd16e04333f2a9dbff14c157eebc2ae1ca0d7b1"
+    },
+    "tools/ds_hbm_pc10_engine_r44.py": {
+      "git_tracked": true,
+      "sha256": "96949401e4ef66977211d03d4d64821ca7cff4bd818a8701d8806344484bc31d"
+    },
+    "tools/ds_hbm_pc10_journal_model_r44.py": {
+      "git_tracked": true,
+      "sha256": "7c70d7a6e511670d8875513df431e43642a5507be5dc944a41e542aadfa5178a"
+    },
+    "tools/ds_hbm_pc10_projection_r46.py": {
+      "git_tracked": true,
+      "sha256": "6abf0fe6946ba8cdd1580ee6f8c27b4c71d4f08bb4741f49b67549c94879ded5"
+    },
+    "tools/ds_hbm_prefix_observed_outputs_r42.py": {
+      "git_tracked": true,
+      "sha256": "c1068f2e82ff8fb0b6ad4677eaadbbb28351e03631142bf05f850d577a38de74"
+    },
+    "tools/ds_hbm_source_inputs_r34.py": {
+      "git_tracked": true,
+      "sha256": "8b23832d1a06e0cd9ec2805708ed6fe8f6786600f317fd1d99ced0f41b2dd412"
+    },
+    "tools/ds_hbm_source_merge_r37.py": {
+      "git_tracked": true,
+      "sha256": "7d683ae8c7362a6f7f981afbb1614045b066da9c35449b8e7849238d8bdfdcab"
+    },
+    "tools/ds_hbm_source_prefix_r43.py": {
+      "git_tracked": true,
+      "sha256": "df7be9f0ad6f84d57e04c5a9cec0d71e95e38d7255c38c709cc826ee03e63159"
+    },
+    "tools/ds_hbm_storage_home_binding_r41.py": {
+      "git_tracked": true,
+      "sha256": "feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1"
+    },
+    "tools/ds_hbm_unconsumed_retirement_r45.py": {
+      "git_tracked": true,
+      "sha256": "b8c693ef6163f52812017b56e4eb4b8a59edbc52c03ab73943e4eae9567857de"
+    },
+    "tools/ds_producer_checkpoint_resume_v3.py": {
+      "git_tracked": true,
+      "sha256": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e"
+    },
+    "tools/h3_ds_checkpoint_provider_r30.py": {
+      "git_tracked": true,
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    "tools/h3_ds_checkpoint_provider_r31.py": {
+      "git_tracked": true,
+      "sha256": "12debf3d035611c0751459a5b15925a988998b2857f0fed50b75ab7072146ecc"
+    },
+    "tools/h3_ds_checkpoint_provider_r33.py": {
+      "git_tracked": true,
+      "sha256": "722a0f5407b77fe6270e71092f7398702075fbe67923ef279a8bb88c5074d00f"
+    },
+    "tools/h3_ds_checkpoint_provider_r34.py": {
+      "git_tracked": true,
+      "sha256": "9d47acf6f44481cf15458e8162118ec53395a03b3aa1d5242c1d1423e7d8b014"
+    },
+    "tools/h3_ds_connected_provider_r37.py": {
+      "git_tracked": true,
+      "sha256": "085b86a67e53fa1ae2b9c43c3d346cea514944601d2ea89477928f9d2990ffe3"
+    },
+    "tools/h3_ds_history_provider_r36.py": {
+      "git_tracked": true,
+      "sha256": "04b8f20c9aec5591be7fd86f2c4e11e31e42967a08918ab42bd98b0dcd4545df"
+    },
+    "tools/h3_ds_query_provider_r36.py": {
+      "git_tracked": true,
+      "sha256": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9"
+    },
+    "tools/h3_ds_source_prefix_provider_r39.py": {
+      "git_tracked": true,
+      "sha256": "dd50f6afb9a52fe58efe285564cd53da2e0622c31f191d5fded3511ea9d36d6d"
+    },
+    "tools/h4_hbm_pc10_r41_lineage.py": {
+      "git_tracked": true,
+      "sha256": "d868b2f6f7cd00e67f74d2b35ceaa9f941676a47c90c7e958731d2a944206a38"
+    },
+    "tools/h4_hbm_w19_pc10_endpoints.py": {
+      "git_tracked": true,
+      "sha256": "5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc"
+    },
+    "tools/hbm_bound_event_journal_r30.py": {
+      "git_tracked": true,
+      "sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+    },
+    "tools/hbm_provider_microvm_r21.py": {
+      "git_tracked": true,
+      "sha256": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+    }
+  },
+  "repository_read_files": {
+    "results/uarch/ds_full_checkpoint_continuation_plan_20261003/r1/model.json": {
+      "bytes": 3537491,
+      "git_tracked": true,
+      "sha256": "7635b10a1f6b17e5922806145e5609a563bc96e41c5f933110632a363813a2ca"
+    },
+    "results/uarch/ds_full_checkpoint_continuation_plan_20261003/r6/model.json": {
+      "bytes": 3999985,
+      "git_tracked": true,
+      "sha256": "0ed3c3657b8f69596f8a6e69d0c8adb4e34b30cdb8bf0a6f963f3703491c2f4f"
+    },
+    "results/uarch/ds_hbm_bound_engine_r43_20261002/inputs/actual_dispatch_bcf.json.gz": {
+      "bytes": 11566814,
+      "git_tracked": true,
+      "sha256": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/actual_DeepSeek_homes.json.gz": {
+      "bytes": 4177637,
+      "git_tracked": true,
+      "sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/deepseek_hbm_complete_memory.py": {
+      "bytes": 5275,
+      "git_tracked": true,
+      "sha256": "ea1bbe4f09973438323adad64154311d22bb493be13af2c68f3521af0aaa8719"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_complete_native.py": {
+      "bytes": 60025,
+      "git_tracked": true,
+      "sha256": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_streaming_linear.py": {
+      "bytes": 21837,
+      "git_tracked": true,
+      "sha256": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_versioned_lowering.py": {
+      "bytes": 37154,
+      "git_tracked": true,
+      "sha256": "900dec4186274cbe3e41cf2eea4abfa76d7d58182d96c3e6b55ea04409e58e91"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/prefix_input_manifest.json.gz": {
+      "bytes": 99903,
+      "git_tracked": true,
+      "sha256": "2c7d0d38d9e5c1a2b049ba14eecfe8bae91eaaf2e96629f418b4ade9693c1c01"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json": {
+      "bytes": 8759,
+      "git_tracked": true,
+      "sha256": "ac08d45b958cbf0401c1abe706d19da8cca4c1ebf15243bc1a3b4181c4188641"
+    },
+    "results/uarch/ds_hbm_connected_source_r37_20261002/results/uarch/h3_deepseek_complete_native_20261002/dependencies/h3_exact_scalar_contract.py": {
+      "bytes": 18524,
+      "git_tracked": true,
+      "sha256": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132"
+    },
+    "results/uarch/ds_hbm_dual_resources_r56_20261003/model.json": {
+      "bytes": 284250,
+      "git_tracked": true,
+      "sha256": "c41b8feadef2f83c863d5f558c8bba30d3007b21dd7f0bcbdee8771c83ce0c6f"
+    },
+    "results/uarch/ds_hbm_source_prefix_r39_20261002/journal_schema_envelope_r2.json": {
+      "bytes": 6869,
+      "git_tracked": true,
+      "sha256": "5281b5c4f237feca913adc8b13dd50337206b42698846120f953adfcc9309455"
+    },
+    "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz": {
+      "bytes": 14342060,
+      "git_tracked": true,
+      "sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264"
+    },
+    "tools/ds_full_checkpoint_continuation_plan.py": {
+      "bytes": 31411,
+      "git_tracked": true,
+      "sha256": "f0c372a1559a235ace39d9e166c8d066e8f56ac724fd9aba1a7742932aa1a3e7"
+    },
+    "tools/ds_hbm_additive_endpoint_join_r54.py": {
+      "bytes": 6600,
+      "git_tracked": true,
+      "sha256": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2"
+    },
+    "tools/ds_hbm_attention_views_r37.py": {
+      "bytes": 4059,
+      "git_tracked": true,
+      "sha256": "f56262956693fd07c3ae9ebfb6edf10f9409062d7be385c086c6fce242c40c71"
+    },
+    "tools/ds_hbm_bound_engine_r43.py": {
+      "bytes": 5403,
+      "git_tracked": true,
+      "sha256": "7e2f296bc46619bfdae2679847b2dfbd04940f98a776851f4ca55797fe1dc47e"
+    },
+    "tools/ds_hbm_checkpointed_prefix_r55.py": {
+      "bytes": 19229,
+      "git_tracked": true,
+      "sha256": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39"
+    },
+    "tools/ds_hbm_collective_continuations_r37.py": {
+      "bytes": 6917,
+      "git_tracked": true,
+      "sha256": "834807707285f70118a09c9878db86e501cd8420c9e744ba3b3dd4ce0ad1a84b"
+    },
+    "tools/ds_hbm_connected_prepare_r37.py": {
+      "bytes": 4698,
+      "git_tracked": true,
+      "sha256": "94cc0c4c1bb1eb01b6bf76cc6bb96992f4a1c9d9bfca5260fcb054a4d4e58511"
+    },
+    "tools/ds_hbm_finite_state_homes_r30.py": {
+      "bytes": 4033,
+      "git_tracked": true,
+      "sha256": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823"
+    },
+    "tools/ds_hbm_group_provider_r34.py": {
+      "bytes": 4926,
+      "git_tracked": true,
+      "sha256": "3650aeaec460723a29ca1d5fdff8295c2bc14ba4c8418135b33a9538400b4fb1"
+    },
+    "tools/ds_hbm_history_codec_r36.py": {
+      "bytes": 3103,
+      "git_tracked": true,
+      "sha256": "24e0a760b926b0b439120e757fbfffe5f42a2f72198e8794510b4acaf9b53dcf"
+    },
+    "tools/ds_hbm_history_store_r36.py": {
+      "bytes": 4739,
+      "git_tracked": true,
+      "sha256": "1735b0130f43a8b17df251fc87f8e0f5bef8d0c5095abc09b3b8b6f1de112aec"
+    },
+    "tools/ds_hbm_initialization_provenance_r42.py": {
+      "bytes": 2072,
+      "git_tracked": true,
+      "sha256": "e6ac0ddf57c518d3e6b056868dd16e04333f2a9dbff14c157eebc2ae1ca0d7b1"
+    },
+    "tools/ds_hbm_pc10_engine_r44.py": {
+      "bytes": 10330,
+      "git_tracked": true,
+      "sha256": "96949401e4ef66977211d03d4d64821ca7cff4bd818a8701d8806344484bc31d"
+    },
+    "tools/ds_hbm_pc10_journal_model_r44.py": {
+      "bytes": 3107,
+      "git_tracked": true,
+      "sha256": "7c70d7a6e511670d8875513df431e43642a5507be5dc944a41e542aadfa5178a"
+    },
+    "tools/ds_hbm_pc10_projection_r46.py": {
+      "bytes": 18813,
+      "git_tracked": true,
+      "sha256": "6abf0fe6946ba8cdd1580ee6f8c27b4c71d4f08bb4741f49b67549c94879ded5"
+    },
+    "tools/ds_hbm_prefix_observed_outputs_r42.py": {
+      "bytes": 7406,
+      "git_tracked": true,
+      "sha256": "c1068f2e82ff8fb0b6ad4677eaadbbb28351e03631142bf05f850d577a38de74"
+    },
+    "tools/ds_hbm_registered_loader_r57.py": {
+      "bytes": 2755,
+      "git_tracked": true,
+      "sha256": "a8f338aac3bcd33b0c81deef05135613dc7454d2a98aeb09c92c5d8691a23ba9"
+    },
+    "tools/ds_hbm_source_inputs_r34.py": {
+      "bytes": 8594,
+      "git_tracked": true,
+      "sha256": "8b23832d1a06e0cd9ec2805708ed6fe8f6786600f317fd1d99ced0f41b2dd412"
+    },
+    "tools/ds_hbm_source_merge_r37.py": {
+      "bytes": 5283,
+      "git_tracked": true,
+      "sha256": "7d683ae8c7362a6f7f981afbb1614045b066da9c35449b8e7849238d8bdfdcab"
+    },
+    "tools/ds_hbm_source_prefix_r43.py": {
+      "bytes": 11578,
+      "git_tracked": true,
+      "sha256": "df7be9f0ad6f84d57e04c5a9cec0d71e95e38d7255c38c709cc826ee03e63159"
+    },
+    "tools/ds_hbm_source_prefix_r45.py": {
+      "bytes": 12750,
+      "git_tracked": true,
+      "sha256": "362ca1a8ca327f585451f5bd4fdb2b7d0b9dff135a75cabd9bc52a9d75d4d620"
+    },
+    "tools/ds_hbm_storage_home_binding_r41.py": {
+      "bytes": 4183,
+      "git_tracked": true,
+      "sha256": "feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1"
+    },
+    "tools/ds_hbm_unconsumed_retirement_r45.py": {
+      "bytes": 3829,
+      "git_tracked": true,
+      "sha256": "b8c693ef6163f52812017b56e4eb4b8a59edbc52c03ab73943e4eae9567857de"
+    },
+    "tools/ds_producer_checkpoint_resume_v3.py": {
+      "bytes": 56555,
+      "git_tracked": true,
+      "sha256": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e"
+    },
+    "tools/h3_complete_native_calendar_successor_r1.py": {
+      "bytes": 489035,
+      "git_tracked": true,
+      "sha256": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21"
+    },
+    "tools/h3_ds_checkpoint_provider_r30.py": {
+      "bytes": 27845,
+      "git_tracked": true,
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    "tools/h3_ds_checkpoint_provider_r31.py": {
+      "bytes": 3005,
+      "git_tracked": true,
+      "sha256": "12debf3d035611c0751459a5b15925a988998b2857f0fed50b75ab7072146ecc"
+    },
+    "tools/h3_ds_checkpoint_provider_r33.py": {
+      "bytes": 9457,
+      "git_tracked": true,
+      "sha256": "722a0f5407b77fe6270e71092f7398702075fbe67923ef279a8bb88c5074d00f"
+    },
+    "tools/h3_ds_checkpoint_provider_r34.py": {
+      "bytes": 6066,
+      "git_tracked": true,
+      "sha256": "9d47acf6f44481cf15458e8162118ec53395a03b3aa1d5242c1d1423e7d8b014"
+    },
+    "tools/h3_ds_connected_provider_r37.py": {
+      "bytes": 6621,
+      "git_tracked": true,
+      "sha256": "085b86a67e53fa1ae2b9c43c3d346cea514944601d2ea89477928f9d2990ffe3"
+    },
+    "tools/h3_ds_history_provider_r36.py": {
+      "bytes": 5378,
+      "git_tracked": true,
+      "sha256": "04b8f20c9aec5591be7fd86f2c4e11e31e42967a08918ab42bd98b0dcd4545df"
+    },
+    "tools/h3_ds_query_provider_r36.py": {
+      "bytes": 9652,
+      "git_tracked": true,
+      "sha256": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9"
+    },
+    "tools/h3_ds_source_prefix_provider_r39.py": {
+      "bytes": 2281,
+      "git_tracked": true,
+      "sha256": "dd50f6afb9a52fe58efe285564cd53da2e0622c31f191d5fded3511ea9d36d6d"
+    },
+    "tools/h4_hbm_pc10_r41_lineage.py": {
+      "bytes": 4632,
+      "git_tracked": true,
+      "sha256": "d868b2f6f7cd00e67f74d2b35ceaa9f941676a47c90c7e958731d2a944206a38"
+    },
+    "tools/h4_hbm_w19_pc10_endpoints.py": {
+      "bytes": 20911,
+      "git_tracked": true,
+      "sha256": "5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc"
+    },
+    "tools/hbm_bound_event_journal_r30.py": {
+      "bytes": 4568,
+      "git_tracked": true,
+      "sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+    },
+    "tools/hbm_provider_microvm_r21.py": {
+      "bytes": 28880,
+      "git_tracked": true,
+      "sha256": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+    }
+  },
+  "status": "PASS_FROM_SOURCE_ALL_PC_RESOURCE_REPLAY"
+}

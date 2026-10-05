@@ -1,0 +1,99 @@
+{
+  "checkpoint_binding": {
+    "checkpoint_revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "first_four_match_retained_service_sentinels": true,
+    "independent_expected_u32le_sha256": "a3e540a4cfaf1ef499cf98199fc60d64b75e782cefdb56af4b12605b15142892",
+    "input_binary_sha256": "6579ce0d11186dae5cfa06eb6c1bf0db2db45b1594f09d25984dc6ad05239534",
+    "prompt_token_count": 200000,
+    "segments": [
+      {
+        "logits_u32le_sha256": "a5a64176489044d2f9191ed1b7ed1b2af0028b75671ff416b89252c9ca506ae0",
+        "matrix_offset": 0,
+        "name": "first_prefill_t512",
+        "position_start": 0,
+        "token_count": 512,
+        "token_ids_u32le_sha256": "10af7f8081114dfec2da97e9cb7d70ffe739b8d9be1ed9e14255b5402983697f"
+      },
+      {
+        "logits_u32le_sha256": "c44ed0476527f4217e0cafd90cfa841c9226c882f9aa1116799c2d3146e524f6",
+        "matrix_offset": 512,
+        "name": "final_prefill_t320",
+        "position_start": 199680,
+        "token_count": 320,
+        "token_ids_u32le_sha256": "4812a304dd03fd4e1e0cad93c3f339ac6369e871cbcd2d99ca462bac7a7dd335"
+      }
+    ],
+    "t1_shape_witness": {
+      "case_index": 0,
+      "expected_u32le_sha256": "03e18884b30119f3540f0e31e27262f41d72d7ce0ef0a0285843e42079b00813",
+      "input_u32le_sha256": "0522cbb780764f1d38c641338c23fef4db27da12b27e063f3f8ad533e797a349",
+      "position": 0,
+      "token_id": 18042
+    },
+    "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+    "workload_id": "TA-DS-CTX-200K-1"
+  },
+  "claim_boundary": {
+    "architectural_timing": false,
+    "checkpoint_first_and_final_prefill_blocks_covered": true,
+    "eos": false,
+    "full_200k_checkpoint_domain": false,
+    "full_hc_pre": false,
+    "model_token_generation": false,
+    "tpot": false,
+    "vectors_only": true
+  },
+  "counts": {
+    "cases": 853,
+    "categories": {
+      "checkpoint_final_t320": 320,
+      "checkpoint_first_t512": 512,
+      "directed_extreme": 2,
+      "directed_ordering": 7,
+      "directed_overflow": 1,
+      "directed_rounding": 4,
+      "directed_underflow": 2,
+      "nonfinite_refusal": 5
+    },
+    "checkpoint_cases": 832,
+    "directed_cases": 21,
+    "errors": {
+      "0": 847,
+      "1": 5,
+      "2": 1
+    },
+    "refused_cases": 6,
+    "successful_cases": 847
+  },
+  "coverage": {
+    "exponential_zero_results": 22,
+    "maximum_column_counts": {
+      "0": 1699,
+      "1": 833,
+      "2": 833,
+      "3": 24
+    },
+    "nonfinite_refusal_kinds": 5,
+    "shifted_subnormal_codes": 27,
+    "shifted_zero_codes": 3448,
+    "subtraction_overflow_cases": 1
+  },
+  "files": {
+    "matrix_expected.hex": "27886fa04e7f6e846cf0e54b621a819d32d10c8baa426ad1cf556793008da31e",
+    "matrix_input.hex": "3bba884fa1ac8b0c3dcf903b2ceb3bb10cf95237e0f425dd50c4cf49d185cf66",
+    "meta.hex": "7d3839ecea5d7673b2ca6807736ac0040a0b2caa3832cf957075841aa2c05260"
+  },
+  "matrix_expected_words": 17,
+  "matrix_input_words": 16,
+  "oracle": {
+    "binary32_arithmetic": "self-contained exact Fraction decode/rational arithmetic/integer RNE encode",
+    "exponential": "runtime.reference.hyper_connection exact-rational adaptive interval",
+    "host_floating_point": false,
+    "operation_order": "source-major max; RN32 subtract; CR32 exp; balanced RN32 sum; RN32 divide; RN32 epsilon add",
+    "rtl_implementation_imported": false,
+    "service_arithmetic_imported": false
+  },
+  "schema": "opentallas.rtl.a3_hc_stable_softmax_vectors.v1",
+  "status": "independent_exact_vectors",
+  "vector_set_id": "f788517728a22c8a24bac7bec59c737bbc07a67bdc24596cb874f6a5fa23cb8d"
+}

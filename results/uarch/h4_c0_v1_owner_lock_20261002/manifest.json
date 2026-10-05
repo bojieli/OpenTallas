@@ -1,0 +1,48 @@
+{
+  "files": {
+    "results/uarch/h4_c0_v1_owner_lock_20261002/Kepler_Dewey_atomic_V1_handoff.json": {
+      "bytes": 2592,
+      "sha256": "4fe1066121b09cfa6c332e9a28abf58b25eb71c96ad21fe9a801f330c37839fb"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/atomic_V1_owner_contract.json": {
+      "bytes": 5301,
+      "sha256": "9be77b5467b088cf73a7c5c07f5c11139e04413420846817488d7b138a216d49"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/owner_gate_model.json": {
+      "bytes": 2390,
+      "sha256": "98ee2a38f5545c6a68a9e5ffb6fff28ed6bc94743a3860ccddea301be4097fd5"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/physical_binding_requests.json": {
+      "bytes": 729734,
+      "sha256": "2491aa1af41406f8b6a9074484c6977d2f8f71f2ae0ba4002ca0e2d0f7bf983f"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/tests.final.log": {
+      "bytes": 1403,
+      "sha256": "3567371186f54b73fd4b9bcb870fc9dab28d411c1eacdc344637f74f2b193fde"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/tests.final.r2.log": {
+      "bytes": 1403,
+      "sha256": "5c32a18dbfaa49b5343313fb4699a93eb8282d0ba05430ff857419593f842d2f"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/tests.log": {
+      "bytes": 1205,
+      "sha256": "013bbcb81ea025e825fffeee996dcb92f8780ba420266e364b5aa40d4f2e2a9a"
+    },
+    "results/uarch/h4_c0_v1_owner_lock_20261002/tests.r2.log": {
+      "bytes": 1298,
+      "sha256": "5db8c86c8fa5b421683e9214459b845611d60b138710c95e82b1352a785165ce"
+    },
+    "tools/h4_c0_v1_owner_lock.py": {
+      "bytes": 24578,
+      "sha256": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22"
+    },
+    "tools/test_h4_c0_v1_owner_lock.py": {
+      "bytes": 7984,
+      "sha256": "3b88466b493ac849662fcf6bcaccad312147eb4334961db2426af7d30524ead9"
+    }
+  },
+  "parent_commit": "50f08a96302961b00e3ca17e14c829be49822819",
+  "schema": "H4_C0_ATOMIC_V1_OWNER_MANIFEST_V1",
+  "source_qualification": "Prepared source/model/interface only; no installed physical rank/SM binding or actual provider closure",
+  "unknown_shared_calls": 189476
+}

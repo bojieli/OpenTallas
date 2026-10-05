@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL",
+  "stage": "initial focused test intake",
+  "command": "python3 -m unittest discover -s tests -p test_deepseek_hbm_complete_*.py",
+  "errors": [
+    "unittest recursive discovery imported unrelated sparse tests/abi3 requiring omitted runtime.abi3",
+    "reference record is tracked but omitted by sparse checkout; source pin digest refused missing file"
+  ],
+  "correction": "explicit focused test files; restore exact HEAD reference blob, no pin edit"
+}

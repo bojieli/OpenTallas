@@ -1,0 +1,26 @@
+{
+  "scope": "Standalone ASAP7 TT 1 ns synthesis, no routing. Candidate is not selected.",
+  "records": [
+    {
+      "record": "prelayout_baseline_1ns.json",
+      "sha256": "08d074ffc8e63aa11a2f6076a0ebff378717aa28f52058f8e0efd0308bd36f0d",
+      "area_um2": 264.348,
+      "setup_wns_ns": -0.271090595500214
+    },
+    {
+      "record": "prelayout_payload_1ns.json",
+      "sha256": "715a8cbb1a123284a8e955b6fc2e883b67ea7776bda124532b704d10c9c0f9da",
+      "area_um2": 286.526,
+      "setup_wns_ns": -0.048324622274803615
+    }
+  ],
+  "decision": "Retain baseline: candidate area rises 8.39% despite improved pre-layout setup margin, which still fails. Wait for containing-service paths before trading controller area for timing.",
+  "functional_verification": {
+    "focused_tests": 74,
+    "numerical_cases": 92,
+    "matching_outputs": 17103,
+    "fault_cases": 18,
+    "g2_outputs": 1352,
+    "g2_counter": 24995
+  }
+}

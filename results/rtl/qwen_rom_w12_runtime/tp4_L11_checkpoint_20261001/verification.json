@@ -1,0 +1,40 @@
+{
+  "adoption": false,
+  "artifact_sha256": {
+    "L11_die0_x.hex": "3ea4f8a7e405d473fd8fb9ed6ec7676927b70da3cc0fbcb81121a498625b705a",
+    "L11_die1_x.hex": "3ea4f8a7e405d473fd8fb9ed6ec7676927b70da3cc0fbcb81121a498625b705a",
+    "L11_die2_x.hex": "3ea4f8a7e405d473fd8fb9ed6ec7676927b70da3cc0fbcb81121a498625b705a",
+    "L11_die3_x.hex": "3ea4f8a7e405d473fd8fb9ed6ec7676927b70da3cc0fbcb81121a498625b705a",
+    "build_params.json": "0acc3fee6955c00452cfa72c6192ded8f38d32ebc7e28c8c93954d9a7f3743ff",
+    "checkpoint.json": "59753eda84acae2fdfa264ace1f19dd21e38d66c32b285792a3edb0a29edb231",
+    "live_watch_state.json": "46691e36b585e416d27163e1bd03b5b8c1142df397c23c4e1063116f6d32161c",
+    "token_log_snapshot.log": "bd4b4decad4670676a2210930fd359095922b5ce722657477660b70797aa7213",
+    "verify_capture.py": "2d60a64c400e73ca0f110e5c21c54a0b6fdf57f521ba6fd9eefa2355b45e3fad"
+  },
+  "at": "2026-10-01T13:01:17.423529+00:00",
+  "collector": {
+    "argv": [
+      "python3",
+      "/tmp/claude-1000/w12b/collect_terminals_identity_20261001.py",
+      "--control",
+      "/tmp/claude-1000/w12b/terminal_control_identity_20261001",
+      "--spool",
+      "/tmp/claude-1000/w12b/terminal_spool_identity_20261001"
+    ],
+    "cwd": "/tmp/claude-1000/wt/w12tm",
+    "pid": 562956,
+    "ppid": 1,
+    "start_ticks": 305176094,
+    "state": "S"
+  },
+  "current_source_composite_checks": 33,
+  "existing_records_edited": false,
+  "identity_alerts": {},
+  "independent_die_vector_checks": 48,
+  "launch_time_source_stability": "pending final source_stable record",
+  "mismatches": 0,
+  "new_L11_die_checks": 4,
+  "old_spool_unchanged": true,
+  "source_and_runtime_inputs_unchanged_since_L10": true,
+  "words_per_die": 4096
+}

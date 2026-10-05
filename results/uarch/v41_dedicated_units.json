@@ -1,0 +1,898 @@
+{
+ "schema": "opentallas.uarch.v41_dedicated.v1",
+ "ctx": 1048576,
+ "rows": [
+  {
+   "design": "as_built",
+   "ctx": 1048576,
+   "layer": 20,
+   "T": 640,
+   "positions": 1,
+   "keys_per_die": 262144,
+   "units": {
+    "indexer": {
+     "element": "ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle (16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+     "sub_element": "ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+     "replicas": 1,
+     "keys_per_cycle": 4,
+     "macs_per_cycle": 16384,
+     "ports_per_element": {
+      "key_in_bits": 2176,
+      "score_out_bits": 184,
+      "query_bits": 17920
+     },
+     "ports_total": {
+      "key_in_bits": 2176,
+      "score_out_bits": 184
+     },
+     "storage_bits": 20160,
+     "area_element_um2": 1354841,
+     "area_basis": "ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area (ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 closed, per key of 4)",
+     "hardened": null,
+     "area_mm2": 1.355,
+     "ops": {
+      "L20.attn.idx.score": {
+       "keys": 262144,
+       "positions": 1,
+       "t_mac": 65536,
+       "t_reader": 9284.3,
+       "issue": 65536,
+       "latency": 48,
+       "bind": "mac"
+      }
+     }
+    },
+    "idx_reader": {
+     "element": "per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / _kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+     "replicas": 128,
+     "target_bytes_per_cycle": 1920,
+     "target_sectors_per_cycle": 60.0,
+     "hbm_peak_sectors_per_cycle": 120.9,
+     "per_pc_target_sectors_per_cycle": 0.4688,
+     "measured_sectors_per_cycle": 60.04,
+     "measured_record": "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+     "collector_out_bits": 34816,
+     "ops": {
+      "L20.attn.idx.score(read)": {
+       "sectors": 557056,
+       "cycles_at_target": 9284.3,
+       "cycles_measured": 9278.1
+      }
+     }
+    },
+    "attention": {
+     "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+     "replicas": 64,
+     "rows_per_cycle": 4,
+     "products_per_cycle": 32768,
+     "ports_total": {
+      "q_bits": 8192,
+      "kv_in_bits": 16960,
+      "p_in_bits": 512,
+      "pv_out_bits": 32768
+     },
+     "stationary_banks": 3,
+     "area_element_um2": 260788,
+     "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+     "hardened": null,
+     "area_mm2": 16.69,
+     "ops": {
+      "L20.attn.scores": {
+       "beats": 160,
+       "positions": 1,
+       "issue": 160,
+       "tile_latency": 33
+      },
+      "L20.attn.pv": {
+       "beats": 160,
+       "p_words": 320,
+       "pwords_per_cycle": 1,
+       "positions": 1,
+       "issue": 320,
+       "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
+      }
+     },
+     "measured_job_cycles": 609,
+     "measured": {
+      "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
+      "job_cycles_pwords1": 609,
+      "pv_window_pwords1": [
+       248,
+       559
+      ]
+     }
+    },
+    "stream_unit": {
+     "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+     "replicas": {
+      "light": 8,
+      "sfu": 7,
+      "full": 1
+     },
+     "lanes": 16,
+     "sfu_lanes": 8,
+     "ports_total": {
+      "read_bits": 2048,
+      "gather_bits": 512,
+      "write_bits": 512,
+      "kv_write_bits": 512,
+      "result_bits": 64
+     },
+     "vm_banks_256b": {
+      "read_bits": 8,
+      "gather_bits": 2,
+      "write_bits": 2,
+      "kv_write_bits": 2,
+      "result_bits": 1
+     },
+     "area_element_um2": {
+      "light": 7069,
+      "sfu": 34451
+     },
+     "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
+     "hardened": {
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
+      "sfu": null
+     },
+     "area_mm2": 0.332,
+     "area_lanes_ledger_mm2": 0.332,
+     "vmh_block": null,
+     "ops": {
+      "L20.attn.softmax.max": {
+       "vectors_per_row_set": 640,
+       "vectors": 640,
+       "depth": 68,
+       "vw": 16,
+       "span": true,
+       "bad": false
+      },
+      "L20.attn.softmax.exp_sum": {
+       "vectors_per_row_set": 1280,
+       "vectors": 1280,
+       "depth": 117,
+       "vw": 8,
+       "span": true,
+       "bad": true
+      },
+      "L20.attn.softmax.sink": {
+       "vectors_per_row_set": 2,
+       "vectors": 2,
+       "depth": 70,
+       "vw": 8,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.divide": {
+       "vectors_per_row_set": 1024,
+       "vectors": 1024,
+       "depth": 37,
+       "vw": 8,
+       "span": false,
+       "bad": false
+      }
+     },
+     "softmax_issue_vectors": 2946,
+     "su_bcast_stages": 0,
+     "su_ret_stages": 0,
+     "softmax_chain_cycles": 3262,
+     "measured": {
+      "record": "results/rtl/v41x_su_softmax.json",
+      "t640_n16_m8": 3280
+     }
+    }
+   },
+   "hub_logic_mm2": 18.377,
+   "hub_avail_mm2": 233.7,
+   "discrepancies": [
+    "indexer: idx_macs 1024 is 0.062 NK=4 slices (not whole)"
+   ]
+  },
+  {
+   "design": "proposal",
+   "ctx": 1048576,
+   "layer": 20,
+   "T": 640,
+   "positions": 1,
+   "keys_per_die": 262144,
+   "units": {
+    "indexer": {
+     "element": "ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle (16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+     "sub_element": "ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+     "replicas": 16,
+     "keys_per_cycle": 64,
+     "macs_per_cycle": 262144,
+     "ports_per_element": {
+      "key_in_bits": 2176,
+      "score_out_bits": 184,
+      "query_bits": 17920
+     },
+     "ports_total": {
+      "key_in_bits": 34816,
+      "score_out_bits": 2944
+     },
+     "storage_bits": 322560,
+     "area_element_um2": 1354841,
+     "area_basis": "ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area (ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 closed, per key of 4)",
+     "hardened": null,
+     "area_mm2": 21.677,
+     "ops": {
+      "L20.attn.idx.score": {
+       "keys": 262144,
+       "positions": 1,
+       "t_mac": 4096,
+       "t_reader": 5119.5,
+       "issue": 5119.5,
+       "latency": 48,
+       "bind": "reader"
+      }
+     }
+    },
+    "idx_reader": {
+     "element": "per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / _kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+     "replicas": 128,
+     "target_bytes_per_cycle": 3482.0,
+     "target_sectors_per_cycle": 108.81,
+     "hbm_peak_sectors_per_cycle": 120.9,
+     "per_pc_target_sectors_per_cycle": 0.8501,
+     "measured_sectors_per_cycle": 60.04,
+     "measured_record": "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+     "collector_out_bits": 34816,
+     "ops": {
+      "L20.attn.idx.score(read)": {
+       "sectors": 557056,
+       "cycles_at_target": 5119.5,
+       "cycles_measured": 9278.1
+      }
+     }
+    },
+    "attention": {
+     "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+     "replicas": 64,
+     "rows_per_cycle": 4,
+     "products_per_cycle": 32768,
+     "ports_total": {
+      "q_bits": 8192,
+      "kv_in_bits": 16960,
+      "p_in_bits": 512,
+      "pv_out_bits": 32768
+     },
+     "stationary_banks": 3,
+     "area_element_um2": 260788,
+     "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+     "hardened": null,
+     "area_mm2": 16.69,
+     "ops": {
+      "L20.attn.scores": {
+       "beats": 160,
+       "positions": 1,
+       "issue": 160,
+       "tile_latency": 33
+      },
+      "L20.attn.pv": {
+       "beats": 160,
+       "p_words": 320,
+       "pwords_per_cycle": 1,
+       "positions": 1,
+       "issue": 320,
+       "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
+      }
+     },
+     "measured_job_cycles": 609,
+     "measured": {
+      "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
+      "job_cycles_pwords1": 609,
+      "pv_window_pwords1": [
+       248,
+       559
+      ]
+     }
+    },
+    "stream_unit": {
+     "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+     "replicas": {
+      "light": 768,
+      "sfu": 255,
+      "full": 1
+     },
+     "lanes": 1024,
+     "sfu_lanes": 256,
+     "ports_total": {
+      "read_bits": 131072,
+      "gather_bits": 32768,
+      "write_bits": 32768,
+      "kv_write_bits": 32768,
+      "result_bits": 4096
+     },
+     "vm_banks_256b": {
+      "read_bits": 512,
+      "gather_bits": 128,
+      "write_bits": 128,
+      "kv_write_bits": 128,
+      "result_bits": 16
+     },
+     "area_element_um2": {
+      "light": 7069,
+      "sfu": 34451
+     },
+     "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
+     "hardened": {
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
+      "sfu": null
+     },
+     "area_mm2": 14.249,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": null,
+     "ops": {
+      "L20.attn.softmax.max": {
+       "vectors_per_row_set": 16,
+       "vectors": 16,
+       "depth": 68,
+       "vw": 1024,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.exp_sum": {
+       "vectors_per_row_set": 48,
+       "vectors": 48,
+       "depth": 117,
+       "vw": 256,
+       "span": true,
+       "bad": false
+      },
+      "L20.attn.softmax.sink": {
+       "vectors_per_row_set": 1,
+       "vectors": 1,
+       "depth": 70,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.divide": {
+       "vectors_per_row_set": 32,
+       "vectors": 32,
+       "depth": 37,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      }
+     },
+     "softmax_issue_vectors": 97,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 4,
+     "softmax_chain_cycles": 445,
+     "measured": {
+      "record": "results/rtl/v41x_su_softmax.json",
+      "t640_n16_m8": 3280
+     }
+    }
+   },
+   "hub_logic_mm2": 52.616,
+   "hub_avail_mm2": 233.7,
+   "discrepancies": []
+  },
+  {
+   "design": "proposal_w11_p1",
+   "ctx": 1048576,
+   "layer": 20,
+   "T": 640,
+   "positions": 1,
+   "keys_per_die": 262144,
+   "units": {
+    "indexer": {
+     "element": "ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle (16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+     "sub_element": "ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+     "replicas": 16,
+     "keys_per_cycle": 64,
+     "macs_per_cycle": 262144,
+     "ports_per_element": {
+      "key_in_bits": 2176,
+      "score_out_bits": 184,
+      "query_bits": 17920
+     },
+     "ports_total": {
+      "key_in_bits": 34816,
+      "score_out_bits": 2944
+     },
+     "storage_bits": 322560,
+     "area_element_um2": 1354841,
+     "area_basis": "ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area (ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 closed, per key of 4)",
+     "hardened": null,
+     "area_mm2": 21.677,
+     "ops": {
+      "L20.attn.idx.score": {
+       "keys": 262144,
+       "positions": 1,
+       "t_mac": 4096,
+       "t_reader": 5119.5,
+       "issue": 5119.5,
+       "latency": 48,
+       "bind": "reader"
+      }
+     }
+    },
+    "idx_reader": {
+     "element": "per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / _kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+     "replicas": 128,
+     "target_bytes_per_cycle": 3482.0,
+     "target_sectors_per_cycle": 108.81,
+     "hbm_peak_sectors_per_cycle": 120.9,
+     "per_pc_target_sectors_per_cycle": 0.8501,
+     "measured_sectors_per_cycle": 60.04,
+     "measured_record": "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+     "collector_out_bits": 34816,
+     "ops": {
+      "L20.attn.idx.score(read)": {
+       "sectors": 557056,
+       "cycles_at_target": 5119.5,
+       "cycles_measured": 9278.1
+      }
+     }
+    },
+    "attention": {
+     "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+     "replicas": 64,
+     "rows_per_cycle": 4,
+     "products_per_cycle": 32768,
+     "ports_total": {
+      "q_bits": 8192,
+      "kv_in_bits": 16960,
+      "p_in_bits": 1024,
+      "pv_out_bits": 32768
+     },
+     "stationary_banks": 4,
+     "area_element_um2": 260788,
+     "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+     "hardened": null,
+     "area_mm2": 16.69,
+     "ops": {
+      "L20.attn.scores": {
+       "beats": 160,
+       "positions": 1,
+       "issue": 160,
+       "tile_latency": 33
+      },
+      "L20.attn.pv": {
+       "beats": 160,
+       "p_words": 320,
+       "pwords_per_cycle": 2,
+       "positions": 1,
+       "issue": 160,
+       "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
+      }
+     },
+     "measured_job_cycles": 449,
+     "measured": {
+      "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
+      "job_cycles_pwords1": 609,
+      "pv_window_pwords1": [
+       248,
+       559
+      ]
+     }
+    },
+    "stream_unit": {
+     "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+     "replicas": {
+      "light": 768,
+      "sfu": 255,
+      "full": 1
+     },
+     "lanes": 1024,
+     "sfu_lanes": 256,
+     "ports_total": {
+      "read_bits": 131072,
+      "gather_bits": 32768,
+      "write_bits": 32768,
+      "kv_write_bits": 32768,
+      "result_bits": 4096
+     },
+     "vm_banks_256b": {
+      "read_bits": 512,
+      "gather_bits": 128,
+      "write_bits": 128,
+      "kv_write_bits": 128,
+      "result_bits": 16
+     },
+     "area_element_um2": {
+      "light": 7069,
+      "sfu": 34451
+     },
+     "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
+     "hardened": {
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
+      "sfu": null
+     },
+     "area_mm2": 38.601,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.601,
+      "lane_array_mm2": 23.913,
+      "lane_side_um": 4890.1,
+      "vm_block_mm2": 14.688,
+      "vm_depth_um": 3003.7,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.274,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "option": "C_rotate",
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling 2026-10-01: the product's VM)",
+      "field_loss_mm2": 25.57,
+      "note": "ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
+     "ops": {
+      "L20.attn.softmax.max": {
+       "vectors_per_row_set": 16,
+       "vectors": 16,
+       "depth": 68,
+       "vw": 1024,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.exp_sum": {
+       "vectors_per_row_set": 48,
+       "vectors": 48,
+       "depth": 117,
+       "vw": 256,
+       "span": true,
+       "bad": false
+      },
+      "L20.attn.softmax.sink": {
+       "vectors_per_row_set": 1,
+       "vectors": 1,
+       "depth": 70,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.divide": {
+       "vectors_per_row_set": 32,
+       "vectors": 32,
+       "depth": 37,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      }
+     },
+     "softmax_issue_vectors": 97,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 5,
+     "softmax_chain_cycles": 449,
+     "measured": {
+      "record": "results/rtl/v41x_su_softmax.json",
+      "t640_n16_m8": 3280
+     }
+    }
+   },
+   "hub_logic_mm2": 76.968,
+   "hub_avail_mm2": 233.7,
+   "discrepancies": []
+  },
+  {
+   "design": "proposal_w11_p6",
+   "ctx": 1048576,
+   "layer": 20,
+   "T": 640,
+   "positions": 6,
+   "keys_per_die": 262144,
+   "units": {
+    "indexer": {
+     "element": "ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle (16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+     "sub_element": "ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+     "replicas": 16,
+     "keys_per_cycle": 64,
+     "macs_per_cycle": 262144,
+     "ports_per_element": {
+      "key_in_bits": 2176,
+      "score_out_bits": 184,
+      "query_bits": 17920
+     },
+     "ports_total": {
+      "key_in_bits": 34816,
+      "score_out_bits": 2944
+     },
+     "storage_bits": 322560,
+     "area_element_um2": 1354841,
+     "area_basis": "ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area (ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 closed, per key of 4)",
+     "hardened": null,
+     "area_mm2": 21.677,
+     "ops": {
+      "L20.attn.idx.score": {
+       "keys": 262144,
+       "positions": 6,
+       "t_mac": 24576,
+       "t_reader": 5119.5,
+       "issue": 24576,
+       "latency": 48,
+       "bind": "mac"
+      }
+     }
+    },
+    "idx_reader": {
+     "element": "per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / _kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+     "replicas": 128,
+     "target_bytes_per_cycle": 3482.0,
+     "target_sectors_per_cycle": 108.81,
+     "hbm_peak_sectors_per_cycle": 120.9,
+     "per_pc_target_sectors_per_cycle": 0.8501,
+     "measured_sectors_per_cycle": 60.04,
+     "measured_record": "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+     "collector_out_bits": 34816,
+     "ops": {
+      "L20.attn.idx.score(read)": {
+       "sectors": 557056,
+       "cycles_at_target": 5119.5,
+       "cycles_measured": 9278.1
+      }
+     }
+    },
+    "attention": {
+     "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+     "replicas": 64,
+     "rows_per_cycle": 4,
+     "products_per_cycle": 32768,
+     "ports_total": {
+      "q_bits": 8192,
+      "kv_in_bits": 16960,
+      "p_in_bits": 1024,
+      "pv_out_bits": 32768
+     },
+     "stationary_banks": 4,
+     "area_element_um2": 260788,
+     "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+     "hardened": null,
+     "area_mm2": 16.69,
+     "ops": {
+      "L20.attn.scores": {
+       "beats": 160,
+       "positions": 6,
+       "issue": 960,
+       "tile_latency": 33
+      },
+      "L20.attn.pv": {
+       "beats": 160,
+       "p_words": 320,
+       "pwords_per_cycle": 2,
+       "positions": 6,
+       "issue": 960,
+       "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
+      }
+     },
+     "measured_job_cycles": 449,
+     "measured": {
+      "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
+      "job_cycles_pwords1": 609,
+      "pv_window_pwords1": [
+       248,
+       559
+      ]
+     }
+    },
+    "stream_unit": {
+     "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+     "replicas": {
+      "light": 768,
+      "sfu": 255,
+      "full": 1
+     },
+     "lanes": 1024,
+     "sfu_lanes": 256,
+     "ports_total": {
+      "read_bits": 131072,
+      "gather_bits": 32768,
+      "write_bits": 32768,
+      "kv_write_bits": 32768,
+      "result_bits": 4096
+     },
+     "vm_banks_256b": {
+      "read_bits": 512,
+      "gather_bits": 128,
+      "write_bits": 128,
+      "kv_write_bits": 128,
+      "result_bits": 16
+     },
+     "area_element_um2": {
+      "light": 7069,
+      "sfu": 34451
+     },
+     "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
+     "hardened": {
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
+      "sfu": null
+     },
+     "area_mm2": 38.601,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.601,
+      "lane_array_mm2": 23.913,
+      "lane_side_um": 4890.1,
+      "vm_block_mm2": 14.688,
+      "vm_depth_um": 3003.7,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.274,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "option": "C_rotate",
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling 2026-10-01: the product's VM)",
+      "field_loss_mm2": 25.57,
+      "note": "ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
+     "ops": {
+      "L20.attn.softmax.max": {
+       "vectors_per_row_set": 16,
+       "vectors": 96,
+       "depth": 68,
+       "vw": 1024,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.exp_sum": {
+       "vectors_per_row_set": 48,
+       "vectors": 288,
+       "depth": 117,
+       "vw": 256,
+       "span": true,
+       "bad": false
+      },
+      "L20.attn.softmax.sink": {
+       "vectors_per_row_set": 1,
+       "vectors": 6,
+       "depth": 70,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      },
+      "L20.attn.softmax.divide": {
+       "vectors_per_row_set": 32,
+       "vectors": 192,
+       "depth": 37,
+       "vw": 256,
+       "span": false,
+       "bad": false
+      }
+     },
+     "softmax_issue_vectors": 582,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 5,
+     "softmax_chain_cycles": 934,
+     "measured": {
+      "record": "results/rtl/v41x_su_softmax.json",
+      "t640_n16_m8": 3280
+     }
+    }
+   },
+   "hub_logic_mm2": 76.968,
+   "hub_avail_mm2": 233.7,
+   "discrepancies": []
+  }
+ ],
+ "elements": {
+  "indexer": {
+   "element": "ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle (16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+   "sub_element": "ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+   "macs_per_element": 16384,
+   "keys_per_element": 4,
+   "key_bits_in": 2176,
+   "query_bits": 17920,
+   "meta_fifo_bits": 2240,
+   "out_bits": 184,
+   "latency": 48,
+   "area_est_um2": 1354841.28,
+   "area_basis": "ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area (ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 closed, per key of 4)",
+   "hardened_record": "results/physical_abi3/asap7/hdc/v41x/w11/idx_chunk/physical.json",
+   "hardened_scale": 16
+  },
+  "idx_reader": {
+   "element": "per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / _kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+   "replicas_fixed": 128,
+   "bytes_per_key": 68,
+   "sector_B": 32,
+   "peak_sectors_per_cycle": 120.90144114517845,
+   "collector_out_bits": 34816,
+   "measured_record": "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+   "measured_sectors_per_cycle": 60.04
+  },
+  "attention": {
+   "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+   "products_per_element": 512,
+   "H": 16,
+   "D": 512,
+   "TD": 32,
+   "q_bits": 8192,
+   "kv_row_bits": 4240,
+   "p_word_bits": 512,
+   "pv_out_bits_per_tile": 512,
+   "area_est_um2": 260788.224,
+   "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+   "hardened_record": "results/physical_abi3/asap7/hdc/v41x/w11/attn_tile/physical.json",
+   "hardened_scale": 1,
+   "measured_record": "results/rtl/v41_full_attention_numeric/result.json",
+   "measured_job_cycles_pwords1": 609,
+   "measured_pv_window_pwords1": [
+    248,
+    559
+   ],
+   "measured_job_cycles_pwords2": {
+    "640": 449,
+    "128": 193
+   },
+   "measured_pv_window_pwords2": [
+    240,
+    399
+   ],
+   "measured_verify6_cycles": {
+    "1": 3389,
+    "2": 2429
+   }
+  },
+  "stream_unit": {
+   "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+   "read_streams": 4,
+   "AW": 24,
+   "area_est_light_um2": 4084.6590000000006,
+   "area_est_sfu_um2": 34450.683,
+   "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
+   "hardened_record_light": "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
+   "hardened_record_sfu": "results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024r/physical.json",
+   "measured_record": "results/rtl/v41x_su_softmax.json",
+   "measured_softmax_t640_n16_m8": 3280
+  }
+ },
+ "source_sha256": {
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+  "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+  "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
+  "results/rtl/v41_full_attention_numeric/result.json": "76dfb9a4e0bf05ae54781df77c32df89cdcf074622b393ec25e81951f3e7c4c7",
+  "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json": "8d769cca3c2072c88e88e9769a3bd1873f6daf2e36b8358cad0a8cea9c8ae304",
+  "results/rtl/v41x_su_softmax.json": "e07463655922bcfb21c8364479b3632cf71705c116941994f63d20539b35bc75"
+ }
+}

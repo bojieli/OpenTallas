@@ -1,0 +1,145 @@
+{
+  "actual_recovery_admission": false,
+  "adoption": false,
+  "checkpoint_payload_reads": false,
+  "clock_reset": {
+    "WINDOW_mux_KARB": "clk with asynchronous negedge rst_n/rn state reset",
+    "architecture_clock_policy": "AGENTS declares streaming1.2GHz and serial0.9GHz; these are target domains, not a measured closure or CDC implementation in this runtime manifest",
+    "backend": "same connected clk interface, synchronous !rst_n queue/return reset on posedge",
+    "connected_fixture": "CLK_PS1000 and one 1ns simulated clock, not physical qualification",
+    "live_reset_scope": "rn fans out across die/core, all four stacks and other services. A WINDOW-only certificate cannot authorize rn reset; require all reset-domain producers/queues/engines and W/B/CKV/RoPE ownership drained.",
+    "phy": "runtime u_hbm uses clk/rn; K model u_k uses rst_n and defaults CLK_PS1000; wrapper does not forward CLK_PS to u_k",
+    "root_reset": "rst_n asynchronous assertion into two-flop rst_s, rn=rst_s[1], two posedges for release",
+    "runtime_die": "One clk input in pinned runtime source; no mesochronous crossings modeled (source lines49-50)"
+  },
+  "finite_ownership": {
+    "MAXSKIP": 16,
+    "QD": 64,
+    "REFPB": 3,
+    "RQD": 32,
+    "RW": 16,
+    "WINDOW_owned_entries_maximum": 8,
+    "backend_NPC": 32,
+    "counter_rules": [
+      "reserve counts before request publication; reserve may be cancelled only before any accepting boundary",
+      "atomic accept at actual direct mux/KARB/backend handshake transfers lease; optional PIPE_OUT accept creates KARB-held lease",
+      "accept-retire equals accepted owned leases; reserve-cancel-retire equals all leases",
+      "fault latches existing fault bits and freezes ingress; it does not free reservations, reset epoch or clear accepted counters",
+      "retire only exact typed identity after final return handshake; rejected stale/duplicate cannot retire a new owner",
+      "restart/epoch reset requires all actor acknowledgements tied to current lease/revision and end-to-end delivery fence",
+      "64-bit ticket/lease/revision exhaustion refuses further reuse; observer trace is not hardware storage"
+    ],
+    "held_registered_response": "aliases RQ head, not a ninth lease",
+    "identity_fields": {
+      "address30": "request",
+      "beat": "0 for single-sector reads",
+      "epoch9": "wire",
+      "lease64": "model-only fenced generation",
+      "owner": "WINDOW constant",
+      "pc5": "address route",
+      "sector5": "wire",
+      "serial64": "model-only reservation ticket, no wrap"
+    },
+    "maximum_backend_queue_and_return_entries_per_stack": 3072,
+    "minimum_outstanding_count_bits": 4,
+    "source_counter_bits_existing": 5,
+    "source_maximum_leases": 8
+  },
+  "hardware_credit": false,
+  "implementation_commit": "de11b3a71090119eb912c0b77dc63fda22e86c51",
+  "interface_state_route_cost": {
+    "alternative_full_serial_on_wire_cost": "If no fence guarantee is obtainable, adding serial64 would add4096 aggregate request+response tag bits across32PCs per stack (16384 across4stacks), before mux fanout. Not proposed/implemented/adopted; finite serial also fails closed on exhaustion.",
+    "boundary": "Any future hardware change must be priced in tools/uarch_model.py and routing/SSFF gates before build; this task creates only the protocol specification.",
+    "cost_class": "analytical state/route count only; no synthesis/area/SSFF/track measurement",
+    "debug_snapshot_breakdown": "32 PCs x(qcount7+rcount6+registered_valid1+scheduler_valid1)",
+    "entry_breakdown": "lease64+serial64+wire_tag14+address30+pc5+phase3+valid1=181",
+    "existing_wire_tags": "14 WINDOW payload bits +2 mux-owner bits; KARB adds one bit ->17 backend tag bits; unchanged by this spec",
+    "full_model_8_entry_bits": 1448,
+    "full_model_lease_entry_bits": 181,
+    "global_breakdown": "lease64+serial64+revision64+4 accounting counters64+outstanding4+mode2+fault5=459",
+    "global_spec_register_bits": 459,
+    "minimum_future_control_routes": "5 acknowledged-empty/fence actor signals plus freeze/recover_request/epoch_clear/reset_permission:9 control signals for selected owner; each tied to lease/fenced transaction, not bare pulses",
+    "minimum_wire_tag_comparators": "8 x14-bit equal comparisons, plus valid/phase/lease checks; physical optimization not qualified",
+    "optional_debug_snapshot_bits": 480,
+    "total_full_spec_state_bits": 1907
+  },
+  "latency": {
+    "already_eligible_held_no_competitors": "At most8 WINDOW response handshakes at one K return per cycle, plus one registered-offer clear edge, plus explicit ack/clear control latency. This is a conditional service-count bound, not a calendar/PPA measurement.",
+    "future_control_assumption": "If acknowledgements sampled in parallel on common clk, 1 registration +1 commit +1 restart edge =3 proposed control cycles; not implemented, no throughput/clock credit.",
+    "queued_reads": "Requires existing finite backend event calendar and fairness assumptions; no new calendar/provider is introduced or tuned here.",
+    "under_arbitrary_held_response": "No finite recovery latency bound; restart remains denied until actual handshake/fence. Timeout never releases ownership."
+  },
+  "minimum_future_opt_in_preconditions": [
+    "Exact source/parameter pins and common-clock reset bindings; direct KARB selection fixed. Any PIPE_RSP/KARB_LOCAL change extends the gate before admission",
+    "Bind five named provider acknowledgements above to implemented exact signals/counters; their current absence is the concrete admission blocker",
+    "Freeze every selected-owner ingress on fault, including same-edge accepted grants, prime and block publication; latch original fault until certified clear",
+    "Account all owned leases through queued, scheduled, return-queued and registered held stages; held-ready can stall indefinitely without credit reclamation",
+    "Quarantine staging/retained publication on fault; re-prime/revalidate source content after certified restart; do not assume old stage_valid survives",
+    "Provider fence guarantees no future old-generation callbacks/responses; otherwise bounded epoch alias cannot be admitted",
+    "No source-only/global forced reset while ownership exists; die rn reset additionally needs global reset-domain drain certificate",
+    "Fail closed on counter exhaustion, invalid/late ack, missing provider or timeout; retain original fault and all leases; no timeout-based cancellation"
+  ],
+  "model_sha256": "eca64ee680e9e4b21b8fa0213c8b5e34d759ddaf985f2ff1c28d580cfefc2a55",
+  "providers": [
+    {
+      "actor": "WINDOW",
+      "implemented": [
+        "fault/fault_code",
+        "m_v/m_rdy and s_v/s_rdy",
+        "internal refill_pending, issued/received masks"
+      ],
+      "missing": "WINDOW_RECOVERY_RETIRE_ACK(lease,ticket,outcome) plus frozen accepted/cancelled/retired counters; current fault guard prevents bookkeeping retirement",
+      "requirement": "Freeze prefetch/prime/blk/start; preserve accepted leases and fault; independently discard-and-retire valid fault-drain responses; cancel only never-accepted reservations"
+    },
+    {
+      "actor": "MUX",
+      "implemented": [
+        "combinational WINDOW/CKV/RoPE ownership tags and routing",
+        "turn and fault state"
+      ],
+      "missing": "MUX_WINDOW_DRAIN_ACK(lease,frozen,no held/offered request/response)",
+      "requirement": "No ledger in mux. With direct paths, prove no local storage and prevent upstream reissue; retain owner tags through drain, never infer global idle from w_v=0"
+    },
+    {
+      "actor": "KARB",
+      "implemented": [
+        "lowest-PC K return selection",
+        "k_grants cumulative32",
+        "kw_out/bw_out are write counters",
+        "PIPE_OUT0/PIPE_RSP0 in baseline"
+      ],
+      "missing": "KARB_WINDOW_READ_DRAIN_ACK(lease,accepted-retired,no K request/response pipeline valid)",
+      "requirement": "Read leases must span accepted request through WINDOW retirement; grant counter or write-zero alone is not read drain. PIPE_OUT1 optional held-request modeled; PIPE_RSP1 requires additional held-group acknowledgement and is outside executable direct-return model"
+    },
+    {
+      "actor": "BACKEND",
+      "implemented": [
+        "internal q_n[32],r_n[32],h_sched[32],rsp_v[32],q/r tags",
+        "registered return handshake and bounded QD64/RQD32"
+      ],
+      "missing": "BACKEND_WINDOW_DRAIN_ACK(lease,owner-scoped queues/held offers empty,scheduler empty)",
+      "requirement": "RQ-held registered offer aliases its RQ-head identity; do not double-count it, but require its valid clears after final acceptance edge. Shared queues require all-owner global drain or reliable owner-scoped ledger, not simply WINDOW pending=0"
+    },
+    {
+      "actor": "DELIVERY_FENCE",
+      "implemented": [
+        "closed synthetic timed backend emits one registered response per accepted read in nominal path"
+      ],
+      "missing": "DELIVERY_FENCE_ACK(lease,no future stale/duplicate response from any route/provider)",
+      "requirement": "Cannot infer from 9-bit tag, timer, quiet samples or reset. Must bind exact transport/provider source and stop all request ingress; if arbitrary late duplicates remain possible, refuse restart or carry a nonaliasing identity end-to-end. MODEL_ONLY certificates never authorize RTL."
+    }
+  ],
+  "schema": "opentallas.window_fault_recovery_protocol_record.v1",
+  "scope": "One selected-stack WINDOW read owner, credits<=8, LENW4/BEATW4, 9-bit epoch, direct mux/KARB and registered backend returns. Event-level reservation/ownership protocol, not a replacement timing/backend/hardware model.",
+  "source_binding_sha256": "35606ac22fa13be18b62ae269a825606931077686206dc87de9bdac44f333462",
+  "status": "PASS_EXECUTABLE_PROTOCOL_SPEC_ACTUAL_RECOVERY_ADMISSION_BLOCKED",
+  "test_sha256": "ed7f28f5417019349af2f510bd35669ec889513d28cbfb6f6043c5c75c9e8f97",
+  "validation": {
+    "RTL_builds": 0,
+    "actual_providers_implemented": 0,
+    "live_resets": 0,
+    "original_files_edited": 0,
+    "pytest_cases": 31,
+    "sequential_formal_proof": false
+  }
+}

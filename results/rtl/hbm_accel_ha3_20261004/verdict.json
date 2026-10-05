@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.hbm_accel.ha3_verdict.v1",
+ "rung": "HA3 cut-through collective (R3a, EPI=0) + fused receive epilogue (R3b)",
+ "optional": true,
+ "verdict": "REJECT (cannot close physically: G-timing fails in context; owner rule, no rescue loop)",
+ "G_exact": "PASS: Qwen reduced 18/18 (cut/fuse/fuseo, FLAT5/7, EPI 0/1), DS reduced pos0 token 2815, epilogue gate 9 bit-exact + 9 fail-closed",
+ "G_latency": "PASS: transport issue->response 35.1 -> 35.2 cyc (no link latency added); SM-side boundary 172.7 -> 0 cyc per AR section",
+ "G_gain": {
+  "pass_": true,
+  "primary": "accelerator_measured_composition @ tomahawk_ultra_protocol, DS 1M",
+  "ar_pct": 2.879,
+  "mtp_measured_draft_pct": 1.607,
+  "ar_tok_s": [
+   2562.7,
+   2636.5
+  ],
+  "mtp_tok_s": [
+   6025.4,
+   6122.3
+  ],
+  "credited_us": 10.92,
+  "no_double_count": "transport credit 0 (Tomahawk protocol contains the cut-through; R3a not re-credited); only W19 boundary 168 x 78 cyc"
+ },
+ "R3b": "REJECT (<1%: -0.01%/-0.3% token)",
+ "qwen": "REJECT (HBM-bound, <=0.63% for HA1/2/3/6 together)",
+ "G_area": {
+  "ha3_epi0_um2": 56711,
+  "baseline_ha3_0_um2": 38896,
+  "delta_um2": 17815,
+  "delta_pct": 45.8,
+  "die_um": 540
+ },
+ "G_route": {
+  "ha3_epi0": "routed, 0 antenna violations",
+  "baseline": "routed, 0 antenna violations",
+  "note": "ORFS finish/report stage timed out at 6 h after 6_final.odb/spef were written; e0w (600 um) never finished detail route"
+ },
+ "G_timing": {
+  "clock_ns": 0.833333,
+  "ss_uncertainty_ps": 60,
+  "ff_hold_uncertainty_ps": 25,
+  "ha3_epi0": {
+   "ss_setup_wns_ns": -1.69244,
+   "ss_failing_setup": 18337,
+   "ss_hold_wns_ns": 0.04538,
+   "ff_hold_wns_ns": -0.00243,
+   "ff_failing_hold": 2,
+   "ff_setup_wns_ns": -0.47686,
+   "endpoints": 43630,
+   "ss_worst": {
+    "start": "g_ha3.u_port.g_on.u_rx_cdc.g_on.u_fifo.rbin[0]$_DFFE_PN0P_",
+    "end": "g_ha3.u_port.g_on.asmb[2166]$_DFFE_PN0P_"
+   }
+  },
+  "baseline_ha3_0": {
+   "ss_setup_wns_ns": -1.70125,
+   "ss_failing_setup": 18344,
+   "ss_hold_wns_ns": 0.04741,
+   "ff_hold_wns_ns": -0.00977,
+   "ff_failing_hold": 7,
+   "ff_setup_wns_ns": -0.52207,
+   "endpoints": 43201,
+   "ss_worst": {
+    "start": "g_base.u_ep.g_on.u_rx_cdc.g_on.u_fifo.rbin[0]$_DFFE_PN0P_",
+    "end": "g_base.u_ep.g_on.asmb[1955]$_DFFE_PN0P_"
+   }
+  },
+  "pass_": false,
+  "note": "both fail by the same ~1.7 ns SS: worst path in the ORIGINAL endpoint rx CDC -> asmb reassembly (inherited, not HA3 logic); HA3 cannot be adopted on a port that does not close"
+ },
+ "records": {
+  "sta_e0": "results/rtl/hbm_accel_ha3_20261004/phys3/sta_e0.json",
+  "sta_h0": "results/rtl/hbm_accel_ha3_20261004/phys3/sta_h0.json",
+  "composition": "results/rtl/hbm_accel_ha3_20261004/composition_authoritative.json",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ha3/phys3"
+ }
+}

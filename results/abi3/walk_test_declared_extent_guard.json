@@ -1,0 +1,65 @@
+{
+ "answer": "No.  A view whose DECLARED extent is smaller than one iteration of the implied block cannot be the axis being walked, and V4.1's compressor gather is exactly that: a 2-row packed key/value pair shortened to ONE row against a 512-row block.",
+ "not_a_claim": [
+  "this does not close a V4.1 cell",
+  "the audit counts views whose BEHAVIOUR changes; a digest cannot move when only the resolver changes, which is why the gate is a re-walk and not a digest"
+ ],
+ "question": "A18's walk test accepts a LOOP_INDUCTION term as walking the extent axis when ``term_stride == stride[axis] * iteration_extent``.  Is that sufficient?",
+ "schema": "opentallas.result.walk_test_declared_extent_guard.v1",
+ "the_case": {
+  "declared": "(2, 512), stride0 512, one term of stride 262,144",
+  "implied_iteration_extent": 512,
+  "the_refusal": "DMA.GATHER output view dims (1, 512) differ from the gathered shape (2, 512), at the third token of a run whose first two matched the shipped oracle exactly",
+  "view": "output of the compressor's decode DMA.GATHER",
+  "what_the_resolver_did": "shortened dim0 from 2 to 1",
+  "why_the_axis_is_not_a_token_axis": "the group axis of the rank-3 (span_groups_ratioN, 2, 512) tensor is already consumed, so axis 0 of the view is the static pair"
+ },
+ "the_gate_in_two_parts": {
+  "1_static_audit_of_every_built_deployment": {
+   "method": "count views where the CURRENT walk test passes and the declared extent is smaller than the implied iteration -- those and only those change behaviour",
+   "qwen3_hbm": 0,
+   "qwen3_rom": 0,
+   "qwen3_rom_array": 0,
+   "reading": "five of the six closed cells cannot move, because the guard changes no view they contain",
+   "v41_hbm_c512": 4,
+   "v41_rom_wafer_c8192": 34,
+   "v4_flash_hbm": 2,
+   "v4_flash_rom": 0,
+   "v4_flash_rom_array": 0
+  },
+  "2_token_rewalk_of_the_one_cell_it_touches": {
+   "cell": "DeepSeek-V4-Flash HBM, TA-DS-CHAT-1-P32",
+   "oracle_agreement": true,
+   "reading": "unmoved, and the contract accepted",
+   "status": "pass",
+   "terminal_accepted": true,
+   "tokens": [
+    13806,
+    345,
+    7472,
+    55560
+   ],
+   "wall_seconds": 4996.4
+  }
+ },
+ "the_guard": "require ``dim[axis] >= iteration_extent`` as well.  Derivable from the view alone, and the same argument the resolver's own docstring makes for the mHC branch reduction -- clamping such a view 'would present four streams as one, which is not a partial final iteration of anything'.",
+ "what_it_buys": {
+  "reading": "two tokens to four, with the first two unchanged and still agreeing.  The remaining divergence is a SEQUENCE defect at the first compression boundary and is recorded separately.",
+  "v41_hbm_after": {
+   "failure": null,
+   "tokens": [
+    14,
+    1320,
+    42250,
+    294
+   ]
+  },
+  "v41_hbm_before": {
+   "failure": "DMA.GATHER output view dims (1, 512) ...",
+   "tokens": [
+    14,
+    1320
+   ]
+  }
+ }
+}

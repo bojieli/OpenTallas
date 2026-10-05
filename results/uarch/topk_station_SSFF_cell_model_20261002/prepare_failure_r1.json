@@ -1,0 +1,1 @@
+{"classification":"PARSER_REFUSED_MULTIINPUT_AND_ARC_BEFORE_OUTPUT","exception":"ValueError: unique arc absent combinational","correction":"Retain both A and B input timing arcs, bound all of them; no cell/geometry/expectation change","physical_jobs":0}

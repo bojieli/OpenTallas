@@ -1,0 +1,290 @@
+{
+  "actual_provider_and_remote_event_calendar_qualified": false,
+  "binding_artifact_sha256": {
+    "candidate_source.json": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08",
+    "model.json": "a360b22fa5689bb9038af96b556594f2ea038128ad905548d4c5346aa7dfe5b6",
+    "native_shard_choices.jsonl.gz": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+    "ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+    "phase_shard_bindings.jsonl.gz": "e22b2080c32cf14d2fcbda03057497fedcbf177927aee4163f636c2c9bcec979",
+    "provider_shard_bindings.jsonl.gz": "5b3afc7853631108bfffe22d0438aa4c1b42384e3f7587b52de7e104d6fe2d92"
+  },
+  "binding_directory": "results/uarch/dsrom_parallel_owner_binding_20261002/r1",
+  "binding_model_sha256": "a360b22fa5689bb9038af96b556594f2ea038128ad905548d4c5346aa7dfe5b6",
+  "build_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "finite_transport_requirements": {
+    "ECC": "8178892800 remote sidecar DATA parity bits in full-model allocated per-rank templates, not measured traffic. Corrected compute needs protected sidecar-word decoder and original bit identity causally before result; derive per-event256+10word reads/coalescing from actual main-read schedule.",
+    "HE_CROM": "All80 original providers retain exact stage/globalpair/nativeword/lane coordinates. New shard routing includes HE bank ownership and CROM read request/return debts; existing adapters still unimplemented.",
+    "activation": "Replay every actual valid cfg/go/xs/xb edge into remote common-phase field. FIFO ordering and source beat identity; cannot omit controls or lose beats. Clock crossing/link endpoint delay has positive priced cycles.",
+    "admission": "Two owner leases and actual both-shard cfg/input readiness; originalfieldbusy sums pairbusy ONLY and does not prove cfgloader/return/ECC queues drained.",
+    "cfg": "Source loader safeGO edge27 is simulation genericcmr contract;7hard4096x72macro depth-select, clkq, ECC and register capture need independent realprovider calendar. Add to remote cfg command path before GO.",
+    "delivered_source_edges_and_original_deadlines_bound": false,
+    "finite_calendar": "Use B.finite_calendar with actualedge events, bits including headers, explicit width/positive latency/slots. All channels on one link share FIFO. Originalconsumerdeadlines must come from source program events, not fitted sensitivity.",
+    "no_loss": "No added serialstages or TP4 levels; assert remote visible <= original consumer dependency deadline for cfg,input,ECC,roots,provider requests and rearm; propagate exposed stalls to descendants.",
+    "return_capture": "64remote roots have no ready:6912packetbits can arrive per streamedge.64whole packet capture slots required for one simultaneous full burst; multi-edge held link bound must be priced separately.",
+    "source_target_clock_domains": "stream1.2GHz; serial0.9GHz; SSsetup60ps/FFhold25ps unchanged. Calendar tick must be bound to source domain; no physical closure claim."
+  },
+  "generator_sha256": "da1626e5a8feff6ac5c38fb1b7c3874eb14424227e6953224524f4c6395d75ea",
+  "header": {
+    "RTL_or_physical_packet_provider_implemented": false,
+    "cfg": "stage6,rank2,shard1,phase10,era1,opseq13,np3,cfggo1=37; local arrays generate distinct25x48 words in parallel",
+    "counter_reuse_or_new_allocation_must_be_priced": true,
+    "full_activation": "stage6,rank2,shard1,phase10,era1,opseq13,beat16=49; preserve source cfg/go/np/positions and data fields",
+    "root": "stage6,rank2,shard1,phase10,era1,opseq13,rootindex6=39; source69 already includes globalrow16,pos3,data,valid,error"
+  },
+  "local_parity_option": {
+    "ECC_read_port_capacity_and_capture_or_adapter_SSFF_price_UNBOUND": true,
+    "TP4_total_mirror_pairs": 23896,
+    "all58_stage_mirror_pairs": 5974,
+    "already_charged_padding_macros_used_per_stage": 412,
+    "conditional_cross_shard_parity_data_reads_after_local_copy": 0,
+    "extra_macro_instance_count": 0,
+    "extra_redundant_useful_parity_data_bits_per_rank": 17616076800,
+    "extra_reserved_provider_capacity_bits_per_stage": 432013312,
+    "immutable_provider_copy_provenance_and_physical_ROM_init_NOT_QUALIFIED": true,
+    "local_parity_word_endpoint_boundaries_checked": 8448,
+    "new_mirrors_per_stage": 103,
+    "original58x103completeparitypairs_preserved": true,
+    "original_padding_shard0": 337,
+    "original_padding_shard1": 384,
+    "precompute_qualification": "Actual local protected256+10-word read/decoder/coalescer calendar before corresponding mainword compute; local address removes transport dependency, not the read/qualification latency.",
+    "prospective_694p883_macro_body_screen_unchanged_but_new_adapters_UNPRICED": true,
+    "remaining_padding_shard1": 281,
+    "same_candidate_NP2048_R64_NBF362_and_all_original_matrices_unchanged": true,
+    "status": "LEGAL_SYMBOLIC_STORAGE_OPTION_NOT_SELECTED_OR_PHYSICAL_PROVIDER_QUALIFIED"
+  },
+  "minimal_adapter_state": {
+    "ECC_remote_word_capture_and_coalescing_slots_unbound": true,
+    "accepted_shard_lease_min_bits_per_logical_owner": 2,
+    "additional_accept_return_adapter_SSFF_area_unqualified": true,
+    "additional_table_copy_bits_per_old_rank_owner": 33792,
+    "both_tables_repeated_on464_layerdies": true,
+    "mirrored_phase_R0_policy_bits_per_shard": 1024,
+    "mirrored_phase_key_bits_per_shard": 32768,
+    "required_generation_identity": "phase10,era1,opseq13 with all source/owner/delivery/causalvisibility debts fenced before wrap; source producer cancellation state17 remains distinct",
+    "root_capture_one_full64packet_burst_bits": 6912,
+    "source_R128_to_two_R64_wrapper_adaptation_REQUIRED": true,
+    "tables_exist_in_old_owner_and_no_full_double_area_credit": true
+  },
+  "next_cheapest_gate": "Maxwell/Peirce deliver source accepted cfg/input/root/ECC/HE/CROM arrivaledges, originalconsumerdeadlines, finite link/CDC/capture params and causal fence identities for this exact PAR2; evaluate shared calendar before adapter RTL or physical build.",
+  "rate_adopted": false,
+  "readback": {
+    "all40_all384_PASS": true,
+    "capture_bound_requires_positions_multiplier_and_original_consumer_delivery_fence": true,
+    "capture_is_not_qualified_FIFO_or_SSFF_area": true,
+    "complexity": "One46509phase and276909choice compressed-record scan; no enumeration of full-model weight payload or repacking.",
+    "conservative_full_phase_capture_bits_at108_per_packet": 442368,
+    "encoded_totals_are_allocated_template_words_NOT_runtime_read_traffic": true,
+    "expert_return_order": "Actual six selected IDs retain original producer/output order; PAR2 is row-sharding, not independent whole-expert stage ownership.",
+    "max_remote_final_rows_per_single_position_phase": 4096,
+    "native_call_count": 1149,
+    "native_choice_count": 276909,
+    "phase_count": 46509,
+    "source_totals": {
+      "ECC_local_bits": 9437184000,
+      "ECC_remote_bits": 8178892800,
+      "both_shards_active": 46410,
+      "output_rows": 38136192,
+      "phases": 46509,
+      "physical_weight_words": 2268504064
+    }
+  },
+  "schema": "opentallas.dsrom.PAR2-source-transport-contract.v1",
+  "single_token_no_loss_proven": false,
+  "source_cfg_edges": {
+    "ROM_read_edges": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "actual_hard_ROM_CLKQ_ECC_capture_or_delivery_fence_qualified": false,
+    "command_edge": 0,
+    "element_cfg_capture": [
+      {
+        "ROM_word": 0,
+        "edge": 2,
+        "element_cfg_capture_word": 0
+      },
+      {
+        "ROM_word": 1,
+        "edge": 3,
+        "element_cfg_capture_word": 1
+      },
+      {
+        "ROM_word": 2,
+        "edge": 4,
+        "element_cfg_capture_word": 2
+      },
+      {
+        "ROM_word": 3,
+        "edge": 5,
+        "element_cfg_capture_word": 3
+      },
+      {
+        "ROM_word": 4,
+        "edge": 6,
+        "element_cfg_capture_word": 4
+      },
+      {
+        "ROM_word": 5,
+        "edge": 7,
+        "element_cfg_capture_word": 5
+      },
+      {
+        "ROM_word": 6,
+        "edge": 8,
+        "element_cfg_capture_word": 6
+      },
+      {
+        "ROM_word": 7,
+        "edge": 9,
+        "element_cfg_capture_word": 7
+      },
+      {
+        "ROM_word": 8,
+        "edge": 10,
+        "element_cfg_capture_word": 8
+      },
+      {
+        "ROM_word": 9,
+        "edge": 11,
+        "element_cfg_capture_word": 9
+      },
+      {
+        "ROM_word": 10,
+        "edge": 12,
+        "element_cfg_capture_word": 10
+      },
+      {
+        "ROM_word": 11,
+        "edge": 13,
+        "element_cfg_capture_word": 11
+      },
+      {
+        "ROM_word": 12,
+        "edge": 14,
+        "element_cfg_capture_word": 12
+      },
+      {
+        "ROM_word": 13,
+        "edge": 15,
+        "element_cfg_capture_word": 13
+      },
+      {
+        "ROM_word": 14,
+        "edge": 16,
+        "element_cfg_capture_word": 14
+      },
+      {
+        "ROM_word": 15,
+        "edge": 17,
+        "element_cfg_capture_word": 15
+      },
+      {
+        "ROM_word": 16,
+        "edge": 18,
+        "element_cfg_capture_word": 16
+      },
+      {
+        "ROM_word": 17,
+        "edge": 19,
+        "element_cfg_capture_word": 17
+      },
+      {
+        "ROM_word": 18,
+        "edge": 20,
+        "element_cfg_capture_word": 18
+      },
+      {
+        "ROM_word": 19,
+        "edge": 21,
+        "element_cfg_capture_word": 19
+      },
+      {
+        "ROM_word": 20,
+        "edge": 22,
+        "element_cfg_capture_word": 20
+      },
+      {
+        "ROM_word": 21,
+        "edge": 23,
+        "element_cfg_capture_word": 21
+      },
+      {
+        "ROM_word": 22,
+        "edge": 24,
+        "element_cfg_capture_word": 22
+      },
+      {
+        "ROM_word": 23,
+        "edge": 25,
+        "element_cfg_capture_word": 23
+      },
+      {
+        "ROM_word": 24,
+        "edge": 26,
+        "element_cfg_capture_word": 24
+      }
+    ],
+    "last_cfg_capture_edge": 26,
+    "source_safe_GO_edge": 27
+  },
+  "source_pins": {
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "archive": "results/uarch/dsrom_parallel_owner_binding_20261002/source_contract_r3/ot_v41_pair_w17w10.sv",
+      "commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "archive": "results/uarch/dsrom_parallel_owner_binding_20261002/source_contract_r3/ot_v41_retn_w17w10.sv",
+      "commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "rtl/v41die/ot_v41_spine_w17w10.sv": {
+      "archive": "results/uarch/dsrom_parallel_owner_binding_20261002/source_contract_r3/ot_v41_spine_w17w10.sv",
+      "commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "rtl/v41rom/ot_v41_ret.sv": {
+      "archive": "results/uarch/dsrom_parallel_owner_binding_20261002/source_contract_r3/ot_v41_ret.sv",
+      "commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+    }
+  },
+  "source_widths": {
+    "BF_activation": 1067,
+    "CFG_command_packet_proposal": 37,
+    "PHW": 10,
+    "cfg_GO_controls_at_PHW10": 16,
+    "complete_broadcast": 1632,
+    "data_only": 1616,
+    "full_bus_packet_proposal": 1681,
+    "q_activation": 549,
+    "remote_root_ports": 64,
+    "root_packet_proposal": 108,
+    "source_root": 69
+  },
+  "verdict": "PASS_SYMBOLIC_SOURCE_BOUND_PAR2_MAP_PROVIDER_AND_TRANSPORT_CONTRACT_ONLY"
+}

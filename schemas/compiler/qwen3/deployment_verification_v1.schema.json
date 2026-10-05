@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/deployment_verification_v1.schema.json",
+  "title": "OpenTallas Qwen3 complete deployment verification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_count", "build_id", "inverse_report_id", "report_id", "schedule_certificate_id", "schema", "status"],
+  "properties": {
+    "artifact_count": {"minimum": 51, "type": "integer"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "inverse_report_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schedule_certificate_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.deployment_verification.v1"},
+    "status": {"const": "pass"}
+  },
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

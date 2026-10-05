@@ -1,0 +1,8 @@
+{
+  "schema": "Qwen_controller_capture_negative_fixture_failure_r1",
+  "verdict": "FAIL_TEST_MUTANT_DID_NOT_CHANGE_TAG_NOT_DUT",
+  "initial_test_result": "1failed2passed",
+  "reason": "Initial tag mutant assigned0 tooriginaltag0, so existing captured owner raisedValueError rather than unknownidentityKeyError. Corrected mutant XOR1; final4testsPASS.",
+  "source_pin": null,
+  "scope": "Initial uncommitted testfixture; no actualcontroller failure."
+}

@@ -1,0 +1,39 @@
+{
+ "observed_utc": "2026-10-01T08:30:58.105783+00:00",
+ "live_processes": [
+  "2984622 2984611    01:17:36 11576 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.json",
+  "2984623 2984622    01:17:36 4644268 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.json",
+  "3029028       1       57:24  3420 bash /home/ubuntu/w18work/jobs/rebase_wait_only.sh"
+ ],
+ "global_route_log": "/home/ubuntu/w18work/karb21/proot/orfs/logs/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.tmp.log",
+ "intermediate_tail": [
+  "      260 |       0 |    1493 |            0 |    +0.4% | -171.237 | -46094.379 | u_iq.m1[105]$_DFFE_PP_/D",
+  "      270 |       0 |    1549 |            0 |    +0.4% | -170.549 | -43473.082 | u_iq.m0[247]$_DFFE_PP_/D",
+  "      280 |       0 |    1606 |            0 |    +0.5% | -170.099 | -40939.762 | u_iq.m0[209]$_DFFE_PP_/D",
+  "      290 |       0 |    1663 |            0 |    +0.5% | -169.486 | -38359.258 | u_iq.m1[155]$_DFFE_PP_/D",
+  "      300 |       0 |    1712 |            0 |    +0.5% | -169.140 | -36151.711 | u_iq.m1[287]$_DFFE_PP_/D",
+  "      310 |       0 |    1768 |            0 |    +0.5% | -168.660 | -33563.395 | u_iq.m0[205]$_DFFE_PP_/D",
+  "      320 |       0 |    1824 |            0 |    +0.5% | -168.270 | -31036.506 | u_iq.m1[148]$_DFFE_PP_/D",
+  "      330 |       0 |    1874 |            0 |    +0.5% | -167.825 | -28847.426 | u_iq.m0[212]$_DFFE_PP_/D",
+  "      340 |       0 |    1923 |            0 |    +0.6% | -167.384 | -26684.020 | u_iq.m1[184]$_DFFE_PP_/D",
+  "      350 |       0 |    1979 |            0 |    +0.6% | -166.847 | -24202.223 | u_iq.m1[141]$_DFFE_PP_/D",
+  "      360 |       0 |    2035 |            0 |    +0.6% | -166.022 | -21752.230 | u_iq.m1[137]$_DFFE_PP_/D",
+  "      370 |       0 |    2091 |            0 |    +0.6% | -165.029 | -19266.736 | u_iq.m0[206]$_DFFE_PP_/D",
+  "      380 |       0 |    2147 |            0 |    +0.6% | -164.354 | -16795.291 | u_iq.m1[213]$_DFFE_PP_/D",
+  "      390 |       0 |    2203 |            0 |    +0.6% | -163.550 | -14369.306 | u_iq.m0[170]$_DFFE_PP_/D",
+  "      400 |       0 |    2259 |            0 |    +0.6% | -162.233 | -11920.405 | u_iq.m0[16]$_DFFE_PP_/D"
+ ],
+ "status_tail": [
+  "2026-10-01T06:45:57Z equiv_dlv rc=1",
+  "2026-10-01T06:50:31Z equiv_ksr rc=1",
+  "2026-10-01T06:53:57Z pslice_ksr pnr rc=0",
+  "2026-10-01T06:54:20Z pslice_ksr sta rc=0",
+  "2026-10-01T06:54:51Z pslice_ksr abstract ok",
+  "2026-10-01T07:39:01Z pregionh_h160ksr pnr rc=1",
+  "2026-10-01T07:41:16Z pregionh_h160ksr sta rc=0",
+  "2026-10-01T07:41:16Z KSR_DONE"
+ ],
+ "final_ss_ff_pending": true,
+ "restarted": false,
+ "timing_claim": false
+}

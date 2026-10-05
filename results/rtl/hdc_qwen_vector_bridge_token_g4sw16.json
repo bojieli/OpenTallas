@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.hdc-spec-token-campaign.v1",
+ "status": "pass",
+ "claim_boundary": "whole-token vector core with the elastic packed-KV write bridge, using direct KV reads for compute and checking every emitted K-tail/V-sector byte; timing model is not calibrated for bridge drain stalls",
+ "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096)",
+ "kv_format": "fp8_e4m3",
+ "context": 64,
+ "spec": {
+  "groups": 8192,
+  "lanes": 131072,
+  "su_width": 1024,
+  "hidden": 4096
+ },
+ "spec_ratios": {
+  "lanes_per_hidden": 32,
+  "lanes_per_su_lane": 128
+ },
+ "points": [
+  {
+   "groups": 4,
+   "lanes": 64,
+   "su_width": 16,
+   "position": 63,
+   "token": 271,
+   "next_token": 3525,
+   "isa_next_token": 3525,
+   "isa_logits_bit_exact_with_golden": true,
+   "rtl_cycles": 25100,
+   "model_cycles": 24762,
+   "instructions": 97,
+   "model_error_pct": -1.347,
+   "fault": 0,
+   "logit_mismatches": 0,
+   "vector_memory_mismatches": 0,
+   "kv_cache_mismatches": 0,
+   "kv_bridge": {
+    "written_byte_mismatches": 0,
+    "fault": 0,
+    "drained": true
+   },
+   "pass": true
+  }
+ ],
+ "kv_bridge": true,
+ "input_sha256": {
+  "rtl/hdc/ot_hdc_isa.svh": "ec5d0cc88769e605a4df0df80415efbcb5ae72235f67163876f62f6ac22f6005",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+  "rtl/hdc/ot_hdc_sfu_q.sv": "57cb1d1b5e0b6d207955e72798c55d8c0e643ae17c4800b75cc9c797803ee664",
+  "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+  "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+  "rtl/hdc/ot_hdc_matvec.sv": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
+  "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+  "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+  "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+  "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+  "rtl/hdc/ot_hdc_core.sv": "8ec84de7d892cf5bd8a1cd0d33ef5deb3c8f8c4fbba73d59f345db923b3f69b1",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+  "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+  "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+  "rtl/test/tb_hdc_core.sv": "1014d627707bad1ed26236e0d75a63342a99e847de0b786c1b8d13533595e57a",
+  "rtl/test/hdc_core_harness.cpp": "5d659a8d6994d74a2cc6d28a1e97738c74850a3df389df5aaba1d475d0093685",
+  "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788",
+  "tools/hdc_isa.py": "deb014363460da47a989e125aeaaf52ce24cb6613aff9b06f97712f49b5e1f47",
+  "tools/hdc_program.py": "4d3f4e37437997ab7af3612d96d25d88a6a17f473013586dd43f0afaa83a3712",
+  "tools/hdc_timing.py": "c797838496c764c01bf3195574b26bf026482cbca9867baff072ac9e18e1f078",
+  "tools/rtl_hdc_spec_token_campaign.py": "2ec811883cbcd0a2cbac9a2e1cc4cfc73e01b581b2d0ade2f7aa7e7d96aff454"
+ }
+}

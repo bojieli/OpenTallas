@@ -1,0 +1,51 @@
+{
+  "PC11_19_bound_witnesses": 1440,
+  "PC11_2212_required_published_field_witnesses": 291248,
+  "actual_numeric_calls": 0,
+  "alias_rank_publications": 26880,
+  "checkpoint_header_binding_count": 3435,
+  "checkpoint_payloads_read_by_header_audit": 0,
+  "checkpoint_shards": 43,
+  "checkpoint_tensor_candidates": 46963,
+  "collective_slice_alias_versions": 280,
+  "existing_launcher_refusal": "R45 prefix driver remains bounded PC0..9; fresh owner stage/GO required",
+  "existing_transform_prerequisites": {
+    "40_attention_sink_views": "existing AttentionViewsMixin per-head slice",
+    "40_wo_a_weight_codecs": "existing released wo_a_payload E4M3+UE8M0 to BF16 conversion"
+  },
+  "families": 30,
+  "full_scope_witness_refusal": "independent witness does not cover every rank/field in this scope",
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "live_pins_modified": false,
+  "missing_rank_writer_homes": 0,
+  "missing_released_checkpoint_tensors": [],
+  "no_new_native_jobs": true,
+  "production_calls_closed": 0,
+  "remaining_required": [
+    "actual full-program numerical independent outputs and next-context entering state",
+    "fresh Kepler stage constructor and source-matched journal capacity with Dewey",
+    "actual retained-version publication/acquisition and retirement in admitted execution",
+    "finite physical ACK/waits/installed-L2 resource and SS/FF contextual qualification"
+  ],
+  "reviewed_home_records": 290730,
+  "source_PC_count": 2213,
+  "source_PC_index_range": [
+    0,
+    2212
+  ],
+  "status": "PASS_COMPLETE_STATIC_BINDING_AND_SCOPED_TESTS_NOT_EXECUTION",
+  "templates": 1129,
+  "test_log_sha256": "02c8abffb898ae2cecff770961bac39ada621b45b343b0c1029fb091ff5fa1eb",
+  "tests_command": [
+    "python3",
+    "-m",
+    "unittest",
+    "tools/test_h4_c0_ds_runtime_bindings.py",
+    "tools/test_h4_c0_ds_fullgraph_inventory.py",
+    "tools/test_h4_c0_ds_checkpoint_operator_bindings.py",
+    "tools/test_h4_c0_ds_stage_witness.py"
+  ],
+  "tests_passed": 22,
+  "unsupported_native_opcodes": []
+}

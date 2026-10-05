@@ -1,0 +1,1919 @@
+{
+ "schema": "opentallas.v41-hbm-switched.v1",
+ "tool": "tools/arch_hbm_switched_v41.py",
+ "basis": "spec agent's request, 2026-09-27; closes the asymmetry that the comparator's collectives were on the board\nmesh with overlapped bytes while the ROM array's are on its real 112G lanes):\n\n* every comparator die is an endpoint of one switch tier; a traversal is SerDes -> switch -> SerDes:\n  alpha = 2 x 209 ns (technology.json links.rom_rack_cable_serdes: full KP4 over rack cable, validated 2026-09-27;\n  the same hop the ROM array's stage links use) + 250 ns (one cut-through tier) = 668 ns;\n* each die's link to the switch carries 1.8 TB/s per direction (the spec agent's figure, \"B200 NVLink\"; note B200's\n  published 1.8 TB/s is the bidirectional total, 0.9 TB/s per direction -- priced as a sensitivity);\n* a collective's bytes cross the die's ONE switch link: one-shot all-reduce (p - 1) n, two-step (reduce-scatter +\n  all-gather, fixed order) 2 (p - 1) / p n at two traversals, all-gather (p - 1) / p n; the faster per collective;\n  in-switch reduction (NVLS/SHARP: one traversal, n bytes) is a sensitivity, not the baseline;\n* stage hops and the token return are one traversal plus the payload on the die link;\n* bytes overlap their producer only where the DAG allows (the same rule as the ROM side);\n* static power on the validated inputs (U.static_terms): logic leakage 0.10 W/mm2 x 628 mm2, 4 stacks x 2.8 W,\n  UCIe idle, and the SerDes lanes that carry the package's link (0.9 TB/s per direction = 68 lanes x 0.728 W, 6.5\n  pJ/b), shared by its 2 dies;\n* switches on BOTH machines (spec ruling): NVL72's NVSwitch trays at 1.5 kW each (ASSUMED) scaled to the\n  comparator's 50 packages by port capacity, and the ROM rack's one off-path switch on the same W per Tb/s; then\n  both machines' chip + switch power through the same wall chain (technology.json power.rack_overheads).",
+ "alpha_s": 6.68e-07,
+ "dies": 99,
+ "configs": {
+  "nvl_0p9_nvls": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.3635090574533,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1181.7070954848582,
+      "mtp_m6": 1189.487404472789
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.211544917683,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2138.640512651763,
+      "mtp_m6": 2152.3712948031502
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2415.9117741231044,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 3746.7383234931453,
+      "mtp_m6": 3770.8885951804987
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2680.4083700212755,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 4807.429255522805,
+      "mtp_m6": 4831.593259536144
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2938.024234882893,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 5705.637244731182,
+      "mtp_m6": 5724.442223376872
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3236.6924964183845,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.26,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 6962.64361099127,
+      "mtp_m6": 6983.393561650236
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3417.3759335525424,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.61,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7809.630646553515,
+      "mtp_m6": 7836.038213254724
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3580.375802755708,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 1.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 8710.99387448573,
+      "mtp_m6": 8743.84090939289
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3580.375802755708
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 8743.84090939289
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.0133824160337,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1190.557538394379,
+      "mtp_m6": 1192.4865748083425
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.5028861478152,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2153.1797877096483,
+      "mtp_m6": 2157.3394019425737
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2427.4465431310946,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 3768.113774671301,
+      "mtp_m6": 3774.7945694822542
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2689.4143069710567,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 4821.9093480103365,
+      "mtp_m6": 4831.75999060192
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2945.5398186908837,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 5710.474114825321,
+      "mtp_m6": 5724.442223376872
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.289097153167,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.49,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 6962.64361099127,
+      "mtp_m6": 6983.393561650236
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3417.55253830787,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.88,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7809.630646553515,
+      "mtp_m6": 7836.038213254724
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3580.375802755708,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 1.63,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 8710.99387448573,
+      "mtp_m6": 8743.84090939289
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3580.375802755708
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 8743.84090939289
+    }
+   }
+  },
+  "nvl_0p9": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.3635090574533,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1181.7070954848582,
+      "mtp_m6": 1189.487404472789
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.211544917683,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2138.640512651763,
+      "mtp_m6": 2152.3712948031502
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2415.9117741231044,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 3551.401154056811,
+      "mtp_m6": 3573.091617926557
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2680.4083700212755,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 4469.262569481212,
+      "mtp_m6": 4490.139243492828
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2938.024234882893,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 5235.480419212639,
+      "mtp_m6": 5251.309645176839
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3161.945781457449,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 7.56,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 6274.990677220708,
+      "mtp_m6": 6291.839404398982
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3225.1175926641654,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 18.06,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 6954.7700156056835,
+      "mtp_m6": 6975.704979855995
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3005.3469028822797,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 179.31,
+       "collective_bytes": 1.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7658.1794375949285,
+      "mtp_m6": 7683.554899311864
+     }
+    ],
+    "best_ar": {
+     "G": 64,
+     "rate": 3225.1175926641654
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 7683.554899311864
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.0133824160337,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1190.557538394379,
+      "mtp_m6": 1192.4865748083425
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.5028861478152,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2153.1797877096483,
+      "mtp_m6": 2157.3394019425737
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2427.4465431310946,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 3570.600165727527,
+      "mtp_m6": 3576.598383109498
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2689.4143069710567,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 4481.774527154472,
+      "mtp_m6": 4490.2832407937885
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2945.5398186908837,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 5239.55271066992,
+      "mtp_m6": 5251.309645176839
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3164.4237916318352,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 7.79,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 6274.990677220708,
+      "mtp_m6": 6291.839404398982
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3225.274884697273,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 18.33,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 6954.7700156056835,
+      "mtp_m6": 6975.704979855995
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3005.3469028822797,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 179.31,
+       "collective_bytes": 1.63,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7658.1794375949285,
+      "mtp_m6": 7683.554899311864
+     }
+    ],
+    "best_ar": {
+     "G": 64,
+     "rate": 3225.274884697273
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 7683.554899311864
+    }
+   }
+  },
+  "nvl_1p8_nvls": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.4937653721527,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1183.5908767001506,
+      "mtp_m6": 1191.3960928499498
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.37518045849,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2145.4204782926754,
+      "mtp_m6": 2159.238738958797
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2416.659644763124,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 3768.2604095697084,
+      "mtp_m6": 3792.689831536478
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2681.84554344703,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 4843.683520641784,
+      "mtp_m6": 4874.003296797538
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2940.0277048484404,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 5765.029068899994,
+      "mtp_m6": 5794.3457281709225
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.542034567446,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7084.900815423603,
+      "mtp_m6": 7108.666131841097
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3424.6244860657084,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7994.513023957825,
+      "mtp_m6": 8022.187932338559
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3595.2999913454996,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 0.33,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9079.618375360045,
+      "mtp_m6": 9115.309912350127
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3595.2999913454996
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 9115.309912350127
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.1457848464113,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1192.4696654169513,
+      "mtp_m6": 1194.4049082047513
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.6686097597226,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2160.05240029235,
+      "mtp_m6": 2164.2386363898736
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2428.201573351041,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 3790.9944287851154,
+      "mtp_m6": 3799.599495845086
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2690.8611567808202,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 4865.933642300657,
+      "mtp_m6": 4876.197934469994
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2947.5535551919697,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 5780.120954812257,
+      "mtp_m6": 5794.432287462473
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3244.5799430958737,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7087.166198224269,
+      "mtp_m6": 7108.666131841097
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3427.4880419562837,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.04,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7994.513023957825,
+      "mtp_m6": 8022.187932338559
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3595.2999913454996,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 0.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9079.618375360045,
+      "mtp_m6": 9115.309912350127
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3595.2999913454996
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 9115.309912350127
+    }
+   }
+  },
+  "nvl_1p8": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.4937653721527,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1183.5908767001506,
+      "mtp_m6": 1191.3960928499498
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.37518045849,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2145.4204782926754,
+      "mtp_m6": 2159.238738958797
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2416.659644763124,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 3768.2604095697084,
+      "mtp_m6": 3792.689831536478
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2681.84554344703,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 4843.683520641784,
+      "mtp_m6": 4874.003296797538
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2940.0277048484404,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 5285.444634862818,
+      "mtp_m6": 5310.076134255046
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.542034567446,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 6374.119466982013,
+      "mtp_m6": 6393.349070275647
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3385.9463621489217,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 3.34,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7101.013360245426,
+      "mtp_m6": 7122.839394244247
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3429.156081616017,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 13.8,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7944.328331580214,
+      "mtp_m6": 7971.6389176551575
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3429.156081616017
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 7971.6389176551575
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.1457848464113,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1192.4696654169513,
+      "mtp_m6": 1194.4049082047513
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.6686097597226,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2160.05240029235,
+      "mtp_m6": 2164.2386363898736
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2428.201573351041,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 3790.9944287851154,
+      "mtp_m6": 3799.599495845086
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2690.8611567808202,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 4865.933642300657,
+      "mtp_m6": 4876.197934469994
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2947.5535551919697,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 5298.127255404878,
+      "mtp_m6": 5310.148829472157
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3244.5799430958737,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 6375.953049739062,
+      "mtp_m6": 6393.349070275647
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3388.745574177065,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 3.38,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7101.013360245426,
+      "mtp_m6": 7122.839394244247
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3429.156081616017,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 13.96,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 7944.328331580214,
+      "mtp_m6": 7971.6389176551575
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3429.156081616017
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 7971.6389176551575
+    }
+   }
+  }
+ },
+ "headline_config": "nvl_0p9_nvls",
+ "board_mesh_was": {
+  "1048576": {
+   "ar": 2932.5746896637033,
+   "ar_G": 32,
+   "mtp": 6301.311423629981,
+   "mtp_G": 48,
+   "mtp_m": 6
+  },
+  "200000": {
+   "ar": 2940.062383490817,
+   "ar_G": 32,
+   "mtp": 6301.311423629981,
+   "mtp_G": 48,
+   "mtp_m": 6
+  }
+ },
+ "hbm_static_w_per_die": {
+  "total": 101.4125,
+  "serdes": 24.8625,
+  "leakage_hbm_ucie": 76.55,
+  "serdes_at_1p8": 49.725
+ },
+ "switches_and_wall": {
+  "hbm_switch_w": 9375.0,
+  "rom_switch_w": 1096.6666666666667,
+  "wall_factor": 1.2404214559386975,
+  "hbm_chip_static_w": 10039.8375,
+  "rom_chip_static_w": 14875.923795328998,
+  "basis": "13.0 W per Tb/s of port capacity (NVL72: 9 x 1.5 kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch carries 4 lanes x 112G both ways per package; NVL72 trays scaled to the comparator's 50 packages (ASSUMED 1.5 kW a tray); both machines' chip and switch power go through the same wall chain (1/(VR x PSU) x (1 + CDU + fans))"
+ },
+ "domain": {
+  "packages": 50,
+  "nvl72_packages": 72,
+  "fits_one_tier": true,
+  "note": "99 dies are 50 two-die packages (GPUs), inside one NVL72 domain of 72; G = 96 dies is 48 packages: no second switch tier is needed"
+ },
+ "energy": {
+  "1048576": {
+   "b1": {
+    "batch": 1,
+    "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 1.645996740740741e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 3580.375802755708,
+     "utilisation_uncapped": 0.05893286901962909,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 3580.375802755708,
+     "utilisation": 0.05893286901962909
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 3580.375802755708,
+     "aggregate_tokens_s": 3580.375802755708,
+     "switch_j": 2.618440218701161,
+     "wall_j": 8.82800095644457,
+     "dynamic_j": 1.6943669344483663,
+     "static_j": 2.8041295252505725,
+     "total_j": 4.498496459698939,
+     "nonclock_j": 1.3918637361154558,
+     "clock_j": 0.3025031983329105
+    },
+    "rom": {
+     "tokens_s_per_user": 7049.079994455792,
+     "aggregate_tokens_s": 7049.079994455792,
+     "total_j": 2.1454636550316426,
+     "dynamic_j": 0.035128149259380806,
+     "static_j": 2.110335505772262,
+     "switch_j": 0.15557585777565464,
+     "wall_j": 2.8542587826488988
+    },
+    "ratio_rate_per_user": 1.968810086647979,
+    "ratio_aggregate": 1.968810086647979,
+    "ratio_energy_with_static": 3.092922411278956,
+    "ratio_energy_chip_only": 2.0967479216666534
+   },
+   "b1_mtp": {
+    "batch": 1,
+    "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 9.875980444444462e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 2395.572851888463,
+     "utilisation_uncapped": 0.2365863063849251,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 8743.84090939289,
+     "utilisation": 0.2365863063849251
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 8743.84090939289,
+     "aggregate_tokens_s": 8743.84090939289,
+     "switch_j": 1.0721832770229272,
+     "wall_j": 5.01827760458378,
+     "dynamic_j": 1.8252215230788305,
+     "static_j": 1.148218226296285,
+     "total_j": 2.9734397493751157,
+     "nonclock_j": 1.0823780751906182,
+     "clock_j": 0.7428434478882121
+    },
+    "rom": {
+     "tokens_s_per_user": 15890.455574630814,
+     "aggregate_tokens_s": 15890.455574630814,
+     "total_j": 0.9596965436770076,
+     "dynamic_j": 0.023541898804617798,
+     "static_j": 0.9361546448723899,
+     "switch_j": 0.06901417404404063,
+     "wall_j": 1.276034846215285
+    },
+    "ratio_rate_per_user": 1.817331278015457,
+    "ratio_aggregate": 1.817331278015457,
+    "ratio_energy_with_static": 3.932712041107634,
+    "ratio_energy_chip_only": 3.098312449873579
+   },
+   "fill28": {
+    "batch": 28,
+    "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.00046087908740740746,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 1213.7503956626733,
+     "utilisation_uncapped": 0.5593921746933926,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 33985.01107855485,
+     "utilisation": 0.5593921746933926
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 1213.7503956626733,
+     "aggregate_tokens_s": 33985.01107855485,
+     "switch_j": 0.27585690580856664,
+     "wall_j": 1.2970438130253714,
+     "dynamic_j": 0.4743711963428147,
+     "static_j": 0.29541957414088693,
+     "total_j": 0.7697907704837017,
+     "nonclock_j": 0.4425019958572276,
+     "clock_j": 0.031869200485587106
+    },
+    "rom": {
+     "tokens_s_per_user": 7049.079994455792,
+     "aggregate_tokens_s": 197374.23984476217,
+     "total_j": 0.11049727446553305,
+     "dynamic_j": 0.035128149259380834,
+     "static_j": 0.07536912520615222,
+     "switch_j": 0.005556280634844809,
+     "wall_j": 0.14395531978447257
+    },
+    "ratio_rate_per_user": 5.807685022922027,
+    "ratio_aggregate": 5.807685022922026,
+    "ratio_energy_with_static": 9.01004433158346,
+    "ratio_energy_chip_only": 6.966604146637294
+   },
+   "fill28_mtp": {
+    "batch": 28,
+    "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.002765274524444446,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 405.4981999013547,
+     "utilisation_uncapped": 1.1213138418952977,
+     "cap": 0.8918109833637233,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 41441.91602991845,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 1319.9412816828008,
+     "aggregate_tokens_s": 36958.35588711842,
+     "switch_j": 0.253663881278539,
+     "wall_j": 1.2668636295246902,
+     "dynamic_j": 0.4960004978418615,
+     "static_j": 0.27165270908328787,
+     "total_j": 0.7676532069251494,
+     "nonclock_j": 0.32025391028374706,
+     "clock_j": 0.17574658755811448
+    },
+    "rom": {
+     "tokens_s_per_user": 13928.222149635922,
+     "aggregate_tokens_s": 389990.2201898058,
+     "total_j": 0.06246197121503927,
+     "dynamic_j": 0.02431762034365337,
+     "static_j": 0.0381443508713859,
+     "switch_j": 0.0028120363278159284,
+     "wall_j": 0.08096727947126196
+    },
+    "ratio_rate_per_user": 10.55215284416194,
+    "ratio_aggregate": 10.552152844161938,
+    "ratio_energy_with_static": 15.6466122833526,
+    "ratio_energy_chip_only": 12.289929248027283
+   },
+   "sat1024": {
+    "batch": 866,
+    "hbm_batch": 811,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.013349033567407373,
+     "stages": 1,
+     "users_per_pass": 811.0,
+     "passes_per_s": 77.92335429788399,
+     "utilisation_uncapped": 1.0402014722074309,
+     "cap": 0.9613522252356377,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 63195.84033558391,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 74.91179005209577,
+     "aggregate_tokens_s": 60753.46173224966,
+     "switch_j": 0.15431219444444405,
+     "wall_j": 0.49706399602725876,
+     "dynamic_j": 0.08115426996422029,
+     "static_j": 0.16525539802566622,
+     "total_j": 0.2464096679898865,
+     "nonclock_j": 0.06332688859884804,
+     "clock_j": 0.01782738136537225
+    },
+    "rom": {
+     "tokens_s_per_user": 315.03214635246917,
+     "aggregate_tokens_s": 272817.8387412383,
+     "total_j": 0.08510134581892276,
+     "dynamic_j": 0.03057439895956257,
+     "static_j": 0.05452694685936019,
+     "switch_j": 0.00401977624236966,
+     "wall_j": 0.1105477519821587
+    },
+    "ratio_rate_per_user": 4.205374696471503,
+    "ratio_aggregate": 4.4905727338401,
+    "ratio_energy_with_static": 4.496373622391524,
+    "ratio_energy_chip_only": 2.895484972872144
+   },
+   "sat1024_mtp": {
+    "batch": 866,
+    "hbm_batch": 811,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.08009420140444472,
+     "stages": 1,
+     "users_per_pass": 811.0,
+     "passes_per_s": 20.800280610323018,
+     "utilisation_uncapped": 1.665981864472178,
+     "cap": 0.6002466301257268,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 61571.95064864768,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 45.57133894835798,
+     "aggregate_tokens_s": 36958.35588711833,
+     "switch_j": 0.25366388127853967,
+     "wall_j": 0.9021177744993215,
+     "dynamic_j": 0.20195055757430427,
+     "static_j": 0.27165270908328853,
+     "total_j": 0.4736032666575928,
+     "nonclock_j": 0.026203970016189352,
+     "clock_j": 0.17574658755811493
+    },
+    "rom": {
+     "tokens_s_per_user": 539.2617579681142,
+     "aggregate_tokens_s": 467000.68240038696,
+     "total_j": 0.05281269448346584,
+     "dynamic_j": 0.020958514487696582,
+     "static_j": 0.031854179995769255,
+     "switch_j": 0.002348319195230705,
+     "wall_j": 0.06842290489838318
+    },
+    "ratio_rate_per_user": 11.833353384222756,
+    "ratio_aggregate": 12.635861936790267,
+    "ratio_energy_with_static": 13.1844413188695,
+    "ratio_energy_chip_only": 8.967602794927734
+   }
+  },
+  "200000": {
+   "b1": {
+    "batch": 1,
+    "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 1.645996740740741e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 3580.375802755708,
+     "utilisation_uncapped": 0.05893286901962909,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 3580.375802755708,
+     "utilisation": 0.05893286901962909
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 3580.375802755708,
+     "aggregate_tokens_s": 3580.375802755708,
+     "switch_j": 2.618440218701161,
+     "wall_j": 8.80846249339432,
+     "dynamic_j": 1.6786154630781265,
+     "static_j": 2.8041295252505725,
+     "total_j": 4.482744988328699,
+     "nonclock_j": 1.376112264745216,
+     "clock_j": 0.3025031983329105
+    },
+    "rom": {
+     "tokens_s_per_user": 7285.665796379299,
+     "aggregate_tokens_s": 7285.665796379299,
+     "total_j": 2.060982138388676,
+     "dynamic_j": 0.019175087244253305,
+     "static_j": 2.041807051144423,
+     "switch_j": 0.15052387761344593,
+     "wall_j": 2.743199512186541
+    },
+    "ratio_rate_per_user": 2.034888569733864,
+    "ratio_aggregate": 2.034888569733864,
+    "ratio_energy_with_static": 3.211017811232147,
+    "ratio_energy_chip_only": 2.175052808479657
+   },
+   "b1_mtp": {
+    "batch": 1,
+    "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 9.875980444444462e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 2395.572851888463,
+     "utilisation_uncapped": 0.2365863063849251,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 8743.84090939289,
+     "utilisation": 0.2365863063849251
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 8743.84090939289,
+     "aggregate_tokens_s": 8743.84090939289,
+     "switch_j": 1.0721832770229272,
+     "wall_j": 5.011387497340852,
+     "dynamic_j": 1.8196668729154202,
+     "static_j": 1.148218226296285,
+     "total_j": 2.9678850992117054,
+     "nonclock_j": 1.076823425027208,
+     "clock_j": 0.7428434478882121
+    },
+    "rom": {
+     "tokens_s_per_user": 16448.545140900587,
+     "aggregate_tokens_s": 16448.545140900587,
+     "total_j": 0.9221918894196105,
+     "dynamic_j": 0.017800426958966727,
+     "static_j": 0.9043914624606437,
+     "switch_j": 0.06667256327367943,
+     "wall_j": 1.226608684135834
+    },
+    "ratio_rate_per_user": 1.881157870019236,
+    "ratio_aggregate": 1.881157870019236,
+    "ratio_energy_with_static": 4.085563360307902,
+    "ratio_energy_chip_only": 3.2182945146910473
+   },
+   "fill28": {
+    "batch": 28,
+    "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.00046087908740740746,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 1213.7503956626733,
+     "utilisation_uncapped": 0.5593921746933926,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 33985.01107855485,
+     "utilisation": 0.5593921746933926
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 1213.7503956626733,
+     "aggregate_tokens_s": 33985.01107855485,
+     "switch_j": 0.27585690580856664,
+     "wall_j": 1.2775053499751217,
+     "dynamic_j": 0.4586197249725747,
+     "static_j": 0.29541957414088693,
+     "total_j": 0.7540392991134617,
+     "nonclock_j": 0.4267505244869876,
+     "clock_j": 0.031869200485587106
+    },
+    "rom": {
+     "tokens_s_per_user": 7285.665796379299,
+     "aggregate_tokens_s": 203998.64229862037,
+     "total_j": 0.0920967676422684,
+     "dynamic_j": 0.0191750872442533,
+     "static_j": 0.0729216803980151,
+     "switch_j": 0.005375852771908784,
+     "wall_j": 0.12090712972831368
+    },
+    "ratio_rate_per_user": 6.002606320388907,
+    "ratio_aggregate": 6.002606320388907,
+    "ratio_energy_with_static": 10.566005105288339,
+    "ratio_energy_chip_only": 8.187467578041149
+   },
+   "fill28_mtp": {
+    "batch": 28,
+    "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.002765274524444446,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 405.4981999013547,
+     "utilisation_uncapped": 1.1213138418952977,
+     "cap": 0.8918109833637233,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 41441.91602991845,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 1319.9412816828008,
+     "aggregate_tokens_s": 36958.35588711842,
+     "switch_j": 0.253663881278539,
+     "wall_j": 1.2599735222817625,
+     "dynamic_j": 0.4904458476784511,
+     "static_j": 0.27165270908328787,
+     "total_j": 0.762098556761739,
+     "nonclock_j": 0.31469926012033667,
+     "clock_j": 0.17574658755811448
+    },
+    "rom": {
+     "tokens_s_per_user": 15219.295713551359,
+     "aggregate_tokens_s": 426140.27997943806,
+     "total_j": 0.05313858111351809,
+     "dynamic_j": 0.0182300674286658,
+     "static_j": 0.03490851368485229,
+     "switch_j": 0.0025734874598561364,
+     "wall_j": 0.06910644521314141
+    },
+    "ratio_rate_per_user": 11.530282388128805,
+    "ratio_aggregate": 11.530282388128805,
+    "ratio_energy_with_static": 18.23235905704152,
+    "ratio_energy_chip_only": 14.341718216632367
+   },
+   "sat1024": {
+    "batch": 1024,
+    "hbm_batch": 1024,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.016855006625185187,
+     "stages": 1,
+     "users_per_pass": 1024.0,
+     "passes_per_s": 65.72743531537212,
+     "utilisation_uncapped": 1.1078363576970278,
+     "cap": 0.9026603911779911,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 67304.89376294105,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": null,
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 59.329552472899906,
+     "aggregate_tokens_s": 60753.4617322495,
+     "switch_j": 0.15431219444444444,
+     "wall_j": 0.467605587745973,
+     "dynamic_j": 0.05740556089420991,
+     "static_j": 0.16525539802566666,
+     "total_j": 0.22266095891987658,
+     "nonclock_j": 0.03957817952883762,
+     "clock_j": 0.017827381365372295
+    },
+    "rom": {
+     "tokens_s_per_user": 425.7484180968951,
+     "aggregate_tokens_s": 435966.38013122056,
+     "total_j": 0.04721368185599862,
+     "dynamic_j": 0.013091959463433563,
+     "static_j": 0.03412172239256506,
+     "switch_j": 0.0025154844883602803,
+     "wall_j": 0.06168512491948734
+    },
+    "ratio_rate_per_user": 7.175992407685278,
+    "ratio_aggregate": 7.175992407685278,
+    "ratio_energy_with_static": 7.580524289385831,
+    "ratio_energy_chip_only": 4.71602616375039
+   },
+   "sat1024_mtp": {
+    "batch": 1024,
+    "hbm_batch": 1024,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.10113003975111129,
+     "stages": 1,
+     "users_per_pass": 1024.0,
+     "passes_per_s": 16.53000843722366,
+     "utilisation_uncapped": 1.6716804103426337,
+     "cap": 0.598200465718825,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 61782.55953496716,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 36.09214442101405,
+     "aggregate_tokens_s": 36958.355887118385,
+     "switch_j": 0.2536638812785392,
+     "wall_j": 0.8923060018841581,
+     "dynamic_j": 0.19404052621505363,
+     "static_j": 0.27165270908328815,
+     "total_j": 0.4656932352983418,
+     "nonclock_j": 0.018293938656938992,
+     "clock_j": 0.17574658755811465
+    },
+    "rom": {
+     "tokens_s_per_user": 600.959624865919,
+     "aggregate_tokens_s": 615382.655862701,
+     "total_j": 0.03819962439645314,
+     "dynamic_j": 0.014026171255375362,
+     "static_j": 0.024173453141077782,
+     "switch_j": 0.001782089007902338,
+     "wall_j": 0.04959417515195436
+    },
+    "ratio_rate_per_user": 16.650704315480358,
+    "ratio_aggregate": 16.650704315480358,
+    "ratio_energy_with_static": 17.992153295224124,
+    "ratio_energy_chip_only": 12.191042259085188
+   }
+  }
+ },
+ "gpu_crosscheck": {
+  "modelled_1M": {
+   "b1": {
+    "chip_w_per_package": 322.12615746176596,
+    "wall_w_per_package": 632.1512202231676
+   },
+   "b1_mtp": {
+    "chip_w_per_package": 519.9856824440216,
+    "wall_w_per_package": 877.5804202729961
+   },
+   "fill28": {
+    "chip_w_per_package": 523.2269572611576,
+    "wall_w_per_package": 881.6009671007654
+   },
+   "fill28_mtp": {
+    "chip_w_per_package": 567.4240083885486,
+    "wall_w_per_package": 936.423937608401
+   },
+   "sat1024": {
+    "chip_w_per_package": 299.4048066935983,
+    "wall_w_per_package": 603.9671692224233
+   },
+   "sat1024_mtp": {
+    "chip_w_per_package": 350.0719615686623,
+    "wall_w_per_package": 666.8157952408216
+   }
+  },
+  "reference": {
+   "b200_tdp_nvl72_w": 1200.0,
+   "nvl72_rack_w": 132000.0,
+   "b200_measured_wall_w_per_gpu_saturated": 1300.0,
+   "b200_measured_decode_w": 689.0
+  },
+  "note": "a check only: the comparator stays modelled (its engines, HBM and SerDes), not scaled to a GPU's measured draw"
+ },
+ "rom_worst_die_w": {
+  "static_w": 98.7963990503202,
+  "dynamic_w": 297.8450251925472,
+  "worst_point": "1048576/sat1024",
+  "dynamic_w_by_point": {
+   "1048576/sat1024": 297.8450251925472,
+   "1048576/sat1024_mtp": 221.68325902201045,
+   "200000/sat1024": 182.8752410686053,
+   "200000/sat1024_mtp": 209.99751416513223
+  },
+  "average_die_dynamic_w_by_point": {
+   "1048576/sat1024": 74.47537004428773,
+   "1048576/sat1024_mtp": 87.38964792725626,
+   "200000/sat1024": 50.961198000873274,
+   "200000/sat1024_mtp": 77.0666296314104
+  },
+  "hottest_die_factor_by_point": {
+   "1048576/sat1024": {
+    "factor": 3.9992419643625787,
+    "hottest_die": "9"
+   },
+   "1048576/sat1024_mtp": {
+    "factor": 2.5367221894124246,
+    "hottest_die": "14"
+   },
+   "200000/sat1024": {
+    "factor": 3.588519270396107,
+    "hottest_die": "14"
+   },
+   "200000/sat1024_mtp": {
+    "factor": 2.7248825486399966,
+    "hottest_die": "head"
+   }
+  },
+  "total_w": 396.6414242428674,
+  "cooling_limit_w": {
+   "air": 374.56,
+   "liquid": 474.56
+  },
+  "cooling_basis": "configs/hardware/power_scenarios.json cooling classes, 2-die packages (tools/power_scenarios.cooling_limits: per-die W, air / liquid)",
+  "provisioned_wall_w": 590.4030395339233,
+  "basis": "max over saturation without and with MTP at the design point (R-L8 pools doubled, m = 2): the HOTTEST die -- the array's dynamic energy per token x its rate over the 112 layer dies, x the hottest die's work over the layer-die mean (power_scenarios.v41_hottest_die) -- plus the static die. No separate HBM-interface active term: the dynamic energy charges every HBM byte at the system-level 13 pJ/b, which contains the I/O (adae6788's ruling); the interface idle is in the static 98.8 W"
+ },
+ "rom_design_point": {
+  "1048576": {
+   "ar": 7049.079994455792,
+   "mtp": 15890.455574630814,
+   "T_us": 141.86248429391,
+   "verify_us": 214.9202752960891,
+   "breakdown_us": {
+    "compute_chain": 74.771,
+    "weight_sweep": 8.548,
+    "kv_sweep": 3.297,
+    "collective_latency": 15.301,
+    "collective_bytes": 4.793,
+    "pipeline_hops": 12.339,
+    "control": 1.689,
+    "on_die_wire": 21.124
+   }
+  },
+  "200000": {
+   "ar": 7285.665796379299,
+   "mtp": 16448.545140900587,
+   "T_us": 137.25581545299022,
+   "verify_us": 207.12676832482612,
+   "breakdown_us": {
+    "compute_chain": 73.561,
+    "weight_sweep": 8.548,
+    "kv_sweep": 1.333,
+    "collective_latency": 15.301,
+    "collective_bytes": 4.769,
+    "pipeline_hops": 11.002,
+    "control": 1.689,
+    "on_die_wire": 21.052
+   }
+  }
+ },
+ "ratios_batch1": {
+  "1048576": {
+   "ar": {
+    "rom": 7049.079994455792,
+    "hbm": 3580.375802755708,
+    "ratio": 1.968810086647979
+   },
+   "mtp": {
+    "rom": 15890.455574630814,
+    "hbm": 8743.84090939289,
+    "ratio": 1.817331278015457
+   },
+   "mtp_speedup": {
+    "rom": 2.2542595043791387,
+    "hbm": 2.4421573016617466
+   }
+  },
+  "200000": {
+   "ar": {
+    "rom": 7285.665796379299,
+    "hbm": 3580.375802755708,
+    "ratio": 2.034888569733864
+   },
+   "mtp": {
+    "rom": 16448.545140900587,
+    "hbm": 8743.84090939289,
+    "ratio": 1.881157870019236
+   },
+   "mtp_speedup": {
+    "rom": 2.25765847632963,
+    "hbm": 2.4421573016617466
+   }
+  }
+ },
+ "kv_replicate_on_write": {
+  "by_source": {
+   "L2": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L8": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L14": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L20": {
+    "reader_groups": 13,
+    "bytes_per_token": 4628
+   }
+  },
+  "bytes_per_token_upper": 7832.0,
+  "residual_hop_bytes_per_token": 41000,
+  "stage_link_Bps_per_group": 368941176470.58826,
+  "worst_aggregate_tokens_s": 467000.68240038696,
+  "link_load_fraction": 0.06181087603485121,
+  "batch1_write_time_s": 2.122831632653061e-08,
+  "note": "upper bound: every source layer's new compressed row + index key (288 + 68 B) written to each distinct reader group, all on one stage link (store-and-forward along the ring); off the critical path (the readers need it from the next token on)"
+ }
+}

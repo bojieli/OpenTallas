@@ -1,0 +1,1765 @@
+{
+  "PC": 0,
+  "event_and_index_file_padding_bytes": 1572864,
+  "events_discarded": 0,
+  "full96_prefix_completed": false,
+  "group_staging_bytes": 41472,
+  "hardware_qualified": false,
+  "home_input_path": "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz",
+  "home_sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+  "native_input_path": "/tmp/kepler-ds-r34-provider-joined-sealed/native.json.gz",
+  "native_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+  "phase_record_frames": {
+    "read": [
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "request_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_owned_issue",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_service_phases_reserved",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "phase_costs": {
+              "admission": 2,
+              "consume": 2,
+              "forward_CDC": 4,
+              "held_accept": 1,
+              "owner_lookup": 12,
+              "read_service": 64,
+              "retire": 2,
+              "reverse_CDC": 4,
+              "reverse_grant": 4,
+              "write_service": 80,
+              "write_visibility": 4
+            },
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": true,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_read_capture",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 154,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 32
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "consumer_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "reverse_credit_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "validated_reverse_grant",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      }
+    ],
+    "write": [
+      {
+        "descriptor": {
+          "checksum": true,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "request_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 154,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 32
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "resident"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "write_residence_reserved",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "resident": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 132,
+        "integer_bits": 64,
+        "integer_fields": 11,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_owned_issue",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_service_phases_reserved",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "phase_costs": {
+              "admission": 2,
+              "consume": 2,
+              "forward_CDC": 4,
+              "held_accept": 1,
+              "owner_lookup": 12,
+              "read_service": 64,
+              "retire": 2,
+              "reverse_CDC": 4,
+              "reverse_grant": 4,
+              "write_service": 80,
+              "write_visibility": 4
+            },
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": true,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "software_backing_visible",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 154,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 32
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "consumer_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "reverse_credit_accept",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      },
+      {
+        "descriptor": {
+          "checksum": false,
+          "metadata": true,
+          "paths": [
+            [
+              "generation"
+            ],
+            [
+              "identity",
+              "epoch"
+            ],
+            [
+              "identity",
+              "pc"
+            ],
+            [
+              "identity",
+              "rank"
+            ],
+            [
+              "identity",
+              "sector"
+            ],
+            [
+              "identity",
+              "serial"
+            ],
+            [
+              "local_sector31"
+            ],
+            [
+              "stack"
+            ],
+            [
+              "tag"
+            ],
+            [
+              "tick"
+            ]
+          ],
+          "value": {
+            "event": "validated_reverse_grant",
+            "generation": null,
+            "hardware": false,
+            "identity": {
+              "epoch": null,
+              "pc": null,
+              "rank": null,
+              "sector": null,
+              "serial": null,
+              "target": "DeepSeek"
+            },
+            "local_sector31": null,
+            "stack": null,
+            "tag": null,
+            "tick": null
+          }
+        },
+        "dictionary_id_bits": 64,
+        "frame_bytes_upper": 121,
+        "integer_bits": 64,
+        "integer_fields": 10,
+        "metadata": {
+          "address_class": "scratch",
+          "native_owner": [
+            0,
+            [
+              "DeepSeek.0.attn_pre.50",
+              "DeepSeek.0.attn_post.51",
+              "DeepSeek.0.attn_comb.52",
+              "DeepSeek.0.attn_res.53"
+            ],
+            95,
+            0,
+            1
+          ]
+        },
+        "payload_checksum_bytes": 0
+      }
+    ]
+  },
+  "preacceptance_headroom_bytes": 327680,
+  "producer_phase_parameters": {
+    "admission": 2,
+    "consume": 2,
+    "forward_CDC": 4,
+    "held_accept": 1,
+    "owner_lookup": 12,
+    "read_service": 64,
+    "retire": 2,
+    "reverse_CDC": 4,
+    "reverse_grant": 4,
+    "write_service": 80,
+    "write_visibility": 4
+  },
+  "provider_phase_disk_reservation_bytes": 140850600720,
+  "provider_phase_events_upper": 1103036832,
+  "publication_event_stream_bytes_upper": 731385600,
+  "ranks": 96,
+  "required_additional_receipt_dictionary_record_sizes": "actual source/native completion/expected-output receipt shapes require separate bound before complete production GO",
+  "sampled_ratio_used": false,
+  "schema": "H4_PC0_FULL96_COMPACT_PHASE_DISK_SOURCE_BOUND_V1",
+  "scratch_event_stream_bytes_upper": 139978930080,
+  "source_dictionary_bytes_upper": 501808,
+  "source_packet_sha256": "59ca7efd413e62750594fb7098638c31e03798fc49edce0f92fb68440ba95a88",
+  "source_publication_events": 5664000,
+  "source_publication_per_rank": [
+    {
+      "rank": 0,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 1,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 2,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 3,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 4,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 5,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 6,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 7,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 8,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 9,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 10,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 11,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 12,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 13,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 14,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 15,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 16,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 17,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 18,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 19,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 20,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 21,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 22,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 23,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 24,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 25,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 26,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 27,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 28,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 29,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 30,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 31,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 32,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 33,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 34,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 35,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 36,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 37,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 38,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 39,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 40,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 41,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 42,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 43,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 44,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 45,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 46,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 47,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 48,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 49,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 50,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 51,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 52,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 53,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 54,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 55,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 56,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 57,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 58,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 59,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 60,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 61,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 62,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 63,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 64,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 65,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 66,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 67,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 68,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 69,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 70,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 71,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 72,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 73,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 74,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 75,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 76,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 77,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 78,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 79,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 80,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 81,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 82,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 83,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 84,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 85,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 86,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 87,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 88,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 89,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 90,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 91,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 92,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 93,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 94,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    },
+    {
+      "rank": 95,
+      "read_sector32": 2568,
+      "write_sector32": 5128
+    }
+  ],
+  "source_scratch_events_upper": 1097372832,
+  "source_scratch_transactions_upper": 149409408,
+  "sparse_index_bytes_upper": 137882688,
+  "transaction_bytes_upper": {
+    "read": 880,
+    "write": 1045
+  },
+  "unresolved_scratch_padding_sectors_per_rank": 913,
+  "whole_journal_admission_complete": false,
+  "whole_token_latency": null
+}

@@ -1,0 +1,72 @@
+{
+  "AGIdocks": "ALL RETIRED excluded",
+  "local": {
+    "MemAvailable_kB": 167648040,
+    "disk": "Filesystem         1B-blocks          Used    Available Use% Mounted on\n/dev/md0p1     4028851920896 3633264148480 190856769536  96% /\n",
+    "loadavg": "13.03 12.63 12.22 14/2395 1911849",
+    "selected_processes": [
+      "1307359       1   14941  0.0 32608 /usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py",
+      "1307433 1307359   14941  0.0  3508 /bin/bash /tmp/claude-1000/orfs_gate.sh /usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py --admitted",
+      "1307441 1307433   14941  0.0 55720 /usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py --admitted",
+      "1844171 1836295    1734  0.0  1436 /usr/bin/time -v make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3 -f Vdie3.mk -j8 Vdie3__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1",
+      "1844172 1844171    1734  0.0 12436 make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3 -f Vdie3.mk -j8 Vdie3__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1",
+      "1857362 1857355    1382  0.0 11444 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.json",
+      "1857363 1857362    1382  177 11156920 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.json",
+      "3029028       1   41009  0.0  3420 bash /home/ubuntu/w18work/jobs/rebase_wait_only.sh"
+    ]
+  },
+  "new_leases": 0,
+  "observed_UTC": "2026-10-01T18:57:03.463795+00:00",
+  "protected_L0": {
+    "admitted": 1307441,
+    "gate": 1307433,
+    "jobs": 8,
+    "launch_floor_GiB": 128,
+    "owner": "Godel",
+    "rank3_make": 1844172,
+    "source_commit": "4e38326d6",
+    "supervisor": 1307359,
+    "work": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4"
+  },
+  "remote_fresh_measurements": {
+    "PVE1": {
+      "CPU": 28,
+      "MemAvailable_kB": 112308536,
+      "disk_available_bytes": 86045007872,
+      "load1": 60.81,
+      "physical_PIDs": [
+        1539789,
+        1603669,
+        1701153,
+        3431058
+      ],
+      "yosys_PID": 1509052
+    },
+    "PVE2": {
+      "CPU": 28,
+      "MemAvailable_kB": 190992960,
+      "disk_available_bytes": 63204114432,
+      "load1": 61.59,
+      "physical_PIDs": [
+        487167,
+        550205,
+        551255,
+        2475445,
+        3317736
+      ]
+    },
+    "PVE3": {
+      "CPU": 28,
+      "MemAvailable_kB": 33835656,
+      "disk_available_bytes": 356951068672,
+      "load1": 74.08,
+      "physical_PIDs": [
+        3964617,
+        3988136,
+        4002090,
+        4005428
+      ]
+    }
+  },
+  "remote_scope": "Read-only SSH host/resource/process samples; not source qualification or lease. No new PVE CPU admission under current oversubscription. Initial process-filter awk failed; corrected ps/rg samples captured these PID lists."
+}

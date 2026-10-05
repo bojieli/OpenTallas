@@ -1,0 +1,28 @@
+{
+  "schema": "DS_ALL_PC_METADATA_ONLY_PLANNING",
+  "source_sha256": {
+    "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/actual_DeepSeek_homes.json.gz": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/prefix_input_manifest.json.gz": "2c7d0d38d9e5c1a2b049ba14eecfe8bae91eaaf2e96629f418b4ade9693c1c01",
+    "results/uarch/ds_hbm_bound_engine_r43_20261002/inputs/actual_dispatch_bcf.json.gz": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+    "tools/ds_producer_checkpoint_resume_v3.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "tools/ds_hbm_source_prefix_r45.py": "362ca1a8ca327f585451f5bd4fdb2b7d0b9dff135a75cabd9bc52a9d75d4d620",
+    "tools/h3_ds_source_prefix_provider_r39.py": "dd50f6afb9a52fe58efe285564cd53da2e0622c31f191d5fded3511ea9d36d6d",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "tools/h3_ds_checkpoint_provider_r34.py": "9d47acf6f44481cf15458e8162118ec53395a03b3aa1d5242c1d1423e7d8b014",
+    "tools/ds_hbm_pc10_engine_r44.py": "96949401e4ef66977211d03d4d64821ca7cff4bd818a8701d8806344484bc31d",
+    "tools/ds_hbm_storage_home_binding_r41.py": "feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1",
+    "tools/ds_hbm_pc10_projection_r46.py": "6abf0fe6946ba8cdd1580ee6f8c27b4c71d4f08bb4741f49b67549c94879ded5",
+    "tools/ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+    "tools/ds_hbm_registered_loader_r57.py": "a8f338aac3bcd33b0c81deef05135613dc7454d2a98aeb09c92c5d8691a23ba9",
+    "tools/ds_hbm_checkpointed_prefix_r55.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "results/uarch/ds_hbm_dual_resources_r56_20261003/model.json": "c41b8feadef2f83c863d5f558c8bba30d3007b21dd7f0bcbdee8771c83ce0c6f",
+    "results/uarch/ds_hbm_source_prefix_r39_20261002/journal_schema_envelope_r2.json": "5281b5c4f237feca913adc8b13dd50337206b42698846120f953adfcc9309455",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_streaming_linear.py": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json": "ac08d45b958cbf0401c1abe706d19da8cca4c1ebf15243bc1a3b4181c4188641"
+  },
+  "scope": "all2213PC all30families; first contiguous segment11..19; no provider construction/numerical execution/live-run edits",
+  "missing_costs_not_zero": true,
+  "timing_ram_disk_caps": false
+}

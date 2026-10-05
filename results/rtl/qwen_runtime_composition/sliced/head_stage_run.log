@@ -1,0 +1,12 @@
+die0 stage head images: code_words=3168 scale_words=4752 crom_words=4096
+die1 stage head images: code_words=3168 scale_words=4752 crom_words=4096
+images loaded in 6.7 s
+models constructed in 6.9 s
+progress tick=0 cyc=1 pc_base=0/0 me_busy=0/0 wall=0s top=0.0 models=0.0 prop=0.0 mem=0.0 edge=0.0 passes=3
+progress tick=2048 cyc=2049 pc_base=0/0 me_busy=0/0 wall=65s top=0.6 models=5.8 prop=8.4 mem=1.0 edge=47.2 passes=4108
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=0/0 wall=130s top=1.2 models=11.7 prop=17.0 mem=2.1 edge=95.0 passes=8204
+progress tick=6144 cyc=6145 pc_base=0/0 me_busy=512/512 wall=204s top=1.8 models=21.0 prop=28.4 mem=3.3 edge=144.1 passes=13731
+progress tick=8192 cyc=8193 pc_base=0/0 me_busy=512/512 wall=278s top=2.3 models=30.2 prop=41.0 mem=4.3 edge=193.3 passes=19875
+progress tick=10240 cyc=10241 pc_base=0/0 me_busy=2145/2145 wall=366s top=2.9 models=47.6 prop=54.1 mem=5.8 edge=247.3 passes=26117
+STAGE head done cycles=11550 start_cyc=7 end_cyc=11557 me_busy=3168/3168 next_token=50994/50994 next_val=419c0f7e/419c0f7e seq_fault=0 core_fault=0 coll_fault=0 wall=427s
+QWEN_TOKEN_TP2 PASS stages=1 token=50994 val=419c0f7e die1_token=50994 cycles=11557 edges=11557 settle_max=3 wall_s=427.0 RSS_KiB=857480 threads=6

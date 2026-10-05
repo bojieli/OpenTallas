@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.w19.loader_followup.v1",
+  "status": "bounded_loader_pass_runtime_open",
+  "branch": "codex/w19-loader-w17-audit",
+  "base": "f1a463bf2",
+  "source_commits": [
+    "aea92e9f9",
+    "4c7f32e41",
+    "c291aec08",
+    "b341eb07c",
+    "f078ad19c"
+  ],
+  "loader": "tools/w19_payload_loader.py",
+  "loader_gate": "results/rtl/w19_payload_loader_gate_20261001.json",
+  "model_basis": "gpu_payload_transport_model: already-sized load-time golden issue-order136B layout; added host buffer167B and no engine/router hardware",
+  "regression": {
+    "w19_tests": 30,
+    "loader_rtl": 4,
+    "private_w17_tests": 17,
+    "parent_main_w17_tests": 17,
+    "restored_originals": 13
+  },
+  "prerequisites": "results/rtl/w19_full96_prerequisites_20261001.json",
+  "source_audit": [
+    "results/rtl/w19_w17_companion_audit_20261001.json",
+    "results/rtl/w19_w17_source_bindings_20261001.json",
+    "results/rtl/w19_w17_main_audit_24910_20261001.json",
+    "results/rtl/w19_w17_main_pin_separation_20261001.json",
+    "results/rtl/w19_w17_main_companion_drift_review_20261001.json"
+  ],
+  "failed_attempt": "results/rtl/w19_w17_main_audit_empty_patch_failure_20261001.json",
+  "runtime_boundary": "Loader consumes already-packed logical SM records; whole checkpoint-to-rank packing, router/descriptor dependencies and full96-rank RTL remain open.",
+  "physical_boundary": "Existing HBM floorplan abstract is pending and clock basis below1.2GHz target; in-context SS/FF and routing required. No hardware or clock adoption.",
+  "no_repeated_gate": "Completed54 padded gate untouched; retained60 sector proof reused, no sector-control rerun",
+  "priority": "Minimum single-user latency first, batching secondary; no measured token gain/rate claim.",
+  "main": "Read-only immutable24910c5ba source audit; no main edits or push",
+  "records_sha256": {
+    "results/rtl/w19_payload_loader_gate_20261001.json": "863389c848960ad5209f07796ee6d857cfd2230d46973342bc4bc93f1d68a64a",
+    "results/rtl/w19_full96_prerequisites_20261001.json": "7229fe83f1dd636409e070bb3975dd614656e084998eeb2977902e0e30573ff8"
+  }
+}

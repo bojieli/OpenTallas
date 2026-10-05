@@ -1,0 +1,155 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_embedding_query_a/semantic_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "architectural_live_at_complete": {
+      "const": [
+        "ATTENTION_POST",
+        "ATTENTION_COMBINATION",
+        "ATTENTION_RESIDUAL",
+        "ATTENTION_NORMALIZED",
+        "QUERY_A"
+      ]
+    },
+    "claim_boundary": {
+      "const": "Typed causal schedule from token IDs through complete layer-0 query-A outputs; HC_PRE numeric reference, integrated execution, attention completion, transformer completion, and performance are not established."
+    },
+    "contract_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "dense_block_size": {
+          "const": 128
+        },
+        "hc_multiplier": {
+          "const": 4
+        },
+        "hidden_size": {
+          "const": 4096
+        },
+        "maximum_token_count": {
+          "const": 4
+        },
+        "minimum_token_count": {
+          "const": 1
+        },
+        "query_a_output_features": {
+          "const": 1024
+        },
+        "vocabulary_size": {
+          "const": 129280
+        }
+      },
+      "required": [
+        "dense_block_size",
+        "hc_multiplier",
+        "hidden_size",
+        "maximum_token_count",
+        "minimum_token_count",
+        "query_a_output_features",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "evidence_observables": {
+      "const": [
+        "EMBEDDING",
+        "ATTENTION_INPUT",
+        "ATTENTION_PRE",
+        "ATTENTION_POST",
+        "ATTENTION_COMBINATION",
+        "ATTENTION_RESIDUAL",
+        "ATTENTION_NORMALIZED",
+        "QUERY_A"
+      ]
+    },
+    "exhaustive_row_sha256": {
+      "const": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef"
+    },
+    "hc_pre_execution_status": {
+      "const": "numeric_reference_pending"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "numeric_bindings": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_normalization_epsilon_binary32": {
+          "const": "0x358637bd"
+        },
+        "hc_sinkhorn_epsilon_binary32": {
+          "const": "0x358637bd"
+        },
+        "rms_epsilon_binary32": {
+          "const": "0x358637bd"
+        },
+        "sinkhorn_iterations": {
+          "const": 20
+        }
+      },
+      "required": [
+        "hc_normalization_epsilon_binary32",
+        "hc_sinkhorn_epsilon_binary32",
+        "rms_epsilon_binary32",
+        "sinkhorn_iterations"
+      ],
+      "type": "object"
+    },
+    "operator_sequence": {
+      "const": [
+        "TOKEN_EMBED",
+        "HC_EXPAND",
+        "HC_PRE",
+        "RMS_NORM",
+        "FP8_LINEAR",
+        "COMPLETE"
+      ]
+    },
+    "required_nonclaims": {
+      "const": [
+        "attention_completion",
+        "query_b",
+        "kv_path",
+        "transformer_block_completion",
+        "logits",
+        "decode",
+        "cycle_accuracy",
+        "ppa",
+        "nvidia_comparison"
+      ]
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_embedding_query_a_schedule_semantic.v1"
+    },
+    "status": {
+      "const": "schedule_only_hc_pre_numeric_reference_pending"
+    }
+  },
+  "required": [
+    "architectural_live_at_complete",
+    "claim_boundary",
+    "contract_id",
+    "dimensions",
+    "evidence_observables",
+    "exhaustive_row_sha256",
+    "hc_pre_execution_status",
+    "model_id",
+    "numeric_bindings",
+    "operator_sequence",
+    "required_nonclaims",
+    "schema",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 embedding-to-query-A schedule semantic contract v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

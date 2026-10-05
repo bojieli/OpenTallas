@@ -1,0 +1,38 @@
+make: Entering directory '/tmp/field-leaf-parent-r1/candidate/obj'
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o w11_field_prefix_sequential_gate.o /tmp/opentallas-bounded-validation-main-intake-20261001/rtl/test/w11_field_prefix_sequential_gate.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o Vgate.o Vgate.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o Vgate__1.o Vgate__1.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o Vgate__2.o Vgate__2.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17  -Os -c -o Vgate__3.o Vgate__3.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17   -c -o Vgate__Slow.o Vgate__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17   -c -o Vgate__1__Slow.o Vgate__1__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17   -c -o Vgate__2__Slow.o Vgate__2__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++17   -c -o Vgate__Syms.o Vgate__Syms.cpp
+ar -cr Vgate__ALL.a Vgate.o Vgate__1.o Vgate__2.o Vgate__3.o Vgate__Slow.o Vgate__1__Slow.o Vgate__2__Slow.o Vgate__Syms.o
+ranlib Vgate__ALL.a
+g++    w11_field_prefix_sequential_gate.o verilated.o Vgate__ALL.a      -o Vgate
+make: Leaving directory '/tmp/field-leaf-parent-r1/candidate/obj'
+	Command being timed: "verilator --cc --exe --build -j 2 -O1 -Wno-fatal -Wno-WIDTH -Wno-UNOPTFLAT -Wno-UNUSED --top-module tb_w11_field_prefix_sequential_gate --prefix Vgate -Mdir /tmp/field-leaf-parent-r1/candidate/obj /tmp/field-leaf-parent-r1/reference/ot_prefix.sv /tmp/field-leaf-parent-r1/reference/ot_hdc_delay.sv /tmp/field-leaf-parent-r1/reference/ot_v41_bmul2.sv /tmp/field-leaf-parent-r1/reference/ot_v41_bterm.sv /tmp/field-leaf-parent-r1/reference/ot_v41_bterm2_w10.sv /tmp/field-leaf-parent-r1/reference/ot_v41_fadd.sv /tmp/field-leaf-parent-r1/candidate/ot_prefix.sv /tmp/field-leaf-parent-r1/candidate/ot_hdc_delay.sv /tmp/field-leaf-parent-r1/candidate/ot_v41_bmul2.sv /tmp/field-leaf-parent-r1/candidate/ot_v41_bterm.sv /tmp/field-leaf-parent-r1/candidate/ot_v41_bterm2_w10.sv /tmp/field-leaf-parent-r1/candidate/ot_v41_fadd.sv /tmp/opentallas-bounded-validation-main-intake-20261001/rtl/test/tb_w11_field_prefix_sequential_gate.sv /tmp/opentallas-bounded-validation-main-intake-20261001/rtl/test/w11_field_prefix_sequential_gate.cpp -CFLAGS -O1 -std=c++17"
+	User time (seconds): 4.72
+	System time (seconds): 0.39
+	Percent of CPU this job got: 171%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.98
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 189320
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 292016
+	Voluntary context switches: 151
+	Involuntary context switches: 43
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 14232
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

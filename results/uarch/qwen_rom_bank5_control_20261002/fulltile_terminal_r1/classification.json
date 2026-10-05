@@ -1,0 +1,48 @@
+{
+  "schema": "QWEN_FULLTILE_TERMINAL_CLASSIFICATION_V1",
+  "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "observed_UTC": "2026-10-02T18:24:27.779270+00:00",
+  "original_status": "FAIL_SOURCE_MAP_RETAINED",
+  "original_error": "unmapped cell $scopeinfo",
+  "hardware_mapper_outputs_complete": true,
+  "raw_mapped_json_SHA256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "metadata_only_scopeinfo": 2319,
+  "cell_area_um2": 65983.07303971479,
+  "selected_cell_area_ceiling_um2": 125000,
+  "selected_corridor_um": 96.768,
+  "unfinished_Ampere82_08_plan_selected": false,
+  "asbuilt_survival_status": "FAIL_REQUIRED_PHYSICAL_REPLICA_RETENTION",
+  "actual_ROM_capture_FFs": 2560,
+  "actual_early_select_FFs": 5,
+  "actual_early_select_term_driver_links_proven": true,
+  "actual_mask_FFs": 30,
+  "required_mask_FFs": 80,
+  "actual_bank_strobe_FFs": 2,
+  "required_bank_strobe_FFs": 5,
+  "actual_source_distribution_BUFFERS": 76,
+  "actual_macros": {
+    "ROM": 10,
+    "KV": 2
+  },
+  "actual_FF_classes": {
+    "DFFHQNx1_ASAP7_75t_R": 45657,
+    "DFFASRHQNx1_ASAP7_75t_R": 56630
+  },
+  "KVcapture_and_high_address_namedwire_driver_join": "Diagnostic names not sufficient; 512KV FFs have source313 provenance. Full semantic driver join still open; not proof of missing hardware.",
+  "numerical_scope": "Retained TP4pos0 PASS unchanged; no new decodeposition or token",
+  "new_map_or_hardware": false,
+  "contextual_SSFF": false,
+  "P_and_R_admitted": false,
+  "future_driver_policy": "Removed arbitrary aggregate16GiB and64GiB-freespace termination. Measured filesystem monitoring remains; no elapsed/CPU/FSIZE limits. Original driver/FAIL unchanged.",
+  "ready_intake_predecessors": [
+    "d4992138c",
+    "b3fb12057",
+    "7d871d28e",
+    "752fffd8a",
+    "8a1c05fcd",
+    "af3c0dd60",
+    "3c431937a"
+  ],
+  "parent_9d4_dependency_audit": "51218664b103paths byteidentical; d49917paths absent;828handoffnotrequired",
+  "next_gate": "Ampere archive selectedplan/actualcounts; price mandatory preservation of already-required80mask5bank FFs and finite clock/reset/wire/root/parentIO. No retry without source-qualified preservation/constraints admission; no P&R before fullfit."
+}

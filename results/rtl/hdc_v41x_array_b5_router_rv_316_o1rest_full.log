@@ -1,0 +1,14 @@
+TOK user=0 pos=0 token=2815 cycle=312808
+TOK user=1 pos=0 token=1209 cycle=421432
+TOK user=0 pos=1 token=3537 cycle=634728
+TOK user=1 pos=1 token=1918 cycle=746513
+NODE node=0 busy=403406 side_wait=0 tx_wait=0 starved=343102 jobs=4 state_mismatch=0
+NODE node=4 busy=22048 side_wait=0 tx_wait=0 starved=724460 jobs=4 state_mismatch=0
+NODE node=3 busy=22048 side_wait=0 tx_wait=0 starved=724460 jobs=4 state_mismatch=0
+NODE node=2 busy=398370 side_wait=28 tx_wait=0 starved=348110 jobs=4 state_mismatch=0
+NODE node=1 busy=440288 side_wait=20 tx_wait=0 starved=306200 jobs=4 state_mismatch=0
+HDC41_ARRAY nodes=5 users=2 generated=2 mismatches=0 logit_mismatch=0 lm_head_checks=8 state_mismatch=0 total_cycles=746513
+USERS_DONE 2
+LINK_STALLS 14118
+PASS
+- /home/ubuntu/OpenTallas/.claude/worktrees/codex-v41x-array-router-rv/rtl/test/tb_hdc_v41x_array.sv:867: Verilog $finish

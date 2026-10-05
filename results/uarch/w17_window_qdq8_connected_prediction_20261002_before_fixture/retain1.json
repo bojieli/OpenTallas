@@ -1,0 +1,434 @@
+{
+  "rows": 128,
+  "retain": 1,
+  "write_requests": 32,
+  "last_write_ack": 905,
+  "last_WRcolumn_ps": 904000,
+  "final_scale_visible_ps": 911274,
+  "starts": [
+    906,
+    21493,
+    21627,
+    41982,
+    42116,
+    62208,
+    62342,
+    82388,
+    82522,
+    102586
+  ],
+  "staged_samples": [
+    21361,
+    21495,
+    41850,
+    41984,
+    62076,
+    62210,
+    82256,
+    82390,
+    102454,
+    102588
+  ],
+  "lifecycle_done_samples": [
+    21492,
+    21626,
+    41981,
+    42115,
+    62207,
+    62341,
+    82387,
+    82521,
+    102585,
+    102719
+  ],
+  "refill_counters": [
+    20453,
+    0,
+    20221,
+    0,
+    19958,
+    0,
+    19912,
+    0,
+    19930,
+    0
+  ],
+  "final_epoch": 128,
+  "first_own_row_READcolumns": {
+    "0": {
+      "kind": "column",
+      "cycle": 21218,
+      "pc": 11,
+      "tcol_ps": 21217375,
+      "address": 264303,
+      "tag": 69632,
+      "we": false
+    },
+    "15": {
+      "kind": "column",
+      "cycle": 21281,
+      "pc": 15,
+      "tcol_ps": 21280875,
+      "address": 264318,
+      "tag": 69647,
+      "we": false
+    },
+    "16": {
+      "kind": "column",
+      "cycle": 21336,
+      "pc": 15,
+      "tcol_ps": 21335375,
+      "address": 264319,
+      "tag": 69648,
+      "we": false
+    }
+  },
+  "read_visibility_margin_ps": {
+    "0": 20853726,
+    "15": 20382226,
+    "16": 20424101
+  },
+  "first_code_READ_after_final_scale_visibility_ps": 20306101,
+  "per_PC": [
+    {
+      "pc": 0,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 832,
+      "activations": 108,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 1,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 833,
+      "activations": 108,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 2,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 832,
+      "activations": 108,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 3,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 834,
+      "activations": 110,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 4,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 834,
+      "activations": 110,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 5,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 835,
+      "activations": 110,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 6,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 835,
+      "activations": 111,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 7,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 837,
+      "activations": 110,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 8,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 837,
+      "activations": 109,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 9,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 838,
+      "activations": 108,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 10,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 838,
+      "activations": 108,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 11,
+      "reads": 340,
+      "writes": 1,
+      "refreshes": 838,
+      "activations": 109,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 12,
+      "reads": 340,
+      "writes": 4,
+      "refreshes": 839,
+      "activations": 111,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 13,
+      "reads": 340,
+      "writes": 4,
+      "refreshes": 839,
+      "activations": 111,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 14,
+      "reads": 340,
+      "writes": 4,
+      "refreshes": 839,
+      "activations": 111,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 15,
+      "reads": 340,
+      "writes": 19,
+      "refreshes": 839,
+      "activations": 111,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 16,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 828,
+      "activations": 104,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 17,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 828,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 18,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 104,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 19,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 20,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 21,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 22,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 23,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 829,
+      "activations": 104,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 24,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 25,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 26,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 104,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 27,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 28,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 29,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 830,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 30,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 831,
+      "activations": 105,
+      "q": 0,
+      "r": 0
+    },
+    {
+      "pc": 31,
+      "reads": 340,
+      "writes": 0,
+      "refreshes": 831,
+      "activations": 104,
+      "q": 0,
+      "r": 0
+    }
+  ],
+  "pairs": 5,
+  "descriptors": 10,
+  "cold_rows": 640,
+  "read_requests": 10880,
+  "epoch_wrap_request": {
+    "kind": "request",
+    "cycle": 81976,
+    "pc": 11,
+    "address": 264303,
+    "tag": 65536,
+    "we": false,
+    "strobe": 0,
+    "row": 127,
+    "sector": 0,
+    "epoch": 0,
+    "op": 6
+  },
+  "first_postwrap_request": {
+    "kind": "request",
+    "cycle": 82525,
+    "pc": 0,
+    "address": 262144,
+    "tag": 65568,
+    "we": false,
+    "strobe": 0,
+    "row": 0,
+    "sector": 0,
+    "epoch": 1,
+    "op": 8
+  },
+  "total_packed_beats": 320,
+  "local_QE_accept_cycle": 300,
+  "QE_capture_cycles": [
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332
+  ],
+  "QE_idle_sample": 335,
+  "producer_issue_cycle": 335
+}

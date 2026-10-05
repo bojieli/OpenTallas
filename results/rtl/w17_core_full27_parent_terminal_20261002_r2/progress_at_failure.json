@@ -1,0 +1,680 @@
+{
+  "steps": [
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=ISSUE"
+      ],
+      "returncode": 0,
+      "wall_seconds": 1.1393800359219313,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_0.log",
+      "log_sha256": "6a2b0f5c1cbbd2830da7f454b4ea482ec1024d3a4780fb345f429a4b7ff550e7",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=GO"
+      ],
+      "returncode": 0,
+      "wall_seconds": 1.1447264747694135,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_1.log",
+      "log_sha256": "604db02abfc205f5fdb07e1b89ce9e137d1b13eb39d119681b5e0a3d749ef3bd",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=POISON"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1077246968634427,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_2.log",
+      "log_sha256": "040cc3a87670fcabb82b64aecd6ff329c13ee99e5cbd66f1f11394cfdc8f0b34",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=SU_SUFFIX"
+      ],
+      "returncode": 0,
+      "wall_seconds": 4.450889959000051,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_3.log",
+      "log_sha256": "220af9e6d53c202981d82ccbe2f14756018ce88cd41f89bf7d0f2c4873df8ff3",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=WC"
+      ],
+      "returncode": 0,
+      "wall_seconds": 5.691345930099487,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_4.log",
+      "log_sha256": "8b3d56e71a5505f0abc8d1a1e9b12be3f2347c0aee9bf80df029f05bd8b53bab",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=WS"
+      ],
+      "returncode": 0,
+      "wall_seconds": 5.691547980997711,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_5.log",
+      "log_sha256": "929fee5b8dfcd2c425eae68453b3f171621422021fe729b23c9240f1919bb79b",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=0"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1030294289812446,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_6.log",
+      "log_sha256": "1f1e66dc74a2e177dde3e3bdd5474b57c110b5513e10625404a299bc623a27e9",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=1"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1065663248300552,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_7.log",
+      "log_sha256": "69b3eb39888fccea39c2ddaca72fbf9622729bda503c5182acdb8ae500a177d3",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=2"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1045303707942367,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_8.log",
+      "log_sha256": "38e570c7f5a1363a9c7c3ffc0db67b34cd1044ae88f265082f5213d87387aaf1",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=3"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1098265829496086,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_9.log",
+      "log_sha256": "b005118db0415f46f5f9f913a6e63628ac26537ab0ac8d981953a06b9bdecf70",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=4"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.119612322654575,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_10.log",
+      "log_sha256": "1e473d43220285b516ced7c97dfeef5315f1ba05f4950c6d417195edf93a1790",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=5"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.105580779723823,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_11.log",
+      "log_sha256": "339a984ca89311d07ada3f66014f1c31516b3130c3f294a1f9e3eaa658512008",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=6"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.110383104067296,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_12.log",
+      "log_sha256": "328041563eed48f35effd84196e42706a19badce76aeaacd2f7f7fdae994f18f",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=7"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1125596398487687,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_13.log",
+      "log_sha256": "7f6fd029502c06b290281af7de18e03d2b763943ba55dd88d9436371d1ced538",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=8"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.110762095078826,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_14.log",
+      "log_sha256": "d6eaaab635ac14741944be12466d3a12fff3393a1e8d85ce2d38d70781e794fc",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=9"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1063243369571865,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_15.log",
+      "log_sha256": "7629e14a2c76412d85f0e171aa38da1b7436ca33a3f9acced0b1973dc1d792d0",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=10"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1103581967763603,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_16.log",
+      "log_sha256": "e120b50d7ec1795bdf879f5b6dd3a341a68fa630c3447373a4324790029f352e",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=11"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1117955138906837,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_17.log",
+      "log_sha256": "0454cca6767e63d7bd15c7cf12e77c73cab16f5aafa40fa8222ef0825b3eaf99",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=12"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.123214929830283,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_18.log",
+      "log_sha256": "552c7ae1cc727edd6c22d3b61ec055b7f5762708e4ad20e8bee24d9f2ad7a646",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=13"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.112703421153128,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_19.log",
+      "log_sha256": "e204c05a009fbb2278ada05df4b83a85ec85ff2316426e943d470891fa74370c",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=14"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1136302771046758,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_20.log",
+      "log_sha256": "3151369f6131dcc9472a369f5963d09c1c4755b591a94129e908a66520a9930d",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=15"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1135833016596735,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_21.log",
+      "log_sha256": "f229ffe379342eea5c8515ce0a039d921bed39f8cb52c37f9e4db9a6738a2eca",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/obj/Vtb",
+        "+CUT=PREFIX",
+        "+PREFIX=16"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.1141411010175943,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/runtime_22.log",
+      "log_sha256": "5be5c26b359654b59c7a6940cdd77772d64039be1f9e61c04cd45c4d5ab27965",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/sources"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--cc",
+        "--main",
+        "--exe",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--unroll-count",
+        "1",
+        "--unroll-limit",
+        "131072",
+        "--output-split",
+        "20000",
+        "--output-split-cfuncs",
+        "2000",
+        "-CFLAGS",
+        "-O0",
+        "-MAKEFLAGS",
+        "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0",
+        "--Mdir",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/obj",
+        "-I/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_coll_transpose.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_karb.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_q2.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_qn.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_region.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_slice.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_prefetch.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_region_guard.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_su_word.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_attn_source.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_block_guard.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_retention.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_row_codec.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_stage4.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_stream.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_coll_topk_merge.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_w15_coll_dma.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/common/ot_prefix.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/hbm/ot_hdc_qstream.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/kv/ot_hdc_hbm_model.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_accept.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_cg.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_delay.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fastfp.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fpu.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_reduce.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_sfu.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_actquant.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_blockdot.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fdiv.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_select.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_softplus.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_rom_fabric_router.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_rom_pkg_ctrl_x.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_w15_rom_oneshot_px.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_v41_rt_die.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_pair_w17w10.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_retn_w17w10.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_rom_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_spine_w17w10.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bf16_lanes.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bmul2.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bterm.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bterm2_w10.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_chain.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_chain2.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_fadd.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_ret.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_segtree.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_segtree2.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_core_cancel_join_r8/actual_fastpp_core_selected_cone.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_actual_producer_cancel_declaration_repaired/ot_hdc_v41x_window_kv_blocks_cancel.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/window_prefetch_recovery.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/kv_reqmux_recovery.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/kv_rope_reqmux_recovery.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/hbm_karb_recovery.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/idx_hbm_recovery.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 99.38094308739528,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/frontend.log",
+      "log_sha256": "b8ef1c235930fb8c72bfafe716142999c016c1faabc848858498872b36cd5ce5"
+    },
+    {
+      "command": [
+        "/usr/bin/make",
+        "-C",
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/obj",
+        "-f",
+        "Vtb.mk",
+        "-j",
+        "2",
+        "OPT_FAST=-O0",
+        "OPT_SLOW=-O0",
+        "OPT_GLOBAL=-O0"
+      ],
+      "returncode": 0,
+      "wall_seconds": 362.1715525514446,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/CXX.log",
+      "log_sha256": "63af64e9fc0b2ac86d783578e0db0a25920879960781bb66d87a463c87f1f3f7"
+    },
+    {
+      "command": [
+        "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/obj/Vtb",
+        "+CUT=GO"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.9517841110937297,
+      "log": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/runtime_0.log",
+      "log_sha256": "4b1ed5b1375152d47d32f7b828accc82eccba14ea3c8368d3a433886eb43904f",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources"
+    }
+  ],
+  "phase_receipts": [
+    {
+      "phase": "baseline",
+      "frontend_CXX_seconds": 0,
+      "phase_closed_sha256": "2fbb39c8a841bbf9f9cf1f707019c9c056a0216425e3c83088e8aba965d79671"
+    }
+  ],
+  "compile_shared_wall_seconds": 461.5524956388399,
+  "runtime_shared_wall_seconds": 75.06600091606379,
+  "no_retry": true
+}

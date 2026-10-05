@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.common-wrack-explicit-completion-event-gate.v1",
+  "status": "MODEL_COMPONENT_TEST_PASS_PROVIDERS_UNQUALIFIED",
+  "synthetic_trace": true,
+  "full_token": false,
+  "engine_RTL_build_ready": false,
+  "physical_build_ready": false,
+  "adoption": false,
+  "test_command": "python3 -m pytest -q tests/test_common_wrack_completion_calendar.py",
+  "test_rc": 0,
+  "tests_passed": 10,
+  "synthetic_input_events": [
+    {
+      "stack": 0,
+      "tag": 0,
+      "sector": 134217729,
+      "epoch": 42,
+      "completion_epoch": 42,
+      "reserve_ps": 0,
+      "column_ps": 3000,
+      "visible_ps": 11000,
+      "landing_accept_ps": 15000,
+      "opcode_finish_ps": 100000,
+      "result_visible_ps": 110000,
+      "consumer_done_ps": 120000
+    }
+  ],
+  "synthetic_input_commands": [
+    {
+      "stack": 0,
+      "tag": 0,
+      "sector": 134217729,
+      "kind": "write",
+      "bytes": 32,
+      "issue_ps": "2500"
+    }
+  ],
+  "output_calendar": {
+    "status": "EVENT_BOUND_MODEL_CALENDAR_PROVIDER_UNQUALIFIED",
+    "timeline": [
+      {
+        "stack": 0,
+        "tag": 0,
+        "epoch": 42,
+        "ACK_delivery_ps": "130000/9",
+        "landing_accept_ps": "15000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      }
+    ],
+    "done_ps": "122500",
+    "full_token_cycles": null,
+    "engine_RTL_build_ready": false,
+    "physical_admission": false
+  },
+  "completion_contract": "actual landingaccept does not release credit; actual opcodefinish and resultvisibility precede finalconsumerdone then reverseCDC",
+  "actual_controller_ports_and_consumer_provider_bound": false,
+  "source_sha256": {
+    "tools/common_wrack_completion_calendar.py": "2d85173fb5361e9eafb27541f4417721fb2fb7ac8daef653b0cf2c77c20f7c9e",
+    "tests/test_common_wrack_completion_calendar.py": "32c2d339a3979fe837c506923e55e0c3cc5b6d241289b550849fe62f17183991",
+    "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+  },
+  "Ram_calendar_reference": {
+    "revision": "b532c9a4a",
+    "path": "tools/w19_finite_service_calendar.py",
+    "sha256": "f36094c77cf0a63c65d796ad2fd3df45f758c3bef8ccfbc5fa196992f879f6df"
+  },
+  "remaining": "Bind real finite read/write scheduled command/WRvisibility, stageconsumer completion and publication provider; compose sharedread/write/RMW bankrefresh/port budgets and physical floorplan beforeengineadmission"
+}

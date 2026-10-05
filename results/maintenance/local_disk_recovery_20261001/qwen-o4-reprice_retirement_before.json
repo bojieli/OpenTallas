@@ -1,0 +1,16 @@
+{
+  "path": "/home/ubuntu/OpenTallas/.claude/worktrees/qwen-o4-reprice",
+  "owner_retirement": "Qwen owner handoff",
+  "timestamp": 1790844067.2084672,
+  "live_pids": [],
+  "manifest_references": [],
+  "head": "fdb5070bf66b7827027e81590294da7211b2f046",
+  "status_sha256": "4e5f3e9beb02416e4d26e45973e27de8b4d92fc4503e607e9c0ce95b8366fd3f",
+  "status": " M docs/HEADLINE_BUNDLE.md\n M results/arch/decode_roofline.json\n M results/arch/figures/decode_roofline_qwen3.html\n M results/arch/figures/sync_cost_table.html\n M results/arch/headline_bundle.json\n M results/arch/power_assumptions.json\n M results/arch/power_scenarios.json\n M results/arch/qwen3_budget.json\n M results/arch/qwen3_utilization.json\n M results/arch/qwen_gpu_calibration.json\n M results/arch/qwen_power_levers.json\n M results/arch/v41_die_assembly.json\n M results/speculative/dflash_step_timing.json\n M tools/arch_budget_qwen3.py\n M tools/dflash_step_timing.py\n?? results/arch/qwen_o4_dflash_reprice.json\n?? tools/qwen_o4_dflash_reprice.py\n",
+  "preserved_head_ref": "refs/maintenance/disk-recovery-20261001/qwen-o4-reprice",
+  "dirty_archive_commit": "a0a6d999626ad1e9e58e6a07f65f19ac585eaadd",
+  "dirty_archive_ref": "refs/maintenance/disk-recovery-20261001/qwen-o4-reprice-dirty",
+  "unique_source_bytes": 1702712,
+  "allocated_bytes_before": 3896410112,
+  "free_before": 92926169088
+}

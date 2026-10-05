@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/schedule_certificate_v1.schema.json",
+  "title": "OpenTallas Qwen3 independent schedule certificate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["certificate_id", "conflict_free", "dependency_complete", "graph_id", "kv_layer_commit_count", "maximum_live_buffers", "physical_map_id", "schedule_id", "schema", "slot_count", "status", "terminal_complete_count"],
+  "properties": {
+    "certificate_id": {"$ref": "#/$defs/sha256"},
+    "conflict_free": {"const": true},
+    "dependency_complete": {"const": true},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "kv_layer_commit_count": {"const": 36},
+    "maximum_live_buffers": {"minimum": 1, "type": "integer"},
+    "physical_map_id": {"$ref": "#/$defs/sha256"},
+    "schedule_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.schedule_certificate.v1"},
+    "slot_count": {"const": 617},
+    "status": {"const": "pass"},
+    "terminal_complete_count": {"const": 1}
+  },
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

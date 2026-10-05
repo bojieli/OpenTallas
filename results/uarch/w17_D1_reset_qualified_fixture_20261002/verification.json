@@ -1,0 +1,21 @@
+{
+  "status": "PASS_SOURCE_MODEL_PREPARATION_ONLY",
+  "source_base": "6badf6488e2af6131a463381c889a8c84f2be02a",
+  "tests_passed": 140,
+  "new_fixture_tests_passed": 23,
+  "command": "python3 -m pytest -q tests/test_w17_D1_reset_qualified_fixture.py tests/test_w17_D1_contributor_receipt.py tests/test_w17_D1_root_header_layout.py tests/test_w17_D1_actual_mask_receipt.py tests/test_w17_D1_parent_fault_evidence.py tests/test_w17_D1_reset_fault_attribution.py tests/test_w17_D1_disjoint_native_actual_runtime.py tests/test_w17_D1_native_join.py tests/test_w17_D1_native_diagnostic.py",
+  "all3829_retained_object_hashes_fresh_match": true,
+  "reuse_count": 3828,
+  "replace_TU_count": 1,
+  "SV_CPP_inverse_exact": true,
+  "engine_prefix_suffix_byteidentical": true,
+  "no_engine_or_live_edits": true,
+  "compiler_link_frontend_simulator_runs": 0,
+  "actual_runtime_healthy_claim": false,
+  "healthy_control_kind": "source-bound phase model, not actual runtime",
+  "protected_failure_receipts_unchanged": true,
+  "model_test_SHA256": {
+    "tools/w17_D1_reset_qualified_fixture.py": "e4be4632eaafc34be2c88f21b7ed31184e95dd0f50abaa984e7f205a8726df64",
+    "tests/test_w17_D1_reset_qualified_fixture.py": "4107534e80c308073e10103333606d6a9cd591e263b7a970a568e07b24629198"
+  }
+}

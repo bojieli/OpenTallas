@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.epoch9-parent-review.v1",
+  "owner_commits": [
+    "c09f3fe15",
+    "adffaaccd"
+  ],
+  "verdict": "PASS_INDEPENDENT_BOUNDED_CORRECTNESS_REPLAY",
+  "source_pins_equal": true,
+  "added_source_pins_equal": true,
+  "runtime_logs_byte_identical": 6,
+  "compiles": 2,
+  "scope": "Synthetic-service actual owner mux/KARB candidate wrap/drain and malformed-return correctness only; no actualbackend credit8 timing, fault recovery, physical clock or fulltoken qualification",
+  "hardware_admission": false,
+  "live_originals_modified": false,
+  "artifact_sha256": {
+    "original_epoch512.log": "f4cdde4336cb823abd9a26b14e3b2cee044e5826dcf0c77099e82403e1d952c1",
+    "healthy_wrap.log": "4426570b3249e01eb18cbba047dd7520cbb0a125452de41b7ef65ebc621d1ab8",
+    "poison.log": "af5e5cfb9914d0614e385b3564ec472fd93ec597b6d1fb2a286e9dc7731e1a08",
+    "stale.log": "af5e5cfb9914d0614e385b3564ec472fd93ec597b6d1fb2a286e9dc7731e1a08",
+    "original_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "record.json": "2d300e1d23ad66306ca156506473f4300716e41e9d44a18851086437752c3fda",
+    "unknown_sector.log": "af5e5cfb9914d0614e385b3564ec472fd93ec597b6d1fb2a286e9dc7731e1a08",
+    "candidate_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "duplicate.log": "af5e5cfb9914d0614e385b3564ec472fd93ec597b6d1fb2a286e9dc7731e1a08"
+  }
+}

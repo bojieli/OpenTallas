@@ -1,0 +1,53 @@
+{
+  "scope": "Historical baseline; final extracted block result at tested 1 ns, not current-source or integrated closure.",
+  "record": "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns.json",
+  "record_sha256": "cec4c6ddadf11831640e884c6c8cb1a68e6faabccd40fe58bfef64499bc3cef2",
+  "source_bindings": [
+    {
+      "launch_path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "matching_source": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    {
+      "launch_path": "results/rtl/kv_index_prefix_count/before.sv",
+      "matching_source": "results/rtl/kv_index_prefix_count/before.sv",
+      "sha256": "b819f251012bb9f1e325969b24940c809b97a500f6d460a3cef32ceea4e6aff9"
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/1_2_yosys.v": "c19b0a837cbcd0d44240ab58d2634bab7ca12d3ec0a69de916535819c2d5c8f7",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/6_final.v": "4ebc473a4f6048ad13ef50f987bbfd9ecdb8a59dea85e0be0740e28ae6eb0c9e",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/6_finish.rpt": "183b0fe5a0f63cec1a8b5b046438d307e02ff1b09a32a6c4f56245158078ce4b",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/config.mk": "b1c2d47ae32ba6d01bb377dd87416c03f2699fcef5cc1dd264d253989ec75e4e",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_util22_cts12_1ns_artifacts/metadata.json": "79eb0886d6a15ba002db58cff5584088af42d981faa4034e8d095025c7edae79"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0566933,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 72.0,
+        "setup_wns_ns": -0.139148,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "routed_cell_area_um2": 1080.38
+}

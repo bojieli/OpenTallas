@@ -1,0 +1,1925 @@
+{
+  "schema": "opentallas.lq8_runtime_overlap_comparison.v1",
+  "status": "pass",
+  "comparison": "capacity",
+  "optimized_queue_entry_bits": 320,
+  "optimized_queue_storage_bits": 640,
+  "baseline_queue_storage_bits": 2560,
+  "scope": "Matched quick corpus. Two weight SRAM banks, 32-word tiles, four-word FIFO. The external auxiliary producer is behavioral with one outstanding request and address-dependent latency. Auxiliary comparison adds an independent RTL cursor and bounded response queue; not bounded activation SRAM, production scheduling, G2 integration, multi-row weight reuse, or routed performance.",
+  "nonfault_baseline_cycles": 314081,
+  "nonfault_optimized_cycles": 314510,
+  "extra_issued_bundles": -4,
+  "serial_cycles": 320212,
+  "overlap_cycles": 320692,
+  "speedup": 0.998503236750527,
+  "latency_reduction_percent": -0.14990069079235008,
+  "cases": [
+    {
+      "case": 0,
+      "issues": 1,
+      "baseline_issues": 1,
+      "expected_fault": false,
+      "overlap_cycles": 37,
+      "serial_cycles": 37,
+      "cycles_saved": 0
+    },
+    {
+      "case": 1,
+      "issues": 2,
+      "baseline_issues": 2,
+      "expected_fault": false,
+      "overlap_cycles": 43,
+      "serial_cycles": 43,
+      "cycles_saved": 0
+    },
+    {
+      "case": 2,
+      "issues": 2,
+      "baseline_issues": 2,
+      "expected_fault": false,
+      "overlap_cycles": 47,
+      "serial_cycles": 47,
+      "cycles_saved": 0
+    },
+    {
+      "case": 3,
+      "issues": 2,
+      "baseline_issues": 2,
+      "expected_fault": false,
+      "overlap_cycles": 51,
+      "serial_cycles": 51,
+      "cycles_saved": 0
+    },
+    {
+      "case": 4,
+      "issues": 15,
+      "baseline_issues": 15,
+      "expected_fault": false,
+      "overlap_cycles": 129,
+      "serial_cycles": 129,
+      "cycles_saved": 0
+    },
+    {
+      "case": 5,
+      "issues": 12,
+      "baseline_issues": 12,
+      "expected_fault": false,
+      "overlap_cycles": 112,
+      "serial_cycles": 112,
+      "cycles_saved": 0
+    },
+    {
+      "case": 6,
+      "issues": 35,
+      "baseline_issues": 35,
+      "expected_fault": false,
+      "overlap_cycles": 271,
+      "serial_cycles": 260,
+      "cycles_saved": -11
+    },
+    {
+      "case": 7,
+      "issues": 14,
+      "baseline_issues": 14,
+      "expected_fault": false,
+      "overlap_cycles": 125,
+      "serial_cycles": 125,
+      "cycles_saved": 0
+    },
+    {
+      "case": 8,
+      "issues": 72,
+      "baseline_issues": 72,
+      "expected_fault": false,
+      "overlap_cycles": 511,
+      "serial_cycles": 502,
+      "cycles_saved": -9
+    },
+    {
+      "case": 9,
+      "issues": 72,
+      "baseline_issues": 72,
+      "expected_fault": false,
+      "overlap_cycles": 511,
+      "serial_cycles": 502,
+      "cycles_saved": -9
+    },
+    {
+      "case": 10,
+      "issues": 105,
+      "baseline_issues": 105,
+      "expected_fault": false,
+      "overlap_cycles": 725,
+      "serial_cycles": 716,
+      "cycles_saved": -9
+    },
+    {
+      "case": 11,
+      "issues": 12,
+      "baseline_issues": 12,
+      "expected_fault": false,
+      "overlap_cycles": 120,
+      "serial_cycles": 120,
+      "cycles_saved": 0
+    },
+    {
+      "case": 12,
+      "issues": 156,
+      "baseline_issues": 156,
+      "expected_fault": false,
+      "overlap_cycles": 1055,
+      "serial_cycles": 1040,
+      "cycles_saved": -15
+    },
+    {
+      "case": 13,
+      "issues": 512,
+      "baseline_issues": 512,
+      "expected_fault": false,
+      "overlap_cycles": 3369,
+      "serial_cycles": 3362,
+      "cycles_saved": -7
+    },
+    {
+      "case": 14,
+      "issues": 2673,
+      "baseline_issues": 2673,
+      "expected_fault": false,
+      "overlap_cycles": 17416,
+      "serial_cycles": 17409,
+      "cycles_saved": -7
+    },
+    {
+      "case": 15,
+      "issues": 24,
+      "baseline_issues": 24,
+      "expected_fault": false,
+      "overlap_cycles": 190,
+      "serial_cycles": 190,
+      "cycles_saved": 0
+    },
+    {
+      "case": 16,
+      "issues": 192,
+      "baseline_issues": 192,
+      "expected_fault": false,
+      "overlap_cycles": 1287,
+      "serial_cycles": 1282,
+      "cycles_saved": -5
+    },
+    {
+      "case": 17,
+      "issues": 48,
+      "baseline_issues": 48,
+      "expected_fault": false,
+      "overlap_cycles": 351,
+      "serial_cycles": 346,
+      "cycles_saved": -5
+    },
+    {
+      "case": 18,
+      "issues": 2048,
+      "baseline_issues": 2048,
+      "expected_fault": false,
+      "overlap_cycles": 13351,
+      "serial_cycles": 13346,
+      "cycles_saved": -5
+    },
+    {
+      "case": 19,
+      "issues": 48,
+      "baseline_issues": 48,
+      "expected_fault": false,
+      "overlap_cycles": 351,
+      "serial_cycles": 346,
+      "cycles_saved": -5
+    },
+    {
+      "case": 20,
+      "issues": 144,
+      "baseline_issues": 144,
+      "expected_fault": false,
+      "overlap_cycles": 975,
+      "serial_cycles": 970,
+      "cycles_saved": -5
+    },
+    {
+      "case": 21,
+      "issues": 144,
+      "baseline_issues": 144,
+      "expected_fault": false,
+      "overlap_cycles": 975,
+      "serial_cycles": 970,
+      "cycles_saved": -5
+    },
+    {
+      "case": 22,
+      "issues": 16,
+      "baseline_issues": 16,
+      "expected_fault": false,
+      "overlap_cycles": 138,
+      "serial_cycles": 138,
+      "cycles_saved": 0
+    },
+    {
+      "case": 23,
+      "issues": 256,
+      "baseline_issues": 256,
+      "expected_fault": false,
+      "overlap_cycles": 1703,
+      "serial_cycles": 1698,
+      "cycles_saved": -5
+    },
+    {
+      "case": 24,
+      "issues": 16,
+      "baseline_issues": 16,
+      "expected_fault": false,
+      "overlap_cycles": 138,
+      "serial_cycles": 138,
+      "cycles_saved": 0
+    },
+    {
+      "case": 25,
+      "issues": 12,
+      "baseline_issues": 12,
+      "expected_fault": false,
+      "overlap_cycles": 116,
+      "serial_cycles": 116,
+      "cycles_saved": 0
+    },
+    {
+      "case": 26,
+      "issues": 12,
+      "baseline_issues": 12,
+      "expected_fault": false,
+      "overlap_cycles": 108,
+      "serial_cycles": 108,
+      "cycles_saved": 0
+    },
+    {
+      "case": 27,
+      "issues": 72,
+      "baseline_issues": 72,
+      "expected_fault": false,
+      "overlap_cycles": 507,
+      "serial_cycles": 502,
+      "cycles_saved": -5
+    },
+    {
+      "case": 28,
+      "issues": 1200,
+      "baseline_issues": 1200,
+      "expected_fault": false,
+      "overlap_cycles": 7839,
+      "serial_cycles": 7834,
+      "cycles_saved": -5
+    },
+    {
+      "case": 29,
+      "issues": 1410,
+      "baseline_issues": 1410,
+      "expected_fault": false,
+      "overlap_cycles": 9208,
+      "serial_cycles": 9203,
+      "cycles_saved": -5
+    },
+    {
+      "case": 30,
+      "issues": 1620,
+      "baseline_issues": 1620,
+      "expected_fault": false,
+      "overlap_cycles": 10569,
+      "serial_cycles": 10560,
+      "cycles_saved": -9
+    },
+    {
+      "case": 31,
+      "issues": 1830,
+      "baseline_issues": 1830,
+      "expected_fault": false,
+      "overlap_cycles": 11942,
+      "serial_cycles": 11933,
+      "cycles_saved": -9
+    },
+    {
+      "case": 32,
+      "issues": 2040,
+      "baseline_issues": 2040,
+      "expected_fault": false,
+      "overlap_cycles": 13307,
+      "serial_cycles": 13294,
+      "cycles_saved": -13
+    },
+    {
+      "case": 33,
+      "issues": 1536,
+      "baseline_issues": 1536,
+      "expected_fault": false,
+      "overlap_cycles": 10031,
+      "serial_cycles": 10018,
+      "cycles_saved": -13
+    },
+    {
+      "case": 34,
+      "issues": 300,
+      "baseline_issues": 300,
+      "expected_fault": false,
+      "overlap_cycles": 1993,
+      "serial_cycles": 1980,
+      "cycles_saved": -13
+    },
+    {
+      "case": 35,
+      "issues": 1024,
+      "baseline_issues": 1024,
+      "expected_fault": false,
+      "overlap_cycles": 6695,
+      "serial_cycles": 6690,
+      "cycles_saved": -5
+    },
+    {
+      "case": 36,
+      "issues": 27,
+      "baseline_issues": 27,
+      "expected_fault": false,
+      "overlap_cycles": 217,
+      "serial_cycles": 217,
+      "cycles_saved": 0
+    },
+    {
+      "case": 37,
+      "issues": 4096,
+      "baseline_issues": 4096,
+      "expected_fault": false,
+      "overlap_cycles": 26673,
+      "serial_cycles": 26658,
+      "cycles_saved": -15
+    },
+    {
+      "case": 38,
+      "issues": 2048,
+      "baseline_issues": 2048,
+      "expected_fault": false,
+      "overlap_cycles": 13361,
+      "serial_cycles": 13346,
+      "cycles_saved": -15
+    },
+    {
+      "case": 39,
+      "issues": 1536,
+      "baseline_issues": 1536,
+      "expected_fault": false,
+      "overlap_cycles": 10033,
+      "serial_cycles": 10018,
+      "cycles_saved": -15
+    },
+    {
+      "case": 40,
+      "issues": 1536,
+      "baseline_issues": 1536,
+      "expected_fault": false,
+      "overlap_cycles": 10033,
+      "serial_cycles": 10018,
+      "cycles_saved": -15
+    },
+    {
+      "case": 41,
+      "issues": 384,
+      "baseline_issues": 384,
+      "expected_fault": false,
+      "overlap_cycles": 2545,
+      "serial_cycles": 2530,
+      "cycles_saved": -15
+    },
+    {
+      "case": 42,
+      "issues": 128,
+      "baseline_issues": 128,
+      "expected_fault": false,
+      "overlap_cycles": 881,
+      "serial_cycles": 866,
+      "cycles_saved": -15
+    },
+    {
+      "case": 43,
+      "issues": 192,
+      "baseline_issues": 192,
+      "expected_fault": false,
+      "overlap_cycles": 1297,
+      "serial_cycles": 1282,
+      "cycles_saved": -15
+    },
+    {
+      "case": 44,
+      "issues": 1,
+      "baseline_issues": 1,
+      "expected_fault": false,
+      "overlap_cycles": 37,
+      "serial_cycles": 37,
+      "cycles_saved": 0
+    },
+    {
+      "case": 45,
+      "issues": 1,
+      "baseline_issues": 1,
+      "expected_fault": false,
+      "overlap_cycles": 38,
+      "serial_cycles": 38,
+      "cycles_saved": 0
+    },
+    {
+      "case": 46,
+      "issues": 9,
+      "baseline_issues": 9,
+      "expected_fault": false,
+      "overlap_cycles": 91,
+      "serial_cycles": 91,
+      "cycles_saved": 0
+    },
+    {
+      "case": 47,
+      "issues": 64,
+      "baseline_issues": 64,
+      "expected_fault": false,
+      "overlap_cycles": 459,
+      "serial_cycles": 450,
+      "cycles_saved": -9
+    },
+    {
+      "case": 48,
+      "issues": 336,
+      "baseline_issues": 336,
+      "expected_fault": false,
+      "overlap_cycles": 2227,
+      "serial_cycles": 2218,
+      "cycles_saved": -9
+    },
+    {
+      "case": 49,
+      "issues": 1024,
+      "baseline_issues": 1024,
+      "expected_fault": false,
+      "overlap_cycles": 6699,
+      "serial_cycles": 6690,
+      "cycles_saved": -9
+    },
+    {
+      "case": 50,
+      "issues": 72,
+      "baseline_issues": 72,
+      "expected_fault": false,
+      "overlap_cycles": 511,
+      "serial_cycles": 502,
+      "cycles_saved": -9
+    },
+    {
+      "case": 51,
+      "issues": 16,
+      "baseline_issues": 16,
+      "expected_fault": false,
+      "overlap_cycles": 138,
+      "serial_cycles": 138,
+      "cycles_saved": 0
+    },
+    {
+      "case": 52,
+      "issues": 43,
+      "baseline_issues": 43,
+      "expected_fault": false,
+      "overlap_cycles": 324,
+      "serial_cycles": 315,
+      "cycles_saved": -9
+    },
+    {
+      "case": 53,
+      "issues": 768,
+      "baseline_issues": 768,
+      "expected_fault": false,
+      "overlap_cycles": 5029,
+      "serial_cycles": 5026,
+      "cycles_saved": -3
+    },
+    {
+      "case": 54,
+      "issues": 2048,
+      "baseline_issues": 2048,
+      "expected_fault": false,
+      "overlap_cycles": 13349,
+      "serial_cycles": 13346,
+      "cycles_saved": -3
+    },
+    {
+      "case": 55,
+      "issues": 64,
+      "baseline_issues": 64,
+      "expected_fault": false,
+      "overlap_cycles": 453,
+      "serial_cycles": 450,
+      "cycles_saved": -3
+    },
+    {
+      "case": 56,
+      "issues": 48,
+      "baseline_issues": 48,
+      "expected_fault": false,
+      "overlap_cycles": 349,
+      "serial_cycles": 346,
+      "cycles_saved": -3
+    },
+    {
+      "case": 57,
+      "issues": 1024,
+      "baseline_issues": 1024,
+      "expected_fault": false,
+      "overlap_cycles": 6693,
+      "serial_cycles": 6690,
+      "cycles_saved": -3
+    },
+    {
+      "case": 58,
+      "issues": 1,
+      "baseline_issues": 1,
+      "expected_fault": false,
+      "overlap_cycles": 43,
+      "serial_cycles": 43,
+      "cycles_saved": 0
+    },
+    {
+      "case": 59,
+      "issues": 1,
+      "baseline_issues": 1,
+      "expected_fault": false,
+      "overlap_cycles": 44,
+      "serial_cycles": 44,
+      "cycles_saved": 0
+    },
+    {
+      "case": 60,
+      "issues": 4,
+      "baseline_issues": 4,
+      "expected_fault": false,
+      "overlap_cycles": 52,
+      "serial_cycles": 52,
+      "cycles_saved": 0
+    },
+    {
+      "case": 61,
+      "issues": 80,
+      "baseline_issues": 80,
+      "expected_fault": false,
+      "overlap_cycles": 561,
+      "serial_cycles": 554,
+      "cycles_saved": -7
+    },
+    {
+      "case": 62,
+      "issues": 216,
+      "baseline_issues": 216,
+      "expected_fault": false,
+      "overlap_cycles": 1445,
+      "serial_cycles": 1438,
+      "cycles_saved": -7
+    },
+    {
+      "case": 63,
+      "issues": 512,
+      "baseline_issues": 512,
+      "expected_fault": false,
+      "overlap_cycles": 3369,
+      "serial_cycles": 3362,
+      "cycles_saved": -7
+    },
+    {
+      "case": 64,
+      "issues": 64,
+      "baseline_issues": 64,
+      "expected_fault": false,
+      "overlap_cycles": 457,
+      "serial_cycles": 450,
+      "cycles_saved": -7
+    },
+    {
+      "case": 65,
+      "issues": 512,
+      "baseline_issues": 512,
+      "expected_fault": false,
+      "overlap_cycles": 3369,
+      "serial_cycles": 3362,
+      "cycles_saved": -7
+    },
+    {
+      "case": 66,
+      "issues": 1024,
+      "baseline_issues": 1024,
+      "expected_fault": false,
+      "overlap_cycles": 6697,
+      "serial_cycles": 6690,
+      "cycles_saved": -7
+    },
+    {
+      "case": 67,
+      "issues": 8,
+      "baseline_issues": 8,
+      "expected_fault": false,
+      "overlap_cycles": 86,
+      "serial_cycles": 86,
+      "cycles_saved": 0
+    },
+    {
+      "case": 68,
+      "issues": 1562,
+      "baseline_issues": 1562,
+      "expected_fault": false,
+      "overlap_cycles": 10196,
+      "serial_cycles": 10189,
+      "cycles_saved": -7
+    },
+    {
+      "case": 69,
+      "issues": 24,
+      "baseline_issues": 24,
+      "expected_fault": false,
+      "overlap_cycles": 190,
+      "serial_cycles": 190,
+      "cycles_saved": 0
+    },
+    {
+      "case": 70,
+      "issues": 32,
+      "baseline_issues": 32,
+      "expected_fault": false,
+      "overlap_cycles": 245,
+      "serial_cycles": 242,
+      "cycles_saved": -3
+    },
+    {
+      "case": 71,
+      "issues": 4,
+      "baseline_issues": 5,
+      "expected_fault": true,
+      "overlap_cycles": 54,
+      "serial_cycles": 54,
+      "cycles_saved": 0
+    },
+    {
+      "case": 72,
+      "issues": 48,
+      "baseline_issues": 48,
+      "expected_fault": true,
+      "overlap_cycles": 349,
+      "serial_cycles": 346,
+      "cycles_saved": -3
+    },
+    {
+      "case": 73,
+      "issues": 4,
+      "baseline_issues": 5,
+      "expected_fault": true,
+      "overlap_cycles": 54,
+      "serial_cycles": 54,
+      "cycles_saved": 0
+    },
+    {
+      "case": 74,
+      "issues": 48,
+      "baseline_issues": 48,
+      "expected_fault": true,
+      "overlap_cycles": 349,
+      "serial_cycles": 346,
+      "cycles_saved": -3
+    },
+    {
+      "case": 75,
+      "issues": 4,
+      "baseline_issues": 5,
+      "expected_fault": true,
+      "overlap_cycles": 54,
+      "serial_cycles": 54,
+      "cycles_saved": 0
+    },
+    {
+      "case": 76,
+      "issues": 192,
+      "baseline_issues": 192,
+      "expected_fault": true,
+      "overlap_cycles": 1285,
+      "serial_cycles": 1282,
+      "cycles_saved": -3
+    },
+    {
+      "case": 77,
+      "issues": 4,
+      "baseline_issues": 5,
+      "expected_fault": true,
+      "overlap_cycles": 54,
+      "serial_cycles": 54,
+      "cycles_saved": 0
+    },
+    {
+      "case": 78,
+      "issues": 192,
+      "baseline_issues": 192,
+      "expected_fault": true,
+      "overlap_cycles": 1285,
+      "serial_cycles": 1282,
+      "cycles_saved": -3
+    },
+    {
+      "case": 79,
+      "issues": 3,
+      "baseline_issues": 3,
+      "expected_fault": true,
+      "overlap_cycles": 45,
+      "serial_cycles": 45,
+      "cycles_saved": 0
+    },
+    {
+      "case": 80,
+      "issues": 12,
+      "baseline_issues": 12,
+      "expected_fault": true,
+      "overlap_cycles": 104,
+      "serial_cycles": 104,
+      "cycles_saved": 0
+    },
+    {
+      "case": 81,
+      "issues": 0,
+      "baseline_issues": 0,
+      "expected_fault": true,
+      "overlap_cycles": 20,
+      "serial_cycles": 20,
+      "cycles_saved": 0
+    },
+    {
+      "case": 82,
+      "issues": 56,
+      "baseline_issues": 56,
+      "expected_fault": true,
+      "overlap_cycles": 392,
+      "serial_cycles": 389,
+      "cycles_saved": -3
+    },
+    {
+      "case": 83,
+      "issues": 84,
+      "baseline_issues": 84,
+      "expected_fault": true,
+      "overlap_cycles": 595,
+      "serial_cycles": 588,
+      "cycles_saved": -7
+    },
+    {
+      "case": 84,
+      "issues": 50,
+      "baseline_issues": 50,
+      "expected_fault": true,
+      "overlap_cycles": 368,
+      "serial_cycles": 353,
+      "cycles_saved": -15
+    },
+    {
+      "case": 85,
+      "issues": 84,
+      "baseline_issues": 84,
+      "expected_fault": true,
+      "overlap_cycles": 591,
+      "serial_cycles": 580,
+      "cycles_saved": -11
+    },
+    {
+      "case": 86,
+      "issues": 84,
+      "baseline_issues": 84,
+      "expected_fault": true,
+      "overlap_cycles": 583,
+      "serial_cycles": 580,
+      "cycles_saved": -3
+    },
+    {
+      "case": 87,
+      "issues": 0,
+      "baseline_issues": 0,
+      "expected_fault": true,
+      "overlap_cycles": 0,
+      "serial_cycles": 0,
+      "cycles_saved": 0
+    },
+    {
+      "case": 88,
+      "issues": 0,
+      "baseline_issues": 0,
+      "expected_fault": true,
+      "overlap_cycles": 0,
+      "serial_cycles": 0,
+      "cycles_saved": 0
+    },
+    {
+      "case": 89,
+      "issues": 6144,
+      "baseline_issues": 6144,
+      "expected_fault": false,
+      "overlap_cycles": 39981,
+      "serial_cycles": 39970,
+      "cycles_saved": -11
+    },
+    {
+      "case": 90,
+      "issues": 3072,
+      "baseline_issues": 3072,
+      "expected_fault": false,
+      "overlap_cycles": 20013,
+      "serial_cycles": 20002,
+      "cycles_saved": -11
+    },
+    {
+      "case": 91,
+      "issues": 1536,
+      "baseline_issues": 1536,
+      "expected_fault": false,
+      "overlap_cycles": 10029,
+      "serial_cycles": 10018,
+      "cycles_saved": -11
+    }
+  ],
+  "runs": {
+    "overlap": {
+      "schema": "opentallas.lq8_runtime_operands.v1",
+      "status": "pass",
+      "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
+      "serial_refill": false,
+      "future_auxiliary": true,
+      "auxiliary_depth": 2,
+      "sources": {
+        "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+        "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+        "rtl/abi3/ot_a3_lane_pipelined.sv": "cade2927fa311a76e3c19d5f22a0434e3b2e259c030bc707ce72bfd7a17b6466",
+        "rtl/abi3/ot_a3_lq8.sv": "60fcfba542bb02d0431d588ae330c5635906566c99bbe56f8f5a5668770a5226",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "d078480246a623fcbf0021b8ceaf6efc6abbc903805c2e2705232fc7bf645bd6",
+        "rtl/abi3/ot_a3_lq8_operand_join.sv": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+        "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
+        "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+        "rtl/test/tb_a3_runtime_weight_banks.sv": "bca837fd6c317b28b5983d4a084d0c850c62058993b119c3787c5309fcd863ff",
+        "rtl/test/tb_a3_lq8.sv": "3ce4a259bd5c5704b89e38a3d4a9d93f4335af646ffa9fdd8bff8525401d4cc1",
+        "rtl/test/a3_lq8_top.sv": "e473a79c737d8927272498f1b7fc97c6c1afe1c9c938372ef2f8b77fa496338f",
+        "rtl/test/a3_lq8_runtime_service.svh": "ed7b176bfdf82728609d6d32f6744b73dc1375c702daa69f7a351a6559e93275",
+        "rtl/test/a3_lq8_future_auxiliary.svh": "1c96c9545e7debe0c8168d223fbb66ff45cb2b0b3d0759b3e63d92987c458402",
+        "tools/check_lq8_runtime_operands.py": "bd6038246d174998de5f3aab3a35472fc17aef9cdff8912e00dbe105f402316a"
+      },
+      "operations": [
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 37
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 43
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 47
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 51
+        },
+        {
+          "issues": 15,
+          "tiles": 1,
+          "cycles": 129
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 112
+        },
+        {
+          "issues": 35,
+          "tiles": 2,
+          "cycles": 271
+        },
+        {
+          "issues": 14,
+          "tiles": 1,
+          "cycles": 125
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 511
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 511
+        },
+        {
+          "issues": 105,
+          "tiles": 4,
+          "cycles": 725
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 120
+        },
+        {
+          "issues": 156,
+          "tiles": 5,
+          "cycles": 1055
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3369
+        },
+        {
+          "issues": 2673,
+          "tiles": 84,
+          "cycles": 17416
+        },
+        {
+          "issues": 24,
+          "tiles": 1,
+          "cycles": 190
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1287
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 351
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13351
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 351
+        },
+        {
+          "issues": 144,
+          "tiles": 5,
+          "cycles": 975
+        },
+        {
+          "issues": 144,
+          "tiles": 5,
+          "cycles": 975
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 256,
+          "tiles": 8,
+          "cycles": 1703
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 116
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 108
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 507
+        },
+        {
+          "issues": 1200,
+          "tiles": 38,
+          "cycles": 7839
+        },
+        {
+          "issues": 1410,
+          "tiles": 45,
+          "cycles": 9208
+        },
+        {
+          "issues": 1620,
+          "tiles": 51,
+          "cycles": 10569
+        },
+        {
+          "issues": 1830,
+          "tiles": 58,
+          "cycles": 11942
+        },
+        {
+          "issues": 2040,
+          "tiles": 64,
+          "cycles": 13307
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10031
+        },
+        {
+          "issues": 300,
+          "tiles": 10,
+          "cycles": 1993
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6695
+        },
+        {
+          "issues": 27,
+          "tiles": 1,
+          "cycles": 217
+        },
+        {
+          "issues": 4096,
+          "tiles": 128,
+          "cycles": 26673
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13361
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10033
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10033
+        },
+        {
+          "issues": 384,
+          "tiles": 12,
+          "cycles": 2545
+        },
+        {
+          "issues": 128,
+          "tiles": 4,
+          "cycles": 881
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1297
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 37
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 38
+        },
+        {
+          "issues": 9,
+          "tiles": 1,
+          "cycles": 91
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 459
+        },
+        {
+          "issues": 336,
+          "tiles": 11,
+          "cycles": 2227
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6699
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 511
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 43,
+          "tiles": 2,
+          "cycles": 324
+        },
+        {
+          "issues": 768,
+          "tiles": 24,
+          "cycles": 5029
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13349
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 453
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 349
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6693
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 43
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 44
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 52
+        },
+        {
+          "issues": 80,
+          "tiles": 3,
+          "cycles": 561
+        },
+        {
+          "issues": 216,
+          "tiles": 7,
+          "cycles": 1445
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3369
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 457
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3369
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6697
+        },
+        {
+          "issues": 8,
+          "tiles": 1,
+          "cycles": 86
+        },
+        {
+          "issues": 1562,
+          "tiles": 49,
+          "cycles": 10196
+        },
+        {
+          "issues": 24,
+          "tiles": 1,
+          "cycles": 190
+        },
+        {
+          "issues": 32,
+          "tiles": 1,
+          "cycles": 245
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 349
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 349
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1285
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1285
+        },
+        {
+          "issues": 3,
+          "tiles": 1,
+          "cycles": 45
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 104
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 20
+        },
+        {
+          "issues": 56,
+          "tiles": 2,
+          "cycles": 392
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 595
+        },
+        {
+          "issues": 50,
+          "tiles": 2,
+          "cycles": 368
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 591
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 583
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 0
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 0
+        },
+        {
+          "issues": 6144,
+          "tiles": 192,
+          "cycles": 39981
+        },
+        {
+          "issues": 3072,
+          "tiles": 96,
+          "cycles": 20013
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10029
+        }
+      ],
+      "total_operation_cycles": 320692,
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_a3_lq8",
+        "--Mdir",
+        "/home/ubuntu/OpenTallas/build/runtime_lq8_future_d2/obj",
+        "-o",
+        "sim",
+        "/home/ubuntu/OpenTallas/rtl/ot_fp32_rne_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_format_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_engine_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_a3_runtime_weight_banks.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_a3_lq8.sv",
+        "/home/ubuntu/OpenTallas/build/runtime_lq8_future_d2/top.sv"
+      ],
+      "markers": [
+        "PASS: ABI3 lq8 cases=92 lane_ops=389495 products=592002 outputs=17103 faults=18 reference_cases=90 reference_outputs=17103 identity=17103 lanes=8 adder_stages=3",
+        "checks=115748",
+        "AUXILIARY requests=48815 max_reserved=2",
+        "RUNTIME issues=48803 fills=49044 tiles=1562 refill_issue_overlap=7270 serial=0"
+      ],
+      "artifacts": {
+        "build/runtime_lq8_future_d2/top.sv": "a2dddb7a0d2e4dc7bdd55159b17f8fcdba7225211745d0159e058575f4c7525d",
+        "build/runtime_lq8_future_d2/simulation.log": "9d429451f74005727fdfbef1743431d5780599ef50906d9fc26ee4a80377a94c",
+        "build/runtime_lq8_future_d2/manifest.json": "04bc3515e01b93e9ec722c83051e4841e7fbfff1222e5a0392f6ecd9316a8671",
+        "build/runtime_lq8_future_d2/lq8_case.hex": "e60138fac0bf15c30ce847cf9f5f46679198fa6d3613b7057f67afc330a21b30",
+        "build/runtime_lq8_future_d2/lq8_expect.hex": "64536a1be1c758c8e176a7a58332823bfbcd3a43d3466bb2cd57f8c14a873cb2",
+        "build/runtime_lq8_future_d2/lq8_m0.hex": "b7049d2d649ddce60cced8a6dd8fab5a89e4e9fdc788d6472d40936bc7429570",
+        "build/runtime_lq8_future_d2/lq8_m1.hex": "457265944f55f20bfba9bb8673105c77b7e7ad47a43858158730b8e85796a5b5",
+        "build/runtime_lq8_future_d2/lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
+        "build/runtime_lq8_future_d2/lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
+        "build/runtime_lq8_future_d2/lq8_meta.hex": "e6cad5b49105fa89fa3b82f286064fa493cdefd871f380dbf212c30afe30e46d",
+        "build/runtime_lq8_future_d2/lq8_w.hex": "05328be14159fd8dc701596d098f9c1fbc93190050c923c4fb1e6db10fe3c13d",
+        "build/runtime_lq8_future_d2/lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
+      }
+    },
+    "serial": {
+      "schema": "opentallas.lq8_runtime_operands.v1",
+      "status": "pass",
+      "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
+      "serial_refill": false,
+      "future_auxiliary": true,
+      "auxiliary_depth": 8,
+      "sources": {
+        "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+        "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+        "rtl/abi3/ot_a3_lane_pipelined.sv": "cade2927fa311a76e3c19d5f22a0434e3b2e259c030bc707ce72bfd7a17b6466",
+        "rtl/abi3/ot_a3_lq8.sv": "60fcfba542bb02d0431d588ae330c5635906566c99bbe56f8f5a5668770a5226",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "d078480246a623fcbf0021b8ceaf6efc6abbc903805c2e2705232fc7bf645bd6",
+        "rtl/abi3/ot_a3_lq8_operand_join.sv": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+        "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "3b3c51d32128acc870b19064d79c103180b343f52e0f746a13c4574166486873",
+        "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+        "rtl/test/tb_a3_runtime_weight_banks.sv": "bca837fd6c317b28b5983d4a084d0c850c62058993b119c3787c5309fcd863ff",
+        "rtl/test/tb_a3_lq8.sv": "3ce4a259bd5c5704b89e38a3d4a9d93f4335af646ffa9fdd8bff8525401d4cc1",
+        "rtl/test/a3_lq8_top.sv": "e473a79c737d8927272498f1b7fc97c6c1afe1c9c938372ef2f8b77fa496338f",
+        "rtl/test/a3_lq8_runtime_service.svh": "ed7b176bfdf82728609d6d32f6744b73dc1375c702daa69f7a351a6559e93275",
+        "rtl/test/a3_lq8_future_auxiliary.svh": "1c96c9545e7debe0c8168d223fbb66ff45cb2b0b3d0759b3e63d92987c458402",
+        "tools/check_lq8_runtime_operands.py": "bd6038246d174998de5f3aab3a35472fc17aef9cdff8912e00dbe105f402316a"
+      },
+      "operations": [
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 37
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 43
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 47
+        },
+        {
+          "issues": 2,
+          "tiles": 1,
+          "cycles": 51
+        },
+        {
+          "issues": 15,
+          "tiles": 1,
+          "cycles": 129
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 112
+        },
+        {
+          "issues": 35,
+          "tiles": 2,
+          "cycles": 260
+        },
+        {
+          "issues": 14,
+          "tiles": 1,
+          "cycles": 125
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 502
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 502
+        },
+        {
+          "issues": 105,
+          "tiles": 4,
+          "cycles": 716
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 120
+        },
+        {
+          "issues": 156,
+          "tiles": 5,
+          "cycles": 1040
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3362
+        },
+        {
+          "issues": 2673,
+          "tiles": 84,
+          "cycles": 17409
+        },
+        {
+          "issues": 24,
+          "tiles": 1,
+          "cycles": 190
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1282
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 346
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13346
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 346
+        },
+        {
+          "issues": 144,
+          "tiles": 5,
+          "cycles": 970
+        },
+        {
+          "issues": 144,
+          "tiles": 5,
+          "cycles": 970
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 256,
+          "tiles": 8,
+          "cycles": 1698
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 116
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 108
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 502
+        },
+        {
+          "issues": 1200,
+          "tiles": 38,
+          "cycles": 7834
+        },
+        {
+          "issues": 1410,
+          "tiles": 45,
+          "cycles": 9203
+        },
+        {
+          "issues": 1620,
+          "tiles": 51,
+          "cycles": 10560
+        },
+        {
+          "issues": 1830,
+          "tiles": 58,
+          "cycles": 11933
+        },
+        {
+          "issues": 2040,
+          "tiles": 64,
+          "cycles": 13294
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10018
+        },
+        {
+          "issues": 300,
+          "tiles": 10,
+          "cycles": 1980
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6690
+        },
+        {
+          "issues": 27,
+          "tiles": 1,
+          "cycles": 217
+        },
+        {
+          "issues": 4096,
+          "tiles": 128,
+          "cycles": 26658
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13346
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10018
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10018
+        },
+        {
+          "issues": 384,
+          "tiles": 12,
+          "cycles": 2530
+        },
+        {
+          "issues": 128,
+          "tiles": 4,
+          "cycles": 866
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1282
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 37
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 38
+        },
+        {
+          "issues": 9,
+          "tiles": 1,
+          "cycles": 91
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 450
+        },
+        {
+          "issues": 336,
+          "tiles": 11,
+          "cycles": 2218
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6690
+        },
+        {
+          "issues": 72,
+          "tiles": 3,
+          "cycles": 502
+        },
+        {
+          "issues": 16,
+          "tiles": 1,
+          "cycles": 138
+        },
+        {
+          "issues": 43,
+          "tiles": 2,
+          "cycles": 315
+        },
+        {
+          "issues": 768,
+          "tiles": 24,
+          "cycles": 5026
+        },
+        {
+          "issues": 2048,
+          "tiles": 64,
+          "cycles": 13346
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 450
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 346
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6690
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 43
+        },
+        {
+          "issues": 1,
+          "tiles": 1,
+          "cycles": 44
+        },
+        {
+          "issues": 4,
+          "tiles": 1,
+          "cycles": 52
+        },
+        {
+          "issues": 80,
+          "tiles": 3,
+          "cycles": 554
+        },
+        {
+          "issues": 216,
+          "tiles": 7,
+          "cycles": 1438
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3362
+        },
+        {
+          "issues": 64,
+          "tiles": 2,
+          "cycles": 450
+        },
+        {
+          "issues": 512,
+          "tiles": 16,
+          "cycles": 3362
+        },
+        {
+          "issues": 1024,
+          "tiles": 32,
+          "cycles": 6690
+        },
+        {
+          "issues": 8,
+          "tiles": 1,
+          "cycles": 86
+        },
+        {
+          "issues": 1562,
+          "tiles": 49,
+          "cycles": 10189
+        },
+        {
+          "issues": 24,
+          "tiles": 1,
+          "cycles": 190
+        },
+        {
+          "issues": 32,
+          "tiles": 1,
+          "cycles": 242
+        },
+        {
+          "issues": 5,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 346
+        },
+        {
+          "issues": 5,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 48,
+          "tiles": 2,
+          "cycles": 346
+        },
+        {
+          "issues": 5,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1282
+        },
+        {
+          "issues": 5,
+          "tiles": 1,
+          "cycles": 54
+        },
+        {
+          "issues": 192,
+          "tiles": 6,
+          "cycles": 1282
+        },
+        {
+          "issues": 3,
+          "tiles": 1,
+          "cycles": 45
+        },
+        {
+          "issues": 12,
+          "tiles": 1,
+          "cycles": 104
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 20
+        },
+        {
+          "issues": 56,
+          "tiles": 2,
+          "cycles": 389
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 588
+        },
+        {
+          "issues": 50,
+          "tiles": 2,
+          "cycles": 353
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 580
+        },
+        {
+          "issues": 84,
+          "tiles": 3,
+          "cycles": 580
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 0
+        },
+        {
+          "issues": 0,
+          "tiles": 0,
+          "cycles": 0
+        },
+        {
+          "issues": 6144,
+          "tiles": 192,
+          "cycles": 39970
+        },
+        {
+          "issues": 3072,
+          "tiles": 96,
+          "cycles": 20002
+        },
+        {
+          "issues": 1536,
+          "tiles": 48,
+          "cycles": 10018
+        }
+      ],
+      "total_operation_cycles": 320212,
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_a3_lq8",
+        "--Mdir",
+        "/home/ubuntu/OpenTallas/build/runtime_lq8_future/obj",
+        "-o",
+        "sim",
+        "/home/ubuntu/OpenTallas/rtl/ot_fp32_rne_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_format_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_engine_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pkg.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_join.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+        "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_a3_runtime_weight_banks.sv",
+        "/home/ubuntu/OpenTallas/rtl/test/tb_a3_lq8.sv",
+        "/home/ubuntu/OpenTallas/build/runtime_lq8_future/top.sv"
+      ],
+      "markers": [
+        "PASS: ABI3 lq8 cases=92 lane_ops=389495 products=592002 outputs=17103 faults=18 reference_cases=90 reference_outputs=17103 identity=17103 lanes=8 adder_stages=3",
+        "checks=115748",
+        "AUXILIARY requests=48815 max_reserved=5",
+        "RUNTIME issues=48807 fills=49044 tiles=1562 refill_issue_overlap=6898 serial=0"
+      ],
+      "artifacts": {
+        "build/runtime_lq8_future/top.sv": "232caf8ebaf253512bbd570091d6b16501a471c91769040f43595693e269e09d",
+        "build/runtime_lq8_future/simulation.log": "314da04fb5e6d2bc2ffc90a9c215829e3de795bd47252d46243edfd44eb5645b",
+        "build/runtime_lq8_future/manifest.json": "04bc3515e01b93e9ec722c83051e4841e7fbfff1222e5a0392f6ecd9316a8671",
+        "build/runtime_lq8_future/lq8_case.hex": "e60138fac0bf15c30ce847cf9f5f46679198fa6d3613b7057f67afc330a21b30",
+        "build/runtime_lq8_future/lq8_expect.hex": "64536a1be1c758c8e176a7a58332823bfbcd3a43d3466bb2cd57f8c14a873cb2",
+        "build/runtime_lq8_future/lq8_m0.hex": "b7049d2d649ddce60cced8a6dd8fab5a89e4e9fdc788d6472d40936bc7429570",
+        "build/runtime_lq8_future/lq8_m1.hex": "457265944f55f20bfba9bb8673105c77b7e7ad47a43858158730b8e85796a5b5",
+        "build/runtime_lq8_future/lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
+        "build/runtime_lq8_future/lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
+        "build/runtime_lq8_future/lq8_meta.hex": "e6cad5b49105fa89fa3b82f286064fa493cdefd871f380dbf212c30afe30e46d",
+        "build/runtime_lq8_future/lq8_w.hex": "05328be14159fd8dc701596d098f9c1fbc93190050c923c4fb1e6db10fe3c13d",
+        "build/runtime_lq8_future/lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
+      }
+    }
+  },
+  "comparison_tool_sha256": "53d9c0dc453741d9feb1659fdb990ded856e7b7dbab85824d9a1324c1e727556"
+}

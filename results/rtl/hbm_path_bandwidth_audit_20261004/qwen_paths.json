@@ -1,0 +1,132 @@
+{
+  "schema": "opentallas.hbm_path_audit.part.v1",
+  "part": "qwen",
+  "audited_at": "2026-10-03 PT (fork Q of claude/hbm-path-bw-audit-20261004), origin/main 5d52b5af6 era; records read, no simulation run",
+  "target_context": "Qwen3-8B position 8,191 (8K KV)",
+  "constants": {
+    "kv_bytes_per_position_per_layer_total": 2048,
+    "kv_basis": "36 layers, 8 KV heads x 128 dim, K+V, FP8 E4M3",
+    "hbm_stack_peak_TBps": 1.0,
+    "hbm_stack_peak_basis": "32 PCs x 32 B per 1.024 ns (ot_hbm3e_phy.json; results/uarch/qwen_hbm_sustained_bw_20261003/README.md)",
+    "sector_bytes": 32,
+    "gate": ">=90% sustained of all stacks per die (owner rule, codex_notes:3352)"
+  },
+  "designs": [
+    {
+      "design": "Qwen3-8B ROM (4 dies TP4, 4 HBM3E stacks per die; QWEN_ROM_PRODUCT in tools/uarch_model.py)",
+      "paths": [
+        {
+          "path": "ROM KV read stream (REAL_MEM baseline: ot_qwen_rt_kv_fill_service on the r14/credit17 tagged controller)",
+          "stage": "BEFORE (historical baseline)",
+          "bytes_per_token_per_die_at_8K": 150994944,
+          "bytes_basis": "8,192 pos x 512 B (2 KV heads/die) = 4 MiB/die/layer x 36 layers = 144 MiB/die/token (reads); write-back 512 B/die/layer",
+          "peak_TBps_per_die": 4.0,
+          "achieved_TBps": {
+            "value_range": [0.222, 0.433],
+            "percent_of_die_peak": [5.5, 10.8],
+            "measured_at": "P1023 (8K unsupported by this map), effective = 524,288 B / fill_cycles at 1.2 GHz: L0 1,451, L1 2,833, L2 2,689 cycles",
+            "relayed_owner_figure": "~15% of the 4-stack peak (codex_notes.txt:3352, no committed record found; the committed records give 5.5-10.8%)",
+            "record": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/summary_w4.json (real_memstat), commit 146dc2b2b"
+          },
+          "stack_level_reference": "existing models on the 1 MiB/stack stream: ot_hdc_hbm_model 0.107 TB/s mean (0.19 with PC_RDY=1) - results/uarch/qwen_hbm_sustained_bw_20261003/README.md (52ce3e9c1)",
+          "first_access_latency": "not separately recorded; fill_cycles include it",
+          "limiter": "per-PC FR-FCFS tagged requests: accept II = 5 edges at LEN1 (204.8 GB/s/stack), 4 column paths 128 GB/s; one stack only",
+          "meets_90pct": false,
+          "owner": "superseded by HBM_STREAM (below)"
+        },
+        {
+          "path": "ROM KV read stream (HBM_STREAM: ot_qwen_rt_kv_stream_service + ot_qwen_hbm_stream_ack on ot_hbm_r14_stream_stack; main 081875cf2)",
+          "stage": "BEFORE (current main)",
+          "bytes_per_token_per_die_at_8K": 150994944,
+          "peak_TBps_per_die": 4.0,
+          "achieved_TBps": {
+            "value": 0.900,
+            "percent_of_die_peak": 22.5,
+            "percent_of_one_stack": 90.0,
+            "measured_at": "P1023: 16,384 sectors (524,288 B) in 699 cycles at 1.2 GHz on L0/L1/L2; P255 4,096 sectors in 196-197 cycles (0.83 TB/s)",
+            "record": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/summary_w4.json (stream_memstat), commit 146dc2b2b; standalone bench standalone/kv_stream_bench_wbw1.log"
+          },
+          "at_8K": "UNSUPPORTED: stream map holds positions < 2048 in ONE stack (one DRAM row per layer); P>=2048 faults (NEG_P2048_beyond_stream_map, code 32770). Blockers listed in codex_notes.txt:3423 (stream_service.sv:487/439/135-136/129-133/218; stream_ack.sv:80-84/167/21)",
+          "first_access_latency": "24.6 ns go->first data with a >=261-cycle descriptor notice (stack bench r6); next-layer notice in the runtime makes chaining cost <=8 cycles",
+          "limiter": "only 1 of the 4 stacks per die is mapped (structural cap 25% of die peak); the per-stack sequencer itself runs at 90-96%",
+          "meets_90pct": false,
+          "owner": "Claude (Qwen 8K closure: full-bandwidth load path, codex_notes.txt:3566); fix = four-stack 8K multi-row stream map + descriptor/landing count + WR address + ACK identity"
+        },
+        {
+          "path": "ROM KV read stream, per-stack streaming controller at the 8K per-stack share (1 MiB/stack/layer = 2,048 pos x 2 heads x 128 B x K,V)",
+          "stage": "AFTER mechanism, stack level only",
+          "bytes_per_layer_per_stack": 1048576,
+          "peak_TBps_per_stack": 1.0,
+          "achieved_TBps": {
+            "value": 0.958,
+            "percent": 95.8,
+            "measured_at": "288 layers, 8 refresh phases, REFpb stream-aware, notice 320 cycles: worst 1,094.7 ns per 1 MiB (need 1,165.1 ns); mean >=0.967, data phase 0.982",
+            "record": "results/uarch/qwen_hbm_sustained_bw_20261003/README.md + rtl-bench-r6.json, commit 52ce3e9c1",
+            "without_notice": "0.774 TB/s worst (no hint); back-to-back layers 0.842 mean"
+          },
+          "first_access_latency": "24.6 ns (go->first data, notice given)",
+          "limiter": "column bus 100%; refresh (tRFCpb) when the notice is short",
+          "meets_90pct": true,
+          "caveat": "controller closes SS at CK/2 1.024 ns only (1.2 GHz misses by 4.7 ps); r8 successor closes WR_EN=1 at 1.024 ns (+25.6/+4.3 ps)"
+        },
+        {
+          "path": "ROM KV read stream, die level, all 4 stacks at P8191",
+          "stage": "AFTER (die level)",
+          "bytes_per_token_per_die_at_8K": 150994944,
+          "peak_TBps_per_die": 4.0,
+          "achieved_TBps": "PENDING - unmeasured; no committed four-stack 8K stream record or branch on origin (checked origin/claude/qwen-nearhbm-ctx8k-20261004: NEAR_TAIL fill successor bench only, no bandwidth record)",
+          "required_per_layer_ns_at_90pct": 1165.1,
+          "meets_90pct": "pending",
+          "owner": "Claude Qwen 8K full-bandwidth load-path agent (codex_notes.txt:3566); Laplace's combined dfc6 8K build waits on it (codex_notes.txt:3574/3606)"
+        }
+      ]
+    },
+    {
+      "design": "Qwen3-8B on the HBM accelerator (HA8; (a) TP2 2 dies 8 stacks, (b) TP4 4 dies 16 stacks; 4 stacks/die)",
+      "paths": [
+        {
+          "path": "Weight code-word stream + KV window (one prefetch stream per layer, r14 streaming controller 52ce3e9c1, REFpb, CK/2)",
+          "bytes_per_layer_per_die_at_P1023": {"a_tp2": 98598912, "b_tp4": 50921472},
+          "bytes_basis": "1,003 (a) / 518 (b) words x 96 KiB; KV is 11 (a) / 6 (b) words of it at P1023",
+          "bytes_per_token_per_die_at_8K": "weights ~3.4 GB (a) / ~1.7 GB (b) for HBM-resident layers + KV 288 MiB (a) / 144 MiB (b); KV ~8% of traffic",
+          "peak_TBps_per_die": 4.0,
+          "achieved_TBps": {
+            "a_tp2": {"value_per_die": 3.85, "per_stack": 0.962, "percent": 96.2, "basis": "typical HBM layer 30,748 core cycles = stream time; 25,027 ctl cycles streaming"},
+            "b_tp4": {"value_per_die": 3.80, "per_stack": 0.949, "percent": 94.9, "basis": "L20 16,102 core cycles for 518 words (layer-time average incl. compute tail)"},
+            "stream_bench": "tb_hbmacc_wstream_bw nstk=4 2,976 words: REFpb 0.9635 TB/s/stack, REFab 0.8718",
+            "measured_at": "P1023 (not 8K)",
+            "record": "results/rtl/hbm_accel_ha8_20261004/measured_composition.json, stream_bench/run_r1_2976.log, run_r0_2976.log, commit ba0f35610"
+          },
+          "first_access_latency": "hidden by cross-layer prefetch (preroll 655/1,000 ctl cycles, lag 40 words); controller go->first data 24.6 ns",
+          "limiter": "HBM column bus (layer = stream time, 86% HBM wait); REFab would cost 10.3%",
+          "meets_90pct": true,
+          "caveats": "measured at P1023, not the 8K target; window (KV) data are arrival-timed but served from stage images (not carried through HBM); measured with 52ce3e9c1 controller, main carries the r8 successor (not re-measured); SS/FF/area of the vehicle not claimed",
+          "owner": "Claude HBM-accelerator closure (codex_notes.txt:3566)"
+        },
+        {
+          "path": "KV window at P8191 on the HBM accelerator",
+          "bytes_per_token_per_die_at_8K": {"a_tp2": 301989888, "b_tp4": 150994944},
+          "peak_TBps_per_die": 4.0,
+          "achieved_TBps": "UNMEASURED at 8K (HA8 ran P1023 only; owner measurement rule requires P8191)",
+          "meets_90pct": "unmeasured (same stream controller as the 96% weight stream; KV wait 4/2 cycles at P1023)",
+          "owner": "Claude HBM-accelerator closure (Qwen 8K re-run of HA8 at P8191)"
+        }
+      ]
+    }
+  ],
+  "below_90_or_unmeasured": [
+    {"item": "Qwen ROM KV stream at 8K, die level (4 stacks)", "status": "below (22.5% today, one stack, faults at P>=2048)", "owner": "Claude Qwen 8K full-bandwidth load-path agent"},
+    {"item": "Qwen HBM accelerator KV/weight stream at P8191", "status": "unmeasured at target (96.2%/94.9% at P1023)", "owner": "Claude HBM-accelerator closure"}
+  ],
+  "sources": [
+    "results/rtl/qwen_rom_hbm_stream_realmem_20261004/summary_w4.json @146dc2b2b",
+    "results/rtl/qwen_rom_hbm_stream_realmem_20261004/standalone/kv_stream_bench_wbw1.log @146dc2b2b",
+    "results/uarch/qwen_hbm_sustained_bw_20261003/README.md @52ce3e9c1",
+    "results/rtl/hbm_accel_ha8_20261004/measured_composition.json @ba0f35610",
+    "results/rtl/hbm_accel_ha8_20261004/REPLAY.md @ba0f35610",
+    "results/rtl/hbm_accel_ha8_20261004/stream_bench/run_r1_2976.log, run_r0_2976.log @ba0f35610",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream_service.sv header (window limit P<2048) @081875cf2",
+    "/tmp/claude-review-20261003/codex_notes.txt lines 3352, 3423, 3566, 3574, 3606",
+    "tools/uarch_model.py QWEN_ROM_PRODUCT (k=4, stacks_per_die=4)"
+  ]
+}

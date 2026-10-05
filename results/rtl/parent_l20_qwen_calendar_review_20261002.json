@@ -1,0 +1,22 @@
+{
+  "DUT_hardware_credit": false,
+  "full_token_cycles": null,
+  "independent_reproduction": {
+    "results/uarch/dsrom_attention_controller_l20_composition_20261001/model.json": {
+      "byte_identical": true,
+      "sha256": "44ec465a213ccfc19b3e5438f5aac874a172474524e943d00e6470a0e368601b"
+    },
+    "results/uarch/qwen_hbm_controller_calendar_20261001/model_r2.json": {
+      "byte_identical": true,
+      "sha256": "bb8a3d93d77e1f9f64f11d4ad3963be0488d8f14882e3d07c8062de19641af87"
+    }
+  },
+  "l20_join_ready_and_visible_writer_missing": true,
+  "next": "Actual finite provider/control experiments; no transferred fixture timing",
+  "owner_commits": [
+    "117ae7d5d25fda1084402c456340f2861eb32d1f",
+    "71bda6e916d183e0d86e6206b0550edc55285043"
+  ],
+  "qwen_actual_phase_and_completion_providers_missing": true,
+  "tests_passed": 13
+}

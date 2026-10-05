@@ -1,0 +1,92 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 32 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_ot_a3_state_controller_asap7/base/1_synth.odb
+read_sdc /work/results/asap7/opentallas_ot_a3_state_controller_asap7/base/1_synth.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 26141
+initialize_floorplan -utilization 35 -aspect_ratio 1 -core_space 2 -site asap7sc7p5t
+[INFO IFP-0107] Defining die area using utilization: 35.00% and aspect ratio: 1.
+[WARNING IFP-0028] Core area lower left (2.000, 2.000) snapped to (2.052, 2.160).
+[INFO IFP-0001] Added 367 rows of 1837 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 103.266 103.266 ) um
+[INFO IFP-0101] Core BBox: (  2.052  2.160 ) ( 101.250 101.250 ) um
+[INFO IFP-0102] Core area:                         9829.530 um^2
+[INFO IFP-0103] Total instances area:              3448.841 um^2
+[INFO IFP-0104] Effective utilization:                0.351
+[INFO IFP-0105] Number of instances:                  26141
+source /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L
+[INFO RSZ-0042] Inserted 13 tie TIELOx1_ASAP7_75t_R instances.
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 2618 tie TIEHIx1_ASAP7_75t_R instances.
+repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+[WARNING EST-0027] no estimated parasitics. Using wire load models.
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove 
+[INFO RSZ-0094] Found 1319 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1319 out of 1319 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -765.472 |  -556319.1 |  -280112.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      10* |       0 |       8 |        0 |      0 |     1 |    +0.0% | -737.378 |  -554899.6 |  -265415.6 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      20* |       0 |      15 |        0 |      0 |     4 |    +0.0% | -723.171 |  -554463.8 |  -260367.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      30* |       0 |      24 |        0 |      0 |     5 |    +0.0% | -712.228 |  -553529.7 |  -259636.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      40* |       0 |      34 |        0 |      0 |     5 |    +0.0% | -700.014 |  -552812.1 |  -246106.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      50* |       0 |      36 |        0 |      0 |    13 |    +0.0% | -689.849 |  -552376.1 |  -239602.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      60* |       0 |      43 |        0 |      0 |    16 |    +0.0% | -684.913 |  -551842.9 |  -239361.5 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      70* |       0 |      50 |        0 |      0 |    19 |    +0.0% | -689.641 |  -555312.8 |  -238881.1 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      80* |       0 |      60 |        0 |      0 |    19 |    +0.0% | -685.051 |  -554426.0 |  -239004.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+      90* |       0 |      70 |        0 |      0 |    19 |    +0.0% | -672.109 |  -554329.6 |  -230474.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     100* |       0 |      79 |        0 |      0 |    20 |    +0.0% | -664.437 |  -554630.8 |  -225787.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     110* |       0 |      89 |        0 |      0 |    20 |    +0.1% | -659.917 |  -553950.0 |  -225684.1 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     120* |       0 |      96 |        0 |      0 |    23 |    +0.1% | -659.937 |  -552706.0 |  -224430.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     130* |       0 |     106 |        0 |      0 |    23 |    +0.1% | -650.486 |  -552022.2 |  -224073.3 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     140* |       0 |     115 |        0 |      0 |    24 |    +0.1% | -648.155 |  -551651.2 |  -223861.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     150* |       0 |     125 |        0 |      0 |    24 |    +0.1% | -640.508 |  -551089.8 |  -220938.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     160* |       0 |     132 |        0 |      0 |    27 |    +0.1% | -634.709 |  -549829.8 |  -218131.1 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     170* |       0 |     142 |        0 |      0 |    27 |    +0.1% | -630.964 |  -549706.2 |  -217943.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     180* |       0 |     150 |        0 |      0 |    29 |    +0.1% | -627.922 |  -550371.0 |  -214709.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     190* |       0 |     159 |        0 |      0 |    30 |    +0.1% | -627.400 |  -551790.5 |  -214190.3 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     200* |       0 |     164 |        0 |      0 |    35 |    +0.1% | -625.314 |  -551412.5 |  -213445.7 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     210* |       0 |     167 |        0 |      0 |    42 |    +0.1% | -622.504 |  -550255.3 |  -212446.7 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     212* |       0 |     168 |        0 |      0 |    42 |    +0.1% | -622.423 |  -550255.2 |  -212385.6 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     220* |       0 |     174 |        0 |      0 |    43 |    +0.1% | -622.423 |  -549723.2 |  -212262.6 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     230* |       0 |     184 |        0 |      0 |    43 |    +0.1% | -622.423 |  -549463.2 |  -212206.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     240* |       0 |     188 |        0 |      0 |    49 |    +0.2% | -625.047 |  -551284.6 |  -212439.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     250* |       0 |     194 |        0 |      0 |    53 |    +0.2% | -622.738 |  -550508.8 |  -213043.4 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     257* |       0 |     185 |        0 |      0 |    45 |    +0.1% | -622.423 |  -549458.9 |  -212202.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     260* |       0 |     186 |        0 |      0 |    46 |    +0.1% | -623.460 |  -549487.1 |  -212204.4 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     270* |       0 |     189 |        0 |      0 |    53 |    +0.2% | -623.688 |  -549536.5 |  -212224.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     280* |       0 |     199 |        0 |      0 |    53 |    +0.2% | -624.855 |  -549419.0 |  -213065.7 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     290* |       0 |     207 |        0 |      0 |    55 |    +0.2% | -623.465 |  -549449.2 |  -213079.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     300* |       0 |     216 |        0 |      0 |    56 |    +0.2% | -623.405 |  -549449.9 |  -213020.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     308* |       0 |     185 |        0 |      0 |    45 |    +0.1% | -622.423 |  -549458.9 |  -212202.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     310* |       0 |     185 |        0 |      0 |    46 |    +0.1% | -622.269 |  -549321.1 |  -212201.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     311* |       0 |     185 |        0 |      0 |    47 |    +0.1% | -622.269 |  -549321.1 |  -212200.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     316* |       0 |     185 |        0 |      0 |    51 |    +0.1% | -622.269 |  -549320.1 |  -212199.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     320* |       0 |     188 |        0 |      0 |    51 |    +0.2% | -623.533 |  -549320.4 |  -212200.5 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     330* |       0 |     198 |        0 |      0 |    51 |    +0.2% | -624.700 |  -549147.4 |  -212825.5 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     340* |       0 |     207 |        0 |      0 |    52 |    +0.2% | -623.310 |  -549023.8 |  -212794.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     350* |       0 |     217 |        0 |      0 |    52 |    +0.2% | -623.310 |  -548677.4 |  -212805.0 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     360* |       0 |     227 |        0 |      0 |    52 |    +0.2% | -623.538 |  -548440.1 |  -212801.2 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     364* |       0 |     185 |        0 |      0 |    51 |    +0.1% | -622.268 |  -549320.1 |  -212199.9 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     370* |       0 |     190 |        0 |      0 |    51 |    +0.2% | -623.533 |  -549254.4 |  -212198.1 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     380* |       0 |     200 |        0 |      0 |    51 |    +0.2% | -623.250 |  -549075.5 |  -212804.4 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     390* |       0 |     210 |        0 |      0 |    51 |    +0.2% | -623.310 |  -549010.6 |  -212788.8 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     400* |       0 |     220 |        0 |      0 |    51 |    +0.2% | -623.310 |  -548643.8 |  -212813.5 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D
+     410* |       0 |     228 |        0 |      0 |    53 |    +0.2% | -623.538 |  -548452.4 |  -212798.5 |   1319 | count_bytes_written\[62\]$_DFFE_PN0P_/D

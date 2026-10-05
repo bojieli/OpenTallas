@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/tmp/DS-recovery-negative-successor-execution-20261002-r1/baseline/obj/Vtb",
+    "+CUT=PREFIX",
+    "+PREFIX=8"
+  ],
+  "returncode": 0,
+  "log_sha256": "834b153b0807342afd47f989bf8f1266457fb032dd6a8e62bc9bb134ad4cc6e8",
+  "memory_events_before": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "memory_events_after": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "config": {
+    "bos_token_id": 0,
+    "decode_mode": "target_only",
+    "eos_token_id": 1,
+    "max_batch_size": 1,
+    "max_context_tokens": 8,
+    "max_new_tokens": 2,
+    "rng_seed": 33377335,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "vocab_size": 129280
+  },
+  "model_results": [
+    {
+      "argmax_token_ids": [20],
+      "candidate_token_ids": [20],
+      "invocation_id": "efbfb473d7348b8e63e4329df23d2abca370820b4e67ee1c99e401832316b900",
+      "logits_sha256": "6c2b02fda01a797558bd8a7697a1b2a3b5c94b69195aeb0c53abc3307628e251",
+      "processed_start_pos": 0,
+      "processed_stop_pos_exclusive": 2,
+      "rng_state_after_sha256": null,
+      "rng_state_before_sha256": null,
+      "state_commit_sha256": "a08890b6bca55357fd063483d1ced1c076b89f15c07fee163fdc5eb431314d34"
+    },
+    {
+      "argmax_token_ids": [1],
+      "candidate_token_ids": [1],
+      "invocation_id": "b6c1e63147e164cab4e5ba95292f0b2a0244aca41fc6379e9439bca9d322cf5e",
+      "logits_sha256": "6a53f0bdb487c8566b317eae5072b1ad2934860840cd7db1331ba9bfe2b5b197",
+      "processed_start_pos": 2,
+      "processed_stop_pos_exclusive": 3,
+      "rng_state_after_sha256": null,
+      "rng_state_before_sha256": null,
+      "state_commit_sha256": "f36b45ae818809ee24ae2489edabfe3cf2a12627b6929c07fc7a3b885d414d44"
+    }
+  ],
+  "prompt_token_ids": [[0, 10]],
+  "schema": "opentallas.deepseek_v4_generation_replay.v1"
+}

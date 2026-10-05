@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-10-01T09:51:29.183482+00:00",
+  "source_commit": "c576e25fd195a0abf06f285d63e564578c382e51",
+  "monitor": {
+    "pid": 626096,
+    "start_ticks": "305314538"
+  },
+  "source_sha256": "15560482aee24be11c8d750bf67d9f9cdb75d77432afebf9d5c18ee1749ccf4f",
+  "events_path": "/tmp/claude-1000/w13jobs/chain17/owner_events.jsonl",
+  "first_poll": {
+    "active_successor": {
+      "pid": 615596,
+      "start_ticks": "305293450",
+      "state": "S"
+    },
+    "issues": [],
+    "status": "EXCLUSIVE",
+    "utc": "2026-10-01T09:51:29.131004+00:00"
+  },
+  "policy": "Every10s checks globalkey, activePIDstart, parked predecessors and all runnable W13 supervisors. Conflict holds only authorized dispatcher; unowned actors and remote children untouched; monitor exits on ownershipkey change.",
+  "guards_tests_passed": 10,
+  "no_column_restart": true
+}

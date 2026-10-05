@@ -1,0 +1,4845 @@
+{
+  "schema": "opentallas.w19.gpu-attention-finish.v1",
+  "status": "INSTRUCTION_SERVICE_MODEL_NOT_ADMITTED",
+  "source_pins": {
+    "tools/w19_gpu_attention_finish.py": "3c98573a2dad2d5680fc90da3d38fb70afcffbda710b54e7f08970a76382bbc5",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/rtl/w19_checkpoint_production_20261001/gpu-attention-dots-r1.json": "c881f50c04a6428120521dbde5212396e1284dcfc8321a0c0cf4570e0287663d"
+  },
+  "source_graph_binding": [
+    {
+      "layer": 0,
+      "op": 8,
+      "rows": 128
+    },
+    {
+      "layer": 1,
+      "op": 13,
+      "rows": 128
+    },
+    {
+      "layer": 2,
+      "op": 18,
+      "rows": 640
+    },
+    {
+      "layer": 3,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 4,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 5,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 6,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 7,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 8,
+      "op": 18,
+      "rows": 640
+    },
+    {
+      "layer": 9,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 10,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 11,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 12,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 13,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 14,
+      "op": 23,
+      "rows": 640
+    },
+    {
+      "layer": 15,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 16,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 17,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 18,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 19,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 20,
+      "op": 21,
+      "rows": 640
+    },
+    {
+      "layer": 21,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 22,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 23,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 24,
+      "op": 17,
+      "rows": 640
+    },
+    {
+      "layer": 25,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 26,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 27,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 28,
+      "op": 17,
+      "rows": 640
+    },
+    {
+      "layer": 29,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 30,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 31,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 32,
+      "op": 17,
+      "rows": 640
+    },
+    {
+      "layer": 33,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 34,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 35,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 36,
+      "op": 17,
+      "rows": 640
+    },
+    {
+      "layer": 37,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 38,
+      "op": 8,
+      "rows": 640
+    },
+    {
+      "layer": 39,
+      "op": 8,
+      "rows": 640
+    }
+  ],
+  "upstream_formats": {
+    "Q": "linear_q toBF16 thenrope_tail BF16 at rotatedtail",
+    "window": "qdq_fp8 explicitto_bf16",
+    "selected": "qdq_fp4_e4m3 explicitto_bf16",
+    "dots": "F32multiply inputs directly; no newBF16round inserted",
+    "PV_probabilities": "explicit G.to_bf16(e); denominator uses originalF32 e"
+  },
+  "precision": "SeparateFADD/FMUL RNE canonical+0; XORneg preserves signzero. EXP golden19FP32ops/6Horneriterations+integerbit scale, no nativeapprox.",
+  "constants": {
+    "source": "hdc_golden EXP_POLY,EXP_MIN/MAX,LOG2E,LN2_HI/LO,MAGIC;readonly immediate operand mux costunqualified",
+    "ATTN_SCALE": "actual V.Model attn_scale F(head_dim**-0.5), productionconstantport required"
+  },
+  "organisation": {
+    "SMs": 32,
+    "lanes_per_SM": 128,
+    "warp_partitions": 4,
+    "registers_per_thread": 32,
+    "shared_bytes_SM": 65536,
+    "latencies_candidate": {
+      "RF_operand": 2,
+      "FP32add_mul": 7,
+      "FP32DIV": 19,
+      "DIV_II": 1,
+      "INT_SHFL": 3,
+      "FP32cmp_select": 3
+    },
+    "FMA": false,
+    "clock_GHz": 0.9
+  },
+  "profiles": [
+    {
+      "rows": 128,
+      "recipes": {
+        "score_scale": [
+          {
+            "op": "LOAD",
+            "dst": "qk",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actualQK"
+            }
+          },
+          {
+            "op": "FMUL",
+            "dst": "s",
+            "src": [
+              "qk",
+              "@ATTN_SCALE"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "s"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {}
+          }
+        ],
+        "max_local": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "scaledQK scores paddedNEG_INF"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "max_global": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "SMpartialmax paddedNEG_INF"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 4
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%8==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 8
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%16==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 16
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%32==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "probabilities": [
+          {
+            "op": "LOAD",
+            "dst": "s",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual scaledQK"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "mb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual globalmax"
+            }
+          },
+          {
+            "op": "XOR",
+            "dst": "negmb",
+            "src": [
+              "mb",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "x",
+            "src": [
+              "s",
+              "negmb"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMAX",
+            "dst": "xlo",
+            "src": [
+              "x",
+              "@EXP_MIN"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMIN",
+            "dst": "xc",
+            "src": [
+              "xlo",
+              "@EXP_MAX"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "t",
+            "src": [
+              "xc",
+              "@LOG2E"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "u",
+            "src": [
+              "t",
+              "@MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "n",
+            "src": [
+              "u",
+              "@NEG_MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nhi",
+            "src": [
+              "n",
+              "@LN2_HI"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nlo",
+            "src": [
+              "n",
+              "@LN2_LO"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neghi",
+            "src": [
+              "nhi",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neglo",
+            "src": [
+              "nlo",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "rhi",
+            "src": [
+              "xc",
+              "neghi"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "r",
+            "src": [
+              "rhi",
+              "neglo"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "@POLY0",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY2"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY3"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY4"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY5"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY6"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "F2I",
+            "dst": "ni",
+            "src": [
+              "n"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "mode": "exact integral signed32"
+            }
+          },
+          {
+            "op": "SHL",
+            "dst": "delta",
+            "src": [
+              "ni",
+              "@U23"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "e",
+            "src": [
+              "p",
+              "delta"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "typed_bit_view": true
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "e"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source": "unroundedEXP for denominator"
+            }
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "e",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "e",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "eb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "eb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16",
+              "source": "roundedEXP forPV"
+            }
+          }
+        ],
+        "den_local": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+0"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "@ZERO",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+1"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+2"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+3"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+4"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+5"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+6"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+7"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "c0"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "one lane active"
+            }
+          }
+        ],
+        "den_global": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual contiguous SM sum subtrees; remaining leaves +0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 4
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%8==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 8
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%16==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "sink_den": [
+          {
+            "op": "LOAD",
+            "dst": "sink",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "checkpoint attn_sink[head]"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "mb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actualglobalmax"
+            }
+          },
+          {
+            "op": "XOR",
+            "dst": "negmb",
+            "src": [
+              "mb",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "x",
+            "src": [
+              "sink",
+              "negmb"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMAX",
+            "dst": "xlo",
+            "src": [
+              "x",
+              "@EXP_MIN"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMIN",
+            "dst": "xc",
+            "src": [
+              "xlo",
+              "@EXP_MAX"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "t",
+            "src": [
+              "xc",
+              "@LOG2E"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "u",
+            "src": [
+              "t",
+              "@MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "n",
+            "src": [
+              "u",
+              "@NEG_MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nhi",
+            "src": [
+              "n",
+              "@LN2_HI"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nlo",
+            "src": [
+              "n",
+              "@LN2_LO"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neghi",
+            "src": [
+              "nhi",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neglo",
+            "src": [
+              "nlo",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "rhi",
+            "src": [
+              "xc",
+              "neghi"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "r",
+            "src": [
+              "rhi",
+              "neglo"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "@POLY0",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY2"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY3"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY4"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY5"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY6"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "F2I",
+            "dst": "ni",
+            "src": [
+              "n"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "mode": "exact integral signed32"
+            }
+          },
+          {
+            "op": "SHL",
+            "dst": "delta",
+            "src": [
+              "ni",
+              "@U23"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "e",
+            "src": [
+              "p",
+              "delta"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "typed_bit_view": true
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "den",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual unrounded EXP chunk8 tree"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "total",
+            "src": [
+              "den",
+              "e"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "total"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {}
+          }
+        ],
+        "output_div_bf16": [
+          {
+            "op": "LOAD",
+            "dst": "pv",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual PV result"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "den",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual denominator+sink"
+            }
+          },
+          {
+            "op": "DIV",
+            "dst": "out",
+            "src": [
+              "pv",
+              "den"
+            ],
+            "latency": 21,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "out",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "out",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "ob",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "ob"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          }
+        ],
+        "inverse_rope": [
+          {
+            "op": "LOAD",
+            "dst": "ab",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "outputBF16dim448+pair*2"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "bb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "outputBF16dim449+pair*2"
+            }
+          },
+          {
+            "op": "WIDEN",
+            "dst": "a",
+            "src": [
+              "ab"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "WIDEN",
+            "dst": "b",
+            "src": [
+              "bb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "c",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual position coefficient COS"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "s",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual position coefficient SIN"
+            }
+          },
+          {
+            "op": "FMUL",
+            "dst": "ac",
+            "src": [
+              "a",
+              "c"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "bs",
+            "src": [
+              "b",
+              "s"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "re",
+            "src": [
+              "ac",
+              "bs"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "bc",
+            "src": [
+              "b",
+              "c"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "as",
+            "src": [
+              "a",
+              "s"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "negas",
+            "src": [
+              "as",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "im",
+            "src": [
+              "bc",
+              "negas"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "re",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "re",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "reb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "reb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "im",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "im",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "imb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "imb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          }
+        ]
+      },
+      "calendars": {
+        "score_scale": {
+          "cycles": 14,
+          "warp_instructions": {
+            "LOAD": 1,
+            "FMUL": 1,
+            "STORE32": 1
+          },
+          "active_lanes": 4,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 2,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 1,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "max_local": {
+          "cycles": 21,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 2,
+            "FMAX": 2,
+            "STORE32": 1
+          },
+          "active_lanes": 4,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 5,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "max_global": {
+          "cycles": 45,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 5,
+            "FMAX": 5,
+            "STORE32": 1
+          },
+          "active_lanes": 32,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 11,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "probabilities": {
+          "cycles": 210,
+          "warp_instructions": {
+            "LOAD": 2,
+            "XOR": 3,
+            "FADD": 11,
+            "FMAX": 1,
+            "FMIN": 1,
+            "FMUL": 9,
+            "F2I": 1,
+            "SHL": 1,
+            "IADD": 3,
+            "STORE32": 1,
+            "SHR": 1,
+            "AND": 2,
+            "STORE16": 1
+          },
+          "active_lanes": 4,
+          "shared_issue_cycles": 4,
+          "RF_write_slots": 35,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 4,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "den_local": {
+          "cycles": 77,
+          "warp_instructions": {
+            "LOAD": 8,
+            "FADD": 8,
+            "STORE32": 1
+          },
+          "active_lanes": 1,
+          "shared_issue_cycles": 9,
+          "RF_write_slots": 16,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "den_global": {
+          "cycles": 53,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 4,
+            "FADD": 4,
+            "STORE32": 1
+          },
+          "active_lanes": 16,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 9,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "sink_den": {
+          "cycles": 206,
+          "warp_instructions": {
+            "LOAD": 3,
+            "XOR": 3,
+            "FADD": 12,
+            "FMAX": 1,
+            "FMIN": 1,
+            "FMUL": 9,
+            "F2I": 1,
+            "SHL": 1,
+            "IADD": 1,
+            "STORE32": 1
+          },
+          "active_lanes": 1,
+          "shared_issue_cycles": 4,
+          "RF_write_slots": 32,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 4,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "output_div_bf16": {
+          "cycles": 55,
+          "warp_instructions": {
+            "LOAD": 2,
+            "DIV": 1,
+            "SHR": 1,
+            "AND": 2,
+            "IADD": 2,
+            "STORE16": 1
+          },
+          "active_lanes": 16,
+          "shared_issue_cycles": 3,
+          "RF_write_slots": 8,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "inverse_rope": {
+          "cycles": 62,
+          "warp_instructions": {
+            "LOAD": 4,
+            "WIDEN": 2,
+            "FMUL": 4,
+            "FADD": 2,
+            "XOR": 1,
+            "SHR": 2,
+            "AND": 4,
+            "IADD": 4,
+            "STORE16": 2
+          },
+          "active_lanes": 8,
+          "shared_issue_cycles": 6,
+          "RF_write_slots": 23,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 6,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        }
+      },
+      "roles": {
+        "score_scale": "32SM each4/20 actual row lanes",
+        "max_local": "32SM localpadded4/32 lanes",
+        "max_global": "SM0 one warp32 after32partials arrive",
+        "probabilities": "same rowSMs asQK",
+        "den_local": "16SM one contiguous8EXP chunk for128;20SM contiguous32EXP/fourchunks for640, same total globaltree order",
+        "den_global": "SM0 16partials or20partials padded32, actual collect required",
+        "sink_den": "SM0 one active head lane",
+        "output_div_bf16": "32SM each16dim,16 serializedDIV lanes perSM",
+        "inverse_rope": "SM28..31 each8 adjacentpairs, dimensions448..511"
+      },
+      "events": [
+        {
+          "phase": "score_scale",
+          "wait": [
+            "QK output retired"
+          ]
+        },
+        {
+          "phase": "max_local",
+          "wait": [
+            "score_scale retired"
+          ]
+        },
+        {
+          "phase": "max_global",
+          "wait": [
+            "all32 localmax collected with finitecredit"
+          ]
+        },
+        {
+          "phase": "probabilities",
+          "wait": [
+            "actualmax broadcast accepted atall32SM"
+          ]
+        },
+        {
+          "phase": "den_local",
+          "wait": [
+            "actualEXP produced +finite contiguous EXP regrouping"
+          ]
+        },
+        {
+          "phase": "den_global",
+          "wait": [
+            "all16/20 localden subtrees collected"
+          ]
+        },
+        {
+          "phase": "sink_den",
+          "wait": [
+            "globalden result andactualglobalmax visible"
+          ]
+        },
+        {
+          "phase": "PV",
+          "wait": [
+            "BF16EXP+actual decoded rows staged; actual rowepoch validated"
+          ]
+        },
+        {
+          "phase": "output_div_bf16",
+          "wait": [
+            "actual PV andsink_den broadcast visible"
+          ]
+        },
+        {
+          "phase": "inverse_rope",
+          "wait": [
+            "outputDIV/BF16 stores committed",
+            "actual positioncos/sin available"
+          ]
+        },
+        {
+          "phase": "WOA_activation_publish",
+          "wait": [
+            "all512 outputs +inverseRoPE stores visible",
+            "allconsumercompletion/fences acknowledged"
+          ]
+        }
+      ],
+      "missing_costs": [
+        "NoC/CDC finite collectors/broadcasts, EXP regrouping, DMA/staging/drain/fences",
+        "positioncos/sin production service and residentformat/allocation, notgolden perlayerinjection",
+        "actualordinary FP32MAX/MIN/DIV/INT wrappers, clock/area/routes/fullshapeports"
+      ],
+      "full_attention_cycles": null,
+      "adopted": false
+    },
+    {
+      "rows": 640,
+      "recipes": {
+        "score_scale": [
+          {
+            "op": "LOAD",
+            "dst": "qk",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actualQK"
+            }
+          },
+          {
+            "op": "FMUL",
+            "dst": "s",
+            "src": [
+              "qk",
+              "@ATTN_SCALE"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "s"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {}
+          }
+        ],
+        "max_local": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "scaledQK scores paddedNEG_INF"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 4
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%8==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 8
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%16==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 16
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%32==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "max_global": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "SMpartialmax paddedNEG_INF"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 4
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%8==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 8
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%16==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 16
+            }
+          },
+          {
+            "op": "FMAX",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%32==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "probabilities": [
+          {
+            "op": "LOAD",
+            "dst": "s",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual scaledQK"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "mb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual globalmax"
+            }
+          },
+          {
+            "op": "XOR",
+            "dst": "negmb",
+            "src": [
+              "mb",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "x",
+            "src": [
+              "s",
+              "negmb"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMAX",
+            "dst": "xlo",
+            "src": [
+              "x",
+              "@EXP_MIN"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMIN",
+            "dst": "xc",
+            "src": [
+              "xlo",
+              "@EXP_MAX"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "t",
+            "src": [
+              "xc",
+              "@LOG2E"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "u",
+            "src": [
+              "t",
+              "@MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "n",
+            "src": [
+              "u",
+              "@NEG_MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nhi",
+            "src": [
+              "n",
+              "@LN2_HI"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nlo",
+            "src": [
+              "n",
+              "@LN2_LO"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neghi",
+            "src": [
+              "nhi",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neglo",
+            "src": [
+              "nlo",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "rhi",
+            "src": [
+              "xc",
+              "neghi"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "r",
+            "src": [
+              "rhi",
+              "neglo"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "@POLY0",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY2"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY3"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY4"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY5"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY6"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "F2I",
+            "dst": "ni",
+            "src": [
+              "n"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "mode": "exact integral signed32"
+            }
+          },
+          {
+            "op": "SHL",
+            "dst": "delta",
+            "src": [
+              "ni",
+              "@U23"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "e",
+            "src": [
+              "p",
+              "delta"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "typed_bit_view": true
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "e"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source": "unroundedEXP for denominator"
+            }
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "e",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "e",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "eb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "eb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16",
+              "source": "roundedEXP forPV"
+            }
+          }
+        ],
+        "den_local": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+0"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "@ZERO",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+1"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+2"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+3"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+4"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+5"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+6"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+7"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c0",
+            "src": [
+              "c0",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+8"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "@ZERO",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+9"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+10"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+11"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+12"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+13"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+14"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+15"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c1",
+            "src": [
+              "c1",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+16"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "@ZERO",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+17"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+18"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+19"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+20"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+21"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+22"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+23"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c2",
+            "src": [
+              "c2",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+24"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "@ZERO",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+25"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+26"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+27"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+28"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+29"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+30"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual EXP at SMbase+31"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "c3",
+            "src": [
+              "c3",
+              "v"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "t0_0",
+            "src": [
+              "c0",
+              "c1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "t0_1",
+            "src": [
+              "c2",
+              "c3"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "t1_0",
+            "src": [
+              "t0_0",
+              "t0_1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "t1_0"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "one lane active"
+            }
+          }
+        ],
+        "den_global": [
+          {
+            "op": "LOAD",
+            "dst": "v",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual contiguous SM sum subtrees; remaining leaves +0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 1
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%2==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 2
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%4==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 4
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%8==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 8
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%16==0"
+            }
+          },
+          {
+            "op": "SHFL",
+            "dst": "other",
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "offset": 16
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "v",
+            "src": [
+              "v",
+              "other"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {
+              "predicate": "lane%32==0"
+            }
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "v"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "predicate": "lane==0"
+            }
+          }
+        ],
+        "sink_den": [
+          {
+            "op": "LOAD",
+            "dst": "sink",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "checkpoint attn_sink[head]"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "mb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actualglobalmax"
+            }
+          },
+          {
+            "op": "XOR",
+            "dst": "negmb",
+            "src": [
+              "mb",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "x",
+            "src": [
+              "sink",
+              "negmb"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMAX",
+            "dst": "xlo",
+            "src": [
+              "x",
+              "@EXP_MIN"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMIN",
+            "dst": "xc",
+            "src": [
+              "xlo",
+              "@EXP_MAX"
+            ],
+            "latency": 5,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "t",
+            "src": [
+              "xc",
+              "@LOG2E"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "u",
+            "src": [
+              "t",
+              "@MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "n",
+            "src": [
+              "u",
+              "@NEG_MAGIC"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nhi",
+            "src": [
+              "n",
+              "@LN2_HI"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "nlo",
+            "src": [
+              "n",
+              "@LN2_LO"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neghi",
+            "src": [
+              "nhi",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "neglo",
+            "src": [
+              "nlo",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "rhi",
+            "src": [
+              "xc",
+              "neghi"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "r",
+            "src": [
+              "rhi",
+              "neglo"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "@POLY0",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY1"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY2"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY3"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY4"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY5"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "prod",
+            "src": [
+              "p",
+              "r"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "p",
+            "src": [
+              "prod",
+              "@POLY6"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "F2I",
+            "dst": "ni",
+            "src": [
+              "n"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "mode": "exact integral signed32"
+            }
+          },
+          {
+            "op": "SHL",
+            "dst": "delta",
+            "src": [
+              "ni",
+              "@U23"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "e",
+            "src": [
+              "p",
+              "delta"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {
+              "typed_bit_view": true
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "den",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual unrounded EXP chunk8 tree"
+            }
+          },
+          {
+            "op": "FADD",
+            "dst": "total",
+            "src": [
+              "den",
+              "e"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE32",
+            "dst": null,
+            "src": [
+              "total"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {}
+          }
+        ],
+        "output_div_bf16": [
+          {
+            "op": "LOAD",
+            "dst": "pv",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual PV result"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "den",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual denominator+sink"
+            }
+          },
+          {
+            "op": "DIV",
+            "dst": "out",
+            "src": [
+              "pv",
+              "den"
+            ],
+            "latency": 21,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "out",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "out",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "ob",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "ob"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          }
+        ],
+        "inverse_rope": [
+          {
+            "op": "LOAD",
+            "dst": "ab",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "outputBF16dim448+pair*2"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "bb",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "outputBF16dim449+pair*2"
+            }
+          },
+          {
+            "op": "WIDEN",
+            "dst": "a",
+            "src": [
+              "ab"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "WIDEN",
+            "dst": "b",
+            "src": [
+              "bb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "LOAD",
+            "dst": "c",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual position coefficient COS"
+            }
+          },
+          {
+            "op": "LOAD",
+            "dst": "s",
+            "src": [],
+            "latency": 2,
+            "shared": true,
+            "attributes": {
+              "source": "actual position coefficient SIN"
+            }
+          },
+          {
+            "op": "FMUL",
+            "dst": "ac",
+            "src": [
+              "a",
+              "c"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "bs",
+            "src": [
+              "b",
+              "s"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "re",
+            "src": [
+              "ac",
+              "bs"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "bc",
+            "src": [
+              "b",
+              "c"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FMUL",
+            "dst": "as",
+            "src": [
+              "a",
+              "s"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "XOR",
+            "dst": "negas",
+            "src": [
+              "as",
+              "@SIGN"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "FADD",
+            "dst": "im",
+            "src": [
+              "bc",
+              "negas"
+            ],
+            "latency": 9,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "re",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "re",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "reb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "reb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          },
+          {
+            "op": "SHR",
+            "dst": "hi",
+            "src": [
+              "im",
+              "@U16"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "lsb",
+            "src": [
+              "hi",
+              "@U1"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "bias",
+            "src": [
+              "im",
+              "@U7FFF"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "IADD",
+            "dst": "rounded",
+            "src": [
+              "bias",
+              "lsb"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "AND",
+            "dst": "imb",
+            "src": [
+              "rounded",
+              "@UFFFF0000"
+            ],
+            "latency": 3,
+            "shared": false,
+            "attributes": {}
+          },
+          {
+            "op": "STORE16",
+            "dst": null,
+            "src": [
+              "imb"
+            ],
+            "latency": 3,
+            "shared": true,
+            "attributes": {
+              "source_bits": "31:16"
+            }
+          }
+        ]
+      },
+      "calendars": {
+        "score_scale": {
+          "cycles": 14,
+          "warp_instructions": {
+            "LOAD": 1,
+            "FMUL": 1,
+            "STORE32": 1
+          },
+          "active_lanes": 20,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 2,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 1,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "max_local": {
+          "cycles": 45,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 5,
+            "FMAX": 5,
+            "STORE32": 1
+          },
+          "active_lanes": 32,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 11,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "max_global": {
+          "cycles": 45,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 5,
+            "FMAX": 5,
+            "STORE32": 1
+          },
+          "active_lanes": 32,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 11,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "probabilities": {
+          "cycles": 210,
+          "warp_instructions": {
+            "LOAD": 2,
+            "XOR": 3,
+            "FADD": 11,
+            "FMAX": 1,
+            "FMIN": 1,
+            "FMUL": 9,
+            "F2I": 1,
+            "SHL": 1,
+            "IADD": 3,
+            "STORE32": 1,
+            "SHR": 1,
+            "AND": 2,
+            "STORE16": 1
+          },
+          "active_lanes": 20,
+          "shared_issue_cycles": 4,
+          "RF_write_slots": 35,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 4,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "den_local": {
+          "cycles": 293,
+          "warp_instructions": {
+            "LOAD": 32,
+            "FADD": 35,
+            "STORE32": 1
+          },
+          "active_lanes": 1,
+          "shared_issue_cycles": 33,
+          "RF_write_slots": 67,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 5,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "den_global": {
+          "cycles": 65,
+          "warp_instructions": {
+            "LOAD": 1,
+            "SHFL": 5,
+            "FADD": 5,
+            "STORE32": 1
+          },
+          "active_lanes": 32,
+          "shared_issue_cycles": 2,
+          "RF_write_slots": 11,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "sink_den": {
+          "cycles": 206,
+          "warp_instructions": {
+            "LOAD": 3,
+            "XOR": 3,
+            "FADD": 12,
+            "FMAX": 1,
+            "FMIN": 1,
+            "FMUL": 9,
+            "F2I": 1,
+            "SHL": 1,
+            "IADD": 1,
+            "STORE32": 1
+          },
+          "active_lanes": 1,
+          "shared_issue_cycles": 4,
+          "RF_write_slots": 32,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 4,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "output_div_bf16": {
+          "cycles": 55,
+          "warp_instructions": {
+            "LOAD": 2,
+            "DIV": 1,
+            "SHR": 1,
+            "AND": 2,
+            "IADD": 2,
+            "STORE16": 1
+          },
+          "active_lanes": 16,
+          "shared_issue_cycles": 3,
+          "RF_write_slots": 8,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 2,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        },
+        "inverse_rope": {
+          "cycles": 62,
+          "warp_instructions": {
+            "LOAD": 4,
+            "WIDEN": 2,
+            "FMUL": 4,
+            "FADD": 2,
+            "XOR": 1,
+            "SHR": 2,
+            "AND": 4,
+            "IADD": 4,
+            "STORE16": 2
+          },
+          "active_lanes": 8,
+          "shared_issue_cycles": 6,
+          "RF_write_slots": 23,
+          "RF_read_ports": 2,
+          "RF_write_ports": 1,
+          "peak_live_value_registers": 6,
+          "address_loop_registers": 8,
+          "divider": "one ordinary FP32RNE divider/SM II1/LAT19; active lanes serialized, RF2 included; never32 lane divider replicas"
+        }
+      },
+      "roles": {
+        "score_scale": "32SM each4/20 actual row lanes",
+        "max_local": "32SM localpadded4/32 lanes",
+        "max_global": "SM0 one warp32 after32partials arrive",
+        "probabilities": "same rowSMs asQK",
+        "den_local": "16SM one contiguous8EXP chunk for128;20SM contiguous32EXP/fourchunks for640, same total globaltree order",
+        "den_global": "SM0 16partials or20partials padded32, actual collect required",
+        "sink_den": "SM0 one active head lane",
+        "output_div_bf16": "32SM each16dim,16 serializedDIV lanes perSM",
+        "inverse_rope": "SM28..31 each8 adjacentpairs, dimensions448..511"
+      },
+      "events": [
+        {
+          "phase": "score_scale",
+          "wait": [
+            "QK output retired"
+          ]
+        },
+        {
+          "phase": "max_local",
+          "wait": [
+            "score_scale retired"
+          ]
+        },
+        {
+          "phase": "max_global",
+          "wait": [
+            "all32 localmax collected with finitecredit"
+          ]
+        },
+        {
+          "phase": "probabilities",
+          "wait": [
+            "actualmax broadcast accepted atall32SM"
+          ]
+        },
+        {
+          "phase": "den_local",
+          "wait": [
+            "actualEXP produced +finite contiguous EXP regrouping"
+          ]
+        },
+        {
+          "phase": "den_global",
+          "wait": [
+            "all16/20 localden subtrees collected"
+          ]
+        },
+        {
+          "phase": "sink_den",
+          "wait": [
+            "globalden result andactualglobalmax visible"
+          ]
+        },
+        {
+          "phase": "PV",
+          "wait": [
+            "BF16EXP+actual decoded rows staged; actual rowepoch validated"
+          ]
+        },
+        {
+          "phase": "output_div_bf16",
+          "wait": [
+            "actual PV andsink_den broadcast visible"
+          ]
+        },
+        {
+          "phase": "inverse_rope",
+          "wait": [
+            "outputDIV/BF16 stores committed",
+            "actual positioncos/sin available"
+          ]
+        },
+        {
+          "phase": "WOA_activation_publish",
+          "wait": [
+            "all512 outputs +inverseRoPE stores visible",
+            "allconsumercompletion/fences acknowledged"
+          ]
+        }
+      ],
+      "missing_costs": [
+        "NoC/CDC finite collectors/broadcasts, EXP regrouping, DMA/staging/drain/fences",
+        "positioncos/sin production service and residentformat/allocation, notgolden perlayerinjection",
+        "actualordinary FP32MAX/MIN/DIV/INT wrappers, clock/area/routes/fullshapeports"
+      ],
+      "full_attention_cycles": null,
+      "adopted": false
+    }
+  ],
+  "full_token_cycles": null,
+  "physical_qualified": false
+}

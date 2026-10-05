@@ -1,0 +1,6 @@
+{
+  "finding": "R1 FMAX incorrectly canonicalizes signed zero. Source np.maximum/np.minimum preserve selected operand bits. R1 immutable; R2 leaf/controller additive corrected.",
+  "predecessor": "bfbcf472b62f442c371cbf9c107c5916f6e84864",
+  "qualification": "finite F32 exact; nonfinite refusal differs from generic source exception semantics and is explicitly scoped",
+  "source": "h3_qwen_bounded_native primitive FMAX/FMIN and bitcast NEG"
+}

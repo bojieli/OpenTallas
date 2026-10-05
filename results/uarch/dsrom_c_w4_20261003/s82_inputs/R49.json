@@ -1,0 +1,2228 @@
+{
+  "ABI": {
+    "context_bits": 170,
+    "extra_physical_shard_context_bits_per_token": 1,
+    "physical_shard_bit_is_separate": true,
+    "reply_bits": 240,
+    "req_reply_corridor_required_bits": 427,
+    "request_ACK_credit_bits": null,
+    "request_bits": 187,
+    "token_capacity_C": null,
+    "total_new_token_FF_bits": null
+  },
+  "actual_raw_bit_cell_roles": [
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "storage",
+      "x_offset_DBU": 0
+    },
+    {
+      "master": "INVx1_ASAP7_75t_R",
+      "role": "restore",
+      "x_offset_DBU": 1080
+    },
+    {
+      "master": "NAND2x1_ASAP7_75t_R",
+      "role": "forward_NAND",
+      "x_offset_DBU": 1242
+    },
+    {
+      "master": "NAND2x1_ASAP7_75t_R",
+      "role": "feedback_NAND",
+      "x_offset_DBU": 1566
+    },
+    {
+      "master": "NAND2x1_ASAP7_75t_R",
+      "role": "final_NAND",
+      "x_offset_DBU": 1890
+    },
+    {
+      "master": "BUFx4_ASAP7_75t_R",
+      "role": "feedback_BUF0",
+      "x_offset_DBU": 2214
+    },
+    {
+      "master": "BUFx4_ASAP7_75t_R",
+      "role": "feedback_BUF1",
+      "x_offset_DBU": 2592
+    }
+  ],
+  "actual_raw_common_gap_um": 4.32,
+  "actual_tracks_after_pg_and_pin_union": null,
+  "area": {
+    "actual_necessary_reticle_deficit_mm2": null,
+    "common_required_mm2": 0.032892100919999986,
+    "feedback_50pct_reserve_mm2": 0.01683051048,
+    "feedback_BUF_body_um2": 8415.25524,
+    "full_owner_cells_with_feedback_mm2": 0.09663352811999999,
+    "interior_left_before_new_tokens_VM_forward_hold_routes_mm2": 0.03713272308,
+    "island_change_mm2": 0,
+    "no_extra_feedback_cost_on_top_of_containing_enclosure": true,
+    "no_inherited_service_or_return_containment_credit": true,
+    "old_full_owner_cells_mm2": 0.07980301763999999,
+    "old_island_mm2": 0.14023044,
+    "reduced_common_reserved_mm2": 0.0450086787,
+    "retained_PG_perimeter_mm2": 0.00646418880000002,
+    "total_widened_raw_reserve_mm2": 0.0637414272,
+    "whole_reticle_screen_unchanged_mm2": 759.4209905970058
+  },
+  "arrival_cut": {
+    "actual_available_tracks_after_OBS_PG_clock_pin_via_union": null,
+    "actual_root_pin_coordinates": null,
+    "cut_edge": "west/east vertical edge",
+    "direction": "HORIZONTAL",
+    "enclosure_height_um": 432.81,
+    "gross_track_sites": 8837,
+    "halfpool_fraction": 0.5,
+    "halfpool_reserved_track_sites": 4418,
+    "lanes": 4416,
+    "layer": "M4",
+    "minimum_gross_edge_um": 423.93600000000004,
+    "y_offset_um": 0.012,
+    "y_pitch_um": 0.048
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "canonical_island_home_DBU": [
+    10974906,
+    15562800,
+    11298906,
+    15995610
+  ],
+  "clock_reset": {
+    "added_new_token_selector_FF_CLK_and_reset_loads": null,
+    "all_feedback_BUF_VDD_VSS_feeds_required": true,
+    "baseline_FFbits_unchanged": 41227,
+    "baseline_clock_RESETN_SETN_pin_loads_unchanged": true,
+    "feedback_combinational_BUFs_do_not_add_clock_or_reset_pins": true,
+    "old73_element_clock_buffers_not_borrowed": true,
+    "parent_route_buffer_sites_wire_load_input_budget_and_reset_release": null,
+    "predecessor_FO8_tree": {
+      "FF_uncertainty_ps": 25,
+      "SETN_TIEHI_cells": 1483,
+      "SETN_ties_already_in_body": true,
+      "SS_uncertainty_ps": 60,
+      "actual_buffer_sites_and_wire_cap": null,
+      "clock_reset_buffers_already_in_body_price": true,
+      "no_prior32way_tree_recharge": true,
+      "reset_release_recovery_removal_closed": false,
+      "skew_ceiling_ps": 25,
+      "slew_ceiling_ps": 320,
+      "source_FO8_trees": {
+        "clock": [
+          5154,
+          645,
+          81,
+          11,
+          2,
+          1
+        ],
+        "owner_active": [
+          16,
+          2,
+          1
+        ],
+        "per_vector_select": [
+          9,
+          2,
+          1
+        ],
+        "reset": [
+          186,
+          24,
+          3,
+          1
+        ]
+      },
+      "source_pin_loads": {
+        "FF": {
+          "SETN_pin_fF": 1726.89418,
+          "bounded_BUF_leaf_clock_load_fF": 9.93608,
+          "bounded_BUF_leaf_select_load_fF": 14.404399999999999,
+          "clock_pin_fF": 21492.939856,
+          "parent_BUF_A_pin_fF": 0.581966,
+          "reset_pin_fF": 1190.714047,
+          "upstream_available_budget_fF": null,
+          "vector_select_69_NAND_input_fF": 74.55794999999999,
+          "wire_budget_is_obligation_not_measured": true,
+          "wire_cap_budget_fF": 5.76
+        },
+        "SS": {
+          "SETN_pin_fF": 1522.16603,
+          "bounded_BUF_leaf_clock_load_fF": 9.333103999999999,
+          "bounded_BUF_leaf_select_load_fF": 13.159192000000001,
+          "clock_pin_fF": 18394.775977999998,
+          "parent_BUF_A_pin_fF": 0.511385,
+          "reset_pin_fF": 1044.069075,
+          "upstream_available_budget_fF": null,
+          "vector_select_69_NAND_input_fF": 63.818031000000005,
+          "wire_budget_is_obligation_not_measured": true,
+          "wire_cap_budget_fF": 5.76
+        }
+      },
+      "upstream_root_source_phase": null
+    },
+    "raw_R0_MX_rail_phase_same": true
+  },
+  "common_circuit_home_shard": null,
+  "common_shift_um": 52.164,
+  "compiled_CFG_macros_per_die": 14336,
+  "compiled_weight_macros_per_die": 8192,
+  "control_locality_and_merge_provider_selected": false,
+  "corrected_common_bbox_DBU": [
+    11188476,
+    15567120,
+    11294586,
+    15991290
+  ],
+  "domains": {
+    "consumer_clock_ps": 1111.111111111111,
+    "consumer_physical_pin_home": null,
+    "selected_CDC": null,
+    "source_actual_clock": "single clk",
+    "target_serial_SU_GHz": 0.9,
+    "target_stream_GHz": 1.2
+  },
+  "eliminated_prior_overlap_um": 47.844,
+  "feedback_route_projection_not_routed_or_closed": true,
+  "forward_hold_closed": false,
+  "forward_payload_does_not_traverse_feedback_BUFs": true,
+  "geometry_raw_common_overlap_free": true,
+  "logical_phase_lease_count": 1,
+  "new_jobs": [],
+  "no_combinational576way_crossdie_mux": true,
+  "no_global_field_ready": true,
+  "per_shard_raw_homes": [
+    {
+      "actual_physical_shard_die": 0,
+      "baseline_feedback_BUFs": 44160,
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15739920
+      ],
+      "raw_reserved_um2": 35411.904,
+      "record_bits": 22080,
+      "seats": 320,
+      "shard": 0
+    },
+    {
+      "actual_physical_shard_die": 1,
+      "baseline_feedback_BUFs": 35328,
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15705360
+      ],
+      "raw_reserved_um2": 28329.5232,
+      "record_bits": 17664,
+      "seats": 256,
+      "shard": 1
+    }
+  ],
+  "physical_build_admitted": false,
+  "physical_fit_proven": false,
+  "predecessor_source_and_records_unchanged": true,
+  "prior_common_bbox_DBU": [
+    11136312,
+    15567120,
+    11294586,
+    15991290
+  ],
+  "proposed_feedback_only_pin_routes_per_bit": [
+    {
+      "L1_projection_um": 0.054,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "A",
+      "dest_point_local_DBU": [
+        1107.0,
+        135.0
+      ],
+      "dest_role": "restore",
+      "source_pin": "QN",
+      "source_point_local_DBU": [
+        1053.0,
+        135.0
+      ],
+      "source_role": "storage"
+    },
+    {
+      "L1_projection_um": 1.026,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "A",
+      "dest_point_local_DBU": [
+        2241.0,
+        135.0
+      ],
+      "dest_role": "feedback_BUF0",
+      "source_pin": "Y",
+      "source_point_local_DBU": [
+        1215.0,
+        135.0
+      ],
+      "source_role": "restore"
+    },
+    {
+      "L1_projection_um": 0.057,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "A",
+      "dest_point_local_DBU": [
+        2619.0,
+        135.0
+      ],
+      "dest_role": "feedback_BUF1",
+      "source_pin": "Y",
+      "source_point_local_DBU": [
+        2562.0,
+        135.0
+      ],
+      "source_role": "feedback_BUF0"
+    },
+    {
+      "L1_projection_um": 1.3625,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "A",
+      "dest_point_local_DBU": [
+        1593.0,
+        150.5
+      ],
+      "dest_role": "feedback_NAND",
+      "source_pin": "Y",
+      "source_point_local_DBU": [
+        2940.0,
+        135.0
+      ],
+      "source_role": "feedback_BUF1"
+    },
+    {
+      "L1_projection_um": 0.448,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "B",
+      "dest_point_local_DBU": [
+        2133.0,
+        153.0
+      ],
+      "dest_role": "final_NAND",
+      "source_pin": "Y",
+      "source_point_local_DBU": [
+        1766.0,
+        234.0
+      ],
+      "source_role": "feedback_NAND"
+    },
+    {
+      "L1_projection_um": 1.946,
+      "actual_escape_layer_vias_OBS_and_wire_RC": null,
+      "dest_pin": "D",
+      "dest_point_local_DBU": [
+        243.0,
+        135.0
+      ],
+      "dest_role": "storage",
+      "source_pin": "Y",
+      "source_point_local_DBU": [
+        2090.0,
+        234.0
+      ],
+      "source_role": "final_NAND"
+    }
+  ],
+  "raw_M1_PG_overlay": [
+    {
+      "M1_rail_length_um": 131155.2,
+      "M2_upfeed_via_pitch_and_full_OBS_access": null,
+      "MX_select_abuts_matching_supplies": true,
+      "VDD_first_rail_bbox_DBU": [
+        10979226,
+        15567381,
+        11184156,
+        15567399
+      ],
+      "VSS_first_rail_bbox_DBU": [
+        10979226,
+        15567111,
+        11184156,
+        15567129
+      ],
+      "existing_word_select_INV_in_MX_empty_row_unchanged": true,
+      "feedback_BUF_orientation": "R0",
+      "feedback_BUFs_per_bit": 2,
+      "last_VDD_rail_top_DBU": 15739659,
+      "rail_count": 640,
+      "rail_width_DBU": 18,
+      "record_bit_pitch_DBU": 2970,
+      "record_fixed_row_orientation": "R0",
+      "row_pitch_DBU": 540,
+      "rows": 320,
+      "shard": 0,
+      "word_select_INV_orientation": "MX",
+      "word_select_INV_origin_offset_DBU": [
+        0,
+        270
+      ]
+    },
+    {
+      "M1_rail_length_um": 104924.16,
+      "M2_upfeed_via_pitch_and_full_OBS_access": null,
+      "MX_select_abuts_matching_supplies": true,
+      "VDD_first_rail_bbox_DBU": [
+        10979226,
+        15567381,
+        11184156,
+        15567399
+      ],
+      "VSS_first_rail_bbox_DBU": [
+        10979226,
+        15567111,
+        11184156,
+        15567129
+      ],
+      "existing_word_select_INV_in_MX_empty_row_unchanged": true,
+      "feedback_BUF_orientation": "R0",
+      "feedback_BUFs_per_bit": 2,
+      "last_VDD_rail_top_DBU": 15705099,
+      "rail_count": 512,
+      "rail_width_DBU": 18,
+      "record_bit_pitch_DBU": 2970,
+      "record_fixed_row_orientation": "R0",
+      "row_pitch_DBU": 540,
+      "rows": 256,
+      "shard": 1,
+      "word_select_INV_orientation": "MX",
+      "word_select_INV_origin_offset_DBU": [
+        0,
+        270
+      ]
+    }
+  ],
+  "raw_bit_pitch_DBU": 2970,
+  "raw_word_width_DBU": 204930,
+  "reticle_33by26_S58_NP2048_unchanged": true,
+  "root_banks": [
+    {
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15570360
+      ],
+      "global_root": 0,
+      "local_root": 0,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15570360,
+        11184156,
+        15573600
+      ],
+      "global_root": 1,
+      "local_root": 1,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15573600,
+        11184156,
+        15576840
+      ],
+      "global_root": 2,
+      "local_root": 2,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15576840,
+        11184156,
+        15580080
+      ],
+      "global_root": 3,
+      "local_root": 3,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15580080,
+        11184156,
+        15583320
+      ],
+      "global_root": 4,
+      "local_root": 4,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15583320,
+        11184156,
+        15586560
+      ],
+      "global_root": 5,
+      "local_root": 5,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15586560,
+        11184156,
+        15589800
+      ],
+      "global_root": 6,
+      "local_root": 6,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15589800,
+        11184156,
+        15593040
+      ],
+      "global_root": 7,
+      "local_root": 7,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15593040,
+        11184156,
+        15596280
+      ],
+      "global_root": 8,
+      "local_root": 8,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15596280,
+        11184156,
+        15599520
+      ],
+      "global_root": 9,
+      "local_root": 9,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15599520,
+        11184156,
+        15602760
+      ],
+      "global_root": 10,
+      "local_root": 10,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15602760,
+        11184156,
+        15606000
+      ],
+      "global_root": 11,
+      "local_root": 11,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15606000,
+        11184156,
+        15609240
+      ],
+      "global_root": 12,
+      "local_root": 12,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15609240,
+        11184156,
+        15612480
+      ],
+      "global_root": 13,
+      "local_root": 13,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15612480,
+        11184156,
+        15615720
+      ],
+      "global_root": 14,
+      "local_root": 14,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15615720,
+        11184156,
+        15618960
+      ],
+      "global_root": 15,
+      "local_root": 15,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15618960,
+        11184156,
+        15622200
+      ],
+      "global_root": 16,
+      "local_root": 16,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15622200,
+        11184156,
+        15625440
+      ],
+      "global_root": 17,
+      "local_root": 17,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15625440,
+        11184156,
+        15628680
+      ],
+      "global_root": 18,
+      "local_root": 18,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15628680,
+        11184156,
+        15631920
+      ],
+      "global_root": 19,
+      "local_root": 19,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15631920,
+        11184156,
+        15635160
+      ],
+      "global_root": 20,
+      "local_root": 20,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15635160,
+        11184156,
+        15638400
+      ],
+      "global_root": 21,
+      "local_root": 21,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15638400,
+        11184156,
+        15641640
+      ],
+      "global_root": 22,
+      "local_root": 22,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15641640,
+        11184156,
+        15644880
+      ],
+      "global_root": 23,
+      "local_root": 23,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15644880,
+        11184156,
+        15648120
+      ],
+      "global_root": 24,
+      "local_root": 24,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15648120,
+        11184156,
+        15651360
+      ],
+      "global_root": 25,
+      "local_root": 25,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15651360,
+        11184156,
+        15654600
+      ],
+      "global_root": 26,
+      "local_root": 26,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15654600,
+        11184156,
+        15657840
+      ],
+      "global_root": 27,
+      "local_root": 27,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15657840,
+        11184156,
+        15661080
+      ],
+      "global_root": 28,
+      "local_root": 28,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15661080,
+        11184156,
+        15664320
+      ],
+      "global_root": 29,
+      "local_root": 29,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15664320,
+        11184156,
+        15667560
+      ],
+      "global_root": 30,
+      "local_root": 30,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15667560,
+        11184156,
+        15670800
+      ],
+      "global_root": 31,
+      "local_root": 31,
+      "no_ready": true,
+      "seats": 6,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15670800,
+        11184156,
+        15672960
+      ],
+      "global_root": 32,
+      "local_root": 32,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15672960,
+        11184156,
+        15675120
+      ],
+      "global_root": 33,
+      "local_root": 33,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15675120,
+        11184156,
+        15677280
+      ],
+      "global_root": 34,
+      "local_root": 34,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15677280,
+        11184156,
+        15679440
+      ],
+      "global_root": 35,
+      "local_root": 35,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15679440,
+        11184156,
+        15681600
+      ],
+      "global_root": 36,
+      "local_root": 36,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15681600,
+        11184156,
+        15683760
+      ],
+      "global_root": 37,
+      "local_root": 37,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15683760,
+        11184156,
+        15685920
+      ],
+      "global_root": 38,
+      "local_root": 38,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15685920,
+        11184156,
+        15688080
+      ],
+      "global_root": 39,
+      "local_root": 39,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15688080,
+        11184156,
+        15690240
+      ],
+      "global_root": 40,
+      "local_root": 40,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15690240,
+        11184156,
+        15692400
+      ],
+      "global_root": 41,
+      "local_root": 41,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15692400,
+        11184156,
+        15694560
+      ],
+      "global_root": 42,
+      "local_root": 42,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15694560,
+        11184156,
+        15696720
+      ],
+      "global_root": 43,
+      "local_root": 43,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15696720,
+        11184156,
+        15698880
+      ],
+      "global_root": 44,
+      "local_root": 44,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15698880,
+        11184156,
+        15701040
+      ],
+      "global_root": 45,
+      "local_root": 45,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15701040,
+        11184156,
+        15703200
+      ],
+      "global_root": 46,
+      "local_root": 46,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15703200,
+        11184156,
+        15705360
+      ],
+      "global_root": 47,
+      "local_root": 47,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15705360,
+        11184156,
+        15707520
+      ],
+      "global_root": 48,
+      "local_root": 48,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15707520,
+        11184156,
+        15709680
+      ],
+      "global_root": 49,
+      "local_root": 49,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15709680,
+        11184156,
+        15711840
+      ],
+      "global_root": 50,
+      "local_root": 50,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15711840,
+        11184156,
+        15714000
+      ],
+      "global_root": 51,
+      "local_root": 51,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15714000,
+        11184156,
+        15716160
+      ],
+      "global_root": 52,
+      "local_root": 52,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15716160,
+        11184156,
+        15718320
+      ],
+      "global_root": 53,
+      "local_root": 53,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15718320,
+        11184156,
+        15720480
+      ],
+      "global_root": 54,
+      "local_root": 54,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15720480,
+        11184156,
+        15722640
+      ],
+      "global_root": 55,
+      "local_root": 55,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15722640,
+        11184156,
+        15724800
+      ],
+      "global_root": 56,
+      "local_root": 56,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15724800,
+        11184156,
+        15726960
+      ],
+      "global_root": 57,
+      "local_root": 57,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15726960,
+        11184156,
+        15729120
+      ],
+      "global_root": 58,
+      "local_root": 58,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15729120,
+        11184156,
+        15731280
+      ],
+      "global_root": 59,
+      "local_root": 59,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15731280,
+        11184156,
+        15733440
+      ],
+      "global_root": 60,
+      "local_root": 60,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15733440,
+        11184156,
+        15735600
+      ],
+      "global_root": 61,
+      "local_root": 61,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15735600,
+        11184156,
+        15737760
+      ],
+      "global_root": 62,
+      "local_root": 62,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15737760,
+        11184156,
+        15739920
+      ],
+      "global_root": 63,
+      "local_root": 63,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 0,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15569280
+      ],
+      "global_root": 64,
+      "local_root": 0,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15569280,
+        11184156,
+        15571440
+      ],
+      "global_root": 65,
+      "local_root": 1,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15571440,
+        11184156,
+        15573600
+      ],
+      "global_root": 66,
+      "local_root": 2,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15573600,
+        11184156,
+        15575760
+      ],
+      "global_root": 67,
+      "local_root": 3,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15575760,
+        11184156,
+        15577920
+      ],
+      "global_root": 68,
+      "local_root": 4,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15577920,
+        11184156,
+        15580080
+      ],
+      "global_root": 69,
+      "local_root": 5,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15580080,
+        11184156,
+        15582240
+      ],
+      "global_root": 70,
+      "local_root": 6,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15582240,
+        11184156,
+        15584400
+      ],
+      "global_root": 71,
+      "local_root": 7,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15584400,
+        11184156,
+        15586560
+      ],
+      "global_root": 72,
+      "local_root": 8,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15586560,
+        11184156,
+        15588720
+      ],
+      "global_root": 73,
+      "local_root": 9,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15588720,
+        11184156,
+        15590880
+      ],
+      "global_root": 74,
+      "local_root": 10,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15590880,
+        11184156,
+        15593040
+      ],
+      "global_root": 75,
+      "local_root": 11,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15593040,
+        11184156,
+        15595200
+      ],
+      "global_root": 76,
+      "local_root": 12,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15595200,
+        11184156,
+        15597360
+      ],
+      "global_root": 77,
+      "local_root": 13,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15597360,
+        11184156,
+        15599520
+      ],
+      "global_root": 78,
+      "local_root": 14,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15599520,
+        11184156,
+        15601680
+      ],
+      "global_root": 79,
+      "local_root": 15,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15601680,
+        11184156,
+        15603840
+      ],
+      "global_root": 80,
+      "local_root": 16,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15603840,
+        11184156,
+        15606000
+      ],
+      "global_root": 81,
+      "local_root": 17,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15606000,
+        11184156,
+        15608160
+      ],
+      "global_root": 82,
+      "local_root": 18,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15608160,
+        11184156,
+        15610320
+      ],
+      "global_root": 83,
+      "local_root": 19,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15610320,
+        11184156,
+        15612480
+      ],
+      "global_root": 84,
+      "local_root": 20,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15612480,
+        11184156,
+        15614640
+      ],
+      "global_root": 85,
+      "local_root": 21,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15614640,
+        11184156,
+        15616800
+      ],
+      "global_root": 86,
+      "local_root": 22,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15616800,
+        11184156,
+        15618960
+      ],
+      "global_root": 87,
+      "local_root": 23,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15618960,
+        11184156,
+        15621120
+      ],
+      "global_root": 88,
+      "local_root": 24,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15621120,
+        11184156,
+        15623280
+      ],
+      "global_root": 89,
+      "local_root": 25,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15623280,
+        11184156,
+        15625440
+      ],
+      "global_root": 90,
+      "local_root": 26,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15625440,
+        11184156,
+        15627600
+      ],
+      "global_root": 91,
+      "local_root": 27,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15627600,
+        11184156,
+        15629760
+      ],
+      "global_root": 92,
+      "local_root": 28,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15629760,
+        11184156,
+        15631920
+      ],
+      "global_root": 93,
+      "local_root": 29,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15631920,
+        11184156,
+        15634080
+      ],
+      "global_root": 94,
+      "local_root": 30,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15634080,
+        11184156,
+        15636240
+      ],
+      "global_root": 95,
+      "local_root": 31,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15636240,
+        11184156,
+        15638400
+      ],
+      "global_root": 96,
+      "local_root": 32,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15638400,
+        11184156,
+        15640560
+      ],
+      "global_root": 97,
+      "local_root": 33,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15640560,
+        11184156,
+        15642720
+      ],
+      "global_root": 98,
+      "local_root": 34,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15642720,
+        11184156,
+        15644880
+      ],
+      "global_root": 99,
+      "local_root": 35,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15644880,
+        11184156,
+        15647040
+      ],
+      "global_root": 100,
+      "local_root": 36,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15647040,
+        11184156,
+        15649200
+      ],
+      "global_root": 101,
+      "local_root": 37,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15649200,
+        11184156,
+        15651360
+      ],
+      "global_root": 102,
+      "local_root": 38,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15651360,
+        11184156,
+        15653520
+      ],
+      "global_root": 103,
+      "local_root": 39,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15653520,
+        11184156,
+        15655680
+      ],
+      "global_root": 104,
+      "local_root": 40,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15655680,
+        11184156,
+        15657840
+      ],
+      "global_root": 105,
+      "local_root": 41,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15657840,
+        11184156,
+        15660000
+      ],
+      "global_root": 106,
+      "local_root": 42,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15660000,
+        11184156,
+        15662160
+      ],
+      "global_root": 107,
+      "local_root": 43,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15662160,
+        11184156,
+        15664320
+      ],
+      "global_root": 108,
+      "local_root": 44,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15664320,
+        11184156,
+        15666480
+      ],
+      "global_root": 109,
+      "local_root": 45,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15666480,
+        11184156,
+        15668640
+      ],
+      "global_root": 110,
+      "local_root": 46,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15668640,
+        11184156,
+        15670800
+      ],
+      "global_root": 111,
+      "local_root": 47,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15670800,
+        11184156,
+        15672960
+      ],
+      "global_root": 112,
+      "local_root": 48,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15672960,
+        11184156,
+        15675120
+      ],
+      "global_root": 113,
+      "local_root": 49,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15675120,
+        11184156,
+        15677280
+      ],
+      "global_root": 114,
+      "local_root": 50,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15677280,
+        11184156,
+        15679440
+      ],
+      "global_root": 115,
+      "local_root": 51,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15679440,
+        11184156,
+        15681600
+      ],
+      "global_root": 116,
+      "local_root": 52,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15681600,
+        11184156,
+        15683760
+      ],
+      "global_root": 117,
+      "local_root": 53,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15683760,
+        11184156,
+        15685920
+      ],
+      "global_root": 118,
+      "local_root": 54,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15685920,
+        11184156,
+        15688080
+      ],
+      "global_root": 119,
+      "local_root": 55,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15688080,
+        11184156,
+        15690240
+      ],
+      "global_root": 120,
+      "local_root": 56,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15690240,
+        11184156,
+        15692400
+      ],
+      "global_root": 121,
+      "local_root": 57,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15692400,
+        11184156,
+        15694560
+      ],
+      "global_root": 122,
+      "local_root": 58,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15694560,
+        11184156,
+        15696720
+      ],
+      "global_root": 123,
+      "local_root": 59,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15696720,
+        11184156,
+        15698880
+      ],
+      "global_root": 124,
+      "local_root": 60,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15698880,
+        11184156,
+        15701040
+      ],
+      "global_root": 125,
+      "local_root": 61,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15701040,
+        11184156,
+        15703200
+      ],
+      "global_root": 126,
+      "local_root": 62,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15703200,
+        11184156,
+        15705360
+      ],
+      "global_root": 127,
+      "local_root": 63,
+      "no_ready": true,
+      "seats": 4,
+      "shard": 1,
+      "write_ports": 1
+    }
+  ],
+  "schema": "DS_CAPTURE_HOME_R49_RECONCILIATION_1",
+  "shared_restore_output_forward_fanout_load_change_requires_characterization": true,
+  "source_feedback_prototype_sha256": null,
+  "source_receipts": [
+    {
+      "commit": "c710ef8f4e60c245f26a7353fb9751c0db2bb647",
+      "copy": "shard.json.gz",
+      "copy_sha256": "e428e4bcf0c3e23653d0da9bdc39c7e36a1c359abab14294b5e36a2c3d740231",
+      "source": "results/uarch/dsrom_capture_shard_join_r49_20261002/model.json",
+      "source_sha256": "1a75456348de769a591a8d765c754da002e460752675ea012abfb48894f83f71"
+    },
+    {
+      "commit": "1f8e7e65dfc28474028b40bcc2005210b77f314e",
+      "copy": "prior_home.json.gz",
+      "copy_sha256": "c750430107e5291192957489029cc37f7354911683d2fc70f096bc6c56a909e3",
+      "source": "results/uarch/dsrom_capture_home_20261002/model.json",
+      "source_sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0"
+    }
+  ],
+  "source_typed_feedback_hold_closed": false,
+  "source_verified_matrices": 768,
+  "timing": {
+    "accepted_consumer_deadline": null,
+    "actual_clock_qualified": false,
+    "actual_route_latency_cycles": null,
+    "first_last_accepted_edges": null,
+    "local_region_to_VM_projection_um": 3284.729,
+    "new_register_cuts_selected": false,
+    "projection_not_legal_route_bound": true,
+    "rejected_cut_e899_unchanged": true
+  },
+  "total_exact_seats": 576
+}

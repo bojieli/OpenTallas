@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.abi3.v41_shipped_streaming_oracle_first_forward.v1",
+ "question": "does the shipped DeepSeek-V4.1-Flash model run through a layer-streaming engine on this machine, and is its routing decisive?",
+ "answer": "yes to both. 510 GB of weights, 40 layers, one 32-token prefill, and a top-1 margin of 2.4947 -- 484x the reduced fixture's 0.00515.",
+ "engine": "runtime/reference/deepseek_v41_oracle.py::StreamingDeepSeekV41",
+ "measurement": {
+  "workload": "build/workloads/deepseek-v4.1-flash/TA-DS41-CHAT-1-P32.json",
+  "prompt_tokens": 32,
+  "argmax_token": 13806,
+  "vendor_sample_token": 13806,
+  "vendor_agrees_with_argmax": true,
+  "top1_logit": 27.374533,
+  "top2_logit": 24.879845,
+  "top1_margin": 2.494688,
+  "prefill_seconds": 91.7,
+  "checkpoint_bytes_read": 58300000000,
+  "engram_lookups": 2,
+  "engram_rows_read": 4,
+  "peak_device_mib": 94071.9,
+  "buffers_on_device_mib": 9.3,
+  "parameter_tensors_on_meta": 93644,
+  "layers": 40
+ },
+ "why_the_margin_is_the_point": {
+  "reduced_fixture_margin": 0.00515,
+  "shipped_margin": 2.494688,
+  "ratio": 484.4,
+  "reading": "the reduced V4.1 cells cannot close because a 0.82% layer-0 difference moves the token, and it moves it because the MoE's routing is near-tied on Philox-drawn weights. A trained checkpoint is not near-tied. This is the first direct measurement of that on V4.1, and it is what makes the shipped cells worth running: 2.4947 of logit margin is not something a sub-ulp arithmetic difference reaches."
+ },
+ "what_made_it_work": [
+  "CUDA 12.8 at /usr/local/cuda/bin. The system nvcc is 11.5 and does not know sm_120a, so every TileLang kernel fails to compile and the whole path is dead. The oracle tool's own recorded command already carried that prefix.",
+  "the Engram row gather: 202.76 GB of tables served by reading the 4 rows the call actually indexed, never giving either table a resident form",
+  "an Engram residency wrapper: Transformer.forward calls layer.engram(...) BEFORE layer(...), so the Engram runs outside Block.forward and its projections need their own materialisation window",
+  "a generic buffer re-materialiser sized from the meta tensors themselves, rather than transcribing V4.1's buffer set -- V4.1 has window_kv_cache and compress_kv_cache where V4 has one kv_cache, a different compressor state shape, and an Indexer with no head_dim",
+  "the release's own fp8 block size (32 for V4.1, 128 for V4) read from quantization_config rather than assumed"
+ ],
+ "not_a_claim": [
+  "not an accelerator token: this is the external reference comparator running the vendor's own pinned code (ADR-003 section 18)",
+  "one forward pass, not a generation: no multi-token sequence has been produced and the nine-cell matrix is unchanged by this record",
+  "the expert path is the vendor's documented FP8 recast, which is also what the shipped V4-Flash oracle records; V4.1's FP4 GEMM is not verified here",
+  "peak device memory was 94,072 MiB against 97,887 available -- it fit, but not with room to spare, and a longer context may not"
+ ]
+}

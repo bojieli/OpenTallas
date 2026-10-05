@@ -1,0 +1,1400 @@
+{
+ "schema": "opentallas.qwen-o4-floorplan.v1",
+ "tool": "tools/qwen_o4_floorplan.py",
+ "status": "PARTIAL_tile_logic_area_is_an_estimate",
+ "tool_sha256": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
+ "source_sha256": {
+  "results/floorplan/qwen_o4_rom_placement.json": "4d8f33abd67692c5ac515326490be3a7b5561997216fb4f02ed89d622f57d43d",
+  "results/floorplan/qwen_o4_die_inventory.json": "884b923c6075724e07d79b3f52eb3d5e7607f2492aa4618e6a3e6f853602f3b4",
+  "results/floorplan/qwen_o4_cluster_synth.json": "29eea475b983df5b789aa9dbea980976a1321e1c9efcd19fb2bb118ff84ed3a2",
+  "results/floorplan/qwen_o4_unit_areas.json": "3805d42b5eaf79491eb8d72879d4e5deae717bd4c815284a807af2439b3bdf41",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+  "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+  "docs/QWEN_O4_HBM_WEIGHT_SUPPLY.md": "0014b2b488807dc6a7c224f8a8a0c54fd7fa0c67fa95d77a38d70c4bbd81b65c"
+ },
+ "clock": {
+  "adopted_ns": 0.910216,
+  "uncertainty_ns": 0.06,
+  "note": "qwen3_budget.json clock (1.09864 GHz); earlier 0.92 ns cuts are 1.07% slower"
+ },
+ "die_um": [
+  31800.0,
+  25628.931
+ ],
+ "lattice_um": [
+  0.432,
+  2.16
+ ],
+ "halo_um": [
+  4.32,
+  2.16
+ ],
+ "logic_util": 0.5,
+ "corridor_um": 60.0,
+ "reach_um_per_cycle": 1101.7,
+ "power_density": {
+  "rom_die": {
+   "tokens_s": 10873.6,
+   "die_w": 434.8,
+   "hbm_controller_phy_w": 267.7,
+   "phy_area_mm2": 40.01,
+   "phy_w_per_mm2": 6.69,
+   "die_average_w_per_mm2": 0.533,
+   "liquid_die_limit_w": 474.6,
+   "liquid_capped_tokens_s": 10873.6
+  },
+  "hbm_die": {
+   "tokens_s": 880.7,
+   "die_w": 466.1,
+   "hbm_controller_phy_w": 293.5,
+   "phy_area_mm2": 40.01,
+   "phy_w_per_mm2": 7.34,
+   "die_average_w_per_mm2": 0.572,
+   "liquid_die_limit_w": 474.6,
+   "liquid_capped_tokens_s": 880.7
+  },
+  "hbm_die_batch16": {
+   "tokens_s": 6684.1,
+   "die_w": 486.1,
+   "hbm_controller_phy_w": 293.5,
+   "phy_area_mm2": 40.01,
+   "phy_w_per_mm2": 7.34,
+   "die_average_w_per_mm2": 0.596,
+   "liquid_die_limit_w": 474.6,
+   "liquid_capped_tokens_s": 6440.6
+  }
+ },
+ "fit": {
+  "rom_die.rtl_as_instantiated": {
+   "fits": false,
+   "tiles_needed": 1512,
+   "tiles_capacity": 1225,
+   "tile_um": [
+    976.32,
+    462.24
+   ],
+   "spine_used_um": 16424.2,
+   "core_height_um": 23153.5,
+   "compute_area_mm2": null,
+   "legal": true,
+   "macros": 36619,
+   "added_cycles_per_token": 9170
+  },
+  "rom_die.reachable_pruned": {
+   "fits": false,
+   "tiles_needed": 1512,
+   "tiles_capacity": 1470,
+   "tile_um": [
+    834.624,
+    462.24
+   ],
+   "spine_used_um": 16424.2,
+   "core_height_um": 23153.5,
+   "compute_area_mm2": null,
+   "legal": true,
+   "macros": 42989,
+   "added_cycles_per_token": 9280
+  },
+  "rom_die.m5_ledger_copies": {
+   "fits": false,
+   "tiles_needed": 1512,
+   "tiles_capacity": 882,
+   "tile_um": [
+    1378.944,
+    462.24
+   ],
+   "spine_used_um": 16424.2,
+   "core_height_um": 23153.5,
+   "compute_area_mm2": null,
+   "legal": true,
+   "macros": 27701,
+   "added_cycles_per_token": 10216
+  },
+  "hbm_die.frame": {
+   "fits": null,
+   "tiles_needed": null,
+   "tiles_capacity": null,
+   "tile_um": null,
+   "spine_used_um": 0.0,
+   "core_height_um": 22522.8,
+   "compute_area_mm2": 688.44,
+   "legal": true,
+   "macros": 4,
+   "added_cycles_per_token": null
+  }
+ },
+ "designs": {
+  "rom_die.rtl_as_instantiated": {
+   "design": "rom_die",
+   "profile": "rtl_as_instantiated",
+   "profile_note": "every tile carries its 64 post-scale fmuls as the RTL instantiates them",
+   "tile": {
+    "w": 976.32,
+    "h": 462.24,
+    "channel_um": 113.616,
+    "column_um": 130.464,
+    "pitch_y": 69.12,
+    "stacks": [
+     6,
+     5,
+     6,
+     5
+    ],
+    "scale_extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "macro": "ot_rom_4096x266_m8",
+    "logic_um2": 105000,
+    "util": 0.5,
+    "macros_per_tile": 26,
+    "area_mm2": 0.45129
+   },
+   "port_tile": {
+    "w": 998.784,
+    "h": 462.24,
+    "macros": 26
+   },
+   "geometry": {
+    "core_y0": 1239.84,
+    "core_y1": 24393.36,
+    "west": 1213.488,
+    "spine_x": 13902.624,
+    "spine_w": 3995.136,
+    "spine_used": 16424.16,
+    "arrays": [
+     {
+      "side": "west",
+      "x0": 1213.488,
+      "y0": 1239.84,
+      "cols": 12,
+      "rows": 49,
+      "tiles": 588
+     },
+     {
+      "side": "east",
+      "x0": 17957.76,
+      "y0": 1239.84,
+      "cols": 13,
+      "rows": 49,
+      "tiles": 637
+     }
+    ],
+    "tiles_needed": 1512,
+    "tiles_capacity": 1225,
+    "tiles_placed": 1225,
+    "fits": false
+   },
+   "legality": {
+    "macros": 36619,
+    "overlaps_including_halo": 0,
+    "errors": [],
+    "legal": true
+   },
+   "macro_counts": {
+    "ot_hbm3e_phy": 4,
+    "ot_rom_4096x266_m8": 31390,
+    "ot_rom_4096x72_m8": 133,
+    "ot_sram_1r1w_128x256_m1_r2c2": 4996,
+    "ot_sram_1r1w_512x128_m4_r2c2": 96
+   },
+   "macro_area_mm2": 300.836,
+   "regions": [
+    {
+     "name": "die",
+     "kind": "die",
+     "x": 0,
+     "y": 0,
+     "w": 31800.0,
+     "h": 25628.931
+    },
+    {
+     "name": "svc_south",
+     "kind": "service",
+     "x": 20.0,
+     "y": 864.0,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "svc_north",
+     "kind": "service",
+     "x": 20.0,
+     "y": 24453.36,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "ucie_phy",
+     "kind": "reservation",
+     "x": 20.0,
+     "y": 6814.465,
+     "w": 833.333,
+     "h": 12000,
+     "note": "ledger 10 mm2 (qwen3_budget ucie.link.phy_mm2_per_die); no LEF view exists"
+    },
+    {
+     "name": "collective",
+     "kind": "logic",
+     "x": 853.333,
+     "y": 6814.465,
+     "w": 300.0,
+     "h": 12000,
+     "holds": "ot_rom_oneshot_allreduce die engine (16 FP32 adders), link flow control"
+    },
+    {
+     "name": "spine",
+     "kind": "spine",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 23153.52,
+     "holds": "VM, SU, sequencer, ports, tree top"
+    },
+    {
+     "name": "spine_port_tiles",
+     "kind": "ports",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 2773.44,
+     "tiles": 24,
+     "holds": "result-port neighbourhoods: groups 0..95, the only ones whose fmul / VM write / argmax leaves can be active"
+    },
+    {
+     "name": "spine_scale_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 4013.28,
+     "w": 3995.136,
+     "h": 3594.24,
+     "macros": 1536,
+     "holds": "16 scale banks for each of the 96 port groups (RTL-compatible whole-image replica)"
+    },
+    {
+     "name": "spine_vm",
+     "kind": "vm",
+     "x": 13902.624,
+     "y": 7607.52,
+     "w": 3995.136,
+     "h": 181.44,
+     "macros": 96,
+     "holds": "8 skew banks x 4 slices x 3 rows of 512x128 (VM_ELEMS 177,808 FP32) + steering"
+    },
+    {
+     "name": "spine_embedding_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 7788.96,
+     "w": 3995.136,
+     "h": 5529.6,
+     "macros": 2376,
+     "holds": "INT8 embedding half-vocabulary + row scales"
+    },
+    {
+     "name": "spine_constants_sequencer",
+     "kind": "seq",
+     "x": 13902.624,
+     "y": 13318.56,
+     "w": 3995.136,
+     "h": 540.0,
+     "macros": 133,
+     "holds": "constant ROM, program, sequencer, ot_rom_tp_seq"
+    },
+    {
+     "name": "spine_stream_unit",
+     "kind": "su",
+     "x": 13902.624,
+     "y": 13858.56,
+     "w": 3995.136,
+     "h": 3205.44,
+     "holds": "reservation: SW = 1,024 stream unit at the ledger 12.8 mm2 (RTL is SW = 1)"
+    },
+    {
+     "name": "spine_tree_top",
+     "kind": "tree",
+     "x": 13902.624,
+     "y": 17064.0,
+     "w": 3995.136,
+     "h": 600.0,
+     "holds": "split-tree levels 9..13 registers and result compaction toward the port tiles"
+    },
+    {
+     "name": "tiles_west",
+     "kind": "tile_array",
+     "x": 1213.488,
+     "y": 1239.84,
+     "w": 11835.84,
+     "h": 23009.76,
+     "cols": 12,
+     "rows": 49,
+     "capacity_tiles": 588
+    },
+    {
+     "name": "tiles_east",
+     "kind": "tile_array",
+     "x": 17957.76,
+     "y": 1239.84,
+     "w": 12872.16,
+     "h": 23009.76,
+     "cols": 13,
+     "rows": 49,
+     "capacity_tiles": 637
+    }
+   ],
+   "wire_budget": {
+    "model": {
+     "ps_per_um": 0.5997,
+     "overhead_ps": 189.5,
+     "points": [
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000/physical.json",
+       "link_um": 1000,
+       "period_ps": 808.6
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000/physical.json",
+       "link_um": 2000,
+       "period_ps": 1350.0
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L3000/physical.json",
+       "link_um": 3000,
+       "period_ps": 2008.0
+      }
+     ]
+    },
+    "period_ps": 910.216,
+    "uncertainty_ps": 60.0,
+    "reach_um_per_cycle": 1101.7,
+    "connections": [
+     {
+      "name": "x operand: VM -> farthest group (mq_x)",
+      "bits": 65536,
+      "distance_um": 26326.7,
+      "rtl_cycles": 1,
+      "per_token": 217,
+      "note": "ot_hdc_matvec: VM read returns at c+1 and mq_x captures at c+2, one cycle from the VM macro to every group. Priced one way, which needs the VM to stream x (it knows the address sequence) rather than tiles requesting it (a round trip, twice this). S distinct elements a cycle (<= 2048) multicast to G/S groups; exposed once per matrix op",
+      "stages_needed": 24,
+      "added_cycles": 23,
+      "added_cycles_per_token": 4991,
+      "bit_mm": 1725346.6112000002
+     },
+     {
+      "name": "issue broadcast: sequencer -> farthest tile (instruction, go)",
+      "bits": 900,
+      "distance_um": 26326.7,
+      "rtl_cycles": 1,
+      "per_token": 0,
+      "note": "same path and direction as the x stream, so it overlaps it (not added twice); the die RTL is one ot_hdc_matvec whose single issue register drives every group",
+      "stages_needed": 24,
+      "added_cycles": 23,
+      "added_cycles_per_token": 0,
+      "bit_mm": 23694.03
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (gate/up, S = 64)",
+      "bits": 49152,
+      "distance_um": 26326.7,
+      "rtl_cycles": 34,
+      "per_token": 36,
+      "note": "per-level partner distances on the placed grid; an adding level gives one register cycle of wire, a holding level TA+1 = 4 (u_hold + lq)",
+      "stages_needed": 34,
+      "added_cycles": 0,
+      "added_cycles_per_token": 0,
+      "bit_mm": 1294009.9584000001
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (o, down, S = 2048)",
+      "bits": 1536,
+      "distance_um": 37199.5,
+      "rtl_cycles": 19,
+      "per_token": 72,
+      "note": "as above",
+      "stages_needed": 42,
+      "added_cycles": 23,
+      "added_cycles_per_token": 1656,
+      "bit_mm": 57138.432
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (qkv, S = 256)",
+      "bits": 12288,
+      "distance_um": 26326.7,
+      "rtl_cycles": 28,
+      "per_token": 36,
+      "note": "as above",
+      "stages_needed": 33,
+      "added_cycles": 5,
+      "added_cycles_per_token": 180,
+      "bit_mm": 323502.48960000003
+     },
+     {
+      "name": "split tree + result compaction (lm_head, S = 1024)",
+      "bits": 3072,
+      "distance_um": 26326.7,
+      "rtl_cycles": 22,
+      "per_token": 1,
+      "note": "as above",
+      "stages_needed": 33,
+      "added_cycles": 11,
+      "added_cycles_per_token": 11,
+      "bit_mm": 80875.62240000001
+     },
+     {
+      "name": "result write: port tile -> VM",
+      "bits": 49152,
+      "distance_um": 3995.1,
+      "rtl_cycles": 2,
+      "per_token": 217,
+      "note": "the matvec output registers o_*1 and o_*",
+      "stages_needed": 4,
+      "added_cycles": 2,
+      "added_cycles_per_token": 434,
+      "bit_mm": 196367.15519999998
+     },
+     {
+      "name": "KV operand: tile KV slice -> mq_kv",
+      "bits": 2048,
+      "distance_um": 462.2,
+      "rtl_cycles": 1,
+      "per_token": 72,
+      "note": "the ring slice sits in the tile (the KV operand of all 6,144 groups is 3.1 Mbit a cycle and cannot cross the die); needs FP8 packing and a per-group KV port (gap G8)",
+      "stages_needed": 1,
+      "added_cycles": 0,
+      "added_cycles_per_token": 0,
+      "bit_mm": 946.5856
+     },
+     {
+      "name": "KV fill: HBM service band -> farthest tile slice",
+      "bits": 26216,
+      "distance_um": 30528.5,
+      "rtl_cycles": 0,
+      "per_token": 0,
+      "note": "prefetch one layer ahead (ot_hdc_kv_stream discipline): bandwidth-, not latency-bound",
+      "stages_needed": 28,
+      "added_cycles": 28,
+      "added_cycles_per_token": 0,
+      "bit_mm": 800335.156
+     },
+     {
+      "name": "TP exchange: port tiles -> UCIe PHY and back",
+      "bits": 1536,
+      "distance_um": 13882.4,
+      "rtl_cycles": 0,
+      "per_token": 146,
+      "note": "ot_rom_oneshot_allreduce LAT 11 models the link hop only; the crossing from the spine to the west-edge PHY and back is not in the RTL",
+      "stages_needed": 13,
+      "added_cycles": 13,
+      "added_cycles_per_token": 1898,
+      "bit_mm": 21323.3664
+     }
+    ],
+    "added_cycles_per_token": 9170,
+    "bisection": {
+     "tracks_per_um": 14.06,
+     "cut_um": 25628.9,
+     "capacity_wires": 360406,
+     "demand_wires_upper_bound": 210536,
+     "utilisation": 0.5842,
+     "kv_operand_if_centralised_wires": 1572864,
+     "kv_centralised_utilisation": 4.364,
+     "note": "demand counts every priced stream once at full width (an upper bound); the centralised-KV line shows why the ring slice must live in the tiles"
+    }
+   },
+   "def_sha256": "8b488b0b4f3067d69da8bf4acedcdc25e6b81d96be68d40698f86d8b52e4e347",
+   "route_cut": {
+    "port": {
+     "w": 936.576,
+     "h": 531.36,
+     "channel_um": 103.68,
+     "column_um": 130.464,
+     "pitch_y": 69.12,
+     "stacks": [
+      6,
+      5,
+      6,
+      5
+     ],
+     "scale_extra": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "macro": "ot_rom_4096x266_m8",
+     "logic_um2": 110000,
+     "util": 0.5
+    }
+   }
+  },
+  "rom_die.reachable_pruned": {
+   "design": "rom_die",
+   "profile": "reachable_pruned",
+   "profile_note": "fmuls only in the 24 result-port tiles (needs an RTL parameter)",
+   "tile": {
+    "w": 834.624,
+    "h": 462.24,
+    "channel_um": 78.192,
+    "column_um": 130.464,
+    "pitch_y": 69.12,
+    "stacks": [
+     6,
+     5,
+     6,
+     5
+    ],
+    "scale_extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "macro": "ot_rom_4096x266_m8",
+    "logic_um2": 72079.5264,
+    "util": 0.5,
+    "macros_per_tile": 26,
+    "area_mm2": 0.3858
+   },
+   "port_tile": {
+    "w": 998.784,
+    "h": 462.24,
+    "macros": 26
+   },
+   "geometry": {
+    "core_y0": 1239.84,
+    "core_y1": 24393.36,
+    "west": 1213.488,
+    "spine_x": 13902.624,
+    "spine_w": 3995.136,
+    "spine_used": 16424.16,
+    "arrays": [
+     {
+      "side": "west",
+      "x0": 1213.488,
+      "y0": 1239.84,
+      "cols": 14,
+      "rows": 49,
+      "tiles": 686
+     },
+     {
+      "side": "east",
+      "x0": 17957.76,
+      "y0": 1239.84,
+      "cols": 16,
+      "rows": 49,
+      "tiles": 784
+     }
+    ],
+    "tiles_needed": 1512,
+    "tiles_capacity": 1470,
+    "tiles_placed": 1470,
+    "fits": false
+   },
+   "legality": {
+    "macros": 42989,
+    "overlaps_including_halo": 0,
+    "errors": [],
+    "legal": true
+   },
+   "macro_counts": {
+    "ot_hbm3e_phy": 4,
+    "ot_rom_4096x266_m8": 36780,
+    "ot_rom_4096x72_m8": 133,
+    "ot_sram_1r1w_128x256_m1_r2c2": 5976,
+    "ot_sram_1r1w_512x128_m4_r2c2": 96
+   },
+   "macro_area_mm2": 345.958,
+   "regions": [
+    {
+     "name": "die",
+     "kind": "die",
+     "x": 0,
+     "y": 0,
+     "w": 31800.0,
+     "h": 25628.931
+    },
+    {
+     "name": "svc_south",
+     "kind": "service",
+     "x": 20.0,
+     "y": 864.0,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "svc_north",
+     "kind": "service",
+     "x": 20.0,
+     "y": 24453.36,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "ucie_phy",
+     "kind": "reservation",
+     "x": 20.0,
+     "y": 6814.465,
+     "w": 833.333,
+     "h": 12000,
+     "note": "ledger 10 mm2 (qwen3_budget ucie.link.phy_mm2_per_die); no LEF view exists"
+    },
+    {
+     "name": "collective",
+     "kind": "logic",
+     "x": 853.333,
+     "y": 6814.465,
+     "w": 300.0,
+     "h": 12000,
+     "holds": "ot_rom_oneshot_allreduce die engine (16 FP32 adders), link flow control"
+    },
+    {
+     "name": "spine",
+     "kind": "spine",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 23153.52,
+     "holds": "VM, SU, sequencer, ports, tree top"
+    },
+    {
+     "name": "spine_port_tiles",
+     "kind": "ports",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 2773.44,
+     "tiles": 24,
+     "holds": "result-port neighbourhoods: groups 0..95, the only ones whose fmul / VM write / argmax leaves can be active"
+    },
+    {
+     "name": "spine_scale_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 4013.28,
+     "w": 3995.136,
+     "h": 3594.24,
+     "macros": 1536,
+     "holds": "16 scale banks for each of the 96 port groups (RTL-compatible whole-image replica)"
+    },
+    {
+     "name": "spine_vm",
+     "kind": "vm",
+     "x": 13902.624,
+     "y": 7607.52,
+     "w": 3995.136,
+     "h": 181.44,
+     "macros": 96,
+     "holds": "8 skew banks x 4 slices x 3 rows of 512x128 (VM_ELEMS 177,808 FP32) + steering"
+    },
+    {
+     "name": "spine_embedding_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 7788.96,
+     "w": 3995.136,
+     "h": 5529.6,
+     "macros": 2376,
+     "holds": "INT8 embedding half-vocabulary + row scales"
+    },
+    {
+     "name": "spine_constants_sequencer",
+     "kind": "seq",
+     "x": 13902.624,
+     "y": 13318.56,
+     "w": 3995.136,
+     "h": 540.0,
+     "macros": 133,
+     "holds": "constant ROM, program, sequencer, ot_rom_tp_seq"
+    },
+    {
+     "name": "spine_stream_unit",
+     "kind": "su",
+     "x": 13902.624,
+     "y": 13858.56,
+     "w": 3995.136,
+     "h": 3205.44,
+     "holds": "reservation: SW = 1,024 stream unit at the ledger 12.8 mm2 (RTL is SW = 1)"
+    },
+    {
+     "name": "spine_tree_top",
+     "kind": "tree",
+     "x": 13902.624,
+     "y": 17064.0,
+     "w": 3995.136,
+     "h": 600.0,
+     "holds": "split-tree levels 9..13 registers and result compaction toward the port tiles"
+    },
+    {
+     "name": "tiles_west",
+     "kind": "tile_array",
+     "x": 1213.488,
+     "y": 1239.84,
+     "w": 11864.736,
+     "h": 23009.76,
+     "cols": 14,
+     "rows": 49,
+     "capacity_tiles": 686
+    },
+    {
+     "name": "tiles_east",
+     "kind": "tile_array",
+     "x": 17957.76,
+     "y": 1239.84,
+     "w": 13533.984,
+     "h": 23009.76,
+     "cols": 16,
+     "rows": 49,
+     "capacity_tiles": 784
+    }
+   ],
+   "wire_budget": {
+    "model": {
+     "ps_per_um": 0.5997,
+     "overhead_ps": 189.5,
+     "points": [
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000/physical.json",
+       "link_um": 1000,
+       "period_ps": 808.6
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000/physical.json",
+       "link_um": 2000,
+       "period_ps": 1350.0
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L3000/physical.json",
+       "link_um": 3000,
+       "period_ps": 2008.0
+      }
+     ]
+    },
+    "period_ps": 910.216,
+    "uncertainty_ps": 60.0,
+    "reach_um_per_cycle": 1101.7,
+    "connections": [
+     {
+      "name": "x operand: VM -> farthest group (mq_x)",
+      "bits": 65536,
+      "distance_um": 26988.5,
+      "rtl_cycles": 1,
+      "per_token": 217,
+      "note": "ot_hdc_matvec: VM read returns at c+1 and mq_x captures at c+2, one cycle from the VM macro to every group. Priced one way, which needs the VM to stream x (it knows the address sequence) rather than tiles requesting it (a round trip, twice this). S distinct elements a cycle (<= 2048) multicast to G/S groups; exposed once per matrix op",
+      "stages_needed": 25,
+      "added_cycles": 24,
+      "added_cycles_per_token": 5208,
+      "bit_mm": 1768718.336
+     },
+     {
+      "name": "issue broadcast: sequencer -> farthest tile (instruction, go)",
+      "bits": 900,
+      "distance_um": 26988.5,
+      "rtl_cycles": 1,
+      "per_token": 0,
+      "note": "same path and direction as the x stream, so it overlaps it (not added twice); the die RTL is one ot_hdc_matvec whose single issue register drives every group",
+      "stages_needed": 25,
+      "added_cycles": 24,
+      "added_cycles_per_token": 0,
+      "bit_mm": 24289.65
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (gate/up, S = 64)",
+      "bits": 49152,
+      "distance_um": 26988.5,
+      "rtl_cycles": 34,
+      "per_token": 36,
+      "note": "per-level partner distances on the placed grid; an adding level gives one register cycle of wire, a holding level TA+1 = 4 (u_hold + lq)",
+      "stages_needed": 35,
+      "added_cycles": 1,
+      "added_cycles_per_token": 36,
+      "bit_mm": 1326538.752
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (o, down, S = 2048)",
+      "bits": 1536,
+      "distance_um": 32806.9,
+      "rtl_cycles": 19,
+      "per_token": 72,
+      "note": "as above",
+      "stages_needed": 39,
+      "added_cycles": 20,
+      "added_cycles_per_token": 1440,
+      "bit_mm": 50391.398400000005
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (qkv, S = 256)",
+      "bits": 12288,
+      "distance_um": 26988.5,
+      "rtl_cycles": 28,
+      "per_token": 36,
+      "note": "as above",
+      "stages_needed": 35,
+      "added_cycles": 7,
+      "added_cycles_per_token": 252,
+      "bit_mm": 331634.688
+     },
+     {
+      "name": "split tree + result compaction (lm_head, S = 1024)",
+      "bits": 3072,
+      "distance_um": 26988.5,
+      "rtl_cycles": 22,
+      "per_token": 1,
+      "note": "as above",
+      "stages_needed": 34,
+      "added_cycles": 12,
+      "added_cycles_per_token": 12,
+      "bit_mm": 82908.672
+     },
+     {
+      "name": "result write: port tile -> VM",
+      "bits": 49152,
+      "distance_um": 3995.1,
+      "rtl_cycles": 2,
+      "per_token": 217,
+      "note": "the matvec output registers o_*1 and o_*",
+      "stages_needed": 4,
+      "added_cycles": 2,
+      "added_cycles_per_token": 434,
+      "bit_mm": 196367.15519999998
+     },
+     {
+      "name": "KV operand: tile KV slice -> mq_kv",
+      "bits": 2048,
+      "distance_um": 462.2,
+      "rtl_cycles": 1,
+      "per_token": 72,
+      "note": "the ring slice sits in the tile (the KV operand of all 6,144 groups is 3.1 Mbit a cycle and cannot cross the die); needs FP8 packing and a per-group KV port (gap G8)",
+      "stages_needed": 1,
+      "added_cycles": 0,
+      "added_cycles_per_token": 0,
+      "bit_mm": 946.5856
+     },
+     {
+      "name": "KV fill: HBM service band -> farthest tile slice",
+      "bits": 26216,
+      "distance_um": 30859.4,
+      "rtl_cycles": 0,
+      "per_token": 0,
+      "note": "prefetch one layer ahead (ot_hdc_kv_stream discipline): bandwidth-, not latency-bound",
+      "stages_needed": 29,
+      "added_cycles": 29,
+      "added_cycles_per_token": 0,
+      "bit_mm": 809010.0304
+     },
+     {
+      "name": "TP exchange: port tiles -> UCIe PHY and back",
+      "bits": 1536,
+      "distance_um": 13882.4,
+      "rtl_cycles": 0,
+      "per_token": 146,
+      "note": "ot_rom_oneshot_allreduce LAT 11 models the link hop only; the crossing from the spine to the west-edge PHY and back is not in the RTL",
+      "stages_needed": 13,
+      "added_cycles": 13,
+      "added_cycles_per_token": 1898,
+      "bit_mm": 21323.3664
+     }
+    ],
+    "added_cycles_per_token": 9280,
+    "bisection": {
+     "tracks_per_um": 14.06,
+     "cut_um": 25628.9,
+     "capacity_wires": 360406,
+     "demand_wires_upper_bound": 210536,
+     "utilisation": 0.5842,
+     "kv_operand_if_centralised_wires": 1572864,
+     "kv_centralised_utilisation": 4.364,
+     "note": "demand counts every priced stream once at full width (an upper bound); the centralised-KV line shows why the ring slice must live in the tiles"
+    }
+   },
+   "def_sha256": "c411a8001178bb2022ef1f971232837f369a266944ff02577ac1fbede87793ca"
+  },
+  "rom_die.m5_ledger_copies": {
+   "design": "rom_die",
+   "profile": "m5_ledger_copies",
+   "profile_note": "reachable profile + 4 MAC-only lane copies a lane (routed 8,449 um2 / 16 lanes) + measured m=5 reducer/scale copies (+178.66 mm2 a die, linear tile replication)",
+   "tile": {
+    "w": 1378.944,
+    "h": 462.24,
+    "channel_um": 214.272,
+    "column_um": 130.464,
+    "pitch_y": 69.12,
+    "stacks": [
+     6,
+     5,
+     6,
+     5
+    ],
+    "scale_extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "macro": "ot_rom_4096x266_m8",
+    "logic_um2": 197829.07848333335,
+    "util": 0.5,
+    "macros_per_tile": 26,
+    "area_mm2": 0.6374
+   },
+   "port_tile": {
+    "w": 998.784,
+    "h": 462.24,
+    "macros": 26
+   },
+   "geometry": {
+    "core_y0": 1239.84,
+    "core_y1": 24393.36,
+    "west": 1213.488,
+    "spine_x": 13902.624,
+    "spine_w": 3995.136,
+    "spine_used": 16424.16,
+    "arrays": [
+     {
+      "side": "west",
+      "x0": 1213.488,
+      "y0": 1239.84,
+      "cols": 9,
+      "rows": 49,
+      "tiles": 441
+     },
+     {
+      "side": "east",
+      "x0": 17957.76,
+      "y0": 1239.84,
+      "cols": 9,
+      "rows": 49,
+      "tiles": 441
+     }
+    ],
+    "tiles_needed": 1512,
+    "tiles_capacity": 882,
+    "tiles_placed": 882,
+    "fits": false
+   },
+   "legality": {
+    "macros": 27701,
+    "overlaps_including_halo": 0,
+    "errors": [],
+    "legal": true
+   },
+   "macro_counts": {
+    "ot_hbm3e_phy": 4,
+    "ot_rom_4096x266_m8": 23844,
+    "ot_rom_4096x72_m8": 133,
+    "ot_sram_1r1w_128x256_m1_r2c2": 3624,
+    "ot_sram_1r1w_512x128_m4_r2c2": 96
+   },
+   "macro_area_mm2": 237.665,
+   "regions": [
+    {
+     "name": "die",
+     "kind": "die",
+     "x": 0,
+     "y": 0,
+     "w": 31800.0,
+     "h": 25628.931
+    },
+    {
+     "name": "svc_south",
+     "kind": "service",
+     "x": 20.0,
+     "y": 864.0,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "svc_north",
+     "kind": "service",
+     "x": 20.0,
+     "y": 24453.36,
+     "w": 31760.0,
+     "h": 315.36,
+     "holds": "per-PC KV arbiters, fill heads and staging (reservation 5 mm2 a band); the ring is in the tiles"
+    },
+    {
+     "name": "ucie_phy",
+     "kind": "reservation",
+     "x": 20.0,
+     "y": 6814.465,
+     "w": 833.333,
+     "h": 12000,
+     "note": "ledger 10 mm2 (qwen3_budget ucie.link.phy_mm2_per_die); no LEF view exists"
+    },
+    {
+     "name": "collective",
+     "kind": "logic",
+     "x": 853.333,
+     "y": 6814.465,
+     "w": 300.0,
+     "h": 12000,
+     "holds": "ot_rom_oneshot_allreduce die engine (16 FP32 adders), link flow control"
+    },
+    {
+     "name": "spine",
+     "kind": "spine",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 23153.52,
+     "holds": "VM, SU, sequencer, ports, tree top"
+    },
+    {
+     "name": "spine_port_tiles",
+     "kind": "ports",
+     "x": 13902.624,
+     "y": 1239.84,
+     "w": 3995.136,
+     "h": 2773.44,
+     "tiles": 24,
+     "holds": "result-port neighbourhoods: groups 0..95, the only ones whose fmul / VM write / argmax leaves can be active"
+    },
+    {
+     "name": "spine_scale_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 4013.28,
+     "w": 3995.136,
+     "h": 3594.24,
+     "macros": 1536,
+     "holds": "16 scale banks for each of the 96 port groups (RTL-compatible whole-image replica)"
+    },
+    {
+     "name": "spine_vm",
+     "kind": "vm",
+     "x": 13902.624,
+     "y": 7607.52,
+     "w": 3995.136,
+     "h": 181.44,
+     "macros": 96,
+     "holds": "8 skew banks x 4 slices x 3 rows of 512x128 (VM_ELEMS 177,808 FP32) + steering"
+    },
+    {
+     "name": "spine_embedding_rom",
+     "kind": "rom",
+     "x": 13902.624,
+     "y": 7788.96,
+     "w": 3995.136,
+     "h": 5529.6,
+     "macros": 2376,
+     "holds": "INT8 embedding half-vocabulary + row scales"
+    },
+    {
+     "name": "spine_constants_sequencer",
+     "kind": "seq",
+     "x": 13902.624,
+     "y": 13318.56,
+     "w": 3995.136,
+     "h": 540.0,
+     "macros": 133,
+     "holds": "constant ROM, program, sequencer, ot_rom_tp_seq"
+    },
+    {
+     "name": "spine_stream_unit",
+     "kind": "su",
+     "x": 13902.624,
+     "y": 13858.56,
+     "w": 3995.136,
+     "h": 3205.44,
+     "holds": "reservation: SW = 1,024 stream unit at the ledger 12.8 mm2 (RTL is SW = 1)"
+    },
+    {
+     "name": "spine_tree_top",
+     "kind": "tree",
+     "x": 13902.624,
+     "y": 17064.0,
+     "w": 3995.136,
+     "h": 600.0,
+     "holds": "split-tree levels 9..13 registers and result compaction toward the port tiles"
+    },
+    {
+     "name": "tiles_west",
+     "kind": "tile_array",
+     "x": 1213.488,
+     "y": 1239.84,
+     "w": 12530.496,
+     "h": 23009.76,
+     "cols": 9,
+     "rows": 49,
+     "capacity_tiles": 441
+    },
+    {
+     "name": "tiles_east",
+     "kind": "tile_array",
+     "x": 17957.76,
+     "y": 1239.84,
+     "w": 12530.496,
+     "h": 23009.76,
+     "cols": 9,
+     "rows": 49,
+     "capacity_tiles": 441
+    }
+   ],
+   "wire_budget": {
+    "model": {
+     "ps_per_um": 0.5997,
+     "overhead_ps": 189.5,
+     "points": [
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000/physical.json",
+       "link_um": 1000,
+       "period_ps": 808.6
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000/physical.json",
+       "link_um": 2000,
+       "period_ps": 1350.0
+      },
+      {
+       "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L3000/physical.json",
+       "link_um": 3000,
+       "period_ps": 2008.0
+      }
+     ]
+    },
+    "period_ps": 910.216,
+    "uncertainty_ps": 60.0,
+    "reach_um_per_cycle": 1101.7,
+    "connections": [
+     {
+      "name": "x operand: VM -> farthest group (mq_x)",
+      "bits": 65536,
+      "distance_um": 26263.3,
+      "rtl_cycles": 1,
+      "per_token": 217,
+      "note": "ot_hdc_matvec: VM read returns at c+1 and mq_x captures at c+2, one cycle from the VM macro to every group. Priced one way, which needs the VM to stream x (it knows the address sequence) rather than tiles requesting it (a round trip, twice this). S distinct elements a cycle (<= 2048) multicast to G/S groups; exposed once per matrix op",
+      "stages_needed": 24,
+      "added_cycles": 23,
+      "added_cycles_per_token": 4991,
+      "bit_mm": 1721191.6288
+     },
+     {
+      "name": "issue broadcast: sequencer -> farthest tile (instruction, go)",
+      "bits": 900,
+      "distance_um": 26263.3,
+      "rtl_cycles": 1,
+      "per_token": 0,
+      "note": "same path and direction as the x stream, so it overlaps it (not added twice); the die RTL is one ot_hdc_matvec whose single issue register drives every group",
+      "stages_needed": 24,
+      "added_cycles": 23,
+      "added_cycles_per_token": 0,
+      "bit_mm": 23636.97
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (gate/up, S = 64)",
+      "bits": 49152,
+      "distance_um": 26263.3,
+      "rtl_cycles": 34,
+      "per_token": 36,
+      "note": "per-level partner distances on the placed grid; an adding level gives one register cycle of wire, a holding level TA+1 = 4 (u_hold + lq)",
+      "stages_needed": 35,
+      "added_cycles": 1,
+      "added_cycles_per_token": 36,
+      "bit_mm": 1290893.7215999998
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (o, down, S = 2048)",
+      "bits": 1536,
+      "distance_um": 49680.9,
+      "rtl_cycles": 19,
+      "per_token": 72,
+      "note": "as above",
+      "stages_needed": 55,
+      "added_cycles": 36,
+      "added_cycles_per_token": 2592,
+      "bit_mm": 76309.86240000001
+     },
+     {
+      "name": "split tree + result compaction: farthest tile -> port tile (qkv, S = 256)",
+      "bits": 12288,
+      "distance_um": 26263.3,
+      "rtl_cycles": 28,
+      "per_token": 36,
+      "note": "as above",
+      "stages_needed": 35,
+      "added_cycles": 7,
+      "added_cycles_per_token": 252,
+      "bit_mm": 322723.43039999995
+     },
+     {
+      "name": "split tree + result compaction (lm_head, S = 1024)",
+      "bits": 3072,
+      "distance_um": 27617.8,
+      "rtl_cycles": 22,
+      "per_token": 1,
+      "note": "as above",
+      "stages_needed": 35,
+      "added_cycles": 13,
+      "added_cycles_per_token": 13,
+      "bit_mm": 84841.8816
+     },
+     {
+      "name": "result write: port tile -> VM",
+      "bits": 49152,
+      "distance_um": 3995.1,
+      "rtl_cycles": 2,
+      "per_token": 217,
+      "note": "the matvec output registers o_*1 and o_*",
+      "stages_needed": 4,
+      "added_cycles": 2,
+      "added_cycles_per_token": 434,
+      "bit_mm": 196367.15519999998
+     },
+     {
+      "name": "KV operand: tile KV slice -> mq_kv",
+      "bits": 2048,
+      "distance_um": 462.2,
+      "rtl_cycles": 1,
+      "per_token": 72,
+      "note": "the ring slice sits in the tile (the KV operand of all 6,144 groups is 3.1 Mbit a cycle and cannot cross the die); needs FP8 packing and a per-group KV port (gap G8)",
+      "stages_needed": 1,
+      "added_cycles": 0,
+      "added_cycles_per_token": 0,
+      "bit_mm": 946.5856
+     },
+     {
+      "name": "KV fill: HBM service band -> farthest tile slice",
+      "bits": 26216,
+      "distance_um": 30496.8,
+      "rtl_cycles": 0,
+      "per_token": 0,
+      "note": "prefetch one layer ahead (ot_hdc_kv_stream discipline): bandwidth-, not latency-bound",
+      "stages_needed": 28,
+      "added_cycles": 28,
+      "added_cycles_per_token": 0,
+      "bit_mm": 799504.1087999999
+     },
+     {
+      "name": "TP exchange: port tiles -> UCIe PHY and back",
+      "bits": 1536,
+      "distance_um": 13882.4,
+      "rtl_cycles": 0,
+      "per_token": 146,
+      "note": "ot_rom_oneshot_allreduce LAT 11 models the link hop only; the crossing from the spine to the west-edge PHY and back is not in the RTL",
+      "stages_needed": 13,
+      "added_cycles": 13,
+      "added_cycles_per_token": 1898,
+      "bit_mm": 21323.3664
+     }
+    ],
+    "added_cycles_per_token": 10216,
+    "bisection": {
+     "tracks_per_um": 14.06,
+     "cut_um": 25628.9,
+     "capacity_wires": 360406,
+     "demand_wires_upper_bound": 210536,
+     "utilisation": 0.5842,
+     "kv_operand_if_centralised_wires": 1572864,
+     "kv_centralised_utilisation": 4.364,
+     "note": "demand counts every priced stream once at full width (an upper bound); the centralised-KV line shows why the ring slice must live in the tiles"
+    }
+   },
+   "def_sha256": "0f3158dac6541495501eed9dd656e0d2820ae6373abb2f4a3e577b6f83130f06"
+  },
+  "hbm_die.frame": {
+   "design": "hbm_die",
+   "profile": "frame",
+   "profile_note": "die frame only (W9 owns compute)",
+   "geometry": {
+    "core_y0": 1555.2,
+    "core_y1": 24078.0,
+    "west": 1213.488,
+    "east": 31780.0,
+    "compute_area_mm2": 688.44,
+    "service_band_mm2": 40.06,
+    "fits": null,
+    "tiles_needed": null,
+    "tiles_capacity": null,
+    "spine_used": 0.0
+   },
+   "legality": {
+    "macros": 4,
+    "overlaps_including_halo": 0,
+    "errors": [],
+    "legal": true
+   },
+   "macro_counts": {
+    "ot_hbm3e_phy": 4
+   },
+   "shoreline": {
+    "stacks": 4,
+    "phy_edge_mm": 48.0,
+    "free_edge_mm": 89.23,
+    "edges": "two PHY+controller abstracts on each long (north/south) edge; the west edge faces the other die (UCIe)"
+   },
+   "weight_supply": {
+    "bytes_per_cycle": 3277,
+    "bytes_consumed_per_cycle_by_rom_engine": 98304,
+    "window_mib_per_die": 48,
+    "note": "docs/QWEN_O4_HBM_WEIGHT_SUPPLY.md; the consumer is W9's array"
+   },
+   "regions": [
+    {
+     "name": "die",
+     "kind": "die",
+     "x": 0,
+     "y": 0,
+     "w": 31800.0,
+     "h": 25628.931
+    },
+    {
+     "name": "svc_south",
+     "kind": "service",
+     "x": 20.0,
+     "y": 864.0,
+     "w": 31760.0,
+     "h": 630.72,
+     "holds": "HBM3E controllers' fabric, per-PC arbiters and weight/KV stream heads for 128 PCs (reservation 10 mm2 a band)"
+    },
+    {
+     "name": "svc_north",
+     "kind": "service",
+     "x": 20.0,
+     "y": 24138.0,
+     "w": 31760.0,
+     "h": 630.72,
+     "holds": "HBM3E controllers' fabric, per-PC arbiters and weight/KV stream heads for 128 PCs (reservation 10 mm2 a band)"
+    },
+    {
+     "name": "ucie_phy",
+     "kind": "reservation",
+     "x": 20.0,
+     "y": 6814.465,
+     "w": 833.333,
+     "h": 12000,
+     "note": "ledger 10 mm2 (qwen3_budget ucie.link.phy_mm2_per_die); no LEF view exists"
+    },
+    {
+     "name": "collective",
+     "kind": "logic",
+     "x": 853.333,
+     "y": 6814.465,
+     "w": 300.0,
+     "h": 12000,
+     "holds": "ot_rom_oneshot_allreduce die engine (16 FP32 adders), link flow control"
+    },
+    {
+     "name": "compute_array_reserved_for_W9",
+     "kind": "reservation",
+     "x": 1213.488,
+     "y": 1555.2,
+     "w": 30566.512,
+     "h": 22522.8,
+     "note": "GPU-style SM / tensor-core array owned by W9 (user design rule 2026-09-29); W5 supplies only the frame: shoreline, stacks, service bands, UCIe"
+    }
+   ],
+   "def_sha256": "eb7541c027f79b5aa954edaf136c0a2bb554a954ce5377477a378bab45fe1ff7"
+  }
+ },
+ "claim_boundary": "macro-packed placement and distance pricing only: no die route, no timing, no power integrity; predictive ASAP7 views; reservations are named as such"
+}

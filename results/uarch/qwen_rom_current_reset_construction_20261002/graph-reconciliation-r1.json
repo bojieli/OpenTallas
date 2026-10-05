@@ -1,0 +1,114 @@
+{
+  "KV_and_high_address": "Source-provenance present; named-wire diagnostics do not prove missing hardware. Complete semantic source-to-driver join remains open.",
+  "actual_ROM_capture_FFs": 2560,
+  "actual_early_select_FFs": 5,
+  "admission": {
+    "PnR": false,
+    "contextual_SSFF": false,
+    "full_tile_construction": false,
+    "second_map": false
+  },
+  "bank_strobe_FFs": {
+    "actual": 2,
+    "missing": 3,
+    "required": 5
+  },
+  "complete_cell_ceiling_um2": 125000,
+  "corridor": {
+    "clock_reserved_tracks": 64,
+    "fill_tracks": 1048,
+    "reset_reserved_tracks": 64,
+    "spare_tracks": 184,
+    "width_um": 96.768
+  },
+  "finite_PG_and_cut_requirements": {
+    "PDN_via_OBS_share": 0.5,
+    "construction_not_a_routed_PG_proof": true,
+    "fill_channel_uses1048tracks": true,
+    "measured_PDN_cut_capacity": null,
+    "reserved_clock_reset_tracks_each": 64
+  },
+  "graph_gate_status": "FAIL_COMPLETE_MAPPED_SURVIVAL_RETAINED",
+  "hardware_source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "mask_FFs": {
+    "actual": 30,
+    "missing": 50,
+    "required": 80
+  },
+  "minimum_replica_preservation": {
+    "RTL_or_mapped_replica_restoration_performed": false,
+    "added_pin_load_fF": {
+      "ff": {
+        "CLK": 26.667056000000002,
+        "RESETN": 42.554176999999996
+      },
+      "ss": {
+        "CLK": 23.001046,
+        "RESETN": 37.313325
+      }
+    },
+    "additional_ASR_FFs": 53,
+    "metadata_reset_FFs": 90,
+    "new_mapping_run": false,
+    "nominal_cell_area_um2": 20.09124,
+    "repaired_ASR_FFs": 56683,
+    "repaired_clock_FFs": 102340,
+    "source_WIDTH_budget_unchanged": true
+  },
+  "named_wire_diagnostic_correction": "Missing cap/code_sel_q names do not imply missing FFs. Old r1 named-wire failures retained as diagnostic history only.",
+  "original_collector_FAIL_retained": true,
+  "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "original_standard_cell_area_um2": 65983.07303971479,
+  "physical_replica_retention": "FAIL_REQUIRED_PHYSICAL_REPLICA_RETENTION",
+  "schema": "QWEN_CURRENT_GRAPH_RECONCILIATION_V1",
+  "source_matched_after_preservation_distribution": {
+    "clock_buffers_before_wire_segmentation": 14651,
+    "fanout_ceiling": 8,
+    "metadata_clock": {
+      "buffers": 15,
+      "depth": 3,
+      "levels_leaf_to_root": [
+        12,
+        2,
+        1
+      ]
+    },
+    "new_cell_area_before_wire_segmentation_um2": 2322.4919400000003,
+    "original76BUF_retained": true,
+    "other_reset": {
+      "buffers": 8088,
+      "depth": 6,
+      "levels_leaf_to_root": [
+        7075,
+        885,
+        111,
+        14,
+        2,
+        1
+      ]
+    },
+    "paired_other_reset_clock_topology": true,
+    "physical_admission": false,
+    "plain_clock": {
+      "buffers": 6527,
+      "depth": 6,
+      "levels_leaf_to_root": [
+        5708,
+        714,
+        90,
+        12,
+        2,
+        1
+      ]
+    },
+    "reset_buffers_including4rootpads_before_wire_segmentation": 8095,
+    "source_tree_clock_depth": 6,
+    "wire_isolation_and_segments_must_be_constructed_and_added": true
+  },
+  "source_pin_requirements": {
+    "address_min_arrival_plus_wire_minus_clock_skew_ps": 42.422199,
+    "hold_uncertainty_ps": 25,
+    "metadata_reset_min_arrival_plus_wire_minus_clock_skew_ps": 50.049297,
+    "setup_uncertainty_ps": 60
+  }
+}

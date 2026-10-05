@@ -1,0 +1,13 @@
+{"N": 2, "NB": 2, "case": "fp8_wq_a_whole_rows", "rows": 12, "rows_out": 12, "fp32_exact": 12, "bf16_exact": 12, "fault": 0, "cycles_last_row": 1250, "t_phase_pred": 1152, "fill": 98, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp8_tiny_one_row", "rows": 6, "rows_out": 6, "fp32_exact": 6, "bf16_exact": 6, "fault": 0, "cycles_last_row": 433, "t_phase_pred": 384, "fill": 49, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp8_wq_a_ksplit", "rows": 6, "rows_out": 6, "fp32_exact": 6, "bf16_exact": 6, "fault": 0, "cycles_last_row": 1249, "t_phase_pred": 1152, "fill": 97, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp8_wq_b", "rows": 6, "rows_out": 6, "fp32_exact": 6, "bf16_exact": 6, "fault": 0, "cycles_last_row": 459, "t_phase_pred": 384, "fill": 75, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp8_wo_b_kquarter", "rows": 6, "rows_out": 6, "fp32_exact": 6, "bf16_exact": 6, "fault": 0, "cycles_last_row": 461, "t_phase_pred": 384, "fill": 77, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp4_expert_w1", "rows": 6, "rows_out": 6, "fp32_exact": 6, "bf16_exact": 6, "fault": 0, "cycles_last_row": 853, "t_phase_pred": 768, "fill": 85, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp8_wq_b_two_rows_per_element", "rows": 24, "rows_out": 24, "fp32_exact": 24, "bf16_exact": 24, "fault": 0, "cycles_last_row": 559, "t_phase_pred": 480, "fill": 79, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "fp4_two_experts_w1_w3", "rows": 12, "rows_out": 12, "fp32_exact": 12, "bf16_exact": 12, "fault": 0, "cycles_last_row": 1238, "t_phase_pred": 1152, "fill": 86, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "bf16_router_gate", "rows": 6, "rows_out": 3, "fp32_exact": 0, "bf16_exact": 0, "fault": 1, "cycles_last_row": 1056, "t_phase_pred": 1920, "fill": -864, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "bf16_compressor_wkv_ksplit", "rows": 6, "rows_out": 3, "fp32_exact": 0, "bf16_exact": 0, "fault": 1, "cycles_last_row": 1056, "t_phase_pred": 1920, "fill": -864, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "bf16_wkv_4096_whole_rows", "rows": 12, "rows_out": 12, "fp32_exact": 12, "bf16_exact": 12, "fault": 0, "cycles_last_row": 1655, "t_phase_pred": 1536, "fill": 119, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "bf16_indexer_wk", "rows": 12, "rows_out": 12, "fp32_exact": 12, "bf16_exact": 12, "fault": 0, "cycles_last_row": 466, "t_phase_pred": 384, "fill": 82, "model_depth": 83}
+{"N": 2, "NB": 2, "case": "mixed_down_fp4_expert_w2_fp8_shared_w2", "rows": 12, "rows_out": 12, "fp32_exact": 12, "bf16_exact": 12, "fault": 0, "cycles_last_row": 762, "t_phase_pred": 672, "fill": 90, "model_depth": 83}

@@ -1,0 +1,17 @@
+{
+  "old_collector_sha256": "0ec1b444630cfa89fba6f9ef91034f0c1740cad42e257f3186e469275c1417ab",
+  "counterexamples": [
+    {
+      "mutation": "next_token_not_head_argmax",
+      "old_collector_accepts": "PASS_FULL_TRAINED_NATIVE_TOKEN_POSTCHECKED",
+      "fixture_only": true,
+      "numerical_execution": false
+    },
+    {
+      "mutation": "comparison_counts_redistributed_same_total",
+      "old_collector_accepts": "PASS_FULL_TRAINED_NATIVE_TOKEN_POSTCHECKED",
+      "fixture_only": true,
+      "numerical_execution": false
+    }
+  ]
+}

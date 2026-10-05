@@ -1,0 +1,23 @@
+{
+  "time": "2026-10-01T13:27:06.827500+00:00",
+  "active_scope": "HC20480 normscalar21actualopcodes viaunchangedtypedMachine.run, plus sourceSSAphysicalRFownership andtimedissue/retirement of27instructionaddressprefixedownercalendar;4retainedHCmixproduceractivations/scalarboundaryhashes, nofullmixrerun",
+  "new_paths": [
+    "tools/w19_hc_scalar_rf_proof.py",
+    "tests/test_w19_hc_scalar_rf_proof.py",
+    "results/quality/w19_hc_scalar_rf_proof_20261001/"
+  ],
+  "Turing_owner": "wholegraph/calendar/allocator/physical RFreservedr28..31; untouched",
+  "Halley_owner": "attentionactualproof+selectedfixturequality+coreFMAX/FMIN/EXP extensions; untouched",
+  "source_pins": {
+    "tools/w16_gpu_hc_dot_schedule.py": "822a43210764a5df3d872558a5b51d0f5215bb6f672bf5d7280b7391e6c40222",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_norm_opcode_proof.py": "541c89829a632d325678ea5e4667f5fdbbb8bf2105de57a5e46aedbdb9194a1c",
+    "results/uarch/w16_gpu_hc_dot_schedule_20261001/cost_r1.json": "f8d5a9ab72bbbe57806f341defaff4210b3e1aaaf353033f31d422b649e29414",
+    "results/uarch/w16_gpu_hc_dot_schedule_20261001/inputs_r1.json": "7c130e8c16eba97918129c95e7f0b3ce446add7f904882a6eb2e1e80d8aa172e"
+  },
+  "source_recipe": "N.scalar_norm_program srcconstant@F5120 replaced@F20480 exactlyasowner D.build",
+  "limits": "IADDR purpose-only source has no numeric address semantics; addressprefix ownership only, notnumericaddress/transportqualification. LOAD consumesorderedchunk8normsum; collector unqualified. No compilerfullHC exp/sigmoid/Sinkhorn RFqualification inferred.",
+  "request": "Consume scalarinstructionresult/type hashes and physicalSSA RAW/WAW/retirement ownership checks andnegativealiases/spill/earlyread controls. Keep r28..31reserved2RFreads1write candidate andSM0oneactive lane (normsourceownerphase mapping separately). No addedrate/adoption/physicalclaim.",
+  "GPU_campaign_authorized": false,
+  "QC": "originalcompleteFAILunchanged"
+}

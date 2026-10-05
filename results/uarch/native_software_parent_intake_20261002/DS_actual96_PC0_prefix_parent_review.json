@@ -1,0 +1,51 @@
+{
+  "actual_PC0_rank_calls": 96,
+  "actual_checkpoint_read_receipts": 289,
+  "artifact_pins_verified": 73,
+  "compared_values": 1968384,
+  "focused_provider_tests_passed": 10,
+  "full_token_qualified": false,
+  "future_use_versions_retained": 384,
+  "hardware_qualified": false,
+  "model_latency_cycles": null,
+  "native_dispatch_and_entering_state_external": true,
+  "owner_commits": [
+    "b51dd3cc6",
+    "f6f47d0cc",
+    "6c136247b",
+    "1eea54934"
+  ],
+  "peer_source_pins_verified": 28,
+  "physical_translation_qualified": false,
+  "portability_failure": "R39 historical artifact inventory included untracked bytecode; successor excludes ephemeral pyc while retaining failure and original inventory",
+  "prefix9_and_10_model_replay": "exact equality",
+  "prefix9_execution": "FAIL_CLOSED_PRESERVED: persistent output needs concrete physical home directory; owner assigned source-bound home repair; no later prefix result credit",
+  "primitive_scratch_transport_qualified": false,
+  "published_outputs_compared": 384,
+  "raw_journal_review": {
+    "all_request_capture_consumer_reverse_phases_closed": true,
+    "event_counts": {
+      "C0_actual_native_numeric_call": 480,
+      "consumer_accept": 738816,
+      "request_accept": 738816,
+      "reverse_credit_accept": 738816,
+      "software_backing_visible": 492288,
+      "software_owned_issue": 738816,
+      "software_read_capture": 246528,
+      "software_service_phases_reserved": 738816,
+      "validated_reverse_grant": 738816,
+      "write_residence_reserved": 492288
+    },
+    "events": 5664480,
+    "golden_comparisons": 384,
+    "journal_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+    "native_calls": 96,
+    "ranks": 96,
+    "scope": "software PC0 actual native publication and golden comparison; source acquisition separately reviewed, no primitive scratch transport or hardware/full-token credit",
+    "status": "PASS_PARENT_RAW_PC0_JOURNAL_CHECK",
+    "transactions": 738816
+  },
+  "released_checkpoint_payload_external": true,
+  "schema": "opentallas.parent.ds-actual96-PC0-prefix-review.v1",
+  "scope": "Actual provider initialization/read_views, native PC0 arithmetic, publication/readback/reverse release; CPU private SSA, no physical scratch latency credit. Prefix9/10 references and later execution qualification remain separate."
+}

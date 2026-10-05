@@ -1,0 +1,38 @@
+{
+  "scope": "Matched state-controller CTS12 1 ns flow synthesis only; not final routed area/timing or energy. Launch-source bindings must be revalidated against final manifests.",
+  "records": [
+    {
+      "name": "before",
+      "mapped_area_um2": 3492.79938,
+      "mapped_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 2618,
+        "DFFHQNx1_ASAP7_75t_R": 1088
+      },
+      "source": "results/rtl/state_parallel_admission/before.sv",
+      "source_sha256": "f60c152c5bdcae2c2db7e5fc1bc9317ed8bad1cdba4c0780afeb90b6d688ba6b",
+      "artifacts": {
+        "results/rtl/state_parallel_admission/synthesis/before/synth_stat.txt": "89ca144d028683d7849bd58ece49070c882f282cfb697f57e8cf626f0d0cd78f",
+        "results/rtl/state_parallel_admission/synthesis/before/synth_check.txt": "69030b938003d23032bd618814b9f768bf974ea403401c3737c4d780059369d6",
+        "results/rtl/state_parallel_admission/synthesis/before/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+        "results/rtl/state_parallel_admission/synthesis/before/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      }
+    },
+    {
+      "name": "after",
+      "mapped_area_um2": 3448.84068,
+      "mapped_flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 2618,
+        "DFFHQNx1_ASAP7_75t_R": 1088
+      },
+      "source": "rtl/abi3/ot_a3_state_controller.sv",
+      "source_sha256": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+      "artifacts": {
+        "results/rtl/state_parallel_admission/synthesis/after/synth_stat.txt": "41704e5b9ef5e630834aa0633a53ac8d53bc2377195a595148e632ba8bd457e0",
+        "results/rtl/state_parallel_admission/synthesis/after/synth_check.txt": "69030b938003d23032bd618814b9f768bf974ea403401c3737c4d780059369d6",
+        "results/rtl/state_parallel_admission/synthesis/after/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+        "results/rtl/state_parallel_admission/synthesis/after/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      }
+    }
+  ],
+  "mapped_area_reduction_percent": 1.2585521015524237
+}

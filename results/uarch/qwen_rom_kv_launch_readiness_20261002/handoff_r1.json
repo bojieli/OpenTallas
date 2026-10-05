@@ -1,0 +1,63 @@
+{
+  "status": "BLOCKED_ACTUAL_READY_PRODUCER_AND_CONTEXTUAL_ACCEPTANCE",
+  "predecessor": "edfca17ba826acc63b7582eb87e9bf9b5dedde75",
+  "parent": "874c6fa05315d56e87088bc459724564141df080",
+  "euclid": "b6adee5098803bcf6d4d1ff7c910322e440a393a",
+  "tests": {
+    "total": 57,
+    "new": 11,
+    "all_PASS": true
+  },
+  "all28_originals_unchanged": true,
+  "numerical_archive_unchanged": true,
+  "implemented": [
+    "Source-state startup predicate and registered stream join software API",
+    "Full379bit source field codec and local IREG accepted-edge instruction/x/owner/PC join",
+    "Literal KV admission predicate, causal/assembly/return/grant debt checks; actual source exports mandatory"
+  ],
+  "actual_blocker": "Selected parent RTL has provider definition only, no instantiation or actual service/serial/readiness producer; actual accepted379bit owner/hold trace also absent.",
+  "remaining": [
+    "Actual coherent same-epoch service/serial/stream release snapshots and crossed acknowledgments",
+    "Actual producer/tail state and allocation/backing/owned/reverseACK/grant/readerdrain receipts",
+    "Actual local tile request/launch/IREG traces and global BD/ready source induction",
+    "Ampere exact local clock/reset/CDC cost, sinks/slot/CTS/PG and SS60ps/FF25ps context"
+  ],
+  "production_calendar_admitted": false,
+  "readiness_physical_producer_admitted": false,
+  "slot_fit": null,
+  "current_rate_risk": "Conditional current transport lower bound16.498944ms/token at8K;3k+ not admitted",
+  "cold_calendar_is_production": false,
+  "new_decode": false,
+  "new_hardware": false,
+  "new_PnR": false,
+  "new_PVE2_PVE3_jobs": false,
+  "peer_contracts": {
+    "Euclid": "euclid_dependency_r1.json",
+    "Ampere": "ampere_dependency_r1.json",
+    "Kepler": "kepler_dependency_r1.json",
+    "Russell": "russell_dependency_r1.json"
+  },
+  "peer_delivery": "No peer message transport exposed; committed for parent relay, not sent",
+  "replay": [
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_kv*.py' -v",
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_persistent_kv*.py' -v",
+    "python3 tools/qwen_rom_kv_launch_readiness.py --parent-ref 874c6fa05315d56e87088bc459724564141df080 --result /tmp/qrom_launch_parent_fresh_r1.json"
+  ],
+  "output_must_be_fresh": true,
+  "artifact_sha256": {
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/persistent_source_tests_r1.log": "308f63bdad2baf746bdcf251c7dc7285d0de55f400f7978c4d06b29c28721d9a",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/identity_production_causal_rate_launch_tests_r1.log": "3f332ed7aa09b9eb21b96848e3da7004ce2f017400c7d5b4892ab7380341352f",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/russell_dependency_r1.json": "90784fa155e3e7a9391da1347ec178d112a7281c6170dfed999e5f0fdbdf8c3b",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/contract_r1.json": "3295578b7dba16ea7a5fda81bed5e4510bb737d0bc4e4a53c1437f591a6049d5",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/accepted-Z-FAIL-r1.json": "f9709caf59d2adba4aa7ea68b1d9efba095e735a63275f2d89c60a6a75920048",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/actual_connection_blocker_r1.json": "6ba6fc532022d45158fb6f3a686fec833fc8458f8461fc595611b68acc86e5b9",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/provider-bypass-FAIL-r1.json": "b5653b6bfacb6b6da71b2c0c4134ea81403bc0340b944c3234ee3c810c6a0d7a",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/euclid_dependency_r1.json": "d44abbcaf52e17b2485a3b7b62820e97f0ced835d041353cdd97d274341d05f0",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/ampere_dependency_r1.json": "2c9760a91220d251e7bcd2f5caa75cf2421cc03ee8b7187a4af8a3264e4d5c89",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/implementation_pins_r1.json": "ab384ee2b9c4e13b2b6d86505fad96bb236828d57b0eec8270da4e614692e398",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/kepler_dependency_r1.json": "1978c2ca4c652553552baaa79b19299d08ab412eca1b0385842c7dae31e87ff9",
+    "results/uarch/qwen_rom_kv_launch_readiness_20261002/preservation_r1.json": "af946d8f5a67c65d0900ccfd322ea15547e4f17ed1b9f4101316935329e1a797",
+    "tools/qwen_rom_kv_launch_readiness.py": "f095aa261a1ca5dbf36992b93d95615882aeb104fed0d38c295104c63c2df1b5",
+    "tests/test_qwen_rom_kv_launch_readiness.py": "7125cfb88545d5a4fb04591eb1c8e0b483016e726f2031672b3694f9d0cf6aff"
+  }
+}

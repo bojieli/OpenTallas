@@ -1,0 +1,157 @@
+{
+  "assumption": {
+    "cycles": {
+      "range_high": 128.0,
+      "range_low": 16.0,
+      "value": 32.0
+    },
+    "fabric_clock_hz": 1000000000.0,
+    "grade": "assumed",
+    "key": "latency.pipeline_fill_drain_s",
+    "source": "no published array pipeline depth for this class of part",
+    "value_s": 3.2e-08
+  },
+  "g4_item": "G4's reason line reads 'technology.json#latency not re-derived'. This artifact is why it stays not-re-derived.  A refused re-derivation with a stated reason is a different state from an undone one, and the gate should keep failing either way: the model still charges a term whose grade is 'assumed' and whose kind the RTL now contradicts.",
+  "generated_by": "tools/audit_boundary_technology_rederivation.py",
+  "generated_by_sha256": "00b6e28d329a7db584be59231cb00ff7e42dfd7763187594667ba8d6975a65f7",
+  "git": {
+    "commit": "3e0d1ec2a73cda8e3d5ff33572e33a0b54379ff5",
+    "scope": "the tree THIS artifact was derived in.  It is not a claim about the tree any measurement it reads was taken in; each of those records carries its own.",
+    "worktree_dirty": true
+  },
+  "kind_mismatch": {
+    "consequence": "substituting the measured cycles for the assumed value would put a service number into a latency slot.  That is a second modelling error, and a worse one than the first, because the number would then look measured.",
+    "holds": true,
+    "the_measurement_reports": {
+      "does_not_scale_with": "the depth of the reduction",
+      "kind": "service",
+      "quoted_from_the_record": "that the boundary does not scale with the depth of the reduction and does scale with the endpoint's pipeline depth by exactly 1 + 3L: it is a SERVICE term, not a latency term, which is the opposite of what a fixed per-boundary charge assumes",
+      "scales_with": "the endpoint's pipeline depth, by exactly 1 + 3L"
+    },
+    "the_model_charges": {
+      "as": "engine.<family>.fixed_latency_cycles",
+      "kind": "latency",
+      "per": "one engine instruction",
+      "site": "tools/derive_cycle_machine.py",
+      "symbol": "array_pass_boundary_s",
+      "verified_in_source": true
+    }
+  },
+  "measurements": {
+    "control": {
+      "artifact": "results/rtl/abi3_boundary_control.json",
+      "artifact_sha256": "67a0b665db0678fe8254ea3ea9cffc8c451a280b0a64127d9bee00abd0f2bf93",
+      "cycles": 8,
+      "decomposition": {
+        "acknowledged_completion": [
+          1
+        ],
+        "mesh_crossbar_and_driver": [
+          1,
+          2
+        ],
+        "queue_admission": [
+          1
+        ],
+        "wait_check": [
+          6
+        ]
+      },
+      "simulators_agree": true,
+      "why_not": "section 13 item 13 asks for a two-tile dependent chain.  This is its control half: the producer tile's last-result path and the operand broadcast into the consumer tile's activation FIFO are not in it, and neither is the mesh traversal"
+    },
+    "datapath": {
+      "artifact": "results/rtl/abi3_boundary_chain_measured.json",
+      "artifact_sha256": "fcfd366b59d87c7d8fd60db62ef3a0b83c4cba1487d63f365567c8bd04f467d8",
+      "cycles": 99,
+      "decomposition": {
+        "admit": [
+          1
+        ],
+        "collect": [
+          2
+        ],
+        "laneadmit": [
+          20
+        ],
+        "ready": [
+          1
+        ],
+        "receive": [
+          1
+        ],
+        "tree": [
+          74
+        ]
+      },
+      "establishes": [
+        "that a two-tile dependent chain can now be assembled out of design RTL alone, which results/rtl/abi3_boundary_chain.json established it could not, and that it computes the exact reference end to end: every root equals re8_chain over the producer's partials, every delivered activation word equals the BF16 narrowing of its root, and every consumer partial equals the reference over the operand that was actually delivered",
+        "the datapath half of a dependent boundary, measured, identical on Icarus Verilog and Verilator, with a design module behind every cycle of it and the six legs summing to the span",
+        "that the boundary does not scale with the depth of the reduction and does scale with the endpoint's pipeline depth by exactly 1 + 3L: it is a SERVICE term, not a latency term, which is the opposite of what a fixed per-boundary charge assumes"
+      ],
+      "headline_stages": 3,
+      "is_the_section_13_item_13_boundary": false,
+      "per_adder_depth": {
+        "1": 93,
+        "3": 99
+      },
+      "simulators_agree": true,
+      "why_not": "this is the DATAPATH half of a dependent boundary, and section 13 item 13 names five terms.  Three of them -- mesh transfer, queue admission and acknowledged completion -- are outside this span BY CONSTRUCTION: the consumer's op_start is asserted and its queue admission complete before the span opens, and the pair is node-local.  Those three are measured elsewhere in RTL (results/rtl/abi3_boundary_control.json, 8 cycles; the mesh traversal in results/rtl/a3_link_campaign.json), so composing them is arithmetic over two records rather than one measurement, and this record reports that sum without asserting it as a measurement of its own.  The second half of the item's acceptance is also unmet: technology.json#latency.pipeline_fill_drain_s has not been re-derived from this measurement, and re-deriving it is a decision this campaign does not take"
+    }
+  },
+  "question": "does the measured dependent boundary license re-deriving technology.json#latency.pipeline_fill_drain_s?",
+  "refusals": [
+    {
+      "evidence": "the datapath record's claim_boundary.does_not_establish",
+      "holds": true,
+      "id": "not-the-shipped-boundary",
+      "why": "the measured pair is built for the measurement rather than taken from a compiled deployment, so it is not the array-pass boundary of a shipped program, which is what the model charges"
+    },
+    {
+      "evidence": "this is the DATAPATH half of a dependent boundary, and section 13 item 13 names five terms.  Three of them -- mesh transfer, queue admission and acknowledged completion -- are outside this span BY CONSTRUCTION: the consumer's op_start is asserted and its queue admission complete before the span opens, and the pair is node-local.  Those three are measured elsewhere in RTL (results/rtl/abi3_boundary_control.json, 8 cycles; the mesh traversal in results/rtl/a3_link_campaign.json), so composing them is arithmetic over two records rather than one measurement, and this record reports that sum without asserting it as a measurement of its own.  The second half of the item's acceptance is also unmet: technology.json#latency.pipeline_fill_drain_s has not been re-derived from this measurement, and re-deriving it is a decision this campaign does not take",
+      "holds": true,
+      "id": "three-of-five-terms-outside",
+      "why": "three of section 3.6's five terms -- mesh transfer, queue admission and acknowledged completion -- are outside the datapath span by construction, so any composed total is arithmetic over two records rather than one measurement"
+    },
+    {
+      "evidence": "section 13 item 13 asks for a two-tile dependent chain.  This is its control half: the producer tile's last-result path and the operand broadcast into the consumer tile's activation FIFO are not in it, and neither is the mesh traversal",
+      "holds": true,
+      "id": "two-vehicles-one-sum",
+      "why": "the datapath and control halves were measured on different vehicles, so their sum bounds the boundary rather than measuring it"
+    }
+  ],
+  "schema": "opentallas.derived.boundary_technology_rederivation_audit.v1",
+  "sensitivity": {
+    "assumed_cycles": 32.0,
+    "band_percentile_of_composed": 81.25,
+    "composed_node_local_cycles": 107.0,
+    "delta_cycles_per_transaction": 51825.0,
+    "delta_seconds_at_fabric_clock": 5.1825e-05,
+    "double_counting_caveat": "do not add this to the control-plane gap without checking for overlap.  The cosimulation that measured the control plane ran STUB engines that complete the cycle after acceptance, so the engine fixed-latency term was not active in that comparison and the two look separable -- but neither record was designed to establish that, and no measurement here does.",
+    "engine_steps_per_transaction": 691,
+    "engine_steps_source": "results/derived/qwen3_n5_design_target_calibration.json calibration.control_plane.cases[0].instruction_mix.engine_steps",
+    "inside_declared_band": true,
+    "measured_control_cycles": 8.0,
+    "measured_datapath_cycles": 99.0,
+    "optimism_factor_composed": 3.34375,
+    "optimism_factor_datapath_only": 3.09375,
+    "projected": {
+      "batch_size": 1,
+      "context_tokens": 8192,
+      "frozen_hbm_s": 0.0010217174853168838,
+      "frozen_ratio": 5.04830632979099,
+      "frozen_rom_s": 0.00020238817111543724,
+      "model": "Qwen3-8B",
+      "rows_are_comparable": true,
+      "shifted_hbm_s": 0.0010735424853168837,
+      "shifted_ratio": 4.223001037304209,
+      "shifted_rom_s": 0.00025421317111543724
+    },
+    "this_is_not_a_proposal": "the term is charged to BOTH storage classes once per engine instruction, so moving it adds the same seconds to each and compresses the ratio rather than reversing it.  This arithmetic shows the SENSITIVITY of the frozen budget to a term the refusals above say must not be moved on this evidence.  It is not a corrected budget and must not be quoted as one."
+  },
+  "verdict": "refused",
+  "what_is_licensed": {
+    "claim": "the measurement bounds the assumption from below: the datapath half ALONE exceeds the assumed point value, on a term charged to both storage classes once per engine instruction",
+    "not_licensed": "replacing the value, narrowing the band, or reporting any composed figure as a measurement of the boundary"
+  }
+}

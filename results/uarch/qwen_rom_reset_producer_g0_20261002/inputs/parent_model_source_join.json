@@ -1,0 +1,50 @@
+{
+  "DS_forward_parent_PC_bindings": 1323,
+  "Qwen_byte_backend_pin": "9fb3ba94186bde39ebaee62895d9f55b557daed5",
+  "Qwen_byte_backend_sha256": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250",
+  "RTL_allowed": false,
+  "full_program_movement_executed": false,
+  "hardware_qualified": false,
+  "immutable_source_pins": {
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/G0_both_program_interface.json.gz": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "4b5608d86845c732e9602c19ffec4b0efcf22784b38d6ed994f8739bf5f6c387"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/forward_leaf_catalog.json.gz": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "b916cbb8084482df35360e6efea59df94f85256157590ed1128d77c4801bb809"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/forward_parent_provider_interface.json.gz": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "316391fe8755be74bf1062d2133841b6b7927abee8923d44b10f038a9a1d04fe"
+    }
+  },
+  "implemented": "Executable full source PC/version/owner binding and reuse of actual forward leaf resolver; addressed parent journal bridge to SerializedOwner",
+  "jobs": [],
+  "missing_forward_version_homes": [
+    "DeepSeek.1110.index_keys.L20.1624",
+    "DeepSeek.121.index_keys.L2.226",
+    "DeepSeek.449.index_keys.L8.690",
+    "DeepSeek.782.index_keys.L14.1160"
+  ],
+  "native_source_pin": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+  "programs": {
+    "DeepSeek": {
+      "PCs": 2213,
+      "families": 30
+    },
+    "Qwen": {
+      "PCs": 1737,
+      "families": 21
+    }
+  },
+  "remaining": [
+    "Full ordered bounded operand-window continuation and exact tile/view mapping",
+    "Qwen immutable byte return has no addressed sector reverse journal; boolean ACK cannot close it",
+    "Kepler route-fence failure must pass on unchanged released byte contracts",
+    "Installed rank/SM connector and composed C0+V1 slot/distributed-cut G0",
+    "Missing hardware families, actual connected ACK gates and SS/FF"
+  ],
+  "remaining_unknown_shared_calls": 189476,
+  "schema": "H4_C0_ACTUAL_PARENT_PROVIDER_SOURCE_JOIN_V1"
+}

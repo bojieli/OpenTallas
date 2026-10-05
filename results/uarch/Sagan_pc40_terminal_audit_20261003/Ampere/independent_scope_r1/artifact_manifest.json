@@ -1,0 +1,60 @@
+{
+  "actual_wrapper_source_sha256": "05e64c4cca236b42135dd3d3bbd63955e0d34ce0921dc35058de8448dd190f1d",
+  "artifacts": {
+    "FMAX.bin": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+    "checkpoint_source_snapshot.json": "7aab1634ac7e472d042caf2b90d1dbc73f728f29d009df21e87232587c844452",
+    "constant.bin": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52",
+    "gate.bin": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0",
+    "historical_prefix_hashes_r1.json": "67fe2f9069f1f7f14e0ce1d413091319f6662f0d5d8af5e9fc1437ce935fb81c",
+    "journal.jsonl": "8b5b9f7a941eab25f61a61a550199e8f70a14df409c36ecf28b6152017f07910",
+    "native_capture.json": "2758204266ef3f9cb5471108b0d3e4a5fb93ea91f73bb41c2cf30ad95543ca83",
+    "negative.bin": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+    "numeric_input_manifest_r1.json": "82461160e03285bebca32cd314d1bf1c1f71ca8231b3f60727f5bfa8b3d897e3",
+    "owner_snapshot.json.gz": "947f03f3728bcea23f33dbeb403a0ccedb2be490856875438c7d25aca4809c08",
+    "producer_progress.jsonl": "ff626451060e003740ba82ac4385232f039018382f03e1cb8f76501f9b455fbf",
+    "review.json": "761fdfbd7ecaa701f13d5090572fe8dce0cda2ab5064ef2c240d553d0e85f6c3",
+    "review.py": "f7a9e4bfb5938d2c0b3a5a7c4c0dbba296be8ab3a7d8f949a22093489046d3db",
+    "source_archive.json.gz": "b798c3d0ab6db0a0d1faaf6f52194d647d521dba1ab077fdea2049230a5068fd",
+    "source_metadata_snapshot.json": "e82e95aaaabecc3bd7da3806bd89f181945230d14a9b933dff593a10588bc0f6",
+    "terminal.json": "e0a30f6c4f49032e02f124d3096abb92488be5d5402735d0dc32871c113c3c45"
+  },
+  "job_outputs_unmodified": true,
+  "numeric_source_pins": [
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "tools/h3_qwen_bounded_native.py"
+    },
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "tools/h3_qwen_complete_native.py"
+    },
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "tools/qwen_trained_byte_provider.py"
+    },
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "tools/qwen_hbm_complete_executor.py"
+    },
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "tools/qwen3_deployment_quality.py"
+    },
+    {
+      "archive_matches_original_commit": true,
+      "sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+      "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+      "source_path": "compiler/models/qwen3-8b/checkpoint_source.json"
+    }
+  ]
+}

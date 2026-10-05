@@ -1,0 +1,19 @@
+{
+  "scope": "Matched ASAP7 TT 1 ns CTS12 fanout16 standalone join. Both routed stages pass; overall not_met due prelayout. No extrapolated frequency or containing-service claim.",
+  "records": [
+    {
+      "record": "pnr_baseline_cts12_1ns.json",
+      "sha256": "84e573bf834f14b84c64a3712a6c0edf564a72b52540bb5465be2397db7f3173",
+      "area_um2": 553.253,
+      "setup_wns_ns": 0.21261000000000002,
+      "hold_wns_ns": 0.0658206
+    },
+    {
+      "record": "pnr_payload_cts12_1ns.json",
+      "sha256": "75c7ee62f50bfe43e422a5f031148c3d5b0ed598207749cc1ac19b5ed26ac7b1",
+      "area_um2": 461.749,
+      "setup_wns_ns": 0.205734,
+      "hold_wns_ns": 0.0545622
+    }
+  ]
+}

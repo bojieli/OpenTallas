@@ -1,0 +1,53 @@
+{
+  "FF_hold_status": "pending, SS min report is not FF signoff",
+  "archived_native_artifact_sha256": {
+    "boundary.json": "9fde5fd11fad6dc8c504efec8388e0a9e52ab26e01f9e7663b0b58d0e9fe8122",
+    "config.mk": "a0a5b41104bc232bb73d1eed6c0d4b5c5bbc2c70a1c2df8fb8a14d36b6e33d4e",
+    "constraint.sdc": "00f50660ac54c896e66005fd2ee7534076714a035c58870120efd3a0a8801cdf",
+    "corner_ss.log": "8b71e66aca7b9c1b216446ddd22f0c59dc28d248d4d34637ea9ba7790419972d",
+    "corner_ss.tcl": "f855b610720ebe704cebc8c95de137e8897ecfb432dc4f1ff09e54e0c94d2346",
+    "corner_ss_max.rpt": "7d0a5a0432a4fe27bcddf777679e65aea8c6a4addb7b780b2aef130e19a150fe",
+    "corner_ss_min.rpt": "7d0ce609316dedc8e682bb9a7e4d4efc7472cb08d55e8b651545f0d520cc299b"
+  },
+  "clock_period_ps": 833,
+  "clocks_relaxed": false,
+  "corner_SS_library_basis": "ASAP7 RVT SS NLDM, read final ODB/SDC/SPEF, propagated clocks",
+  "date_utc": "2026-10-01",
+  "followup": "Preserve same remaining corner run and await owner terminal archive; no retry/tuning or SM dispatch",
+  "full_SM_or_die_admission": false,
+  "full_source_pins_independently_checked_this_intake": false,
+  "host": "ot-pve1",
+  "native_SS_hold_uncertainty_ps": 0,
+  "native_SS_metrics": {
+    "dbu": 1000.0,
+    "hold_buffer_dbu2": 1737863100.0,
+    "hold_buffers": 23839.0,
+    "hold_tns": 0.0,
+    "hold_wns": 7.035627636042818e-11,
+    "setup_tns": -3.837703133058312e-08,
+    "setup_wns": -1.0265510663742816e-10
+  },
+  "native_max_path": {
+    "end": "g_lane[29].u_mul.s1_e[10]$_DFF_P_",
+    "register_to_register": true,
+    "rounded_arrival_ps": 1246.1,
+    "rounded_required_ps": 1143.4,
+    "start": "v_q$_DFF_PN0_"
+  },
+  "original_work": "/home/ubuntu/w13work/tc_col_13",
+  "required_FF_hold_uncertainty_ps": 25,
+  "route_retries_launched": 0,
+  "routing_layers": "M2-M6",
+  "run_continuity": {
+    "corner_container": "3e30f2c48282",
+    "corner_wrapper_pid": 1875939,
+    "flow_terminal_at_intake": false,
+    "old_container_absence_is_normal_stage_completion": true,
+    "old_final_report_container": "56d221341db3",
+    "same_wrapper_pid": 1343492
+  },
+  "schema": "parent.TC-column-native-SS-intake.v1",
+  "setup_uncertainty_ps": 60,
+  "source_commit_reported_by_owner": "000ba0898",
+  "verdict": "FAIL_SS_SETUP_NO_ADOPTION"
+}

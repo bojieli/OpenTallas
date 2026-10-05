@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.D1.actual-fault-mask-attribution.v1",
+  "verdict": "ACTUAL_DIE_KV_FAULT_BIT6_CAPTURED_RUNTIME_FAIL",
+  "source_head": "784f6de2bf393664f0e87ad79891414ccfd9110d",
+  "engine_source": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "frontend_source": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2",
+  "native_source": "a93ac5a8c2312266213cc4f119aa2bd99175f52a",
+  "capture": {
+    "actual_masks": {
+      "fault_r": 64,
+      "dbg_fs": 0,
+      "violations": 0
+    },
+    "fatal_union_nonzero": true,
+    "WINDOW_kv_fault_bit_observed": true,
+    "original_PC24_cause": "UNOBSERVED",
+    "service_bound": "BOUND_MISSING",
+    "row0_invalid_directly_observed": false
+  },
+  "actual_union": {
+    "fault_r_nonzero": true,
+    "dbg_fs_nonzero": false,
+    "observer_violations_nonzero": false
+  },
+  "original_native_journal_markers_and_fatal_byteidentical": true,
+  "expected_reset_priming_attribution": "First row prime counted while consumer samples rn=0; invalid row0 first prefetch predicts pf_fault_code bit0 then kv_fault to die bit6. Actual die mask now agrees. This capture did not read pf_fault_code/row_valid[0] or each kv_fault contributor, so underlying contributor and lost-row state remain source-derived, not independently sampled.",
+  "cause_next_boundary": "No core/debug or observer-ledger repair justified by this run. Any bench-only reset/priming correction must be additive, same-reset/actual-ready qualified and independently gated; no engine readiness force or payload injection.",
+  "fixture": "synthetic two-instruction zero-row controlled prefix, not original full token",
+  "scope": {
+    "runtime_success": false,
+    "fulltoken": false,
+    "physical_or_hardware_qualification": false,
+    "original_PC24_cause": "UNOBSERVED",
+    "service_bound": "BOUND_MISSING",
+    "I66_used": false
+  },
+  "one_replay_only": true,
+  "compile_link_frontend_runs": 0,
+  "old_failure_preserved": true,
+  "source_SHA256": {
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/w17_runtime/chip/ot_chip_v41x_die.sv": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/tb_D1_scope_core.sv": "7eb722d71722fc48d10bacdc0964020e8e101533f94108dfa1fcd86b3b4aeac9",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/ot_v41_rt_die_D1_scope.sv": "be35b5ccf0d258677b11bc9cd6b0ee2869b5023b21651a3b39099413bdb4487d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/runtime.log": "7e34b92b5fffe5da1088f3f516c661da6cb2324938078b50a407bc7c92e9975e",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/receipt.json": "a2f3120ea37e232078ce378550e6028b632edde0220ae1273a86f2dd81011098"
+  }
+}

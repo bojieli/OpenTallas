@@ -1,0 +1,131 @@
+{
+  "schema": "opentallas.recovered_physical_experiments.v1",
+  "scope": "Recovery index of completed experiments from the prior session; original records and artifacts remain at the paths listed. Nonmatching source hashes are historical evidence, not current-source closure.",
+  "experiments": [
+    {
+      "experiment": "lim_bothpipe",
+      "record_path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/lim_bothpipe/pnr.json",
+      "record_sha256": "a2fcd5e62b1740ec51cc4d99dccfa2bb40178d2cbd7c43557c7aa0d71c9e6c23",
+      "status": "not_met",
+      "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+      "parameters": {
+        "PIPELINED_DIVIDER": 1
+      },
+      "clock_period_ns": 1.8,
+      "closed": false,
+      "fmax_hz": 427294000.0,
+      "setup_wns_ns": -0.5403110000000001,
+      "area_um2": 3228.77,
+      "core_area_um2": 8103.23,
+      "signal_integrity_clean": true,
+      "sources": [
+        {
+          "path": "rtl/ot_fp32_rne_pkg.sv",
+          "recorded_sha256": "e9bf493054a959c351ca19fb14a81fa5d3d5f9adb67f27b4b94f3d89798df453",
+          "current_sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+          "matches": false
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_positive_rne_pipe.sv",
+          "recorded_sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+          "current_sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+          "matches": true
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+          "recorded_sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+          "current_sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+          "matches": true
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+          "recorded_sha256": "bbd5ef82bf97b53be2d835b17b9466570cbf9179cddb7c7f75b231ea4e7633a5",
+          "current_sha256": "bbd5ef82bf97b53be2d835b17b9466570cbf9179cddb7c7f75b231ea4e7633a5",
+          "matches": true
+        },
+        {
+          "path": "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
+          "recorded_sha256": "bd866bb68c951ac5a36c2a88a22eabe43f54a51703b0d07ce474492ad1cea5da",
+          "current_sha256": "bd866bb68c951ac5a36c2a88a22eabe43f54a51703b0d07ce474492ad1cea5da",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "experiment": "trans_step0_pnr",
+      "record_path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/trans_step0_pnr/pnr.json",
+      "record_sha256": "49dc0179b835cb540c9b5cc7eef5ff9f39984cc24a881be4a12da1438c856c5a",
+      "status": "not_met",
+      "top": "ot_a3_fp32_transcendental_cr_rne",
+      "parameters": {},
+      "clock_period_ns": 2.6,
+      "closed": false,
+      "fmax_hz": 378281000.0,
+      "setup_wns_ns": -0.0435409,
+      "area_um2": 9656.38,
+      "core_area_um2": 25153.3,
+      "signal_integrity_clean": true,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "recorded_sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "current_sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "matches": true
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "recorded_sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+          "current_sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+          "matches": true
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "recorded_sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+          "current_sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+          "matches": true
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "recorded_sha256": "705e29f102769edb49c7373f3929034fd4bed2528499302163f105212a846913",
+          "current_sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+          "matches": false
+        }
+      ]
+    },
+    {
+      "experiment": "sweep_ot_a3_fp32_exp_pos_cr_rne",
+      "record_path": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/sweep_ot_a3_fp32_exp_pos_cr_rne/pnr.json",
+      "record_sha256": "8278f8a1d157f62619d84bcea93f123daa5c1b19553bae931f199cfa5a84c30a",
+      "status": "not_met",
+      "top": "ot_a3_fp32_exp_pos_cr_rne",
+      "parameters": {},
+      "clock_period_ns": 1.2,
+      "closed": false,
+      "fmax_hz": 348675000.0,
+      "setup_wns_ns": -1.668,
+      "area_um2": 10021.8,
+      "core_area_um2": 25076.3,
+      "signal_integrity_clean": true,
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "recorded_sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "current_sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "matches": true
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "recorded_sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+          "current_sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+          "matches": true
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+          "recorded_sha256": "acbe6172b6286934597d121a59e389fcd7e3d58286c1ff123d4b91847efe3ac6",
+          "current_sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+          "matches": false
+        }
+      ]
+    }
+  ]
+}

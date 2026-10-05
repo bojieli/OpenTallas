@@ -1,0 +1,10 @@
+  one_block      span=1 heads=2 head_dim=16 slots=6 live=6 blocks=1 oracle_rows=()
+  full_block     span=1 heads=2 head_dim=16 slots=64 live=64 blocks=1 oracle_rows=()
+  two_blocks     span=1 heads=2 head_dim=16 slots=70 live=70 blocks=2 oracle_rows=()
+  three_blocks   span=1 heads=1 head_dim=16 slots=133 live=133 blocks=3 oracle_rows=()
+  multi_row      span=3 heads=2 head_dim=16 slots=6 live=18 blocks=1 oracle_rows=()
+  multi_row_blocks span=2 heads=2 head_dim=16 slots=70 live=140 blocks=2 oracle_rows=()
+  wide_head      span=1 heads=1 head_dim=32 slots=64 live=64 blocks=1 oracle_rows=()
+  duplicates     span=1 heads=2 head_dim=16 slots=12 live=12 blocks=1 oracle_rows=()
+  single_valid   span=1 heads=2 head_dim=16 slots=1 live=1 blocks=1 oracle_rows=()
+wrote 9 cases to build/kv_index_prefix_attention_vectors

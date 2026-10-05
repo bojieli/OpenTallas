@@ -1,0 +1,266 @@
+{
+  "ACK_CDC": {
+    "SMs": 32,
+    "actual_clock_domain_pair": null,
+    "coded_bits": 72,
+    "depth": 16,
+    "finite_wait_upper": null,
+    "installed": false,
+    "protected_state_bits": 39168,
+    "raw_bits": 26,
+    "required_positive_occurrence_ids": [
+      "owner_grant",
+      "RF_both_copy_accept",
+      "RF_common_ACK",
+      "ACK_identity_match",
+      "CDC_forward",
+      "CDC_return",
+      "visibility",
+      "consumer",
+      "reverse_match",
+      "reverse_grant"
+    ]
+  },
+  "area_is_screen_only": true,
+  "codec_mux_control_gate_equivalents_ASSUMED": 18192384,
+  "complete_controller_bits_after_replacement": 16519680,
+  "complete_unallocated_screen_upper_mm2_ASSUMED": 39.657388032,
+  "connected_cost_source_bindings": {
+    "ACK_identity_match": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "write_go capture; current ack_valid has no tag/destination echo",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "CDC_forward": {
+      "CDC_receiver_sync_edges_each": 2,
+      "actual_clock_pair": null,
+      "archive": "bridge.sv",
+      "attachment": "first(src_clk->fast_clk), route(EDGES=38), second(fast_clk->dst_clk)",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 38,
+      "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    "CDC_return": {
+      "CDC_receiver_sync_edges_each": 2,
+      "actual_clock_pair": null,
+      "archive": "bridge.sv",
+      "attachment": "reverse instance of same first/route/second chain; actual domain pairing absent",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 38,
+      "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    "RF_both_copy_accept": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "write_go && wr_addr[8:7]==p; both u_operand_a/u_operand_b",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "RF_common_ACK": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "if(write_go) ack_valid<=1; ack_valid && ack_ready",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "consumer": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "host_rsp_valid[sm] && host_rsp_ready[sm]; scratch_done && scratch_done_ready",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "owner_grant": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "rf_owner_grant[sm] && !collision",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "reverse_grant": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "rf_owner_grant/shared_owner_grant release after matched child reverse",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "reverse_match": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "no source reverse identity port; add owner retained matcher",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "visibility": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "fence.sv",
+      "attachment": "pending && host_ack_valid; vector_ACK_visible",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+    }
+  },
+  "conservative_replacement_logic_overlap_not_deducted": true,
+  "directions": {
+    "request": {
+      "bit_boundary_per_SM": 1448,
+      "coded_bits_per_lane": 360,
+      "control_bits_per_lane": 7,
+      "data_control_protected_bits": 3589632,
+      "handshake": "per-hop registered occupancy; onehop credit dependency, no38hop combinational ready chain",
+      "lanes_per_SM": 4,
+      "payload_ECC": "code at ingress, carry protected words through registers, decode at egress; no repeated fullword codec perstage",
+      "raw_bits_per_lane": 313,
+      "seats_per_stage": 2,
+      "stages": 38
+    },
+    "return": {
+      "bit_boundary_per_SM": 1448,
+      "coded_bits_per_lane": 360,
+      "control_bits_per_lane": 7,
+      "data_control_protected_bits": 3589632,
+      "handshake": "per-hop registered occupancy; onehop credit dependency, no38hop combinational ready chain",
+      "lanes_per_SM": 4,
+      "payload_ECC": "code at ingress, carry protected words through registers, decode at egress; no repeated fullword codec perstage",
+      "raw_bits_per_lane": 277,
+      "seats_per_stage": 2,
+      "stages": 38
+    }
+  },
+  "directory_policy": {
+    "HBM_NATIVE_STATE": "no required fixed home SM or RF-style retire PC; actual requester port and producer publication/generation lease",
+    "RF": "source home SM and static birth/retire eligibility; generation/consumer/reverse lease prevents premature recycle",
+    "actual_appended4616_missing_SM_or_retire_is_not_itself_invalid": true,
+    "arbitrary_home_SM_constant_refused": true,
+    "existing_provider": "publish_state validates binding.PC/version/rank/source_result, shape/type, aperture and _leased(version)",
+    "installed_requester_receipts": null,
+    "original501strict_allkind_refusal_superseded": true,
+    "requester": "actual accepted SM endpoint port index; Peirce/Sagan actual consumer binding and physical rank mapping must pair it",
+    "spill": "offchip home locality independent of requester; source publication/read lease required"
+  },
+  "engine_build_ready": false,
+  "hardware_admitted": false,
+  "latency": {
+    "allocation_ACK_CDC_consumer_reverse_wait_upper": null,
+    "existing72wire_edges_not_recharged_without_interval_receipt": true,
+    "forward_reverse_pipeline_edges": 76,
+    "no_stall_route_edges": 38,
+    "positive_control_costs_required": true,
+    "target1p2GHz_component_ns": 63.333333333333336,
+    "whole_operator_ns": null
+  },
+  "mandatory_baseline": true,
+  "next_gates": [
+    "Peirce/Sagan actual requester/version/publication/generation lease paired with Dewey intervals",
+    "actual producer acceptance and backend/CDC/commonACK/consumer/reverse finite waits",
+    "coded4lane two-seat throughput pipeline complete32SM slot/clock/PG/cuts"
+  ],
+  "owned_RF_ACK": {
+    "accepted_echo": "tag16+RFdestination9+commonACK1 captured at actual common write_go",
+    "existing_shadow_not_double_charged": true,
+    "phase": "write_go->commonACKheld->identitymatch->visibility->consumer->reverse",
+    "proposed_identity_match_edges": 1,
+    "required_shadow_bits": 2304,
+    "source_common_ACK_is_one": true,
+    "source_identity_missing": true,
+    "source_write_to_ACK_min_edges": 1
+  },
+  "owner_retention": {
+    "no_generation_wrap_without_quiescence": true,
+    "root_metadata_reuse_needs_actual_source_connection": true,
+    "source_common_ACK_once_for_all_copies": true,
+    "stage_pop_not_parent_release": true,
+    "tag_held_until_all_consumer_and_reverse_acceptances": true
+  },
+  "parent_guard_FF_mux_footprint_mm2_ASSUMED": 9.2570750976,
+  "parent_guard_bits_upper": 4128768,
+  "parent_guard_fields": {
+    "common_ACK": 1,
+    "consumer_mask": 32,
+    "delivered_mask": 32,
+    "home_id": 32,
+    "length": 6,
+    "phase": 3,
+    "reverse_mask": 32,
+    "tag": 16,
+    "valid": 1
+  },
+  "parent_guard_gate_equivalents_ASSUMED": 11415296,
+  "parent_guard_reuse_not_credited_without_source_inventory": true,
+  "performance_opt_in": false,
+  "physical": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "actual38hop_routes_for_selected32SMs": null,
+    "additional_clock_PG_OBS_via_allocation": null,
+    "coded_request_return_cuts_capacity": null,
+    "fixed1p2GHz_target_no_timing_relaxation": true
+  },
+  "pipeline_FF_control_footprint_mm2_ASSUMED": 15.102377164800002,
+  "predecessor": "501a3babc57fd7bc7b7ddb117f31b370b6cc8aba",
+  "predecessor_single_seat_pipeline_bits": 3502080,
+  "replacement_incremental_bits": 3677184,
+  "replacement_not_added_twice": true,
+  "schema": "HBM_KIND_DIRECTORY_ELASTIC_PIPELINE_R2",
+  "source_sha256": {
+    "bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+    "codec.py": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+    "fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+    "fifo.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "model.json": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e",
+    "provider.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "rf.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+    "sm.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "wrapper.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+  },
+  "status": "FINITE_CADENCE_DESIGN_READY_FAIL_SOURCE_RECEIPTS_PHYSICAL_CUTS",
+  "throughput": {
+    "SMs": 32,
+    "ceiling3to4_Bpc": 3072,
+    "ceiling_equalclock_Bpc": 4096,
+    "lanes_per_SM": 4,
+    "not_installed_or_measured": true,
+    "sector_payload_bytes": 32,
+    "steady_beats_per_lane_per_FASTedge": 1,
+    "with3to4_sink": 0.75
+  },
+  "total_pipeline_protected_bits": 7179264
+}

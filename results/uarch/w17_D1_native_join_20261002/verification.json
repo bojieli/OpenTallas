@@ -1,0 +1,7 @@
+{
+  "tests": "pytest -q tests/test_w17_D1_native_join.py",
+  "PASS": 16,
+  "negative_controls": "active/failed/sourcewrong/foreignmissing/duplicateownership; implicitcppbasename parser; PCH or unrecognizedcompiler command rejection",
+  "execution": "No archive/link/runtime launched; currenttwoownedCXXjobs preserved",
+  "old_pilot_caps_copied": false
+}

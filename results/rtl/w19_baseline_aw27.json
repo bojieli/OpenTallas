@@ -1,0 +1,644 @@
+{
+  "schema": "opentallas.w19.baseline_aw27_actual_resident_gate.v1",
+  "status": "pass",
+  "cases": [
+    {
+      "layer": 13,
+      "family": "w2",
+      "expert_id": 60,
+      "rank": 0,
+      "stack": 2,
+      "sm": 25,
+      "rows": [
+        50,
+        52
+      ],
+      "K": 2304,
+      "stall": 0,
+      "first_byte": 536868864,
+      "boundary_bytes": 536870912,
+      "descriptor": {
+        "first_sector": 16777152,
+        "sector_count": 256,
+        "cfg_base": 4145584,
+        "cfg_exp_lines": 800,
+        "cfg_off": 704,
+        "cfg_lines": 64,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "image_sha256": {
+          "sparse_keys.hex": "69a3a339a49234f0421737ac0e6720004353ee4a0a53ea2f5bce88b7b12a2cba",
+          "sparse_values.hex": "6e3c0acf5cee6d85aac92c9798b575e6ae0e426164547069fb22cd36e613fb2b"
+        }
+      },
+      "raw_proof": {
+        "payloads": 32,
+        "logical_sha256": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "consumed_checkpoint_bytes_sha256": "756969d50434cc78b617bb15df99a968744f2614667cfe8fcd4d9e971bbd0d60"
+      },
+      "stimulus_key": "L0.op43.p0",
+      "x_sha256": "506734fd1d3bdf9bfc32ee95cbdb1290388c40f82cb30af8f76bac1b9dba6ee7",
+      "golden_sha256": "3b149aa66b123ac17a5e97ee553aa8260674b879d36e90e7d2222bdd9b5450b5",
+      "fixture_sha256": {
+        "cfg.hex": "ee04d003161529f2767d8c698587158dc70572c31dbb0a7a67b25893a61f46d6",
+        "x.hex": "6a2d9861ec2199516e5de7c44d851088216c27ac38eb027bb49ba9bbd6168f0a",
+        "lines.hex": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "sparse_keys.hex": "69a3a339a49234f0421737ac0e6720004353ee4a0a53ea2f5bce88b7b12a2cba",
+        "sparse_values.hex": "6e3c0acf5cee6d85aac92c9798b575e6ae0e426164547069fb22cd36e613fb2b"
+      },
+      "output_sha256": "c9cf8a806f9a0372800cdec0e4bce0e490a0c4956dfae11925bd9e8787e30295",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    },
+    {
+      "layer": 13,
+      "family": "w2",
+      "expert_id": 60,
+      "rank": 0,
+      "stack": 2,
+      "sm": 25,
+      "rows": [
+        50,
+        52
+      ],
+      "K": 2304,
+      "stall": 1,
+      "first_byte": 536868864,
+      "boundary_bytes": 536870912,
+      "descriptor": {
+        "first_sector": 16777152,
+        "sector_count": 256,
+        "cfg_base": 4145584,
+        "cfg_exp_lines": 800,
+        "cfg_off": 704,
+        "cfg_lines": 64,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "image_sha256": {
+          "sparse_keys.hex": "69a3a339a49234f0421737ac0e6720004353ee4a0a53ea2f5bce88b7b12a2cba",
+          "sparse_values.hex": "6e3c0acf5cee6d85aac92c9798b575e6ae0e426164547069fb22cd36e613fb2b"
+        }
+      },
+      "raw_proof": {
+        "payloads": 32,
+        "logical_sha256": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "consumed_checkpoint_bytes_sha256": "756969d50434cc78b617bb15df99a968744f2614667cfe8fcd4d9e971bbd0d60"
+      },
+      "stimulus_key": "L0.op43.p0",
+      "x_sha256": "506734fd1d3bdf9bfc32ee95cbdb1290388c40f82cb30af8f76bac1b9dba6ee7",
+      "golden_sha256": "3b149aa66b123ac17a5e97ee553aa8260674b879d36e90e7d2222bdd9b5450b5",
+      "fixture_sha256": {
+        "cfg.hex": "085dc843c35bbd87c209073d7ff44f6c4bdbf8ed8b1e4258df56e6f3df5336ed",
+        "x.hex": "6a2d9861ec2199516e5de7c44d851088216c27ac38eb027bb49ba9bbd6168f0a",
+        "lines.hex": "9884513526e851c1b7a975fac32ece989f09abbbf4b3be7b63ea0d5742567af6",
+        "sparse_keys.hex": "69a3a339a49234f0421737ac0e6720004353ee4a0a53ea2f5bce88b7b12a2cba",
+        "sparse_values.hex": "6e3c0acf5cee6d85aac92c9798b575e6ae0e426164547069fb22cd36e613fb2b"
+      },
+      "output_sha256": "d99b7ab8863e694064f852849e824767d71de509964469fa94b3cc269e9ce302",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    },
+    {
+      "layer": 26,
+      "family": "w3",
+      "expert_id": 121,
+      "rank": 0,
+      "stack": 2,
+      "sm": 18,
+      "rows": [
+        18,
+        19
+      ],
+      "K": 5120,
+      "stall": 0,
+      "first_byte": 1073739776,
+      "boundary_bytes": 1073741824,
+      "descriptor": {
+        "first_sector": 33554368,
+        "sector_count": 192,
+        "cfg_base": 8291424,
+        "cfg_exp_lines": 800,
+        "cfg_off": 368,
+        "cfg_lines": 48,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "image_sha256": {
+          "sparse_keys.hex": "b81a1e6d40c85b0760f039c793235cfcdd2af6a08d94d4be6a67d0115a008290",
+          "sparse_values.hex": "817eba397a936225ba5b93be8ab2c3dd05f8777b5ff43f87e27c40369eef24a1"
+        }
+      },
+      "raw_proof": {
+        "payloads": 24,
+        "logical_sha256": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "consumed_checkpoint_bytes_sha256": "66d9f39f1b7a57b0695f46c917800c98918eb23bfa4b2a8db1d5589f976d381d"
+      },
+      "stimulus_key": "L0.op22.p0",
+      "x_sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891",
+      "golden_sha256": "847dcb0b065091c86c642a6c4bd00ca4642688d3d6ceb08950c98f0639ccb53d",
+      "fixture_sha256": {
+        "cfg.hex": "95ca4ecda64b72634313b601a18f1a5861419bf5e90a6bbc4c510666635017fb",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+        "lines.hex": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "sparse_keys.hex": "b81a1e6d40c85b0760f039c793235cfcdd2af6a08d94d4be6a67d0115a008290",
+        "sparse_values.hex": "817eba397a936225ba5b93be8ab2c3dd05f8777b5ff43f87e27c40369eef24a1"
+      },
+      "output_sha256": "b6a8f6ad23cf2549a983911de702b38bdd508c462c21e9ff5ed0cd285f7fe8df",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    },
+    {
+      "layer": 26,
+      "family": "w3",
+      "expert_id": 121,
+      "rank": 0,
+      "stack": 2,
+      "sm": 18,
+      "rows": [
+        18,
+        19
+      ],
+      "K": 5120,
+      "stall": 1,
+      "first_byte": 1073739776,
+      "boundary_bytes": 1073741824,
+      "descriptor": {
+        "first_sector": 33554368,
+        "sector_count": 192,
+        "cfg_base": 8291424,
+        "cfg_exp_lines": 800,
+        "cfg_off": 368,
+        "cfg_lines": 48,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "image_sha256": {
+          "sparse_keys.hex": "b81a1e6d40c85b0760f039c793235cfcdd2af6a08d94d4be6a67d0115a008290",
+          "sparse_values.hex": "817eba397a936225ba5b93be8ab2c3dd05f8777b5ff43f87e27c40369eef24a1"
+        }
+      },
+      "raw_proof": {
+        "payloads": 24,
+        "logical_sha256": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "consumed_checkpoint_bytes_sha256": "66d9f39f1b7a57b0695f46c917800c98918eb23bfa4b2a8db1d5589f976d381d"
+      },
+      "stimulus_key": "L0.op22.p0",
+      "x_sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891",
+      "golden_sha256": "847dcb0b065091c86c642a6c4bd00ca4642688d3d6ceb08950c98f0639ccb53d",
+      "fixture_sha256": {
+        "cfg.hex": "09c333650dcb004399fde78ecb4d408cbf7dcd2176ae008fbac45a6288e8cfc8",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+        "lines.hex": "d1c56b27355ff61b6106539f6fc1596d1ec1f1621e8d299315f7afbcf1c90584",
+        "sparse_keys.hex": "b81a1e6d40c85b0760f039c793235cfcdd2af6a08d94d4be6a67d0115a008290",
+        "sparse_values.hex": "817eba397a936225ba5b93be8ab2c3dd05f8777b5ff43f87e27c40369eef24a1"
+      },
+      "output_sha256": "2df5f76921570e884306d99ebded2c404e48f919f4619c0b90abdb0c84bcafa0",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    },
+    {
+      "layer": 33,
+      "family": "w3",
+      "expert_id": 60,
+      "rank": 0,
+      "stack": 0,
+      "sm": 10,
+      "rows": [
+        10,
+        11
+      ],
+      "K": 5120,
+      "stall": 0,
+      "first_byte": 2147481600,
+      "boundary_bytes": 2147483648,
+      "descriptor": {
+        "first_sector": 67108800,
+        "sector_count": 192,
+        "cfg_base": 16699392,
+        "cfg_exp_lines": 1280,
+        "cfg_off": 1008,
+        "cfg_lines": 48,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "image_sha256": {
+          "sparse_keys.hex": "b24aa248dfd513a91b5b9ba4ff9034ab99074dc8754391e27cdfeb425ab2d76f",
+          "sparse_values.hex": "cce78a9a524c9fed7db2ea4e893049197344627d063278124c10a58a0de9c213"
+        }
+      },
+      "raw_proof": {
+        "payloads": 24,
+        "logical_sha256": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "consumed_checkpoint_bytes_sha256": "934c108bb087ffa1b7787f4d05cbdc209857c7d466c2f5adb892e5a2654e915c"
+      },
+      "stimulus_key": "L0.op22.p0",
+      "x_sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891",
+      "golden_sha256": "4cf72060460a2155572f161584818a5da495bfd94ff81952dccbd481a927406f",
+      "fixture_sha256": {
+        "cfg.hex": "07158d347aae6cd6d553a44d845e176b8825327874970367790b92babb440a2a",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+        "lines.hex": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "sparse_keys.hex": "b24aa248dfd513a91b5b9ba4ff9034ab99074dc8754391e27cdfeb425ab2d76f",
+        "sparse_values.hex": "cce78a9a524c9fed7db2ea4e893049197344627d063278124c10a58a0de9c213"
+      },
+      "output_sha256": "3f1ba7ff90cb034235a476d61042d6bcf36aa6375fc17263bb3ceef9491380bf",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    },
+    {
+      "layer": 33,
+      "family": "w3",
+      "expert_id": 60,
+      "rank": 0,
+      "stack": 0,
+      "sm": 10,
+      "rows": [
+        10,
+        11
+      ],
+      "K": 5120,
+      "stall": 1,
+      "first_byte": 2147481600,
+      "boundary_bytes": 2147483648,
+      "descriptor": {
+        "first_sector": 67108800,
+        "sector_count": 192,
+        "cfg_base": 16699392,
+        "cfg_exp_lines": 1280,
+        "cfg_off": 1008,
+        "cfg_lines": 48,
+        "address_bits": 27,
+        "fragment_only": true,
+        "resident_admitted": false,
+        "physical_record_bytes": 256,
+        "compact_adapter": false,
+        "logical_sha256": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "image_sha256": {
+          "sparse_keys.hex": "b24aa248dfd513a91b5b9ba4ff9034ab99074dc8754391e27cdfeb425ab2d76f",
+          "sparse_values.hex": "cce78a9a524c9fed7db2ea4e893049197344627d063278124c10a58a0de9c213"
+        }
+      },
+      "raw_proof": {
+        "payloads": 24,
+        "logical_sha256": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "consumed_checkpoint_bytes_sha256": "934c108bb087ffa1b7787f4d05cbdc209857c7d466c2f5adb892e5a2654e915c"
+      },
+      "stimulus_key": "L0.op22.p0",
+      "x_sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891",
+      "golden_sha256": "4cf72060460a2155572f161584818a5da495bfd94ff81952dccbd481a927406f",
+      "fixture_sha256": {
+        "cfg.hex": "b7ed0e40f2b4adc297d50e8ae2fcf75728f46b392d97522cdc8bc434e57a5df7",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+        "lines.hex": "04b67147dddf649d799ee42fcc19dc7303b738507974542007356e6b0809e1fd",
+        "sparse_keys.hex": "b24aa248dfd513a91b5b9ba4ff9034ab99074dc8754391e27cdfeb425ab2d76f",
+        "sparse_values.hex": "cce78a9a524c9fed7db2ea4e893049197344627d063278124c10a58a0de9c213"
+      },
+      "output_sha256": "aa9c58ce9b391d9e6a9c9be6a36234d02be11fca0c438a40a3ccb8e03e608503",
+      "exit_code": 0,
+      "exact_FP32": true,
+      "exact_BF16": true,
+      "pass_case": true
+    }
+  ],
+  "fault_controls": [
+    {
+      "case": 0,
+      "control": "default24",
+      "pass_control": true,
+      "log_sha256": "3c5e43130a13ff5189a74537494f7515f225e0941fde73b757b8930869fef187"
+    },
+    {
+      "case": 0,
+      "control": "off27",
+      "pass_control": true,
+      "log_sha256": "85d443cc87e4eb9708c38966dcf76f67ccb1179bc55c96b6a3bc30a17c15e7e0"
+    },
+    {
+      "case": 0,
+      "control": "low24_alias",
+      "pass_control": true,
+      "log_sha256": "9bfb7011dc0fd969b23ffc397212a3be0ef37b54f6ef6f3fc74306ee6d0f91f9"
+    },
+    {
+      "case": 1,
+      "control": "default24",
+      "pass_control": true,
+      "log_sha256": "3c5e43130a13ff5189a74537494f7515f225e0941fde73b757b8930869fef187"
+    },
+    {
+      "case": 1,
+      "control": "off27",
+      "pass_control": true,
+      "log_sha256": "85d443cc87e4eb9708c38966dcf76f67ccb1179bc55c96b6a3bc30a17c15e7e0"
+    },
+    {
+      "case": 1,
+      "control": "low24_alias",
+      "pass_control": true,
+      "log_sha256": "a7dfe4d301b32e68e970b934cfeaa2bce92f0ecac6edca06b8f374fb3099e2c7"
+    },
+    {
+      "case": 2,
+      "control": "default24",
+      "pass_control": true,
+      "log_sha256": "3c5e43130a13ff5189a74537494f7515f225e0941fde73b757b8930869fef187"
+    },
+    {
+      "case": 2,
+      "control": "off27",
+      "pass_control": true,
+      "log_sha256": "85d443cc87e4eb9708c38966dcf76f67ccb1179bc55c96b6a3bc30a17c15e7e0"
+    },
+    {
+      "case": 2,
+      "control": "low24_alias",
+      "pass_control": true,
+      "log_sha256": "a2df6635e574ec03d3f17fdce590afa2213babb5a5383997284075c27a76e50e"
+    }
+  ],
+  "source_commit": "5ab138ace272f609811939b166c4c28f7ef9c712",
+  "prebuild_sha256": "47c23b4200da5aaab8e143b7462d4fee36694c642bcc9a85a08661cc1937064e",
+  "prebuild": {
+    "schema": "opentallas.w19.accepted_baseline_aw27_prebuild.v1",
+    "base_commit": "c0661c1e0aff4e73a5c3e4d2e681e1a20a7ce5fc",
+    "model_source_commit": "5be9f42d26ae82a541c6c4e5c1d6b530df7487d5",
+    "model_source_sha256": "16c9663fa33ea04b2f8decc0435321559e91ef9aceeffc4bebefe67553880c23",
+    "model_symbol": "gpu_checkpoint_address_transport",
+    "model_symbol_ast_sha256": "8e348ea466ceeb061ec6fbd3d70d7bad03564c34a219650e5cf96daa8d2a08f3",
+    "address_model": {
+      "schema": "opentallas.w19.address_transport.v1",
+      "enabled_default": false,
+      "default_sector_address_bits": 24,
+      "selected_sector_address_bits": 27,
+      "aperture_bytes": 4294967296,
+      "cfg_base_line_bits": 25,
+      "expert_stride_bits": 16,
+      "SM_offset_bits": 16,
+      "SM_request_bits": 32,
+      "SM_sector_window_index_bits": 24,
+      "sector_index_scope": "Relative operation index, not physicalHBM address",
+      "replicas_per_rank": 4,
+      "ranks": 96,
+      "added_address_bits_per_request_port": 3,
+      "added_cfg_base_bits_per_stack": 3,
+      "added_boundary_bits_per_rank": 24,
+      "added_fetch_storage_bits_per_rank": 480,
+      "added_controller_queue_address_bits_per_rank": 24576,
+      "added_SM_selector_mux_bit_equivalents_per_rank": 84,
+      "added_fetch_logic_area_mm2_per_rank": 0.00015676800000000003,
+      "area_basis": "ASSUMED DFFHQNx1 0.2916um2 and mux0.2um2/bit; controller queue area/adder carry must be qualified separately",
+      "replica_fanout": "Same four stack-local endpoints; cfg_base fanout40 address registers per stack; no new global datapath",
+      "routing": {
+        "added_request_and_cfg_tracks_per_stack": 6,
+        "basis": "Existing local address route widened only; contextual channel/slot/SSFF still pending"
+      },
+      "added_architectural_latency_cycles": 0,
+      "carry_path": "Existing descriptor base+expert*stride+offset and active address increments widened; same scheduling, unqualified atSS",
+      "contingency_one_pipeline_cycle_per_matrix_us": 0.9191666666666666,
+      "latency_policy": "Zero added cycles is a parameter-level hypothesis only. Any required stage must enter composed model and SS/FF gain gate before adoption.",
+      "backing_store": "Bounded exact full-address dictionary for simulation; baseline finite request/return queues and bank/refresh schedule retained. Missing keys fail, never alias or reload.",
+      "physical": "W13_CHAIN17_CPU_RAM_EXCLUSIVE; actualSM LEF + contextual SS1.2GHz60ps / FF25ps required",
+      "acceptance": "Actual checkpoint boundary-crossing/beyond512MiB and2GiB descriptors -> router/fetch finiteHBM -> adapter/SM exactness; later all32SM/current-token full96 propagation",
+      "adoption": "OFF: no token-rate or full-token/physical claim"
+    },
+    "w16_prerequisite_sha256": "c462190c077a67ed117821ce1b096845303b1662408e72c3bebd04ddd4b8baed",
+    "map_sha256": "0f5eb379f9083344b6f6e7f3bc55cf0faffed00170935a1f4b810993d1d745f9",
+    "map_source_commit": "fc3483c0ffe6eac2237c4cabb38678b539c39b3f",
+    "cases": [
+      {
+        "descriptor": {
+          "K": 2304,
+          "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+          "byte_length": 8192,
+          "cfg_base_line": 4145584,
+          "cfg_exp_lines": 800,
+          "cfg_lines": 64,
+          "cfg_off": 704,
+          "expert_range": [
+            0,
+            384
+          ],
+          "expert_stride_bytes": 102400,
+          "family": "w2",
+          "fmt": "fp4",
+          "layer": 13,
+          "offset": 90112,
+          "operation_id": 43,
+          "payloads": 32,
+          "rank": 0,
+          "resident_24bit_sector_fit": false,
+          "resident_first_byte": 530724864,
+          "resident_last_exclusive": 569952256,
+          "rows": [
+            50,
+            52
+          ],
+          "sm": 25,
+          "stack": 2
+        },
+        "expert_id": 60,
+        "boundary_bytes": 536870912,
+        "first_byte": 536868864
+      },
+      {
+        "descriptor": {
+          "K": 5120,
+          "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+          "byte_length": 6144,
+          "cfg_base_line": 8291424,
+          "cfg_exp_lines": 800,
+          "cfg_lines": 48,
+          "cfg_off": 368,
+          "expert_range": [
+            0,
+            384
+          ],
+          "expert_stride_bytes": 102400,
+          "family": "w3",
+          "fmt": "fp4",
+          "layer": 26,
+          "offset": 47104,
+          "operation_id": 22,
+          "payloads": 24,
+          "rank": 0,
+          "resident_24bit_sector_fit": false,
+          "resident_first_byte": 1061349376,
+          "resident_last_exclusive": 1100574720,
+          "rows": [
+            18,
+            19
+          ],
+          "sm": 18,
+          "stack": 2
+        },
+        "expert_id": 121,
+        "boundary_bytes": 1073741824,
+        "first_byte": 1073739776
+      },
+      {
+        "descriptor": {
+          "K": 5120,
+          "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+          "byte_length": 6144,
+          "cfg_base_line": 16699392,
+          "cfg_exp_lines": 1280,
+          "cfg_lines": 48,
+          "cfg_off": 1008,
+          "expert_range": [
+            0,
+            384
+          ],
+          "expert_stride_bytes": 163840,
+          "family": "w3",
+          "fmt": "fp4",
+          "layer": 33,
+          "offset": 129024,
+          "operation_id": 22,
+          "payloads": 24,
+          "rank": 0,
+          "resident_24bit_sector_fit": false,
+          "resident_first_byte": 2137651200,
+          "resident_last_exclusive": 2200408064,
+          "rows": [
+            10,
+            11
+          ],
+          "sm": 10,
+          "stack": 0
+        },
+        "expert_id": 60,
+        "boundary_bytes": 2147483648,
+        "first_byte": 2147481600
+      }
+    ],
+    "baseline": "256B =128B weights+8B UE8M0+120B padding; compact240vs233 REJECTED",
+    "simulated_replica": {
+      "NSM": 1,
+      "NPC": 32,
+      "DQ": 4,
+      "DEPTH": 64,
+      "MAX_OUT": 32,
+      "tag_join": 512,
+      "SM_source": "000ba0898f5120a66d5905ccff333ebbbe28394d"
+    },
+    "target": {
+      "ranks": 96,
+      "SM_per_rank": 32,
+      "stacks_per_rank": 4,
+      "fetch_NSM": 8,
+      "fetch_DQ": 4
+    },
+    "qualification": "BOUND_EXISTING_PARAMETER_REPLAY_ONLY",
+    "full_resident_admitted": false,
+    "physical": "UNQUALIFIED: contextual channel/area/carry SSFF and nonSM regions remain prerequisites",
+    "token_cycles": null,
+    "model_headlines": "UNCHANGED",
+    "preload": "Activation SRAM and bounded exact-address sparse keys loaded before timing; no complete resident memory or shared500ns service claim",
+    "ports": {
+      "HBM_request_bytes_per_beat": 32,
+      "fetch_SM_bytes_per_line": 128,
+      "SM_response_bytes_per_payload": 136,
+      "HBM_bytes_per_payload": 256
+    },
+    "new_engine": false,
+    "adoption": false
+  },
+  "owner_source_commit": "c98db4d2b21d8f9b691978dcd4891a2aa787aeae",
+  "SM_snapshot": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+  "stimulus_sha256": "1c089030099aa00f129b1e46f8a4e6d5d5aa53428ba04c72fac82fd8a10b5c8b",
+  "full_resident_admitted": false,
+  "full_token": false,
+  "adoption": false,
+  "model_headlines": "UNCHANGED",
+  "timing_scope": "833ps bench clock; original finiteHBM CLK_PS833 REQ/RSP15ns and3.9us refresh. Preloads and6000-cycle refresh warmup excluded from diagnostic operation timing; no500ns loaded/shared-service or token-rate claim.",
+  "claim_boundary": "Three actual rank0 resident routed descriptor fragments at L13/L26/L33 and full K. Real checkpoint weights/fresh golden; retained L0 input activation stimulus. Existing finite fetch and padded512-tag bench join into historical W13 SM. No compact adapter, runtime router, connected activations, all32SM/96rank arithmetic, collectives, attention/KV/SU/SFU or current hardware/SSFF qualification.",
+  "model_prebuild_verified": true,
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "dependencies_sha256": {
+    "tools/w19_sm_real_ops.py": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8"
+  },
+  "owner_companions_sha256": {
+    "w19_checkpoint_stream": "65dd6d7eed6ec977a5112a8573d7888807d3f5fcd4abcf23a051ece7a85188a0",
+    "w19_sparse_hbm": "287ca03fcbc639a4a4cfdc298e9ae4d65e2a31aeff51eff692f3167ba279d43c"
+  },
+  "sources_sha256": {
+    "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_bterm2.sv": "6672d9e22d8a7a1c0ef293abc6970446cfa6c8e7c768c7b4706ee1cb94fcc708",
+    "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+    "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+    "rtl/gpu/ot_gpu_bd_col.sv": "6bb9a1468b9d0e54e93b75ff697461ba2d277cc2657c5337d8b97e01a2263af0",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/gpu/ot_gpu_expert_fetch.sv": "a36d62a66e7541a5052b0a1cd3c1c7be346e45627c80f4b94fc72d733b98883e",
+    "rtl/test/tb_w19_baseline_aw27.sv": "7c232f49ddb0282b40f36cf150b59fa2869f5fc9265bae667501b84fb965e471",
+    "generated/ot_hdc_hbm_sparse_model.sv": "9c048626e92e6fd05535236a7df34dda793dd3ad2f15b5ec662e94a97736f6e3",
+    "tools/w19_baseline_address.py": "6ce3c01199a1db49278b55bc425d0b4d8bf9bcbb54f39ec2d32ff3f1cc5bec38",
+    "tools/w19_baseline_aw27_gate.py": "07482343d2cc0a5875ce3002540f8ccd7a5abb77c7227f2cc1d64b682d613494",
+    "tests/test_w19_baseline_address.py": "fa3e74130e1d39afcc93c57b5d727718911bcf062b63c1c5341bc0d89ccb625c"
+  },
+  "sparse_controller_proof": {
+    "pinned_controller_sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "generated_sha256": "9c048626e92e6fd05535236a7df34dda793dd3ad2f15b5ec662e94a97736f6e3",
+    "controller_service_byte_identical_after_declared_backing_substitutions": true,
+    "default_address_bits": 24,
+    "backing": "Exact full-address bounded dictionary; no modulo aliases or reloads"
+  },
+  "host": "ubuntu@155.103.253.114",
+  "remote_work": "/home/ubuntu/w19-baseline-aw27-r2",
+  "simulator": "Icarus Verilog version 12.0 (stable) ()\n",
+  "resource_receipt": " 10:36:34 up 5 days,  2:18,  3 users,  load average: 1.67, 1.30, 1.37\n               total        used        free      shared  buff/cache   available\nMem:           32020       10518       21056        6512        7450       21502\nSwap:              0           0           0\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda1       193G  113G   80G  59% /\n",
+  "executable_sha256": {
+    "sim": "6beeddedc77a752a07662fff4a96c246dbe2272af6d1d114c83fe783c92c4767",
+    "default24": "e641aaab26ec20ffcfe5f09936e094caafced8a0fbaaec15aef7dd16c1697e40",
+    "off27": "5fcbc328262cbc226865745cdc688fd428133e3eaddc7bf9b7724169bc9fd7e2"
+  }
+}

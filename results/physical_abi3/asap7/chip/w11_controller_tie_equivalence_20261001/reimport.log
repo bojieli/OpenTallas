@@ -1,0 +1,24 @@
+
+-- Executing script file `/home/ubuntu/w11-controller-tie-proof-20261001/reimport.ys' --
+
+1. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /home/ubuntu/w11-controller-tie-proof-20261001/tied.v
+Parsing Verilog input from `/home/ubuntu/w11-controller-tie-proof-20261001/tied.v' to AST representation.
+Generating RTLIL representation for module `\ot_v41_attn_eng_ctl_phys'.
+Successfully finished Verilog frontend.
+
+7. Executing JSON backend.

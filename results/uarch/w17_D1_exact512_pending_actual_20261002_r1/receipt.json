@@ -1,0 +1,34 @@
+{
+  "status": "TERMINAL_PENDING_OFFLINE_REVIEW",
+  "source_commit": "e9e5d4a8e366d11e654ad0c0dd84e2de6ae19078",
+  "supervisor_PID": 1741457,
+  "actual_argv": [
+    "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix"
+  ],
+  "cwd": "/tmp/w17-D1-native-joined-20261002-r1",
+  "available_memory": 189679210496,
+  "capacity_reservation_bytes": 154618822656,
+  "imposed_limits": [],
+  "input_hashes": {
+    "/tmp/opentallas-D1-descriptor-provenance-successor-20261002/results/uarch/w17_D1_exact512_pending_probe_20261002/plan.json": "f393b5eadd38f9794f70cdfa539d2169ac2972c5190a24ce3e44331f82cb3278",
+    "/tmp/opentallas-D1-descriptor-provenance-successor-20261002/results/uarch/w17_D1_exact512_pending_probe_20261002/capture.gdb": "b56ce5a9abf2fe0650b9dca0bf44b61a7b9243584cae3f988b1bd3e97fdd0f1c",
+    "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix": "dcbb334df6bd62990f7731c2254cd59aa33aeff0c20b61641edf8345d81e2482",
+    "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core___024root.h": "c66d1ceb7ab3cbf289d9a88822ad6a1cf114cbb29fa37469752d89aa57f70042",
+    "/usr/bin/gdb": "a6222ff0f450ca040e3479c04fdb7d0f1e0cabb099688270e720b7115d933c3d"
+  },
+  "fulltoken": false,
+  "first_return_deadline": null,
+  "authorization": "USER_EXPLICIT_REVERSIBLE_SOURCE_BOUND_DIAGNOSTIC_THIS_TURN",
+  "GDB_PID": 1741531,
+  "GDB_exit": 0,
+  "wall_s": 203.27624921733513,
+  "log_SHA256": "36ee363615104c0723995668e316177404906aeb482cd4901200bc39ad0610fd",
+  "input_postchecks": {
+    "/tmp/opentallas-D1-descriptor-provenance-successor-20261002/results/uarch/w17_D1_exact512_pending_probe_20261002/plan.json": true,
+    "/tmp/opentallas-D1-descriptor-provenance-successor-20261002/results/uarch/w17_D1_exact512_pending_probe_20261002/capture.gdb": true,
+    "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix": true,
+    "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core___024root.h": true,
+    "/usr/bin/gdb": true
+  },
+  "default_prog_still_absent": true
+}

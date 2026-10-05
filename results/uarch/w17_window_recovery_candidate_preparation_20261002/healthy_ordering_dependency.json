@@ -1,0 +1,56 @@
+{
+  "verdict": "HEALTHY_DEPENDENCY_MODELED_ZERO_GUARD; RECOVERY_PREPARATION_ONLY",
+  "evidence_scope": "Verified referenced committed JSON hashes, identical handoff/prediction visibility contracts and two margin calculations. No independent source-order proof recomputation, RTL compilation or measurement.",
+  "dependency_pins": [
+    {
+      "commit": "b0f895dc41cf5f2a2bc43f6ea2c0542e69abfe98",
+      "path": "results/rtl/w17_window_epoch9_producer_prepared_20261002/handoff.json",
+      "sha256": "7586af5595a8c3295b5677a70651e5b39857a27f5dbaf0850ef4d9083d24937c"
+    },
+    {
+      "commit": "e9a63c86f182812783a30901c4435fba55864cb0",
+      "path": "results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/prediction.json",
+      "sha256": "6bde2e30fd4d32ff58646b4ccdbb54b84db99891c61d6ea17d1c468911f431d7"
+    }
+  ],
+  "visibility_contract": {
+    "lag_ps": 7274,
+    "publication": "row_valid proves logical ordered write acknowledgements only, not immediate physical visibility; existing consumers use it only to enter HBM refill. Packed/stage4 consumers need staged read replies; direct scalar banked reads fault.",
+    "earliest_prefetch_waiting_descriptor": "Final WRissueI, observedackA=I+1; earliest prefetchA+1, requestA+2, READcolumn >=(A+2)*1000+REQ10000 >=last_WRcol+13000, even COUNT1.",
+    "minimum_first_code_margin_over_latest_scale_visibility_ps": 5726,
+    "credit8_lower_bounds_relative_last_WRcol_ps": {
+      "any_code": 13000,
+      "last_code15": 55000,
+      "scale": 90000
+    },
+    "lower_bound_derivation": "Minimum request-to-reply34cycles from REQ10ns+CL12.5ns+BURST1.024ns+RSP10ns. Credit8 wave2 cannot start before reply0+1; code15 request>=firstgrant+42; scale waits all16 replies then oneedge. These are conservative source-derived lower bounds, not a constant fit or exact-case values.",
+    "per_PC_WTR_minimum_ps": {
+      "different_BG": 11649,
+      "same_BG": 13524
+    },
+    "bank_dependence": "Address map row127 lastcodePC15 bank10/BG2, scalePC15 bank11/BG3. WTRdifferentBG for code15 after scaleWR; sameBG for scaleREAD. Bank ACT/PRE/refresh/return congestion only postpone admission/column/reply.",
+    "guard_decision": "No7cycle guard implemented: legal source->HBM->stage->QK/PV path already captures data after visibility. Preserve7cycle post-ack worst visibility envelope for any future immediate-visible consumer or fault/reset contract; Peirce owns recovery.",
+    "COUNT1": "Not a legal actualL0 descriptor under L0_ONLY1 (requires128). Modeled only as stronger source-count boundary; source COUNT1 still has16code then scale barrier."
+  },
+  "selected_healthy_decision": "No seven-cycle publication guard for constrained actual L0 source->HBM->stage->QK/PV path. row_valid is logical ordered WR ACK/provenance. Consuming reads enforce visibility before data capture.",
+  "scope_exclusion": "COUNT1 is a stronger source boundary model, not legal actual L0_ONLY1 geometry. No extension to immediate consumers, physical completion, fault/reset, whole token or numerical QK/PV qualification.",
+  "recovery_selection_unchanged": "Drain accepted WC/WS block continuation, discard faulted read payload while exact identities retire, suppress publication, wait selected-owner projected write visibility plus closed delivery fence before owner-local restart. Healthy READ turnaround cannot substitute for recovery visible ACK.",
+  "visibility_implementation_status": "Recovery watermark remains unimplemented plan-only; healthy verdict resolves ordering dependency but does not grant implementation or compile GO.",
+  "future_immediate_consumers": "Seven-cycle post-ACK envelope remains a conditional timing reference at CLK_PS1000, not a selected healthy guard or implemented timer.",
+  "candidate_budget_unchanged": {
+    "additional_state_bits": 276,
+    "area_est_um2": 643.6816,
+    "healthy_added_pipeline_cycles": 0,
+    "wire_tag_bits": 17,
+    "wide_serial_on_wire": false
+  },
+  "compile_GO": false,
+  "no_RTL_or_build": true,
+  "preserved_preparation_files_sha256": {
+    "results/uarch/w17_window_recovery_candidate_preparation_20261002/model.json": "1b7fb7a6173107d2f94093b4d4dcd9c0e8fb93d64bec4cf3c899f02e5992b8c8",
+    "results/uarch/w17_window_recovery_candidate_preparation_20261002/pytest.log": "0caf379acbcb845c31b98bf4efeffb865a66d527d27d5bb4f34018bea0099078",
+    "results/uarch/w17_window_recovery_candidate_preparation_20261002/receipt.json": "7008e9d31cadfb9a3a93bad295b8c41eebb4c528b7e4d7bd1ab99380d9cf76f6",
+    "tests/test_w17_window_recovery_candidate_plan.py": "a42d9978b1a6751cdf29f46b2896914a4a93361278e2c7e5971fa3852c94ff65",
+    "tools/w17_window_recovery_candidate_plan.py": "57776543e7c8461eb329111b0ecde8dd552c5c24cf3dfeb1c92f681635d1a4d6"
+  }
+}

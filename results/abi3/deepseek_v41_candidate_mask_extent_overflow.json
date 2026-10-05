@@ -1,0 +1,56 @@
+{
+  "how_far_it_reaches": {
+    "committed_deployments_are_also_affected": "build/abi3/deepseek-v41-flash-rom-wafer-2 declares this plane as (1, 262144) and build/abi3/deepseek-v41-flash-rom-array-64 as (1, 131072) -- a single query row, which the same engine check refuses in the other direction.  Neither committed V4.1 deployment can serve a multi-token prefill through this operator.",
+    "shipped_wafer_at_262144": "refused, after 3,744.9 s of prefill",
+    "the_reduced_vehicles": "unaffected -- their contexts are 128 and 512",
+    "what_is_NOT_affected": "every context at or below 16,384.  The wafer and array cells being walked for the nine-cell matrix are built at 8,192, where the term is present and encodable, so they do not touch this fault."
+  },
+  "measured_across_contexts": {
+    "basis": "the same shipped graph built at four deployment contexts; dims and the term are read out of each deployment's own descriptor table",
+    "reading": "Up to 16,384 the token block IS the whole context, so the step and the capacity coincide and the stride stays inside the field.  262,144 is the first context where they differ -- the input blocks at 8,192 and the output does not -- and it is the only one that overflows.  The fault is a function of the deployment context, not of the model.",
+    "rows": [
+      {
+        "context": 512,
+        "encodable": true,
+        "input_view": "(512, 2048) 1 term",
+        "output_term_stride": 262144,
+        "output_view": "(512, 512) 1 term"
+      },
+      {
+        "context": 8192,
+        "encodable": true,
+        "input_view": "(8192, 2048) 1 term",
+        "output_term_stride": 67108864,
+        "output_view": "(8192, 8192) 1 term"
+      },
+      {
+        "context": 16384,
+        "encodable": true,
+        "input_view": "(16384, 2048) 1 term",
+        "output_term_stride": 268435456,
+        "output_view": "(16384, 16384) 1 term"
+      },
+      {
+        "context": 262144,
+        "encodable": false,
+        "input_view": "(8192, 2048) 1 term",
+        "output_term_stride": 68719476736,
+        "output_view": "(262144, 262144) 0 terms"
+      }
+    ]
+  },
+  "not_a_claim": [
+    "no fix is claimed; this is a located defect with a measured reach",
+    "the 32-bit stride field is an ABI 3.0 property, so a 262,144 x 262,144 plane may need a different addressing scheme rather than a larger number"
+  ],
+  "question": "The shipped DeepSeek-V4.1-Flash ROM wafer, built at the released 262,144-token context, runs 62 minutes of prefill and then refuses: 'ROUTE.CANDIDATE_MASK output view 6730 covers 262144 query rows, expected 32'.  Why, and how far does the fault reach?",
+  "schema": "opentallas.result.v41_candidate_mask_extent_overflow.v1",
+  "the_engine_is_right_to_refuse": "runtime/sim/engines/route.py requires the mask's output view to cover exactly the query rows its block-identifier input covers.  The input resolved to the request's 32; the output presented 262,144.  A mask over rows the request does not have is not a mask.",
+  "the_mechanism": {
+    "1": "The graph is correct and unchanged.  'main.layer20.attention.indexer.pool.mask' takes block_identifiers [span_tokens, 2048] and writes admission [span_tokens, context_length].  Both lead with the request's span, and the committed IR and a fresh rebuild are identical on this kernel.",
+    "2": "An ABI 3.0 view declares its leading axis at the tensor's CAPACITY and carries a dynamic term that lets the runtime resolve it to the request's actual span.  The term is the whole resolving mechanism: with it the axis narrows to 32, without it the view keeps the capacity.",
+    "3": "That term's stride is the elements one iteration advances -- the row step times the row width.  At the shipped context the width IS 262,144, and the step taken is the capacity rather than the 8,192-row token block the INPUT view uses, so the stride is 262,144 squared = 68,719,476,736.  The dynamic-term stride field is 32 bits, which holds 4,294,967,295.",
+    "4": "Commit 1278085 made an unencodable stride DROP the term and publish the drop in 'resolving_terms_unencodable', rather than force it into the encoder -- which is the right call for a randomly addressed plane and was what let the build complete at all.  The consequence for THIS plane is that nothing narrows its leading axis, so it presents 262,144 rows and the engine refuses."
+  },
+  "why_this_is_recorded_and_not_fixed_here": "The candidate fix is to make the output's row step the token block, as the input's is: 8,192 x 262,144 is 2,147,483,648, which the field holds.  But the step comes from the kernel's own loop divisor through amendment A18's iteration_extent, shared by every operand, and 'scratch' is in REQUEST_EXTENT_STATE_CLASSES precisely so this plane gets the request extent -- a class established as load-bearing by removing it and watching the reduced wafer stop emitting.  So the two operands taking different steps from one divisor is not yet explained, and a change here addresses the addressing of a plane the passing reduced vehicles also use.  Guessing at it while those vehicles are the only closed V4.1 evidence would risk the evidence to save a context nothing currently needs."
+}

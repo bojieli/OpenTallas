@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "scope": "12 focused ABI capture/layout/refusal checks including 64-bit offset alias prevention for activation, weight and output. Does not qualify general nonzero deployment offsets.",
+  "sources": {
+    "rtl/abi3/ot_a3_g2_array_issue_adapter.sv": "056c14737d55159d3c4e1e8cb4315282c2e42492e4eeb794eb15566e6d268c9c",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/test/tb_a3_g2_issue_contract.sv": "29adfdf5b2dd124b9a76a3309591062fe39af3ff4f47a32637d9cecd92bf0708",
+    "tests/test_g2_issue_contract.py": "d703ad41c0eba32474944617999b2aaeab351e26cc3e594f8a7a2173a2b7dfc1"
+  },
+  "command": [
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_g2_issue_contract.py"
+  ],
+  "stdout": ".                                                                        [100%]\n"
+}

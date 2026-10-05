@@ -1,0 +1,35 @@
+{
+  "verdict": "FAIL_MAPPED_NET_NAME_BINDING_BEFORE_PLACEMENT",
+  "source_commit": "7393dc4446e94fd3f015947a409ce99d5fe2938d",
+  "supervisor_pid": 1311021,
+  "terminal_exit": 1,
+  "diagnosis": "OpenDB bus net names preserve literal escaped brackets e.g. ph_q0\\[10\\]. Partition hook expected ph_q0[10] and refused missing boundary.",
+  "necessary_correction": "Normalize only name escape characters before same boundary regex, preserving exact reverse-cone cut at phase_launch/provider_addr. Verified on retained tapped mapped ODB; no RTL or slot change.",
+  "read_only_partition_binding": {
+    "provider_cells": 2137,
+    "provider_area_um2": 235.2483,
+    "issuer_cells": 871,
+    "issuer_area_um2": 75.42234,
+    "both_50pct_budgets_pass": true,
+    "includes_source_tap_physical_cells": true,
+    "not_placed_or_timing_closed": true
+  },
+  "mapped_netlist_reused": true,
+  "physical_closure": false,
+  "sha256": {
+    "partition-binding.log": "77176bbd594a8ef442316776a9a5f60871e92496131bfd8a8358669031bbcbe0",
+    "physical.json": "3b2aba234196d0873b767d675be374303a25c2d7b664f9eea1a362e21e6d978a",
+    "route.log": "5f1b23ec7a4658e0dafe91f7436999e1ffc55cc29d6b00c3c0a6da0374c47ecd",
+    "launch.json": "e8b4af6db19fcafd29ccb0e888640a4eef6bc134dc3cf36c205a19e411d0aa0d",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "regions-corrected.tcl": "3f75bc15514ed12cec58a109abeab10cd40b51fb2fdbb57fa17aa103726cebf7",
+    "partition-netnames.tcl": "4ef9e70ff0a948ef6b3a80d2c498be8b3d634838444234b3c1bd493b51a9e724",
+    "partition-binding.tcl": "ca2d676586cea673f020511b624c1b2c42e0fe66a214b3d71e5d8dcc14979f52",
+    "partition-netnames.log": "8efd03b4e79c969c9641a71e9701c91c77336adf03af83b7bfafcf39dbb510e5",
+    "supervise.py": "3cf5929941caf70612cb6cd339d1d9b7d6f5dd23e1b9a609344e312d48c46155",
+    "supervisor.pid": "4420bef2938c568b313f9e944f973514d7ff26b889137599d008dd20338801be",
+    "driver_args.json": "aac249f3f2429e60ade371948f8bf5247aefa1fb0653186fcf95b4915445016b",
+    "admission.json": "5fbc8dafb2c26e855df3a1edb10b2f921ef65a1de5de7a8ab3b990dfbb4ac257"
+  }
+}

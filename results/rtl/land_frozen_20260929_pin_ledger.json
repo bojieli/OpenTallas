@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.integration.pin_ledger.v1",
+  "integration_branch": "claude/land-frozen-20260929",
+  "base": "dd0a01a6",
+  "branches_merged": {
+    "claude/w2-karb-local": "fd6e9a81",
+    "claude/w2-rommac": "87095f95",
+    "claude/w2-attn": "5d613af1",
+    "claude/w2-vmcoll": "c7e10deb",
+    "claude/w1-v41-floorplan": "d2bf0417",
+    "claude/w1-v41-rtl-profile": "cfbfaba9 (patch-identical to 85170ea3 on w1)",
+    "claude/w8-v41-rom-array": "41cfd337",
+    "claude/w3-v41-die-assembly": "01ef74dc",
+    "claude/w4-connected-l0": "07396b1c",
+    "claude/w4-qe-shared-stall": "c2255064",
+    "claude/w6-qwen-hbm": "57843f4d (contains claude/w6-qwen-exec 8b581572)",
+    "claude/w5-qwen-physical": "e93d75ef"
+  },
+  "refreshed_by_rerun": {
+    "results/floorplan/v41_rtl_engine_profile.json": "tools/v41_rtl_engine_profile.py re-elaborated (Verilator 5.050, FULL_SHAPE=1): 471,764 instances, 128 modules, 345 arrays, MAC lanes unchanged; behavioural memory 284,910,921 -> 284,910,793 B from main's RTL; inventory path g_hbm.u_arb now elaborates as die.g_hbm[*].g_karb.u_arb (tool mapping updated)",
+    "results/rtl/chip_v41x_karb_pipe_equiv.json": "see its landing_20260929 block",
+    "results/rtl/qwen_layer0_postscale_ab_prepare.json": "--prepare-only rerun; images and oracle identical, core_vector_weight pin moved",
+    "results/rtl/qwen_layer0_matrixscale_ab_prepare.json": "--prepare-only rerun; images and oracle identical, core_vector_weight pin moved",
+    "results/rtl/qwen_int8_scale_base.json": "rewritten by tests/test_hdc_qwen_int8_scale_base.py (RTL rerun, pass); core_vector_weight pin moved",
+    "results/rtl/qwen_o4_hbm_pc_window.json": "rewritten by tests/test_hdc_qwen_int8_pc_window.py (RTL rerun, pass); core_vector_weight pin moved",
+    "results/rtl/qwen_o4_hbm_weight_preflight.json": "tools/qwen_o4_hbm_weight_preflight.py rerun; only the core_vector_weight pin changed",
+    "results/floorplan/qwen_o4_die_inventory.json": "tools/qwen_o4_die_inventory.py rerun (yosys); only the core_vector_weight pin changed",
+    "results/contracts/qwen_g4_vm_skew_macro_gate.json": "tools/rtl_qwen_g4_vm_skew.py rerun; PASS output identical, candidate pin moved by W5's latch-default edit"
+  },
+  "revalidated_labelled": [
+    "results/rtl/v41x_karb_group4_kv_gate.json",
+    "results/rtl/v41x_karb_group4_local_kv_gate.json",
+    "results/rtl/v41x_karb_group4_macro_ifdef_kv_gate.json",
+    "results/rtl/v41x_karb_group4_outpipe_kv_gate.json",
+    "results/rtl/v41x_karb_group4_tailpipe_kv_gate.json",
+    "results/rtl/v41_coll_vm_gw4_neighborhood.json"
+  ],
+  "labelled_not_rerun": [
+    "results/rtl/chip_v41x_karb_local_equiv.json",
+    "results/rtl/v41_l0_live_chain.json",
+    "results/rtl/v41_shared_qe_admission.json",
+    "results/rtl/v41_shared_weight_bursts.json",
+    "results/rtl/qwen_runtime_composition/core_boundary_lint.json",
+    "results/physical_abi3/asap7/chip/v41_coll_vm_gw4/partial_stopped_20260929/partial_record.json"
+  ],
+  "runner_pin_moved": {
+    "path": "tools/run_abi3_physical.py",
+    "old_sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+    "new_sha256": "8888a3fcda7bb1271550e4510d232d3fe17f44cd973a56d574213f97a1e59532",
+    "change": "--clock-uncertainty-ns keeps main's all-clocks setup+hold semantics; adds opt-in --clock-uncertainty-setup-only (claude/w5-qwen-physical semantics) and --output-delay-min/max-ns (from W5); records design.clock_uncertainty_ns and the new options when used",
+    "evidence": "every committed record whose runner.driver.sha256 is the old runner (33 replayable argv) was replayed through old and new sdc_lines in the same tree: SDC byte-identical for all 33",
+    "records": [
+      "results/physical_abi3/asap7/chip/v41_coll_vm_gw4/partial_stopped_20260929/partial_record.json",
+      "results/physical_abi3/asap7/chip/v41_coll_vm_gw4/transpose_fo12_balio_cts_bufcap_failure.json",
+      "results/physical_abi3/asap7/chip/v41_coll_vm_gw4/transpose_fo12_idealio_cts_hold_failure.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_hold20/me_hold20.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_hold20/vm_hold20.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_joint_grid/inputs.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_joint_grid/me_physical_joint_grid.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_joint_grid/me_physical_pg_corrected.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_joint_grid/vm_physical_joint_grid.json",
+      "results/physical_abi3/asap7/chip/v41_macro_local_joint_grid/vm_physical_pg_corrected.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_colslice_hook_locked_macro.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_colslice_ideal_io_cts_hold_bufcap.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_colslice_l250_output_budget_not_met.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_stagectl_holdmargin20_cts_bufcap.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_stagectl_ideal_io_hold_m0p12ps.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/attempts/w2c_stagectl_l250_holdmargin20_cts_bufcap.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/w2c_colslice_l400/physical.json",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/w2c_stagectl_l130/physical.json",
+      "results/physical_abi3/asap7/chip/v41_w2_rommac/qe_romac_physical_attempt1_locked_macro.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_1000um/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_1250um_stopped/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_750um/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_stopped/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/proot_aw30_stopped/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/region_aw30/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/region_aw30_band/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30_band/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/stack_ep_aw30_attempt1_buffercap/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/stack_ep_aw30_stopped/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_end_stopped/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_far/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_far_attempt1_buffercap/physical.json",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_mid/physical.json"
+    ],
+    "w5_replay_note": "results/physical_hdc/asap7/qwen_o4_w5/vm_cut_attempt1_ideal_io (FlowError attempt, driver 6c583fab) used W5's setup-only semantics; a replay must add --clock-uncertainty-setup-only"
+  },
+  "already_stale_on_branch_not_changed": [
+    "results/floorplan/v41_pack_orfs_check_expanded_woa.json",
+    "results/floorplan/v41_pack_orfs_pdn_fulldie_expanded_woa.json",
+    "results/rtl/qwen_runtime_composition/sliced/gate_*.json (W6 handoff: some pins resolve at 8b581572)"
+  ],
+  "rtl_fix": {
+    "path": "rtl/chip/ot_chip_v41x_tile.sv",
+    "what": "main dd0a01a6 declared core_fault twice and drove fault twice (031af880 merged over e53f6584), so ot_chip_v41x_die did not elaborate; now one declaration and fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault"
+  }
+}

@@ -1,0 +1,49 @@
+{
+ "schema": "qwen-nearhbm-attn-real-vs-dpi.v1",
+ "hd": 16,
+ "r": 1,
+ "note": "head_dim-16 debug vehicle; REAL arithmetic RTL (incl. exp_p/recip_p at LA 7, LM 7) vs host-float stand-ins",
+ "rows": [
+  {
+   "ctx": 1,
+   "real_exact": true,
+   "dpi_exact": true,
+   "cycles_real": 849,
+   "cycles_dpi": 849,
+   "marks_identical": true
+  },
+  {
+   "ctx": 9,
+   "real_exact": true,
+   "dpi_exact": true,
+   "cycles_real": 985,
+   "cycles_dpi": 985,
+   "marks_identical": true
+  },
+  {
+   "ctx": 130,
+   "real_exact": true,
+   "dpi_exact": true,
+   "cycles_real": 2896,
+   "cycles_dpi": 2896,
+   "marks_identical": true
+  },
+  {
+   "ctx": 600,
+   "real_exact": true,
+   "dpi_exact": true,
+   "cycles_real": 2991,
+   "cycles_dpi": 2991,
+   "marks_identical": true
+  },
+  {
+   "ctx": 3000,
+   "real_exact": true,
+   "dpi_exact": true,
+   "cycles_real": 3574,
+   "cycles_dpi": 3574,
+   "marks_identical": true
+  }
+ ],
+ "verdict": "PASS"
+}

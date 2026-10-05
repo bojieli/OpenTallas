@@ -1,0 +1,59 @@
+{
+  "cases": 12,
+  "checkpoint_reads": 0,
+  "credit128_rows": [
+    {
+      "banks": 6,
+      "chosen_slot_deficit_mm2": "0.40063849600",
+      "coefficient_only_us": "1513.418333333333333333333333",
+      "credits": 128
+    },
+    {
+      "banks": 9,
+      "chosen_slot_deficit_mm2": "0.42750791968",
+      "coefficient_only_us": "1022.855",
+      "credits": 128
+    },
+    {
+      "banks": 16,
+      "chosen_slot_deficit_mm2": "0.49020355264",
+      "coefficient_only_us": "603.7758333333333333333333333",
+      "credits": 128
+    },
+    {
+      "banks": 45,
+      "chosen_slot_deficit_mm2": "0.76651624768",
+      "coefficient_only_us": "247.3658333333333333333333333",
+      "credits": 128
+    }
+  ],
+  "do_not_transfer": [
+    "cold fill cost to steady token without lifetime proof",
+    "scalar reach to 1152bit route qualification",
+    "catalog fit to full image validity",
+    "chosen area deficits to fundamental impossibility"
+  ],
+  "fresh_join_matches_saved": true,
+  "hardware_admitted": false,
+  "independently_verified_all_dependency_pins": true,
+  "missing": [
+    "L1 immutable complete image and encoded bases",
+    "source-proven warm ownership mapping reset and epoch",
+    "actual 1152bit route track loads CDC state and SS/FF",
+    "absolute PC deadlines and full token schedule",
+    "whole geometry clock PG IR and power"
+  ],
+  "new_hardware_jobs": 0,
+  "route": {
+    "SS_reach_um": 504,
+    "actual_1152bit_bus_qualification": false,
+    "envelope_um": 8159.616,
+    "minimum_stages": 17
+  },
+  "schema": "parent_SS17_CROM_calendar_inventory_review",
+  "scope": "cold coefficient service plus reverse credit only, not whole token; warm residency unresolved",
+  "source_commit": "d795433ed",
+  "source_record_sha256": "2c0b91ac7590a907aad87312d2a5b14c70efc5a77b470f2dede0958b9eaa9f0f",
+  "source_tool_sha256": "99a162915be29b5796a2492f284d7dcdd7099595c97fdace8748f36ba8e655a7",
+  "verdict": "PASS_SOURCE_BOUND_REGENERATION_WITH_ALL_CHOSEN_CONSTRUCTIONS_FAILING"
+}

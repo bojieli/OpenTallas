@@ -1,0 +1,24 @@
+{
+  "verdict": "FAIL_CAPABILITY_KERNEL_CPU_CONTROLLER_NOT_DELEGATED_BEFORE_HDL",
+  "GO_commit": "09a5a29f947be12a5c298ad1b300e1956e18cbe3",
+  "reviewed_runner_commit": "4131c60d7468bbeff48f74022f094e6edd565f7b",
+  "unit": "dsrom-upstream-pair-cadence-3675969.service",
+  "compiler_invocations": 0,
+  "RTL_simulation_invocations": 0,
+  "actual_cadence_verdict": null,
+  "child_record_absent": true,
+  "cause": "Actual user-service cgroup has memory/pids controllers only; cpu.max absent despite systemd CPUQuota property. final metrics lookup also raises and masks initial cap failure.",
+  "no_retry": true,
+  "no_global_delegation_or_permissions_changes": true,
+  "next": "Fresh resource implementation proposal preserving aggregate4GiB/swap0 and maximumtwoCPU execution. Record metrics-unavailable instead of masking original error; native kernel affinity restricts2cores but quota not enforced. No automatic fallback.",
+  "host_cpu_delegation_snapshot": {
+    "/sys/fs/cgroup/cgroup.controllers": "cpuset cpu io memory hugetlb pids rdma misc\n",
+    "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/cgroup.controllers": "memory pids\n",
+    "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/cgroup.subtree_control": "memory pids\n"
+  },
+  "artifacts_sha256": {
+    "opentallas-upstream-pair-cadence-execution-20261002-r2_host_admission.json": "76bd576dfecee9a7b53f959e45b31620d1c53693454f805c0a22798e90e930fd",
+    "opentallas-upstream-pair-cadence-execution-20261002-r2_launcher.log": "fb7ac76da4c271a8a8533fefed41e994aa820f85fbeb56a11b88ea9b630193be",
+    "opentallas-upstream-pair-cadence-execution-20261002-r2_launcher.json": "a2fd66d238a526e71f5f944873311d3219c277daebc846f1160d583d2598dc2c"
+  }
+}

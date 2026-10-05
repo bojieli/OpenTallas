@@ -1,0 +1,65 @@
+{
+ "record": "W2 decision on stale ot-pve3 tselect_q global routes",
+ "date": "2026-09-29",
+ "workstream": "W2 v41-physical-clusters",
+ "sources": {
+  "rtl/hdc/v41/ot_hdc_tselect_q.sv": "24723b4d6552d1fd9386e0e59477d26ad19e40db5ac4b4f8f4da699f605e415a",
+  "rtl/hdc/v41/ot_hdc_tselect.sv": "85051117373f13200472ca4aac704914ade30d17644323cb81e469d7fbed7e4b"
+ },
+ "sources_note": "both scratch copies (pin_q, pin_q2) are byte-identical to each other and to main 4a82ce47",
+ "runs": [
+  {
+   "container": "0a6a8a21894c",
+   "host": "ot-pve3",
+   "work": "/tmp/abi3-physical-b1lubk9z/orfs",
+   "source_scratch": "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pin_q2",
+   "design_nickname": "opentallas_ot_hdc_tselect_q_asap7",
+   "top": "ot_hdc_tselect_q",
+   "clock_period_ps": 900,
+   "stage_at_stop": "5_1_grt (global_route.tcl post-GRT repair_timing)",
+   "elapsed_s_at_stop": 232599,
+   "cts_setup_ws_ps": -1033.47,
+   "cts_hold_ws_ps": -561.325,
+   "cts_stdcell_area_um2": 70004.8,
+   "grt_repair_first": {
+    "iter": 0,
+    "wns_ps": -540.388,
+    "tns_ps": -1558412.625
+   },
+   "grt_repair_last": {
+    "iter": 8470,
+    "wns_ps": -412.359,
+    "tns_ps": -359231.75
+   },
+   "grt_tmp_log_sha256": "9afac151509a46b50744e8f5d64a49ab3768b54d91246c89cbccb0454f836307"
+  },
+  {
+   "container": "4b963d0091c2",
+   "host": "ot-pve3",
+   "work": "/tmp/abi3-physical-kxrpivjw/orfs",
+   "source_scratch": "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pin_q",
+   "design_nickname": "opentallas_ot_hdc_tselect_q_asap7",
+   "top": "ot_hdc_tselect_q",
+   "clock_period_ps": 900,
+   "stage_at_stop": "5_1_grt (global_route.tcl post-GRT repair_timing)",
+   "elapsed_s_at_stop": 232599,
+   "cts_setup_ws_ps": -1038.69,
+   "cts_hold_ws_ps": -566.954,
+   "cts_stdcell_area_um2": 69304.5,
+   "grt_repair_first": {
+    "iter": 0,
+    "wns_ps": -548.471,
+    "tns_ps": -1552612.375
+   },
+   "grt_repair_last": {
+    "iter": 8430,
+    "wns_ps": -413.881,
+    "tns_ps": -344591.094
+   },
+   "grt_tmp_log_sha256": "ffc93462a644fd9c3771023f17ef995cc3013f1d71b32fa8fd69a21c94290ca0"
+  }
+ ],
+ "verdict": "nonconverging and duplicate: both containers ran the same source at 900 ps (not the adopted 920 ps/60 ps uncertainty SDC); post-GRT repair_timing held WNS constant at about -412 ps for >8,400 iterations while only TNS crept, so neither could close; the two runs duplicated each other. No committed record consumes them.",
+ "action": "docker stop 0a6a8a21894c 4b963d0091c2 on ot-pve3 at 2026-09-29 ~09:35 UTC after copying config, SDC, logs and reports to W2 scratch",
+ "closed": false
+}

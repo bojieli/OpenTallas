@@ -1,0 +1,221 @@
+{
+  "BF_decode_codes": 65536,
+  "deep_underflow_boundary_checks": 696,
+  "finite_decode_codes": 65280,
+  "nonfinite_classified": 256,
+  "normalized_significand_pairs": 16384,
+  "proof_scope": "All BF16 decodes; all128x128 normalized BF significand products for every subnormal shift1..25 and both result signs; algebraic bound plus extrema for25..140. Exponents/sign combinations covered by reduction to these categories, not all2**32 BF input pairs. Existing nonfinite/overflow refusal retained. Not compiled RTL or full arithmetic qualification.",
+  "shift_categories": {
+    "1": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "10": {
+      "increment": 3300,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 4101
+    },
+    "11": {
+      "increment": 5036,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 3471
+    },
+    "12": {
+      "increment": 6254,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 2433
+    },
+    "13": {
+      "increment": 7059,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 1585
+    },
+    "14": {
+      "increment": 7526,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 971
+    },
+    "15": {
+      "increment": 7843,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 577
+    },
+    "16": {
+      "increment": 7781,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 281
+    },
+    "17": {
+      "increment": 8063,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 252
+    },
+    "18": {
+      "increment": 8041,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 112
+    },
+    "19": {
+      "increment": 8103,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 53
+    },
+    "2": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "20": {
+      "increment": 8004,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 21
+    },
+    "21": {
+      "increment": 7846,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 11
+    },
+    "22": {
+      "increment": 7500,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 4
+    },
+    "23": {
+      "increment": 6811,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 2
+    },
+    "24": {
+      "increment": 16383,
+      "pairs": 16384,
+      "rounded_zero": 1,
+      "ties": 1
+    },
+    "25": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 16384,
+      "ties": 0
+    },
+    "3": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "4": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "5": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "6": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "7": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "8": {
+      "increment": 0,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 0
+    },
+    "9": {
+      "increment": 1256,
+      "pairs": 16384,
+      "rounded_zero": 0,
+      "ties": 2509
+    }
+  },
+  "sign_checks": 819200,
+  "status": "STATIC_CATEGORY_PROOF_PASS_NOT_RTL_PASS",
+  "witnesses": [
+    {
+      "a": "0080",
+      "b": "3380",
+      "biased_exponent": -23,
+      "corrected": "00000000",
+      "independent_golden": "00000000",
+      "shift": 24
+    },
+    {
+      "a": "0080",
+      "b": "0080",
+      "biased_exponent": -125,
+      "corrected": "00000000",
+      "independent_golden": "00000000",
+      "shift": 126
+    },
+    {
+      "a": "0080",
+      "b": "3b80",
+      "biased_exponent": -7,
+      "corrected": "00008000",
+      "independent_golden": "00008000",
+      "shift": 8
+    },
+    {
+      "a": "0080",
+      "b": "3c00",
+      "biased_exponent": -6,
+      "corrected": "00010000",
+      "independent_golden": "00010000",
+      "shift": 7
+    },
+    {
+      "a": "0080",
+      "b": "3400",
+      "biased_exponent": -22,
+      "corrected": "00000001",
+      "independent_golden": "00000001",
+      "shift": 23
+    },
+    {
+      "a": "0080",
+      "b": "3381",
+      "biased_exponent": -23,
+      "corrected": "00000001",
+      "independent_golden": "00000001",
+      "shift": 24
+    },
+    {
+      "a": "8080",
+      "b": "3380",
+      "biased_exponent": -23,
+      "corrected": "00000000",
+      "independent_golden": "00000000",
+      "shift": 24
+    }
+  ],
+  "zero_codes": 2
+}

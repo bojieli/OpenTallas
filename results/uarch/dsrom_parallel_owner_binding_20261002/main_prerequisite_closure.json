@@ -1,0 +1,144 @@
+{
+  "all_existing_dependencies_main_byteidentical": true,
+  "main_commit": "18ff53b4d6c09b73a34a5bbaa6f42d3891f1dc1e",
+  "prerequisites": [
+    {
+      "expected_sha256": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz"
+    },
+    {
+      "expected_sha256": "e86e6b1cf6743a2a8ee192862db1e60d7f06c561f4c4c88293403f82bcd32072",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/FP4_ECC_provider_directory.jsonl.gz"
+    },
+    {
+      "expected_sha256": "3897e59a03e34ffa4a69fc87f4fa5d70c77b869c311730f041731bcef1364bd6",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/immutable_provider_directory.jsonl.gz"
+    },
+    {
+      "expected_sha256": "964cc4c64f9c795cd20e194392f22d93e4b1fffeaefd93db971666096d64a192",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/phase_directory.jsonl.gz"
+    },
+    {
+      "expected_sha256": "c91855b5b33c21c56dac3ea9ebc69a201ff582a3a6ad67a19024e89cd113881f",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/r1/assignments.jsonl.gz"
+    },
+    {
+      "expected_sha256": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/readback_r1/model.json"
+    },
+    {
+      "expected_sha256": "e655bdc7a0d863c4b3a2daa011d8b138f31554eedf8d0d6970329704e40c99ed",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/dsrom_full_owner_closure.py"
+    },
+    {
+      "expected_sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/dsrom_full_owner_compiler.py"
+    },
+    {
+      "expected_sha256": "98ba0264485e089930f354e8137bf9e797f60e9dc722656215cae940a8959b79",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/dsrom_native_weight_address_join.py"
+    },
+    {
+      "expected_sha256": "ba64180725768c98ef22481a692f66d6fb0a0346a46b82e0a9d8b69383055358",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/dsrom_owner_cfg_interface_export.py"
+    },
+    {
+      "expected_sha256": "4b28ee9c0e5060641c60010965150c404fbc035289c5b1c841ba90148c1e504d",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/dsrom_owner_provider_first.py"
+    },
+    {
+      "expected_sha256": "8705c822cf8a32af796a0ee67c5c0d2ae66c1fdf715cc7af59c01e42cf69f5bf",
+      "introduced_by_this_milestone": true,
+      "main_identical": false,
+      "path": "tools/dsrom_parallel_owner_binding.py"
+    },
+    {
+      "expected_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_golden.py"
+    },
+    {
+      "expected_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_golden_v41.py"
+    },
+    {
+      "expected_sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_isa_v41.py"
+    },
+    {
+      "expected_sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_program_v41.py"
+    },
+    {
+      "expected_sha256": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_replay_v41.py"
+    },
+    {
+      "expected_sha256": "8298c22e3e1265bdd60e82f2e97dea4145d8c93f2627a74c80705588e892a127",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/hdc_timing_v41.py"
+    },
+    {
+      "expected_sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/rtl_v41_fullshape_layer_campaign.py"
+    },
+    {
+      "expected_sha256": "c1b28d9191ab3bf7bbcb6ec6d38d26c10bd90acdaf009a39f44d171724f83ece",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/v41_floorplan_die_macromap.py"
+    },
+    {
+      "expected_sha256": "c5ff8a63019e9ea5a21d3a9c49cb176dc161ce8b76044b06638a137946a2de5a",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/v41_floorplan_stage_bankmap.py"
+    },
+    {
+      "expected_sha256": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/v41_program_constants.py"
+    },
+    {
+      "expected_sha256": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+      "introduced_by_this_milestone": false,
+      "main_identical": true,
+      "path": "tools/v41_rom_ksplit_bankmap.py"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "PC.sv": {
+    "bytes": 4213,
+    "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "source_path": "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv"
+  },
+  "R55_handoff.json": {
+    "bytes": 2047,
+    "sha256": "18f4a2c7eda495f0cc72c2b80e4d2afbf16d83bab54a74f1f4f8a38ccfa0fe60",
+    "source_commit": "a71c37d4f",
+    "source_path": "results/uarch/ds_hbm_checkpointed_prefix_r55_20261003/handoff.json"
+  },
+  "R55_runner.py": {
+    "bytes": 19229,
+    "sha256": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "source_commit": "a71c37d4f",
+    "source_path": "tools/ds_hbm_checkpointed_prefix_r55.py"
+  },
+  "R55_storage.py": {
+    "bytes": 7707,
+    "sha256": "f21057181b997b9871aa2ffe3e8e595ef38d732394be6341104c5af1264becca",
+    "source_commit": "a71c37d4f",
+    "source_path": "tools/ds_hbm_checkpoint_storage_r55.py"
+  },
+  "RF.sv": {
+    "bytes": 2365,
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "source_path": "rtl/gpu/ot_gpu_rf_service.sv"
+  },
+  "owner_r14.sv": {
+    "bytes": 5250,
+    "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv"
+  },
+  "provider_r14.sv": {
+    "bytes": 9668,
+    "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "source_path": "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv"
+  },
+  "shared.sv": {
+    "bytes": 1113,
+    "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "source_path": "rtl/gpu/ot_gpu_scratch_service.sv"
+  },
+  "system.sv": {
+    "bytes": 3773,
+    "sha256": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "source_path": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv"
+  },
+  "wrapper.sv": {
+    "bytes": 3623,
+    "sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+    "source_path": "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv"
+  }
+}

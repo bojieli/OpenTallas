@@ -1,0 +1,37 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "failure_commit": "8ee4069ba40f4c9feaddeb3771a810a84ba3f1ea",
+  "failure_receipt_path": "results/rtl/observer_resource_lint_execution_d1b55a45_20261002/receipt.json",
+  "failure_receipt_sha256": "154629ea6743b364deacfe3fa8422a8c5c0979057619c7304bd14690480fb29b",
+  "scope": "Simulation-only added wrappers; original RTL and failed copies untouched",
+  "changes": [
+    {
+      "site": "L0 copy111/original107",
+      "before": ".att_packed_kv_w('0)",
+      "after": ".att_packed_kv_w(16960'd0)",
+      "semantics": "Context-sized unbased unsized zero fills every port bit; explicit unsigned sized zero identical at FULL_SHAPE1.",
+      "warning": "WIDTHCONCAT replication16960",
+      "unverified": "New literal may still trigger tool warnings; fresh actual lint required."
+    },
+    {
+      "site": "L0 copy141/original137",
+      "before": "31bit unsigned dbg_faults concat",
+      "after": "32bit concat: leading11zeros ->12zeros",
+      "semantics": "Original assignment adds one zero at bit31. Data field offsets unchanged.",
+      "warning": "WIDTHEXPAND31to32"
+    },
+    {
+      "site": "L0 copy151/original147",
+      "before": "60bit unsigned dbg_state concat",
+      "after": "64bit concat with4leadingzeros",
+      "semantics": "Original assignment adds four zeros at bits63:60. Sticky faults stay bits59:28, other fields retain exact offsets.",
+      "warning": "WIDTHEXPAND60to64"
+    }
+  ],
+  "proof": "symbolic per-bit identity includes 0/1/X/Z; no signed extension introduced",
+  "CKV": "Same three original expressions and source-bound widths in actual L20; prepare explicit-width L20 copy for future real full-hierarchy baseline/path/parameter mutants.",
+  "default_observation": 0,
+  "causal_deadlines": "BOUND_MISSING",
+  "no_warning_waiver": true,
+  "no_compile": true
+}

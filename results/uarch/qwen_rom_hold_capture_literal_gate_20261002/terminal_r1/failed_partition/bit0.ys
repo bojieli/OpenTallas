@@ -1,0 +1,6 @@
+read_verilog -formal -sv /tmp/qwen-hold-literal-partitions-r1/original.sv /tmp/qwen-hold-literal-partitions-r1/candidate.sv /tmp/qwen-hold-literal-partitions-r1/bit0.sv
+prep -top qwen_hold_capture_formal -flatten
+async2sync
+dffunmap
+opt_clean
+sat -seq 2 -tempinduct -set-assumes -prove-asserts -verify

@@ -1,0 +1,12 @@
+{
+  "verdict": "PARENT_SERVICE_NAME_REFUSED_BEFORE_GO_CLAIM_OR_EXECUTION",
+  "previous_GO": "6025f93bcc9a9e14a51e6ab5fa14937fbd307d64",
+  "compiler_invocations": 0,
+  "runtime_invocations": 0,
+  "cause": "Parent selected service prefix w17-recovery-retained instead of required w17-recovery-resource; runner preserved refusal",
+  "correction": "Reviewed source unchanged; new explicit GO and freshoutput/unit with required prefix; no automatic retry",
+  "artifact_sha256": {
+    "record.json": "b1ede288167c14196c8842db9c1aec4950e50b7e2ac2ff2567a05b25f0d491a5",
+    "output_owner.json": "4cca314892e41295656dd57ce00ddc93140ae4cd2e0f35ac4f558fb2f74b40b5"
+  }
+}

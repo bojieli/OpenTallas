@@ -1,0 +1,55 @@
+{
+  "status": "ACTUAL_RUNTIME_NAMESPACE_AND_FULL_L20_BUILD_BINDING_PREPARED_NO_LAUNCH",
+  "base_main": "8fe743684d382489e40e5be78d67d63ea892494a",
+  "full_parent_owner": "Archimedes",
+  "systemstream_owner": "Claude",
+  "runtime_namespace": "rtl/chip/window_owner_safe/",
+  "source_list": "tools/w17_current_fastpp_l20_window_owner_safe_sources.txt",
+  "source_count": 125,
+  "replacements": {
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "ot_chip_v41x_window_attn_source_owner_safe.sv",
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "ot_chip_v41x_die_owner_safe.sv",
+    "rtl/test/v41_runtime/ot_v41_rt_die_l20.sv": "ot_v41_rt_die_l20_owner_safe.sv"
+  },
+  "builder": "tools/w17_current_fastpp_owner_safe_die_rt.py",
+  "top": "ot_v41_rt_die_l20_owner_safe",
+  "compile_defines": [
+    "V41_ATT_CUT"
+  ],
+  "explicit_parameters": {
+    "WINDOW_REFILL_CREDITS": 8,
+    "WINDOW_REFILL_OWNER_SAFE": 1
+  },
+  "prefixes": [
+    "Vdie0",
+    "Vdie1",
+    "Vdie2",
+    "Vdie3"
+  ],
+  "CXX_driver": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+  "CXX_driver_change": null,
+  "ABI": "unchanged public top ports; Vdie0..3 header prefixes retained; namespaced internal paths must be rebound for observer hooks",
+  "price_model": "results/rtl/dsrom_window_owner_tag_gate_20261003/model.json",
+  "evidence": "results/rtl/dsrom_window_owner_tag_gate_20261003/verdict.json",
+  "new_state_ports_or_stages": 0,
+  "no_new_gate_simulation": true,
+  "full_parent_runtime": false,
+  "physical_credit": false,
+  "fulltoken_credit": false,
+  "commands": {
+    "focused_static_test": "python3 tests/test_window_owner_safe_runtime_hook.py",
+    "owner_build_template": "python3 tools/w17_current_fastpp_owner_safe_die_rt.py build --l20 --only die0,die1,die2,die3 --work FRESH_SOURCE_BOUND_ROOT --jobs MEASURED_OWNER_LEASE_THREADS",
+    "owner_link_template": "python3 tools/w17_current_fastpp_owner_safe_die_rt.py link --l20 --work OWNER_BOUND_ROOT --attn-obj PINNED_MATCHING_ATTN_ROOT"
+  },
+  "remaining": [
+    "Archimedes/Claude bind current producer and observer hierarchy to the new top/module names",
+    "source-bound all4 build/model/resource admission; no duplicate active runtime",
+    "reset/malformed provider functional coverage is Epicurus follow-on after ownership confirmation",
+    "full arithmetic and provider/CDC/SSFF context remain open"
+  ],
+  "archive_reuse": "matching window_owner_safe_build_binding.json permits completed safe archives and retained incremental outputs; unsigned or changed die roots refuse without deleting progress",
+  "static_tests": 8,
+  "HDL_frontend_launched": false,
+  "duplicate_runtime_launched": false
+}

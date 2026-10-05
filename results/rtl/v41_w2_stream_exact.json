@@ -1,0 +1,41 @@
+{
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "checkpoint_snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "expert_ids": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
+  "expert_output_mismatches": 0,
+  "final_mismatches": 0,
+  "fixture_path": "results/rtl/fixtures/v41_w2_stream_l0_200k.npz",
+  "fixture_sha256": "8fc8cee031aa9309bcb5dd44e6720d1be21e5ee998322cea145421d62b996393",
+  "gathered_code_mismatches": 0,
+  "gathered_exp_mismatches": 0,
+  "output_bits_sha256": "b3672c17081be751d4e57e5fa1c132bb902c10ca55e2574f297ac26b61adf1b1",
+  "rows_checked": 32,
+  "schema": "v41_w2_stream_exact_v1",
+  "scope": "real released L0/200K input, sampled rows; numerical only",
+  "shard_mismatches": 0,
+  "shard_sha256": "d642ca564e20edc34f729656461fa2bd68ecf55d1b706f2043c382f157ed6de3",
+  "source_sha256": {
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087",
+    "tools/v41_w2_stream_exact.py": "74abf07137b607bd5472f45fcf3c2a725d625ed3ab20389f5d864a28e2224fff"
+  },
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/rtl_v41_fullshape_layer_campaign.py": {
+        "old": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+        "new": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087"
+      }
+    },
+    "historical_copy": null
+  }
+}

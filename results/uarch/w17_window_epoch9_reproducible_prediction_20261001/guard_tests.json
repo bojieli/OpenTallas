@@ -1,0 +1,19 @@
+{
+  "command": "python3 -m pytest -q tests/test_w17_window_epoch9_contract_guards.py",
+  "status": "PASS",
+  "cases": 18,
+  "build_or_RTL_simulation": false,
+  "negative_guards": [
+    "unsupported/mismatched credits",
+    "KARB owner bit and KV/RoPE owner bits",
+    "epoch corruption",
+    "ninth outstanding request",
+    "unissued/duplicate return",
+    "scale before code drain",
+    "original source substituted for candidate",
+    "modified owner mux",
+    "wrong connected owner/credits/stale or missing held return observation"
+  ],
+  "prior_parent_metadata_failure_commit": "4bfc480f9",
+  "prior_numeric_mismatch": false
+}

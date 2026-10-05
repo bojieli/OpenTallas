@@ -1,0 +1,220 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T15:46:08.459599+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 23515.348,
+    "block": "ot_gpu_tc_col",
+    "cells": 156277,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "L": 32,
+      "TAGW": 16
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/gpu/ot_gpu_tree.sv",
+        "sha256": "6973a40d35478320c25b032bef5ac57a4928cef02b9581602ea9c8d68338d142",
+        "size_bytes": 2510
+      },
+      {
+        "path": "rtl/gpu/ot_gpu_tc_col.sv",
+        "sha256": "219eb9de9c55cb3cf8247a3c574f9b47e28126db32c91e91c04e9d222b03fb02",
+        "size_bytes": 4139
+      }
+    ],
+    "top": "ot_gpu_tc_col"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nNFO DRT-0035]   Complete M7 (guide).\n[INFO DRT-0035]   Complete V7 (guide).\n[INFO DRT-0035]   Complete M8 (guide).\n[INFO DRT-0035]   Complete V8 (guide).\n[INFO DRT-0035]   Complete M9 (guide).\n[INFO DRT-0035]   Complete V9 (guide).\n[INFO DRT-0035]   Complete Pad (guide).\n[INFO DRT-0036] Active guide region query size = 0.\n[INFO DRT-0036] V0 guide region query size = 0.\n[INFO DRT-0036] M1 guide region query size = 582045.\n[INFO DRT-0036] V1 guide region query size = 0.\n[INFO DRT-0036] M2 guide region query size = 558904.\n[INFO DRT-0036] V2 guide region query size = 0.\n[INFO DRT-0036] M3 guide region query size = 286464.\n[INFO DRT-0036] V3 guide region query size = 0.\n[INFO DRT-0036] M4 guide region query size = 33521.\n[INFO DRT-0036] V4 guide region query size = 0.\n[INFO DRT-0036] M5 guide region query size = 27304.\n[INFO DRT-0036] V5 guide region query size = 0.\n[INFO DRT-0036] M6 guide region query size = 19273.\n[INFO DRT-0036] V6 guide region query size = 0.\n[INFO DRT-0036] M7 guide region query size = 7904.\n[INFO DRT-0036] V7 guide region query size = 0.\n[INFO DRT-0036] M8 guide region query size = 0.\n[INFO DRT-0036] V8 guide region query size = 0.\n[INFO DRT-0036] M9 guide region query size = 0.\n[INFO DRT-0036] V9 guide region query size = 0.\n[INFO DRT-0036] Pad guide region query size = 0.\n[INFO DRT-0179] Init gr pin query.\n[INFO DRT-0267] cpu time = 00:00:07, elapsed time = 00:00:01, memory = 3041.05 (MB), peak = 3039.64 (MB)\n[INFO DRT-0245] skipped writing guide updates to database.\n[INFO DRT-0181] Start track assignment.\n[INFO DRT-0184] Done with 903717 vertical wires in 11 frboxes and 611698 horizontal wires in 11 frboxes.\n[INFO DRT-0186] Done with 74150 vertical wires in 11 frboxes and 134103 horizontal wires in 11 frboxes.\n[INFO DRT-0182] Complete track assignment.\n[INFO DRT-0267] cpu time = 00:01:52, elapsed time = 00:00:25, memory = 5252.88 (MB), peak = 5506.09 (MB)\n[INFO DRT-0187] Start routing data preparation.\n[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 5360.78 (MB), peak = 5506.09 (MB)\n[INFO DRT-0194] Start detail routing.\n[INFO DRT-0195] Start 0th optimization iteration.\n    Completing 10% with 0 violations.\n    elapsed time = 00:00:29, memory = 12926.65 (MB).\n    Completing 20% with 5910 violations.\n    elapsed time = 00:01:08, memory = 19544.14 (MB).\n    Completing 30% with 8306 violations.\n    elapsed time = 00:01:38, memory = 19546.11 (MB).\n    Completing 40% with 8306 violations.\n    elapsed time = 00:02:14, memory = 19938.27 (MB).\n    Completing 50% with 14132 violations.\n    elapsed time = 00:02:54, memory = 20950.70 (MB).\n    Completing 60% with 16439 violations.\n    elapsed time = 00:03:31, memory = 21516.59 (MB).\n    Completing 70% with 21461 violations.\n    elapsed time = 00:04:19, memory = 22971.10 (MB).\n    Completing 80% with 23545 violations.\n    elapsed time = 00:04:55, memory = 22598.94 (MB).\n    Completing 90% with 23545 violations.\n    elapsed time = 00:05:39, memory = 22987.95 (MB).\n\nElapsed time: 0:06.75[h:]min:sec. CPU time: user 6.26 sys 0.49 (99%). Peak memory: 672148KB.\nElapsed time: 0:47.26[h:]min:sec. CPU time: user 56.43 sys 11.29 (143%). Peak memory: 1105468KB.\nElapsed time: 0:03.07[h:]min:sec. CPU time: user 2.63 sys 0.44 (100%). Peak memory: 539240KB.\nElapsed time: 0:02.60[h:]min:sec. CPU time: user 2.27 sys 0.32 (100%). Peak memory: 418004KB.\nElapsed time: 0:06.67[h:]min:sec. CPU time: user 6.21 sys 0.47 (99%). Peak memory: 579360KB.\nElapsed time: 0:40.86[h:]min:sec. CPU time: user 287.30 sys 1.00 (705%). Peak memory: 940500KB.\nElapsed time: 0:03.01[h:]min:sec. CPU time: user 2.60 sys 0.41 (100%). Peak memory: 572416KB.\nElapsed time: 5:07.53[h:]min:sec. CPU time: user 737.37 sys 79.57 (265%). Peak memory: 2697280KB.\nElapsed time: 1:52.09[h:]min:sec. CPU time: user 155.79 sys 42.94 (177%). Peak memory: 1340468KB.\nElapsed time: 2:41.21[h:]min:sec. CPU time: user 201.03 sys 40.04 (149%). Peak memory: 1820604KB.\nElapsed time: 2:33.18[h:]min:sec. CPU time: user 275.07 sys 84.64 (234%). Peak memory: 2226788KB.\nElapsed time: 7:58.91[h:]min:sec. CPU time: user 2690.38 sys 153.37 (593%). Peak memory: 4465256KB.\nElapsed time: 8:17.84[h:]min:sec. CPU time: user 6623.90 sys 92.28 (1349%). Peak memory: 24059020KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 247\nmake: *** [Makefile:589: /work/results/asap7/opentallas_ot_gpu_tc_col_asap7_w13tc91/base/5_2_route.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T15:07:52.673391+00:00",
+  "git": {
+    "commit": "89400078b7d4a2b72f3c2720e550c936c93494d8",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_gpu_tc_col",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/gpu/ot_gpu_tree.sv",
+      "--source",
+      "rtl/gpu/ot_gpu_tc_col.sv",
+      "--param",
+      "L=32",
+      "--param",
+      "TAGW=16",
+      "--clock-period-ns",
+      "0.91",
+      "--nickname-tag",
+      "w13tc91",
+      "--output",
+      "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_091/physical.json",
+      "--false-path-io",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.55",
+      "--slew-margin-percent",
+      "20",
+      "--stages",
+      "synth,pnr",
+      "--force"
+    ],
+    "driver": {
+      "commit": "89400078b7d4a2b72f3c2720e550c936c93494d8",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w13-hbm/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "8888a3fcda7bb1271550e4510d232d3fe17f44cd973a56d574213f97a1e59532",
+      "tree": "/tmp/claude-1000/wt/w13-hbm"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w13-hbm"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 910.0,
+    "cell_area_um2": 23515.348,
+    "cell_count": 156277,
+    "cell_types_used": 38,
+    "chip_area_um2": 23523.92604,
+    "combinational_cell_count": 123284,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "ed32b8f6a0aec1fecf4c61364c91e87491474dcc69fab9ed5913677f0bb66dd9",
+      "raw_netlist_sha256": "ed32b8f6a0aec1fecf4c61364c91e87491474dcc69fab9ed5913677f0bb66dd9",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 11760.0,
+    "sequential_cell_count": 32993,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.91,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

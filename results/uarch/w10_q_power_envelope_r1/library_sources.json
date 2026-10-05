@@ -1,0 +1,128 @@
+{
+  "SIMPLE_SS.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+    "source_raw_sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db",
+    "source_uncompressed_sha256": "29f2d9c5153299a3907df523633bb84fda8f291d90b3b0058d22ed5d67e719ee",
+    "selected_sha256": "4767b0907b75fb51cc16cd69fd4cacd8548c712c47bcedef4970822544a317e6",
+    "nom_voltage": "0.63",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "INVBUF_SS.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+    "source_raw_sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "source_uncompressed_sha256": "971247fdbb98c969300444c440ce5a5f3bc64a17c402e2025cf09c87908e97c0",
+    "selected_sha256": "4223a8bc20e3c2c59656b4863a41400153e02bf9e6841511afbb08e2dcf6341b",
+    "nom_voltage": "0.63",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "SEQ_SS.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "source_raw_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "source_uncompressed_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "selected_sha256": "d1384482af90f3b85c760a8def053387cba872ceeff34af3435ba6f0e396a82d",
+    "nom_voltage": "0.63",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "SIMPLE_TT.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+    "source_raw_sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "source_uncompressed_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "selected_sha256": "af60226213e49d2c3b734d19e7be7907512bd6d419af69884e886b81d8d0885f",
+    "nom_voltage": "0.7",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "INVBUF_TT.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+    "source_raw_sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "source_uncompressed_sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "selected_sha256": "f79a842c446fed82cb91afad4fce6ccb63b33a9ad37a0566fb08aab7aa88f296",
+    "nom_voltage": "0.7",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "SEQ_TT.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "source_raw_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "source_uncompressed_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "selected_sha256": "3ec87fff4b4cbcff99a71b63db4a5de40d6d4ea3cb344b65b29736162d5a16ce",
+    "nom_voltage": "0.7",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "SIMPLE_FF.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+    "source_raw_sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "source_uncompressed_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+    "selected_sha256": "0241401f13211800f88cb0ce7c436234eb86072c3a8bbca087773e106799c0f5",
+    "nom_voltage": "0.77",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "INVBUF_FF.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+    "source_raw_sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "source_uncompressed_sha256": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+    "selected_sha256": "2a5a7080ffa69fc1cfc7856d51da5b81c80bf18a326fdfd82e162ce2968d4001",
+    "nom_voltage": "0.77",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  },
+  "SEQ_FF.cells.lib": {
+    "source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "source_raw_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "source_uncompressed_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "selected_sha256": "cb1c8660861d175fb22501571104a9bb1ae98818028e9c51e8a5faf23deb4aff",
+    "nom_voltage": "0.77",
+    "units": {
+      "time": "ps",
+      "capacitance": "fF",
+      "current": "mA",
+      "voltage": "V",
+      "leakage": "pW"
+    }
+  }
+}

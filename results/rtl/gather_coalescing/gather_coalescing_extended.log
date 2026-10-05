@@ -1,0 +1,31 @@
+slots=1 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=56853
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=56853
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=1 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=12053
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7813
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=12013
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7773
+.slots=1 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=51201
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=51201
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=1 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=11439
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7813
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=11395
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7773
+.slots=1 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=51201
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=0 workload_cycles=51201
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=0 workload_cycles=22933
+.slots=1 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=11439
+.slots=1 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7813
+.slots=3 zero_latency=0 PASS gather checks=1769 retain=1 workload_cycles=11395
+.slots=3 zero_latency=1 PASS gather checks=1769 retain=1 workload_cycles=7773
+...ordered gather workload cycles credits1/2/4/8=[329, 329, 329, 329]
+.ordered gather workload cycles credits1/2/4/8=[329, 329, 329, 329]
+.ordered gather workload cycles credits1/2/4/8=[601, 346, 346, 346]
+.ordered gather workload cycles credits1/2/4/8=[601, 346, 346, 346]
+.ordered gather workload cycles credits1/2/4/8=[2281, 1181, 661, 461]
+.ordered gather workload cycles credits1/2/4/8=[2281, 1181, 661, 461]
+.

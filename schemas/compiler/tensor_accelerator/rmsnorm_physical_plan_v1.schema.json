@@ -1,0 +1,137 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/rmsnorm_physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "expected_counters": {"$ref": "rmsnorm_expectations_v1.schema.json#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {"$ref": "#/$defs/image"},
+        "regions": {"items": {"oneOf": [{"$ref": "#/$defs/embedding_region"}, {"$ref": "#/$defs/weight_region"}]}, "minItems": 2, "maxItems": 2, "type": "array"}
+      },
+      "required": ["image", "regions"],
+      "type": "object"
+    },
+    "numeric_contracts": {"const": ["bf16_payload_lookup_v1", "qwen3_rmsnorm_fp32_bf16_v1"]},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "resident_embedding_base_token": {"minimum": 0, "type": "integer"},
+        "resident_embedding_rows": {"minimum": 1, "type": "integer"},
+        "row_bytes": {"minimum": 2, "type": "integer"},
+        "rows": {"minimum": 1, "type": "integer"},
+        "width": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["resident_embedding_base_token", "resident_embedding_rows", "row_bytes", "rows", "width"],
+      "type": "object"
+    },
+    "program": {"$ref": "#/$defs/artifact"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.rmsnorm_physical_plan.v1"},
+    "source_operation_ids": {"items": {"minLength": 1, "type": "string"}, "minItems": 2, "maxItems": 2, "type": "array", "uniqueItems": true},
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "addressing": {"const": "bank_base_plus_byte_offset"},
+        "regions": {"items": {"$ref": "#/$defs/sram_region"}, "minItems": 4, "maxItems": 4, "type": "array"}
+      },
+      "required": ["addressing", "regions"],
+      "type": "object"
+    }
+  },
+  "required": ["capability_id", "expected_counters", "graph_id", "hbm", "numeric_contracts", "physical_plan_id", "problem", "program", "qualification_report_id", "schema", "source_operation_ids", "sram"],
+  "title": "Embedding-to-RMSNorm HBM/SRAM physical plan v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {"minimum": 1, "type": "integer"},
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["command_count", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "embedding_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "id": {"const": "embedding_rows"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {
+          "additionalProperties": false,
+          "properties": {
+            "dtype": {"const": "bf16"},
+            "row_count": {"minimum": 1, "type": "integer"},
+            "row_stride_bytes": {"minimum": 1, "type": "integer"},
+            "source_payload_sha256": {"$ref": "#/$defs/sha256"},
+            "source_row_base": {"minimum": 0, "type": "integer"},
+            "source_shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 2, "maxItems": 2, "type": "array"},
+            "tensor_name": {"minLength": 1, "type": "string"}
+          },
+          "required": ["dtype", "row_count", "row_stride_bytes", "source_payload_sha256", "source_row_base", "source_shape", "tensor_name"],
+          "type": "object"
+        }
+      },
+      "required": ["address", "id", "offset_bytes", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "properties": {
+        "base_address": {"minimum": 0, "type": "integer"},
+        "path": {"const": "memory/hbm_embedding_rmsnorm.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["base_address", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "sram_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "allocated_bytes": {"minimum": 1, "type": "integer"},
+        "bank": {"minimum": 0, "type": "integer"},
+        "dtype": {"enum": ["bf16", "u32"]},
+        "id": {"enum": ["token_id", "embedding", "rmsnorm_weight", "output"]},
+        "logical_bytes": {"minimum": 1, "type": "integer"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 1, "maxItems": 2, "type": "array"}
+      },
+      "required": ["address", "allocated_bytes", "bank", "dtype", "id", "logical_bytes", "shape"],
+      "type": "object"
+    },
+    "weight_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "id": {"const": "rmsnorm_weight"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {
+          "additionalProperties": false,
+          "properties": {
+            "dtype": {"const": "bf16"},
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 1, "maxItems": 1, "type": "array"},
+            "tensor_name": {"minLength": 1, "type": "string"}
+          },
+          "required": ["dtype", "payload_sha256", "shape", "tensor_name"],
+          "type": "object"
+        }
+      },
+      "required": ["address", "id", "offset_bytes", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    }
+  }
+}

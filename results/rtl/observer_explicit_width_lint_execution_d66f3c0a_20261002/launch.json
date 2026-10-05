@@ -1,0 +1,23 @@
+{
+  "owner_commit": "6ecb6df5cca3ba9b1bd64aab6bbc35a497bc6d0d",
+  "go_commit": "d66f3c0af1658f9e9ab991190b5aea652fc34bb7",
+  "go_sha256": "0a0ccc30667323009567cdc5176eaf6f9bb8a7a73a6cb323dff1086746ed153b",
+  "plan_sha256": "b1b27004f65ba13852df112493bb3c8da0ddb38632db91988fdd43421dcbc600",
+  "runner_pid": 2951142,
+  "start_ticks": "311167833",
+  "argv": [
+    "/home/ubuntu/bin/python",
+    "tools/run_observer_explicit_width_lint.py",
+    "--repo",
+    "/tmp/opentallas-observer-explicit-width-variants",
+    "--plan",
+    "/tmp/opentallas-observer-explicit-width-variants/results/rtl/observer_explicit_widths_4e383_20261002/plan.json",
+    "--go",
+    "/tmp/opentallas-observer-width-go-d66f3c0a-r1/GO.json",
+    "--scratch",
+    "/tmp/opentallas-observer-width-execution-d66f3c0a-r1",
+    "--execute"
+  ],
+  "output": "/tmp/opentallas-observer-width-go-d66f3c0a-r1/runner.log",
+  "scratch": "/tmp/opentallas-observer-width-execution-d66f3c0a-r1"
+}

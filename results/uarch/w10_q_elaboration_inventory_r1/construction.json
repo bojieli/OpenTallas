@@ -1,0 +1,288 @@
+{
+  "actual_mapped_standard_area_um2": null,
+  "clock_inventory": {
+    "buffer_count": 1114,
+    "buffer_input_cap_fF": "1248.794",
+    "groups": {
+      "[115159]": {
+        "activity_bound": 1,
+        "buffer_count": 14,
+        "buffers_by_level": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 1
+      },
+      "[115160]": {
+        "activity_bound": 1,
+        "buffer_count": 14,
+        "buffers_by_level": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 1
+      },
+      "[115161]": {
+        "activity_bound": 1,
+        "buffer_count": 14,
+        "buffers_by_level": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 1
+      },
+      "[115162]": {
+        "activity_bound": 1,
+        "buffer_count": 14,
+        "buffers_by_level": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 1
+      },
+      "[2757]": {
+        "activity_bound": 1,
+        "buffer_count": 331,
+        "buffers_by_level": [
+          309,
+          10,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 9886
+      },
+      "[2]": {
+        "activity_bound": 1,
+        "buffer_count": 54,
+        "buffers_by_level": [
+          40,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 1275
+      },
+      "[6895]": {
+        "activity_bound": 1,
+        "buffer_count": 197,
+        "buffers_by_level": [
+          179,
+          6,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 5710
+      },
+      "[6962]": {
+        "activity_bound": 1,
+        "buffer_count": 237,
+        "buffers_by_level": [
+          218,
+          7,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 6950
+      },
+      "[736]": {
+        "activity_bound": 1,
+        "buffer_count": 239,
+        "buffers_by_level": [
+          220,
+          7,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sinks": 7009
+      }
+    },
+    "peak_current_A": null,
+    "power_W": null,
+    "scope": "14-stage fanout32/500um conditional reserve; phase, load and spatial fit unqualified",
+    "stop_credit": 0,
+    "wire_guard2_cap_fF": "162004.564000"
+  },
+  "conditional_50pct_cell_plus_macro_budget_um2": "246546.516960",
+  "conditional_standard_construction_area_um2": "107510.52888",
+  "density": "0.50",
+  "excluded_unqualified_terms": [
+    "post-map fanout/hold/ties/taps repair",
+    "legal corridor and PG allocation",
+    "hub/descriptor composition",
+    "source-bound clock load/energy/voltage envelope",
+    "SS/FF timing of constructed gate network"
+  ],
+  "inputs": {
+    "lef": {
+      "path": "/home/ubuntu/w10-w18-recovery/baseline_wake/local_fit_r1/actual_worker_R.lef",
+      "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1"
+    },
+    "netlist": {
+      "path": "/home/ubuntu/w10-w18-recovery/baseline_wake/q_elaboration_model_r2/q_coarse.json",
+      "sha256": "9739ef29a2cb4b494e47c6ae19d4215486a46eaac91973188c3eefeb98037b2f"
+    }
+  },
+  "macro_area_um2": "31525.459200",
+  "memory_decode_enable_nand2": 22544,
+  "memory_mux_nand2": 63176,
+  "palette": {
+    "buffer": {
+      "area_um2": "0.23328",
+      "cell": "BUFx12_ASAP7_75t_R"
+    },
+    "icg": {
+      "area_um2": "0.26244",
+      "cell": "ICGx1_ASAP7_75t_R"
+    },
+    "nand": {
+      "area_um2": "0.08748",
+      "cell": "NAND2x1_ASAP7_75t_R"
+    },
+    "storage": {
+      "area_um2": "0.37908",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R"
+    }
+  },
+  "physical_admission": false,
+  "primitive_nand2_counts": {
+    "$add": 22776,
+    "$adff": 0,
+    "$adffe": 0,
+    "$and": 48208,
+    "$dff": 0,
+    "$dffe": 0,
+    "$eq": 21018,
+    "$ge": 2352,
+    "$gt": 12782,
+    "$le": 2752,
+    "$logic_and": 12768,
+    "$logic_not": 14512,
+    "$logic_or": 1008,
+    "$lt": 24644,
+    "$mem_v2": 0,
+    "$mul": 70400,
+    "$mux": 70504,
+    "$ne": 570,
+    "$neg": 14064,
+    "$not": 844,
+    "$or": 37654,
+    "$pmux": 4096,
+    "$reduce_and": 348,
+    "$reduce_bool": 7624,
+    "$reduce_or": 3732,
+    "$scopeinfo": 0,
+    "$sdff": 0,
+    "$sdffce": 0,
+    "$shift": 4736,
+    "$shiftx": 8840,
+    "$shl": 233696,
+    "$shr": 16768,
+    "$sub": 14148,
+    "$xor": 47632,
+    "ICGx1_ASAP7_75t_R": 0,
+    "ot_rom_4096x274_m8": 0
+  },
+  "reset_enable_nand2": 308220,
+  "root_stop_credit": 0,
+  "schema": "w10_q_boolean_construction_bound_v1",
+  "scope": "finite conservative Boolean construction allocation, not optimization or mapped measurement; overbudget does not prove actual implementation impossible",
+  "total_nand2": 1092416
+}

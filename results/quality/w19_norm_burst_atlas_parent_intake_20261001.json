@@ -1,0 +1,116 @@
+{
+  "Atlas": {
+    "both_untriaged_annotations_synced": true,
+    "census": {
+      "candidates": 4422,
+      "documents": 165,
+      "unbound": 4005,
+      "untriaged": 3997
+    },
+    "four_SVG_XML_checks": "PASS",
+    "make_check_figures": "PASS existing scientific readiness blockers retained",
+    "owner_rendered_screenshot_inspected": "/home/ubuntu/atlas-floorplans-gallery.png",
+    "parent_reran_browser": false,
+    "provenance_sha256": "85c46d72aa2c5988586172c1cafc43ed343bc99a67fa8551b30a97ee73389f5d",
+    "renderer_byteidentical": true,
+    "reviewed_commit": "470dcec303801e3a36f6899113191dbe8a641849",
+    "scope": "Illustrations only: recorded historical ROM coordinates and proposed32SM HBM organisation, with qualification captions. No physical signoff inference.",
+    "source_hashes_verified": true
+  },
+  "QC_NAM_canonical_sha256": "f72b847c5ee38b616d40b16a3ced0da7399cba58fafc6c53e519818fcf979531",
+  "burst": {
+    "conditional32PC_response_trace": {
+      "accepted_sectors": 128,
+      "delivered_lines": 32,
+      "exact_bytes_sha256": "9397170576bf416fb015b437a2c1870057322da8ee59f4ebb95557931d130def",
+      "first_delivery_cycle": 7,
+      "last_delivery_cycle": 10,
+      "preissued_bursts": 8,
+      "scope": "Response-only trace with actual32PC map; preissued bursts and required setup/grant cycles explicit, HBM timing/CDC waits unpriced. Synchronized beat phases expose landing collisions; not a sustained service rate.",
+      "sector_bank_collision_cycles": 3,
+      "serial_prepare_cycles": 8,
+      "serial_request_grant_cycles": 8,
+      "written_sectors": 128
+    },
+    "contract_r2_sha256": "23c9bb35af4d4daeedebe78e0e87172a0e0e4b4095cd2d7be7c6ea362a5c9104",
+    "historical_failed_r1_unchanged": true,
+    "intake_files_verified": {
+      "build_r2.log": "5a32b59757269285fb5e0c7c2bbf5b64498101c71dc3f1e5d8d06abf3875b26f",
+      "check_r2.log": "5a32b59757269285fb5e0c7c2bbf5b64498101c71dc3f1e5d8d06abf3875b26f",
+      "contract_r2.json": "23c9bb35af4d4daeedebe78e0e87172a0e0e4b4095cd2d7be7c6ea362a5c9104",
+      "snapshot_manifest_r2.json": "99d81df17a81067712bbaf651728f2a080786aa207fb05ae92756996e2ed8c4b",
+      "source_snapshot_r2.tar.gz": "de49cbeb80c8729ad2af0e6c2e2d2800485ca298213ca51ccd66ca69aff3199a",
+      "tests_r2.log": "3b71d88609c7244f5f791abe6e5855f34a83c0ce62215f59cf517e3aa04d50f4",
+      "tests_r2.xml": "2e58a68b49828c09b1b5d3a09a7618c94fade06e396abeba299c1d0411d7cc23"
+    },
+    "nominal_1TB_requires_ports": 2,
+    "one_port_bytes_rank": 5494288,
+    "one_port_ceiling_bytes_s": 614400000000,
+    "r2_current_source_check": "PASS",
+    "scope": "Analytical candidate only. Request/grant preparation and finite response collisions charged separately. Two-port interface/coalesced enqueue/authoritative SM credit ledger/CDC/area/routes unqualified. Oracle epoch argument is fault metadata, not a response wire. No guaranteed450cycle credit bound inferred for HC22.",
+    "snapshot_members_match_current_files": true,
+    "snapshot_members_verified": 9,
+    "source_commit": "774b2249eaae6ac100e94fe85c2168f8f5c9c7a6",
+    "two_port_bytes_rank": 5625388
+  },
+  "full_token_qualified": false,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "model_generator_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "norm": {
+    "artifact_hashes_verified": {
+      "opcodes_0.json": "4bd7f571c029ee4e85554b08c8622c71485135b31e69a02a92047b96108473c5",
+      "opcodes_1.json": "4865d83bbe06a9a0b288074bd955058f62c19a44308872bc4d7c3b7932e36518",
+      "opcodes_2.json": "252a9eb21707735cc3a77544d8843872dbcd77acaa6337714516085b4008a9a2",
+      "opcodes_3.json": "863eb2f6b0c4e49bf385c11411da24c6b3c10d4bd9a2060e2ea168d8d6bb2356",
+      "opcodes_4.json": "17084d03e987a599ae9c821ffdb7675a20d7c4fa08717e59c1220bcae698a60c",
+      "opcodes_5.json": "616d47704547f91fa719476fa2dcaa14662de704ce3ed834c5dd58da36632f26",
+      "opcodes_6.json": "1772d61e72655636280bfc258b3506a6113437a7fb640a427ccbbf0b53284869",
+      "opcodes_7.json": "311147cf08cd09f7e421ce26ba4799a9db02c3679d3b44a09eb4483ee3014bd2",
+      "opcodes_8.json": "dc0f50bb36eaabf1a47bd64fe8b95e511367e9952830de4d1738c0c1e8652d00",
+      "opcodes_9.json": "9e95c467dea91164abafaa1735beecfa1f19f32e6ecba26ee5eb31fee593101c",
+      "outputs_0.npz": "8be6df095b769916b03964a47d098284623c0cc7970855b62193bbdba58da872",
+      "outputs_1.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+      "outputs_2.npz": "782ffb9f67c0a3eab39640d3618278a8adc8c1ef6f236b4570b86c8c283e6bd8",
+      "outputs_3.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+      "outputs_4.npz": "b63e8f22387f908caa0516c55348ad9ed54e95f4b8d38f6fdb373393ac177e60",
+      "outputs_5.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+      "outputs_6.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+      "outputs_7.npz": "b63e8f22387f908caa0516c55348ad9ed54e95f4b8d38f6fdb373393ac177e60",
+      "outputs_8.npz": "c3189da8fe59dea9ed4e2c01abf226065aadd277779c6bcb6c68b275b0c19e1a",
+      "outputs_9.npz": "7758431fd261f72164d58a1ee622b4f6e3471989c395fe21c8c311a3fd00c6cb"
+    },
+    "carry_arrays_unchanged": true,
+    "fixtures": 10,
+    "opcode_boundaries_replayed": 890,
+    "opcode_traces_exact": true,
+    "output_bits_exact": true,
+    "proof_sha256": "1761e3467794fbf6afe49682ff11f39a1c7023399b55b2e36afdda571711d538",
+    "scope": "Actual typed CPU opcode execution of pre5120/post20480/normscalar5120/scale5120 published recipes. Norm ordered reduction is supplied at the declared LOAD; no new collector/warp/RF physical or GPU timing qualification. Synthetic BF16 identity producer path and synthetic gain remain disclosed; not a real token trajectory.",
+    "source_commit": "809af9e88233453f198e284f36e8f1867b663aca",
+    "source_pins_verified_against_files_and_original_Git": {
+      "tests/test_w19_norm_opcode_proof.py": "9a1a5783c0656b52f2f0a572a17508c3b718ecca0abc766cd269124f6732f13b",
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+      "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+      "tools/w19_norm_opcode_proof.py": "541c89829a632d325678ea5e4667f5fdbbb8bf2105de57a5e46aedbdb9194a1c"
+    }
+  },
+  "physical_qualified": false,
+  "schema": "opentallas.w19.norm-burst-atlas-parent-intake.v1",
+  "tests": {
+    "burst_landing_transport": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 59
+    },
+    "norm_opcodes": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 14
+    }
+  }
+}

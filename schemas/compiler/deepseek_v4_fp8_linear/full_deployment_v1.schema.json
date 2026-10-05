@@ -1,0 +1,174 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/full_deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "$ref": "#/$defs/path"
+          },
+          "role": {
+            "enum": [
+              "execution_expectations",
+              "microcode",
+              "microcode_disassembly",
+              "operator_coverage",
+              "output_selection",
+              "roundtrip_report",
+              "scale_table",
+              "semantic_ir",
+              "tensor_manifest",
+              "weight_matrix"
+            ]
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "size_bytes": {
+            "$ref": "#/$defs/nonnegative"
+          }
+        },
+        "required": [
+          "path",
+          "role",
+          "sha256",
+          "size_bytes"
+        ],
+        "type": "object"
+      },
+      "maxItems": 10,
+      "minItems": 10,
+      "type": "array"
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "claim_boundary": {
+      "items": false,
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {
+          "const": "Executes every logical output row of one FP8_LINEAR operator."
+        },
+        {
+          "const": "Does not execute input normalization, attention, a transformer block, logits, or decode state."
+        },
+        {
+          "const": "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence."
+        }
+      ],
+      "type": "array"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "opentallas-deepseek-v4-fp8-linear-compiler"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_expectations": {
+          "$ref": "#/$defs/path"
+        },
+        "microcode": {
+          "$ref": "#/$defs/path"
+        },
+        "semantic_ir": {
+          "$ref": "#/$defs/path"
+        },
+        "tensor_manifest": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": [
+        "execution_expectations",
+        "microcode",
+        "semantic_ir",
+        "tensor_manifest"
+      ],
+      "type": "object"
+    },
+    "microcode_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "const": 0
+        },
+        "name": {
+          "const": "deepseek_v4_fp8_linear"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "name"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_fp8_linear_full_deployment.v1"
+    },
+    "source_application_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "enum": [
+        "development_fixture_complete_fp8_linear_operator_not_release_evidence",
+        "real_checkpoint_complete_fp8_linear_operator"
+      ]
+    }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "claim_boundary",
+    "compiler",
+    "entrypoint",
+    "microcode_abi",
+    "model_id",
+    "schema",
+    "source_application_id",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 complete-output FP8 deployment v1",
+  "type": "object",
+  "$defs": {
+    "nonnegative": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "path": {
+      "minLength": 1,
+      "not": {
+        "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)"
+      },
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

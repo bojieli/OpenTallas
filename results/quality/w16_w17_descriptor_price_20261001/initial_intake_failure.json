@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_PATH_INTAKE_FAILURE_PRESERVED",
+  "requested": "850d9c79b:results/uarch/w10_clock_source_contract_r1/contract.json",
+  "error": "gitshow exit128 path does not exist",
+  "correction": "git committed path is results/quality/w10_clock_source_contract_r1/contract.json; exact committed source used, no content change",
+  "additional_read_only_path_probe_failures": [
+    "rtl/v41rom/ot_v41_spine_w10.sv",
+    "rtl/v41rom/ot_v41_pair_w17w10.sv"
+  ],
+  "corrected_paths": [
+    "rtl/v41die/ot_v41_spine_w17w10.sv",
+    "rtl/v41die/ot_v41_pair_w17w10.sv"
+  ],
+  "adopt": false
+}

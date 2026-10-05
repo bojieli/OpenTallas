@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_MODEL_AND_LOCAL_PRODUCER_OPTIN_COPY_PREPARATION_ONLY",
+  "baseline_pass": "618ab551661f0383409c861f49c4ebb975a79fd4",
+  "parent_intake_reported": "1057f3516",
+  "Nash_contract": "8a156f62548aa927414d1d2e4f1a00baa2898bbf",
+  "model_sha256": "31b981c528285afc7b86283062f9870f071ff5b7ed8660f0152ce1eb2ee39993",
+  "candidate_sha256": "343e71b6c28e19af5be3240990f7a66411c5289333e26d12650b6c51ff980ec9",
+  "generator_sha256": "df337c251b0f9d773c0d1b37cb6e3df5661431f791328283fe1c812ecd36012a",
+  "tests": "8 static/model source-binding tests PASS; no RTL functional PASS",
+  "OPT_CANCEL_default": 0,
+  "legacy_default_inverse_byte_identical": true,
+  "prepared_local_state_bits": 2,
+  "future_exact_suffix_controller_state_subtotal_bits": 8,
+  "conservative_prior_adapter_envelope_bits": 19,
+  "producer_added_control_port_bits": 9,
+  "same_edge_fault": "known fault freezes all new admissions; producer rejects invalid local attempts without parallel valid commits; old accepted block stays WINDOW-owned",
+  "QE_contract": "terminal=kvb_v OR kvb_fault, retain raw VM writes/arithmetic, no cap-ready or blk-ready backpressure; real sourceidle before ack",
+  "new_rearm": "held matching cancel token plus suffixclosed/QEidle and EXTERNAL certified complete retirement; token-start and projected visibility never supply certificate",
+  "not_yet_prepared": [
+    "Core S_ISSUE/go/SU scalar-suppression wiring; await Nash edge/model review",
+    "Actual8bit QE suffix/sticky-freeze controller source and port binding",
+    "Causal PHY visible/delivery provider and end-to-end identity certification"
+  ],
+  "coordination": "Durable source-hook record for parent relay to Nash; no direct message or acknowledgement asserted",
+  "static_trials": "static_attempt1..3 preserved; no service/compile/runtime involved",
+  "no_new_synthetic_bench": true,
+  "no_compile_GO": true,
+  "service_provider": false,
+  "producer_live_safe": false,
+  "causal_PHY": false,
+  "fulltoken": false,
+  "adoption": false
+}

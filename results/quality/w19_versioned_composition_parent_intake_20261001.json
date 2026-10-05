@@ -1,0 +1,156 @@
+{
+  "artifacts": {
+    "results/quality/w16_w19_composed_schedule_20261001_r2/finite_service_profile.json": "5ee9b7baf9fe569aa8dfbe3c2934d9e88600a511e8be7625fce2b40c5559d282",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/graph_summary.json": "159a8c20b401f40e670453114f5d78d29652188e621d8e3a4b134c96b9c576b3",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/kernel_binding.json": "f4ad85ac9af459fbb5c7cd714d312c71cb1314d654b9cec69ad6859599d8f5f2",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/missing_cost_keys.json": "035ce871292754e05d8f59bb97963e0923bc8fb5225b6741a4e0abb2c37da74d",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/readiness.log": "2159cc4498b30d662b73b4dc31448594223e39bf0d74612592a8cabeff41d6c1",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/service_readiness.json": "c35f77713b275eba8c22c080b4611f7c21a9506bfac5a6d9fbd1c74356fda4c6"
+  },
+  "burst_scope_archival_hashes_verified": {
+    "build_r1.log": "e11634be14e8604edc1c2a4ee54f842ac7ee16bbe28462624039566928175748",
+    "check_r1.log": "e11634be14e8604edc1c2a4ee54f842ac7ee16bbe28462624039566928175748",
+    "scope_r1.json": "e59d7559735a59fb56ab0b5875318f733195dc3bb501a84a896ddf09e15240b4",
+    "snapshot_manifest_r1.json": "b15a79d5e1ae978b066364174805a14757d20f1fe26f15aa61f60670841807ee",
+    "source_snapshot_r1.tar.gz": "e398834e65f612ecdf2d5cee5856d3001f028f625c7dc50831dd4d15ef705988",
+    "tests_r1.log": "d9b8b8e3929d6a003f2bf5d309a4e03b20d21f9e2f3952dc832f9c3e57ec1954",
+    "tests_r1.xml": "6e99d5386a5ce366bc686cbb350d92412243caed3ffdad47bb9801198d1dfddd"
+  },
+  "burst_scope_snapshot_members_verified": 9,
+  "collision_cases": [
+    {
+      "clients": 1,
+      "consumer_bound_cycles": 1,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 1,
+      "consumer_bound_cycles": 7,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 1,
+      "consumer_bound_cycles": 31,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound_cycles": 1,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound_cycles": 7,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound_cycles": 31,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound_cycles": 1,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound_cycles": 7,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound_cycles": 31,
+      "controller_whole_sector_budget": true,
+      "inflight_output_credits": true,
+      "owner_tag_conservation": true,
+      "response_events": 256,
+      "route_and_reverse_CDC": true
+    }
+  ],
+  "explicit_CLI_RC": 2,
+  "finite_profile_source_pins_verified": {
+    "results/rtl/w11_ckv_current_readmode_binding_20261001.json": {
+      "commit": "758d3425c",
+      "sha256": "b9ec0aec40b241da03dfa6b793df1ccb5d2a9ce99ef91dc3395003d84c5bb1b3"
+    },
+    "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json": {
+      "commit": "8625c420a",
+      "sha256": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c"
+    },
+    "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": {
+      "commit": "07a07ec5d",
+      "sha256": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+    },
+    "results/uarch/qwen_hbm_connected_20261001/publication_model_negative_gate.json": {
+      "commit": "66aa67ed1",
+      "sha256": "287d997d2a5aefe6267b58f3f6b4a853067e1df6fb430e29fd67ccaef3c92b19"
+    }
+  },
+  "finite_source_sha256": "f36094c77cf0a63c65d796ad2fd3df45f758c3bef8ccfbc5fa196992f879f6df",
+  "four_owner_records_byteidentical": true,
+  "full_token_cycles": null,
+  "graph_phase_nodes": 13629,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "historical_HC22_scenario_rebound_into_new_graph": false,
+  "local_cost_nodes": 1245,
+  "new_graph_sha256": "ba0d17e0af29a02ba892d7a50f56cf45a07c82bb1adc6aef3204006ae467f9a6",
+  "owner_graph_source_sha256": "4dc2cdc56c438ab316ad9ec10e158ad0485cc3ecfd989ea20bc1866d6b94e5ec",
+  "owner_model_commit": "1ee79f2e0",
+  "physical_qualified": false,
+  "remaining": "Actual backend and combined read/write service, authoritative destination progress deadlines, full HC cost rebind to this graph, remaining vector/attention/matrix phases, address manifests/physical fit/connected tokens/SSFF. 450credit is an unvalidated scenario assumption, bank3 tail requires finalwrite anchor and delivery eligibility.",
+  "schema": "opentallas.versioned_composition_and_scope_parent_intake.v1",
+  "scope_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 35
+  },
+  "scope_verdict": {
+    "HBM_500ns": "ASSUMED_LOADED_LATENCY; not measured service or upper bound",
+    "bank_3": "CONFIRM conditional3cycles after final bank write with delivery eligibility; reject as unconditional tail after controller response",
+    "credit_450": "REJECT_AS_VALIDATED_UPPER_BOUND; retain only explicit isolated scenario assumption until destination/source progress deadlines and admission proof are supplied",
+    "provider": "CONDITIONAL_HC22_MODEL_ONLY; no measured guarantee, no bound validation and no full-token/hardware credit"
+  },
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 86
+  },
+  "unpriced_phase_nodes": 12384,
+  "versioning": "Exact owner helper in tools/w19_composed_schedule_r2.py; existing tools/w19_composed_schedule.py and all historical r1 graph/resource/landing receipts preserved. Companion files permit source-pinned current model progress without changing prior intake inputs."
+}

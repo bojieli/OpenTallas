@@ -1,0 +1,47 @@
+Actual native consumer + eight-cohort drain source integration (additive/default-off)
+Instantiate ot_gpu_qwen_kv_native_lifecycle ENABLE=1 in the actual enclosing simulator.
+It INSTantiates the existing ot_gpu_qwen_kv_lifecycle_controller and directly wires
+all16 consumer/drain ports to the new native bridge. Controller source is unchanged.
+No second72reader table: existing controller enforces reader identity and SCORES/PV order.
+
+New source paths:
+ rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv
+ rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_kv_native_lifecycle.sv
+ tools/gpu_sys/canonical_qwen_native_consumer_drain.py (stateless tuple packing/port map)
+ tools/gpu_sys/qwen_native_consumer_drain_model.py (before RTL sizing; unified DFF/uncertainty constants)
+
+Compile source order: existing W6 SECDED package, existing lifecycle controller,
+new native bridge, new lifecycle wrapper. Same actual controller streaming clock.
+Native issue/complete/reverse tuple230 is {stage1,key20,reader64,rank1,SM5,PC11,gen64,tag64}.
+Actual operator issue must coincide enclosing issuer acceptance. Completion is actual
+opPC.result_visible after ALL source loops/tiles and output commits; reverse is actual
+opPC.credit_return after captured output. Neither individual primitives nor RPC return
+or PC40's partial SILU NEG/FMAX/FMIN may create these events. Literal144 SCORES/PV
+operators validated against original actual program; source KV input/output versions
+and native issue/result_visible/credit_return event IDs exported in model.json.
+
+Each cohort request is held until ready; replies match {key20,id64}. Named8 endpoints
+are stage,payload-request,payload-return,metadata,RF/commonACK,consumer,requestCDC,reverseCDC.
+Every endpoint must close NEW same-key admissions while cohort_quiesce is asserted,
+return EMPTY only after its ACTUAL accepted obligations and reverse ownership retire,
+and retain quiescence until drain_retained falls. No idle/elapsed/allff completion.
+Allcopies output consists ONLY of matching captured response bits. Warm reset/fault
+retains active/native/drain ownership and quiesce, sticky protected fault; por_n is
+COLD global discard authority only, never a local recovery substitute.
+
+Euclid owns enclosing pins/clock/actual native endpoint connections. Dewey owns
+shared router and state observer; Sagan owns sector grant/reverse; Russell owns
+ONE connected gate. This packet launches no connected fixture or costly job.
+Actual endpoint source-response adapters/quiescence and actual fulloperator hardware
+completion wiring must be installed by enclosing owner; the wrapper never creates
+them from an empty-software-dictionary, immediate callback, timer or ready default.
+
+Model:335raw/432protectedFF per rank,6codedwords, two replicas, zero payload SRAM.
+Assumed gross both-rank50pct footprint .0053198208mm2 (not net hardware admission).
+Positive capture/service/control edges exported; worst endpoint waits/whole-token,
+actual slots/routes, SSFF remain UNKNOWN. No assumed .833ns hardware frequency claim.
+Cold model replay and source/port tests PASS; complete ENABLE1 wrapper lint PASS
+(no UNOPTFLAT/errors; existing packageTIMESCALEMOD and existing controller width warnings retained). First composed lint loop failure retained:
+permit-masked controller drain_valid was in CURRENT fault; fixed by validating key
+on capture edge, retaining bad owner/fault before any endpoint request can issue.
+No HDL runtime/connected token/physical qualification claimed.

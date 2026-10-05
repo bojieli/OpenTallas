@@ -1,0 +1,51 @@
+{
+  "DS_dependency_nodes": 97,
+  "LEF_parser_correction": "Prior summary counted only first rectangle per supply pin. New parser preserves all actual retained power rectangles without changing previous evidence. Parent routed PDN/via occupancy is absent; no nominal Tcl geometry substituted.",
+  "Qwen_W8_parent_matrix_nodes": 290,
+  "Qwen_general_BF16_feed_mapping_gate_nodes": 144,
+  "actual_M6_macro_power_rectangles_DS_TC16": 34,
+  "actual_M6_macro_power_rectangles_Qwen": 44,
+  "artifacts_sha256": {
+    "results/uarch/hbm_tc_unique_net_sourceplan_20261002/model.json": "1b7c4a647764b415a0e9c267fef81849c261b4fc466ca39dcfdf65b7729019c4",
+    "results/uarch/hbm_tc_unique_net_sourceplan_20261002/net_manifest.json.gz": "60951ccf69ae68100fbec5083ec337a79a74aeed0504b8ed0d9fb57a8417c049",
+    "tools/hbm_tc_unique_net_sourceplan.py": "5f126638564f2f71d670d1af0aa759c7019e283a7557fe51563fe04528c33b5f",
+    "tools/test_hbm_tc_unique_net_sourceplan.py": "eab839179462a2373f456a456df6a90d06c39a1172b6b7139c8541bc7862d5f5"
+  },
+  "failed_unchanged": {
+    "DRC": 0,
+    "FF_hold_wns_ps": -0.9053036098549683,
+    "SS_setup_violation_count": 1170,
+    "SS_setup_wns_ps": -102.65510663742816,
+    "cell_area_um2": 37566.1,
+    "complete_LEF_ETMs": true,
+    "core_area_um2": 46586,
+    "die_area_um2": 48400,
+    "engineering_verdict": "FAIL",
+    "fault_budget_excess_ps": 64.7,
+    "hold_uncertainty_ps": 25,
+    "output_over_budget": [
+      "fault",
+      "ov"
+    ],
+    "ov_budget_excess_ps": 24.3,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60
+  },
+  "final_new_test_command": "python3 -m unittest discover -s tools -p test_hbm_tc_unique_net_sourceplan.py -v",
+  "final_new_tests_PASS": 8,
+  "git_diff_check": "PASS",
+  "new_tests_PASS": 8,
+  "no_RTL_PnR_retry_checkpoint_payloads_live_job_changes_or_VM_access": true,
+  "no_admission": true,
+  "no_original_edits": true,
+  "no_rate_die_or_impossibility_claim": true,
+  "parent_git": "23a7aa87c9ff595ce064aead4d5d289c35f77347",
+  "prior_tests_PASS": 26,
+  "reproduction": "PASS byte-identical JSON and deterministic gzip net manifest",
+  "reproduction_command": "python3 tools/hbm_tc_unique_net_sourceplan.py --check results/uarch/hbm_tc_unique_net_sourceplan_20261002",
+  "safe_physical_cut_status": "NOT_ESTABLISHED_FROM_RETAINED_SOURCES; source plan and precise metadata gate only",
+  "schema": "opentallas.hbm-tc-unique-net-sourceplan-validation.v1",
+  "test_command": "python3 -m unittest discover -s tools -p 'test_hbm_tc*.py' -v",
+  "tests_PASS": 34,
+  "wire_delta_status": "Source-graph per-event expressions and numeric macro-anchor displacement bounds; actual source-visible producer/consumer locations and readiness slack remain necessary. No broadcast-count or physical wire-stage substitution."
+}

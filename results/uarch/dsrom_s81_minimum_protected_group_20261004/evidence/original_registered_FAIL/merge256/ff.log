@@ -1,0 +1,111 @@
+OpenSTA 2.6.0 aa598a2f14 Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9184, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9217, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9250, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9283, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9316, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9349, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 9382, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 10518, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 10551, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ff.lib line 10584, timing group from output port.
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+Startpoint: _3997_ (rising edge-triggered flip-flop clocked by core)
+Endpoint: _3353_ (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ _3997_/CLK (DFFHQNx1_ASAP7_75t_R)
+  35.209766  211.080383  128.307648  128.307648 ^ _3997_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  _0645_ (net)
+             211.080383    0.000000  128.307648 ^ _2454_/A (INVx1_ASAP7_75t_R)
+  34.577595  201.441635  144.890579  273.198212 v _2454_/Y (INVx1_ASAP7_75t_R)
+                                                  _1292_ (net)
+             201.441635    0.000000  273.198212 v _3146_/B (NAND2x1_ASAP7_75t_R)
+   1.078980   36.558048   32.388924  305.587128 ^ _3146_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1671_ (net)
+              36.558048    0.000000  305.587128 ^ _3148_/A (NAND2x1_ASAP7_75t_R)
+   0.619256   11.027841    8.388540  313.975677 v _3148_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0000_[127] (net)
+              11.027841    0.000000  313.975677 v _3353_/D (DFFHQNx1_ASAP7_75t_R)
+                                     313.975677   data arrival time
+
+               0.000000 1111.111084 1111.111084   clock core (rise edge)
+                           0.000000 1111.111084   clock network delay (ideal)
+                         -60.000000 1051.111084   clock uncertainty
+                           0.000000 1051.111084   clock reconvergence pessimism
+                                    1051.111084 ^ _3353_/CLK (DFFHQNx1_ASAP7_75t_R)
+                         -11.147434 1039.963623   library setup time
+                                    1039.963623   data required time
+---------------------------------------------------------------------------------------
+                                    1039.963623   data required time
+                                    -313.975677   data arrival time
+---------------------------------------------------------------------------------------
+                                     725.987976   slack (MET)
+
+
+Startpoint: _3609_ (rising edge-triggered flip-flop clocked by core)
+Endpoint: _3353_ (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: min
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ _3609_/CLK (DFFHQNx1_ASAP7_75t_R)
+   0.513683   11.235140   31.216009   31.216009 ^ _3609_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  _0257_ (net)
+              11.235140    0.000000   31.216009 ^ _2066_/A (INVx1_ASAP7_75t_R)
+   0.787122    7.075310    6.296401   37.512409 v _2066_/Y (INVx1_ASAP7_75t_R)
+                                                  _0904_ (net)
+               7.075310    0.000000   37.512409 v _3147_/A (NAND2x1_ASAP7_75t_R)
+   0.574289    8.933325    8.029029   45.541439 ^ _3147_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1672_ (net)
+               8.933325    0.000000   45.541439 ^ _3148_/B (NAND2x1_ASAP7_75t_R)
+   0.548002    5.962409    5.550171   51.091610 v _3148_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0000_[127] (net)
+               5.962409    0.000000   51.091610 v _3353_/D (DFFHQNx1_ASAP7_75t_R)
+                                      51.091610   data arrival time
+
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                          25.000000   25.000000   clock uncertainty
+                           0.000000   25.000000   clock reconvergence pessimism
+                                      25.000000 ^ _3353_/CLK (DFFHQNx1_ASAP7_75t_R)
+                           8.653744   33.653744   library hold time
+                                      33.653744   data required time
+---------------------------------------------------------------------------------------
+                                      33.653744   data required time
+                                     -51.091610   data arrival time
+---------------------------------------------------------------------------------------
+                                      17.437868   slack (MET)
+
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+_2451_/Y                              320.00  227.98   92.02 (MET)
+
+max capacitance
+
+Pin                                    Limit     Cap   Slack
+------------------------------------------------------------
+_3994_/QN                              46.08   35.26   10.82 (MET)
+

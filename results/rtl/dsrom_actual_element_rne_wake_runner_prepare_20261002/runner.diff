@@ -1,0 +1,119 @@
+--- tools/run_dsrom_actual_element_numerical.py
++++ tools/run_dsrom_actual_element_rne_wake.py
+@@ -14,12 +14,12 @@
+ import time
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+-PREPARED_SOURCE_COMMIT='864b4042cca1b9ee7e2286c01e80e97f135875f7'
+-GO_PATH='results/rtl/dsrom_actual_element_numerical_prepare_20261002/parent_GO.json'
+-MODEL_PATH='results/rtl/dsrom_actual_element_numerical_prepare_20261002/model.json'
+-RUNNER_PATH='tools/run_dsrom_actual_element_numerical.py'
+-PLAN_PATH='results/rtl/dsrom_actual_element_numerical_runner_prepare_20261002/runner_plan.json'
+-SOURCEPLAN_PATH='results/rtl/dsrom_actual_element_numerical_prepare_20261002/sourceplan.json'
++PREPARED_SOURCE_COMMIT='0c51556275864679b407ace696ae136208bce1b5'
++GO_PATH='results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/parent_GO.json'
++MODEL_PATH='results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/model.json'
++RUNNER_PATH='tools/run_dsrom_actual_element_rne_wake.py'
++PLAN_PATH='results/rtl/dsrom_actual_element_rne_wake_runner_prepare_20261002/runner_plan.json'
++SOURCEPLAN_PATH='results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json'
+ VERILATOR='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'
+ 
+ def sha(data): return hashlib.sha256(data).hexdigest()
+@@ -27,11 +27,11 @@
+ def write(path,record):
+     with path.open('x') as f: json.dump(record,f,indent=2,sort_keys=True); f.write('\n')
+ def prepare_module():
+-    spec=importlib.util.spec_from_file_location('prepare_numerical',ROOT/'tools/prepare_dsrom_actual_element_numerical.py')
++    spec=importlib.util.spec_from_file_location('prepare_numerical',ROOT/'tools/prepare_dsrom_actual_element_rne_wake.py')
+     prep=importlib.util.module_from_spec(spec);spec.loader.exec_module(prep);return prep
+ 
+ def package_sha(pins):
+-    # Canonical complete44-file manifest; does not rely on filesystem iteration order.
++    # Canonical complete48-file manifest; does not rely on filesystem iteration order.
+     return sha(json.dumps(pins,sort_keys=True,separators=(',',':')).encode())
+ 
+ def reviewed_plan():
+@@ -56,6 +56,7 @@
+     for token in expected['help_option_tokens']:
+         if token not in help_text:raise ValueError('Verilator option unavailable: '+token)
+     sourceplan=json.loads((ROOT/SOURCEPLAN_PATH).read_text())
++    if sha(help_text.encode())!=expected['help_sha256']:raise ValueError('Verilator help changed')
+     for case,argv in sourceplan['compile_plan_proposed_only'].items():
+         if argv!=plan['compile_plan_proposed_only'][case]:raise ValueError('compile options changed: '+case)
+         if argv[0]!=VERILATOR:raise ValueError('compile path mismatch')
+@@ -65,7 +66,7 @@
+     # A separate GO binds all reviewed sources, package, runner, plan, and full commit.
+     raw=git('show',go_commit+':'+GO_PATH);go=json.loads(raw)
+     model=prepare_module().verify();plan=reviewed_plan()
+-    if go.get('GO')!='BOUNDED_NUMERICAL_ACTUAL_ELEMENT_VERIFICATION_ONLY' or go.get('bench_revision')!='numerical':raise ValueError('explicit new numerical parent GO required')
++    if go.get('GO')!='BOUNDED_NUMERICAL_ACTUAL_ELEMENT_VERIFICATION_ONLY' or go.get('bench_revision')!='rne_wake':raise ValueError('explicit new numerical parent GO required')
+     required=dict(prepared_model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),bench_sha256=model['new_artifact_pins'][model['bench_path']],generated_package_sha256=package_sha(model['generated_files_sha256']),runner_sha256=sha((ROOT/RUNNER_PATH).read_bytes()),runner_plan_sha256=sha((ROOT/PLAN_PATH).read_bytes()),sourceplan_sha256=sha((ROOT/SOURCEPLAN_PATH).read_bytes()))
+     for key,pin in required.items():
+         if go.get(key)!=pin:raise ValueError('GO pin mismatch: '+key)
+@@ -84,12 +85,24 @@
+     events=[list(map(int,m)) for m in re.findall(r'^ORACLE phase=(\d+) positions=(\d+) active_segments=(\d+) nseg=(\d+) cumulative_public_rows=(\d+) value_assertions=(\d+)$',text,re.M)]
+     passes=[list(map(int,m)) for m in re.findall(r'^PASS independent-numerical BF=(\d+) rows=(\d+) value_assertions=(\d+) config_assertions=(\d+)$',text,re.M)]
+     expected=[[int(case=='bfcolumn'),target['public_rows'],target['value_assertions'],target['config_assertions']]]
+-    return dict(valid=events==plan['expected_phase_events'][case] and passes==expected,events=events,pass_counters=passes,expected_events=plan['expected_phase_events'][case],expected_counters=expected)
++    legacy_pattern=r'PASS actual-element BF=(\d+) cycles=(\d+) partials=(\d+) issues=(\d+) gated=(\d+) opened=(\d+) loads=(\d+)'
++    wake_pattern=r'PASS wake-source BF=(\d+) wake_assertions=(\d+) root_capture_events=(\d+)'
++    legacy=[list(map(int,m)) for m in re.findall('^'+legacy_pattern+'$',text,re.M)]
++    wake=[list(map(int,m)) for m in re.findall('^'+wake_pattern+'$',text,re.M)]
++    wake_valid=False
++    if len(legacy)==1 and len(wake)==1:
++        bf,cycles,partials,issues,gated,opened,loads=legacy[0]
++        wake_valid=(bf==int(case=='bfcolumn') and cycles>4 and partials==(target['public_rows']+8)//2 and min(issues,gated,opened)>0 and loads==25*(target['config_assertions']//32) and wake[0]==[bf,16*cycles,cycles-4])
++    pass_patterns=[legacy_pattern,wake_pattern,r'PASS independent-numerical BF=\d+ rows=\d+ value_assertions=\d+ config_assertions=\d+']
++    oracle_pattern=r'ORACLE phase=\d+ positions=\d+ active_segments=\d+ nseg=\d+ cumulative_public_rows=\d+ value_assertions=\d+'
++    malformed=any(('PASS' in line and not any(re.fullmatch(p,line) for p in pass_patterns)) or ('ORACLE' in line and not re.fullmatch(oracle_pattern,line)) for line in text.splitlines())
++    fatal=bool(re.search(r'%Fatal|%Error|Assertion failed|Aborting|\b(?:Segmentation fault|core dumped|DIFF)\b',text))
++    return dict(valid=events==plan['expected_phase_events'][case] and passes==expected and wake_valid and not malformed and not fatal,events=events,pass_counters=passes,expected_events=plan['expected_phase_events'][case],expected_counters=expected,wake_terminal=wake,legacy_terminal=legacy,wake_valid=wake_valid,malformed_marker=malformed,fatal_or_DIFF=fatal)
+ 
+ def failure_kinds(text,entry):
+     kinds=[]
+     if entry['explicit_DIFF']:kinds.append('DIFFERENTIAL')
+-    if re.search(r'NUMERICAL value',text):kinds.append('NUMERICAL_VALUE')
++    if re.search(r'NUMERICAL value',text):kinds.append('NUMERICAL_BITS_OR_FLAGS')
+     if re.search(r'NUMERICAL (metadata|duplicate|missing|output|exact|extended)',text):kinds.append('NUMERICAL_CONTRACT_OR_FIXTURE')
+     if not kinds:kinds.append('FIXTURE_OR_IMPLEMENTATION_OR_COMPLETION')
+     return kinds
+@@ -104,7 +117,7 @@
+     if caps['memory.max']!='4294967296' or caps['memory.swap.max']!='0':raise RuntimeError('aggregate memory caps not applied; refuse execution')
+     if not (cg/'cgroup.kill').exists() or not os.access(cg/'cgroup.kill',os.W_OK):raise RuntimeError('whole cgroup kill unavailable; refuse execution')
+     cpus=sorted(os.sched_getaffinity(0))
+-    if len(cpus)!=2:raise RuntimeError('two CPU affinity cap not applied; refuse execution')
++    if cpus!=[0,1]:raise RuntimeError('two CPU affinity cap not applied; refuse execution')
+     a.output.mkdir(parents=True,exist_ok=False)
+     plan=reviewed_plan()
+     def whole_kill(*ignored):
+@@ -167,7 +180,7 @@
+         positives_pass=not compile_failed and len(record['runs'])==4 and all(e['returncode']==0 for e in record['runs']) and all(e['pass_marker'] and e['numerical_completion']['valid'] and not e['explicit_DIFF'] for e in record['runs'] if e['phase']=='simulate')
+         # Optional mutant is deliberately omitted if positives fail. No repair/retry.
+         record['optional_mutant']='NOT_RUN: conservative omission; positives must pass first' if not positives_pass else 'NOT_RUN: optional omitted to preserve positive package unchanged'
+-        record['classification']='Bounded finite synthetic actual-element numerical oracle plus reference/candidate differential; parent reduction software mapping only; no full arithmetic domain, field, fulltoken or physical qualification'
++        record['classification']='Bounded full-target-shape actual q/BF element with shared RNE and true WAKE1, independent immutable-input numerical/config oracle and reference/candidate helper differential; not full arithmetic domain, fieldreturn, SS/FF, fulltoken or adoption qualification'
+         record['status']='PASS_BOUNDED_NUMERICAL_AND_DIFFERENTIAL' if positives_pass else 'FAIL_UNQUALIFIED'
+     except Exception as e:
+         record['status']='FAIL_RUNNER';record['failure']=repr(e)
+@@ -179,14 +192,18 @@
+     return 0 if record['status']=='PASS_BOUNDED_NUMERICAL_AND_DIFFERENTIAL' else 1
+ 
+ if __name__=='__main__':
+-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--capped-child',action='store_true');p.add_argument('--go-commit',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--work',type=Path,required=True);a=p.parse_args();a.output=a.output.resolve();a.work=a.work.resolve()
++    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute',action='store_true');p.add_argument('--capped-child',action='store_true');p.add_argument('--go-commit');p.add_argument('--output',type=Path);p.add_argument('--work',type=Path);a=p.parse_args()
++    if not a.execute:
++        model=prepare_module().verify();plan=reviewed_plan();print(json.dumps(dict(status='PREFLIGHT_ONLY_NO_HDL_EXECUTION',model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),generated_package_sha256=package_sha(model['generated_files_sha256']),tool_preflight=tool_preflight(plan)),indent=2));sys.exit(0)
++    if not a.go_commit or not a.output or not a.work:p.error('fresh GO/work/output required')
++    a.output=a.output.resolve();a.work=a.work.resolve()
+     if a.output.exists() or a.work.exists():p.error('fresh work/output paths required')
+     if a.capped_child:sys.exit(capped_run(a))
+     verify(a.go_commit)
+     if git('status','--porcelain').strip():raise RuntimeError('clean pinned worktree required')
+     tool_preflight(reviewed_plan()) # Read-only version/path/options check before launch.
+-    unit='dsrom-actual-element-numerical-bounded-'+str(os.getpid())
+-    argv=['systemd-run','--user','--wait','--pipe','--unit='+unit,'-p','MemoryMax=4294967296','-p','MemorySwapMax=0','-p','CPUQuota=200%','-p','CPUAffinity=0 1','-p','TasksMax=64','-p','OOMPolicy=kill','-p','RuntimeMaxSec=660s','-p','TimeoutStopSec=1s','-p','KillMode=control-group',sys.executable,str(Path(__file__).resolve()),'--capped-child','--go-commit',a.go_commit,'--output',str(a.output),'--work',str(a.work)]
++    unit='dsrom-actual-element-rne-wake-bounded-'+str(os.getpid())
++    argv=['systemd-run','--user','--wait','--pipe','--unit='+unit,'-p','MemoryMax=4294967296','-p','MemorySwapMax=0','-p','CPUQuota=200%','-p','CPUAffinity=0 1','-p','TasksMax=64','-p','OOMPolicy=kill','-p','RuntimeMaxSec=660s','-p','TimeoutStopSec=1s','-p','KillMode=control-group',sys.executable,str(Path(__file__).resolve()),'--capped-child','--execute','--go-commit',a.go_commit,'--output',str(a.output),'--work',str(a.work)]
+     # Launcher log lives outside child output so cap/setup failures survive too.
+     with Path(str(a.output)+'_launcher.log').open('x') as f:rc=subprocess.run(argv,stdout=f,stderr=subprocess.STDOUT).returncode
+     props=subprocess.run(['systemctl','--user','show',unit,'-p','Result','-p','ExecMainCode','-p','ExecMainStatus','-p','MemoryPeak','-p','CPUQuotaPerSecUSec','-p','MemoryMax','-p','MemorySwapMax','-p','ControlGroup'],capture_output=True,text=True)

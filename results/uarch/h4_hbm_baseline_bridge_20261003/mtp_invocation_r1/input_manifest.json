@@ -1,0 +1,44 @@
+[
+  {
+    "archive": "inputs/inference_config.json",
+    "bytes": 1982,
+    "origin": "f829666927fa0bfdd28e162ed2c302565022089b:compiler/models/deepseek-v4.1-flash/inference_config.json",
+    "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+  },
+  {
+    "archive": "inputs/hdc_golden_v41.py",
+    "bytes": 62982,
+    "origin": "f829666927fa0bfdd28e162ed2c302565022089b:tools/hdc_golden_v41.py",
+    "sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  {
+    "archive": "inputs/hdc_program_v41.py",
+    "bytes": 111128,
+    "origin": "f829666927fa0bfdd28e162ed2c302565022089b:tools/hdc_program_v41.py",
+    "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+  },
+  {
+    "archive": "inputs/hdc_isa_v41.py",
+    "bytes": 18901,
+    "origin": "f829666927fa0bfdd28e162ed2c302565022089b:tools/hdc_isa_v41.py",
+    "sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+  },
+  {
+    "archive": "inputs/audit_HANDOFF.txt",
+    "bytes": 8810,
+    "origin": "70ee620dcb85cdd209f1590e8db5fd893b177483:results/uarch/ds_mtp_coverage_independent_review_20261003/HANDOFF.txt",
+    "sha256": "20921c8ab4931a3f6e401122caa3e4f0c6b2b0d29cbe97105189edda6a390caa"
+  },
+  {
+    "archive": "inputs/audit_findings.json",
+    "bytes": 18753,
+    "origin": "70ee620dcb85cdd209f1590e8db5fd893b177483:results/uarch/ds_mtp_coverage_independent_review_20261003/findings.json",
+    "sha256": "5d6ed50aeb631fd1e5063f16c079d2ac3f35f119678d4f94971c3e0641accdc1"
+  },
+  {
+    "archive": "inputs/audit_inventory.json",
+    "bytes": 4900,
+    "origin": "70ee620dcb85cdd209f1590e8db5fd893b177483:results/uarch/ds_mtp_coverage_independent_review_20261003/inventory.json",
+    "sha256": "c617ac47392fe53265115cd52edc53a343974b00c8025bfba1c36c670b5d5011"
+  }
+]

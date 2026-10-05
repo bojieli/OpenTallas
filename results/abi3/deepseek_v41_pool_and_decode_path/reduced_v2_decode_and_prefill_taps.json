@@ -1,0 +1,208 @@
+{
+ "head_5d21129c": {
+  "hbm_c32cmp": {
+   "decode_tokens": [
+    3372,
+    1309,
+    813
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1309
+   ],
+   "prefill_token": [
+    1215
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": {
+    "taps": 12,
+    "identical_taps": 5,
+    "first_difference": {
+     "tap": "L02.ffn_norm",
+     "min_cosine": 0.998392,
+     "rows_below_0_9999": [
+      0
+     ]
+    },
+    "min_cosine": 0.87556
+   }
+  },
+  "rom_wafer_cmp": {
+   "decode_tokens": [
+    3372,
+    1309,
+    813
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1239
+   ],
+   "prefill_token": [
+    3672
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": "not comparable: decode failed or generated a different prefix than the prefill prompt",
+   "prefill10_all_rows_vs_hbm": {
+    "taps": 80,
+    "identical_taps": 49,
+    "first_difference": {
+     "tap": "L24.ffn_norm",
+     "min_cosine": 0.999918,
+     "rows_below_0_9999": []
+    },
+    "min_cosine": 0.970762
+   }
+  },
+  "rom_array12_cmp": {
+   "decode_tokens": [
+    3372,
+    1309,
+    813
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1239
+   ],
+   "prefill_token": [
+    3672
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": "not comparable: decode failed or generated a different prefix than the prefill prompt",
+   "prefill10_all_rows_vs_hbm": {
+    "taps": 80,
+    "identical_taps": 49,
+    "first_difference": {
+     "tap": "L24.ffn_norm",
+     "min_cosine": 0.999918,
+     "rows_below_0_9999": []
+    },
+    "min_cosine": 0.970762
+   }
+  }
+ },
+ "fixed_e0e5fe21": {
+  "hbm_c32cmp": {
+   "decode_tokens": [
+    3372,
+    1239,
+    3672
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1239
+   ],
+   "prefill_token": [
+    3672
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": {
+    "taps": 80,
+    "identical_taps": 80,
+    "first_difference": null,
+    "min_cosine": 1.0
+   }
+  },
+  "rom_wafer_cmp": {
+   "decode_tokens": [
+    3372,
+    1239,
+    3672
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1239
+   ],
+   "prefill_token": [
+    3672
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": {
+    "taps": 80,
+    "identical_taps": 80,
+    "first_difference": null,
+    "min_cosine": 1.0
+   },
+   "prefill10_all_rows_vs_hbm": {
+    "taps": 80,
+    "identical_taps": 80,
+    "first_difference": null,
+    "min_cosine": 1.0
+   }
+  },
+  "rom_array12_cmp": {
+   "decode_tokens": [
+    3372,
+    1239,
+    3672
+   ],
+   "decode_failure": null,
+   "prefill_prompt": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582,
+    3372,
+    1239
+   ],
+   "prefill_token": [
+    3672
+   ],
+   "decode_step_pos9_vs_prefill10_last_row": {
+    "taps": 80,
+    "identical_taps": 80,
+    "first_difference": null,
+    "min_cosine": 1.0
+   },
+   "prefill10_all_rows_vs_hbm": {
+    "taps": 80,
+    "identical_taps": 80,
+    "first_difference": null,
+    "min_cosine": 1.0
+   }
+  }
+ }
+}

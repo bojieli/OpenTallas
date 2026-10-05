@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_line_identity_survives_layout_cursor_decoding (tools.gpu_sys.test_canonical_qwen_matrix_loop.MatrixTests.test_line_identity_survives_layout_cursor_decoding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/ampere-qwen-native-service-calendar-20261003/tools/gpu_sys/test_canonical_qwen_matrix_loop.py", line 56, in test_line_identity_survives_layout_cursor_decoding
+    self.assertEqual(self.t.line(i)['line_address'],i)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 128
+
+----------------------------------------------------------------------
+Ran 1 test in 1.707s
+
+FAILED (failures=1)

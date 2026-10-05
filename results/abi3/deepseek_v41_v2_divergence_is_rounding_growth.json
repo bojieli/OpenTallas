@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.abi3.v41_divergence_character.v1",
+  "question": "is the reduced V4.1 device-versus-reference divergence a localised fault or growing rounding?",
+  "answer": "growing rounding. No layer-2 operator is wrong; the whole of layer 2 sits between 0.9968 and 0.9996 against the reference, and the relative error grows with depth from about two BF16 epsilons at layer 0 to 266 at layer 39.",
+  "relative_error_in_bf16_epsilon_units": {
+    "note": "relative L2 error is sqrt(2*(1-cosine)); one BF16 epsilon is 2**-8 = 0.39%",
+    "block.00": {"cosine": 0.999966, "relative_percent": 0.82, "epsilons": 2.1},
+    "block.01": {"cosine": 0.999347, "relative_percent": 3.61, "epsilons": 9.3},
+    "L02.attn_norm": {"cosine": 0.999317, "relative_percent": 3.70, "epsilons": 9.5},
+    "L02.attn.wkv": {"cosine": 0.998861, "relative_percent": 4.77, "epsilons": 12.2},
+    "L02.attn.compressor": {"cosine": 0.999561, "relative_percent": 2.96, "epsilons": 7.6},
+    "L02.attn.wo_b": {"cosine": 0.996812, "relative_percent": 7.98, "epsilons": 20.4},
+    "block.02": {"cosine": 0.991827, "relative_percent": 12.79, "epsilons": 32.7},
+    "block.39": {"cosine": 0.458449, "relative_percent": 104.07, "epsilons": 266.4}
+  },
+  "the_wgate_reading_is_an_artifact": "the deep taps show L02.attn.compressor.wgate.all at 0.214 against neighbours at 0.999, which looks like a named fault. It is not: the compressor's OUTPUT is 0.999561, so the compressor computes the right thing. Our lowering fuses the gate projection with the softmax pooling rather than materialising the raw gate, so there is no device tensor for that tap to match and the nearest-neighbour search returns a coincidence. The same applies to L02.attn.indexer.all at 0.627 beside its own components at 0.9996.",
+  "why_the_two_references_do_not_bound_this": "the FP8-recast and FP4-dequantised references agree to the digit, which proves the expert numeric path does not move the output -- but BOTH are torch, accumulating in the same order. They therefore say nothing about the accumulation order the device is entitled to use under its contracts. Two references agreeing with each other is weaker evidence than it looks when they share an implementation.",
+  "what_this_means_for_the_cell": "the reduced V4.1 cells cannot be closed by exact token match on this fixture. The device's own top-1 margin is 0.00515 while the accumulated difference at the head is 266 BF16 epsilons, so the argmax is decided by rounding order rather than by the model. That is a property of a fixture with random weights and a 40-layer stack, not of the implementation -- and it is why all three DeepSeek-V4-Flash cells close at SHIPPED scale, where trained weights give a decisive margin, while this vehicle cannot.",
+  "what_would_be_worth_doing_instead": [
+    "accept the reduced vehicle for what it demonstrates -- that the program executes end to end under the real control plane, which it does, with 13,473 instructions retired and no trap -- and stop treating its argmax as a correctness oracle",
+    "or reduce the depth rather than the width: a 4-layer reduced V4.1 would keep the CSA2 mode sequence's first cycle and give an accumulated error of a few epsilons instead of 266, which is a vehicle whose token IS checkable",
+    "the shipped-scale cells remain the real evidence and are already closed for DeepSeek-V4-Flash on all three topologies"
+  ],
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "growing rounding is not a proof of correctness -- it is the absence of a localised discrepancy, measured at every operator of the first diverging layer",
+    "a 266-epsilon accumulated difference does not exclude a small real fault somewhere; it means the instrument cannot separate one from rounding on this vehicle"
+  ]
+}

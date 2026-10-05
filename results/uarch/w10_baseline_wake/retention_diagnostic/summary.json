@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS_LEAN_ASAP7_RETENTION_ONLY",
+  "adopted": false,
+  "source_commit": "b046de7f0",
+  "rtl_unchanged": true,
+  "parameters_unchanged": true,
+  "latency_unchanged": true,
+  "host_first_only": "older host Yosys maps to1 without second barrier",
+  "orfs_first_only": "ORFS Yosys0.68 maps8 with first barrier alone",
+  "both": "8 at proc/coarse/techmap/ASAP7 dfflibmap+ABC",
+  "collapsed": "1 actualmappedFF",
+  "second_only": "assert8 rejects1 aftercoarse",
+  "full_column_map_pending": true,
+  "pnr_allowed": false,
+  "pin_access_review": "reuse root owner c3a265f43; actual all-pin escape/phase/site and local capacity mandatory beforefloorplan"
+}

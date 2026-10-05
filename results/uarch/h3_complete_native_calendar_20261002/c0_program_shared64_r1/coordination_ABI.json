@@ -1,0 +1,81 @@
+{
+  "CPU_elapsed_to_hardware_conversion": false,
+  "Kepler_source_worktree": "/tmp/kepler-ds-r50-current-main-20261002",
+  "Peirce_required_boundary": "actual frozen/drained PC9 provider pools plus all logical leases/source_images/published versions; no expected-output stimuli",
+  "Sagan_source_milestone": "e10e1d93d78b162905f23e96e3d498e818d407d2",
+  "actual_complete_runtime_checkpoint_disk_reservation": null,
+  "actual_ports": [
+    "rf_owner_grant[SM]",
+    "shared_owner_grant[SM]",
+    "host_rsp_ready[SM]",
+    "host_ack_ready[SM]",
+    "simd_done_ready[SM]",
+    "scratch_done_ready[SM]"
+  ],
+  "complete_continuation_disk_reservation": null,
+  "continuation_alias_rank_publications": 26880,
+  "default_one_edge_admitted": false,
+  "existing_context": "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv",
+  "identity_fields": [
+    "model",
+    "physical_RF_id",
+    "physical_L2_bank_id",
+    "rank",
+    "SM",
+    "generation64",
+    "source_PC",
+    "owner_tag",
+    "fragment_sequence",
+    "version",
+    "lease"
+  ],
+  "missing_terms_are_zero": false,
+  "movement_receipt_owners": [
+    "Kepler",
+    "Sagan"
+  ],
+  "no_numerical_job_launched": true,
+  "production_finite_hardware_admission": false,
+  "provider_owner": "Popper",
+  "ready_actual_payload_checkpoint_APIs": [
+    "write_actual_provider_checkpoint",
+    "restore_actual_provider_checkpoint"
+  ],
+  "ready_compact_API": "install_compact_provider_journals_preserving_constructor",
+  "ready_new_Qwen_API": [
+    "compile_qwen_shared64_spans",
+    "iter_qwen_shared64_packets",
+    "qwen_source_word_home"
+  ],
+  "ready_owner_cycle_API": "verify_finite_owner_dependency_graph",
+  "ready_source_projection_API": "project_r46_compact_shared_journal",
+  "reference_arbiter_qualified": false,
+  "required_mapping": [
+    "installed source pin/path/SHA and hierarchy",
+    "physical RF512vectors/128lanes/2mirrors",
+    "L2 actual bank/slice/16KiB staging reservation installation",
+    "exact operand span->physical byte/slot/page/lane",
+    "same owner exclusion for C0/GU/KV/matrix/SIMD contenders"
+  ],
+  "required_service_cases": [
+    "RF response capture with pre-reserved actual destination",
+    "both copies write acceptance plus combined H1 ACK",
+    "source visibility/fence acceptance",
+    "actual sink consumer acceptance independent of future blocked owner",
+    "actual matching reverse grant and credit return",
+    "mapped domain crossing, finite queue occupancy and reset/online rendezvous"
+  ],
+  "schema": "H4_PRODUCTION_OWNER_ENDPOINT_BINDING_REQUEST_V1",
+  "scope": "bind actual production endpoints; source mappings do not certify hardware wait bounds",
+  "term_fields": [
+    "service_name",
+    "source_pin",
+    "source_path",
+    "source_sha256",
+    "actual_case_reference",
+    "clock_domain",
+    "edge_unit",
+    "finite_worst_case_edges",
+    "installed_context_or_source_model_label"
+  ]
+}

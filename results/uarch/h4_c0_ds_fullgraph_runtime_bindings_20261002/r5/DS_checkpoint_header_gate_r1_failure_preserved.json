@@ -1,0 +1,6 @@
+{
+  "status": "FAIL_HF_SNAPSHOT_SYMLINK_ADMISSION_PRESERVED",
+  "reason": "snapshot shard symlinks resolve to immutable HF blobs; keep index basename and target inode/stamp/header checks, do not reject normal snapshot resolution",
+  "tensor_payloads_read": 0,
+  "numerical_jobs": 0
+}

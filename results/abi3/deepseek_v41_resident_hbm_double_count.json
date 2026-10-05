@@ -1,0 +1,142 @@
+{
+  "claim": "the Engram tables were priced in HBM and placed in ROM as well; they are now placed once, and the ROM image of the real V4.1 IR fits the two-wafer capability",
+  "claim_boundary": {
+    "does_not_establish": [
+      "either V4.1 ROM deployment: neither was built, so no digest, no inverse proof and no schedule certificate exists for V4.1-Flash itself",
+      "anything about the resident region's row sharding on real bytes: the sharded object source is refused for want of per-shard authentication and the checkpoint is not on this disk",
+      "anything about execution, numerics or rate for V4.1 on any target"
+    ],
+    "establishes": [
+      "the double count, measured on the real V4.1 IR: 202,758,032,400 resident bytes equal to the capability's declared resident region to the byte, and a ROM image of 298,625,150,976 (72.4%) instead of 501,383,183,376 (121.6%)",
+      "the residency contract change, exercised end to end on the wafer fixture: build, independent verifier, schedule certificate with shared_state_locality and resident_hbm_region both true, inverse proof covering the resident bytes bit-identically, and a byte-identical rebuild",
+      "that the shipped DeepSeek-V4-Flash wafer and Qwen3-8B ROM digests are unmoved"
+    ]
+  },
+  "contract_change": {
+    "files": [
+      "compiler/backends/rom/common/image.py",
+      "compiler/backends/rom/common/program.py",
+      "compiler/backends/rom/common/inverse.py",
+      "compiler/backends/rom/common/check.py",
+      "compiler/backends/rom/deepseek_v41.py",
+      "compiler/backends/rom/deepseek_v41_array.py"
+    ],
+    "preserved": [
+      "inverse.py proves a resident region under the identical tiling, bit-identical reconstruction, zero-padding, independent content-digest and placement-uniqueness rules, and additionally refuses an object that backs both stores",
+      "check.py's resident_hbm_region keeps immutability / no-STATE / no-SCATTER and adds: on a machine that prices a resident region, the table objects must be HBM objects owned by a resident region of the plan, and the reserve must fit the declared bytes",
+      "a plan with no resident region emits byte-for-byte the record it emitted before, so plan_id and the deployment digest cannot move for V4 or Qwen3"
+    ],
+    "rule": "a region of the plan declares a residency; a resident region's object is StorageClass.HBM with the same READ|IMMUTABLE permissions, is planned, placed, digest-bound and proved under the same rules as a ROM region, and is excluded from rom_bytes.  Residency is decided by the capability declaring memory.hbm.resident_region_bytes, and the tensor set is derived structurally (a checkpoint-bound weight operand of a LAYERED embedding lookup) -- no model number is written into a predicate."
+  },
+  "git_head": "6898b855fd909b6a4291c3b3ac82dfab28a3ef9d",
+  "kernel_ir": {
+    "graph_id": "9d348505b8ee59fb0c32eee3bdbd4f967e2c86d9cdf743a85d33b03866bb28e4",
+    "kernels": 3243,
+    "path": "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+    "sha256": "1c4490a0f9761cc057541cf4e8541bd92809505cb43742120785779b0862c45d",
+    "tensors": 5825
+  },
+  "measured_array": {
+    "capability_resident_region_bytes_per_node": 3168094257,
+    "capability_rom_bytes_per_node": 19327352832,
+    "dense_bank_budget_bytes": 12884901888,
+    "dense_percent_of_dense_banks": 76.4,
+    "engram_rows": [
+      384006168,
+      384016682
+    ],
+    "node_count": 64,
+    "owned_expert_bytes_per_node": 4512153600,
+    "probe_note": "the ROM side is measured with the resident region unsharded, because the row-sharded form is refused; the probe changes where the resident bytes are placed, not which bytes leave the ROM image",
+    "replicated_dense_bytes_per_node": 9847320576,
+    "rom_bytes_per_node": 14359474176,
+    "rom_percent_of_capability": 74.3,
+    "row_bytes": {
+      "scale": 8,
+      "weight": 256
+    },
+    "rows_mod_node_count": [
+      24,
+      42
+    ],
+    "tail_node_over_declared_by": 17151,
+    "tail_node_reserve_bytes": 3168111408,
+    "tail_row_bytes_total": 17424,
+    "whole_row_bulk_bytes_per_node": 3168093984
+  },
+  "measured_wafer": {
+    "capability_resident_region_bytes": 202758032400,
+    "capability_rom_bytes": 412316860416,
+    "delta_to_capability": 0,
+    "double_counted_percent": 121.6,
+    "double_counted_rom_total_bytes": 501383183376,
+    "resident_padding_bytes": 0,
+    "resident_payload_bytes": 202758032400,
+    "resident_tensors": [
+      "layers.1.engram.embed.scale",
+      "layers.1.engram.embed.weight",
+      "layers.14.engram.embed.scale",
+      "layers.14.engram.embed.weight"
+    ],
+    "rom_bytes_by_wafer": {
+      "0": 103643205632,
+      "1": 194981945344
+    },
+    "rom_padding_bytes": 633408,
+    "rom_payload_bytes": 298624517568,
+    "rom_percent_of_capability": 72.4,
+    "rom_total_bytes": 298625150976
+  },
+  "refusals_cleared_on_the_way": [
+    {
+      "by": "the resident Engram tables are placed once, in HBM",
+      "now": "the ROM image is 298625150976 bytes, 72.4% of 412316860416",
+      "was": "compiler.backends.rom.deepseek_v41.DeepSeekV41RomError: the DeepSeek-V4.1 ROM image needs 501383192576 bytes but the two-wafer capability declares 412316860416"
+    },
+    {
+      "by": "_scale_block_rows generalised: a scale with at least as many rows as the operand is the same row space addressed the same way, which is what the DEQUANTIZE kernel declares (scale_rows: addressed_by_the_same_row_identifiers); the last-axis blocking is still confronted",
+      "now": "one scale code row per data row, which is the scale_block_rows the table's own weight view carries",
+      "separate_finding": true,
+      "was": "compiler.backends.rom.common.program.RomLoweringError: weight 'main.layer01.engram.row_lookup.rows' has 6291456 rows and its scale 'layers.1.engram.embed.scale' has 384006168; a block scale covers a whole number of rows per code"
+    }
+  ],
+  "remaining_refusals": [
+    {
+      "cause": "the released row counts do not divide 64.  The two admissible forms -- a bulk-plus-tail split, or a node count that divides the rows -- are both capability re-derivations (the declared 3,168,094,257 is ceil(total/nodes) and assumes an even division; the tail node needs 3,168,111,408).",
+      "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash-array --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json --json",
+      "message": "compiler.backends.rom.common.image.RomImageError: resident region 'hbm.r1.p005.s1' shards into 1536024672 bytes a node, which is not a whole number of its 256-byte addressing rows; a row split across two nodes has no owner",
+      "second_gate": "even with whole rows, a shard of a tensor is a byte range the checkpoint lock does not name, so row_sharded_region_source refuses to emit an unauthenticated segment; authenticating a shard means reading the checkpoint bytes, and the V4.1 checkpoint is not on this disk (compiler/models/deepseek-v4.1-flash holds only config and the lock)",
+      "target": "rom array x64"
+    },
+    {
+      "cause": "reached only after the double count was removed; a separate gap in the compressor state path, not a residency question",
+      "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash --ir build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json --json",
+      "message": "compiler.backends.rom.common.program.RomLoweringError: kernel 'main.layer02.attention.compressor.carry': rolling compression requires the same KV and score histories in state_reads/state_writes",
+      "target": "rom wafer x2"
+    }
+  ],
+  "schema": "opentallas.deepseek_v41.resident_hbm_double_count.v1",
+  "shipped_digests_after_the_change": {
+    "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py <product> --ir <ir> --json",
+    "deepseek-v4-flash (wafer)": {
+      "deployment_sha256": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "descriptors": 3135,
+      "expected": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+      "identical": true,
+      "instructions": 1323
+    },
+    "deepseek-v4-flash-array": {
+      "deployment_sha256": "101b80211a9c6b9503dc706bf03ed2512a35667c96c4cc8c272782e2abb15649",
+      "descriptors": 3165,
+      "note": "equals what the previous unit measured for this target with the shared-lowering fix in place; unmoved by this change"
+    },
+    "qwen3-8b": {
+      "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "descriptors": 215,
+      "expected": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+      "identical": true,
+      "instructions": 74
+    }
+  },
+  "status": "double_count_fixed_neither_v41_deployment_built"
+}

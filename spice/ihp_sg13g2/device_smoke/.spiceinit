@@ -1,0 +1,9 @@
+* OpenTallas IHP SG13G2 device-smoke initialization.
+* The runner supplies these task-specific environment variables and verifies
+* every referenced file before invoking ngspice.
+set ngbehavior=hsa
+setcs sourcepath = ( $sourcepath $OPENTALLAS_IHP_PDK_ROOT/ihp-sg13g2/libs.tech/ngspice/models )
+osdi '$OPENTALLAS_IHP_OSDI_ROOT/psp103.osdi'
+osdi '$OPENTALLAS_IHP_OSDI_ROOT/psp103_nqs.osdi'
+osdi '$OPENTALLAS_IHP_OSDI_ROOT/r3_cmc.osdi'
+osdi '$OPENTALLAS_IHP_OSDI_ROOT/mosvar.osdi'

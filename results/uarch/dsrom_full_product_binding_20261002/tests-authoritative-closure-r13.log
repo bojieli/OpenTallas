@@ -1,0 +1,15 @@
+...................................................................F.... [ 86%]
+...........                                                              [100%]
+=================================== FAILURES ===================================
+____________ test_authoritative_closure_not_active_only_draft_stats ____________
+
+    def test_authoritative_closure_not_active_only_draft_stats():
+        x=J.build();a=x['authoritative_closure']
+        assert x['input_receipts'][0]['path'].endswith('closure_r2/closure.json')
+        assert a['capacity_verdict']=='FAIL_CANDIDATE_PLACEMENT'
+>       assert a['unallocated_matrices']==12202
+E       AssertionError: assert [{'alias': 'exp190.w1', 'layer': 29}, {'alias': 'exp190.w3', 'layer': 29}, {'alias': 'exp190.w2', 'layer': 29}, {'alias': 'exp191.w1', 'layer': 29}, {'alias': 'exp191.w3', 'layer': 29}, {'alias': 'exp191.w2', 'layer': 29}, ...] == 12202
+
+tests/test_dsrom_compiled_budget_join.py:60: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_compiled_budget_join.py::test_authoritative_closure_not_active_only_draft_stats

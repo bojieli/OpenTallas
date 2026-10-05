@@ -1,0 +1,39 @@
+{
+  "GO_path": "results/rtl/dsrom_upstream_pair_cadence_runner_prepare_r3_20261002/parent_GO.json",
+  "GO_template": "parent_GO.template.json",
+  "actual_controller_observation": "controller_delegation_read_only.json",
+  "claims": {
+    "RTL_PASS": false,
+    "RTL_fault": false,
+    "adoption": false,
+    "fullfield": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "cpu_quota": "CPUQuota200 property remains advisory/non-enforced in user branch; no kernelquota proof claimed. Optional cpu.max presence/absence/value recorded with per-file errors. New GO kind/limits bind affinity policy.",
+  "default_preflight": "default_preflight.json",
+  "fixed_resource_revision": "Explicit user-authorized inherited kernel task-affinity boundCPU0/1, mandatory memory4GiB/swap0/oomgroup1/writablewholekill;build600total/sim60total/whole660 unchanged. Not an automatic quota fallback. No system-service/root route or hostpermission/delegation edits.",
+  "launches": 0,
+  "original_r2failure": "45ms exit1 before compiler; missing actual cpu.max then finally reread masks initial exception and preventsrecord. Original launcher/log/host receipts copiedbyteidentical+hash, oldrunner/files unchanged.",
+  "owned_service_handle": null,
+  "parent_fill": [
+    "GO=BOUNDED_ACTUAL_UPSTREAM_PAIR_CADENCE_AFFINITY_ONLY",
+    "prepared_commit=full reviewed r3 commit SHA",
+    "approval_id=fresh unique approval, old approval cannotreuse"
+  ],
+  "prior_runner_commit": "4131c60d7468bbeff48f74022f094e6edd565f7b",
+  "prior_tracked_changes": [],
+  "receipt_fix": "Metrics optional/errors data; original exception+traceback preserved; finally metric/inventory errors kept separately so initial exception survives. Tests verify record.json survives double failure.",
+  "runner": "tools/run_dsrom_upstream_pair_cadence_r3.py",
+  "runner_sha256": "fd6c3d7ab783b337704b3964c688472c38ea716c02ee9d70343818d0e7d2c148",
+  "source_package_parser_geometry_oracle_unchanged": true,
+  "source_prepare_commit": "6649e1759b9bdd170a8abba15cc0f70aefd15fa8",
+  "status": "R3_AFFINITY_RESOURCE_PROPOSAL_READY_REVIEW_ONLY",
+  "task_verification": "Main kernel sched affinityexact0/1 before compilation; every enumerated live cgroup/descendant thread subset0/1 checked before each child launch, after phases and background0.1s. Direct compiler/sim child checked explicitly; masks inherited across clone/exec. Auditlog captures samples and vanishedshortlivedthreads; do not claim every transient task independently sampled. Bound is per-task inherited kernel affinity.",
+  "tests": {
+    "PASS": true,
+    "count": 28,
+    "log": "static_tests_r2.log",
+    "mockedHDL_systemd_children_only": true
+  }
+}

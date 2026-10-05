@@ -1,0 +1,98 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/tensor_manifest_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "output_selection": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "U32" },
+        "path": { "$ref": "#/$defs/path" },
+        "rows": {
+          "items": { "minimum": 0, "type": "integer" },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size_bytes": { "minimum": 4, "type": "integer" }
+      },
+      "required": ["dtype", "path", "rows", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "scale": { "$ref": "#/$defs/scale" },
+    "schema": { "const": "opentallas.deepseek_v4_fp8_linear_tensors.v1" },
+    "weight": { "$ref": "#/$defs/weight" }
+  },
+  "required": ["output_selection", "scale", "schema", "weight"],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 tensor manifest v1",
+  "type": "object",
+  "$defs": {
+    "path": {
+      "minLength": 1,
+      "not": { "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)" },
+      "type": "string"
+    },
+    "ranks": {
+      "items": { "minimum": 0, "type": "integer" },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "scale": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "F8_E8M0" },
+        "path": { "$ref": "#/$defs/path" },
+        "replicated_ranks": { "$ref": "#/$defs/ranks" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shape": { "$ref": "#/$defs/shape2" },
+        "size_bytes": { "minimum": 1, "type": "integer" },
+        "source_assignment_path": { "$ref": "#/$defs/path" }
+      },
+      "required": [
+        "dtype",
+        "path",
+        "replicated_ranks",
+        "sha256",
+        "shape",
+        "size_bytes",
+        "source_assignment_path"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "shape2": {
+      "items": { "minimum": 1, "type": "integer" },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "weight": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "F8_E4M3" },
+        "path": { "$ref": "#/$defs/path" },
+        "replicated_ranks": { "$ref": "#/$defs/ranks" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shape": { "$ref": "#/$defs/shape2" },
+        "size_bytes": { "minimum": 1, "type": "integer" },
+        "source_assignment_path": { "$ref": "#/$defs/path" }
+      },
+      "required": [
+        "dtype",
+        "path",
+        "replicated_ranks",
+        "sha256",
+        "shape",
+        "size_bytes",
+        "source_assignment_path"
+      ],
+      "type": "object"
+    }
+  }
+}

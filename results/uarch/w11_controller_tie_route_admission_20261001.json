@@ -1,0 +1,60 @@
+{
+  "CKV_retry": false,
+  "SS_FF_closure": null,
+  "added_cycles": 0,
+  "adoption": false,
+  "failed_terminal_preserved": "80534d1b3f4724ab4fbeac0e62d8b0cf21bd94e6",
+  "fixed_constraints": {
+    "ORFS_threads": 4,
+    "core_utilization": 40,
+    "hold": [
+      "WC/SS",
+      "BC/FF"
+    ],
+    "hold_uncertainty_ns": 0.025,
+    "period_ns": 0.833,
+    "place_density": 0.6,
+    "routing_layers": [
+      "M2",
+      "M5"
+    ],
+    "setup": "WC/SS",
+    "setup_uncertainty_ns": 0.06
+  },
+  "guard_expected": 338023,
+  "guard_minimum": 270418,
+  "mapped_added_cell_area_um2": "0.08748",
+  "mapped_ties": 2,
+  "model_cost": {
+    "actual_post_repair_tie_count": null,
+    "allowance_basis": "587 one-per-sink replicas plus retaining both mapped roots; sizing allowance, not measured clone count. Any extra buffers/replicas must be captured from actual flow; no fit/signoff inferred.",
+    "basis": "Flow-only correction in existing full64tile model; all original mapped cells unchanged. DC ties add no arithmetic/latency cycles, no rate credit.",
+    "conservative_tie_cell_count_allowance": 589,
+    "mapped_cell_area_delta_um2": "0.08748",
+    "physical_wires_buffers_PG_and_SS_FF": null,
+    "tie_cell_area_allowance_um2": "25.76286",
+    "tie_cell_footprint_allowance_at_40percent_util_um2": "64.40715",
+    "unit_tie_cell_area_um2": "0.04374"
+  },
+  "native_artifact_directory": "/home/ubuntu/w11-controller-tie-admission-20261001",
+  "native_artifact_sha256": {
+    "export_tech.log": "39c92c3722b3f8f31f999b84fe1ecd91f32dc00dffb455d3f891323a25000da6",
+    "export_tech.tcl": "e86009744279f2beee0985a13fb2f32fd350f7317a5882d40d27484d1849b058",
+    "native_import.log": "7e037e18248475ffaf2575aff66b5a0fddaebebb1445aa750649327ea09d2bbf",
+    "native_import.tcl": "a02e9f698e46e108ce0b757048fc17cd75fb990efa3bdeb5096a5ee7104c1412",
+    "native_tech.lef": "2592bc5cf2e42a5737896f484beddf5af6c2206e88aa6054d1978c0afe4f6000",
+    "native_tied.odb": "c5fcd1525af7eeb2c2911866abecbebadf4f44ba4306bbefd75adc0623385c3c"
+  },
+  "native_flops": 337084,
+  "native_guard": "PASS",
+  "native_scope": "Netlist import and ordinary tie-output/special PG connectivity only; no floorplan, route, PG geometry or SS/FF timing qualification. Loaded SS/WC and FF/BC libraries from original route log; serialized technology/master LEF from original synthesized ODB.",
+  "original_source_pin": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+  "physical_build_scope": "User-authorized single fresh characterization for flow-error correction; only tied guarded netlist substituted. Driver/hooks/RTL byteidentical e3 baseline; no host resynthesis, ABC, dff remap or timing tuning.",
+  "physical_verdict": null,
+  "proof_pin": "71ba8ca929ccea0101d52d15591d57c325de0a2f",
+  "schema": "opentallas.w11.corrected-controller-admission.v1",
+  "tie_fanout": {
+    "HI": 587,
+    "LO": 0
+  }
+}

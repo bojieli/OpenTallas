@@ -1,0 +1,4352 @@
+{
+ "schema": "opentallas.v41.die_macromap.v1",
+ "status": "integer_macro_binding_capacity_judged_against_floorplan_slots",
+ "representation": "compact_woa",
+ "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+ "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+ "checkpoint_header_sha256": {
+  "model-00003-of-00048.safetensors": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449",
+  "model-00004-of-00048.safetensors": "a18996c1e8f291117f9a2b638ffbd24c0b60babafd44db75bedfab1bec3a3f4a",
+  "model-00005-of-00048.safetensors": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6",
+  "model-00006-of-00048.safetensors": "b6fd1a38fb53430098d46487db546c012d38ac14ac91b22e9af6983ea4290189",
+  "model-00007-of-00048.safetensors": "3dcfa5cba8e7e80fb684a3166f34164bb1b8ec95a802763b1e2eebb19b2a6ba5",
+  "model-00008-of-00048.safetensors": "fde260ef12e8bc6737afaf29d58799d1f2dcf206a126746a22f61ebff9cb9a87",
+  "model-00009-of-00048.safetensors": "139eeea4664aba161a4b4cb82a60a86a2429467601ee6584a887825f8137adfd",
+  "model-00010-of-00048.safetensors": "f60d4a2f55d70b668be2c7a61883ed9e2ba7d2cace06f40c3429da073dca64f2",
+  "model-00011-of-00048.safetensors": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c",
+  "model-00012-of-00048.safetensors": "ec5434239be33e6d35218d2ed1d4ee522bb02357669280ef6dfe86ce44873e0c",
+  "model-00013-of-00048.safetensors": "e9246f9e946c8b771d95640635c0cc01d295a312fc374fd87f7d0d67e9c7f0fc",
+  "model-00014-of-00048.safetensors": "e2871f3474228510b968b237f9836898a5c9707add5cb1cad51401318dfb5311",
+  "model-00015-of-00048.safetensors": "4184d16248ac775f7ab002039b2e9a43b98d51f24913cc9b19ceb85c3726ed59",
+  "model-00016-of-00048.safetensors": "fcdcfd73f87aa514e2c8e3a742104def5a051acd47cd54b0b2bee2033d495edb",
+  "model-00017-of-00048.safetensors": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79",
+  "model-00018-of-00048.safetensors": "0ad32850738558e9df1239b284abc748e42e01745eec180cd30815e21a67af55",
+  "model-00019-of-00048.safetensors": "efaa20b2c111c875904e0f83623206f3414652353413e9051ba02e60ab7a085f",
+  "model-00020-of-00048.safetensors": "6cc297397ef39dc77747d5fbba93a8a299caf4dfb4952886ca9c2d478d517f0c",
+  "model-00021-of-00048.safetensors": "ef8537770773e4006d36e1b5de0082407afe1abeb2309d4efac0e8ffcdc39040",
+  "model-00022-of-00048.safetensors": "6f1df707004fd8f06f44e4a1e79677102037a414862d1550a7ac6a175961fa72",
+  "model-00023-of-00048.safetensors": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9",
+  "model-00024-of-00048.safetensors": "190ff387c34f3b0a55277993b798b26adf528de28125361495fa30a050ed106c",
+  "model-00025-of-00048.safetensors": "ee80ffddf8ddeca1b934f2e32c14b7f4856b2e747088fbdc9fc80dcc27377891",
+  "model-00026-of-00048.safetensors": "ed25fdc55bb96b2101ac8cff12a235a7ea54412050c792b4e72377ae417a9a66",
+  "model-00027-of-00048.safetensors": "babf9e26761c97df06490e96368e40e3cc916770abe2afffa9b3a45a5734742b",
+  "model-00028-of-00048.safetensors": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668",
+  "model-00029-of-00048.safetensors": "611e9ea2b143014df6037e285a3e1a865676e0954091dcbf95b3f57ec825336b",
+  "model-00030-of-00048.safetensors": "5a5bf5cbd36e27c13c6dcbd6969db9796e9219e928e69b86fd5704131be598ea",
+  "model-00031-of-00048.safetensors": "50ac0885851fd0c5f9c2436858fbcecec347dd4efd39557ec68723b224d2985d",
+  "model-00032-of-00048.safetensors": "105e2bffb58a83dd3ca1502ecfbcf14759b1a16f705ca0eac52284053684007f",
+  "model-00033-of-00048.safetensors": "2b3caec06921b098107c3757f81e6b5bd0c401809b19fa65e24ef27ca9eb505e",
+  "model-00034-of-00048.safetensors": "08a8b7c04834ea2ca2b3efcebe2bd5b934e165154a7c3d11004242e2a1b438c4",
+  "model-00035-of-00048.safetensors": "18a61fbf3d94a454137e1d6fc8f19b7ddfe12954f32c47337c8921069d5de193",
+  "model-00036-of-00048.safetensors": "32ef9284ffa83282248f59443f2c3b4daaf57e305d02a07dad3b493a05d68752",
+  "model-00037-of-00048.safetensors": "7b3daaa3d09fc52c64153c5a81fcd3c4984e6c3dcc6981c95ae840c8928ad1d5",
+  "model-00038-of-00048.safetensors": "33f706f0d8727ac9aa2154eb56b76f76d5396ea5c9bd94248c7378f086fddc2b",
+  "model-00039-of-00048.safetensors": "e5e55c1f73de87075da7717c9319f30d32078ba2f1be641e8cd6127d4c273987",
+  "model-00040-of-00048.safetensors": "e8a1a6448644f70d3aa897fba81c2cf2245125851aacdf377c97ef3ce959981e",
+  "model-00041-of-00048.safetensors": "3fde0cd4e3167cc5a1117e055b052d20f4a3d8ea013bfc54764abb07d09351c1",
+  "model-00042-of-00048.safetensors": "5ca433405c1b16b8776486a174583e7ff2641889b292d70952da7a339687a70c",
+  "model-00047-of-00048.safetensors": "e5c5c7fc900caec400644bef07aa5d7e28fc6ca941c8c47592b393963b218242",
+  "model-00048-of-00048.safetensors": "5d8fa4697d7a071c31baeee6947d493c08ea3243261c5d0f79c355ad191b8222"
+ },
+ "source_sha256": {
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "results/arch/v41_stage_owner_preflight.json": "8d7607de634470f58132eb36bb9100b369689a9b509dd299662a7f97fba47a1d",
+  "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+  "results/floorplan/v41_stage17_complete_reservation.json": "57025862459a90c649cd7997175dcf0a7167b4fa40073c408f63c1d5ee7b2a31",
+  "rtl/chip/ot_chip_v41x_woa_compact_bank.sv": "2a424abea15febf7e032d543bc710cd7c12731e056508698739c7a242c7780ba",
+  "rtl/chip/ot_chip_v41x_qtile_pair_bank.sv": "647d9e2a956de1de49f7be71f27576f7c3a1dc3d15caceae922c2ba945e56b1b",
+  "results/rtl/v41_woa_compact_me.json": "2ebb557be611e42f3d9c3ab327fac9a1815b6b9855b5fdae5a6e5155ae914b37",
+  "tools/v41_floorplan_die_macromap.py": "c1b28d9191ab3bf7bbcb6ec6d38d26c10bd90acdaf009a39f44d171724f83ece",
+  "tools/v41_floorplan_stage_bankmap.py": "c5ff8a63019e9ea5a21d3a9c49cb176dc161ce8b76044b06638a137946a2de5a"
+ },
+ "expert_matrix_headers_checked": 46080,
+ "expert_matrix_reservation": {
+  "w1": {
+   "rows": 576,
+   "cols": 5120,
+   "beats": 11520,
+   "macros": 8,
+   "required_rows_per_bank": 5760,
+   "allocated_rows_per_bank": 8192,
+   "useful_payload_bytes": 1566720
+  },
+  "w3": {
+   "rows": 576,
+   "cols": 5120,
+   "beats": 11520,
+   "macros": 8,
+   "required_rows_per_bank": 5760,
+   "allocated_rows_per_bank": 8192,
+   "useful_payload_bytes": 1566720
+  },
+  "w2": {
+   "rows": 1280,
+   "cols": 2304,
+   "beats": 11520,
+   "macros": 8,
+   "required_rows_per_bank": 5760,
+   "allocated_rows_per_bank": 8192,
+   "useful_payload_bytes": 1566720
+  }
+ },
+ "macro_views": {
+  "ot_rom_8192x274_m8": {
+   "width_um": 125.712,
+   "height_um": 119.34,
+   "area_um2": 15002.47,
+   "capacity_bits": 2244608,
+   "min_period_ps": {
+    "ff": 639.3,
+    "ss": 987.6,
+    "tt": 775.1
+   }
+  },
+  "ot_rom_8192x104_m8": {
+   "width_um": 52.272,
+   "height_um": 119.34,
+   "area_um2": 6238.14,
+   "capacity_bits": 851968,
+   "min_period_ps": {
+    "ff": 568.6,
+    "ss": 916.9,
+    "tt": 704.4
+   }
+  }
+ },
+ "mean_model_budget_bytes": 2714287356,
+ "mean_model_note": "rom_bytes_per_die = checkpoint bytes / 188: every die over it by a replicated or padded byte; it is an accounting mean, not a physical capacity",
+ "layer_dies": [
+  {
+   "die": "layer_s00_r0",
+   "role": "layer",
+   "stage": 0,
+   "rank": 0,
+   "dense_layers": [
+    0,
+    1
+   ],
+   "routed_experts": 536,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13578,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12864
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 440
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2719978016,
+   "physical_macro_bytes": 3836923904,
+   "macro_area_mm2": 205.300501,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 5690660
+  },
+  {
+   "die": "layer_s00_r1",
+   "role": "layer",
+   "stage": 0,
+   "rank": 1,
+   "dense_layers": [
+    0,
+    1
+   ],
+   "routed_experts": 536,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13578,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12864
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 440
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2719978016,
+   "physical_macro_bytes": 3836923904,
+   "macro_area_mm2": 205.300501,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 5690660
+  },
+  {
+   "die": "layer_s00_r2",
+   "role": "layer",
+   "stage": 0,
+   "rank": 2,
+   "dense_layers": [
+    0,
+    1
+   ],
+   "routed_experts": 536,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13578,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12864
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 440
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2719978016,
+   "physical_macro_bytes": 3836923904,
+   "macro_area_mm2": 205.300501,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 5690660
+  },
+  {
+   "die": "layer_s00_r3",
+   "role": "layer",
+   "stage": 0,
+   "rank": 3,
+   "dense_layers": [
+    0,
+    1
+   ],
+   "routed_experts": 536,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13578,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12864
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 440
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2719978016,
+   "physical_macro_bytes": 3836923904,
+   "macro_area_mm2": 205.300501,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 5690660
+  },
+  {
+   "die": "layer_s01_r0",
+   "role": "layer",
+   "stage": 1,
+   "rank": 0,
+   "dense_layers": [
+    2
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13734,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2726810632,
+   "physical_macro_bytes": 3867062272,
+   "macro_area_mm2": 206.842405,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 12523276
+  },
+  {
+   "die": "layer_s01_r1",
+   "role": "layer",
+   "stage": 1,
+   "rank": 1,
+   "dense_layers": [
+    2
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13734,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2726810632,
+   "physical_macro_bytes": 3867062272,
+   "macro_area_mm2": 206.842405,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 12523276
+  },
+  {
+   "die": "layer_s01_r2",
+   "role": "layer",
+   "stage": 1,
+   "rank": 2,
+   "dense_layers": [
+    2
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13734,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2726810632,
+   "physical_macro_bytes": 3867062272,
+   "macro_area_mm2": 206.842405,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 12523276
+  },
+  {
+   "die": "layer_s01_r3",
+   "role": "layer",
+   "stage": 1,
+   "rank": 3,
+   "dense_layers": [
+    2
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13734,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2726810632,
+   "physical_macro_bytes": 3867062272,
+   "macro_area_mm2": 206.842405,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 12523276
+  },
+  {
+   "die": "layer_s02_r0",
+   "role": "layer",
+   "stage": 2,
+   "rank": 0,
+   "dense_layers": [
+    3,
+    4
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s02_r1",
+   "role": "layer",
+   "stage": 2,
+   "rank": 1,
+   "dense_layers": [
+    3,
+    4
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s02_r2",
+   "role": "layer",
+   "stage": 2,
+   "rank": 2,
+   "dense_layers": [
+    3,
+    4
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s02_r3",
+   "role": "layer",
+   "stage": 2,
+   "rank": 3,
+   "dense_layers": [
+    3,
+    4
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s03_r0",
+   "role": "layer",
+   "stage": 3,
+   "rank": 0,
+   "dense_layers": [
+    5
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s03_r1",
+   "role": "layer",
+   "stage": 3,
+   "rank": 1,
+   "dense_layers": [
+    5
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s03_r2",
+   "role": "layer",
+   "stage": 3,
+   "rank": 2,
+   "dense_layers": [
+    5
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s03_r3",
+   "role": "layer",
+   "stage": 3,
+   "rank": 3,
+   "dense_layers": [
+    5
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s04_r0",
+   "role": "layer",
+   "stage": 4,
+   "rank": 0,
+   "dense_layers": [
+    6,
+    7
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s04_r1",
+   "role": "layer",
+   "stage": 4,
+   "rank": 1,
+   "dense_layers": [
+    6,
+    7
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s04_r2",
+   "role": "layer",
+   "stage": 4,
+   "rank": 2,
+   "dense_layers": [
+    6,
+    7
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s04_r3",
+   "role": "layer",
+   "stage": 4,
+   "rank": 3,
+   "dense_layers": [
+    6,
+    7
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s05_r0",
+   "role": "layer",
+   "stage": 5,
+   "rank": 0,
+   "dense_layers": [
+    8
+   ],
+   "routed_experts": 552,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13710,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13248
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722110472,
+   "physical_macro_bytes": 3860328448,
+   "macro_area_mm2": 206.482346,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 7823116
+  },
+  {
+   "die": "layer_s05_r1",
+   "role": "layer",
+   "stage": 5,
+   "rank": 1,
+   "dense_layers": [
+    8
+   ],
+   "routed_experts": 552,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13710,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13248
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722110472,
+   "physical_macro_bytes": 3860328448,
+   "macro_area_mm2": 206.482346,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 7823116
+  },
+  {
+   "die": "layer_s05_r2",
+   "role": "layer",
+   "stage": 5,
+   "rank": 2,
+   "dense_layers": [
+    8
+   ],
+   "routed_experts": 552,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13710,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13248
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722110472,
+   "physical_macro_bytes": 3860328448,
+   "macro_area_mm2": 206.482346,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 7823116
+  },
+  {
+   "die": "layer_s05_r3",
+   "role": "layer",
+   "stage": 5,
+   "rank": 3,
+   "dense_layers": [
+    8
+   ],
+   "routed_experts": 552,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13710,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13248
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722110472,
+   "physical_macro_bytes": 3860328448,
+   "macro_area_mm2": 206.482346,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 7823116
+  },
+  {
+   "die": "layer_s06_r0",
+   "role": "layer",
+   "stage": 6,
+   "rank": 0,
+   "dense_layers": [
+    9
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s06_r1",
+   "role": "layer",
+   "stage": 6,
+   "rank": 1,
+   "dense_layers": [
+    9
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s06_r2",
+   "role": "layer",
+   "stage": 6,
+   "rank": 2,
+   "dense_layers": [
+    9
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s06_r3",
+   "role": "layer",
+   "stage": 6,
+   "rank": 3,
+   "dense_layers": [
+    9
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s07_r0",
+   "role": "layer",
+   "stage": 7,
+   "rank": 0,
+   "dense_layers": [
+    10,
+    11
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s07_r1",
+   "role": "layer",
+   "stage": 7,
+   "rank": 1,
+   "dense_layers": [
+    10,
+    11
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s07_r2",
+   "role": "layer",
+   "stage": 7,
+   "rank": 2,
+   "dense_layers": [
+    10,
+    11
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s07_r3",
+   "role": "layer",
+   "stage": 7,
+   "rank": 3,
+   "dense_layers": [
+    10,
+    11
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s08_r0",
+   "role": "layer",
+   "stage": 8,
+   "rank": 0,
+   "dense_layers": [
+    12
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s08_r1",
+   "role": "layer",
+   "stage": 8,
+   "rank": 1,
+   "dense_layers": [
+    12
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s08_r2",
+   "role": "layer",
+   "stage": 8,
+   "rank": 2,
+   "dense_layers": [
+    12
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s08_r3",
+   "role": "layer",
+   "stage": 8,
+   "rank": 3,
+   "dense_layers": [
+    12
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s09_r0",
+   "role": "layer",
+   "stage": 9,
+   "rank": 0,
+   "dense_layers": [
+    13,
+    14
+   ],
+   "routed_experts": 535,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13619,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12840
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 464
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 82
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2731384608,
+   "physical_macro_bytes": 3848427520,
+   "macro_area_mm2": 205.915603,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 17097252
+  },
+  {
+   "die": "layer_s09_r1",
+   "role": "layer",
+   "stage": 9,
+   "rank": 1,
+   "dense_layers": [
+    13,
+    14
+   ],
+   "routed_experts": 535,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13619,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12840
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 464
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 82
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2731384608,
+   "physical_macro_bytes": 3848427520,
+   "macro_area_mm2": 205.915603,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 17097252
+  },
+  {
+   "die": "layer_s09_r2",
+   "role": "layer",
+   "stage": 9,
+   "rank": 2,
+   "dense_layers": [
+    13,
+    14
+   ],
+   "routed_experts": 535,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13619,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12840
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 464
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 82
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2731384608,
+   "physical_macro_bytes": 3848427520,
+   "macro_area_mm2": 205.915603,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 17097252
+  },
+  {
+   "die": "layer_s09_r3",
+   "role": "layer",
+   "stage": 9,
+   "rank": 3,
+   "dense_layers": [
+    13,
+    14
+   ],
+   "routed_experts": 535,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13619,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 12840
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 464
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 82
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2731384608,
+   "physical_macro_bytes": 3848427520,
+   "macro_area_mm2": 205.915603,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 17097252
+  },
+  {
+   "die": "layer_s10_r0",
+   "role": "layer",
+   "stage": 10,
+   "rank": 0,
+   "dense_layers": [
+    15
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s10_r1",
+   "role": "layer",
+   "stage": 10,
+   "rank": 1,
+   "dense_layers": [
+    15
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s10_r2",
+   "role": "layer",
+   "stage": 10,
+   "rank": 2,
+   "dense_layers": [
+    15
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s10_r3",
+   "role": "layer",
+   "stage": 10,
+   "rank": 3,
+   "dense_layers": [
+    15
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s11_r0",
+   "role": "layer",
+   "stage": 11,
+   "rank": 0,
+   "dense_layers": [
+    16,
+    17
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s11_r1",
+   "role": "layer",
+   "stage": 11,
+   "rank": 1,
+   "dense_layers": [
+    16,
+    17
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s11_r2",
+   "role": "layer",
+   "stage": 11,
+   "rank": 2,
+   "dense_layers": [
+    16,
+    17
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s11_r3",
+   "role": "layer",
+   "stage": 11,
+   "rank": 3,
+   "dense_layers": [
+    16,
+    17
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s12_r0",
+   "role": "layer",
+   "stage": 12,
+   "rank": 0,
+   "dense_layers": [
+    18
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s12_r1",
+   "role": "layer",
+   "stage": 12,
+   "rank": 1,
+   "dense_layers": [
+    18
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s12_r2",
+   "role": "layer",
+   "stage": 12,
+   "rank": 2,
+   "dense_layers": [
+    18
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s12_r3",
+   "role": "layer",
+   "stage": 12,
+   "rank": 3,
+   "dense_layers": [
+    18
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s13_r0",
+   "role": "layer",
+   "stage": 13,
+   "rank": 0,
+   "dense_layers": [
+    19
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s13_r1",
+   "role": "layer",
+   "stage": 13,
+   "rank": 1,
+   "dense_layers": [
+    19
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s13_r2",
+   "role": "layer",
+   "stage": 13,
+   "rank": 2,
+   "dense_layers": [
+    19
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s13_r3",
+   "role": "layer",
+   "stage": 13,
+   "rank": 3,
+   "dense_layers": [
+    19
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s14_r0",
+   "role": "layer",
+   "stage": 14,
+   "rank": 0,
+   "dense_layers": [
+    20,
+    21
+   ],
+   "routed_experts": 543,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13638,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13032
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2723110688,
+   "physical_macro_bytes": 3853758464,
+   "macro_area_mm2": 206.20065,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8823332
+  },
+  {
+   "die": "layer_s14_r1",
+   "role": "layer",
+   "stage": 14,
+   "rank": 1,
+   "dense_layers": [
+    20,
+    21
+   ],
+   "routed_experts": 543,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13638,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13032
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2723110688,
+   "physical_macro_bytes": 3853758464,
+   "macro_area_mm2": 206.20065,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8823332
+  },
+  {
+   "die": "layer_s14_r2",
+   "role": "layer",
+   "stage": 14,
+   "rank": 2,
+   "dense_layers": [
+    20,
+    21
+   ],
+   "routed_experts": 543,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13638,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13032
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2723110688,
+   "physical_macro_bytes": 3853758464,
+   "macro_area_mm2": 206.20065,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8823332
+  },
+  {
+   "die": "layer_s14_r3",
+   "role": "layer",
+   "stage": 14,
+   "rank": 3,
+   "dense_layers": [
+    20,
+    21
+   ],
+   "routed_experts": 543,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13638,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13032
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 61
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2723110688,
+   "physical_macro_bytes": 3853758464,
+   "macro_area_mm2": 206.20065,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8823332
+  },
+  {
+   "die": "layer_s15_r0",
+   "role": "layer",
+   "stage": 15,
+   "rank": 0,
+   "dense_layers": [
+    22
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s15_r1",
+   "role": "layer",
+   "stage": 15,
+   "rank": 1,
+   "dense_layers": [
+    22
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s15_r2",
+   "role": "layer",
+   "stage": 15,
+   "rank": 2,
+   "dense_layers": [
+    22
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s15_r3",
+   "role": "layer",
+   "stage": 15,
+   "rank": 3,
+   "dense_layers": [
+    22
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s16_r0",
+   "role": "layer",
+   "stage": 16,
+   "rank": 0,
+   "dense_layers": [
+    23,
+    24
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435616,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8148260
+  },
+  {
+   "die": "layer_s16_r1",
+   "role": "layer",
+   "stage": 16,
+   "rank": 1,
+   "dense_layers": [
+    23,
+    24
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435616,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8148260
+  },
+  {
+   "die": "layer_s16_r2",
+   "role": "layer",
+   "stage": 16,
+   "rank": 2,
+   "dense_layers": [
+    23,
+    24
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435616,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8148260
+  },
+  {
+   "die": "layer_s16_r3",
+   "role": "layer",
+   "stage": 16,
+   "rank": 3,
+   "dense_layers": [
+    23,
+    24
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435616,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8148260
+  },
+  {
+   "die": "layer_s17_r0",
+   "role": "layer",
+   "stage": 17,
+   "rank": 0,
+   "dense_layers": [
+    25
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s17_r1",
+   "role": "layer",
+   "stage": 17,
+   "rank": 1,
+   "dense_layers": [
+    25
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s17_r2",
+   "role": "layer",
+   "stage": 17,
+   "rank": 2,
+   "dense_layers": [
+    25
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s17_r3",
+   "role": "layer",
+   "stage": 17,
+   "rank": 3,
+   "dense_layers": [
+    25
+   ],
+   "routed_experts": 554,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13296
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2715404040,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1116684
+  },
+  {
+   "die": "layer_s18_r0",
+   "role": "layer",
+   "stage": 18,
+   "rank": 0,
+   "dense_layers": [
+    26,
+    27
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s18_r1",
+   "role": "layer",
+   "stage": 18,
+   "rank": 1,
+   "dense_layers": [
+    26,
+    27
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s18_r2",
+   "role": "layer",
+   "stage": 18,
+   "rank": 2,
+   "dense_layers": [
+    26,
+    27
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s18_r3",
+   "role": "layer",
+   "stage": 18,
+   "rank": 3,
+   "dense_layers": [
+    26,
+    27
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s19_r0",
+   "role": "layer",
+   "stage": 19,
+   "rank": 0,
+   "dense_layers": [
+    28
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s19_r1",
+   "role": "layer",
+   "stage": 19,
+   "rank": 1,
+   "dense_layers": [
+    28
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s19_r2",
+   "role": "layer",
+   "stage": 19,
+   "rank": 2,
+   "dense_layers": [
+    28
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s19_r3",
+   "role": "layer",
+   "stage": 19,
+   "rank": 3,
+   "dense_layers": [
+    28
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s20_r0",
+   "role": "layer",
+   "stage": 20,
+   "rank": 0,
+   "dense_layers": [
+    29
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s20_r1",
+   "role": "layer",
+   "stage": 20,
+   "rank": 1,
+   "dense_layers": [
+    29
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s20_r2",
+   "role": "layer",
+   "stage": 20,
+   "rank": 2,
+   "dense_layers": [
+    29
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s20_r3",
+   "role": "layer",
+   "stage": 20,
+   "rank": 3,
+   "dense_layers": [
+    29
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703880,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583476
+  },
+  {
+   "die": "layer_s21_r0",
+   "role": "layer",
+   "stage": 21,
+   "rank": 0,
+   "dense_layers": [
+    30,
+    31
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s21_r1",
+   "role": "layer",
+   "stage": 21,
+   "rank": 1,
+   "dense_layers": [
+    30,
+    31
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s21_r2",
+   "role": "layer",
+   "stage": 21,
+   "rank": 2,
+   "dense_layers": [
+    30,
+    31
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s21_r3",
+   "role": "layer",
+   "stage": 21,
+   "rank": 3,
+   "dense_layers": [
+    30,
+    31
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s22_r0",
+   "role": "layer",
+   "stage": 22,
+   "rank": 0,
+   "dense_layers": [
+    32
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s22_r1",
+   "role": "layer",
+   "stage": 22,
+   "rank": 1,
+   "dense_layers": [
+    32
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s22_r2",
+   "role": "layer",
+   "stage": 22,
+   "rank": 2,
+   "dense_layers": [
+    32
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s22_r3",
+   "role": "layer",
+   "stage": 22,
+   "rank": 3,
+   "dense_layers": [
+    32
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13694,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 168
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716192520,
+   "physical_macro_bytes": 3855839232,
+   "macro_area_mm2": 206.242306,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 1905164
+  },
+  {
+   "die": "layer_s23_r0",
+   "role": "layer",
+   "stage": 23,
+   "rank": 0,
+   "dense_layers": [
+    33,
+    34
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s23_r1",
+   "role": "layer",
+   "stage": 23,
+   "rank": 1,
+   "dense_layers": [
+    33,
+    34
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238526,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946976,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659620
+  },
+  {
+   "die": "layer_s23_r2",
+   "role": "layer",
+   "stage": 23,
+   "rank": 2,
+   "dense_layers": [
+    33,
+    34
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946712,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659356
+  },
+  {
+   "die": "layer_s23_r3",
+   "role": "layer",
+   "stage": 23,
+   "rank": 3,
+   "dense_layers": [
+    33,
+    34
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13618,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 288
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2716946712,
+   "physical_macro_bytes": 3848146944,
+   "macro_area_mm2": 205.9006,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 2659356
+  },
+  {
+   "die": "layer_s24_r0",
+   "role": "layer",
+   "stage": 24,
+   "rank": 0,
+   "dense_layers": [
+    35
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s24_r1",
+   "role": "layer",
+   "stage": 24,
+   "rank": 1,
+   "dense_layers": [
+    35
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s24_r2",
+   "role": "layer",
+   "stage": 24,
+   "rank": 2,
+   "dense_layers": [
+    35
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s24_r3",
+   "role": "layer",
+   "stage": 24,
+   "rank": 3,
+   "dense_layers": [
+    35
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s25_r0",
+   "role": "layer",
+   "stage": 25,
+   "rank": 0,
+   "dense_layers": [
+    36,
+    37
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435352,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8147996
+  },
+  {
+   "die": "layer_s25_r1",
+   "role": "layer",
+   "stage": 25,
+   "rank": 1,
+   "dense_layers": [
+    36,
+    37
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435352,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8147996
+  },
+  {
+   "die": "layer_s25_r2",
+   "role": "layer",
+   "stage": 25,
+   "rank": 2,
+   "dense_layers": [
+    36,
+    37
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435352,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8147996
+  },
+  {
+   "die": "layer_s25_r3",
+   "role": "layer",
+   "stage": 25,
+   "rank": 3,
+   "dense_layers": [
+    36,
+    37
+   ],
+   "routed_experts": 544,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13642,
+    "ot_rom_8192x104_m8": 256
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13056
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 312
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 256
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 41
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2722435352,
+   "physical_macro_bytes": 3854880768,
+   "macro_area_mm2": 206.26066,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": 8147996
+  },
+  {
+   "die": "layer_s26_r0",
+   "role": "layer",
+   "stage": 26,
+   "rank": 0,
+   "dense_layers": [
+    38
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s26_r1",
+   "role": "layer",
+   "stage": 26,
+   "rank": 1,
+   "dense_layers": [
+    38
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s26_r2",
+   "role": "layer",
+   "stage": 26,
+   "rank": 2,
+   "dense_layers": [
+    38
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s26_r3",
+   "role": "layer",
+   "stage": 26,
+   "rank": 3,
+   "dense_layers": [
+    38
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s27_r0",
+   "role": "layer",
+   "stage": 27,
+   "rank": 0,
+   "dense_layers": [
+    39
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s27_r1",
+   "role": "layer",
+   "stage": 27,
+   "rank": 1,
+   "dense_layers": [
+    39
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s27_r2",
+   "role": "layer",
+   "stage": 27,
+   "rank": 2,
+   "dense_layers": [
+    39
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  },
+  {
+   "die": "layer_s27_r3",
+   "role": "layer",
+   "stage": 27,
+   "rank": 3,
+   "dense_layers": [
+    39
+   ],
+   "routed_experts": 553,
+   "spill_rows": 238525,
+   "macros": {
+    "ot_rom_8192x274_m8": 13670,
+    "ot_rom_8192x104_m8": 128
+   },
+   "macros_by_group": {
+    "ROM_MAC.expert": {
+     "ot_rom_8192x274_m8": 13272
+    },
+    "ROM_MAC.dense_QE": {
+     "ot_rom_8192x274_m8": 144
+    },
+    "ROM_MAC.ME": {
+     "ot_rom_8192x104_m8": 128
+    },
+    "VM.CONSTANT_HE": {
+     "ot_rom_8192x274_m8": 21
+    },
+    "ENGRAM.spill": {
+     "ot_rom_8192x274_m8": 233
+    }
+   },
+   "payload_bytes": 2710703616,
+   "physical_macro_bytes": 3849105408,
+   "macro_area_mm2": 205.882247,
+   "mean_model_budget_bytes": 2714287356,
+   "bytes_over_mean_model": -3583740
+  }
+ ],
+ "engram_table_dies": {
+  "role": "engram_table",
+  "count": 72,
+  "rows_per_die": 10281391,
+  "macros": {
+   "ot_rom_8192x274_m8": 10041
+  },
+  "macro_area_mm2": 150.639801,
+  "status": "whole rows; 264-bit words, 8 reads/row; gather port count unbound"
+ },
+ "head_dies": {
+  "role": "head",
+  "count": 4,
+  "payload_bytes": 2714287322,
+  "macros": {
+   "ot_rom_8192x274_m8": 10041
+  },
+  "macro_area_mm2": 150.639801,
+  "status": "mean-model head bytes packed at 264 useful bits/word; exact head tensor image not derived"
+ },
+ "summary": {
+  "layer_die_count": 112,
+  "max_macros": 13898,
+  "max_wide_macros": 13734,
+  "max_narrow_macros": 256,
+  "max_macro_area_mm2": 206.842405,
+  "min_macro_area_mm2": 205.300501,
+  "busiest_die": "layer_s01_r3",
+  "dies_over_mean_model": 76,
+  "max_bytes_over_mean_model": 17097252,
+  "total_payload_bytes": 304247301488,
+  "total_macro_area_mm2": 23074.875
+ },
+ "open_items": [
+  "ECC image and bits not included (witness has none)",
+  "dense tensors with unknown partitions remain fully replicated",
+  "expert matrices use a separate 8192-deep set each: 5,760 of 8,192 rows used (70.3%)",
+  "head-die image is the analytical mean model, not an exact tensor image",
+  "gather/read-port schedule for pooled constants and Engram spill unbound"
+ ]
+}

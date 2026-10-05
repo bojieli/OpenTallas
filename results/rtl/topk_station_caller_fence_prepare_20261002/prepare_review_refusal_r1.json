@@ -1,0 +1,15 @@
+{
+  "authoritative": "package_r3",
+  "classification": "SOURCE_INSPECTION_REFUSAL_NOT_HDL_FAILURE",
+  "correction": "package_r3 preserves generic native data width, masks only12 terminal control bits, uses explicit WPW constant and adds simulation-only refusal for missing live VM credits. Same fixed99/99/28 architecture.",
+  "no_compilation": true,
+  "package_r1_issues": [
+    "GW1 defaultoff IPW expanded N*FW instead of actual single-rank payload width",
+    "All payload bits masked to zero on absent present flag, adding unpriced data gates"
+  ],
+  "preserved_packages": [
+    "package_r1",
+    "package_r2"
+  ],
+  "test_r1_issue": "Python test syntax else256; original log retained, corrected without changed assertions"
+}

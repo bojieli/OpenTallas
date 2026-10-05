@@ -1,0 +1,245 @@
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:296:32: Operator VAR 'PRK' expects 7 bits on the Initial value, but Initial value's SHIFTR generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  296 |         localparam [KV_AW-1:0] PRK = GT >> KV_SK;
+      |                                ^~~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:297:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  297 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:299:36: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  299 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:301:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  301 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:302:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  302 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:305:35: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  305 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:307:35: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  307 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:438:25: Operator VAR 'WNB' expects 19 bits on the Initial value, but Initial value's VARREF 'W' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  438 |     localparam [NW:0]   WNB = W;
+      |                         ^~~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:566:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  566 |     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
+      |                        ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:572:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  572 |     end else if (LANES) begin : g_kv_addr_prep
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:637:24: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  637 |     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+      |                        ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:708:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  708 |     generate if (LANES) begin : g_operand
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:727:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'PORTS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  727 |     generate if (PORTS) begin : g_atag
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:745:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  745 |     generate if (LANES) begin : g_lanes
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:805:47: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  805 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                               ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:805:32: Operator VAR 'ALWAYS' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  805 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                ^~~~~~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:806:48: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  806 |             localparam integer HOLD_TO = PRUNE ? NPG : G;       
+      |                                                ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:817:44: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  817 |             localparam integer R1 = ALWAYS ? R0 : ((HOLD_TO > R0) ? HOLD_TO : R0);
+      |                                            ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:821:17: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  821 |             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
+      |                 ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:836:17: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'ALWAYS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  836 |                 if (ALWAYS) begin : g_a
+      |                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:874:35: Logical Operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'PORTS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  874 |     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
+      |                                   ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_fp32_add_lat.sv:208:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me.g_lanes.g_grp[0].g_lane[0].g_ladd.u_add.u.u_ca
+  208 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_arith.sv:54:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                          : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me.g_lanes.g_grp[0].g_lane[0].g_candidate_mul.u_mul
+   54 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:345:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  345 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:431:90: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  431 |                 if (((GT >> b) & 1) != 0 && b >= sh) acc = acc + ({{PRW{1'b0}}, x} << (b - sh));
+      |                                                                                          ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:448:91: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  448 |             tsh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                           ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:449:92: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  449 |             osh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                            ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:451:14: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  451 |         pr_a <= GT >> split_r;
+      |              ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:468:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  468 |         nb_step <= pr_a * (W * IL);
+      |                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:469:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  469 |         lb_step <= pr_a * W;
+      |                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:504:69: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  504 |                 if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+      |                                                                     ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:506:27: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  506 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                           ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:506:38: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  506 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                      ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:563:39: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xc' generates 24 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  563 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                       ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:563:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  563 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:833:125: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  833 |                 ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+      |                                                                                                                             ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:956:33: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PORTS' generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  956 |         assign result_v = PORTS ? raw_v : 1'b0;
+      |                                 ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:988:33: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  988 |     wire [$clog2(GT):0] r_ports = GT >> r_split;
+      |                                 ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:996:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_lb' generates 19 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  996 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                      ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:996:76: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_nb' generates 19 bits.
+                                                                                                            : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  996 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                            ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1009:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_oa' generates 24 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1009 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                         ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1009:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1009 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1082:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 18 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1082 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                                              ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1082:31: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1082 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                               ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1151:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1151 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1152:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1152 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:1153:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                                                                             : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+ 1153 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:104:35: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  104 |     wire             go_i  = IREG ? go_q : ib_go;
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:105:35: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  105 |     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:106:35: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  106 |     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:302:33: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'a' generates 24 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  302 |         wire          is_v = (a >= KV_VB);
+      |                                 ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:303:29: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'a' generates 24 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  303 |         wire [AW-1:0] w = a - KV_VB;
+      |                             ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:303:25: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  303 |         wire [AW-1:0] w = a - KV_VB;
+      |                         ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:306:35: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'tk' generates 9 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  306 |         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:306:35: Operator DIV expects 32 bits on the RHS, but RHS's VARREF 'PRK' generates 7 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  306 |         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
+      |                                   ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:306:50: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  306 |         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
+      |                                                  ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:306:29: Operator ASSIGNW expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  306 |         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
+      |                             ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:307:43: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pv' generates 13 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  307 |         wire [KV_AW-1:0] lv = KV_KL + (pv >> KV_SV) * KV_NH + w[KV_HB+1:KV_HB];
+      |                                           ^~
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:307:61: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  307 |         wire [KV_AW-1:0] lv = KV_KL + (pv >> KV_SV) * KV_NH + w[KV_HB+1:KV_HB];
+      |                                                             ^
+%Warning-WIDTH: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv:307:29: Operator ASSIGNW expects 7 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                               : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2
+  307 |         wire [KV_AW-1:0] lv = KV_KL + (pv >> KV_SV) * KV_NH + w[KV_HB+1:KV_HB];
+      |                             ^
+%Warning-UNSIGNED: results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv:996:103: Comparison is constant due to unsigned arithmetic
+                                                                                                                : ... In instance ot_qwen_rom_tile_logic_context_candidate_r2.u_me
+  996 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                                                       ^

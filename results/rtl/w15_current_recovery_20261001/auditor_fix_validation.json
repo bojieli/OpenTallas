@@ -1,0 +1,12 @@
+{
+  "schema": "w15_historical_auditor_validation_v1",
+  "verdict": "PASS",
+  "checks": [
+    "Matching checkout validates historical binding",
+    "Current uarch_model.py from 3ce6b8298 reports drift and preserves historical PASS/source_commit",
+    "Corrupt historical model hash rejects evidence",
+    "Existing committed audit and campaign evidence left byte-identical"
+  ],
+  "model_drift_commit": "3ce6b8298f2656d640abe566794f235bd3eb4dc8",
+  "historical_source_commit": "f449a0d9ac9a4b6f227bab636cd8d6156fbd8f0d"
+}

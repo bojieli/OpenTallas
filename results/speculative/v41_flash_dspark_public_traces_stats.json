@@ -1,0 +1,417 @@
+{
+ "definitions": "Greedy speculative-acceptance statistics from a teacher-forced main pass + DSpark drafts.\n\nDefinitions (row = (sequence j, position p)):\n  g_q      main-model greedy token at position q (prediction for token q+1), over the TRACE prefix\n  drafts   d_1..d_5 from the block [g_p, noise x4]; d_k targets g_{p+k}\n  a        accepted drafts = leading k with d_k == g_{p+k}   (depth D = min(5, T-1-p))\n  tau      tokens per verification pass = a + 1 (bonus token), over rows with full depth 5\n  EXACT    the row's acceptance equals true greedy acceptance iff the trace IS the model's greedy\n           text over the tokens the targets condition on: x_{p+i} == g_{p+i-1}, i = 1..min(a+1, D)\n  assistant row: token p+1 lies inside an assistant span (assistant_mask of the trace)\n  greedy-match rate: fraction of assistant tokens x_t with x_t == g_{t-1}",
+ "per_source": {
+  "swe_agent": {
+   "sequences": 8,
+   "ids": [
+    "row1873 fatiando__pooch-171 swe-agent-llama-70b",
+    "row915 planetlabs__planet-client-python-621 swe-agent-llama-8b",
+    "row4651 Azure__msrest-for-python-208 swe-agent-llama-70b",
+    "row3798 geopandas__geopandas-1336 swe-agent-llama-70b",
+    "row4893 alvinwan__TexSoup-140 swe-agent-llama-70b",
+    "row2788 devopshq__artifactory-439 swe-agent-llama-70b",
+    "row3753 docker__docker-py-1167 swe-agent-llama-70b",
+    "row2513 NVIDIA__hpc-container-maker-221 swe-agent-llama-8b"
+   ],
+   "tokens": 4800,
+   "assistant_tokens": 1340,
+   "greedy_match_rate_assistant_tokens": 0.7313432835820896,
+   "assistant_rows_proxy": {
+    "rows": 1340,
+    "rows_full_depth": 1336,
+    "tau_tokens_per_verification_incl_bonus": 3.038922155688623,
+    "tau_stderr": 0.052414701474577996,
+    "mean_accepted_drafts": 2.038922155688623,
+    "accepted_length_histogram_0..5": [
+     422,
+     243,
+     174,
+     129,
+     94,
+     274
+    ],
+    "per_position_conditional_acceptance": [
+     0.6841317365269461,
+     0.7341356673960613,
+     0.7406855439642325,
+     0.7404426559356136,
+     0.7445652173913043
+    ],
+    "per_position_marginal_match": [
+     0.6841317365269461,
+     0.5344311377245509,
+     0.4199101796407186,
+     0.33083832335329344,
+     0.25074850299401197
+    ]
+   },
+   "assistant_rows_EXACT_greedy_only": {
+    "rows": 662,
+    "rows_full_depth": 658,
+    "tau_tokens_per_verification_incl_bonus": 3.8419452887537995,
+    "tau_stderr": 0.07721629417296515,
+    "mean_accepted_drafts": 2.8419452887537995,
+    "accepted_length_histogram_0..5": [
+     124,
+     95,
+     77,
+     70,
+     49,
+     243
+    ],
+    "per_position_conditional_acceptance": [
+     0.8115501519756839,
+     0.8220973782771536,
+     0.8246013667425968,
+     0.8066298342541437,
+     0.8321917808219178
+    ],
+    "per_position_marginal_match": [
+     0.8115501519756839,
+     0.7082066869300911,
+     0.6048632218844985,
+     0.5075987841945289,
+     0.42249240121580545
+    ]
+   },
+   "non_assistant_rows_proxy": {
+    "rows": 3444,
+    "rows_full_depth": 3416,
+    "tau_tokens_per_verification_incl_bonus": 2.8193793911007026,
+    "tau_stderr": 0.03283029566210041,
+    "mean_accepted_drafts": 1.8193793911007026,
+    "accepted_length_histogram_0..5": [
+     1286,
+     644,
+     380,
+     269,
+     181,
+     656
+    ],
+    "per_position_conditional_acceptance": [
+     0.6235362997658079,
+     0.6976525821596244,
+     0.7442799461641992,
+     0.7567811934900542,
+     0.7837514934289128
+    ],
+    "per_position_marginal_match": [
+     0.6235362997658079,
+     0.47540983606557374,
+     0.38231850117096017,
+     0.29918032786885246,
+     0.24502341920374707
+    ]
+   }
+  },
+  "tau_airline": {
+   "sequences": 4,
+   "ids": [
+    "gpt-4o-airline[107] task_id=7 trial=2",
+    "gpt-4o-airline[60] task_id=10 trial=1",
+    "gpt-4o-airline[15] task_id=15 trial=0",
+    "gpt-4o-airline[61] task_id=11 trial=1"
+   ],
+   "tokens": 5623,
+   "assistant_tokens": 1027,
+   "greedy_match_rate_assistant_tokens": 0.7789678675754625,
+   "assistant_rows_proxy": {
+    "rows": 1027,
+    "rows_full_depth": 1022,
+    "tau_tokens_per_verification_incl_bonus": 3.3962818003913893,
+    "tau_stderr": 0.06397368133123378,
+    "mean_accepted_drafts": 2.3962818003913893,
+    "accepted_length_histogram_0..5": [
+     286,
+     159,
+     123,
+     86,
+     54,
+     314
+    ],
+    "per_position_conditional_acceptance": [
+     0.7201565557729941,
+     0.7839673913043478,
+     0.7868284228769498,
+     0.8105726872246696,
+     0.8532608695652174
+    ],
+    "per_position_marginal_match": [
+     0.7201565557729941,
+     0.5998043052837574,
+     0.49021526418786693,
+     0.4187866927592955,
+     0.37084148727984345
+    ]
+   },
+   "assistant_rows_EXACT_greedy_only": {
+    "rows": 630,
+    "rows_full_depth": 630,
+    "tau_tokens_per_verification_incl_bonus": 4.198412698412699,
+    "tau_stderr": 0.07914484799522373,
+    "mean_accepted_drafts": 3.1984126984126986,
+    "accepted_length_histogram_0..5": [
+     100,
+     74,
+     67,
+     51,
+     36,
+     302
+    ],
+    "per_position_conditional_acceptance": [
+     0.8412698412698413,
+     0.8603773584905661,
+     0.8530701754385965,
+     0.8688946015424165,
+     0.893491124260355
+    ],
+    "per_position_marginal_match": [
+     0.8412698412698413,
+     0.7682539682539683,
+     0.665079365079365,
+     0.5968253968253968,
+     0.5476190476190477
+    ]
+   },
+   "non_assistant_rows_proxy": {
+    "rows": 4588,
+    "rows_full_depth": 4577,
+    "tau_tokens_per_verification_incl_bonus": 2.594275726458379,
+    "tau_stderr": 0.02697623825977843,
+    "mean_accepted_drafts": 1.594275726458379,
+    "accepted_length_histogram_0..5": [
+     1928,
+     865,
+     524,
+     329,
+     258,
+     673
+    ],
+    "per_position_conditional_acceptance": [
+     0.5787633821280315,
+     0.6734616836542091,
+     0.7062780269058296,
+     0.7388888888888889,
+     0.7228786251342643
+    ],
+    "per_position_marginal_match": [
+     0.5787633821280315,
+     0.4623115577889447,
+     0.38169106401573083,
+     0.32051562158619185,
+     0.25322263491369895
+    ]
+   }
+  },
+  "tau_retail": {
+   "sequences": 4,
+   "ids": [
+    "gpt-4o-retail[332] task_id=102 trial=2",
+    "gpt-4o-retail[252] task_id=22 trial=2",
+    "gpt-4o-retail[336] task_id=106 trial=2",
+    "gpt-4o-retail[374] task_id=29 trial=3"
+   ],
+   "tokens": 6000,
+   "assistant_tokens": 1013,
+   "greedy_match_rate_assistant_tokens": 0.8627838104639685,
+   "assistant_rows_proxy": {
+    "rows": 1013,
+    "rows_full_depth": 1005,
+    "tau_tokens_per_verification_incl_bonus": 4.153233830845771,
+    "tau_stderr": 0.06447407767227595,
+    "mean_accepted_drafts": 3.153233830845771,
+    "accepted_length_histogram_0..5": [
+     181,
+     121,
+     90,
+     77,
+     43,
+     493
+    ],
+    "per_position_conditional_acceptance": [
+     0.8199004975124378,
+     0.8531553398058253,
+     0.871977240398293,
+     0.8743882544861338,
+     0.9197761194029851
+    ],
+    "per_position_marginal_match": [
+     0.8199004975124378,
+     0.7194029850746269,
+     0.6427860696517413,
+     0.5771144278606966,
+     0.5283582089552239
+    ]
+   },
+   "assistant_rows_EXACT_greedy_only": {
+    "rows": 754,
+    "rows_full_depth": 746,
+    "tau_tokens_per_verification_incl_bonus": 4.8766756032171585,
+    "tau_stderr": 0.06372134776956932,
+    "mean_accepted_drafts": 3.876675603217158,
+    "accepted_length_histogram_0..5": [
+     59,
+     64,
+     52,
+     50,
+     31,
+     490
+    ],
+    "per_position_conditional_acceptance": [
+     0.920911528150134,
+     0.9068413391557496,
+     0.9165329052969502,
+     0.9124343257443083,
+     0.9404990403071017
+    ],
+    "per_position_marginal_match": [
+     0.920911528150134,
+     0.8565683646112601,
+     0.8042895442359249,
+     0.7426273458445041,
+     0.6970509383378016
+    ]
+   },
+   "non_assistant_rows_proxy": {
+    "rows": 4979,
+    "rows_full_depth": 4971,
+    "tau_tokens_per_verification_incl_bonus": 2.227519613759807,
+    "tau_stderr": 0.023016070556995036,
+    "mean_accepted_drafts": 1.2275196137598068,
+    "accepted_length_histogram_0..5": [
+     2440,
+     1026,
+     564,
+     292,
+     173,
+     476
+    ],
+    "per_position_conditional_acceptance": [
+     0.5091530879098772,
+     0.5946266297905966,
+     0.6252491694352159,
+     0.6896918172157279,
+     0.7334360554699538
+    ],
+    "per_position_marginal_match": [
+     0.5091530879098772,
+     0.37577952122309394,
+     0.28968014484007243,
+     0.21947294306980486,
+     0.18225709112854557
+    ]
+   }
+  }
+ },
+ "overall": {
+  "sequences": 16,
+  "ids": [
+   "gpt-4o-retail[332] task_id=102 trial=2",
+   "gpt-4o-retail[252] task_id=22 trial=2",
+   "gpt-4o-retail[336] task_id=106 trial=2",
+   "gpt-4o-retail[374] task_id=29 trial=3",
+   "gpt-4o-airline[107] task_id=7 trial=2",
+   "gpt-4o-airline[60] task_id=10 trial=1",
+   "gpt-4o-airline[15] task_id=15 trial=0",
+   "gpt-4o-airline[61] task_id=11 trial=1",
+   "row1873 fatiando__pooch-171 swe-agent-llama-70b",
+   "row915 planetlabs__planet-client-python-621 swe-agent-llama-8b",
+   "row4651 Azure__msrest-for-python-208 swe-agent-llama-70b",
+   "row3798 geopandas__geopandas-1336 swe-agent-llama-70b",
+   "row4893 alvinwan__TexSoup-140 swe-agent-llama-70b",
+   "row2788 devopshq__artifactory-439 swe-agent-llama-70b",
+   "row3753 docker__docker-py-1167 swe-agent-llama-70b",
+   "row2513 NVIDIA__hpc-container-maker-221 swe-agent-llama-8b"
+  ],
+  "tokens": 16423,
+  "assistant_tokens": 3380,
+  "greedy_match_rate_assistant_tokens": 0.785207100591716,
+  "assistant_rows_proxy": {
+   "rows": 3380,
+   "rows_full_depth": 3363,
+   "tau_tokens_per_verification_incl_bonus": 3.48052334225394,
+   "tau_stderr": 0.03529833982558104,
+   "mean_accepted_drafts": 2.48052334225394,
+   "accepted_length_histogram_0..5": [
+    889,
+    523,
+    387,
+    292,
+    191,
+    1081
+   ],
+   "per_position_conditional_acceptance": [
+    0.735652691049658,
+    0.7886014551333872,
+    0.8016401845207586,
+    0.8132992327365729,
+    0.8498427672955975
+   ],
+   "per_position_marginal_match": [
+    0.735652691049658,
+    0.6095747844186739,
+    0.5078798691644365,
+    0.4311626523936961,
+    0.3702051739518287
+   ]
+  },
+  "assistant_rows_EXACT_greedy_only": {
+   "rows": 2046,
+   "rows_full_depth": 2034,
+   "tau_tokens_per_verification_incl_bonus": 4.331858407079646,
+   "tau_stderr": 0.04317162452297119,
+   "mean_accepted_drafts": 3.331858407079646,
+   "accepted_length_histogram_0..5": [
+    283,
+    233,
+    196,
+    171,
+    116,
+    1035
+   ],
+   "per_position_conditional_acceptance": [
+    0.86086529006883,
+    0.8669331810394061,
+    0.8708827404479579,
+    0.8706505295007564,
+    0.8992180712423979
+   ],
+   "per_position_marginal_match": [
+    0.86086529006883,
+    0.7812192723697149,
+    0.6966568338249755,
+    0.6214355948869223,
+    0.5619469026548672
+   ]
+  },
+  "non_assistant_rows_proxy": {
+   "rows": 13011,
+   "rows_full_depth": 12964,
+   "tau_tokens_per_verification_incl_bonus": 2.512958963282937,
+   "tau_stderr": 0.015744585277059867,
+   "mean_accepted_drafts": 1.5129589632829374,
+   "accepted_length_histogram_0..5": [
+    5654,
+    2535,
+    1468,
+    890,
+    612,
+    1805
+   ],
+   "per_position_conditional_acceptance": [
+    0.5638691761801913,
+    0.6532147742818057,
+    0.692565445026178,
+    0.7308739038403387,
+    0.7467935457178321
+   ],
+   "per_position_marginal_match": [
+    0.5638691761801913,
+    0.43258253625424253,
+    0.34657513113236654,
+    0.2761493366244986,
+    0.22385066337550139
+   ]
+  }
+ }
+}

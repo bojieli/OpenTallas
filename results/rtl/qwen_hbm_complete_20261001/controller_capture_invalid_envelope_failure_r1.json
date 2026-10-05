@@ -1,0 +1,240 @@
+{
+  "actual_provider_credit": false,
+  "base_identity": {
+    "PC": 0,
+    "die": 0,
+    "instruction": 10,
+    "position": 0,
+    "producer_epoch": 18446744073709551615,
+    "sector": 0,
+    "stack": 0,
+    "tag": 0,
+    "transport_epoch": 7
+  },
+  "hardware_build_ready": false,
+  "prerequisite_pins": {
+    "results/rtl/qwen_hbm_complete_20261001/controller_capture_supplied_event_review_r1.json": {
+      "commit": "b0da977edc14b263be322a1cba582aa76e4a63c5",
+      "sha256": "26b4a2c656d3fdc40e1e61cbf708b2c7a44ec570826df04a6e0145af75d1c556"
+    },
+    "results/rtl/qwen_hbm_complete_20261001/controller_source_prerequisites_r4.json": {
+      "commit": "4ef6920bf19bb79c18d99f7141c070021993a5d6",
+      "sha256": "26a0dc8af245cb72afca3c30aafc442036227a962441e6d4d4d41f270e229b00"
+    }
+  },
+  "reproduction": "Load source_pin via git show into a fresh module with tools on sys.path; for each witness instantiate Capture(), apply setup if present, invoke call with base_identity plus identity_override, compare deepcopy(vars(c)) before/after. Column uses the recorded fixture eligibility arguments.",
+  "schema": "Qwen_controller_capture_invalid_envelope_failure_r1",
+  "scope": "Software candidate supplied-event control validation only; not hardware qualification. Parent source executed before applying correction; no callback state transitions changed.",
+  "source_pin": {
+    "commit": "c38dbb46e4864e8f9fa69ab258362c9b2a83853e",
+    "path": "tools/qwen_hbm_complete_controller_capture.py",
+    "sha256": "ecdc8a5bd4e25a400c9a6d7fa295b0c44f81b13c7108edd5a5c70218fab1e023"
+  },
+  "verdict": "FAIL",
+  "whole_program_admission": false,
+  "witnesses": [
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "instruction": -1
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "instruction": 2048
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "instruction": true
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "instruction": 10.0
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "position": -1
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "position": 2097152
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "position": false
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "position": 0.0
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "die": false
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "die": 0.0
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "stack": false
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "stack": 0.0
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "PC": false
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "identity_override": {
+        "PC": 0.0
+      },
+      "mask": 4294967295,
+      "mutated_state": true,
+      "outcome": "accepted_invalid_identity",
+      "time": 0
+    },
+    {
+      "call": "lock_partial",
+      "mask": true,
+      "mutated_state": true,
+      "outcome": "accepted_noninteger_mask"
+    },
+    {
+      "call": "lock_partial",
+      "mask": 1.0,
+      "mutated_state": true,
+      "outcome": "accepted_noninteger_mask"
+    },
+    {
+      "call": "column",
+      "eligibility_event": "fixture",
+      "eligibility_until": 1000000,
+      "mask": 4294967295.0,
+      "mutated_state": true,
+      "outcome": "accepted_noninteger_mask",
+      "time": 0
+    },
+    {
+      "call": "read_import_retired",
+      "mutated_state": true,
+      "outcome": "accepted_invalid_timestamp",
+      "setup": "lock_partial(identity,1)",
+      "time": -1
+    },
+    {
+      "call": "read_import_retired",
+      "mutated_state": true,
+      "outcome": "accepted_invalid_timestamp",
+      "setup": "lock_partial(identity,1)",
+      "time": false
+    }
+  ]
+}

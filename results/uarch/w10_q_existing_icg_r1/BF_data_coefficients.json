@@ -1,0 +1,303 @@
+{
+  "source_image": "af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "source_sha256": {
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+  },
+  "coefficients": {
+    "AND2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "5.1619374",
+      "nonclock_pin_cap_fF": "1.142538",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AND2x4_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.966488",
+      "nonclock_pin_cap_fF": "2.21559",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "7.230030",
+      "nonclock_pin_cap_fF": "1.911186",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.453739",
+      "nonclock_pin_cap_fF": "2.513616",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "10.2842705",
+      "nonclock_pin_cap_fF": "2.686155",
+      "output_load_ceiling_fF": "368.64"
+    },
+    "AO211x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "13.058008415",
+      "nonclock_pin_cap_fF": "3.793573",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "6.5202253",
+      "nonclock_pin_cap_fF": "1.888644",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AO21x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.3822718",
+      "nonclock_pin_cap_fF": "1.891004",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "10.2652146",
+      "nonclock_pin_cap_fF": "2.657043",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "18.5384664",
+      "nonclock_pin_cap_fF": "3.621534",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "7.1390976",
+      "nonclock_pin_cap_fF": "1.771829",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "15.790589944",
+      "nonclock_pin_cap_fF": "4.537851",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.9328166",
+      "nonclock_pin_cap_fF": "2.472116",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AO33x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "16.8904437",
+      "nonclock_pin_cap_fF": "3.185136",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.5704554584",
+      "nonclock_pin_cap_fF": "3.947523",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.3405595056",
+      "nonclock_pin_cap_fF": "3.57118",
+      "output_load_ceiling_fF": "23.04"
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "10.6327443501",
+      "nonclock_pin_cap_fF": "4.773969",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "AOI22x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "12.5111237",
+      "nonclock_pin_cap_fF": "4.88562",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "11.66421",
+      "nonclock_pin_cap_fF": "2.60175",
+      "output_load_ceiling_fF": "368.64"
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "2.153457",
+      "nonclock_pin_cap_fF": "0.577042",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "3.085998",
+      "nonclock_pin_cap_fF": "0.693513",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "3.435156",
+      "nonclock_pin_cap_fF": "0.581966",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.113256",
+      "nonclock_pin_cap_fF": "1.08995",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "BUFx5_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.45181",
+      "nonclock_pin_cap_fF": "0.6936",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "5.87853",
+      "nonclock_pin_cap_fF": "1.33316",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "1.937995",
+      "nonclock_pin_cap_fF": "0.623429",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "1.702812",
+      "nonclock_pin_cap_fF": "0.62135",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "ICGx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "5.303669",
+      "nonclock_pin_cap_fF": "0.939747",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "INVx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "1.141197",
+      "nonclock_pin_cap_fF": "0.683716",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "INVx2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "2.191697",
+      "nonclock_pin_cap_fF": "1.32045",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "INVx3_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "3.450023",
+      "nonclock_pin_cap_fF": "1.95945",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "INVx4_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.384938",
+      "nonclock_pin_cap_fF": "2.5933",
+      "output_load_ceiling_fF": "184.32"
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "17.332960",
+      "nonclock_pin_cap_fF": "2.987849",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.748078",
+      "nonclock_pin_cap_fF": "2.15953",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "NAND2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.515406",
+      "nonclock_pin_cap_fF": "4.32085",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.221523",
+      "nonclock_pin_cap_fF": "4.13605",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.1364653808",
+      "nonclock_pin_cap_fF": "2.19363",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "NOR2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.2397440092",
+      "nonclock_pin_cap_fF": "4.33489",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "NOR3x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.3358073019",
+      "nonclock_pin_cap_fF": "4.18892",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.7015946",
+      "nonclock_pin_cap_fF": "1.995863",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.3032228",
+      "nonclock_pin_cap_fF": "1.903168",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "18.6486377",
+      "nonclock_pin_cap_fF": "3.622804",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "11.5849089",
+      "nonclock_pin_cap_fF": "2.441814",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "13.3882764",
+      "nonclock_pin_cap_fF": "3.672879",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OA33x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "18.3619180",
+      "nonclock_pin_cap_fF": "3.596613",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "8.7332102",
+      "nonclock_pin_cap_fF": "3.69702",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "12.4950127",
+      "nonclock_pin_cap_fF": "4.88648",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "4.643501028",
+      "nonclock_pin_cap_fF": "1.146161",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "6.050347705",
+      "nonclock_pin_cap_fF": "1.913150",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "7.802883345",
+      "nonclock_pin_cap_fF": "2.513352",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "9.174821083",
+      "nonclock_pin_cap_fF": "2.692821",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "TIEHIx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "0",
+      "nonclock_pin_cap_fF": "0",
+      "output_load_ceiling_fF": "0"
+    },
+    "TIELOx1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "0",
+      "nonclock_pin_cap_fF": "0",
+      "output_load_ceiling_fF": "0"
+    },
+    "XNOR2x1_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "12.57428",
+      "nonclock_pin_cap_fF": "3.38046",
+      "output_load_ceiling_fF": "46.08"
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "13.25974",
+      "nonclock_pin_cap_fF": "2.09658",
+      "output_load_ceiling_fF": "92.16"
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "data_cycle_energy_fJ": "12.87202",
+      "nonclock_pin_cap_fF": "2.077566",
+      "output_load_ceiling_fF": "92.16"
+    }
+  },
+  "scope": "Compatible when-state SS/TT/FF actual cell data-event maxima, warm reset-deasserted; not actual activity/RC"
+}

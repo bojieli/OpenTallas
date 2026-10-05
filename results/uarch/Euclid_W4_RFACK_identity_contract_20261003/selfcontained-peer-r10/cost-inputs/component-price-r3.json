@@ -1,0 +1,200 @@
+{
+  "F0_git_pins": {
+    "FULLWIDTH_HANDOFF.txt": {
+      "git_object": "887c76704954ebee8fa61f47d18da6140947ab5a:results/uarch/h4_hbm_f0_field_freeze_review_20261003/FULLWIDTH_HANDOFF.txt",
+      "sha256": "2a7c931dd3256e6642324778eaf397a90548daeebe88ae889c39e83ddac9a4c2"
+    },
+    "Popper-protection-reference.py": {
+      "git_object": "1aed3d931:tools/h4_hbm_baseline_bridge.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2"
+    },
+    "canonical-fullwidth-C0-KV-read-r1.json": {
+      "git_object": "887c76704954ebee8fa61f47d18da6140947ab5a:results/uarch/h4_hbm_f0_field_freeze_review_20261003/canonical-fullwidth-C0-KV-read-r1.json",
+      "sha256": "22e2e3c718807d91e3ef4bfd8b8a3db704583f452592975fc651b538f2827212"
+    }
+  },
+  "admission": {
+    "RTL_written": false,
+    "component_model_preparation": true,
+    "composed_calendar": false,
+    "hardware_build": false,
+    "headline": false,
+    "next": "Popper choose caller adapter/clock/buffers/reset/slots+jointcalendar and admit priced fullwidth component; Euclid then actual defaultoff successor",
+    "physical": false
+  },
+  "area": {
+    "DFFHQN_geometric_basis_um2": 0.2916,
+    "FF_geometric_area_um2": 1856.9088000000002,
+    "codec_area_um2_ASSUMED": 20409.6,
+    "excluded_not_zero": [
+      "async-reset cell premium",
+      "reset/clock/capture-enable buffers and repeater wiring",
+      "actual endpoint pin/PG/OBS fit",
+      "CDC seats and additional route slots owned by Popper",
+      "allocator/drain/fault/control logic"
+    ],
+    "full_component_area_um2": null,
+    "mux_area_um2_ASSUMED": 1625.6000000000001,
+    "mux_bit_um2_ASSUMED": 0.2,
+    "placement_utilization_ASSUMED": 0.5,
+    "reset_FF_actual_area_delta": null,
+    "slot_fit": null,
+    "subtotal_cells_um2_ASSUMED": 23892.108799999998,
+    "subtotal_footprint_um2_ASSUMED": 47784.217599999996
+  },
+  "baseline": "canonical FULLWIDTH owner46 plus actual RFslot9; compact optional",
+  "canonical_owner": {
+    "bits": 46,
+    "generator": "actual accepted W2 requester; physicalPC from accepted lane, client from exact source grant, originaltag unchanged32, gen4 from source-owned transaction allocator",
+    "layout_MSB_to_LSB": [
+      [
+        "physical_PC",
+        7
+      ],
+      [
+        "client",
+        3
+      ],
+      [
+        "original_client_tag",
+        32
+      ],
+      [
+        "generation",
+        4
+      ]
+    ],
+    "ownership": "same full scoped owner through returned data/assembly, actual RF write, common ACK, visibility, consumer, reverse CDC and retirement",
+    "requester_SM": "actual accepted destination/SM port5; implicit only on real per-SM port, never inferred from software home or fabricated constant",
+    "slices": {
+      "client": "38:36",
+      "generation": "3:0",
+      "original_client_tag": "35:4",
+      "physical_PC": "45:39"
+    }
+  },
+  "latency": {
+    "CDC_cycles": null,
+    "II_basis": "one accepted write, later registered ACK, separate sink acceptance; actual backpressure can extend",
+    "acceptance_to_ACK_budget_ns_at_target1p2GHz": 1.6666666666666667,
+    "actual_clock": null,
+    "added_local_RF_edges_vs_existing_ACK": 1,
+    "conditional_service_II_min_edges_no_backpressure": 3,
+    "cycle_debit_rule": "charge actual RF writes at exposed dependencies; subtract existing ACK debit once, no blind all-SM sum",
+    "finite_wait_upper": null,
+    "proposed_write_accept_to_common_ACK_edges": 2,
+    "scope": "prospective local RF edges; no installed timing or globalclock bound",
+    "sensitivity_added_edges": [
+      {
+        "added_edges": 1,
+        "ns_at_target1p2": 1.6666666666666667,
+        "total_accept_to_ACK_edges": 2
+      },
+      {
+        "added_edges": 2,
+        "ns_at_target1p2": 2.5,
+        "total_accept_to_ACK_edges": 3
+      },
+      {
+        "added_edges": 3,
+        "ns_at_target1p2": 3.3333333333333335,
+        "total_accept_to_ACK_edges": 4
+      }
+    ],
+    "token_increment_s": null
+  },
+  "owner_generation_separate_FFs": 0,
+  "prior_source_model": {
+    "CTAGW": 32,
+    "PTAGW": 35,
+    "RF_slot_bits": 9,
+    "SM_namespace": "actual static RF endpoint32SMs; accepted requester SM/home map must be proved",
+    "capture_with_explicit_PC7_and_client_context": 52,
+    "compact_parent_tag16": "optional only after reversible source adapter; PC and coalescer layouts unequal",
+    "generation_bits": 4,
+    "generation_is_explicit": true,
+    "local_handle": "physicalPC7 + source PTAG35 + generation4 + actual wr_addr9",
+    "minimum_capture_if_PC_client_scoped_in_real_context": 45,
+    "narrower_width_requires_real_context_ownership": true,
+    "optional_compact_adapter_blocks_baseline": false,
+    "original_tag_overwritten": false,
+    "physical_PC_bits": 7,
+    "selected_conservative_capture_including_client3": 55
+  },
+  "prospective_protection": {
+    "actual_codec_RTL_or_mapped_survival": false,
+    "codec_gate_area_um2_ASSUMED": 0.3,
+    "codec_is_not_ROM_ECC": true,
+    "codec_timing": null,
+    "generic_codec_gate_upper_ASSUMED": 68032,
+    "mutable_control_protection_retained": true,
+    "reference": "Popper protected(bits)=ceil(bits/64)*72",
+    "syndrome_decode_gate_upper_per_word": 448,
+    "unshared_decoder_XOR2_per_word": 340,
+    "unshared_encoder_XOR2_per_word": 275
+  },
+  "quiescence": {
+    "backend_reset_flush_receipt": null,
+    "finite_wait_upper": null,
+    "generation_modulus": 16,
+    "generation_run_cap": false,
+    "matched_reverse_CDC_before_reuse": true,
+    "positive_wait_required": true,
+    "prospective_drain_added_edges_sensitivity": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "sensitivity_is_not_source_wait_upper": true,
+    "source_allcopies_transition": null,
+    "wholeprogram_Qwen1737_DS2213_repeatedtokens_required": true
+  },
+  "routing": {
+    "FF_hold": null,
+    "SS_setup": null,
+    "buffer_tree_fanout_limit": null,
+    "corridor_capacity": null,
+    "endpoint_signal_basis": "write owner46, ACK owner46+slot9, wr/ACKvalidready4; local boundary screen only",
+    "endpoint_uncoded_signal_tracks_per_SM": 105,
+    "installed_CTS": null
+  },
+  "schema": "EUCLID_W4_CANONICAL_COMPONENT_PROSPECTIVE_PRICE_R3",
+  "selected_inventory": {
+    "SMs": 32,
+    "SRAM_added_ports": 0,
+    "SRAM_added_replicas": 0,
+    "actual_RF_slot9_existing_input": true,
+    "added_MACs": 0,
+    "check_bits_per_word": 8,
+    "clock_loads": 6368,
+    "common_ACKs_per_write": 1,
+    "hold_mux_bit_equivalents": 6368,
+    "host_internal_mux_bit_equivalents": 1760,
+    "identity_input_wires_per_SM": 46,
+    "identity_output_payload_wires_per_SM": 55,
+    "internal_SIMD_enable_loads": 72,
+    "internal_SIMD_protected_retention_FFs": 2304,
+    "leaf_capture_enable_loads": 55,
+    "leaf_raw_capture_FFs": 1760,
+    "live_write_slots_per_SM": 1,
+    "padding_bits_per_word": 9,
+    "protected_ACK_shadow_FFs": 2304,
+    "protected_stage_enable_loads": 72,
+    "protected_transport_wires_per_SM_if_used": 72,
+    "protected_word_bits_per_SM": 72,
+    "raw_identity_payload_bits_per_SM": 55,
+    "register_read_ports": 1,
+    "register_write_ports": 1,
+    "reset_loads": 6368,
+    "total_added_FFs": 6368
+  },
+  "source_context": {
+    "KV_client5_occupied": true,
+    "NC_full_wrapper": 6,
+    "accepted_C0_KV_caller_map": null,
+    "new_directory_client": 0,
+    "real_return_assembly_owner_pass_through_required": true,
+    "requester_SM": "actual accepted destination port; never software home inferred or fixtureconstant"
+  }
+}

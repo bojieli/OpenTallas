@@ -1,0 +1,32 @@
+{
+  "scope": "component checkpoint and selected memory-service model plus portable archived Qwen terminal replay",
+  "owner_commits": [
+    "c8ca03f5f3983f6924ba5bf56510cd53ef6815bf",
+    "e598478bb719da11a7224abb55154710323898fd",
+    "0ff269833eddaaf7a25c5144b3822423813578fb",
+    "fbd37cc17cafbb56c582e00ba94a38c009abb792"
+  ],
+  "parent_tests": 45,
+  "test_command": "python3 -m pytest -q tests/test_ds_producer_checkpoint_resume.py tests/test_h4_hbm_selected_cache_rmw.py tests/test_qwen_native_terminal_coverage.py",
+  "tests_exit": 0,
+  "checkpoint_current_source_hashes_verified": 6,
+  "selected_service_byte_exact_replay": "PASS",
+  "selected_service_input_manifest_hash_validation": "PASS during independent replay",
+  "portable_Qwen_replay": "PASS_LAYER_HEAD_BOUNDARIES_WITH_OPEN_KV_COVERAGE",
+  "make_check_figures_exit": 0,
+  "open": [
+    "PC10 nonempty shared state reconstruction schema",
+    "compound query field-home and codec visibility validation",
+    "exact complete incremental disk admission",
+    "actual production shared journals replacing directed PC10 provenance",
+    "atomic L2 grant and client/home directory",
+    "distributed RMW slots and SS merge path",
+    "Qwen actual ordered KV lifecycle and raw FP8 comparison"
+  ],
+  "production_restore_qualified": false,
+  "new_numerical_execution": false,
+  "RTL_qualified": false,
+  "physical_qualified": false,
+  "rate_credit": false,
+  "goal_complete": false
+}

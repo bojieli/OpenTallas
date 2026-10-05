@@ -1,0 +1,29 @@
+{
+  "host": "ot-pve1",
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "lease_keeper_pid": 1008370,
+  "memory_reservation_GiB": 80,
+  "threads": 8,
+  "CPU_sharing": true,
+  "Nice": 10,
+  "admission": "Parent-directed CPU sharing; exact memory/disk reservations remain enforced",
+  "held_lock_files": [
+    "/tmp/claude-1000/agd_slots/ot-pve1.9",
+    "/tmp/claude-1000/agd_slots/ot-pve1.10",
+    "/tmp/claude-1000/agd_slots/ot-pve1.11",
+    "/tmp/claude-1000/agd_slots/ot-pve1.12",
+    "/tmp/claude-1000/agd_slots/ot-pve1.13",
+    "/tmp/claude-1000/agd_slots/ot-pve1.14",
+    "/tmp/claude-1000/agd_slots/ot-pve1.15",
+    "/tmp/claude-1000/agd_slots/ot-pve1.16",
+    "/tmp/claude-1000/agd_slots/ot-pve1.17",
+    "/tmp/claude-1000/agd_slots/ot-pve1.18",
+    "/tmp/claude-1000/agd_slots/ot-pve1.wt.0c98183f852d",
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/ot-pve1.1008370"
+  ],
+  "source_model": "f91b3599e",
+  "capacity_basis": "PVE1 fresh199GiB available; existing finite row-stream source model, retain80GiB fleet-capacity reservation, no smaller guessed process cap. This is fleet capacity protection, not an estimated workload peak.",
+  "no_wall_cap": true,
+  "no_FSIZE_cap": true,
+  "no_AS_cap": true
+}

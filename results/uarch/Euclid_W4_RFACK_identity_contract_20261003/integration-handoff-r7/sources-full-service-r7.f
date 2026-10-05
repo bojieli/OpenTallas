@@ -1,0 +1,10 @@
+rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv
+rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_scratch_service.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_fadd.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fastfp.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_prefix.sv
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v

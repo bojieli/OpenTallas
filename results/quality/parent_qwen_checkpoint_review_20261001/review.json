@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.parent.qwen.actual_checkpoint.prefix.review.v1",
+  "source_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "artifact_hashes_verified": 8,
+  "source_blob_hashes_verified": 8,
+  "focused_tests": "16 PASS",
+  "L0_values": 4096,
+  "retired_instructions": 49,
+  "bit_mismatches": 0,
+  "nonfinite": 0,
+  "publications": 2,
+  "software_reader_leases": 0,
+  "reference_scope": "Private Torch activations and KV; shares admitted weight quantization recipe; compares only after executor produces values",
+  "verdict": "PASS_ACTUAL_CHECKPOINT_L0_SOFTWARE_ONLY",
+  "full_reader_provenance_pending": true,
+  "full_token_qualified": false,
+  "hardware_provider_qualified": false,
+  "DUT_RTL_qualified": false,
+  "physical_qualified": false,
+  "speed_credit": 0,
+  "live_identity_receipt_is_historical_only": true
+}

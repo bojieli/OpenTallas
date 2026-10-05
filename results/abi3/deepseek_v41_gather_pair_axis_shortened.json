@@ -1,0 +1,39 @@
+{
+ "answer": "the view is wrong, and not at declaration: it DECLARES dim0 = 2 and is SHORTENED to 1 by the resolver, because its LOOP_INDUCTION term satisfies the A18 walk test against a 512-row block on an axis whose declared extent is 2.",
+ "not_a_claim": [
+  "the guard is reasoned from the view and the resolver's own rule, not measured",
+  "no cell is closed or moved by this record"
+ ],
+ "question": "the V4.1 HBM cell agrees with the shipped oracle on the 8-token workload and stops at the third token with 'DMA.GATHER output view 3115 dims (1, 512) differ from the gathered shape (2, 512)'.  Which side is wrong, and where?",
+ "schema": "opentallas.result.v41_gather_pair_axis_shortened.v1",
+ "the_mechanism": {
+  "the_available_guard": "a term cannot be walking an extent axis whose DECLARED extent is smaller than one iteration of the block it implies: 2 < 512 here.  That is derivable from the view alone, in the same spirit as the existing test, and it would refuse this term without a list of exceptions.",
+  "the_walk_test": "runtime/sim/memory.py::_walks_extent_axis asks whether one iteration advances by one whole block of the extent axis: term_stride == stride[axis] * iteration_extent(bound_divisor, numerator, unit).  Here stride0 is 512 and the term stride is 262,144, so the implied iteration extent is 512 -- and the test passes.",
+  "why_that_is_wrong_here": "axis 0 of this view is the packed KEY/VALUE PAIR, extent 2.  The group axis (span_groups_ratio2) was already consumed, so the view's rank is 2 out of a rank-3 tensor.  A term that advances by 512 rows of a 512-row block cannot be walking a 2-row axis, and the resolver's own docstring makes exactly this argument for the mHC branch reduction -- 'clamping such a view would present four streams as one, which is not a partial final iteration of anything'.  This is the same shape of error with two rows instead of four."
+ },
+ "the_view_as_built": {
+  "declared": {
+   "dim0": 2,
+   "dim1": 512,
+   "dynamic_term_count": 1,
+   "extent_numerator": 0,
+   "rank": 2,
+   "stride0": 512,
+   "stride1": 1,
+   "term0_index": 3083,
+   "term0_stride": 262144
+  },
+  "index_view": {
+   "descriptor": 3114,
+   "dim0": 2,
+   "term_kind": "SYMBOL"
+  },
+  "kernel": "main.layer02.attention.compressor.carry (COMPRESS_STATE_UPDATE, ratio 2)",
+  "note": "the declared views are byte-identical before and after the lowering change I tried, so the defect is not in what is declared",
+  "operator": 3120,
+  "output_view": 3115,
+  "tensor": "(span_groups_ratio2 <= 256, 2, 512) fp32"
+ },
+ "what_it_costs_today": "two of four tokens on the 8-token workload.  The two produced AGREE with the oracle and the prefix contract is accepted; the third is this refusal.",
+ "why_it_is_not_landed_here": "the guard lives in the runtime resolver, so it changes how EVERY deployment resolves, and a resolver change needs the closed cells re-walked rather than digest-gated -- a digest cannot move when only the resolver changes.  I also tried the lowering-side alternative (skip the decode leading-extent clamp when the request-determined axis is not present in the view); it moved DeepSeek-V4-Flash's HBM digest and left this view byte-identical, so it was reverted."
+}

@@ -1,0 +1,161 @@
+{
+  "admission": {
+    "connected_protected_VM_build": false,
+    "full_token": false,
+    "physical": false,
+    "raw_component_RTL_source_preparation": true,
+    "raw_component_build": false,
+    "reason": "Rawmask/owner/visibility component sized andsourcepreparation authorized; protection storage/cost bounded above but actualcodec cuts, finiteRMW/publication andslot mustenroll beforehardwarebuild"
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "interfaces": {
+    "owner_layout": {
+      "batch_nonce": 16,
+      "context": 169,
+      "request_id": 10,
+      "reset_era": 32
+    },
+    "read_issue": {
+      "rd_accept_v": 1,
+      "rd_base_word": 15,
+      "rd_owner": 227,
+      "rd_v": 1,
+      "rule": "One consecutive4word read, not four independent read addresses. All-bank addressbounds must pass."
+    },
+    "read_response": {
+      "edges_after_issue": 4,
+      "rd_out_bank_words": 2048,
+      "rd_out_owner": 227,
+      "rd_out_rot": 2,
+      "rd_out_v": 1,
+      "rule": "Physical bank order + rotation; pulse. External reserved response seat mandatory, no invented READY."
+    },
+    "reset": {
+      "clock_domain_GHz": 0.9,
+      "rule": "Stop admissions and drain read/write/tagged-event debt before reset. Reset clears valid pipelines, cannot undo SRAMwrite. Independent-clock reset/epoch protocol belongs to priced CDC context."
+    },
+    "write_issue": {
+      "rule": "One word per actual bank, only enabled32bit lanes. All owner bits captured with accepted command. Reject wrongbank/zero mask. No superseded-write grant from raw backend.",
+      "wr_accept_v": 4,
+      "wr_lane_mask": 64,
+      "wr_owner": 908,
+      "wr_v": 4,
+      "wr_word_addr": 60,
+      "wr_word_data": 2048
+    },
+    "write_visible": {
+      "edges_after_issue": 3,
+      "rule": "Raw event after N+2 SRAMwrite, not protection checked publication or dependent consumer receipt.",
+      "wr_ack_lane_mask": 64,
+      "wr_ack_owner": 908,
+      "wr_ack_v": 4,
+      "wr_ack_word_addr": 60
+    }
+  },
+  "live_jobs_modified": false,
+  "mutable_protection": {
+    "RMW_and_postwrite_checked_visibility_schedule": "Separate finite service schedule mustprice protected read, merge, encode, nativeN+2 commit andchecked publication. PreserveMaxwellrawN+3 asrawevent; noACKtoirreversibleconsumer beforevalidation.",
+    "check_bits": 2097152,
+    "check_bytes": 262144,
+    "codec_area_is_unmapped_conservative": true,
+    "codec_source": "ot_gpu_w6_secded_pkg.encode64/decode64 unchanged64data/72code; syndrome<=71 andoverall, UE quarantine",
+    "data_bits": 16777216,
+    "data_words512": 32768,
+    "full32pair_cell_body_mm2": 0.00923228928,
+    "full32pair_gate_counts": {
+      "INVx1_ASAP7_75t_R": 24320,
+      "NAND2x1_ASAP7_75t_R": 93376
+    },
+    "full_read_decoder_replicas": 32,
+    "initialization": "Allowned VM extents/checkhalves valid before firstread; no constructor-zero or unwritten macro syntheticzero assumption. Source RNE/rounding untouched.",
+    "max4bank_fullword_write_encoder_replicas": 32,
+    "metadata": "Full owner/address/mask/version/epoch/batch protected controlrecords plus guard3811FF cost remain in joined context. ROMwaiver gives no mutablemetadata credit.",
+    "name": "W6_64bit_stripes_native32sidecars",
+    "native_macro_FF_CLK_cap_total_fF": 2987.4816,
+    "native_macro_SS_CLK_cap_total_fF": 2500.92288,
+    "nominal_diagnostic_stage_plan": {
+      "raw4edge_plus_diagnostic_read_edges": 7,
+      "raw_macro_read_to_checked_capture_extra_edges": 3,
+      "scope": "Reservation/example, not selected/certifiedminimum or buildtiming. Codec delay mayrequire differentcuts, pricedbeforebuild.",
+      "three_read_record_FF_floor_mm2": 0.002270106,
+      "three_read_record_bits": 7785
+    },
+    "one_source_encoder_decoder_pair_gate_counts": {
+      "INVx1_ASAP7_75t_R": 760,
+      "NAND2x1_ASAP7_75t_R": 2918
+    },
+    "pair_cell_body_um2": 288.50904,
+    "physical_admission": false,
+    "protection_source_realization_present": false,
+    "raw_Nplus3_ACK_not_protected_publication": true,
+    "required_not_ROM_ECC": true,
+    "scalar_partial_write": "Read+decode old64bit stripe, merge enabled32bit lane, encode same resulting64bit stripe andwrite onlyenabled data lanes+exact8 check bits. UE refuses write/publication; corrected sibling used. Mask alone cannotkeep parity valid.",
+    "sidecar_capacity_bits": 2097152,
+    "sidecar_layout": "perbank8pairs; group>>1 selects pair, group&1 selects64bit half, row=(word>>2)&511. Two independent datagroups share distinctmasked halves, one sourceR/W perbank; not extra concurrent ports.",
+    "sidecar_macro": "ot_sram_1r1w_512x128_m4_r2c2",
+    "sidecar_macro_body_mm2": 0.1654608384,
+    "sidecar_macros": 32,
+    "stage_options": "Full source codec cones require loadedSSFF mapping to select actual registered cuts. No inherited ROMchecker timing; no singlecycle decoder claim.",
+    "stripes64_per_word": 8,
+    "total288_macro_body_mm2": 1.4891475456
+  },
+  "no_new_jobs": true,
+  "original_source": {
+    "copy": "backend.sv",
+    "git": "298ba9d796d1441760359c85f3b909c199ca2495",
+    "path": "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv",
+    "sha256": "a149e8877eae9919cd4539f14206eae431ac71e0c3a49ba1e0d8c16eda99a121"
+  },
+  "remaining_required_costs": [
+    {
+      "datum": "Map actualretained W6 fullencoder+decoder withactual64data/72code andSSFFreceiverpinloads; select/priceregisteredcut latency/state beforeprotectfrontendbuild",
+      "owner": "Archimedes"
+    },
+    {
+      "datum": "Selectedsidecar32macrohome/portcalendar, bankRMW grants, checked postwritepublication and errorheldseat/sourceclock/reset/PG/OBS union",
+      "owner": "Archimedes+Maxwell"
+    },
+    {
+      "datum": "Name actualVM/co-residenthome forfull288macrobody and existingbackendFF/new6367FF/guard3811FF/codec andsidecarcontrol; no containmentcredit",
+      "owner": "Maxwell"
+    },
+    {
+      "datum": "Actual full169owner12writer exclusion and visiblecallback acceptance/enrollment; static affinecert isconditional",
+      "owner": "Hubble/Maxwell"
+    }
+  ],
+  "reset_tree_status": {
+    "FF_RESETN_pin_fF": 0.802909,
+    "eight_pin_fF": 6.423272,
+    "original_FAIL_preserved": "inputs/prior_reset_FAIL.json",
+    "repair_complete": false,
+    "rule": "Separate reset actual pin/wire/site construction from clock. +41 buffer pin-only lower bound is not routed solution.",
+    "selected_cap_fF": 5.76,
+    "seven_pin_wire_budget_fF": 0.139637
+  },
+  "schema": "DS_NATIVE_MASKED_VISIBLE_SOURCE_INTERFACE_R1",
+  "scope_owner": {
+    "Archimedes": [
+      "native lane-mask realization",
+      "tagged raw write-visible event",
+      "mutable SRAM protection cost/stage/port model",
+      "dual-clock physical/reset context"
+    ],
+    "Russell": [
+      "full K512 NW21 scalar protected producer",
+      "TOKX-AMAX origin echo",
+      "protected accept leaf RTL"
+    ],
+    "system_stream_peer": [
+      "field-tree backpressure",
+      "selected KV",
+      "stall/link/queue e2e"
+    ]
+  },
+  "successor": {
+    "opt_in": "MASKED_VISIBLE=0",
+    "path": "rtl/model_ready_ds_native_vm_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible.sv",
+    "sha256": "91b5d6b8ec9796b59a9c1d5724c1ef34a7b4dd94b4a0980d8cae6374a4c54e86"
+  },
+  "tests_scope": "Python integer codec/address/RMW properties plus source-interface checks; not executed RTL or physical qualification"
+}

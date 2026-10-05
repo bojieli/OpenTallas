@@ -1,0 +1,56 @@
+{
+  "Cicero_Arch_tasks": {
+    "Archimedes": "Use the two-source leaf top or instantiate the reader beside the minimum real VM endpoint; reuse compiled leaf library. Do not link/build full parent/native chain.",
+    "Cicero": "Consume the embedding ABI directly in a minimum-stage harness and bind its actual accepted context/VM commit endpoint. Keep embedding producer distinct from normalized field consumers."
+  },
+  "Cicero_stage_ports": {
+    "VM_commit": "valid/ready + FP32data512/address19/identity47; ready means actual16word native SRAM commit",
+    "completion": "DUT done after320 responses and1280 accepted16word commits; any fault blocks completion",
+    "request": "valid/ready + global dedicated embedding macro14/row12/identity47",
+    "response": "valid/ready + payload256 + echoed macro/row/identity",
+    "start": "accepted token17, saved identity47, VMbase19"
+  },
+  "RTL_sources": [
+    "rtl/dsrom_sys/s81_bootstrap/ot_dsrom_s81_embedding.sv",
+    "rtl/test/dsrom_s81_bootstrap/embedding_vm.sv"
+  ],
+  "checkpoint_service_PID_observed": 2041348,
+  "checkpoint_service_socket": "/tmp/dsrom-s81-embedding-cbe13bd57.sock",
+  "composition": {
+    "TP4_transport_arbitration_cycles": null,
+    "area_terms": "Retain dedicated storage and all unpriced mux/control/port/transport/CTS/routes; do not remove a cost because minimum harness omits it",
+    "complete_stage_latency_qualified": false,
+    "embedding_leaf_no_stall_cycles": 4161,
+    "embedding_macro_capture_cycles_provisional": 8,
+    "embedding_single_endpoint_VM_words": 20480,
+    "native_PF_SSX_contribution_cycles": null,
+    "physical_qualification": false,
+    "stage_contribution_formula": "4161 + measured ROM-service/VM backpressure + priced transport/fanout + native PF/SSX producer + downstream accepted-stage contribution"
+  },
+  "existing_component_result": "first_native_r1/GO.json",
+  "existing_component_result_scope": "One actual token0 lookup/VM leaf completed; no new run needed for this export",
+  "full_parent_DIR_images": "Historical full-parent dependency; not a minimum embedding leaf prerequisite. Never synthesize empty or zero substitute files.",
+  "geometry": "Existing canonical S81 dedicated embedding ledger2525 pairs unchanged; no rank field allocation reload/refit",
+  "implementation_pin": "477061dd147965e6674bf77ba94a0034e0052ae5",
+  "leaf_top": "embedding_vm",
+  "minimum_external_inputs": [
+    "Read-only mounted released checkpoint snapshot dba1be0a40aa45a94ad051997016db3960a90277",
+    "Pinned actual prompt token IDs",
+    "Actual accepted stage context and finite ROM request/response handshake",
+    "Actual native SRAM commit endpoint with backpressure/identity/address checks"
+  ],
+  "minimum_harness_image_files": [],
+  "native_host_sources": [
+    "tools/runtime/dsrom/s81_embedding_abi.h",
+    "tools/runtime/dsrom/s81_embedding_bridge.cpp"
+  ],
+  "policy": "Minimum component/stage simulation plus analytical composition; whole-core/full-array/native-chain execution excluded from this handoff",
+  "read_only_source_sources": [
+    "tools/dsrom_checkpoint.py",
+    "tools/dsrom_s81_cold_input.py",
+    "tools/dsrom_s81_embedding_server.py"
+  ],
+  "reader_module": "ot_dsrom_s81_embedding",
+  "schema": "opentallas.dsrom.S81.minimum-stage.embedding.v1",
+  "source_scope": "DUT-addressed Checkpoint.raw only; no host-generated input H, no expected activation restore"
+}

@@ -1,0 +1,96 @@
+{
+ "answer": "it is NOT concentrated.  Fixing the limiter buys 1.024x, because the next block is 283.5 MHz.  The nine slowest blocks span 276.9 to 409.4 MHz -- 1.48x across EIGHT fixes -- with no single rung worth more than 1.098x.  The design is at a balanced plateau, and further single-block frequency work has almost no leverage.",
+ "not_a_claim": [
+  "a rung's fmax is its best CLOSED record, so a block with no closed record is not on this ladder at all -- 48 of 105 modules are still outside any closed block",
+  "the ladder is a bound on the clock, not on token time: a block's cycle count matters as much as its clock, which is exactly what defeats the divider swap"
+ ],
+ "question": "the ABI 3.0 clock limiter is ot_a3_hc_sinkhorn20_rne_pipe at 276.9 MHz.  How much clock is actually available above it, and is it concentrated anywhere?",
+ "reaching_the_ninth_rung": {
+  "blocks_that_must_be_fixed": 8,
+  "clock_ratio": 1.4786404120226238
+ },
+ "schema": "opentallas.derived.asap7_limiter_ladder.v1",
+ "the_ladder": [
+  {
+   "at_target_clock_period_ns": 3.7,
+   "block": "ot_a3_hc_sinkhorn20_rne_pipe",
+   "clock_gain_from_fixing_this_rung": 1.0239491761714545,
+   "fmax_hz": 276878000.0,
+   "rung": 1
+  },
+  {
+   "at_target_clock_period_ns": 3.6,
+   "block": "ot_a3_fp32_div_rne",
+   "clock_gain_from_fixing_this_rung": 1.0668303299013435,
+   "fmax_hz": 283509000.0,
+   "rung": 2
+  },
+  {
+   "at_target_clock_period_ns": 4.5,
+   "block": "ot_a3_g2_cluster",
+   "clock_gain_from_fixing_this_rung": 1.0879070013489565,
+   "fmax_hz": 302456000.0,
+   "rung": 3
+  },
+  {
+   "at_target_clock_period_ns": 3.2,
+   "block": "ot_a3_vector_mhc_pre_tile_scheduler",
+   "clock_gain_from_fixing_this_rung": 1.0394050643682913,
+   "fmax_hz": 329044000.0,
+   "rung": 4
+  },
+  {
+   "at_target_clock_period_ns": 3.0,
+   "block": "add_bf16_sram_engine",
+   "clock_gain_from_fixing_this_rung": 1.040680097073185,
+   "fmax_hz": 342010000.0,
+   "rung": 5
+  },
+  {
+   "at_target_clock_period_ns": 6.0,
+   "block": "ot_a3_tree_endpoint_fp32",
+   "clock_gain_from_fixing_this_rung": 1.0983105896500085,
+   "fmax_hz": 355923000.0,
+   "rung": 6
+  },
+  {
+   "at_target_clock_period_ns": 4.0,
+   "block": "ot_a3_engram_exact_dot_tree",
+   "clock_gain_from_fixing_this_rung": 1.0077766465258344,
+   "fmax_hz": 390914000.0,
+   "rung": 7
+  },
+  {
+   "at_target_clock_period_ns": 4.0,
+   "block": "ot_a3_mac_lane_pipe",
+   "clock_gain_from_fixing_this_rung": 1.0392152383273174,
+   "fmax_hz": 393954000.0,
+   "rung": 8
+  },
+  {
+   "at_target_clock_period_ns": 4.0,
+   "block": "ot_a3_link_rx_channel",
+   "clock_gain_from_fixing_this_rung": null,
+   "fmax_hz": 409403000.0,
+   "rung": 9
+  }
+ ],
+ "the_one_concentrated_lever": {
+  "consumers": [
+   "rtl/abi3/ot_a3_attention_epilogue.sv",
+   "rtl/abi3/ot_a3_engram_fp32_sqrt_rne_pipe.sv",
+   "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv",
+   "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv",
+   "rtl/abi3/ot_a3_hc_stable_softmax_rne.sv",
+   "rtl/abi3/ot_a3_qwen_gqa.sv",
+   "rtl/abi3/ot_a3_route_weight_normalize.sv",
+   "rtl/abi3/ot_a3_vector_engram_gate.sv",
+   "rtl/abi3/ot_a3_vector_silu_mul.sv"
+  ],
+  "module": "ot_a3_fp32_div_rne",
+  "the_replacement_exists": "ot_a3_fp32_div_rne_pipe is proven bit-exact on 673 cases and closes at 431.4 MHz against 283.5, which is 1.52x",
+  "why": "it is the critical path of the limiter itself -- the routed worst path runs entirely inside g_reference_divider.divider, lower_code[0] to result_code[31] -- and it is instantiated by NINE synthesisable modules, so its own frequency bounds all of them",
+  "why_it_is_not_simply_swapped": "serial use makes it SLOWER.  Inside the Sinkhorn twin it costs 1.55x the reference's cycles over the same 35 matrices, because that FSM issues one division and waits: in_valid is one state and out_ready is the next.  1.55x cycles against a 1.52x clock is a net loss, which is why the parameter defaults off with the number written down.  Hiding the latency needs each consumer to INTERLEAVE independent divisions -- a Sinkhorn group's elements share a denominator and are independent, so it is possible -- and that is a per-site FSM rewrite, not a parameter flip."
+ },
+ "what_this_does_not_bound": "the iso-area figure.  That comes from ot_compute_unit, which closes ROUTED at 1.290 GHz with zero slew violations; the 276.9 MHz ladder is the ABI 3.0 control and HC blocks.  See results/derived/iso_area_position_against_a100.json."
+}

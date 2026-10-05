@@ -1,0 +1,279 @@
+{
+ "schema": "opentallas.meso_fifo.verdict.v1",
+ "date": "2026-10-04",
+ "status": "MESO_FIFO_CLOSED; FORWARDED_HOP_CLOSED_REG_TO_REG; HOP_FIXTURE_PORT_BOUNDARY_NOT_CLOSED",
+ "rtl": {
+  "ot_meso_fifo": "rtl/common/ot_meso_fifo.sv (default-off ENABLE=0; DEPTH 4, OFFSET 2, guards 0/4, CREDITS 8+1; closed source aec121692: registered one-hot ring selects, kept 2:1 next-state selects, per-64-bit index copies)",
+  "ot_fwd_link_stage": "rtl/common/ot_fwd_link_stage.sv (Codex 6de31bae2 + two changes: forwarding inverter is a kept cell ot_fwd_clk_inv, else synthesis folds it into the next stage's flops; data flops need no reset hold, removing a 512-load rst_n enable)"
+ },
+ "campaign": {
+  "d4_central": {
+   "words": 220331463,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    839.7,
+    2493.5
+   ],
+   "crossing_delta_periods_mean": 2.0135,
+   "crossing_delta_periods_range": [
+    1.5193,
+    2.512
+   ],
+   "round_trip_delta_histogram": {
+    "4": 36,
+    "5": 1
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  },
+  "d8_tt_routed": {
+   "words": 51535701,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    518.3,
+    4481.8
+   ],
+   "crossing_delta_periods_mean": 2.9762,
+   "crossing_delta_periods_range": [
+    2.488,
+    3.4494
+   ],
+   "round_trip_delta_histogram": {
+    "6": 21
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  },
+  "d16_bound_ss": {
+   "words": 51005834,
+   "errors": 0,
+   "false_faults": 0,
+   "window_violations": 0,
+   "stream_words_per_cycle_min": 1.0,
+   "lag_ps": [
+    829.3,
+    7503.8
+   ],
+   "crossing_delta_periods_mean": 4.9762,
+   "crossing_delta_periods_range": [
+    4.4881,
+    5.4493
+   ],
+   "round_trip_delta_histogram": {
+    "10": 20,
+    "9": 1
+   },
+   "drift_runs": 78,
+   "drift_all_fail_closed": true
+  }
+ },
+ "mutants": {
+  "OFFSET": true,
+  "NO_GUARD": true,
+  "EARLY_CREDIT": true
+ },
+ "price_per_token": {
+  "central_thick_metal": {
+   "typical": {
+    "per_op": 4,
+    "qwen_cycles": 1012,
+    "qwen_pct_calibrated": -0.235,
+    "qwen_pct_near_hbm": -0.44,
+    "ds_cycles": 1321,
+    "ds_pct": -0.273
+   },
+   "worst_phase": {
+    "per_op": 5,
+    "qwen_cycles": 1265,
+    "qwen_pct_calibrated": -0.294,
+    "qwen_pct_near_hbm": -0.549,
+    "ds_cycles": 1652,
+    "ds_pct": -0.342
+   },
+   "phase_average": {
+    "per_op": 4.027,
+    "qwen_cycles": 1019,
+    "qwen_pct_calibrated": -0.237,
+    "qwen_pct_near_hbm": -0.443,
+    "ds_cycles": 1330,
+    "ds_pct": -0.275
+   },
+   "model_only_per_op": 2
+  },
+  "tt_routed": {
+   "typical": {
+    "per_op": 6,
+    "qwen_cycles": 1518,
+    "qwen_pct_calibrated": -0.352,
+    "qwen_pct_near_hbm": -0.658,
+    "ds_cycles": 1982,
+    "ds_pct": -0.41
+   },
+   "worst_phase": {
+    "per_op": 7,
+    "qwen_cycles": 1771,
+    "qwen_pct_calibrated": -0.411,
+    "qwen_pct_near_hbm": -0.767,
+    "ds_cycles": 2312,
+    "ds_pct": -0.477
+   },
+   "phase_average": {
+    "per_op": 5.9524,
+    "qwen_cycles": 1506,
+    "qwen_pct_calibrated": -0.349,
+    "qwen_pct_near_hbm": -0.653,
+    "ds_cycles": 1966,
+    "ds_pct": -0.406
+   },
+   "model_only_per_op": 6
+  },
+  "bound_ss_routed": {
+   "typical": {
+    "per_op": 10,
+    "qwen_cycles": 2530,
+    "qwen_pct_calibrated": -0.585,
+    "qwen_pct_near_hbm": -1.092,
+    "ds_cycles": 3303,
+    "ds_pct": -0.681
+   },
+   "worst_phase": {
+    "per_op": 11,
+    "qwen_cycles": 2783,
+    "qwen_pct_calibrated": -0.644,
+    "qwen_pct_near_hbm": -1.2,
+    "ds_cycles": 3633,
+    "ds_pct": -0.748
+   },
+   "phase_average": {
+    "per_op": 9.9524,
+    "qwen_cycles": 2518,
+    "qwen_pct_calibrated": -0.583,
+    "qwen_pct_near_hbm": -1.087,
+    "ds_cycles": 3287,
+    "ds_pct": -0.677
+   },
+   "model_only_per_op": 8
+  }
+ },
+ "physical_asap7_1p2GHz_60_25ps": {
+  "meso_d4_v2_fallthrough_output": {
+   "source_commit": "f8baf0651",
+   "setup_ss_ps": -85.13,
+   "hold_ff_ps": 9.61,
+   "verdict": "REJECTED: cross-clock r_v path and local buffer->r_d"
+  },
+  "meso_d4_v3_registered_output": {
+   "source_commit": "88632fc2f",
+   "setup_ss_ps": -29.96,
+   "hold_ff_ps": 10.56,
+   "std_cell_area_um2": 4892.7,
+   "violating_d_pins": 19,
+   "verdict": "NOT CLOSED: s_lap -> lap compare -> cnt, 369.35 ps against the 356.667 ps crossing budget"
+  },
+  "meso_d4_v4_kept_crossing_term": {
+   "source_commit": "a5db2e1dd",
+   "setup_ss_ps": -14.13,
+   "setup_tns_ps": -38.7,
+   "hold_ff_ps": 8.93,
+   "std_cell_area_um2": 4999.82,
+   "violating_d_pins": 6,
+   "verdict": "NOT CLOSED: w_cred[0..3] <- credit-ring s_v1 4:1 pointer-decoded mux (AND2/AO211/OA211/OR4) + lap XNOR; cnt[1]/tl[0] <- data-ring valid mux (physical/meso_d4_v4/violating_paths_ss.txt)"
+  },
+  "fwd_span430_midpoint": {
+   "setup_ss_ps": -88.5,
+   "hold_ff_ps": 37.65,
+   "reg_d_setup_ss_ps": 24.45083,
+   "verdict": "NOT QUALIFIED at 430.56 um standalone: flop -> east port data wire (220 ps) vs CTS-tapped forwarded clock (68 ps past the flop clock); registers and hold pass",
+   "superseded_by": "fwd_hop2 runs: the -88.5 ps was the CTS-tapped clock vs the 220 ps data wire; with the clock forwarded beside the bus the hop has +374 ps"
+  },
+  "fwd_span430_rx_end_fence": "ABORTED in global-route repair at -471 ps WNS (outputs); no rescue loop",
+  "meso_d4_v5_onehot_select": {
+   "source_commit": "9dd52e6c6",
+   "setup_ss_ps": -21.38,
+   "setup_tns_ps": -111.6,
+   "hold_ff_ps": 10.29,
+   "violating_d_pins": 9,
+   "verdict": "NOT CLOSED: registered one-hot selects shortened the mux to OAI22+OR4 (206 ps), but ABC folded the hit back into the counter arithmetic (XNOR/AO32 after it)"
+  },
+  "meso_d4_v6_kept_selects": {
+   "source_commit": "8baea9a28",
+   "setup_ss_ps": 12.26,
+   "hold_ff_ps": 8.65,
+   "max_slew_violations": 4,
+   "verdict": "TIMING CLOSED, not physically clean: 4 max-slew violations on the 512-load one-hot data-index net"
+  },
+  "meso_d4_v7_closed": {
+   "source_commit": "aec121692",
+   "setup_ss_ps": 10.13,
+   "setup_tns_ps": 0.0,
+   "hold_ff_ps": 9.44,
+   "violating_d_pins": 0,
+   "std_cell_area_um2": 4842.31,
+   "drc_errors": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "status": "pass",
+   "closes_signoff": true,
+   "added_latency_cycles": 0,
+   "verdict": "CLOSED at SS 60 ps / FF 25 ps, physically clean. Zero added latency: every crossing term (slot valid / lap) is a two-level AND-OR of write-domain flops with REGISTERED one-hot read-domain selects (placed and advanced with the pointer), and it only drives a kept 2:1 select between next states precomputed from local flops; the 512-bit data select has one one-hot index register per 64-bit chunk. Campaign on this source is cycle-identical to v4."
+  },
+  "fwd_hop2_fixture": "physical/rom_clock/ot_fwd_link_hop2.sv: stage A (west fence) -> 440 um -> stage B (east fence), B clocked ONLY by A's forwarded clock (fwd_hop2.sdc: generated clock fwd_a at the last of six kept span repeaters; fwd_forwarded_subtree.tcl keeps the forwarded subtree: ORFS repair_clock_inverters skipped)",
+  "fwd_hop2_synchronous_counterfactual": {
+   "setup_ss_reg_to_reg_ps": -330.27,
+   "hold_ff_ps": 213.44,
+   "verdict": "inverter folded into B's flops, so CTS built ONE balanced tree over 440 um: -330 ps. A synchronous span does not close; forwarding is required"
+  },
+  "fwd_hop2_v7": {
+   "source_commit": "4e13f3442",
+   "hop_setup_ss_ps": 165.28,
+   "hop_hold_ff_ps": 297.54,
+   "boundary_input_ps": -656.51,
+   "verdict": "HOP CLOSED; boundary failed (rst_n 512-load enable). Path detail: physical/fwd_hop2_v7/hop_path_{ss,ff}.txt"
+  },
+  "fwd_hop2_v11": {
+   "source_commit": "ab338894c",
+   "hop_setup_ss_ps": 373.97,
+   "hop_hold_ff_ps": 246.18,
+   "input_to_reg_ss_ps": 129.12,
+   "output_port_ss_ps": -426.15,
+   "max_slew_violations": 14,
+   "closes_signoff": false,
+   "verdict": "HOP CLOSED with ~374 ps setup / ~246 ps hold margin at a 440 um span: no added stages over the 430.56 um pitch. Fixture output boundary (B flop -> east port, Codex output-delay rule 166.67 ps) fails: a buffer inserted by timing-driven global placement was stranded at x 250 um on the B -> port net"
+  },
+  "fwd_hop2_v12": {
+   "source_commit": "ab338894c",
+   "gpl_timing_driven": 0,
+   "hop_setup_ss_ps": 329.08,
+   "hop_hold_ff_ps": 263.04,
+   "worst_ss_ps": -213.89,
+   "input_to_reg_ss_ps": -131.75,
+   "max_slew_violations": 138,
+   "verdict": "non-timing-driven placement moves the failure to the input boundary; v13/v14 (re-buffer before resize) crashed TritonCTS"
+  }
+ },
+ "verdict": [
+  "Meso FIFO W512 D4 CLOSED at 1.2 GHz: SS +10.13 ps, FF +9.44 ps, 0 DRC/slew/cap, 4842.31 um2 (aec121692), with no added latency; the campaign on that RTL is cycle-identical to v4 (0 errors, drift fails closed, mutants 3/3).",
+  "Measured option-C price unchanged: 2 periods a crossing, 4 a round trip (5 at the resolution edge): Qwen -0.235% / -0.44%, DS -0.273% (clocking_model_measured.json now carries the closure).",
+  "Forwarded link: the A->B hop over 440 um with the clock forwarded beside its bus closes with +374 ps setup / +246 ps hold (v11), so the 430.56 um pitch needs no added stages; a synchronous (one balanced tree) span measures -330 ps. The standalone hop fixture's port boundaries are still unclosed (placement artifacts), recorded as open."
+ ],
+ "campaign_source": {
+  "commit": "aec121692",
+  "note": "tools/meso_fifo_campaign.py on the closed RTL (campaign.json): word, latency and round-trip numbers identical to the v4 campaign (220,331,463 / 51,535,701 / 51,005,834 words, 0 errors, 0 false faults, 0 window violations; drift 78/78 fail closed per config; mutants 3/3)"
+ },
+ "forwarded_link_stage": {
+  "hop_span_um": 440.0,
+  "stage_pitch_um": 430.56,
+  "added_stages": 0,
+  "hop_setup_ss_ps": 373.97,
+  "hop_hold_ff_ps": 246.18,
+  "source": "physical/fwd_hop2_v11",
+  "implementation": "forwarded clock = kept inverter at the launching stage + repeated clock-net span beside the bus + the receiving stage's own CTS subtree; not shielded (no NDR in this flow; coupling is not in the STA)",
+  "open_item": "standalone fixture's port boundaries (placeholders for the neighbouring hops, which are this same hop) have not closed in ORFS: outputs -426.15 ps (v11), inputs -131.75 ps (v12)"
+ }
+}

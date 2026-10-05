@@ -1,0 +1,36 @@
+Startpoint: g_s[0].g_h.u_s (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_s[0].u_q.h1[176]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock core_clk (rise edge)
+                          439.445  439.445   clock network delay (propagated)
+                 338.295    0.000  439.445 ^ g_s[0].g_h.u_s/clk (ot_chip_v41x_karb_pslice)
+     1   32.033  244.683  585.339 1024.784 ^ g_s[0].g_h.u_s/ks_v (ot_chip_v41x_karb_pslice)
+     1    5.728   29.036   73.191 1097.974 ^ place19747/Y (BUFx6f_ASAP7_75t_R)
+     1    2.867   27.341   42.971 1140.945 ^ hold31210/Y (BUFx2_ASAP7_75t_R)
+     3    4.338   38.749   42.853 1183.798 ^ hold32500/Y (BUFx2_ASAP7_75t_R)
+     2    3.289   48.255   36.057 1219.855 v _38724_/Y (OAI21x1_ASAP7_75t_R)
+     2    1.669   26.622   48.888 1268.743 v _49352_/Y (AO21x1_ASAP7_75t_R)
+     2    3.406   64.635   36.005 1304.747 ^ _49353_/Y (NOR2x1_ASAP7_75t_R)
+    14   22.466   66.491   57.874 1362.622 ^ place17595/Y (BUFx6f_ASAP7_75t_R)
+    18   24.403   71.438   69.057 1431.678 ^ place17564/Y (BUFx6f_ASAP7_75t_R)
+     3    2.821   28.302   63.838 1495.516 ^ place17558/Y (BUFx2_ASAP7_75t_R)
+     1    0.784   21.892   18.127 1513.643 v _50253_/Y (NOR2x1_ASAP7_75t_R)
+     1    0.631   17.549   34.856 1548.500 v _50254_/Y (AO21x1_ASAP7_75t_R)
+                  17.549    0.031 1548.530 v g_s[0].u_q.h1[176]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                  1548.530   data arrival time
+                          833.000  833.000   clock core_clk (rise edge)
+                          551.141 1384.141   clock network delay (propagated)
+                          -60.000 1324.141   clock uncertainty
+                            1.023 1325.164   clock reconvergence pessimism
+                                  1325.164 ^ g_s[0].u_q.h1[176]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                           -1.005 1324.159   library setup time
+                                  1324.159   data required time
+---------------------------------------------------------------------------------
+                                  1324.159   data required time
+                                  -1548.530   data arrival time
+---------------------------------------------------------------------------------
+                                  -224.372   slack (VIOLATED)

@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-02T08:33:04.792356+00:00",
+  "status": {
+    "localhost": {
+      "mem_total_GiB": 188.50510025024414,
+      "mem_available_GiB": 158.04188537597656,
+      "disk_available_GiB": 446.94139099121094,
+      "load": [
+        3.80322265625,
+        3.7666015625,
+        3.38720703125
+      ]
+    },
+    "ot-agidock128": {
+      "mem_total_GiB": 125.7047004699707,
+      "mem_available_GiB": 111.8042984008789,
+      "disk_available_GiB": 972.8961181640625,
+      "load": [
+        0.0556640625,
+        0.1015625,
+        0.08740234375
+      ]
+    }
+  },
+  "Q_drained_receipt": "/tmp/claude-1000/queue/h1-r8-r2-calendar-20261002/Qwen-r2-terminal-drain.receipt.json",
+  "Q_named_cgroup_exists": false,
+  "Q_memory_peak_events": "Unavailable; named cgroup removed, no retained monitor counters",
+  "Q_OOM": "Confirmed by systemd/journal; parent reports wall211.1s at32GiB",
+  "DS53171_live": true,
+  "DS_reserved_memory_GiB": 32,
+  "DS_reserved_CPU": 0,
+  "prospective_Q_cap_GiB": 96,
+  "local_conservative_after_DS32_Q96_GiB": 30.041885375976562,
+  "local_admission_reserve24_PASS": true,
+  "AG128_reserved_RAM_GiB": 0,
+  "AG128_after_Q96_and_existing_leases_GiB": 15.804298400878906,
+  "AG128_live_reserve24_PASS": false,
+  "AG128_single_request_max_GiB": 94,
+  "AG128_metadata_admits_96": false,
+  "resource_reservation_for_Q": false,
+  "worker10e6_change": false,
+  "execution_started": false,
+  "pve23_new_tasks": false
+}

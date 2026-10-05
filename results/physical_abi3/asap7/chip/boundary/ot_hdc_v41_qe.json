@@ -1,0 +1,231 @@
+{
+  "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlist_signed_stripped": 0,
+  "netlists": [
+    "<work>/results/asap7/chip_ot_hdc_v41_qe/base/1_2_yosys.v"
+  ],
+  "period_ps": 1000.0,
+  "ports": {
+    "fault": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "go": {
+      "direction": "input",
+      "in2reg_ps": 271.64,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_fp4": {
+      "direction": "input",
+      "in2reg_ps": 50.59,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_ibase": {
+      "direction": "input",
+      "in2reg_ps": 50.53,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_ind": {
+      "direction": "input",
+      "in2reg_ps": 53.52,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_istride": {
+      "direction": "input",
+      "in2reg_ps": 50.59,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_mode": {
+      "direction": "input",
+      "in2reg_ps": 50.59,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_nb": {
+      "direction": "input",
+      "in2reg_ps": 642.6,
+      "unused_bits": 0,
+      "width": 8
+    },
+    "i_nout": {
+      "direction": "input",
+      "in2reg_ps": 50.55,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "i_obase": {
+      "direction": "input",
+      "in2reg_ps": 50.57,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_tiles": {
+      "direction": "input",
+      "in2reg_ps": 641.25,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "i_wbase": {
+      "direction": "input",
+      "in2reg_ps": 80.45,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_xbase": {
+      "direction": "input",
+      "in2reg_ps": 50.54,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "idle": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "qr_addr": {
+      "direction": "output",
+      "reg2out_ps": 57.5,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "qr_q": {
+      "direction": "input",
+      "in2reg_ps": 3.41,
+      "unused_bits": 96,
+      "width": 4352
+    },
+    "qr_re": {
+      "direction": "output",
+      "reg2out_ps": 60.64,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "ready": {
+      "direction": "output",
+      "reg2out_ps": 96.21,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "in2reg_ps": 308.72,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "vi_addr": {
+      "direction": "output",
+      "reg2out_ps": 59.46,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "vi_q": {
+      "direction": "input",
+      "in2reg_ps": 864.13,
+      "unused_bits": 8,
+      "width": 32
+    },
+    "vi_re": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "w_addr": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "w_data": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "w_mask": {
+      "direction": "output",
+      "reg2out_ps": 113.51,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "w_we": {
+      "direction": "output",
+      "reg2out_ps": 66.97,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "xr_addr": {
+      "direction": "output",
+      "reg2out_ps": 59.46,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "xr_q": {
+      "direction": "input",
+      "in2reg_ps": 3.41,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "xr_re": {
+      "direction": "output",
+      "reg2out_ps": 60.64,
+      "unused_bits": 0,
+      "width": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_reduce.sv",
+      "sha256": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "sha256": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_actquant.sv",
+      "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+      "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_v41_qe.sv",
+      "sha256": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b"
+    }
+  ],
+  "top": "ot_hdc_v41_qe"
+}

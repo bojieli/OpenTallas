@@ -1,0 +1,237 @@
+[
+  {
+    "pid": 1771965,
+    "cwd": "/home/ubuntu/w15bwt8",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh port_qwen"
+  },
+  {
+    "pid": 1772099,
+    "cwd": "/home/ubuntu/w15bwt9",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh port_ucie"
+  },
+  {
+    "pid": 1827073,
+    "cwd": "/home/ubuntu/w15bwt7",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh topk_4_128_64_8"
+  },
+  {
+    "pid": 1885025,
+    "cwd": "/tmp/claude-1000/wt/w11-ilvr2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/ilv_r2_full.sh /tmp/claude-1000/w11s/ns3 /tmp/claude-1000/w11s/ns2/vec_full /tmp/claude-1000/w11s/attn/vectors"
+  },
+  {
+    "pid": 1894039,
+    "cwd": "/tmp/claude-1000/wt/w11-sg1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/st_gate.sh attn /tmp/claude-1000/w11st/g3/attn --lat 7,6 --banks 6,8"
+  },
+  {
+    "pid": 1941990,
+    "cwd": "/tmp/claude-1000/wt/w11-ckv",
+    "command": "python3 /tmp/claude-1000/remote_gate.py python3 tools/run_abi3_physical.py --view asap7 --top ot_chip_v41x_ckv_sel_ids --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --orfs-var ADDER_"
+  },
+  {
+    "pid": 2019453,
+    "cwd": "/home/ubuntu/w11kc-wt3",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_j2u30f --top ot_w11_join_hs_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv --routing-layers M2 M5 --false-path-io --co"
+  },
+  {
+    "pid": 2046930,
+    "cwd": "/tmp/claude-1000/wt/w11-sp",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc09.sh sp4_softplus_s --source rtl/hdc/v41x/ot_hdc_v41x_spshort.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/"
+  },
+  {
+    "pid": 2183105,
+    "cwd": "/tmp/claude-1000/wt/w11-su1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py python3 tools/rtl_hdc_v41x_vec_campaign.py --random1024 16 --scratch /tmp/claude-1000/w11s/sc/rg_vec/s --out /tmp/claude-1000/w11s/sc/rg_vec/hdc_v41x_vec_campaign.json"
+  },
+  {
+    "pid": 2183107,
+    "cwd": "/tmp/claude-1000/wt/w11-su3",
+    "command": "python3 /tmp/claude-1000/remote_gate.py python3 tools/rtl_hdc_v41x_vec_campaign.py --no-1024 --mlat 5 --alat 4 --bcast 4 --ret 5 --scratch /tmp/claude-1000/w11s/sc/q_c54_b4r5/s --out /tmp/claude-1000/w11s/sc/q_c54_b4r5/rec.json"
+  },
+  {
+    "pid": 2213732,
+    "cwd": "/tmp/claude-1000/wt/w11-su1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py python3 tools/rtl_hdc_v41x_vec_campaign.py --random1024 16 --scratch /tmp/claude-1000/w11s/sc/rg_vec/s --out /tmp/claude-1000/w11s/sc/rg_vec/hdc_v41x_vec_campaign.json"
+  },
+  {
+    "pid": 2243730,
+    "cwd": "/home/ubuntu/w15bwt14",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_64_8"
+  },
+  {
+    "pid": 2258305,
+    "cwd": "/home/ubuntu/w11kc-wt2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_r9u30 --top ot_w11_kctl_ring_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kstr"
+  },
+  {
+    "pid": 2278526,
+    "cwd": "/tmp/claude-1000/wt/w11-fz1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc09.sh fz_s20 --top ot_hdc_v41x_vec_sfu1024rk --source rtl/hdc/v41x/ot_hdc_v41x_w11_kr_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv --source rtl/hdc/v41x/ot_hdc_v41x_sfu.sv "
+  },
+  {
+    "pid": 2393393,
+    "cwd": "/tmp/claude-1000/wt/w11-fpk",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc09_ac.sh ca_s94 --top ot_hdc_fp_ctx_s94 --source rtl/hdc/ot_hdc_fp_ctx.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix"
+  },
+  {
+    "pid": 2447938,
+    "cwd": "/tmp/claude-1000/wt/w11-sg2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/st_gate.sh idx /tmp/claude-1000/w11st/g3/idxs --lat 7,5,5 --quick --shape shipped"
+  },
+  {
+    "pid": 2454261,
+    "cwd": "/tmp/claude-1000/wt/w11-fpk",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc_ac.sh ca_s76 --top ot_hdc_fp_ctx_s --source rtl/hdc/ot_hdc_fp_ctx.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv "
+  },
+  {
+    "pid": 2454263,
+    "cwd": "/tmp/claude-1000/wt/w11-fpk",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc_ac.sh ca_s66 --top ot_hdc_fp_ctx_s66 --source rtl/hdc/ot_hdc_fp_ctx.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.s"
+  },
+  {
+    "pid": 2474382,
+    "cwd": "/tmp/claude-1000/wt/w11-st2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh st_tile76k --top ot_hdc_v41x_attn_tile --false-path-io --source rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --so"
+  },
+  {
+    "pid": 2474383,
+    "cwd": "/tmp/claude-1000/wt/w11-st3",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh st_tile74k --top ot_hdc_v41x_attn_tile --false-path-io --source rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --so"
+  },
+  {
+    "pid": 2474385,
+    "cwd": "/tmp/claude-1000/wt/w11-st4",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh st_chunk755k --top ot_hdc_v41x_idx_chunk --false-path-io --source rtl/hdc/v41x/ot_hdc_v41x_idx.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv --source rtl/hdc/ot_hdc_fastfp.sv -"
+  },
+  {
+    "pid": 2479785,
+    "cwd": "/tmp/claude-1000/wt/w11-fz1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/fuse/jobs/die.sh /tmp/claude-1000/w11s/fuse/die/u00.json 0 0 0"
+  },
+  {
+    "pid": 2486935,
+    "cwd": "/tmp/claude-1000/wt/w11-fz1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/fuse/jobs/die.sh /tmp/claude-1000/w11s/fuse/die/u2517.json 0 25 17"
+  },
+  {
+    "pid": 2538097,
+    "cwd": "/home/ubuntu/w11kc-wt4",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_r10u30 --top ot_w11_kctl_ring_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kst"
+  },
+  {
+    "pid": 2631816,
+    "cwd": "/tmp/claude-1000/wt/w11-cr5b",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11crot/jobs/die_gate.sh square_m5a4 --mlat 5 --alat 4 --stage-set square_hub"
+  },
+  {
+    "pid": 2631818,
+    "cwd": "/tmp/claude-1000/wt/w11-cr5a",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11crot/jobs/die_gate.sh strip_m5a4 --mlat 5 --alat 4"
+  },
+  {
+    "pid": 2637364,
+    "cwd": "/tmp/claude-1000/wt/qcnam-run",
+    "command": "/usr/bin/python3 tools/deepseek_v41_nam_quality.py --work /tmp/claude-1000/qcnam/runs/core/work --out /tmp/claude-1000/qcnam/runs/core/run.json --raw-out /tmp/claude-1000/qcnam/runs/core/raw.json --partial /tmp/claude-1000/qcnam/runs/core/partial.json --resume"
+  },
+  {
+    "pid": 2637424,
+    "cwd": "/tmp/claude-1000/wt/qcnam-run",
+    "command": "/usr/bin/python3 tools/deepseek_v41_nam_quality.py --work /tmp/claude-1000/qcnam/runs/mmlu1000/work --out /tmp/claude-1000/qcnam/runs/mmlu1000/run.json --raw-out /tmp/claude-1000/qcnam/runs/mmlu1000/raw.json --partial /tmp/claude-1000/qcnam/runs/mmlu1000/parti"
+  },
+  {
+    "pid": 2675203,
+    "cwd": "/home/ubuntu/w15bwt13",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram"
+  },
+  {
+    "pid": 2675839,
+    "cwd": "/tmp/claude-1000/wt/w11-kc2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_kdx1b --top ot_w11_kdata_m_x1_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv --source physical/asap7_memory_macros/ot_sram_"
+  },
+  {
+    "pid": 2711386,
+    "cwd": "/home/ubuntu/w10s",
+    "command": "/bin/bash ./bankmap_final2.sh"
+  },
+  {
+    "pid": 2716644,
+    "cwd": "/tmp/claude-1000/wt/w11-st6",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh st_tile76m5 --routing-layers M2 M5 --core-utilization 35 --top ot_hdc_v41x_attn_tile --false-path-io --source rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv --source rtl/hdc/ot_hdc_fastfp.s"
+  },
+  {
+    "pid": 2716646,
+    "cwd": "/tmp/claude-1000/wt/w11-st5",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh st_chunk755m5 --routing-layers M2 M5 --core-utilization 35 --top ot_hdc_v41x_idx_chunk --false-path-io --source rtl/hdc/v41x/ot_hdc_v41x_idx.sv --source rtl/hdc/v41x/ot_hdc_v41x_id"
+  },
+  {
+    "pid": 2722975,
+    "cwd": "/home/ubuntu/w11kc-wt5",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_r11u40 --top ot_w11_kctl_ring_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kst"
+  },
+  {
+    "pid": 2882638,
+    "cwd": "/tmp/claude-1000/wt/w18",
+    "command": "/bin/bash /home/ubuntu/w18work/jobs/karb21.sh"
+  },
+  {
+    "pid": 2882640,
+    "cwd": "/tmp/claude-1000/wt/w18",
+    "command": "/bin/bash /home/ubuntu/w18work/jobs/karb21.sh"
+  },
+  {
+    "pid": 2882642,
+    "cwd": "/tmp/claude-1000/wt/w18",
+    "command": "python3 tools/v41x_karb_local_pnr.py proot --run --phy-e8p5 --signoff-1p2 --tag _dlv --stages pnr --work /home/ubuntu/w18work/karb21"
+  },
+  {
+    "pid": 2882695,
+    "cwd": "/tmp/claude-1000/wt/w18",
+    "command": "/usr/bin/python3 /tmp/claude-1000/wt/w18/tools/run_abi3_physical.py --view asap7 --top ot_chip_v41x_karb_proot --source rtl/chip/ot_chip_v41x_karb_proot.sv --source rtl/chip/ot_chip_v41x_karb_q2.sv --source rtl/chip/ot_chip_v41x_karb_q2r.sv --source rtl/chip/o"
+  },
+  {
+    "pid": 2894494,
+    "cwd": "/tmp/claude-1000/wt/w11-cr5c",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11crot/jobs/su_gate.sh square_small su,lat --stage-set square_hub"
+  },
+  {
+    "pid": 2894495,
+    "cwd": "/tmp/claude-1000/wt/w11-cr5d",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11crot/jobs/su_gate.sh strip_small su,lat"
+  },
+  {
+    "pid": 2894496,
+    "cwd": "/tmp/claude-1000/wt/w11-cr5e",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11crot/jobs/su_gate.sh lat1024 lat --n1024"
+  },
+  {
+    "pid": 2897088,
+    "cwd": "/home/ubuntu/w10q",
+    "command": "python3 /tmp/claude-1000/remote_gate.py python3 tools/run_abi3_physical.py --view asap7 --top ot_v41_rom_elem --source rtl/v41rom/ot_v41_rom_elem_q.sv --source rtl/v41rom/ot_v41_rom_elem.sv --source rtl/v41rom/ot_v41_bterm.sv --source rtl/v41rom/ot_v41_chain.s"
+  },
+  {
+    "pid": 2901745,
+    "cwd": "/home/ubuntu/w15bwt12",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w15p/jobs/harden.sh port_board"
+  },
+  {
+    "pid": 3029028,
+    "cwd": "/home/ubuntu/OpenTallas",
+    "command": "bash /home/ubuntu/w18work/jobs/rebase_wait_only.sh"
+  },
+  {
+    "pid": 3029636,
+    "cwd": "/tmp/claude-1000/wt/w11-st1",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc09.sh sc_s6 --top ot_hdc_v41x_vec_sfu1024r --source rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_vec_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv --s"
+  },
+  {
+    "pid": 3045527,
+    "cwd": "/tmp/claude-1000/wt/w11-sp",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc09.sh sp4f_softplus_s --source rtl/hdc/v41x/ot_hdc_v41x_spshort.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc"
+  },
+  {
+    "pid": 3065002,
+    "cwd": "/home/ubuntu/w11kc-wt2",
+    "command": "python3 /tmp/claude-1000/remote_gate.py /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_portn3 --top ot_w11_ring_port_nphys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_ring_"
+  }
+]

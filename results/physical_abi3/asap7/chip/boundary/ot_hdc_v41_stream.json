@@ -1,0 +1,503 @@
+{
+  "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlist_signed_stripped": 0,
+  "netlists": [
+    "<work>/results/asap7/chip_ot_hdc_v41_stream/base/1_2_yosys.v"
+  ],
+  "period_ps": 1000.0,
+  "ports": {
+    "cr_addr": {
+      "direction": "output",
+      "reg2out_ps": 55.73,
+      "unused_bits": 0,
+      "width": 96
+    },
+    "cr_q": {
+      "direction": "input",
+      "in2reg_ps": 67.06,
+      "unused_bits": 0,
+      "width": 256
+    },
+    "cr_re": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 4
+    },
+    "fault": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "go": {
+      "direction": "input",
+      "in2reg_ps": 219.26,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_abase": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_ad": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "i_aibase": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_aind": {
+      "direction": "input",
+      "in2reg_ps": 55.27,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_amin": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_arelu": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_arnd": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_asi": {
+      "direction": "input",
+      "in2reg_ps": 55.26,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_aso": {
+      "direction": "input",
+      "in2reg_ps": 55.26,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_asrc": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_bbase": {
+      "direction": "input",
+      "in2reg_ps": 56.41,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_bhalf": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_bsi": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_bso": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_bsrc": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_cbase": {
+      "direction": "input",
+      "in2reg_ps": 56.41,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_cclip": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_cpair": {
+      "direction": "input",
+      "in2reg_ps": 35.01,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_csi": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_cso": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_csrc": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_dbase": {
+      "direction": "input",
+      "in2reg_ps": 56.41,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_dsi": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_dso": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_dsrc": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_dst": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_e1": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "i_e2": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_imm1": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "i_imm2": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "i_imm3": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "i_m1": {
+      "direction": "input",
+      "feedthrough_ps": 220.22,
+      "in2reg_ps": 322.26,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "i_m2": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_nin": {
+      "direction": "input",
+      "in2reg_ps": 1024.64,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "i_nout": {
+      "direction": "input",
+      "in2reg_ps": 1022.9,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "i_obase": {
+      "direction": "input",
+      "in2reg_ps": 63.44,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_orow": {
+      "direction": "input",
+      "in2reg_ps": 56.24,
+      "unused_bits": 5,
+      "width": 24
+    },
+    "i_osi": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_oso": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_qm": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "i_rbase": {
+      "direction": "input",
+      "in2reg_ps": 57.13,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_red": {
+      "direction": "input",
+      "in2reg_ps": 56.38,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "i_redrnd": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_redsq": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_redwhole": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_rnd": {
+      "direction": "input",
+      "in2reg_ps": 55.2,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "i_rso": {
+      "direction": "input",
+      "in2reg_ps": 55.21,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "i_sfu": {
+      "direction": "input",
+      "in2reg_ps": 294.79,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "idle": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kv_waddr": {
+      "direction": "output",
+      "reg2out_ps": 53.08,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "kv_wdata": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "kv_we": {
+      "direction": "output",
+      "reg2out_ps": 62.8,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "ready": {
+      "direction": "output",
+      "feedthrough_ps": 220.22,
+      "reg2out_ps": 813.45,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "red_addr": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "red_data": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "red_we": {
+      "direction": "output",
+      "reg2out_ps": 62.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "in2reg_ps": -8.43,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "vi_addr": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "vi_q": {
+      "direction": "input",
+      "in2reg_ps": 1090.53,
+      "unused_bits": 8,
+      "width": 32
+    },
+    "vi_re": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "vm_addr": {
+      "direction": "output",
+      "reg2out_ps": 73.15,
+      "unused_bits": 0,
+      "width": 96
+    },
+    "vm_q": {
+      "direction": "input",
+      "in2reg_ps": 69.12,
+      "unused_bits": 0,
+      "width": 128
+    },
+    "vm_re": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 4
+    },
+    "vm_waddr": {
+      "direction": "output",
+      "reg2out_ps": 69.67,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "vm_wdata": {
+      "direction": "output",
+      "reg2out_ps": 73.15,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "vm_we": {
+      "direction": "output",
+      "reg2out_ps": 63.29,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "wrom_addr": {
+      "direction": "output",
+      "reg2out_ps": 73.01,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "wrom_q": {
+      "direction": "input",
+      "in2reg_ps": 189.47,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "wrom_re": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_reduce.sv",
+      "sha256": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_v41_stream.sv",
+      "sha256": "0ab121ef60c0e2979ce17423f6202fc2e88852f4851f7f1e7a51d6df89d2ede3"
+    }
+  ],
+  "top": "ot_hdc_v41_stream"
+}

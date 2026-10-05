@@ -1,0 +1,411 @@
+{
+  "W4_pinned_unchanged": true,
+  "build_projection": {
+    "FSIZE_cap": null,
+    "arithmetic": "same original KSA/kadd/CSA-tree/ksum circuit bodies; no arithmetic substitution",
+    "duration_cap": null,
+    "engine_datapath_elaboration": false,
+    "kind": "small Icarus control-only compile",
+    "measured_available_RAM_GiB": 69,
+    "measured_free_disk_GiB": 350,
+    "memory_cap": null,
+    "one_compiler_process": true,
+    "reservation_not_cap_bytes": 67108864
+  },
+  "no_duplicate_numerical_token": true,
+  "no_large_SAT": true,
+  "owner": "Euclid",
+  "ports": {
+    "actual_broadcast": "go && ready -> reset-valid IREG=1; ib379 and xl128 captured every edge without added input-hold assumption",
+    "external_provider_ready_port": null,
+    "root_inputs": [
+      "clk",
+      "rst_n",
+      "go",
+      "ib[378:0]",
+      "xl[127:0]"
+    ],
+    "root_ready": "!active&&!pend actual issue control",
+    "stall_scope": "issue go blocked by actual active/pend readiness and idle input gaps; no downstream service-stall port exists in this projection",
+    "tile": "PART1/LOCAL_KV_PREP3; root PART2; BD1 SMIN6 GT6144 IL8"
+  },
+  "prospective_clock_impact": {
+    "FF_hold_uncertainty_ps": 25,
+    "RTL_datapath_change": false,
+    "SS_setup_uncertainty_ps": 60,
+    "STA_or_frequency_credit": false,
+    "added_area": 0,
+    "added_hardware_cycles": 0,
+    "added_ports": 0,
+    "added_replicas": 0,
+    "clock_ns": 0.8333333333333334,
+    "simulation_timescale_not_physical_timing": true,
+    "verification_only": true
+  },
+  "schema": "QROM_CONNECTED_LITERAL_CONTROL_FROZEN_PLAN_V1",
+  "scope": "directed connected actual extracted issue-control and actual go&&ready broadcast/IREG; control projection only, not full ME/engine/owned-ready/provider/CDC/physical",
+  "source_base": "cf0d0dbc93ebf2bc56d4fab32275caf71c38baa9",
+  "source_pins": {
+    "raw/literal.sv": "0d51cae6bd27aa36052be5a2e502238d8b435190214f8782f714ba295daac760",
+    "source-inputs/rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "source-inputs/rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+    "source-inputs/rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb"
+  },
+  "state_inventory": [
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "wrom_re",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "kv_re",
+      "width": 1
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "wrom_addr",
+      "width": 24
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "active",
+      "width": 1
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "nout_r",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "tiles_r",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "k_r",
+      "width": 18
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "wsrc_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "round_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "oen_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "amax_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "mmode_r",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "rmax_r",
+      "width": 1
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "mbase_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "scale_base_r",
+      "width": 24
+    },
+    {
+      "bits": 4,
+      "elements": 1,
+      "name": "split_r",
+      "width": 4
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "tstep_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "wcs_r",
+      "width": 24
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "ktot_r",
+      "width": 18
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ts_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ks_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "js_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xks_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xjs_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xcs_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ots_r",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ojs_r",
+      "width": 24
+    },
+    {
+      "bits": 3,
+      "elements": 1,
+      "name": "jsh_r",
+      "width": 3
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "t",
+      "width": 18
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "k",
+      "width": 18
+    },
+    {
+      "bits": 3,
+      "elements": 1,
+      "name": "j",
+      "width": 3
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "cur",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "base_k",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "base_t",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xk",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xc",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "xk_base",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "oa",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ot",
+      "width": 24
+    },
+    {
+      "bits": 24,
+      "elements": 1,
+      "name": "ot_step",
+      "width": 24
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb_t",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "nb_step",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "lb",
+      "width": 19
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "lb_step",
+      "width": 19
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "t_last",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "k_last",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "split_fault",
+      "width": 1
+    },
+    {
+      "bits": 1,
+      "elements": 1,
+      "name": "pend",
+      "width": 1
+    },
+    {
+      "bits": 4,
+      "elements": 1,
+      "name": "pcnt",
+      "width": 4
+    },
+    {
+      "bits": 14,
+      "elements": 1,
+      "name": "pr_a",
+      "width": 14
+    },
+    {
+      "bits": 38,
+      "elements": 1,
+      "name": "tsg_a",
+      "width": 38
+    },
+    {
+      "bits": 38,
+      "elements": 1,
+      "name": "otsg_a",
+      "width": 38
+    },
+    {
+      "bits": 18,
+      "elements": 1,
+      "name": "kc_a",
+      "width": 18
+    },
+    {
+      "bits": 532,
+      "elements": 14,
+      "name": "tsh",
+      "width": 38
+    },
+    {
+      "bits": 532,
+      "elements": 14,
+      "name": "osh",
+      "width": 38
+    },
+    {
+      "bits": 19,
+      "elements": 1,
+      "name": "kpad_a",
+      "width": 19
+    }
+  ],
+  "test_cases": [
+    "reset then first ROM instruction",
+    "idle payload changes without acceptance",
+    "go/payload changes while active rejected",
+    "KV3 pending countdown and go rejection",
+    "multi-K multi-tile boundary addresses and IL8 counter transition",
+    "back-to-back next eligible acceptance",
+    "async reset while active and while pending then recovery",
+    "all accepted379bits and every-edge128x delayed capture",
+    "qualified full state after actual init and three-stage terms",
+    "split-fault retention/reset",
+    "address near24bit wrap and carry"
+  ]
+}

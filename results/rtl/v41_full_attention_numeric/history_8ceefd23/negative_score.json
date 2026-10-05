@@ -1,0 +1,9 @@
+{
+  "scope": "Checker sensitivity negative control, not hardware corruption detection. Expected first FP32 score bit0 deliberately flipped; same executable, Q/K/P inputs and arithmetic.",
+  "fault_injection": "window128/sc.hex first row XOR1",
+  "expected_sc_errors": 1,
+  "observed_sc_errors": 1,
+  "pv_errors": 0,
+  "source_expected_sc_sha256": "61622410f9753d586bd15c62d4eca8d0e631a834316607aed28893083e9ea67a",
+  "log_sha256": "3179e5479d1bfade83d65f99b8917414d9fcc6fafea2a5d39aeebc32d59dc972"
+}

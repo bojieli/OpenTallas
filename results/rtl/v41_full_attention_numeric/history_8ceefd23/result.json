@@ -1,0 +1,84 @@
+{
+  "scope": "Synthetic golden inputs at actual H16 D512 TD32 NL4 T640. No checkpoint, HBM or softmax execution claim.",
+  "executable_sha256": "a08ad6e5b7ef12bfc33f9650f55d542f7c5af2e8488ada51216711e9def53ea2",
+  "manifest_sha256": "6a3c8cc59623ab38d6f1ccfb319a1ba08a083f68ccb4db363b5c99d3e3c3a478",
+  "results": [
+    {
+      "name": "window128",
+      "pass_": true,
+      "returncode": 0,
+      "fields": {
+        "jobs": 1,
+        "sc_checked": 2048,
+        "sc_errors": 0,
+        "pv_checked": 8192,
+        "pv_errors": 0,
+        "faults": 0,
+        "lat_score_max": 50,
+        "lat_score_min": 50,
+        "lat_pv_max": 57,
+        "cycles": 225,
+        "timeout": 0
+      },
+      "wall_seconds": 55.47229182100273
+    },
+    {
+      "name": "mixed640",
+      "pass_": true,
+      "returncode": 0,
+      "fields": {
+        "jobs": 1,
+        "sc_checked": 10240,
+        "sc_errors": 0,
+        "pv_checked": 8192,
+        "pv_errors": 0,
+        "faults": 0,
+        "lat_score_max": 50,
+        "lat_score_min": 50,
+        "lat_pv_max": 57,
+        "cycles": 609,
+        "timeout": 0
+      },
+      "wall_seconds": 158.67369063399383
+    },
+    {
+      "name": "mixed640wide",
+      "pass_": true,
+      "returncode": 0,
+      "fields": {
+        "jobs": 1,
+        "sc_checked": 10240,
+        "sc_errors": 0,
+        "pv_checked": 8192,
+        "pv_errors": 0,
+        "faults": 9670,
+        "lat_score_max": 50,
+        "lat_score_min": 50,
+        "lat_pv_max": 57,
+        "cycles": 609,
+        "timeout": 0
+      },
+      "wall_seconds": 158.89917012001388
+    },
+    {
+      "name": "tail129",
+      "pass_": true,
+      "returncode": 0,
+      "fields": {
+        "jobs": 1,
+        "sc_checked": 2064,
+        "sc_errors": 0,
+        "pv_checked": 8192,
+        "pv_errors": 0,
+        "faults": 0,
+        "lat_score_max": 50,
+        "lat_score_min": 50,
+        "lat_pv_max": 64,
+        "cycles": 234,
+        "timeout": 0
+      },
+      "wall_seconds": 56.440440842998214
+    }
+  ],
+  "status": "pass"
+}

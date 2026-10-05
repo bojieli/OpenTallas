@@ -1,0 +1,1124 @@
+{
+  "scope": "single actual protected CODEpair + fixed read pipeline; component context only",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv": "84f4ed15806552ce08d5650057ab7227be456be193df94be0edbfd59657a4704",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3"
+  },
+  "CORE_period_ps": 833.333333,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "read_edges": 2,
+  "II_edges": 1,
+  "read_latency_ns": 1.666666666,
+  "read_payload_bytes_per_edge": 64,
+  "write_payload_bytes_per_edge": 32,
+  "macro_write_check_bits": 32,
+  "macro_read_check_bits_per_edge": 64,
+  "read_row_boundary_bits_per_edge": 26,
+  "virtual_bank_boundary_bits_per_edge": 6,
+  "owned_write_boundary_bits": 465,
+  "output_rom_bus_bits": 2660,
+  "output_actual_steering_bits": 2560,
+  "coded_state_bits": 1008,
+  "coded_state_FF_floor_um2": 293.93280000000004,
+  "macro_outline_area_um2": 162057.8664,
+  "macro_views": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "count": 10,
+      "area_um2": 12314.20968,
+      "width_um": 174.744,
+      "height_um": 70.47,
+      "timing": {
+        "ff": {
+          "breakdown": {
+            "bitline_cap_ff": 32.01192,
+            "bitline_ps": 129.49629425114097,
+            "cell_current_ua": 24.720336736368004,
+            "column_mux_ps": 7.388620537777778,
+            "control_ps": 44.33172322666667,
+            "decode_ps": 110.09044601288889,
+            "fo4_ps": 14.777241075555557,
+            "output_ps": 44.33172322666667,
+            "precharge_ps": 36.5619394876756,
+            "read_cycle_ps": 435.34941984370414,
+            "sense_ps": 29.554482151111113,
+            "wordline_cap_ff": 133.9252857728,
+            "wordline_ps": 85.31453471422091,
+            "write_cycle_ps": 327.6378240046832,
+            "write_ps": 291.0758845170076
+          },
+          "clk_cap_ff": 10.3732,
+          "clk_to_q_ps": 450.73624307799497,
+          "corner": "ff",
+          "hold_ps": 19.67222053777778,
+          "leakage_nw": 61571.0484,
+          "min_period_ps": 435.34941984370414,
+          "min_pulse_ps": 174.13976793748168,
+          "out_r_kohm": 0.31724855211381614,
+          "out_slew_intrinsic_ps": 22.165861613333334,
+          "pin_cap_ff": 0.683716,
+          "read_energy_fj": 1544.4674467106934,
+          "setup_ps": 24.694771075555558,
+          "temperature": 0.0,
+          "voltage": 0.77,
+          "write_energy_fj": 5772.294525878695
+        },
+        "ss": {
+          "breakdown": {
+            "bitline_cap_ff": 32.01192,
+            "bitline_ps": 206.75289014770823,
+            "cell_current_ua": 15.483178966509284,
+            "column_mux_ps": 11.796620584583334,
+            "control_ps": 70.7797235075,
+            "decode_ps": 175.76964671029168,
+            "fo4_ps": 23.593241169166667,
+            "output_ps": 70.77972350750001,
+            "precharge_ps": 62.83265739407467,
+            "read_cycle_ps": 671.517944835277,
+            "sense_ps": 47.186482338333334,
+            "wordline_cap_ff": 133.9252857728,
+            "wordline_ps": 108.19654473736905,
+            "write_cycle_ps": 504.0044709124767,
+            "write_ps": 441.171813518402
+          },
+          "clk_cap_ff": 8.68376,
+          "clk_to_q_ps": 691.7716429145595,
+          "corner": "ss",
+          "hold_ps": 30.074020584583334,
+          "leakage_nw": 61571.0484,
+          "min_period_ps": 671.517944835277,
+          "min_pulse_ps": 268.60717793411084,
+          "out_r_kohm": 0.7083491406580278,
+          "out_slew_intrinsic_ps": 35.38986175375,
+          "pin_cap_ff": 0.578766,
+          "read_energy_fj": 1223.1076039792245,
+          "setup_ps": 39.800541169166664,
+          "temperature": 100.0,
+          "voltage": 0.63,
+          "write_energy_fj": 3959.4353065072246
+        },
+        "tt": {
+          "breakdown": {
+            "bitline_cap_ff": 32.01192,
+            "bitline_ps": 160.05960000000002,
+            "cell_current_ua": 20.0,
+            "column_mux_ps": 9.132459385555556,
+            "control_ps": 54.79475631333334,
+            "decode_ps": 136.0736448447778,
+            "fo4_ps": 18.264918771111113,
+            "output_ps": 54.79475631333334,
+            "precharge_ps": 46.607757925726524,
+            "read_cycle_ps": 527.1658079425957,
+            "sense_ps": 36.529837542222225,
+            "wordline_cap_ff": 133.9252857728,
+            "wordline_ps": 93.10021131653573,
+            "write_cycle_ps": 395.449047097211,
+            "write_ps": 348.8412891714845
+          },
+          "clk_cap_ff": 9.3458,
+          "clk_to_q_ps": 544.8137711860629,
+          "corner": "tt",
+          "hold_ps": 21.600259385555557,
+          "leakage_nw": 61571.0484,
+          "min_period_ps": 527.1658079425957,
+          "min_pulse_ps": 210.8663231770383,
+          "out_r_kohm": 0.4562575976456151,
+          "out_slew_intrinsic_ps": 27.39737815666667,
+          "pin_cap_ff": 0.619928,
+          "read_energy_fj": 1381.534882028672,
+          "setup_ps": 28.256178771111113,
+          "temperature": 25.0,
+          "voltage": 0.7,
+          "write_energy_fj": 4823.456520428672
+        }
+      },
+      "views": {
+        "ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+        "ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f",
+        "ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39",
+        "ot_sram_1r1w_1024x256_m2_r2c2_tt.lib": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4"
+      }
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "count": 10,
+      "area_um2": 3891.57696,
+      "width_um": 94.824,
+      "height_um": 41.04,
+      "timing": {
+        "ff": {
+          "breakdown": {
+            "bitline_cap_ff": 8.096400000000001,
+            "bitline_ps": 32.75198103628078,
+            "cell_current_ua": 24.720336736368004,
+            "column_mux_ps": 0.0,
+            "control_ps": 44.33172322666667,
+            "decode_ps": 93.8354808297778,
+            "fo4_ps": 14.777241075555557,
+            "output_ps": 44.33172322666667,
+            "precharge_ps": 31.32679626347178,
+            "read_cycle_ps": 272.8743932705856,
+            "sense_ps": 29.554482151111113,
+            "wordline_cap_ff": 66.9626428864,
+            "wordline_ps": 41.073929763277455,
+            "write_cycle_ps": 256.67196742222103,
+            "write_ps": 225.34517115874925
+          },
+          "clk_cap_ff": 10.3732,
+          "clk_to_q_ps": 286.10773919130247,
+          "corner": "ff",
+          "hold_ps": 19.67222053777778,
+          "leakage_nw": 19457.884799999996,
+          "min_period_ps": 272.8743932705856,
+          "min_pulse_ps": 109.14975730823424,
+          "out_r_kohm": 0.31724855211381614,
+          "out_slew_intrinsic_ps": 22.165861613333334,
+          "pin_cap_ff": 0.683716,
+          "read_energy_fj": 391.26040396201324,
+          "setup_ps": 24.694771075555558,
+          "temperature": 0.0,
+          "voltage": 0.77,
+          "write_energy_fj": 1460.5551905220134
+        },
+        "ss": {
+          "breakdown": {
+            "bitline_cap_ff": 8.096400000000001,
+            "bitline_ps": 52.29158700233866,
+            "cell_current_ua": 15.483178966509284,
+            "column_mux_ps": 0.0,
+            "control_ps": 70.7797235075,
+            "decode_ps": 149.81708142420834,
+            "fo4_ps": 23.593241169166667,
+            "output_ps": 70.77972350750001,
+            "precharge_ps": 51.14368614620566,
+            "read_cycle_ps": 435.17450020501155,
+            "sense_ps": 47.186482338333334,
+            "wordline_cap_ff": 66.9626428864,
+            "wordline_ps": 63.95593978642559,
+            "write_cycle_ps": 410.43335817971183,
+            "write_ps": 359.2896720335062
+          },
+          "clk_cap_ff": 8.68376,
+          "clk_to_q_ps": 455.3205489475797,
+          "corner": "ss",
+          "hold_ps": 30.074020584583334,
+          "leakage_nw": 19457.884799999996,
+          "min_period_ps": 435.17450020501155,
+          "min_pulse_ps": 174.06980008200463,
+          "out_r_kohm": 0.7083491406580278,
+          "out_slew_intrinsic_ps": 35.38986175375,
+          "pin_cap_ff": 0.578766,
+          "read_energy_fj": 285.84519176961214,
+          "setup_ps": 39.800541169166664,
+          "temperature": 100.0,
+          "voltage": 0.63,
+          "write_energy_fj": 977.9125095296123
+        },
+        "tt": {
+          "breakdown": {
+            "bitline_cap_ff": 8.096400000000001,
+            "bitline_ps": 40.482000000000006,
+            "cell_current_ua": 20.0,
+            "column_mux_ps": 0.0,
+            "control_ps": 54.79475631333334,
+            "decode_ps": 115.98223419655558,
+            "fo4_ps": 18.264918771111113,
+            "output_ps": 54.79475631333334,
+            "precharge_ps": 39.07872791159102,
+            "read_cycle_ps": 335.7271623292945,
+            "sense_ps": 36.529837542222225,
+            "wordline_cap_ff": 66.9626428864,
+            "wordline_ps": 48.85960636559227,
+            "write_cycle_ps": 316.0589714697743,
+            "write_ps": 276.9802435581833
+          },
+          "clk_cap_ff": 9.3458,
+          "clk_to_q_ps": 351.7716962013416,
+          "corner": "tt",
+          "hold_ps": 21.600259385555557,
+          "leakage_nw": 19457.884799999996,
+          "min_period_ps": 335.7271623292945,
+          "min_pulse_ps": 134.2908649317178,
+          "out_r_kohm": 0.4562575976456151,
+          "out_slew_intrinsic_ps": 27.39737815666667,
+          "pin_cap_ff": 0.619928,
+          "read_energy_fj": 336.6485224810027,
+          "setup_ps": 28.256178771111113,
+          "temperature": 25.0,
+          "voltage": 0.7,
+          "write_energy_fj": 1207.1734504810026
+        }
+      },
+      "views": {
+        "ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+        "ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+        "ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+        "ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+        "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+      }
+    }
+  },
+  "codec_count": {
+    "encode64": 10,
+    "decode64": 14
+  },
+  "raw_changed_engine_cycles": 0,
+  "added_read_edges_vs_original_macro": 1,
+  "existing_optional_MEM_EXTRA": "sole tile owner, excluded here",
+  "whole_token_cycle_delta": null,
+  "logic_area_model": "positive codec + five-bank data/check mux + slot selector + 2560-bit demux + receipt + control + buffers/CTS/PG/wire; awaiting Kant slot reservation",
+  "slot_binding": null,
+  "boundary_load_binding": null,
+  "track_gate_binding": null,
+  "fit": false,
+  "route_ready": false,
+  "adopted": false,
+  "macro_timing_basis": "compiler calibrated analytical abstracts, not transistor layout/SPICE/silicon",
+  "timing_admission": {
+    "verdict": "CURRENT_SOURCE_NOT_ADMITTED_UNDER_PRICED_PROXY",
+    "basis": "Kant source-bound balanced five-way mux, 3 MUX2 levels at 2 SS FO4 (47.186 ps/level); conservative proxy, not mapped STA or absolute impossibility",
+    "data_SS_clkQ_ps": 691.7716429145595,
+    "remaining_before_capture_setup_wire_mux_ps": 81.56169008544055,
+    "five_bank_mux_proxy_ps": 141.558,
+    "remaining_after_mux_before_capture_setup_wire_ps": -59.99630991455945,
+    "macro_views_scope": "calibrated analytical abstracts",
+    "no_ideal_clock_credit": true,
+    "required_next": "source owners price/choose bank-local capture or cut; downstream mux/decode/steering and actual tag latency must be bound before route"
+  },
+  "contingent_bank_local_capture": {
+    "read_coded_bits_before": 576,
+    "read_coded_bits_after": 2880,
+    "additional_raw_FF_bits": 2304,
+    "additional_FF_floor_um2": 671.8464,
+    "total_coded_bits_with_leaf_and_pipeline": 3312,
+    "total_FF_floor_um2": 965.7792000000001,
+    "delayed_physical_bank_payload_bits": 6,
+    "additional_control_coded_bits_if_unused_padding_proves_sufficient": 0,
+    "read_edges_if_same_E2_capture_relocated_and_tags_aligned": 2,
+    "II_edges": 1,
+    "modeled_extra_cycles": 0,
+    "added_memory_ports": 0,
+    "extra_codecs_if_code_mux_precedes_existing_decoders": 0,
+    "remaining_after_check_macro_clkQ_ps": 318.01278405242033,
+    "remaining_after_check_slot_proxy_before_setup_wire_ps": 176.45478405242034,
+    "area_fanout": "bank-local enables/2880FF clock loads + 5bank288bit output-code mux, decoded output/2560steering and realwire need owner model; area floor is not slot admission",
+    "source_owner": "Erdos/Sagan",
+    "implemented": false,
+    "qualified": false
+  },
+  "selected_successor_source": {
+    "path": "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv",
+    "sha256": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+    "owner_main": "e93281c6a5df20408703d050c3dc261542d0f523",
+    "external_ABI_unchanged": true,
+    "functional_gate_owner": "Erdos component PASS; Sagan composed tile gate owner"
+  },
+  "Kant_preRTL_price": {
+    "path": "/home/ubuntu/hbm-fulldie-inputs-20261004/results/uarch/hbm_accel_fulldie_inputs_20261004/code_pair_slot/model.json",
+    "sha256": "b34023f768d6392695344bd20f22f0bfef6fea4eedc0b686839a3c34b9a08c42",
+    "model": {
+      "name": "qwen.code_pair",
+      "default_enabled": false,
+      "actual_fit": false,
+      "full_parent_adopted": false,
+      "wrapper": "ot_qwen_hbm_code_pair_context",
+      "parameters": {
+        "ENABLE": 1,
+        "COLUMN_BASE": 0,
+        "ROWS": 4496
+      },
+      "source_bindings": {
+        "results/uarch/qwen_hbm_code_payload_leaf_20261005/model.json": "ec00fb1d8c7fa136fd7b906ada42b8240fa98382c87474f1225e3497f43323b4",
+        "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv": "84f4ed15806552ce08d5650057ab7227be456be193df94be0edbfd59657a4704",
+        "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json": "da05b0fef4aa9283ecdba8bfcedc49e4dff706dba5f21af2fbc36f7e8bac0794",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/code_pair_slot/authorities/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+        "results/uarch/hbm_accel_fulldie_inputs_20261004/code_pair_slot/authorities/standard_cell_pins.json": "317d4d42f4819b026cb992c3ba974c229d950b1cd91694fea2ef43ec49fbbfe2"
+      },
+      "die_xyxy_um": [
+        0,
+        0,
+        864,
+        673.92
+      ],
+      "core_xyxy_um": [
+        8.64,
+        8.64,
+        855.36,
+        665.28
+      ],
+      "macro_count": 20,
+      "macro_area_um2": 162057.8664,
+      "macro_halo_area_um2": 16835.817599999988,
+      "context_cells_um2": {
+        "protected1008_FF_floor": 293.93280000000004,
+        "protected1008_FF_reset_upsize_reserve": 88.17983999999994,
+        "encode64_10calls_gross": 468.89279999999997,
+        "decode64_14calls_gross": 2111.4172799999997,
+        "data_and_check_5bank_mux_gross": 1433.27232,
+        "check_8way_shift_gross": 537.47712,
+        "protected_read_hold_mux_gross": 201.55392,
+        "fixed_pipeline2560_payload_steering_proxy": 10240,
+        "address_auth_visible_decode_proxy": 204.8,
+        "clock_reset_select_write_buffers_reserve": 895.7952,
+        "CTS_route_IR_repair_reserve": 1791.5904
+      },
+      "gross_standard_cells_um2": 24297.54464,
+      "standard_cell_capacity_um2": 207403.09524000002,
+      "selected_cut": "bank-local protectedcapture before physical bankmux",
+      "selected_cut_default_enabled": false,
+      "selected_cut_source_ready": false,
+      "context_strip_xywh_um": [
+        8.64,
+        492.48,
+        846.72,
+        172.8
+      ],
+      "bank_pitch_um": 96.66,
+      "macro_layer_obstructions": [
+        "M1",
+        "M2",
+        "M3",
+        "M4 except pin-edge strips"
+      ],
+      "over_macro_routing_layers": [
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9"
+      ],
+      "open_channel_layers": {
+        "horizontal": [
+          "M4",
+          "M6",
+          "M8"
+        ],
+        "vertical": [
+          "M3",
+          "M5",
+          "M7",
+          "M9"
+        ]
+      },
+      "signal_track_fraction": 0.5,
+      "reserved_track_fraction": 0.5,
+      "channels": [
+        {
+          "name": "column0.raw_read_write_mux",
+          "box_xywh_um": [
+            183.384,
+            8.64,
+            103.68,
+            457.11
+          ],
+          "vertical_signal_tracks": 3978,
+          "demand_tracks": 3392,
+          "demand_terms": {
+            "raw_read_outputs": 2560,
+            "write_data_checks_masks": 768,
+            "read_write_row_addresses": 23,
+            "select_handshake_control": 40,
+            "clock": 1
+          }
+        },
+        {
+          "name": "column1.raw_read_write_mux",
+          "box_xywh_um": [
+            656.856,
+            8.64,
+            103.68,
+            457.11
+          ],
+          "vertical_signal_tracks": 3978,
+          "demand_tracks": 3392,
+          "demand_terms": {
+            "raw_read_outputs": 2560,
+            "write_data_checks_masks": 768,
+            "read_write_row_addresses": 23,
+            "select_handshake_control": 40,
+            "clock": 1
+          }
+        },
+        {
+          "name": "pair.context_and_boundary",
+          "box_xywh_um": [
+            8.64,
+            492.48,
+            846.72,
+            172.8
+          ],
+          "horizontal_signal_tracks": 4230,
+          "demand_tracks": 3334,
+          "demand_terms": {
+            "steered_payload": 2560,
+            "visible_metadata": 237,
+            "owned_write": 465,
+            "controls": 72
+          }
+        },
+        {
+          "name": "pair.shared_vertical",
+          "box_xywh_um": [
+            381.888,
+            8.64,
+            100.224,
+            457.11
+          ],
+          "vertical_signal_tracks": 3845,
+          "demand_tracks": 3334,
+          "demand_terms": {
+            "steered_payload": 2560,
+            "visible_metadata": 237,
+            "owned_write": 465,
+            "controls": 72
+          }
+        }
+      ],
+      "per_bank_pin_escape": {
+        "height_um": 70.47,
+        "signal_tracks": 1724,
+        "demand_tracks": 1648
+      },
+      "area_and_track_reservation_pass": true,
+      "clock_admission": false,
+      "timing": {
+        "core_period_ps": 833.333333,
+        "setup_uncertainty_ps": 60,
+        "hold_uncertainty_ps": 25,
+        "macro_data_SS_clkQ_ps": 691.7716429145595,
+        "macro_check_SS_clkQ_ps": 455.3205489475797,
+        "data_macro_to_capture_available_before_setup_wire_skew_ps": 81.56169008544055,
+        "existing5bankmux_proxy_ps": 141.559447015,
+        "proxy_basis": "3 balanced MUX2 levels at 2 actual SS FO4 each; estimate, not mapped lower bound",
+        "maximum_bank_to_common_capture_vertical_span_um": 228.555,
+        "local_escape_width_um": 103.68,
+        "positive_wire_and_clock_skew_reserve_ps": 20,
+        "available_for_actual_mux_and_capture_setup_ps": 61.561690085440546,
+        "existing_schedule_read_edges": 2,
+        "II_edges": 1,
+        "read_bytes_per_edge": 64,
+        "latency_ns": 1.666666666,
+        "added_edges_against_original_tile_macro": 1,
+        "macro_clock_load_SS_fF": 173.6752,
+        "standard_state_clock_load_TT_proxy_fF": 478.533888,
+        "FF_macro_hold_ps": 19.67222053777778,
+        "SS_macro_min_period_ps": 671.517944835277,
+        "actual_capture_setup_and_mux_delay_measured": false,
+        "route_admitted": false,
+        "verdict": "EXISTING_CONTEXT_OVER_CONSERVATIVE_TIMING_BUDGET_SOURCE_OWNER_CUT_OR_ACTUAL_MAPPED_PRICE_REQUIRED"
+      },
+      "bank_local_capture_candidate": {
+        "selected": true,
+        "owners": [
+          "Erdos leaf",
+          "Sagan tile/tags"
+        ],
+        "Pauli_scope": "physical only",
+        "read_capture_bits": 2880,
+        "added_coded_FF_bits": 2304,
+        "held_output_physical_bank_bits_added": 6,
+        "held_output_bank_coded_FF_added": 0,
+        "held_output_bank_storage": "6 payload bits in existing 72-bit protected control, within unused64-bit payload padding",
+        "read_edges": 2,
+        "II_edges": 1,
+        "additional_edges": 0,
+        "required_schedule": "Each selected bank captures assembled data/check under old accepted read, bank/check tags at E2. At same E2 store old physical bank into protected output-bank tags; select coded288 after registers then unchanged decode. Virtual-bank pipeline unchanged; consumer drains and retains original MEM_EXTRA/+1 alignment.",
+        "costs_um2": {
+          "added_FF_floor": 671.8464,
+          "added_hold_mux": 806.21568,
+          "additional_bank_local_8way_check_shift": 2149.90848,
+          "gross_postcapture5bank288_mux": 806.21568,
+          "bank_enable_and_output_tag_logic_reserve": 51.2,
+          "additional_clock_enable_fanout_buffer_reserve": 447.8976,
+          "additional_CTS_route_IR_repair_reserve": 895.7952,
+          "additional_state_upsize_reserve": 201.5539199999999
+        },
+        "old_mux_removal_credit_um2": 0,
+        "additional_standard_clock_load_TT_proxy_fF": 1093.7917439999999,
+        "data_macro_to_banklocal_capture_distance_target_um": 30.24,
+        "banklocal_check_capture_available_before_setup_wire_ps": 318.01278405242033,
+        "remaining_timing_gates": [
+          "data clkQ + capture hold mux + setup + local wire within81.562ps",
+          "local check8:1 shift into protectedcapture",
+          "postcapture bank mux + unchanged ECC decode +2560 steering",
+          "protected metadata/control feedback and all FF25 hold paths"
+        ],
+        "arithmetic_and_ACK_unchanged_required": true,
+        "exactness_unmeasured": true,
+        "local_placement_regions": [
+          {
+            "name": "column0.bank0.protected_capture",
+            "box_xywh_um": [
+              185.54399999999998,
+              8.64,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column0.bank0.check_slot_select",
+            "box_xywh_um": [
+              250.344,
+              8.64,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column0.bank1.protected_capture",
+            "box_xywh_um": [
+              185.54399999999998,
+              105.3,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column0.bank1.check_slot_select",
+            "box_xywh_um": [
+              250.344,
+              105.3,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column0.bank2.protected_capture",
+            "box_xywh_um": [
+              185.54399999999998,
+              201.95999999999998,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column0.bank2.check_slot_select",
+            "box_xywh_um": [
+              250.344,
+              201.95999999999998,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column0.bank3.protected_capture",
+            "box_xywh_um": [
+              185.54399999999998,
+              298.62,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column0.bank3.check_slot_select",
+            "box_xywh_um": [
+              250.344,
+              298.62,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column0.bank4.protected_capture",
+            "box_xywh_um": [
+              185.54399999999998,
+              395.28,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column0.bank4.check_slot_select",
+            "box_xywh_um": [
+              250.344,
+              395.28,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column1.bank0.protected_capture",
+            "box_xywh_um": [
+              659.016,
+              8.64,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column1.bank0.check_slot_select",
+            "box_xywh_um": [
+              723.816,
+              8.64,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column1.bank1.protected_capture",
+            "box_xywh_um": [
+              659.016,
+              105.3,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column1.bank1.check_slot_select",
+            "box_xywh_um": [
+              723.816,
+              105.3,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column1.bank2.protected_capture",
+            "box_xywh_um": [
+              659.016,
+              201.95999999999998,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column1.bank2.check_slot_select",
+            "box_xywh_um": [
+              723.816,
+              201.95999999999998,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column1.bank3.protected_capture",
+            "box_xywh_um": [
+              659.016,
+              298.62,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column1.bank3.check_slot_select",
+            "box_xywh_um": [
+              723.816,
+              298.62,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          },
+          {
+            "name": "column1.bank4.protected_capture",
+            "box_xywh_um": [
+              659.016,
+              395.28,
+              17.28,
+              51.84
+            ],
+            "coded_FF_bits": 288,
+            "cell_capacity_um2": 492.6873600000001,
+            "gross_local_cell_budget_um2": 339.1456,
+            "members": "new bank-local288 coded FFs, their hold muxes and bank enable; exact synthesized names owned by Pauli/Erdos"
+          },
+          {
+            "name": "column1.bank4.check_slot_select",
+            "box_xywh_um": [
+              723.816,
+              395.28,
+              34.56,
+              70.47
+            ],
+            "cell_capacity_um2": 1339.4937600000003,
+            "gross_local_cell_budget_um2": 315.39456,
+            "members": "new bank-local actual8:1 check slot selector; no parity RAM idealization"
+          }
+        ],
+        "total_coded_state_bits_including_fixed_pipeline": 3312,
+        "total_macro_and_standard_clock_load_proxy_fF": 1746.000832,
+        "local_wire_price": {
+          "horizontal_um": 19.44,
+          "vertical_um": 10.8,
+          "wire_cap_fF": 5.2436052,
+          "wire_resistance_kohm": 0.5875593600000001,
+          "driver_SS_out_r_kohm": 0.7083491406580278,
+          "receiver_D_cap_TT_proxy_fF": 0.558822,
+          "Elmore_delay_ps_ESTIMATE": 5.895576752547023,
+          "additional_nonideal_wire_coupling_detour_reserve_ps": 5,
+          "clock_skew_reserve_ps": 10,
+          "zero_wire_credit": false,
+          "bit_locality_targets_required": true,
+          "unconstrained_region_distance_um": 69.36,
+          "unconstrained_region_Elmore_delay_ps_ESTIMATE": 16.983879216372415,
+          "data_short_route_is_placement_requirement_not_measured": true
+        },
+        "capture_hold_mux_proxy_ps": 47.186482338333334,
+        "data_capture_available_for_actual_setup_ps": 13.479630994560189,
+        "check_slot_select_proxy_ps": 141.559447015,
+        "check_capture_available_for_actual_setup_wire_ps": 76.93786856325228,
+        "postcapture_path_estimates": {
+          "bank5mux_ps": 141.559447015,
+          "W6_decode_proxy_ps": 448.2715822141667,
+          "virtual_steering_proxy_ps": 47.186482338333334,
+          "positive_wire_and_clock_skew_reserve_ps": 30,
+          "available_including_launchclkQ_before_isolated_output_delay_ps": 653.333333,
+          "measured": false,
+          "grade": "gross FO4 proxies are not mapped cell minimums; cannot claim SS closure"
+        },
+        "check_slot_wire_price": {
+          "horizontal_M6_um": 80,
+          "vertical_M7_um": 40,
+          "cap_fF": 21.51324,
+          "resistance_kohm": 1.475352,
+          "Elmore_delay_ps_ESTIMATE": 32.32898613583471,
+          "coupling_detour_reserve_ps": 10,
+          "actual_mapped_delay_measured": false
+        },
+        "additional_state_upsize_reserve_um2": 201.5539199999999
+      },
+      "boundary_contract": {
+        "scope": "isolated interface only; no production-parent timing claim",
+        "input_drive_cell": "BUFx2_ASAP7_75t_R",
+        "output_load_fF": 0.558822,
+        "load_basis": "one literal DFFHQNx1 D pin from installed TT Liberty, declared fixed isolated load, not SS receiver characterization",
+        "max_input_delay_ps": 120,
+        "max_output_delay_ps": 120,
+        "min_input_delay_ps": 0,
+        "min_output_delay_ps": 0,
+        "output_receiver_and_input_driver_instantiated": false,
+        "CORE_clk_is_existing_same_domain": true,
+        "physical_boundary_acceptance_required_by": "Pauli"
+      },
+      "state_bits": {
+        "baseline_leaf": 936,
+        "banklocal_added": 2304,
+        "selected_leaf": 3240,
+        "fixed_pipeline": 72,
+        "total": 3312
+      },
+      "macro_inventory": [
+        {
+          "instance": "u_leaf.on.column[0].bank[0].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            8.64,
+            8.64,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[0].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            287.06399999999996,
+            8.64,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[1].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            8.64,
+            105.3,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[1].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            287.06399999999996,
+            105.3,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[2].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            8.64,
+            201.95999999999998,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[2].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            287.06399999999996,
+            201.95999999999998,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[3].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            8.64,
+            298.62,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[3].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            287.06399999999996,
+            298.62,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[4].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            8.64,
+            395.28,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[0].bank[4].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            287.06399999999996,
+            395.28,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[0].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            482.11199999999997,
+            8.64,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[0].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            760.536,
+            8.64,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[1].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            482.11199999999997,
+            105.3,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[1].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            760.536,
+            105.3,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[2].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            482.11199999999997,
+            201.95999999999998,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[2].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            760.536,
+            201.95999999999998,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[3].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            482.11199999999997,
+            298.62,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[3].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            760.536,
+            298.62,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[4].data_store",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "orientation": "MY",
+          "box_xywh_um": [
+            482.11199999999997,
+            395.28,
+            174.744,
+            70.47
+          ],
+          "halo_um": 2.16
+        },
+        {
+          "instance": "u_leaf.on.column[1].bank[4].check_store",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "orientation": "R0",
+          "box_xywh_um": [
+            760.536,
+            395.28,
+            94.824,
+            41.04
+          ],
+          "halo_um": 2.16
+        }
+      ],
+      "next_action": "Erdos additive banklocal RTL + Sagan exact pipeline/tags gate; Pauli only selected minimumcontext physical validation, no originalcentral route/fullarray/parent adoption"
+    }
+  },
+  "selected_state_bits": 3312,
+  "raw_added_wrapper_state_bits": 0,
+  "physical_mapping_scope": "Only actual-source logic/cell-load price can resolve conservative postcapture proxy; PNR remains held. Mapping does not establish clocks/wires/SSFF in context."
+}

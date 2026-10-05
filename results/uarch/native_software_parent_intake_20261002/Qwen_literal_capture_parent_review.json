@@ -1,0 +1,20 @@
+{
+  "status": "PASS_INDEPENDENT_FOURSTATE_AND_SOURCE_FORMAL_RECEIPT_REVIEW",
+  "owner_record_sha256": "ae27120ac0909b54e06577eb67f75f56a40cf370cc1bc1e80df88163345f37c3",
+  "source_pins_verified": 5,
+  "formal_scope": "Owner actual HDL base and temporal induction completed; no duplicate expensive solver run",
+  "fourstate_replays": [
+    {
+      "case": "positive",
+      "returncode": 0,
+      "log_sha256": "37cb3784a374bf180f1a6e5899da503744a7555d0592609d2de24ea1ec045f60"
+    },
+    {
+      "case": "wrong_metadata",
+      "returncode": 1,
+      "log_sha256": "bbff3afc2eb2daa8399b7b3b5dfa44c9017d504bf01eaaadfa6712cb5c80ff01"
+    }
+  ],
+  "physical_clock_closed": false,
+  "PnR_adoption": false
+}

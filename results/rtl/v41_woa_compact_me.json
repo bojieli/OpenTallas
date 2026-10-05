@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.v41.woa_compact_me.v1",
+  "status": "pass_local_matched_ME_not_full_layer",
+  "layer": 25,
+  "activation": "deterministic BF16 sin vector, not checkpoint token activation",
+  "checkpoint": {
+    "layers.25.attn.wo_a.weight": {
+      "shape": [
+        8192,
+        4096
+      ],
+      "header_sha256": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668",
+      "blob": "9bc915075568b75e2aec9c645cc0fece6287f115c32031a52ab4f9ba9d12fde6"
+    },
+    "layers.25.attn.wo_a.scale": {
+      "shape": [
+        256,
+        128
+      ],
+      "header_sha256": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668",
+      "blob": "9bc915075568b75e2aec9c645cc0fece6287f115c32031a52ab4f9ba9d12fde6"
+    }
+  },
+  "arms": {
+    "expanded": {
+      "rows_per_group": 16,
+      "exact_rows": 32,
+      "bank_reads": 2084,
+      "cycles": 4235,
+      "wall_seconds": 7.902836441062391
+    },
+    "compact": {
+      "rows_per_group": 16,
+      "exact_rows": 32,
+      "bank_reads": 2084,
+      "cycles": 4235,
+      "wall_seconds": 8.230688699055463
+    }
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "rtl/chip/ot_chip_v41x_woa_fp8_decode.sv": "4ee0fb0b1cfcbe77c977b30bc253e871c200da2114deeecf728d855edd4523b2",
+    "rtl/chip/ot_chip_v41x_woa_compact_bank.sv": "2a424abea15febf7e032d543bc710cd7c12731e056508698739c7a242c7780ba",
+    "rtl/test/tb_chip_v41x_woa_compact_me.sv": "c6d19d3e98430ca1444844780c21aa7f05d6e8ddf15128c69452b34377d2c0f5",
+    "tools/rtl_v41_woa_compact_me.py": "b79e4796395224cbdbca33c5b00e0b1323298e284436d901c611a1a43ec46f47",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "image_sha256": {
+    "compact.hex": "989eec0b56d00f34d6bd951c6db1822aedb0a1d2625b42d5c421a6e436c151ac",
+    "expanded.hex": "b823bae6dff23b3e52b6d1a05c8d81d1295594d6c32e2f96865dbc39b7f64c61",
+    "acc.hex": "f8ffffd16bbc244d9e3f802c54443ef77bb758db8f6f03eace65be62347ffc39",
+    "za.hex": "3297cca009f733d22a601a4401b2529326aa891218690a475b7bbf84d58b2e5b"
+  },
+  "contract": {
+    "banks": 8,
+    "bits_per_bank_word": 80,
+    "values_per_beat": 64,
+    "read_latency_cycles": 2,
+    "extra_cycles": 0,
+    "bank_depth_full_rank": 131072,
+    "code_scale_logical_bytes_full_rank": 10485760,
+    "scale_replication": "two UE8M0 bytes perbank/address; no sharedscaleport assumption",
+    "physical_macro_binding": "pending; 80-bit independentbank contract only"
+  }
+}

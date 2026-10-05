@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL_RETAINED_NOT_QUALIFIED",
+  "shape": {
+    "N": 2,
+    "NB": 2
+  },
+  "wake_router_fault": 1,
+  "original_router_fault": 1,
+  "interpretation": "original baseline reproduces BF16 router fault at N2; both failed records remain FAIL; N4 separately qualified, no N2 adoption"
+}

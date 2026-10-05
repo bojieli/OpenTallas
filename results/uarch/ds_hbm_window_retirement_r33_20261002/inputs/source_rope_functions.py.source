@@ -1,0 +1,20 @@
+import math
+import numpy as np
+F=np.float32
+
+def rope_freqs(dim, original_seq_len, base, factor, beta_fast, beta_slow):
+    """precompute_freqs_cis' frequencies in binary32, op by op (a table ROM)."""
+    freqs = (F(1.0) / (F(base) ** (np.arange(0, dim, 2, dtype=F) / F(dim)).astype(F))).astype(F)
+    if original_seq_len > 0:
+        def corrected(rot):
+            return dim * math.log(original_seq_len / (rot * 2 * math.pi)) / (2 * math.log(base))
+        low = max(math.floor(corrected(beta_fast)), 0)
+        high = min(math.ceil(corrected(beta_slow)), dim - 1)
+        ramp = np.clip((np.arange(dim // 2, dtype=F) - F(low)) / F(max(high - low, 1e-3)), 0, 1).astype(F)
+        smooth = (F(1) - ramp).astype(F)
+        freqs = ((freqs / F(factor)).astype(F) * (F(1) - smooth)).astype(F) + (freqs * smooth).astype(F)
+    return freqs.astype(F)
+
+def rope_cs(freqs, position):
+    angle = (F(position) * freqs).astype(F)
+    return np.cos(angle.astype(np.float64)).astype(F), np.sin(angle.astype(np.float64)).astype(F)

@@ -1,0 +1,374 @@
+{
+  "description": "Energy of one decode step of each architecture's reduced vehicle: logic energy from the activity-annotated sign-off power at the routed parasitics (results/physical_abi3/asap7/signoff/*.json), memory and link energy from the per-byte terms of configs/hardware/technology.json applied to the bytes the RTL campaign's memory ports actually move in that step.  ASAP7 is a predictive 7 nm academic PDK; none of these joules may be scaled to a foundry node (docs/METHODOLOGY.md section 9).",
+  "architectures": {
+    "qwen3_8b_rom_reticle": {
+      "description": "Reduced Qwen3 on the hardwired decode core, weights in mask ROM, KV and vector memory in on-die SRAM; one step at position 15 (tools/rtl_hdc_decode_campaign.py single step).",
+      "token_cycles": 32246,
+      "clock_period_ns": 0.9,
+      "logic": [
+        {
+          "name": "decode_core",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core"
+        },
+        {
+          "name": "matrix_engine (u_me)",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core",
+          "group": "u_me.",
+          "subtotal_of": "decode_core"
+        },
+        {
+          "name": "stream_unit (u_su)",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core",
+          "group": "u_su.",
+          "subtotal_of": "decode_core"
+        }
+      ],
+      "memory": [
+        {
+          "name": "weight ROM",
+          "energy": "rom_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "wrom_re": 128
+            }
+          },
+          "basis": "one 64-lane BF16 word (128 B) per wrom_re cycle"
+        },
+        {
+          "name": "program and constant ROM",
+          "energy": "rom_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "prog_re": 128,
+              "crom_re": 8
+            }
+          },
+          "basis": "1,024-bit instruction per prog_re, 64-bit constant pair per crom_re"
+        },
+        {
+          "name": "KV SRAM",
+          "energy": "sram_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "kv_re": 256,
+              "kv_we": 4
+            }
+          },
+          "basis": "kv_re reads one 16-lane FP32 word per lane group (4 x 64 B); kv_we writes one FP32 element; writes charged at the read energy"
+        },
+        {
+          "name": "vector memory SRAM",
+          "energy": "sram_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "vx_re": 4,
+              "va_re": 4,
+              "vb_re": 4,
+              "vc_re": 4,
+              "vw_me_we": 64,
+              "vw_su_we": 4,
+              "vw_rd_we": 4
+            }
+          },
+          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial)"
+        }
+      ],
+      "static": [],
+      "mac": {
+        "logic": "matrix_engine (u_me)",
+        "macs_per_token": 1277952,
+        "format": "bf16",
+        "basis": "results/rtl/hdc_decode_campaign.json weight_macs_per_token (BF16 x BF16 products into FP32 accumulators)"
+      },
+      "compare": {
+        "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+        "key": "qwen_core"
+      }
+    },
+    "hbm_comparator": {
+      "description": "The same core and step with weights and KV streamed from HBM: the KV streamer (ot_hdc_kv_stream, 4 pseudo-channels = 1/8 of an HBM3E stack) is signed off; the HBM path (device, PHY, controller) is charged the analytical model's measured per-byte energy on the weight and KV bytes the core consumes, plus the stack's idle interface power pro rata.",
+      "token_cycles": 32275,
+      "clock_period_ns": 0.9,
+      "logic": [
+        {
+          "name": "decode_core",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core",
+          "cycles": 32246
+        },
+        {
+          "name": "matrix_engine (u_me)",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core",
+          "group": "u_me.",
+          "subtotal_of": "decode_core",
+          "cycles": 32246
+        },
+        {
+          "name": "kv_streamer",
+          "signoff": "results/physical_abi3/asap7/signoff/hbm_kv_stream_signoff.json",
+          "key": "hbm_kv_stream"
+        }
+      ],
+      "memory": [
+        {
+          "name": "weights from HBM",
+          "energy": "hbm_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "wrom_re": 128
+            }
+          },
+          "basis": "the core's weight-word reads, each streamed from HBM"
+        },
+        {
+          "name": "KV from HBM",
+          "energy": "hbm_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "kv_re": 256,
+              "kv_we": 4
+            }
+          },
+          "basis": "the KV bytes the core consumes (the streamer fetches each once into its window; the tail SRAM holds the open tile)"
+        },
+        {
+          "name": "program and constant ROM/SRAM",
+          "energy": "sram_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "prog_re": 128,
+              "crom_re": 8
+            }
+          }
+        },
+        {
+          "name": "vector memory SRAM",
+          "energy": "sram_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/ot_hdc_core/activity/core.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "vx_re": 4,
+              "va_re": 4,
+              "vb_re": 4,
+              "vc_re": 4,
+              "vw_me_we": 64,
+              "vw_su_we": 4,
+              "vw_rd_we": 4
+            }
+          }
+        }
+      ],
+      "static": [
+        {
+          "name": "HBM interface idle",
+          "term": [
+            "power",
+            "memory_interface_idle_w_per_stack"
+          ],
+          "fraction": 0.125,
+          "basis": "4 of an HBM3E stack's 32 pseudo-channels (tools/rtl_hdc_kv_stream_campaign.py NPC)"
+        }
+      ],
+      "mac": {
+        "logic": "matrix_engine (u_me)",
+        "macs_per_token": 1277952,
+        "format": "bf16",
+        "basis": "results/rtl/hdc_decode_campaign.json weight_macs_per_token"
+      },
+      "compare": {
+        "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+        "key": "qwen_core"
+      }
+    },
+    "deepseek_v41_rom_array_die": {
+      "description": "Reduced DeepSeek-V4.1-Flash on one die of the ROM array (ot_hdc_core_v41), one step at position 7.  Logic: the routed matrix engine and V4.1 units, activity from the campaign's RTL register activity mapped onto their flops; the sequencer, stream unit, hc projection and Sinkhorn unit have no retained route and are listed as missing.",
+      "token_cycles": 1088551,
+      "clock_period_ns": 0.9,
+      "logic": [
+        {
+          "name": "matrix_engine (u_me)",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_matvec",
+          "group": "u_me."
+        },
+        {
+          "name": "activation quantiser",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_actquant"
+        },
+        {
+          "name": "FP4 quantise-dequantise",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_fp4qdq"
+        },
+        {
+          "name": "block-dot lanes (16)",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_blockdot_lane0",
+          "instances": 16,
+          "note": "lane 0's activity for all 16 lanes (lane 15 is analysed to bound the spread)"
+        },
+        {
+          "name": "top-16 select",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_select"
+        },
+        {
+          "name": "Engram hash",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_engram_hash"
+        },
+        {
+          "name": "softplus / sqrt",
+          "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+          "key": "v41_softplus"
+        }
+      ],
+      "missing": [
+        "sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total"
+      ],
+      "memory": [
+        {
+          "name": "ROM (weights, expert weights, hc, block-quantised, Engram, constants)",
+          "energy": "rom_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/v41_memory_ports/activity/ports.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "wrom_re": 128,
+              "ewrom_re": 128,
+              "hrom_re": 12,
+              "qrom_re": 544,
+              "erom_re": 33,
+              "crom_re": 8,
+              "xcrom_re": 8,
+              "prog_re": 192
+            }
+          },
+          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction)"
+        },
+        {
+          "name": "KV and vector memory SRAM",
+          "energy": "sram_read_j_per_byte",
+          "ports_from_saif": {
+            "saif": "${OT_SIGNOFF_SCRATCH}/v41_memory_ports/activity/ports.nets.saif",
+            "half_period_ps": 450,
+            "ports": {
+              "kv_re": 256,
+              "kv_we": 4,
+              "vx_re": 4,
+              "vs_re": 4,
+              "vi_re": 4,
+              "vq_re": 4,
+              "vr_re": 4,
+              "vh_re": 4,
+              "wxr_re": 128,
+              "vw_me_we": 64,
+              "vw_su_we": 4,
+              "vw_rd_we": 4,
+              "vw_xe_we": 4,
+              "ww_q_we": 128,
+              "ww_h_we": 128,
+              "ww_x_we": 128
+            }
+          },
+          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound)"
+        }
+      ],
+      "static": [],
+      "mac": {
+        "logic": "matrix_engine (u_me)",
+        "macs_per_token_from_saif": {
+          "saif": "${OT_SIGNOFF_SCRATCH}/v41_memory_ports/activity/ports.nets.saif",
+          "half_period_ps": 450,
+          "ports": {
+            "wrom_re": 64,
+            "ewrom_re": 64
+          }
+        },
+        "format": "bf16",
+        "basis": "64 BF16 weights per matrix-engine ROM word, each one MAC (enable-high cycles of wrom_re and ewrom_re)"
+      },
+      "compare": {
+        "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
+        "key": "v41_actquant"
+      }
+    },
+    "deepseek_v41_rom_array_package": {
+      "description": "One package of the DeepSeek-V4.1 ROM array: four dies as one tensor group on UCIe, plus the package's fabric logic.  Die energy is one die-step (four dies each do a quarter of the matrix work in about a quarter of the time; the replicated vector work is not counted); fabric logic is vectorless (default 0.1 input activity, propagated), which overstates idle fabric; the UCIe bytes follow the Qwen package campaign's tensor-split rule (two all-reduces of the hc x dim FP32 residual per layer, each die sending its partial to the three others), derived, not simulated for V4.1.",
+      "token_cycles": 1088551,
+      "clock_period_ns": 0.9,
+      "logic": [
+        {
+          "name": "four-die tensor group (one die-step equivalent)",
+          "from_architecture": "deepseek_v41_rom_array_die",
+          "count": 1,
+          "note": "four dies each doing a quarter of every matrix for about a quarter of the step spend about one die-step of energy; the replicated vector work (norms, residuals, RoPE) on the other three dies is not counted, so this is a lower bound on the dies"
+        },
+        {
+          "name": "package controller",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_pkg_ctrl"
+        },
+        {
+          "name": "fabric router",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_fabric_router"
+        },
+        {
+          "name": "KV multicast node",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_mcast_node"
+        },
+        {
+          "name": "MoE dispatch",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_moe_dispatch"
+        },
+        {
+          "name": "MoE expert port",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_moe_expert_port"
+        },
+        {
+          "name": "argmax collective",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_argmax_reduce_gate_level"
+        },
+        {
+          "name": "express link",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_express_link"
+        }
+      ],
+      "memory": [
+        {
+          "name": "UCIe die-to-die all-reduce",
+          "energy": "ucie_j_per_bit",
+          "bytes_per_token": 2457600,
+          "basis": "4 dies x 3 peers x 2 all-reduces per layer x 40 layers x (4 hc x 160 x 4 B) = 2,457,600 B per package per token"
+        }
+      ],
+      "static": []
+    }
+  }
+}

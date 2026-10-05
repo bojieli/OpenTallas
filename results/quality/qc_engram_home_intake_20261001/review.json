@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.qc.engram-home-independent-intake.v1",
+  "verdict": "PASS_BOUNDED_DEMAND_AND_RETAINED_L14_REVIEW",
+  "source_commit": "f7fed60cdf91512095dbf92675f68f7d852198a5",
+  "owner_commit": "b0cfaee4c9b4ab64606fc33d0d246e2ed685f559",
+  "input_hashes": {
+    "HBM_default_MEM_WORDS": 4096,
+    "HBM_modulo_memory_aliasing": true,
+    "owner": "f2709a51618de7cc9c9c919177c15f17c9a9ebb2a18b7b952b50a1f7f3c82ac8",
+    "model": "303b0a5786680e96d0259809f2aa18f3a411e812d826124d3bed0ad6882612be",
+    "contract": "0d144979e62c903e0c543237fb5952e4a0b2df6aee12f9c51080a2981c9257b9",
+    "eight_scale_spec": "301e0e7fa2c9806b8689d3a043bd31449db52628f132b6f01ace8aa85da40964",
+    "HBM_source": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "model_commit": "64c6bffe0442cdf9126a6eaac752591b6a8e8389",
+  "historical_HBM_source_commit": "821709d3d88772edd88cba5e28039a1295dbc0fc",
+  "requested_f270_pin": "not resolved among local Git objects; authoritative owner JSON pins64c6model/821709HBM",
+  "review_source_pins": {
+    "tools/qc_engram_home_intake.py": "e8f66753a48148c4fb111590b8bb10a2c92201a0a7259e81fd5f7077ab16cd8d",
+    "tests/test_qc_engram_home_intake.py": "93c772f662384bd3424cb3fcf846103743183d54ed9c5b1ffdc6caa4853f0e0f"
+  },
+  "geometry": {
+    "table_rows": 768022850,
+    "ROM_words": 6144182800,
+    "ROM_macros": 1500067,
+    "ROM_capacity_bytes": 210441399296,
+    "ROM_padding_words": 91632,
+    "column_selectors": 48,
+    "max_macros_per_selector": 31252,
+    "HBM_sectors": 432,
+    "HBM_sector_bytes": 13824,
+    "useful_bytes_per_token": 12672,
+    "HBM_overhead_bytes": 1152,
+    "flat_sector_bits": 33,
+    "default_sector_bits": 24,
+    "default_aperture_bytes": 536870912,
+    "minimum_default_aperture_regions": 378,
+    "region_count_is_not_physical_stack_count": true
+  },
+  "L14": {
+    "FP32_product_coefficients": 20480,
+    "finite_coefficients": 20480,
+    "nonfinite_coefficients": 0,
+    "zero_coefficients": 0,
+    "negative_zero_bits": 0,
+    "FP32_product_bits_sha256": "ab43ae81a7cc77c56b063a7ba730f5f1535c76d04d1dd8507cb6ad3bca22e9fe",
+    "CROM64bit_product_slice_sha256": "f2297940486c2604a7a4baf8887ed319c264f77cb10ccc3f164c16e01182f377"
+  },
+  "L1": "NULL/source pair incomplete; no coefficient/image credit",
+  "retained_artifacts_read": [
+    {
+      "path": "/tmp/codex_v41_fullshape_golden/images/ctx200000_L14_r0/w.engram.q_weight.bin",
+      "bytes": 40960,
+      "sha256": "a49e74aa912b88f56df4183862c729bc8539ce4a7b76e6107da858b59e782e28"
+    },
+    {
+      "path": "/tmp/codex_v41_fullshape_golden/images/ctx200000_L14_r0/w.engram.k_weight.bin",
+      "bytes": 40960,
+      "sha256": "fa3128a62fef3630e32a0953e2dc32eb6f6870492ba447bb1877ff37f4f6cd93"
+    }
+  ],
+  "checkpoint_payload_bytes_read": 0,
+  "compiler_runs": 0,
+  "new_images": 0,
+  "RTL_jobs": [],
+  "PnR_jobs": [],
+  "physical_owner": null,
+  "admission": false,
+  "missing_costs": [
+    {
+      "owner": "Ram",
+      "cost": "ROM macro area/die count and SSclk->q for1500067macros;48registeredselectors up to31252each plus requestfanout/returnroute",
+      "priced": false
+    },
+    {
+      "owner": "Ram",
+      "cost": "HBM explicit33bit flat-equivalent sharding overAW24 regions;PC/bank placement and capacity;command/return issue ports;ACT/PRE/RCD/CL/cache-state random row service;4096sector modulo-alias behavioral storage is not actual203GB table backing",
+      "priced": false
+    },
+    {
+      "owner": "Ram/Halley",
+      "cost": "9sector-to8beat matching-scale reassembly; finite response lease/tag/credits, adapter SRAM and CDC/fence/consumer acceptance",
+      "priced": false
+    },
+    {
+      "owner": "Ram",
+      "cost": "two264bit ingress and two512bit decoder-write paths;49152B decoded doublebuffer ports/release and route occupancy",
+      "priced": false
+    },
+    {
+      "owner": "Ram/Fermat",
+      "cost": "L1 q/k source completion;45bank scalarhome writer/unpack/registeredselect/oneport arbitration and dependentconsumer release",
+      "priced": false
+    },
+    {
+      "owner": "Ram",
+      "cost": "bind wkv producer157286400MAC/layer, raw6336B vs projected51200B/layer boundary, keynorm/h readiness and exact delayedgate to the same fulltoken calendar",
+      "priced": false
+    }
+  ],
+  "limits": "432BURST=442.368ns and431tCCDL=1103.36ns are source-model conditional floors/spans, not total row/random latency or token deadline; region minimum not stack count; scalar capacity not admitted writer/port/route",
+  "QC_NAM": "original FAIL unchanged"
+}

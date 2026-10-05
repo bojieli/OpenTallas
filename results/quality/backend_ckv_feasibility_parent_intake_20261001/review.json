@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.backend-ckv-feasibility-parent-intake.v1",
+  "tests": {
+    "backend_provider": 9,
+    "completion_composition": 4,
+    "CKV_feasibility": 3,
+    "physical_terminal_gate": 3
+  },
+  "records_byte_identical": {
+    "results/uarch/qwen_hbm_connected_20261001/common_HBM_backend_provider_binding_r2.json": "ecc6baef8ccdbe2350e9f3e516fd44426da35048dec8cf32ebd3220ba8ddc408",
+    "results/quality/w16_w19_backend_composition_20261001/composition.json": "214ac12de0c4f1999d92ee284b40070f7bc84935df8902f3f00f989e022113f3",
+    "results/quality/w16_w11_ckv_feasibility_20261001/feasibility.json": "619516232d7c959f46a0feaa325b566470747b239081e8387d3d302979b772fd"
+  },
+  "current_CKV_RTL_matches_failed_source": true,
+  "original_CKV_Git_source_recovered": false,
+  "backend_storage_doublecount": false,
+  "synthetic_provider_only": true,
+  "CKV_ROM_baseline_transfer_to_HBM": false,
+  "physical_admission": false,
+  "hardware_adopted": false,
+  "connected_token_cycles": null,
+  "scientific_jobs_launched": 0
+}

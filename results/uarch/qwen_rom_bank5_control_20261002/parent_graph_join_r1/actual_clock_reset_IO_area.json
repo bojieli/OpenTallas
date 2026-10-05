@@ -1,0 +1,79 @@
+{
+  "status": "ACTUAL_ASBUILT_PIN_LOADS_AND_AREA_ONLY_CONTEXT_OPEN",
+  "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "corner": "SS",
+  "clock_standard_FFs": 102287,
+  "clock_macros": 12,
+  "clock_SS_pin_cap_fF": 45072.757426,
+  "reset_sinks": 56630,
+  "reset_SS_pin_cap_fF": 39868.935749999975,
+  "parent_input_sink_classes": {
+    "tile_id": {
+      "sink_count": 74,
+      "pin_cap_fF": 32.48904099999999
+    },
+    "reset_stream_n": {
+      "sink_count": 56596,
+      "pin_cap_fF": 39844.147689
+    },
+    "clk_stream": {
+      "sink_count": 102299,
+      "pin_cap_fF": 45072.757426
+    },
+    "ib_go": {
+      "sink_count": 1,
+      "pin_cap_fF": 0.527811
+    },
+    "n_va": {
+      "sink_count": 1,
+      "pin_cap_fF": 0.527811
+    },
+    "kvw_ce": {
+      "sink_count": 1,
+      "pin_cap_fF": 0.527811
+    },
+    "ib": {
+      "sink_count": 309,
+      "pin_cap_fF": 162.14033399999937
+    },
+    "n_a": {
+      "sink_count": 512,
+      "pin_cap_fF": 268.6597119999967
+    },
+    "n_b": {
+      "sink_count": 512,
+      "pin_cap_fF": 268.6597119999967
+    },
+    "kvw_addr": {
+      "sink_count": 7,
+      "pin_cap_fF": 3.673082000000001
+    },
+    "kvw_data": {
+      "sink_count": 512,
+      "pin_cap_fF": 268.6597119999967
+    },
+    "kvw_mask": {
+      "sink_count": 512,
+      "pin_cap_fF": 268.6597119999967
+    },
+    "xl": {
+      "sink_count": 128,
+      "pin_cap_fF": 67.1649280000001
+    }
+  },
+  "mapped_cell_area_um2": 65983.07303971479,
+  "selected_complete_cell_ceiling_um2": 125000,
+  "remaining_cell_reservation_um2": 59016.926960285215,
+  "macro_area_um2": 84422.63232,
+  "selected_corridor_um": 96.768,
+  "asbuilt_replica_survival": "FAIL_80mask_to30_5strobe_to2",
+  "current_parent_output_loads": null,
+  "FF_pin_caps": null,
+  "clock_reset_wire_RC_and_skew": null,
+  "parent_IO_arrival_bounds": null,
+  "root_reset_producer_installed": false,
+  "contextual_SSFF": false,
+  "P_and_R_admitted": false,
+  "next_required": "Ampere model-selected physical distribution/preservation with finite RC and actual parent arrivals. No credit for uninstalled root/CTS or missing replicas."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "FAILED_INITIAL_CLOSURE_PROBE",
+  "reason": "Partial-clone Git tried automatic historical-object fetch during absence probe; stopped owned probe and disabled clone remote. No model replay verdict was produced.",
+  "correction": "Archive-only generator and default fallback replay in independent shallow clone with no remote/alternates; loader additionally disables origin promisor and lazy fetch."
+}

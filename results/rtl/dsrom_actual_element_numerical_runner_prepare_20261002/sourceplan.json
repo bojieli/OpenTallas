@@ -1,0 +1,280 @@
+{
+  "GO_instructions": "Parent reviews runner/model/source/package then replaces template GO literal with required_GO_literal and prepared_commit with full reviewed commit, commits record at commit_GO_at. Old GOs and template are rejected.",
+  "GO_template": "results/rtl/dsrom_actual_element_numerical_runner_prepare_20261002/parent_GO.template.json",
+  "calibration": {
+    "caps_unchanged": true,
+    "new_package_measured": false,
+    "prior_peak_memory_bytes": 2533793792,
+    "prior_rowfix_build_seconds": 155.08317171549425,
+    "prior_rowfix_sim_seconds": 0.797376970294863
+  },
+  "caps": {
+    "automatic_retries": 0,
+    "build_summed_seconds": 600,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_quota_percent": 200,
+    "fallback": false,
+    "kill": "cgroup.kill=1; RuntimeMaxSec660 plus independent timer and immediate SIGTERM handler; kill occurs even if timeout receipt write fails",
+    "memory_max_bytes": 4294967296,
+    "memory_swap_max_bytes": 0,
+    "simulate_summed_seconds": 60,
+    "whole_cgroup_seconds": 660
+  },
+  "cases": {
+    "bfcolumn": {
+      "BF16": 1,
+      "XF": 8
+    },
+    "q": {
+      "BF16": 0,
+      "XF": 4
+    }
+  },
+  "classification": "Future bounded numerical oracle plus reference/candidate at actual public partials. Software parent mapping only; not full arithmetic domain or field/fulltoken qualification.",
+  "expected_completion": {
+    "bfcolumn": {
+      "complete_phase_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        3
+      ],
+      "config_assertions": 448,
+      "public_rows": 456,
+      "value_assertions": 912
+    },
+    "q": {
+      "complete_phase_ids": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        1
+      ],
+      "config_assertions": 352,
+      "public_rows": 344,
+      "value_assertions": 688
+    }
+  },
+  "expected_phase_events": {
+    "bfcolumn": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ],
+      [
+        3,
+        1,
+        8,
+        1,
+        48,
+        96
+      ],
+      [
+        4,
+        1,
+        8,
+        1,
+        56,
+        112
+      ],
+      [
+        5,
+        6,
+        8,
+        1,
+        152,
+        304
+      ],
+      [
+        6,
+        6,
+        4,
+        1,
+        200,
+        400
+      ],
+      [
+        7,
+        6,
+        4,
+        1,
+        248,
+        496
+      ],
+      [
+        8,
+        6,
+        4,
+        1,
+        296,
+        592
+      ],
+      [
+        9,
+        6,
+        4,
+        2,
+        344,
+        688
+      ],
+      [
+        10,
+        6,
+        4,
+        2,
+        392,
+        784
+      ],
+      [
+        11,
+        6,
+        4,
+        2,
+        440,
+        880
+      ],
+      [
+        3,
+        1,
+        8,
+        1,
+        456,
+        912
+      ]
+    ],
+    "q": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ],
+      [
+        4,
+        1,
+        8,
+        1,
+        40,
+        80
+      ],
+      [
+        5,
+        6,
+        8,
+        1,
+        136,
+        272
+      ],
+      [
+        6,
+        6,
+        4,
+        1,
+        184,
+        368
+      ],
+      [
+        7,
+        6,
+        4,
+        1,
+        232,
+        464
+      ],
+      [
+        9,
+        6,
+        4,
+        2,
+        280,
+        560
+      ],
+      [
+        10,
+        6,
+        4,
+        2,
+        328,
+        656
+      ],
+      [
+        1,
+        1,
+        8,
+        1,
+        344,
+        688
+      ]
+    ]
+  },
+  "failure_controls": "Exclusive-create outputs/logs/receipts; per-phase separate classifications, original assertion text and returncode retained; build failure stops, q sim failure preserves and continues only planned BF; no retries or expectation relaxation. No expected value drives inputs.",
+  "full_geometry": {
+    "BP": 0,
+    "CG": 1,
+    "CUT": 379,
+    "DRAIN": 127,
+    "EARLY": 1,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8,
+    "LV": 5,
+    "MTP": 1,
+    "NB": 2,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1
+  },
+  "generated_file_count": 44,
+  "input_only_hashes": {
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/input_fixture.json": "53f246827d4aad5fe3162ea82b5b759d6099fcaca9aafb77616d8ec15697c089",
+    "rtl/test/dsrom_actual_element_numerical_rom.cpp": "a54615b2b8f6130e1ae5fbef79de99d4d21899a68041fad5e57ea6d93ab4b3cc",
+    "rtl/test/dsrom_actual_element_numerical_stimulus.svh": "0e6e1d91add3263e7b4531b9af83c215d60bc1b3e570d64ece8ee1673be65dc3"
+  },
+  "numerical_sourceplan": "results/rtl/dsrom_actual_element_numerical_prepare_20261002/sourceplan.json",
+  "physical_scope": "Existing 4e383 reset/go wake only; distinct WAKE1 join and contextual SS/FF OPEN; 833ps fixture grants no frequency credit",
+  "runner": "tools/run_dsrom_actual_element_numerical.py",
+  "runner_plan": "results/rtl/dsrom_actual_element_numerical_runner_prepare_20261002/runner_plan.json",
+  "status": "PREPARE_ONLY_REVIEW_AND_FRESH_GO_REQUIRED",
+  "tag_order_contract": "Ordered ORACLE phase records and cumulative exact counts required. Bench checks row/lo/nseg/position, duplicate/missing, no output before final input; 72 DIFF predicates check both namespaces. Comparisons>=3*cycles is derived, not a separately instrumented runtime count. No cross-segment output ordering asserted beyond pinned walker contract.",
+  "unchanged_engine_count": 40
+}

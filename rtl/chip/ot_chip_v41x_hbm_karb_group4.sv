@@ -1,0 +1,196 @@
+`timescale 1ns/1ps
+// Four-PC physical hierarchy: local request registers and grouped response buffers.
+module ot_chip_v41x_hbm_karb_group4 #(
+    parameter integer NPC  = 4,
+    parameter integer AW   = 28,
+    parameter integer TAGW = 16,
+    parameter integer LENW = 4,
+    parameter integer BEATW = 4,
+    parameter integer DW   = 256,
+    parameter integer PIPE_OUT = 1,
+    parameter integer PIPE_RSP = 1
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    // B: per pseudo-channel
+    input  wire [NPC-1:0]       b_v,
+    output wire [NPC-1:0]       b_rdy,
+    input  wire [NPC*AW-1:0]    b_addr,
+    input  wire [NPC*LENW-1:0]  b_len,
+    input  wire [NPC*TAGW-1:0]  b_tag,
+    input  wire [NPC-1:0]       b_we,
+    input  wire [NPC*DW-1:0]    b_wdata,
+    input  wire [NPC*DW/8-1:0]  b_wstrb,
+    output wire [NPC-1:0]       b_wr_done,
+    output wire [NPC-1:0]       b_rsp_v,
+    input  wire [NPC-1:0]       b_rsp_rdy,
+    output wire [NPC*TAGW-1:0]  b_rsp_tag,
+    output wire [NPC*BEATW-1:0] b_rsp_beat,
+    output wire [NPC*DW-1:0]    b_rsp_data,
+    // K: one channel
+    input  wire                 k_v,
+    output wire                 k_rdy,
+    input  wire [AW-1:0]        k_addr,
+    input  wire [LENW-1:0]      k_len,
+    input  wire [TAGW-1:0]      k_tag,
+    input  wire                 k_we,
+    input  wire [DW-1:0]        k_wdata,
+    input  wire [DW/8-1:0]      k_wstrb,
+    output wire                 k_wr_done,
+    output wire                 k_rsp_v,
+    input  wire                 k_rsp_rdy,
+    output wire [TAGW-1:0]      k_rsp_tag,
+    output wire [BEATW-1:0]     k_rsp_beat,
+    output wire [DW-1:0]        k_rsp_data,
+    // the stack
+    output wire [NPC-1:0]       h_v,
+    input  wire [NPC-1:0]       h_rdy,
+    output wire [NPC*AW-1:0]    h_addr,
+    output wire [NPC*LENW-1:0]  h_len,
+    output wire [NPC*(TAGW+1)-1:0] h_tag,
+    output wire [NPC-1:0]       h_we,
+    output wire [NPC*DW-1:0]    h_wdata,
+    output wire [NPC*DW/8-1:0]  h_wstrb,
+    input  wire [NPC-1:0]       h_wr_done,
+    input  wire [NPC-1:0]       r_v,
+    output wire [NPC-1:0]       r_rdy,
+    input  wire [NPC*(TAGW+1)-1:0] r_tag,
+    input  wire [NPC*BEATW-1:0] r_beat,
+    input  wire [NPC*DW-1:0]    r_data,
+    // status
+    output reg  [31:0]          k_grants,
+    output reg  [31:0]          b_grants,
+    output reg  [31:0]          contended
+);
+    // One four-PC physical group.  Its request register terminates the
+    // long K broadcast before local address/data delivery.  A parent of eight
+    // groups can pipeline that trunk separately without a flat 32-way mux.
+    initial if (NPC != 4 || PIPE_OUT != 1 || PIPE_RSP != 1)
+        $fatal(1, "group4 requires NPC=4, PIPE_OUT=1 and PIPE_RSP=1");
+    function automatic [1:0] pc_of(input [AW-1:0] s);
+        pc_of = 2'(((s >> 2) ^ (s >> 4) ^ (s >> 6)) & 3);
+    endfunction
+    reg in_v, in_we;
+    reg [1:0] in_pc;
+    reg [AW-1:0] in_addr;
+    reg [LENW-1:0] in_len;
+    reg [TAGW-1:0] in_tag;
+    reg [DW-1:0] in_wdata;
+    reg [DW/8-1:0] in_wstrb;
+    // The tail entry isolates upstream ready from the four local arbiters.
+    // A full tail conservatively inserts a bubble if the head leaves on the
+    // same edge; the accepted request order and write ownership stay intact.
+    reg tail_v, tail_we;
+    reg [1:0] tail_pc;
+    reg [AW-1:0] tail_addr;
+    reg [LENW-1:0] tail_len;
+    reg [TAGW-1:0] tail_tag;
+    reg [DW-1:0] tail_wdata;
+    reg [DW/8-1:0] tail_wstrb;
+    wire [3:0] child_k_rdy, child_k_wr_done;
+    wire [31:0] kg [0:3], bg [0:3], ct [0:3];
+    wire pop = in_v && child_k_rdy[in_pc];
+    assign k_rdy = !tail_v;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            in_v <= 1'b0; in_we <= 1'b0; in_pc <= '0;
+            in_addr <= '0; in_len <= '0; in_tag <= '0;
+            in_wdata <= '0; in_wstrb <= '0;
+            tail_v <= 1'b0; tail_we <= 1'b0; tail_pc <= '0;
+            tail_addr <= '0; tail_len <= '0; tail_tag <= '0;
+            tail_wdata <= '0; tail_wstrb <= '0;
+        end else begin
+            if (pop) begin
+                in_v <= tail_v;
+                if (tail_v) begin
+                    in_pc <= tail_pc;
+                    in_addr <= tail_addr; in_len <= tail_len;
+                    in_tag <= tail_tag; in_we <= tail_we;
+                    in_wdata <= tail_wdata; in_wstrb <= tail_wstrb;
+                end
+                tail_v <= 1'b0;
+            end
+            if (k_v && k_rdy) begin
+              if (!in_v || (pop && !tail_v)) begin
+                in_v <= 1'b1;
+                in_pc <= pc_of(k_addr);
+                in_addr <= k_addr; in_len <= k_len; in_tag <= k_tag;
+                in_we <= k_we; in_wdata <= k_wdata; in_wstrb <= k_wstrb;
+              end else begin
+                tail_v <= 1'b1;
+                tail_pc <= pc_of(k_addr);
+                tail_addr <= k_addr; tail_len <= k_len;
+                tail_tag <= k_tag; tail_we <= k_we;
+                tail_wdata <= k_wdata; tail_wstrb <= k_wstrb;
+              end
+            end
+        end
+    genvar p;
+    generate for (p = 0; p < 4; p = p + 1) begin : g_pc
+`ifdef HDC_KARB_MACRO
+        // The physical macro view has fixed adopted widths and no timing arcs.
+        ot_chip_v41x_hbm_karb_pc_local u_local (
+`else
+        ot_chip_v41x_hbm_karb_pc_local #(.AW(AW), .TAGW(TAGW), .LENW(LENW),
+                                         .BEATW(BEATW), .DW(DW)) u_local (
+`endif
+            .clk(clk), .rst_n(rst_n),
+            .b_v(b_v[p]), .b_rdy(b_rdy[p]), .b_addr(b_addr[p*AW +: AW]),
+            .b_len(b_len[p*LENW +: LENW]), .b_tag(b_tag[p*TAGW +: TAGW]),
+            .b_we(b_we[p]), .b_wdata(b_wdata[p*DW +: DW]),
+            .b_wstrb(b_wstrb[p*DW/8 +: DW/8]), .b_wr_done(b_wr_done[p]),
+            .k_v(in_v && in_pc == 2'(p)), .k_rdy(child_k_rdy[p]),
+            .k_addr(in_addr), .k_len(in_len), .k_tag(in_tag), .k_we(in_we),
+            .k_wdata(in_wdata), .k_wstrb(in_wstrb), .k_wr_done(child_k_wr_done[p]),
+            .h_v(h_v[p]), .h_rdy(h_rdy[p]), .h_addr(h_addr[p*AW +: AW]),
+            .h_len(h_len[p*LENW +: LENW]), .h_tag(h_tag[p*(TAGW+1) +: TAGW+1]),
+            .h_we(h_we[p]), .h_wdata(h_wdata[p*DW +: DW]),
+            .h_wstrb(h_wstrb[p*DW/8 +: DW/8]), .h_wr_done(h_wr_done[p]),
+            .k_grants(kg[p]), .b_grants(bg[p]), .contended(ct[p]));
+        assign b_rsp_v[p] = r_v[p] && !r_tag[p*(TAGW+1)+TAGW];
+        assign b_rsp_tag[p*TAGW +: TAGW] = r_tag[p*(TAGW+1) +: TAGW];
+        assign b_rsp_beat[p*BEATW +: BEATW] = r_beat[p*BEATW +: BEATW];
+        assign b_rsp_data[p*DW +: DW] = r_data[p*DW +: DW];
+    end endgenerate
+    assign k_wr_done = |child_k_wr_done;
+    // Terminate the four-way response selection at the group boundary.  The
+    // upstream receive buffers see a conventional one-entry elastic sink;
+    // the external K port is driven only by this local register.
+    wire mid_rsp_v;
+    wire mid_rsp_rdy = !out_rsp_v || k_rsp_rdy;
+    wire [TAGW-1:0] mid_rsp_tag;
+    wire [BEATW-1:0] mid_rsp_beat;
+    wire [DW-1:0] mid_rsp_data;
+    reg out_rsp_v;
+    reg [TAGW-1:0] out_rsp_tag;
+    reg [BEATW-1:0] out_rsp_beat;
+    reg [DW-1:0] out_rsp_data;
+    assign k_rsp_v = out_rsp_v;
+    assign k_rsp_tag = out_rsp_tag;
+    assign k_rsp_beat = out_rsp_beat;
+    assign k_rsp_data = out_rsp_data;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            out_rsp_v <= 1'b0;
+            out_rsp_tag <= '0;
+            out_rsp_beat <= '0;
+            out_rsp_data <= '0;
+        end else if (mid_rsp_rdy) begin
+            out_rsp_v <= mid_rsp_v;
+            if (mid_rsp_v) begin
+                out_rsp_tag <= mid_rsp_tag;
+                out_rsp_beat <= mid_rsp_beat;
+                out_rsp_data <= mid_rsp_data;
+            end
+        end
+    ot_chip_v41x_hbm_rsp_pipe #(.NPC(4), .TAGW(TAGW), .BEATW(BEATW), .DW(DW), .NG(4)) u_rsp (
+        .clk(clk), .rst_n(rst_n), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag),
+        .r_beat(r_beat), .r_data(r_data), .b_rsp_rdy(b_rsp_rdy),
+        .k_rsp_rdy(mid_rsp_rdy), .k_rsp_v(mid_rsp_v), .k_rsp_tag(mid_rsp_tag),
+        .k_rsp_beat(mid_rsp_beat), .k_rsp_data(mid_rsp_data));
+    always @(*) begin
+        k_grants = kg[0] + kg[1] + kg[2] + kg[3];
+        b_grants = bg[0] + bg[1] + bg[2] + bg[3];
+        contended = ct[0] + ct[1] + ct[2] + ct[3];
+    end
+endmodule

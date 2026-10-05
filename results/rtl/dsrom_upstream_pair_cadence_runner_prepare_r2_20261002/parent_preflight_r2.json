@@ -1,0 +1,45 @@
+{
+  "status": "PREFLIGHT_ONLY_NO_HDL_EXECUTION",
+  "source_prepare_commit": "6649e1759b9bdd170a8abba15cc0f70aefd15fa8",
+  "generated_package_sha256": "b1eb791657126a0ba60be89395ce70e204100494bda26900454e5342e16c89d1",
+  "tool_preflight": {
+    "status": "PREFLIGHT_ONLY_NO_HDL_EXECUTION",
+    "versions": {
+      "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+      "g++": "x86_64-linux-gnu-g++-11 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "make": "GNU Make 4.3",
+      "python3": "Python 3.10.12",
+      "systemd-run": "systemd 249 (249.11-0ubuntu3.22)"
+    },
+    "tool_files_sha256": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0",
+      "/usr/bin/make": "92f646030615cd98490a68a94c0aefd87b552be3158b941c02e43b0bfdb576db",
+      "/usr/bin/python3.10": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+      "/usr/bin/systemd-run": "a8bf17a15ed28195c76fc70c7f23cbff607cd38ee1ce49e9939ce89bf40334fd",
+      "/usr/bin/x86_64-linux-gnu-g++-11": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    },
+    "help_sha256": "163792edc666155765bbb78b29afb77bc1d5191a6093dff1d3827c184929a0be",
+    "compiled": false
+  },
+  "host_preflight": {
+    "status": "READ_ONLY_LOCAL_ADMISSION_NO_SERVICE_LAUNCHED",
+    "UTC": "2026-10-02T05:18:33Z",
+    "hostname": "ubuntu",
+    "uid": 1000,
+    "available_memory_bytes": 169896808448,
+    "total_memory_bytes": 202405810176,
+    "free_tmp_disk_bytes": 563974656000,
+    "CPU_count": 32,
+    "load_1_5_15": [
+      2.6630859375,
+      4.9794921875,
+      6.4990234375
+    ],
+    "delegated_parent": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice",
+    "delegated_cgroup_kill_writable": true,
+    "OOMPolicykill_installed_manual_sha256": "2f6e1f68504236057ccb1ef512cea4d1ac7ec5f964d3f5322b9a727c0b30e2de",
+    "new_execution_leaf_writable_kill_and_oom_group1": "MUST_VERIFY_INSIDE_CHILD_BEFORE_COMPILE"
+  }
+}

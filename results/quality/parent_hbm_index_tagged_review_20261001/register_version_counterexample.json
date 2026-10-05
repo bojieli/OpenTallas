@@ -1,0 +1,138 @@
+{
+  "actual_auditor_result": {
+    "candidate_event_constraints_pass": true,
+    "hardware_launch": false,
+    "issues": [],
+    "physical_admission": false,
+    "rate_credit": 0,
+    "scope": "event validation only; exact arithmetic/branch replay, source provider and contextual SSFF additionally required"
+  },
+  "actual_last_register_writer": "B visible at tick76 overwrites register2 before consumer_A read tick80",
+  "auditor_sha256": "e251a80f12ad3fcd4a3bd8b6e799e702e92e720b478c4394e4d81de0bd31cb06",
+  "checkpoint_reads": 0,
+  "current_hardware_admission_already_false": true,
+  "fixture": "synthetic provisional-validator counterexample, not actual GPU/DUT execution",
+  "focused_existing_tests_pass": 4,
+  "lease": {
+    "consumer_done": 140,
+    "credit_return": 143,
+    "decoded_store_visible": 140,
+    "descriptor_WR_visible": 3,
+    "old_generation_return_drained": 140,
+    "packer_scratch_consumer_done": 140,
+    "payload_WR_visible": 0,
+    "physical_provider_source_pin": "unverified-fixture-only",
+    "raw_decode_consumer_done": 140,
+    "read_lease_acquired": 9,
+    "reverse_CDC_ack": 6,
+    "score_scratch_first_store": 140
+  },
+  "new_RTL_or_PnR_jobs": false,
+  "owner_source_commit": "e1d6e4c4f003acbfc87401c9b8bb50d31ff2f18d",
+  "reason": "Auditor separately checks producer A ready tick36 and register2 ready tick76 but does not bind source operand to the register version. Register-number and readiness checks are insufficient.",
+  "required_correction": "Immutable executed source instruction operand/result binding plus RF producer/version live intervals per SM/partition/warp; reject reads of overwritten required versions. Do not treat candidate-supplied metadata as source authority.",
+  "required_operand": "consumer_A requires producer A in register2",
+  "runtime_events": [
+    {
+      "RF_read_tick": 0,
+      "RF_register_reads": [
+        0,
+        1
+      ],
+      "RF_register_writes": [
+        2
+      ],
+      "RF_write_copy_count": 2,
+      "dependencies": [],
+      "id": "A",
+      "issue_tick": 8,
+      "op": "IADD",
+      "partition": 0,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "sm": 0,
+      "warp_slot": 0,
+      "writeback_tick": 36
+    },
+    {
+      "RF_read_tick": 40,
+      "RF_register_reads": [
+        0,
+        1
+      ],
+      "RF_register_writes": [
+        2
+      ],
+      "RF_write_copy_count": 2,
+      "dependencies": [],
+      "id": "B",
+      "issue_tick": 48,
+      "op": "IADD",
+      "partition": 0,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "sm": 0,
+      "warp_slot": 0,
+      "writeback_tick": 76
+    },
+    {
+      "RF_read_tick": 80,
+      "RF_register_reads": [
+        2,
+        0
+      ],
+      "RF_register_writes": [
+        3
+      ],
+      "RF_write_copy_count": 2,
+      "dependencies": [
+        "A"
+      ],
+      "id": "consumer_A",
+      "issue_tick": 88,
+      "op": "IADD",
+      "partition": 0,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "sm": 0,
+      "warp_slot": 0,
+      "writeback_tick": 116
+    }
+  ],
+  "schema": "parent.hbm.phase-calendar-register-version-counterexample.v1",
+  "source_events": {
+    "A": {
+      "dependencies": [],
+      "op": "IADD",
+      "result_register": 2
+    },
+    "B": {
+      "dependencies": [],
+      "op": "IADD",
+      "result_register": 2
+    },
+    "consumer_A": {
+      "dependencies": [
+        "A"
+      ],
+      "op": "IADD",
+      "operand_register_bindings": [
+        {
+          "producer": "A",
+          "register": 2
+        },
+        {
+          "producer": "phase_entry",
+          "register": 0
+        }
+      ]
+    }
+  },
+  "verdict": "FAIL_REGISTER_PRODUCER_IDENTITY_NOT_CHECKED"
+}

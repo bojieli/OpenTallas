@@ -1,0 +1,75 @@
+{
+  "status": "timing_improved_physical_acceptance_open",
+  "tested_period_ns": 1,
+  "rows": [
+    {
+      "record": "pnr_cts8_1ns.json",
+      "verified_source": "results/physical_abi3/asap7/weight_layout_cursor/before_admission_pipeline.sv",
+      "source_sha256": "8425d445e7f7f89cf9825b02017dc3302c7ae6b658319753bad38106e633379e",
+      "area_um2": 1301.8,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.051553800000000004,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 62.0,
+          "setup_wns_ns": -0.191066,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ],
+      "admission_cycles_after_accept": 3
+    },
+    {
+      "record": "pnr_admission_pipeline_cts8_1ns.json",
+      "verified_source": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "source_sha256": "b65f9e29bba36fe3afdeb7884f8a2fab5b3a17451db3ac4c53b577fc31268971",
+      "area_um2": 1375.97,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.051455,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 2.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": false,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 0.0,
+          "setup_wns_ns": 0.0537158,
+          "signal_integrity_clean": false,
+          "stage": "place_and_route",
+          "timing_met": true
+        }
+      ],
+      "admission_cycles_after_accept": 5
+    }
+  ],
+  "area_increase_percent": 5.697495775080674,
+  "remaining_violations": [
+    {
+      "net": "clknet_3_0__leaf_clk",
+      "loads": 18,
+      "limit": 16
+    },
+    {
+      "net": "clknet_3_1__leaf_clk",
+      "loads": 17,
+      "limit": 16
+    }
+  ],
+  "next_run": "pnr_admission_pipeline_cts12_1ns.json",
+  "scope": "Standalone cursor only; no integrated throughput or system clock claim"
+}

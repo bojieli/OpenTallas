@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.qwen-gpu-calibration.v1",
+ "tool": "tools/qwen_gpu_calibration.py",
+ "evidence_class": "model for H200; measured GPU for RTX PRO 6000",
+ "inputs": {
+  "results/gpu/qwen3_rtx_pro_6000_decode.json": "b35b6e250b926d87f5ff76dce6a42cab84596980d2d87244ff284737c4b838a9",
+  "results/arch/qwen3_budget.json": "2976b95e51159fae328d33b813c57eac7d6fa2c061bbbee5c0c6a0eccfc9b88c"
+ },
+ "nim_h200": {
+  "bf16_tok_s": 140.14,
+  "fp8_tok_s": 234.95,
+  "source": "https://docs.nvidia.com/nim/benchmarking/llm/1.0.0/performance.html"
+ },
+ "fit": {
+  "llama_params_read": 7504658432,
+  "llama_bf16_kv_bytes_at_mean_context": 196608000,
+  "seconds_per_weight_byte": 3.8369457036069853e-13,
+  "fixed_seconds_llama": 0.0013012906138061644,
+  "fixed_seconds_qwen": 0.001463951940531935,
+  "qwen_fp8_weight_bytes": 7568097280.0,
+  "qwen_fp8_kv_bytes_8k": 603979776.0,
+  "rule": "t = fixed_seconds_qwen + seconds_per_weight_byte * (weight bytes + KV bytes); NIM BF16/FP8 pair fits the slope, fixed time scales by 36/32 layers"
+ },
+ "contexts": {
+  "8192": {
+   "autoregressive": {
+    "h200_bf16": {
+     "tok_s": 133.27342480031444,
+     "grade": "NIM-calibrated model"
+    },
+    "h200_fp8": {
+     "tok_s": 217.41335122015158,
+     "grade": "NIM-calibrated model"
+    }
+   }
+  }
+ },
+ "local_gpu_rtx_pro_6000": {
+  "source": "results/gpu/qwen3_rtx_pro_6000_decode.json",
+  "workload": "reasoning_math500",
+  "concurrency_1": {
+   "bf16": {
+    "ar_tok_s": 93.6,
+    "dflash_tok_s": 270.2,
+    "dflash_tau": 3.6534
+   },
+   "fp8": {
+    "ar_tok_s": 151.4,
+    "dflash_tok_s": 390.3,
+    "dflash_tau": 3.7176
+   }
+  }
+ }
+}

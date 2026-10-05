@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -DOT_MEM_NO_INIT -s tb -o /tmp/ds-actual-spine-related-native-r1/gate.vvp /tmp/ds-actual-spine-related-native-r1/sources/0_tb.sv /tmp/ds-actual-spine-related-native-r1/sources/1_ot_ds_field_x_related_native.sv /tmp/ds-actual-spine-related-native-r1/sources/2_ot_v41_spine_related_vm.sv /tmp/ds-actual-spine-related-native-r1/sources/3_ot_ds_owned_ratio_boundary.sv /tmp/ds-actual-spine-related-native-r1/sources/4_ratio_fifo.sv /tmp/ds-actual-spine-related-native-r1/sources/5_ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv /tmp/ds-actual-spine-related-native-r1/sources/6_native_sram.v /tmp/ds-actual-spine-related-native-r1/sources/7_ot_hdc_actquant.sv /tmp/ds-actual-spine-related-native-r1/sources/8_ot_hdc_delay.sv /tmp/ds-actual-spine-related-native-r1/sources/9_ot_hdc_fpu.sv /tmp/ds-actual-spine-related-native-r1/sources/10_ot_hdc_fp32_mul_pipe.sv"
+	User time (seconds): 0.55
+	System time (seconds): 0.06
+	Percent of CPU this job got: 24%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.52
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 80384
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 19291
+	Voluntary context switches: 15
+	Involuntary context switches: 258
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 18440
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

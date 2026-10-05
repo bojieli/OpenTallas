@@ -1,0 +1,4621 @@
+{
+ "schema": "opentallas.qwen-power-levers.v2",
+ "tool": "tools/qwen_power_levers.py",
+ "inputs": {
+  "configs/hardware/qwen_power_levers.json": "0558014d29056f11455ae1c1235ecde34ddb1f756fdc961711eb79c0d63aa593",
+  "configs/hardware/power_scenarios.json": "7d9c8045f56c0bafd9d0c5089b4fba5f85f92fb19b784b524e2f2569a7c1eea4",
+  "results/speculative/dflash_step_timing.json": "d80f80368e940e442a42f4c90a84ed2c4b6dbf38191f92bb5b316b4fcd6cc2bc",
+  "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c"
+ },
+ "timing_basis": {
+  "source": "tools/dflash_step_timing.design_basis (tools/arch_budget_qwen3.timing_basis)",
+  "sha256": "e45959d0184de52a57215b24f2313512a3fcf07c6f0f1e3b8908d8e04d6b64ab"
+ },
+ "target_tokens_s": 10967.9,
+ "target_rule": "the baseline's own autoregressive batch-1 design rate (tools/power_scenarios.qwen_point B_proposed_production ar_batch1 design_rate_tokens_s: the design rate is the same on both scenarios), i.e. batch 1 uncapped; computed by the tool, never restated here",
+ "baseline": {
+  "A_measured_implementation": {
+   "ar_batch1": {
+    "design_rate_tokens_s": 10967.9,
+    "clock_hz": 1098640000.0,
+    "dies": 2,
+    "block": 1,
+    "lane_multiplier_m": 5,
+    "tokens_per_step": 1,
+    "step_cycles": 100169,
+    "energy_per_token_mj": 130.284,
+    "die_energy_per_token_mj": 113.614,
+    "die_dynamic_mj_per_token": 95.5387,
+    "per_die_dynamic_mj_per_token": 47.7694,
+    "stack_energy_per_token_mj": 16.6698,
+    "die_components_mj_per_token": {
+     "mac_weights": 30.0783,
+     "mac_attention": 9.60173,
+     "weight_read_and_delivery": 2.34707,
+     "kv_ring_sram_and_delivery": 3.27961,
+     "stream_unit": 0.986085,
+     "hbm_controller_phy_io": 49.2364,
+     "ucie_exchange": 0.00947003,
+     "leakage": 9.92825,
+     "clock": 6.10465,
+     "hbm_idle": 2.04233
+    },
+    "die_static_w": {
+     "leakage_w": 54.4458,
+     "clock_w": 33.4775,
+     "hbm_idle_w": 11.2
+    },
+    "package_static_w": {
+     "leakage_w": 108.892,
+     "clock_w": 66.955,
+     "hbm_idle_w": 22.4
+    },
+    "die_w_at_design_rate": 623.051,
+    "package_dies_w_at_design_rate": 1246.1,
+    "stacks_w_high": 207.74,
+    "resident_kv_bytes_per_user": 0.0,
+    "resident_kv_fraction": 0.0,
+    "hbm_kv_bytes_per_step": 603980000.0,
+    "areas_package_mm2": {
+     "logic": 1054.32,
+     "clocked_logic": 639.04,
+     "rom": 506.82,
+     "sram": 12.8,
+     "total": 1573.94,
+     "total_per_die": 786.97,
+     "lane_multiplier_m": 5
+    },
+    "cooling_classes": {
+     "air": {
+      "reference": "b200_hgx",
+      "die_limit_w": 374.56,
+      "package_limit_w": 1000.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 5765.97,
+      "capped_rate": 5765.97,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 374.56,
+      "package_w_at_cap": 858.332
+     },
+     "liquid": {
+      "reference": "gb200_nvl72",
+      "die_limit_w": 474.56,
+      "package_limit_w": 1200.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 7859.36,
+      "capped_rate": 7859.36,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 474.56,
+      "package_w_at_cap": 1097.98
+     }
+    },
+    "capped_rate": 7859.36
+   },
+   "dflash": {
+    "design_rate_tokens_s": 18719.9,
+    "clock_hz": 1098640000.0,
+    "dies": 2,
+    "block": 5,
+    "lane_multiplier_m": 5,
+    "tokens_per_step": 2.8591,
+    "step_cycles": 167796,
+    "energy_per_token_mj": 125.905,
+    "die_energy_per_token_mj": 119.264,
+    "die_dynamic_mj_per_token": 106.603,
+    "per_die_dynamic_mj_per_token": 53.3013,
+    "stack_energy_per_token_mj": 6.64024,
+    "die_components_mj_per_token": {
+     "mac_weights": 63.6409,
+     "mac_attention": 19.1251,
+     "weight_read_and_delivery": 0.934611,
+     "kv_ring_sram_and_delivery": 1.30639,
+     "stream_unit": 1.96398,
+     "hbm_controller_phy_io": 19.6128,
+     "ucie_exchange": 0.0189796,
+     "leakage": 5.8169,
+     "clock": 5.64831,
+     "hbm_idle": 1.19659
+    },
+    "die_static_w": {
+     "leakage_w": 54.4458,
+     "clock_w": 52.8679,
+     "hbm_idle_w": 11.2
+    },
+    "package_static_w": {
+     "leakage_w": 108.892,
+     "clock_w": 105.736,
+     "hbm_idle_w": 22.4
+    },
+    "die_w_at_design_rate": 1116.31,
+    "package_dies_w_at_design_rate": 2232.62,
+    "stacks_w_high": 141.239,
+    "resident_kv_bytes_per_user": 0.0,
+    "resident_kv_fraction": 0.0,
+    "hbm_kv_bytes_per_step": 687866000.0,
+    "areas_package_mm2": {
+     "logic": 1054.32,
+     "clocked_logic": 1054.32,
+     "rom": 506.82,
+     "sram": 12.8,
+     "total": 1573.94,
+     "total_per_die": 786.97,
+     "lane_multiplier_m": 5
+    },
+    "cooling_classes": {
+     "air": {
+      "reference": "b200_hgx",
+      "die_limit_w": 374.56,
+      "package_limit_w": 1000.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 4803.75,
+      "capped_rate": 4803.75,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 374.56,
+      "package_w_at_cap": 785.364
+     },
+     "liquid": {
+      "reference": "gb200_nvl72",
+      "die_limit_w": 474.56,
+      "package_limit_w": 1200.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 6679.87,
+      "capped_rate": 6679.87,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 474.56,
+      "package_w_at_cap": 999.519
+     }
+    },
+    "capped_rate": 6679.87
+   }
+  },
+  "B_proposed_production": {
+   "ar_batch1": {
+    "design_rate_tokens_s": 10967.9,
+    "clock_hz": 1098640000.0,
+    "dies": 2,
+    "block": 1,
+    "lane_multiplier_m": 5,
+    "tokens_per_step": 1,
+    "step_cycles": 100169,
+    "energy_per_token_mj": 96.4943,
+    "die_energy_per_token_mj": 79.8245,
+    "die_dynamic_mj_per_token": 61.7492,
+    "per_die_dynamic_mj_per_token": 30.8746,
+    "stack_energy_per_token_mj": 16.6698,
+    "die_components_mj_per_token": {
+     "mac_weights": 4.46518,
+     "mac_attention": 1.42539,
+     "weight_read_and_delivery": 2.34707,
+     "kv_ring_sram_and_delivery": 3.27961,
+     "stream_unit": 0.986085,
+     "hbm_controller_phy_io": 49.2364,
+     "ucie_exchange": 0.00947003,
+     "leakage": 9.92825,
+     "clock": 6.10465,
+     "hbm_idle": 2.04233
+    },
+    "die_static_w": {
+     "leakage_w": 54.4458,
+     "clock_w": 33.4775,
+     "hbm_idle_w": 11.2
+    },
+    "package_static_w": {
+     "leakage_w": 108.892,
+     "clock_w": 66.955,
+     "hbm_idle_w": 22.4
+    },
+    "die_w_at_design_rate": 437.752,
+    "package_dies_w_at_design_rate": 875.504,
+    "stacks_w_high": 207.74,
+    "resident_kv_bytes_per_user": 0.0,
+    "resident_kv_fraction": 0.0,
+    "hbm_kv_bytes_per_step": 603980000.0,
+    "areas_package_mm2": {
+     "logic": 1054.32,
+     "clocked_logic": 639.04,
+     "rom": 506.82,
+     "sram": 12.8,
+     "total": 1573.94,
+     "total_per_die": 786.97,
+     "lane_multiplier_m": 5
+    },
+    "cooling_classes": {
+     "air": {
+      "reference": "b200_hgx",
+      "die_limit_w": 374.56,
+      "package_limit_w": 1000.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 8921.13,
+      "capped_rate": 8921.13,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 374.56,
+      "package_w_at_cap": 918.093
+     },
+     "liquid": {
+      "reference": "gb200_nvl72",
+      "die_limit_w": 474.56,
+      "package_limit_w": 1200.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 12160.0,
+      "capped_rate": 10967.9,
+      "binds": false,
+      "bound_by": "die",
+      "die_w_at_cap": 437.752,
+      "package_w_at_cap": 1083.24
+     }
+    },
+    "capped_rate": 10967.9
+   },
+   "dflash": {
+    "design_rate_tokens_s": 18719.9,
+    "clock_hz": 1098640000.0,
+    "dies": 2,
+    "block": 5,
+    "lane_multiplier_m": 5,
+    "tokens_per_step": 2.8591,
+    "step_cycles": 167796,
+    "energy_per_token_mj": 55.4255,
+    "die_energy_per_token_mj": 48.7853,
+    "die_dynamic_mj_per_token": 36.1235,
+    "per_die_dynamic_mj_per_token": 18.0617,
+    "stack_energy_per_token_mj": 6.64024,
+    "die_components_mj_per_token": {
+     "mac_weights": 9.44759,
+     "mac_attention": 2.83915,
+     "weight_read_and_delivery": 0.934611,
+     "kv_ring_sram_and_delivery": 1.30639,
+     "stream_unit": 1.96398,
+     "hbm_controller_phy_io": 19.6128,
+     "ucie_exchange": 0.0189796,
+     "leakage": 5.8169,
+     "clock": 5.64831,
+     "hbm_idle": 1.19659
+    },
+    "die_static_w": {
+     "leakage_w": 54.4458,
+     "clock_w": 52.8679,
+     "hbm_idle_w": 11.2
+    },
+    "package_static_w": {
+     "leakage_w": 108.892,
+     "clock_w": 105.736,
+     "hbm_idle_w": 22.4
+    },
+    "die_w_at_design_rate": 456.627,
+    "package_dies_w_at_design_rate": 913.254,
+    "stacks_w_high": 141.239,
+    "resident_kv_bytes_per_user": 0.0,
+    "resident_kv_fraction": 0.0,
+    "hbm_kv_bytes_per_step": 687866000.0,
+    "areas_package_mm2": {
+     "logic": 1054.32,
+     "clocked_logic": 1054.32,
+     "rom": 506.82,
+     "sram": 12.8,
+     "total": 1573.94,
+     "total_per_die": 786.97,
+     "lane_multiplier_m": 5
+    },
+    "cooling_classes": {
+     "air": {
+      "reference": "b200_hgx",
+      "die_limit_w": 374.56,
+      "package_limit_w": 1000.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 14176.2,
+      "capped_rate": 14176.2,
+      "binds": true,
+      "bound_by": "die",
+      "die_w_at_cap": 374.56,
+      "package_w_at_cap": 856.077
+     },
+     "liquid": {
+      "reference": "gb200_nvl72",
+      "die_limit_w": 474.56,
+      "package_limit_w": 1200.0,
+      "dies_per_package": 2,
+      "thermal_rate_limit": 19712.7,
+      "capped_rate": 18719.9,
+      "binds": false,
+      "bound_by": "die",
+      "die_w_at_cap": 456.627,
+      "package_w_at_cap": 1054.49
+     }
+    },
+    "capped_rate": 18719.9
+   }
+  }
+ },
+ "energy_split_batch1": {
+  "A_measured_implementation": {
+   "ar_batch1": {
+    "die_mj_per_token": 113.614,
+    "mj": {
+     "kv_streaming": 52.516,
+     "weights": 32.4254,
+     "attention_macs": 9.60173,
+     "stream_unit": 0.986085,
+     "ucie_exchange": 0.00947003,
+     "static": 18.0752
+    },
+    "fraction": {
+     "kv_streaming": 0.462232,
+     "weights": 0.2854,
+     "attention_macs": 0.0845119,
+     "stream_unit": 0.00867926,
+     "ucie_exchange": 8.33527e-05,
+     "static": 0.159093
+    },
+    "stack_mj_per_token": 16.6698
+   },
+   "dflash": {
+    "die_mj_per_token": 119.264,
+    "mj": {
+     "kv_streaming": 20.9191,
+     "weights": 64.5755,
+     "attention_macs": 19.1251,
+     "stream_unit": 1.96398,
+     "ucie_exchange": 0.0189796,
+     "static": 12.6618
+    },
+    "fraction": {
+     "kv_streaming": 0.175401,
+     "weights": 0.541448,
+     "attention_macs": 0.160359,
+     "stream_unit": 0.0164674,
+     "ucie_exchange": 0.000159139,
+     "static": 0.106166
+    },
+    "stack_mj_per_token": 6.64024
+   }
+  },
+  "B_proposed_production": {
+   "ar_batch1": {
+    "die_mj_per_token": 79.8245,
+    "mj": {
+     "kv_streaming": 52.516,
+     "weights": 6.81225,
+     "attention_macs": 1.42539,
+     "stream_unit": 0.986085,
+     "ucie_exchange": 0.00947003,
+     "static": 18.0752
+    },
+    "fraction": {
+     "kv_streaming": 0.657894,
+     "weights": 0.0853404,
+     "attention_macs": 0.0178566,
+     "stream_unit": 0.0123532,
+     "ucie_exchange": 0.000118636,
+     "static": 0.226437
+    },
+    "stack_mj_per_token": 16.6698
+   },
+   "dflash": {
+    "die_mj_per_token": 48.7853,
+    "mj": {
+     "kv_streaming": 20.9191,
+     "weights": 10.3822,
+     "attention_macs": 2.83915,
+     "stream_unit": 1.96398,
+     "ucie_exchange": 0.0189796,
+     "static": 12.6618
+    },
+    "fraction": {
+     "kv_streaming": 0.428801,
+     "weights": 0.212814,
+     "attention_macs": 0.0581969,
+     "stream_unit": 0.0402576,
+     "ucie_exchange": 0.000389044,
+     "static": 0.259541
+    },
+    "stack_mj_per_token": 6.64024
+   }
+  }
+ },
+ "package_slack_mm2": 56.06,
+ "levers": {
+  "kv_sram_in_slack": {
+   "family": "1 KV window on die",
+   "what": "each die's 28.0 mm2 of slack (56.1 mm2 in the package) filled with SRAM holding the user's most recent KV rows of that die's own KV heads",
+   "area_mm2_added": 0.0,
+   "kv_sram_mm2": 56.06,
+   "kv_sram_mm2_per_die": 28.03,
+   "lane_copies_removed_per_die": 0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "assumed",
+   "lever_inputs": {
+    "kv_sram_mm2": 56.06,
+    "resident_kv_bytes": 168671000.0,
+    "resident_read_j_per_byte": 1.272e-11,
+    "lane_multiplier_m": 5
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 114.122,
+      "die_energy_per_token_mj": 102.108,
+      "die_dynamic_mj_per_token": 83.9351,
+      "per_die_dynamic_mj_per_token": 41.9676,
+      "stack_energy_per_token_mj": 12.0145,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 35.4864,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 2.14549,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 9.95381,
+       "clock": 6.17625,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 54.586,
+       "clock_w": 33.8701,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 109.172,
+       "clock_w": 67.7403,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 559.951,
+      "package_dies_w_at_design_rate": 1119.9,
+      "stacks_w_high": 149.726,
+      "resident_kv_bytes_per_user": 168671000.0,
+      "resident_kv_fraction": 0.279265,
+      "hbm_kv_bytes_per_step": 435309000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 68.86,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6550.39,
+        "capped_rate": 6550.39,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 838.541
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8933.18,
+        "capped_rate": 8933.18,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1071.07
+       }
+      },
+      "capped_rate": 8933.18,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 0.833451,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18719.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 120.276,
+      "die_energy_per_token_mj": 115.264,
+      "die_dynamic_mj_per_token": 102.546,
+      "per_die_dynamic_mj_per_token": 51.2728,
+      "stack_energy_per_token_mj": 5.01199,
+      "die_components_mj_per_token": {
+       "mac_weights": 63.6409,
+       "mac_attention": 19.1251,
+       "weight_read_and_delivery": 0.934611,
+       "kv_ring_sram_and_delivery": 1.30639,
+       "stream_unit": 1.96398,
+       "hbm_controller_phy_io": 14.8035,
+       "ucie_exchange": 0.0189796,
+       "kv_resident_sram_read": 0.750407,
+       "kv_resident_sram_write": 0.00164006,
+       "leakage": 5.83187,
+       "clock": 5.69026,
+       "hbm_idle": 1.19659
+      },
+      "die_static_w": {
+       "leakage_w": 54.586,
+       "clock_w": 53.2605,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 109.172,
+       "clock_w": 106.521,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 1078.87,
+      "package_dies_w_at_design_rate": 2157.73,
+      "stacks_w_high": 106.606,
+      "resident_kv_bytes_per_user": 168671000.0,
+      "resident_kv_fraction": 0.279265,
+      "hbm_kv_bytes_per_step": 519195000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 68.86,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 4983.42,
+        "capped_rate": 4983.42,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 777.499
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6933.77,
+        "capped_rate": 6933.77,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 988.606
+       }
+      },
+      "capped_rate": 6933.77,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 0.746034,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 80.3326,
+      "die_energy_per_token_mj": 68.318,
+      "die_dynamic_mj_per_token": 50.1456,
+      "per_die_dynamic_mj_per_token": 25.0728,
+      "stack_energy_per_token_mj": 12.0145,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 35.4864,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 2.14549,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 9.95381,
+       "clock": 6.17625,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 54.586,
+       "clock_w": 33.8701,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 109.172,
+       "clock_w": 67.7403,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 374.651,
+      "package_dies_w_at_design_rate": 749.303,
+      "stacks_w_high": 149.726,
+      "resident_kv_bytes_per_user": 168671000.0,
+      "resident_kv_fraction": 0.279265,
+      "hbm_kv_bytes_per_step": 435309000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 68.86,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10964.2,
+        "capped_rate": 10964.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 898.796
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 14952.6,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 374.651,
+        "package_w_at_cap": 899.028
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 0.999667,
+      "reaches_target_air": false,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18719.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 49.797,
+      "die_energy_per_token_mj": 44.785,
+      "die_dynamic_mj_per_token": 32.0663,
+      "per_die_dynamic_mj_per_token": 16.0331,
+      "stack_energy_per_token_mj": 5.01199,
+      "die_components_mj_per_token": {
+       "mac_weights": 9.44759,
+       "mac_attention": 2.83915,
+       "weight_read_and_delivery": 0.934611,
+       "kv_ring_sram_and_delivery": 1.30639,
+       "stream_unit": 1.96398,
+       "hbm_controller_phy_io": 14.8035,
+       "ucie_exchange": 0.0189796,
+       "kv_resident_sram_read": 0.750407,
+       "kv_resident_sram_write": 0.00164006,
+       "leakage": 5.83187,
+       "clock": 5.69026,
+       "hbm_idle": 1.19659
+      },
+      "die_static_w": {
+       "leakage_w": 54.586,
+       "clock_w": 53.2605,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 109.172,
+       "clock_w": 106.521,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 419.185,
+      "package_dies_w_at_design_rate": 838.37,
+      "stacks_w_high": 106.606,
+      "resident_kv_bytes_per_user": 168671000.0,
+      "resident_kv_fraction": 0.279265,
+      "hbm_kv_bytes_per_step": 519195000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 68.86,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 15936.6,
+        "capped_rate": 15936.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 839.875
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 22173.7,
+        "capped_rate": 18719.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 419.185,
+        "package_w_at_cap": 944.976
+       }
+      },
+      "capped_rate": 18719.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 0.851318,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added, lane_multiplier_m, slack_mm2 a die) and every DFlash figure at the design lane multiplier (results/speculative/dflash_step_timing.json rom['8192/fp8/m5']: block, tokens a step, tokens/s), since the multiplier is the DFlash lever"
+  },
+  "kv_sram_for_1_lane_copy_per_die": {
+   "family": "1 KV window on die",
+   "what": "1 of the 4 lane copies a die (51.9 mm2 a die, idle at autoregressive batch 1) plus the slack re-spent on a KV SRAM; lane multiplier 5 -> 4 (DFlash re-timed on the package basis at m = 4)",
+   "area_mm2_added": 0.0,
+   "kv_sram_mm2": 159.88,
+   "kv_sram_mm2_per_die": 79.94,
+   "lane_copies_removed_per_die": 1,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "assumed",
+   "lever_inputs": {
+    "kv_sram_mm2": 159.88,
+    "resident_kv_bytes": 481039000.0,
+    "resident_read_j_per_byte": 1.272e-11,
+    "lane_multiplier_m": 4
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 4,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 83.2431,
+      "die_energy_per_token_mj": 79.8499,
+      "die_dynamic_mj_per_token": 62.4442,
+      "per_die_dynamic_mj_per_token": 31.2221,
+      "stack_energy_per_token_mj": 3.39317,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 10.0221,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 6.11882,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 9.05455,
+       "clock": 6.30885,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 49.6545,
+       "clock_w": 34.5973,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 99.3091,
+       "clock_w": 69.1946,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 437.891,
+      "package_dies_w_at_design_rate": 875.783,
+      "stacks_w_high": 42.2858,
+      "resident_kv_bytes_per_user": 481039000.0,
+      "resident_kv_fraction": 0.796449,
+      "hbm_kv_bytes_per_step": 122941000.0,
+      "areas_package_mm2": {
+       "logic": 950.5,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 172.68,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 4
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8939.45,
+        "capped_rate": 8939.45,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 783.585
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 12142.3,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 437.891,
+        "package_w_at_cap": 918.069
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.13743,
+      "reaches_target_air": false,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 17850.4,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 4,
+      "lane_multiplier_m": 4,
+      "tokens_per_step": 2.6256,
+      "step_cycles": 161598,
+      "energy_per_token_mj": 99.332,
+      "die_energy_per_token_mj": 97.1578,
+      "die_dynamic_mj_per_token": 84.8338,
+      "per_die_dynamic_mj_per_token": 42.4169,
+      "stack_energy_per_token_mj": 2.17414,
+      "die_components_mj_per_token": {
+       "mac_weights": 55.2521,
+       "mac_attention": 16.6605,
+       "weight_read_and_delivery": 1.01773,
+       "kv_ring_sram_and_delivery": 1.42257,
+       "stream_unit": 1.71091,
+       "hbm_controller_phy_io": 6.42159,
+       "ucie_exchange": 0.0165365,
+       "kv_resident_sram_read": 2.33044,
+       "kv_resident_sram_write": 0.00142873,
+       "leakage": 5.56341,
+       "clock": 5.50576,
+       "hbm_idle": 1.25487
+      },
+      "die_static_w": {
+       "leakage_w": 49.6545,
+       "clock_w": 49.14,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 99.3091,
+       "clock_w": 98.2801,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 867.153,
+      "package_dies_w_at_design_rate": 1734.31,
+      "stacks_w_high": 44.0963,
+      "resident_kv_bytes_per_user": 481039000.0,
+      "resident_kv_fraction": 0.796449,
+      "hbm_kv_bytes_per_step": 206827000.0,
+      "areas_package_mm2": {
+       "logic": 950.5,
+       "clocked_logic": 950.5,
+       "rom": 506.82,
+       "sram": 172.68,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 4
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6237.27,
+        "capped_rate": 6237.27,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 764.528
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8594.82,
+        "capped_rate": 8594.82,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 970.352
+       }
+      },
+      "capped_rate": 8594.82,
+      "design_rate_over_baseline": 0.953553,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.93374,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 4,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 49.4536,
+      "die_energy_per_token_mj": 46.0604,
+      "die_dynamic_mj_per_token": 28.6547,
+      "per_die_dynamic_mj_per_token": 14.3273,
+      "stack_energy_per_token_mj": 3.39317,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 10.0221,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 6.11882,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 9.05455,
+       "clock": 6.30885,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 49.6545,
+       "clock_w": 34.5973,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 99.3091,
+       "clock_w": 69.1946,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 252.592,
+      "package_dies_w_at_design_rate": 505.184,
+      "stacks_w_high": 42.2858,
+      "resident_kv_bytes_per_user": 481039000.0,
+      "resident_kv_fraction": 0.796449,
+      "hbm_kv_bytes_per_step": 122941000.0,
+      "areas_package_mm2": {
+       "logic": 950.5,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 172.68,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 4
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 19480.8,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 252.592,
+        "package_w_at_cap": 547.47
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 26460.5,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 252.592,
+        "package_w_at_cap": 547.47
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 17850.4,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 4,
+      "lane_multiplier_m": 4,
+      "tokens_per_step": 2.6256,
+      "step_cycles": 161598,
+      "energy_per_token_mj": 38.0949,
+      "die_energy_per_token_mj": 35.9208,
+      "die_dynamic_mj_per_token": 23.5968,
+      "per_die_dynamic_mj_per_token": 11.7984,
+      "stack_energy_per_token_mj": 2.17414,
+      "die_components_mj_per_token": {
+       "mac_weights": 8.20226,
+       "mac_attention": 2.47328,
+       "weight_read_and_delivery": 1.01773,
+       "kv_ring_sram_and_delivery": 1.42257,
+       "stream_unit": 1.71091,
+       "hbm_controller_phy_io": 6.42159,
+       "ucie_exchange": 0.0165365,
+       "kv_resident_sram_read": 2.33044,
+       "kv_resident_sram_write": 0.00142873,
+       "leakage": 5.56341,
+       "clock": 5.50576,
+       "hbm_idle": 1.25487
+      },
+      "die_static_w": {
+       "leakage_w": 49.6545,
+       "clock_w": 49.14,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 99.3091,
+       "clock_w": 98.2801,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 320.6,
+      "package_dies_w_at_design_rate": 641.201,
+      "stacks_w_high": 44.0963,
+      "resident_kv_bytes_per_user": 481039000.0,
+      "resident_kv_fraction": 0.796449,
+      "hbm_kv_bytes_per_step": 206827000.0,
+      "areas_package_mm2": {
+       "logic": 950.5,
+       "clocked_logic": 950.5,
+       "rom": 506.82,
+       "sram": 172.68,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 4
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 22423.9,
+        "capped_rate": 17850.4,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 320.6,
+        "package_w_at_cap": 685.297
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 30899.6,
+        "capped_rate": 17850.4,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 320.6,
+        "package_w_at_cap": 685.297
+       }
+      },
+      "capped_rate": 17850.4,
+      "design_rate_over_baseline": 0.953553,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.953553,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added, lane_multiplier_m, slack_mm2 a die) and every DFlash figure at the design lane multiplier (results/speculative/dflash_step_timing.json rom['8192/fp8/m5']: block, tokens a step, tokens/s), since the multiplier is the DFlash lever"
+  },
+  "kv_sram_for_2_lane_copies_per_die": {
+   "family": "1 KV window on die",
+   "what": "2 of the 4 lane copies a die (103.8 mm2 a die, idle at autoregressive batch 1) plus the slack re-spent on a KV SRAM; lane multiplier 5 -> 3 (DFlash re-timed on the package basis at m = 3)",
+   "area_mm2_added": 0.0,
+   "kv_sram_mm2": 263.7,
+   "kv_sram_mm2_per_die": 131.85,
+   "lane_copies_removed_per_die": 2,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "assumed",
+   "lever_inputs": {
+    "kv_sram_mm2": 263.7,
+    "resident_kv_bytes": 793407000.0,
+    "resident_read_j_per_byte": 1.272e-11,
+    "lane_multiplier_m": 3
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 3,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 70.6249,
+      "die_energy_per_token_mj": 70.6249,
+      "die_dynamic_mj_per_token": 53.9859,
+      "per_die_dynamic_mj_per_token": 26.9929,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 8.1553,
+       "clock": 6.44144,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 44.7231,
+       "clock_w": 35.3244,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 89.4462,
+       "clock_w": 70.6488,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 387.302,
+      "package_dies_w_at_design_rate": 774.605,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 846.68,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 276.5,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 3
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10495.8,
+        "capped_rate": 10495.8,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 749.12
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 14200.5,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 387.302,
+        "package_w_at_cap": 774.605
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.33545,
+      "reaches_target_air": false,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 16015.5,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 3,
+      "lane_multiplier_m": 3,
+      "tokens_per_step": 2.2654,
+      "step_cycles": 155403,
+      "energy_per_token_mj": 86.6055,
+      "die_energy_per_token_mj": 85.5835,
+      "die_dynamic_mj_per_token": 72.9779,
+      "per_die_dynamic_mj_per_token": 36.489,
+      "stack_energy_per_token_mj": 1.02201,
+      "die_components_mj_per_token": {
+       "mac_weights": 47.7549,
+       "mac_attention": 14.4819,
+       "weight_read_and_delivery": 1.17955,
+       "kv_ring_sram_and_delivery": 1.64876,
+       "stream_unit": 1.48721,
+       "hbm_controller_phy_io": 3.01863,
+       "ucie_exchange": 0.014378,
+       "kv_resident_sram_read": 3.39129,
+       "kv_resident_sram_write": 0.00124193,
+       "leakage": 5.58497,
+       "clock": 5.622,
+       "hbm_idle": 1.39864
+      },
+      "die_static_w": {
+       "leakage_w": 44.7231,
+       "clock_w": 45.0196,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 89.4462,
+       "clock_w": 90.0392,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 685.332,
+      "package_dies_w_at_design_rate": 1370.66,
+      "stacks_w_high": 18.5978,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 83886100.0,
+      "areas_package_mm2": {
+       "logic": 846.68,
+       "clocked_logic": 846.68,
+       "rom": 506.82,
+       "sram": 276.5,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 3
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 7498.63,
+        "capped_rate": 7498.63,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 757.828
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10239.2,
+        "capped_rate": 10239.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 961.01
+       }
+      },
+      "capped_rate": 10239.2,
+      "design_rate_over_baseline": 0.855535,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 1.12257,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 3,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 36.8354,
+      "die_energy_per_token_mj": 36.8354,
+      "die_dynamic_mj_per_token": 20.1964,
+      "per_die_dynamic_mj_per_token": 10.0982,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 8.1553,
+       "clock": 6.44144,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 44.7231,
+       "clock_w": 35.3244,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 89.4462,
+       "clock_w": 70.6488,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 202.003,
+      "package_dies_w_at_design_rate": 404.006,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 846.68,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 276.5,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 3
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 28055.8,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 202.003,
+        "package_w_at_cap": 404.006
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 37958.6,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 202.003,
+        "package_w_at_cap": 404.006
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 16015.5,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 3,
+      "lane_multiplier_m": 3,
+      "tokens_per_step": 2.2654,
+      "step_cycles": 155403,
+      "energy_per_token_mj": 33.6078,
+      "die_energy_per_token_mj": 32.5858,
+      "die_dynamic_mj_per_token": 19.9802,
+      "per_die_dynamic_mj_per_token": 9.99011,
+      "stack_energy_per_token_mj": 1.02201,
+      "die_components_mj_per_token": {
+       "mac_weights": 7.0893,
+       "mac_attention": 2.14987,
+       "weight_read_and_delivery": 1.17955,
+       "kv_ring_sram_and_delivery": 1.64876,
+       "stream_unit": 1.48721,
+       "hbm_controller_phy_io": 3.01863,
+       "ucie_exchange": 0.014378,
+       "kv_resident_sram_read": 3.39129,
+       "kv_resident_sram_write": 0.00124193,
+       "leakage": 5.58497,
+       "clock": 5.622,
+       "hbm_idle": 1.39864
+      },
+      "die_static_w": {
+       "leakage_w": 44.7231,
+       "clock_w": 45.0196,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 89.4462,
+       "clock_w": 90.0392,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 260.939,
+      "package_dies_w_at_design_rate": 521.879,
+      "stacks_w_high": 18.5978,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 83886100.0,
+      "areas_package_mm2": {
+       "logic": 846.68,
+       "clocked_logic": 846.68,
+       "rom": 506.82,
+       "sram": 276.5,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 3
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 27388.8,
+        "capped_rate": 16015.5,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 260.939,
+        "package_w_at_cap": 540.477
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 37398.7,
+        "capped_rate": 16015.5,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 260.939,
+        "package_w_at_cap": 540.477
+       }
+      },
+      "capped_rate": 16015.5,
+      "design_rate_over_baseline": 0.855535,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.855535,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added, lane_multiplier_m, slack_mm2 a die) and every DFlash figure at the design lane multiplier (results/speculative/dflash_step_timing.json rom['8192/fp8/m5']: block, tokens a step, tokens/s), since the multiplier is the DFlash lever"
+  },
+  "kv_sram_for_4_lane_copies_per_die": {
+   "family": "1 KV window on die",
+   "what": "4 of the 4 lane copies a die (207.6 mm2 a die, idle at autoregressive batch 1) plus the slack re-spent on a KV SRAM; lane multiplier 5 -> 1 (DFlash degenerates: its best block at m = 1 on the package basis is re-timed)",
+   "area_mm2_added": 0.0,
+   "kv_sram_mm2": 471.34,
+   "kv_sram_mm2_per_die": 235.67,
+   "lane_copies_removed_per_die": 4,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "assumed",
+   "lever_inputs": {
+    "kv_sram_mm2": 471.34,
+    "resident_kv_bytes": 1418140000.0,
+    "resident_read_j_per_byte": 1.272e-11,
+    "lane_multiplier_m": 1
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 1,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 69.0916,
+      "die_energy_per_token_mj": 69.0916,
+      "die_dynamic_mj_per_token": 53.9859,
+      "per_die_dynamic_mj_per_token": 26.9929,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 6.35679,
+       "clock": 6.70663,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 34.8602,
+       "clock_w": 36.7787,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 69.7204,
+       "clock_w": 73.5574,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 378.894,
+      "package_dies_w_at_design_rate": 757.787,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 639.04,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 484.14,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 1
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10807.3,
+        "capped_rate": 10807.3,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 749.12
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 14512.0,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 378.894,
+        "package_w_at_cap": 757.787
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.37509,
+      "reaches_target_air": false,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 9017.15,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 1,
+      "tokens_per_step": 1.0,
+      "step_cycles": 121839,
+      "energy_per_token_mj": 72.3595,
+      "die_energy_per_token_mj": 72.3595,
+      "die_dynamic_mj_per_token": 53.9859,
+      "per_die_dynamic_mj_per_token": 26.9929,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 7.73198,
+       "clock": 8.1575,
+       "hbm_idle": 2.48416
+      },
+      "die_static_w": {
+       "leakage_w": 34.8602,
+       "clock_w": 36.7787,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 69.7204,
+       "clock_w": 73.5574,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 326.238,
+      "package_dies_w_at_design_rate": 652.476,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 639.04,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 484.14,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 1
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10807.3,
+        "capped_rate": 9017.15,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 326.238,
+        "package_w_at_cap": 652.476
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 14512.0,
+        "capped_rate": 9017.15,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 326.238,
+        "package_w_at_cap": 652.476
+       }
+      },
+      "capped_rate": 9017.15,
+      "design_rate_over_baseline": 0.481688,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 1.3499,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 1,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 35.3021,
+      "die_energy_per_token_mj": 35.3021,
+      "die_dynamic_mj_per_token": 20.1964,
+      "per_die_dynamic_mj_per_token": 10.0982,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 6.35679,
+       "clock": 6.70663,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 34.8602,
+       "clock_w": 36.7787,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 69.7204,
+       "clock_w": 73.5574,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 193.594,
+      "package_dies_w_at_design_rate": 387.189,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 639.04,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 484.14,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 1
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 28888.5,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 193.594,
+        "package_w_at_cap": 387.189
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 38791.2,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 193.594,
+        "package_w_at_cap": 387.189
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 9017.15,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 1,
+      "tokens_per_step": 1.0,
+      "step_cycles": 121839,
+      "energy_per_token_mj": 38.57,
+      "die_energy_per_token_mj": 38.57,
+      "die_dynamic_mj_per_token": 20.1964,
+      "per_die_dynamic_mj_per_token": 10.0982,
+      "stack_energy_per_token_mj": 0.0,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 3.27961,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 0.0,
+       "ucie_exchange": 0.00947003,
+       "kv_resident_sram_read": 7.68262,
+       "kv_resident_sram_write": 0.00093782,
+       "leakage": 7.73198,
+       "clock": 8.1575,
+       "hbm_idle": 2.48416
+      },
+      "die_static_w": {
+       "leakage_w": 34.8602,
+       "clock_w": 36.7787,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 69.7204,
+       "clock_w": 73.5574,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 173.896,
+      "package_dies_w_at_design_rate": 347.791,
+      "stacks_w_high": 0.0,
+      "resident_kv_bytes_per_user": 603980000.0,
+      "resident_kv_fraction": 1.0,
+      "hbm_kv_bytes_per_step": 0.0,
+      "areas_package_mm2": {
+       "logic": 639.04,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 484.14,
+       "total": 1630.0,
+       "total_per_die": 815.0,
+       "lane_multiplier_m": 1
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 28888.5,
+        "capped_rate": 9017.15,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 173.896,
+        "package_w_at_cap": 347.791
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 38791.2,
+        "capped_rate": 9017.15,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 173.896,
+        "package_w_at_cap": 347.791
+       }
+      },
+      "capped_rate": 9017.15,
+      "design_rate_over_baseline": 0.481688,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.481688,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added, lane_multiplier_m, slack_mm2 a die) and every DFlash figure at the design lane multiplier (results/speculative/dflash_step_timing.json rom['8192/fp8/m5']: block, tokens a step, tokens/s), since the multiplier is the DFlash lever"
+  },
+  "sensitivity_kv_int4": {
+   "family": "sensitivity",
+   "what": "4-bit KV (0.5 B an element): SENSITIVITY ONLY -- FP8 KV is the design point (user rule); a golden change with an unmeasured accuracy cost",
+   "area_mm2_added": 0.0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "baseline inputs only",
+   "lever_inputs": {
+    "kv_bytes_per_elem": 0.5
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 95.6909,
+      "die_energy_per_token_mj": 87.3559,
+      "die_dynamic_mj_per_token": 69.2807,
+      "per_die_dynamic_mj_per_token": 34.6404,
+      "stack_energy_per_token_mj": 8.33492,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.60173,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 1.63981,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 24.6182,
+       "ucie_exchange": 0.00947003,
+       "leakage": 9.92825,
+       "clock": 6.10465,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 33.4775,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 66.955,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 479.054,
+      "package_dies_w_at_design_rate": 958.108,
+      "stacks_w_high": 103.87,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 301990000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 7951.32,
+        "capped_rate": 7951.32,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 824.422
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 10838.1,
+        "capped_rate": 10838.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1051.76
+       }
+      },
+      "capped_rate": 10838.1,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0117,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18719.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 112.125,
+      "die_energy_per_token_mj": 108.805,
+      "die_dynamic_mj_per_token": 96.1431,
+      "per_die_dynamic_mj_per_token": 48.0716,
+      "stack_energy_per_token_mj": 3.32012,
+      "die_components_mj_per_token": {
+       "mac_weights": 63.6409,
+       "mac_attention": 19.1251,
+       "weight_read_and_delivery": 0.934611,
+       "kv_ring_sram_and_delivery": 0.653197,
+       "stream_unit": 1.96398,
+       "hbm_controller_phy_io": 9.80638,
+       "ucie_exchange": 0.0189796,
+       "leakage": 5.8169,
+       "clock": 5.64831,
+       "hbm_idle": 1.19659
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 52.8679,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 105.736,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 1018.41,
+      "package_dies_w_at_design_rate": 2036.82,
+      "stacks_w_high": 70.6193,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 343933000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 5326.36,
+        "capped_rate": 5326.36,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 769.213
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 7406.59,
+        "capped_rate": 7406.59,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 977.061
+       }
+      },
+      "capped_rate": 7406.59,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 0.797374,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10967.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 61.9014,
+      "die_energy_per_token_mj": 53.5665,
+      "die_dynamic_mj_per_token": 35.4912,
+      "per_die_dynamic_mj_per_token": 17.7456,
+      "stack_energy_per_token_mj": 8.33492,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.46518,
+       "mac_attention": 1.42539,
+       "weight_read_and_delivery": 2.34707,
+       "kv_ring_sram_and_delivery": 1.63981,
+       "stream_unit": 0.986085,
+       "hbm_controller_phy_io": 24.6182,
+       "ucie_exchange": 0.00947003,
+       "leakage": 9.92825,
+       "clock": 6.10465,
+       "hbm_idle": 2.04233
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 33.4775,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 66.955,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 293.755,
+      "package_dies_w_at_design_rate": 587.51,
+      "stacks_w_high": 103.87,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 301990000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 15521.4,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 293.755,
+        "package_w_at_cap": 691.38
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 21156.6,
+        "capped_rate": 10967.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 293.755,
+        "package_w_at_cap": 691.38
+       }
+      },
+      "capped_rate": 10967.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18719.9,
+      "clock_hz": 1098640000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 41.6458,
+      "die_energy_per_token_mj": 38.3257,
+      "die_dynamic_mj_per_token": 25.6639,
+      "per_die_dynamic_mj_per_token": 12.8319,
+      "stack_energy_per_token_mj": 3.32012,
+      "die_components_mj_per_token": {
+       "mac_weights": 9.44759,
+       "mac_attention": 2.83915,
+       "weight_read_and_delivery": 0.934611,
+       "kv_ring_sram_and_delivery": 0.653197,
+       "stream_unit": 1.96398,
+       "hbm_controller_phy_io": 9.80638,
+       "ucie_exchange": 0.0189796,
+       "leakage": 5.8169,
+       "clock": 5.64831,
+       "hbm_idle": 1.19659
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 52.8679,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 105.736,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 358.726,
+      "package_dies_w_at_design_rate": 717.452,
+      "stacks_w_high": 70.6193,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 343933000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 19953.8,
+        "capped_rate": 18719.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 358.726,
+        "package_w_at_cap": 788.072
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 27746.9,
+        "capped_rate": 18719.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 358.726,
+        "package_w_at_cap": 788.072
+       }
+      },
+      "capped_rate": 18719.9,
+      "design_rate_over_baseline": 1.0,
+      "per_user_rate_kept": true,
+      "capped_gain_over_baseline_air": 1.0,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "none (a sensitivity is not adoptable under the FP8-KV rule)"
+  },
+  "dvfs_f0.966": {
+   "family": "4 clock/voltage",
+   "what": "core clock of both dies x0.966 at core supply x0.983 (the 850 MHz / 0.7375 V point of the N6 OPP table over its top point)",
+   "area_mm2_added": 0.0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "published-spec",
+   "lever_inputs": {
+    "f_ratio": 0.965909,
+    "v_ratio": 0.983333
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10594.0,
+      "clock_hz": 1061190000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 128.974,
+      "die_energy_per_token_mj": 112.304,
+      "die_dynamic_mj_per_token": 94.0085,
+      "per_die_dynamic_mj_per_token": 47.0042,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 29.0841,
+       "mac_attention": 9.28434,
+       "weight_read_and_delivery": 2.26949,
+       "kv_ring_sram_and_delivery": 3.1712,
+       "stream_unit": 0.953489,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 10.2787,
+       "clock": 5.90286,
+       "hbm_idle": 2.11441
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 31.2673,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 62.5347,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 594.874,
+      "package_dies_w_at_design_rate": 1189.75,
+      "stacks_w_high": 200.658,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 5906.85,
+        "capped_rate": 5906.85,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 861.0
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8034.31,
+        "capped_rate": 8034.31,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1101.3
+       }
+      },
+      "capped_rate": 8034.31,
+      "design_rate_over_baseline": 0.965909,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.751568,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18081.7,
+      "clock_hz": 1061190000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 123.091,
+      "die_energy_per_token_mj": 116.45,
+      "die_dynamic_mj_per_token": 103.728,
+      "per_die_dynamic_mj_per_token": 51.8639,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 61.5372,
+       "mac_attention": 18.4929,
+       "weight_read_and_delivery": 0.903717,
+       "kv_ring_sram_and_delivery": 1.26321,
+       "stream_unit": 1.89906,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.0222,
+       "clock": 5.4616,
+       "hbm_idle": 1.23882
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 49.3775,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 98.7551,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 1052.81,
+      "package_dies_w_at_design_rate": 2105.62,
+      "stacks_w_high": 136.424,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 5004.19,
+        "capped_rate": 5004.19,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 786.876
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6932.31,
+        "capped_rate": 6932.31,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1001.42
+       }
+      },
+      "capped_rate": 6932.31,
+      "design_rate_over_baseline": 0.965909,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.749144,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10594.0,
+      "clock_hz": 1061190000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 96.3017,
+      "die_energy_per_token_mj": 79.6319,
+      "die_dynamic_mj_per_token": 61.3359,
+      "per_die_dynamic_mj_per_token": 30.668,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.31758,
+       "mac_attention": 1.37828,
+       "weight_read_and_delivery": 2.26949,
+       "kv_ring_sram_and_delivery": 3.1712,
+       "stream_unit": 0.953489,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 10.2787,
+       "clock": 5.90286,
+       "hbm_idle": 2.11441
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 31.2673,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 62.5347,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 421.808,
+      "package_dies_w_at_design_rate": 843.617,
+      "stacks_w_high": 200.658,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 9053.32,
+        "capped_rate": 9053.32,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 920.597
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 12314.0,
+        "capped_rate": 10594.0,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 421.808,
+        "package_w_at_cap": 1044.27
+       }
+      },
+      "capped_rate": 10594.0,
+      "design_rate_over_baseline": 0.965909,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.82544,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 18081.7,
+      "clock_hz": 1061190000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 54.9412,
+      "die_energy_per_token_mj": 48.3009,
+      "die_dynamic_mj_per_token": 35.5783,
+      "per_die_dynamic_mj_per_token": 17.7892,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 9.1353,
+       "mac_attention": 2.7453,
+       "weight_read_and_delivery": 0.903717,
+       "kv_ring_sram_and_delivery": 1.26321,
+       "stream_unit": 1.89906,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.0222,
+       "clock": 5.4616,
+       "hbm_idle": 1.23882
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 49.3775,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 98.7551,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 436.682,
+      "package_dies_w_at_design_rate": 873.363,
+      "stacks_w_high": 136.424,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 14589.6,
+        "capped_rate": 14589.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 859.196
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 20211.0,
+        "capped_rate": 18081.7,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 436.682,
+        "package_w_at_cap": 1009.79
+       }
+      },
+      "capped_rate": 18081.7,
+      "design_rate_over_baseline": 0.965909,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.779364,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); also the per-user batch-1 design rate itself (a DVFS point runs slower by f)"
+  },
+  "dvfs_f0.932": {
+   "family": "4 clock/voltage",
+   "what": "core clock of both dies x0.932 at core supply x0.967 (the 820 MHz / 0.7250 V point of the N6 OPP table over its top point)",
+   "area_mm2_added": 0.0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "published-spec",
+   "lever_inputs": {
+    "f_ratio": 0.931818,
+    "v_ratio": 0.966667
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10220.1,
+      "clock_hz": 1023730000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 127.725,
+      "die_energy_per_token_mj": 111.055,
+      "die_dynamic_mj_per_token": 92.504,
+      "per_die_dynamic_mj_per_token": 46.252,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 28.1065,
+       "mac_attention": 8.97228,
+       "weight_read_and_delivery": 2.19321,
+       "kv_ring_sram_and_delivery": 3.06461,
+       "stream_unit": 0.921441,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 10.6547,
+       "clock": 5.70446,
+       "hbm_idle": 2.19177
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 29.15,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 58.2999,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 567.494,
+      "package_dies_w_at_design_rate": 1134.99,
+      "stacks_w_high": 193.576,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6048.7,
+        "capped_rate": 6048.7,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 863.687
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8210.77,
+        "capped_rate": 8210.77,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1104.64
+       }
+      },
+      "capped_rate": 8210.77,
+      "design_rate_over_baseline": 0.931818,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.769617,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 17443.5,
+      "clock_hz": 1023730000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 120.346,
+      "die_energy_per_token_mj": 113.706,
+      "die_dynamic_mj_per_token": 100.901,
+      "per_die_dynamic_mj_per_token": 50.4506,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 59.4689,
+       "mac_attention": 17.8713,
+       "weight_read_and_delivery": 0.873342,
+       "kv_ring_sram_and_delivery": 1.22075,
+       "stream_unit": 1.83523,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.24253,
+       "clock": 5.27803,
+       "hbm_idle": 1.28414
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 46.0337,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 92.0675,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 991.717,
+      "package_dies_w_at_design_rate": 1983.43,
+      "stacks_w_high": 131.609,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 5210.65,
+        "capped_rate": 5210.65,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 788.434
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 7192.78,
+        "capped_rate": 7192.78,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1003.39
+       }
+      },
+      "capped_rate": 7192.78,
+      "design_rate_over_baseline": 0.931818,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.780052,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 10220.1,
+      "clock_hz": 1023730000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 96.1504,
+      "die_energy_per_token_mj": 79.4805,
+      "die_dynamic_mj_per_token": 60.9296,
+      "per_die_dynamic_mj_per_token": 30.4648,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.17246,
+       "mac_attention": 1.33195,
+       "weight_read_and_delivery": 2.19321,
+       "kv_ring_sram_and_delivery": 3.06461,
+       "stream_unit": 0.921441,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 10.6547,
+       "clock": 5.70446,
+       "hbm_idle": 2.19177
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 29.15,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 58.2999,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 406.148,
+      "package_dies_w_at_design_rate": 812.295,
+      "stacks_w_high": 193.576,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 9183.2,
+        "capped_rate": 9183.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 923.057
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 12465.7,
+        "capped_rate": 10220.1,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 406.148,
+        "package_w_at_cap": 1005.87
+       }
+      },
+      "capped_rate": 10220.1,
+      "design_rate_over_baseline": 0.931818,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.837282,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 17443.5,
+      "clock_hz": 1023730000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 54.4873,
+      "die_energy_per_token_mj": 47.847,
+      "die_dynamic_mj_per_token": 35.0423,
+      "per_die_dynamic_mj_per_token": 17.5212,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 8.82825,
+       "mac_attention": 2.65303,
+       "weight_read_and_delivery": 0.873342,
+       "kv_ring_sram_and_delivery": 1.22075,
+       "stream_unit": 1.83523,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.24253,
+       "clock": 5.27803,
+       "hbm_idle": 1.28414
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 46.0337,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 92.0675,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 417.311,
+      "package_dies_w_at_design_rate": 834.621,
+      "stacks_w_high": 131.609,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 15003.6,
+        "capped_rate": 15003.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 862.32
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 20711.0,
+        "capped_rate": 17443.5,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 417.311,
+        "package_w_at_cap": 966.23
+       }
+      },
+      "capped_rate": 17443.5,
+      "design_rate_over_baseline": 0.931818,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.801479,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); also the per-user batch-1 design rate itself (a DVFS point runs slower by f)"
+  },
+  "dvfs_f0.864": {
+   "family": "4 clock/voltage",
+   "what": "core clock of both dies x0.864 at core supply x0.933 (the 760 MHz / 0.7000 V point of the N6 OPP table over its top point)",
+   "area_mm2_added": 0.0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "published-spec",
+   "lever_inputs": {
+    "f_ratio": 0.863636,
+    "v_ratio": 0.933333
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 9472.25,
+      "clock_hz": 948825000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 125.42,
+      "die_energy_per_token_mj": 108.751,
+      "die_dynamic_mj_per_token": 89.5721,
+      "per_die_dynamic_mj_per_token": 44.786,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 26.2016,
+       "mac_attention": 8.36417,
+       "weight_read_and_delivery": 2.04456,
+       "kv_ring_sram_and_delivery": 2.8569,
+       "stream_unit": 0.858989,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 11.4959,
+       "clock": 5.31783,
+       "hbm_idle": 2.3648
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 25.1859,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 50.3718,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 515.056,
+      "package_dies_w_at_design_rate": 1030.11,
+      "stacks_w_high": 179.412,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6335.19,
+        "capped_rate": 6335.19,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 869.114
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8568.03,
+        "capped_rate": 8568.03,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1111.41
+       }
+      },
+      "capped_rate": 8568.03,
+      "design_rate_over_baseline": 0.863636,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.80607,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 16167.2,
+      "clock_hz": 948825000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 115.075,
+      "die_energy_per_token_mj": 108.434,
+      "die_dynamic_mj_per_token": 95.3931,
+      "per_die_dynamic_mj_per_token": 47.6966,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 55.4383,
+       "mac_attention": 16.6601,
+       "weight_read_and_delivery": 0.81415,
+       "kv_ring_sram_and_delivery": 1.13801,
+       "stream_unit": 1.71084,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.73536,
+       "clock": 4.92031,
+       "hbm_idle": 1.38552
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 39.7737,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 79.5474,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 876.538,
+      "package_dies_w_at_design_rate": 1753.08,
+      "stacks_w_high": 121.979,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 5642.77,
+        "capped_rate": 5642.77,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 791.694
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 7739.35,
+        "capped_rate": 7739.35,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1007.51
+       }
+      },
+      "capped_rate": 7739.35,
+      "design_rate_over_baseline": 0.863636,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.844741,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 9472.25,
+      "clock_hz": 948825000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 95.986,
+      "die_energy_per_token_mj": 79.3162,
+      "die_dynamic_mj_per_token": 60.1377,
+      "per_die_dynamic_mj_per_token": 30.0688,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 3.88967,
+       "mac_attention": 1.24168,
+       "weight_read_and_delivery": 2.04456,
+       "kv_ring_sram_and_delivery": 2.8569,
+       "stream_unit": 0.858989,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 11.4959,
+       "clock": 5.31783,
+       "hbm_idle": 2.3648
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 25.1859,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 50.3718,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 375.651,
+      "package_dies_w_at_design_rate": 751.303,
+      "stacks_w_high": 179.412,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 9435.95,
+        "capped_rate": 9435.95,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 927.845
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 12761.7,
+        "capped_rate": 9472.25,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 375.651,
+        "package_w_at_cap": 930.715
+       }
+      },
+      "capped_rate": 9472.25,
+      "design_rate_over_baseline": 0.863636,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.860327,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 16167.2,
+      "clock_hz": 948825000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 53.6793,
+      "die_energy_per_token_mj": 47.039,
+      "die_dynamic_mj_per_token": 33.9979,
+      "per_die_dynamic_mj_per_token": 16.9989,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 8.2299,
+       "mac_attention": 2.47322,
+       "weight_read_and_delivery": 0.81415,
+       "kv_ring_sram_and_delivery": 1.13801,
+       "stream_unit": 1.71084,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 6.73536,
+       "clock": 4.92031,
+       "hbm_idle": 1.38552
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 39.7737,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 79.5474,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 380.244,
+      "package_dies_w_at_design_rate": 760.488,
+      "stacks_w_high": 121.979,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 15832.8,
+        "capped_rate": 15832.8,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 868.576
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 21715.5,
+        "capped_rate": 16167.2,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 380.244,
+        "package_w_at_cap": 882.467
+       }
+      },
+      "capped_rate": 16167.2,
+      "design_rate_over_baseline": 0.863636,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.845774,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); also the per-user batch-1 design rate itself (a DVFS point runs slower by f)"
+  },
+  "dvfs_f0.795": {
+   "family": "4 clock/voltage",
+   "what": "core clock of both dies x0.795 at core supply x0.900 (the 700 MHz / 0.6750 V point of the N6 OPP table over its top point)",
+   "area_mm2_added": 0.0,
+   "silicon_mm2": 1630.0,
+   "dies": 2,
+   "weakest_evidence_class": "published-spec",
+   "lever_inputs": {
+    "f_ratio": 0.795455,
+    "v_ratio": 0.9
+   },
+   "result": {
+    "A_measured_implementation": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 8724.44,
+      "clock_hz": 873918000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 123.406,
+      "die_energy_per_token_mj": 106.737,
+      "die_dynamic_mj_per_token": 86.7431,
+      "per_die_dynamic_mj_per_token": 43.3715,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 24.3634,
+       "mac_attention": 7.7774,
+       "weight_read_and_delivery": 1.90113,
+       "kv_ring_sram_and_delivery": 2.65648,
+       "stream_unit": 0.798729,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 12.4812,
+       "clock": 4.94477,
+       "hbm_idle": 2.5675
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 21.5702,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 43.1403,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 465.608,
+      "package_dies_w_at_design_rate": 931.217,
+      "stacks_w_high": 165.248,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6625.17,
+        "capped_rate": 6625.17,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 874.606
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8930.83,
+        "capped_rate": 8724.44,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 465.608,
+        "package_w_at_cap": 1096.46
+       }
+      },
+      "capped_rate": 8724.44,
+      "design_rate_over_baseline": 0.795455,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.842966,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 14890.8,
+      "clock_hz": 873918000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 110.111,
+      "die_energy_per_token_mj": 103.47,
+      "die_dynamic_mj_per_token": 90.0782,
+      "per_die_dynamic_mj_per_token": 45.0391,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 51.5491,
+       "mac_attention": 15.4913,
+       "weight_read_and_delivery": 0.757035,
+       "kv_ring_sram_and_delivery": 1.05818,
+       "stream_unit": 1.59082,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 7.31267,
+       "clock": 4.57513,
+       "hbm_idle": 1.50428
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 34.0637,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 68.1274,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 770.379,
+      "package_dies_w_at_design_rate": 1540.76,
+      "stacks_w_high": 112.349,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 6102.48,
+        "capped_rate": 6102.48,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.56,
+        "package_w_at_cap": 795.162
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 8322.78,
+        "capped_rate": 8322.78,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.56,
+        "package_w_at_cap": 1011.91
+       }
+      },
+      "capped_rate": 8322.78,
+      "design_rate_over_baseline": 0.795455,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.913563,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     }
+    },
+    "B_proposed_production": {
+     "ar_batch1": {
+      "design_rate_tokens_s": 8724.44,
+      "clock_hz": 873918000.0,
+      "dies": 2,
+      "block": 1,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 1,
+      "step_cycles": 100169,
+      "energy_per_token_mj": 96.0369,
+      "die_energy_per_token_mj": 79.3671,
+      "die_dynamic_mj_per_token": 59.3736,
+      "per_die_dynamic_mj_per_token": 29.6868,
+      "stack_energy_per_token_mj": 16.6698,
+      "die_components_mj_per_token": {
+       "mac_weights": 3.61679,
+       "mac_attention": 1.15457,
+       "weight_read_and_delivery": 1.90113,
+       "kv_ring_sram_and_delivery": 2.65648,
+       "stream_unit": 0.798729,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.00947003,
+       "leakage": 12.4812,
+       "clock": 4.94477,
+       "hbm_idle": 2.5675
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 21.5702,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 43.1403,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 346.217,
+      "package_dies_w_at_design_rate": 692.433,
+      "stacks_w_high": 165.248,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 603980000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 639.04,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 9679.18,
+        "capped_rate": 8724.44,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 346.217,
+        "package_w_at_cap": 857.681
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 13047.7,
+        "capped_rate": 8724.44,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 346.217,
+        "package_w_at_cap": 857.681
+       }
+      },
+      "capped_rate": 8724.44,
+      "design_rate_over_baseline": 0.795455,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.795455,
+      "reaches_target_air": false,
+      "reaches_target_liquid": false
+     },
+     "dflash": {
+      "design_rate_tokens_s": 14890.8,
+      "clock_hz": 873918000.0,
+      "dies": 2,
+      "block": 5,
+      "lane_multiplier_m": 5,
+      "tokens_per_step": 2.8591,
+      "step_cycles": 167796,
+      "energy_per_token_mj": 53.0224,
+      "die_energy_per_token_mj": 46.3821,
+      "die_dynamic_mj_per_token": 32.99,
+      "per_die_dynamic_mj_per_token": 16.495,
+      "stack_energy_per_token_mj": 6.64024,
+      "die_components_mj_per_token": {
+       "mac_weights": 7.65255,
+       "mac_attention": 2.29971,
+       "weight_read_and_delivery": 0.757035,
+       "kv_ring_sram_and_delivery": 1.05818,
+       "stream_unit": 1.59082,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.0189796,
+       "leakage": 7.31267,
+       "clock": 4.57513,
+       "hbm_idle": 1.50428
+      },
+      "die_static_w": {
+       "leakage_w": 54.4458,
+       "clock_w": 34.0637,
+       "hbm_idle_w": 11.2
+      },
+      "package_static_w": {
+       "leakage_w": 108.892,
+       "clock_w": 68.1274,
+       "hbm_idle_w": 22.4
+      },
+      "die_w_at_design_rate": 345.334,
+      "package_dies_w_at_design_rate": 690.668,
+      "stacks_w_high": 112.349,
+      "resident_kv_bytes_per_user": 0.0,
+      "resident_kv_fraction": 0.0,
+      "hbm_kv_bytes_per_step": 687866000.0,
+      "areas_package_mm2": {
+       "logic": 1054.32,
+       "clocked_logic": 1054.32,
+       "rom": 506.82,
+       "sram": 12.8,
+       "total": 1573.94,
+       "total_per_die": 786.97,
+       "lane_multiplier_m": 5
+      },
+      "cooling_classes": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.56,
+        "package_limit_w": 1000.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 16662.6,
+        "capped_rate": 14890.8,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 345.334,
+        "package_w_at_cap": 803.017
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.56,
+        "package_limit_w": 1200.0,
+        "dies_per_package": 2,
+        "thermal_rate_limit": 22725.1,
+        "capped_rate": 14890.8,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 345.334,
+        "package_w_at_cap": 803.017
+       }
+      },
+      "capped_rate": 14890.8,
+      "design_rate_over_baseline": 0.795455,
+      "per_user_rate_kept": false,
+      "capped_gain_over_baseline_air": 0.795455,
+      "reaches_target_air": true,
+      "reaches_target_liquid": true
+     }
+    }
+   },
+   "atlas_figures_if_adopted": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); also the per-user batch-1 design rate itself (a DVFS point runs slower by f)"
+  }
+ },
+ "superseded_levers": {
+  "3_two_die_package": "DROPPED 2026-09-28: the superseded single-reticle study's family 3 (two_die_striped_kv, two_die_striped_kv_plus_kv_sram, two_die_unstriped_kv) priced a second die as a lever. The O4 baseline IS a two-reticle package (tensor-parallel 2 over UCIe, every die streaming its own KV heads from its own 4 stacks, no KV crossing the link), so there is no second-die lever left to price; its inputs (UCIe link energy, PHY area, hop latency, exchange bytes) are now the baseline's own (configs/hardware/power_scenarios.json die.link_j_per_bit.ucie and design_points.qwen3.ucie_exchange, tools/arch_budget_qwen3.ucie_link / UCIE_PHY_MM2). The rejected layer-pipeline split of the two dies is results/arch/qwen3_budget.json layer_pipeline_alternative."
+ },
+ "not_evaluated": {
+  "stacked_sram_die": "a hybrid-bonded SRAM die over the logic (3D V-Cache class) could hold a whole 8K user KV (604 MB, 302 MB a die) off the reticle area, but no source gives the thermal derating of a cache die stacked on a logic die at the baseline per-die power (hundreds of W), and the only shipping part (AMD 3D V-Cache, ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731565: 'expands Zen3's on-die L3 Cache from 32MB to 96MB') is a ~100 W-class CPU; its die area was not verifiable. Not priced.",
+  "hbm_controller_measured": "no measured host PHY or controller energy per bit exists in a loadable source (see hbm_controller.note); the record gives the requirement instead (hbm_die_share_needed_for_target)",
+  "kv_int4": "4-bit KV is a SENSITIVITY only (user rule); it is in the record as sensitivity_kv_int4 and not a lever",
+  "web_search_budget": "the session's web-search quota was exhausted during this work; sources were loaded by direct URL/DOI. A measured HBM3 PHY paper (ISSCC/VLSI), Intel's UCIe test chip, SC'25 Table 3's L2 row and a macro-level N5/N6 SRAM density remain to be fetched."
+ },
+ "resident_kv_needed_for_target": {
+  "A_measured_implementation/air": null,
+  "A_measured_implementation/liquid": {
+   "bytes": 393582000.0,
+   "fraction_of_kv": 0.651648,
+   "sram_mm2": 130.812,
+   "sram_mm2_per_die": 65.4062,
+   "note": "SRAM area (package total, both dies) at the lever config's density, before any leakage/clock of the new area (lower bound on the area)"
+  },
+  "B_proposed_production/air": {
+   "bytes": 167501000.0,
+   "fraction_of_kv": 0.277329,
+   "sram_mm2": 55.6712,
+   "sram_mm2_per_die": 27.8356,
+   "note": "SRAM area (package total, both dies) at the lever config's density, before any leakage/clock of the new area (lower bound on the area)"
+  },
+  "B_proposed_production/liquid": {
+   "bytes": 0.0,
+   "fraction_of_kv": 0.0,
+   "sram_mm2": 0.0,
+   "sram_mm2_per_die": 0.0,
+   "note": "SRAM area (package total, both dies) at the lever config's density, before any leakage/clock of the new area (lower bound on the area)"
+  }
+ },
+ "dflash_kv_amortisation": {
+  "block": 5,
+  "tokens_per_step": 2.8591,
+  "kv_bytes_per_token_ar": 603980000.0,
+  "kv_bytes_per_step_dflash": 687866000.0,
+  "kv_bytes_per_token_dflash": 240588000.0,
+  "ratio_dflash_over_ar": 0.398338,
+  "A_measured_implementation": {
+   "hbm_die_mj_per_token_ar": 49.2364,
+   "hbm_die_mj_per_token_dflash": 19.6128,
+   "mac_mj_per_token_ar": 39.6801,
+   "mac_mj_per_token_dflash": 82.766,
+   "capped_ar": 7859.36,
+   "capped_dflash": 6679.87
+  },
+  "B_proposed_production": {
+   "hbm_die_mj_per_token_ar": 49.2364,
+   "hbm_die_mj_per_token_dflash": 19.6128,
+   "mac_mj_per_token_ar": 5.89057,
+   "mac_mj_per_token_dflash": 12.2867,
+   "capped_ar": 10967.9,
+   "capped_dflash": 18719.9
+  }
+ },
+ "dvfs_sweep": {
+  "basis": {
+   "ar_step_cycles": 100169,
+   "kv_stream_cycles": 92161,
+   "kv_stream_s": 8.38864e-05,
+   "highest_f_ratio_still_compute_bound": 1.08689,
+   "source": "configs/hardware/power_scenarios.json design_points.qwen3.ar_batch1.step_cycles; tools/arch_budget_qwen3.timing_basis rom_token['<context>/fp8'].kv_stream_cycles (the 8 stacks' stream, whose seconds do not scale with the core clock)",
+   "note": "lowering the core clock lengthens the chain's seconds while the KV stream's stay fixed, so the step stays compute-chain bound at every f_ratio <= highest_f_ratio_still_compute_bound (the chain's cycles over the stream's) and the rate scales with f.  The UCIe hops' seconds are also fixed, so the rate at a lowered clock is a lower bound (conservative)"
+  },
+  "rows": [
+   {
+    "hz": 880000000,
+    "uv": 750000,
+    "f_ratio": 1.0,
+    "v_ratio": 1.0,
+    "A/ar_batch1": {
+     "design": 10967.9,
+     "air": 5765.97,
+     "liquid": 7859.36
+    },
+    "A/dflash": {
+     "design": 18719.9,
+     "air": 4803.75,
+     "liquid": 6679.87
+    },
+    "B/ar_batch1": {
+     "design": 10967.9,
+     "air": 8921.13,
+     "liquid": 10967.9
+    },
+    "B/dflash": {
+     "design": 18719.9,
+     "air": 14176.2,
+     "liquid": 18719.9
+    }
+   },
+   {
+    "hz": 850000000,
+    "uv": 737500,
+    "f_ratio": 0.965909,
+    "v_ratio": 0.983333,
+    "A/ar_batch1": {
+     "design": 10594.0,
+     "air": 5906.85,
+     "liquid": 8034.31
+    },
+    "A/dflash": {
+     "design": 18081.7,
+     "air": 5004.19,
+     "liquid": 6932.31
+    },
+    "B/ar_batch1": {
+     "design": 10594.0,
+     "air": 9053.32,
+     "liquid": 10594.0
+    },
+    "B/dflash": {
+     "design": 18081.7,
+     "air": 14589.6,
+     "liquid": 18081.7
+    }
+   },
+   {
+    "hz": 820000000,
+    "uv": 725000,
+    "f_ratio": 0.931818,
+    "v_ratio": 0.966667,
+    "A/ar_batch1": {
+     "design": 10220.1,
+     "air": 6048.7,
+     "liquid": 8210.77
+    },
+    "A/dflash": {
+     "design": 17443.5,
+     "air": 5210.65,
+     "liquid": 7192.78
+    },
+    "B/ar_batch1": {
+     "design": 10220.1,
+     "air": 9183.2,
+     "liquid": 10220.1
+    },
+    "B/dflash": {
+     "design": 17443.5,
+     "air": 15003.6,
+     "liquid": 17443.5
+    }
+   },
+   {
+    "hz": 790000000,
+    "uv": 712500,
+    "f_ratio": 0.897727,
+    "v_ratio": 0.95,
+    "A/ar_batch1": {
+     "design": 9846.15,
+     "air": 6191.49,
+     "liquid": 8388.68
+    },
+    "A/dflash": {
+     "design": 16805.4,
+     "air": 5423.41,
+     "liquid": 7461.67
+    },
+    "B/ar_batch1": {
+     "design": 9846.15,
+     "air": 9310.75,
+     "liquid": 9846.15
+    },
+    "B/dflash": {
+     "design": 16805.4,
+     "air": 15418.0,
+     "liquid": 16805.4
+    }
+   },
+   {
+    "hz": 760000000,
+    "uv": 700000,
+    "f_ratio": 0.863636,
+    "v_ratio": 0.933333,
+    "A/ar_batch1": {
+     "design": 9472.25,
+     "air": 6335.19,
+     "liquid": 8568.03
+    },
+    "A/dflash": {
+     "design": 16167.2,
+     "air": 5642.77,
+     "liquid": 7739.35
+    },
+    "B/ar_batch1": {
+     "design": 9472.25,
+     "air": 9435.95,
+     "liquid": 9472.25
+    },
+    "B/dflash": {
+     "design": 16167.2,
+     "air": 15832.8,
+     "liquid": 16167.2
+    }
+   },
+   {
+    "hz": 730000000,
+    "uv": 687500,
+    "f_ratio": 0.829545,
+    "v_ratio": 0.916667,
+    "A/ar_batch1": {
+     "design": 9098.34,
+     "air": 6479.77,
+     "liquid": 8748.76
+    },
+    "A/dflash": {
+     "design": 15529.0,
+     "air": 5869.02,
+     "liquid": 8026.25
+    },
+    "B/ar_batch1": {
+     "design": 9098.34,
+     "air": 9098.34,
+     "liquid": 9098.34
+    },
+    "B/dflash": {
+     "design": 15529.0,
+     "air": 15529.0,
+     "liquid": 15529.0
+    }
+   },
+   {
+    "hz": 700000000,
+    "uv": 675000,
+    "f_ratio": 0.795455,
+    "v_ratio": 0.9,
+    "A/ar_batch1": {
+     "design": 8724.44,
+     "air": 6625.17,
+     "liquid": 8724.44
+    },
+    "A/dflash": {
+     "design": 14890.8,
+     "air": 6102.48,
+     "liquid": 8322.78
+    },
+    "B/ar_batch1": {
+     "design": 8724.44,
+     "air": 8724.44,
+     "liquid": 8724.44
+    },
+    "B/dflash": {
+     "design": 14890.8,
+     "air": 14890.8,
+     "liquid": 14890.8
+    }
+   },
+   {
+    "hz": 670000000,
+    "uv": 662500,
+    "f_ratio": 0.761364,
+    "v_ratio": 0.883333,
+    "A/ar_batch1": {
+     "design": 8350.53,
+     "air": 6771.36,
+     "liquid": 8350.53
+    },
+    "A/dflash": {
+     "design": 14252.6,
+     "air": 6343.5,
+     "liquid": 8629.39
+    },
+    "B/ar_batch1": {
+     "design": 8350.53,
+     "air": 8350.53,
+     "liquid": 8350.53
+    },
+    "B/dflash": {
+     "design": 14252.6,
+     "air": 14252.6,
+     "liquid": 14252.6
+    }
+   },
+   {
+    "hz": 640000000,
+    "uv": 650000,
+    "f_ratio": 0.727273,
+    "v_ratio": 0.866667,
+    "A/ar_batch1": {
+     "design": 7976.63,
+     "air": 6918.29,
+     "liquid": 7976.63
+    },
+    "A/dflash": {
+     "design": 13614.5,
+     "air": 6592.41,
+     "liquid": 8946.56
+    },
+    "B/ar_batch1": {
+     "design": 7976.63,
+     "air": 7976.63,
+     "liquid": 7976.63
+    },
+    "B/dflash": {
+     "design": 13614.5,
+     "air": 13614.5,
+     "liquid": 13614.5
+    }
+   },
+   {
+    "hz": 598000000,
+    "uv": 650000,
+    "f_ratio": 0.679545,
+    "v_ratio": 0.866667,
+    "A/ar_batch1": {
+     "design": 7453.16,
+     "air": 6946.85,
+     "liquid": 7453.16
+    },
+    "A/dflash": {
+     "design": 12721.0,
+     "air": 6637.03,
+     "liquid": 8991.17
+    },
+    "B/ar_batch1": {
+     "design": 7453.16,
+     "air": 7453.16,
+     "liquid": 7453.16
+    },
+    "B/dflash": {
+     "design": 12721.0,
+     "air": 12721.0,
+     "liquid": 12721.0
+    }
+   },
+   {
+    "hz": 556000000,
+    "uv": 643750,
+    "f_ratio": 0.631818,
+    "v_ratio": 0.858333,
+    "A/ar_batch1": {
+     "design": 6929.7,
+     "air": 6929.7,
+     "liquid": 6929.7
+    },
+    "A/dflash": {
+     "design": 11827.6,
+     "air": 6792.91,
+     "liquid": 9182.22
+    },
+    "B/ar_batch1": {
+     "design": 6929.7,
+     "air": 6929.7,
+     "liquid": 6929.7
+    },
+    "B/dflash": {
+     "design": 11827.6,
+     "air": 11827.6,
+     "liquid": 11827.6
+    }
+   },
+   {
+    "hz": 515000000,
+    "uv": 637500,
+    "f_ratio": 0.585227,
+    "v_ratio": 0.85,
+    "A/ar_batch1": {
+     "design": 6418.69,
+     "air": 6418.69,
+     "liquid": 6418.69
+    },
+    "A/dflash": {
+     "design": 10955.4,
+     "air": 6949.59,
+     "liquid": 9374.76
+    },
+    "B/ar_batch1": {
+     "design": 6418.69,
+     "air": 6418.69,
+     "liquid": 6418.69
+    },
+    "B/dflash": {
+     "design": 10955.4,
+     "air": 10955.4,
+     "liquid": 10955.4
+    }
+   },
+   {
+    "hz": 473000000,
+    "uv": 637500,
+    "f_ratio": 0.5375,
+    "v_ratio": 0.85,
+    "A/ar_batch1": {
+     "design": 5895.23,
+     "air": 5895.23,
+     "liquid": 5895.23
+    },
+    "A/dflash": {
+     "design": 10061.9,
+     "air": 6993.8,
+     "liquid": 9418.98
+    },
+    "B/ar_batch1": {
+     "design": 5895.23,
+     "air": 5895.23,
+     "liquid": 5895.23
+    },
+    "B/dflash": {
+     "design": 10061.9,
+     "air": 10061.9,
+     "liquid": 10061.9
+    }
+   },
+   {
+    "hz": 431000000,
+    "uv": 631250,
+    "f_ratio": 0.489773,
+    "v_ratio": 0.841667,
+    "A/ar_batch1": {
+     "design": 5371.76,
+     "air": 5371.76,
+     "liquid": 5371.76
+    },
+    "A/dflash": {
+     "design": 9168.49,
+     "air": 7153.21,
+     "liquid": 9168.49
+    },
+    "B/ar_batch1": {
+     "design": 5371.76,
+     "air": 5371.76,
+     "liquid": 5371.76
+    },
+    "B/dflash": {
+     "design": 9168.49,
+     "air": 9168.49,
+     "liquid": 9168.49
+    }
+   },
+   {
+    "hz": 410000000,
+    "uv": 631250,
+    "f_ratio": 0.465909,
+    "v_ratio": 0.841667,
+    "A/ar_batch1": {
+     "design": 5110.03,
+     "air": 5110.03,
+     "liquid": 5110.03
+    },
+    "A/dflash": {
+     "design": 8721.76,
+     "air": 7175.21,
+     "liquid": 8721.76
+    },
+    "B/ar_batch1": {
+     "design": 5110.03,
+     "air": 5110.03,
+     "liquid": 5110.03
+    },
+    "B/dflash": {
+     "design": 8721.76,
+     "air": 8721.76,
+     "liquid": 8721.76
+    }
+   },
+   {
+    "hz": 390000000,
+    "uv": 625000,
+    "f_ratio": 0.443182,
+    "v_ratio": 0.833333,
+    "A/ar_batch1": {
+     "design": 4860.76,
+     "air": 4860.76,
+     "liquid": 4860.76
+    },
+    "A/dflash": {
+     "design": 8296.31,
+     "air": 7313.5,
+     "liquid": 8296.31
+    },
+    "B/ar_batch1": {
+     "design": 4860.76,
+     "air": 4860.76,
+     "liquid": 4860.76
+    },
+    "B/dflash": {
+     "design": 8296.31,
+     "air": 8296.31,
+     "liquid": 8296.31
+    }
+   }
+  ],
+  "best_air": {
+   "A/ar_batch1": {
+    "hz": 598000000,
+    "f_ratio": 0.679545,
+    "v_ratio": 0.866667,
+    "design": 7453.16,
+    "air": 6946.85,
+    "liquid": 7453.16
+   },
+   "A/dflash": {
+    "hz": 390000000,
+    "f_ratio": 0.443182,
+    "v_ratio": 0.833333,
+    "design": 8296.31,
+    "air": 7313.5,
+    "liquid": 8296.31
+   },
+   "B/ar_batch1": {
+    "hz": 760000000,
+    "f_ratio": 0.863636,
+    "v_ratio": 0.933333,
+    "design": 9472.25,
+    "air": 9435.95,
+    "liquid": 9472.25
+   },
+   "B/dflash": {
+    "hz": 760000000,
+    "f_ratio": 0.863636,
+    "v_ratio": 0.933333,
+    "design": 16167.2,
+    "air": 15832.8,
+    "liquid": 16167.2
+   }
+  }
+ },
+ "hbm_die_share_needed_for_target": {
+  "A_measured_implementation/ar_batch1": {
+   "pj_per_bit": 0.812078,
+   "reduction_pj_per_bit": 9.37792,
+   "reference": {
+    "baseline_mi250x": 10.19,
+    "gh200_hbm3": 8.23,
+    "oconnor_io_floor": 0.8
+   },
+   "below_gh200_derived": true
+  },
+  "A_measured_implementation/dflash": null,
+  "B_proposed_production/ar_batch1": {
+   "pj_per_bit": 7.80517,
+   "reduction_pj_per_bit": 2.38483,
+   "reference": {
+    "baseline_mi250x": 10.19,
+    "gh200_hbm3": 8.23,
+    "oconnor_io_floor": 0.8
+   },
+   "below_gh200_derived": true
+  },
+  "B_proposed_production/dflash": {
+   "pj_per_bit": 10.19,
+   "note": "already reaches the target"
+  }
+ },
+ "summary": [
+  {
+   "lever": "baseline",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 5765.97,
+   "liquid": 7859.36,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline"
+  },
+  {
+   "lever": "baseline",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 4803.75,
+   "liquid": 6679.87,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline"
+  },
+  {
+   "lever": "baseline",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 8921.13,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline"
+  },
+  {
+   "lever": "baseline",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 14176.2,
+   "liquid": 18719.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline"
+  },
+  {
+   "lever": "kv_sram_in_slack",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 6550.39,
+   "liquid": 8933.18,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_in_slack",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 4983.42,
+   "liquid": 6933.77,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_in_slack",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10964.2,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_in_slack",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 15936.6,
+   "liquid": 18719.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_1_lane_copy_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 8939.45,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_1_lane_copy_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 17850.4,
+   "air": 6237.27,
+   "liquid": 8594.82,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_1_lane_copy_per_die",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10967.9,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_1_lane_copy_per_die",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 17850.4,
+   "air": 17850.4,
+   "liquid": 17850.4,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_2_lane_copies_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10495.8,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_2_lane_copies_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 16015.5,
+   "air": 7498.63,
+   "liquid": 10239.2,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_2_lane_copies_per_die",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10967.9,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_2_lane_copies_per_die",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 16015.5,
+   "air": 16015.5,
+   "liquid": 16015.5,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_4_lane_copies_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10807.3,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_4_lane_copies_per_die",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 9017.15,
+   "air": 9017.15,
+   "liquid": 9017.15,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_4_lane_copies_per_die",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10967.9,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "kv_sram_for_4_lane_copies_per_die",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 9017.15,
+   "air": 9017.15,
+   "liquid": 9017.15,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "assumed"
+  },
+  {
+   "lever": "sensitivity_kv_int4",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 7951.32,
+   "liquid": 10838.1,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline inputs only"
+  },
+  {
+   "lever": "sensitivity_kv_int4",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 5326.36,
+   "liquid": 7406.59,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline inputs only"
+  },
+  {
+   "lever": "sensitivity_kv_int4",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10967.9,
+   "air": 10967.9,
+   "liquid": 10967.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline inputs only"
+  },
+  {
+   "lever": "sensitivity_kv_int4",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 18719.9,
+   "air": 18719.9,
+   "liquid": 18719.9,
+   "per_user_rate_kept": true,
+   "silicon_mm2": 1630.0,
+   "evidence": "baseline inputs only"
+  },
+  {
+   "lever": "dvfs_f0.966",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10594.0,
+   "air": 5906.85,
+   "liquid": 8034.31,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.966",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 18081.7,
+   "air": 5004.19,
+   "liquid": 6932.31,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.966",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10594.0,
+   "air": 9053.32,
+   "liquid": 10594.0,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.966",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 18081.7,
+   "air": 14589.6,
+   "liquid": 18081.7,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.932",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 10220.1,
+   "air": 6048.7,
+   "liquid": 8210.77,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.932",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 17443.5,
+   "air": 5210.65,
+   "liquid": 7192.78,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.932",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 10220.1,
+   "air": 9183.2,
+   "liquid": 10220.1,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.932",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 17443.5,
+   "air": 15003.6,
+   "liquid": 17443.5,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.864",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 9472.25,
+   "air": 6335.19,
+   "liquid": 8568.03,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.864",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 16167.2,
+   "air": 5642.77,
+   "liquid": 7739.35,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.864",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 9472.25,
+   "air": 9435.95,
+   "liquid": 9472.25,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.864",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 16167.2,
+   "air": 15832.8,
+   "liquid": 16167.2,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.795",
+   "scenario": "A_measured_implementation",
+   "point": "ar_batch1",
+   "design_rate": 8724.44,
+   "air": 6625.17,
+   "liquid": 8724.44,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.795",
+   "scenario": "A_measured_implementation",
+   "point": "dflash",
+   "design_rate": 14890.8,
+   "air": 6102.48,
+   "liquid": 8322.78,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.795",
+   "scenario": "B_proposed_production",
+   "point": "ar_batch1",
+   "design_rate": 8724.44,
+   "air": 8724.44,
+   "liquid": 8724.44,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  },
+  {
+   "lever": "dvfs_f0.795",
+   "scenario": "B_proposed_production",
+   "point": "dflash",
+   "design_rate": 14890.8,
+   "air": 14890.8,
+   "liquid": 14890.8,
+   "per_user_rate_kept": false,
+   "silicon_mm2": 1630.0,
+   "evidence": "published-spec"
+  }
+ ]
+}

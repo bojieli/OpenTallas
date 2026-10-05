@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Default-off RF-side connected-fence model, before RTL; no simulations."""
+import hashlib,json,math,subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+PARENT='e6cac61a773b81075e924d911c9e354b08ab4c7a'
+CAPTURE='rtl/test/hbm_connected_service/tb_connected_matrix_service.sv'
+
+def generate():
+    raw=subprocess.check_output(['git','show',PARENT+':'+CAPTURE],cwd=ROOT)
+    prior=json.loads((ROOT/'results/uarch/full_sm_rf_service_20261002/model_final.json').read_text())
+    state=dict(expected_vectors=10,issued_vectors=10,retired_ACKs=10,epoch=8,ACK_addr=9,
+               active=1,ACK_pending=1,producer_done=1,fault=1)
+    return dict(schema='opentallas.uarch.connected-RF-visibility-fence.v1',default_enabled=False,
+      source_parent_commit=PARENT,parent_capture_sha256=hashlib.sha256(raw).hexdigest(),
+      model_sha256=hashlib.sha256((ROOT/'results/uarch/full_sm_rf_service_20261002/model_final.json').read_bytes()).hexdigest(),
+      source_RF_service_commit='2e75bab2efa022f60d98bd8511a3027da56951ce',
+      ownership=dict(matrix_result_capture='Maxwell/parent, existing bounded full-operation capture reused unchanged',
+                     RF_visibility_fence_and_tests='this RF owner; no duplicate result capture RTL'),
+      interface=dict(begin='op_valid/op_ready;epoch8;expected_vectors10, legal1..512',
+        capture='cap_valid/cap_ready;cap_epoch8;cap_addr9 must equal issued-vector index0..expected-1;cap_last1;cap_data4096. Stable until ready; no duplicate/gap destination.',
+        producer='producer_done_valid/producer_done_epoch8, one epoch-tagged completion pulse after actual producer drain',
+        service='original host_wr_valid/ready,dst9,wdata4096,host_ack_valid/ready; unchanged RF/SIMD provider',
+        vector_visibility='vector_ACK_visible plus ACK_addr9/epoch8; backed by actual service ACK, never invented timer',
+        fence='writes_visible;fence_valid/fence_ready/fence_epoch8; consumer release only after all ACKs retired AND producer_done',
+        ACK_backpressure='ack_retire_enable, diagnostic/controller readiness; accepted writes remain pending until actual ACK handshake'),
+      state_bits=state,total_state_bits=sum(state.values()),payload_buffer_bits=0,max_pending_RF_writes=1,
+      capture_queue_inside_fence=0,full_RF_geometry_unchanged=True,SIMD_lanes=128,RF_banks=16,RF_pages=4,RF_read_copies=2,
+      new_MACs_pc=0,op_intensity=0,replicas=32,
+      ports_bytes_pc=dict(capture=512,RF_logical_write=512,RF_physical_mirrored_write=1024),
+      boundaries_bits_pc=dict(begin=20,capture=4116,producer_done=9,RF_write=4107,RF_ACK=2,vector_ACK=18,fence=10,status=2),
+      physical_boundary_note='capture data routes directly to existing RF write bus, not8192bits of internal RF reads across matrix boundary; no additional memory copy',
+      mux_payload_bits=0,demux_enable_loads=1,control_fanout_upper=8,
+      estimated_state_area_um2=sum(state.values())*.2916,
+      assumed_control_gate_equivalents=128,assumed_control_gate_area_um2=.2,
+      estimated_total_logic_area_um2=sum(state.values())*.2916+128*.2,
+      assumed_50pct_slot_area_um2=2*(sum(state.values())*.2916+128*.2),
+      candidate_local_slot_um=[10.8,8.64],slot_is_NOT_placed=True,
+      tracks=dict(capture_payload_local_bus=4096,additional_control_incidence=20+20+9+18+10+2,
+        actual_translated_OBS_PG_pin_escape_capacity=None,existing_aggregate_channel_FAIL_preserved=True),
+      latency=dict(capture_accept_equals_RF_write_accept=True,
+        write_accept_to_ACK_visible_edges=0,ACK_earliest_retirement_edges=1,
+        earliest_fence_valid_edges=1,earliest_consumer_accept_edges=2,
+        formula='fence_visible_edge=max(last_actual_RF_ACK_retire_edge,epoch_producer_done_capture_edge);consumer_accept>=fence_visible_edge+1 and other actual inputs/leases/barrier/weights ready',
+        repeated_write_II_min=2,price='Reuse existing RFwriteII2; count measured fence/producer/bank/backpressure delays once on actual event DAG; no extra blanket200ns term',
+        RF_SIMD_alias_chain='matrix capture -> visible mirrored RF writes -> ADD(x,x)->sameaddr -> ADD(prior,prior)->sameaddr -> RF read -> optional scratch -> actual nextmatrix xwrite -> firstissue; no host overwrite between dependent ops',
+        reset='reset invalidates pending ACK/control/epoch, not SRAM contents; next operation initializes its vectors from actual matrix producer before reading',
+        invalid_epoch_count_last='not accepted; sticky fault until reset; never advance fence from rejected/stale input'),
+      full_geometry={k:v['retained_element_outline_um'] for k,v in prior['models'].items()},
+      capture_budget=dict(DS_payload_bytes=131072,Qwen_payload_bytes=262144,metadata_and_mux_in_parent=True,
+        selected_policy='reuse source-bound full-one-op reservation from parent bench; product streaming collector still parent owned'),
+      trace_required=['producer_first_rv','producer_last_rv','RF_first_write_accept','RF_last_write_accept',
+        'RF_first_ACK_visible','RF_last_ACK_visible','RF_last_ACK_retire','RF_fence_valid',
+        'SIMD_first_accept','SIMD_last_done','RF_operand_read_visible','scratch_write_done','scratch_read_done',
+        'consumer_x_last_write','consumer_start','consumer_first_valid_issue'],
+      simulation_clock_ns=10,clock_target_GHz=1.2,clock_closure=False,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+      general_vector_reducer_SFU_provider_not_added=True,full_token_bound=False,build_GO=False,adoption=False,
+      generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+if __name__=='__main__':
+    out=ROOT/'results/uarch/hbm_rf_visibility_fence_20261002/model_addressed_before_guard_RTL.json';out.parent.mkdir(parents=True,exist_ok=True)
+    data=(json.dumps(generate(),indent=2,sort_keys=True)+'\n').encode()
+    if out.exists():assert out.read_bytes()==data
+    else:out.write_bytes(data)
+    print(out)

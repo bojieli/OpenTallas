@@ -1,0 +1,58 @@
+{
+  "host": "ot-pve2",
+  "observed_at": "2026-10-01T09:45:30.522742+00:00",
+  "archive": "/home/ubuntu/w13-retired-tc-col-12-20261001",
+  "files": {
+    "container_before.json": {
+      "sha256": "0c7b9477278caf7db9149e50f7d574f626584dcc66cf12e7b0074bc2f06d7bbc",
+      "bytes": 6054
+    },
+    "source.patch": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "terminal.json": {
+      "sha256": "33a326f8a351f3161a8c4280d213dc5fe4273c04324809a2c300b0a4adacb497",
+      "bytes": 209
+    },
+    "receipt_before.json": {
+      "sha256": "f12c9aa1dbb06a24445b24af4fc81c7b450fa15270f54a04abb95a8bc42e60fc",
+      "bytes": 376
+    },
+    "source_status.txt": {
+      "sha256": "0e9e3fcdb44c938e1cccca9fa1815073b58ad8fb023a7ef4a3ed083ad66bf608",
+      "bytes": 64
+    },
+    "evidence.tar.gz": {
+      "sha256": "3390899a74a7ea2b449b516902bd8e9d2f548d7cde88e748134f454cda50ea6a",
+      "bytes": 1485
+    }
+  },
+  "terminal": {
+    "status": "STOPPED_AUTO_REMOVED",
+    "container_inspect_returncode": 1,
+    "process435036_absent": true,
+    "evidence_preserved": true,
+    "work_preserved": true,
+    "utc": "2026-10-01T09:44:00.143906+00:00"
+  },
+  "receipt_before": {
+    "source_head": "f7b5566e16f99648477f7794dfd0afeda91e15ed",
+    "container": "d2fa7e4a16792da747fdd20c7f6b5883cce8061635e0d5d840b54926b4088ca4",
+    "work": "/home/ubuntu/w13work/tc_col_12",
+    "verdict": "SUPERSEDED_UNQUALIFIED_CANCELLATION",
+    "archive_sha256": "3390899a74a7ea2b449b516902bd8e9d2f548d7cde88e748134f454cda50ea6a",
+    "utc": "2026-10-01T09:43:20.321750+00:00"
+  },
+  "container_matching": "",
+  "process435036_exists": false,
+  "stop_owner": "parent; this stream only verifies, no duplicate signals",
+  "work_and_sources": "not deleted",
+  "sole_supervisor": {
+    "pid": 508855,
+    "start_ticks": "305066820",
+    "state": "T",
+    "hold": "CPU_GUARD_REQUIRED"
+  },
+  "no_additional_kill_or_restart": true
+}

@@ -1,0 +1,328 @@
+{
+  "schema": "QWEN_ROM_K16_HOTSPOT_DEMAND_MODEL_V1",
+  "tree": "banded",
+  "bundle_k": 16,
+  "pins": {
+    "results/rtl/qwen_rom_fulldie_20261003/terminal_b2_k16_banded_i5/gcell_usage.txt.gz": "3f5da9b9e9b4d1cadac29d7f755561ef7979098ca6f6124a7b19e01c4ed0fd7c",
+    "results/rtl/qwen_rom_fulldie_20261003/k16_demand_r1/inputs/SS_cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "results/rtl/qwen_rom_fulldie_20261003/k16_demand_r1/inputs/tech_k16.lef": "a72a55475ea73167735d8f6e1cab13adab2809da00764313ec00c10e667bae54",
+    "/home/ubuntu/OpenTallas-qwen-fulldie-pg-repair/tools/qwen_rom_fulldie.py": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
+    "/home/ubuntu/OpenTallas-qwen-fulldie-pg-repair/tools/qwen_rom_k16_hotspot_demand_r1.py": "6101b14916fc65a3bb7e8ea4e63df653c45c1792f0d955791d4141747cc86d8d",
+    "results/rtl/qwen_rom_fulldie_20261003/terminal_b2_k16_banded_i5/grt_congestion.rpt": "d5105e26af34e7a63ee10f6ca203ba0804988f7526c08792e2dd28f3e105a2c8"
+  },
+  "region_rects_um": {
+    "spine": [
+      11466.144,
+      21.6,
+      12690.0,
+      31216.320000000007
+    ],
+    "spine_vchan": [
+      11991.024,
+      21.6,
+      12165.119999999999,
+      31216.320000000007
+    ],
+    "hub_el": [
+      11578.464,
+      15413.760000000002,
+      11991.0,
+      15826.296000000002
+    ],
+    "sp_tree_top": [
+      11466.144,
+      15826.320000000002,
+      11991.0,
+      20394.696
+    ]
+  },
+  "measurement_scope": "raw OpenDB 4x4-gcell sums; centroid assigns boundary-crossing windows; overlapping region summaries are not additive",
+  "before_measured": {
+    "spine": {
+      "M8": {
+        "capacity": 3217501.0,
+        "demand": 1162989.0,
+        "windows": 27852,
+        "over_capacity_windows": 0,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 0.9310344827586207,
+        "peak_window_rect_um": [
+          12603.36,
+          9055.2,
+          12640.32,
+          9092.16
+        ],
+        "demand_capacity_fraction": 0.36145723031632315
+      },
+      "M9": {
+        "capacity": 3217328.0,
+        "demand": 1363509.0,
+        "windows": 27852,
+        "over_capacity_windows": 160,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 1.293103448275862,
+        "peak_window_rect_um": [
+          12122.88,
+          8759.52,
+          12159.84,
+          8796.48
+        ],
+        "demand_capacity_fraction": 0.4238016764221739
+      }
+    },
+    "spine_vchan": {
+      "M8": {
+        "capacity": 487400.0,
+        "demand": 177823.0,
+        "windows": 4220,
+        "over_capacity_windows": 0,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 0.9137931034482759,
+        "peak_window_rect_um": [
+          12122.88,
+          9129.12,
+          12159.84,
+          9166.08
+        ],
+        "demand_capacity_fraction": 0.3648399671727534
+      },
+      "M9": {
+        "capacity": 486144.0,
+        "demand": 294482.0,
+        "windows": 4220,
+        "over_capacity_windows": 158,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 1.293103448275862,
+        "peak_window_rect_um": [
+          12122.88,
+          8759.52,
+          12159.84,
+          8796.48
+        ],
+        "demand_capacity_fraction": 0.6057505595050027
+      }
+    },
+    "hub_el": {
+      "M8": {
+        "capacity": 13992.0,
+        "demand": 7757.0,
+        "windows": 121,
+        "over_capacity_windows": 0,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 0.8620689655172413,
+        "peak_window_rect_um": [
+          11827.2,
+          15412.32,
+          11864.16,
+          15449.28
+        ],
+        "demand_capacity_fraction": 0.5543882218410521
+      },
+      "M9": {
+        "capacity": 13992.0,
+        "demand": 6729.0,
+        "windows": 121,
+        "over_capacity_windows": 0,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 0.8706896551724138,
+        "peak_window_rect_um": [
+          11827.2,
+          15412.32,
+          11864.16,
+          15449.28
+        ],
+        "demand_capacity_fraction": 0.48091766723842194
+      }
+    },
+    "sp_tree_top": {
+      "M8": {
+        "capacity": 200570.0,
+        "demand": 70811.0,
+        "windows": 1736,
+        "over_capacity_windows": 0,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 0.8035714285714286,
+        "peak_window_rect_um": [
+          11827.2,
+          15818.88,
+          11864.16,
+          15855.84
+        ],
+        "demand_capacity_fraction": 0.35304881088896645
+      },
+      "M9": {
+        "capacity": 200880.0,
+        "demand": 93257.0,
+        "windows": 1736,
+        "over_capacity_windows": 1,
+        "positive_demand_zero_capacity_windows": 0,
+        "peak_fraction": 1.043103448275862,
+        "peak_window_rect_um": [
+          11790.24,
+          15818.88,
+          11827.2,
+          15855.84
+        ],
+        "demand_capacity_fraction": 0.464242333731581
+      }
+    }
+  },
+  "overflow_source_mentions": {
+    "spine": {
+      "vertical_edges": 28,
+      "capacity": 140,
+      "usage": 180,
+      "source_mentions_by_class": {
+        "link_spine": 170,
+        "io": 4,
+        "tree_spine": 6
+      }
+    },
+    "spine_vchan": {
+      "vertical_edges": 0,
+      "capacity": 0,
+      "usage": 0,
+      "source_mentions_by_class": {}
+    },
+    "hub_el": {
+      "vertical_edges": 2,
+      "capacity": 10,
+      "usage": 12,
+      "source_mentions_by_class": {
+        "link_spine": 8,
+        "io": 4
+      }
+    },
+    "sp_tree_top": {
+      "vertical_edges": 8,
+      "capacity": 40,
+      "usage": 50,
+      "source_mentions_by_class": {
+        "link_spine": 50
+      }
+    }
+  },
+  "after_measured": null,
+  "after_status": "UNKNOWN: no changed-source contextual route; never uniformly scale measured layer demand by wire cuts",
+  "prospective": {
+    "default_off": true,
+    "selection_order": [
+      "reset+two-beat instruction+256-bit links/GALS",
+      "M8 longhaul and PG away from spine with actual IR",
+      "spine widening using reticle slack",
+      "hub relocation last"
+    ],
+    "ports": {
+      "corridor_and_head": {
+        "before": 637,
+        "after": 388,
+        "before_k16_nets": 40,
+        "after_k16_nets": 25,
+        "wire_cut_fraction": 0.39089481946624804
+      },
+      "tile_tap": {
+        "before": 511,
+        "after": 325,
+        "before_k16_nets": 32,
+        "after_k16_nets": 21,
+        "wire_cut_fraction": 0.3639921722113503
+      },
+      "stack_link": {
+        "before": 1056,
+        "after": 544,
+        "before_k16_nets": 66,
+        "after_k16_nets": 34,
+        "wire_cut_fraction": 0.48484848484848486
+      },
+      "paired_spine_links": {
+        "before": 2112,
+        "after": 1088,
+        "before_k16_nets": 132,
+        "after_k16_nets": 68,
+        "wire_cut_fraction": 0.48484848484848486
+      }
+    },
+    "instruction": {
+      "word_bits": 379,
+      "beat_data_bits": 190,
+      "beat_control_bits": 3,
+      "accept_only_two_ordered_beats": true,
+      "FIFO_entries": 2,
+      "assembly_mask_bits": 2,
+      "extra_issue_edges": 1,
+      "per_token_extra_edges": "N_instructions_on_critical_path (source count/overlap not yet bound)",
+      "stations": 1536,
+      "raw_bits_per_station": 768,
+      "protected_bits_per_station": 936,
+      "protected_added_bits": 1437696,
+      "gross_FF_body_um2": 545001.7996799999,
+      "clock_pin_load_SS_fF": 623934.1854719999,
+      "logic_reserve_proxy_um2": 272500.89983999997,
+      "logic_proxy_is_not_measured": true,
+      "body_plus_proxy_mm2": 0.8175026995199999,
+      "slot_area_at_50pct_mm2": 1.6350053990399998,
+      "matched_replaced_state_debit": "UNKNOWN: zero credit",
+      "added_codec_mux_timing": "UNKNOWN"
+    },
+    "narrow_links": {
+      "old_data_bits_per_direction": 512,
+      "new_data_bits_per_direction": 256,
+      "controls": 32,
+      "old_B_per_cycle_each_direction": 64,
+      "new_B_per_cycle_each_direction": 32,
+      "old_bits_per_cycle_each_direction": 512,
+      "new_bits_per_cycle_each_direction": 256,
+      "serialized_extra_edges_per_layer": 112,
+      "serialized_extra_edges_per_36layer_token": 4032,
+      "serialized_extra_us_at_1p2GHz": 3.36,
+      "critical_path_policy": "4 stacks parallel: count max stack, not sum; conservative full serialization, overlap uncredited",
+      "rounding_order_unchanged_required": true,
+      "partial_final_payload_and_version_ACK_source": "UNKNOWN"
+    },
+    "reset": {
+      "wires_before": 64,
+      "wires_after": 1,
+      "requires_per_hop_registered_reset": true,
+      "reset_drain_and_fanout_source": "UNKNOWN; no clock wire removal credited"
+    },
+    "GALS": {
+      "data_width": 256,
+      "proposed_depth_per_direction": 8,
+      "links": 4,
+      "directions": 2,
+      "raw_buffer_bits": 18432,
+      "protected_buffer_bits": 23040,
+      "per_cut_forward_latency_prospective_cycles": 3,
+      "per_cut_reverse_credit_prospective_cycles": 3,
+      "source_matched_cut_count": null,
+      "finite_backpressure_and_reset_quiescence_source": "UNKNOWN",
+      "existing_FIFO_replacement_debit": "UNKNOWN: zero credit"
+    },
+    "implementation_admitted": false,
+    "reason": "Prospective ports/state priced; no exact caller/FIFO/reset/GALS source or loaded new codec/mux SSFF context. Do not generate a fake reduced-demand hardware PASS."
+  },
+  "reticle": {
+    "hard_mm2": 858,
+    "existing_die_mm2": 792.364,
+    "existing_slack_mm2": 65.63599999999997,
+    "DSpark_approx_composition_mm2": 823,
+    "DSpark_source_bound": false,
+    "conditional_slack_at_823_mm2": 35,
+    "max_extra_spine_width_um_if_823_actual": 1067.0159162191296,
+    "widening_not_selected": true
+  },
+  "clock_policy": {
+    "stream_GHz": 1.2,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "corridor": {
+    "slab_min_um": 17.28,
+    "centered_pins": true,
+    "no_M2_M5_longhaul": true,
+    "max_reach_um": 430.56,
+    "existing_token_link_delta_cycles": 432
+  },
+  "actual_protected_FIFO_codec_or_dispatcher_RTL_written": false,
+  "new_physical_launch": false
+}

@@ -1,0 +1,52 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte _____
+
+    @pytest.mark.skipif(not RECORDS, reason="no routed records present")
+    def test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte():
+        """The recorded config.mk hash of each earlier route, rebuilt by this driver."""
+        checked = 0
+        for path in RECORDS:
+            record = json.loads(path.read_text(encoding="utf-8"))
+            pnr = record.get("place_and_route")
+            if not pnr:
+                continue
+            artifact = pnr.get("artifacts", {}).get("config.mk")
+            if not artifact:
+                continue
+            design = record["design"]
+            block = {
+                "top": design["top"],
+                "sources": [entry["path"] for entry in design["sources"]],
+                "parameters": design["parameters"],
+                "clock_port": design["clock_port"],
+                "false_path_from_ports": design["false_path_from_ports"],
+            }
+            view = flow.VIEWS[record["view"]["name"]]
+            lines = flow.orfs_config_lines(
+                pnr["design_nickname"],
+                block,
+                pnr["platform"],
+                view["pnr"],
+                pnr["core_utilization_percent"],
+                pnr["place_density"],
+                pnr.get("signal_integrity_constraints"),
+                # A record that named memory macros carries their lines in its own
+                # config.mk, so the rebuild must be handed them back.  Passing None
+                # here would have silently exempted every macro-bearing record from
+                # the only test that binds a config.mk to its hash -- and the first
+                # such record (asap7/a3_g2_cluster) would have failed instead of
+                # being checked.
+                pnr.get("memory_macros"),
+            )
+            text = "\n".join(lines) + "\n"
+>           assert hashlib.sha256(text.encode("utf-8")).hexdigest() == artifact["sha256"], path
+E           AssertionError: PosixPath('/home/ubuntu/OpenTallas/results/physical_abi3/asap7/a3_g2_cluster/pnr.json')
+E           assert '7d21b92d6de5...0665dd73d6264' == '855af0f3641e...9c23b17bb1ec2'
+E             
+E             - 855af0f3641e326c0f1f884f47a0646a8fc38a462dc3633fd039c23b17bb1ec2
+E             + 7d21b92d6de5371d7271047f35383298d34873f43de444811960665dd73d6264
+
+tests/test_abi3_physical_memory_macros.py:184: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_abi3_physical_memory_macros.py::test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte

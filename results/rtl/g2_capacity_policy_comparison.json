@@ -1,0 +1,41 @@
+{
+  "status": "pass",
+  "scope": "Configuration-time residency heuristic versus manual three-column pass at matched M6/N53/K343; not runtime adaptation or global optimality",
+  "source_manifests_match": true,
+  "current_sources_verified": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth343_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "7cd57bfb2441df487ef588a8bc1d434031579d50bab54e88890b2b1160a4d1fa",
+      "pass_columns": 3,
+      "schedule_policy": null,
+      "median_successful_phase_cycles": 201466.5,
+      "first_weight_bytes": 405512,
+      "first_weight_fills": 12691,
+      "first_activation_fills": 6174,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth343_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2_auto_schedule.json",
+      "sha256": "b95bdd7a00c9584ec23eb2521dffd84ace8d369aaeb32d66e655c59834b2c1f8",
+      "pass_columns": 2,
+      "schedule_policy": {
+        "pass_first": true,
+        "pass_columns": 2,
+        "reason": "widest supported whole-K pass that fits resident banks",
+        "packed_row_words": 2401,
+        "packed_pass_words": 686,
+        "capacity_words": 1024
+      },
+      "median_successful_phase_cycles": 68181.5,
+      "first_weight_bytes": 73352,
+      "first_weight_fills": 2401,
+      "first_activation_fills": 8232,
+      "outputs": 2234,
+      "writes": 295
+    }
+  ],
+  "successful_phase_cycle_reduction_percent": 66.1574008582072,
+  "policy_tests": 15
+}

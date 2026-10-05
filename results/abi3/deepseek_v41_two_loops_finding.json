@@ -1,0 +1,21 @@
+{
+  "measured": {
+    "and_the_symbol_change_is_not_free": "Binding the loop to POSITION_START also changed the reduced vehicle's PREFILL token from 1126 to 2284, so the loop descriptor is load-bearing for prefill addressing too.",
+    "both_numbers_are_137_but_from_different_symbols": "That is the whole difficulty.  Bind the single loop to CONTEXT_LENGTH and the output reads 9 + 129 = 138 against operands of 137.  Bind it to POSITION_START and the output reads 8 + 129 = 137 while the operand clamps to 8 and the operands sum to 136.  Measured both ways, one build each.",
+    "the_decode_output_extent": "RequestAxis(POSITION_START, unit=1, numerator=1, bias=129).  _phase_substitution rewrites the extent across section 12.2's relation -- context_length = position_start + span_tokens -- so pinning span_tokens to 1 turns the context form into POSITION_START + 1, and the committed window's 128 plus that 1 is the bias of 129.  At decode POSITION_START is 8, so 8 + 129 = 137.",
+    "the_operand_axis": "context_length itself, identity, bias 0.  At decode CONTEXT_LENGTH is 9, so the compressed prefix holds 9 rows and with the 128-row window the operands sum to 137."
+  },
+  "not_a_claim": [
+    "no V4.1 cell closes",
+    "the two-loop design is reasoned from two measurements, not implemented"
+  ],
+  "schema": "opentallas.result.v41_two_loops_finding.v1",
+  "state_of_the_tree": "Reverted to the two GATED fixes.  The reduced V4.1 array rebuilds byte-identically to the gated build (695b4f30...), V4-Flash and Qwen3 are unmoved from the A18 baseline, and the ratio-2 join passes decode while the ratio-1 join does not.",
+  "the_last_structural_fact": "The join's OUTPUT extent and its context-derived OPERAND need loops bound to DIFFERENT symbols, so one loop per kernel cannot resolve both.",
+  "what_the_complete_fix_needs": [
+    "TWO loops per phase-split join: one bound to the symbol the output's extent names, one to the symbol the context operand's own axis names",
+    "per-phase INPUT views, so the decode form reads the operand's capacity while prefill reads its token block (implemented and measured: operands 129 -> 137)",
+    "and a V4-Flash token re-walk, because per-phase input views move its digest (0e7cc36b... -> 176c24ed...)"
+  ],
+  "why_I_stopped_here": "Each step of this sequence revealed the next layer, and the last two attempts regressed prefill -- the token flipping to 2284 twice is the signal that I was changing a load-bearing descriptor faster than I was establishing what depends on it.  Two loops plus per-phase inputs plus a re-walk of a closed cell is a coherent piece of work and not a fifth incremental edit, and leaving the tree at a gated state is worth more than leaving it mid-sequence."
+}

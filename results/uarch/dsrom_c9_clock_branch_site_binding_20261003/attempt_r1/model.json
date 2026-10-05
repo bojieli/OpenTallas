@@ -1,0 +1,76 @@
+{
+  "added_BUF": 0,
+  "annex_charge_mm2": 0,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cases": {
+    "0": {
+      "assigned_BUF_count": 37817,
+      "assignment_failures": 358,
+      "cell_artifact_sha256": "acec4fd3f506b9495fc84eea4ccce0f834b5bc4c0dbe5d9c754e96a2d7d86b4e",
+      "common_control_instance_union_not_complete": true,
+      "common_new_BUF": 118,
+      "common_prefix_patch_DBU": [
+        11188476,
+        15567120,
+        11197116,
+        15572520
+      ],
+      "common_prefix_patch_requires_Maxwell_disjoint_ledger": true,
+      "common_prefix_patch_reserve_um2": 46.656,
+      "declared_metal_budget_excess_edges": 0,
+      "edge_artifact_sha256": "5ba531bccb90f85324e37ae610e3868c4bdcbe35d9224150bf498a26c42039de",
+      "equal_depth_not_skew": true,
+      "expected_existing_BUF_count": 38383,
+      "logical_source_root_cell_depth": 25,
+      "minimum_outside_first_hops_including_pad_only": 106,
+      "native_pin_vias_PG_upfeeds_current_R_C_and_clock_reset_skew_not_qualified": true,
+      "raw_new_BUF": 37699,
+      "raw_pool_count": 167264
+    },
+    "1": {
+      "assigned_BUF_count": 29729,
+      "assignment_failures": 294,
+      "cell_artifact_sha256": "5ef55e5d26fc2b2597221694694cb3394b7b0c422829c5c852cb04c9ca6b19fd",
+      "common_control_instance_union_not_complete": true,
+      "common_new_BUF": 79,
+      "common_prefix_patch_DBU": [
+        11188476,
+        15567120,
+        11197116,
+        15572520
+      ],
+      "common_prefix_patch_requires_Maxwell_disjoint_ledger": true,
+      "common_prefix_patch_reserve_um2": 46.656,
+      "declared_metal_budget_excess_edges": 0,
+      "edge_artifact_sha256": "d7ba2c158153ef77ea16990194e0c5c9e50ccb6ec7e60f5e2f93beba306f1b7b",
+      "equal_depth_not_skew": true,
+      "expected_existing_BUF_count": 30231,
+      "logical_source_root_cell_depth": 23,
+      "minimum_outside_first_hops_including_pad_only": 70,
+      "native_pin_vias_PG_upfeeds_current_R_C_and_clock_reset_skew_not_qualified": true,
+      "raw_new_BUF": 29650,
+      "raw_pool_count": 133824
+    }
+  },
+  "clock_or_capture_cycle_change": false,
+  "expected_total_existing_correction_BUF": 68614,
+  "physical_build_admitted": false,
+  "preserved_selector_bank": {
+    "complete_selector_reserved_with_core_rectangle_headroom_mm2": 2.3226645088799995,
+    "core_clock70406": 70406,
+    "named_bank_bbox_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "reserved_bank_mm2": 0.01438311168,
+    "source_cells_hash": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+    "source_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+    "spare_sites": 58,
+    "transport_clock48007_not_readded": true
+  },
+  "removed_BUF": 0,
+  "schema": "DS_C9_ONE_FIXED_BRANCH_SITE_ASSIGNMENT_V1",
+  "source_c9": "c9d19ed598077e4a4941c8548273f15deefb8c1a"
+}

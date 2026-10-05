@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "tests": 43,
+  "scope": "Independent arithmetic latency and column interleave; exact FP32 sequential accumulation, address and output order, credit stalls, reset/recovery; invalid adder depth refused",
+  "configurations": {
+    "pass_columns_and_adder_stages": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    "depths": [
+      1,
+      4,
+      160
+    ],
+    "pass_first": [
+      0,
+      1
+    ]
+  },
+  "sources": {
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "58e710313e4d591ca2c7840dbcd0d6b70debb971023377e4ad848627375c7b8f",
+    "rtl/abi3/ot_a3_lq8.sv": "dce16fd3450e3699e6f0cfd1e9c00dea0538c995019447187b51f1ffec99045f",
+    "rtl/abi3/ot_a3_g2_cluster.sv": "3317e20863fa8027463bfdf2ff1872220dce56b84d898ebfa64dd1abb1d5bb20",
+    "tests/test_lane_pass_first.py": "6b751a37ae91e29b204ab5d0ec2d258c97c97158a937ea53199d659276ffa240"
+  }
+}

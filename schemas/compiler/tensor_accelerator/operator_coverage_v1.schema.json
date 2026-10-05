@@ -1,0 +1,84 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/operator_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "encountered_operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "kind": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "count",
+          "kind"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "numeric_profile": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.operator_coverage.v1"
+    },
+    "status": {
+      "enum": [
+        "fail",
+        "pass"
+      ]
+    },
+    "supported_operations": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "unsupported_operation_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "unsupported_operations": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "encountered_operations",
+    "model_id",
+    "numeric_profile",
+    "schema",
+    "status",
+    "supported_operations",
+    "unsupported_operation_count",
+    "unsupported_operations"
+  ],
+  "title": "OpenTallas tensor-accelerator operator coverage v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    }
+  }
+}

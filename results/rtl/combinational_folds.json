@@ -1,0 +1,543 @@
+{
+  "files_scanned": 375,
+  "fold_count": 58,
+  "folds": [
+    {
+      "always_block_line": 464,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/ot_fp32_rne_pkg.sv",
+      "loop_bound": "524",
+      "product": 13100,
+      "trip_count": 524
+    },
+    {
+      "always_block_line": 81,
+      "carried": "dividend_aligned",
+      "carried_width_bits": 97,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "loop_bound": "49",
+      "product": 4753,
+      "trip_count": 49
+    },
+    {
+      "always_block_line": 81,
+      "carried": "product_aligned",
+      "carried_width_bits": 97,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "loop_bound": "49",
+      "product": 4753,
+      "trip_count": 49
+    },
+    {
+      "always_block_line": 151,
+      "carried": "dividend_aligned",
+      "carried_width_bits": 97,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+      "loop_bound": "49",
+      "product": 4753,
+      "trip_count": 49
+    },
+    {
+      "always_block_line": 151,
+      "carried": "product_aligned",
+      "carried_width_bits": 97,
+      "file": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+      "loop_bound": "49",
+      "product": 4753,
+      "trip_count": 49
+    },
+    {
+      "always_block_line": 249,
+      "carried": "crc",
+      "carried_width_bits": 32,
+      "file": "rtl/rom/ot_rom_read_service.sv",
+      "loop_bound": "128",
+      "product": 4096,
+      "trip_count": 128
+    },
+    {
+      "always_block_line": 662,
+      "carried": "rounded",
+      "carried_width_bits": 25,
+      "file": "rtl/abi3/ot_a3_lane_pkg.sv",
+      "loop_bound": "52",
+      "product": 1300,
+      "trip_count": 52
+    },
+    {
+      "always_block_line": 310,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/ot_fp32_rne_pkg.sv",
+      "loop_bound": "48",
+      "product": 1200,
+      "trip_count": 48
+    },
+    {
+      "always_block_line": 79,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_hbm_frontend.sv",
+      "loop_bound": "74",
+      "product": 1184,
+      "trip_count": 74
+    },
+    {
+      "always_block_line": 104,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_data_boundary.sv",
+      "loop_bound": "74",
+      "product": 1184,
+      "trip_count": 74
+    },
+    {
+      "always_block_line": 231,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_fault_data.sv",
+      "loop_bound": "74",
+      "product": 1184,
+      "trip_count": 74
+    },
+    {
+      "always_block_line": 379,
+      "carried": "crc",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_pkg.sv",
+      "loop_bound": "32",
+      "product": 1024,
+      "trip_count": 32
+    },
+    {
+      "always_block_line": 168,
+      "carried": "crc",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_vector_rope.sv",
+      "loop_bound": "32",
+      "product": 1024,
+      "trip_count": 32
+    },
+    {
+      "always_block_line": 97,
+      "carried": "crc",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_ta_command_decoder.sv",
+      "loop_bound": "32",
+      "product": 1024,
+      "trip_count": 32
+    },
+    {
+      "always_block_line": 164,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/ot_fp32_rne_pkg.sv",
+      "loop_bound": "27",
+      "product": 675,
+      "trip_count": 27
+    },
+    {
+      "always_block_line": 194,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "loop_bound": "24",
+      "product": 600,
+      "trip_count": 24
+    },
+    {
+      "always_block_line": 142,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "loop_bound": "24",
+      "product": 600,
+      "trip_count": 24
+    },
+    {
+      "always_block_line": 20,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/abi3/ot_a3_hc_projection_pkg.sv",
+      "loop_bound": "24",
+      "product": 600,
+      "trip_count": 24
+    },
+    {
+      "always_block_line": 326,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/abi3/ot_a3_vector_sqrt_softplus.sv",
+      "loop_bound": "24",
+      "product": 600,
+      "trip_count": 24
+    },
+    {
+      "always_block_line": 128,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 25,
+      "file": "rtl/test/ot_wide_carry_probe.sv",
+      "loop_bound": "24",
+      "product": 600,
+      "trip_count": 24
+    },
+    {
+      "always_block_line": 310,
+      "carried": "right_mantissa",
+      "carried_width_bits": 24,
+      "file": "rtl/ot_fp32_rne_pkg.sv",
+      "loop_bound": "23",
+      "product": 552,
+      "trip_count": 23
+    },
+    {
+      "always_block_line": 79,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_schedule_controller.sv",
+      "loop_bound": "SLOTS",
+      "product": 512,
+      "trip_count": 16
+    },
+    {
+      "always_block_line": 137,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_cmd_frontend.sv",
+      "loop_bound": "30",
+      "product": 480,
+      "trip_count": 30
+    },
+    {
+      "always_block_line": 49,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_control.sv",
+      "loop_bound": "30",
+      "product": 480,
+      "trip_count": 30
+    },
+    {
+      "always_block_line": 75,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_stage_random.sv",
+      "loop_bound": "30",
+      "product": 480,
+      "trip_count": 30
+    },
+    {
+      "always_block_line": 62,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_stage_top.sv",
+      "loop_bound": "30",
+      "product": 480,
+      "trip_count": 30
+    },
+    {
+      "always_block_line": 108,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_route_mask.sv",
+      "loop_bound": "26",
+      "product": 416,
+      "trip_count": 26
+    },
+    {
+      "always_block_line": 90,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_units.sv",
+      "loop_bound": "26",
+      "product": 416,
+      "trip_count": 26
+    },
+    {
+      "always_block_line": 79,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_fault_data.sv",
+      "loop_bound": "26",
+      "product": 416,
+      "trip_count": 26
+    },
+    {
+      "always_block_line": 38,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_reference_units.sv",
+      "loop_bound": "26",
+      "product": 416,
+      "trip_count": 26
+    },
+    {
+      "always_block_line": 542,
+      "carried": "blk_out",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_tile64.sv",
+      "loop_bound": "LQ8S",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 23,
+      "carried": "work_crc",
+      "carried_width_bits": 32,
+      "file": "rtl/lib/ot_crc32c.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 55,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_stage_link_rx.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 73,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_stage_link_rx.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 58,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_stage_link_tx.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 76,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/ot_stage_link_tx.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 35,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/test/tb_fault_link.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 54,
+      "carried": "c",
+      "carried_width_bits": 32,
+      "file": "rtl/test/tb_fault_link.sv",
+      "loop_bound": "8",
+      "product": 256,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 182,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_cmd_frontend.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 60,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_csr_block.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 71,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/ot_ras_controller.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 68,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_control.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 56,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_stage_random.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 110,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_fault_ras_dft.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 58,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_stage_top.sv",
+      "loop_bound": "14",
+      "product": 224,
+      "trip_count": 14
+    },
+    {
+      "always_block_line": 164,
+      "carried": "large_exponent",
+      "carried_width_bits": 8,
+      "file": "rtl/ot_fp32_rne_pkg.sv",
+      "loop_bound": "27",
+      "product": 216,
+      "trip_count": 27
+    },
+    {
+      "always_block_line": 444,
+      "carried": "shifted",
+      "carried_width_bits": 8,
+      "file": "rtl/abi3/ot_a3_lane_pkg.sv",
+      "loop_bound": "16",
+      "product": 128,
+      "trip_count": 16
+    },
+    {
+      "always_block_line": 172,
+      "carried": "link_replayed_flits",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "loop_bound": "4",
+      "product": 128,
+      "trip_count": 4
+    },
+    {
+      "always_block_line": 172,
+      "carried": "link_retry_events",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "loop_bound": "4",
+      "product": 128,
+      "trip_count": 4
+    },
+    {
+      "always_block_line": 172,
+      "carried": "link_credit_stall_cycles",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "loop_bound": "4",
+      "product": 128,
+      "trip_count": 4
+    },
+    {
+      "always_block_line": 172,
+      "carried": "link_crc_errors",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "loop_bound": "4",
+      "product": 128,
+      "trip_count": 4
+    },
+    {
+      "always_block_line": 172,
+      "carried": "link_sequence_errors",
+      "carried_width_bits": 32,
+      "file": "rtl/abi3/ot_a3_link_node.sv",
+      "loop_bound": "4",
+      "product": 128,
+      "trip_count": 4
+    },
+    {
+      "always_block_line": 32,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/lib/ot_crc_pkg.sv",
+      "loop_bound": "8",
+      "product": 128,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 50,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_units.sv",
+      "loop_bound": "8",
+      "product": 128,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 70,
+      "carried": "c",
+      "carried_width_bits": 16,
+      "file": "rtl/test/tb_coverage_units.sv",
+      "loop_bound": "8",
+      "product": 128,
+      "trip_count": 8
+    },
+    {
+      "always_block_line": 72,
+      "carried": "exponent_work",
+      "carried_width_bits": 9,
+      "file": "rtl/ot_bf16_add_rne.sv",
+      "loop_bound": "10",
+      "product": 90,
+      "trip_count": 10
+    },
+    {
+      "always_block_line": 72,
+      "carried": "rounded_mantissa",
+      "carried_width_bits": 9,
+      "file": "rtl/ot_bf16_add_rne.sv",
+      "loop_bound": "10",
+      "product": 90,
+      "trip_count": 10
+    },
+    {
+      "always_block_line": 299,
+      "carried": "shifted",
+      "carried_width_bits": 8,
+      "file": "rtl/abi3/ot_a3_lane_pkg.sv",
+      "loop_bound": "8",
+      "product": 64,
+      "trip_count": 8
+    }
+  ],
+  "min_product": 64,
+  "not_a_claim": [
+    "a fold is not automatically a fault: a one-bit OR or AND chain maps to trivial gates and a trip count of two or four is already shallow",
+    "this is a regex over comment-stripped source, not an elaboration; a carried value the pattern does not recognise is missed, and a width given as a parameter expression is reported as 0 and sorts last",
+    "the product is a proxy for depth, not a delay",
+    "function bodies are scanned as well as always blocks, because the deepest fold in this tree is inside a package function",
+    "blocking assignments only: comparisons and non-blocking assignments are excluded, because reading `if (state == S_X)` as an assignment is exactly how the first version of this audit misreported a sequential state register as the deepest fold in the tree"
+  ],
+  "producer": {
+    "git": {
+      "commit": "eafe78c718553854de606861612afb9d96e9408e"
+    },
+    "tool": "tools/audit_rtl_combinational_folds.py"
+  },
+  "schema": "opentallas.derived.rtl_combinational_folds.v1"
+}

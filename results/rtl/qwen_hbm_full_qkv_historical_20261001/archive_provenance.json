@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.historical-artifact-archive.v1",
+  "historical_raw_record": "results/rtl/qwen_hbm_full_qkv_historical_20261001/owner_terminal.json",
+  "sha256": "4deba55c0285345809fd744e061a2db36cf69c4f473080e7c67b328935da43a4",
+  "original_path": "/tmp/w19-qwen-qkv-stage-all64.json",
+  "original_source_commit": "a8a1a79c83bf1a1c9c9697c530498591e05cc427",
+  "actual_campaign_driver_rc": null,
+  "terminal_provenance": "INCOMPLETE",
+  "arithmetic_artifact_verdict": "PASS",
+  "missing_reused_rc_count": 8,
+  "missing_reused_sim_log_count": 3,
+  "qualified_scope_record": "results/rtl/qwen_hbm_full_qkv_scope_20261001.json",
+  "source_scope": "Preserved raw historical JSON byte-identical; reportedstatuspass is not a globallyqualified runtime verdict. No retrospectively manufacturedRC; no full RTLlayer/token or sharedservice qualification.",
+  "captured_utc": "2026-10-01T11:08:12.689897+00:00",
+  "historical_raw_file_bytes": 109198
+}

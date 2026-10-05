@@ -1,0 +1,318 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.05293294296272556,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 8192,
+        "setup_wns_ns": -3.6722784959773933,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-14T09:50:37.828286+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 5194.536,
+    "block": "ot_a3_vector_scale",
+    "cells": 35302,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": 5.0,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "fmax_basis": "static_timing.fmax_hz (pre-layout)",
+    "fmax_hz": 115309950.02799398,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "size_bytes": 30130
+      },
+      {
+        "path": "rtl/abi3/ot_a3_pkg.sv",
+        "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "size_bytes": 19703
+      },
+      {
+        "path": "rtl/abi3/ot_a3_format_pkg.sv",
+        "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+        "size_bytes": 7072
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+        "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
+        "size_bytes": 30643
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_hc_projection_pkg.sv",
+        "sha256": "d3591df9b9bde7997922756734d61eec5ed32245e4e3a718a2a43b42e9468d6a",
+        "size_bytes": 11209
+      },
+      {
+        "path": "rtl/abi3/ot_a3_vector_scale.sv",
+        "sha256": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4",
+        "size_bytes": 7211
+      }
+    ],
+    "top": "ot_a3_vector_scale"
+  },
+  "elapsed_seconds": 145.183,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-09-14T09:48:12.645301+00:00",
+  "git": {
+    "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/tmp/otfrq",
+      "--view",
+      "asap7",
+      "--clock-port",
+      "clk",
+      "--false-path-from",
+      "rst_n",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--purpose",
+      "characterization",
+      "--top",
+      "ot_a3_vector_scale",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_hc_projection_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_vector_scale.sv",
+      "--clock-period-ns",
+      "5.0",
+      "--output",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/out/vs_base_sta_m5p0.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
+      "file_modified_since_commit": false,
+      "note": "the sources, their git identity (the record's git block) and the container's /src mount come from --source-root; the driver ran from a different checkout, so git.commit is the sources' commit and runner.driver.commit is the driver's",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": false,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/otfrq"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 5.0,
+    "critical_path_ns": 8.672278495977393,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 115309950.02799398,
+    "fmax_search": {
+      "evaluations": 13,
+      "fmax_hz": 104223918.57506362,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 9.5947265625,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 5.0,
+          "setup_wns_ns": -3.6722784959773933
+        },
+        {
+          "clock_period_ns": 7.5,
+          "setup_wns_ns": -1.6722787665942564
+        },
+        {
+          "clock_period_ns": 7.5,
+          "setup_wns_ns": -1.6722787665942564
+        },
+        {
+          "clock_period_ns": 9.375,
+          "setup_wns_ns": -0.17228085693605333
+        },
+        {
+          "clock_period_ns": 9.4921875,
+          "setup_wns_ns": -0.07852829529157015
+        },
+        {
+          "clock_period_ns": 9.55078125,
+          "setup_wns_ns": -0.031657343539868064
+        },
+        {
+          "clock_period_ns": 9.580078125,
+          "setup_wns_ns": -0.008215650415054277
+        },
+        {
+          "clock_period_ns": 9.58740234375,
+          "setup_wns_ns": -0.0023607782489961375
+        },
+        {
+          "clock_period_ns": 9.5947265625,
+          "setup_wns_ns": 0.003503863879717743
+        },
+        {
+          "clock_period_ns": 9.609375,
+          "setup_wns_ns": 0.015224266352913013
+        },
+        {
+          "clock_period_ns": 9.84375,
+          "setup_wns_ns": 0.2027196196792236
+        },
+        {
+          "clock_period_ns": 10.3125,
+          "setup_wns_ns": 0.5777192081160774
+        },
+        {
+          "clock_period_ns": 11.25,
+          "setup_wns_ns": 1.3277201613466312
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.05293294296272556,
+    "library_time_unit_ns": 0.001,
+    "raw_library_units": {
+      "hold_wns": 52.93294296272556,
+      "setup_tns": -29342070.89211885,
+      "setup_wns": -3672.278495977393
+    },
+    "sdc_clock_period_library_units": 5000.0,
+    "setup_tns_ns": -29342.07089211885,
+    "setup_violating_paths": 8192,
+    "setup_wns_ns": -3.6722784959773933,
+    "timing_met": false
+  },
+  "status": "not_met",
+  "synthesis": {
+    "abc_delay_target_ps": 5000.0,
+    "cell_area_um2": 5194.536,
+    "cell_count": 35302,
+    "cell_types_used": 39,
+    "chip_area_um2": 5193.3231,
+    "combinational_cell_count": 26857,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "2d3cadc8adeda4865de6937b110cbf95fb1b89b1caeaae11f86d8eb101dae5b7",
+      "raw_netlist_sha256": "2d3cadc8adeda4865de6937b110cbf95fb1b89b1caeaae11f86d8eb101dae5b7",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 2485.907,
+    "sequential_cell_count": 8445,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 5.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

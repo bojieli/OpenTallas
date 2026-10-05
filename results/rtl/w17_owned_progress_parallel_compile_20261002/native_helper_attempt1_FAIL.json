@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_TEST_HARNESS_WIDE_FIELD_REQUEST",
+  "reason": "First decoder harness invoked the actual scalar getter on105-bit ckv_collect_gid; getter intentionally accepts1..64bits. No native DUT or design build.",
+  "compile_returncode": 0,
+  "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scratch": "/tmp/w17-owned-progress-native-helper-20261002-r1",
+  "preserved": true
+}

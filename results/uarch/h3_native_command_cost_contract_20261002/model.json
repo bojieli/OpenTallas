@@ -1,0 +1,458 @@
+{
+  "DIV": {
+    "arithmetic": "binary32 RN-even exact quotient, gradual underflow, canonical +0; add epsilon only after rounded division",
+    "assignment": "No implementation owner assignment evidenced in pinned package; independent exact-DIV work assignable",
+    "calendar_21_is_proposal_not_measurement": true,
+    "candidate_bodies": [
+      {
+        "declared_II": 1,
+        "declared_depth": 31,
+        "source": "rtl/hdc/v41/ot_hdc_fdiv.sv"
+      },
+      {
+        "declared_II": 1,
+        "declared_depth": 19,
+        "module": "ot_hdc_v41x_fdiv",
+        "source": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+      }
+    ],
+    "cost_to_add": [
+      "admission",
+      "RF_read",
+      "execute",
+      "mirrored_write_ACK",
+      "done_retire",
+      "reset/valid/fault alignment",
+      "scalar result publication/broadcast"
+    ],
+    "divisor_binary32_hex": "45a00000",
+    "end_to_end_service_edges": null,
+    "fault_contract": "nonfinite operand, zero divisor or overflow: fault and +0; no valid successful publication",
+    "implementation_owner": null,
+    "model_composition_owner": "Maxwell",
+    "native_GPU_binding": false,
+    "reciprocal_multiply_substitution_allowed": false,
+    "reference": "tools/hdc_golden_v41.py:div; numerical golden is not a service-time oracle",
+    "selected_call": "tools/w19_gpu_norm_calendar.py:scalar_norm_program DIV(sum,@F5120)",
+    "specification_owner": "Peirce H3 lowering"
+  },
+  "Qwen": {
+    "RSTD_mean": "FMUL(sum,F32(1/4096)); not DIV",
+    "exact_IEEE_DIV_is_not_a_substitute_for_Qwen_reciprocal": true,
+    "reciprocal": "executor reciprocal seed 0x7ef311c7 with source saturation rule; three separately rounded y*(2-a*y) iterations",
+    "rsqrt": "separate bit-seeded three-Newton rsqrt; reciprocal is not rsqrt"
+  },
+  "admission": {
+    "Maxwell_required": [
+      "internal_RF_12339_tracks",
+      "root_route_41_tracks",
+      "replica_slot_fit",
+      "composed_all_component_latency"
+    ],
+    "Qwen_source_extent_bytes": 704512,
+    "Qwen_spill_required_bytes": 33554432,
+    "RTL_allowed": false,
+    "native_clock_transfer": false,
+    "physical_causal_visibility": false
+  },
+  "schema": "H3_NATIVE_COMMAND_COST_CONTRACT_V1",
+  "source_sha256": {
+    "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+    "results/uarch/h3_distributed_norm_endpoint_20261002/Qwen.json.gz": "b0332a1b379b3288c98d26dd0bdff22f007ade4c03d3b2bc92844db802bf150e",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "tools/h3_native_command_cost_contract.py": "c62d86836a37f97e3ade882d4a433bd3ca0cf0dcd31e38f5e8c17ce6688cbbc1",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966"
+  },
+  "targets": {
+    "DeepSeek": {
+      "cost_request": {
+        "AND": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "FADD": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "FILL_ZERO": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "FMUL": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "GATHER8": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "IADD": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "PAIR_EVEN": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "PAIR_ODD": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "SHR": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "SPLAT": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        }
+      },
+      "critical_path_rule": "max participant service only after priced independent ports; serialized shared collector; no ideal overlap",
+      "full_kernel_edges": null,
+      "remaining_services": [
+        "input/coefficient/gamma/constant staging",
+        "source root extraction and forward CDC",
+        "collector decode and ROOT_INSERT mirrored ACK",
+        "reverse commit ACK and closed delivery fence",
+        "ordered collector tree and scalar tail",
+        "scalar broadcast and downstream scale",
+        "each output home copy and mirrored ACK",
+        "PACK_BF16 and bounded packing queue",
+        "matrix xw CDC/staging/barrier/weight readiness",
+        "spill reserve/sector transport/causal visibility/read retirement"
+      ],
+      "scope": "local participant templates only; collector/tail/output/provider service required separately",
+      "selected_PCs": 80,
+      "templates": {
+        "11530fd8982c5aac054e": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "145fefc3e8efecf0b97b": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "1f2aacefc14fa9454526": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "1f5de3980bc5f4e1b39e": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "2eb349d9c213663490cb": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "54425c23421794428474": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "54c92dae9fe969394383": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "7193970bb9a853be3c83": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        },
+        "f6299a7167a1a12f7e43": {
+          "commands": 72,
+          "opcode_counts": {
+            "AND": 4,
+            "FADD": 19,
+            "FILL_ZERO": 1,
+            "FMUL": 16,
+            "GATHER8": 8,
+            "IADD": 4,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5,
+            "SHR": 2,
+            "SPLAT": 8
+          },
+          "serialized_service_edges": null
+        }
+      }
+    },
+    "Qwen": {
+      "cost_request": {
+        "FADD": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "FILL_ZERO": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "FMUL": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "GATHER8": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "PAIR_EVEN": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        },
+        "PAIR_ODD": {
+          "RF_read": null,
+          "admission": null,
+          "done_retire": null,
+          "execute": null,
+          "mirrored_write_ACK": null
+        }
+      },
+      "critical_path_rule": "max participant service only after priced independent ports; serialized shared collector; no ideal overlap",
+      "full_kernel_edges": null,
+      "remaining_services": [
+        "input/coefficient/gamma/constant staging",
+        "source root extraction and forward CDC",
+        "collector decode and ROOT_INSERT mirrored ACK",
+        "reverse commit ACK and closed delivery fence",
+        "ordered collector tree and scalar tail",
+        "scalar broadcast and downstream scale",
+        "each output home copy and mirrored ACK",
+        "PACK_BF16 and bounded packing queue",
+        "matrix xw CDC/staging/barrier/weight readiness",
+        "spill reserve/sector transport/causal visibility/read retirement"
+      ],
+      "scope": "local participant templates only; collector/tail/output/provider service required separately",
+      "selected_PCs": 72,
+      "templates": {
+        "45db26351c2565ad778f": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "4cbc59e0de07b07d1e5c": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "671dda91b3c21af2356a": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "7519b35638679d3f0247": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "8babf5b6c7c35829e5f7": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "9711e011685e6a20ee45": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        },
+        "d65d9775a33e3c1e86ca": {
+          "commands": 40,
+          "opcode_counts": {
+            "FADD": 13,
+            "FILL_ZERO": 1,
+            "FMUL": 8,
+            "GATHER8": 8,
+            "PAIR_EVEN": 5,
+            "PAIR_ODD": 5
+          },
+          "serialized_service_edges": null
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "contract": {
+    "instruction_ids": [
+      "L0.ffn.act_gather",
+      "L0.ffn.y_gather"
+    ],
+    "note": "two exact gather components serialized; no full layer, shared HBM, ME or clock claim",
+    "physical_flit_bytes": 64,
+    "tensor_specs": {}
+  },
+  "operations": [
+    {
+      "cluster": 0,
+      "demands": {
+        "collective_engine": 1486,
+        "link": 798,
+        "vm_read": 266,
+        "vm_write": 1064
+      },
+      "deps": [],
+      "die": 0,
+      "end_cycle": 1486,
+      "exact_stage_record": {
+        "case": "act",
+        "input_words": 266,
+        "output_words": 1064,
+        "path": "results/rtl/v41_collective_depth_campaign.json",
+        "tail_cycles": 1220
+      },
+      "id": "L0.ffn.act_gather",
+      "instruction_id": "L0.ffn.act_gather",
+      "kind": "verified_collective_stage",
+      "ready_cycle": 0,
+      "reservations": [
+        {
+          "class": "vm_read",
+          "end_cycle": 266,
+          "rate": 1,
+          "resource": "dma_vm_read",
+          "start_cycle": 0
+        },
+        {
+          "class": "vm_write",
+          "end_cycle": 1486,
+          "rate": 1,
+          "resource": "dma_vm_write",
+          "start_cycle": 0
+        },
+        {
+          "class": "link",
+          "end_cycle": 1486,
+          "rate": 1,
+          "resource": "collective_link",
+          "start_cycle": 0
+        },
+        {
+          "class": "collective_engine",
+          "end_cycle": 1486,
+          "rate": 1,
+          "resource": "px_engine",
+          "start_cycle": 0
+        }
+      ],
+      "start_cycle": 0,
+      "tensor_fragment_ids": []
+    },
+    {
+      "cluster": 0,
+      "demands": {
+        "collective_engine": 556,
+        "link": 240,
+        "vm_read": 80,
+        "vm_write": 320
+      },
+      "deps": [
+        "L0.ffn.act_gather"
+      ],
+      "die": 0,
+      "end_cycle": 2042,
+      "exact_stage_record": {
+        "case": "y",
+        "input_words": 80,
+        "output_words": 320,
+        "path": "results/rtl/v41_collective_depth_campaign.json",
+        "tail_cycles": 476
+      },
+      "id": "L0.ffn.y_gather",
+      "instruction_id": "L0.ffn.y_gather",
+      "kind": "verified_collective_stage",
+      "ready_cycle": 1486,
+      "reservations": [
+        {
+          "class": "vm_read",
+          "end_cycle": 1566,
+          "rate": 1,
+          "resource": "dma_vm_read",
+          "start_cycle": 1486
+        },
+        {
+          "class": "vm_write",
+          "end_cycle": 2042,
+          "rate": 1,
+          "resource": "dma_vm_write",
+          "start_cycle": 1486
+        },
+        {
+          "class": "link",
+          "end_cycle": 2042,
+          "rate": 1,
+          "resource": "collective_link",
+          "start_cycle": 1486
+        },
+        {
+          "class": "collective_engine",
+          "end_cycle": 2042,
+          "rate": 1,
+          "resource": "px_engine",
+          "start_cycle": 1486
+        }
+      ],
+      "start_cycle": 1486,
+      "tensor_fragment_ids": []
+    }
+  ],
+  "provenance_boundary": "The depth128 exact RTL bench validates each blocked gather and its internal queues. This witness reserves external ports for the full intervals and serializes the two stages; it does not replay their internal flit timestamps.",
+  "queues": {},
+  "resources": {
+    "collective_link": {
+      "capacity_per_cycle": 1,
+      "classes": [
+        "link"
+      ],
+      "physical_id": "adopted_t1_link",
+      "unit": "64B_word"
+    },
+    "dma_vm_read": {
+      "capacity_per_cycle": 1,
+      "classes": [
+        "vm_read"
+      ],
+      "physical_id": "vm_port_b_read",
+      "unit": "64B_word"
+    },
+    "dma_vm_write": {
+      "capacity_per_cycle": 1,
+      "classes": [
+        "vm_write"
+      ],
+      "physical_id": "vm_port_b_write",
+      "unit": "64B_word"
+    },
+    "px_engine": {
+      "capacity_per_cycle": 1,
+      "classes": [
+        "collective_engine"
+      ],
+      "physical_id": "die_px_engine",
+      "unit": "engine_cycle"
+    }
+  },
+  "schema": "opentallas.v41.finite-schedule.v1",
+  "scope": "operator_subset",
+  "source_sha256": {
+    "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
+    "tools/v41_finite_schedule.py": "38a5ad17a7e88d0c223e158fdb2409213d406b8f687f6b75c96500554f166c5b",
+    "tools/v41_finite_schedule_subset.py": "8ed900710836c895b67c261fed362eae4e9214b1720835b462ddb27eb52953f3"
+  },
+  "tensor_fragments": []
+}

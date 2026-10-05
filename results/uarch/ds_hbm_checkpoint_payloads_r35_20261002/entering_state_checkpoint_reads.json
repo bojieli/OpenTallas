@@ -1,0 +1,82 @@
+[
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00005-of-00048.safetensors",
+    "header_sha256": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6",
+    "rows": null,
+    "selected_payload_sha256": "a7fbb4aec3eeb9ab86b331e4648af1b93f7eaee77e71f4206f55f817eaaf42cb",
+    "tensor": "layers.2.attn.compressor.norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00005-of-00048.safetensors",
+    "header_sha256": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6",
+    "rows": null,
+    "selected_payload_sha256": "ef2588b3266474c25e394750292ddb70cd0edc1e2578a97f5372157fd14c0278",
+    "tensor": "layers.2.attn.indexer.k_norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00011-of-00048.safetensors",
+    "header_sha256": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c",
+    "rows": null,
+    "selected_payload_sha256": "9268ff00f9da1b40ef87e39bd0613bb3b839b9b2eb4d59fc679abbd79db74dab",
+    "tensor": "layers.8.attn.compressor.norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00011-of-00048.safetensors",
+    "header_sha256": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c",
+    "rows": null,
+    "selected_payload_sha256": "9f5a347ddb94810de6f09fc12358257e89a352ac3b9c3714c876906b0c0d6bfc",
+    "tensor": "layers.8.attn.indexer.k_norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00017-of-00048.safetensors",
+    "header_sha256": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79",
+    "rows": null,
+    "selected_payload_sha256": "57176cb663792e8db397fc911b22ecac3d75d9d8c7f8cfce2a69c623bf9d651d",
+    "tensor": "layers.14.attn.compressor.norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00017-of-00048.safetensors",
+    "header_sha256": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79",
+    "rows": null,
+    "selected_payload_sha256": "6d9726b93430b03e87b51d5a93f4583d18e1e72a3f2e3b7eb153e4d533e2009a",
+    "tensor": "layers.14.attn.indexer.k_norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00023-of-00048.safetensors",
+    "header_sha256": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9",
+    "rows": null,
+    "selected_payload_sha256": "0acb50c11b26e38115a90f316ef58b3c05bc9c324a17812cd94eead7e4160912",
+    "tensor": "layers.20.attn.compressor.norm.weight",
+    "whole_shard_payload_hash_verified": false
+  },
+  {
+    "cols": null,
+    "dtype": "BF16",
+    "filename": "model-00023-of-00048.safetensors",
+    "header_sha256": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9",
+    "rows": null,
+    "selected_payload_sha256": "50d1710cb092996d0c7bfc9ac65606e9304f02f1faadfb71badcc949bddb4be1",
+    "tensor": "layers.20.attn.indexer.k_norm.weight",
+    "whole_shard_payload_hash_verified": false
+  }
+]

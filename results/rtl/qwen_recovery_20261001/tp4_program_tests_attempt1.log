@@ -1,0 +1,72 @@
+FFFF......                                                               [100%]
+=================================== FAILURES ===================================
+______________ test_first_layer_program_round_trip_and_die_order _______________
+
+    def test_first_layer_program_round_trip_and_die_order():
+        before = (P.VM, P.GR, P.S_STRIDE)
+        a, b = F.profile(0), F.profile(1)
+        assert (P.VM, P.GR, P.S_STRIDE) == before
+        assert a['program_hex'] == b['program_hex']
+>       assert a['program_words'] == len(a['program_hex']) == 31
+E       AssertionError: assert 29 == 31
+E        +  where 29 = len(['0000000000000000000000000000000000000000000000000001000000003f204000000000000000000000000000000000000000000000000000...0002800040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200002', ...])
+
+tests/test_hdc_qwen_fullshape_program.py:20: AssertionError
+___________ test_vm_regions_do_not_overlap_and_first_layer_kv_window ___________
+
+    def test_vm_regions_do_not_overlap_and_first_layer_kv_window():
+        vm, total = F.vm_map()
+        assert total > I.VM_ELEMS
+>       assert vm['S'] + 16 * 8192 <= vm['ATT']
+E       assert (16240 + (16 * 8192)) <= 81776
+
+tests/test_hdc_qwen_fullshape_program.py:41: AssertionError
+__________ test_lm_head_512_word_chunks_keep_independent_scale_stride __________
+
+    def test_lm_head_512_word_chunks_keep_independent_scale_stride():
+        meta = matrix(0, 'lm_head', 75968, 4096)
+        meta['scale_base'] = 0
+>       a, b = F.profile_lm_head(0, meta, 535041), F.profile_lm_head(1, meta, 535041)
+
+tests/test_hdc_qwen_fullshape_program.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program.py:195: in profile_lm_head
+    words, desc = QI.encode_segments(program)
+tools/hdc_qwen_fullshape_isa.py:55: in encode_segments
+    words.extend(encode_instruction(f) for f in instructions)
+tools/hdc_qwen_fullshape_isa.py:55: in <genexpr>
+    words.extend(encode_instruction(f) for f in instructions)
+tools/hdc_qwen_fullshape_isa.py:24: in encode_instruction
+    return I.encode(**legacy) | ((row0 >> 16) << ROW_HIGH_OFFSET)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kw = {'barrier': 1, 'chase': 1, 'chase_n': 512, 'me_amax': 1, ...}, word = 1
+name = 'me_nout', value = -11168, off = 23, width = 16
+
+    def encode(**kw):
+        word = 0
+        for name, value in kw.items():
+            off, width = LAYOUT[name]
+            value = int(value)
+>           assert 0 <= value < (1 << width), (name, value)
+E           AssertionError: ('me_nout', -11168)
+
+tools/hdc_isa.py:137: AssertionError
+____________________ test_one_segment_all_reduce_is_opt_in _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ca5d99a1390>
+
+    def test_one_segment_all_reduce_is_opt_in(monkeypatch):
+        """QWEN_O4_AR_WORDS=256: each 4,096-element all-reduce is ONE 256-word segment (count 0 encodes 256)."""
+        monkeypatch.setattr(F, 'AR_WORDS', 256)
+        a = F.profile(0)
+>       assert a['program_words'] == len(a['program_hex']) == 29
+E       AssertionError: assert 27 == 29
+E        +  where 27 = len(['0000000000000000000000000000000000000000000000000001000000003f204000000000000000000000000000000000000000000000000000...0002800040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200002', ...])
+
+tests/test_hdc_qwen_fullshape_program.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_hdc_qwen_fullshape_program.py::test_first_layer_program_round_trip_and_die_order
+FAILED tests/test_hdc_qwen_fullshape_program.py::test_vm_regions_do_not_overlap_and_first_layer_kv_window
+FAILED tests/test_hdc_qwen_fullshape_program.py::test_lm_head_512_word_chunks_keep_independent_scale_stride
+FAILED tests/test_hdc_qwen_fullshape_program.py::test_one_segment_all_reduce_is_opt_in

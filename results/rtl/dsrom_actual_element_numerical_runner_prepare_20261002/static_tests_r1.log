@@ -1,0 +1,113 @@
+test_build_failure_stops_without_retry (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+test_exact_caps_and_unchanged_compile_options (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_exact_numerical_phase_counts_order_and_case (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_explicit_numerical_failures_preserved_without_DIFF (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+test_full_prepared_commit_files_and_package_bound (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_legacy_PASS_alone_cannot_qualify (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+test_missing_PASS_never_qualifies (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+test_new_GO_and_each_authoritative_pin_required (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_prep_package_and_prior_files_unchanged (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_q_sim_failure_preserved_BF_continues_only_planned (test_dsrom_actual_element_numerical_runner.RunnerTests) ... test_q_then_BF_no_retry_and_summed_budgets (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+test_tool_preflight_rejects_version_and_options_changes (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_whole_and_phase_kill_even_receipt_write_fails (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ERROR
+
+======================================================================
+ERROR: test_build_failure_stops_without_retry (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 110, in test_build_failure_stops_without_retry
+    rc,record,calls,timers,cg=scenario(tmp,[(1,'compile FAIL\n')]);self.assertEqual(1,rc);self.assertEqual(1,len(calls));self.assertEqual('FAIL_UNQUALIFIED',record['status'])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_explicit_numerical_failures_preserved_without_DIFF (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 136, in test_explicit_numerical_failures_preserved_without_DIFF
+    rc,record,calls,_,_=scenario(tmp,[(0,'build'),(1,message),(0,'build'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_legacy_PASS_alone_cannot_qualify (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 131, in test_legacy_PASS_alone_cannot_qualify
+    rc,record,calls,_,_=scenario(tmp,[(0,'build'),(0,'PASS actual-element BF=0 cycles=2 partials=1 issues=1 gated=1 opened=1 loads=200\n'),(0,'build'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_missing_PASS_never_qualifies (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 113, in test_missing_PASS_never_qualifies
+    rc,record,calls,timers,cg=scenario(tmp,[(0,'build\n'),(0,'no PASS marker\n'),(0,'build\n'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_q_sim_failure_preserved_BF_continues_only_planned (test_dsrom_actual_element_numerical_runner.RunnerTests) (text='tag/walk scoreboard\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 106, in test_q_sim_failure_preserved_BF_continues_only_planned
+    rc,record,calls,timers,cg=scenario(tmp,[(0,'build\n'),(1,text),(0,'build\n'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_q_sim_failure_preserved_BF_continues_only_planned (test_dsrom_actual_element_numerical_runner.RunnerTests) (text='DIFF public\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 106, in test_q_sim_failure_preserved_BF_continues_only_planned
+    rc,record,calls,timers,cg=scenario(tmp,[(0,'build\n'),(1,text),(0,'build\n'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_q_then_BF_no_retry_and_summed_budgets (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 97, in test_q_then_BF_no_retry_and_summed_budgets
+    rc,record,calls,timers,cg=scenario(tmp,[(0,'build\n'),(0,PASSQ),(0,'build\n'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+======================================================================
+ERROR: test_whole_and_phase_kill_even_receipt_write_fails (test_dsrom_actual_element_numerical_runner.RunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 117, in test_whole_and_phase_kill_even_receipt_write_fails
+    rc,record,calls,timers,cg=scenario(tmp,[(0,'build\n'),(0,PASSQ),(0,'build\n'),(0,PASSB)])
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tests/test_dsrom_actual_element_numerical_runner.py", line 48, in scenario
+    rc=RUN.capped_run(a)
+  File "/tmp/opentallas-dsrom-actual-element-prepare-20261001/tools/run_dsrom_actual_element_numerical.py", line 120, in capped_run
+    record=dict(status='RUNNING',runner_commit=git('rev-parse','HEAD').decode().strip(),runner_sha256=sha(Path(__file__).read_bytes()),prepared_commit=json.loads(raw)['prepared_commit'],parent_GO_commit=a.go_commit,parent_GO_sha256=sha(raw),parent_GO=json.loads(raw),model_sha256=sha((ROOT/MODEL_PATH).read_bytes()),verified_source_pins=len(model['source_pins']),verified_artifact_pins=len(model['new_artifact_pins']),cpu_affinity=cpus,initial_caps=caps,versions={t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in (VERILATOR,'g++','make','systemd-run')},runs=[],used_seconds=dict(build=0.0,simulate=0.0),limits_seconds=dict(build=600,simulate=60),timing_claim=False,arithmetic_claim=False,adoption=False,live_source_selection=False,limitations=model['execution_claims'],whole_limit_seconds=660)
+KeyError: 'execution_claims'
+
+----------------------------------------------------------------------
+Ran 13 tests in 29.260s
+
+FAILED (errors=8)

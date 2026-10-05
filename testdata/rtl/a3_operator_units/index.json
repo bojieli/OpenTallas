@@ -1,0 +1,443 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "append_cases": [
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 12345,
+      "generated_before": 0,
+      "name": "token_append_continues",
+      "note": "not EOS, below the request bound",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 1,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 151645,
+      "generated_before": 0,
+      "name": "token_append_official_eos_first_slot",
+      "note": "the first EOS token of the shipped policy",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 151645,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 1,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 151643,
+      "generated_before": 0,
+      "name": "token_append_official_eos_second_slot",
+      "note": "the second EOS token: slot scanning, not just slot zero",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 151643,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 1,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 151643,
+      "generated_before": 0,
+      "name": "token_append_eos_slot_beyond_declared_count",
+      "note": "the same id, one slot outside the declared count: a slot the policy does not declare is not an EOS token",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 151643,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 2,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 12345,
+      "generated_before": 2,
+      "name": "token_append_length_stop",
+      "note": "this append reaches the request's ceiling",
+      "policy_max": 8256,
+      "request_max": 3,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 1,
+      "expected_error": 0,
+      "expected_out_count": 1,
+      "expected_reads": 1,
+      "expected_token": 151645,
+      "generated_before": 2,
+      "name": "token_append_eos_beats_length_stop",
+      "note": "a final token that is also EOS reports the official reason, which is the branch the golden model returns early on",
+      "policy_max": 8256,
+      "request_max": 3,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 151645,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 1,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 0,
+      "expected_out_count": 0,
+      "expected_reads": 1,
+      "expected_token": 777,
+      "generated_before": 0,
+      "name": "token_append_without_token_ring",
+      "note": "the optional ring is unbound: appended, nothing written",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": false,
+      "selection_mode": 0,
+      "token": 777,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 0,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 4,
+      "expected_out_count": 0,
+      "expected_reads": 1,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_outside_vocabulary",
+      "note": "one past the last legal id is a fault, not a clamp",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 151936,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 0,
+      "expected_capability": true,
+      "expected_eos": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_reads": 0,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_sampling_policy",
+      "note": "a sampling policy is a capability refusal",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 1,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 0,
+      "expected_capability": true,
+      "expected_eos": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_reads": 0,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_request_bound_zero",
+      "note": "a request that may generate nothing is refused",
+      "policy_max": 8256,
+      "request_max": 0,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 0,
+      "expected_capability": true,
+      "expected_eos": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_reads": 0,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_request_above_policy",
+      "note": "the immutable policy is the deployment ceiling",
+      "policy_max": 4,
+      "request_max": 5,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 9,
+      "expected_appended": 0,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_reads": 0,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_eos_count_above_abi_bound",
+      "note": "the frozen ABI bounds the EOS set at eight",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 12345,
+      "vocabulary": 151936
+    },
+    {
+      "eos_count": 2,
+      "expected_appended": 0,
+      "expected_capability": false,
+      "expected_eos": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_reads": 0,
+      "expected_token": 0,
+      "generated_before": 0,
+      "name": "token_append_empty_vocabulary",
+      "note": "a policy with no vocabulary cannot admit any token",
+      "policy_max": 8256,
+      "request_max": 8,
+      "ring_bound": true,
+      "selection_mode": 0,
+      "token": 0,
+      "vocabulary": 0
+    }
+  ],
+  "claim_boundary": {
+    "bit_exact_against_independent_reference": true,
+    "block_level_only": true,
+    "model_token_generation": false,
+    "shared_certifying_exponential": true,
+    "shared_correctly_rounded_divider": true,
+    "tpot": false
+  },
+  "expected_pass": {
+    "append_cases": 13,
+    "silu_cases": 5,
+    "silu_words": 1217
+  },
+  "geometry": {
+    "append_case_count": 13,
+    "append_case_words": 32,
+    "silu_case_count": 5,
+    "silu_case_words": 16,
+    "silu_directed_count": 191,
+    "silu_directed_excluded": 17,
+    "silu_element_count": 1217
+  },
+  "image_sha256": {
+    "append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
+    "silu_cases.hex": "b8eb33d987f5e7cf66acee5ed647b3ffaaf5e2e162c54bcd07562b6f12d0b358",
+    "silu_expected.hex": "13f74f3cf2cee0157c786d97f5937f5deba84d94fbb6a5b59070becbbd7b9835",
+    "silu_gate.hex": "848ed3958f685b514dcee54be33c631582eb24af799da76c086d3524e109a231",
+    "silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
+  },
+  "oracles": {
+    "independent_of_dut": true,
+    "silu_expected_bf16_sha256": "b62ff9e34b2dea3f76e535b489713f4274f891b541e48e7e6d1daec69caae8b9",
+    "silu_mul": "runtime/reference/tensor_accelerator_elementwise.py::qwen3_silu_mul_bf16",
+    "token_append": "runtime/sim/engines/selection.py::token_append"
+  },
+  "schema": "opentallas.rtl.a3_operator_unit_vectors.v1",
+  "silu_cases": [
+    {
+      "compare_output": true,
+      "count": 1217,
+      "expected_activation_saturations": 0,
+      "expected_error": 0,
+      "expected_out_count": 1217,
+      "expected_saturations": 1,
+      "expected_work_count": 2434,
+      "name": "silu_mul_directed_and_seeded",
+      "note": "every directed corner and the seeded spread, bit for bit",
+      "poison_gate_code": 0,
+      "poison_gate_enable": 0,
+      "poison_index": 0,
+      "poison_up_code": 0,
+      "poison_up_enable": 0
+    },
+    {
+      "compare_output": false,
+      "count": 1217,
+      "expected_activation_saturations": 0,
+      "expected_error": 1,
+      "expected_out_count": 3,
+      "expected_saturations": 0,
+      "expected_work_count": 6,
+      "name": "silu_mul_nonfinite_gate",
+      "note": "an infinite gate stops the block before the fourth element",
+      "poison_gate_code": 32640,
+      "poison_gate_enable": 1,
+      "poison_index": 3,
+      "poison_up_code": 0,
+      "poison_up_enable": 0
+    },
+    {
+      "compare_output": false,
+      "count": 1217,
+      "expected_activation_saturations": 0,
+      "expected_error": 1,
+      "expected_out_count": 5,
+      "expected_saturations": 0,
+      "expected_work_count": 10,
+      "name": "silu_mul_nonfinite_up",
+      "note": "a NaN up value is a fault, not a value to skip",
+      "poison_gate_code": 0,
+      "poison_gate_enable": 0,
+      "poison_index": 5,
+      "poison_up_code": 65472,
+      "poison_up_enable": 1
+    },
+    {
+      "compare_output": false,
+      "count": 1217,
+      "expected_activation_saturations": 0,
+      "expected_error": 2,
+      "expected_out_count": 2,
+      "expected_saturations": 0,
+      "expected_work_count": 5,
+      "name": "silu_mul_gated_product_range",
+      "note": "the SiLU activation is in range and the gated product is not: the work count shows the failure is the second multiply",
+      "poison_gate_code": 32639,
+      "poison_gate_enable": 1,
+      "poison_index": 2,
+      "poison_up_code": 16384,
+      "poison_up_enable": 1
+    },
+    {
+      "compare_output": false,
+      "count": 0,
+      "expected_activation_saturations": 0,
+      "expected_error": 7,
+      "expected_out_count": 0,
+      "expected_saturations": 0,
+      "expected_work_count": 0,
+      "name": "silu_mul_degenerate_count",
+      "note": "a zero-element operation is a shape fault",
+      "poison_gate_code": 0,
+      "poison_gate_enable": 0,
+      "poison_index": 0,
+      "poison_up_code": 0,
+      "poison_up_enable": 0
+    }
+  ],
+  "silu_directed_excluded_pairs": [
+    {
+      "gate": 16384,
+      "up": 32639
+    },
+    {
+      "gate": 16384,
+      "up": 65407
+    },
+    {
+      "gate": 16640,
+      "up": 32639
+    },
+    {
+      "gate": 16640,
+      "up": 65407
+    },
+    {
+      "gate": 16768,
+      "up": 32639
+    },
+    {
+      "gate": 16768,
+      "up": 65407
+    },
+    {
+      "gate": 17024,
+      "up": 32639
+    },
+    {
+      "gate": 17024,
+      "up": 65407
+    },
+    {
+      "gate": 17072,
+      "up": 32639
+    },
+    {
+      "gate": 17072,
+      "up": 65407
+    },
+    {
+      "gate": 32639,
+      "up": 32639
+    },
+    {
+      "gate": 32639,
+      "up": 65407
+    },
+    {
+      "gate": 32639,
+      "up": 16384
+    },
+    {
+      "gate": 16448,
+      "up": 32639
+    },
+    {
+      "gate": 16448,
+      "up": 65407
+    },
+    {
+      "gate": 17104,
+      "up": 32639
+    },
+    {
+      "gate": 17104,
+      "up": 65407
+    }
+  ]
+}

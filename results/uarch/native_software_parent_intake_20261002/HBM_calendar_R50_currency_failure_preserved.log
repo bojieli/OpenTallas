@@ -1,0 +1,138 @@
+F.FF.FF                                                                  [100%]
+=================================== FAILURES ===================================
+______________________ test_current_source_guard_positive ______________________
+
+    def test_current_source_guard_positive():
+     import h3_complete_native_calendar as c
+>    assert a.current_source_mismatch(c.execute_ds_provider_group128) is False
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_current_calendar_adapter_r50.py:24: in current_source_mismatch
+    verify_current_source(source.read_bytes(),inputs()['calendar.py'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+reference = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+
+    def verify_current_source(raw,reference):
+>       if hashlib.sha256(raw).hexdigest()!=CURRENT_SHA:raise ValueError('exact current calendar module source required')
+E       ValueError: exact current calendar module source required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:17: ValueError
+____________________ test_executor_semantics_mutant_refuses ____________________
+
+    def test_executor_semantics_mutant_refuses():
+     raw=(a.ROOT/'tools/h3_complete_native_calendar.py').read_bytes()
+>    with pytest.raises(ValueError,match='unchanged'):a.verify_current_source(raw,a.inputs()['calendar.py'].replace(b'output=np.empty(8192,np.float32)',b'output=np.empty(4096,np.float32)'))
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+reference = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+
+    def verify_current_source(raw,reference):
+>       if hashlib.sha256(raw).hexdigest()!=CURRENT_SHA:raise ValueError('exact current calendar module source required')
+E       ValueError: exact current calendar module source required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:17: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_executor_semantics_mutant_refuses():
+     raw=(a.ROOT/'tools/h3_complete_native_calendar.py').read_bytes()
+>    with pytest.raises(ValueError,match='unchanged'):a.verify_current_source(raw,a.inputs()['calendar.py'].replace(b'output=np.empty(8192,np.float32)',b'output=np.empty(4096,np.float32)'))
+E    AssertionError: Regex pattern did not match.
+E      Expected regex: 'unchanged'
+E      Actual message: 'exact current calendar module source required'
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:18: AssertionError
+__________________ test_runtime_function_substitution_refuses __________________
+
+    def test_runtime_function_substitution_refuses():
+>    with pytest.raises(ValueError,match='runtime executor'):a.current_source_mismatch(lambda:None)
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_current_calendar_adapter_r50.py:24: in current_source_mismatch
+    verify_current_source(source.read_bytes(),inputs()['calendar.py'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+reference = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+
+    def verify_current_source(raw,reference):
+>       if hashlib.sha256(raw).hexdigest()!=CURRENT_SHA:raise ValueError('exact current calendar module source required')
+E       ValueError: exact current calendar module source required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:17: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_runtime_function_substitution_refuses():
+>    with pytest.raises(ValueError,match='runtime executor'):a.current_source_mismatch(lambda:None)
+E    AssertionError: Regex pattern did not match.
+E      Expected regex: 'runtime executor'
+E      Actual message: 'exact current calendar module source required'
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:21: AssertionError
+____ test_compact_shared_source_guard_preserves_original_and_exact_current _____
+
+    def test_compact_shared_source_guard_preserves_original_and_exact_current():
+     import h3_complete_native_calendar as c
+     assert a.shared_provider_source_mismatch(a.OriginalSectorProvider) is False
+     exact=c.compact_sector_provider_class(a.OriginalSectorProvider)
+>    assert a.shared_provider_source_mismatch(exact) is False
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_current_calendar_adapter_r50.py:70: in shared_provider_source_mismatch
+    verify_current_source((ROOT/'tools/h3_complete_native_calendar.py').read_bytes(),inputs()['calendar.py'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+reference = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+
+    def verify_current_source(raw,reference):
+>       if hashlib.sha256(raw).hexdigest()!=CURRENT_SHA:raise ValueError('exact current calendar module source required')
+E       ValueError: exact current calendar module source required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:17: ValueError
+_______________ test_compact_shared_actual_bytes_and_owner_drain _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6998/test_compact_shared_actual_byt0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b3b6db2cee0>
+
+    def test_compact_shared_actual_bytes_and_owner_drain(tmp_path,monkeypatch):
+     import h3_complete_native_calendar as c
+     import hbm_bound_event_journal_r30 as journal
+     budget=c.CompactJournalBudget(tmp_path/'journal',1<<24)
+     compact=c.compact_sector_provider_class(a.OriginalSectorProvider)
+     monkeypatch.setattr(journal,'BoundSectorProvider',compact)
+     factory=a.CurrentSharedFactory(budget)
+     owner=dict(PC=10,rank=3,SM=7,generation=1,version='DeepSeek.10.z.68')
+>    memory=factory(owner);payload=bytes(range(32))
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_current_calendar_adapter_r50.py:271: in __call__
+    ???
+tools/ds_hbm_current_calendar_adapter_r50.py:70: in shared_provider_source_mismatch
+    verify_current_source((ROOT/'tools/h3_complete_native_calendar.py').read_bytes(),inputs()['calendar.py'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+reference = b'#!/usr/bin/env python3\n"""Full H3 finite SOFTWARE calendar; explicit provisional cycles, never an RTL oracle.\n\nAn..._keys=True) + \'\\n\')\n        print(json.dumps(summaries, indent=2))\n\n\nif __name__ == \'__main__\':\n    main()\n'
+
+    def verify_current_source(raw,reference):
+>       if hashlib.sha256(raw).hexdigest()!=CURRENT_SHA:raise ValueError('exact current calendar module source required')
+E       ValueError: exact current calendar module source required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:17: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_current_source_guard_positive
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_executor_semantics_mutant_refuses
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_runtime_function_substitution_refuses
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_compact_shared_source_guard_preserves_original_and_exact_current
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_compact_shared_actual_bytes_and_owner_drain

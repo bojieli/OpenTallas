@@ -1,0 +1,83 @@
+{
+  "schema": "opentallas.window_epoch9.connected_handoff.v1",
+  "verdict": "PASS_BOUNDED_CONNECTED_MODEL_VS_SOURCE",
+  "prediction_commit": "553406375503180711bdc3a73955b62c76ca5e5a",
+  "fixture_commit": "01dea7875e27c17ea9e7d0a47146804e42397203",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_originals_unchanged": true,
+  "main_live_watchdog_unchanged": true,
+  "baseline": {
+    "refill": 124368,
+    "start": 12300,
+    "staged": 136669,
+    "done": 136800,
+    "max_inflight": 1,
+    "refreshes": 34929,
+    "activations": 2171
+  },
+  "candidate": {
+    "start": 12300,
+    "staged": 32902,
+    "done": 33033,
+    "refill": 20601,
+    "reads": 2176,
+    "replies": 2176,
+    "beats": 32,
+    "max_inflight": 8,
+    "refreshes": 8413,
+    "activations": 800
+  },
+  "exact_gate": {
+    "client_requests": 2176,
+    "client_replies": 2176,
+    "backend_requests": 2176,
+    "backend_replies": 2176,
+    "per_PC_reads_and_returns": 68,
+    "drained_PCs": 32,
+    "exact_PC_refresh_and_activation_counters": true
+  },
+  "modeled_backend_candidate": {
+    "max_queued_per_PC": 4,
+    "max_return_entries_per_PC": 4,
+    "QD": 64,
+    "RQD": 32,
+    "FR_FCFS_bypasses": 30,
+    "held_return_PC_cycles": 54
+  },
+  "resolved_edge_defect": "Original model failure preserved. Final scale response B; scheduler sees valid row B+1 and asserts stage post-edge; posedge bench samples stage B+2. Refill=B-start+1. Next row prefetchB+2, firstgrantB+3. Stage4 response has two registers; merge plus schedule yields doneB+133. Source-derived before candidate measurement; no fit.",
+  "conditional_single_cold_refill_cost": {
+    "baseline_cycles": 124368,
+    "candidate_cycles": 20601,
+    "saved_cycles": 103767,
+    "candidate_start_to_staged_cycles": 20602,
+    "candidate_start_to_done_cycles": 20733,
+    "scope": "One conditional per-layer WINDOW cold refill contribution; not total layer/token cost. No full40/warm-token transfer, rate headline or adoption."
+  },
+  "preflight_and_resources": {
+    "workers_max": 2,
+    "memory_limit_bytes": 4294967296,
+    "total_wall_cap_seconds": 180,
+    "measured_compile_seconds": 15.692513615824282,
+    "measured_runtime_seconds": 0.11541957035660744,
+    "measured_total_seconds": 15.820488180965185,
+    "verilator_elaboration_allocated_MB": 101.199,
+    "runtime_allocated_MB": 15,
+    "generated_payload_bytes": 8458240,
+    "backend_request_queue_bits": 827392,
+    "backend_return_queue_bits": 349184,
+    "source_declared_bits": 606718
+  },
+  "preserved_failures": [
+    "Prior onecycle stage-edge convention defect retained in baseline comparison/static_attempt1.log",
+    "Connected attempt1 compile-only failure from16MiB file limit retained; generated-file cap256MiB, CPU/memory/wall limits unchanged",
+    "Original epoch512 owner rejection retained in epoch9 synthetic correctness record; no owneralias encoding"
+  ],
+  "next_cheapest_necessary_gate": "Model actual producer and operation lifecycle integration, including persistent epoch ownership and explicit external fault-quiescence/restart contract for all reset-affected owners; then a bounded connected producer/recovery test with delayed/stale replies, under that model. Parent physical-block owners separately handle contextSS/FF; no product adoption before applicable gain/model and context gates.",
+  "limits": [
+    "CLK_PS1000 internal behavioral event calendar, no physical/live clock qualification",
+    "Same reset/start, API-primed historical rows and generated nonpoison fulladdresses; no producer writes, checkpoint payload, fulltoken or actual live coldstate proof",
+    "No B/CKV/RoPE/write competitors, no pipeline/CDC queues, no across-token retention",
+    "Actual timing run uses epochs1..128; healthy511->0->1 and malformed returns qualified separately by synthetic-service connected fixture",
+    "External fault drain is absent, not certified by pending counter; ghost after512same-tag epochs remains excluded only by drain/exactlyonce/nonreplay"
+  ]
+}

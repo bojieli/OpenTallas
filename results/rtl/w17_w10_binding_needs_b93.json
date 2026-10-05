@@ -1,0 +1,200 @@
+{
+  "claim": "Read-only consumer/basis audit for W10 owner. No qualification or engine replay.",
+  "entries": [
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem.sv",
+      "integration": {
+        "sha256": "2a2695256f941a78cc3b51f0f20aaf28c9ba24945fb7c800e1f29ef3254620cd",
+        "parameters": [
+          [
+            "MTP",
+            "0"
+          ],
+          [
+            "EARLY",
+            "0"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "EARLY",
+            "EARLY"
+          ]
+        ]
+      },
+      "historical": {
+        "sha256": "2a2695256f941a78cc3b51f0f20aaf28c9ba24945fb7c800e1f29ef3254620cd",
+        "parameters": [
+          [
+            "MTP",
+            "0"
+          ],
+          [
+            "EARLY",
+            "0"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "EARLY",
+            "EARLY"
+          ]
+        ]
+      }
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "integration": {
+        "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+        "parameters": [],
+        "special_parameters_passed": []
+      },
+      "historical": {
+        "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+        "parameters": [],
+        "special_parameters_passed": []
+      }
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "integration": {
+        "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+        "parameters": [
+          [
+            "EARLY",
+            "0      // 1: a final node with nothing held above it and nothing of its tree in the"
+          ]
+        ],
+        "special_parameters_passed": []
+      },
+      "historical": {
+        "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+        "parameters": [
+          [
+            "EARLY",
+            "0      // 1: a final node with nothing held above it and nothing of its tree in the"
+          ]
+        ],
+        "special_parameters_passed": []
+      }
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_ret.sv",
+      "integration": {
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "parameters": [
+          [
+            "BYPASS",
+            "0     // 1: a forwarded partial leaves the next cycle (not through the 5-cycle add"
+          ]
+        ],
+        "special_parameters_passed": []
+      },
+      "historical": {
+        "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+        "parameters": [
+          [
+            "BYPASS",
+            "0     // 1: a forwarded partial leaves the next cycle (not through the 5-cycle add"
+          ]
+        ],
+        "special_parameters_passed": []
+      }
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "integration": {
+        "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+        "parameters": [],
+        "special_parameters_passed": []
+      },
+      "historical": {
+        "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+        "parameters": [],
+        "special_parameters_passed": []
+      }
+    },
+    {
+      "path": "rtl/v41die/ot_v41_pair.sv",
+      "integration": {
+        "sha256": "693bf217cb83d9d8b24c873de4d021af10a785d57addf0df509690039edcab1c",
+        "parameters": [
+          [
+            "MTP",
+            "1"
+          ],
+          [
+            "EARLY",
+            "1"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "MTP",
+            "MTP"
+          ],
+          [
+            "EARLY",
+            "EARLY"
+          ]
+        ]
+      },
+      "historical": {
+        "sha256": "693bf217cb83d9d8b24c873de4d021af10a785d57addf0df509690039edcab1c",
+        "parameters": [
+          [
+            "MTP",
+            "1"
+          ],
+          [
+            "EARLY",
+            "1"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "MTP",
+            "MTP"
+          ],
+          [
+            "EARLY",
+            "EARLY"
+          ]
+        ]
+      }
+    },
+    {
+      "path": "rtl/v41die/ot_v41_retn.sv",
+      "integration": {
+        "sha256": "48272f4a5c66059bbd8d0ca5a804fd2d597aa66bff4611ca01c1ec97dc4d4993",
+        "parameters": [
+          [
+            "BYPASS",
+            "1"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "BYPASS",
+            "BYPASS"
+          ]
+        ]
+      },
+      "historical": {
+        "sha256": "48272f4a5c66059bbd8d0ca5a804fd2d597aa66bff4611ca01c1ec97dc4d4993",
+        "parameters": [
+          [
+            "BYPASS",
+            "1"
+          ]
+        ],
+        "special_parameters_passed": [
+          [
+            "BYPASS",
+            "BYPASS"
+          ]
+        ]
+      }
+    }
+  ]
+}

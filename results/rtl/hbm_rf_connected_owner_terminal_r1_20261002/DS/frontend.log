@@ -1,0 +1,303 @@
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:7:20: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_connected_rf_visibility'
+    7 |  localparam NC=QWEN?16:8, MAXVECS=4096*NC/128;
+      |                    ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:8:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_connected_rf_visibility'
+    8 |  localparam XC=8*266+64*16, FW=QWEN?32768:NC*XC, BEATS=(FW+2047)/2048;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:15:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'QWEN' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_connected_rf_visibility'
+   15 |  generate if(QWEN)begin:g_q
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:27:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'QWEN' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_connected_rf_visibility'
+   27 |  generate if(QWEN)begin
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:16:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   16 |  generate if(ENABLE)begin:g_on
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_full_sm_service.sv:22:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                            : ... note: In instance 'tb_connected_rf_visibility.service'
+   22 |  generate if(ENABLE) begin:g_enabled
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'tb_connected_rf_visibility.service.g_enabled.g_lane[127].u_mul.u.u_c1'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fpu.sv:66:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                 : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.g_col[7].g_sub[3].g_hard.u_tc.u.g_lane[15].u_mul'
+   66 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:78:29: Operator ADD expects 21 bits on the RHS, but RHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+   78 |     wire [RW+8:0] item = wb + si;
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:83:46: Operator ADD expects 13 bits on the RHS, but RHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+   83 |     wire [RW:0] row_now = gs_q ? gs_row : rb + si;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:89:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 3 bits.
+                                                   : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+   89 |     wire        last_si = (si == IL - 1);
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:107:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 3 bits.
+                                                    : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  107 |             ph <= (ph == IL - 1) ? {SW{1'b0}} : ph + 1'b1;
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:127:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb' generates 21 bits.
+                                                    : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  127 |                             else wb <= wb + IL;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_issue.sv:127:37: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                   : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  127 |                             else wb <= wb + IL;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:126:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb' generates 21 bits.
+                                                    : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  126 |                             if (wb + IL >= items_q) issuing <= 1'b0;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:142:47: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb' generates 13 bits.
+                                                    : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  142 |                                 else rb <= rb + IL;
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/gpu/ot_gpu_issue.sv:142:41: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                   : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  142 |                                 else rb <= rb + IL;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_issue.sv:141:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb' generates 13 bits.
+                                                    : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_issue'
+  141 |                                 if (rb + IL >= rows_q) issuing <= 1'b0;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:57:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 3 bits.
+                                                       : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_bc'
+   57 |     assign d_ready = (q_cnt < DQ);
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:66:42: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                       : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_bc'
+   66 |     wire                slot_free = used < DEPTH;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:67:53: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                       : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_bc'
+   67 |     assign req_v = act && slot_free && (outstanding < MAX_OUT);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:124:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_wp' generates 2 bits.
+                                                        : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_bc'
+  124 |             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/gpu/ot_gpu_bulk_copy.sv:129:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_rp' generates 2 bits.
+                                                        : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.u_bc'
+  129 |                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:26:51: Bit extraction of var[255:0] requires 8 bit index, not 10 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   26 |  assign wr_valid=live&&!waiting&&wp<nvec&&complete[wp];
+      |                                                   ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:27:42: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 10 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   27 |  assign wr_addr=wp[8:0];assign wr_data=wp<VMAX?data[wp]:4096'd0;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:27:52: Bit extraction of array[255:0] requires 8 bit index, not 10 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   27 |  assign wr_addr=wp[8:0];assign wr_data=wp<VMAX?data[wp]:4096'd0;
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:37:95: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'reserve_rows' generates 13 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   37 |     else begin live<=1;waiting<=0;visible<=0;rows_q<=reserve_rows;nrows<=0;nvec<=(reserve_rows+RP-1)/RP;wp<=0;committed<=0;seen<=0;complete<=0;
+      |                                                                                               ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:37:80: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   37 |     else begin live<=1;waiting<=0;visible<=0;rows_q<=reserve_rows;nrows<=0;nvec<=(reserve_rows+RP-1)/RP;wp<=0;committed<=0;seen<=0;complete<=0;
+      |                                                                                ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:36:37: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'reserve_rows' generates 13 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   36 |     if(reserve_rows==0||reserve_rows>RMAX)err<=1;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:44:17: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'row_index' generates 12 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   44 |      v=row_index/RP;needed=(v==nvec-1)?rows_q-v*RP:RP;
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:44:36: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'nvec' generates 10 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   44 |      v=row_index/RP;needed=(v==nvec-1)?rows_q-v*RP:RP;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:44:46: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'rows_q' generates 13 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   44 |      v=row_index/RP;needed=(v==nvec-1)?rows_q-v*RP:RP;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:47:47: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'row_index' generates 12 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   47 |      for(l=0;l<NC;l=l+1)data[v][32*((row_index%RP)*NC+l)+:32]<=row_data[32*l+:32];
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:49:17: Operator ADD expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   49 |      if(vrows[v]+1==needed)complete[v]<=1;
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv:42:24: Operator GTE expects 13 bits on the LHS, but LHS's VARREF 'row_index' generates 12 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility.capture_fence'
+   42 |     if(!live||row_index>=rows_q||seen[row_index])err<=1;
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:61:54: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'capture_addr' generates 9 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+   61 |  .cap_last(negative_epoch_test?cap_last:(capture_addr==nvec-1)),.cap_data(negative_epoch_test?cap_data:capture_data),
+      |                                                      ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:100:4: Logical operator IF expects 1 bit on the If, but If's VARREF 'QWEN' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_connected_rf_visibility'
+  100 |    if(QWEN)for(l=0;l<128;l=l+1)rsp_data[8*l+:8]<=8'd1;
+      |    ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:122:12: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'rrow' generates 12 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility'
+  122 |     if(rrow!=nres)$fatal(1,"row order/tag mismatch got%0d expected%0d",rrow,nres);
+      |            ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:130:12: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'rrow' generates 12 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility'
+  130 |     if(rrow!=nconsumer)$fatal(1,"consumer row order");
+      |            ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:143:64: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'initial_one' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  143 |   if(QWEN)for(j=0;j<16*128;j=j+1)fragment[16*j+:16]=initial_one?16'h3f80:data[32*(j%128)+16+:16];
+      |                                                                ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:144:87: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'initial_one' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  144 |   else for(j=0;j<NC;j=j+1)for(b=0;b<64;b=b+1)fragment[j*XC+8*266+16*b+:16]=initial_one?16'h3f80:data[32*((j*64+b)%128)+16+:16];
+      |                                                                                       ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:143:3: Logical operator IF expects 1 bit on the If, but If's VARREF 'QWEN' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_connected_rf_visibility'
+  143 |   if(QWEN)for(j=0;j<16*128;j=j+1)fragment[16*j+:16]=initial_one?16'h3f80:data[32*(j%128)+16+:16];
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:146:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  146 |    @(negedge clk);xw_en=1;xw_grp=QWEN?(j%2):j;xw_addr=QWEN?(j/2):0;xw_data=fragment[2048*j+:2048];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:146:33: Operator ASSIGN expects 7 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  146 |    @(negedge clk);xw_en=1;xw_grp=QWEN?(j%2):j;xw_addr=QWEN?(j/2):0;xw_data=fragment[2048*j+:2048];
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:146:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  146 |    @(negedge clk);xw_en=1;xw_grp=QWEN?(j%2):j;xw_addr=QWEN?(j/2):0;xw_data=fragment[2048*j+:2048];
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:146:54: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  146 |    @(negedge clk);xw_en=1;xw_grp=QWEN?(j%2):j;xw_addr=QWEN?(j/2):0;xw_data=fragment[2048*j+:2048];
+      |                                                      ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:148:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'initial_one' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  148 |   @(negedge clk);xw_en=0;stamp(initial_one?"producer_x_last_write":"consumer_x_last_write");
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:152:35: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'rows' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  152 |   @(negedge clk);d_valid=1;d_lines=rows;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:161:26: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  161 |   @(negedge clk);op_epoch=case_id+1;op_vectors=nvec;op_valid=1;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:161:47: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'nvec' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  161 |   @(negedge clk);op_epoch=case_id+1;op_vectors=nvec;op_valid=1;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:179:14: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'host_dst' generates 9 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility'
+  179 |   if(host_dst!=index)$fatal(1,"capture offer vector order");
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:183:21: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'vector_ACK_addr' generates 9 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility'
+  183 |   if(vector_ACK_addr!=index||vector_ACK_epoch!=op_epoch)$fatal(1,"ACK identity mismatch");
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:206:24: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'index' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  206 |   @(negedge clk);simd_a=index;simd_b=index;simd_dst=index;simd_valid=1;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:206:37: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'index' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  206 |   @(negedge clk);simd_a=index;simd_b=index;simd_dst=index;simd_valid=1;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:206:52: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'index' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  206 |   @(negedge clk);simd_a=index;simd_b=index;simd_dst=index;simd_valid=1;
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:213:9: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'index' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_connected_rf_visibility'
+  213 |   host_a=index;host_b=index;host_rd_valid=1;
+      |         ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:213:22: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'index' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  213 |   host_a=index;host_b=index;host_rd_valid=1;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:224:50: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  224 |   for(j=0;j<128;j=j+1)if(cooked[32*j+:32]!==(QWEN?32'h44000000:32'h43800000))$fatal(1,"SIMD RF visibility mismatch");
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:238:63: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'v' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  238 |    @(negedge clk);scratch_valid=1;scratch_write=1;scratch_addr=v;scratch_wdata=cooked[512*v+:512];
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:245:63: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'v' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  245 |    @(negedge clk);scratch_valid=1;scratch_write=0;scratch_addr=v;
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:256:129: Operator ASSIGN expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'row_count' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_connected_rf_visibility'
+  256 |   chain_active=0;negative_epoch_test=0;producer_done_sent=0;accepted_host_writes=0;simd_accepts=0;phase=0;rows=row_count;op_rows=row_count;nres=0;nconsumer=0;last_producer=-1;first_issue=-1;last_consumer=-1;rf_wait=0;weight_stalls=0;x_stalls=0;peak_pending=0;release_in=0;
+      |                                                                                                                                 ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:258:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  258 |   producer_expected=QWEN?32'h43000000:32'h42800000;consumer_expected=QWEN?32'h47800000:32'h46800000;
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:258:74: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  258 |   producer_expected=QWEN?32'h43000000:32'h42800000;consumer_expected=QWEN?32'h47800000:32'h46800000;
+      |                                                                          ^
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:275:13: Logical operator IF expects 1 bit on the If, but If's VARREF 'use_scratch' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  275 |   rf_read();if(use_scratch)scratch_roundtrip();
+      |             ^~
+%Warning-WIDTHTRUNC: rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv:288:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'QWEN' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_connected_rf_visibility'
+  288 |   producer_expected=QWEN?32'h43000000:32'h42800000;
+      |                         ^
+-Info: Command Line disabled gate optimization with -fno-gate.  This may cause ordering problems.
+%Warning-UNOPTFLAT: rtl/gpu/ot_gpu_stack.sv:46:24: Signal unoptimizable: Circular combinational logic: 'tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.lv_v'
+                                                 : ... note: In instance 'tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack'
+   46 |     wire [LEV:0]       lv_v;
+      |                        ^~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/gpu/ot_gpu_stack.sv:46:24:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.lv_v
+                    rtl/gpu/ot_gpu_stack.sv:65:32:      Example path: ASSIGNW
+                    rtl/gpu/ot_gpu_stack.sv:65:27:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].v_in
+                    rtl/gpu/ot_gpu_stack.sv:71:32:      Example path: ASSIGNW
+                    rtl/gpu/ot_gpu_stack.sv:71:27:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].lone
+                    rtl/gpu/ot_gpu_stack.sv:72:32:      Example path: ASSIGNW
+                    rtl/gpu/ot_gpu_stack.sv:72:27:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].go
+                    rtl/gpu/ot_gpu_stack.sv:96:73:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_sfu.sv:17:23:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].u_gv.v
+                    rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_sfu.sv:18:23:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].u_gv.vd
+                    rtl/gpu/ot_gpu_stack.sv:96:82:      Example path: ASSIGNW
+                    rtl/gpu/ot_gpu_stack.sv:95:27:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.g_lv[0].gv
+                    rtl/gpu/ot_gpu_stack.sv:100:30:      Example path: ASSIGNW
+                    rtl/gpu/ot_gpu_stack.sv:46:24:      Example path: tb_connected_rf_visibility.g_ds.u_sm.g_col[0].u_stack.lv_v
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.g'
+                                                  : ... note: In instance 'tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.p'
+                                                  : ... note: In instance 'tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: tb_connected_rf_visibility.service.g_enabled.g_lane[0].u_add.u.u_sum.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.261 MB sources in 64 modules, into 1704.698 MB in 11383 C++ files needing 40.449 MB
+- Verilator: Walltime 257.912 s (elab=1.599, cvt=205.097, bld=0.000); cpu 257.597 s on 1 threads; allocated 21264.930 MB

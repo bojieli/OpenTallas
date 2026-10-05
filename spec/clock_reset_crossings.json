@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "top_module": "ot_stage_top",
+  "evidence_class": "public_open_tool_structural_contract",
+  "domains": {
+    "aon_cfg": {
+      "clock_port": "aon_clk",
+      "nominal_hz": 250000000,
+      "reset_port": "aon_rst_n",
+      "reset_release": "upstream_synchronous_to_aon_clk",
+      "retained": true
+    },
+    "core": {
+      "clock_port": "core_clk",
+      "nominal_hz": 1000000000,
+      "reset_port": "core_domain_rst_n",
+      "external_reset_port": "core_rst_n",
+      "reset_release": "ot_reset_sync_synchronous_to_core_clk",
+      "retained": false
+    }
+  },
+  "stage_top_port_groups": [
+    {
+      "classification": "clock",
+      "direction": "input",
+      "domain": "asynchronous_source",
+      "signals": ["aon_clk", "core_clk"]
+    },
+    {
+      "classification": "reset",
+      "direction": "input",
+      "domain": "asynchronous_source",
+      "signals": ["aon_rst_n", "core_rst_n"]
+    },
+    {
+      "classification": "functional",
+      "direction": "input",
+      "domain": "aon_cfg",
+      "signals": [
+        "host_cmd_valid",
+        "host_cmd_record",
+        "host_rsp_ready",
+        "telemetry_ready",
+        "csr_req_valid",
+        "csr_req_record",
+        "csr_rsp_ready",
+        "power_good",
+        "clock_stable",
+        "hbm_ready",
+        "link_ready",
+        "bist_done",
+        "bist_pass",
+        "thermal_warning",
+        "thermal_fatal",
+        "fatal_error",
+        "requalify",
+        "test_enable",
+        "schedule_wr_valid",
+        "schedule_wr_slot",
+        "schedule_wr_data",
+        "schedule_commit_req",
+        "schedule_manifest_crc_ok",
+        "schedule_commit_id"
+      ]
+    },
+    {
+      "classification": "functional",
+      "direction": "output",
+      "domain": "aon_cfg",
+      "signals": [
+        "host_cmd_ready",
+        "host_rsp_valid",
+        "host_rsp_record",
+        "telemetry_valid",
+        "telemetry_record",
+        "csr_req_ready",
+        "csr_rsp_valid",
+        "csr_rsp_record",
+        "power_state",
+        "safe_state",
+        "schedule_wr_ready",
+        "schedule_wr_ack",
+        "schedule_wr_error",
+        "schedule_commit_ready",
+        "schedule_commit_ack",
+        "schedule_commit_error",
+        "schedule_valid",
+        "boot_control_requests",
+        "csr_schedule_window_valid",
+        "csr_schedule_window_address",
+        "csr_schedule_window_data",
+        "csr_schedule_window_strobe",
+        "csr_repair_window_valid",
+        "csr_repair_window_address",
+        "csr_repair_window_data",
+        "csr_repair_window_strobe"
+      ]
+    },
+    {
+      "classification": "functional",
+      "direction": "input",
+      "domain": "core",
+      "signals": [
+        "image_slot_valid",
+        "service_start_ready",
+        "service_done_valid",
+        "service_done_status",
+        "service_done_error_source",
+        "service_done_syndrome",
+        "abort_valid",
+        "abort_transaction_id"
+      ]
+    },
+    {
+      "classification": "functional",
+      "direction": "output",
+      "domain": "core",
+      "signals": [
+        "service_start_valid",
+        "service_transaction_id",
+        "service_session_id",
+        "service_session_generation",
+        "service_first_layer",
+        "service_last_layer",
+        "service_batch_minus_one",
+        "service_draft_tokens",
+        "service_schedule_id",
+        "service_flags",
+        "service_activation_address",
+        "service_poison",
+        "stage_idle",
+        "admission_block"
+      ]
+    }
+  ],
+  "resets": [
+    {
+      "id": "RST-AON-001",
+      "signal": "aon_rst_n",
+      "domain": "aon_cfg",
+      "assertion": "asynchronous",
+      "release": "qualified_synchronous_upstream",
+      "owner": "platform_aon_reset_controller",
+      "spec_ref": "CRP-3.1"
+    },
+    {
+      "id": "RST-CORE-001",
+      "signal": "core_domain_rst_n",
+      "domain": "core",
+      "assertion": "asynchronous_from_core_rst_n_and_core_reset_n_qualified",
+      "release": "two_core_clk_cycles_minimum",
+      "owner": "core_reset_conditioner",
+      "spec_ref": "CRP-3.1"
+    },
+    {
+      "id": "RST-FIFO-001",
+      "signal": "fifo_async_rst_n",
+      "domain": "dual_clock_primitive",
+      "assertion": "either_interface_reset_flushes_both_domains",
+      "release": "per_domain_synchronous_then_online_rendezvous",
+      "owner": "ot_async_fifo",
+      "spec_ref": "CRP-2.2"
+    }
+  ],
+  "crossings": [
+    {
+      "id": "CDC-CMD-001",
+      "instance": "cmd_cdc",
+      "module": "ot_async_fifo",
+      "source_domain": "aon_cfg",
+      "destination_domain": "core",
+      "payload": "host_cmd_record plus ready/valid",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "source_reset": "aon_rst_n",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-RSP-001",
+      "instance": "rsp_cdc",
+      "module": "ot_async_fifo",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "host_rsp_record plus ready/valid",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-TELEM-001",
+      "instance": "telemetry_cdc",
+      "module": "ot_async_fifo",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "128-bit RAS telemetry record",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-SCHED-001",
+      "instance": "schedule_cdc",
+      "module": "ot_cdc_mailbox",
+      "source_domain": "aon_cfg",
+      "destination_domain": "core",
+      "payload": "write_or_commit, manifest result, schedule ID, slot, entry",
+      "mechanism": "closed_loop_four_phase_mailbox",
+      "source_reset": "aon_rst_n",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "destination_replay_into_destination_reset_state",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-STATUS-001",
+      "instance": "status_snapshot_cdc",
+      "module": "ot_cdc_mailbox",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "512-bit coherent diagnostic snapshot",
+      "mechanism": "closed_loop_four_phase_snapshot_mailbox",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "replay_is_idempotent_snapshot_replacement",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-RAS-CLEAR-001",
+      "instance": "ras_clear_cdc",
+      "module": "ot_cdc_mailbox",
+      "source_domain": "aon_cfg",
+      "destination_domain": "core",
+      "payload": "RW1C first-error clear request",
+      "mechanism": "closed_loop_four_phase_mailbox",
+      "source_reset": "aon_rst_n",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "replay_is_idempotent_clear",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-RAS-SAFE-001",
+      "instance": "ras_safe_sync",
+      "module": "ot_sync_bits",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "sticky fail-safe level",
+      "mechanism": "two_flop_level_synchronizer",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "destination_defaults_safe_request_low_then_RAS_requalifies",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-SERVICE-ENABLE-001",
+      "instance": "service_sync",
+      "module": "ot_sync_bits",
+      "source_domain": "aon_cfg",
+      "destination_domain": "core",
+      "payload": "service-enable level",
+      "mechanism": "two_flop_level_synchronizer",
+      "source_reset": "aon_rst_n",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "destination_defaults_disabled",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-POWER-SAFE-001",
+      "instance": "power_safe_sync",
+      "module": "ot_sync_bits",
+      "source_domain": "aon_cfg",
+      "destination_domain": "core",
+      "payload": "power-safe level",
+      "mechanism": "two_flop_level_synchronizer",
+      "source_reset": "aon_rst_n",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "core_reset_and_admission_interlock_cover_release",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-IDLE-001",
+      "instance": "idle_sync",
+      "module": "ot_sync_level",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "stage-idle level",
+      "mechanism": "two_flop_plus_three_cycle_stable_qualification",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "destination_defaults_idle_for_power_sequence",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "CDC-SCHEDULE-VALID-001",
+      "instance": "schedule_valid_sync",
+      "module": "ot_sync_level",
+      "source_domain": "core",
+      "destination_domain": "aon_cfg",
+      "payload": "schedule-valid level",
+      "mechanism": "two_flop_plus_three_cycle_stable_qualification",
+      "source_reset": "core_domain_rst_n",
+      "destination_reset": "aon_rst_n",
+      "reset_recovery": "destination_defaults_invalid",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "id": "RDC-CORE-RESET-001",
+      "instance": "core_reset_conditioner",
+      "module": "ot_reset_sync",
+      "source_domain": "aon_cfg_and_external_reset",
+      "destination_domain": "core",
+      "payload": "core reset qualification",
+      "mechanism": "asynchronous_assert_synchronous_release_reset_conditioner",
+      "source_reset": "core_rst_n_and_core_reset_n_qualified",
+      "destination_reset": "core_domain_rst_n",
+      "reset_recovery": "minimum_two_core_clock_release_stages",
+      "spec_ref": "CRP-3.1"
+    }
+  ]
+}

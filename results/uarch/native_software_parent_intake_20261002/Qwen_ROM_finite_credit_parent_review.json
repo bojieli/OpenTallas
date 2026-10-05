@@ -1,0 +1,23 @@
+{
+  "schema": "PARENT_QWEN_ROM_FINITE_CREDIT_REVIEW_R1",
+  "owner_commits": [
+    "6c0cc1aeb55efbdb7110b6d258139025b4494c81",
+    "02e9c04b773642e1f88118815bae6d164f8b1fcf"
+  ],
+  "checks": {
+    "focused_tests_passed": 14,
+    "source_pins_verified": 57,
+    "original_pins_verified": 28,
+    "dependency_pins_verified": 2,
+    "artifact_hashes_verified": 20,
+    "cold_model_byte_equal": true
+  },
+  "conditional_token_us": 361.0713,
+  "budget_for_3000_tps_us": 333.3333333333333,
+  "deficit_us": 27.737966666666694,
+  "model_verdict": "G0_FAIL_CONDITIONAL_FINITE_CALENDAR",
+  "physical_qualified": false,
+  "production_lifecycle_qualified": false,
+  "headline_qualified": false,
+  "next": "source-bound wait attribution and lower bound before one targeted change; actual producer release and legal channel sustained PHY required"
+}

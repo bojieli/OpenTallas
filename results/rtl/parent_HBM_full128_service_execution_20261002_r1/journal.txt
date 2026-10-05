@@ -1,0 +1,4 @@
+Oct 02 04:17:51 ubuntu systemd[1537]: Started /usr/bin/env PARENT_REVIEWED_FULL_SM_GATE=1 FULL_SM_GATE_OUT=/tmp/full-sm-rf-parent-exact-2e75bab2e-r1 bash tools/full_sm_rf_service_exact_gate.sh.
+Oct 02 04:20:51 ubuntu systemd[1537]: hbm-full128-parent-20261002-r1.service: Main process exited, code=exited, status=124/n/a
+Oct 02 04:20:51 ubuntu systemd[1537]: hbm-full128-parent-20261002-r1.service: Failed with result 'exit-code'.
+Oct 02 04:20:51 ubuntu systemd[1537]: hbm-full128-parent-20261002-r1.service: Consumed 3min 34ms CPU time.

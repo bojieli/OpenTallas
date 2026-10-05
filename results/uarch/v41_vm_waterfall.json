@@ -1,0 +1,522 @@
+{
+ "schema": "opentallas.uarch.v41_vm_waterfall.v1",
+ "waterfall": [
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 3153.0,
+   "mtp_tokens_s_b1": 4858.8,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": null,
+   "step": "previous product (VM_DIST 6/6/6, ledger hub, W10 q 476 um)",
+   "delta_ar": null
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 3129.9,
+   "mtp_tokens_s_b1": 4840.4,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 4.500000000000001,
+    "coll_write": 4.500000000000001,
+    "su_op_extra": 0.0,
+    "su_red_extra": 0.0,
+    "su_issue": 1.0,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H x gather 6 -> 12 stages",
+   "delta_ar": -23.1
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 3107.1,
+   "mtp_tokens_s_b1": 4822.2,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 4.500000000000001,
+    "su_op_extra": 0.0,
+    "su_red_extra": 0.0,
+    "su_issue": 1.0,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H result scatter 6 -> 12",
+   "delta_ar": -22.8
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 3092.9,
+   "mtp_tokens_s_b1": 4814.2,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 0.0,
+    "su_red_extra": 0.0,
+    "su_issue": 1.0,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H collective write 6 -> 12",
+   "delta_ar": -14.2
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 2781.7,
+   "mtp_tokens_s_b1": 4608.1,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 0.0,
+    "su_issue": 1.0,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H SU op network latency +36.7 slow cycles",
+   "delta_ar": -311.2
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 2705.1,
+   "mtp_tokens_s_b1": 4556.0,
+   "ar_saturated_tokens_s": 90025.4,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.0,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H reduction network latency +44.9",
+   "delta_ar": -76.6
+  },
+  {
+   "stages": 37,
+   "dies": 188,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 2697.1,
+   "mtp_tokens_s_b1": 4518.3,
+   "ar_saturated_tokens_s": 89148.3,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "VM_DIST 6/6/6 fast cycles (no VM-H)"
+   },
+   "step": "VM-H issue x1.169",
+   "delta_ar": -8.0
+  },
+  {
+   "stages": 39,
+   "dies": 200,
+   "hub_block_mm2": null,
+   "ar_tokens_s_b1": 2689.4,
+   "mtp_tokens_s_b1": 4497.2,
+   "ar_saturated_tokens_s": 89124.7,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "step": "W10b tiles (q 510.84 um): 37 -> 39 stages",
+   "delta_ar": -7.7
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2680.2,
+   "mtp_tokens_s_b1": 4474.8,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "step": "VM-H hub block 38.95 mm2: 39 -> 41 stages (measured VM-H reference)",
+   "delta_ar": -9.2
+  }
+ ],
+ "levers": [
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2736.7,
+   "mtp_tokens_s_b1": 4548.9,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 8,
+    "coll_write": 8,
+    "su_op_extra": 37,
+    "su_red_extra": 29,
+    "su_issue": 1.0,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)"
+   },
+   "lever": "(a) C_rotate, W11 square layout (37 / 29): SUPERSEDED, unplaced geometry",
+   "vs_vmh_reference_pct": 2.1
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2690.4,
+   "mtp_tokens_s_b1": 4512.9,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 42,
+    "su_red_extra": 32,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f"
+   },
+   "lever": "(a) C_rotate on W18b's strip hub (42 / 32), unfused: reference",
+   "vs_vmh_reference_pct": 0.4
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2749.0,
+   "mtp_tokens_s_b1": 4560.8,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 42,
+    "su_red_extra": 32,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f",
+    "fusion": {
+     "bcast": 7,
+     "read": 18,
+     "read_red": 18,
+     "write": 17,
+     "result": 7,
+     "mode": "conservative"
+    }
+   },
+   "lever": "(a) C_rotate on W18b's strip hub, fused conservative: reference",
+   "vs_vmh_reference_pct": 2.6
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2733.4,
+   "mtp_tokens_s_b1": 4545.9,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 37,
+    "su_red_extra": 28,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip"
+   },
+   "lever": "(a) C_rotate on W18b's plus hub (37 / 28), unfused: PRODUCT basis",
+   "vs_vmh_reference_pct": 2.0
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2786.8,
+   "mtp_tokens_s_b1": 4589.0,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 37,
+    "su_red_extra": 28,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip",
+    "fusion": {
+     "bcast": 6,
+     "read": 16,
+     "read_red": 16,
+     "write": 15,
+     "result": 6,
+     "mode": "conservative"
+    }
+   },
+   "lever": "(a) C_rotate on W18b's plus hub, fused conservative: PRODUCT (modelled; RTL pending)",
+   "vs_vmh_reference_pct": 4.0
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2799.5,
+   "mtp_tokens_s_b1": 4599.0,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 37,
+    "su_red_extra": 28,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip",
+    "fusion": {
+     "bcast": 6,
+     "read": 16,
+     "read_red": 16,
+     "write": 15,
+     "result": 6,
+     "mode": "optimistic"
+    }
+   },
+   "lever": "(a) C_rotate on W18b's plus hub, fused optimistic: BOUND",
+   "vs_vmh_reference_pct": 4.5
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2743.2,
+   "mtp_tokens_s_b1": 4525.9,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)",
+    "fusion": {
+     "bcast": 5,
+     "read": 15.853000000000002,
+     "read_red": 31.909,
+     "write": 15.853000000000002,
+     "result": 8,
+     "mode": "conservative"
+    }
+   },
+   "lever": "(a) VM-H, fused conservative (comparison)",
+   "vs_vmh_reference_pct": 2.4
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2519.9,
+   "mtp_tokens_s_b1": 4374.4,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 11,
+    "ret_scatter": 10,
+    "coll_write": 20,
+    "su_op_extra": 61,
+    "su_red_extra": 46,
+    "su_issue": 1.0
+   },
+   "lever": "(a) C_rotate on the compact hub at 481 um a stage (61 / 46; sensitivity: the 1.2 GHz reach)",
+   "vs_vmh_reference_pct": -6.0
+  },
+  {
+   "stages": 44,
+   "dies": 220,
+   "hub_block_mm2": 62.951,
+   "ar_tokens_s_b1": 2682.4,
+   "mtp_tokens_s_b1": 4507.1,
+   "ar_saturated_tokens_s": 89980.6,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(b) SU 2,048 / SFU 512 lanes, network unchanged (optimistic; block ~63 mm2)",
+   "vs_vmh_reference_pct": 0.1
+  },
+  {
+   "stages": 44,
+   "dies": 220,
+   "hub_block_mm2": 62.951,
+   "ar_tokens_s_b1": 2541.8,
+   "mtp_tokens_s_b1": 4394.2,
+   "ar_saturated_tokens_s": 89980.6,
+   "vm": {
+    "x_gather": 17,
+    "ret_scatter": 17,
+    "coll_write": 17,
+    "su_op_extra": 49.70546,
+    "su_red_extra": 61.27168999999999,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(b) SU 2,048 / SFU 512 lanes, network stages x1.41",
+   "vs_vmh_reference_pct": -5.2
+  },
+  {
+   "stages": 45,
+   "dies": 224,
+   "hub_block_mm2": 74.664,
+   "ar_tokens_s_b1": 2492.3,
+   "mtp_tokens_s_b1": 4294.8,
+   "ar_saturated_tokens_s": 89728.6,
+   "vm": {
+    "x_gather": 18,
+    "ret_scatter": 18,
+    "coll_write": 18,
+    "su_op_extra": 57,
+    "su_red_extra": 49,
+    "su_issue": 1.0,
+    "src": "W11 3cc18731 options.C (central full crossbar, 74.66 mm2)"
+   },
+   "lever": "(c) flat VM as buildable = W11 option C (central crossbar, 74.66 mm2)",
+   "vs_vmh_reference_pct": -7.0
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 3130.0,
+   "mtp_tokens_s_b1": 4808.6,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": null,
+   "lever": "(c) flat VM with no network (NOT physical; reference)",
+   "vs_vmh_reference_pct": 16.8
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2754.5,
+   "mtp_tokens_s_b1": 4526.7,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 28.779500000000002,
+    "su_red_extra": 34.93175,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(d) VM-H per-op network latency -25%",
+   "vs_vmh_reference_pct": 2.8
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2833.2,
+   "mtp_tokens_s_b1": 4579.8,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 20.853,
+    "su_red_extra": 24.9545,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(d) VM-H per-op network latency -50%",
+   "vs_vmh_reference_pct": 5.7
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2704.0,
+   "mtp_tokens_s_b1": 4495.1,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 8,
+    "coll_write": 8,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(d) VM-H client stages 12 -> 8 only",
+   "vs_vmh_reference_pct": 0.9
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2688.1,
+   "mtp_tokens_s_b1": 4511.9,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.0,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
+   },
+   "lever": "(d) VM-H issue x1.169 -> 1.0 only",
+   "vs_vmh_reference_pct": 0.3
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2875.0,
+   "mtp_tokens_s_b1": 4644.2,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 8,
+    "coll_write": 8,
+    "su_op_extra": 21,
+    "su_red_extra": 21,
+    "su_issue": 1.0,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)"
+   },
+   "lever": "(d) W11's 3,850 um sensitivity (one-way 8, op / red +21): SUPERSEDED -- the rotate pays the hub diameter",
+   "vs_vmh_reference_pct": 7.3
+  }
+ ],
+ "total_drop_ar": -472.8,
+ "ruling": "ROOT 2026-10-01: C_rotate stays (no issue penalty; it wins the saturated rate), priced on W18b's placed compact hub at 748 um a stage (+42 / +32) with lane-local fusion as a named step (modelled; RTL pending); the square layout's 37 / 29 is superseded; VM-H is the comparison row; W11's aligned-base near / far allocator becomes an upside row when it lands",
+ "caveat": "Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as per-op latency on the chain, not as bandwidth.",
+ "source_sha256": {
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+ }
+}

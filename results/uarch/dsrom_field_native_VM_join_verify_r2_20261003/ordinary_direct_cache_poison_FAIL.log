@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 196, in <module>
+    args.out.write_text(json.dumps(generate(),sort_keys=True,indent=2)+'\n')
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 161, in generate
+    receipt=source_formatter_receipt();p=json.loads((OUT/'inputs/provider_model.json').read_text());v=provider()
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 22, in provider
+    m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_calendar.py", line 1, in <module>
+    #!/usr/bin/env python3
+RuntimeError: CACHE_MUST_NOT_EXECUTE

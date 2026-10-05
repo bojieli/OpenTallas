@@ -1,0 +1,25 @@
+{
+  "GO": "SINGLE_BOUNDED_PREPARED_EXISTING_SOURCE_PRODUCER_VERIFICATION",
+  "conditions": [
+    "Clean pinned source/model fixture only; hard wholecgroup stop, aggregate memory cap; capmustverify beforecompile",
+    "Two declared retention cases only; same full128row actualL0 descriptor, noforce/retry/shapechange",
+    "Compare all source memory events/calendars and physicalvisibility shadow; no seven-cycle guard",
+    "Preserve failures; no actualQE arithmetic/checkpoint/engine/fulltoken/physicaladoption credit"
+  ],
+  "event_journals_byte_identical": 3,
+  "hardware_admission": false,
+  "model_byte_identical": true,
+  "prediction_sha256": "6bde2e30fd4d32ff58646b4ccdbb54b84db99891c61d6ea17d1c468911f431d7",
+  "prepared_owner_commit": "b0f895dc41cf5f2a2bc43f6ea2c0542e69abfe98",
+  "r2_element_status": "FAIL_UNQUALIFIED_TAG_WALK_SCOREBOARD_DIAGNOSIS_PENDING",
+  "r2_terminal_artifacts_verified": 13,
+  "resource_limits": {
+    "CPU_affinity_max": 2,
+    "aggregate_memory_bytes": 4294967296,
+    "aggregate_whole_run_seconds": 180,
+    "generated_file_limit_bytes": 268435456,
+    "swap_bytes": 0
+  },
+  "static_tests_passed": 5,
+  "status": "PARENT_REVIEW_PASS_BOUNDED_PRODUCER_GO"
+}

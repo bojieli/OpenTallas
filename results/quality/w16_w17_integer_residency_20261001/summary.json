@@ -1,0 +1,1231 @@
+{
+  "schema": "opentallas.w17.integer-expert-residency-candidate.v1",
+  "source_pins": {
+    "results/rtl/w17_connected_token_preparation_20261001/actual_expert_expected_manifest.json.gz": {
+      "commit": "e0c28412ad892d212661661529a9fc5324af0116",
+      "sha256": "d35d4868d781bae93e4d1f0b999e4293fc19356312ab97073496feb7eb4c8343"
+    },
+    "results/rtl/w17_connected_token_preparation_20261001/actual_manifest_intake.json": {
+      "commit": "e95c6a2a40b2539cb2844151881535aec12f3957",
+      "sha256": "386dfe81e6bb9b169ec51de86a3f08d6974322fdda877914225bf567b9696b8f"
+    },
+    "tools/v41_rom_ksplit_bankmap.py": {
+      "commit": "42e2471cf20dc081ea59f8f43478435848dc7256",
+      "sha256": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+    },
+    "tools/v41_die_images_w17w10.py": {
+      "commit": "1c4c5aefdfbbdd41dee75772761a95a3446104cc",
+      "sha256": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780"
+    },
+    "results/quality/w16_w10_fullmap_area_20261001/area_price.json": {
+      "commit": "50e6c9928",
+      "sha256": "3e9caac62402110980b39eb953b997cef90bdaad003f0d66d2e76b2cc900fcd3"
+    },
+    "tools/uarch_model.py": {
+      "commit": "cc8a2a77bdfc1c69aeda2d0a678d66f5df5a8cd9",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "commit": "cc8a2a77bdfc1c69aeda2d0a678d66f5df5a8cd9",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    }
+  },
+  "status": "EXPERT_ONLY_INTEGER_CANDIDATE_FULL_PRODUCT_BLOCKED",
+  "geometry_reconciliation": {
+    "logical_mates_per_pair": 2,
+    "logical_words_per_mate": 8192,
+    "physical_parities_per_mate": 2,
+    "physical_rows_per_parity": 4096,
+    "physical_bits_per_word": 274,
+    "capacity_bits_per_pair": 4489216,
+    "physical_capacity_bits_per_pair": 4489216,
+    "logical_to_physical": "mate unchanged; parity=logical_address%2; row=logical_address//2",
+    "w10_baseline_model_macros_per_pair": 4,
+    "w10_baseline_model_macro_area_um2": "4*7881.4",
+    "cons_need_area_formula": "2*pairs*CONS_MACRO_MM2*(149.6/142.4) + nq*(fq-2*CONS_MACRO_MM2) + nb*(fb-2*CONS_MACRO_MM2)",
+    "meaning": "cons_need subtracts two baseline8192 logical-macro footprints then adds equivalent capacity at4096 density; not two physical4096 banks/pair and not doubled resident capacity",
+    "actual_q_PP_strip_footprint_reconciled": false,
+    "historical_3749_q_fit_transferred": false
+  },
+  "geometry": {
+    "NP": 8192,
+    "return_regions": 128,
+    "q_pairs": 3749,
+    "reserved_BF16_pairs": 1024,
+    "physical_words_per_parity_macro": 4096,
+    "logical_depth_per_mate": 8192,
+    "physical_macros_per_pair": 4,
+    "q_mask": "region first29/30 pairs (37 regions have30); BF16 reserve next8 pairs/region; other tree slots inactive",
+    "scope": "Historical model pair count + proposed128-region field; NOT actual3109 capacity or physical qualification"
+  },
+  "policy": "Pinned _place at empty q-only metadata field separately per family; freeze exact element_order template, append whole expert triplets stage/rank. Not fill-awareLPT replay at every resident phase; proposed deterministic allocator.",
+  "stages": [
+    {
+      "stage": 0,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 1,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 2,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 3,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 4,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 5,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 6,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 7,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 8,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 9,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 10,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 11,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 12,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 13,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 14,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 15,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 16,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 17,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 18,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 19,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 20,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 21,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 22,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 23,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 24,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 25,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 26,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 27,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 28,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 29,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 30,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 31,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 32,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 33,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 34,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 35,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 36,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 37,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 38,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 39,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 40,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 41,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 42,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 43,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 44,
+      "experts": 341,
+      "expert_phase_entries": 1023,
+      "required_expert_phase_bits": 10,
+      "maximum_logical_bank_fill": 8184,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 195543040
+    },
+    {
+      "stage": 45,
+      "experts": 15,
+      "expert_phase_entries": 45,
+      "required_expert_phase_bits": 6,
+      "maximum_logical_bank_fill": 360,
+      "physical_macros_touched": 13440,
+      "expert_words_all_four_ranks": 8601600
+    }
+  ],
+  "experts_per_stage_capacity": 341,
+  "expert_only_stage_count": 46,
+  "expected_slices": 184320,
+  "physical_payload_word_totals": {
+    "w1": 2831155200,
+    "w3": 2831155200,
+    "w2": 3145728000
+  },
+  "PP_alignment_gap_words": 0,
+  "descriptor": {
+    "cfg_words_per_pair_phase": 25,
+    "cfg_bits_per_word": 48,
+    "expert_phase_count_per_rank": 46080,
+    "phase_bits_current_L0": 6,
+    "current_64_entry_phase_capacity_fails": true,
+    "maximum_stage_expert_entries": 1023,
+    "dense_image_bytes_per_rank": 32990976000,
+    "allocated_power_of_two_dense_image_bytes_per_rank": 33036796800,
+    "cfg_bits_per_full_pair_per_phase": 1200,
+    "config_load_bits_per_full_stage_phase": 5727600,
+    "config_service_bits_per_cycle": null,
+    "config_load_cycle_formula": "ceil(active_pairs*25*48 / aggregate_config_bits_per_cycle), plus lookup/CDC/wake completion; port contract unbound",
+    "resident_key_bits": 17,
+    "global_key_not_local_phase": true,
+    "compact_lookup_hardware_cycles": null,
+    "config_reload_cycles": null,
+    "area_mm2": null
+  },
+  "port_quantities": {
+    "fp4_Macs_per_issued_pair_cycle": 128,
+    "logical_ROM_bytes_per_pair_issue_cycle": "68.5",
+    "physical_ROM_ports_per_pair": 4,
+    "physical_bytes_per_port_per_two_cycle_read": "34.25",
+    "activation_spine_payload_bits_per_source_cycle": 512,
+    "activation_spine_exponent_bits_per_source_cycle": 20,
+    "cfg_bits_per_pair_phase": 1200,
+    "return_bytes_per_pair_issue_cycle": 8,
+    "boundary_routing_tracks": null,
+    "replica_mux_demux_area_mm2": null,
+    "scope": "Existing NB2/FAST/PP interface quantities; multicast/return/hop/descriptor scheduling and area not closed"
+  },
+  "hop_cost_equation": "For each hop: ceil(payload_bits/(bits_per_replica_source_cycle*replicas))*3 common3600MHz ticks + registered_route_ticks; then forwardCDC, actual consumerdone, reversecredit. Missing service contracts fail closed; no arbitrary beat width.",
+  "phase_costs": {
+    "per_family_stream_issue_cycles": {
+      "w1": 80,
+      "w3": 80,
+      "w2": 64
+    },
+    "one_selected_expert_stream_issue_cycles": 224,
+    "scope": "Conservative one expert at a time FAST LAT8 stream issue only, no sharedexpert or finite routing/reduction/SU/norm/descriptor cost credit",
+    "connected_token_cycles": null
+  },
+  "layer_hop_requirements": [
+    {
+      "layer": 0,
+      "candidate_hub_anchor": 0,
+      "expert_stages": [
+        0,
+        1
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 1,
+      "candidate_hub_anchor": 1,
+      "expert_stages": [
+        1,
+        2
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 2,
+      "candidate_hub_anchor": 2,
+      "expert_stages": [
+        2,
+        3
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 3,
+      "candidate_hub_anchor": 3,
+      "expert_stages": [
+        3,
+        4
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 4,
+      "candidate_hub_anchor": 4,
+      "expert_stages": [
+        4,
+        5
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 5,
+      "candidate_hub_anchor": 5,
+      "expert_stages": [
+        5,
+        6
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 6,
+      "candidate_hub_anchor": 6,
+      "expert_stages": [
+        6,
+        7
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 7,
+      "candidate_hub_anchor": 7,
+      "expert_stages": [
+        7,
+        8,
+        9
+      ],
+      "furthest_linear_stage_distance": 2,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 8,
+      "candidate_hub_anchor": 9,
+      "expert_stages": [
+        9,
+        10
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 9,
+      "candidate_hub_anchor": 10,
+      "expert_stages": [
+        10,
+        11
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 10,
+      "candidate_hub_anchor": 11,
+      "expert_stages": [
+        11,
+        12
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 11,
+      "candidate_hub_anchor": 12,
+      "expert_stages": [
+        12,
+        13
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 12,
+      "candidate_hub_anchor": 13,
+      "expert_stages": [
+        13,
+        14
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 13,
+      "candidate_hub_anchor": 14,
+      "expert_stages": [
+        14,
+        15
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 14,
+      "candidate_hub_anchor": 15,
+      "expert_stages": [
+        15,
+        16
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 15,
+      "candidate_hub_anchor": 16,
+      "expert_stages": [
+        16,
+        17,
+        18
+      ],
+      "furthest_linear_stage_distance": 2,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 16,
+      "candidate_hub_anchor": 18,
+      "expert_stages": [
+        18,
+        19
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 17,
+      "candidate_hub_anchor": 19,
+      "expert_stages": [
+        19,
+        20
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 18,
+      "candidate_hub_anchor": 20,
+      "expert_stages": [
+        20,
+        21
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 19,
+      "candidate_hub_anchor": 21,
+      "expert_stages": [
+        21,
+        22
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 20,
+      "candidate_hub_anchor": 22,
+      "expert_stages": [
+        22,
+        23
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 21,
+      "candidate_hub_anchor": 23,
+      "expert_stages": [
+        23,
+        24
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 22,
+      "candidate_hub_anchor": 24,
+      "expert_stages": [
+        24,
+        25
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 23,
+      "candidate_hub_anchor": 25,
+      "expert_stages": [
+        25,
+        26,
+        27
+      ],
+      "furthest_linear_stage_distance": 2,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 24,
+      "candidate_hub_anchor": 27,
+      "expert_stages": [
+        27,
+        28
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 25,
+      "candidate_hub_anchor": 28,
+      "expert_stages": [
+        28,
+        29
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 26,
+      "candidate_hub_anchor": 29,
+      "expert_stages": [
+        29,
+        30
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 27,
+      "candidate_hub_anchor": 30,
+      "expert_stages": [
+        30,
+        31
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 28,
+      "candidate_hub_anchor": 31,
+      "expert_stages": [
+        31,
+        32
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 29,
+      "candidate_hub_anchor": 32,
+      "expert_stages": [
+        32,
+        33
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 30,
+      "candidate_hub_anchor": 33,
+      "expert_stages": [
+        33,
+        34
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 31,
+      "candidate_hub_anchor": 34,
+      "expert_stages": [
+        34,
+        35,
+        36
+      ],
+      "furthest_linear_stage_distance": 2,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 32,
+      "candidate_hub_anchor": 36,
+      "expert_stages": [
+        36,
+        37
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 33,
+      "candidate_hub_anchor": 37,
+      "expert_stages": [
+        37,
+        38
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 34,
+      "candidate_hub_anchor": 38,
+      "expert_stages": [
+        38,
+        39
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 35,
+      "candidate_hub_anchor": 39,
+      "expert_stages": [
+        39,
+        40
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 36,
+      "candidate_hub_anchor": 40,
+      "expert_stages": [
+        40,
+        41
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 37,
+      "candidate_hub_anchor": 41,
+      "expert_stages": [
+        41,
+        42
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 38,
+      "candidate_hub_anchor": 42,
+      "expert_stages": [
+        42,
+        43
+      ],
+      "furthest_linear_stage_distance": 1,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    },
+    {
+      "layer": 39,
+      "candidate_hub_anchor": 43,
+      "expert_stages": [
+        43,
+        44,
+        45
+      ],
+      "furthest_linear_stage_distance": 2,
+      "dispatch_per_selected_remote_rank_minimum_BF16_activation_bits": 81920,
+      "return_per_selected_remote_rank_minimum_BF16_output_bits": 20480,
+      "selected_experts": null,
+      "finite_hop_cycles": null,
+      "boundary_bits_per_replica_source_cycle": null,
+      "replicas": null,
+      "aggregate_boundary_bits_per_source_cycle": null,
+      "packet_credit_release": "Only actual serialization + priced CDC + consumer acceptance/completion; no beat/port mismatch calendar credit"
+    }
+  ],
+  "failures": [
+    "Logical8192-to-physical4096 parity capacity reconciled; historical3749 q footprint/strip subtraction and PP mux/capture/ports/clock area transfer still UNPROVEN",
+    "Historical fullmapped BF16 element area exceeds unchanged slot; no physical fit transfer",
+    "Dense/HC/constants not assigned; reserved BF16 slots do not prove total shared-bank fit",
+    "128-region q-only template is proposed product geometry; full profile/return tree/RF ports unqualified",
+    "PHW6 cannot address the resident expert phase catalogue; descriptor area/ports/load and lookup latency unpriced",
+    "Actual activation formats/framing/routes/credits/CDC/hub/KV owners and selectedexpert gather joins unbound",
+    "No complete tensor payload hashes, executable image or full-token exactness"
+  ],
+  "top_build_ready": false,
+  "physical_admission": false,
+  "adopt": false,
+  "full_token_rate": null,
+  "candidate_sha256": "eff58ce55fb268530aea3fdc981ef53e8009248baee276fc42af5ac335141c98"
+}

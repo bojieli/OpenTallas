@@ -1,0 +1,24 @@
+{
+  "status": "FAIL_LITERAL_BINARY_METADATA",
+  "returncode": 1,
+  "mutant": "missing_mask_reset",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/physical/ot_qwen_rom_bank5_control_distribution.sv": "7b1f5eacaec02856ab44d30df9b02ea2496594df75602e990ff433054ecbaa73",
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+  },
+  "retained_cell_instances": 85,
+  "source_metadata_bits_including_pruned_q2": 95,
+  "physical_metadata_inventory": 90,
+  "owned_ready_provider": "explicit known boundary stimulus only; actual service/serial/KV readiness producer unqualified",
+  "actual_parent_driven_initialization_contract": false,
+  "transition_induction": false,
+  "physical_control_survival": false,
+  "contextual_SSFF": false,
+  "stored_Z": "FAIL_RETAINED",
+  "new_engine": false,
+  "new_map": false,
+  "new_token": false
+}

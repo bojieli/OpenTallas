@@ -1,0 +1,14 @@
+DS whole-program finite known-service cost milestone
+
+This completes the C0/native/provider known-service composition for all2213PC/30families, rather than onlyPC127. It consumes retained actual c7ae native artifact bytes and bounded forward dispatch765e bytes; no arithmetic/provider or full materialized native-calendar repetition. Every PC/rank/template has instruction-dependent opcode/scalar counts, positive C0 dispatch and retained provider costs, finite32SM/RF/tag/write-residence resources and serial PC dependency reservations. One command per scalar is an explicit conservative upper, not a vector command/throughput claim. All-gather keeps its existing admission price once; all-reduce/topk-merge add positive atomic admission on the common global credit, with actual payload routes still UNKNOWN.
+
+Actual M1/C0 shared movement exports are absent from current source. All211428 template calls therefore retain null shared counts; known-service tick subtotal is not a complete program latency. Checkpoint fetch/routes, all96 physical workspace bases/leases and hardware full-native admission remain UNKNOWN/false. DS32MiB relative workspace never becomes64KiB shared memory.
+
+The executable bridge importer accepts only matching source/program/dispatch hashes and exact native per-template path/opcode counts; it checks ordered instruction references, concrete64B scratch leases within64KiB, no live aliases, positive repetition counts and matched release-after-ACK/reverse. Partial binding preserves unknown counts. Empty movement cannot silently mean zero. Synthetic importer positive/negative controls are software ABI checks, not a new numerical or H1 qualification. CLI additionally requires actual producer source bytes matching bridge_source_sha256. Sagan_shared_bridge_contract.json describes the exact input.
+
+Replay after intake:
+```sh
+python3 tools/h3_complete_native_calendar.py --ds-full-program-cost results/uarch/h3_complete_native_calendar_20261002/bounded_provider_milestone/ds/forward_dispatch_milestone.json.gz --ds-full-native-source results/uarch/h3_complete_native_calendar_20261002/final_ds_bed325f89/program_final.json.gz --out results/uarch/h3_complete_native_calendar_20261002/ds_full_program_service_join_r1/run_final --verify
+python3 -m unittest discover -s tests -p test_h3_complete_native_calendar.py
+```
+For regeneration use a new nonexistent out directory, omit --verify; cost join needs under10sec/<1.5GiB and test suite around30sec/<1.5GiB. With Sagan actual bridge add --ds-shared-bridge EXPORT.json --ds-shared-bridge-source PRODUCER.py. Historical run remains preserved with its earlier consumer pin; run_final is authoritative. Source-pinned producer numerical gates remain the prior synthetic-family tests and Qwen reduced36layer fixture snapshots; this cost join performs no new payload execution and supplies no full-token quality credit.

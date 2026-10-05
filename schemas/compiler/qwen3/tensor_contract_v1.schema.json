@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/tensor_contract_v1.schema.json",
+  "title": "OpenTallas Qwen3 complete tensor contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_id", "coverage", "model", "schema", "tensors"],
+  "properties": {
+    "contract_id": {"$ref": "#/$defs/sha256"},
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["all_checkpoint_payloads_have_execution_roles", "expected_parameter_count", "expected_payload_bytes", "expected_tensor_count", "layer_count", "tensor_structure_sha256"],
+      "properties": {
+        "all_checkpoint_payloads_have_execution_roles": {"const": true},
+        "expected_parameter_count": {"const": 8190735360},
+        "expected_payload_bytes": {"const": 16381470720},
+        "expected_tensor_count": {"const": 399},
+        "layer_count": {"const": 36},
+        "tensor_structure_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config_sha256", "id", "name", "repository", "revision", "target_context_tokens"],
+      "properties": {
+        "config_sha256": {"$ref": "#/$defs/sha256"},
+        "id": {"const": "qwen3-8b"},
+        "name": {"const": "Qwen3-8B"},
+        "repository": {"const": "Qwen/Qwen3-8B"},
+        "revision": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "target_context_tokens": {"const": 8000}
+      }
+    },
+    "schema": {"const": "opentallas.qwen3.tensor_contract.v1"},
+    "tensors": {
+      "type": "array",
+      "minItems": 399,
+      "maxItems": 399,
+      "items": {"$ref": "#/$defs/tensor"}
+    }
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumer", "dtype", "layer", "name", "parameter_count", "role", "shape", "size_bytes"],
+      "properties": {
+        "consumer": {"minLength": 1, "type": "string"},
+        "dtype": {"const": "BF16"},
+        "layer": {"anyOf": [{"maximum": 35, "minimum": 0, "type": "integer"}, {"type": "null"}]},
+        "name": {"minLength": 1, "type": "string"},
+        "parameter_count": {"minimum": 1, "type": "integer"},
+        "role": {"enum": ["decoder_weight", "final_norm", "input_embedding", "output_head"]},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "maxItems": 2, "minItems": 1, "type": "array"},
+        "size_bytes": {"minimum": 2, "type": "integer"}
+      }
+    }
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "actual_floor": 144,
+  "actual_positions": [
+    {
+      "actual_demand": {
+        "callback_timeline": null,
+        "client_quad_binding": null,
+        "dependencies": [
+          5,
+          9
+        ],
+        "die": 0,
+        "format": "E4M3 byte packed",
+        "hardware_qualified": false,
+        "id": 10,
+        "kinds": {
+          "K": {
+            "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+            "RMW_read_fast_cycles": null,
+            "WR_visible_ACK_fast_cycles": null,
+            "distinct_byte_masks": [
+              65537
+            ],
+            "full_sector_writes_by_stack": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "partial_sector_writes_by_stack": [
+              64,
+              64,
+              64,
+              64
+            ],
+            "produced_payload_bytes": 512,
+            "total_32B_write_commands": 256,
+            "valid_written_bytes_by_stack": [
+              128,
+              128,
+              128,
+              128
+            ],
+            "write_port_payload_bytes": 8192
+          },
+          "V": {
+            "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+            "RMW_read_fast_cycles": null,
+            "WR_visible_ACK_fast_cycles": null,
+            "distinct_byte_masks": [
+              4294967295
+            ],
+            "full_sector_writes_by_stack": [
+              0,
+              0,
+              16,
+              0
+            ],
+            "partial_sector_writes_by_stack": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "produced_payload_bytes": 512,
+            "total_32B_write_commands": 16,
+            "valid_written_bytes_by_stack": [
+              0,
+              0,
+              512,
+              0
+            ],
+            "write_port_payload_bytes": 512
+          }
+        },
+        "layer": 0,
+        "position": 0,
+        "publication": "Only all addressed-sector WRvisible commits for matching layer/die/position; retain reader generation until SCORES/PV final consumers",
+        "reads": [
+          "L0.d0.kr",
+          "L0.d0.v",
+          "position"
+        ]
+      },
+      "model_result": {
+        "die": 0,
+        "full_sector_writes_by_stack": [
+          64,
+          64,
+          80,
+          64
+        ],
+        "graph_op": 10,
+        "layer": 0,
+        "lock_release_after_ACKs": 256,
+        "locked_RMW_reads_by_stack": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "masks": [
+          65537
+        ],
+        "merge_RF_operand_bits": 393216,
+        "merge_RF_write_bits": 196608,
+        "merge_active_word_lanes_per_sector": 8,
+        "merge_two_source_integer_warp_instructions": 768,
+        "minimum_shared_stack_command_cycles": 144,
+        "mixed_read_write_commands_by_stack": [
+          128,
+          128,
+          144,
+          128
+        ],
+        "physical_admission": false,
+        "port_payload_bytes": 16896,
+        "position": 0,
+        "produced_bytes": 1024,
+        "publication": "All K/V addressed sector WRvisible ACKs and reverse CDC completed before publication. No accepted/queued-write completion credit.",
+        "sector_merge_warp32_invocations": 256,
+        "write_visible_ACKs": 272
+      }
+    },
+    {
+      "actual_demand": {
+        "callback_timeline": null,
+        "client_quad_binding": null,
+        "dependencies": [
+          5,
+          9
+        ],
+        "die": 0,
+        "format": "E4M3 byte packed",
+        "hardware_qualified": false,
+        "id": 10,
+        "kinds": {
+          "K": {
+            "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+            "RMW_read_fast_cycles": null,
+            "WR_visible_ACK_fast_cycles": null,
+            "distinct_byte_masks": [
+              131074
+            ],
+            "full_sector_writes_by_stack": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "partial_sector_writes_by_stack": [
+              64,
+              64,
+              64,
+              64
+            ],
+            "produced_payload_bytes": 512,
+            "total_32B_write_commands": 256,
+            "valid_written_bytes_by_stack": [
+              128,
+              128,
+              128,
+              128
+            ],
+            "write_port_payload_bytes": 8192
+          },
+          "V": {
+            "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+            "RMW_read_fast_cycles": null,
+            "WR_visible_ACK_fast_cycles": null,
+            "distinct_byte_masks": [
+              4294967295
+            ],
+            "full_sector_writes_by_stack": [
+              0,
+              0,
+              0,
+              16
+            ],
+            "partial_sector_writes_by_stack": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "produced_payload_bytes": 512,
+            "total_32B_write_commands": 16,
+            "valid_written_bytes_by_stack": [
+              0,
+              0,
+              0,
+              512
+            ],
+            "write_port_payload_bytes": 512
+          }
+        },
+        "layer": 0,
+        "position": 1,
+        "publication": "Only all addressed-sector WRvisible commits for matching layer/die/position; retain reader generation until SCORES/PV final consumers",
+        "reads": [
+          "L0.d0.kr",
+          "L0.d0.v",
+          "position"
+        ]
+      },
+      "model_result": {
+        "die": 0,
+        "full_sector_writes_by_stack": [
+          64,
+          64,
+          64,
+          80
+        ],
+        "graph_op": 10,
+        "layer": 0,
+        "lock_release_after_ACKs": 256,
+        "locked_RMW_reads_by_stack": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "masks": [
+          131074
+        ],
+        "merge_RF_operand_bits": 393216,
+        "merge_RF_write_bits": 196608,
+        "merge_active_word_lanes_per_sector": 8,
+        "merge_two_source_integer_warp_instructions": 768,
+        "minimum_shared_stack_command_cycles": 144,
+        "mixed_read_write_commands_by_stack": [
+          128,
+          128,
+          128,
+          144
+        ],
+        "physical_admission": false,
+        "port_payload_bytes": 16896,
+        "position": 1,
+        "produced_bytes": 1024,
+        "publication": "All K/V addressed sector WRvisible ACKs and reverse CDC completed before publication. No accepted/queued-write completion credit.",
+        "sector_merge_warp32_invocations": 256,
+        "write_visible_ACKs": 272
+      }
+    }
+  ],
+  "audit_sha256": "31bb540a5d297e8b040840efd6d6f6d6ebc4f2f4afc2ecf4fb26c9b30da45d46",
+  "audit_source_commit": "c59e106d6d46f9b23e61b755ebbd859481cacbb5",
+  "audit_source_path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/actual_controller_masks_and_RMW_service.json",
+  "cause": "Synthetic test splits sixteen V sectors evenly over four stacks; actual address mapping assigns all sixteen to one stack, which rotates with position. No speed or physical admission.",
+  "demand_sha256": "dcff5725e36cddc035cab547e1f21e13ab0af5a53be455cc548f48019d89b395",
+  "focused_model_tests": {
+    "limitation": "Positive fixture balances V sectors and misses actual address skew.",
+    "passed": 2,
+    "seconds": 0.06
+  },
+  "hardware_admission": false,
+  "owner_reported_floor": 132,
+  "schema": "opentallas.parent.qwen-packed-KV-RMW-stack-skew.v1",
+  "token_cycles": null,
+  "verdict": "FAIL_SOURCE_BOUND_SHARED_STACK_FLOOR_IN_OWNER_AUDIT"
+}

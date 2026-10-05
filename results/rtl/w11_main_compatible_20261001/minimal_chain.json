@@ -1,0 +1,14 @@
+{
+  "observed_at": "2026-10-01T09:05:02.038707+00:00",
+  "controller_commit": "9cd5650d7",
+  "KR_commit": "41d7a78fb",
+  "base": "518363bd15436faf64846f2f6ec7a004731151ae",
+  "minimal_chain": "9cd5650d7 -> 41d7a78fb (KR independent but commit parent is controller)",
+  "baseline_replacements": [],
+  "parent_scope": "Review optional implementation/evidence only; all main/TASKS/publication parent-owned",
+  "functional_pairs": "Terminal matched fu/unfu PASS; original overall FAIL retained. Wired calibration and bounded rotate/CKV already integrated, no duplicate compute or record copies.",
+  "controller_live": "Local launcher460201 driver460228 Yosys460303 ABC476459 pinned e3e9e9b8a, remote waiter398790 withdrawn pre-admission",
+  "controller_status": "Mapped-size guard and full route pending",
+  "KR_status": "Strict lint FAIL; N64 slower lever remains rejected, no tuning/adoption",
+  "dffe4cbbc": "Terminal softplus/rotate failure evidence still separate for parent review; not duplicated in new branch"
+}

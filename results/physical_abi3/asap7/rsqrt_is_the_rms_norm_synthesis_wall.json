@@ -1,0 +1,18 @@
+{
+  "answer": "ot_fp32_rsqrt_rne, and it is measurable alone. Synthesised as its own top at a 3.4 ns target with a 20-minute synthesis budget it produces nothing: the run was still in yosys when a 10-minute wall-clock limit stopped it. The RMS norm instantiates it, so the parent's four-hour timeout is this module's.",
+  "cost_if_done": "the bisection advances one bit per clock today. Two independent comparisons can use two multiplier pairs in parallel, and at 16 bits per step a 25-by-25 product takes 4 cycles and a 50-by-24 product 5, so a bisection step becomes 9 cycles instead of 1. That is a 9x cycle cost on one rsqrt per RMS-norm row, which is a real cost and has to be weighed rather than assumed away.",
+  "not_a_claim": [
+    "the multiplies are NOT proven to be the wall on their own: the block also carries two 74-iteration loops, three task calls with integer outputs and integer-valued shifts, and this record does not separate them",
+    "ot_a3_fp32_sqrt_rne, a different module, sits in the fmax inventory at 1363.8 MHz -- a square root is not the problem, this rsqrt's bisection is"
+  ],
+  "producer": {
+    "git": {
+      "commit": "3c92d49a42c59738f644fe7c63beb99f99912959"
+    },
+    "tool": "tools/run_abi3_physical.py --stages synth,sta"
+  },
+  "question": "ot_a3_vector_rms_norm's route failed with 'TimeoutExpired ... timed out after 14400 seconds' in 1_2_yosys. Four hours of synthesis and no netlist: what in it cannot be synthesised?",
+  "schema": "opentallas.result.rsqrt_is_the_rms_norm_synthesis_wall.v1",
+  "the_shape": "one combinational always block computes ``compare_square_product_to_one`` TWICE -- once for the bisection's candidate and once for its midpoint -- and each call performs a 25-by-25 multiply, then a 50-by-24 multiply into a 74-bit product, then a 74-iteration priority scan for the product's top set bit written as a loop over an integer, then a 74-iteration OR for the bits below it. The block also calls a task with ``output integer`` arguments three times and shifts by integer-valued differences of powers. Every one of those is the family this session has already measured: an unrolled loop over a wide value in a single cycle.",
+  "why_it_is_worth_recording": "a four-hour synthesis that produces nothing costs a machine half a day and leaves no evidence. This says what to fix before spending that again, and the fix is the one that worked three times today: the wide products become ot_wide_mul_seq, which is carry-save and sequential, and the scans stay -- results/physical_abi3/asap7/wide_datapath_knobs.json measures a 163-bit top-set-bit scan at 656 MHz and a sticky OR at 2,550 MHz, so the scans are not the problem and do not need rewriting."
+}

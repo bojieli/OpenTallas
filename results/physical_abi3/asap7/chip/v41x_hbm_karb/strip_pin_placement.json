@@ -1,0 +1,41 @@
+{
+  "case": "v41x_hbm_karb_phy_edge_strip",
+  "case_driver": {
+    "path": "tools/v41x_die_pnr.py",
+    "sha256": "ac3a458a1d044331e1aad9add9a6a582330b8eaec05ac51b79dd56480314ab17",
+    "source_commit": "b8074836"
+  },
+  "clock_period_ns": 0.92,
+  "completed_stage": "3_2_place_iop",
+  "floorplan_um": [
+    12000.0,
+    30.24
+  ],
+  "limitations": [
+    "PHY-edge strip is an artificial hierarchy boundary",
+    "No global/detailed route or signoff",
+    "The PHY is an interface and timing abstract, not a measured HBM3E controller"
+  ],
+  "log": {
+    "remote_path": "/home/ubuntu/v41dpnr/work/karb_strip/orfs/logs/asap7/opentallas_ot_chip_v41x_hbm_karb_asap7_claude_v41x_karb_strip/base/3_2_place_iop.log",
+    "sha256": "827eadea9cb68758c8afb01a9e19536cbea3b2581827510f56d48392dcc6d24a"
+  },
+  "observed": {
+    "design_area_um2": 5569.0,
+    "io_nets_hpwl_um": 126897272.0,
+    "pin_placement_seconds": 44.85,
+    "reported_utilization_percent": 2.0
+  },
+  "pin_count": 40332,
+  "pseudo_channels": 32,
+  "purpose": "physical partition preflight",
+  "route_completed": false,
+  "schema_version": 1,
+  "setup_hold_drc_power_fmax": null,
+  "source": {
+    "path": "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+    "sha256": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74"
+  },
+  "source_commit": "b8074836",
+  "verdict": "pin_placement_pass"
+}

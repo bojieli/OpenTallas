@@ -1,0 +1,8214 @@
+{
+ "claim_boundary": "Cycle-accurate RTL simulation (Verilator 5.050, --timing) of the die-side collective engines, DMA, behavioural VM and a synthesizable link layer (framing, CRC-32, credit return, Gray-code CDC FIFOs, deterministic release) on per-die clocks; the analog PHY, channel and the PHY's PCS/FEC pipelines are timing models whose constants are cited or ASSUMED in `links`.  Layer-0 collective descriptors are the emitted program; operands are the synthetic arithmetic stress fixture, not a model token.",
+ "configs": {
+  "q1024": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q1024",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "fc770289daa2e44cfc2931046f428f45d00cef9cec694f97798af352892e99b4"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 59,
+    "allreduce_cycles_mean": 59.0,
+    "allreduce_cycles_min": 59,
+    "allreduce_ns_mean": 53.7,
+    "argmax_gather_cycles": 53,
+    "exchanges": 73,
+    "first_result_cycles": 56,
+    "token_exchange_cycles": 4301
+   },
+   "fixture": "q1024",
+   "fixture_manifest_sha256": "b6a6e46e4b2e57aeda526548a2577cfe101943eeda719ebf1861cb55af691c4e",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    56.62,
+    61.33
+   ],
+   "parameters": {
+    "DEPTH": 16,
+    "LANES": 1024,
+    "U_NL": 1,
+    "U_T": 0.95
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "q16d128": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q16d128",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "d780da0fb9578cd0d2b52ab3d292ecdd49e851458899249ac6780eedd5728be7"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 311,
+    "allreduce_cycles_mean": 311.0,
+    "allreduce_cycles_min": 311,
+    "allreduce_ns_mean": 283.1,
+    "argmax_gather_cycles": 53,
+    "exchanges": 73,
+    "first_result_cycles": 56,
+    "token_exchange_cycles": 22445
+   },
+   "fixture": "q16",
+   "fixture_manifest_sha256": "0b27f63b8991e52a4220702c1f8a73a0085219aad874a9ee312f2e8bc1d849c9",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    309.0,
+    310.39
+   ],
+   "parameters": {
+    "DEPTH": 128,
+    "LANES": 16
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "q16d16": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q16d16",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "06bb03bd53215cc230a05981e2b4c906670fe12eddd016e346fd945042f9ac26"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 1566,
+    "allreduce_cycles_mean": 655.43,
+    "allreduce_cycles_min": -63970,
+    "allreduce_ns_mean": 596.6,
+    "argmax_gather_cycles": 78,
+    "exchanges": 73,
+    "first_result_cycles": 81,
+    "token_exchange_cycles": 47269
+   },
+   "fixture": "q16",
+   "fixture_manifest_sha256": "0b27f63b8991e52a4220702c1f8a73a0085219aad874a9ee312f2e8bc1d849c9",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    571.47,
+    589.46
+   ],
+   "parameters": {
+    "DEPTH": 16,
+    "LANES": 16
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "q256d128": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q256d128",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "32b698c8be3a481b3bfd7ea9fc995a60468fe0a01b197a786ad3c9084b8a8e0a"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 71,
+    "allreduce_cycles_mean": 71.0,
+    "allreduce_cycles_min": 71,
+    "allreduce_ns_mean": 64.6,
+    "argmax_gather_cycles": 53,
+    "exchanges": 73,
+    "first_result_cycles": 56,
+    "token_exchange_cycles": 5165
+   },
+   "fixture": "q256",
+   "fixture_manifest_sha256": "8e5fde8019ebe24289bd725993cdff7ad17ed70121c0d17b8807dd1e724d5d0a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    69.0,
+    70.12
+   ],
+   "parameters": {
+    "DEPTH": 128,
+    "LANES": 256
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "q256d16": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q256d16",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "99f39a0a647eae4a7b18baf89b8094d297fd3f7753b58e1c529a57965b0c0ffe"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 96,
+    "allreduce_cycles_mean": 95.65,
+    "allreduce_cycles_min": 71,
+    "allreduce_ns_mean": 87.1,
+    "argmax_gather_cycles": 78,
+    "exchanges": 73,
+    "first_result_cycles": 81,
+    "token_exchange_cycles": 6965
+   },
+   "fixture": "q256",
+   "fixture_manifest_sha256": "8e5fde8019ebe24289bd725993cdff7ad17ed70121c0d17b8807dd1e724d5d0a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    90.49,
+    93.51
+   ],
+   "parameters": {
+    "DEPTH": 16,
+    "LANES": 256
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "q256d64": {
+   "arrival_hub_to_hub_cycles": {
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "q256d64",
+   "clock_hz": 1098659635.245001,
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": null,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": null,
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "32b698c8be3a481b3bfd7ea9fc995a60468fe0a01b197a786ad3c9084b8a8e0a"
+   },
+   "exchanges": {
+    "allreduce_cycles_max": 71,
+    "allreduce_cycles_mean": 71.0,
+    "allreduce_cycles_min": 71,
+    "allreduce_ns_mean": 64.6,
+    "argmax_gather_cycles": 53,
+    "exchanges": 73,
+    "first_result_cycles": 56,
+    "token_exchange_cycles": 5165
+   },
+   "fixture": "q256",
+   "fixture_manifest_sha256": "8e5fde8019ebe24289bd725993cdff7ad17ed70121c0d17b8807dd1e724d5d0a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": null,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_allreduce_mean_range": [
+    69.0,
+    70.12
+   ],
+   "parameters": {
+    "DEPTH": 64,
+    "LANES": 256
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48
+   },
+   "release_guard_cycles": 1,
+   "top": "tb_w15_qwen_tp2"
+  },
+  "v41_r0d1024": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r0d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 233,
+     "issue_to_last_commit_ns": 214.4,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      233,
+      233,
+      233,
+      233
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 42.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 530,
+     "issue_to_last_commit_ns": 487.6,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      530,
+      530,
+      530,
+      530
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 7.6,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 74.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 300,
+     "issue_to_last_commit_ns": 276.0,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      300,
+      300,
+      300,
+      300
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "b72db2406fd0f8a48ab82fb54fed2f6eb93304f1758a5a91dc9b7b449d230544"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 211.08,
+     "points": [
+      [
+       20,
+       233
+      ],
+      [
+       8,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       6,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       80,
+       300
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       530
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     228,
+     232
+    ],
+    "1": [
+     214,
+     220
+    ],
+    "10": [
+     247,
+     254
+    ],
+    "11": [
+     296,
+     304
+    ],
+    "2": [
+     526,
+     532
+    ],
+    "3": [
+     247,
+     253
+    ],
+    "4": [
+     215,
+     221
+    ],
+    "5": [
+     248,
+     254
+    ],
+    "6": [
+     247,
+     254
+    ],
+    "7": [
+     246,
+     255
+    ],
+    "8": [
+     247,
+     254
+    ],
+    "9": [
+     248,
+     255
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 0
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3258,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r0d1024_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r0d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.3,
+     "issue_to_first_commit_cycles": 209,
+     "issue_to_last_commit_cycles": 212,
+     "issue_to_last_commit_ns": 195.0,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      212,
+      212,
+      212,
+      212
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 74.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 300,
+     "issue_to_last_commit_ns": 276.0,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      300,
+      300,
+      300,
+      300
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 114.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 390,
+     "issue_to_last_commit_ns": 358.8,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      390,
+      390,
+      390,
+      390
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 156.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 570,
+     "issue_to_last_commit_ns": 524.4,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      570,
+      570,
+      570,
+      570
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.3,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 211,
+     "issue_to_last_commit_ns": 194.1,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      211,
+      211,
+      211,
+      211
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.6,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 218,
+     "issue_to_last_commit_ns": 200.6,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      218,
+      218,
+      218,
+      218
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 246,
+     "issue_to_last_commit_ns": 226.3,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      246,
+      246,
+      246,
+      246
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 19.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 290,
+     "issue_to_last_commit_ns": 266.8,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      290,
+      290,
+      290,
+      290
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 30.1,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 370,
+     "issue_to_last_commit_ns": 340.4,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      370,
+      370,
+      370,
+      370
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 42.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 530,
+     "issue_to_last_commit_ns": 487.6,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      530,
+      530,
+      530,
+      530
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "e1e80fc4d0cae25d089ebb9408c07a43620b742c41c1a6c6e79629923ffa75d2"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1234,
+     "fixed_cycles": 210.39,
+     "points": [
+      [
+       1,
+       212
+      ],
+      [
+       8,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       80,
+       300
+      ],
+      [
+       160,
+       390
+      ],
+      [
+       320,
+       570
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 210.0,
+     "points": [
+      [
+       1,
+       211
+      ],
+      [
+       8,
+       218
+      ],
+      [
+       36,
+       246
+      ],
+      [
+       80,
+       290
+      ],
+      [
+       160,
+       370
+      ],
+      [
+       320,
+       530
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     207,
+     210
+    ],
+    "1": [
+     215,
+     220
+    ],
+    "10": [
+     366,
+     372
+    ],
+    "11": [
+     526,
+     532
+    ],
+    "2": [
+     247,
+     252
+    ],
+    "3": [
+     296,
+     301
+    ],
+    "4": [
+     387,
+     392
+    ],
+    "5": [
+     566,
+     571
+    ],
+    "6": [
+     207,
+     213
+    ],
+    "7": [
+     214,
+     219
+    ],
+    "8": [
+     242,
+     248
+    ],
+    "9": [
+     286,
+     292
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 0
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3807,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r0d256": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r0d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 233,
+     "issue_to_last_commit_ns": 214.4,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      233,
+      233,
+      233,
+      233
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 33.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 674,
+     "issue_to_last_commit_ns": 620.1,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      674,
+      674,
+      674,
+      674
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 7.6,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 74.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 300,
+     "issue_to_last_commit_ns": 276.0,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      300,
+      300,
+      300,
+      300
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "02eae1daec7d20e00ae0fb8b1843707e8adc729b5ef03524752c5a6a526ed10d"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 211.08,
+     "points": [
+      [
+       20,
+       233
+      ],
+      [
+       8,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       6,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       80,
+       300
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       674
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     228,
+     232
+    ],
+    "1": [
+     214,
+     220
+    ],
+    "10": [
+     247,
+     253
+    ],
+    "11": [
+     296,
+     303
+    ],
+    "2": [
+     660,
+     671
+    ],
+    "3": [
+     247,
+     253
+    ],
+    "4": [
+     215,
+     221
+    ],
+    "5": [
+     248,
+     254
+    ],
+    "6": [
+     247,
+     253
+    ],
+    "7": [
+     247,
+     255
+    ],
+    "8": [
+     247,
+     253
+    ],
+    "9": [
+     248,
+     254
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 0
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3402,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r0d256_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r0d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.3,
+     "issue_to_first_commit_cycles": 209,
+     "issue_to_last_commit_cycles": 212,
+     "issue_to_last_commit_ns": 195.0,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      212,
+      212,
+      212,
+      212
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 219,
+     "issue_to_last_commit_ns": 201.5,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      219,
+      219,
+      219,
+      219
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 39.9,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 230.9,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 74.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 300,
+     "issue_to_last_commit_ns": 276.0,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      300,
+      300,
+      300,
+      300
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 114.2,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 390,
+     "issue_to_last_commit_ns": 358.8,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      390,
+      390,
+      390,
+      390
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 130.6,
+     "issue_to_first_commit_cycles": 212,
+     "issue_to_last_commit_cycles": 682,
+     "issue_to_last_commit_ns": 627.4,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      682,
+      682,
+      682,
+      682
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.3,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 211,
+     "issue_to_last_commit_ns": 194.1,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      211,
+      211,
+      211,
+      211
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.6,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 218,
+     "issue_to_last_commit_ns": 200.6,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      218,
+      218,
+      218,
+      218
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 10.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 246,
+     "issue_to_last_commit_ns": 226.3,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      246,
+      246,
+      246,
+      246
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 19.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 290,
+     "issue_to_last_commit_ns": 266.8,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      290,
+      290,
+      290,
+      290
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 30.1,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 370,
+     "issue_to_last_commit_ns": 340.4,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      370,
+      370,
+      370,
+      370
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 33.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 674,
+     "issue_to_last_commit_ns": 620.1,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      674,
+      674,
+      674,
+      674
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "47b10603fb371cae12d93792d073daf723786a889d033dce6909dfb12b921a96"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.4518,
+     "fixed_cycles": 195.95,
+     "points": [
+      [
+       1,
+       212
+      ],
+      [
+       8,
+       219
+      ],
+      [
+       36,
+       251
+      ],
+      [
+       80,
+       300
+      ],
+      [
+       160,
+       390
+      ],
+      [
+       320,
+       682
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.4222,
+     "fixed_cycles": 191.43,
+     "points": [
+      [
+       1,
+       211
+      ],
+      [
+       8,
+       218
+      ],
+      [
+       36,
+       246
+      ],
+      [
+       80,
+       290
+      ],
+      [
+       160,
+       370
+      ],
+      [
+       320,
+       674
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     207,
+     210
+    ],
+    "1": [
+     215,
+     220
+    ],
+    "10": [
+     367,
+     373
+    ],
+    "11": [
+     662,
+     672
+    ],
+    "2": [
+     247,
+     252
+    ],
+    "3": [
+     296,
+     301
+    ],
+    "4": [
+     387,
+     392
+    ],
+    "5": [
+     668,
+     680
+    ],
+    "6": [
+     207,
+     213
+    ],
+    "7": [
+     214,
+     218
+    ],
+    "8": [
+     243,
+     249
+    ],
+    "9": [
+     286,
+     291
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 0
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 4063,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r1d1024": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r1d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 19.1,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 291,
+     "issue_to_last_commit_ns": 267.7,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      291,
+      291,
+      291,
+      291
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 8.0,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 277,
+     "issue_to_last_commit_ns": 254.8,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      277,
+      277,
+      277,
+      277
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 37.9,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 588,
+     "issue_to_last_commit_ns": 541.0,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      588,
+      588,
+      588,
+      588
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 6.0,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 277,
+     "issue_to_last_commit_ns": 254.8,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      277,
+      277,
+      277,
+      277
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 62.2,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 358,
+     "issue_to_last_commit_ns": 329.4,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      358,
+      358,
+      358,
+      358
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "a9db21076c10b7c1533d25f901f9eeed5469127d0b5836b04e3d64325332c968"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 269.08,
+     "points": [
+      [
+       20,
+       291
+      ],
+      [
+       8,
+       277
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       6,
+       277
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       80,
+       358
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       588
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     284,
+     288
+    ],
+    "1": [
+     271,
+     276
+    ],
+    "10": [
+     305,
+     312
+    ],
+    "11": [
+     354,
+     359
+    ],
+    "2": [
+     582,
+     588
+    ],
+    "3": [
+     303,
+     308
+    ],
+    "4": [
+     271,
+     277
+    ],
+    "5": [
+     304,
+     310
+    ],
+    "6": [
+     304,
+     309
+    ],
+    "7": [
+     304,
+     310
+    ],
+    "8": [
+     305,
+     310
+    ],
+    "9": [
+     305,
+     309
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 1
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3954,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r1d1024_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r1d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.0,
+     "issue_to_first_commit_cycles": 209,
+     "issue_to_last_commit_cycles": 270,
+     "issue_to_last_commit_ns": 248.4,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      212,
+      270,
+      212,
+      270
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 6.6,
+     "issue_to_first_commit_cycles": 328,
+     "issue_to_last_commit_cycles": 335,
+     "issue_to_last_commit_ns": 308.2,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      335,
+      277,
+      335,
+      277
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 62.2,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 358,
+     "issue_to_last_commit_ns": 329.4,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      358,
+      358,
+      358,
+      358
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 99.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 448,
+     "issue_to_last_commit_ns": 412.2,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      448,
+      448,
+      448,
+      448
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 141.8,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 628,
+     "issue_to_last_commit_ns": 577.8,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      628,
+      628,
+      628,
+      628
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.3,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 269,
+     "issue_to_last_commit_ns": 247.5,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      211,
+      269,
+      211,
+      269
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 1.7,
+     "issue_to_first_commit_cycles": 269,
+     "issue_to_last_commit_cycles": 334,
+     "issue_to_last_commit_ns": 307.3,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      334,
+      276,
+      334,
+      276
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 8.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 304,
+     "issue_to_last_commit_ns": 279.7,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      304,
+      304,
+      304,
+      304
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 16.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 348,
+     "issue_to_last_commit_ns": 320.2,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      348,
+      348,
+      348,
+      348
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 26.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 428,
+     "issue_to_last_commit_ns": 393.8,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      428,
+      428,
+      428,
+      428
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 37.9,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 588,
+     "issue_to_last_commit_ns": 541.0,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      588,
+      588,
+      588,
+      588
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "659f651c157afd722100a44cea64816fbedab05cb09bf25c24b132fd550cb798"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.0514,
+     "fixed_cycles": 285.32,
+     "points": [
+      [
+       1,
+       270
+      ],
+      [
+       8,
+       335
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       80,
+       358
+      ],
+      [
+       160,
+       448
+      ],
+      [
+       320,
+       628
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 0.928,
+     "fixed_cycles": 284.93,
+     "points": [
+      [
+       1,
+       269
+      ],
+      [
+       8,
+       334
+      ],
+      [
+       36,
+       304
+      ],
+      [
+       80,
+       348
+      ],
+      [
+       160,
+       428
+      ],
+      [
+       320,
+       588
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     262,
+     266
+    ],
+    "1": [
+     325,
+     331
+    ],
+    "10": [
+     423,
+     431
+    ],
+    "11": [
+     584,
+     593
+    ],
+    "2": [
+     302,
+     309
+    ],
+    "3": [
+     351,
+     359
+    ],
+    "4": [
+     442,
+     448
+    ],
+    "5": [
+     621,
+     630
+    ],
+    "6": [
+     263,
+     269
+    ],
+    "7": [
+     325,
+     334
+    ],
+    "8": [
+     299,
+     306
+    ],
+    "9": [
+     344,
+     353
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 1
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 4619,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r1d256": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r1d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 19.1,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 291,
+     "issue_to_last_commit_ns": 267.7,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      291,
+      291,
+      291,
+      291
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 8.0,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 277,
+     "issue_to_last_commit_ns": 254.8,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      277,
+      277,
+      277,
+      277
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 28.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 790,
+     "issue_to_last_commit_ns": 726.8,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      790,
+      790,
+      790,
+      790
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 6.0,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 277,
+     "issue_to_last_commit_ns": 254.8,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      277,
+      277,
+      277,
+      277
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 62.2,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 358,
+     "issue_to_last_commit_ns": 329.4,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      358,
+      358,
+      358,
+      358
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "bd22eff8cf6ff53e9247fef2fd129090ab22d091ea131dd38bf49c4eb2c5c4e5"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 269.08,
+     "points": [
+      [
+       20,
+       291
+      ],
+      [
+       8,
+       277
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       6,
+       277
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       80,
+       358
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       790
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     284,
+     288
+    ],
+    "1": [
+     271,
+     276
+    ],
+    "10": [
+     304,
+     311
+    ],
+    "11": [
+     352,
+     359
+    ],
+    "2": [
+     772,
+     784
+    ],
+    "3": [
+     303,
+     309
+    ],
+    "4": [
+     271,
+     279
+    ],
+    "5": [
+     304,
+     311
+    ],
+    "6": [
+     302,
+     310
+    ],
+    "7": [
+     303,
+     309
+    ],
+    "8": [
+     304,
+     311
+    ],
+    "9": [
+     305,
+     311
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 1
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 4156,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41_r1d256_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 198,
+     "min": 192
+    },
+    "ucie": {
+     "max": 57,
+     "min": 54
+    }
+   },
+   "binary": "v41_r1d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.0,
+     "issue_to_first_commit_cycles": 209,
+     "issue_to_last_commit_cycles": 270,
+     "issue_to_last_commit_ns": 248.4,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      212,
+      270,
+      212,
+      270
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 6.6,
+     "issue_to_first_commit_cycles": 328,
+     "issue_to_last_commit_cycles": 335,
+     "issue_to_last_commit_ns": 308.2,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      335,
+      277,
+      335,
+      277
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 32.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 309,
+     "issue_to_last_commit_ns": 284.3,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      309,
+      309,
+      309,
+      309
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 62.2,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 358,
+     "issue_to_last_commit_ns": 329.4,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      358,
+      358,
+      358,
+      358
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 99.4,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 448,
+     "issue_to_last_commit_ns": 412.2,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      448,
+      448,
+      448,
+      448
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 111.6,
+     "issue_to_first_commit_cycles": 270,
+     "issue_to_last_commit_cycles": 798,
+     "issue_to_last_commit_ns": 734.2,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      798,
+      798,
+      798,
+      798
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.3,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 269,
+     "issue_to_last_commit_ns": 247.5,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      211,
+      269,
+      211,
+      269
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 1.7,
+     "issue_to_first_commit_cycles": 269,
+     "issue_to_last_commit_cycles": 334,
+     "issue_to_last_commit_ns": 307.3,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      334,
+      276,
+      334,
+      276
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 8.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 304,
+     "issue_to_last_commit_ns": 279.7,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      304,
+      304,
+      304,
+      304
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 16.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 348,
+     "issue_to_last_commit_ns": 320.2,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      348,
+      348,
+      348,
+      348
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 26.0,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 428,
+     "issue_to_last_commit_ns": 393.8,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      428,
+      428,
+      428,
+      428
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 28.2,
+     "issue_to_first_commit_cycles": 211,
+     "issue_to_last_commit_cycles": 790,
+     "issue_to_last_commit_ns": 726.8,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      790,
+      790,
+      790,
+      790
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "0891376a9b61ee3cfb68c67d16e343a3bb88eaa754456e58ae70739ea32be43b"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.5498,
+     "fixed_cycles": 263.4,
+     "points": [
+      [
+       1,
+       270
+      ],
+      [
+       8,
+       335
+      ],
+      [
+       36,
+       309
+      ],
+      [
+       80,
+       358
+      ],
+      [
+       160,
+       448
+      ],
+      [
+       320,
+       798
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.5202,
+     "fixed_cycles": 258.88,
+     "points": [
+      [
+       1,
+       269
+      ],
+      [
+       8,
+       334
+      ],
+      [
+       36,
+       304
+      ],
+      [
+       80,
+       348
+      ],
+      [
+       160,
+       428
+      ],
+      [
+       320,
+       790
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     262,
+     266
+    ],
+    "1": [
+     325,
+     331
+    ],
+    "10": [
+     422,
+     430
+    ],
+    "11": [
+     773,
+     787
+    ],
+    "2": [
+     302,
+     309
+    ],
+    "3": [
+     351,
+     359
+    ],
+    "4": [
+     442,
+     448
+    ],
+    "5": [
+     779,
+     793
+    ],
+    "6": [
+     262,
+     268
+    ],
+    "7": [
+     324,
+     332
+    ],
+    "8": [
+     299,
+     306
+    ],
+    "9": [
+     343,
+     351
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 1
+   },
+   "release_delay_cycles": {
+    "U_DREL": 58,
+    "X_DREL": 199
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 4991,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p14_r0d256": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 168,
+     "min": 162
+    },
+    "ucie": {
+     "max": 41,
+     "min": 38
+    }
+   },
+   "binary": "v41p14_r0d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 27.4,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 203,
+     "issue_to_last_commit_ns": 186.8,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      203,
+      203,
+      203,
+      203
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.8,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 189,
+     "issue_to_last_commit_ns": 173.9,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      189,
+      189,
+      189,
+      189
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 38.1,
+     "issue_to_first_commit_cycles": 181,
+     "issue_to_last_commit_cycles": 584,
+     "issue_to_last_commit_ns": 537.3,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      584,
+      584,
+      584,
+      584
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 8.8,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 189,
+     "issue_to_last_commit_ns": 173.9,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      189,
+      189,
+      189,
+      189
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 45.3,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 221,
+     "issue_to_last_commit_ns": 203.3,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      221,
+      221,
+      221,
+      221
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 82.4,
+     "issue_to_first_commit_cycles": 182,
+     "issue_to_last_commit_cycles": 270,
+     "issue_to_last_commit_ns": 248.4,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      270,
+      270,
+      270,
+      270
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "62577ef34f3d2d31a8f23304745526108f78e9c6534b9f45ecb5a78be51b6a6f"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 181.08,
+     "points": [
+      [
+       20,
+       203
+      ],
+      [
+       8,
+       189
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       6,
+       189
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       36,
+       221
+      ],
+      [
+       80,
+       270
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       584
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     199,
+     201
+    ],
+    "1": [
+     185,
+     191
+    ],
+    "10": [
+     219,
+     224
+    ],
+    "11": [
+     267,
+     275
+    ],
+    "2": [
+     571,
+     581
+    ],
+    "3": [
+     217,
+     223
+    ],
+    "4": [
+     186,
+     190
+    ],
+    "5": [
+     218,
+     224
+    ],
+    "6": [
+     218,
+     222
+    ],
+    "7": [
+     218,
+     223
+    ],
+    "8": [
+     218,
+     223
+    ],
+    "9": [
+     219,
+     225
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 0,
+    "U_WIRE": 14,
+    "X_WIRE": 14
+   },
+   "release_delay_cycles": {
+    "U_DREL": 42,
+    "X_DREL": 169
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 2982,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d1024": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 26.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 209,
+     "issue_to_last_commit_ns": 192.3,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      209,
+      209,
+      209,
+      209
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.4,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 44.0,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 506,
+     "issue_to_last_commit_ns": 465.5,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      506,
+      506,
+      506,
+      506
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 8.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.7,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 276,
+     "issue_to_last_commit_ns": 253.9,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      276,
+      276,
+      276,
+      276
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "2f47a2f8df1c5c8c3c52841485413d4a1b308fc3d028fa04e12c49924b248024"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 187.08,
+     "points": [
+      [
+       20,
+       209
+      ],
+      [
+       8,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       6,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       80,
+       276
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       506
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     205,
+     208
+    ],
+    "1": [
+     191,
+     197
+    ],
+    "10": [
+     223,
+     229
+    ],
+    "11": [
+     272,
+     281
+    ],
+    "2": [
+     503,
+     508
+    ],
+    "3": [
+     223,
+     230
+    ],
+    "4": [
+     192,
+     197
+    ],
+    "5": [
+     224,
+     230
+    ],
+    "6": [
+     225,
+     229
+    ],
+    "7": [
+     223,
+     230
+    ],
+    "8": [
+     224,
+     229
+    ],
+    "9": [
+     223,
+     230
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 2970,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d1024_even_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.9,
+     "issue_to_first_commit_cycles": 186,
+     "issue_to_last_commit_cycles": 189,
+     "issue_to_last_commit_ns": 173.9,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      189,
+      189,
+      189,
+      189
+     ],
+     "words_per_rank": 2
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.4,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.7,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 276,
+     "issue_to_last_commit_ns": 253.9,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      276,
+      276,
+      276,
+      276
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 121.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 366,
+     "issue_to_last_commit_ns": 336.7,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      366,
+      366,
+      366,
+      366
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 163.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 546,
+     "issue_to_last_commit_ns": 502.3,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      546,
+      546,
+      546,
+      546
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 128,
+     "effective_GBps_per_die": 0.7,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 188,
+     "issue_to_last_commit_ns": 173.0,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      188,
+      188,
+      188,
+      188
+     ],
+     "words_per_rank": 2
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 194,
+     "issue_to_last_commit_ns": 178.5,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      194,
+      194,
+      194,
+      194
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 11.3,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 222,
+     "issue_to_last_commit_ns": 204.2,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      222,
+      222,
+      222,
+      222
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 20.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 266,
+     "issue_to_last_commit_ns": 244.7,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      266,
+      266,
+      266,
+      266
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 32.2,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 346,
+     "issue_to_last_commit_ns": 318.3,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      346,
+      346,
+      346,
+      346
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 44.0,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 506,
+     "issue_to_last_commit_ns": 465.5,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      506,
+      506,
+      506,
+      506
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "d4ec13212160fbd7af921baa6466fb3b950a3f0e8d10b2fc6802e0aff8ea504c",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "cecff64dd0b9c9182e472e1c190efa566f6c2643159fc7ed659b47c1969f915f"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1236,
+     "fixed_cycles": 186.35,
+     "points": [
+      [
+       2,
+       189
+      ],
+      [
+       8,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       80,
+       276
+      ],
+      [
+       160,
+       366
+      ],
+      [
+       320,
+       546
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 186.0,
+     "points": [
+      [
+       2,
+       188
+      ],
+      [
+       8,
+       194
+      ],
+      [
+       36,
+       222
+      ],
+      [
+       80,
+       266
+      ],
+      [
+       160,
+       346
+      ],
+      [
+       320,
+       506
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep_even",
+   "fixture_manifest_sha256": "16f8b43e65d7195331ea04d735d2121c7e7f16ff22c5563cdd0529896b61b1c1",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     185,
+     187
+    ],
+    "1": [
+     191,
+     196
+    ],
+    "10": [
+     342,
+     349
+    ],
+    "11": [
+     502,
+     509
+    ],
+    "2": [
+     223,
+     229
+    ],
+    "3": [
+     272,
+     278
+    ],
+    "4": [
+     363,
+     367
+    ],
+    "5": [
+     542,
+     548
+    ],
+    "6": [
+     184,
+     190
+    ],
+    "7": [
+     190,
+     195
+    ],
+    "8": [
+     218,
+     224
+    ],
+    "9": [
+     262,
+     268
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "record_bytes": 64,
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3521,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d1024_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d1024",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.5,
+     "issue_to_first_commit_cycles": 185,
+     "issue_to_last_commit_cycles": 188,
+     "issue_to_last_commit_ns": 173.0,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      188,
+      188,
+      188,
+      188
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.4,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.7,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 276,
+     "issue_to_last_commit_ns": 253.9,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      276,
+      276,
+      276,
+      276
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 121.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 366,
+     "issue_to_last_commit_ns": 336.7,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      366,
+      366,
+      366,
+      366
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 163.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 546,
+     "issue_to_last_commit_ns": 502.3,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      546,
+      546,
+      546,
+      546
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.4,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 187,
+     "issue_to_last_commit_ns": 172.0,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      187,
+      187,
+      187,
+      187
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 194,
+     "issue_to_last_commit_ns": 178.5,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      194,
+      194,
+      194,
+      194
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 11.3,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 222,
+     "issue_to_last_commit_ns": 204.2,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      222,
+      222,
+      222,
+      222
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 20.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 266,
+     "issue_to_last_commit_ns": 244.7,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      266,
+      266,
+      266,
+      266
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 32.2,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 346,
+     "issue_to_last_commit_ns": 318.3,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      346,
+      346,
+      346,
+      346
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 44.0,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 506,
+     "issue_to_last_commit_ns": 465.5,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      506,
+      506,
+      506,
+      506
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "29bf43843c6270ae08392039490b681af6728c1cc3581ba58cf0c37fe52c62f1"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1234,
+     "fixed_cycles": 186.39,
+     "points": [
+      [
+       1,
+       188
+      ],
+      [
+       8,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       80,
+       276
+      ],
+      [
+       160,
+       366
+      ],
+      [
+       320,
+       546
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 186.0,
+     "points": [
+      [
+       1,
+       187
+      ],
+      [
+       8,
+       194
+      ],
+      [
+       36,
+       222
+      ],
+      [
+       80,
+       266
+      ],
+      [
+       160,
+       346
+      ],
+      [
+       320,
+       506
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     184,
+     186
+    ],
+    "1": [
+     191,
+     196
+    ],
+    "10": [
+     342,
+     348
+    ],
+    "11": [
+     503,
+     508
+    ],
+    "2": [
+     223,
+     229
+    ],
+    "3": [
+     272,
+     278
+    ],
+    "4": [
+     363,
+     368
+    ],
+    "5": [
+     542,
+     549
+    ],
+    "6": [
+     183,
+     189
+    ],
+    "7": [
+     190,
+     196
+    ],
+    "8": [
+     218,
+     224
+    ],
+    "9": [
+     263,
+     268
+    ]
+   },
+   "parameters": {
+    "DEPTH": 1024,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3519,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d256": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 26.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 209,
+     "issue_to_last_commit_ns": 192.3,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      209,
+      209,
+      209,
+      209
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.4,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 37.0,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 602,
+     "issue_to_last_commit_ns": 553.8,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      602,
+      602,
+      602,
+      602
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 8.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.7,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 276,
+     "issue_to_last_commit_ns": 253.9,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      276,
+      276,
+      276,
+      276
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "a8aac9bfd9b1ae59413ff588e710b4df31fe1507a0b8f85ecf780577c147be01"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 187.08,
+     "points": [
+      [
+       20,
+       209
+      ],
+      [
+       8,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       6,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       80,
+       276
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       602
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     205,
+     208
+    ],
+    "1": [
+     191,
+     197
+    ],
+    "10": [
+     224,
+     232
+    ],
+    "11": [
+     272,
+     283
+    ],
+    "2": [
+     589,
+     600
+    ],
+    "3": [
+     223,
+     230
+    ],
+    "4": [
+     192,
+     197
+    ],
+    "5": [
+     223,
+     229
+    ],
+    "6": [
+     224,
+     229
+    ],
+    "7": [
+     224,
+     231
+    ],
+    "8": [
+     224,
+     230
+    ],
+    "9": [
+     224,
+     233
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3066,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d256_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.5,
+     "issue_to_first_commit_cycles": 185,
+     "issue_to_last_commit_cycles": 188,
+     "issue_to_last_commit_ns": 173.0,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      188,
+      188,
+      188,
+      188
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 11.4,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 195,
+     "issue_to_last_commit_ns": 179.4,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      195,
+      195,
+      195,
+      195
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 44.1,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 227,
+     "issue_to_last_commit_ns": 208.8,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      227,
+      227,
+      227,
+      227
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.7,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 276,
+     "issue_to_last_commit_ns": 253.9,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      276,
+      276,
+      276,
+      276
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 121.6,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 366,
+     "issue_to_last_commit_ns": 336.7,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      366,
+      366,
+      366,
+      366
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 81920,
+     "effective_GBps_per_die": 146.0,
+     "issue_to_first_commit_cycles": 188,
+     "issue_to_last_commit_cycles": 610,
+     "issue_to_last_commit_ns": 561.2,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      610,
+      610,
+      610,
+      610
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.4,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 187,
+     "issue_to_last_commit_ns": 172.0,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      187,
+      187,
+      187,
+      187
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 512,
+     "effective_GBps_per_die": 2.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 194,
+     "issue_to_last_commit_ns": 178.5,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      194,
+      194,
+      194,
+      194
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 2304,
+     "effective_GBps_per_die": 11.3,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 222,
+     "issue_to_last_commit_ns": 204.2,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      222,
+      222,
+      222,
+      222
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 20.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 266,
+     "issue_to_last_commit_ns": 244.7,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      266,
+      266,
+      266,
+      266
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 32.2,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 346,
+     "issue_to_last_commit_ns": 318.3,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      346,
+      346,
+      346,
+      346
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 37.0,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 602,
+     "issue_to_last_commit_ns": 553.8,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      602,
+      602,
+      602,
+      602
+     ],
+     "words_per_rank": 320
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "f4486d3d749b50f787dbed7b4c9bea57d4c64434c81f7384cc1e612e83f982f5",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "0325df422d12ee76424dd04ceb307dc83dca217627a2d4b8557f83c24a549795"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.311,
+     "fixed_cycles": 178.14,
+     "points": [
+      [
+       1,
+       188
+      ],
+      [
+       8,
+       195
+      ],
+      [
+       36,
+       227
+      ],
+      [
+       80,
+       276
+      ],
+      [
+       160,
+       366
+      ],
+      [
+       320,
+       610
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.2814,
+     "fixed_cycles": 173.62,
+     "points": [
+      [
+       1,
+       187
+      ],
+      [
+       8,
+       194
+      ],
+      [
+       36,
+       222
+      ],
+      [
+       80,
+       266
+      ],
+      [
+       160,
+       346
+      ],
+      [
+       320,
+       602
+      ]
+     ]
+    }
+   },
+   "fixture": "sweep",
+   "fixture_manifest_sha256": "d291fa7096a4066068c6305ebe06298e6fdfd16fc5087bb605824e7bf9e401b0",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     184,
+     186
+    ],
+    "1": [
+     191,
+     196
+    ],
+    "10": [
+     343,
+     348
+    ],
+    "11": [
+     590,
+     601
+    ],
+    "2": [
+     223,
+     229
+    ],
+    "3": [
+     272,
+     278
+    ],
+    "4": [
+     363,
+     368
+    ],
+    "5": [
+     596,
+     608
+    ],
+    "6": [
+     183,
+     189
+    ],
+    "7": [
+     190,
+     197
+    ],
+    "8": [
+     219,
+     224
+    ],
+    "9": [
+     262,
+     269
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3679,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d512_w32": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 176,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d512_w32",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 2560,
+     "effective_GBps_per_die": 13.8,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 201,
+     "issue_to_last_commit_ns": 184.9,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "words_per_rank": 10
+    },
+    {
+     "bytes_committed_per_die": 1024,
+     "effective_GBps_per_die": 5.8,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 193,
+     "issue_to_last_commit_ns": 177.6,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      193,
+      193,
+      193,
+      193
+     ],
+     "words_per_rank": 4
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 32.0,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 348,
+     "issue_to_last_commit_ns": 320.2,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      348,
+      348,
+      348,
+      348
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 768,
+     "effective_GBps_per_die": 4.3,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 192,
+     "issue_to_last_commit_ns": 176.6,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      192,
+      192,
+      192,
+      192
+     ],
+     "words_per_rank": 3
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 47.8,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 233,
+     "issue_to_last_commit_ns": 214.4,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      233,
+      233,
+      233,
+      233
+     ],
+     "words_per_rank": 40
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "7b7d371261dab841d33959e5d8b6721a9737b8cf8aa601e3dc8a3dcd8cdf25c9",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "f55c3b38327936772449a5c270ff87f4265bef4abffabc5d4b14328e52d42ac1"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1147,
+     "fixed_cycles": 189.55,
+     "points": [
+      [
+       10,
+       201
+      ],
+      [
+       4,
+       193
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       3,
+       192
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       40,
+       233
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       160,
+       348
+      ]
+     ]
+    }
+   },
+   "fixture": "l0w32",
+   "fixture_manifest_sha256": "714d143b6c60b98f3418cf642dc382d77642cbebe6f34f3d63e2511d296a7ea8",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     195,
+     198
+    ],
+    "1": [
+     187,
+     193
+    ],
+    "10": [
+     204,
+     211
+    ],
+    "11": [
+     228,
+     232
+    ],
+    "2": [
+     344,
+     349
+    ],
+    "3": [
+     204,
+     209
+    ],
+    "4": [
+     185,
+     191
+    ],
+    "5": [
+     204,
+     210
+    ],
+    "6": [
+     204,
+     210
+    ],
+    "7": [
+     205,
+     210
+    ],
+    "8": [
+     204,
+     211
+    ],
+    "9": [
+     205,
+     211
+    ]
+   },
+   "parameters": {
+    "DEPTH": 512,
+    "LANES": 32,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_NL": 1,
+    "X_WIRE": 17
+   },
+   "record_bytes": 128,
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 177
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 2637,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r0d512_w32_sweep": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 176,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r0d512_w32",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.5,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 190,
+     "issue_to_last_commit_ns": 174.8,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      190,
+      190,
+      190,
+      190
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 1024,
+     "effective_GBps_per_die": 5.8,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 193,
+     "issue_to_last_commit_ns": 177.6,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      193,
+      193,
+      193,
+      193
+     ],
+     "words_per_rank": 4
+    },
+    {
+     "bytes_committed_per_die": 4608,
+     "effective_GBps_per_die": 23.9,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 210,
+     "issue_to_last_commit_ns": 193.2,
+     "mode": "all_gather",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      210,
+      210,
+      210,
+      210
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 47.8,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 233,
+     "issue_to_last_commit_ns": 214.4,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      233,
+      233,
+      233,
+      233
+     ],
+     "words_per_rank": 40
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 80.1,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 278,
+     "issue_to_last_commit_ns": 255.8,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      278,
+      278,
+      278,
+      278
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 40960,
+     "effective_GBps_per_die": 121.0,
+     "issue_to_first_commit_cycles": 190,
+     "issue_to_last_commit_cycles": 368,
+     "issue_to_last_commit_ns": 338.6,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      368,
+      368,
+      368,
+      368
+     ],
+     "words_per_rank": 160
+    },
+    {
+     "bytes_committed_per_die": 64,
+     "effective_GBps_per_die": 0.4,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 189,
+     "issue_to_last_commit_ns": 173.9,
+     "mode": "all_reduce",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      189,
+      189,
+      189,
+      189
+     ],
+     "words_per_rank": 1
+    },
+    {
+     "bytes_committed_per_die": 256,
+     "effective_GBps_per_die": 1.4,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 192,
+     "issue_to_last_commit_ns": 176.6,
+     "mode": "all_reduce",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      192,
+      192,
+      192,
+      192
+     ],
+     "words_per_rank": 4
+    },
+    {
+     "bytes_committed_per_die": 1152,
+     "effective_GBps_per_die": 6.1,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 206,
+     "issue_to_last_commit_ns": 189.5,
+     "mode": "all_reduce",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      206,
+      206,
+      206,
+      206
+     ],
+     "words_per_rank": 18
+    },
+    {
+     "bytes_committed_per_die": 2560,
+     "effective_GBps_per_die": 12.2,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 228,
+     "issue_to_last_commit_ns": 209.8,
+     "mode": "all_reduce",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      228,
+      228,
+      228,
+      228
+     ],
+     "words_per_rank": 40
+    },
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 20.8,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 268,
+     "issue_to_last_commit_ns": 246.6,
+     "mode": "all_reduce",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      268,
+      268,
+      268,
+      268
+     ],
+     "words_per_rank": 80
+    },
+    {
+     "bytes_committed_per_die": 10240,
+     "effective_GBps_per_die": 32.0,
+     "issue_to_first_commit_cycles": 189,
+     "issue_to_last_commit_cycles": 348,
+     "issue_to_last_commit_ns": 320.2,
+     "mode": "all_reduce",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      348,
+      348,
+      348,
+      348
+     ],
+     "words_per_rank": 160
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "65655504da2b17d329b6b94e24548d6eb77d0721989543ec9fd8246d0cca0041",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "a845129ac2bd0351570591e1bd0695f302812d53e78678cb8b619e8a0c8c2057"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1184,
+     "fixed_cycles": 188.86,
+     "points": [
+      [
+       1,
+       190
+      ],
+      [
+       4,
+       193
+      ],
+      [
+       18,
+       210
+      ],
+      [
+       40,
+       233
+      ],
+      [
+       80,
+       278
+      ],
+      [
+       160,
+       368
+      ]
+     ]
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 188.0,
+     "points": [
+      [
+       1,
+       189
+      ],
+      [
+       4,
+       192
+      ],
+      [
+       18,
+       206
+      ],
+      [
+       40,
+       228
+      ],
+      [
+       80,
+       268
+      ],
+      [
+       160,
+       348
+      ]
+     ]
+    }
+   },
+   "fixture": "sweepw32",
+   "fixture_manifest_sha256": "483c4b2afc067257760f916506ad30a4c12f7c99469ae0c6dce4e65c14023257",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     184,
+     186
+    ],
+    "1": [
+     187,
+     192
+    ],
+    "10": [
+     263,
+     270
+    ],
+    "11": [
+     344,
+     352
+    ],
+    "2": [
+     204,
+     210
+    ],
+    "3": [
+     227,
+     232
+    ],
+    "4": [
+     272,
+     277
+    ],
+    "5": [
+     362,
+     367
+    ],
+    "6": [
+     183,
+     188
+    ],
+    "7": [
+     186,
+     192
+    ],
+    "8": [
+     200,
+     206
+    ],
+    "9": [
+     223,
+     229
+    ]
+   },
+   "parameters": {
+    "DEPTH": 512,
+    "LANES": 32,
+    "RELAY": 0,
+    "U_WIRE": 17,
+    "X_NL": 1,
+    "X_WIRE": 17
+   },
+   "record_bytes": 128,
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 177
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 2903,
+   "top": "tb_w15_v41_tp4"
+  },
+  "v41p17_r1d256": {
+   "arrival_hub_to_hub_cycles": {
+    "board": {
+     "max": 174,
+     "min": 168
+    },
+    "ucie": {
+     "max": 47,
+     "min": 44
+    }
+   },
+   "binary": "v41p17_r1d256",
+   "clock_hz": 1086956521.7391305,
+   "collectives": [
+    {
+     "bytes_committed_per_die": 5120,
+     "effective_GBps_per_die": 21.7,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 257,
+     "issue_to_last_commit_ns": 236.4,
+     "mode": "all_gather",
+     "op": 0,
+     "per_die_issue_to_last_commit": [
+      257,
+      257,
+      257,
+      257
+     ],
+     "words_per_rank": 20
+    },
+    {
+     "bytes_committed_per_die": 2048,
+     "effective_GBps_per_die": 9.2,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 243,
+     "issue_to_last_commit_ns": 223.6,
+     "mode": "all_gather",
+     "op": 1,
+     "per_die_issue_to_last_commit": [
+      243,
+      243,
+      243,
+      243
+     ],
+     "words_per_rank": 8
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 31.9,
+     "issue_to_first_commit_cycles": 187,
+     "issue_to_last_commit_cycles": 698,
+     "issue_to_last_commit_ns": 642.2,
+     "mode": "all_reduce",
+     "op": 2,
+     "per_die_issue_to_last_commit": [
+      698,
+      698,
+      698,
+      698
+     ],
+     "words_per_rank": 320
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 3,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 1536,
+     "effective_GBps_per_die": 6.9,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 243,
+     "issue_to_last_commit_ns": 223.6,
+     "mode": "all_gather",
+     "op": 4,
+     "per_die_issue_to_last_commit": [
+      243,
+      243,
+      243,
+      243
+     ],
+     "words_per_rank": 6
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 5,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 6,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 7,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 8,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 9,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 9216,
+     "effective_GBps_per_die": 36.4,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 275,
+     "issue_to_last_commit_ns": 253.0,
+     "mode": "all_gather",
+     "op": 10,
+     "per_die_issue_to_last_commit": [
+      275,
+      275,
+      275,
+      275
+     ],
+     "words_per_rank": 36
+    },
+    {
+     "bytes_committed_per_die": 20480,
+     "effective_GBps_per_die": 68.7,
+     "issue_to_first_commit_cycles": 236,
+     "issue_to_last_commit_cycles": 324,
+     "issue_to_last_commit_ns": 298.1,
+     "mode": "all_gather",
+     "op": 11,
+     "per_die_issue_to_last_commit": [
+      324,
+      324,
+      324,
+      324
+     ],
+     "words_per_rank": 80
+    }
+   ],
+   "deterministic": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 1,
+    "distinct_results": 1,
+    "distinct_timings": 1,
+    "late_faults": 0,
+    "result_sha256": "a78c39a51759ed9859e0d5149cf5feac3b6dffa9998f030ba76e1d720c75a2ec",
+    "runs": 14,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     2000,
+     2001
+    ],
+    "timing_sha256": "dc1b8da23333b1fb1c0bae7ae3837932c0a18e7f5bd916d2c5057374f1f9025a"
+   },
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.1096,
+     "fixed_cycles": 235.08,
+     "points": [
+      [
+       20,
+       257
+      ],
+      [
+       8,
+       243
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       6,
+       243
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       36,
+       275
+      ],
+      [
+       80,
+       324
+      ]
+     ]
+    },
+    "all_reduce": {
+     "points": [
+      [
+       320,
+       698
+      ]
+     ]
+    }
+   },
+   "fixture": "l0",
+   "fixture_manifest_sha256": "ecfea8b6505653144202ee81faadeef47f92df466f9995845837663191588b2a",
+   "free_running": {
+    "all_passed": true,
+    "corner_channels": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.868,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.868,
+      "X_JS": 0.0
+     }
+    ],
+    "det": 0,
+    "distinct_results": 1,
+    "distinct_timings": 26,
+    "runs": 26,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     1000,
+     1001
+    ]
+   },
+   "free_running_latency_range": {
+    "0": [
+     250,
+     254
+    ],
+    "1": [
+     237,
+     242
+    ],
+    "10": [
+     269,
+     276
+    ],
+    "11": [
+     320,
+     325
+    ],
+    "2": [
+     680,
+     692
+    ],
+    "3": [
+     268,
+     275
+    ],
+    "4": [
+     236,
+     243
+    ],
+    "5": [
+     269,
+     275
+    ],
+    "6": [
+     269,
+     276
+    ],
+    "7": [
+     269,
+     275
+    ],
+    "8": [
+     269,
+     276
+    ],
+    "9": [
+     269,
+     275
+    ]
+   },
+   "parameters": {
+    "DEPTH": 256,
+    "RELAY": 1,
+    "U_WIRE": 17,
+    "X_WIRE": 17
+   },
+   "release_delay_cycles": {
+    "U_DREL": 48,
+    "X_DREL": 175
+   },
+   "release_guard_cycles": 1,
+   "sum_issue_to_last_commit_cycles": 3690,
+   "top": "tb_w15_v41_tp4"
+  }
+ },
+ "fixed_floor": {
+  "board_arrival_cycles": {
+   "max": 176,
+   "min": 168
+  },
+  "components": {
+   "codeword_serialisation": {
+    "grade": "derived (FEC block time)",
+    "ns": 1.87
+   },
+   "engine_startup_and_commit": {
+    "cycles": 12.6,
+    "note": "DMA read, engine head stage, transpose and VM commit (fit fixed term minus release delay)"
+   },
+   "flight": {
+    "grade": "derived",
+    "ns": 2.0
+   },
+   "link_layer_logic_cdc_and_phase": {
+    "note": "framer, CRC, deframe, two CDC FIFOs and clock-phase alignment (measured remainder of the worst arrival)",
+    "ns": 15.0
+   },
+   "release_margin": {
+    "cycles": 1,
+    "note": "deterministic release beyond the worst arrival (guard)"
+   },
+   "rs272_decode": {
+    "grade": "published (FEC processing)",
+    "ns": 45.1
+   },
+   "rx_afe_dsp": {
+    "grade": "ASSUMED",
+    "ns": 50.0
+   },
+   "rx_deskew": {
+    "grade": "ASSUMED",
+    "ns": 10.0
+   },
+   "tx_analog": {
+    "grade": "ASSUMED",
+    "ns": 3.0
+   },
+   "tx_pcs_fec_encode": {
+    "grade": "ASSUMED",
+    "ns": 3.7
+   },
+   "wire_hub_to_phy_both_ends": {
+    "cycles": 34,
+    "lever": "floorplan: put the link PHY (or the collective endpoint) nearer; 17 stages each way at the W3 channel-crossing placement",
+    "ns": 31.3
+   }
+  },
+  "config": "v41p17_r0d512_w32",
+  "fit_fixed_cycles": 189.55,
+  "fit_fixed_ns": 174.4,
+  "note": "Root 2026-09-29: no action yet; wire is the floorplan lever, FEC the link-code lever",
+  "release_delay_cycles": 177,
+  "summary": {
+   "fec_ns": 50.7,
+   "pcs_deskew_ns": 10.0,
+   "serdes_analog_and_flight_ns": 55,
+   "wire_ns": 31.3
+  }
+ },
+ "git": {
+  "dirty": [],
+  "head": "8d4fcb452d1fa8987567d9cd5389b37344f1ec95"
+ },
+ "links": {
+  "board_112g": {
+   "adopted_hop_ns": {
+    "grade": "assumed (adopted)",
+    "source": "tools/arch_budget_v41.BASELINE board_hop_s (light-FEC package link, band 100-170)",
+    "value": 130.0
+   },
+   "codeword_bits": {
+    "grade": "normative",
+    "source": "RS(272,257) over GF(2^10): 272 x 10 bits; payload 257 x 10 = 2,570 bits (Ethernet Technology Consortium LL-FEC Specification 1.0, 2018)",
+    "value": 2720
+   },
+   "codeword_ns": {
+    "grade": "derived",
+    "source": "2,720 bits / (13 x 112 Gb/s)",
+    "value": 1.8681318681318682
+   },
+   "flight_ns": {
+    "grade": "derived",
+    "source": "0.3 m of board trace at ~6.7 ns/m (technology.json rom_board_serdes channel decomposition; TI SCAA082A stripline 7.15 ps/mm)",
+    "value": 2.0
+   },
+   "lane_gbps": {
+    "grade": "published",
+    "source": "112G PAM4 SerDes class (technology.json links.rom_board_serdes.bytes_s source)",
+    "value": 112.0
+   },
+   "lanes": {
+    "grade": "derived",
+    "source": "rtl/rom/ot_rom_oneshot_px.sv header ('T1 links (13 lanes per die pair)'); configs/hardware/technology.json links.rom_board_serdes",
+    "value": 13
+   },
+   "pcs_clock_ns": {
+    "grade": "derived",
+    "source": "PCS datapath at twice the codeword rate: a frame (codeword payload) is 2 cycles x 2 slots = 4 records of 547 bits + header + CRC-32 = 2,300 of 2,570 payload bits",
+    "value": 0.9340659340659341
+   },
+   "rs272_decode_ns": {
+    "grade": "published",
+    "source": "RS(272,257) '~99ns' total at 50 Gb/s lanes (P. Sun, IEEE 802.3 50GE ad hoc, 2016) of which the 51 ns codeword store is lane-rate bound; the ~48 ns processing is kept, the store is the 1.87 ns 13-lane codeword time here (tools/sync_cost_table.py r-sun3cd, r-gustlin3ck)",
+    "value": 45.0
+   },
+   "rx_afe_dsp_ns": {
+    "grade": "ASSUMED",
+    "source": "ADC-DSP receiver (CDR, FFE/DFE): technology.json rom_board_serdes names ~40-60 ns; mid value",
+    "value": 50.0
+   },
+   "rx_deskew_align_ns": {
+    "grade": "ASSUMED",
+    "source": "PCS lane alignment and deskew FIFO",
+    "value": 10.0
+   },
+   "static_latency_variation_ns": {
+    "grade": "ASSUMED",
+    "source": "PMA/PCS gearbox and deskew-FIFO pointer placement differ per link training (IEEE P802.3cd brown_3cd_03_1116 'skew variation'); ~3 PCS cycles",
+    "value": 3.0
+   },
+   "tx_analog_ns": {
+    "grade": "ASSUMED",
+    "source": "serializer, FFE and driver",
+    "value": 3.0
+   },
+   "tx_pcs_fec_encode_ns": {
+    "grade": "ASSUMED",
+    "source": "PCS + RS encoder + gearbox; 4 PCS-clock register stages",
+    "value": 4.0
+   },
+   "wander_ns": {
+    "grade": "ASSUMED",
+    "source": "temperature/supply drift over a run",
+    "value": 0.2
+   },
+   "what": "112G PAM4 board SerDes between the two packages of a TP-4 group, 13 lanes per die pair, light RS(272,257) FEC",
+   "wire_stages_v41": {
+    "grade": "floorplan",
+    "source": "results/floorplan/v41_pack_expanded_woa.json latency_crossings 'COLLECTIVE -> farthest SerDes lane' 24,911 um at 0.76 ps/um and 0.92 ns: tools/uarch_model.wire_cycles(24911.3, 1/0.92e-9, 0.76) = 29",
+    "value": 29
+   }
+  },
+  "board_stages": {
+   "T": 0.9340659340659341,
+   "chan_ns": 56.86813186813187,
+   "dec": 59,
+   "enc": 4
+  },
+  "ucie_a": {
+   "fdi_clock_ns": {
+    "grade": "ASSUMED",
+    "source": "D2D adapter / FDI clock of 1 GHz: the link-layer logic runs on it (a 2-slot frame per cycle, 2 x 547-bit records + header; 3.4 Tb/s of the 34.8 Tb/s raw)",
+    "value": 1.0
+   },
+   "modules": {
+    "grade": "derived",
+    "source": "results/floorplan/v41_rtl_engine_profile.json gaps: 'UCIe-A modules (17)'; configs/hardware/technology.json links.rom_package_ucie.bytes_s 4.2 TB/s / (64 lanes x 32 GT/s / 8 = 256 GB/s per module)",
+    "value": 17
+   },
+   "phy_adapter_measured_ns": {
+    "grade": "published",
+    "source": "3.5 ns FDI-to-FDI measured, 3 nm CoWoS UCIe-A, IEEE JSSC 2026, doi:10.1109/JSSC.2026.3651425 (sensitivity)",
+    "value": 3.5
+   },
+   "phy_adapter_tx_rx_ns": {
+    "grade": "normative",
+    "source": "UCIe key metric 'Latency (Tx + Rx) < 2ns Includes D2D Adapter and PHY (FDI to bump and back)': D. Das Sharma et al., IEEE Trans. CPMT 12(9), 2022, Table I (tools/sync_cost_table.py r-ucie-tcpmt)",
+    "value": 2.0
+   },
+   "raw_bits_per_ns": {
+    "grade": "derived",
+    "source": "17 modules x 64 lanes x 32 Gb/s",
+    "value": 34816
+   },
+   "static_latency_variation_ns": {
+    "grade": "ASSUMED",
+    "source": "half an FDI cycle of training-dependent PHY/adapter latency",
+    "value": 0.5
+   },
+   "wander_ns": {
+    "grade": "ASSUMED",
+    "source": "supply/temperature drift over a run",
+    "value": 0.05
+   },
+   "what": "UCIe-A (advanced package) die-to-die link inside a package, 17 x64 modules at 32 GT/s",
+   "wire_stages_qwen": {
+    "grade": "floorplan",
+    "source": "tools/uarch_model.QWEN_WIRE ucie_wire_per_token (13 stages each way, W5) scaled by the loaded-channel ratio wscale = 1.29 (qwen_eval)",
+    "value": 17
+   },
+   "wire_stages_v41": {
+    "grade": "floorplan",
+    "source": "results/floorplan/v41_pack_expanded_woa.json latency_crossings 'COLLECTIVE -> farthest UCIe module' 19,183 um, re-derived at 0.76 ps/um (tools/uarch_model.WIRE_PS_PER_UM_LOADED) and 0.92 ns: tools/uarch_model.wire_cycles(19183.4, 1/0.92e-9, 0.76) = 22",
+    "value": 22
+   }
+  }
+ },
+ "schema": "w15_collectives_v1",
+ "source_sha256": {
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
+  "results/rtl/hdc_v41x_fullshape_program_bind.json": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd",
+  "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
+  "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/link/ot_link_port_harden.sv": "9706dd8276b6e5d0be1ef185fd8115885d4b9232a19f2753942de15eed1ff0ff",
+  "rtl/link/ot_link_rx.sv": "7f724bcc4027eac7bfb211937c9301cc01a59ad5ad63d887c7c9a83edfc102fb",
+  "rtl/link/ot_link_tx.sv": "0e19d581a21dc48f0b1a2a4730b58e764f64c2612596f7b4b121f82b80883a9e",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+  "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
+  "rtl/test/tb_w15_crc32.sv": "29e97861325c9d2dd50c10faad8f93cc7caf5f1c6fb1f49510287bc28d0e314e",
+  "rtl/test/tb_w15_link_unit.sv": "7903e47308a73ea9e1f5a007cb2b42bfacdc200666604facb54a4ecea280a649",
+  "rtl/test/tb_w15_qwen_tp2.sv": "fd3517ae5c49b4a8803be55660295b8b4b1bb8ceecabfb63c5d68d40726d633b",
+  "rtl/test/tb_w15_v41_tp4.sv": "e94fccdb880e283e1a340c5368ea19eda2d65c12511ab0ba19a22e4a37268914",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/rtl_v41_tp_layer0_collectives.py": "ab8c36ea63004e3b89343982b117abfa9f9b0bed001145d831309adf5fc27624",
+  "tools/uarch_model.py": "dab2b84ca44df40966f402f7df8e478c25b74f54364108c4cc1ccf1e7dce8a76",
+  "tools/w15_collectives.py": "2da205053fbd79d83655bf7aaa37954840b5e30fd99b705f49bec5b915baf0c3"
+ },
+ "unit_checks": {
+  "crc_par": {
+   "line": "CRCCHK W=2300 mask_max=8192 frames=200 bad=0 PASS",
+   "parameters": {
+    "W": 2300
+   }
+  },
+  "crc_ser": {
+   "line": "CRCCHK W=2300 mask_max=16 frames=200 bad=0 PASS",
+   "parameters": {
+    "MASK_MAX_W": 16,
+    "W": 2300
+   }
+  },
+  "unit_board": {
+   "all_pass": true,
+   "crc_flip": [
+    "LINKUNIT seed=3 crc_fault_detected=1 flip_at=500 PASS_FAILCLOSED"
+   ],
+   "distinct_digests": 1,
+   "parameters": {
+    "AW_TX": 6,
+    "DEC_STAGES": 59,
+    "DLY_NS": 56.868,
+    "DREL": 199,
+    "ENC_STAGES": 4,
+    "FRAME_CYCLES": 2,
+    "JSTATIC_NS": 3.0,
+    "T_LINK": 0.93407,
+    "WANDER_NS": 0.2,
+    "WIRE_RX": 29,
+    "WIRE_TX": 29
+   },
+   "runs": [
+    "LINKUNIT seed=1 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=165 head_age_max=170 wait_max=6 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=2 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=166 head_age_max=170 wait_max=5 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=3 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=166 head_age_max=170 wait_max=5 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=4 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=168 head_age_max=170 wait_max=3 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=5 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=165 head_age_max=170 wait_max=6 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=6 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=165 head_age_max=170 wait_max=7 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=7 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=166 head_age_max=170 wait_max=5 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS",
+    "LINKUNIT seed=8 det=1 recs=2000 bad=0 hub_lat_min=199 hub_lat_max=199 head_age_min=165 head_age_max=170 wait_max=6 credits_ok=1 faults=0000 digest=fd002f9d662d791a PASS"
+   ]
+  },
+  "unit_ucie": {
+   "all_pass": true,
+   "crc_flip": [
+    "LINKUNIT seed=3 crc_fault_detected=1 flip_at=500 PASS_FAILCLOSED"
+   ],
+   "distinct_digests": 1,
+   "parameters": {
+    "AW_TX": 6,
+    "DREL": 58,
+    "WIRE_RX": 22,
+    "WIRE_TX": 22
+   },
+   "runs": [
+    "LINKUNIT seed=1 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=5 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=2 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=4 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=3 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=34 head_age_max=36 wait_max=3 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=4 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=34 head_age_max=36 wait_max=3 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=5 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=4 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=6 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=4 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=7 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=4 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS",
+    "LINKUNIT seed=8 det=1 recs=2000 bad=0 hub_lat_min=58 hub_lat_max=58 head_age_min=33 head_age_max=36 wait_max=4 credits_ok=1 faults=0000 digest=c1d59c05f9be791a PASS"
+   ]
+  }
+ },
+ "unit_checks_source_sha256": {
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/link/ot_link_rx.sv": "7f724bcc4027eac7bfb211937c9301cc01a59ad5ad63d887c7c9a83edfc102fb",
+  "rtl/link/ot_link_tx.sv": "0e19d581a21dc48f0b1a2a4730b58e764f64c2612596f7b4b121f82b80883a9e",
+  "rtl/test/tb_w15_crc32.sv": "29e97861325c9d2dd50c10faad8f93cc7caf5f1c6fb1f49510287bc28d0e314e",
+  "rtl/test/tb_w15_link_unit.sv": "7903e47308a73ea9e1f5a007cb2b42bfacdc200666604facb54a4ecea280a649"
+ },
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "verilator_flags": [
+  "--binary",
+  "--timing",
+  "-CFLAGS",
+  "-O0",
+  "-Wno-fatal",
+  "-Wno-WIDTH",
+  "-Wno-TIMESCALEMOD",
+  "-Wno-lint",
+  "-Wno-style",
+  "-Wno-MULTIDRIVEN"
+ ],
+ "repin_20260930": {
+  "label": "stale: program changed",
+  "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+  "rerun": false,
+  "changed_pins": {
+   "results/rtl/hdc_v41x_fullshape_program_bind.json": {
+    "old": "99d250781f4613f51f42b6aea1ef78fd9033e752ef4e5ed8aff211ce4eefab3d",
+    "new": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd"
+   }
+  },
+  "historical_copy": "w15_collectives_historical_before_w17_isa.json"
+ }
+}

@@ -1,0 +1,96 @@
+{
+  "schema": "w11_idx_ring_prefill_sizing_v1",
+  "writer": {
+    "source": "results/rtl/w11_idx_ring_gate.json",
+    "keys_placed": 1048576,
+    "run_cycles": 5290573,
+    "cycles_per_key_upper_bound": 5.0455,
+    "sector_writes_per_key": 3,
+    "requests_per_cycle": 1,
+    "bytes_per_s": 13934449851.120455,
+    "clock_hz": 1033912324.2349049
+  },
+  "ingest_engine_keys_Bps_model": 22583684480.0,
+  "cases_v41_rom_1M": [
+    {
+      "rate_key": "conservative",
+      "gpu_prefill_s": 4.7572473147502645,
+      "burst_binding": "nic",
+      "burst_time_s": 0.009563297315247656,
+      "keys_per_die_per_user": 262144,
+      "key_bytes_per_die_per_user": 17825792,
+      "keys_share_of_burst_s": 0.001824055305954236,
+      "writer_time_s": 0.0012792605514,
+      "writer_over_key_burst_share": 0.7013277213822022,
+      "writer_over_whole_burst": 0.1337677277229848,
+      "stream_key_pace_Bps_needed": 37525005.71117512,
+      "writer_over_stream_pace": 371.33771433299773,
+      "exposed_if_keys_arrive_contiguously_s": 0.0,
+      "exposed_fraction_of_ttft": 0.0,
+      "ttft_s_late_bind": 4.766962474549806
+    },
+    {
+      "rate_key": "optimistic",
+      "gpu_prefill_s": 3.359501267424382,
+      "burst_binding": "nic",
+      "burst_time_s": 0.009563297315247656,
+      "keys_per_die_per_user": 262144,
+      "key_bytes_per_die_per_user": 17825792,
+      "keys_share_of_burst_s": 0.001824055305954236,
+      "writer_time_s": 0.0012792605514,
+      "writer_over_key_burst_share": 0.7013277213822022,
+      "writer_over_whole_burst": 0.1337677277229848,
+      "stream_key_pace_Bps_needed": 53137569.67037498,
+      "writer_over_stream_pace": 262.2334807097722,
+      "exposed_if_keys_arrive_contiguously_s": 0.0,
+      "exposed_fraction_of_ttft": 0.0,
+      "ttft_s_late_bind": 3.3692164272239236
+    },
+    {
+      "rate_key": "conservative",
+      "gpu_prefill_s": 2.3786236573751323,
+      "burst_binding": "nic",
+      "burst_time_s": 0.009563297315247656,
+      "keys_per_die_per_user": 262144,
+      "key_bytes_per_die_per_user": 17825792,
+      "keys_share_of_burst_s": 0.001824055305954236,
+      "writer_time_s": 0.0012792605514,
+      "writer_over_key_burst_share": 0.7013277213822022,
+      "writer_over_whole_burst": 0.1337677277229848,
+      "stream_key_pace_Bps_needed": 75050011.42235024,
+      "writer_over_stream_pace": 185.66885716649887,
+      "exposed_if_keys_arrive_contiguously_s": 0.0,
+      "exposed_fraction_of_ttft": 0.0,
+      "ttft_s_late_bind": 2.388338817174674
+    },
+    {
+      "rate_key": "conservative",
+      "gpu_prefill_s": 4.7572473147502645,
+      "burst_binding": "package_port",
+      "burst_time_s": 0.003543208,
+      "keys_per_die_per_user": 262144,
+      "key_bytes_per_die_per_user": 17825792,
+      "keys_share_of_burst_s": 0.000675813701012403,
+      "writer_time_s": 0.0012792605514,
+      "writer_over_key_burst_share": 1.8929189353273,
+      "writer_over_whole_burst": 0.3610458520640053,
+      "stream_key_pace_Bps_needed": 37525005.71117512,
+      "writer_over_stream_pace": 371.33771433299773,
+      "exposed_if_keys_arrive_contiguously_s": 0.000603446850387597,
+      "exposed_fraction_of_ttft": 0.00012674945453217598,
+      "ttft_s_late_bind": 4.760942385234558
+    }
+  ],
+  "verdict": {
+    "binds": false,
+    "writer_time_over_burst_time_max": 0.3610458520640053,
+    "writer_over_model_key_engine_rate": 0.6170140157360388,
+    "max_exposed_fraction_of_ttft": 0.00012674945453217598,
+    "reading": "The ring writer places one 1M-context die slice (262,144 keys) in ~1.3 ms, inside every modelled burst ingest of that die's bytes (NIC-bound 9.6 ms; package-port-bound 3.5 ms) and hundreds of times faster than streamed ingest needs. If the keys arrived as one contiguous chunk at the package-port rate the writer would trail them by up to ~0.6 ms, under 0.03% of the time to first token. It does not bind prefill. It is, however, slower than the key-ingest engine rate the prefill model assumes (~14 vs ~22.6 GB/s)."
+  },
+  "source_sha256": {
+    "results/rtl/w11_idx_ring_gate.json": "386e1e7c3705180aa409c849a1a1ab3f7f38ceeb580b9f8e995c0addeafc8b8e",
+    "results/arch/prefill_ingest.json": "dc7ef4c9991d0711667417438b8b88fcd3961d2295a4c725acfac9735485f9b2",
+    "tools/w11_idx_ring_prefill_sizing.py": "d10192fcc2c8cf210c982d66517b155a11d65dac161cab8984791be925652b3d"
+  }
+}

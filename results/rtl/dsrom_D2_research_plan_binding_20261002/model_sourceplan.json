@@ -1,0 +1,143 @@
+{
+  "admission_rules": {
+    "automatic_retry": false,
+    "launch_authorized": false,
+    "live_owned_jobs": [],
+    "new_hosts": [
+      "local",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "old_GO_reusable": false,
+    "parser_only_PASS_promotion": false,
+    "prohibited_new_hosts": [
+      "ot-pve2",
+      "ot-pve3"
+    ],
+    "resources": {
+      "CPUs": [
+        0,
+        1
+      ],
+      "build_total_s": 600,
+      "memory_bytes": 4294967296,
+      "sim_total_s": 60,
+      "swap_bytes": 0,
+      "whole_s": 660
+    }
+  },
+  "composed_model_owner": "Maxwell",
+  "configuration": {
+    "BP": 0,
+    "CUT": 379,
+    "DRAIN": 127,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "K": 512,
+    "LAT": 8,
+    "MTP": 2,
+    "NB": 2,
+    "NBF": 1024,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1,
+    "R": 128,
+    "WAKE_REG": 1,
+    "XF": 4,
+    "global_NP": 8192,
+    "primitive_RNE": true,
+    "rowfix": true,
+    "rows": 257,
+    "selected_pair": 1
+  },
+  "dependency_terminal_archive_commits": [
+    "3750161e0",
+    "a206468c1"
+  ],
+  "diagnosis_commit": "c3a607091e699af4a304ff0060a091468108c147",
+  "evidence_commit": "97b880aba6085f565ab553b092c7cc8c853a5c83",
+  "gate_matrix": {
+    "G0": "OPEN: selected-case mismatch diagnosed; complete emitted program, bank ownership, service/return calendar still required",
+    "G1": "OPEN: no full-token result from this stream",
+    "G2": "OPEN: production5 actual FIFO overflow; FAST8 directed control PASS only",
+    "G3": "OPEN: full element and context SS/FF, ROM/ICG/return crossings and power",
+    "G4": "OPEN: selected producer5/consumer8 cycle trace reconciled; whole-program costs unresolved",
+    "G5": "OPEN: immutable prerequisites retained; comparative completion awaits G0-G4"
+  },
+  "model": {
+    "authoritative_unified_model": "tools/uarch_model.py:w10_baseline_model",
+    "constraints": [
+      "No extrapolation of selected 60% schedule increase into full-token rate",
+      "BF16 grouped issue/hold and PP bank collisions require separate exact service bounds",
+      "DRAIN127 requires last leaf to actual root retire proof, not schedule-only completion",
+      "Retain actual bank ownership and every required context; no NP-width or active-site reduction"
+    ],
+    "existing_protocol": {
+      "adder_recurrence_cycles": 8,
+      "bterm_latency_cycles": 11,
+      "golden_chunk_terms": 8,
+      "issue_to_capture_cycles": 3,
+      "minimum_chunk_round_cycles": 64,
+      "registered_input_cycles": 1
+    },
+    "full_program_increment_formula": "Sum over actual positions and rounds of max(0, required_bound_round_words-original_round_words); then compose VM/readiness/writes/return/drain without zero-filling",
+    "image_only_admission_candidate": {
+      "added_RTL_registers": 0,
+      "added_ports": 0,
+      "added_stages": 0,
+      "incremental_schedule_cycles": 48,
+      "incremental_schedule_ns_at_833ps": 39.984,
+      "physical_frequency_credit": false,
+      "positions": 2,
+      "schedule_words_per_position_after": 64,
+      "schedule_words_per_position_before": 40
+    },
+    "selected_case": {
+      "FIFO_entries": 4,
+      "actual_first_overflow_cycle": 119,
+      "arrival_interval_cycles": 5,
+      "backlog_growth_per_cycle": "3/40",
+      "pop_interval_cycles": 8,
+      "producer_slices_per_cycle": "1/5",
+      "same_slot_service_slices_per_cycle": "1/8"
+    }
+  },
+  "next_sourceplan": {
+    "mode": "additive default-off successor; source review before HDL",
+    "steps": [
+      "Add diagnostic validity/loader snapshots and exclusive terminal branches, preserving every unrelated fault and unchanged numerical score",
+      "Bind source image recurrence to actual compiled CUT/LAT and all round demands; refuse stale mismatch explicitly rather than silently patch an image",
+      "Preserve canonical source ROM words, configuration and expected golden assertions; emitted cadence changes must have independently reconstructed order/tags",
+      "Enumerate actual full-program rounds, demand, grouped BF16/PP hazards and finite queues before broader field admission",
+      "Prepare fresh cap-enforcing selected full-row successor using the exact source/program/model pins for parent review",
+      "After qualified connected source gate, join actual fullfield return, bank mapping and WAKE contextual timing obligations"
+    ]
+  },
+  "owner": "Epicurus",
+  "plan_commit": "368f82a61c45a4431956ae267ed6746ec83e5f94",
+  "plan_sha256": {
+    "TASKS.md": "bf907f5cb82d3e56f011afbe9652bc742e1ef223244944a027b46246fabcbd6d",
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": "73df4bb9a1fc02739e596a86fcc35a55a80d07ffe2c9513b8a0d26a45f8f5424"
+  },
+  "publisher": {
+    "cherry_picked_rewrite": false,
+    "docs_edits": false,
+    "main_edits": false,
+    "reason": "Bounded isolated owner record; main publisher intakes rewrite plus dependency archives without overwriting concurrent history"
+  },
+  "schema": "opentallas.D2.research_plan_binding.v1",
+  "source_sha256": {
+    "results/rtl/dsrom_upstream_pair_cadence_r3_diagnosis_20261002/diagnosis.json": "19c915092d6f1ee0f60e36635491703ecb566e8a25072de0d0750ffba480315a",
+    "rtl/v41die/ot_v41_field_w17w10_rne_wake_faultfix_prepare.sv": "9585fda30a187bdd8bf441aa854b249232bff11d55cdf892d511b63b9c5cbb2c",
+    "tools/prepare_dsrom_upstream_pair_cadence.py": "b1b86cf82ab986f02f5082f82d40af820219b36a6bddbce3afaba3c3fd578998",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/v41_die_field.py": "fdf62d1b9ecee3ccb3c8a67137bb75d3399a812f762df3651fffc37041a73d4a",
+    "tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780",
+    "tools/w17_runtime_v41_die_images.py": "e7c95148569f6743e81f1a4a059c10bdf2f8bdc5342d4de0da15beb059e1b643",
+    "tools/w17_w10_field_rt_gate.py": "f71762fd434eaabd3268d229bdc8c7d2270e0fdbeba71aad0c85924946115d38"
+  },
+  "status": "MANDATORY_CORRECTNESS_OPEN_MODEL_PREPARE_ONLY",
+  "task": "D2"
+}

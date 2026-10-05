@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.rtl.v41x_me_preload64_pipe2.v1",
+  "status": "pass",
+  "claim_scope": "Standalone two-stage registered converter; no VM port, cluster or rate claim",
+  "exact_elements": 8256,
+  "checkpoint_elements": 8192,
+  "edge_elements": 64,
+  "beats": 129,
+  "latency_cycles_after_registered_vm_data": 2,
+  "fixture_sha256": {
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_wo_a_acc_rank0.f32le.bin": "12be81f72514fd6b140e7bf9eb3e709394ed1b470be682a3cc676bdbb1e051b8",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/hdc_v41x_fullshape_200k_l0_wo_a_vectors.json": "244eef6c0d0e69dae9987d4e0ec363efe18e3b72f8a741b92a25079ccafc692b"
+  },
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv": "49629f6e1b4d45f51f5b309d005ecd9e658e454a38badf6b81515b3c57a9754a",
+    "tools/rtl_v41x_me_preload64_pipe2.py": "83f9efc587fe1aee579987c4b4e9b0490b4e6d59bbf2390910c2e9eecc3a4b05",
+    "tools/rtl_v41x_me_preload64.py": "e7a61b55465e0ac25aa6a4bdd77eeff530a3b5c669a304991625855655cdb658"
+  }
+}

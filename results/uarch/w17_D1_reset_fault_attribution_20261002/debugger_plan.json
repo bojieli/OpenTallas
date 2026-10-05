@@ -1,0 +1,90 @@
+{
+  "schema": "opentallas.D1.existing_binary_fault_capture.proposal.v1",
+  "status": "PREPARED_NOT_ADMITTED_NOT_EXECUTED",
+  "source_phase_model_only": true,
+  "fresh_parent_GO_required": true,
+  "new_memory_heavy_lock_owner_not_to_disturb": 1357128,
+  "no_compile_or_link": true,
+  "simulator_runs_launched": 0,
+  "binary": "/tmp/w17-D1-native-joined-20261002-r1/D1_current_prefix",
+  "binary_SHA256": "b7d605fa323444f14fbc60b8912b9fd894f257f36b137f78fbab882407c60153",
+  "program": "/tmp/w17-D1-native-diagnostic-result-20261002-r1/input/prog.hex",
+  "program_SHA256": "dc93faea61a95d04d0a157d09e9c962d7f863bb9559ab92532aed61d7856d1c6",
+  "archive_SHA256": "d724823df4d6f142d097601f4d551f52f0fdbb332a0cd52671eb3a67b3cf12a3",
+  "debugger": {
+    "path": "/usr/bin/gdb",
+    "SHA256": "a6222ff0f450ca040e3479c04fdb7d0f1e0cabb099688270e720b7115d933c3d",
+    "version": "GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1",
+    "offline_command": [
+      "gdb",
+      "-q",
+      "-batch",
+      "-nx",
+      "-x",
+      "/tmp/opentallas-D1-reset-fault-attribution-20261002/results/uarch/w17_D1_reset_fault_attribution_20261002/capture_masks.gdb"
+    ],
+    "offline_exit": 0,
+    "inferior_started": false,
+    "DWARF": false,
+    "symbol_table": true,
+    "actor": "_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2PZ59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024rootE99_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024root.Frame.actor",
+    "breakpoint_actor_offset_hex": "0x91d",
+    "fault_branch_link_address_hex": "0x11251",
+    "frame_pointer_from_rbp_minus_hex": "0x48",
+    "root_pointer_from_frame_plus_hex": "0x40",
+    "fields": {
+      "fault_r": {
+        "offset_hex": "0x28021",
+        "bytes": 1
+      },
+      "dbg_fs": {
+        "offset_hex": "0x5f0fc",
+        "bytes": 4
+      },
+      "violations": {
+        "offset_hex": "0x27fe2",
+        "bytes": 1
+      }
+    },
+    "guard": "Verify exact binary SHA, tool SHA, assembly and pointer-load offsets; stop if any differ. No inferior function calls or engine register/memory writes. GDB convenience variables only; continue original fatal unchanged."
+  },
+  "cost_basis": {
+    "prior_actual_runtime_wall_s": 57.451255587861,
+    "prior_RSS_single_sample_bytes": 2490122240,
+    "sample_is_peak": false,
+    "compile_s": 0,
+    "link_s": 0,
+    "runtime_prediction_is_deadline": false,
+    "debugger_runtime_overhead_unmeasured": true
+  },
+  "capacity_proposal": {
+    "existing_reviewed_reservation_bytes": 103079215104,
+    "host_reserve_bytes": 34359738368,
+    "fresh_recheck_required": true,
+    "capacity_justification": "Carry existing actual full-geometry reservation for same immutable executable; individual observed RSS sample is not a measured peak. Coordinate recovery owner and fresh host survey before admission.",
+    "CPU_threads": 1,
+    "CPU_affinity_candidate": [
+      8
+    ],
+    "nonexclusive": true,
+    "wall_limit": null,
+    "CPU_time_limit": null,
+    "per_file_limit": null,
+    "per_process_AS_limit": null,
+    "resource_admitted": false
+  },
+  "preparation_host_snapshot": {
+    "memory": {
+      "MemTotal": 202405810176,
+      "MemAvailable": 186815807488
+    },
+    "disk_available_bytes": 1171574501376,
+    "load": [
+      3.5029296875,
+      3.45947265625,
+      3.26513671875
+    ]
+  },
+  "scope": "Capture masks on same controlled prefix only. Original PC24 cause remains UNOBSERVED; causal service BOUND_MISSING. No callback/first-return/full-token or numerical/hardware credit.",
+  "alternative": "Native-only additive fatal callback would require new helper ABI/root-header validation and link; preferred existing GDB resolves fatal masks without rebuilding. Neither alternative executed."
+}

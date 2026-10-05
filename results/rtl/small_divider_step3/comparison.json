@@ -1,0 +1,74 @@
+{
+  "scope": "Isolated consumer snapshot changes small-divisor chunk width 10 -> 3; no production default change. Functional service-cycle result, physical clock pending.",
+  "baseline_cycles": 767158,
+  "candidate_cycles": 1356253,
+  "cycle_increase_percent": 76.78926635712591,
+  "break_even_clock_ratio": 1.767892663571259,
+  "physical_evals": 276,
+  "cache_hits": 121,
+  "validation": "Nine numerical softmax cases and two refusals pass. Four unit tests across two simulators and divisor widths pass.",
+  "sources": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "results/rtl/small_divider_step3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "a138efa2820a12968a5c13fc0f49348833e433b1e76ae4548d29793a52f687cd",
+      "verilator_content_hash": "oTjvooIKEpaKXBP8D0k0iDPkM7HnauRUjSl5OlL2"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7",
+      "verilator_content_hash": "OwxGLS0o5RR7t3JsBVVQ98hlSt22EpBeIXty7mHo"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+      "verilator_content_hash": "wDwVBZRWeHngxyPAjQmBOu1ZDkdXDSHD2K6awQuW"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4"
+    },
+    {
+      "path": "rtl/test/tb_a3_softmax_block.sv",
+      "sha256": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181",
+      "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh"
+    }
+  ],
+  "physical_pending": "results/physical_abi3/asap7/small_divider/captured_divisor_step3_cts12_1ns.json",
+  "decision": "Do not select narrower chunk solely for slack; requires >1.768x complete-engine clock improvement to improve this corpus latency relative to ten-step cycles. Neither configuration has current containing routed closure."
+}

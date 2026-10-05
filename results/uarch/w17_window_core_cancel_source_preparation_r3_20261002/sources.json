@@ -1,0 +1,47 @@
+{
+  "status": "UNCOMPILED_SOURCE_REVIEW_REQUIRED_NOT_COMPLETE_COMPOSED_GATE",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "repaired_producer_pin": "3625a502b889d3a69aada6796cd9ceb8eefb6810",
+  "repaired_producer_path": "rtl/test/w17_window_actual_producer_cancel_declaration_repaired/ot_hdc_v41x_window_kv_blocks_cancel.sv",
+  "repaired_producer_sha256": "c9c7bbec16601faf19723768bd1d159a4319c2291348ef77a05f5cf5c5252f5e",
+  "copies": {
+    "base": {
+      "origin_path": "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+      "origin_sha256": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+      "candidate_sha256": "62d8b616ed8a65554b49952f259cc803156ecd0115f520420c20d2f0829ba213",
+      "default_inverse": true,
+      "parameters_forwarded": 53,
+      "ports_forwarded": 213,
+      "extra_core_register_bits": 8,
+      "module": "ot_hdc_core_v41x_cancel_base"
+    },
+    "fastpp": {
+      "origin_path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+      "origin_sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+      "candidate_sha256": "a484abe8c06e195206db85ee0d8f237e21a3dd67c69db263c16fcb7e49c36f16",
+      "default_inverse": true,
+      "parameters_forwarded": 64,
+      "ports_forwarded": 228,
+      "extra_core_register_bits": 8,
+      "module": "ot_hdc_core_v41x_cancel_fastpp"
+    }
+  },
+  "generator_sha256": "8327252721cfde0804d744dc9bf3f1509d456ee95823d1b479b7d989ad8a41d3",
+  "accounting": {
+    "provider": 259,
+    "core": 8,
+    "producer_ACK": 2,
+    "concrete": 269,
+    "envelope": 278
+  },
+  "raw_VM_write_ports_unchanged": true,
+  "healthy_stages_intended": 0,
+  "remaining_before_runtime": [
+    "Nash committed edge/descriptor model and source diff review",
+    "PC20/PC21 descriptor-class binding only; other packed program locations unqualified",
+    "Actual core+QE+producer+guard+WINDOW bench/event calendar and mutants",
+    "Resource/output model and fresh GO; no compile now"
+  ],
+  "physical_causal_provider": false,
+  "fulltoken": false
+}

@@ -1,0 +1,158 @@
+{
+  "FAIL_unchanged": true,
+  "artifacts": [
+    {
+      "bytes": 10354286,
+      "path": "results/uarch/hbm_tc_perimeter_strip_20261002/model.json",
+      "sha256": "e78e93a62904f7c44e5f195e73a800cfbd18d82be7283f7c2df3cb960e459f04"
+    },
+    {
+      "bytes": 1513946,
+      "path": "results/uarch/hbm_tc_perimeter_strip_20261002/net_manifest.json.gz",
+      "sha256": "07568751ea5c9ca11f3b4825405e9919eb3e859d1f5f546b873bd3c0b6cb3b93"
+    },
+    {
+      "bytes": 7022,
+      "path": "results/uarch/hbm_tc_perimeter_strip_20261002/parent_metrics_observation.json",
+      "sha256": "4bf6b4ad398cdc3e3a5042e6588585b845786b3a12696517c01d39abe7a224f3"
+    }
+  ],
+  "byte_identical_reproduction": true,
+  "events": {
+    "DS": 97,
+    "Qwen": 434,
+    "actual_parent_ready_cost_verified": false,
+    "conditional_TC_delta_cycles": 1,
+    "token_delta_not_aggregated_without_dependency_calendar": true
+  },
+  "main_head": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "no_PDN_changes": true,
+  "no_RTL_PnR": true,
+  "no_admission": true,
+  "no_decap_replacement": true,
+  "no_main_checkout_writes": true,
+  "original_pins": [
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/floorplans.py",
+      "sha256": "3a78ac42e27e5a01b8970620eff075e62c149abe8dc8d45da756f40a3865c94f",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/tcl/pdn_block.tcl",
+      "sha256": "33da1f61502ead8da388a1d8ab8ceb26b88eb0179d1f72a52f08c7b356caaf7a",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/tcl/pdn_sm.tcl",
+      "sha256": "2d2c33d3082c1c4c20c3aa7b84e2b91de492ce489425b8dcdce6e99723e959dc",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/receipt.json",
+      "sha256": "f6464972f70582e47ec0848c5e8a910e767423aa1dc06e72de3e880deecbf2d1",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/receipt.json",
+      "sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b",
+      "unchanged": true
+    }
+  ],
+  "summary": {
+    "deepseek_v41": {
+      "actual_free_tracks": 0,
+      "alternative": "N",
+      "candidate_32SM_delta_mm2": 0.942592,
+      "co_resident_capacity": {
+        "actual_fit_verified": false,
+        "declaration_cell_area_interval_stock_DFF_um2": [
+          12990.78,
+          16888.014000000003
+        ],
+        "resident_declared_register_bits": 44550,
+        "residual_at_50pct_policy_after_declarations_and_TT_arithmetic_interval_um2": [
+          132328.90408000053,
+          136226.13808000053
+        ],
+        "residual_cell_area_ceiling_at_50pct_policy_um2": 169925.2700800005,
+        "residual_geometric_area_ceiling_um2": 339850.540160001,
+        "usable_row_area_verified_um2": 0
+      },
+      "extra_cycles_cases": {
+        "1.0": 1,
+        "1.25": 1
+      },
+      "full_seam_reserved_policy_tracks": 3591,
+      "inventory_slot_delta_um2": 29456.0,
+      "inventory_slot_um": [
+        1400,
+        1661.04
+      ],
+      "maximum_input_Q_reference_reach_um": 265.0831760242793,
+      "maximum_semantic_D_reach_um": 217.43065402124432,
+      "outline_um": [
+        164.0,
+        174.8
+      ],
+      "per_column_FF": 659,
+      "per_column_cells_area_cap_um2": 421.98894,
+      "port_displacement_bound_um": 43.199999999999974
+    },
+    "qwen": {
+      "actual_free_tracks": 0,
+      "alternative": "N_PLUS_E_HOLD_TAB",
+      "candidate_32SM_delta_mm2": 1.582979071999997,
+      "co_resident_capacity": {
+        "actual_fit_verified": false,
+        "declaration_cell_area_interval_stock_DFF_um2": [
+          41397.2856,
+          53816.471280000005
+        ],
+        "resident_declared_register_bits": 141966,
+        "residual_at_50pct_policy_after_declarations_and_TT_arithmetic_interval_um2": [
+          -50783.2058399987,
+          -38364.0201599987
+        ],
+        "residual_cell_area_ceiling_at_50pct_policy_um2": 62628.5774400013,
+        "residual_geometric_area_ceiling_um2": 125257.1548800026,
+        "usable_row_area_verified_um2": 0
+      },
+      "extra_cycles_cases": {
+        "1.0": 1,
+        "1.25": 1
+      },
+      "full_seam_reserved_policy_tracks": 4863,
+      "inventory_slot_delta_um2": 49468.0959999999,
+      "inventory_slot_um": [
+        1900.8,
+        2175.12
+      ],
+      "maximum_input_Q_reference_reach_um": 384.70632717474973,
+      "maximum_semantic_D_reach_um": 276.6083271747498,
+      "outline_um": [
+        225.184,
+        230.8
+      ],
+      "per_column_FF": 1299,
+      "per_column_cells_area_cap_um2": 831.4245,
+      "port_displacement_bound_um": 122.68799999999992
+    }
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tools -p 'test_hbm_tc_*.py' -v",
+    "failed": 0,
+    "new_tests": 9,
+    "passed": 51
+  }
+}

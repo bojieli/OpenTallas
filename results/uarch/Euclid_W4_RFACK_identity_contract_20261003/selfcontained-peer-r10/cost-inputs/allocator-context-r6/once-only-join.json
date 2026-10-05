@@ -1,0 +1,64 @@
+{
+  "schema": "W4_PARENT_FRAME_R14_METADATA_ONCE_ONLY_JOIN_R6",
+  "allocator_git": "290d701b986ecafc81e59f5561c9701228f8077d",
+  "live_component_sourcefreeze": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+  "live_source_changed": false,
+  "canonical_parent_owner_bits": 46,
+  "canonical_RFslot_bits": 9,
+  "stable_parent_record_from_bound_reference_required": true,
+  "last_child_owner_cannot_be_parent_owner": true,
+  "command_envelope": {
+    "source_fragments": 64,
+    "fragment_bytes": 64,
+    "RF_frames_per_SM": 8,
+    "sector_children_per_SM": 128,
+    "SMs": 32,
+    "retained_frame_rows": 256,
+    "retained_child_rows": 4096
+  },
+  "once_only_ledger": {
+    "allocator_gross_protected_bits": 940464,
+    "allocator_FF_protection_partial_footprint_mm2_ASSUMED": 2.5504255123200004,
+    "W4_leaf55_raw_capture_bits": 1760,
+    "W4_internal_SIMD_and_protected_shadow_are_distinct_lifetime_cells": true,
+    "retained_frame_parent55_payload_bits": 14080,
+    "retained_child_R14meta92_payload_bits": 376832,
+    "R14_same_context_sidecar_metadata92_plus_backendgen4_bits": 96,
+    "RF_assembler_data_bits_existing_connector_reservation": 131072,
+    "RF_assembler_masks_existing_connector_reservation": 512,
+    "RF_SRAM_original_area_recharged": false,
+    "RF_data_and_mask_reservation_recharged": false,
+    "net_parent55_debit_if_same_indices_ports_lifetime": null,
+    "net_childmeta92_debit_if_same_indices_ports_lifetime": null,
+    "allocator_net_increment_area": null,
+    "grosses_may_not_be_blindly_added_or_subtracted": true,
+    "price_rule": "keep allocator gross as reference, not adopted extra debit; record R14/W4 charged owners once; select actual same storage row/index/port/lifetime replacements before any debit; protected shadow, capture pipeline and internalSIMD are distinct cells until actual reuse is proved"
+  },
+  "lifetime": {
+    "assembler_reusable_only_after_exact_common_RF_ACK": true,
+    "frame_parent_metadata_held_through_consumer_and_validated_reverse": true,
+    "child_metadata_held_through_allcopy_reverse_CDC_drain": true,
+    "local_common_ACK_not_parent_or_physical_tag_release": true,
+    "source_fragment_credit": 1,
+    "conditional_wait_fullACK_credit1_blocks_after64B": true,
+    "actual_continued_admission_or_early_capture_reverse_proof": null,
+    "actual_fragment_or_frame_early_release_claim": false
+  },
+  "ports": {
+    "source_parent_allocator_proposed_per_die_edge": 1,
+    "parent_32way_arbitration_cost_complete": false,
+    "same_row_atomic_allocate_return_reverse_update": null,
+    "actual_hot_PC_capacity_distribution": null,
+    "R14_W2_production_C0_KV_caller": null
+  },
+  "qualification": {
+    "component_gate_separate": true,
+    "native_allocator_installed": false,
+    "whole_program_accepted_journal": false,
+    "allcopy_source_wait_cycles": null,
+    "whole_service_latency": null,
+    "physical_slot_fit": null,
+    "clock_reset_CDC_SSFF": null,
+    "hardware_build_admission": false
+  }
+}

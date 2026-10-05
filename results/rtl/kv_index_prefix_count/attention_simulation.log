@@ -1,0 +1,14 @@
+  one_block: span=1 heads=2 head_dim=16 slots=6 valid=12 padding=116
+  full_block: span=1 heads=2 head_dim=16 slots=64 valid=128 padding=0
+  two_blocks: span=1 heads=2 head_dim=16 slots=70 valid=140 padding=116
+  three_blocks: span=1 heads=1 head_dim=16 slots=133 valid=133 padding=59
+  multi_row: span=3 heads=2 head_dim=16 slots=6 valid=36 padding=348
+  multi_row_blocks: span=2 heads=2 head_dim=16 slots=70 valid=280 padding=232
+  wide_head: span=1 heads=1 head_dim=32 slots=64 valid=64 padding=0
+  duplicates: span=1 heads=2 head_dim=16 slots=12 valid=24 padding=104
+  single_valid: span=1 heads=2 head_dim=16 slots=1 valid=2 padding=126
+PASS a3_attention_sparse: 9 transactions bit-identical to sparse_attention_bf16_codes, with counters, saturation, and every read inside a bound view
+- rtl/test/tb_a3_attention_sparse.sv:207: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 52.881 s; speed 92.415 us/s
+- Verilator: cpu 52.178 s on 1 threads; allocated 10 MB

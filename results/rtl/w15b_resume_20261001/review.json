@@ -1,0 +1,275 @@
+{
+  "claim_boundary": "Evidence intake only; no RTL adoption, timing closure, or performance-model update. All archived failures remain failures. TT is pathfinding only; SS setup/FF hold at 60/25 ps remain required.",
+  "completed_physical_failures": [
+    {
+      "case": "tm89_700",
+      "closed": false,
+      "corner": "TT",
+      "diagnostic": [
+        "detail-route exited 247; cause not established from record"
+      ],
+      "flow_completed": false,
+      "pins_verified": true,
+      "signoff_present": false,
+      "snapshot": {
+        "path": "results/rtl/w15b_resume_20261001/physical/tm89_700/physical.json",
+        "sha256": "4748dbf47c80f997507475fb95fca2fe5965d126837e9017d373bf78d4ad7a1a"
+      },
+      "source_commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "status": "error"
+    },
+    {
+      "case": "tm89_1000",
+      "closed": false,
+      "corner": "TT",
+      "diagnostic": [
+        "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer."
+      ],
+      "flow_completed": false,
+      "pins_verified": true,
+      "signoff_present": false,
+      "snapshot": {
+        "path": "results/rtl/w15b_resume_20261001/physical/tm89_1000/physical.json",
+        "sha256": "de89f9178b2926140d02388cec90657ca1a922b727790663730693079ea3267d"
+      },
+      "source_commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "status": "error"
+    },
+    {
+      "case": "tg89_700",
+      "closed": false,
+      "corner": "TT",
+      "diagnostic": [
+        "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer."
+      ],
+      "flow_completed": false,
+      "pins_verified": true,
+      "signoff_present": false,
+      "snapshot": {
+        "path": "results/rtl/w15b_resume_20261001/physical/tg89_700/physical.json",
+        "sha256": "087fdb01c77428c5f43e3cf07e2943056330720a1cf2482b045375d41d155160"
+      },
+      "source_commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "status": "error"
+    },
+    {
+      "case": "tg89_1000",
+      "closed": false,
+      "corner": "TT",
+      "diagnostic": [
+        "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer."
+      ],
+      "flow_completed": false,
+      "pins_verified": true,
+      "signoff_present": false,
+      "snapshot": {
+        "path": "results/rtl/w15b_resume_20261001/physical/tg89_1000/physical.json",
+        "sha256": "eddc14e5647ace4383fed68526c5044bd203ca30725e23910ae663bf2344ae29"
+      },
+      "source_commit": "c9d1a7514580e78d2ae6faf81e566a889a939bf1",
+      "status": "error"
+    },
+    {
+      "case": "px32_sram",
+      "closed": false,
+      "corner": "TT",
+      "diagnostic": [
+        "[ERROR DPL-0033] detailed placement checks failed during check placement."
+      ],
+      "flow_completed": false,
+      "pins_verified": true,
+      "signoff_present": false,
+      "snapshot": {
+        "path": "results/rtl/w15b_resume_20261001/physical/px32_sram/physical.json",
+        "sha256": "cea771f4a97d6e401540dd01c1e735e83b46f4ff05b14ee6cd43cbe256611b7b"
+      },
+      "source_commit": "19ecd2fb4d64c2ace60ec6f18d36a1d754db55bb",
+      "status": "error"
+    }
+  ],
+  "live_jobs": [
+    {
+      "case": "port_qwen",
+      "container": "otjob-a1b0ccc17a",
+      "host": "ot-pve2",
+      "worker_pid": 506469
+    },
+    {
+      "case": "port_ucie",
+      "container": "otjob-4fb246ee96",
+      "host": "ot-pve2",
+      "worker_pid": 506482
+    },
+    {
+      "case": "topk_4_128_64_8",
+      "container": "otjob-ac1da26900",
+      "host": "ot-pve2",
+      "worker_pid": 1261978
+    },
+    {
+      "case": "port_board",
+      "container": "otjob-3751823665",
+      "host": "155.103.253.114",
+      "worker_pid": 731592
+    },
+    {
+      "case": "topk_4_256_1024_64_8",
+      "container": "otjob-5e22c32e3a",
+      "host": "155.103.253.114",
+      "worker_pid": 2876819
+    },
+    {
+      "case": "qwen256_sram",
+      "container": "otjob-87b0c1cf03",
+      "host": "155.103.253.133",
+      "worker_pid": 2771832
+    }
+  ],
+  "merge_fix": {
+    "basis": "Claude checkpoint and archived eight-test rerun logs; no new regression run claimed here.",
+    "integrated_commit": "08373ccb",
+    "source_commit": "50f5165b",
+    "tests": [
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_qwen_tp_host_binding.log",
+          "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+        },
+        "name": "test_qwen_tp_host_binding",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_qwen_tp_host_binding.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_uarch_consolidation.log",
+          "sha256": "c6ce8518a2cc113cc5560b3731e234ed6d559e746221ae903ce01599dfe7e797"
+        },
+        "name": "test_uarch_consolidation",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_uarch_consolidation.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_collective_gw4_campaign.log",
+          "sha256": "c4b808d34f4db00b333696dec1f3a43a2887d8bfe0cb7af07a3cb98ff43a7830"
+        },
+        "name": "test_v41_collective_gw4_campaign",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_collective_gw4_campaign.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_single_token_schedule_preflight.log",
+          "sha256": "700bc0322b00f8e8db3ce495047983b54ab27ab59ed1fedac05f3aeba47dae24"
+        },
+        "name": "test_v41_single_token_schedule_preflight",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_single_token_schedule_preflight.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_tp_layer0_collectives.log",
+          "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+        },
+        "name": "test_v41_tp_layer0_collectives",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_tp_layer0_collectives.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_w2_packed_collective.log",
+          "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+        },
+        "name": "test_v41_w2_packed_collective",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41_w2_packed_collective.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41x_attn_desc_lifecycle.log",
+          "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+        },
+        "name": "test_v41x_attn_desc_lifecycle",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41x_attn_desc_lifecycle.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      },
+      {
+        "log": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41x_attn_packed_bypass.log",
+          "sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87"
+        },
+        "name": "test_v41x_attn_packed_bypass",
+        "rc": {
+          "path": "results/rtl/w15b_resume_20261001/regression/test_v41x_attn_packed_bypass.rc",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "returncode": 0
+      }
+    ]
+  },
+  "remaining_blockers": [
+    "V4.1 SRAM binary manifest disagrees with campaign record for rtl/link/ot_link_rx.sv; historical aggregate cannot be promoted.",
+    "Assigned worktree predates merged renamed modules; no source integration performed in this evidence-only commit.",
+    "SS/FF closure still pending for live jobs; archived physical records are TT failures.",
+    "lane6_133 queues tg89_1000 after qwen256_sram at the same shared output path; preserved previous failure in archive before it can be replaced."
+  ],
+  "reviewed_at": "2026-10-01T07:32:22.043133+00:00",
+  "schema": "w15b_resume_review_v1",
+  "sram_review": {
+    "action": "Leave original uncommitted record untouched; do not promote as current evidence. Re-run affected V4.1 configs on pinned renamed modules with matching binary and record pins.",
+    "binary_manifests": [
+      {
+        "binary": "q256d64_sram",
+        "mismatches": {},
+        "snapshot": {
+          "path": "results/rtl/w15b_resume_20261001/sram/q256d64_sram_sources.json",
+          "sha256": "d409528ea344abfa98808936baf512834b484416c0a5de17d73e9ae294dffb5a"
+        }
+      },
+      {
+        "binary": "v41p17_r0d512_w32_sram",
+        "mismatches": {
+          "rtl/link/ot_link_rx.sv": {
+            "binary_sha256": "2bf8dc175c45921ae0ac6bd3d2c4a45b41a02ee8166e696ac29c66b0ca75b52d",
+            "record_sha256": "7f724bcc4027eac7bfb211937c9301cc01a59ad5ad63d887c7c9a83edfc102fb"
+          }
+        },
+        "snapshot": {
+          "path": "results/rtl/w15b_resume_20261001/sram/v41p17_r0d512_w32_sram_sources.json",
+          "sha256": "42257a871ac499ec5fd5615d4e7cf6be96c6d7827a63b2cf4755c9b359bbdf68"
+        }
+      }
+    ],
+    "configs_nesting_valid": true,
+    "historical_pin_mismatches": [],
+    "old_configs_byte_values_preserved": true,
+    "snapshot": {
+      "path": "results/rtl/w15b_resume_20261001/sram/pending_collectives.json",
+      "sha256": "bd4a9053cc5bfe53d60ee6c54dde311c2177342ae5b4eb12a3d5824063f6d983"
+    },
+    "source_commit": "59d488eeba4e2d19a413a050db028f722d548f1f",
+    "verdict": "BLOCKED_PROVENANCE"
+  },
+  "worktree_head": "e9ec0311581c9bd5e097b31114d7ceef22c040b4"
+}

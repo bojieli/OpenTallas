@@ -1,0 +1,202 @@
+{
+  "scope": "Nine supported sparse-attention reference fixtures; active RTL cycles, not whole-model latency or a measured clock. Exponential wait is nested inside denominator and is not additive. No service replication speedup prediction.",
+  "rows": [
+    {
+      "name": "one_block",
+      "active_cycles": 31438,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 384,
+        "index_launch": 2,
+        "qk": 3454,
+        "denominator": 18452,
+        "av": 2462,
+        "next_block": 2,
+        "sink_read": 6,
+        "epilogue": 6672,
+        "next_head": 2,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 17296,
+      "softmax_exponential_wait_percent": 55.01622240600547
+    },
+    {
+      "name": "full_block",
+      "active_cycles": 375558,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 384,
+        "index_launch": 2,
+        "qk": 3454,
+        "denominator": 362224,
+        "av": 2462,
+        "next_block": 2,
+        "sink_read": 6,
+        "epilogue": 7020,
+        "next_head": 2,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 360256,
+      "softmax_exponential_wait_percent": 95.9255294788022
+    },
+    {
+      "name": "two_blocks",
+      "active_cycles": 417319,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 768,
+        "index_launch": 4,
+        "qk": 6908,
+        "denominator": 397982,
+        "av": 4972,
+        "next_block": 4,
+        "sink_read": 6,
+        "epilogue": 6671,
+        "next_head": 2,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 394844,
+      "softmax_exponential_wait_percent": 94.61443164581532
+    },
+    {
+      "name": "three_blocks",
+      "active_cycles": 393123,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 576,
+        "index_launch": 3,
+        "qk": 5181,
+        "denominator": 380103,
+        "av": 3741,
+        "next_block": 3,
+        "sink_read": 3,
+        "epilogue": 3510,
+        "next_head": 1,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 377550,
+      "softmax_exponential_wait_percent": 96.03864439373936
+    },
+    {
+      "name": "multi_row",
+      "active_cycles": 112648,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 1152,
+        "index_launch": 6,
+        "qk": 10362,
+        "denominator": 72648,
+        "av": 7386,
+        "next_block": 6,
+        "sink_read": 18,
+        "epilogue": 21060,
+        "next_head": 6,
+        "next_row": 3,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 69180,
+      "softmax_exponential_wait_percent": 61.412541722888996
+    },
+    {
+      "name": "multi_row_blocks",
+      "active_cycles": 832103,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 1536,
+        "index_launch": 8,
+        "qk": 13816,
+        "denominator": 793080,
+        "av": 9944,
+        "next_block": 8,
+        "sink_read": 12,
+        "epilogue": 13692,
+        "next_head": 4,
+        "next_row": 2,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 786804,
+      "softmax_exponential_wait_percent": 94.55608260035116
+    },
+    {
+      "name": "wide_head",
+      "active_cycles": 191750,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 192,
+        "index_launch": 1,
+        "qk": 2799,
+        "denominator": 182552,
+        "av": 2255,
+        "next_block": 1,
+        "sink_read": 3,
+        "epilogue": 3944,
+        "next_head": 1,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 181568,
+      "softmax_exponential_wait_percent": 94.68996088657106
+    },
+    {
+      "name": "duplicates",
+      "active_cycles": 20341,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 384,
+        "index_launch": 2,
+        "qk": 3454,
+        "denominator": 7008,
+        "av": 2462,
+        "next_block": 2,
+        "sink_read": 6,
+        "epilogue": 7019,
+        "next_head": 2,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 5768,
+      "softmax_exponential_wait_percent": 28.356521311636595
+    },
+    {
+      "name": "single_valid",
+      "active_cycles": 14419,
+      "phase_cycles": {
+        "idle": 0,
+        "index_read": 384,
+        "index_launch": 2,
+        "qk": 3454,
+        "denominator": 1086,
+        "av": 2462,
+        "next_block": 2,
+        "sink_read": 6,
+        "epilogue": 7019,
+        "next_head": 2,
+        "next_row": 1,
+        "done": 1
+      },
+      "softmax_exponential_wait_cycles": 0,
+      "softmax_exponential_wait_percent": 0.0
+    }
+  ],
+  "aggregate_active_cycles": 2388699,
+  "aggregate_phase_cycles": {
+    "idle": 0,
+    "index_read": 5760,
+    "index_launch": 30,
+    "qk": 52882,
+    "denominator": 2215135,
+    "av": 38146,
+    "next_block": 30,
+    "sink_read": 66,
+    "epilogue": 76607,
+    "next_head": 22,
+    "next_row": 12,
+    "done": 9
+  },
+  "aggregate_softmax_exponential_wait_cycles": 2193266,
+  "aggregate_softmax_exponential_wait_percent": 91.81843338151856
+}

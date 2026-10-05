@@ -1,0 +1,37 @@
+{
+  "KV_lifecycle": "UNKNOWN_NOT_CAPTURED",
+  "actual_RTL": false,
+  "actual_independent_reference_recomputed_by_parent": false,
+  "actual_output_file_hashes": 39,
+  "actual_output_values": 303488,
+  "checkpoint_index_sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+  "physical_credit": false,
+  "rate_credit": false,
+  "raw_FP8_state": "UNKNOWN_NOT_CAPTURED",
+  "raw_archive_file_hashes": 59,
+  "saved_logits_argmax": 11,
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "source_pin_count": 21,
+  "status": "PASS_PARENT_QWEN_TERMINAL_ARCHIVE_AND_STRICT_REPLAY",
+  "strict_replay": {
+    "PCs": 1737,
+    "actual_RTL": false,
+    "checkpoint_tensor_shard_mapping_verified": true,
+    "compared_values": 303488,
+    "fulltoken_KV_comparison_qualified": false,
+    "independent_comparison_boundaries": 39,
+    "open_coverage": [
+      "1737 output hashes are observations; independent comparisons cover39 layer/head boundaries only",
+      "independent FP8 KV payload comparison not emitted by pinned driver",
+      "actual ordered KV lifecycle journal not emitted by pinned driver"
+    ],
+    "ordered_KV_journal": "MISSING_NOT_EMITTED_BY_PINNED_DRIVER",
+    "physical_credit": false,
+    "qualified_images_sha256": "b055a2e9674c5903fa28b8cfe3d38e2e0c5c664624253b644f539bcd96067fdb",
+    "rate_credit": false,
+    "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+    "source_tensors": 399,
+    "verdict": "PASS_LAYER_HEAD_BOUNDARIES_WITH_OPEN_KV_COVERAGE"
+  },
+  "strict_validator_tests_passed": 8
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.w16.expert-dispatch-cost.v1",
+  "evidence_commit": "2f5b6cf49ae85ed77e33402fd92f92580141a733",
+  "source_pins": {
+    "results/quality/w16_w17_geometry_search_20261001/search.json": "d3031257bf3e8c479e2b54e880e080e374c9866c976432aa65445de55c69fe20",
+    "tools/w17_integer_expert_residency.py": "570e4b7b21fd086b30b19d092b86becedff05072d61fe62c2bf5217ce5b20852",
+    "tools/w16_expert_dispatch_costs.py": "350df2d1aba7befcb3b35319cd1eb0a8f891a607e9d27e167d8de1609376a1c1"
+  },
+  "geometry_owner": "Ram 01a0f697-9c82-7572-8900-dd7b15d59ebf",
+  "q_pairs": 1024,
+  "expert_only_stages": 181,
+  "product_stage_count": null,
+  "service_inputs": {
+    "registered_route_ticks_per_hop": null,
+    "forward_CDC_ticks": null,
+    "reverse_CDC_ticks": null,
+    "consumer_remainder_ticks": null,
+    "source_arbitration_ticks": null,
+    "return_visibility_ticks": null,
+    "request_queue_data_bits_per_rank_hop": null,
+    "return_queue_data_bits_per_rank_hop": null,
+    "request_and_return_share_only_one_credit": null
+  },
+  "dispatch": {
+    "known_conditional_partial_fabric_cycles": 606960,
+    "known_conditional_partial_ns": "505800",
+    "scope": "Config/stream issue plus serialization components only; no complete operator bound.",
+    "packet_buffer_data_bits_per_rank_hop": {
+      "request": 81920,
+      "return_packet": 20480
+    },
+    "simultaneous_TP4_request_plus_return_buffer_bytes_per_hop": 51200,
+    "missing_inputs": [
+      "registered_route_ticks_per_hop",
+      "forward_CDC_ticks",
+      "reverse_CDC_ticks",
+      "consumer_remainder_ticks",
+      "source_arbitration_ticks",
+      "return_visibility_ticks",
+      "request_queue_data_bits_per_rank_hop",
+      "return_queue_data_bits_per_rank_hop"
+    ],
+    "complete_dispatch_bound_ticks": null,
+    "validated_progress_bound": false,
+    "physical_admission": false,
+    "engine_RTL_build_ready": false,
+    "headline_rate": null,
+    "status": "BLOCKED_FINITE_OPERATOR_INPUTS"
+  },
+  "CPUwalltime_used": false,
+  "engine_RTL_build_ready": false,
+  "physical_admission": false,
+  "full_token_cycles": null
+}

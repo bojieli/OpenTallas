@@ -1,0 +1,15 @@
+{
+  "verdict": "FAIL",
+  "source_commit": "7c091e32d22b209217199aa5e82c2fcfc64774bf",
+  "factory_output": [
+    4096.0,
+    4096.0
+  ],
+  "forged_rehashed_output": [
+    0.0,
+    0.0
+  ],
+  "query_hash_equal": true,
+  "counterexample": "dataclasses.replace(factory,units=zeros,decoded_hash=hash(zeros+original_exponents))",
+  "hardware_admitted": false
+}

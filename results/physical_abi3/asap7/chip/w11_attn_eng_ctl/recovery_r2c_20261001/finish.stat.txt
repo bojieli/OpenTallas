@@ -1,0 +1,53 @@
+
+11. Printing statistics.
+
+=== ot_v41_attn_eng_ctl_phys ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   397992        - wires
+   397992        - wire bits
+    22466        - public wires
+    22466        - public wire bits
+      191        - ports
+      191        - port bits
+   396383 6.79E+04 cells
+     8317  727.571   AND2x2_ASAP7_75t_R
+      572   50.039   AND3x1_ASAP7_75t_R
+       29     2.96   AND4x1_ASAP7_75t_R
+        9     1.05   AND5x1_ASAP7_75t_R
+    19282 1.69E+03   AO21x1_ASAP7_75t_R
+       14    2.041   AO221x1_ASAP7_75t_R
+        7    1.225   AO222x2_ASAP7_75t_R
+      642   84.243   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+      514   59.953   AO32x1_ASAP7_75t_R
+        1    0.175   AOI211x1_ASAP7_75t_R
+     2310  269.438   AOI21x1_ASAP7_75t_R
+       19     2.77   AOI22x1_ASAP7_75t_R
+        1    0.073   BUFx2_ASAP7_75t_R
+      272   103.11   DFFASRHQNx1_ASAP7_75t_R
+   101793 2.97E+04   DFFHQNx1_ASAP7_75t_R
+    29370 1.28E+03   INVx1_ASAP7_75t_R
+       34    4.461   MAJx2_ASAP7_75t_R
+     3615   316.24   NAND2x1_ASAP7_75t_R
+        4    0.642   NAND3x1_ASAP7_75t_R
+     3715  324.988   NOR2x1_ASAP7_75t_R
+     2180  254.275   OA211x2_ASAP7_75t_R
+      153   15.615   OA21x2_ASAP7_75t_R
+        9    1.575   OA222x2_ASAP7_75t_R
+       13    1.895   OA22x2_ASAP7_75t_R
+        4    0.875   OA31x2_ASAP7_75t_R
+    22021 2.57E+03   OAI21x1_ASAP7_75t_R
+       19     2.77   OAI22x1_ASAP7_75t_R
+    24362 2.13E+03   OR2x2_ASAP7_75t_R
+     1110   97.103   OR3x1_ASAP7_75t_R
+       10    1.021   OR4x1_ASAP7_75t_R
+        5    0.583   OR5x1_ASAP7_75t_R
+   141699 2.27E+04   XNOR2x2_ASAP7_75t_R
+    34277  5.5E+03   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_v41_attn_eng_ctl_phys': 67903.944300
+     of which used for sequential elements: 29785.948560 (43.86%)
+

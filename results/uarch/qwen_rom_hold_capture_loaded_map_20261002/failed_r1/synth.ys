@@ -1,0 +1,11 @@
+read_liberty -lib /tmp/qwen-hold-loaded-map-r1/mapped_ss.lib
+read_liberty -lib /tmp/opentallas-qwen-rom-capture-hold-proposal-20261002/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib
+read_verilog -sv /tmp/qwen-hold-loaded-map-r1/full_loaded_cone.sv
+hierarchy -check -top qwen_loaded_capture
+synth -top qwen_loaded_capture
+dfflibmap -liberty /tmp/qwen-hold-loaded-map-r1/mapped_ss.lib
+abc -liberty /tmp/qwen-hold-loaded-map-r1/mapped_ss.lib
+clean
+stat -liberty /tmp/qwen-hold-loaded-map-r1/mapped_ss.lib
+write_verilog -noattr -noexpr /tmp/qwen-hold-loaded-map-r1/mapped.v
+write_json /tmp/qwen-hold-loaded-map-r1/mapped.json

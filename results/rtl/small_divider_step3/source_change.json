@@ -1,0 +1,7 @@
+{
+  "scope": "Experimental negative-exp/sigmoid consumer snapshot, only DIV_BITS_PER_STEP default 10 -> 3. Production source unchanged.",
+  "baseline": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+  "baseline_sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+  "candidate": "results/rtl/small_divider_step3/ot_a3_fp32_transcendental_cr_rne.sv",
+  "candidate_sha256": "a138efa2820a12968a5c13fc0f49348833e433b1e76ae4548d29793a52f687cd"
+}

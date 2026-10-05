@@ -1,0 +1,111 @@
+{
+  "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlist_signed_stripped": 0,
+  "netlists": [
+    "<work>/results/asap7/chip_ot_chip_router/base/1_2_yosys.v"
+  ],
+  "period_ps": 1000.0,
+  "ports": {
+    "cfg_dest": {
+      "direction": "input",
+      "in2reg_ps": 201.26,
+      "unused_bits": 0,
+      "width": 8
+    },
+    "cfg_mask": {
+      "direction": "input",
+      "in2reg_ps": 65.15,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "cfg_we": {
+      "direction": "input",
+      "in2reg_ps": 206.65,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "drops": {
+      "direction": "output",
+      "reg2out_ps": 84.43,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "in_credit": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "in_data": {
+      "direction": "input",
+      "in2reg_ps": 363.29,
+      "unused_bits": 0,
+      "width": 2560
+    },
+    "in_last": {
+      "direction": "input",
+      "in2reg_ps": 50.57,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "in_ready": {
+      "direction": "output",
+      "reg2out_ps": 137.61,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "in_valid": {
+      "direction": "input",
+      "in2reg_ps": 226.83,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "out_data": {
+      "direction": "output",
+      "reg2out_ps": 59.46,
+      "unused_bits": 0,
+      "width": 2560
+    },
+    "out_last": {
+      "direction": "output",
+      "reg2out_ps": 59.46,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "out_ready": {
+      "direction": "input",
+      "in2reg_ps": 330.71,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "out_valid": {
+      "direction": "output",
+      "reg2out_ps": 70.42,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "overflow": {
+      "direction": "output",
+      "reg2out_ps": 68.54,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "in2reg_ps": -11.45,
+      "unused_bits": 0,
+      "width": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "rtl/rom/ot_rom_fabric_router.sv",
+      "sha256": "f4c2f0737c03cec072c8cabc23a873090a441d0ffdef26d3dc1a93e9f8e60277"
+    },
+    {
+      "path": "rtl/chip/ot_chip_router.sv",
+      "sha256": "af65c68b851ee593b66a40c058eb3b2a4d424247e7182ae75c6fd02e942332ee"
+    }
+  ],
+  "top": "ot_chip_router"
+}

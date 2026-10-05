@@ -1,0 +1,105 @@
+{
+  "schema": "qwen.scratch-client-mux.prospective.r1",
+  "scope": "mandatory HA8 source composition, not optional architecture/rate lever; original router/SM/macros unchanged",
+  "unified_model_authority": "tools/uarch_model.py GPU organisation: existing64SM scratch services; additive connector pricing only, no baseline replacement or rate credit",
+  "default_ENABLE_CLIENT": 0,
+  "inventory": {
+    "SM": 64,
+    "existing_SRAM_bytes_per_SM": 65536,
+    "existing_macros_per_SM": 2,
+    "existing_macros_total": 128,
+    "new_SRAM_bytes": 0,
+    "new_payload_register_bits": 0,
+    "new_metadata_raw_bits_per_SM": 318,
+    "new_metadata_words72_per_SM": 8,
+    "new_coded_FF_per_SM": 576,
+    "total_new_coded_FF": 36864
+  },
+  "ports": {
+    "MAC_per_cycle": 0,
+    "compute_intensity": 0,
+    "bytes_per_accepted_memory_beat": 64,
+    "shared_memory_ports_per_SM": 1,
+    "request_bits_per_SM": 524,
+    "return_bits_per_SM": 512,
+    "workspace_identity_bits": 315,
+    "client_identity_bits": 294,
+    "metadata_saved": "destination,busy,fault,owner55,GO239,scratchbase10,length11; no payload",
+    "port_bytes_per_cycle_upper_bound": 64,
+    "total_bytes_per_cycle_upper_bound": 4096,
+    "actual_bytes_per_cycle": "finite serialized actual ready/done, baseline write min1/read min2edges plus backpressure"
+  },
+  "logic_budget_NAND2_per_SM": {
+    "request_mux_524bits": 1572,
+    "return_demux_1024bits": 1024,
+    "held_identity_compare_315bits": 1575,
+    "aperture_bounds": 420,
+    "sealed_encode_decode_8words_budget": 32000,
+    "other_control_budget": 512
+  },
+  "price": {
+    "body_um2_ASSUMED": 223943.20128,
+    "gross_mm2_at50pct_ASSUMED": 0.44788640256,
+    "cell_prices_source": "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json",
+    "QN_restoring_inversions_charged": true,
+    "clock_input_SS_fF": 15998.312447999999,
+    "async_reset_SS_fF": 63790.75584,
+    "buffer_x4_per_SM": 96
+  },
+  "routing": {
+    "inbound_memory_bits_per_SM": 524,
+    "outbound_memory_bits_per_SM": 512,
+    "workspace_and_client_identity_bits_per_SM": 609,
+    "replicas": 64,
+    "request_mux_bits_total": 33536,
+    "return_demux_bits_total": 65536,
+    "control_select_sinks_per_SM": 524,
+    "clock_reset_loads": 36864,
+    "tracks_lower_bound_per_SM": 1645,
+    "tracks_capacity": null,
+    "installed_wire_RC": null,
+    "floorplan_slot_fit": null
+  },
+  "latency": {
+    "target_period_ps": "2500/3",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "source_memory_write_min_edges": 1,
+    "source_memory_read_min_edges": 2,
+    "added_registered_command_edges": 0,
+    "added_loaded_timing_edges": null,
+    "prospective_pipeline_sensitivity_edges": [
+      0,
+      1,
+      2
+    ],
+    "native_and_KV_scratch_counts": null,
+    "composed_single_user_token_s": null,
+    "composition": "T_successor=T_current+N_accepted_scratch*L_added_loaded + actual contention delta; counts/calendar/loaded L unknown; no token prediction",
+    "default_branch": "literal combinational passthrough of original router-to-service; client disabled"
+  },
+  "admission": {
+    "component_RTL": true,
+    "directed_component": true,
+    "full_engine_build": false,
+    "PnR": false,
+    "SSFF": false,
+    "rate_credit": false
+  },
+  "policy": {
+    "held_owner_after_accept": true,
+    "reverse_or_source_lease_release": false,
+    "warm_reset": "pause with retained state, never warm clear",
+    "loss_or_change_of_busy_client_workspace": "sticky fault/no completion/no release",
+    "outside_window_router_service": "may continue; inside leased window blocked for NEW commands; admitted router completion continues",
+    "same_clock": true,
+    "repair": "any code defect refuses progress; no implicit corrected ACK"
+  },
+  "source_sha256": {
+    "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_hbm_integrated_ranked.sv": "7a1e553dc9b66837f5fb4edef8579461d6e1fd18b9d193d52642140a80b4fd49",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv": "f40fdf52eb6a1a4ab74adbf805cb2d50dd68d090342c1b7049d68f477f77df70",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv": "82f85401dd62982f600329d86d54c0788578f9cc57bae9e53823638196abe0b8"
+  }
+}

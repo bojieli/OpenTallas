@@ -1,0 +1,21 @@
+{
+  "provider_ref": "97c43abe254a31ce6882969589c236ab1d0833eb",
+  "files": [
+    {
+      "source_path": "results/uarch/qwen_hbm_endpoint_r14_20261002/review_r14.json",
+      "snapshot": "provider_snapshot/results/uarch/qwen_hbm_endpoint_r14_20261002/review_r14.json",
+      "sha256": "162a620563cd70b1bca2e5be2f2b5aa9907da2a877fb4634e57ef94aaef54f14"
+    },
+    {
+      "source_path": "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "snapshot": "provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77"
+    },
+    {
+      "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+      "snapshot": "provider_snapshot/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+      "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98"
+    }
+  ],
+  "boundary": "Exact external r14 calendar-review inputs; portable review snapshot, not compile closure or actual provider join."
+}

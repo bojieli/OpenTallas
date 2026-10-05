@@ -1,0 +1,11 @@
+{
+  "scope": "STATIC_PYTHON_TEST_ONLY_NO_HDL",
+  "log": "static_tests_r2.log",
+  "log_sha256": "d6b804c8bb13783acdf3f62682cf930ed6d4d2b8544b045deb77e7e58ef39579",
+  "exception": "IndexError in expected array lookup",
+  "root_cause": "test variable words was reassigned from FP32 score words to emitted ID words inside k loop; next k iteration indexed the shorter ID-word list",
+  "correction": "rename emitted ID-word local to emitted_words, retaining source scores and identical expected sorting/assertions",
+  "oracle_expectations_changed": false,
+  "RTL_or_simulation_failed": false,
+  "corrected_direct_log": "static_tests_r3.log"
+}

@@ -1,0 +1,132 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_____________________ test_inventory_preserves_source_map ______________________
+
+    def test_inventory_preserves_source_map():
+>    m=model();assert len(m['root_envelopes'])==64 and m['total_capture_seats']==576 and m['raw_record_bits']==69
+
+tests/test_dsrom_capture_home_binding_r48.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_capture_home_binding_r48.py:11: in model
+    field=load(BASE/'field.json.gz');services=load(BASE/'services.json.gz');banks=load(ROOT/'results/uarch/dsrom_I66_capture_cells_20261002/model.json');clock=load(ROOT/'results/uarch/dsrom_I66_provider_clock_contract_20261002/model.json')
+tools/dsrom_capture_home_binding_r48.py:7: in load
+    b=p.read_bytes();return json.loads(gzip.decompress(b) if p.suffix=='.gz' else b)
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+________________________ test_box_gap_not_actual_route _________________________
+
+    def test_box_gap_not_actual_route():
+     assert gap([0,0,10,10],[15,20,30,30])==15
+>    m=model();assert all(r['routed_distance'] is None and r['root_output_pin'] is None and r['capture_bank_home'] is None for r in m['root_envelopes'])
+
+tests/test_dsrom_capture_home_binding_r48.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_capture_home_binding_r48.py:11: in model
+    field=load(BASE/'field.json.gz');services=load(BASE/'services.json.gz');banks=load(ROOT/'results/uarch/dsrom_I66_capture_cells_20261002/model.json');clock=load(ROOT/'results/uarch/dsrom_I66_provider_clock_contract_20261002/model.json')
+tools/dsrom_capture_home_binding_r48.py:7: in load
+    b=p.read_bytes();return json.loads(gzip.decompress(b) if p.suffix=='.gz' else b)
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_________________ test_domain_and_unknown_deadline_failclosed __________________
+
+    def test_domain_and_unknown_deadline_failclosed():
+>    m=model();assert m['source_clock_contract']['stream_period_ps']==1000/1.2
+
+tests/test_dsrom_capture_home_binding_r48.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_capture_home_binding_r48.py:11: in model
+    field=load(BASE/'field.json.gz');services=load(BASE/'services.json.gz');banks=load(ROOT/'results/uarch/dsrom_I66_capture_cells_20261002/model.json');clock=load(ROOT/'results/uarch/dsrom_I66_provider_clock_contract_20261002/model.json')
+tools/dsrom_capture_home_binding_r48.py:7: in load
+    b=p.read_bytes();return json.loads(gzip.decompress(b) if p.suffix=='.gz' else b)
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+________________ test_parent_feedback_scope_not_forward_credit _________________
+
+    def test_parent_feedback_scope_not_forward_credit():
+>    p=model()['parent_private_design'];assert p['feedback_only_BUFx4_count']==82454
+
+tests/test_dsrom_capture_home_binding_r48.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_capture_home_binding_r48.py:11: in model
+    field=load(BASE/'field.json.gz');services=load(BASE/'services.json.gz');banks=load(ROOT/'results/uarch/dsrom_I66_capture_cells_20261002/model.json');clock=load(ROOT/'results/uarch/dsrom_I66_provider_clock_contract_20261002/model.json')
+tools/dsrom_capture_home_binding_r48.py:7: in load
+    b=p.read_bytes();return json.loads(gzip.decompress(b) if p.suffix=='.gz' else b)
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/kepler-ds-r44-pc10-engine-20261002/results/uarch/dsrom_I66_capture_cells_20261002/model.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_capture_home_binding_r48.py::test_inventory_preserves_source_map
+FAILED tests/test_dsrom_capture_home_binding_r48.py::test_box_gap_not_actual_route
+FAILED tests/test_dsrom_capture_home_binding_r48.py::test_domain_and_unknown_deadline_failclosed
+FAILED tests/test_dsrom_capture_home_binding_r48.py::test_parent_feedback_scope_not_forward_credit

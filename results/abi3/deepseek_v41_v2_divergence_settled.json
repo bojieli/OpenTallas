@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.abi3.v41_divergence_settled.v1",
+ "question": "is the reduced V4.1 token divergence explained, and can it be closed?",
+ "answer": "explained, and not closable without making the device violate its own numeric contract.",
+ "the_sufficiency_measurement": {
+  "what": "perturb ONLY the oracle's layer-0 block output by a random direction of a given relative L2 magnitude, and see whether the emitted token changes",
+  "why_it_settles_it": "the device's layer-0 block output differs from the oracle's at cosine 0.999966, a relative L2 error of 0.82%. If a perturbation of that size moves the token, the layer-0 difference is SUFFICIENT to explain the divergence without anything deeper being wrong.",
+  "unperturbed_token": 3118,
+  "device_token": 1126,
+  "results": [
+   {"relative": 0.0082, "seeds_changing_the_token": 2, "seeds_tried": 3, "tokens": [3118, 3630, 825]},
+   {"relative": 0.02, "seeds_changing_the_token": 3, "seeds_tried": 3, "tokens": [2875, 3912, 2554]},
+   {"relative": 0.05, "seeds_changing_the_token": 2, "seeds_tried": 3, "tokens": [3118, 3292, 1639]},
+   {"relative": 0.10, "seeds_changing_the_token": 3, "seeds_tried": 3, "tokens": [1768, 675, 3597]}
+  ],
+  "conclusion": "0.82% at layer 0 changes the token in 2 of 3 trials. The fixture is that sensitive, and the observed layer-0 difference is enough on its own."
+ },
+ "why_the_float64_experiment_is_consistent": "it perturbed the hyper-connection COEFFICIENTS, not the residual. A one-ulp coefficient change propagates into a residual change far smaller than 0.82%, so its having no effect says nothing about the residual's sensitivity. Both measurements are right; they perturb different things.",
+ "where_the_0p82_percent_comes_from": {
+  "ffn_norm": "5 of 8 tokens BIT-EXACT; tokens 2, 3 and 4 differ by at most 0.45 BF16 ulp",
+  "block_output": "cosine 0.999887 per stream, a relative L2 of about 1.5%",
+  "reading": "the MoE amplifies a sub-ulp input difference into a percent-level block output within layer 0 alone -- routing is a discontinuous function of the score, so a sub-ulp change to a near-tied score changes which expert runs, and that is an O(1) change to that token's contribution."
+ },
+ "why_it_cannot_be_closed": {
+  "the_conflict": "bit-exact agreement at layer 0 requires the device to reproduce the vendor kernel's exact fp32 rounding through the Sinkhorn split. The device computes that split with the correctly-rounded transcendentals its numeric contracts declare; the vendor's kernel does not. Matching it means abandoning the declared arithmetic.",
+  "and_neither_side_is_more_accurate": {
+   "basis": "maximum relative difference against a float64 evaluation of the released kernel's own sequence, in fp32 ulps",
+   "pre": {"vendor": 0.745, "device": 0.721},
+   "post": {"vendor": 0.719, "device": 0.486},
+   "comb": {"vendor": 1.894, "device": 2.016}
+  },
+  "so": "this is a conflict between the declared numeric contract and the reference implementation, not a defect on either side. It is why the reduced V4.1 cells execute correctly and emit a different token."
+ },
+ "what_would_close_them": [
+  "a checkpoint whose routing is not near-tied -- a trained one. The three DeepSeek-V4-Flash cells close at SHIPPED scale for exactly this reason, and the reduced QWEN3 cell closes because it is dense and has no router at all.",
+  "not achievable by repairing the device, and not by any fixture seed: the sensitivity is to the MoE's discontinuity, which every top-k router over untrained weights has."
+ ],
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "the perturbation is random-direction, so it measures the fixture's SENSITIVITY to a difference of that size, not that the device's particular difference acts like a random one",
+  "three seeds per magnitude is a small sample; it establishes that 0.82% is enough to move the token, not the precise probability"
+ ]
+}

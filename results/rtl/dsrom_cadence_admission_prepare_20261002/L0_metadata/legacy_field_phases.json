@@ -1,0 +1,1317 @@
+{
+ "schema": "opentallas.rtl.w17_die_field_images.v1",
+ "weights": "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/weights.json",
+ "weights_sha256": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd",
+ "params": {
+  "np": 8192,
+  "active": 6899,
+  "regions": 128,
+  "nbf": 1024,
+  "depth": 8192,
+  "phw": 6
+ },
+ "rom_fill_max_words": 392,
+ "stream_words": 1976,
+ "phases": [
+  {
+   "index": 0,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 0,
+   "nrows": 320,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      320
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 32,
+     "segment_elems": [
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 7,
+   "kind": "qe",
+   "key": 0
+  },
+  {
+   "index": 1,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 80,
+   "nrows": 128,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wkv",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      128
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 32,
+     "segment_elems": [
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 8,
+   "kind": "qe",
+   "key": 3840
+  },
+  {
+   "index": 2,
+   "bf": false,
+   "K": 1280,
+   "nbeat": 40,
+   "sbase": 160,
+   "nrows": 8192,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 32,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      8192
+     ],
+     "cols": [
+      0,
+      1280
+     ],
+     "off": 0,
+     "split": 2,
+     "segment_elems": [
+      1024,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 2,
+   "pc": 14,
+   "kind": "qe",
+   "key": 5120
+  },
+  {
+   "index": 3,
+   "bf": true,
+   "K": 4096,
+   "nbeat": 128,
+   "sbase": 200,
+   "nrows": 1024,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 128,
+   "t_phase_model": 128,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wo_a",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      1024
+     ],
+     "cols": [
+      0,
+      4096
+     ],
+     "off": 0,
+     "split": 2,
+     "segment_elems": [
+      2048,
+      2048
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 37,
+   "kind": "me",
+   "key": 7680
+  },
+  {
+   "index": 4,
+   "bf": true,
+   "K": 4096,
+   "nbeat": 128,
+   "sbase": 328,
+   "nrows": 1024,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 128,
+   "t_phase_model": 128,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wo_a",
+     "fmt": "bf16",
+     "rows": [
+      1024,
+      2048
+     ],
+     "cols": [
+      0,
+      4096
+     ],
+     "off": 0,
+     "split": 2,
+     "segment_elems": [
+      2048,
+      2048
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 38,
+   "kind": "me",
+   "key": 73216
+  },
+  {
+   "index": 5,
+   "bf": false,
+   "K": 2048,
+   "nbeat": 40,
+   "sbase": 456,
+   "nrows": 5120,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 32,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.attn.wo_b",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      5120
+     ],
+     "cols": [
+      0,
+      2048
+     ],
+     "off": 0,
+     "split": 4,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 2,
+   "pc": 40,
+   "kind": "qe",
+   "key": 25600
+  },
+  {
+   "index": 6,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 496,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 16,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.shared_experts.w1",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 32,
+     "segment_elems": [
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 2,
+   "pc": 53,
+   "kind": "qe",
+   "key": 46080
+  },
+  {
+   "index": 7,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 576,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 16,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.shared_experts.w3",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 32,
+     "segment_elems": [
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 2,
+   "pc": 54,
+   "kind": "qe",
+   "key": 52480
+  },
+  {
+   "index": 8,
+   "bf": true,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 656,
+   "nrows": 96,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 64,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.gate",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      96
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      1024,
+      1024,
+      1024,
+      1024,
+      1024
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 55,
+   "kind": "me",
+   "key": 0
+  },
+  {
+   "index": 9,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 736,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.shared_experts.w2",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 58,
+   "kind": "qe",
+   "key": 58880
+  },
+  {
+   "index": 10,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 776,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.61.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 66,
+   "kind": "qe",
+   "key": 455040
+  },
+  {
+   "index": 11,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 856,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.61.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 67,
+   "kind": "qe",
+   "key": 2912640
+  },
+  {
+   "index": 12,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 936,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.69.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 68,
+   "kind": "qe",
+   "key": 506240
+  },
+  {
+   "index": 13,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1016,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.69.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 69,
+   "kind": "qe",
+   "key": 2963840
+  },
+  {
+   "index": 14,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1096,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.112.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 72,
+   "kind": "qe",
+   "key": 781440
+  },
+  {
+   "index": 15,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1176,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.112.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 73,
+   "kind": "qe",
+   "key": 3239040
+  },
+  {
+   "index": 16,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1256,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.61.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 79,
+   "kind": "qe",
+   "key": 5331200
+  },
+  {
+   "index": 17,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1296,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.170.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 82,
+   "kind": "qe",
+   "key": 1152640
+  },
+  {
+   "index": 18,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1376,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.170.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 83,
+   "kind": "qe",
+   "key": 3610240
+  },
+  {
+   "index": 19,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1456,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.69.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 84,
+   "kind": "qe",
+   "key": 5377280
+  },
+  {
+   "index": 20,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1496,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.299.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 87,
+   "kind": "qe",
+   "key": 1978240
+  },
+  {
+   "index": 21,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1576,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.299.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 88,
+   "kind": "qe",
+   "key": 4435840
+  },
+  {
+   "index": 22,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1656,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.112.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 89,
+   "kind": "qe",
+   "key": 5624960
+  },
+  {
+   "index": 23,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1696,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.357.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 92,
+   "kind": "qe",
+   "key": 2349440
+  },
+  {
+   "index": 24,
+   "bf": false,
+   "K": 5120,
+   "nbeat": 80,
+   "sbase": 1776,
+   "nrows": 576,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 80,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.357.w3",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      576
+     ],
+     "cols": [
+      0,
+      5120
+     ],
+     "off": 0,
+     "split": 16,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512,
+      512
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 93,
+   "kind": "qe",
+   "key": 4807040
+  },
+  {
+   "index": 25,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1856,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.170.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 94,
+   "kind": "qe",
+   "key": 5959040
+  },
+  {
+   "index": 26,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1896,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.299.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 97,
+   "kind": "qe",
+   "key": 6702080
+  },
+  {
+   "index": 27,
+   "bf": false,
+   "K": 2304,
+   "nbeat": 40,
+   "sbase": 1936,
+   "nrows": 1280,
+   "fmt_fp32": [
+    false,
+    false
+   ],
+   "rsplit": 0,
+   "t_read": 8,
+   "t_phase_model": 40,
+   "matrices": [
+    {
+     "name": "layers.0.ffn.experts.357.w2",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1280
+     ],
+     "cols": [
+      0,
+      2304
+     ],
+     "off": 0,
+     "split": 8,
+     "segment_elems": [
+      512,
+      512,
+      512,
+      512,
+      256
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1,
+   "pc": 100,
+   "kind": "qe",
+   "key": 7036160
+  }
+ ],
+ "checkpoint_header_sha256": {
+  "model-00003-of-00048.safetensors": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449"
+ },
+ "source_sha256": {
+  "tools/v41_die_field.py": "343319812f934a39ac17c7f03784b59209fbbbb9fbe144b1e8149b77cdb4ddfa",
+  "tools/v41_die_images.py": "e7c95148569f6743e81f1a4a059c10bdf2f8bdc5342d4de0da15beb059e1b643",
+  "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+  "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1"
+ },
+ "wall_s": 121.2
+}

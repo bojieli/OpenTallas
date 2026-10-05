@@ -1,0 +1,42 @@
+{
+  "adoption": false,
+  "artifact_sha256": {
+    "L10_die0_x.hex": "33dd8f7538c45bd4e5ee8a9edb97b0cba2f88e8fec1de3253a044061c7b7e5eb",
+    "L10_die1_x.hex": "33dd8f7538c45bd4e5ee8a9edb97b0cba2f88e8fec1de3253a044061c7b7e5eb",
+    "L10_die2_x.hex": "33dd8f7538c45bd4e5ee8a9edb97b0cba2f88e8fec1de3253a044061c7b7e5eb",
+    "L10_die3_x.hex": "33dd8f7538c45bd4e5ee8a9edb97b0cba2f88e8fec1de3253a044061c7b7e5eb",
+    "build_params.json": "0acc3fee6955c00452cfa72c6192ded8f38d32ebc7e28c8c93954d9a7f3743ff",
+    "checkpoint.json": "ccd0db4be5cdd0c8aa84f40ebe965bbd8b0b34bf7755f72438bb7b65447467d2",
+    "live_job_identities.json": "a59bf463e2abc0cc1560aefb7ac1ae7eafc86b0a5937f65cb20c5a8fc1ce5801",
+    "live_watch_state.json": "7631ffac9bc8827c90bc053e46454e0f41c3aa03a13a5030b1f02ff0392e0b70",
+    "token_log_snapshot.log": "da9f92cac3e970bd702ece834663e89ab4effc7dbefd91a0273b4c9f15747601",
+    "verify_capture.py": "4fe9407b358de162f4bb4733a1d50f4fcbbc5ed8545c5d35507ab796aff05781"
+  },
+  "at": "2026-10-01T12:05:29.003405+00:00",
+  "collector": {
+    "argv": [
+      "python3",
+      "/tmp/claude-1000/w12b/collect_terminals_identity_20261001.py",
+      "--control",
+      "/tmp/claude-1000/w12b/terminal_control_identity_20261001",
+      "--spool",
+      "/tmp/claude-1000/w12b/terminal_spool_identity_20261001"
+    ],
+    "cwd": "/tmp/claude-1000/wt/w12tm",
+    "pid": 562956,
+    "ppid": 1,
+    "start_ticks": 305176094,
+    "state": "S"
+  },
+  "current_source_composite_checks": 33,
+  "existing_records_edited": false,
+  "identity_alerts": {},
+  "independent_die_vector_checks": 44,
+  "launch_time_source_stability": "pending final source_stable record",
+  "mismatches": 0,
+  "new_L10_die_checks": 4,
+  "old_spool_unchanged": true,
+  "source_and_runtime_inputs_unchanged_since_L9": true,
+  "terminal_archives_available": false,
+  "words_per_die": 4096
+}

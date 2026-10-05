@@ -1,0 +1,56 @@
+{
+ "level": "cluster",
+ "rows": 16,
+ "size_um": [
+  514.08,
+  2246.4
+ ],
+ "pair": {
+  "name": "ot_v41_rom_elem_q",
+  "w": 513.756,
+  "h": 131.76,
+  "signal_pins": 734,
+  "pin_edges": {
+   "S": 734,
+   "N": 0,
+   "W": 0,
+   "E": 0
+  },
+  "power_layers": [
+   "M6"
+  ],
+  "obs_layers": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ]
+ },
+ "pair_w": 0.2663,
+ "tiles_per_pair": 4,
+ "cluster_w": 4.2608,
+ "grid": {
+  "M7": {
+   "width": 0.544,
+   "pitch": 10.8,
+   "spacing": 4.856
+  },
+  "M8": {
+   "width": 2.0,
+   "pitch": 16.0,
+   "spacing": 6.0
+  },
+  "pair_M6": {
+   "width": 0.288,
+   "pitch": 5.4,
+   "spacing": 2.412
+  }
+ },
+ "sources": "STRAPS (M8 cluster pins)",
+ "loads": "pair current-map tiles, current at tile centre on M7",
+ "pair_lef_sha256": "095c8a664be086d87d942abbf3792a1c1a6abfe96d512082d3920cfaef6a951a",
+ "floorplan_sha256": "a81dcc667cdfeb2f4046e4a78690801abaefd8cacdd04e0d3499ef14bf379c64"
+}

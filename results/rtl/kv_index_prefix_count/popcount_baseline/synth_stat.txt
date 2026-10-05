@@ -1,0 +1,72 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== ot_a3_attention_kv_index ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     8363        -     8363        - wires
+    10542        -    10542        - wire bits
+       74        -       74        - public wires
+     2253        -     2253        - public wire bits
+       10        -       10        - ports
+     2189        -     2189        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     6277  707.611     6277  707.611 cells
+       37    3.237       37    3.237   AND2x2_ASAP7_75t_R
+       24      2.1       24      2.1   AND3x1_ASAP7_75t_R
+      330    33.68      330    33.68   AND4x1_ASAP7_75t_R
+       10    1.166       10    1.166   AND4x2_ASAP7_75t_R
+      265    30.91      265    30.91   AND5x1_ASAP7_75t_R
+        1    0.292        1    0.292   AND5x2_ASAP7_75t_R
+        3      0.7        3      0.7   AO211x2_ASAP7_75t_R
+      536   46.889      536   46.889   AO21x1_ASAP7_75t_R
+       27    3.937       27    3.937   AO221x1_ASAP7_75t_R
+        3    0.525        3    0.525   AO222x2_ASAP7_75t_R
+        9    1.181        9    1.181   AO22x1_ASAP7_75t_R
+        9      2.1        9      2.1   AO31x2_ASAP7_75t_R
+        9     1.05        9     1.05   AO32x1_ASAP7_75t_R
+        6     1.05        6     1.05   AOI211x1_ASAP7_75t_R
+        8    0.933        8    0.933   AOI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   AOI22x1_ASAP7_75t_R
+       58    4.228       58    4.228   BUFx2_ASAP7_75t_R
+       15    1.312       15    1.312   BUFx3_ASAP7_75t_R
+        8    1.166        8    1.166   BUFx6f_ASAP7_75t_R
+       74   28.052       74   28.052   DFFASRHQNx1_ASAP7_75t_R
+       54   11.022       54   11.022   FAx1_ASAP7_75t_R
+     2128  279.236     2128  279.236   HAxp5_ASAP7_75t_R
+      422   18.458      422   18.458   INVx1_ASAP7_75t_R
+       19    1.662       19    1.662   NAND2x1_ASAP7_75t_R
+        6    0.962        6    0.962   NAND3x1_ASAP7_75t_R
+        8      0.7        8      0.7   NOR2x1_ASAP7_75t_R
+        1     0.16        1     0.16   NOR3x1_ASAP7_75t_R
+      200   23.328      200   23.328   OA211x2_ASAP7_75t_R
+      917   93.589      917   93.589   OA21x2_ASAP7_75t_R
+        2    0.467        2    0.467   OA221x2_ASAP7_75t_R
+        6     1.05        6     1.05   OA222x2_ASAP7_75t_R
+       22    3.208       22    3.208   OA22x2_ASAP7_75t_R
+        1    0.219        1    0.219   OA31x2_ASAP7_75t_R
+       13    1.895       13    1.895   OA33x2_ASAP7_75t_R
+       16    1.866       16    1.866   OAI21x1_ASAP7_75t_R
+       75   10.935       75   10.935   OAI22x1_ASAP7_75t_R
+      185   16.184      185   16.184   OR2x2_ASAP7_75t_R
+      210   18.371      210   18.371   OR3x1_ASAP7_75t_R
+      383   39.089      383   39.089   OR4x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR4x2_ASAP7_75t_R
+      169   19.712      169   19.712   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        4    0.642        4    0.642   XNOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_attention_kv_index': 707.611140
+     of which used for sequential elements: 28.051920 (3.96%)
+

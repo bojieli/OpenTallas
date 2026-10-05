@@ -1,0 +1,48 @@
+{
+  "status": "PARENT_ACTUAL_CORE_RETAINED_BINARY_FULL27_SINGLE_GO",
+  "requested_status": "PARENT_ACTUAL_CORE_RETAINED_BINARY_FULL27_SINGLE_GO",
+  "plan_sha256": "d5ef30e1ab03a9c333bace26e79d85f31068cd9bf7b62408c4515bad3ee3407e",
+  "runner_sha256": "6ceec5921b0207032616cd5924299ddfb2cbb17bebc4c58b2b6d74961fea2563",
+  "source_digest": "37bd3a8035aea33568ac3cc3e27c537afd1f12b23434ba6d17231c8bd9c37aa4",
+  "profile_digest": "286901d0799b91ade8b61c81928c6f34492b87023cd43b0cd574438b2ba060dd",
+  "compiled_artifact_digest": "f408aee02aac801f4274f50742dade3e40a0ecc583ca15fc6c2a3ca45c94f93c",
+  "diagnostic_digest": "00775f81a82659fbfce03f111e885e97904ade110537609ae897a24a60333e8b",
+  "dependencies_digest": "83ef29ffe90514cd9f1f4bf2bca0fb41b05e0d065b9dcf2660859d2e0e2c03a5",
+  "build_toolchain_digest": "92293d8f73c47d81d8a2cbe38298aced7bd24df03f8337574c8f246f59c5ddf7",
+  "jobs_digest": "a29f13e4b3dd68ecdaea910790acc1b396d53b382003e35818a05a5291b8e167",
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 3600,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 2600,
+    "phase_compile_seconds": 650,
+    "frontend_phase_seconds": 300,
+    "runtime_shared_seconds": 720,
+    "short_case_seconds": 10,
+    "long_case_seconds": 120,
+    "supervision_reserve_seconds": 280,
+    "whole_seconds": 3600,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "automatic_retries": 0,
+    "phase_count": 5,
+    "baseline_frontend_repeats": 0,
+    "baseline_CXX_repeats": 0,
+    "new_frontend_processes": 4,
+    "CXX_processes": 4
+  },
+  "reviewed_source_commit": "625a8214f6074050f133ba08664921c2ae56ee6b",
+  "parent_review": "Independent18controlsPASS; verifiedbaseline retained105489464byte binary and163sourcepins; measuredCUTISSUEdiagnostic1.6115swithGDB. All23positive+4mutants preserved. No baselinecompile repeat. New10/120second case bounds and 3600second total explicitly finite allowances not predictions; no auto retry."
+}

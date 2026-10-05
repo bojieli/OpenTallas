@@ -1,0 +1,186 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "properties": {
+              "evidence_scope": { "const": "official_checkpoint" }
+            },
+            "required": ["evidence_scope"]
+          }
+        },
+        "required": ["source"]
+      },
+      "then": {
+        "properties": {
+          "status": { "const": "official_checkpoint_complete_hc_pre_parameters_not_execution_evidence" }
+        }
+      },
+      "else": {
+        "properties": {
+          "status": { "const": "development_fixture_complete_hc_pre_parameters_not_release_evidence" }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": { "$ref": "#/$defs/path" },
+          "role": {
+            "enum": [
+              "counter_contract",
+              "hc_base_parameter",
+              "hc_projection_parameter",
+              "hc_scale_parameter",
+              "numeric_profile",
+              "operator_coverage",
+              "roundtrip_report",
+              "semantic_ir",
+              "tensor_manifest"
+            ]
+          },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "size_bytes": { "minimum": 1, "type": "integer" }
+        },
+        "required": ["path", "role", "sha256", "size_bytes"],
+        "type": "object"
+      },
+      "maxItems": 9,
+      "minItems": 9,
+      "type": "array"
+    },
+    "build_id": { "$ref": "#/$defs/sha256" },
+    "claim_boundary": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": "Packages all learned parameters and the frozen numeric contract for one complete HC_PRE site." },
+        { "const": "Contains no input activation or expected result and establishes no execution, transformer, model-completion, or CUDA-equivalence claim." },
+        { "const": "Semantic counter coefficients are contract metadata only and establish no cycles, throughput, energy, area, or PPA result." },
+        { "const": "Publication is atomic create-once within a caller-trusted output parent; concurrent mutation by the same filesystem owner is outside the package threat boundary." }
+      ],
+      "type": "array"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "name": { "const": "opentallas-deepseek-v4-hc-pre-artifact-compiler" },
+        "version": { "const": "0.1.0" }
+      },
+      "required": ["name", "version"],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "counter_contract": { "const": "counter_contract.json" },
+        "numeric_profile": { "const": "numeric_profile.json" },
+        "semantic_ir": { "const": "model.ir.json" },
+        "tensor_manifest": { "const": "tensor_manifest.json" }
+      },
+      "required": ["counter_contract", "numeric_profile", "semantic_ir", "tensor_manifest"],
+      "type": "object"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_profile_id": { "const": "opentallas.deepseek_v4_hc_pre_numeric.v1" },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_deployment.v1" },
+    "site": { "$ref": "#/$defs/site" },
+    "source": { "$ref": "#/$defs/source" },
+    "status": {
+      "enum": [
+        "development_fixture_complete_hc_pre_parameters_not_release_evidence",
+        "official_checkpoint_complete_hc_pre_parameters_not_execution_evidence"
+      ]
+    }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "claim_boundary",
+    "compiler",
+    "entrypoint",
+    "model_id",
+    "numeric_profile_id",
+    "schema",
+    "site",
+    "source",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE artifact deployment v1",
+  "type": "object",
+  "$defs": {
+    "path": {
+      "minLength": 1,
+      "not": { "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)" },
+      "type": "string"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "site": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "const": "attention" },
+        "layer": { "const": 0 },
+        "scope": { "const": "main" }
+      },
+      "required": ["branch", "layer", "scope"],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evidence_scope": { "const": "official_checkpoint" }
+            },
+            "required": ["evidence_scope"]
+          },
+          "then": {
+            "properties": {
+              "application_status": { "const": "partial_official_transform_application_not_release_evidence" },
+              "repository": { "const": "deepseek-ai/DeepSeek-V4-Flash-0731" },
+              "revision": { "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062" }
+            }
+          },
+          "else": {
+            "properties": {
+              "application_status": { "const": "development_fixture_application_not_release_evidence" }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "application_id": { "$ref": "#/$defs/sha256" },
+        "application_status": {
+          "enum": [
+            "development_fixture_application_not_release_evidence",
+            "partial_official_transform_application_not_release_evidence"
+          ]
+        },
+        "checkpoint_lock_id": { "$ref": "#/$defs/sha256" },
+        "evidence_scope": { "enum": ["development_fixture", "official_checkpoint"] },
+        "repository": { "minLength": 1, "type": "string" },
+        "revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "verification_id": { "$ref": "#/$defs/sha256" }
+      },
+      "required": [
+        "application_id",
+        "application_status",
+        "checkpoint_lock_id",
+        "evidence_scope",
+        "repository",
+        "revision",
+        "verification_id"
+      ],
+      "type": "object"
+    }
+  }
+}

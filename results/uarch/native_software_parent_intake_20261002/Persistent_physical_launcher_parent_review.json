@@ -1,0 +1,31 @@
+{
+  "schema": "ABI3_PERSISTENT_UNCAPPED_LAUNCHER_REVIEW",
+  "status": "PASS_ORCHESTRATION_ONLY",
+  "tests_passed": 7,
+  "test_log_sha256": "83a1593c5b5783693fe3006d1f6597bcb4f3a5968f23b59481ee09a0477f910a",
+  "source_pins": {
+    "tools/run_abi3_physical_persistent.py": "a9df9a85aa1ad01b0b8e91c33df0028fd1668a2e608f6ab6009e16d0258407e6",
+    "tests/test_abi3_persistent_launcher.py": "d0310435d0c32be37bab4238b4437fc2ad04b4a0634e6d6cd8b39cf1e3fbeee1",
+    "tools/run_abi3_physical.py": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43"
+  },
+  "legacy_driver_byte_identical_to_main": true,
+  "validated": [
+    "actual subprocess outlives deliberately short former timeout",
+    "success and exceptions preserve intermediate files",
+    "existing job/output paths refused",
+    "driver function restoration after exit",
+    "finite inherited CPU/address-space/file-size hard caps refused",
+    "original engineering exit code retained"
+  ],
+  "admission_required": "complete model/source/slot and current fleet headroom remain external prerequisites; launcher grants no hardware admission",
+  "hardware_policy_unchanged": [
+    "clock and uncertainty",
+    "mapping/inferred-memory-versus-macro policy",
+    "corner and engineering verdict",
+    "RTL and macro sources"
+  ],
+  "scope": "future explicitly selected jobs only; no live process modification",
+  "live_PVE1_PVE2_modified": false,
+  "new_hardware_job_launched": false,
+  "PVE1_retention_incident": "separate live recovery owned by Chandrasekhar; attribution remains under investigation"
+}

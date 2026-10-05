@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.w10.capture-pinphase-parent-intake.v1",
+  "capture_audit_sha256": "222e9ee350684b325ecd08abeac5fb444f63536b7c1ecb71eabc37ac90512039",
+  "conditional_pin_phase_sha256": "2a4b0843ea5beb97b6e1d996098a13f80a4b7298f5ba2941f77da886c97437b0",
+  "capture_replay": "exact JSON equality",
+  "selected_LEF_and_SS_Liberty_replay": "byte-identical",
+  "capture_raw_source_pins_verified": {
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/fullmap_r2/1_2_yosys.v": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/local_fit_r1/actual_worker_R.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/local_fit_r1/actual_worker_SEQ_SS.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15"
+  },
+  "conditional_phase_replay": "byte-identical",
+  "focused_tests": {
+    "passed": 10,
+    "command": "python3 -m pytest -q tests/test_w10_capture_local_fit.py tests/test_w10_fullmap_slot_fit.py"
+  },
+  "capture_flops": 1088,
+  "conditional_M5_unextended_ports_without_track": 576,
+  "physical_admission": false,
+  "headline_or_latency_change": false,
+  "scope": "Relative site-bin and track-intersection predicates; no legal placement/routing/CTS proof",
+  "remaining": [
+    "Actual local routing/track and macro all-port escape/PG master review",
+    "Shared-control global fanout and clock tree buffer site reserve",
+    "Constructive geometric legalization and timing with selected real cells",
+    "SS/FF full context and actual power/IR"
+  ]
+}

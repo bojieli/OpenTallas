@@ -1,0 +1,77 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_physical_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "capacity_certificate_id": {"$ref": "#/$defs/sha256"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "checker_version": {"const": "tensor-accelerator-qwen-full-model-physical-check-0.1.0"},
+    "checks": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_and_exact_file_set": {"const": true},
+        "capacity_and_no_host_paging": {"const": true},
+        "checkpoint_payload_reconstruction": {"const": true},
+        "command_and_kernel_range_derivation": {"const": true},
+        "complete_graph_and_semantic_binding": {"const": true},
+        "hbm_region_and_shard_integrity": {"const": true},
+        "independent_inverse_reconstruction": {"const": true},
+        "rope_and_state_table_payloads": {"const": true},
+        "source_lock_and_immutable_copies": {"const": true},
+        "sram_bank_capacity_and_liveness": {"const": true},
+        "terminal_36_resource_atomic_commit": {"const": true},
+        "zero_initialized_transactional_state": {"const": true}
+      },
+      "required": [
+        "canonical_and_exact_file_set",
+        "capacity_and_no_host_paging",
+        "checkpoint_payload_reconstruction",
+        "command_and_kernel_range_derivation",
+        "complete_graph_and_semantic_binding",
+        "hbm_region_and_shard_integrity",
+        "independent_inverse_reconstruction",
+        "rope_and_state_table_payloads",
+        "source_lock_and_immutable_copies",
+        "sram_bank_capacity_and_liveness",
+        "terminal_36_resource_atomic_commit",
+        "zero_initialized_transactional_state"
+      ],
+      "type": "object"
+    },
+    "command_count": {"const": 924386},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm_logical_sha256": {"$ref": "#/$defs/sha256"},
+    "operation_count": {"const": 617},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_physical_check.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "state_resource_count": {"const": 36},
+    "status": {"const": "pass"},
+    "tensor_count": {"const": 1053},
+    "weight_count": {"const": 399}
+  },
+  "required": [
+    "capability_id",
+    "capacity_certificate_id",
+    "check_id",
+    "checker_version",
+    "checks",
+    "command_count",
+    "graph_id",
+    "hbm_logical_sha256",
+    "operation_count",
+    "physical_plan_id",
+    "schema",
+    "source_lock_id",
+    "state_resource_count",
+    "status",
+    "tensor_count",
+    "weight_count"
+  ],
+  "title": "Independent Qwen complete-model physical check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

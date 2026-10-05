@@ -1,0 +1,58 @@
+{
+  "GO_template": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/parent_GO.template.json",
+  "artifact_sha256": {
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/default_preflight.json": "c5212e8f46664d65ae6feb2510a9e1fe7eb43a0748611f0b613770456db3d1d4",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/expected_contract.json": "27c0488d7f00102137eb2b32f9c74c035fdbea385e04a72c55443d931312b966",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/parent_GO.template.json": "ef5b25d1d178695ca7baad7d6ab56b1ed3725b664ac14fc0522b1488079020f1",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/runner_plan.json": "e2ee2c4baf5298e0c09329dff808bc7d0de272a63173d0081af3d8e33173ff88",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/static_tests_r1.log": "fd8ec878665a58e252f2b2d2c4b81407c762d4e056a6de5d8513a96eefdc4918",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/static_tests_r2.log": "d9ca512e59f0d270b898e725bdb0cace85abcd85b1c55579557f0b0bac2c4e74",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/static_tests_r3.log": "6e158d4988a8817924a841bbf300083cfd26b518d4cd2e7ce5239b2aa1da96fd",
+    "tests/test_dsrom_bmul_rne_primitive_runner.py": "dac4123c9fbcfec65f9b76618319ce2666a516dfc6761000866b3cfff5bac1b9",
+    "tools/run_dsrom_bmul_rne_primitive.py": "d2433d68cd98a712d1e24872b9376142868d68df18bb395ffd2b27344c913976"
+  },
+  "caps": {
+    "aggregate_disk_bound_poll_seconds": 0.1,
+    "automatic_retries": 0,
+    "build_log_bytes": 8388608,
+    "build_summed_seconds": 60,
+    "core_bytes": 0,
+    "cpu_affinity": [
+      0
+    ],
+    "cpu_quota_percent": 100,
+    "each_sim_log_bytes": 262144,
+    "fallback": false,
+    "kill": "Alllimitviolations usecgroup.kill=1; timeoutreceipt failure cannotpreventkill. RuntimeMax70+independentwholewatchdog+SIGTERMwholekill. Logstoredbyteshardbounded; inheritedRLIMIT_FSIZE hardboundsregularfiles; aggregategenerated/outputbytes sampled0.1s, overshootpossibleuntilwholekill, explicitlynot a filesystemquota.",
+    "launcher_log_hard_bytes": 8388608,
+    "memory_max_bytes": 536870912,
+    "memory_swap_max_bytes": 0,
+    "output_aggregate_bytes": 33554432,
+    "output_files": 64,
+    "per_file_hard_bytes": 8388608,
+    "receipt_max_bytes": 4194304,
+    "simulate_summed_seconds": 10,
+    "whole_cgroup_seconds": 70,
+    "work_aggregate_bytes": 536870912,
+    "work_files": 4096
+  },
+  "commands": {
+    "default_preflight": "python3 tools/run_dsrom_bmul_rne_primitive.py",
+    "proposed_after_fresh_GO_only": "python3 tools/run_dsrom_bmul_rne_primitive.py --execute --go-commit <FRESH_PARENT_GO_COMMIT> --work /tmp/dsrom-bmul-rne-primitive-bounded-build-r1-20261002 --output /tmp/dsrom-bmul-rne-primitive-bounded-run-r1-20261002"
+  },
+  "default_preflight": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/default_preflight.json",
+  "immutable_preservation": "No tracked paths modified; all additions only. Original primitive inputs/expected tables, RTL, model, sourceplan, numerical failures and wake model remain byte-identical to HEAD.",
+  "open_context": "Physical ENA/ROM timing, legal full-unit drain bound and WAKE1 actual-engine join remain open in retained wake model; audit scope not expanded for this delivery.",
+  "parent_source_commit": "26b005b67602a655feccffac82babd55f6558865",
+  "scope": "One shared primitive compile and nine planned modes only after fresh parent GO. No full element/fullfield/token/physical/timing/adoption credit.",
+  "single_DIFF_contract": "Exactly one DIFF per selected mutant. Captured kind/index binds independent expected bits; format/index bounds and actual difference required. Foreign/malformed markers, wrong mode, duplicate terminal, crash/nonzero reject.",
+  "status": "PREPARE_ONLY_NO_HDL_EXECUTION",
+  "tests": {
+    "current_log": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_20261002/static_tests_r3.log",
+    "prior_logs_preserved": [
+      "static_tests_r1.log",
+      "static_tests_r2.log"
+    ],
+    "runner_mock_tests_passed": 15
+  }
+}

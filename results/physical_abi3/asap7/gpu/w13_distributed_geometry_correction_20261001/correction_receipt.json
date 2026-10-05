@@ -1,0 +1,109 @@
+{
+  "utc": "2026-10-01T15:40:05.436430+00:00",
+  "source_git": "9fffce2ef8871b750e69c76c06f2640a18cf279f",
+  "original_candidate_verdict": "FAIL_GEOMETRY_CONTAINMENT; historical coarse-fit claim withdrawn",
+  "original_candidate_path": "results/physical_abi3/asap7/gpu/w13_distributed_ordinary_gpu_20261001/candidate_24lane_128credit.json",
+  "original_candidate_sha256": "f309ca1690d09d7c4249b4fc550db70e99f2d203f8730a195ac093efdd21dcee",
+  "original_commits": [
+    "231641d09",
+    "0b2718d84"
+  ],
+  "parent_review_source_git": "a3d8d3aad9a4853b7c647668e5f79ae451eab9cb",
+  "parent_review_path": "results/quality/parent_hbm_distributed_fit_review_20261001/review.json",
+  "parent_review_sha256": "d584ef872b6d301b76aeb5ddd1058fec0687cb18671a481a959069838a442ba5",
+  "cause": "Original placement boxes included die origin913.3/1554.7um while array extents were origin-free. Bounding box coordinate contract was absent and tests missed containment. Preserve original FAIL; corrected v2 uses local coordinates and explicit die transform.",
+  "tests": "6 PASS",
+  "dispatch": "NONE; all full-program/SSFF gates remainclosed",
+  "rows": [
+    {
+      "model": "qwen",
+      "old_extent_check_failures": 11,
+      "corrected_frame": "array-local micrometers",
+      "array_bbox_um": [
+        0,
+        0,
+        28042.064,
+        21777.72
+      ],
+      "die_origin_um": [
+        913.3,
+        1554.7
+      ],
+      "absolute_array_bbox_um": [
+        913.3,
+        1554.7,
+        28955.363999999998,
+        23332.420000000002
+      ],
+      "geometry_audit": {
+        "pass_all": true,
+        "issues": [],
+        "coordinate_frame": "array-local micrometers; explicit die origin stored separately",
+        "reserved_region_area_um2": 610692218.01408,
+        "array_area_um2": 610692218.01408,
+        "checked_SM_count": 32,
+        "checked_regions": 69,
+        "checked_macros": 656
+      },
+      "array_dimensions_recomputed_unchanged": true,
+      "area_recomputed": {
+        "priced_SM_mm2": 5.228987757928,
+        "network_mm2": 16.869590016,
+        "reserved_router_strip_mm2": 75.11088,
+        "reserved_service_bands_mm2": 84.126192
+      },
+      "credit_recomputed": {
+        "wire_hops_one_way": 50,
+        "route_cycles_one_way": 53,
+        "no_stall_credit_roundtrip_fast_cycles": 115,
+        "required_credits_for_II1": 115
+      },
+      "physical_admission": "FAIL_CLOSED"
+    },
+    {
+      "model": "v41",
+      "old_extent_check_failures": 11,
+      "corrected_frame": "array-local micrometers",
+      "array_bbox_um": [
+        0,
+        0,
+        28042.064,
+        21777.72
+      ],
+      "die_origin_um": [
+        913.3,
+        1554.7
+      ],
+      "absolute_array_bbox_um": [
+        913.3,
+        1554.7,
+        28955.363999999998,
+        23332.420000000002
+      ],
+      "geometry_audit": {
+        "pass_all": true,
+        "issues": [],
+        "coordinate_frame": "array-local micrometers; explicit die origin stored separately",
+        "reserved_region_area_um2": 610692218.01408,
+        "array_area_um2": 610692218.01408,
+        "checked_SM_count": 32,
+        "checked_regions": 69,
+        "checked_macros": 656
+      },
+      "array_dimensions_recomputed_unchanged": true,
+      "area_recomputed": {
+        "priced_SM_mm2": 2.828987757928,
+        "network_mm2": 16.869590016,
+        "reserved_router_strip_mm2": 75.11088,
+        "reserved_service_bands_mm2": 84.126192
+      },
+      "credit_recomputed": {
+        "wire_hops_one_way": 50,
+        "route_cycles_one_way": 53,
+        "no_stall_credit_roundtrip_fast_cycles": 115,
+        "required_credits_for_II1": 115
+      },
+      "physical_admission": "FAIL_CLOSED"
+    }
+  ]
+}

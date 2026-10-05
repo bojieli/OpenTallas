@@ -1,0 +1,12 @@
+{
+ "git_commit": "903021f692cdb805721fd68594c43aece1701ef7",
+ "name": "v41_corridor_136um_3000w_M4up",
+ "reason": "global route still in congestion-reduction iteration 2/30 after ~75 min; stopped at the root freeze; no timing result",
+ "schema": "opentallas.v41.die_corridor.v1",
+ "signal_layers": "M4-M9",
+ "status": "stopped_nonconverging_grt",
+ "tool_sha256": "1a7a46e745079daef84f72ddcb990b2bc6ce9245e3d5b41158c583fb5411dc4e",
+ "width_um": 136,
+ "wires": 3000,
+ "work": "ot-pve2:/home/ubuntu/w3/runs/cor_gap_m4"
+}

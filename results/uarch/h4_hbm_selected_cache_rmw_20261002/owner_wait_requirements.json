@@ -1,0 +1,50 @@
+{
+  "actual_clock_conversion": null,
+  "ask_Dewey": "join exact emitted PC/dependency/lease overlap to these real commands; supply finite reserved-sink/consumer/reverse constraints, including cache clients if routed to L2; no synthetic contender cardinality",
+  "ask_Sagan": "replace directed PC10 control span provenance with current production shared64 journal and source/output lease receipts; same 2x32B bank request corresponds to one64B scratch child",
+  "child_reverse_does_not_release_outer_owner": true,
+  "commands": "selected_r3/commands.json.gz",
+  "cost_reconciliation": "retain existing C0/V1/I64/provider intervals; replace RF local service once and add proposed merge only after source-model admission; replace shared service once after actual span/owner join",
+  "finitegrant_requirements": {
+    "Dewey_exact_emitted_program_overlap_and_dependencies": null,
+    "RF_read_ACK_reserved_sink_bound": null,
+    "atomic_L2_cache_bank_grant_producer": null,
+    "generic_cache_directory_source": null,
+    "parent_consumer_bound": null,
+    "parent_reverse_lease_bound": null,
+    "partial_merge_SS_register_stage": null,
+    "shared64_ACK_reserved_sink_bound": null
+  },
+  "hardware_admitted": false,
+  "model": "selected_r3/model.json",
+  "no_cached_bank_eligibility_as_atomic_grant": true,
+  "no_independent_copy_ACK_latency_charge": true,
+  "parent_shared_hold_children_per_tile": 144,
+  "proposed_merge_reference_edges": 1,
+  "required_event_keys": [
+    "parent_owner_live_lease_accept",
+    "RF_read_child_accept",
+    "RF_read_ACK_consume",
+    "RF_read_child_reverse",
+    "RMW_opaque_merge_register",
+    "RF_both_copy_write_observe_and_common_ACK_consume",
+    "RF_write_child_reverse",
+    "RF_readback_child_accept",
+    "RF_readback_ACK_consume",
+    "RF_readback_child_reverse",
+    "shared64_child_accept",
+    "shared64_read_or_write_ACK_consume",
+    "shared64_child_reverse",
+    "parent_consumer_accept",
+    "parent_reverse_lease_grant"
+  ],
+  "schema": "HBM_SELECTED_SERVICE_OWNER_WAIT_REQUIREMENTS_V1",
+  "scope": "96-PC0 partial RF plus directed PC10 rank0 shared only; no whole-program/cache credit",
+  "source_local_reference_edges": {
+    "RF_both_copy_write": 2,
+    "RF_read_pair": 3,
+    "shared_read64": 3,
+    "shared_write64": 2
+  },
+  "whole_token_latency_ns": null
+}
