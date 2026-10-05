@@ -1,0 +1,294 @@
+{
+  "schema": "opentallas.dsrom-qx10-z18c.terminal-source-reconciliation.v1",
+  "verdict": "REJECT_NO_QUALIFIED_HANDOFF",
+  "source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "clean_source_at_launch": true,
+  "route_source_rows": [
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+      "sha256": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+      "sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain3.sv",
+      "sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain4.sv",
+      "sha256": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd2.sv",
+      "sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm3_w10.sv",
+      "sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm4_w10.sv",
+      "sha256": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree3.sv",
+      "sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree4.sv",
+      "sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree5.sv",
+      "sha256": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "source_matched_exact": true,
+      "source_matched_field": true
+    }
+  ],
+  "source_match_count": 27,
+  "owner_receipt_matches_original_logs": true,
+  "flow_completed": true,
+  "flow_acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 19.0,
+        "hold_wns_ns": -0.00687134,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 662.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 1.0,
+        "setup_wns_ns": -0.0038967700000000004,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "final_context": {
+    "SS_setup_wns_ps": -3.8967718097025688,
+    "SS_setup_tns_ps": -3.8967718097025688,
+    "FF_hold_wns_ps": 7.011447006582842,
+    "FF_hold_tns_ps": 0,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "DRC": 0,
+    "max_fanout_violations": 662,
+    "combined_corner_hold_violations": 19,
+    "combined_corner_hold_wns_ps": -6.87134,
+    "combined_corner_summary_is_not_separate_FF_report": true
+  },
+  "exact": {
+    "source_match": true,
+    "scope": "Retained seed1 NRAND400+24 real-drain cases, 7801 matched partials, neg_tree caught; plus minimum full-K field 28 rows. This is not whole-campaign exact qualification.",
+    "whole_campaign_qualified": false
+  },
+  "latency_reconciliation": {
+    "analytical_added_pipeline_stages": 0,
+    "measured_extra_last_and_idle_cycles_vs_QX9": 0,
+    "measured_phases": [
+      {
+        "phase": "L20.a_proj.fp8",
+        "region": 0,
+        "rows": 6,
+        "last": 409,
+        "idle": 410,
+        "additional_cycles": 0
+      },
+      {
+        "phase": "L20.exp158.gu",
+        "region": 0,
+        "rows": 12,
+        "last": 398,
+        "idle": 399,
+        "additional_cycles": 0
+      },
+      {
+        "phase": "L20.exp158.w2",
+        "region": 0,
+        "rows": 10,
+        "last": 285,
+        "idle": 286,
+        "additional_cycles": 0
+      }
+    ],
+    "composed_phase_region_cycles_with_existing_wire": [
+      489,
+      478,
+      365
+    ],
+    "consistent": true,
+    "basis": "Selected QX10 chain4/fadd2 parallel candidate step0 and registered flags/prefix differences retain the existing CUT/LAT and stage count. All27 route RTL hashes match measured vehicles. Actual minimum measurements confirm zero additional last/idle cycles; the routed setup failure does not create an extra cycle or validate the clock.",
+    "physical_rejection_prevents_adoption": true,
+    "whole_token_rate_repriced": false
+  },
+  "handoff": {
+    "qualified": false,
+    "blocked_by": [
+      "Final SS setup violation bank1 lane P1_q[10][11] to P2_c[97]",
+      "Route max-fanout violations662 retained",
+      "Existing source-matched exact evidence covers only stated minimum scope"
+    ],
+    "whole_field_missing_input_clocks": true
+  },
+  "preservation": {
+    "original_failure_record": "results/physical/dsrom_qx10_z18_20261005/Z18c/record.json",
+    "recipes_changed": false,
+    "relaunches": 0,
+    "remote_sources_and_objects_retained": true
+  },
+  "linked_inputs": {
+    "results/rtl/dsrom_qx_exact_restart_failure_20261005/final_minimum/source.json": "2c7742fbe3e5c5b4bed79b15872a72d8ee109e2fd9f136edbb0b0f94c927de17",
+    "results/rtl/dsrom_qx10_field_min_20261005/noether-qx10-field-source-manifest.json": "99617cea93483487c08f00f6cb2da6a242891a57e705548794fc7d4d1a04506d",
+    "results/uarch/dsrom_qx10_parent_context_20261005/model.json": "8599b07cfb382167fe700ed21d05b501f0587eb001c1bc50e5e1f9a90bf0c805",
+    "results/rtl/dsrom_qx10_field_min_20261005/record.json": "fb97499ca22c421a7b6ab692157cf8140f4fbf07c1a2adb6ad45e9fda946a2d5",
+    "results/rtl/dsrom_qx10_field_min_20261005/minimum_composition.json": "7a8ff9daf14b7b2c783a88f12a062260d620d0e1c6710cdba8044b43965e406d"
+  },
+  "files": {
+    "config.mk": "613884785da01952bf77c15a5dc09cb6782a3f20266a86308e0de5028deacd26",
+    "final_SS.log": "b63056e8e5510db989d6ae0a61ea91fb809f959f29bfbf74583990a079500ff3",
+    "post.done": "d117fa006ba9208500b2930ce69cbde436c647afa917cb7396a9bc9111a46dd2",
+    "final_FF.log": "f8d829c99bef87476f29bc03383e27a64a15730e55309ec6a65295d94469e9b5",
+    "final_FF.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "physical.json": "a0fa52643957e1c45e0415127900193752fe404fcbae62f6591c097e2c7b5121",
+    "constraint.sdc": "d3bffafc2b420f07d5e236cfba5cd16b2bc4677608578f579d3b79d380cca01f",
+    "metadata.json": "07e2b3435ea6bff0c78f0688959cb16e18120314cbe6973d7d7d51857514b834",
+    "6_finish.rpt": "772dde284e9b74f59051f9d3fc3139a4dfdce0e707ce25fcdbfa3830a9cb71ea",
+    "retained_objects.sha256": "3a805e5c07d8b6a81f41d751bef69b5d3d8add54446f5f36f6db086966108a07",
+    "sta_corner.tcl": "4cea96f66b951c512168914d1ef999cfb51a95798fecbe69f09ff1a1b981e1f4",
+    "owner_terminal_receipt.json": "a0e8fe9012cca99146cfbbe9013b0ccc246e8437059165c04b2f54000b5df5f1",
+    "final_SS.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "post_sta_qz.sh": "aa07ab0fc57c43cccc7f62d30e41262ce1703833745cd4e2e129640143cd4180"
+  }
+}
