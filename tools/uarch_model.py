@@ -206,6 +206,33 @@ def wire_cycles(um: float, clock_hz: float, ps_per_um: float = WIRE_PS_PER_UM) -
     return regs + 1 if regs > 0 else (1 if um > 0 else 0)
 
 
+def rom_spine_repin_price(displacements_um, setup_slack_ps, hold_slack_ps):
+    """Same-frame pin-only recipe: bound both shorter and longer Manhattan wires.
+
+    Charge the upper 0.81 ps/um of W3's measured loaded-channel range, rather
+    than the unloaded express-link proxy. Margins are from the unchanged CTS
+    snapshot, including SS60/FF25. This is an analytical admission bound, not
+    routed timing or a guarantee that cell placement and buffering stay fixed.
+    """
+    upper_loaded_ps_per_um = 0.81
+    longest = max(displacements_um, default=0.0)
+    delta = longest * upper_loaded_ps_per_um
+    setup_left = setup_slack_ps - delta
+    hold_left = hold_slack_ps - delta
+    fits = setup_left > 0 and hold_left > 0
+    return dict(max_pin_displacement_um=round(longest, 6),
+                total_pin_displacement_um=round(sum(displacements_um), 6),
+                wire_ps_per_um=upper_loaded_ps_per_um,
+                wire_basis="W3 loaded-channel measured range 0.72-0.81 ps/um; upper endpoint",
+                incremental_wire_delay_bound_ps=round(delta, 6),
+                estimated_setup_remaining_ps=round(setup_left, 6),
+                estimated_hold_remaining_ps=round(hold_left, 6),
+                analytical_budget_fits=fits, area_delta_mm2=0,
+                protocol_cycle_delta=0 if fits else None,
+                power_delta_w=None, routed_closure=False,
+                assumption="Same endpoints and buffering; displacement bounds incremental Manhattan wire only")
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Designs.  Every resource is a named parameter; PRESETS differ only where stated.
 # ---------------------------------------------------------------------------------------------------------
