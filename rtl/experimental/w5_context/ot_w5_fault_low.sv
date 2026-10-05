@@ -7,7 +7,9 @@
 module ot_w5_fault_low(input wire clk,rst_n,alarm,output wire settled);
  wire d=rst_n & alarm;
 `ifdef SYNTHESIS
- (* keep,dont_touch *) DLLx1_ASAP7_75t_R u_latch(.CLK(clk),.D(d),.Q(settled));
+ // Preserve the real qualifier, while allowing CTS to connect its clock pin.
+ // Physical dont_touch prevents OpenROAD from inserting that clock tree.
+ (* keep *) DLLx1_ASAP7_75t_R u_latch(.CLK(clk),.D(d),.Q(settled));
 `else
  reg q;
  always @* if(!clk) q=d;
