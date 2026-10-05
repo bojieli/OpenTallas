@@ -3,6 +3,60 @@
 Physical costs are explicit inventory, never a routed closure or rate credit.
 This does not allocate x memory, alter arithmetic or price the entire SM twice.
 """
+def w2_parent_source_model(fixture):
+    """Price the proposed DS20 single-MREQ installation BEFORE engine RTL.
+
+    This rejects treating the component's 1088-bit procedural return source
+    as a physical 256-bit DS20 client. It is not a new memory architecture or
+    a composition edit; Maxwell owns canonical integration of this inventory.
+    """
+    ds=[fixture['composite_descriptors'][k] for k in fixture['w2_groups']]
+    weight_lines=sum(d[4] for d in ds)
+    rows=sum(d[0] for d in ds)
+    # Actual joint P1 XMAP source uses groups[0,4] for FP4 and [0] for FP8.
+    x_beats=sum(((d[7] if d[6] else 0)+(d[13] if d[10] else 0))*(2 if d[3]==2 else 1) for d in ds)
+    weight_bytes=weight_lines*136
+    padded_weight_bytes=weight_lines*5*32
+    x_bytes=x_beats*256
+    publication_bytes=rows*32*2  # full NC8 write plus positive readback
+    request_edges=(padded_weight_bytes+x_bytes+publication_bytes)//32
+    inventory=dict(weight_assembly=32*(1280+160+72),
+                   publication=14*6*72,x_beat=32*72,
+                   frozen_configuration=4*(1024+16),frame_control=8*72)
+    ff=sum(inventory.values())
+    # Positive bounds for selectors/protection/control; not mapped closure.
+    nand2=3*1280*32+3*432*14+3*1024*4+12000
+    buffers=128
+    area=ff*.37908+nand2*.08748+buffers*.10206
+    return dict(schema='opentallas.ds20.w2.parent_source_model.v1',
+        default_enabled=False,existing_provider='SM0 LSU -> mreq_cdc -> memsys_adapter/xbar/L2/HBM',
+        request_bits=337,response_bits=273,request_data_bytes=32,
+        provider_clock_ps=1000,stream_clock_ps=833.333333,
+        ss_uncertainty_ps=60,ff_uncertainty_ps=25,
+        new_memory_ports=0,provider_requests_per_edge=1,arithmetic_macs_added=0,
+        component_logical_weight_lines=weight_lines,restored_rows=rows,
+        useful_weight_bytes=weight_bytes,padded_weight_bytes=padded_weight_bytes,
+        weight_sectors=padded_weight_bytes//32,x_beats=x_beats,x_read_bytes=x_bytes,
+        publication_write_readback_bytes=publication_bytes,
+        total_provider_request_edges_floor=request_edges,
+        total_provider_service_us_floor=request_edges*.001,
+        useful_weight_only_us_floor=weight_bytes/32*.001,
+        padded_weight_only_us_floor=padded_weight_bytes/32*.001,
+        source_ff_inventory=inventory,total_storage_bits_allowance=ff,
+        nand2_equivalent_allowance=nand2,buffer_allowance=buffers,
+        cell_area_allowance_um2=area,reservation_at_50pct_um2=2*area,
+        clock_pin_cap_ff_proxy=ff*.5,loaded_clock_cap_ff=None,
+        weight_selector_inputs=32,weight_payload_mux_bits=1280,
+        internal_weight_boundary_bits=1088,internal_x_boundary_bits=2048,
+        added_response_capture_edges=1,added_x_write_edges=1,
+        descriptor_validation_edges_min=1,publication='matched write ACK plus actual readback; no acceptance-as-completion',
+        source_image_bound=False,parent_slot_fit=None,channel_capacity=None,
+        composer_owner='Maxwell',canonical_composed_latency=None,
+        engine_build_admitted=False,physical_build_admitted=False,adopted=False,
+        verdict='SINGLE_MREQ_BINDING_REQUIRES_OWNER_DECISION',
+        reason='Weight traffic alone exceeds old 425/609-cycle procedural provider intervals; installed-source/actual-provider composition must replace that credit, not inherit it')
+
+
 def model(nc=8, sub=4, ds=3, dg=3, pio=2, rmax=4096, nout=4):
     rw = (rmax - 1).bit_length()
     # SEG and FP4 per physical issue slot; registered second context, counts,

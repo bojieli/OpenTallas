@@ -67,17 +67,22 @@ def compile_image(binding,root):
         ops=d['operations']
         if len(ops)!=n:
             raise ValueError('immutable original operation association')
-        if d['c']!=8 or d['groups']!=2 or d['format']!=2 or not d['group_stride']:
-            raise ValueError('only source-qualified homogeneous FP4 W2 shape')
+        fp4=d['format']==2 and d['groups']==2
+        fp8=d['format']==1 and d['groups']==3 and not pair
+        if d['c']!=8 or not (fp4 or fp8) or not d['group_stride']:
+            raise ValueError('only paired FP4 or original final FP8 W2 shape')
+        line_count=32 if fp4 else 48
+        x_count=16 if fp4 else 24
+        x_stride=512 if fp4 else 256
         bases={};ends={};xb=[];opids=[];logical=[]
         for side,o in enumerate(ops):
             ident=field(o['original_op'],32,'original_op')
-            if ident in ids or o['rows']!=2 or o['lines']!=32 or o['x_addresses']!=16:
+            if ident in ids or o['rows']!=2 or o['lines']!=line_count or o['x_addresses']!=x_count:
                 raise ValueError('duplicate identity/unqualified operation geometry')
             ids.add(ident);opids.append(ident)
             logical.append(field(o['logical_line_base'],32,'logical_line_base'))
             xb.append(field(o['x_ring_base'],7,'x_ring_base'))
-            for kind,stride,count in [('weight',160,32),('x',512,16),('result',32,2)]:
+            for kind,stride,count in [('weight',160,line_count),('x',x_stride,x_count),('result',32,2)]:
                 s=o[kind+'_span'];base=field(s['base'],32,kind+'_base')
                 end=field(s['end'],32,kind+'_end')
                 if s['stride']!=stride or end-base!=stride*count or base%32 or end>extent:
@@ -107,9 +112,9 @@ def compile_image(binding,root):
         w=[(0x57325031<<32)|pc,opids[0]|opids[1]<<32]
         for kind in ('weight','x','result'):
             w += [bases[kind,0]|bases[kind,1]<<32,ends[kind,0]|ends[kind,1]<<32]
-        w += [(4 if pair else 2)|(2<<13)|(8<<26)|(2<<42)|(2<<50)|(1<<52)|(xb[0]<<53),
+        w += [(4 if pair else 2)|(2<<13)|(8<<26)|(d['groups']<<42)|(d['format']<<50)|(1<<52)|(xb[0]<<53),
               xb[1]|((xb[1]-xb[0])%128)<<7|int(pair)<<14,
-              136|(160<<16)|(512<<32)|(32<<48),32|(32<<32),
+              136|(160<<16)|(x_stride<<32)|(32<<48),line_count|(line_count<<32),
               logical[0]|logical[1]<<32,extent,0,0]
         if len(w)!=16:raise AssertionError('descriptor width')
         words += [dict(address=bank+k*16+j,data=v) for j,v in enumerate(w)]
