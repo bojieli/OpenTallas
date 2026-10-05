@@ -402,7 +402,7 @@ def _route(path: Path):
     c = [x for x in d["acceptance"]["checks"] if x.get("stage") == "place_and_route"][0]
     keys = ("setup_wns_ns", "setup_violations", "hold_wns_ns", "hold_violations", "drc_errors", "max_slew_violations",
             "max_cap_violations", "max_fanout_violations", "antenna_violating_nets", "timing_met", "physically_clean")
-    return dict(record=str(path.relative_to(ROOT)), status=d["status"], closed=d["status"] == "met",
+    return dict(record=str(path.resolve().relative_to(ROOT)), status=d["status"], closed=d["status"] in ("met", "pass"),
                 **{k: c.get(k) for k in keys})
 
 
@@ -440,7 +440,10 @@ def cmd_lever(a):
                    f"in-element lowest-id first-max + 2-level bundle compare tree measured "
                    f"({cyc['result'] - cyc['last_logit']} cyc after the last logit) + {rank_levels} labelled rank "
                    f"compare levels (1 cyc each, same node)"))},
-        info=dict(head_stage_occupancy_us=round(lm_us, 4), head_argmax_drain_us=round(am_us, 4)),
+        info=dict(head_stage_occupancy_us=round(lm_us, 4), head_argmax_drain_us=round(am_us, 4),
+                  occupancy_basis=("measured per-position lm_head sweep: go -> last logit of one bundle (all bundles in "
+                                   "lockstep) + labelled wire; the DSpark draft heads and the verify head use the SAME "
+                                   "array and the same occupancy (no separate draft head die group assumed)")),
         measurement=dict(
             vehicle=("rtl/v41rom/ot_dsrom_head_bundle.sv on bench " + TB_BUNDLE + ": rows "
                      f"{BUNDLE0}..{BUNDLE0 + BUNDLE_ROWS - 1} of rank 0 (the bundle holding the golden argmax 21,946), "
