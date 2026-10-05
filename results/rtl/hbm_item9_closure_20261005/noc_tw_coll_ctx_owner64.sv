@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Same full128 two-SM registered parent boundary as r6X; no new IO exceptions.
-module noc_tw_coll_ctx_owner64 #(parameter integer TX_MASK_LA=0, parameter integer OWNER64=0) (
+module noc_tw_coll_ctx_owner64 #(parameter integer TX_MASK_LA=0, parameter integer OWNER64=0, parameter integer RXOH=0, parameter integer RDUP=8) (
     input  wire clk, input wire rst_n,
     input  wire [1:0] i_req_v, input wire [1:0] i_mode, input wire [15:0] i_count, input wire [8191:0] i_data,
     input  wire [1:0] i_rsp_rdy,
@@ -29,7 +29,7 @@ module noc_tw_coll_ctx_owner64 #(parameter integer TX_MASK_LA=0, parameter integ
         .s_data(data), .s_rsp_v(rsp_v), .s_rsp_rdy(rsp_rdy), .s_rsp_data(rsp_data), .m_req_v(m_req_v),
         .m_req_rdy(m_req_rdy), .m_mode(m_mode), .m_count(m_count), .m_data(m_data), .m_rsp_v(m_rsp_v),
         .m_rsp_rdy(m_rsp_rdy), .m_rsp_data(m_rsp_data));
-    ot_gpu_coll_endpoint_f12_txmask #(.TX_MASK_LA(TX_MASK_LA), .ENABLE(1), .XREG(1), .NL(NL), .R(2), .RANK(0)) u_ep (
+    ot_gpu_coll_endpoint_f12_cuts #(.RXOH(RXOH), .RDUP(RDUP), .TX_MASK_LA(TX_MASK_LA), .ENABLE(1), .XREG(1), .NL(NL), .R(2), .RANK(0)) u_ep (
         .clk_sm(clk), .rst_sm_n(rst_n), .coll_req_v(m_req_v), .coll_req_rdy(m_req_rdy), .coll_mode(m_mode),
         .coll_count(m_count), .coll_data(m_data), .coll_rsp_v(m_rsp_v), .coll_rsp_rdy(m_rsp_rdy),
         .coll_rsp_data(m_rsp_data), .coll_fault(fault), .clk_link(clk), .rst_link_n(rst_n),
