@@ -53,7 +53,7 @@ CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
 BUILDS = {"pos": CHK, "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU"],
           "neg_qxca": ["+define+QX_MUTANT_CA"], "neg_qxnca": ["+define+QX_MUTANT_NCA"],
-          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "neg_xr": ["+define+ST_MUTANT_XR"], "neg_qxsf": ["+define+QX_MUTANT_SF"], "neg_qxhz": ["+define+QX_MUTANT_HZ"], "neg_p2s": ["+define+BT_MUTANT_P2S"],
+          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "neg_xc": ["+define+ST_MUTANT_XC"], "neg_qxsf": ["+define+QX_MUTANT_SF"], "neg_qxhz": ["+define+QX_MUTANT_HZ"], "neg_p2s": ["+define+BT_MUTANT_P2S"],
           "neg_bk": ["+define+QZ_MUTANT_BK"], "neg_z": ["+define+QZ_MUTANT_Z"], "neg_cl": ["+define+QY_MUTANT_CL"],
           "neg_dp": ["+define+QP_MUTANT_DP"], "neg_tree": ["+define+QP_MUTANT_TREE"],
           "neg_half": ["+define+QP_MUTANT_HALF"], "neg_shadow": ["+define+QP_MUTANT_SHADOW"],
@@ -128,7 +128,7 @@ def main() -> None:
         jobs += [("qy0", 400 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("xs0", 200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("neg_dp", 1), ("neg_tree", 1), ("neg_half", 1), ("neg_shadow", 1), ("neg_lu", 3), ("neg_bk", 1),
-                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xr", 1)]
+                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1)]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
             results = list(ex.map(lambda j: run(*j), jobs))
         for name, seed, rc, log, lsha in results:

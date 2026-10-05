@@ -26,7 +26,8 @@
 // issue hazard is a register loaded with its next-cycle value (three register-only candidates selected by go / issue).
 // QP_CHECK asserts it equals the original every cycle.  Zero added cycles.
 // QX = 8 (after routes Z12a-c, SS -41 to -43 ps on the segment tree's x_oh -> held[] select -> add_a): the tree is
-// ot_v41_segtree4 with XR = 1 (held operand read one stage early with a hold forward; XR = 0 is segtree3).  Zero cycles.
+// ot_v41_segtree4 with XC = 4 (four kept copies of x_oh, each selecting 8 of the 32 held bits; XC = 1 is segtree3).
+// (The first QX = 8, XR = 1 early read, measured SS -175 ps in Z14a and is not used.)  Zero cycles.
 // QX = 7 (after route Z11d, SS -3.8 ps on r_go's fan-out into nB): kept copies of the go boundary register for the
 // nA / nB, wA / wB / fF and walker-state loads.  Zero added cycles.
 // QX = 6 (after CTS screen Z9s2, SS -22.6 ps on w_s -> s_x[w_s] lookups -> w_seg_last -> w_h): w_s's segment flags
@@ -1773,7 +1774,7 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [2:0]     t_pos;
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0) begin : g_tr3
-    ot_v41_segtree4 #(.XR(QX >= 8 ? 1 : 0), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree4 #(.XR(0), .XC(QX >= 8 ? 4 : 1), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0) begin : g_tr2

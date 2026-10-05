@@ -7,6 +7,12 @@
 // the select stage to the decide stage each cycle, and held[] / herr[] change only by a hold at the decide stage, so
 // the read is exact with one forward: a hold this cycle into the slot the selected event reads (same tree, same
 // level) forwards x_d / x_e.  QP_CHECK asserts both registers equal the decide-stage select.  Zero cycles.
+// XR = 1 MEASURED WORSE (routes Z14a / Z14b: SS -175 / -185 ps on xr_held): reading at the select stage adds the
+// select mux and the one-hot decode to the same 80-slot select, so it is kept only as a record.
+// XC = n (> 1; zero cycles): n kept copies of x_oh (ot_v41_kreg, never merged), copy c selecting held[] bits
+// [32c/n, 32(c+1)/n): each x_oh bit drives 32/n AND gates instead of 32 (Z12a: ~340 ps of buffering on one x_oh bit
+// of the 80-slot select), and n kept copies of x_d, copy g writing held slots [g NH / n, (g + 1) NH / n) (route Z13b:
+// SS -35 ps into held[36], x_d fanning out to all NT * LV slots).  QP_CHECK asserts every copy equals x_oh / x_d.
 // ot_v41_segtree3: ot_v41_segtree2 with LOCAL decision logic (QPIPE, DS-V4.1 ROM q-pair, 2026-10-03; zero cycles,
 // same events, same adds, same order).  segtree2 forms pair / hold from x_have = |(have & x_oh) over all NT*LV
 // held slots and drives every slot's write enable from that global decision.  Because x_oh is one-hot (or zero at
@@ -41,7 +47,8 @@ module ot_v41_segtree4 #(
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
 ,
-    parameter integer XR = 0) (
+    parameter integer XR = 0,
+    parameter integer XC = 1) (
     input  wire                     clk,
     input  wire                     rst_n,
     input  wire                     in_v,
@@ -158,12 +165,48 @@ module ot_v41_segtree4 #(
             s_pair[tj] = x_v && x_oh[tj] && have[tj];
         end
     end
-    reg [31:0] x_held;
+    reg [31:0] x_held, x_held1;
     reg        x_herr;
     always @* begin
-        x_held = 32'd0; x_herr = 1'b0;
+        x_held1 = 32'd0; x_herr = 1'b0;
         for (hi = 0; hi < NH; hi = hi + 1)
-            if (x_oh[hi]) begin x_held = x_held | held[hi]; x_herr = x_herr | herr[hi]; end
+            if (x_oh[hi]) begin x_held1 = x_held1 | held[hi]; x_herr = x_herr | herr[hi]; end
+    end
+    // XC: the held select by kept copies of x_oh, one per 32 / XC data bits
+    localparam integer XCB = 32 / (XC > 1 ? XC : 1);
+    wire [NH-1:0] x_ohc [0:(XC > 1 ? XC : 1)-1];
+    wire [31:0]   x_dc  [0:(XC > 1 ? XC : 1)-1];
+    if (XC > 1) begin : g_xc
+        for (genvar c = 0; c < XC; c = c + 1) begin : g_c
+`ifdef ST_MUTANT_XC
+            ot_v41_kreg #(.W(NH)) u_oh (.clk(clk), .arst_n(1'b1), .d(c == 1 ? e_above : e_oh), .q(x_ohc[c]));   // negative control
+`else
+            ot_v41_kreg #(.W(NH)) u_oh (.clk(clk), .arst_n(1'b1), .d(e_oh), .q(x_ohc[c]));
+`endif
+        end
+        always @* begin
+            x_held = 32'd0;
+            for (int c = 0; c < XC; c++)
+                for (hi = 0; hi < NH; hi = hi + 1)
+                    if (x_ohc[c][hi]) x_held[XCB*c +: XCB] = x_held[XCB*c +: XCB] | held[hi][XCB*c +: XCB];
+        end
+`ifdef QP_CHECK
+        always @(negedge clk) for (int c = 0; c < XC; c++) if (rst_n && x_ohc[c] !== x_oh) begin
+            $display("QP_CHECK FAIL segtree4 x_oh copy %0d %m %t", c, $time); $fatal(1);
+        end
+`endif
+        for (genvar g = 0; g < XC; g = g + 1) begin : g_d
+            ot_v41_kreg #(.W(32)) u_d (.clk(clk), .arst_n(1'b1), .d(e_d), .q(x_dc[g]));
+        end
+`ifdef QP_CHECK
+        always @(negedge clk) for (int g = 0; g < XC; g++) if (rst_n && x_dc[g] !== x_d) begin
+            $display("QP_CHECK FAIL segtree4 x_d copy %0d %m %t", g, $time); $fatal(1);
+        end
+`endif
+    end else begin : g_nxc
+        assign x_ohc[0] = x_oh;
+        assign x_dc[0] = x_d;
+        always @* x_held = x_held1;
     end
     // XR: the held operand / error read at the select stage (see the header)
     reg [31:0] xr_held;
@@ -233,7 +276,7 @@ module ot_v41_segtree4 #(
             h_f <= qf[qr + (use_q ? 1'b1 : 1'b0)]; h_e <= qe[qr + (use_q ? 1'b1 : 1'b0)];
             h_p <= qp[qr + (use_q ? 1'b1 : 1'b0)];
         end
-        for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= x_d;
+        for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= x_dc[hi * (XC > 1 ? XC : 1) / NH];
         oval <= x_d;
         otree <= x_t;
     end
