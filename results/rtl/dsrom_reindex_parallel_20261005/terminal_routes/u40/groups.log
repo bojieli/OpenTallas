@@ -1,0 +1,21 @@
+{
+ "ss_setup_met": false,
+ "ff_hold_met": true,
+ "ss_boundary_budget_met": false,
+ "ss": {
+  "exit": 0,
+  "setup_wns_ps": -47.19,
+  "hold_wns_ps": 42.06,
+  "failing_setup_endpoints": 23,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822
+ },
+ "ff": {
+  "exit": 0,
+  "setup_wns_ps": 289.7,
+  "hold_wns_ps": 1.46,
+  "failing_setup_endpoints": 0,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822
+ }
+}

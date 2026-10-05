@@ -20,7 +20,7 @@ module tb_dsrom_su_qbank #(
     reg [31:0]  csm [0:63];
     reg [783:0] ex [0:MAXB-1];
     integer nblk = 0, fp4 = 0, nbeat = 0;
-    reg [1023:0] cs = 0;
+    reg [2047:0] cs = 0;
     integer i;
     initial begin
         if (!$value$plusargs("NBLK=%d", nblk)) nblk = 0;

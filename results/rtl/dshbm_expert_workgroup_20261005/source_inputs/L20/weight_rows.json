@@ -1,0 +1,303 @@
+{
+  "layer": 20,
+  "expert_ids": [
+    41,
+    65,
+    158,
+    164,
+    259,
+    266
+  ],
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "scope": "released selected FP4/UE8M0 bytes only; no inference",
+  "tensors": [
+    {
+      "file": "expert41_w1.packed",
+      "expert": 41,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "07bfaa6a051e80dfde57d0c0eeea3f8cd735430cde64748d09bbefc2f8f13fb8"
+    },
+    {
+      "file": "expert41_w1.scale",
+      "expert": 41,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "65fa35349647921560bb03c65b58513b0e285d8edde7b59221a123b159852295"
+    },
+    {
+      "file": "expert41_w3.packed",
+      "expert": 41,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "46039f488e663948f5165b0ce7d076282c5e3568cc436a3081775bb937ecc923"
+    },
+    {
+      "file": "expert41_w3.scale",
+      "expert": 41,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "487a2b9104b4103b2881700293a48c81b20be4427f659aeaa6eb4404d56a4a45"
+    },
+    {
+      "file": "expert65_w1.packed",
+      "expert": 65,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "789e5e99089055219b7ce675c15d3c073fbd7dd6eba53fd24a64586a0a6e2ef1"
+    },
+    {
+      "file": "expert65_w1.scale",
+      "expert": 65,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "9cfdc830fb4ac5fac5ed7dbe9d036a9ee43ec741c20c9ffa2e454861348a2dec"
+    },
+    {
+      "file": "expert65_w3.packed",
+      "expert": 65,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "74d4b78885e47b9b94b59414a161712031fe27f1dfe2b127df46a321f214bf6a"
+    },
+    {
+      "file": "expert65_w3.scale",
+      "expert": 65,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "eb6372a10c4b4373d204aacfb3d69b82acf5f954cc517adf0fcc4e173fb872f1"
+    },
+    {
+      "file": "expert158_w1.packed",
+      "expert": 158,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "c51b52c7e57d542b7d75af9a230d7e7dca7d53b74f0f4249ee99461418abab59"
+    },
+    {
+      "file": "expert158_w1.scale",
+      "expert": 158,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "2c0ab3535ec8c6d78b224265a5d7d307fcca52318149ddcb1cd0c7419f38d402"
+    },
+    {
+      "file": "expert158_w3.packed",
+      "expert": 158,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "617aa9d6d7b78b47de429bfb6daac9e888fb6397fdc5aa391a985016fa80a948"
+    },
+    {
+      "file": "expert158_w3.scale",
+      "expert": 158,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "4e6a2ce7160d35d1ff6cf633cb9e704d007731a6e0ea981c2c7f4a6fd30833f1"
+    },
+    {
+      "file": "expert164_w1.packed",
+      "expert": 164,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "5c271ffc611851c874e4d4417f8ef20ee9ca8fa310fdb27260344f6532548b41"
+    },
+    {
+      "file": "expert164_w1.scale",
+      "expert": 164,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "676ad026967da51a0f8f9fc4bf395c4d3fc40876c5b88287b8adb4d1605abb2f"
+    },
+    {
+      "file": "expert164_w3.packed",
+      "expert": 164,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "46e4634a5537b3603c99d8cb0c42515cdc2ad8b678decfdfb12b8fe1787e9958"
+    },
+    {
+      "file": "expert164_w3.scale",
+      "expert": 164,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "8e31f49ba7c671703c7bec71448c56eeebcd41294f7fa90fb97245dbf399699e"
+    },
+    {
+      "file": "expert259_w1.packed",
+      "expert": 259,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "529cbeaae694b870fcd5d45c37779e6392da0a5f19b3702856e6d4cf40516996"
+    },
+    {
+      "file": "expert259_w1.scale",
+      "expert": 259,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "45ffb2a165d632d2cf903db104a751901de7b93f7e18abef8ba2c008695689b6"
+    },
+    {
+      "file": "expert259_w3.packed",
+      "expert": 259,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "9fc560c0c658c425c6e8acabc4f2697e8c1415f632ec382337817778e80bfcba"
+    },
+    {
+      "file": "expert259_w3.scale",
+      "expert": 259,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "3382bfbcda4d111c71145084c450c3e3a76e0f6d711339d1707a99a65bf8d6b6"
+    },
+    {
+      "file": "expert266_w1.packed",
+      "expert": 266,
+      "matrix": "w1",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "2cf11eb4bf73b41a53b4c9d77e9b0b27cd6927d8d6ff181a3b7e4b9d247cc857"
+    },
+    {
+      "file": "expert266_w1.scale",
+      "expert": 266,
+      "matrix": "w1",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "a2a7b33f26ded17c54376f8a8b9c00ed7e9454778786dda9a8dd24a8ac7181ec"
+    },
+    {
+      "file": "expert266_w3.packed",
+      "expert": 266,
+      "matrix": "w3",
+      "kind": "packed",
+      "shape": [
+        2304,
+        2560
+      ],
+      "bytes": 5898240,
+      "sha256": "a2d61a8a4f2a6f194a1dd281d18c46d95367a8f26564cb0dc845cd7851a3684b"
+    },
+    {
+      "file": "expert266_w3.scale",
+      "expert": 266,
+      "matrix": "w3",
+      "kind": "scale",
+      "shape": [
+        2304,
+        160
+      ],
+      "bytes": 368640,
+      "sha256": "caea203e153c03c156e471f8c5f927aedd1e8bc093c9e817d30bcd4ca4e5d308"
+    }
+  ]
+}
