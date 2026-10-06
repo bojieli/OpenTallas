@@ -9,7 +9,9 @@
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_softmax_exp6 #(
     parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
-    parameter integer LA = 6                    // add latency: the six-cut f12 adder (must be 6)
+    parameter integer LA = 6,                   // add latency: the six-cut f12 adder (must be 6)
+    parameter integer NSPLIT = 0                // 1: n = rint(t) over two stages (shift + round bits | increment +
+                                                //    negate), +1 cycle: the one-stage form missed by 12 ps (x6u25)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -19,7 +21,7 @@ module ot_dsrom_su_softmax_exp6 #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer T_N = 1 + LM + 1;        // n registered
+    localparam integer T_N = 1 + LM + 1 + NSPLIT; // n registered
     localparam integer T_K = T_N + 1;           // table products registered
     localparam integer T_R1 = T_K + LA;
     localparam integer T_R = T_R1 + LA;
@@ -321,9 +323,24 @@ module ot_dsrom_su_softmax_exp6 #(
     wire [4:0]  trb = tsh - 5'd1;
     wire        thalf = tm[trb];
     wire        tstk = |(tm & ~({24{1'b1}} << trb));
-    wire [7:0]  tmag = (te < 8'd126) ? 8'd0 : (tip[7:0] + {7'd0, thalf && (tstk || tip[0])});
     reg  [8:0]  nint;
-    always @(posedge clk) nint <= t[31] ? -{1'b0, tmag} : {1'b0, tmag};
+    generate if (NSPLIT) begin : g_ns
+        // stage 1: the shifted integer part, its round bit and sticky, the |t| < 1/2 test, the sign
+        reg [7:0] s_ip;
+        reg       s_rnd, s_small, s_neg;
+        always @(posedge clk) begin
+            s_ip <= tip[7:0];
+            s_rnd <= thalf && (tstk || tip[0]);
+            s_small <= (te < 8'd126);
+            s_neg <= t[31];
+        end
+        // stage 2: the increment and the negate (the same function as the one-stage form)
+        wire [7:0] tmag2 = s_small ? 8'd0 : (s_ip + {7'd0, s_rnd});
+        always @(posedge clk) nint <= s_neg ? -{1'b0, tmag2} : {1'b0, tmag2};
+    end else begin : g_n1
+        wire [7:0]  tmag = (te < 8'd126) ? 8'd0 : (tip[7:0] + {7'd0, thalf && (tstk || tip[0])});
+        always @(posedge clk) nint <= t[31] ? -{1'b0, tmag} : {1'b0, tmag};
+    end endgenerate
 
     reg [31:0] a_hi, a_lo;
     always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);

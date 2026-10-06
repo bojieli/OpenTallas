@@ -54,6 +54,10 @@ module ot_dsrom_su_softmax #(
                                          // register-to-register sites; 0: the keep-prefix LAT-4/LAT-5 adder
     parameter integer EXP6  = 0,         // 1: the exp units' adds on the six-cut f12 adder too (ot_dsrom_su_softmax_exp6,
                                          // add latency 6; ELA unused)
+    parameter integer EXPNS = 0,         // 1 (with EXP6): the exp's n = rint(t) over two stages (+1 cycle an exp)
+    parameter integer DENK  = 0,         // 1: the per-lane den copies on reset flops, a cell type the output register den_d
+                                         //    does not share, so synthesis cannot merge them into it (x6u30: den_d fanned
+                                         //    out to every lane's divider, -55 ps at CTS)
     parameter integer DIVF12 = 1         // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
 ) (
     input  wire                 clk,
@@ -87,7 +91,7 @@ module ot_dsrom_su_softmax #(
     localparam integer NPV = 512 / LPH;
     localparam integer LH = $clog2(LPH);
     localparam integer ELA_T = EXP6 ? 6 : ELA;    // the exp's add latency
-    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4;
+    localparam integer D_EXP = 7 * ELM + 8 * ELA_T + 4 + (EXP6 ? EXPNS : 0);
     localparam integer D_DIV = DIVF12 ? 33 : 19;
 
     function automatic [31:0] okey(input [31:0] x);
@@ -189,7 +193,7 @@ module ot_dsrom_su_softmax #(
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, mx_v, sink[32*h +: 32], {~mx_d[32*h + 31], mx_d[32*h +: 31]}, sk_d[32*h +: 32], fa);
         if (EXP6) begin : g_x6
-            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
         end else begin : g_x
             ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
@@ -237,7 +241,7 @@ module ot_dsrom_su_softmax #(
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, rv, s_rd[32*l +: 32], mbn[32*l +: 32], bd[32*l +: 32], fa);
         if (EXP6) begin : g_x6
-            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
+            ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(6), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
         end else begin : g_x
             ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
@@ -369,7 +373,13 @@ module ot_dsrom_su_softmax #(
     always @(posedge clk) if (dndv[RWD]) den_d <= den_dn;
     (* keep *) reg [NL*32-1:0] denl;             // den of the lane's head, a leaf register per lane (kept)
     generate for (l = 0; l < NL; l = l + 1) begin : g_dl
-        always @(posedge clk) if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
+        if (DENK) begin : g_k
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) denl[32*l +: 32] <= 32'd0;
+                else if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
+        end else begin : g_p
+            always @(posedge clk) if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
+        end
     end endgenerate
 
     // =================================================================================================
