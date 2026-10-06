@@ -1,0 +1,15 @@
+{
+  "result": "ACTUAL_NATIVE_PRIORITY_ADAPTER_CORRECTION_RUNTIME_PENDING",
+  "provider_unchanged": "554d7b0c9",
+  "defaultoff": true,
+  "mechanism": "Native sameowner XA read/write both enabled, up to read2/write5 sameedge held together and service reads old before all native-priority writes; distinct simultaneous XA RX/TX identities fault/reject before acceptance, never serialize or drop a native enable. XBdifferentowner remains unaccepted/backpressured. Genuine capture/consume/visibility/retire debt predicates retained.",
+  "scope_limit": "One-common-lease sameowner minimum, NOT allowner overlapping native caller binding; distinct simultaneous XAowners require supplier multilease mechanism or actual upstream source admission redesign before full native adoption. This join refuses unsupported binding explicitly.",
+  "extra_FF": 0,
+  "cost": "31bit compare within existing512NAND2 control allowance, no extra pipeline edges",
+  "bench_change": "Await final registered xb_port_retired at actual consumer posedge before final equal counters; no ordinal/oracle weakening. More explicit first-fatal counter values.",
+  "meaningful_negatives": "real heldreply+olddata/fourwriter priority/wrongowner consume/warm-debt",
+  "supplier_reuse": "normal full2MiB948cycles +CE/warm/identity and soleUE-only618ns actual5.032 passed reused, unchangedprovider554d",
+  "old_fail_preserved": "gate_r1_FAIL/",
+  "SS60_FF25": false,
+  "adopted": false
+}

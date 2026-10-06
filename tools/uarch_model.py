@@ -10351,15 +10351,25 @@ def dsrom_window_full_block_pipeline_model():
     write_enable = banks*cols*depth
     ack = npc*(256+13+4+12+1)
     read_extra = banks*4*rowb  # four new eight-entry read registers; original final q remains
+    # Stage r2: snapshot accepted read's range/user and four eight-slot
+    # completion groups alongside payload; compare at the existing next edge.
+    read_wanted_snapshot = banks*22
+    read_owner_snapshot = 21+22+10
+    read_completion_snapshot = banks*4
+    read_qualification_extra = (read_wanted_snapshot + read_owner_snapshot +
+                                read_completion_snapshot - banks)
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
-             read_extra + writer_control_upper + job_control_upper)
+             read_extra + read_qualification_extra + writer_control_upper + job_control_upper)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
     ff_area = added*DFF_UM2
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
-    cell_budget = baseline+ff_area+mux_area_upper
+    # Positive allowance for the captured end adder and four end comparisons;
+    # do not credit removal of the old relative-row subtraction/comparisons.
+    read_qualification_logic = (22*12 + banks*22*6)*.08748
+    cell_budget = baseline+ff_area+mux_area_upper+read_qualification_logic
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10380,23 +10390,33 @@ def dsrom_window_full_block_pipeline_model():
             winner_FF_bits=winner, column_payload_FF_bits=column_payload,
             row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
             extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            read_wanted_snapshot_FF_bits=read_wanted_snapshot,
+            read_owner_range_user_snapshot_FF_bits=read_owner_snapshot,
+            read_completion_group_snapshot_FF_bits=read_completion_snapshot,
+            removed_direct_bank_ok_FF_bits=banks,
+            read_qualification_added_FF_bits=read_qualification_extra,
+            read_qualification='fresh accepted-request operands and preedge completion captured with payload; qualification at existing second read edge, not reused permission',
             job_control_upper_bits=job_control_upper, added_FF_upper_bits=added,
             qualified_ready='current elastic occupancy and downstream transfer; never permission cached across mutation',
             acceptance_debt='retain accepted original beat identities through actual memory write and stream engine drain'),
         communication=dict(response_boundary_bits_per_cycle=npc*(256+13+4+2),
             landing_data_bits_per_cycle=column_payload,
             read_boundary_bits_per_cycle=banks*rowb,
+            read_control_snapshot_internal_bits_per_cycle=read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot,
+            read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
             track_demand_lower_bound=npc*(256+13+4+2)+banks*rowb,
             actual_parent_channel_capacity=None, parent_channel_fit=False),
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
+            read_qualification_logic_allowance_um2=read_qualification_logic,
+            read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
-            read_added_cycles=1, existing_stream_validation_tail_cycles_upper=8,
+            read_added_cycles=1, read_qualification_added_cycles=0, existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
             added_layer_cycles_upper=4+7+32+128+8,
@@ -11878,12 +11898,21 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
+def dsrom_wfc_native_two_lease_price():
+    """Legal next-position RX/previous-position TX before serialization RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/native_two_lease_model.json').read_text())
+
+
 def dsrom_wfc_protected_caller_adapter_price():
     """Actual readyless-to-protected service adapter, before its source build."""
     import json
     from pathlib import Path
     root=Path(__file__).resolve().parents[1]
     provider=json.loads((root/'results/uarch/dsrom_protected_vm_20261006/model.json').read_text())
+    receipt=root/'results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r2_PASS/result.json'
+    measured=json.loads(receipt.read_text()) if receipt.is_file() else None
     owner=47
     flags=8
     state=3
@@ -11909,8 +11938,11 @@ def dsrom_wfc_protected_caller_adapter_price():
       link_router_stalled=False,controller_pause='clock enables; root clocks unchanged, actual router drains independently',
       latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
       mandatory_per_A_read_capture_bubble_edges=1,
-      actual_service_wait_edges=None,actual_token_latency_ns=None,
-      allwriter_contract='bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled',
+      actual_service_wait_edges=measured['observed_service'] if measured else None,actual_token_latency_ns=None,
+      actual_context_nominal_fast_cycles=measured['nominal']['fast_cycles'] if measured else None,
+      actual_native_capture_fast_edges=measured['nominal']['native_capture_fast_edges'] if measured else None,
+      actual_context_scope='Minimum commonowner native service; config init/preload/retirement fixtures not full numerical engine/token latency',
+      allwriter_contract='bundle XA/XB0..3 native order including sameowner simultaneous XAread/write; old reads before all writes; distinct XB owner backpressured and unaccepted; distinct simultaneous XA RX/TX owners explicitly rejected without serialization',
       global_VM_geometry_owner='Turing current r8/new-frame binding',
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
