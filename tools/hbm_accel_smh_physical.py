@@ -276,24 +276,23 @@ def config_mk(name, nick, die, macros, extra):
 
 
 HOPS = r"""# front hop flops, FIRM (tools/hbm_accel_smh_physical.py); asap7 has no tapcells, rows alternate orientation
-set ot_blk [ord::get_db_block]
-set ot_rows {}
-foreach r [$ot_blk getRows] { lappend ot_rows [list [lindex [$r getOrigin] 1] [$r getOrient]] }
-set ot_rows [lsort -integer -index 0 $ot_rows]
-proc ot_place {re xlo xhi ylo yhi} {
-    global ot_blk ot_rows
+set ::ot_blk [ord::get_db_block]
+set ::ot_rows {}
+foreach r [$::ot_blk getRows] { lappend ::ot_rows [list [lindex [$r getOrigin] 1] [$r getOrient]] }
+set ::ot_rows [lsort -integer -index 0 $::ot_rows]
+proc ::ot_place {re xlo xhi ylo yhi} {
     set names {}
-    foreach i [$ot_blk getInsts] {
+    foreach i [$::ot_blk getInsts] {
         set n [$i getName]
-        if {[regexp $re $n] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $n }
+        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $n }
     }
     set names [lsort $names]
-    set dbu [$ot_blk getDbUnitsPerMicron]
+    set dbu [$::ot_blk getDbUnitsPerMicron]
     set px [expr {int(1.62 * $dbu)}]
     set k 0
     set rows {}
     set par 0
-    foreach r $ot_rows {
+    foreach r $::ot_rows {
         set y [lindex $r 0]
         if {$y < $ylo * $dbu || $y > $yhi * $dbu} { continue }
         if {$par % 2 == 0} { lappend rows $r }
