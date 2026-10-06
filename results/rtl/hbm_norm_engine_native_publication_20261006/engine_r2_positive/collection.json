@@ -1,0 +1,40 @@
+{
+  "status": "ACTUAL_ENGINE_POSITIVE_PASS_NEGATIVE_PENDING",
+  "arithmetic_instantiated": true,
+  "bench_source": "46b81ca11",
+  "runner_source": "b5c95fa36",
+  "remote_root": "ot-epyc1tb:/srv/opentallas-scratch/codex/hbm-norm-engine-46b81ca11/r2",
+  "parameters": {
+    "N": 64,
+    "D": 5120,
+    "KIND": 0,
+    "PUBLISH_QUANT": 1
+  },
+  "observed": {
+    "CP_returns": 25600,
+    "checked_publication_ACKs": 400,
+    "FP32_ACKs": 160,
+    "quant_ACKs": 240,
+    "samebank_gold_words": 12800,
+    "last_WORD": 16383,
+    "actual_engine_child_edges": 4289,
+    "full73_held_edges": 7,
+    "warm_joint_retire": true
+  },
+  "negative": {
+    "case": "real_engine_wrong_final_ACK",
+    "plusarg": "+FAULT_LAST_ACK",
+    "status": "LIVE_NO_INTERMEDIATE_TRANSACTION_OBSERVABILITY",
+    "runtime_pid": 138526,
+    "supervisor_pid": 4032155
+  },
+  "full_parent_qualified": false,
+  "physical_closed": false,
+  "artifacts": {
+    "prepared.json": "0112ee495b09626afbed3f7ccca920af311d6f7a2a0a30bb3bf40fb04f2eb5f4",
+    "real_engine_gold_compare.log": "0e5df7ac6d8f8fd7421db304b0a2f7c1a9ea3c12a8d72761a54b2c50509c3f36",
+    "real_engine_gold_compare.resources": "beb0e49b3002597fc2f876516b79cc46d38affa2608509d5e172e576b5ed8204",
+    "real_engine_gold_compare.json": "19703c55a8c15a9f1391af4265579f819cbc5880b86d3bd573279bc94cfc38a2",
+    "reuse.json": "fc67834ce965ab58d54f296040625f607833a2464c56c881b4f948c3bf5d8daa"
+  }
+}
