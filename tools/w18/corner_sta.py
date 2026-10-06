@@ -33,7 +33,7 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def script(corner: str, base: str, macros: list[str]) -> str:
+def script(corner: str, base: str, macros: list[str], sdc: str = "6_final.sdc") -> str:
     libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner])
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
@@ -45,7 +45,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {libs}
 {mlibs}
 read_db {base}/6_final.odb
-read_sdc {base}/6_final.sdc
+read_sdc {base}/{sdc}
 read_spef {base}/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_CORNER {corner}"
@@ -74,10 +74,10 @@ def _f(v):
         return None
 
 
-def run(orfs: Path, corner: str, macros: list[str]) -> dict:
+def run(orfs: Path, corner: str, macros: list[str], sdc: str = "6_final.sdc") -> dict:
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = f"/work/{base.relative_to(orfs)}"
-    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros))
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, sdc))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:latest", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
@@ -93,7 +93,7 @@ def run(orfs: Path, corner: str, macros: list[str]) -> dict:
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
                 errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                 odb_sha256=sha(base / "6_final.odb"), spef_sha256=sha(base / "6_final.spef"),
-                sdc_sha256=sha(base / "6_final.sdc"))
+                sdc_sha256=sha(base / sdc))
 
 
 def main(argv=None):
@@ -101,11 +101,13 @@ def main(argv=None):
     ap.add_argument("--orfs-dir", type=Path, required=True)
     ap.add_argument("--macro", action="append", default=[], help="repo-relative macro view dir")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--sdc-name", default="6_final.sdc", help="SDC in the results dir to sign off with (default the "
+                    "routed one; an over-constrained route signs off with a copy at the sign-off period)")
     a = ap.parse_args(argv)
     o = a.orfs_dir.resolve()
     rec = dict(schema="opentallas.w18.corner_sta.v1", orfs_dir=str(o),
-               sdc=(next((o / "results/asap7").glob("*/base")) / "6_final.sdc").read_text()[:600],
-               setup_ss=run(o, "ss", a.macro), hold_ff=run(o, "ff", a.macro),
+               sdc=(next((o / "results/asap7").glob("*/base")) / a.sdc_name).read_text()[:600], sdc_name=a.sdc_name,
+               setup_ss=run(o, "ss", a.macro, a.sdc_name), hold_ff=run(o, "ff", a.macro, a.sdc_name),
                libraries=LIBS, tool_sha256=sha(Path(__file__)),
                policy="AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps")
     rec["closes_signoff"] = bool(rec["setup_ss"]["worst_slack_ps"] is not None and rec["setup_ss"]["worst_slack_ps"] >= 0

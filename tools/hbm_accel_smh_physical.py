@@ -212,10 +212,12 @@ def front_pins(g, hcore):
 
 
 # ---------------- ORFS config ----------------
-def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None):
+def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None, period=833,
+              skew=0):
     lat_ff = lat_ff if lat_ff is not None else round(0.6 * float(lat))
-    s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock 833 ps, 60 / 25 ps uncertainty",
-         "set clk_period 833",
+    s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock {period} ps (sign-off 833: run.sh rewrites the",
+         "# period of the routed SDC), 60 / 25 ps uncertainty",
+         f"set clk_period {period}",
          "create_clock -name core_clk -period $clk_period [get_ports clk]",
          "create_clock -name nbr_clk -period $clk_period",
          "# the neighbour's flop sits at this block's own clock insertion, in each corner.  One SDC serves both corners",
@@ -226,6 +228,8 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          "# the parent on the real pair.",
          f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
          f"set dlo {float(lat) - float(lat_ff):g}",
+         "# (margin rule) die clock-arrival difference budgeted on every port: setup +skew, hold -skew",
+         f"set skew {skew}",
          "set_clock_uncertainty -setup 60 [all_clocks]",
          "set_clock_uncertainty -hold 25 [all_clocks]",
          "set_false_path -from [get_ports rst_n]"]
@@ -237,20 +241,20 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "# the hub's.  The element top keeps the binding ideal-clock die budget and reports it unchanged.",
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
-              "set_input_delay -max 473 -clock nbr_clk $elem_in",
-              "set_input_delay -min [expr $clk_period * 0.2] -clock nbr_clk $elem_in",
-              "set_output_delay -max 323 -clock nbr_clk $elem_out",
-              "set_output_delay -min [expr $clk_period * 0.2 + $dlo] -clock nbr_clk $elem_out",
+              "set_input_delay -max [expr 473 + $skew] -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr 833 * 0.2 - $skew] -clock nbr_clk $elem_in",
+              "set_output_delay -max [expr 323 + $skew] -clock nbr_clk $elem_out",
+              "set_output_delay -min [expr 833 * 0.2 + $dlo - $skew] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
               "set nbr_out [get_ports {rout_* bout_*}]"]
     else:
         s += [f"set nbr_in [get_ports {{{nbr_in}}}]",
               "set nbr_out [all_outputs]"]
     s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
-          "set_input_delay -max 300 -clock nbr_clk $nbr_in",
-          "set_input_delay -min 30 -clock nbr_clk $nbr_in",
-          "set_output_delay -max 300 -clock nbr_clk $nbr_out",
-          "set_output_delay -min [expr 50 + $dlo] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
+          "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
+          "set_input_delay -min [expr 30 - $skew] -clock nbr_clk $nbr_in",
+          "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
+          "set_output_delay -min [expr 50 + $dlo - $skew] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
           "set_max_fanout 32 [current_design]"]
     if ring:
@@ -290,6 +294,132 @@ set ::ot_rows {}
 set ::ot_ry [dict create]
 foreach r [$::ot_blk getRows] { dict set ::ot_ry [lindex [$r getOrigin] 1] [$r getOrient] }
 foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [dict get $::ot_ry $y]] }
+# every flop of re whose D or Q reaches a port (through buffers / inverters) is placed FIRM at its pin: W / E pins
+# in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
+# pin's x.  Run before any other FIRM placement in the strips.
+proc ::ot_net_port {net dir} {
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} { return [lindex $bts 0] }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            set out [$it isOutputSignal]
+            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+            set inst [$it getInst]
+            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+            foreach o [$inst getITerms] {
+                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+            }
+            break
+        }
+        set net $nx
+    }
+    return ""
+}
+proc ::ot_flop_port {inst} {
+    set qn "NULL"; set dn "NULL"
+    foreach it [$inst getITerms] {
+        set mt [[$it getMTerm] getName]
+        if {[$it isOutputSignal]} { set qn [$it getNet] } elseif {$mt eq "D"} { set dn [$it getNet] }
+    }
+    set bt [::ot_net_port $qn q]
+    if {$bt eq ""} { set bt [::ot_net_port $dn d] }
+    return $bt
+}
+proc ::ot_pin_place_auto {re depth} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set die [$::ot_blk getDieArea]
+    set dw [$die xMax]; set dh [$die yMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set dp [expr {int(round($depth / 0.054)) * $sw}]
+    set E [dict create W {} E {} S {} N {}]
+    set skip 0
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set bt [::ot_flop_port $i]
+        if {$bt eq ""} { incr skip; continue }
+        set bb [$bt getBBox]
+        set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
+        dict lappend E $e [list [expr {($e eq "W" || $e eq "E") ? $py : $px}] $i]
+    }
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set placed 0
+    foreach e {W E} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        if {$e eq "W"} { set lo $m0; set hi [expr {$m0 + $dp}] } else { set hi [expr {$dw - $m0}]; set lo [expr {$hi - $dp}] }
+        set cur [lrepeat $nr [expr {$e eq "W" ? $lo : $hi}]]
+        foreach f $fl {
+            lassign $f py inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]; set h [[$inst getMaster] getHeight]
+            for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+                set m [expr {($a + $b) / 2}]
+                if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+            }
+            set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+            set done 0
+            for {set s 0} {$s < $nr && !$done} {incr s} {
+                foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                    if {$r < 0 || $r >= $nr} { continue }
+                    set c [lindex $cur $r]
+                    if {$e eq "W"} {
+                        if {$c + $w2 > $hi} { continue }
+                        set x $c; lset cur $r [expr {$c + $w2}]
+                    } else {
+                        if {$c - $w2 < $lo} { continue }
+                        set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                    }
+                    set rr [lindex $rows $r]
+                    place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                    set done 1; incr placed; break
+                }
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+        }
+    }
+    foreach e {S N} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        set er {}
+        foreach r $rows {
+            set y [lindex $r 0]
+            if {($e eq "S" && $y >= $m0 && $y < $m0 + $dp) || ($e eq "N" && $y + 270 <= $dh - $m0 && $y + 270 > $dh - $m0 - $dp)} { lappend er $r }
+        }
+        if {$e eq "N"} { set er [lreverse $er] }
+        set ne [llength $er]
+        if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
+        set cur [lrepeat $ne [expr {$m0 + $dp}]]
+        set k 0
+        foreach f $fl {
+            lassign $f px inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]
+            set done 0
+            for {set t 0} {$t < $ne && !$done} {incr t} {
+                set r [expr {($k + $t) % $ne}]
+                set c [lindex $cur $r]
+                set x [expr {$px - $w / 2}]
+                set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
+                if {$x < $c} { set x $c }
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
+                set rr [lindex $er $r]
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                lset cur $r [expr {$x + $w2}]
+                set done 1; incr placed
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+            incr k
+        }
+    }
+    puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
+}
 proc ::ot_place {re xlo xhi ylo yhi} {
     set dbu [$::ot_blk getDbUnitsPerMicron]
     set x0 [expr {int(round(1.08 * $dbu))}]
@@ -298,7 +428,8 @@ proc ::ot_place {re xlo xhi ylo yhi} {
     set occ [dict create]
     foreach i [$::ot_blk getInsts] {
         set n [$i getName]
-        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $i; continue }
+        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]] &&
+            [$i getPlacementStatus] ne "FIRM"} { lappend names $i; continue }
         if {[$i isPlaced] || [$i getPlacementStatus] eq "FIRM"} {
             set bb [$i getBBox]
             if {[$bb yMin] >= $ylo * $dbu - 1 && [$bb yMin] <= $yhi * $dbu} {
@@ -428,8 +559,9 @@ proc ::ot_pin_place {re side xoff xw} {
 # Every row / x-write output flop now sits at its own pin's row (the bundle leaves through a 14 um edge strip); the
 # issue with the start channel's sink and the bulk copy's control are FIRM, compact, in the central channel next to
 # the line skid and s1 they talk to every cycle.
-ot_pin_place {^g_side\[0\]\.g_rs\[\d\]\.(u_o\.|g_bo\.u_bo[dv])} W 0 14
-ot_pin_place {^g_side\[1\]\.g_rs\[\d\]\.(u_o\.|g_bo\.u_bo[dv])} E 0 14
+# (margin m1) every flop that reaches a pin sits at it: the O stages in the W / E strips, the element-pin landing
+# and launch registers (x-write wl, response chain stage 0, request skid head, result outputs) in the N / S rows
+ot_pin_place_auto {.*} 14
 # central channel (x 148.4 .. 276.5 between the ring columns), bottom to top: line skid, s1, issue, bulk-copy control
 ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 470 500
 ot_place {^s1_(w|cv|ct)} 152 272 502 520
@@ -458,6 +590,143 @@ ot_place {^u_rsk\.} 120 200 3 12
 """
 
 
+PIN_HDR = r"""# piece port flops at their pins, FIRM (tools/hbm_accel_smh_physical.py; margin rule: every boundary flop -> pin)
+set ::ot_blk [ord::get_db_block]
+set ::ot_rows {}
+set ::ot_ry [dict create]
+foreach r [$::ot_blk getRows] { dict set ::ot_ry [lindex [$r getOrigin] 1] [$r getOrient] }
+foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [dict get $::ot_ry $y]] }
+"""
+PIN_TCL = PIN_HDR + r"""# every flop of re whose D or Q reaches a port (through buffers / inverters) is placed FIRM at its pin: W / E pins
+# in an edge strip `depth` um wide at the pin's row, N / S pins in the `depth` um of rows next to that edge at the
+# pin's x.  Run before any other FIRM placement in the strips.
+proc ::ot_net_port {net dir} {
+    for {set d 0} {$d < 4} {incr d} {
+        if {$net eq "NULL" || $net eq ""} { return "" }
+        set bts [$net getBTerms]
+        if {[llength $bts] > 0} { return [lindex $bts 0] }
+        set nx "NULL"
+        foreach it [$net getITerms] {
+            set out [$it isOutputSignal]
+            if {($dir eq "q" && $out) || ($dir eq "d" && !$out)} { continue }
+            set inst [$it getInst]
+            if {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} { continue }
+            foreach o [$inst getITerms] {
+                if {![$o isInputSignal] && ![$o isOutputSignal]} { continue }
+                if {($dir eq "q" && [$o isOutputSignal]) || ($dir eq "d" && [$o isInputSignal])} { set nx [$o getNet] }
+            }
+            break
+        }
+        set net $nx
+    }
+    return ""
+}
+proc ::ot_flop_port {inst} {
+    set qn "NULL"; set dn "NULL"
+    foreach it [$inst getITerms] {
+        set mt [[$it getMTerm] getName]
+        if {[$it isOutputSignal]} { set qn [$it getNet] } elseif {$mt eq "D"} { set dn [$it getNet] }
+    }
+    set bt [::ot_net_port $qn q]
+    if {$bt eq ""} { set bt [::ot_net_port $dn d] }
+    return $bt
+}
+proc ::ot_pin_place_auto {re depth} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set sw [expr {int(round(0.054 * $dbu))}]
+    set die [$::ot_blk getDieArea]
+    set dw [$die xMax]; set dh [$die yMax]
+    set m0 [expr {int(round(1.08 * $dbu))}]
+    set dp [expr {int(round($depth / 0.054)) * $sw}]
+    set E [dict create W {} E {} S {} N {}]
+    set skip 0
+    foreach i [$::ot_blk getInsts] {
+        if {![string match *DFF* [[$i getMaster] getName]]} { continue }
+        if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
+        set bt [::ot_flop_port $i]
+        if {$bt eq ""} { incr skip; continue }
+        set bb [$bt getBBox]
+        set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
+        dict lappend E $e [list [expr {($e eq "W" || $e eq "E") ? $py : $px}] $i]
+    }
+    set rows {}
+    set par 0
+    foreach r $::ot_rows { if {$par % 2 == 0} { lappend rows $r }; incr par }
+    set nr [llength $rows]
+    set placed 0
+    foreach e {W E} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        if {$e eq "W"} { set lo $m0; set hi [expr {$m0 + $dp}] } else { set hi [expr {$dw - $m0}]; set lo [expr {$hi - $dp}] }
+        set cur [lrepeat $nr [expr {$e eq "W" ? $lo : $hi}]]
+        foreach f $fl {
+            lassign $f py inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]; set h [[$inst getMaster] getHeight]
+            for {set a 0; set b [expr {$nr - 1}]} {$a <= $b} {} {
+                set m [expr {($a + $b) / 2}]
+                if {[lindex $rows $m 0] + $h / 2 < $py} { set a [expr {$m + 1}] } else { set b [expr {$m - 1}] }
+            }
+            set r0 [expr {$a >= $nr ? $nr - 1 : $a}]
+            set done 0
+            for {set s 0} {$s < $nr && !$done} {incr s} {
+                foreach r [list [expr {$r0 - $s}] [expr {$r0 + $s}]] {
+                    if {$r < 0 || $r >= $nr} { continue }
+                    set c [lindex $cur $r]
+                    if {$e eq "W"} {
+                        if {$c + $w2 > $hi} { continue }
+                        set x $c; lset cur $r [expr {$c + $w2}]
+                    } else {
+                        if {$c - $w2 < $lo} { continue }
+                        set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                    }
+                    set rr [lindex $rows $r]
+                    place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                    set done 1; incr placed; break
+                }
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+        }
+    }
+    foreach e {S N} {
+        set fl [lsort -integer -index 0 [dict get $E $e]]
+        if {![llength $fl]} { continue }
+        set er {}
+        foreach r $rows {
+            set y [lindex $r 0]
+            if {($e eq "S" && $y >= $m0 && $y < $m0 + $dp) || ($e eq "N" && $y + 270 <= $dh - $m0 && $y + 270 > $dh - $m0 - $dp)} { lappend er $r }
+        }
+        if {$e eq "N"} { set er [lreverse $er] }
+        set ne [llength $er]
+        if {!$ne} { error "ot_pin_place_auto: no rows on $e" }
+        set cur [lrepeat $ne [expr {$m0 + $dp}]]
+        set k 0
+        foreach f $fl {
+            lassign $f px inst
+            set w [[$inst getMaster] getWidth]; set w2 [expr {$w + 12 * $sw}]
+            set done 0
+            for {set t 0} {$t < $ne && !$done} {incr t} {
+                set r [expr {($k + $t) % $ne}]
+                set c [lindex $cur $r]
+                set x [expr {$px - $w / 2}]
+                set x [expr {$m0 + ($x - $m0) / $sw * $sw}]
+                if {$x < $c} { set x $c }
+                if {$x + $w2 > $dw - $m0 - $dp} { continue }
+                set rr [lindex $er $r]
+                place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
+                lset cur $r [expr {$x + $w2}]
+                set done 1; incr placed
+            }
+            if {!$done} { error "ot_pin_place_auto $re: no room on $e for [$inst getName]" }
+            incr k
+        }
+    }
+    puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
+}
+ot_pin_place_auto {.*} 16
+"""
+
+
 RUN = r"""#!/bin/bash
 # {label}: route, abstract, sign-off corner STA.  Host-side paths; the container sees /src (sources) and /work.
 set -u
@@ -478,7 +747,9 @@ if [ -f $B/6_final.odb ]; then
   docker run --rm -v $S:/src:ro -v $W:/work $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl" > $W/abstract.log 2>&1
   echo "abstract_rc=$?" >> $W/status
-  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {macro_args} --output $W/corner_sta.json) > $W/corner.log 2>&1
+  # sign-off at 833 ps: the routed SDC with the (over-constrained) route period put back to 833
+  sed -E 's/-period [0-9.]+/-period 833.0000/g' $B/6_final.sdc > $B/6_signoff.sdc
+  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {macro_args} --sdc-name 6_signoff.sdc --output $W/corner_sta.json) > $W/corner.log 2>&1
   echo "corner_rc=$?" >> $W/status
 fi
 echo "end $(date -Is)" >> $W/status
@@ -551,7 +822,7 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff)
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew)
     elif a.piece == "be":
         w, h = g["tile_w"], g["be_h"]
         pins = be_pins(w, h, a.variant)
@@ -559,7 +830,7 @@ def cmd_block(a):
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff)
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew)
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -580,10 +851,13 @@ def cmd_block(a):
                f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff)
+        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew)
         # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
+        extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
+    if a.piece != "front" and a.pin_flops:
+        (work / "hops.tcl").write_text(PIN_TCL)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     die = (round(w, 3), round(h, 3))
     (work / "pins.tcl").write_text(pin_tcl(pins))
@@ -696,6 +970,11 @@ def main(argv=None):
     b.add_argument("--grt-allow", action="store_true", help="global route may finish with overflow and leave it "
                    "to detailed route (sign-off still requires zero DRC)")
     b.add_argument("--cores", default="16")
+    b.add_argument("--period", default="833", help="route clock period (ps); sign-off is always 833 (margin rule: "
+                   "route at ~770 for +60 ps at 833)")
+    b.add_argument("--skew", default="0", help="die clock-arrival difference budgeted on every port (ps; margin "
+                   "rule >= 150): setup +skew, hold -skew")
+    b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)
