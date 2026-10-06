@@ -13,7 +13,9 @@
 //   k (index keys 1024 b + 2 forwarded clocks) -> two-clock FIFOs (ot_hbm_accel_cdc_fifo, 8 deep: a continuous
 //     stream needs the 2+2-period pointer round trip covered; 4 deep overflows in the bench) -> key register ->
 //     t_vm = PLACEHOLDER (key[511:0] ^ key[1023:512]) where the selector result would leave; no scoring.
-module hfd_index_q #(parameter integer A_ST = 6, K_ST = 14) (   // wire stages: a0/a3 -> t_su 3.02 mm, k -> t_vm 6.28 mm
+// MARGIN (owner rule 2026-10-06): +2 wire stages on both chain classes (route at <= 770 ps: <= ~395 um a hop) and a
+//   capture register on the forwarded key clock's falling edge at the k pins (no logic between pin and flop).
+module hfd_index_q #(parameter integer A_ST = 8, K_ST = 16) (   // wire stages: a0/a3 -> t_su 3.02 mm, k -> t_vm 6.28 mm
     input wire [528:0] a0,
     input wire [528:0] a1,
     input wire [528:0] a2,
@@ -61,8 +63,11 @@ module hfd_index_q #(parameter integer A_ST = 6, K_ST = 14) (   // wire stages: 
   wire [511:0] kh [0:1]; wire [1:0] ke;
   generate for (g = 0; g < 2; g = g + 1) begin : gk
     wire full_; wire [2:0] fr_;
-    ot_hbm_accel_cdc_fifo #(.W(512), .AW(3)) u_x (.wclk(~k[1024+g]), .wrst_n(rst[0]), .we(1'b1),
-      .wdata(k[g*512 +: 512]), .full(full_), .rd_freed(fr_), .rclk(c), .rrst_n(rn), .re(1'b1), .rdata(kh[g]),
+    wire wck = ~k[1024+g];                                  // one inverted clock net for capture and FIFO write
+    reg [511:0] kc;                                         // MARGIN: capture flop at the pin
+    always @(posedge wck) kc <= k[g*512 +: 512];
+    ot_hbm_accel_cdc_fifo #(.W(512), .AW(3)) u_x (.wclk(wck), .wrst_n(rst[0]), .we(1'b1),
+      .wdata(kc), .full(full_), .rd_freed(fr_), .rclk(c), .rrst_n(rn), .re(1'b1), .rdata(kh[g]),
       .empty(ke[g]));
   end endgenerate
   reg kv; reg [511:0] kf;

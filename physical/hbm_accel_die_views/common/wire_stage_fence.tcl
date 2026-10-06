@@ -8,7 +8,7 @@
 # from stage N-1 (breadth-first over cells, sequential cells included, nets with more than OT_WS_FANOUT loads
 # skipped), so every hop carries 1/(N+1) of the distance.  Region area = stage cell area / OT_WS_DENSITY (0.12),
 # square, clipped to the core; a box that would overlap an earlier one moves along the chain direction.
-# Membership: flops named <chain>.gn.r[k][*] and <chain>.gn.rv[k] (synthesis keeps register names).
+# Membership: flops named <chain>.gn.st[k].r[*] and <chain>.gn.rv[k] (synthesis keeps register names).
 # Terminal positions come from the IO constraint file (ORFS erases IO_CONSTRAINTS in the floorplan stage, so the
 # route passes the same file as OT_IO_FILE).
 global ws_pin ws_chain ws_fan ws_tok ws_n ws_seeds
@@ -32,7 +32,8 @@ if {![array size ws_pin]} { error "OT_WS fence: no terminal positions in $ws_iof
 array set ws_st {}; array set ws_n {}; array set ws_chain {}
 foreach i [$ws_blk getInsts] {
   set n [string map {"\\" ""} [$i getName]]
-  if {[regexp {^(.+)\.gn\.rv?\[([0-9]+)\]} $n -> c k]} {
+  if {[regexp {^(.+)\.gn\.(?:st\[([0-9]+)\]\.r|rv\[([0-9]+)\])} $n -> c k1 k2]} {
+    set k [expr {$k1 ne "" ? $k1 : $k2}]
     lappend ws_st($c,$k) $i
     set ws_chain([$i getName]) $c
     if {![info exists ws_n($c)] || $k + 1 > $ws_n($c)} { set ws_n($c) [expr {$k + 1}] }
