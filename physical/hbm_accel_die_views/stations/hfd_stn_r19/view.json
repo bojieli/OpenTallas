@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_stn_r19",
+  "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P2_hfd_stn_r19",
   "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
-  "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_stn_r19/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+  "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_stn_r19 top=physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv DW=60.024 DH=66.936 PD=0.40 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P2_hfd_stn_r19/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -58,8 +58,8 @@
   "margin": {
    "margin": true,
    "ckins_ps": 0,
-   "route_sdc": ".views/P1_hfd_stn_r19/route.sdc",
-   "signoff_sdc": ".views/P1_hfd_stn_r19/signoff.sdc",
+   "route_sdc": ".views/P2_hfd_stn_r19/route.sdc",
+   "signoff_sdc": ".views/P2_hfd_stn_r19/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
@@ -108,13 +108,6 @@
  "pin_access_check": {
   "tool": "physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh",
   "verdict": "FAIL",
-  "drt0073_instances": 4,
-  "orients": [
-   "R0",
-   "MX",
-   "MY",
-   "R180"
-  ],
-  "detail": "a[1029] no access point in all 4 orientations (own-wire M4 OBS strip x 59.84-59.90 abutting the E-face pin run); P2 re-route at PD 0.40 (EPYC1 routes/P2_hfd_stn_r19)"
+  "detail": "a[1029] x4 orients (P2 at PD 0.40 was inert: PLACE_DENSITY_LB_ADDON overrides PD, identical result); R1 re-route with bench/stn_pin_keepout.tcl"
  }
 }
