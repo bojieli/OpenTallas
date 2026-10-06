@@ -89,7 +89,7 @@ proc ot_toport {n depth} {
 }
 array set ot_outs {}; array set ot_ins {}
 foreach i [$ot_blk getInsts] {
-  if {[info exists ot_grp([$i getName])] || ![ot_isseq $i]} continue
+  if {![ot_isseq $i]} continue
   set pins {}
   foreach it [$i getITerms] {
     if {![$it isOutputSignal]} continue
@@ -97,6 +97,10 @@ foreach i [$ot_blk getInsts] {
     set pins [concat $pins [ot_toport $n 2]]
   }
   if {![llength $pins]} continue
+  if {[info exists ot_grp([$i getName])]} {
+    foreach p $pins { lappend ot_outs($ot_grp([$i getName])) $p }
+    continue
+  }
   set g [ot_back $i $ot_depth]
   if {$g ne ""} { lappend ot_mem($g) $i; foreach p $pins { lappend ot_outs($g) $p } }
 }
@@ -112,16 +116,26 @@ proc ot_cent {l} {
   return [list [expr {$sx/[llength $l]}] [expr {$sy/[llength $l]}]]
 }
 if {![array size ot_pin]} { error "OT_STN fence: no terminal positions (OT_IO_FILE '$ot_iof')" }
+# One fence holds every FIFO of the view: a view's FIFOs are parallel lanes between the same faces (meso_r1: three
+# lanes E -> W), and separate regions would overlap.  Its centre is the area-weighted mean of the per-FIFO centres.
+set area 0.0; set wx 0.0; set wy 0.0; set nin 0; set nout 0; set all {}
 foreach g [lsort [array names ot_mem]] {
   set ins [expr {[info exists ot_ins($g)] ? $ot_ins($g) : {}}]
   set outs [expr {[info exists ot_outs($g)] ? $ot_outs($g) : {}}]
-  set area 0.0
-  foreach i $ot_mem($g) { set area [expr {$area + double([[$i getMaster] getWidth])*[[$i getMaster] getHeight]}] }
+  set ga 0.0
+  foreach i $ot_mem($g) { set ga [expr {$ga + double([[$i getMaster] getWidth])*[[$i getMaster] getHeight]}] }
   set mid [list [expr {($cx0+$cx1)/2}] [expr {($cy0+$cy1)/2}]]
   if {[llength $ins] && [llength $outs]} {
     set a [ot_cent $ins]; set b [ot_cent $outs]
     set mid [list [expr {[lindex $a 0]+$ot_pos*([lindex $b 0]-[lindex $a 0])}] [expr {[lindex $a 1]+$ot_pos*([lindex $b 1]-[lindex $a 1])}]]
   }
+  puts [format "OT_STN: fifo %s %d cells %.1f um2, %d in / %d out terminals, centre (%.2f %.2f) um" $g [llength $ot_mem($g)] \
+        [expr {$ga/$ot_dbu/$ot_dbu}] [llength $ins] [llength $outs] [expr {[lindex $mid 0]/double($ot_dbu)}] [expr {[lindex $mid 1]/double($ot_dbu)}]]
+  set area [expr {$area+$ga}]; set wx [expr {$wx+$ga*[lindex $mid 0]}]; set wy [expr {$wy+$ga*[lindex $mid 1]}]
+  set nin [expr {$nin+[llength $ins]}]; set nout [expr {$nout+[llength $outs]}]; set all [concat $all $ot_mem($g)]
+}
+if {[llength $all]} {
+  set mid [list [expr {$wx/$area}] [expr {$wy/$area}]]
   set need [expr {$area / $ot_dens}]
   set W [expr {$cx1-$cx0}]; set H [expr {$cy1-$cy0}]
   if {$H >= $W} {
@@ -133,14 +147,14 @@ foreach g [lsort [array names ot_mem]] {
   }
   set rx0 [expr {round($rx0)}]; set ry0 [expr {round($ry0)}]
   set rx1 [expr {round($rx0+$rw)}]; set ry1 [expr {round($ry0+$rh)}]
-  set r [odb::dbRegion_create $ot_blk "ot_fence_$g"]
+  set r [odb::dbRegion_create $ot_blk "ot_fence_meso"]
   odb::dbBox_create $r $rx0 $ry0 $rx1 $ry1
   $r setRegionType INCLUSIVE
   # global placement places a region's cells through a group bound to it (a region alone only constrains the
   # legaliser, which then drags the cells there after an unconstrained global placement: r8, 3x wirelength)
-  set grp [odb::dbGroup_create $r "ot_fence_grp_$g"]
-  foreach i $ot_mem($g) { $grp addInst $i }
-  puts [format "OT_STN: fence %s %d cells %.1f um2 at %.2f -> (%.2f %.2f %.2f %.2f) um, %d in / %d out terminals" \
-        $g [llength $ot_mem($g)] [expr {$area/$ot_dbu/$ot_dbu}] $ot_dens [expr {$rx0/double($ot_dbu)}] \
-        [expr {$ry0/double($ot_dbu)}] [expr {$rx1/double($ot_dbu)}] [expr {$ry1/double($ot_dbu)}] [llength $ins] [llength $outs]]
+  set grp [odb::dbGroup_create $r "ot_fence_grp_meso"]
+  foreach i $all { $grp addInst $i }
+  puts [format "OT_STN: fence %d FIFO(s) %d cells %.1f um2 at %.2f -> (%.2f %.2f %.2f %.2f) um, %d in / %d out terminals" \
+        [array size ot_mem] [llength $all] [expr {$area/$ot_dbu/$ot_dbu}] $ot_dens [expr {$rx0/double($ot_dbu)}] \
+        [expr {$ry0/double($ot_dbu)}] [expr {$rx1/double($ot_dbu)}] [expr {$ry1/double($ot_dbu)}] $nin $nout]
 }
