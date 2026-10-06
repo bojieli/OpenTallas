@@ -88,4 +88,25 @@ module tb_qwen_rt_kv_stream4 #(
             if (ce_q[i]) slice[i][a_q[i]] <= (slice[i][a_q[i]] & ~m_q[i]) | (d_q[i] & m_q[i]);
         end
     end
+`ifdef KVTRACE
+    // landing trace for the die landing-crossbar study (qfd_kvc): every accepted landed beat with the cycle it
+    // was first offered (CDC l_v), the cycle it was accepted, the PC and its slice writes' tiles (1 K, 2 V halves)
+    integer kv_fd = 0; integer kv_cyc = 0; reg [NPC-1:0] kv_wait = 0; integer kv_first [0:NPC-1];
+    string kv_fn;
+    initial begin
+        if (!$value$plusargs("kvtrace=%s", kv_fn)) kv_fn = "kvtrace.txt";
+        kv_fd = $fopen(kv_fn, "a");
+    end
+    always @(posedge clk) begin
+        kv_cyc <= kv_cyc + 1;
+        if (kv_fd != 0) for (int p = 0; p < NPC; p++) begin
+            if (u_svc.l_v[p] && !kv_wait[p]) begin kv_wait[p] = 1'b1; kv_first[p] = kv_cyc; end
+            if (u_svc.l_v[p] && u_svc.l_pop[p]) begin
+                $fwrite(kv_fd, "%0d %0d %0d %0d %0d %0d\n", kv_cyc, kv_first[p], p,
+                        u_svc.b_n[p], u_svc.b_tile[p][0], u_svc.b_tile[p][1]);
+                kv_wait[p] = 1'b0;
+            end
+        end
+    end
+`endif
 endmodule
