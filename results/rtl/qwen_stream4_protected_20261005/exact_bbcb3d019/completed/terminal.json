@@ -1,0 +1,99 @@
+{
+  "verdict": "PASS_EXISTING_PINNED_32_CASE_SEQUENCE",
+  "source_commit": "bbcb3d019",
+  "source_config": {
+    "source_commit": "bbcb3d019",
+    "PROTECTED": 1,
+    "SYNC": 2,
+    "NSTK": 4,
+    "NPC": 128,
+    "LD": 64,
+    "WB": 16,
+    "AD": 64,
+    "CLK_fs": 833333,
+    "HCLK_fs": 1024000,
+    "build_workers": 4,
+    "build_guard_GiB": 96,
+    "build_reservation_basis": "prior raw STREAM4 build declared32GiB; protected mutable FF ratio2.93; rounded96GiB fleet admission only, no process address/wall/file limits",
+    "corner_tool_parent": "dc3085b40",
+    "corner_tool_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+    "exact_cases": 32,
+    "adopted": false
+  },
+  "ELF_sha256": "5a4572c7b768916c90afd8df3c33717b26d464bbb1656b975ea892bc055e5fb0",
+  "supervisor_exit": 0,
+  "runs": [
+    {
+      "name": "ALL_0",
+      "exit": 0,
+      "PASS_count": 15,
+      "cases": [
+        "PASS ISO_P255 \"P\":255,\"fill_cycles\":128,\"fill_sectors\":4096,\"sectors_per_cycle\":32.00,\"tb_s_at_1p2ghz\":1.229,\"kv_ok_after_start\":546,\"su_drain_wait\":481,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P256_tile_open \"P\":256,\"fill_cycles\":130,\"fill_sectors\":4352,\"sectors_per_cycle\":33.48,\"tb_s_at_1p2ghz\":1.286,\"kv_ok_after_start\":546,\"su_drain_wait\":481,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P0 \"P\":0,\"fill_cycles\":80,\"fill_sectors\":256,\"sectors_per_cycle\":3.20,\"tb_s_at_1p2ghz\":0.123,\"kv_ok_after_start\":498,\"su_drain_wait\":433,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P1023 \"P\":1023,\"fill_cycles\":261,\"fill_sectors\":16384,\"sectors_per_cycle\":62.77,\"tb_s_at_1p2ghz\":2.411,\"kv_ok_after_start\":788,\"su_drain_wait\":723,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P4095 \"P\":4095,\"fill_cycles\":780,\"fill_sectors\":65536,\"sectors_per_cycle\":84.02,\"tb_s_at_1p2ghz\":3.226,\"kv_ok_after_start\":1316,\"su_drain_wait\":1251,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P8191 \"P\":8191,\"fill_cycles\":1466,\"fill_sectors\":131072,\"sectors_per_cycle\":89.41,\"tb_s_at_1p2ghz\":3.433,\"kv_ok_after_start\":2019,\"su_drain_wait\":1954,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P8191_posted \"P\":8191,\"fill_cycles\":1466,\"fill_sectors\":131072,\"sectors_per_cycle\":89.41,\"tb_s_at_1p2ghz\":3.433,\"kv_ok_after_start\":1476,\"su_drain_wait\":0,\"violations\":0 : slices and token HBM codes exact",
+        "PASS CHAIN_P8191_base \"P\":8191,\"early_go\":0,\"posted_wb\":0,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1466,\"A_kv_ok_after_start\":2019,\"B_fill_cycles\":1433,\"B_fill_exposed_after_start\":1433,\"B_kv_ok_after_start\":1962,\"su_drain_wait\":3851,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P8191_early_posted \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1466,\"A_kv_ok_after_start\":1476,\"B_fill_cycles\":1430,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P4095_early_posted \"P\":4095,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":600,\"mlp_cycles\":3000,\"A_fill_cycles\":780,\"A_kv_ok_after_start\":790,\"B_fill_cycles\":745,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P8191_early_short_mlp \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":400,\"A_fill_cycles\":1466,\"A_kv_ok_after_start\":1476,\"B_fill_cycles\":1427,\"B_fill_exposed_after_start\":1027,\"B_kv_ok_after_start\":1037,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P255_early_posted \"P\":255,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":300,\"mlp_cycles\":2500,\"A_fill_cycles\":128,\"A_kv_ok_after_start\":138,\"B_fill_cycles\":90,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS NEG_wrong_position \"P\":255,\"fill_cycles\":128,\"fill_sectors\":4096,\"sectors_per_cycle\":32.00,\"tb_s_at_1p2ghz\":1.229,\"kv_ok_after_start\":200312,\"su_drain_wait\":259,\"violations\":0 : faulted as required (code 8)",
+        "PASS NEG_not_e4m3 \"P\":255,\"fill_cycles\":128,\"fill_sectors\":4096,\"sectors_per_cycle\":32.00,\"tb_s_at_1p2ghz\":1.229,\"kv_ok_after_start\":536,\"su_drain_wait\":481,\"violations\":0 : faulted as required (code 8)",
+        "PASS NEG_P8192_beyond_map \"P\":8192,\"fill_cycles\":0,\"fill_sectors\":0,\"sectors_per_cycle\":0.00,\"tb_s_at_1p2ghz\":0.000,\"kv_ok_after_start\":200049,\"su_drain_wait\":0,\"violations\":0 : faulted as required (code 32770)"
+      ],
+      "log_sha256": "875b1fc2d8e93c84d0f73a3a309179f588c57dc6bdb921d08dbba17d21bbfb65"
+    },
+    {
+      "name": "ALL_511000",
+      "exit": 0,
+      "PASS_count": 15,
+      "cases": [
+        "PASS ISO_P255 \"P\":255,\"fill_cycles\":131,\"fill_sectors\":4096,\"sectors_per_cycle\":31.27,\"tb_s_at_1p2ghz\":1.201,\"kv_ok_after_start\":549,\"su_drain_wait\":484,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P256_tile_open \"P\":256,\"fill_cycles\":133,\"fill_sectors\":4352,\"sectors_per_cycle\":32.72,\"tb_s_at_1p2ghz\":1.257,\"kv_ok_after_start\":550,\"su_drain_wait\":485,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P0 \"P\":0,\"fill_cycles\":80,\"fill_sectors\":256,\"sectors_per_cycle\":3.20,\"tb_s_at_1p2ghz\":0.123,\"kv_ok_after_start\":499,\"su_drain_wait\":434,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P1023 \"P\":1023,\"fill_cycles\":259,\"fill_sectors\":16384,\"sectors_per_cycle\":63.26,\"tb_s_at_1p2ghz\":2.429,\"kv_ok_after_start\":787,\"su_drain_wait\":722,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P4095 \"P\":4095,\"fill_cycles\":779,\"fill_sectors\":65536,\"sectors_per_cycle\":84.13,\"tb_s_at_1p2ghz\":3.231,\"kv_ok_after_start\":1316,\"su_drain_wait\":1251,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P8191 \"P\":8191,\"fill_cycles\":1463,\"fill_sectors\":131072,\"sectors_per_cycle\":89.59,\"tb_s_at_1p2ghz\":3.440,\"kv_ok_after_start\":2019,\"su_drain_wait\":1954,\"violations\":0 : slices and token HBM codes exact",
+        "PASS ISO_P8191_posted \"P\":8191,\"fill_cycles\":1463,\"fill_sectors\":131072,\"sectors_per_cycle\":89.59,\"tb_s_at_1p2ghz\":3.440,\"kv_ok_after_start\":1473,\"su_drain_wait\":0,\"violations\":0 : slices and token HBM codes exact",
+        "PASS CHAIN_P8191_base \"P\":8191,\"early_go\":0,\"posted_wb\":0,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1463,\"A_kv_ok_after_start\":2019,\"B_fill_cycles\":1439,\"B_fill_exposed_after_start\":1439,\"B_kv_ok_after_start\":1969,\"su_drain_wait\":3858,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P8191_early_posted \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1463,\"A_kv_ok_after_start\":1473,\"B_fill_cycles\":1429,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P4095_early_posted \"P\":4095,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":600,\"mlp_cycles\":3000,\"A_fill_cycles\":779,\"A_kv_ok_after_start\":789,\"B_fill_cycles\":742,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P8191_early_short_mlp \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":400,\"A_fill_cycles\":1463,\"A_kv_ok_after_start\":1473,\"B_fill_cycles\":1426,\"B_fill_exposed_after_start\":1026,\"B_kv_ok_after_start\":1036,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS CHAIN_P255_early_posted \"P\":255,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":300,\"mlp_cycles\":2500,\"A_fill_cycles\":131,\"A_kv_ok_after_start\":141,\"B_fill_cycles\":91,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact",
+        "PASS NEG_wrong_position \"P\":255,\"fill_cycles\":131,\"fill_sectors\":4096,\"sectors_per_cycle\":31.27,\"tb_s_at_1p2ghz\":1.201,\"kv_ok_after_start\":200315,\"su_drain_wait\":262,\"violations\":0 : faulted as required (code 8)",
+        "PASS NEG_not_e4m3 \"P\":255,\"fill_cycles\":131,\"fill_sectors\":4096,\"sectors_per_cycle\":31.27,\"tb_s_at_1p2ghz\":1.201,\"kv_ok_after_start\":539,\"su_drain_wait\":484,\"violations\":0 : faulted as required (code 8)",
+        "PASS NEG_P8192_beyond_map \"P\":8192,\"fill_cycles\":0,\"fill_sectors\":0,\"sectors_per_cycle\":0.00,\"tb_s_at_1p2ghz\":0.000,\"kv_ok_after_start\":200049,\"su_drain_wait\":0,\"violations\":0 : faulted as required (code 32770)"
+      ],
+      "log_sha256": "1151eb57a3023b73a017a0001bff0c47d2fa05bb45d857e1dd2e7a066e7caed5"
+    },
+    {
+      "name": "CHAIN_137000",
+      "exit": 0,
+      "PASS_count": 1,
+      "cases": [
+        "PASS CHAIN_P8191_early_posted \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1467,\"A_kv_ok_after_start\":1477,\"B_fill_cycles\":1429,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact"
+      ],
+      "log_sha256": "b6a65d58faa9bc0a964fbf633cd3d7a53d4a9d7a63c56eb6ae249fd1f0aac5dd"
+    },
+    {
+      "name": "CHAIN_901000",
+      "exit": 0,
+      "PASS_count": 1,
+      "cases": [
+        "PASS CHAIN_P8191_early_posted \"P\":8191,\"early_go\":1,\"posted_wb\":1,\"attn_cycles\":1200,\"mlp_cycles\":3000,\"A_fill_cycles\":1465,\"A_kv_ok_after_start\":1475,\"B_fill_cycles\":1434,\"B_fill_exposed_after_start\":0,\"B_kv_ok_after_start\":65,\"su_drain_wait\":0,\"violations\":0 : A and B slices, both token write-backs exact"
+      ],
+      "log_sha256": "0f380f44c110d97cd82e0c05ed05a46a3ff6afaeed2d46a5e76d7c6a606d2f7c"
+    }
+  ],
+  "whole32_complete": true,
+  "collected_only": true,
+  "no_relaunch_or_rebuild": true,
+  "scope": "historical full128 protected local interface sourcebbcb; golden slices/writeback, boundary negatives, real CLK/HCLK phase cases; does not qualify corrected c625 or newer shared global transport/fulltoken/physical",
+  "c625": "existing continuation619940 incrementalbuild2313576 live; no second corrected job",
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "adopted": false
+}
