@@ -11202,6 +11202,9 @@ def dsrom_window_parent_boundary_model():
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
+    pin_probe_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/pin_access_r2/record.json'
+    pin_probe = json.loads(pin_probe_path.read_text()) if pin_probe_path.is_file() else None
+    measured_pin_budget = (pin_probe['legal_positions']*.80*.60 if pin_probe else None)
     # Existing pinned SS/FF clock pin capacitances; these are sink loads,
     # never a substitute for the enclosing propagated CTS/root input load.
     ff_clk_caps = {'ss': {'DFFASRHQNx1_ASAP7_75t_R': .433982,
@@ -11341,7 +11344,22 @@ def dsrom_window_parent_boundary_model():
                 macro_bodies_and_halos_and_root_CTS_not_priced_free=True,
                 added_FF_bits=0, added_payload_bits=0, added_external_ports=0,
                 added_logical_cycles=0, full_route_ready=False,
-                measured_pin_access=False, parent_slot_fit=False, adoption=False),
+                measured_pin_access=bool(pin_probe and pin_probe['terminal_exit']==0),
+                retained_source_measured_capacity=(dict(
+                    evidence=str(pin_probe_path.relative_to(ROOT)),
+                    source_pin=pin_probe['source_pin'], die_um=pin_probe['die_um'],
+                    actual_PG_geometry_retained=pin_probe['real_PG_geometry_retained'],
+                    legal_positions=pin_probe['legal_positions'], signal_IO=pin_probe['signal_IO'],
+                    raw_signal_fraction=pin_probe['signal_IO']/pin_probe['legal_positions'],
+                    conservative_signal_budget=measured_pin_budget,
+                    conservative_budget_fraction=pin_probe['signal_IO']/measured_pin_budget,
+                    conservative_spare_positions=measured_pin_budget-pin_probe['signal_IO'],
+                    reserve_is_analytical_not_measured_clock_or_route_space=True,
+                    changed_source_physical_credit=False,
+                    parent_capacity_extrapolation_is_not_allocation=True,
+                    decision='Pin placement PASS only; low stdcell utilization does not establish channel, CTS/PG or loaded repair margin. Preserve the running changed-source map; coordinate any larger finite slot before full context routing.')
+                    if pin_probe else None),
+                parent_slot_fit=False, adoption=False),
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
