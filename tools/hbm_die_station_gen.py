@@ -345,6 +345,30 @@ def module_text(rec, E):
             f"master, tools/hbm_die_views.py)\nmodule {rec['master']} (\n{decl}\n);\n" + '\n'.join(E.body) + '\nendmodule\n')
 
 
+def sim_text(rec, E, name):
+    """bench-only shim (Verilator has no partial-bit inout drivers): the same body behind split ports, every inout
+    port p as input p_i / output p_o around an internal wire p (inputs assigned bit by bit into p)."""
+    decl, pre = [], []
+    for p, v in sorted(rec['ports'].items()):
+        w = v['bits']
+        if v['direction'] != 'inout':
+            decl.append(f"    {v['direction']} wire [{w - 1}:0] {p}")
+            continue
+        decl += [f'    input wire [{w - 1}:0] {p}_i', f'    output wire [{w - 1}:0] {p}_o']
+        pre.append(f'  wire [{w - 1}:0] {p};')
+        ins = [i for i, d in enumerate(dirs(rec, p)) if d == 'in']
+        i = 0
+        while i < len(ins):
+            j = i
+            while j + 1 < len(ins) and ins[j + 1] == ins[j] + 1:
+                j += 1
+            pre.append(f'  assign {p}[{ins[j]}:{ins[i]}] = {p}_i[{ins[j]}:{ins[i]}];')
+            i = j + 1
+        pre.append(f'  assign {p}_o = {p};')
+    return (f"// bench shim of {rec['master']} (split inout ports; body identical)\nmodule {name} (\n" + ',\n'.join(decl)
+            + '\n);\n' + '\n'.join(pre + E.body) + '\nendmodule\n')
+
+
 def sdc_text(rec, E):
     L = [f"# {rec['master']}: forwarded clocks (one per 512 b slice and direction), the local clock ck, the meso",
          '# crossings (max 356.667 / min 0 ps ignoring latency, the closed ot_meso_fifo W512 D4 contract), io budget 0.2 T.',
@@ -415,6 +439,8 @@ def main(argv=None):
         (d / f'{n}.sv').write_text(module_text(rec, E))
         (d / f'{n}_mutant.sv').write_text(module_text(rec, Em))
         (d / f'{n}.sdc').write_text(sdc_text(rec, E))
+        (d / f'{n}_sim.sv').write_text(sim_text(rec, E, n + '_sim'))
+        (d / f'{n}_mutant_sim.sv').write_text(sim_text(rec, Em, n + '_sim'))
         fcs = {p: E.fcm.get((n, p)) for p in rec['ports'] if p not in ('ck', 'rst')}
         (d / 'map.json').write_text(json.dumps(dict(master=n, role=role, forwarded=fcs, map=E.map,
                                                     clk_in=sorted({f'{p}[{i}]' for p, i in E.clk_in}),

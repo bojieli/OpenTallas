@@ -48,7 +48,15 @@ def cmd_tb(a):
     L = ['`timescale 1ns/1ps', f'module tb_{a.master};']
     for p, (dr, w) in ports.items():
         L.append(f'  wire [{w - 1}:0] {p};')
-    L.append(f'  {a.master} dut (' + ', '.join(f'.{p}({p})' for p in ports) + ');')
+    io = {p for p, (dr, w) in ports.items() if dr == 'inout'}
+    for p in io:
+        L.append(f'  wire [{ports[p][1] - 1}:0] {p}__o;')
+    L.append(f'  {a.master}_sim dut (' + ', '.join((f'.{p}_i({p}), .{p}_o({p}__o)' if p in io else f'.{p}({p})')
+                                               for p in ports) + ');')
+
+    def ob(b):          # an output bit as the bench sees it
+        p, i = bitsplit(b)
+        return f'{p}__o[{i}]' if p in io else b
     has_ck = 'ck' in ports
     L.append('  reg ck_r = 0; reg rst_r = 0;')
     if has_ck:
@@ -85,10 +93,10 @@ def cmd_tb(a):
     L.insert(2, '  integer seed = 1062026;')
     for j, (dmn, bits) in enumerate(sorted(outdom.items())):
         bits = sorted(bits, key=lambda s: (bitsplit(s)[0], bitsplit(s)[1]))
-        clk = 'ck_r' if dmn == 'ck' else dmn
+        clk = 'ck_r' if dmn == 'ck' else ob(dmn)
         L.append(f'  integer oc{j} = 0;')
         L.append(f'  always @(negedge {clk}) begin $fwrite(fd, "O {j} %0d %h\\n", oc{j}, '
-                 f'{{{", ".join(reversed(bits))}}}); oc{j} = oc{j} + 1; end')
+                 f'{{{", ".join(ob(b) for b in reversed(bits))}}}); oc{j} = oc{j} + 1; end')
         mp['_in_order'][f'o{j}'] = dict(dom=dmn, bits=bits)
     L.append(f'  initial begin #({PER} * {NCYC}); $fclose(fd); $display("TB_DONE"); $finish; end')
     L.append('endmodule')
