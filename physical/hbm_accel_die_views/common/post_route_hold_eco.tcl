@@ -4,7 +4,7 @@
 #   SS + FF libraries as two STA corners, the routed 6_final.odb (fillers removed), its routed SDC plus the sign-off
 #   post-SDC(s), RCX parasitics of the detailed route (ASAP7 ships one RC deck: the FF corner's parasitics are the
 #   extracted ones) -> repair_timing -hold to OT_HOLD_MARGIN ps (FF) while keeping setup >= OT_SETUP_MARGIN ps (SS)
-#   -> legalise -> incremental global route of the changed nets -> detailed route (existing wires kept) -> fillers
+#   -> legalise -> signal wires stripped, full global + detailed re-route -> fillers
 #   -> re-extract -> 6_final.{odb,spef,v}.  Constraints are unchanged (the routed SDC + post-SDC are re-read by the
 #   sign-off STA, tools/w18/corner_sta.py); the ECO only adds/resizes hold buffers.
 # env: OT_IN (routed base dir), OT_OUT (output base dir), OT_POST_SDC (space-separated), OT_HOLD_MARGIN (ps, default 22),
@@ -41,8 +41,6 @@ set lo [envd OT_MINL M2]; set hi [envd OT_MAXL M5]
 set_global_routing_layer_adjustment $lo-$hi 0.25
 set_routing_layers -clock [envd OT_MINCLKL M4]-$hi
 set_routing_layers -signal $lo-$hi
-global_route -allow_congestion
-global_route -start_incremental
 # RCX of the detailed route, annotated on BOTH scenes (extract_parasitics alone annotates one: the first test read
 # SS setup +86 / hold -2.7 against corner_sta's +41 / +5.2 on the same odb)
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
@@ -56,7 +54,14 @@ if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_p
 puts "OT_ECO cells_added [expr {[llength [get_cells *]] - $n0}]"
 detailed_placement
 check_placement -verbose
-global_route -end_incremental -allow_congestion
+# full re-route of the ECO'd placement: the first runs (incremental GRT over a detailed-routed db, existing wires kept)
+# broke DRT (guides vs kept wires: 'pin not visited', ~1M violations on m6light_b/m6sfu_a).  The lanes are small
+# (<= 0.06 mm2), so strip every signal wire and route from scratch; sign-off re-extracts the new route.
+foreach net [[ord::get_db_block] getNets] {
+  if {[$net getSigType] in {POWER GROUND}} continue
+  set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w }
+}
+global_route -allow_congestion
 detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 check_placement -verbose
