@@ -1,0 +1,187 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T19:09:16.390097+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_window_stage_pipeline",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "SPLIT_COLUMNS": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+        "sha256": "69143c9fb9a70431ed33f7697d7084443bd3104d99be9e17dfd714da3d55f6af",
+        "size_bytes": 18636
+      }
+    ],
+    "top": "ot_dsrom_window_stage_pipeline"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\norner WC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ss.lib\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_128/ot_dsrom_window_column_128_ff.lib\nread_liberty -corner BC /src/physical/dsrom_window_columns/ot_dsrom_window_column_256/ot_dsrom_window_column_256_ff.lib\nread_db /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier/base/2_1_floorplan.odb\nread_sdc /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n[INFO GPL-0022] Initialize gpl and calculate uniform density.\nPlacement density is 0.2404999977350235, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.1899999976158142\nrtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2404999977350235\n[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.\nDie Area: (0.00, 0.00) (1900.00, 1900.00),  Floorplan Area: (5.02, 5.13) (1894.97, 1894.86)\n\tNumber of std cell instances: 940399\n\tArea of std cell instances: 117412.07\n\tNumber of macros: 68\n\tMacros to be placed: 68\n\tArea of macros: 762998.94\n\tBase halo (L, B, R, T): (4.00, 4.00, 4.00, 4.00)\n\tArea of macros with halos: 882339.35\n\tArea of std cell instances + Area of macros: 880411.01\n\tFloorplan area: 3571487.65\n\tDesign Utilization: 0.25\n\tFloorplan Utilization: 0.04\n\tManufacturing Grid: 1\n\n[INFO MPL-0500] Runtime: 1599.77s\nTook 1599 seconds: rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2404999977350235\nsource /work/hooks/post_macro_place_place_stage.tcl\nError: macro_place.tcl, 8 unexpected WINDOW column instance g_bank\\[0\\].g_col\\[0\\].g_split.g_payload.u_column\n\nElapsed time: 0:30.80[h:]min:sec. CPU time: user 29.96 sys 0.83 (99%). Peak memory: 2535260KB.\nElapsed time: 43:06.84[h:]min:sec. CPU time: user 6591.98 sys 1218.17 (301%). Peak memory: 5662720KB.\nElapsed time: 27:01.45[h:]min:sec. CPU time: user 3399.63 sys 93.90 (215%). Peak memory: 7699368KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_window_stage_pipeline_asap7_window_stage_hier/base/2_2_floorplan_macro.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T14:58:20.609856+00:00",
+  "git": {
+    "commit": "dda930c52e9af28a424c418b96c958b4fb18ddd0",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_window_stage_pipeline",
+      "--param",
+      "SPLIT_COLUMNS=1",
+      "--source",
+      "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+      "--clock-period-ns",
+      "0.8333333333333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1900",
+      "1900",
+      "--core-area",
+      "5",
+      "5",
+      "1895",
+      "1895",
+      "--place-density",
+      "0.55",
+      "--max-fanout",
+      "32",
+      "--max-transition-ns",
+      "0.15",
+      "--hold-margin-ns",
+      "0.008",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "TMPDIR=/work/tmp",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/dsrom_window_columns/parent_pdn.tcl",
+      "--orfs-var",
+      "IO_PLACER_H=M4 M6 M8",
+      "--orfs-var",
+      "IO_PLACER_V=M5 M7 M9",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--macro-place-halo",
+      "4",
+      "4",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/dsrom_window_columns/place_stage.tcl",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "window_stage_hier",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/item7-window-parent-20261006/route_r1/work",
+      "--output",
+      "/srv/opentallas-scratch/codex/item7-window-parent-20261006/route_r1/physical.json",
+      "--macro-view",
+      "ot_dsrom_window_column_128=physical/dsrom_window_columns/ot_dsrom_window_column_128",
+      "--macro-view",
+      "ot_dsrom_window_column_256=physical/dsrom_window_columns/ot_dsrom_window_column_256"
+    ],
+    "driver": {
+      "commit": "dda930c52e9af28a424c418b96c958b4fb18ddd0",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/item7-window-parent-20261006/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/codex/item7-window-parent-20261006/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/item7-window-parent-20261006/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.8333333333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
