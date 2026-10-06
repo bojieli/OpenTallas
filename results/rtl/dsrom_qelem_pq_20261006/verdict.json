@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.dsrom_qelem_pq.v1",
+ "date": "2026-10-06",
+ "verdict": "EXACT_PASS",
+ "one_line": "PQ field spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1, QX=10): every L20 phase x region and node run exact vs golden, 0 faults (3,648 runs), at spine GAP 32 / GUARD 202 / GSLACK 32; +436 cycles over the 11 L20 field nodes vs the W10 PQ element on the same harness (8,333 -> 8,769, +5.2%)",
+ "source_commit": "660f088f6 (branch claude/dsrom-qelem-pq-20261006)",
+ "element": {
+  "module": "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv (wrapper ot_v41_rom_elem_q_qxpq_w10)",
+  "PQ0": "identical to ot_v41_rom_elem_qx_w10 (quick QX gate pos_pq0 PASS)",
+  "PQ1": "banked output tags + op tree parity (ot_v41_elem_pq_tags, unchanged) + configuration shadow by replay of 2NSEG+1 = 17 words into the qx configuration port; registered status outputs; bank_free low while a go is in the boundary registers"
+ },
+ "harness": "tools/dsrom_combined_l20.py field --cfg pq1_q10 (v9 PQ spine vehicle, swap pair rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) vs --cfg pq1 (W10 PQ element), same plan /mnt/epyc1-scratch/claude/dsrom-field-spine/planv; node cycles by tools/dsrom_combined_l20.field_summary (as-built rule, no floorplan wire)",
+ "spine_params": {
+  "qelem": {
+   "GAP": 32,
+   "GUARD": 202,
+   "GSLACK": 32
+  },
+  "w10_pq": {
+   "GAP": 12,
+   "GUARD": 180,
+   "GSLACK": 6
+  },
+  "why": "the q-element copies its shadow by a 17-cycle replay (+1 register, +3 settle) instead of the W10 one-cycle copy"
+ },
+ "gap_sweep": {
+  "24": {
+   "failed_runs": 126,
+   "runs": 3648
+  },
+  "32": {
+   "failed_runs": 0,
+   "runs": 3648
+  },
+  "42": {
+   "failed_runs": 0,
+   "runs": 3648
+  }
+ },
+ "gap_sweep_note": "GAP 24: node runs fault (go during replay); GSLACK 6: first-op timeouts",
+ "nodes": [
+  {
+   "node": "L20.attn.a_proj",
+   "stage": 37,
+   "w10_pq_cycles": 1376,
+   "qelem_pq_cycles": 1384,
+   "delta": 8,
+   "exact": true,
+   "rows_checked": 608
+  },
+  {
+   "node": "L20.attn.cmp.wk",
+   "stage": 37,
+   "w10_pq_cycles": 204,
+   "qelem_pq_cycles": 230,
+   "delta": 26,
+   "exact": true,
+   "rows_checked": 128
+  },
+  {
+   "node": "L20.attn.wo_a",
+   "stage": 37,
+   "w10_pq_cycles": 881,
+   "qelem_pq_cycles": 933,
+   "delta": 52,
+   "exact": true,
+   "rows_checked": 2048
+  },
+  {
+   "node": "L20.attn.wo_b",
+   "stage": 37,
+   "w10_pq_cycles": 302,
+   "qelem_pq_cycles": 333,
+   "delta": 31,
+   "exact": true,
+   "rows_checked": 5120
+  },
+  {
+   "node": "L20.attn.wq_b",
+   "stage": 37,
+   "w10_pq_cycles": 600,
+   "qelem_pq_cycles": 663,
+   "delta": 63,
+   "exact": true,
+   "rows_checked": 12288
+  },
+  {
+   "node": "L20.ffn.down",
+   "stage": 37,
+   "w10_pq_cycles": 1302,
+   "qelem_pq_cycles": 1448,
+   "delta": 146,
+   "exact": true,
+   "rows_checked": 6400
+  },
+  {
+   "node": "L20.ffn.down",
+   "stage": 38,
+   "w10_pq_cycles": 531,
+   "qelem_pq_cycles": 591,
+   "delta": 60,
+   "exact": true,
+   "rows_checked": 2560
+  },
+  {
+   "node": "L20.ffn.experts_gu",
+   "stage": 37,
+   "w10_pq_cycles": 1505,
+   "qelem_pq_cycles": 1533,
+   "delta": 28,
+   "exact": true,
+   "rows_checked": 4608
+  },
+  {
+   "node": "L20.ffn.experts_gu",
+   "stage": 38,
+   "w10_pq_cycles": 751,
+   "qelem_pq_cycles": 765,
+   "delta": 14,
+   "exact": true,
+   "rows_checked": 2304
+  },
+  {
+   "node": "L20.ffn.router",
+   "stage": 37,
+   "w10_pq_cycles": 495,
+   "qelem_pq_cycles": 495,
+   "delta": 0,
+   "exact": true,
+   "rows_checked": 96
+  },
+  {
+   "node": "L20.ffn.shared_gu",
+   "stage": 37,
+   "w10_pq_cycles": 386,
+   "qelem_pq_cycles": 394,
+   "delta": 8,
+   "exact": true,
+   "rows_checked": 1152
+  }
+ ],
+ "total_w10_pq": 8333,
+ "total_qelem_pq": 8769,
+ "exact_gate": "qx10pq_quick.json (QX quick gate incl. pos_pq0)",
+ "not_measured": [
+  "physical closure of the PQ q-element (routes Z21a-c)",
+  "composition of the delta into the published rate (pending adoption)"
+ ]
+}
