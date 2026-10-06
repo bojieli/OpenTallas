@@ -233,7 +233,8 @@ DECISIONS = dict(
 # boundaries on existing wire-stage registers (0 cycles).  The split record (tools/hbm_die_split.py) gives every band its
 # parent ports at unchanged absolute positions plus the cross buses between abutting bands; the generator replaces each
 # parent instance by its bands in the same slot (mirrored with the parent) and rewires (apply_splits).
-R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/index_q/split/split.json'})
+R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/index_q/split/split.json'},
+            spine_slots={'su_red': (1399.656, 218.136), 'su_full': (346.008, 347.736)})
 ADOPTED = R16I
 
 
@@ -343,6 +344,19 @@ def build(variant=None):
                   domain='serial_0p9' if n == 'quant' else 'stream_1p2')
         insts.append(it)
         hub[n] = it
+    # r16i (hub REQUEST 12:10 PT): one-per-die SU slots stacked above the top spine block (quant) in the free top
+    # end of the spine column, at the spine's upper gap pitch: su_red (the SU reducer: hfd_su accumulate chains in on
+    # its W / E faces, result out on its N face) then su_full (the full SU lane on the SU broadcast bus: S face from
+    # su_red, W / E faces to the SU broadcast, nearest spine block to it the VM).  Nothing else moves (a spine re-stack
+    # renumbers the station masters and moves the attention tiles' q pins: 7 closed views invalidated, measured).
+    yy = yy - ghi
+    for n_, (w_, h_) in variant.get('spine_slots', {}).items():
+        it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), up(yy + ghi, GY), w_, h_,
+                  kind='spine', region='hub', domain='serial_0p9')
+        assert it.y + it.h <= hy1, ('spine slot above the hub band', n_, it.y + it.h, hy1)
+        insts.append(it)
+        hub[n_] = it
+        yy = it.y + h_
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
         it = hub['router']
