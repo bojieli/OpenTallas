@@ -63,15 +63,31 @@ proc ds_vm_connect {prefix serial_clock} {
 
 proc ds_vm_bind_pg {inst} {
   set block [ord::get_db_block]
-  foreach {pin net sigtype} {VDD VDD POWER VSS VSS GROUND} {
-    set term [$inst findITerm $pin]
-    if {$term eq "NULL" || [[$term getMTerm] getSigType] ne $sigtype} {
-      error "Missing actual $sigtype PG pin [$inst getName]/$pin"
+  set immutable [$inst isDoNotTouch]
+  set signal_before {}
+  foreach term [$inst getITerms] {
+    if {[[$term getMTerm] getSigType] ni {POWER GROUND}} {dict set signal_before $term [$term getNet]}
+  }
+  # OpenDB forbids even PG connection while immutable. No mapping, timing
+  # repair, signal rewiring or placement is run inside this PG-only interval.
+  try {
+    if {$immutable} {$inst setDoNotTouch 0}
+    foreach {pin net sigtype} {VDD VDD POWER VSS VSS GROUND} {
+      set term [$inst findITerm $pin]
+      if {$term eq "NULL" || [[$term getMTerm] getSigType] ne $sigtype} {
+        error "Missing actual $sigtype PG pin [$inst getName]/$pin"
+      }
+      set pgnet [$block findNet $net]
+      if {$pgnet eq "NULL"} {set pgnet [odb::dbNet_create $block $net];$pgnet setSigType $sigtype}
+      if {[$pgnet getSigType] ne $sigtype} {error "Wrong real PG net type $net"}
+      $term connect $pgnet
+      if {[$term getNet] ne $pgnet} {error "Exact PG connection failed [$inst getName]/$pin"}
     }
-    set pgnet [$block findNet $net]
-    if {$pgnet eq "NULL"} {set pgnet [odb::dbNet_create $block $net];$pgnet setSigType $sigtype}
-    if {[$pgnet getSigType] ne $sigtype} {error "Wrong real PG net type $net"}
-    $term connect $pgnet
-    if {[$term getNet] ne $pgnet} {error "Exact PG connection failed [$inst getName]/$pin"}
+  } finally {
+    $inst setDoNotTouch $immutable
+  }
+  if {[$inst isDoNotTouch] != $immutable} {error "Macro immutability not restored"}
+  dict for {term net} $signal_before {
+    if {[$term getNet] ne $net} {error "Macro signal connection changed during PG hookup"}
   }
 }
