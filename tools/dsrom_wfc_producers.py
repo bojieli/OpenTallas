@@ -46,7 +46,14 @@ def model(layer):
  return dict(schema='opentallas.wfc.producers.v1',before_RTL=True,layer=layer,MAXU=users,prompt_prefix_words=prompt,draft_positions_per_user=positions,draft_block_tags=16,prompt_payload_bits=26,prompt_encoded_bits=32,SRAM_SECDED=True,ROM_ECC=False,prompt_slots=slots,packed_rows=rows,SRAM_banks=banks,SRAM_primitive=s.parent.name,book_words_per_rank=[len(x) for x in b['records']],book_groups=b['groups'],book_replicas=4,book_primitive=r.parent.name,MACs_per_cycle=0,memory=dict(read_payload_bytes_per_cycle=21/8,prompt_physical_bytes_per_read=16,prompt_read_ports=1,prompt_write_ports=1,book_read_ports=4,book_physical_bytes_per_cycle=36),boundary=dict(prompt_request_bits=1+10+21+4,prompt_response_bits=21+1,whole_request_bits=1+47+21+14,whole_result_bits=1+47+21+32,source_event_lanes=4,command_event_bits_per_lane=1+47+7+14+14+4),geometry=dict(macro_body_um2=macro_area,logic_upper_um2=logic_upper,macro_halo_reserved_um2=macro_halo,minimum_producer_envelope_um=[producer_width,producer_height],analytical_fit=True,selected_global_slot_owner='Turing',selected_global_slot_qualified=False),routing=dict(local_tracks_reserved=2048,available_tracks_for_envelope=math.floor((producer_width-4.32)/.096)*2,bank_read_mux=banks,bank_write_demux=banks,book_replicas=4,fanout_and_CTS_unqualified=True),latency=dict(prompt_reply_edges=1,prompt_validity_and_block_checked=True,boot_clear_rows=rows,run_admission_scan_words='users*prompt_len at one read/edge',new_engine_stages=0,whole_completion_wait='all literal commands, four real retirements/group, source restore and final identity-matched visibility; no fixed timer',token_rate_credit=0),clocks=dict(root='same enclosing actual clk as WFC/C8/native request and VM receipts',period_ps=1000/1.2,setup_uncertainty_ps=60,hold_uncertainty_ps=25,SRAM_timing=sm['timing'],book_timing=rm['timing'],physical_input_clocks_closed=False),source_sha256={str(s.relative_to(ROOT)):digest(s),str(r.relative_to(ROOT)):digest(r),**b['source_sha256']},source_dispatch_sha256=b['source_dispatch_sha256'],functional_adopted=False,route_ready=False,minimum_RTL_ready=True,missing_input_clocks=True)
 def emit(layer,out):
  out.mkdir(parents=True,exist_ok=False);b=book(layer)
- for rank,rows in enumerate(b['records']):(out/f'rank{rank}.hex').write_text(''.join(x['word']+'\n' for x in rows))
+ for rank,rows in enumerate(b['records']):
+  (out/f'rank{rank}.hex').write_text(''.join(x['word']+'\n' for x in rows))
+  array=[0]*512
+  for address,row in enumerate(rows):
+   word=int(row['word'],16)
+   for bit in range(72):
+    if word>>bit&1:array[address//8]|=1<<(bit*8+address%8)
+  (out/f'rank{rank}.viamap.hex').write_text(''.join(f'{x:0144x}\n' for x in array))
  (out/'book.json').write_text(json.dumps(b,indent=2)+'\n')
  return b
 if __name__=='__main__':
