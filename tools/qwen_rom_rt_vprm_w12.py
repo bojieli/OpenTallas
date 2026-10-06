@@ -94,8 +94,10 @@ def main() -> None:
                     help="DEC_LA_BOUND (tools/qwen_rom_core_dec_bound_emit_w12.py); 0 = core unchanged")
     ap.add_argument("--dec-la-amq", type=int, choices=(0, 1), default=0,
                     help="DEC_LA_AMQ argmax boundary register (+1 cycle per core program END); 0 = core unchanged")
-    ap.add_argument("--dec-la-meif", type=int, choices=(0, 1), default=0,
-                    help="DEC_LA_MEIF: registered core <-> ME-spine handshake (stale-status hold); 0 = core unchanged")
+    ap.add_argument("--dec-la-suif", type=int, choices=(0, 1, 2), default=0,
+                    help="DEC_LA_SUIF: registered core <-> vector-stream handshake (measurement); 0 = core unchanged; 2 = negative control (stale status unmasked)")
+    ap.add_argument("--dec-la-meif", type=int, choices=(0, 1, 2), default=0,
+                    help="DEC_LA_MEIF: registered core <-> ME-spine handshake (stale-status hold); 0 = core unchanged; 2 = negative control (stale status unmasked)")
     ap.add_argument("--dec-la-nxreg", type=int, choices=(0, 1), default=0,
                     help="DEC_LA_NXREG: NEXT fields registered at the core boundary (0 added cycles); 0 = core unchanged")
     ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2, 3), default=0,
@@ -152,7 +154,11 @@ def main() -> None:
     if args.dec_la_meif:
         import qwen_rom_core_issue_fallback_w12
         core_text = qwen_rom_core_issue_fallback_w12.apply_meif(core_text).replace(
-            "parameter integer DEC_LA_MEIF = 0", "parameter integer DEC_LA_MEIF = 1")
+            "parameter integer DEC_LA_MEIF = 0", f"parameter integer DEC_LA_MEIF = {args.dec_la_meif}")
+    if args.dec_la_suif:
+        import qwen_rom_core_issue_fallback_w12
+        core_text = qwen_rom_core_issue_fallback_w12.apply_suif(core_text).replace(
+            "parameter integer DEC_LA_SUIF = 0", f"parameter integer DEC_LA_SUIF = {args.dec_la_suif}")
     core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
@@ -283,7 +289,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra,
-                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la, "dec_la": args.dec_la, "dec_la_issue_fb": args.dec_la_issue_fb, "dec_la_bound": args.dec_la_bound, "dec_la_amq": args.dec_la_amq, "dec_la_nxreg": args.dec_la_nxreg, "dec_la_meif": args.dec_la_meif,
+                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la, "dec_la": args.dec_la, "dec_la_issue_fb": args.dec_la_issue_fb, "dec_la_bound": args.dec_la_bound, "dec_la_amq": args.dec_la_amq, "dec_la_nxreg": args.dec_la_nxreg, "dec_la_meif": args.dec_la_meif, "dec_la_suif": args.dec_la_suif,
                          "kv": "REAL_MEM: ot_qwen_rt_kv_mp_service + ot_qwen_hbm_model_ack NPC=32 CLK_PS=833 WR_ACK=1, KV_HBM=1, KV_VEC_WRITE_BRIDGE=1"},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},
         "stages": per_stage, "verify_tokens": tokens, "accept": accepts, "commits": commits,
