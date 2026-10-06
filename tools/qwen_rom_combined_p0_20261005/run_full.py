@@ -211,8 +211,8 @@ def main():
         import signal
         handoff = r['owner_supersession']
         hot = json.loads(Path(r['qualified_hot_gate']).read_text())
-        if hot['status'] != 'PASS_COMPILER_EQUIVALENCE' or not hot['adopted']:
-            raise RuntimeError('supersession requires exact changed compiler gate')
+        if hot['status'] not in ('PASS_COMPILER_EQUIVALENCE', 'PASS_NATIVE_SOURCE_EQUIVALENCE') or not hot['adopted']:
+            raise RuntimeError('supersession requires exact changed native archive gate')
         if hot['new_archive_sha256'] != hashlib.sha256(Path(r['completed_top']).read_bytes()).hexdigest():
             raise RuntimeError('supersession archive qualification mismatch')
         previous = Path('/proc')/str(handoff['pid'])
@@ -221,7 +221,7 @@ def main():
             start = (previous/'stat').read_text().rsplit(')',1)[1].split()[19]
             if cmdline != handoff['binary'] or start != handoff['start_ticks']:
                 raise RuntimeError('owner supersession PID/source identity mismatch')
-            receipt = dict(status='OWNER_SUPERSEDED_BY_QUALIFIED_COMPILER',
+            receipt = dict(status='OWNER_SUPERSEDED_BY_QUALIFIED_NATIVE_ARCHIVE',
                 previous=handoff, successor_binary=r['runtime'][0],
                 new_archive_sha256=hot['new_archive_sha256'],
                 compiler_gate=r['qualified_hot_gate'], time=time.time(),
