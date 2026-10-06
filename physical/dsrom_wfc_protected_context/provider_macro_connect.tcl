@@ -7,11 +7,12 @@ proc ds_vm_connect {prefix serial_clock} {
   set check 0
   foreach inst [$block getInsts] {
     set name [$inst getName]
+    set logical_name [string map [list {\[} {[} {\]} {]}] $name]
     if {[string first "${prefix}." $name] != 0} {continue}
-    if {[regexp {\.g_data\[([0-9]+)\]\.g_column\[([0-9]+)\]\.u_data$} $name -> g c]} {
+    if {[regexp {\.g_data\[([0-9]+)\]\.g_column\[([0-9]+)\]\.u_data$} $logical_name -> g c]} {
       if {$g >= 64 || $c >= 4} {error "Unexpected data macro $name"}
       incr data
-    } elseif {[regexp {\.g_checks\[([0-9]+)\]\.u_check$} $name -> g]} {
+    } elseif {[regexp {\.g_checks\[([0-9]+)\]\.u_check$} $logical_name -> g]} {
       if {$g >= 32} {error "Unexpected check macro $name"}
       incr check
     } else {continue}
@@ -30,8 +31,12 @@ proc ds_vm_connect {prefix serial_clock} {
       }
     }
     # Escape literal generated indices for STA's wildcard pin lookup.
-    set pin_pattern [string map [list {[} {\[} {]} {\]}] "$name/clk"]
+    set pin_pattern [string map [list {[} {\[} {]} {\]}] "$logical_name/clk"]
     set pins [get_pins -quiet $pin_pattern]
+    if {![llength $pins]} {
+      set raw_pattern [string map [list {\} {\\} {[} {\[} {]} {\]}] "$name/clk"]
+      set pins [get_pins -quiet $raw_pattern]
+    }
     if {[llength $pins] != 1} {error "Missing literal STA macro clock pin $name/clk"}
     set clocks [get_clocks -of_objects $pins]
     if {[llength $clocks] != 1 || [get_full_name [lindex $clocks 0]] ne $serial_clock} {
@@ -40,12 +45,15 @@ proc ds_vm_connect {prefix serial_clock} {
     lappend cells $inst
   }
   if {$data != 256 || $check != 32} {error "Selected protected VM requires 256 data + 32 check SRAMs; got $data/$check"}
-  set escaped [string map [list {.} {\.} {[} {\[} {]} {\]}] $prefix]
-  set pattern [format {^%s\.(g_data\[[0-9]+\]\.g_column\[[0-9]+\]\.u_data|g_checks\[[0-9]+\]\.u_check)$} $escaped]
-  # Global-connect PG using exactly the selected provider hierarchy.
-  # LEF contains VDD/VSS even though the signal-only synthesis BB omits them.
-  add_global_connection -net VDD -inst_pattern $pattern -pin_pattern {^VDD$} -power
-  add_global_connection -net VSS -inst_pattern $pattern -pin_pattern {^VSS$} -ground
+  # OpenDB names can contain literal backslashes before generated brackets.
+  # Bind PG to each exact retained instance, escaping every regex metacharacter.
+  foreach inst $cells {
+    set name [$inst getName]
+    regsub -all {[][\.^$*+?(){}|]} $name {\&} escaped
+    set pattern "^${escaped}\$"
+    add_global_connection -net VDD -inst_pattern $pattern -pin_pattern {^VDD$} -power
+    add_global_connection -net VSS -inst_pattern $pattern -pin_pattern {^VSS$} -ground
+  }
   global_connect
   foreach inst $cells {
     foreach {pin net} {VDD VDD VSS VSS} {
