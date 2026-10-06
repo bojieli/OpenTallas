@@ -1,0 +1,6 @@
+read_verilog /work/results/asap7/carson_router_successor/base/1_2_yosys.v
+hierarchy -top ot_hbm_router_topk_successor
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+write_json /work/mapped.json
