@@ -1,0 +1,1696 @@
+{
+  "input_sha256": "312c13161c5dde492950f91ac2c79630d4ab6da57aaa42c14269841250f258b3",
+  "added_by_lane": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "mapped_combinational_cells": 293243,
+  "shared_multilane_combinational_cells": 5524,
+  "groups": [
+    {
+      "lane": 0,
+      "members": 5602,
+      "area_um2": 761.5863,
+      "padded_area_um2": 1088.29494,
+      "rectangle_dbu": [
+        18900,
+        52650,
+        239868,
+        84240
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16447478595339526
+    },
+    {
+      "lane": 1,
+      "members": 5633,
+      "area_um2": 763.5546,
+      "padded_area_um2": 1092.07116,
+      "rectangle_dbu": [
+        264114,
+        52650,
+        485028,
+        84240
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.1650859211807405
+    },
+    {
+      "lane": 2,
+      "members": 5559,
+      "area_um2": 756.20628,
+      "padded_area_um2": 1080.40716,
+      "rectangle_dbu": [
+        498852,
+        52650,
+        719820,
+        84240
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.1632833837750054
+    },
+    {
+      "lane": 3,
+      "members": 5637,
+      "area_um2": 764.5752,
+      "padded_area_um2": 1093.32504,
+      "rectangle_dbu": [
+        744066,
+        52650,
+        964980,
+        84240
+      ],
+      "usable_after_taps_um2": 6963.305940000004,
+      "capacity_after_guard5_um2": 6615.140643000003,
+      "guarded_padded_fraction": 0.1652761594958578
+    },
+    {
+      "lane": 4,
+      "members": 5570,
+      "area_um2": 757.19772,
+      "padded_area_um2": 1082.04012,
+      "rectangle_dbu": [
+        979236,
+        52650,
+        1200204,
+        84240
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.16353017521090185
+    },
+    {
+      "lane": 5,
+      "members": 5557,
+      "area_um2": 757.5039,
+      "padded_area_um2": 1081.58814,
+      "rectangle_dbu": [
+        1224018,
+        52650,
+        1444932,
+        84240
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16350122681571752
+    },
+    {
+      "lane": 6,
+      "members": 5577,
+      "area_um2": 759.0348,
+      "padded_area_um2": 1084.28544,
+      "rectangle_dbu": [
+        1459188,
+        52650,
+        1680156,
+        84240
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16386882737540157
+    },
+    {
+      "lane": 7,
+      "members": 5646,
+      "area_um2": 764.25444,
+      "padded_area_um2": 1093.52916,
+      "rectangle_dbu": [
+        1703970,
+        52650,
+        1924884,
+        84240
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16530632373498572
+    },
+    {
+      "lane": 8,
+      "members": 5561,
+      "area_um2": 757.78092,
+      "padded_area_um2": 1082.09844,
+      "rectangle_dbu": [
+        18900,
+        123930,
+        239868,
+        155520
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.1635383045146777
+    },
+    {
+      "lane": 9,
+      "members": 5568,
+      "area_um2": 756.76032,
+      "padded_area_um2": 1081.48608,
+      "rectangle_dbu": [
+        264114,
+        123930,
+        480060,
+        155520
+      ],
+      "usable_after_taps_um2": 6806.395979999988,
+      "capacity_after_guard5_um2": 6466.0761809999885,
+      "guarded_padded_fraction": 0.16725538792410985
+    },
+    {
+      "lane": 10,
+      "members": 5550,
+      "area_um2": 754.89408,
+      "padded_area_um2": 1078.57008,
+      "rectangle_dbu": [
+        503874,
+        123930,
+        719820,
+        155520
+      ],
+      "usable_after_taps_um2": 6808.087259999988,
+      "capacity_after_guard5_um2": 6467.682896999989,
+      "guarded_padded_fraction": 0.1667629809897283
+    },
+    {
+      "lane": 11,
+      "members": 5570,
+      "area_um2": 757.09566,
+      "padded_area_um2": 1081.93806,
+      "rectangle_dbu": [
+        744066,
+        123930,
+        960012,
+        155520
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16732600498029793
+    },
+    {
+      "lane": 12,
+      "members": 5583,
+      "area_um2": 758.07252,
+      "padded_area_um2": 1083.67308,
+      "rectangle_dbu": [
+        984258,
+        123930,
+        1200204,
+        155520
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16759433269321794
+    },
+    {
+      "lane": 13,
+      "members": 5627,
+      "area_um2": 762.57774,
+      "padded_area_um2": 1090.74438,
+      "rectangle_dbu": [
+        1224018,
+        123930,
+        1444932,
+        155520
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16488535485637737
+    },
+    {
+      "lane": 14,
+      "members": 5622,
+      "area_um2": 762.41736,
+      "padded_area_um2": 1090.2924,
+      "rectangle_dbu": [
+        1459188,
+        123930,
+        1680156,
+        155520
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16477666349952302
+    },
+    {
+      "lane": 15,
+      "members": 5714,
+      "area_um2": 767.47662,
+      "padded_area_um2": 1100.7171,
+      "rectangle_dbu": [
+        1703970,
+        123930,
+        1924884,
+        155520
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16639290832741455
+    },
+    {
+      "lane": 16,
+      "members": 5560,
+      "area_um2": 755.92926,
+      "padded_area_um2": 1080.18846,
+      "rectangle_dbu": [
+        18900,
+        193050,
+        239868,
+        224640
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.1632496478829789
+    },
+    {
+      "lane": 17,
+      "members": 5569,
+      "area_um2": 758.27664,
+      "padded_area_um2": 1083.06072,
+      "rectangle_dbu": [
+        264114,
+        193050,
+        485028,
+        224640
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16372383339550514
+    },
+    {
+      "lane": 18,
+      "members": 5635,
+      "area_um2": 764.05032,
+      "padded_area_um2": 1092.68352,
+      "rectangle_dbu": [
+        498852,
+        193050,
+        719820,
+        224640
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.16513872653415568
+    },
+    {
+      "lane": 19,
+      "members": 5548,
+      "area_um2": 755.1711,
+      "padded_area_um2": 1078.73046,
+      "rectangle_dbu": [
+        744066,
+        193050,
+        960012,
+        224640
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16682993693960546
+    },
+    {
+      "lane": 20,
+      "members": 5549,
+      "area_um2": 755.5356,
+      "padded_area_um2": 1079.15328,
+      "rectangle_dbu": [
+        984258,
+        193050,
+        1200204,
+        224640
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16689532772678764
+    },
+    {
+      "lane": 21,
+      "members": 5606,
+      "area_um2": 760.14288,
+      "padded_area_um2": 1087.0848,
+      "rectangle_dbu": [
+        1224018,
+        193050,
+        1444932,
+        224640
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16433214444522193
+    },
+    {
+      "lane": 22,
+      "members": 5548,
+      "area_um2": 755.1711,
+      "padded_area_um2": 1078.73046,
+      "rectangle_dbu": [
+        1459188,
+        193050,
+        1680156,
+        224640
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16302929930916302
+    },
+    {
+      "lane": 23,
+      "members": 5542,
+      "area_um2": 756.30834,
+      "padded_area_um2": 1079.51778,
+      "rectangle_dbu": [
+        1703970,
+        193050,
+        1924884,
+        224640
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.1631882551886893
+    },
+    {
+      "lane": 24,
+      "members": 5536,
+      "area_um2": 754.99614,
+      "padded_area_um2": 1077.85566,
+      "rectangle_dbu": [
+        18900,
+        264330,
+        239868,
+        295920
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16289709016487347
+    },
+    {
+      "lane": 25,
+      "members": 5539,
+      "area_um2": 754.67538,
+      "padded_area_um2": 1077.70986,
+      "rectangle_dbu": [
+        264114,
+        264330,
+        485028,
+        295920
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16291495602142525
+    },
+    {
+      "lane": 26,
+      "members": 5537,
+      "area_um2": 753.6402,
+      "padded_area_um2": 1076.55804,
+      "rectangle_dbu": [
+        498852,
+        264330,
+        719820,
+        295920
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.16270166110467796
+    },
+    {
+      "lane": 27,
+      "members": 5530,
+      "area_um2": 753.26112,
+      "padded_area_um2": 1075.77072,
+      "rectangle_dbu": [
+        744066,
+        264330,
+        960012,
+        295920
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16637220142933015
+    },
+    {
+      "lane": 28,
+      "members": 5555,
+      "area_um2": 756.43956,
+      "padded_area_um2": 1080.40716,
+      "rectangle_dbu": [
+        984258,
+        264330,
+        1200204,
+        295920
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.1670892452336038
+    },
+    {
+      "lane": 29,
+      "members": 5614,
+      "area_um2": 759.88044,
+      "padded_area_um2": 1087.28892,
+      "rectangle_dbu": [
+        1224018,
+        264330,
+        1444932,
+        295920
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16436300080281624
+    },
+    {
+      "lane": 30,
+      "members": 5529,
+      "area_um2": 754.98156,
+      "padded_area_um2": 1077.43284,
+      "rectangle_dbu": [
+        1459188,
+        264330,
+        1680156,
+        295920
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16283318907846686
+    },
+    {
+      "lane": 31,
+      "members": 5548,
+      "area_um2": 754.13592,
+      "padded_area_um2": 1077.69528,
+      "rectangle_dbu": [
+        1703970,
+        264330,
+        1924884,
+        295920
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.1629127519958828
+    },
+    {
+      "lane": 32,
+      "members": 5607,
+      "area_um2": 762.88392,
+      "padded_area_um2": 1089.88416,
+      "rectangle_dbu": [
+        18900,
+        333450,
+        239868,
+        365040
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.1647149658988546
+    },
+    {
+      "lane": 33,
+      "members": 5627,
+      "area_um2": 762.9714,
+      "padded_area_um2": 1091.13804,
+      "rectangle_dbu": [
+        264114,
+        333450,
+        480060,
+        365040
+      ],
+      "usable_after_taps_um2": 6806.395979999988,
+      "capacity_after_guard5_um2": 6466.0761809999885,
+      "guarded_padded_fraction": 0.1687480953605551
+    },
+    {
+      "lane": 34,
+      "members": 5608,
+      "area_um2": 760.50738,
+      "padded_area_um2": 1087.56594,
+      "rectangle_dbu": [
+        503874,
+        333450,
+        719820,
+        365040
+      ],
+      "usable_after_taps_um2": 6808.087259999988,
+      "capacity_after_guard5_um2": 6467.682896999989,
+      "guarded_padded_fraction": 0.16815387478326488
+    },
+    {
+      "lane": 35,
+      "members": 5596,
+      "area_um2": 760.02624,
+      "padded_area_um2": 1086.38496,
+      "rectangle_dbu": [
+        744066,
+        333450,
+        960012,
+        365040
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16801373567307612
+    },
+    {
+      "lane": 36,
+      "members": 5622,
+      "area_um2": 763.87536,
+      "padded_area_um2": 1091.7504,
+      "rectangle_dbu": [
+        984258,
+        333450,
+        1200204,
+        365040
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16884352221387075
+    },
+    {
+      "lane": 37,
+      "members": 5538,
+      "area_um2": 756.43956,
+      "padded_area_um2": 1079.41572,
+      "rectangle_dbu": [
+        1224018,
+        333450,
+        1444932,
+        365040
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16317282700989214
+    },
+    {
+      "lane": 38,
+      "members": 5585,
+      "area_um2": 759.35556,
+      "padded_area_um2": 1085.07276,
+      "rectangle_dbu": [
+        1459188,
+        333450,
+        1680156,
+        365040
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16398781560526215
+    },
+    {
+      "lane": 39,
+      "members": 5634,
+      "area_um2": 763.42338,
+      "padded_area_um2": 1091.99826,
+      "rectangle_dbu": [
+        1703970,
+        333450,
+        1924884,
+        365040
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16507490105302824
+    },
+    {
+      "lane": 40,
+      "members": 5558,
+      "area_um2": 757.02276,
+      "padded_area_um2": 1081.16532,
+      "rectangle_dbu": [
+        18900,
+        402570,
+        239868,
+        434160
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16339728142743556
+    },
+    {
+      "lane": 41,
+      "members": 5560,
+      "area_um2": 756.3375,
+      "padded_area_um2": 1080.5967,
+      "rectangle_dbu": [
+        264114,
+        402570,
+        485028,
+        434160
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16335135307883078
+    },
+    {
+      "lane": 42,
+      "members": 5625,
+      "area_um2": 763.36506,
+      "padded_area_um2": 1091.41506,
+      "rectangle_dbu": [
+        498852,
+        402570,
+        719820,
+        434160
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.16494702247234325
+    },
+    {
+      "lane": 43,
+      "members": 5545,
+      "area_um2": 755.03988,
+      "padded_area_um2": 1078.42428,
+      "rectangle_dbu": [
+        744066,
+        402570,
+        960012,
+        434160
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16678258499026663
+    },
+    {
+      "lane": 44,
+      "members": 5632,
+      "area_um2": 764.88138,
+      "padded_area_um2": 1093.33962,
+      "rectangle_dbu": [
+        984258,
+        402570,
+        1200204,
+        434160
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16908930137948658
+    },
+    {
+      "lane": 45,
+      "members": 5599,
+      "area_um2": 761.04684,
+      "padded_area_um2": 1087.58052,
+      "rectangle_dbu": [
+        1224018,
+        402570,
+        1444932,
+        434160
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16440708131366527
+    },
+    {
+      "lane": 46,
+      "members": 5538,
+      "area_um2": 755.4627,
+      "padded_area_um2": 1078.43886,
+      "rectangle_dbu": [
+        1459188,
+        402570,
+        1680156,
+        434160
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16298522959439984
+    },
+    {
+      "lane": 47,
+      "members": 5538,
+      "area_um2": 754.41294,
+      "padded_area_um2": 1077.3891,
+      "rectangle_dbu": [
+        1703970,
+        402570,
+        1924884,
+        434160
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16286646745949132
+    },
+    {
+      "lane": 48,
+      "members": 5565,
+      "area_um2": 756.76032,
+      "padded_area_um2": 1081.31112,
+      "rectangle_dbu": [
+        18900,
+        473850,
+        239868,
+        505440
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16341931628481715
+    },
+    {
+      "lane": 49,
+      "members": 5663,
+      "area_um2": 767.1267,
+      "padded_area_um2": 1097.39286,
+      "rectangle_dbu": [
+        264114,
+        473850,
+        485028,
+        505440
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16589039050373547
+    },
+    {
+      "lane": 50,
+      "members": 5561,
+      "area_um2": 760.82814,
+      "padded_area_um2": 1085.14566,
+      "rectangle_dbu": [
+        498852,
+        473850,
+        719820,
+        505440
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.16399951963809783
+    },
+    {
+      "lane": 51,
+      "members": 5554,
+      "area_um2": 756.4833,
+      "padded_area_um2": 1080.39258,
+      "rectangle_dbu": [
+        744066,
+        473850,
+        960012,
+        505440
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16708699037887337
+    },
+    {
+      "lane": 52,
+      "members": 5541,
+      "area_um2": 755.28774,
+      "padded_area_um2": 1078.43886,
+      "rectangle_dbu": [
+        984258,
+        473850,
+        1200204,
+        505440
+      ],
+      "usable_after_taps_um2": 6806.366819999989,
+      "capacity_after_guard5_um2": 6466.048478999989,
+      "guarded_padded_fraction": 0.16678483984499706
+    },
+    {
+      "lane": 53,
+      "members": 5557,
+      "area_um2": 758.0142,
+      "padded_area_um2": 1082.09844,
+      "rectangle_dbu": [
+        1224018,
+        473850,
+        1444932,
+        505440
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16357836770970333
+    },
+    {
+      "lane": 54,
+      "members": 5547,
+      "area_um2": 754.90866,
+      "padded_area_um2": 1078.4097,
+      "rectangle_dbu": [
+        1459188,
+        473850,
+        1680156,
+        505440
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16298082262292352
+    },
+    {
+      "lane": 55,
+      "members": 5629,
+      "area_um2": 763.27758,
+      "padded_area_um2": 1091.56086,
+      "rectangle_dbu": [
+        1703970,
+        473850,
+        1924884,
+        505440
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16500878028675467
+    },
+    {
+      "lane": 56,
+      "members": 5554,
+      "area_um2": 756.68742,
+      "padded_area_um2": 1080.5967,
+      "rectangle_dbu": [
+        18900,
+        542970,
+        239868,
+        574560
+      ],
+      "usable_after_taps_um2": 6965.040960000006,
+      "capacity_after_guard5_um2": 6616.788912000005,
+      "guarded_padded_fraction": 0.16331134548364737
+    },
+    {
+      "lane": 57,
+      "members": 5546,
+      "area_um2": 755.11278,
+      "padded_area_um2": 1078.5555,
+      "rectangle_dbu": [
+        264114,
+        542970,
+        485028,
+        574560
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.16304278950288748
+    },
+    {
+      "lane": 58,
+      "members": 5604,
+      "area_um2": 760.23036,
+      "padded_area_um2": 1087.05564,
+      "rectangle_dbu": [
+        498852,
+        542970,
+        719820,
+        574560
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.1642881774782982
+    },
+    {
+      "lane": 59,
+      "members": 5547,
+      "area_um2": 756.16254,
+      "padded_area_um2": 1079.66358,
+      "rectangle_dbu": [
+        744066,
+        542970,
+        964980,
+        574560
+      ],
+      "usable_after_taps_um2": 6963.305940000004,
+      "capacity_after_guard5_um2": 6615.140643000003,
+      "guarded_padded_fraction": 0.16321097891432984
+    },
+    {
+      "lane": 60,
+      "members": 5542,
+      "area_um2": 755.37522,
+      "padded_area_um2": 1078.58466,
+      "rectangle_dbu": [
+        979236,
+        542970,
+        1200204,
+        574560
+      ],
+      "usable_after_taps_um2": 6965.011800000007,
+      "capacity_after_guard5_um2": 6616.761210000006,
+      "guarded_padded_fraction": 0.1630079469045852
+    },
+    {
+      "lane": 61,
+      "members": 5556,
+      "area_um2": 757.34352,
+      "padded_area_um2": 1081.36944,
+      "rectangle_dbu": [
+        1224018,
+        542970,
+        1439964,
+        574560
+      ],
+      "usable_after_taps_um2": 6806.395979999988,
+      "capacity_after_guard5_um2": 6466.0761809999885,
+      "guarded_padded_fraction": 0.1672373491635486
+    },
+    {
+      "lane": 62,
+      "members": 6589,
+      "area_um2": 834.87996,
+      "padded_area_um2": 1219.15044,
+      "rectangle_dbu": [
+        1464210,
+        542970,
+        1680156,
+        574560
+      ],
+      "usable_after_taps_um2": 6806.395979999988,
+      "capacity_after_guard5_um2": 6466.0761809999885,
+      "guarded_padded_fraction": 0.18854563507655062
+    },
+    {
+      "lane": 63,
+      "members": 5533,
+      "area_um2": 753.52356,
+      "padded_area_um2": 1076.20812,
+      "rectangle_dbu": [
+        1703970,
+        542970,
+        1924884,
+        574560
+      ],
+      "usable_after_taps_um2": 6963.335100000003,
+      "capacity_after_guard5_um2": 6615.168345000003,
+      "guarded_padded_fraction": 0.1626879413905527
+    }
+  ],
+  "shared_partition": "receivers",
+  "local_result_receivers": 2112,
+  "argmax_pair_registers_actual": {
+    "0": 49,
+    "10": 33,
+    "11": 33,
+    "12": 33,
+    "13": 33,
+    "14": 33,
+    "15": 33,
+    "16": 33,
+    "17": 33,
+    "18": 33,
+    "19": 33,
+    "1": 33,
+    "20": 33,
+    "21": 33,
+    "22": 33,
+    "23": 33,
+    "24": 33,
+    "25": 33,
+    "26": 33,
+    "27": 33,
+    "28": 33,
+    "29": 33,
+    "2": 33,
+    "30": 33,
+    "31": 33,
+    "3": 33,
+    "4": 33,
+    "5": 33,
+    "6": 33,
+    "7": 33,
+    "8": 33,
+    "9": 33
+  },
+  "shared_regions": [
+    {
+      "name": "fh_shared_r0_c0",
+      "members": 210,
+      "area_um2": 32.54256,
+      "padded_area_um2": 44.78976,
+      "rectangle_dbu": [
+        239868,
+        52650,
+        264114,
+        84240
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.061693870276186426
+    },
+    {
+      "name": "fh_shared_r0_c2",
+      "members": 191,
+      "area_um2": 27.52704,
+      "padded_area_um2": 38.66616,
+      "rectangle_dbu": [
+        719820,
+        52650,
+        744066,
+        84240
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05325712931622217
+    },
+    {
+      "name": "fh_shared_r0_c4",
+      "members": 199,
+      "area_um2": 27.76032,
+      "padded_area_um2": 39.366,
+      "rectangle_dbu": [
+        1200204,
+        52650,
+        1224018,
+        84240
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.05508276184967903
+    },
+    {
+      "name": "fh_shared_r0_c6",
+      "members": 373,
+      "area_um2": 43.36092,
+      "padded_area_um2": 65.11428,
+      "rectangle_dbu": [
+        1680156,
+        52650,
+        1703970,
+        84240
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.09131981257559273
+    },
+    {
+      "name": "fh_shared_r1_c0",
+      "members": 197,
+      "area_um2": 28.12482,
+      "padded_area_um2": 39.61386,
+      "rectangle_dbu": [
+        239868,
+        123930,
+        264114,
+        155520
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05456453305351515
+    },
+    {
+      "name": "fh_shared_r1_c1",
+      "members": 1,
+      "area_um2": 0.08748,
+      "padded_area_um2": 0.1458,
+      "rectangle_dbu": [
+        480060,
+        123930,
+        503874,
+        155520
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.00020447786067083015
+    },
+    {
+      "name": "fh_shared_r1_c2",
+      "members": 199,
+      "area_um2": 27.9207,
+      "padded_area_um2": 39.52638,
+      "rectangle_dbu": [
+        719820,
+        123930,
+        744066,
+        155520
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05444195987039152
+    },
+    {
+      "name": "fh_shared_r1_c3",
+      "members": 2,
+      "area_um2": 0.2187,
+      "padded_area_um2": 0.33534,
+      "rectangle_dbu": [
+        960012,
+        123930,
+        984258,
+        155520
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.00046188309738805054
+    },
+    {
+      "name": "fh_shared_r1_c4",
+      "members": 194,
+      "area_um2": 28.02276,
+      "padded_area_um2": 39.33684,
+      "rectangle_dbu": [
+        1200204,
+        123930,
+        1224018,
+        155520
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.055041959803864456
+    },
+    {
+      "name": "fh_shared_r1_c6",
+      "members": 203,
+      "area_um2": 28.81008,
+      "padded_area_um2": 40.64904,
+      "rectangle_dbu": [
+        1680156,
+        123930,
+        1703970,
+        155520
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05700842755502744
+    },
+    {
+      "name": "fh_shared_r2_c0",
+      "members": 197,
+      "area_um2": 27.71658,
+      "padded_area_um2": 39.20562,
+      "rectangle_dbu": [
+        239868,
+        193050,
+        264114,
+        224640
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05400221913172699
+    },
+    {
+      "name": "fh_shared_r2_c2",
+      "members": 202,
+      "area_um2": 28.32894,
+      "padded_area_um2": 40.10958,
+      "rectangle_dbu": [
+        719820,
+        193050,
+        744066,
+        224640
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05524523482237074
+    },
+    {
+      "name": "fh_shared_r2_c3",
+      "members": 3,
+      "area_um2": 0.33534,
+      "padded_area_um2": 0.5103,
+      "rectangle_dbu": [
+        960012,
+        193050,
+        984258,
+        224640
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.0007028655829818159
+    },
+    {
+      "name": "fh_shared_r2_c4",
+      "members": 201,
+      "area_um2": 28.41642,
+      "padded_area_um2": 40.13874,
+      "rectangle_dbu": [
+        1200204,
+        193050,
+        1224018,
+        224640
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.056164016063765324
+    },
+    {
+      "name": "fh_shared_r2_c6",
+      "members": 192,
+      "area_um2": 28.15398,
+      "padded_area_um2": 39.35142,
+      "rectangle_dbu": [
+        1680156,
+        193050,
+        1703970,
+        224640
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05518857459505705
+    },
+    {
+      "name": "fh_shared_r3_c0",
+      "members": 195,
+      "area_um2": 28.18314,
+      "padded_area_um2": 39.55554,
+      "rectangle_dbu": [
+        239868,
+        264330,
+        264114,
+        295920
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05448420249325969
+    },
+    {
+      "name": "fh_shared_r3_c2",
+      "members": 205,
+      "area_um2": 28.51848,
+      "padded_area_um2": 40.47408,
+      "rectangle_dbu": [
+        719820,
+        264330,
+        744066,
+        295920
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05574728166735775
+    },
+    {
+      "name": "fh_shared_r3_c3",
+      "members": 9,
+      "area_um2": 0.97686,
+      "padded_area_um2": 1.50174,
+      "rectangle_dbu": [
+        960012,
+        264330,
+        984258,
+        295920
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.0020684330013464873
+    },
+    {
+      "name": "fh_shared_r3_c4",
+      "members": 195,
+      "area_um2": 28.41642,
+      "padded_area_um2": 39.78882,
+      "rectangle_dbu": [
+        1200204,
+        264330,
+        1224018,
+        295920
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.0556743915139904
+    },
+    {
+      "name": "fh_shared_r3_c6",
+      "members": 210,
+      "area_um2": 29.53908,
+      "padded_area_um2": 41.78628,
+      "rectangle_dbu": [
+        1680156,
+        264330,
+        1703970,
+        295920
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05860335486825991
+    },
+    {
+      "name": "fh_shared_r4_c0",
+      "members": 199,
+      "area_um2": 28.75176,
+      "padded_area_um2": 40.35744,
+      "rectangle_dbu": [
+        239868,
+        333450,
+        264114,
+        365040
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05558874769677214
+    },
+    {
+      "name": "fh_shared_r4_c1",
+      "members": 1,
+      "area_um2": 0.10206,
+      "padded_area_um2": 0.16038,
+      "rectangle_dbu": [
+        480060,
+        333450,
+        503874,
+        365040
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.00022492564673791315
+    },
+    {
+      "name": "fh_shared_r4_c2",
+      "members": 201,
+      "area_um2": 28.34352,
+      "padded_area_um2": 40.06584,
+      "rectangle_dbu": [
+        719820,
+        333450,
+        744066,
+        365040
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.0551849892009723
+    },
+    {
+      "name": "fh_shared_r4_c3",
+      "members": 22,
+      "area_um2": 2.07036,
+      "padded_area_um2": 3.3534,
+      "rectangle_dbu": [
+        960012,
+        333450,
+        984258,
+        365040
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.004618830973880505
+    },
+    {
+      "name": "fh_shared_r4_c4",
+      "members": 201,
+      "area_um2": 28.85382,
+      "padded_area_um2": 40.57614,
+      "rectangle_dbu": [
+        1200204,
+        333450,
+        1224018,
+        365040
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.05677604675098399
+    },
+    {
+      "name": "fh_shared_r4_c6",
+      "members": 190,
+      "area_um2": 27.23544,
+      "padded_area_um2": 38.31624,
+      "rectangle_dbu": [
+        1680156,
+        333450,
+        1703970,
+        365040
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05373678178429416
+    },
+    {
+      "name": "fh_shared_r5_c0",
+      "members": 200,
+      "area_um2": 28.19772,
+      "padded_area_um2": 39.86172,
+      "rectangle_dbu": [
+        239868,
+        402570,
+        264114,
+        434160
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05490593793460081
+    },
+    {
+      "name": "fh_shared_r5_c2",
+      "members": 204,
+      "area_um2": 28.56222,
+      "padded_area_um2": 40.4595,
+      "rectangle_dbu": [
+        719820,
+        402570,
+        744066,
+        434160
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.055727199793558266
+    },
+    {
+      "name": "fh_shared_r5_c3",
+      "members": 2,
+      "area_um2": 0.20412,
+      "padded_area_um2": 0.32076,
+      "rectangle_dbu": [
+        960012,
+        402570,
+        984258,
+        434160
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.00044180122358857004
+    },
+    {
+      "name": "fh_shared_r5_c4",
+      "members": 195,
+      "area_um2": 28.47474,
+      "padded_area_um2": 39.84714,
+      "rectangle_dbu": [
+        1200204,
+        402570,
+        1224018,
+        434160
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.05575599560561956
+    },
+    {
+      "name": "fh_shared_r5_c6",
+      "members": 202,
+      "area_um2": 29.16,
+      "padded_area_um2": 40.94064,
+      "rectangle_dbu": [
+        1680156,
+        402570,
+        1703970,
+        434160
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.057417383276369104
+    },
+    {
+      "name": "fh_shared_r6_c0",
+      "members": 194,
+      "area_um2": 28.38726,
+      "padded_area_um2": 39.70134,
+      "rectangle_dbu": [
+        239868,
+        473850,
+        264114,
+        505440
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05468502889389832
+    },
+    {
+      "name": "fh_shared_r6_c2",
+      "members": 205,
+      "area_um2": 27.74574,
+      "padded_area_um2": 39.70134,
+      "rectangle_dbu": [
+        719820,
+        473850,
+        744066,
+        505440
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05468294235598529
+    },
+    {
+      "name": "fh_shared_r6_c3",
+      "members": 4,
+      "area_um2": 0.40824,
+      "padded_area_um2": 0.64152,
+      "rectangle_dbu": [
+        960012,
+        473850,
+        984258,
+        505440
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.0008836024471771401
+    },
+    {
+      "name": "fh_shared_r6_c4",
+      "members": 207,
+      "area_um2": 29.5245,
+      "padded_area_um2": 41.59674,
+      "rectangle_dbu": [
+        1200204,
+        473850,
+        1224018,
+        505440
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.058204118354494176
+    },
+    {
+      "name": "fh_shared_r6_c6",
+      "members": 197,
+      "area_um2": 28.31436,
+      "padded_area_um2": 39.8034,
+      "rectangle_dbu": [
+        1680156,
+        473850,
+        1703970,
+        505440
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05582245596313663
+    },
+    {
+      "name": "fh_shared_r7_c0",
+      "members": 197,
+      "area_um2": 29.0142,
+      "padded_area_um2": 40.50324,
+      "rectangle_dbu": [
+        239868,
+        542970,
+        264114,
+        574560
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.05578957409741077
+    },
+    {
+      "name": "fh_shared_r7_c2",
+      "members": 193,
+      "area_um2": 27.74574,
+      "padded_area_um2": 39.0015,
+      "rectangle_dbu": [
+        719820,
+        542970,
+        744066,
+        574560
+      ],
+      "usable_after_taps_um2": 764.239860000001,
+      "capacity_after_guard5_um2": 726.0278670000009,
+      "guarded_padded_fraction": 0.05371901241361022
+    },
+    {
+      "name": "fh_shared_r7_c4",
+      "members": 205,
+      "area_um2": 28.38726,
+      "padded_area_um2": 40.34286,
+      "rectangle_dbu": [
+        1200204,
+        542970,
+        1224018,
+        574560
+      ],
+      "usable_after_taps_um2": 752.2842600000015,
+      "capacity_after_guard5_um2": 714.6700470000014,
+      "guarded_padded_fraction": 0.05644963038446737
+    },
+    {
+      "name": "fh_shared_r7_c5",
+      "members": 1,
+      "area_um2": 0.10206,
+      "padded_area_um2": 0.16038,
+      "rectangle_dbu": [
+        1439964,
+        542970,
+        1464210,
+        574560
+      ],
+      "usable_after_taps_um2": 764.210700000001,
+      "capacity_after_guard5_um2": 726.000165000001,
+      "guarded_padded_fraction": 0.00022090904070249046
+    },
+    {
+      "name": "fh_shared_r7_c6",
+      "members": 198,
+      "area_um2": 28.2852,
+      "padded_area_um2": 39.83256,
+      "rectangle_dbu": [
+        1680156,
+        542970,
+        1703970,
+        574560
+      ],
+      "usable_after_taps_um2": 750.5638200000014,
+      "capacity_after_guard5_um2": 713.0356290000013,
+      "guarded_padded_fraction": 0.05586335153527079
+    }
+  ],
+  "serialized_regions_verified": 64,
+  "serialized_shared_regions_verified": 41,
+  "output_sha256": "94fd9120bfd60ebf1e2adaef89ef83f1098fc17819f6558afaf634fd10532c07",
+  "geometry_changed": true,
+  "macro_geometry_changed": false,
+  "region_geometry_changed": true,
+  "macro_pins_changed": false,
+  "logic_changed": false,
+  "added_cycles": 0,
+  "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d"
+}

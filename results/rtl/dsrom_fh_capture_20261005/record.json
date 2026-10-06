@@ -220,6 +220,25 @@
       ]
     ],
     "successor": "C17_region_replace",
-    "correction": "remove group, destroy/recreate region with exact group/member preservation; assert all64 serialized boundaries and member counts"
+    "correction": "remove group, destroy/recreate region with exact group/member preservation; assert all64 serialized boundaries and member counts",
+    "setup_ws_ps": -2568.27,
+    "hold_ws_ps": -6.23,
+    "resized_setup_ws_ps": -2234.8,
+    "critical_start": "u_memory.g_bank[55].u_lane/poison_q",
+    "critical_end": "g_argmax_consumer[12].c[19]",
+    "critical_class": "global64-bank fault reduction/veto through first real argmax consumer; not ALAT arithmetic",
+    "reports": [
+      "routes/C16_rect_strips/global_place.rpt",
+      "routes/C16_rect_strips/resized.rpt"
+    ]
+  },
+  "shared_partition_successors": {
+    "comb": "C18_shared_comb",
+    "receivers": "C19_shared_receivers",
+    "RTL_unchanged": true,
+    "exact_replayed": false,
+    "native_all_member_row_tap_guard5_and_reload_pass": true,
+    "slot_growth_mm2": 0,
+    "added_cycles": 0
   }
 }
