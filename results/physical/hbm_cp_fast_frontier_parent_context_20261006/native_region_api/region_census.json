@@ -1,0 +1,152 @@
+{
+  "3_2_place_iop.odb": {
+    "groups": {
+      "cp_body": {
+        "cells": 5890,
+        "area": 799.6838400000416,
+        "boxes": [
+          [
+            17280,
+            60480,
+            60480,
+            64800
+          ],
+          [
+            60480,
+            17280,
+            64800,
+            64800
+          ],
+          [
+            22464,
+            56160,
+            60480,
+            60480
+          ],
+          [
+            17280,
+            17280,
+            60480,
+            56160
+          ],
+          [
+            17280,
+            17280,
+            60480,
+            56160
+          ]
+        ],
+        "members": []
+      },
+      "cp_association": {
+        "cells": 13,
+        "area": 2.7556200000000004,
+        "boxes": [
+          [
+            17280,
+            56160,
+            22464,
+            60480
+          ]
+        ],
+        "members": [
+          "u_su_association.on.fast_receiver.executor/fast.g\\[3\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[2\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[1\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[0\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/_2_",
+          "u_su_association.on.fast_receiver.executor/_1_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[3\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[2\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[1\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[0\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/_2_",
+          "u_su_association.on.fast_receiver.admit/_1_",
+          "_6105_"
+        ]
+      }
+    },
+    "ungrouped_movable": 0,
+    "core": [
+      17280,
+      17280,
+      64800,
+      64800
+    ]
+  },
+  "3_3_place_gp-failed.odb": {
+    "groups": {
+      "cp_body": {
+        "cells": 5408,
+        "area": 764.5314600000361,
+        "boxes": [
+          [
+            17280,
+            60480,
+            60480,
+            64800
+          ],
+          [
+            60480,
+            17280,
+            64800,
+            64800
+          ],
+          [
+            22464,
+            56160,
+            60480,
+            60480
+          ],
+          [
+            17280,
+            17280,
+            60480,
+            56160
+          ],
+          [
+            17280,
+            17280,
+            60480,
+            56160
+          ]
+        ],
+        "members": []
+      },
+      "cp_association": {
+        "cells": 13,
+        "area": 2.7556200000000004,
+        "boxes": [
+          [
+            17280,
+            56160,
+            22464,
+            60480
+          ]
+        ],
+        "members": [
+          "u_su_association.on.fast_receiver.executor/fast.g\\[3\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[2\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[1\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/fast.g\\[0\\].n/_0_",
+          "u_su_association.on.fast_receiver.executor/_2_",
+          "u_su_association.on.fast_receiver.executor/_1_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[3\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[2\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[1\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/fast.g\\[0\\].n/_0_",
+          "u_su_association.on.fast_receiver.admit/_2_",
+          "u_su_association.on.fast_receiver.admit/_1_",
+          "_6105_"
+        ]
+      }
+    },
+    "ungrouped_movable": 235,
+    "core": [
+      17280,
+      17280,
+      64800,
+      64800
+    ]
+  }
+}
