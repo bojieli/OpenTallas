@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm-accel-die-floorplan.v1",
  "tool": "tools/hbm_accel_die_fp.py",
- "tool_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+ "tool_sha256": "5ef5953be303f77ab213c78d22d6befdb09ec9c8f816ad3e9752b8e8d13e2c0d",
  "sources_sha256": {
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
@@ -11,7 +11,7 @@
   "results/uarch/hbm_current_target_portmap_20261005/model_portmap.json": "89f86a1a126c7da0154b428ccfd07975068d0b018af59927b05900940758c59b",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json": "34672497097022383bd473e225cf697fc67178f5b2c290b035e595a83335f3a8",
-  "tools/dsrom_s81_fulldie.py": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
+  "tools/dsrom_s81_fulldie.py": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20",
   "tools/qwen_rom_fulldie.py": "bc892b806a6ff1652a5a2830028ea445edf6334161e36109aea0df187fbc30ff"
  },
  "die": {
@@ -134,7 +134,7 @@
   "phy": 40.025,
   "svc": 8.813,
   "sm": 146.165,
-  "spine": 7.803,
+  "spine": 8.072,
   "hub": 51.044,
   "attn_tile": 116.565,
   "serdes_slab": 18.009,
@@ -143,8 +143,8 @@
   "waypoint": 2.961
  },
  "child_reservations": null,
- "placed_footprint_mm2": 406.88,
- "utilisation_of_die": 0.677,
+ "placed_footprint_mm2": 407.15,
+ "utilisation_of_die": 0.678,
  "geometry": {
   "W": 24401.52,
   "H": 24621.84,
@@ -161,7 +161,7 @@
    18014.4
   ],
   "ew_y": {
-   "S": 9780.48,
+   "S": 9828.576000000001,
    "N": 15230.16
   },
   "spch": 1244.16
@@ -486,9 +486,9 @@
   },
   "expert_req_SW": {
    "segments": 8,
-   "um": 12677.3,
+   "um": 12581.1,
    "stages_430": 33,
-   "stages_504": 30
+   "stages_504": 29
   },
   "kv_SW": {
    "segments": 11,
@@ -732,9 +732,9 @@
   },
   "expert_req_SE": {
    "segments": 8,
-   "um": 12837.1,
+   "um": 12740.9,
    "stages_430": 32,
-   "stages_504": 32
+   "stages_504": 31
   },
   "kv_SE": {
    "segments": 9,
@@ -978,9 +978,9 @@
   },
   "expert_req_NW": {
    "segments": 12,
-   "um": 17820.3,
+   "um": 17724.2,
    "stages_430": 46,
-   "stages_504": 44
+   "stages_504": 43
   },
   "kv_NW": {
    "segments": 11,
@@ -1224,9 +1224,9 @@
   },
   "expert_req_NE": {
    "segments": 12,
-   "um": 17980.2,
+   "um": 17884.0,
    "stages_430": 46,
-   "stages_504": 44
+   "stages_504": 43
   },
   "kv_NE": {
    "segments": 9,
@@ -1278,7 +1278,7 @@
   },
   "hub_router_cmdproc": {
    "segments": 1,
-   "um": 423.4,
+   "um": 327.2,
    "stages_430": 1,
    "stages_504": 1
   },
@@ -1290,9 +1290,9 @@
   },
   "hub_vm_router": {
    "segments": 1,
-   "um": 3553.2,
+   "um": 3457.0,
    "stages_430": 9,
-   "stages_504": 8
+   "stages_504": 7
   },
   "hub_cmdproc_barrier": {
    "segments": 1,
@@ -1350,7 +1350,7 @@
   },
   "hub_su_SW_router": {
    "segments": 1,
-   "um": 1311.1,
+   "um": 1373.8,
    "stages_430": 4,
    "stages_504": 3
   },
@@ -1416,7 +1416,7 @@
   },
   "hub_su_SE_router": {
    "segments": 1,
-   "um": 1311.1,
+   "um": 1373.8,
    "stages_430": 4,
    "stages_504": 3
   },
@@ -1482,7 +1482,7 @@
   },
   "hub_su_NW_router": {
    "segments": 1,
-   "um": 4160.2,
+   "um": 4064.0,
    "stages_430": 10,
    "stages_504": 9
   },
@@ -1548,7 +1548,7 @@
   },
   "hub_su_NE_router": {
    "segments": 1,
-   "um": 4160.2,
+   "um": 4064.0,
    "stages_430": 10,
    "stages_504": 9
   },
@@ -1708,9 +1708,9 @@
   },
   "expert_req": {
    "paths": 4,
-   "max_um": 17980.2,
+   "max_um": 17884.0,
    "max_stages_430": 46,
-   "max_stages_504": 44,
+   "max_stages_504": 43,
    "worst": "expert_req_NE",
    "what": "router -> stream service (expert-fetch descriptor)"
   },
@@ -1778,12 +1778,12 @@
   }
  },
  "power": {
-  "peak_in_phase_w": 395.9,
+  "peak_in_phase_w": 396.2,
   "by_kind": {
    "phy": 0.0,
    "svc": 34.58,
    "sm": 175.4,
-   "spine": 8.19,
+   "spine": 8.48,
    "hub": 53.6,
    "attn_tile": 122.39,
    "serdes_slab": 0.0,
@@ -2086,8 +2086,16 @@
   "attn_tile_w_um": 1349.136,
   "attn_tile_h_um": 1350.0,
   "face_fix": true,
+  "router_env": [
+   9338.688,
+   326.28
+  ],
   "W": 24401.52,
   "H": 24621.84
+ },
+ "generator_decisions": {
+  "item9_collective_path": "The selected native SM (ot_hbm_accel_sm_v / TU) has no O_COLL / VR path. The die collective path is the native one: SM result gather -> SU -> TU collective endpoint (SU quarter -> endpoint inj_data 1,024 b, endpoint -> quarter return 580 b), as coll_rtl wires it. The original 32-caller O_COLL / B_COLL x 64 b ABI join (Dirac minimum slice) is NOT built and no alias pins are added (decision 2026-10-06, re TURING ITEM9_ACTUAL_PORTTOP_P0 / ITEM9_NATIVE_JOIN_DECISION).",
+  "r16h_router_env": "Router envelope [11069.136, 9338.688, 12468.792, 9664.968] (326.280 um tall, from 133.896) per TURING ROUTER_FINITE_FRAME allocation; loader / cmdproc fixed, each adjacent gap 327.192 um. The die router view (ot_gpu_router_topk_ps PIPESEL=1, ~7.4k um2 placed) fits."
  },
  "r15_lint_fix": {
   "source": "results/rtl/die_top_lint_20261006/findings.json (H1-H13, TF1-TF7)",

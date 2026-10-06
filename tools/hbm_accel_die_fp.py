@@ -65,7 +65,8 @@ SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r16g'            # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
+FINAL_ROUND = 'r16h'            # (r16g until 2026-10-06 09:30 PT: r16h = r16g + router_env)
+# the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
 # ------------------------------------------------------------------------------------------------ block ledger
@@ -203,7 +204,24 @@ R16G = dict(R16E, face_fix=True)
 FACE_FIX = {('hfd_attn_tile', 'k'): 'S', ('hfd_attn_tile', 'ci'): 'S', ('hfd_attn_tile', 'cf'): 'N',
             ('hfd_attn_tile', 'q'): 'E', ('hfd_attn_tile', 'o'): 'E', ('hfd_attn_tile', 'ri'): 'E',
             ('hfd_attn_tile', 'i'): 'W', ('hfd_attn_tile', 'rf'): 'W', ('hfd_su', 'r'): 'S'}
-ADOPTED = R16G
+# r16h (adopted 2026-10-06, CLAUDE HBM-ABSTRACTS as generator owner, on Turing's finite router frame
+# TURING_TO_CARSON_GIBBS_KANT_CLAUDE_ROUTER_FINITE_FRAME_20261006): the router envelope grows from 133.896 to 326.280 um
+# tall, [11069.136, 9338.688, 12468.792, 9664.968], taken from the loader / cmdproc gaps (each keeps 327.192 um);
+# loader and cmdproc do not move.  The die's pipelined router view (ot_gpu_router_topk_ps, ~7.4k um2 placed) fits either
+# envelope; the resize carries the alternative topk_f3 child frame (315.956 um square + 5 um halo).
+R16H = dict(R16G, router_env=(9338.688, 326.28))
+# Generator decisions recorded in floorplan.json (generator owner CLAUDE HBM-ABSTRACTS, 2026-10-06)
+DECISIONS = dict(
+    item9_collective_path=('The selected native SM (ot_hbm_accel_sm_v / TU) has no O_COLL / VR path. The die collective '
+                           'path is the native one: SM result gather -> SU -> TU collective endpoint (SU quarter -> '
+                           'endpoint inj_data 1,024 b, endpoint -> quarter return 580 b), as coll_rtl wires it. The '
+                           'original 32-caller O_COLL / B_COLL x 64 b ABI join (Dirac minimum slice) is NOT built and no '
+                           'alias pins are added (decision 2026-10-06, re TURING ITEM9_ACTUAL_PORTTOP_P0 / '
+                           'ITEM9_NATIVE_JOIN_DECISION).'),
+    r16h_router_env=('Router envelope [11069.136, 9338.688, 12468.792, 9664.968] (326.280 um tall, from 133.896) per '
+                     'TURING ROUTER_FINITE_FRAME allocation; loader / cmdproc fixed, each adjacent gap 327.192 um. The '
+                     'die router view (ot_gpu_router_topk_ps PIPESEL=1, ~7.4k um2 placed) fits.'))
+ADOPTED = R16H
 
 
 def build(variant=None):
@@ -308,6 +326,11 @@ def build(variant=None):
                   domain='serial_0p9' if n == 'quant' else 'stream_1p2')
         insts.append(it)
         hub[n] = it
+    if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
+        ry, rh = variant['router_env']
+        it = hub['router']
+        assert ry >= hub['loader'].y + hub['loader'].h and ry + rh <= hub['cmdproc'].y, ('router_env overlaps', ry, rh)
+        it.y, it.h = ry, rh
     # r12: the SU E <-> W quarter links (1,024 b each way per pair) cross the spine column through the gap between
     # router and cmdproc (S pair) and between VM and barrier (N pair); r11 crossed the blocks (402 M6 overflow)
     if variant.get('attn_rtl'):
@@ -1610,6 +1633,7 @@ def plan_record(m):
                                       where='multicast stations (one per SM column) + the x trunk stations', grade='sized: '
                                       '4 stages x bus width x 0.2916 um2 DFF at 0.6 utilisation')),
         power=die_power(m), pdn=pdn_plan(m), clock_region_list=clock_regions(m), notes=m['notes'], variant=m['variant'],
+        generator_decisions=DECISIONS,
         **r15_record(m))
 
 
@@ -1939,7 +1963,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
