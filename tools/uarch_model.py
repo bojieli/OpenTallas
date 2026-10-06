@@ -11245,3 +11245,11 @@ def dsrom_s81_wfc_parent_allocation_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
+
+
+def hbm_item9_current32_parent_allocation_model():
+    """Source-local caller/endpoint subregions and concrete native corridor deficit."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_item9_current32_parent_allocation_20261006/model.json').read_text())
