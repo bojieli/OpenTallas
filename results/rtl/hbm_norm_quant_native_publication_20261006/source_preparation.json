@@ -76,10 +76,11 @@
     "module": "ot_hbm_die_vm_sfu_publication_root",
     "candidate_root": "ot-epyc2:/srv/opentallas-scratch2/codex/hbm-norm-native-73fe978cd/r2/obj/Vot_hbm_die_vm_sfu_publication_root_2",
     "candidate_library": "libot_hbm_die_vm_sfu_publication_root_2.a",
-    "match_required": "All actual backend source hashes and generated hierarchy interface must match; no forced archive reuse or flat400GB build"
+    "match_required": "All actual backend source hashes and generated hierarchy interface must match; no forced archive reuse or flat400GB build",
+    "cached_generated_port_ABI": "root_backend_generated_abi.json: all88 directions/widths match"
   },
   "runtime_owner": "Gibbs",
-  "dispatch_owner": "Kant",
+  "dispatch_owner": "Gibbs",
   "Gauss_launcher": "NONE",
   "cases": [
     {
@@ -119,5 +120,6 @@
     "-fno-dfg"
   ],
   "fault_negative": "Actual root SRAM checked finalROW16352 ACK held7edges, only incomingTOKENbit52 flipped; 400rootACK events /239correctquantACKs /5120checkedFP32, retained owner/root debt/warm refusal required",
-  "verification": "All result12800WORDs, padding included, actual SRAM index readback under full73 identity; no numerical gold regeneration/no arithmeticbaseline replay"
+  "verification": "All result12800WORDs, padding included, actual SRAM index readback under full73 identity; no numerical gold regeneration/no arithmeticbaseline replay",
+  "capacity_and_central_refresh_owner": "Kant"
 }
