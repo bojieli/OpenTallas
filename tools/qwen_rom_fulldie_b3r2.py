@@ -335,6 +335,8 @@ def _r18_masters(v, m):
         for pn, fr in (('x3', 0.22), ('ar', 0.36)):
             if pn in hb.ports:
                 hb.ports[pn] = ('face', v.IO_BITS, 'E', 'M4', hb.h * fr, 2)
+        if 'ln' in hb.ports:           # r18_real: DRT-0073 on ln[26] at 0.78 h (one pin, no neighbour); one band up
+            hb.ports['ln'] = hb.ports['ln'][:4] + (hb.h * 0.81,) + hb.ports['ln'][5:]
         if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
             hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
         vm = out['qfd_sp_vector_memory']
@@ -385,9 +387,17 @@ def _r18_masters(v, m):
             # clock / reset ports: M8 area pins in a row at the block centre (reachable over any OBS)
             j = 0
             for pn in sorted(mst_used.get(mn, set())):
-                if pn in M.ports:
+                if pn in M.ports and not (pn in R18_CK or pn.startswith(('pll_', 'fck_'))):
+                    continue
+                if pn in M.ports and M.ports[pn][0] == 'area':
                     continue
                 if pn in R18_CK or pn.startswith(('pll_', 'fck_')):
+                    # (the earlier wrappers' face stacking put these on faces already holding data pins: r18_real
+                    # pll_r60 on top of hub ln[24]; they all become centre area pins here)
+                    if pn in M.ports:
+                        M.order.remove(pn)
+                        M.ports.pop(pn)
+                    M.order.append(pn)
                     M.area(pn, 1, min(M.w - 1.0, max(1.0, M.w / 2 + ((j % 12) - 6) * 1.6)),
                            min(M.h - 1.0, max(1.0, M.h / 2 + (j // 12) * 1.6)), 1)
                     j += 1
