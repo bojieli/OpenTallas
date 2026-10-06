@@ -3278,7 +3278,7 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
         it.kind, it.domain = 'hstn', dom
         it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
         CH8.bus(f'{name}_d{k}', 'local', bits, [prev, (it.name, 'di')])
-        prev = (it.name, 'do')
+        prev = (it.name, 'dq')
     CH8.bus(f'{name}_d{len(sts)}', 'local', bits, [prev, (Bk.name, pb)])
     m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=len(sts),
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
@@ -3333,7 +3333,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         it.kind, it.domain = 'hstn', A.domain
         it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
         CH8.bus(f'{name}_d{k}', 'hub', bits, [prev, (it.name, 'di')])
-        prev = (it.name, 'do')
+        prev = (it.name, 'dq')
     CH8.bus(f'{name}_d{len(sts)}', 'hub', bits, [prev, (Bk.name, pb)])
     m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=len(sts),
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
@@ -3819,7 +3819,7 @@ def _faces_r8(m, Mx, it, ports):
     elif kind == 'hstn':
         horiz = mst.startswith('dsfd_hstnh')
         _lay(Mx, 'W' if horiz else 'S', P_(['di']), 'M4' if horiz else 'M5', gap=0.0)
-        _lay(Mx, 'E' if horiz else 'N', P_(['do']), 'M4' if horiz else 'M5', gap=0.0)
+        _lay(Mx, 'E' if horiz else 'N', P_(['dq']), 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'N' if horiz else 'W', P_(['ck']), 'M5' if horiz else 'M4')
     elif kind == 'sstn':
         _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
@@ -3998,7 +3998,7 @@ def glue_rtl(m):
             for s_ in range(math.ceil(w / 512)):
                 lo, hi = 512 * s_, min(w, 512 * (s_ + 1))
                 body.append(f'    ot_fwd_link_stage #(.W({hi - lo}), .ENABLE(1\'b1)) u_{s_} (.fclk_i(fck), .rst_n(1\'b1), '
-                            f'.i_v(1\'b1), .i_d(di[{hi - 1}:{lo}]), .fclk_o(), .o_v(), .o_d(do[{hi - 1}:{lo}]));')
+                            f'.i_v(1\'b1), .i_d(di[{hi - 1}:{lo}]), .fclk_o(), .o_v(), .o_d(dq[{hi - 1}:{lo}]));')
         elif mst.startswith('dsfd_sstn'):
             body.append('    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;')
             body.append('    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end')
