@@ -155,6 +155,16 @@
     "new_data_cycles": 0,
     "memory_geometry_and_ports_unchanged": true,
     "root_source_qualification": "Turing repair or explicit actual external provider; body result never qualifies source/PLL",
-    "one_route_density": 0.55
+    "one_route_density": 0.55,
+    "mode": "IDEAL_EXTERNAL_INPUT_DIAGNOSTIC",
+    "assumption": "Owner-authorized ideal clock SOURCE at external fast_clk/slow_clk inputs; sameepoch0/50%duty/3:4. No characterized insertion/slew/jitter values invented.",
+    "source": "4262a69ba/compatibility0ce837edc",
+    "clock_source_qualified": false,
+    "full_parent_qualified": false,
+    "headline_allowed": false,
+    "body_network": "actual propagated CTS and named WC/BC SPEF required",
+    "finite_IO_source_bound": false,
+    "IO_blocker": "retained R4 external engine command/retirement/restore fixture and link/XB/C8 external source endpoints still need actual finite implementation hooks",
+    "source_budget_interpretation": "reg2reg slack AFTER60/25 is available combinedsourcevariation budget; negative has no positive allowance"
   }
 }
