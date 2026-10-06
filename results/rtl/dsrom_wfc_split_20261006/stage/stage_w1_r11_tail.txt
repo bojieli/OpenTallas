@@ -1,0 +1,15 @@
+JOB node=0 user=0 pos=0 hdr=55 pay=55 cstart=55 start=55 done=11318
+OUT msg=0 cycle=11370
+JOB node=0 user=0 pos=1 hdr=11367 pay=11367 cstart=11367 start=11367 done=23409
+OUT msg=1 cycle=23461
+JOB node=0 user=0 pos=2 hdr=23458 pay=23458 cstart=23458 start=23458 done=36098
+OUT msg=2 cycle=36150
+JOB node=0 user=0 pos=3 hdr=36147 pay=36147 cstart=36147 start=36147 done=48774
+OUT msg=3 cycle=48826
+JOB node=0 user=0 pos=3 hdr=48823 pay=48823 cstart=48823 start=48823 done=60942
+OUT msg=4 cycle=60994
+JOB node=0 user=0 pos=4 hdr=60991 pay=60991 cstart=60991 start=60991 done=73622
+OUT msg=5 cycle=73674
+HDC41_ARRAY nodes=1 users=1 generated=0 mismatches=0 logit_mismatch=0 lm_head_checks=0 state_mismatch=0 total_cycles=73675
+STAGE_OUT msgs=6 out_mismatch=0
+PASS
