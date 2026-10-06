@@ -11086,7 +11086,7 @@ def hbm_attn_registered_parent_model():
     root = Path(__file__).resolve().parents[1]
     old = json.loads((root/'results/uarch/hbm_attn_h16_context_20261005/model.json').read_text())
     w = 1618
-    ff = w*(1+4+16) + 16*34 + 2 + 16
+    ff = w*(1+4+16) + 16*34 + 2 + 16 + 16
     source_fixture_ff = w + 16
     ff_body = ff*.37908
     buffer_reserve = 2048*.4374
@@ -11133,10 +11133,32 @@ def hbm_attn_registered_parent_model():
             per_block_FF_and_payload_reach_verified=True,
             nonconstant_ordered_macro_payload_bits=25888,own_receiver_D_associations=544,
             CTS_and_tracks_qualified=False, added_token_cycles_unchanged=3),
+        native_pin_alignment=dict(origin_um=[5.040,352.992,700.992,1048.992],
+            origin_rule="R0 origin both axes multiple .048um; actual1662 LEF signal centers .012 modulo .048",
+            max_displacement_um=.046,outline_delta_um=0,FF_delta=0,cycle_delta=0,
+            minimum_macro_boundary_halo_um=5.040,
+            minimum_inter_macro_halo_gap_um=43.170,
+            conservative_row_track_reserve=3,
+            access_probe="in-memory savedCTS origin alignment running; no LEF/OBS changes",
+            PG_recheck_required=True,native_full_access_qualified=False),
+        pending_loaded_context_fix=dict(
+            baseline_source='e5624a88a',baseline_terminal='main2ad7ab49b DRT0073 ib288 all16',
+            baseline_SS_setup_classes=20,baseline_FF_setup_classes=14,
+            baseline_SS_negative_endpoints=57234,baseline_FF_negative_endpoints=15081,
+            baseline_estimated_hold_negative_endpoints=0,
+            local_data_polarity='store complemented packet so native QN directly drives canonical macro; move INV to D side, preserve payload/reset value',
+            local_data_POR='16 positive-edge release FFs feed only falling-edge data-bank async reset; existing falling-edge macro/receiver POR retained',
+            boundary_exact_cycles=2415,boundary_exact_checked_beats=2376,
+            added_FF=16,added_cycles=0,added_FF_area_um2=16*.37908,
+            added_clock_pin_SS_fF=16*.433982,
+            data_inverter_count_credit=0,
+            remaining_mandatory_context='native pin access + per-head loaded clock tree balance/receiver and bank placement + root/producer/row POR launch contract; all20 source classes remain unqualified',
+            new_mapping_required=True,new_mapping_expected_FF=36174,
+            native_access_and_PG_qualified=False,source_ready_for_full_route=False),
         retained_banks=dict(row_instances=4,head_instances=16,
             implementation='kept hierarchical row/head bank instances; wire keep alone actually merged firstmapping to7019FF',
             required_total_mapped_FF_count=ff+w,
-            root_and_fixture_FF=w*2+2,row_FF=w*4,head_launch_and_local_POR_FF=16*(w+1),receiver_FF=16*34,
+            root_and_fixture_FF=w*2+2,row_FF=w*4,head_launch_and_local_POR_FF=16*(w+2),receiver_FF=16*34,
             requirement='confirm actual synthesis instance counts before contextual clock qualification'),
         finite_cell_space=dict(core_um=[1349.082,1349.730], macro_with_halo_um=304.782,
             free_area_um2=1349.082*1349.730-16*304.782**2,
@@ -11146,7 +11168,7 @@ def hbm_attn_registered_parent_model():
         qualified_PG_hook=dict(commit='d1775001d',sha256='5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786',
             VDD_connected=True,VSS_connected=True,IR_qualified=False,added_M2_M3_area_um2=.2268,
             added_M6_M9_tracks=0,added_FF=0,added_cycles=0),
-        row_capacity_tracks=old['routing_capacity']['row_capacity_tracks_after_PG_vias_and_clock_reserve'],
+        row_capacity_tracks=old['routing_capacity']['row_capacity_tracks_after_PG_vias_and_clock_reserve']-3,
         row_demand_tracks=old['routing_capacity']['row_demand_tracks'],
         whole_tile_capacity_tracks=old['routing_capacity']['whole_tile_capacity_tracks'],
         clock_tracks_per_row=64,
@@ -11167,7 +11189,7 @@ def hbm_attn_registered_parent_model():
         output_IO_policy='receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction',
         baseline_failures_preserved=True, finite_PG_owner='Turing',
         exact_gate=True, SS_FF_qualified=False, parent_die_qualified=False,
-        minimum_endpoint_context_route_ready=True,
+        minimum_endpoint_context_route_ready=False,
         minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
         engine_source_anchor_qualified=False,
         route_ready=False, gain_credit=None)
@@ -11253,3 +11275,17 @@ def dsrom_s81_wfc_parent_allocation_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
+
+
+def hbm_item9_current32_parent_allocation_model():
+    """Source-local caller/endpoint subregions and concrete native corridor deficit."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_item9_current32_parent_allocation_20261006/model.json').read_text())
+
+
+def dsrom_wfc_producers_model(layer=19):
+    """Finite actual WFC configuration, prompt and emitted-plan producers."""
+    from dsrom_wfc_producers import model
+    return model(layer)
