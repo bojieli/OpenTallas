@@ -15,7 +15,7 @@
 // region. Once accepted, write debt drains before publication even if that
 // region changes. The functional result does not establish the bandwidth/rate
 // of the 640-row mixed attention path.
-module ot_dsrom_window_writer_pipeline #(
+module ot_dsrom_window_writer_pipeline_reference #(
     parameter bit REFILL_OWNER_SAFE = 0,
     parameter integer POS_W = 21,
     parameter integer SEC_W = 30,
@@ -106,25 +106,6 @@ module ot_dsrom_window_writer_pipeline #(
     localparam [2:0] IDLE = 0, WC = 1, WC_DONE = 2, WS = 3,
                      WS_DONE = 4, FR = 5, FR_DONE = 6;
     reg [3:0] state;
-    // Status arithmetic only: each carry describes the current lower bytes.
-    // Update the predicate with the same event as its counter so each byte
-    // increments locally, including full 32-bit wrap, without a serial carry.
-    reg [2:0] rows_fetched_carry, blocks_written_carry;
-    reg [2:0] sectors_read_carry, sectors_written_carry;
-    function automatic [31:0] stat_increment(input [31:0] value, input [2:0] carry);
-        begin
-            stat_increment[7:0] = value[7:0] + 8'd1;
-            stat_increment[15:8] = value[15:8] + {7'b0,carry[0]};
-            stat_increment[23:16] = value[23:16] + {7'b0,carry[1]};
-            stat_increment[31:24] = value[31:24] + {7'b0,carry[2]};
-        end
-    endfunction
-    function automatic [2:0] stat_carry_after_increment(input [31:0] value);
-        begin
-            stat_carry_after_increment = {value[23:0] == 24'hfffffe,
-                value[15:0] == 16'hfffe, value[7:0] == 8'hfe};
-        end
-    endfunction
     localparam [3:0] CHECK1=8, CHECK2=9, CHECK3=10, ADDR1=11, ADDR2=12, ADDR3=13;
     reg command_prime;
     reg [SEC_W-1:0] cfg_base, cfg_count;
@@ -297,8 +278,6 @@ module ot_dsrom_window_writer_pipeline #(
             user_id <= 0; active_row <= 0; active_user <= 0; q <= 0; fault <= 0; fault_code <= 0;
             st_rows_fetched <= 0; st_blocks_written <= 0;
             st_sectors_read <= 0; st_sectors_written <= 0;
-            rows_fetched_carry <= 0; blocks_written_carry <= 0;
-            sectors_read_carry <= 0; sectors_written_carry <= 0;
             row_active <= 0; row_valid <= 0; stage_valid <= 0;
         end else begin
             if (re) begin
@@ -368,20 +347,17 @@ module ot_dsrom_window_writer_pipeline #(
                 ADDR2: begin row_base <= row_base + slot_offset; state <= ADDR3; end
                 ADDR3: begin checked_addr <= row_base + (SEC_W+1)'(sec); state <= sec == 16 ? WS : WC; end
                 WC: if (grant) begin
-                    st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
-                    sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+                    st_sectors_written <= st_sectors_written + 1;
                     state <= WC_DONE;
                 end
                 WC_DONE: if (done_write) begin sec <= 5'd16; state <= ADDR3; end
                 WS: if (grant) begin
-                    st_sectors_written <= stat_increment(st_sectors_written, sectors_written_carry);
-                    sectors_written_carry <= stat_carry_after_increment(st_sectors_written);
+                    st_sectors_written <= st_sectors_written + 1;
                     state <= WS_DONE;
                 end
                 WS_DONE: if (done_write) begin
                     block_valid[slot][bidx] <= 1'b1;
-                    st_blocks_written <= stat_increment(st_blocks_written, blocks_written_carry);
-                    blocks_written_carry <= stat_carry_after_increment(st_blocks_written);
+                    st_blocks_written <= st_blocks_written + 1;
                     if (bidx == 4'd15) row_valid[slot] <= 1'b1;
                     state <= IDLE;
                 end
@@ -397,14 +373,12 @@ module ot_dsrom_window_writer_pipeline #(
                             if (sec < 16) stage[slot][256*sec +: 256] <= s_data[WIN_STACK*256 +: 256];
                             else stage[slot][4096 +: 128] <= s_data[WIN_STACK*256 +: 128];
                         end
-                        st_sectors_read <= stat_increment(st_sectors_read, sectors_read_carry);
-                        sectors_read_carry <= stat_carry_after_increment(st_sectors_read);
+                        st_sectors_read <= st_sectors_read + 1;
                         if (sec == 5'd16) begin
                             stage_tag[slot] <= row;
                             stage_user[slot] <= user_id;
                             stage_valid[slot] <= 1'b1;
-                            st_rows_fetched <= stat_increment(st_rows_fetched, rows_fetched_carry);
-                            rows_fetched_carry <= stat_carry_after_increment(st_rows_fetched);
+                            st_rows_fetched <= st_rows_fetched + 1;
                             state <= IDLE;
                         end else begin sec <= sec + 1'b1; state <= FR; end
                     end
@@ -425,17 +399,14 @@ module ot_dsrom_window_writer_pipeline #(
                             if (!pipe_reply_ok) begin fault <= 1; fault_code[2] <= 1; end
                             else begin
                                 refill_received[reply_sector] <= 1'b1;
-                                st_sectors_read <= stat_increment(st_sectors_read, sectors_read_carry);
-                                sectors_read_carry <= stat_carry_after_increment(st_sectors_read);
+                                st_sectors_read <= st_sectors_read + 1;
                                 if (!BANKED_STAGE) begin
                                     if (reply_sector < 16) stage[slot][256*reply_sector +: 256] <= s_data[WIN_STACK*256 +: 256];
                                     else stage[slot][4096 +: 128] <= s_data[WIN_STACK*256 +: 128];
                                 end
                                 if (reply_sector == 16) begin
                                     stage_tag[slot] <= row; stage_user[slot] <= user_id;
-                                    stage_valid[slot] <= 1;
-                                    st_rows_fetched <= stat_increment(st_rows_fetched, rows_fetched_carry);
-                                    rows_fetched_carry <= stat_carry_after_increment(st_rows_fetched);
+                                    stage_valid[slot] <= 1; st_rows_fetched <= st_rows_fetched + 1;
                                     state <= IDLE;
                                 end
                             end
