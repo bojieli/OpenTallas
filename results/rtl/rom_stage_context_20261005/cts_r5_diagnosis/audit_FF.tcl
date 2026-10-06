@@ -1,3 +1,46 @@
+set ::so_libs {{/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_FF_nldm_FAKE.lib} {/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_FF_nldm_FAKE.lib} {/so_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib}}
+set ::so_odb /so_res/4_cts.odb
+set ::so_sdc /so_res/4_cts.sdc
+set ::so_spef {}
+set ::so_platform /OpenROAD-flow-scripts/flow/platforms/asap7
+set ::so_pdn_tcl {}
+set ::so_saif {}
+set ::so_saif_scope {}
+set ::so_groups {}
+set ::so_inst_power {}
+set ::so_derate 0.0
+set ::so_vdd 0.77
+set ::so_bump_pitch 140
+set ::so_bump_size 50
+set ::so_out /so_out/FF
+file mkdir /so_out/FF
+
+proc emit {key value} { puts "SIGNOFF $key=$value" }
+proc sum_list {l} { set s 0.0; foreach x $l { set s [expr {$s + $x}] }; return $s }
+
+
+read_db $::so_odb
+if {$::so_pdn_tcl ne ""} {
+    # a PDN variant: rip the route's grid up and build the variant's (before any
+    # Liberty is read: pdngen then sees only the LEF masters)
+    pdngen -ripup
+    source $::so_pdn_tcl
+    pdngen
+}
+foreach lib $::so_libs { read_liberty $lib }
+read_sdc $::so_sdc
+if {$::so_spef ne ""} {
+    read_spef $::so_spef
+} else {
+    # pre-route stage (e.g. 4_cts.odb): placement-estimated wire parasitics
+    source $::so_platform/setRC.tcl
+    estimate_parasitics -placement
+}
+set_cmd_units -time ns -power W
+
+emit corner.name FF
+
+set_thread_count 4
 # Read-only diagnostic on a real W5 checkpoint; no constraint changes.
 set_units -time ps -capacitance fF
 set_propagated_clock [all_clocks]
@@ -34,7 +77,7 @@ proc w5_class {n} {
  return enclosing_IO
 }
 set rows [open $::so_out/endpoints.tsv w]
-puts $rows "class\tmode\tendpoint\tslack_native\tunconstrained\tstartpoint_count"
+puts $rows "class\tmode\tendpoint\tslack_ps\tunconstrained\tstartpoint_count"
 set clocks [open $::so_out/clock_terminals.tsv w]
 puts $clocks "pin\tclocks"
 foreach p [all_registers -clock_pins] {
