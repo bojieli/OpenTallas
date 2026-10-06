@@ -129,6 +129,9 @@ foreach bt [$fc_blk getBTerms] {
         set grp {}; incr j
       }
     }
+    # cells after the last flop (its QN inverter: ASAP7 flops are QN-only) drive the output pin: they sit at the pin
+    # (cpss3_pd55: left at their global-placement spot, xl's last inverter sat 450 um from its pin: xl -653 ps)
+    foreach g $grp { fc_move $g $Q; set fc_done([$g getName]) 1; incr n_moved }
     set fc_done(pin:[$thru getName]) 1
     incr n_thru
     continue
