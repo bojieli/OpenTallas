@@ -69,6 +69,10 @@ def main() -> None:
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--seeds", type=int, default=4)
+    ap.add_argument("--quick", action="store_true",
+                    help="one seed per configuration (owner ruling 2026-10-05, simple verification): every build runs once, "
+                         "including every negative control; the comparison itself is unchanged")
+    ap.add_argument("--tag", default="", help="also write the record with this suffix, so a quick run never hides the full one")
     ap.add_argument("--jobs", type=int, default=12)
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
@@ -116,19 +120,23 @@ def main() -> None:
     try:
         with cf.ThreadPoolExecutor(len(BUILDS)) as ex:
             record["build_commands"] = dict(zip(BUILDS, ex.map(build, BUILDS)))
-        jobs = [("pos", s) for s in range(1, a.seeds + 1)] + [("qz0", 100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx9", 1400 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx8", 1300 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx7", 1200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx6", 1100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx5", 1000 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx4", 900 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx3", 800 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx2", 700 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx1", 600 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qx0", 500 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("qy0", 400 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
-        jobs += [("xs0", 200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
+        n = 1 if a.quick else a.seeds
+        m = 1 if a.quick else max(2, a.seeds // 2)
+        record["measurement_mode"] = ("quick: one seed per configuration" if a.quick else
+                                      "pos x %d seeds, every other configuration x %d" % (n, m))
+        jobs = [("pos", s) for s in range(1, n + 1)] + [("qz0", 100 + s) for s in range(1, m + 1)]
+        jobs += [("qx9", 1400 + s) for s in range(1, m + 1)]
+        jobs += [("qx8", 1300 + s) for s in range(1, m + 1)]
+        jobs += [("qx7", 1200 + s) for s in range(1, m + 1)]
+        jobs += [("qx6", 1100 + s) for s in range(1, m + 1)]
+        jobs += [("qx5", 1000 + s) for s in range(1, m + 1)]
+        jobs += [("qx4", 900 + s) for s in range(1, m + 1)]
+        jobs += [("qx3", 800 + s) for s in range(1, m + 1)]
+        jobs += [("qx2", 700 + s) for s in range(1, m + 1)]
+        jobs += [("qx1", 600 + s) for s in range(1, m + 1)]
+        jobs += [("qx0", 500 + s) for s in range(1, m + 1)]
+        jobs += [("qy0", 400 + s) for s in range(1, m + 1)]
+        jobs += [("xs0", 200 + s) for s in range(1, m + 1)]
         jobs += [("neg_dp", 1), ("neg_tree", 1), ("neg_half", 1), ("neg_shadow", 1), ("neg_lu", 3), ("neg_bk", 1),
                  ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_ns", 1), ("neg_pd", 1), ("neg_dp10", 1)]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
@@ -157,6 +165,8 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         record["error"] = str(e)
     a.output.parent.mkdir(parents=True, exist_ok=True)
+    if a.tag:
+        a.output.with_name(a.output.stem + "_" + a.tag + a.output.suffix).write_text(json.dumps(record, indent=1) + "\n")
     a.output.write_text(json.dumps(record, indent=1) + "\n")
     print(record["verdict"], record.get("total_compared_cycles"), record.get("error", ""))
 
