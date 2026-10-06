@@ -68,7 +68,17 @@
   "physical/qwen_code_pair/ot_qwen_hbm_code_pair_context.sv": "633ae741c0d32b80190d8f2ca9979da144977d3afbd8cd57035aec4ab39b52ae"
  },
  "adopted": false,
- "physical": "one route pending at 770 ps, sign-off 833.333 ps (SS >= +40, FF >= +15, DRC 0)",
+ "physical": {
+  "state": "RUNNING",
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair",
+  "source": "3b26daaa5 (pinned archive src_pinned, commit 46ffc80a5)",
+  "launched": "2026-10-06 14:19 PT",
+  "route": "770 ps SS60/FF25 WC, hold WC+BC, 120 ps IO, retained slot geometry/pins/macro locations, capture fences 2560/10",
+  "terminal": "route.exit; watch.sh then runs signoff.sh (833.333 ps routed SS/FF with SPEF) -> signoff_SS.log/signoff_FF.log, watch.done",
+  "floorplan_stage_770ps": "all classes >= +65 ps except SRAM rd_out->capture -10.4 ps (SS clk->q 691.8 ps bound; +52.6 at 833 before wire)",
+  "accept": "SS >= +40, FF >= +15 at 833.333, DRC 0"
+ },
  "probe_r0": {
   "host": "ot-epyc1tb",
   "path": "/srv/opentallas-scratch/claude/takeover-ds/code-pair/probe_r0",
