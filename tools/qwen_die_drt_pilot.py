@@ -6,6 +6,8 @@ floorplan_pdn.odb.  The pilot runs, in ONE OpenROAD process with per-step wall t
   load -> GRT (k = 1, every die net, 50 congestion iterations) -> repair_design (die-top repeaters/buffers in the free
   sites of corridors / channels; max wire length = the measured 430.56 um stage) -> detailed_placement -> GRT again
   -> DRT -> RCX (asap7 rcx_patterns) -> write SPEF / ODB / DEF
+with a checkpoint (write_db) after GRT1, DPL and GRT2 and the routed ODB after DRT; the pilot runs in a container with
+a hard memory guard (run_case.sh <mem_gb>, owner: 450 GB on EPYC1) so an overrun cannot OOM other owners' jobs;
 then OpenSTA in separate processes at SS (60 ps setup uncertainty) and FF (25 ps hold) at 833.333 ps on the routed
 top-level parasitics with the element interface LIBs (tools/qwen_die_element_lib.py) and the real HBM3E PHY lib.
 There is no global placement of standard cells (GPL) or detailed placement of macros: every element is a fixed macro;
@@ -46,10 +48,13 @@ step libs {{
 source {PLAT}/setRC.tcl
 set_routing_layers -signal M2-M9 -clock M2-M9
 step grt1 {{ global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/grt1_congestion.rpt }}
+step ckpt_grt1 {{ write_db /work/ckpt_grt1.odb }}
 step est1 {{ estimate_parasitics -global_routing }}
 step repair_design {{ repair_design -max_wire_length 430 -verbose }}
 step dpl {{ detailed_placement; check_placement -verbose }}
+step ckpt_dpl {{ write_db /work/ckpt_dpl.odb }}
 step grt2 {{ global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/grt2_congestion.rpt }}
+step ckpt_grt2 {{ write_db /work/ckpt_grt2.odb; write_guides /work/route.guide }}
 step drt {{ detailed_route -output_drc /work/drt_drc.rpt -output_maze /work/drt_maze.log -verbose 1 -droute_end_iter 64 }}
 step write_odb {{ write_db /work/routed.odb }}
 step rcx {{ define_process_corner -ext_model_index 0 X; extract_parasitics -ext_model_file {PLAT}/rcx_patterns.rules }}
