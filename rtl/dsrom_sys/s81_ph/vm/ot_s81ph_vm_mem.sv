@@ -187,14 +187,14 @@ module ot_s81ph_vm_mem #(
         assign b_ovf[gb] = ovf;
         assign b_occ[gb] = occ;
         // ---- serve register (drives the macro pins)
-        reg          s_v, s_we;
+        reg          s_v, s_we, s_re;     // s_re: the macro read enable straight from a flop (no gate before the pin)
         reg [PW-1:0] s_p;
         reg [8:0]    s_r;
         reg [511:0]  s_d, s_bm;
         integer e;
         always @(posedge clk or negedge rst_i)
-            if (!rst_i) begin s_v <= 1'b0; s_we <= 1'b0; end
-            else begin s_v <= serve; s_we <= serve & q_we[qh]; end
+            if (!rst_i) begin s_v <= 1'b0; s_we <= 1'b0; s_re <= 1'b0; end
+            else begin s_v <= serve; s_we <= serve & q_we[qh]; s_re <= serve & ~q_we[qh]; end
         always @(posedge clk) begin
             s_p <= q_p[qh]; s_r <= q_r[qh]; s_d <= q_d[qh];
             for (e = 0; e < 16; e = e + 1)
@@ -209,8 +209,10 @@ module ot_s81ph_vm_mem #(
         genvar gc;
         for (gc = 0; gc < 4; gc = gc + 1) begin : g_m
             if (MACRO) begin : g_sram
-                (* keep = 1, dont_touch = 1 *) ot_sram_1r1w_512x128_m4_r2c2 u_m (
-                    .clk(clk), .r_ce_in(s_v & ~s_we), .r_addr_in(s_r), .rd_out(rd[128*gc +: 128]),
+                // kept, NOT dont_touch: the resizer must be free to buffer the nets that drive the macro pins
+                // (route m1 failed RSZ-3006 at place_gp: dont_touch forbids a buffer before r_ce_in)
+                (* keep = 1 *) ot_sram_1r1w_512x128_m4_r2c2 u_m (
+                    .clk(clk), .r_ce_in(s_re), .r_addr_in(s_r), .rd_out(rd[128*gc +: 128]),
                     .w_ce_in(s_we), .w_addr_in(s_r), .wd_in(s_d[128*gc +: 128]), .w_mask_in(s_bm[128*gc +: 128]),
                     .rr_en(2'd0), .rr_addr(14'd0), .cr_en(2'd0), .cr_sel(14'd0));
             end else begin : g_flop
@@ -218,7 +220,7 @@ module ot_s81ph_vm_mem #(
                 reg [127:0] r_q;
                 integer bi;
                 always @(posedge clk) begin
-                    if (s_v & ~s_we) r_q <= mem[s_r];
+                    if (s_re) r_q <= mem[s_r];
                     if (s_we) for (bi = 0; bi < 128; bi = bi + 1)
                         if (s_bm[128*gc + bi]) mem[s_r][bi] <= s_d[128*gc + bi];
                 end
@@ -231,7 +233,7 @@ module ot_s81ph_vm_mem #(
         reg [511:0]  r_d;
         always @(posedge clk or negedge rst_i)
             if (!rst_i) begin m_v <= 1'b0; r_v <= 1'b0; end
-            else begin m_v <= s_v & ~s_we; r_v <= m_v; end
+            else begin m_v <= s_re; r_v <= m_v; end
         always @(posedge clk) begin m_p <= s_p; r_p <= m_p; r_d <= rd; end
         reg [511:0]  f_d [0:RQ-1];
         reg [PW-1:0] f_p [0:RQ-1];
