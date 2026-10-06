@@ -11911,6 +11911,14 @@ def hbm_cp_phase_parallel_model():
         "results/uarch/hbm_cp_phase_parallel_20261006/model.json").read_text())
 
 
+def hbm_cp_control_tail_model():
+    """Bounded exact CP output-tail price before RTL; no added latency."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_control_tail_20261006/model.json").read_text())
+
+
 def dsrom_wfc_enclosing_stage_price():
     """Minimum actual enclosing receiver/held-job context, before source build.
 
