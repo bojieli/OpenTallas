@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
+    parser.add_argument('--resume-cts-sha256', help='Resume validated CTS with mapped/floorplan/placement frozen')
     parser.add_argument('--resume-io-sha256', help='Resume actual validated mapped/PDN/IO objects without upstream replay')
     parser.add_argument('--resume-resized-sha256',
                         help='Reuse the mapped netlist and physical stages through validated3_4')
@@ -112,21 +113,21 @@ def main():
         record['canonical_frontend_reused'] = True
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     frozen = {}
-    if args.resume_resized_sha256 or args.resume_io_sha256:
-        checkpoint_name = '3_4_place_resized.odb' if args.resume_resized_sha256 else '3_2_place_iop.odb'
-        checkpoint_digest = args.resume_resized_sha256 or args.resume_io_sha256
+    if args.resume_resized_sha256 or args.resume_io_sha256 or args.resume_cts_sha256:
+        checkpoint_name = '4_1_cts.odb' if args.resume_cts_sha256 else ('3_4_place_resized.odb' if args.resume_resized_sha256 else '3_2_place_iop.odb')
+        checkpoint_digest = args.resume_cts_sha256 or args.resume_resized_sha256 or args.resume_io_sha256
         checkpoints = list((case/'results').rglob(checkpoint_name))
         assert len(checkpoints) == 1 and sha(checkpoints[0]) == checkpoint_digest
         for path in checkpoints[0].parent.iterdir():
             stage = path.name.split('_')
             if path.suffix not in ('.odb', '.sdc', '.v', '.rtlil') or 'failed' in path.name:
                 continue
-            if stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in (('1','2','3','4') if args.resume_resized_sha256 else ('1','2'))):
+            if (args.resume_cts_sha256 and stage[0]=='4') or stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in (('1','2','3','4','5','place') if args.resume_cts_sha256 else (('1','2','3','4') if args.resume_resized_sha256 else ('1','2')))):
                 frozen[path] = sha(path)
         mapped = checkpoints[0].parent/'1_2_yosys.v'
         assert mapped in frozen
         record.update(synthesis_required=False, synthesis_reused=True,
-            resume_resized_sha256=args.resume_resized_sha256,resume_io_sha256=args.resume_io_sha256,
+            resume_resized_sha256=args.resume_resized_sha256,resume_io_sha256=args.resume_io_sha256,resume_cts_sha256=args.resume_cts_sha256,
             upstream_sha256={str(p.relative_to(case)):h for p,h in frozen.items()})
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if finite:
@@ -155,6 +156,12 @@ s=p.read_text()
 needle='proc do_placement { global_placement_args } {'
 assert s.count(needle)==1, 'Installed GPL port-buffer/placement API changed'
 s=s.replace(needle,'source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
+p.write_text(s)
+p=Path('/OpenROAD-flow-scripts/flow/scripts/global_route.tcl')
+s=p.read_text()
+needle='    log_cmd detailed_placement'
+assert s.count(needle)==2, 'Installed GRT repair legalization API changed'
+s=s.replace(needle,'    source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
 p.write_text(s)
 '''
     (case/'bind_cts_membership.py').write_text(patch)
