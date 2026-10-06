@@ -1,6 +1,6 @@
 #!/bin/bash
 # CLAUDE HBM-ABSTRACTS (hub): re-harden a CLOSED hub lane element (unchanged RTL) in a die-dense footprint with every
-# pin on the left edge (mirrored columns in the quarter face a shared channel), signals M2-M7 (M8/M9 left to the
+
 # quarter / die PDN), SS60/FF25 at 0.833 ns, IO false-pathed (register-direct, checked after the route), corner STA.
 #   route_lane.sh <label> <top> <W> <H> [run_abi3_physical args]   env: R (scratch base with src0), SRCS, KEEP, CORES, NEED
 R=${R:?}; lab=$1; top=$2; W_=$3; H_=$4; shift 4
@@ -12,7 +12,7 @@ S=""; for s in $SRCS; do S="$S --source $s"; done
   --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
   --die-area 0 0 $W_ $H_ --core-area 0 0.54 $W_ $(python3 -c "print(round($H_-0.54,3))") --pin-region ".*=left" --routing-layers M2 M7 --orfs-var "IO_PLACER_H=M4 M6" \
-  --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/su/pdn_lane_m7.tcl \
+  --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/common/pdn_view.tcl \
   --place-density ${PD:-0.65} --hold-margin-ns ${HM:-0.01} --orfs-var ADDER_MAP_FILE= \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag hub_$lab \
   ${KEEP:+--orfs-var "SYNTH_KEEP_MODULES=$KEEP"} \
