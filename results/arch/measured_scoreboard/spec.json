@@ -4387,12 +4387,12 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_composed",
-   "label": "Per-user AR tok/s at 8K: measured STREAM4 P8191 token + adopted in-context core closure cycles",
+   "label": "Per-user AR tok/s at 8K: measured STREAM4 P8191 token (all 576 MiB FP8 KV in-token) + adopted closure cycles",
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "qwen_rom.AR_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json) + 112 cycles (core r5b_f3ba DEC_LA_AMQ, SS +0.87 / FF +7.12 ps) at 1.2 GHz; MTP mode = AR (DSpark OFF); full-system SS/FF not qualified"
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json; KV guard: 576 MiB/token landed at 3.65 TB/s/die, 91.3% of 4-stack peak) + 0 cycles core r5_f2ba + 217 cycles slab MUL_LAT 7 (r11c SS +11.47 / FF +4.20 ps) = 194,172 at 1.2 GHz; r18g die wire bound 5,783.8 PENDING (GRT not closed); MTP mode = AR (DSpark OFF); full-system SS/FF not qualified"
   },
   {
    "target": "qwen_rom",

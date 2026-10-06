@@ -1,0 +1,133 @@
+{
+  "schema": "hbm.cp.loaded-context.decision.v1",
+  "disposition": "REPAIR_MANDATORY_BASELINE",
+  "checks": {
+    "ss": false,
+    "ff": false,
+    "DRC": true,
+    "nonzero_loaded_IR": true
+  },
+  "terminal_SS_FF": {
+    "schema": "hbm.cp.parent-context.corners.v1",
+    "ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -234.04,
+      "tns_ps": -1905.2,
+      "worst_register_d_slack_ps": -55.987549,
+      "worst_reg_to_reg_slack_ps": -55.99,
+      "worst_input_to_reg_slack_ps": 306.42,
+      "worst_output_port_slack_ps": -234.042404,
+      "violating_d_pins": 6,
+      "errors": [],
+      "odb_sha256": "2c703ad3d3656ade0a795352dfad870af66dc210c603af2dd8deee4aba6362c9",
+      "spef_sha256": "6db4def4bab24a9eb40fa91e34d52674acde016897b88481f78fc831c39ddfb6",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": -28.56,
+      "tns_ps": -37.3,
+      "worst_register_d_slack_ps": -28.563194,
+      "worst_reg_to_reg_slack_ps": 13.73,
+      "worst_input_to_reg_slack_ps": 14.59,
+      "worst_output_port_slack_ps": 51.312325,
+      "violating_d_pins": 2,
+      "errors": [],
+      "odb_sha256": "2c703ad3d3656ade0a795352dfad870af66dc210c603af2dd8deee4aba6362c9",
+      "spef_sha256": "6db4def4bab24a9eb40fa91e34d52674acde016897b88481f78fc831c39ddfb6",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+    "uses_extracted_interconnect_and_propagated_clock": true,
+    "external_loads_analytical": true,
+    "parent_budget_adoption": false
+  },
+  "DRC": 0,
+  "loaded_IR": {
+    "SS": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0016406688373535872,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00164,
+          "supply_v": 0.63,
+          "worst_voltage_v": 0.628,
+          "average_voltage_v": 0.629,
+          "average_ir_drop_v": 0.000725,
+          "worst_ir_drop_v": 0.00208,
+          "worst_drop_percent": 0.33,
+          "em_max_current_a": 5.22e-05,
+          "em_average_current_a": 8.91e-07,
+          "resistors": 77702
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00164,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.0018,
+          "average_voltage_v": 0.000637,
+          "average_ir_drop_v": 0.000637,
+          "worst_ir_drop_v": 0.0018,
+          "worst_drop_percent": 0.29,
+          "em_max_current_a": 4.01e-05,
+          "em_average_current_a": 8.13e-07,
+          "resistors": 78203
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-owner-veto-parent-context-r1/loaded_ir/SS.log"
+    },
+    "FF": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0027697086334228516,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00277,
+          "supply_v": 0.77,
+          "worst_voltage_v": 0.767,
+          "average_voltage_v": 0.769,
+          "average_ir_drop_v": 0.001,
+          "worst_ir_drop_v": 0.00297,
+          "worst_drop_percent": 0.39,
+          "em_max_current_a": 7.3e-05,
+          "em_average_current_a": 1.24e-06,
+          "resistors": 77702
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00277,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00249,
+          "average_voltage_v": 0.00088,
+          "average_ir_drop_v": 0.00088,
+          "worst_ir_drop_v": 0.00249,
+          "worst_drop_percent": 0.32,
+          "em_max_current_a": 5.76e-05,
+          "em_average_current_a": 1.13e-06,
+          "resistors": 78203
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-owner-veto-parent-context-r1/loaded_ir/FF.log"
+    }
+  },
+  "IR_drop_budget": null,
+  "workload_peak_qualified": false,
+  "adopted": false,
+  "required_next_actions": [
+    "CP source owner: use actual terminal path classes to qualify the prepared exact control/quiet/entry/parity source cut; register its bounded unified-model entry before RTL. Keep full same-edge owner checks and accepted-debt drain.",
+    "CP source owner: classify actual data hold separately from asynchronous reset/removal; preserve 25ps uncertainty and current source phase.",
+    "Turing: bind the actual permissible child rail-drop budget and workload activity before any IR/adoption claim; current vectorless input0.1/ideal boundary supply remains conditional and excludes parent-grid drop."
+  ],
+  "clock_relaxation": false,
+  "region_waiver": false,
+  "source_job_restart": false
+}

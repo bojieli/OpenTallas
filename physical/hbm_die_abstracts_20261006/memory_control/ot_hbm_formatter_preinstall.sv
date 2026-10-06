@@ -6,7 +6,11 @@
 // both real readbacks. Original bridge owns descriptor rows and final sinks.
 module ot_hbm_formatter_preinstall #(
  parameter integer ENABLE=0,
- parameter [63:0] ENTRY_PC=0
+ parameter [63:0] ENTRY_PC=0,
+ parameter [31:0] SCORE_SOURCE=32'h80000,ID_SOURCE=32'h80800,
+ parameter [31:0] ARENA_BASE=32'h10000,ARENA_LIMIT=32'h70000,
+ parameter [31:0] SINK_BASE=32'h70000,SINK_LIMIT=32'h70800,
+ parameter [32:0] CAPACITY_BYTES=33'h100000
 )(
  input wire clk,por_n,warm_req,input wire [72:0] actual_cp_frame,
  input wire begin_v,output wire begin_r,input wire [72:0] begin_frame,
@@ -54,10 +58,10 @@ module ot_hbm_formatter_preinstall #(
  function automatic [63:0] expected_desc(input integer i);
   case(i)
    0:expected_desc=ENTRY_PC;
-   1:expected_desc=64'h00080800_00080000;
-   2:expected_desc=64'h00070000_00010000;
-   3:expected_desc=64'h00070800_00070000;
-   4:expected_desc=64'h00000000_00100000;
+   1:expected_desc={ID_SOURCE,SCORE_SOURCE};
+   2:expected_desc={ARENA_LIMIT,ARENA_BASE};
+   3:expected_desc={SINK_LIMIT,SINK_BASE};
+   4:expected_desc={31'd0,CAPACITY_BYTES};
    5:expected_desc=64'd96|(64'd512<<16)|(64'd32<<32);
    default:expected_desc=0;
   endcase
@@ -94,13 +98,13 @@ module ot_hbm_formatter_preinstall #(
   wire [32:0] score_end={1'b0,sb}+33'd196608,id_end={1'b0,ib}+33'd196608;
   wire [32:0] begin_se={1'b0,score_plane_base}+33'd196608;
   wire [32:0] begin_ie={1'b0,id_plane_base}+33'd196608;
-  wire geometry=capacity_bytes==33'h100000&&score_plane_base[5:0]==0&&id_plane_base[5:0]==0&&
+  wire geometry=capacity_bytes==CAPACITY_BYTES&&score_plane_base[5:0]==0&&id_plane_base[5:0]==0&&
    begin_se<=capacity_bytes&&begin_ie<=capacity_bytes&&
    !overlap({1'b0,score_plane_base},begin_se,{1'b0,id_plane_base},begin_ie)&&
-   !overlap({1'b0,score_plane_base},begin_se,33'h10000,33'h70800)&&
-   !overlap({1'b0,id_plane_base},begin_ie,33'h10000,33'h70800)&&
-   !overlap({1'b0,score_plane_base},begin_se,33'h80000,33'h81000)&&
-   !overlap({1'b0,id_plane_base},begin_ie,33'h80000,33'h81000);
+   !overlap({1'b0,score_plane_base},begin_se,{1'b0,ARENA_BASE},{1'b0,SINK_LIMIT})&&
+   !overlap({1'b0,id_plane_base},begin_ie,{1'b0,ARENA_BASE},{1'b0,SINK_LIMIT})&&
+   !overlap({1'b0,score_plane_base},begin_se,{1'b0,SCORE_SOURCE},{1'b0,ID_SOURCE}+33'd2048)&&
+   !overlap({1'b0,id_plane_base},begin_ie,{1'b0,SCORE_SOURCE},{1'b0,ID_SOURCE}+33'd2048);
   wire begin_match=begin_frame==actual_cp_frame&&desc_match&&geometry&&
    layer==20&&candidate_source_layer==20&&!candidate_masked;
   reg writers_clear;
@@ -108,7 +112,7 @@ module ot_hbm_formatter_preinstall #(
    writers_clear=1;
    for(integer w=0;w<3;w=w+1)if(other_writer_v[w])begin
     if(other_writer_base[w*32+:32]>=other_writer_end[w*32+:32]||
-     overlap({1'b0,other_writer_base[w*32+:32]},{1'b0,other_writer_end[w*32+:32]},33'h10000,33'h70800)||
+     overlap({1'b0,other_writer_base[w*32+:32]},{1'b0,other_writer_end[w*32+:32]},{1'b0,ARENA_BASE},{1'b0,SINK_LIMIT})||
      overlap({1'b0,other_writer_base[w*32+:32]},{1'b0,other_writer_end[w*32+:32]},{1'b0,sb},score_end)||
      overlap({1'b0,other_writer_base[w*32+:32]},{1'b0,other_writer_end[w*32+:32]},{1'b0,ib},id_end))writers_clear=0;
    end
@@ -121,7 +125,7 @@ module ot_hbm_formatter_preinstall #(
   wire record_common=record_frame==held_frame&&record_base[5:0]==0&&record_end[5:0]==0&&
    record_base<record_end&&{1'b0,record_end}<=cap;
   wire record_occupied=record_kind==0&&got_occupied<wanted_occupied&&
-   !overlap({1'b0,record_base},{1'b0,record_end},33'h10000,33'h70800)&&
+   !overlap({1'b0,record_base},{1'b0,record_end},{1'b0,ARENA_BASE},{1'b0,SINK_LIMIT})&&
    !overlap({1'b0,record_base},{1'b0,record_end},{1'b0,sb},score_end)&&
    !overlap({1'b0,record_base},{1'b0,record_end},{1'b0,ib},id_end);
   wire record_source=(record_kind==1||record_kind==2)&&record_rank<96&&
