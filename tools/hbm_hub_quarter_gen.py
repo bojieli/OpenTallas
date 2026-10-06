@@ -39,11 +39,11 @@ QUARTERS = {
     # master, lane module, lane source, params, per-lane fields, C2 pairs, G groups / half, L lanes / column / group,
     # lane macro (w, h), channel width, spine (east) width
     'su': dict(master='hfd_su', lane='ot_su12_light', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
-               C2=2, G=6, L=4),
+               C2=3, G=8, L=2, PIPE=5),
     'sfu': dict(master='hfd_sfu', lane='ot_su12_sfu', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
-                C2=1, G=8, L=1),
+                C2=1, G=8, L=1, PIPE=1),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 5, 'AL': 5},
-               per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2),
+               per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1),
 }
 
 
@@ -76,6 +76,8 @@ class Plan:
         self.K = self.C2 * 2                 # chains: (pair, half)
         self.N = self.K * self.G * 2 * self.L
         self.WC = -(-self.WO // self.K)      # accumulator width of one chain
+        self.PIPE = q.get('PIPE', 0)         # extra (* keep *) wire stages on every die input and output (port band
+        #                                      -> chain heads up to ~2.7 mm: a stage per <= 504 um)
 
     def lanes(self):
         """(lane index j, chain k, group g, side s (0 left col / 1 right col), slot i)."""
@@ -89,7 +91,9 @@ class Plan:
 
     # ---- reference model (steady state, constant die inputs)
     def lane_inputs(self, din_bits, j):
-        bcw = [din_bits[t % self.WI] for t in range(self.LB)]
+        bcw = [0] * self.LB
+        for u in range(self.WI):                 # bsrc[t] = XOR of din_q[t + m * LB]: every die input bit is used
+            bcw[u % self.LB] ^= din_bits[u]
         plw = [bcw[(j * self.LP + t) % self.LB] for t in range(self.LP)]
         vec, bi, pi = {}, 0, 0
         for n, w in self.ins:
@@ -145,11 +149,18 @@ def emit_rtl(P, neg=False):
            '    // reset request: two-flop synchroniser at the boundary, carried down every broadcast chain',
            '    (* keep *) reg [1:0] rst_q;',
            '    always @(posedge clk) rst_q <= {rst_q[0], rst[0]};',
-           f'    (* keep *) reg [{P.WI - 1}:0] din_q;',
-           '    always @(posedge clk) din_q <= {' + ', '.join(p for p, _ in reversed(P.din)) + '};',
-           f'    wire [{P.LB}:0] bsrc;']
-    # bsrc[t] = din_q[t mod WI]; bsrc[LB] = reset
-    L_.append('    assign bsrc = {rst_q[1], ' + ', '.join(f'din_q[{t % P.WI}]' for t in reversed(range(P.LB))) + '};')
+           f'    (* keep *) reg [{P.WI - 1}:0] din_p0;',
+           '    always @(posedge clk) din_p0 <= {' + ', '.join(p for p, _ in reversed(P.din)) + '};']
+    for s_ in range(1, P.PIPE + 1):
+        L_.append(f'    (* keep *) reg [{P.WI - 1}:0] din_p{s_};  always @(posedge clk) din_p{s_} <= din_p{s_ - 1};')
+    L_ += [f'    wire [{P.WI - 1}:0] din_q = din_p{P.PIPE};', f'    wire [{P.LB}:0] bsrc;']
+    # bsrc[t] = XOR of din_q[t + m LB]; bsrc[LB] = reset
+    fold = {}
+    for u in range(P.WI):
+        fold.setdefault(u % P.LB, []).append(f'din_q[{u}]')
+    L_.append(f'    assign bsrc[{P.LB}] = rst_q[1];')
+    for t in range(P.LB):
+        L_.append(f'    assign bsrc[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
     for k in range(P.K):
         for g in range(P.G):
             src = 'bsrc' if g == 0 else f'bc_{k}_{g - 1}'
@@ -197,7 +208,10 @@ def emit_rtl(P, neg=False):
                 L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' | '.join(parts) if parts else "1'b0") + ';')
             L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge clk) acc_{k}_{g} <= nx_{k}_{g};')
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
-    L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_q;  always @(posedge clk) dout_q <= heads[{P.WO - 1}:0];')
+    L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_p0;  always @(posedge clk) dout_p0 <= heads[{P.WO - 1}:0];')
+    for s_ in range(1, P.PIPE + 1):
+        L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_p{s_};  always @(posedge clk) dout_p{s_} <= dout_p{s_ - 1};')
+    L_.append(f'    wire [{P.WO - 1}:0] dout_q = dout_p{P.PIPE};')
     ob = 0
     for p, w in P.dout:
         L_.append(f'    assign {p} = dout_q[{ob + w - 1}:{ob}];')
@@ -241,7 +255,7 @@ def emit_tb(P, nvec, seed, out):
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
     q = P.q
     m = q['master']
-    hold = 2 * P.G + 12
+    hold = 2 * P.G + 2 * P.PIPE + 12
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
     return f"""`timescale 1ns/1ps
@@ -305,7 +319,7 @@ def main():
     info = dict(master=m, lane=q['lane'], lane_source=q['src'], lane_params=q['params'], lanes=P.N, chains=P.K,
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
-                flops=dict(boundary=P.WI + P.WO + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC))
+                flops=dict(boundary=(P.WI + P.WO) * (1 + P.PIPE) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     print(json.dumps(info))
 
