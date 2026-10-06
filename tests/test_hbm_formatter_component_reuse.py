@@ -143,6 +143,15 @@ class ComponentReuse(unittest.TestCase):
         (d/'resources.log').write_text('incomplete profile')
         with self.assertRaises(ValueError):R.measured_model_reservation(d,192)
 
+    def test_fixture_import_and_both_continuation_includes_are_enrolled(self):
+        from unittest.mock import patch
+        cpp=Path('main.cpp');(self.work/'src'/cpp).write_text('#include "Vtb.h"\n#include "verilated.h"\n#include "norm.inc"\n#include "sfu.inc"\n#include "formatter.inc"\n')
+        with patch.object(R,'ROOT',self.work/'src'):
+            got=R.companion_sources(cpp,Path('prepare.py'),[Path('tools/gather.py')],'tb')
+            self.assertEqual(set(got),{'main.cpp','prepare.py','tools/gather.py','norm.inc','sfu.inc','formatter.inc'})
+            with self.assertRaises(ValueError):R.companion_sources(cpp,None,[Path('../peer.py')],'tb')
+            with self.assertRaises(ValueError):R.companion_sources(cpp,None,[Path('/absolute.py')],'tb')
+
     def test_regenerated_dependency_interface_rejects_even_same_contract(self):
         j=self.jobs[1];directory=Path(j['directory']);directory.mkdir(parents=True)
         terminal=directory/'terminal.json';terminal.write_text('{"exit":0}')
