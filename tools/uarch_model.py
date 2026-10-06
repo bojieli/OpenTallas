@@ -10356,8 +10356,8 @@ def dsrom_window_full_block_pipeline_model():
     read_wanted_snapshot = banks*22
     read_owner_snapshot = 21+22+10
     read_completion_snapshot = banks*4
-    read_qualification_extra = (read_wanted_snapshot + read_owner_snapshot +
-                                read_completion_snapshot - banks)
+    read_snapshot_gross = read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot
+    read_qualification_extra = read_snapshot_gross-banks
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
@@ -10369,7 +10369,11 @@ def dsrom_window_full_block_pipeline_model():
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
     read_qualification_logic = (22*12 + banks*22*6)*.08748
-    cell_budget = baseline+ff_area+mux_area_upper+read_qualification_logic
+    # Each new witness holds when req_v is low. Reserve four NAND2 cell areas
+    # per enable mux, with no removed-enable or shared-inverter savings credit.
+    read_snapshot_enable_mux = read_snapshot_gross*4*.08748
+    cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
+                   read_snapshot_enable_mux)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10403,6 +10407,11 @@ def dsrom_window_full_block_pipeline_model():
             landing_data_bits_per_cycle=column_payload,
             read_boundary_bits_per_cycle=banks*rowb,
             read_control_snapshot_internal_bits_per_cycle=read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot,
+            read_owner_operand_receiver_replicas=banks,
+            read_owner_operand_max_receiver_fanout=banks,
+            read_control_directed_bit_routes=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
+            read_control_route_tracks_lower_bound=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
+            read_snapshot_enable_additional_sinks=read_snapshot_gross,
             read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
@@ -10411,6 +10420,7 @@ def dsrom_window_full_block_pipeline_model():
             actual_parent_channel_capacity=None, parent_channel_fit=False),
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
             read_qualification_logic_allowance_um2=read_qualification_logic,
+            read_snapshot_enable_mux_allowance_um2=read_snapshot_enable_mux,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
@@ -10426,6 +10436,12 @@ def dsrom_window_full_block_pipeline_model():
             mandatory_clock_closure=True, measured=False),
         clock=dict(period_ps=1e12/clock, SS_setup_uncertainty_ps=60,
             FF_hold_uncertainty_ps=25, real_FF_clkQ_from_corner_liberty=True,
+            read_snapshot_gross_new_clock_sinks=read_snapshot_gross,
+            read_snapshot_removed_clock_sinks=banks,
+            read_snapshot_net_logical_clock_sink_delta=read_qualification_extra,
+            read_snapshot_gross_sink_clock_cap_fF={
+                'SS':read_snapshot_gross*.446638, 'FF':read_snapshot_gross*.52201},
+            read_snapshot_clock_cap_basis='pinned ORFS DFFHQNx1 SS/FF CLK capacitance in fF; no removed-sink credit, buffer/wire cost and root pin capacitance require actual CTS',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
@@ -10670,6 +10686,44 @@ def hbm_r5a_row_address_context_model():
         protection=base['cuts']['SM_protection'],
         gates=dict(exact=False,physical=False,performance=False,adopted=False))
 
+def hbm_r5a_external_calendar_context_model():
+    """Expose the existing PC descriptors/credits; remove private calendar owners.
+
+    The memory-control adapter owns job identity, row grants, REFpb, column
+    reservation and provider ordinals. This boundary adds no assumed service
+    latency or area saving; parent arbitration/receipt costs remain unqualified.
+    """
+    base = hbm_r5a_row_address_context_model()
+    return dict(item=6, enabled_default=False,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
+        fetch_source='rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_shared_p2.sv',
+        shape=base['shape'], compute=base['compute'],
+        state=dict(added_register_bits=0, added_codec_instances=0,
+            private_PC_controller_instances=0, external_calendar_PC_count=32,
+            job_lease_owned_by='Gibbs sole calendar adapter; not stored by payload caller'),
+        ports=dict(descriptor_bits=32*(1+19+11), descriptor_ready_bits=32,
+            provider_busy_fault_issue_bits=32*3, calendar_notice_bits=32,
+            landing_credit_bits=32*3, fetch_reset_bits=2,
+            provider_next_ordinal_bits=32*16, return_ordinal_bits=32*16,
+            raw_return_bits_per_cycle=32*256, coded_return_bits_per_cycle=32*360,
+            SM_capture_bits_per_cycle=8*1024,
+            new_service_boundary_bits=32*(1+19+11+1+3+1+3)+2,
+            former_row_column_boundary_bits=32*(1+1+3+5+5+5+19),
+            added_tracks_against_existing_boundary=2,
+            existing_channel_fit_not_parent_adapter_qualification=True),
+        memory=dict(macro_count=96, added_ports=0, read_credits_per_PC=32,
+            credit_return_event='actual service-domain CDC landing freed count, not PHY arrival'),
+        area=base['area'],
+        latency=dict(added_architectural_edges=0, existing_context_charge_ns=3.334,
+            parent_calendar_and_receipt_latency_pending=True,
+            full_off_package_FEC_owned_by='Claude DS-RACK actual handoff; no light130ns budget',
+            first_access_FAIL_ns=153.757, first_access_target_ns=140),
+        reset=dict(provider='whole-provider cold POR only; never fetch configuration reset',
+            fetch='existing independently synchronized config release on stream/service clocks',
+            warm_debt_clear_allowed=False),
+        gates=dict(syntax=False, exact=False, protection=False, physical=False,
+            performance=False, adopted=False))
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
@@ -10811,6 +10865,36 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             measured_full32_tree_DFF=304836, measured_full32_tree_cell_delta_um2=-2327.7699,
             measured_full32_cycles=789, measured_new_cycles=0,
             exact_gate=True, physical_gain_measured=False, adopted=False),
+        registered_request_boundary=dict(
+            optin_parameter='PIPE default0 in additive item9_pipe successor',
+            evidence='route-r1 GRT1180 data6562 is ingress hold; CTS detailed i_data3803 min WC -803.83ps, capture clock999.40ps/input min166.60ps; not repaired by data pipeline',
+            mechanism='four-leaf masked partial trees -> registered bank results -> registered held root payload; one outstanding ownership credit until real response acceptance',
+            request_banks=(nsm+3)//4, bank_leaf_limit=4,
+            bank_payload_FF_bits=((nsm+3)//4)*width,
+            held_payload_FF_bits=width, held_descriptor_FF_bits=9,
+            added_local_owner_FF_bits=max(0,(nsm+3)//4-1)*copies*sb,
+            added_join_enable_FF_bits=copies,
+            added_FF_floor_bits=(((nsm+3)//4)+1)*width+10+max(0,(nsm+3)//4-1)*copies*sb+copies,
+            added_FF_floor_um2=((((nsm+3)//4)+1)*width+10+max(0,(nsm+3)//4-1)*copies*sb+copies)*DFF_UM2,
+            capture_bytes_per_transaction=width/8,
+            bank_internal_bits_per_cycle=((nsm+3)//4)*width,
+            held_endpoint_bits_per_cycle=width+9,
+            bank_mask_AND_bits=nsm*width, bank_OR_bits=max(0,nsm-(nsm+3)//4)*width,
+            root_OR_bits=max(0,(nsm+3)//4-1)*width,
+            routing_tracks_bank_to_root=((nsm+3)//4)*width,
+            real_channel_capacity=None, real_slot_fit=False,
+            new_cycles_per_collective=2, new_cycles_per_record=0,
+            predicted_full32_context_cycles=789+32*2,
+            token_delta_ns=actual_collectives*2/1.2,
+            arithmetic_MACs_per_cycle=0, arithmetic_reordering=False,
+            mutable_payload_protection='inherits endpoint transaction checks; credit/control reset, data invalid until capture; no new off-package boundary',
+            direct_ingress_hold_repair_claim=False,
+            measured_full32_context_cycles=853, measured_full32_added_cycles=64,
+            exact_gate_passed=(nsm==32 and nl==128 and copies==64),
+            four_state_held_boundary_and_negative_mutant=True,
+            timed_slice_payload_bits=64, timed_slice_caller_replicas=32,
+            timed_slice_is_not_full_endpoint_or_parent_signoff=True,
+            contextual_SS_FF=False, adopted=False),
         geographic_request_tree=dict(
             optin_parameter='GEO default0 in new item9_geo successor',
             parent_geometry_status='HOLD: die-lint 7ccef3810; old allocation/mirroring/corridors unqualified pending Claude HBM-DIE-FIX regeneration',

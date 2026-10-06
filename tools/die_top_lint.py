@@ -92,6 +92,9 @@ def gen_tag(rel, root=ROOT):
 # (sha256 86a9e54b..., EPYC1 /srv/opentallas/scratch-overflow/claude/qwen-die-r17/cases/r17b_real/die.v).
 QWEN_R17B = dict(b3r3=True, b3r6=True, tree_cols=6, bw_align=True, bw_edge=True, io_faces=True, bw_edge_inner=True,
                  bw_sp=200, m6_strip=40, slab_group_h=455.76, cdc='183.048,183.048')
+# r18 recipe (claude/qwen-die-rebuild-20261005): r17b + r18=True (findings Q1-Q14 of the first lint, main 694e21a6e)
+QWEN_R18 = dict(QWEN_R17B, r18=True)
+QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
 
@@ -143,7 +146,7 @@ def load_qwen():
     sys.path.insert(0, str(Path(src['root']) / 'tools'))
     try:
         B = importlib.import_module('qwen_rom_fulldie_b3r2')
-        r = dict(QWEN_R17B)
+        r = dict(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B)
         cdc = r.pop('cdc')
         v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
     finally:
@@ -283,9 +286,13 @@ def real_blocks(die):
                                    ports=parse_module(QPHY_BB, 'ot_hbm3e_phy')['ports'],
                                    binding=dict(dfi=[pn for pn, _ in v.phy_pins()]))
         prm = dict(TAGW=9)
+        bind = dict(CDC_LAYOUT)
+        if QWEN_RECIPE == 'r18':
+            bind.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
+            out['ot_hbm3e_phy']['binding'].update(clk=['clk'], rst_n=['rst_n'])
         out['qfd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL,
                               kind='RTL (routed per-PC CDC element; the die master qfd_cdc is its frame)', params=prm,
-                              ports=parse_module(QCDC_RTL, 'ot_qwen_stream4_cdc_pc', prm)['ports'], binding=CDC_LAYOUT)
+                              ports=parse_module(QCDC_RTL, 'ot_qwen_stream4_cdc_pc', prm)['ports'], binding=bind)
         return out
     if die.startswith('s81'):
         rp = S.real_ports()
@@ -506,10 +513,11 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
     """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
-    if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk'):
+    bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
+    if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'io':
-        if bid in ('ucie_tx', 'serdes_tx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx
+        if bid in ('ucie_tx', 'serdes_tx', 'ucie_rx', 'serdes_rx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx
             return flow(j, bits, bits // 2)
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls in ('link_spine', 'link_channel', 'strip_fan'):   # hub side upstream; per link: 528 down, 528 back
@@ -806,7 +814,7 @@ def physical(die, m, M, ports_w, real):
             along = [y for _, y in D] if face in 'EW' else [x for x, _ in D]
             ep_geo[(bid, inst, port)] = (cx, cy, face, max(along) - min(along), it)
     for bid, cls, bits, eps in m['buses']:
-        if len(eps) < 2 or cls == 'clock_trunk':       # clock nets are CTS-built from the region roots
+        if len(eps) < 2 or cls in ('clock_trunk', 'reset'):   # clock / reset nets are buffered trees (CTS / reset tree)
             continue
         for inst, port in eps:
             g = ep_geo.get((bid, inst, port))
@@ -916,8 +924,10 @@ def domain_crossings(m):
     by = {it.name: it for it in m['insts']}
     out = defaultdict(lambda: dict(buses=0, bits=0, examples=[]))
     for bid, cls, nb, eps in m['buses']:
-        if cls == 'clock_trunk':
+        if cls in ('clock_trunk', 'reset'):
             continue
+        if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
+            continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
         ds = [by[i].domain for i, _ in eps]
         if len(set(ds)) > 1:
             r = out[f'{cls}|{"->".join(ds)}']
@@ -1570,7 +1580,7 @@ def rom_abstracts(die):
     return dict(
         schema='opentallas.rom_die_abstract_list.v1', die=die, generator=tool, generator_tag=gen_tag(tool, gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe=QWEN_R17B if die == 'qwen_rom' else None, variant=m.get('variant'),
+        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, variant=m.get('variant'),
         die_um=[round(m['die']['w'], 3), round(m['die']['h'], 3)] if isinstance(m.get('die'), dict) else
         [round(max(i_.x + i_.w for i_ in m['insts']), 3), round(max(i_.y + i_.h for i_ in m['insts']), 3)],
         status_codes=STATUS_ORDER,
@@ -1654,7 +1664,7 @@ def run_lint(die, out, top_fix=False):
         schema='opentallas.die_top_lint.v1', die=die, top_fix=top_fix, generator=tool,
         generator_sha256=sha_gen(die, tool), generator_tag=gen_tag(tool, gen_root(die)),
         qwen_source={k: str(v) for k, v in qwen_src().items()} if die == 'qwen_rom' else None,
-        qwen_recipe=QWEN_R17B if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
+        qwen_recipe=(QWEN_R18 if QWEN_RECIPE == 'r18' else QWEN_R17B) if die == 'qwen_rom' else None, pin_fit_errors=dict(PIN_FIT_ERRORS),
         lint_tool_sha256=sha('tools/die_top_lint.py'), variant=m.get('variant'),
         census=dict(instances=len(m['insts']), buses=len(m['buses']), net_bits=int(sum(b[2] for b in m['buses'])),
                     masters=len({it.master for it in m['insts']}),
@@ -1687,12 +1697,14 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
     a = ap.parse_args(argv)
-    global QWEN_REF
+    global QWEN_REF, QWEN_RECIPE
     QWEN_REF = a.qwen_ref
+    QWEN_RECIPE = a.qwen_recipe
     if a.mode == 'vlsum':
         s = vlsum(a.out / f'{a.top}.verilator.log', a.top)
         (a.out / f'{a.top}_verilator_summary.json').write_text(json.dumps(s, indent=1) + '\n')

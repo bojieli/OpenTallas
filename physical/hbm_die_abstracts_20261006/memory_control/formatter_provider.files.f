@@ -68,13 +68,12 @@ rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv
 rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w15_store.sv
 rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv
 rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv
-rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
-rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv
+rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv
+rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec.sv
 rtl/hdc/ot_hdc_cg.sv
-rtl/hdc/ot_hdc_fastfp_lat.sv
 rtl/hdc/ot_hdc_fastfp_lat_f12.sv
 rtl/hdc/ot_hdc_fp32_f12.sv
 rtl/hdc/v41/ot_hdc_fsqrt.sv
