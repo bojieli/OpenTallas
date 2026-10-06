@@ -382,13 +382,18 @@ def cmd_block(a):
         macros = [SRAM_R]
         name = "ot_hbm_accel_smh_front"
         mw, mh = 96.552, 69.66
+        # the 2 x 5 ring macros: slice mb in row mb, group 0 left (MY: pins on its right edge) and group 1 right (R0:
+        # pins on its left edge), both facing a central channel where the bulk copy's queue and control sit
+        ch = 120.0
+        xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
+        y0 = qd(h / 2 - 2.5 * (mh + 4.32))
         tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
-               f"  set x {qd((w - mw) / 2)}",
-               f"  set y [expr {{{qd(h / 2 - 5 * (mh + 4.32))} + ($mb * 2 + $gg) * {q(mh + 4.32)}}}]",   # slice pairs adjacent
-               "  place_macro -macro_name [$ot_inst getName] -location [list $x $y] -orientation R0",
+               f"  set y [expr {{{y0} + $mb * {q(mh + 4.32)}}}]",
+               f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
+               f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_block(a.lat, element_io=True, ring=True)
     die = (round(w, 3), round(h, 3))
@@ -477,7 +482,8 @@ def cmd_top(a):
     print(f"wrote {work}: element die {die}, {len(xy)} pieces, {len(pins)} pins")
 
 
-GEOM = dict(tile_w=q(319), tile_h=q(509), be_h=q(77), front_w=q(233), gap=GRID, margin=GRID)
+# front 432 um wide (round 4; was 233): the ring macros as a compact 5 x 2 block facing a central channel
+GEOM = dict(tile_w=q(319), tile_h=q(509), be_h=q(77), front_w=q(432), gap=GRID, margin=GRID)
 
 
 def main(argv=None):
