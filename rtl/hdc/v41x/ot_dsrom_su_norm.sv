@@ -38,6 +38,8 @@ module ot_dsrom_su_norm #(
     parameter integer RD = 0,           // RoPE tail length (0: none; the tail lies in the last vector)
     parameter integer QUANT = 1,        // FP8 act-quant of the output (N a multiple of 32)
     parameter integer RXS = 0,          // 1: one more register stage on the RoPE operands (cycles for margin)
+    parameter integer SXC = 0,          // 1: the scale multipliers (x*r, w*(x*r)) on the operand-cut multiplier (LM+1):
+                                        //    their first stage is fed from another unit (xo, the broadcast rh, u_xr)
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
     parameter integer BW = 9,           // broadcast wire stages (scalar tail -> lanes)
     parameter integer LM = 5,
@@ -108,7 +110,8 @@ module ot_dsrom_su_norm #(
         else if (in_v) in_i <= in_i + 8'd1;
 
     // ---------------------------------------------------------------- control lines
-    localparam integer DY = 2 * LM + 1;                     // scale depth
+    localparam integer LMS = LM + SXC;                      // scale multiplier latency
+    localparam integer DY = 2 * LMS + 1;                    // scale depth
     wire [(DM > 0 ? DM : 1):0] vm_w;
     ot_hdc_vline #(.D(DM > 0 ? DM : 1)) u_vm (.clk(clk), .rst_n(rst_n), .v(in_v), .vd(vm_w));
     wire [DM:0] vm = vm_w[DM:0];
@@ -147,7 +150,7 @@ module ot_dsrom_su_norm #(
     wire [DY:0] vy;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rst_n), .v(sc_go), .vd(vy));
     wire [7:0] yi_m, yi_o;
-    ot_hdc_delay #(.W(8), .D(LM)) u_yim (.clk(clk), .rst_n(rst_n), .d(sc_nx), .q(yi_m));   // gain read a cycle ahead (wo)
+    ot_hdc_delay #(.W(8), .D(LMS)) u_yim (.clk(clk), .rst_n(rst_n), .d(sc_nx), .q(yi_m));   // gain read a cycle ahead (wo)
     ot_hdc_delay #(.W(8), .D(DY)) u_yio (.clk(clk), .rst_n(rst_n), .d(sc_x), .q(yi_o));
 
     wire [N-1:0]    lf;                 // lane faults
@@ -186,8 +189,8 @@ module ot_dsrom_su_norm #(
             always @(posedge clk) if (wl_v) wr[wl_i] <= wl_d[l * 32 +: 32];
             always @(posedge clk) wo <= wr[yi_m];
             wire [31:0] p, q;
-            ot_hdc_qmul_lat #(LM) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
-            ot_hdc_qmul_lat #(LM) u_w  (clk, rst_n, vy[LM], wo, p, q, f[9]);
+            ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
+            ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, vy[LMS], wo, p, q, f[9]);
             reg [31:0] yr;
             (* keep *) reg [31:0] yrr;          // the RoPE's copy (its two multipliers), kept through synthesis
             always @(posedge clk) begin yr <= bf16(q); yrr <= bf16(q); end

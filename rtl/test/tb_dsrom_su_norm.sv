@@ -12,7 +12,7 @@
 // landings include HUB_OUT) ey=<errors> er=<errors> eq=<errors> checked_y=.. checked_q=.. fault=..
 module tb_dsrom_su_norm #(
     parameter integer N = 1024, parameter integer D = 5120, parameter integer HC = 1, parameter integer RD = 0,
-    parameter integer QUANT = 1, parameter integer RW = 9, parameter integer BW = 9, parameter integer RXS = 0, parameter integer LA = 4,
+    parameter integer QUANT = 1, parameter integer RW = 9, parameter integer BW = 9, parameter integer RXS = 0, parameter integer LA = 4, parameter integer SXC = 0,
     parameter integer HUB_IN = 33, parameter integer HUB_OUT = 23
 );
     localparam integer NV = (D + N - 1) / N;
@@ -59,7 +59,7 @@ module tb_dsrom_su_norm #(
             sin_t[i * 32 +: 32] = csm[RD / 2 + i];
         end
     end
-    ot_dsrom_su_norm #(.N(N), .D(D), .HC(HC), .RD(RD), .QUANT(QUANT), .RW(RW), .BW(BW), .RXS(RXS), .LA(LA)) dut (
+    ot_dsrom_su_norm #(.N(N), .D(D), .HC(HC), .RD(RD), .QUANT(QUANT), .RW(RW), .BW(BW), .RXS(RXS), .LA(LA), .SXC(SXC)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre({cfg[3], cfg[2], cfg[1], cfg[0]}),
         .n_f(cfg[4]), .eps(cfg[5]), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t),
         .y_v(y_v), .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
