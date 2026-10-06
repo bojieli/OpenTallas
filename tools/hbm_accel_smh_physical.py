@@ -39,10 +39,11 @@ RTL = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_
        "rtl/gpu/ot_gpu_bd_col.sv", "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bulk_copy.sv",
        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
-       "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv", "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+       "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
        "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
        "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
-       "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
        SRAM_X + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v", SRAM_R + "/ot_sram_1r1w_512x256_m1_r2c2_bb.v"]
 GRID = 8.64          # macro / die quantum: a multiple of every routing pitch (0.048 0.064 0.08) and the 0.27 row
 PITCH = 0.096        # abutting pin slot (two M4 / M5 tracks)
@@ -191,7 +192,11 @@ def front_pins(g, hcore):
         for (ln, i), y in qy.items():
             pins.append((f"qin{suffix}[{ln * P['QLW'] + i}]", "M4", "", xedge, y))
     # element pins: north = x-write, op channel, barrier; south = NoC, results
-    north = (["clk", "rst_n", "start", "start_ready", "busy", "arrive", "release_in", "released", "xw_en"]
+    # the clock enters on the west edge in the channel between the two tile rows (near mid-height: the tree root
+    # is mid-block, so the pin-to-root wire is short); the element top routes it there through the channel
+    ygap = round(bh + gap + (P["NP"] - 1) * (th + gap) - gap / 2, 3)
+    pins.append(("clk", "M4", "", 0.0, round(round((ygap - 0.012) / 0.048) * 0.048 + 0.012, 3)))
+    north = (["rst_n", "start", "start_ready", "busy", "arrive", "release_in", "released", "xw_en"]
              + bits("op_rows", P["RW"] + 1) + bits("op_c", 16) + bits("op_g", 8) + ["op_gs"] + bits("op_fmt", 2)
              + bits("op_xb", P["XW"]) + bits("xw_addr", P["XW"]) + bits("xw_grp", 7) + bits("xw_data", 2048))
     south = (["d_valid", "d_ready", "req_v", "req_ready", "rsp_v", "rv", "fault"] + bits("d_base", 32)
@@ -382,7 +387,7 @@ def cmd_block(a):
                "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
                f"  set x {qd((w - mw) / 2)}",
-               f"  set y [expr {{{qd(h / 2 - 5 * (mh + 4.32))} + ($gg * 5 + $mb) * {q(mh + 4.32)}}}]",
+               f"  set y [expr {{{qd(h / 2 - 5 * (mh + 4.32))} + ($mb * 2 + $gg) * {q(mh + 4.32)}}}]",   # slice pairs adjacent
                "  place_macro -macro_name [$ot_inst getName] -location [list $x $y] -orientation R0",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_block(a.lat, element_io=True, ring=True)
@@ -438,6 +443,8 @@ def cmd_top(a):
     for name, layer, _, x, y in front_pins(g, hcore):
         if layer == "M5":
             pins.append((name, "M5", "", round(fx + x, 3), die[1] if y > 0 else 0.0))
+    # the element clock: north edge over the front's west corner (the front's own clock pin is mid-height west)
+    pins.append(("clk", "M5", "", round(round((fx + 4.0 - 0.012) / 0.048) * 0.048 + 0.012, 3), die[1]))
     (work / "pins.tcl").write_text(pin_tcl(pins))
     sdc = ["# ot_hbm_accel_smh element: clock 833 ps, 60 / 25 ps; the W13 die budget on the element pins, unchanged",
            "set clk_period 833",
