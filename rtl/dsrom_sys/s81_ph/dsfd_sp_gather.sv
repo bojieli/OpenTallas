@@ -7,7 +7,7 @@
 // widened to the per-root row lanes (generator change G1/G2 in the contract).
 // Every die input is captured in a flop at the pin; every die output is launched from a flop.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_sp_gather #(parameter integer ROOTD = 128) (
+module dsfd_sp_gather #(parameter integer ROOTD = 128, parameter integer ROOT_BLK = 1) (
     input wire [0:0] ck,
     input wire [0:0] rst,
     input wire [0:0] ckv,
@@ -196,7 +196,7 @@ module dsfd_sp_gather #(parameter integer ROOTD = 128) (
     wire [NR*68-1:0] lw_m = lw;
     wire [NR-1:0] lv_m = lv;
 `endif
-    ot_s81ph_gather #(.NR(NR), .ROOTD(ROOTD)) u_g (.clk(ck[0]), .rst_n(rs_n), .lane_v(lv_m), .lane_w(lw_m), .trunk_st(tst),
+    ot_s81ph_gather #(.NR(NR), .ROOTD(ROOTD), .ROOT_BLK(ROOT_BLK)) u_g (.clk(ck[0]), .rst_n(rs_n), .lane_v(lv_m), .lane_w(lw_m), .trunk_st(tst),
         .row_v(rv), .row_d(rd), .g_fault(gf), .g_busy(gb), .g_live(gl));
     // ---- output register at the pins
     reg [6946:0] tq;
