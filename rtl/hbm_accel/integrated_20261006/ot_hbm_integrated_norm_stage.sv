@@ -28,14 +28,14 @@ module ot_hbm_integrated_norm_stage #(
  output wire q_valid,output wire [7:0] q_index,output wire [N*8-1:0] q_codes,
  output wire [(N/32)*10-1:0] q_exp,output wire [N*16-1:0] q_bf16,
  output wire [15:0] reserve_events,output wire [72:0] held_frame,
- output wire retained,fault,ce,due
+ output wire [72:0] q_frame,output wire retained,fault,ce,due
 );
  generate if(!ENABLE)begin:g_off
  assign warm_ack=0;assign enroll_r=0;assign lease_v=0;assign quiet=1;assign release_v=0;
  assign publication_v=0;assign rd_addr=0;assign rd_re=0;assign rd_src=0;
  assign vm_we=0;assign vm_waddr=0;assign vm_wdata=0;assign q_valid=0;assign q_index=0;
  assign q_codes=0;assign q_exp=0;assign q_bf16=0;assign reserve_events=0;
- assign held_frame=0;assign retained=0;assign fault=0;assign ce=0;assign due=0;
+ assign q_frame=0;assign held_frame=0;assign retained=0;assign fault=0;assign ce=0;assign due=0;
  end else begin:g_on
  wire [4*N*AW-1:0] child_rd_addr;wire [4*N-1:0] child_rd_re;
  wire [8*N-1:0] child_rd_src;wire [N-1:0] child_vm_we;
@@ -46,7 +46,7 @@ module ot_hbm_integrated_norm_stage #(
  assign rd_re=child_rd_re&{4*N{!fault}};
  assign vm_waddr=child_vm_waddr;assign vm_wdata=child_vm_wdata;
  assign vm_we=child_vm_we&{N{!fault}};
- assign q_valid=child_q_valid&&!fault;assign q_index=child_q_index;
+ assign q_frame=held_frame;assign q_valid=child_q_valid&&!fault;assign q_index=child_q_index;
  assign q_codes=child_q_codes;assign q_exp=child_q_exp;assign q_bf16=child_q_bf16;
  wire child_clk;
  ot_hdc_cg u_norm_icg(.clk(clk),.en(!por_n||!NATIVE_VM||(native_clock_enable&&!ce&&!due)),.gclk(child_clk));
