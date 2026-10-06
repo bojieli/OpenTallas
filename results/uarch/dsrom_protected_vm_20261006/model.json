@@ -23,7 +23,8 @@
     "read_before_any_same_bundle_write": true,
     "all_native_core_ports_integrated": false,
     "identity_bits": 47,
-    "identity_fields": "epoch16/user10/pos21"
+    "identity_fields": "epoch16/user10/pos21",
+    "accepted_transaction_ordinal_bits": 32
   },
   "memory": {
     "MACs_per_cycle": 0,
@@ -44,20 +45,20 @@
     "replicas": 1
   },
   "boundary": {
-    "request_bits": 2799,
-    "response_bits": 1235,
-    "receipt_bits": 48,
+    "request_bits": 2831,
+    "response_bits": 1267,
+    "receipt_bits": 80,
     "encoded_stream_widths": [
-      3168,
+      3240,
       1440,
-      72
+      144
     ],
     "request_bundle_capacity": 1,
     "visible_rows_per_bundle": 5,
     "C8_retirement_authority": false,
     "mutable_packet_and_identity_protection": "SECDED transport plus complementary retained state/data",
-    "pipeline_fifo_storage_bits": 18720,
-    "tracks_needed": 4680,
+    "pipeline_fifo_storage_bits": 19296,
+    "tracks_needed": 4824,
     "common_adjacent_channel_um": 172.8,
     "planning_capacity_tracks": 7200,
     "installed_wire_stages": 0,
