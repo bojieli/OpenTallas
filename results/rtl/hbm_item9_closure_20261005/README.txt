@@ -102,3 +102,16 @@ Actual balanced request mux TREE1 fullNSM32/NL128 lockstep PASS209 grants/
 256RX/789cycles/0added. Source defaultTREE0 retained, newbalancedmasked tree
 adds0FF/0edges. Prebuild full32 gate proxy53657.6um2 before removing old mux;
 no area/physical gain claimed until changedmapped cells/actualcontext route.
+
+Actual mapped source-local caller pin map:262528FF (8204/caller), including
+3-state mapped FSM vs2-bit RTL floor;76561.56288um2 actualFFcell area. All
+CLK pins bind realclk_sm. Fullinstance/pin JSONL stays on E2;32slot/hash summary
+is committed. Concrete local480x480um proposals stay in each existingSMbbox.
+Baseline hb_coll child proposed580x1000um; conservative155429.56um2cell bound
+against174000um2 at30%, before actualCTS/PG measurement. NO installed fitclaim.
+Separate HA2 fullprotectedparent has388864.04um2cell /1.296213mm2area deficit
+at30% from actualqueueFF floor+measuredPF384cells; do not launchlargefloparray.
+Flatcentral32mux commonwest upper-layercut:69824tracks required vs50594upper
+beforeOTHERclaims (19230deficit on allocatedM6-M9 basis). Real distributed
+masked reduction before sharedspine plus priced physical transport required;
+262144localvectorbits are not oneperimeter bank/free sharedchannel allowance.
