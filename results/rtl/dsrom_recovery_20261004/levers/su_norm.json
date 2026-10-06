@@ -190,6 +190,17 @@
    "hc": 321,
    "q": 285,
    "kv": 279
+  },
+  "registered_transport": {
+   "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_transport_terminal.json",
+   "exact": true,
+   "full_shape": true,
+   "cases": 1,
+   "variant": "hc",
+   "real_rtl": true,
+   "y_last_cycles": 303,
+   "q_last_cycles": 321,
+   "production_adoption": false
   }
  },
  "default": "opt-in: applied only in the recovery baseline; the SU (ot_hdc_v41x_vec) and its lowering are unchanged",
