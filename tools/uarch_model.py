@@ -11226,3 +11226,11 @@ def dsrom_wfc_enclosing_stage_price():
         'finite WFC physical rectangle and channel allocation'],
       P_and_R_ready=False, actual_parent_context_qualified=False,
       SS_FF_closed=False, adopted=False)
+
+
+def dsrom_s81_wfc_parent_allocation_model():
+    """Selected existing S81 WFC slot, real VM library ports and finite deficit."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
