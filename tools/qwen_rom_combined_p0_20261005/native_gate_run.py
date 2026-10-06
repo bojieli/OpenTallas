@@ -45,20 +45,34 @@ def child(a):
 
 
 def dispatch(a):
-    for phase,cpus in [('link',1),('run',16)]:
+    phases=[('relink-driver',1),('runtime',16)] if a.full else [('link',1),('run',16)]
+    for phase,cpus in phases:
         # Wait only before admission, never restart an admitted failing child.
         while True:
             try: fresh(a.output,phase+'_pre',cpus);break
             except RuntimeError: print('WAIT_CPU '+phase,flush=True);time.sleep(20)
-        cmd=['/srv/opentallas-scratch/admit.sh','16','--','python3',__file__,'--output',str(a.output),'--phase',phase]
+        if a.full:
+            cmd=['/srv/opentallas-scratch/admit.sh','16','--','python3',str(Path(__file__).with_name('run_full.py')),
+                 '--output',str(a.output),'--source',str(a.output/'src'),'--stage',phase]
+        else:
+            cmd=['/srv/opentallas-scratch/admit.sh','16','--','python3',__file__,'--output',str(a.output),'--phase',phase]
         (a.output/(phase+'_guard_command.json')).write_text(json.dumps(cmd)+'\n')
-        with (a.output/(phase+'_supervisor.log')).open('x') as log: rc=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT).returncode
+        env=os.environ.copy()
+        if a.full:
+            env.update(RT_THREADS='16',QWEN_P0_NATIVE_REENTRY_SKIP='1',QWEN_P0_NATIVE_PROFILE='1')
+        with (a.output/(phase+'_supervisor.log')).open('x') as log: rc=subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT).returncode
         (a.output/(phase+'_supervisor.exit')).write_text(str(rc)+'\n')
         if rc:raise RuntimeError(phase+' stopped; no replay/rebuild')
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--phase',choices=['dispatch','link','run'],required=True);a=p.parse_args()
+    p.add_argument('--phase',choices=['dispatch','link','run'],required=True)
+    p.add_argument('--full',action='store_true',help='one final full36/head smoke, only after trace gate PASS')
+    a=p.parse_args()
+    if a.full:
+        gate=json.loads((a.output/'qualified_native_gate.json').read_text())
+        if gate['status']!='PASS_EQUIVALENCE' or not gate['adopted']:
+            raise RuntimeError('changed-host trace and speed gate must pass before final smoke')
     try: dispatch(a) if a.phase=='dispatch' else child(a)
     except Exception as e:
         (a.output/(a.phase+'_terminal.json')).write_text(json.dumps(dict(status='FAIL_'+a.phase.upper(),reason=str(e),full_token_pass=False))+'\n');raise
