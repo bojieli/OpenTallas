@@ -13,6 +13,7 @@ module ot_dsrom_reindex_parent_physctx #(
     parameter integer LMW  = 11,
     parameter integer DF   = 8,
     parameter integer LSW  = 3,          // list slots = 2^LSW (0: the as-built single list)
+    parameter integer SPLIT_COUNTERS = 0,
     localparam integer SLW = (LSW > 0) ? LSW : 1
 ) (
     input  wire                 clk,
@@ -44,7 +45,7 @@ module ot_dsrom_reindex_parent_physctx #(
     wire [1:0] dr_v;wire [6:0] dr_slot;wire [13:0] dr_j;
     wire [9:0] dr_fc,dr_f0;wire [27:0] dr_blk;
     assign o_valid=d_valid&&!fault;
-    ot_dsrom_reindex_parent_control #(.NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),.DW(DW),.LBW(LBW),.LMW(LMW),.DF(DF),.LSW(LSW)) u_control(
+    ot_dsrom_reindex_parent_control #(.SPLIT_COUNTERS(SPLIT_COUNTERS),.NPC(NPC),.WB(WB),.AW(AW),.HW(HW),.TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),.DW(DW),.LBW(LBW),.LMW(LMW),.DF(DF),.LSW(LSW)) u_control(
         .clk(clk),.rst_n(rst_n),.lw_v(lw_v),.lw_slot(lw_slot),.lw_addr(lw_addr),.lw_blk(lw_blk),.cmd_v(cmd_v),.cmd_slot(cmd_slot),.cmd_base(cmd_base),.cmd_skip(cmd_skip),.cmd_n(cmd_n),.busy(busy),.fault(fault),.req_v(req_v),.req_rdy(req_rdy),.req_addr(req_addr),.req_len(req_len),.req_tag(req_tag),.rsp_v(rsp_v),.rsp_rdy(rsp_rdy),.rsp_tag(rsp_tag),.rsp_beat(rsp_beat),
         .d_valid(d_valid),.drain_ready(drain_ready),.consumer_fault(dfault),
         .drain_accept(drain_accept),.dr_v(dr_v),.dr_slot(dr_slot),.dr_j(dr_j),.dr_fc(dr_fc),.dr_f0(dr_f0),.dr_blk(dr_blk));

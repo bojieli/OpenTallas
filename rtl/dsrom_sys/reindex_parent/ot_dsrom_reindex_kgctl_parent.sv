@@ -1,4 +1,5 @@
 module ot_dsrom_reindex_kgctl_parent #(
+    parameter integer SPLIT_COUNTERS = 0,
     parameter integer OPT_KC6 = 1,
     parameter integer OPT_KC7 = 1,
     parameter integer OPT_KC8 = 1,   // grouped registered room, replicated slot write enables
@@ -168,7 +169,9 @@ module ot_dsrom_reindex_kgctl_parent #(
     // -- slot state ------------------------------------------------------------------------------------
     reg [NPC-1:0]  pend_c [0:WB-1];
     reg [NPC-1:0]  pend_s [0:WB-1];
-    reg [4:0]      cntc   [0:4*WB-1]; // four distinct beats per actual code channel plus check bit
+    wire [4:0]     cntc   [0:4*WB-1];
+    reg [4:0]      cntc_legacy [0:4*WB-1];
+    wire [NPC-1:0] counter_accept[0:WB-1]; // four distinct beats per actual code channel plus check bit
     reg [WB-1:0]   adm;
     reg [WB-1:0]   adm_q;                   // adm, a cycle later (aligned with cpart)
     reg [7:0]      cpart [0:WB-1];          // nothing pending in each 8-channel group (code 0-3, scale 4-7)
@@ -327,12 +330,27 @@ module ot_dsrom_reindex_kgctl_parent #(
                     (rr_kind[rg][rp]?pend_s[re][rp]:(pend_c[re][rp]&&
                      !(^cntc[re*4+((rp^m_fc[re])&3)])&&
                      !cntc[re*4+((rp^m_fc[re])&3)][rr_beat[rg][rp*2+:2]]));
+                assign counter_accept[re][rp]=accepted&&!rr_kind[rg][rp];
                 assign clear_scale[re][rp]=accepted&&rr_kind[rg][rp];
                 assign clear_code[re][rp]=accepted&&!rr_kind[rg][rp]&&
                      &(cntc[re*4+((rp^m_fc[re])&3)][3:0] | (4'b0001<<rr_beat[rg][rp*2+:2]));
             end
         end
         ot_hdc_v41x_kg_kreg_parent #(.W(NPC*RW)) u_r(.clk(clk),.d(din),.q(rr_q[rg*NPC*RW+:NPC*RW]));
+    end endgenerate
+    // Local four-counter banks eliminate a 512-entry array with 4096
+    // variable write ports. The accepted responses and highest-PC priority
+    // are unchanged; these are the original counter registers, with no cut.
+    generate if(SPLIT_COUNTERS) begin : g_counter_split
+        for(genvar slot=0;slot<WB;slot=slot+1) begin : g_slot
+            (* keep_hierarchy = "yes" *) ot_dsrom_reindex_counter_slot u_count (
+                .clk(clk), .rst_n(rst_n), .accept(counter_accept[slot]),
+                .first_channel(m_fc[slot][1:0]), .beat(rr_beat[slot/SG]),
+                .counts({cntc[4*slot+3],cntc[4*slot+2],cntc[4*slot+1],cntc[4*slot]}));
+        end
+    end else begin : g_counter_legacy
+        for(genvar counter=0;counter<4*WB;counter=counter+1)
+            assign cntc[counter]=cntc_legacy[counter];
     end endgenerate
     reg [LIST_LAT-2:0] list_v;
     reg [QW-1:0] list_seq[0:LIST_LAT-2];
@@ -350,7 +368,7 @@ module ot_dsrom_reindex_kgctl_parent #(
             room_all <= 1'b1; room_g <= 8'hff; rob_ok <= 1'b1; inuse <= 0;
             list_v <= 0;
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
-            for (p = 0; p < 4 * WB; p = p + 1) cntc[p] <= 5'd0;   // empty distinct-beat mask
+            if(!SPLIT_COUNTERS) for (p = 0; p < 4 * WB; p = p + 1) cntc_legacy[p] <= 5'd0;   // empty distinct-beat mask
         end else begin
             if(memory_fault||(run&&((|half_bad)||(|slot_bad))))fault<=1;
             // completion, two cycles late: per-group partials, then their AND (never early: adm_q is
@@ -374,7 +392,7 @@ module ot_dsrom_reindex_kgctl_parent #(
                         cntc[e*4+ci][rr_beat[e/SG][p*2+:2]])))fault<=1;
                     else if(!rr_kind[e/SG][p])begin
                         next_beats=cntc[e*4+ci][3:0] | (4'b0001 << rr_beat[e/SG][p*2+:2]);
-                        cntc[e*4+ci]<=(&next_beats)?5'd0:{^next_beats,next_beats};
+                        if(!SPLIT_COUNTERS) cntc_legacy[e*4+ci]<=(&next_beats)?5'd0:{^next_beats,next_beats};
                     end
                 end
             end
@@ -670,4 +688,42 @@ module ot_dsrom_parent_payload_last #(parameter integer W=8) (
     (* keep = 1 *) wire [W-1:0] selected = scale ? scale_data : code_data;
     (* keep = 1 *) wire [W-1:0] available = eligible ? selected : old_data;
     assign next_data = (ready || !valid) ? available : old_data;
+endmodule
+
+// Four checked distinct-beat masks for one of the complete 128 reorder slots.
+// Several aliased response channels may arrive in one edge: the old procedural
+// loop gives the highest PC priority, using only that PC's beat and the OLD mask.
+// Balance that priority decode and payload OR instead of a serial mux chain.
+module ot_dsrom_reindex_counter_slot (
+    input wire clk, rst_n,
+    input wire [31:0] accept,
+    input wire [1:0] first_channel,
+    input wire [63:0] beat,
+    output wire [19:0] counts
+);
+    wire [31:0] highest;
+    generate for(genvar p=0;p<32;p=p+1) begin : g_priority
+        wire [31:0] later;
+        for(genvar q=0;q<32;q=q+1) begin : g_later
+            assign later[q]=(q>p && (q%4)==(p%4)) ? accept[q] : 1'b0;
+        end
+        assign highest[p]=accept[p] && !(|later);
+    end endgenerate
+    generate for(genvar c=0;c<4;c=c+1) begin : g_counter
+        reg [4:0] value;
+        wire [31:0] selected;
+        wire [3:0] tree[0:62];
+        for(genvar p=0;p<32;p=p+1) begin : g_beat
+            assign selected[p]=highest[p] && ((2'(p)^first_channel)==2'(c));
+            assign tree[31+p]=(4'b0001<<beat[2*p+:2]) & {4{selected[p]}};
+        end
+        for(genvar n=0;n<31;n=n+1) begin : g_or
+            assign tree[n]=tree[2*n+1] | tree[2*n+2];
+        end
+        wire [3:0] next_mask=value[3:0] | tree[0];
+        always @(posedge clk)
+            if(!rst_n) value<=0;
+            else if(|selected) value<=(&next_mask)?5'd0:{^next_mask,next_mask};
+        assign counts[5*c+:5]=value;
+    end endgenerate
 endmodule
