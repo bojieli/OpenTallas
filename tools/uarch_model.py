@@ -10517,3 +10517,9 @@ def dsrom_v9_parent_context_model():
     """Full-slot source register/clock cut, with actual loaded QX10 ports."""
     from dsrom_v9_parent_context import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def dsrom_v9_cfg_context_model():
+    """Finite physical configuration-ROM provider for the native PHW6 pair."""
+    from dsrom_v9_cfg_context import model
+    return model(Path(__file__).resolve().parents[1])
