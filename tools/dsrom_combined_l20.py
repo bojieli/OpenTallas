@@ -390,7 +390,7 @@ def cmd_edges(a):
 # ------------------------------------------------------------------------------------------------------- field
 FIELD_CFGS = {
     "pq0": dict(pq=0, qelem=0, plan="base"),
-    "pq1": dict(pq=1, qelem=0, plan="pq"),
+    "pq1": dict(pq=1, qelem=0, plan="pq"),           # recorded from the committed v9 field_pq.json (no replay)
     "pq0_q9": dict(pq=0, qelem=9, plan="base"),
     "pq1_q9": dict(pq=1, qelem=9, plan="pq"),        # expected NOT buildable (negative structural control)
 }
@@ -642,20 +642,38 @@ def crosscheck(w: Path, parts: dict, field: dict) -> list:
                                 lever_us=v["us"], composition_us=got, source=pat[n].get("source", "")[:120]))
             cdc = pat[n].get("cdc_measured_us")
             if cdc and v.get("kind") == "fused_fast":
-                out.append(dict(kind="CDC still charged on a fused 1.2 GHz node with all levers ON", lever=lv, node=n,
-                                cdc_us=cdc))
+                out.append(dict(kind="info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency "
+                                     "stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+                                severity="info", lever=lv, node=n, cdc_us=cdc))
     # unit cycles vs lever records (1.2 GHz units; routeract's short lane runs at 0.9 GHz)
-    unit_node = {"su_hcpost": {"L20.attn.hc_post": ["L20.attn.hc_post"], "L20.ffn.hc_post": ["L20.ffn.hc_post"]}}
+    hcn = lambda b: [f"L20.{b}.hc_pre", f"L20.{b}.norm.sumsq", f"L20.{b}.norm.rsqrt", f"L20.{b}.norm.scale",
+                     f"L20.{b}.quant"]
+    unit_node = {"su_hcpost": {"L20.attn.hc_post": ["L20.attn.hc_post"], "L20.ffn.hc_post": ["L20.ffn.hc_post"]},
+                 "su_norm.hc": {"L20.attn.hc_pre_norm": hcn("attn"), "L20.ffn.hc_pre_norm": hcn("ffn")},
+                 "su_norm.q": {"L20.attn.q_norm": ["L20.attn.q_norm.sumsq", "L20.attn.q_norm.rsqrt",
+                                                   "L20.attn.q_norm.scale", "L20.attn.q_quant"]},
+                 "su_norm.kv": {"L20.attn.kv_norm_rope": ["L20.attn.kv_norm.sumsq", "L20.attn.kv_norm.rsqrt",
+                                                          "L20.attn.kv_norm.scale", "L20.attn.kv_rope_qdq"]}}
     for row in (parts.get("units") or {}).get("rows", []):
         if not row["l20"]:
             continue
+        if row["unit"] == "su_softmax" and isinstance(row.get("cycles"), dict):
+            for nd, cyc in row["cycles"].items():
+                n = f"L20.{nd}"
+                lev = (pat.get(n) or {}).get("measured_us")
+                if lev is not None and abs(cyc / 1.2e3 - lev) > 5e-4:
+                    out.append(dict(kind="unit run vs composition", unit="su_softmax", case=row["case"], node=n,
+                                    run_cycles=cyc, run_us=round(cyc / 1.2e3, 5), composition_us=lev))
+            continue
+        if row["unit"].startswith("su_norm") and row.get("fp") != "dpi":
+            continue                      # the N 64 RTL-FP rows prove the arithmetic; the full-N rows carry the time
         nodes = unit_node.get(row["unit"], {}).get(row["case"])
         if nodes and isinstance(row.get("cycles"), (int, float)):
             us = row["cycles"] / 1.2e3
             lev = sum(pat.get(n, {}).get("measured_us") or 0 for n in nodes)
             if abs(us - lev) > 5e-4:
                 out.append(dict(kind="unit run vs composition", unit=row["unit"], case=row["case"], run_us=round(us, 5),
-                                composition_us=lev))
+                                run_cycles=row["cycles"], composition_us=round(lev, 5), nodes=nodes))
     # field
     base = json.loads((ROOT / "results/rtl/dsrom_field_spine_20261004/field_baseline.json").read_text())
     bmap = {n["node"]: n.get("total_cycles") for n in base.get("node_summary", [])}
@@ -683,7 +701,15 @@ def cmd_record(a):
         p = w / f"{n}.json"
         parts[n] = json.loads(p.read_text()) if p.exists() else None
     field = {c: field_summary(w, c, Path(a.plan_base if FIELD_CFGS[c]["plan"] == "base" else a.plan_pq))
-             for c in FIELD_CFGS}
+             for c in FIELD_CFGS if c != "pq1"}
+    # PQ 1 alone: the committed v9 record (RTL pins current on this snapshot: static.pin_currency) -- no replay
+    pq1 = json.loads((ROOT / LEVER_RECORDS["field_spine"][1]).read_text())
+    l20 = [n for n in pq1.get("node_summary", []) if n["node"].startswith("L20.")]
+    field["pq1"] = dict(cfg="pq1", build="committed", record=LEVER_RECORDS["field_spine"][1],
+                        nodes=[dict(node=n["node"], exact=n.get("exact"), total_cycles=n.get("total_cycles"),
+                                    rows_checked=n.get("rows_checked")) for n in l20],
+                        exact=bool(l20) and all(n.get("exact") for n in l20))
+    xc = crosscheck(w, parts, field)
     fails = []
     if not parts["edges"] or not parts["edges"]["all_equal"]:
         fails.append("edges")
@@ -696,9 +722,10 @@ def cmd_record(a):
             continue
         if not s.get("exact"):
             fails.append(f"field {c}")
+    fails += [f"run-vs-composition: {x['kind']} {x.get('node') or x.get('case')}" for x in xc
+              if x.get("severity") != "info" and x["kind"].startswith(("composition applies", "lever node absent"))]
     if parts["static"] and parts["static"]["unresolved_conflicts"]:
         fails.append("static conflicts")
-    xc = crosscheck(w, parts, field)
     rec = dict(schema="opentallas.dsrom-combined.record.v1", generated_utc=now(), source_commit=a.source_commit,
                verdict="PASS" if not fails else "FAIL", failures=fails, run_vs_composition=xc, field=field, **parts)
     (out / "combined.json").write_text(json.dumps(rec, indent=1) + "\n")
