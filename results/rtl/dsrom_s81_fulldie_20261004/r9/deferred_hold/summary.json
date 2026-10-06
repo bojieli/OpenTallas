@@ -6,6 +6,45 @@
  "method": "Per routed unit (6_final odb + spef, propagated clock, SS and FF ASAP7 NLDM): the IO false paths / IO delays of its SDC are dropped and every non-clock input / output gets a 0 ps IO delay on the unit clock; the port slack then gives the window the parent must meet, relative to the clock edge at the unit clk PORT: an input may change no earlier than -FF hold slack and must arrive by the SS setup slack; an output is valid from FF hold slack + 25 ps to T - 60 - SS setup slack. Composed with an ASAP7 DFFHQNx1 parent register (FF clk->q 32.2 ps, SS 115.6 ps, 30 ps wire), each port group yields the window of parent launch (input) / capture (output) clock offsets that close both corners. P0 = parent CTS treats the unit clk pin as a plain sink (offset 0); P1 = parent registers clocked at the unit's own insertion (write_timing_model min/max_clock_tree_path).",
  "units": [
   {
+   "unit": "su_norm_core16_xf_a",
+   "lever": "su_norm (ADOPTED route)",
+   "top": "ot_dsrom_su_norm (core16_xf_a, adopted: SS +10.55 / FF +2.44 r2r)",
+   "mechanism": "a: input hold false path",
+   "base": "/srv/opentallas-scratch/claude/dsrom-suchains/norm/routes/core16_xf_a/work/orfs/results/asap7/opentallas_ot_dsrom_su_norm_asap7_su_norm_core16_xf_a/base",
+   "clock_tree_path_ps": {
+    "ss": {
+     "min_clock_tree_path": 580.2652,
+     "max_clock_tree_path": 636.11041
+    },
+    "ff": {
+     "min_clock_tree_path": 354.22058,
+     "max_clock_tree_path": 397.77734
+    }
+   },
+   "infeasible_ports": [],
+   "common_offset_ps": {
+    "in": {
+     "window_ps": [
+      366.57,
+      507.08
+     ],
+     "width_ps": 140.51,
+     "feasible": true
+    },
+    "out": {
+     "window_ps": [
+      238.93,
+      375.69
+     ],
+     "width_ps": 136.76,
+     "feasible": true
+    }
+   },
+   "P0_worst_margin_ps": -366.57,
+   "P1_worst_margin_ps": -129.03,
+   "verdict": "FEASIBLE with insertion-aware parent banks (P0 plain-sink parent fails by 367 ps); launch window only 141 ps wide"
+  },
+  {
    "unit": "su_norm_mix6",
    "lever": "su_norm",
    "top": "ot_dsrom_su_norm_mix (mix6_a, closed SS +28.96 / FF +17.58)",
