@@ -3,6 +3,9 @@
 # die pins with its closed r2 lanes as hard macros, through common/route_view.sh (corner STA, LEF + SS/FF ETM export,
 # generator check).  The lane view (LEF + SS/FF lib, committed under <q>/lane/<lane>/) and the macro placement
 # (<q>/rtl/macro_place.tcl, tools/hbm_hub_quarter_gen.py --lane-size W H) come from the pinned source snapshot.
+# PLACE_DENSITY_LB_ADDON is cleared so PD (route_view.sh --place-density) is the placement target: run_abi3_physical
+# always exports LB_ADDON 0.05, which on a quarter that is ~99 % lanes made the target 0.0695 and left global placement
+# on an overflow plateau of 0.38 for 1.5 h (q1hc, killed).
 #   route_quarter.sh <label> su|sfu|hc [extra run_abi3_physical args]     env: SRC, OUT, PD, CORES, NEED as route_view.sh
 set -u
 lab=$1; q=$2; shift 2
@@ -14,4 +17,4 @@ test -f $SRC/$V/lane/$lane/$lane.lef && test -f $SRC/$V/rtl/macro_place.tcl || {
 mkdir -p $SRC/.views/$lab; sed -E 's/ #\(\.[A-Za-z]+\([0-9]+\)(, \.[A-Za-z]+\([0-9]+\))*\) u_lane_/ u_lane_/' $SRC/$V/rtl/hfd_$q.sv > $SRC/.views/$lab/hfd_$q.sv
 MACROS="$lane=$V/lane/$lane" PDN=physical/hbm_accel_die_views/su/pdn_quarter.tcl MAXL=M7 \
   exec bash $SRC/physical/hbm_accel_die_views/common/route_view.sh $lab hfd_$q .views/$lab/hfd_$q.sv \
-  --orfs-var MACRO_PLACEMENT_TCL=/src/$V/rtl/macro_place.tcl "$@"
+  --orfs-var MACRO_PLACEMENT_TCL=/src/$V/rtl/macro_place.tcl --orfs-var PLACE_DENSITY_LB_ADDON= "$@"
