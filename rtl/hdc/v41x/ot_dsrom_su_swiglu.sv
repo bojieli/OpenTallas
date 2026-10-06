@@ -226,14 +226,10 @@ module ot_dsrom_su_qbank #(
                 wire [31:0] self = xi[32*k +: 32];
                 wire [31:0] mate = xi[32*(odd ? k - 1 : k + 1) +: 32];
                 wire [31:0] c = cs[32*pr +: 32], s = cs[1024 + 32*pr +: 32];
-                wire [31:0] p1, p2;
-                wire f1, f2;
-                ot_hdc_qmul_lat #(LM) u_m1 (clk, rst_n, vin[NIN], self, c, p1, f1);
-                ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, vin[NIN], mate, {s[31] ^ !odd, s[30:0]}, p2, f2);
-                wire [LM:0] vm;
-                ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(vin[NIN]), .vd(vm));
-                ot_dsrom_add_f12_l6 u_a (clk, rst_n, vm[LM], p1, p2, xr[32*k +: 32], fa[k]);
-                assign fm[k] = f1 | f2;
+                // one rotation element (ot_dsrom_su_rope_el), the routed minimum component of the RoPE front
+                ot_dsrom_su_rope_el #(.LM(LM), .ODD(odd)) u_el (.clk(clk), .rst_n(rst_n), .v(vin[NIN]), .self(self),
+                    .mate(mate), .c(c), .s(s), .y(xr[32*k +: 32]), .fault(fa[k]));
+                assign fm[k] = 1'b0;
             end
         end
         wire [DR:0] vr;
@@ -271,4 +267,75 @@ module ot_dsrom_su_qbank #(
     ot_hdc_vline #(.D(NOUT)) u_vout (.clk(clk), .rst_n(rst_n), .v(qv[0]), .vd(vout));
     assign vo = vout[NOUT];
     assign {fault, q, e, y} = oq;
+endmodule
+
+// ---------------------------------------------------------------------------
+// ot_dsrom_su_rope_el: one index-q RoPE element (golden rope_tail; the SU lane's QM_ALT_NP): even (re) a*c + b*(-s),
+// odd (im) b*c + a*s, the two products on the f12 multiplier (LM) and the add on the six-cut f12 adder
+// (ot_dsrom_add_f12_l6).  Latency LM + 6.  The qbank's RoPE front is 2 x 32 of these a 128-element row.
+// ---------------------------------------------------------------------------
+module ot_dsrom_su_rope_el #(
+    parameter integer LM = 5,
+    parameter integer ODD = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] self,
+    input  wire [31:0] mate,
+    input  wire [31:0] c,
+    input  wire [31:0] s,
+    output wire [31:0] y,
+    output wire        fault
+);
+    wire [31:0] p1, p2;
+    wire f1, f2, fa;
+    ot_hdc_qmul_lat #(LM) u_m1 (clk, rst_n, v, self, c, p1, f1);
+    ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, v, mate, {s[31] ^ (ODD == 0), s[30:0]}, p2, f2);
+    wire [LM:0] vm;
+    ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(v), .vd(vm));
+    ot_dsrom_add_f12_l6 u_a (clk, rst_n, vm[LM], p1, p2, y, fa);
+    assign fault = f1 | f2 | fa;
+endmodule
+
+// ---------------------------------------------------------------------------
+// ot_dsrom_su_rope_slice: the routable hardened element of the qbank RoPE front (owner closure procedure: a block
+// whose route exceeds ~3 h is split into replicated pieces with registered boundaries).  P rotation pairs (2P
+// ot_dsrom_su_rope_el) between the qbank's registered operands (the input traverse's last stage, and the position's
+// cos/sin table words, registered here) and the quantiser's input register (ot_dsrom_actquant_f12 S0): the BF16
+// rounding of the result and that register are inside, so every path of the front is register to register.
+// ---------------------------------------------------------------------------
+module ot_dsrom_su_rope_slice #(
+    parameter integer P = 4,
+    parameter integer LM = 5
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              v,
+    input  wire [64*P-1:0]   x,
+    input  wire [64*P-1:0]   cs,        // {sin[P], cos[P]}
+    output wire              vo,
+    output reg  [64*P-1:0]   y,
+    output reg               fault
+);
+    reg [64*P-1:0] xq, csq;
+    reg            vq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) vq <= 1'b0; else vq <= v;
+    always @(posedge clk) begin xq <= x; csq <= cs; end
+    wire [64*P-1:0] yr, yb;
+    wire [2*P-1:0]  f;
+    genvar k;
+    generate for (k = 0; k < 2 * P; k = k + 1) begin : g_e
+        ot_dsrom_su_rope_el #(.LM(LM), .ODD(k % 2)) u_el (.clk(clk), .rst_n(rst_n), .v(vq), .self(xq[32*k +: 32]),
+            .mate(xq[32*(k ^ 1) +: 32]), .c(csq[32*(k/2) +: 32]), .s(csq[32*P + 32*(k/2) +: 32]), .y(yr[32*k +: 32]),
+            .fault(f[k]));
+        ot_dsrom_su_bf16rnd u_r (.x(yr[32*k +: 32]), .y(yb[32*k +: 32]));
+    end endgenerate
+    wire [LM+6:0] vd;
+    ot_hdc_vline #(.D(LM + 6)) u_v (.clk(clk), .rst_n(rst_n), .v(vq), .vd(vd));
+    reg vr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= vd[LM + 6];
+    always @(posedge clk) y <= yb;
+    always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= |f;
+    assign vo = vr;
 endmodule
