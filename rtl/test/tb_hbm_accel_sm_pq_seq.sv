@@ -47,6 +47,10 @@ module tb_hbm_accel_sm_pq_seq;
         .release_in(release_in), .released(released));
 `define OT_DP dut.g_fp.u_front   // the bench configuration (RMAX 256) instantiates the parameterised pieces
 `define OT_DCROW dut.g_fp.u_front.al[RW-1:0]
+`ifdef OT_SMH_NEG_FLIP
+    // negative control: one bit of the front's s1 line stuck at 1 -> the golden compare must fail
+    initial force dut.g_fp.u_front.s1_w[3] = 1'b1;
+`endif
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (

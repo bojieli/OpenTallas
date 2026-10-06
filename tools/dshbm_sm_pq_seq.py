@@ -111,8 +111,9 @@ def cmd_run(a):
     (d / "x.hex").write_text("\n".join(xw) + "\n")
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
-    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else ""))
-    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh)
+    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
+                              + ("_negflip" if a.neg_flip else ""))
+    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
@@ -177,9 +178,9 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs, smh=False):
+def compile_bench(sim, params, outdir, jobs, smh=False, neg=False):
     src = SRC + (SMH_SRC if smh else [])
-    defs = ["-DOT_SMH"] if smh else []
+    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else [])
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     if sim == "verilator":
@@ -208,6 +209,7 @@ def main(argv=None):
     ap.add_argument("--serial", action="store_true")
     ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
+    ap.add_argument("--neg-flip", action="store_true", help="--smh negative control: one weight bit flipped (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)

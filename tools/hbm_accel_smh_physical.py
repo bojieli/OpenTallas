@@ -212,12 +212,16 @@ def front_pins(g, hcore):
 
 
 # ---------------- ORFS config ----------------
-def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*"):
+def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None):
+    lat_ff = lat_ff if lat_ff is not None else round(0.6 * float(lat))
     s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock 833 ps, 60 / 25 ps uncertainty",
          "set clk_period 833",
          "create_clock -name core_clk -period $clk_period [get_ports clk]",
          "create_clock -name nbr_clk -period $clk_period",
-         f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
+         "# the neighbour's flop sits at this block's own clock insertion: SS insertion for setup (max), FF insertion",
+         "# for hold (min; the hold check runs at FF, where every insertion is ~0.6 x SS)",
+         f"set_clock_latency -source -max {lat} [get_clocks nbr_clk]",
+         f"set_clock_latency -source -min {lat_ff} [get_clocks nbr_clk]",
          "set_clock_uncertainty -setup 60 [all_clocks]",
          "set_clock_uncertainty -hold 25 [all_clocks]",
          "set_false_path -from [get_ports rst_n]"]
@@ -454,7 +458,7 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",))
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff)
     elif a.piece == "be":
         w, h = g["tile_w"], g["be_h"]
         pins = be_pins(w, h, a.variant)
@@ -462,7 +466,7 @@ def cmd_block(a):
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*")
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff)
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -483,7 +487,7 @@ def cmd_block(a):
                f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_block(a.lat, element_io=True, ring=True)
+        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff)
         # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
@@ -592,6 +596,7 @@ def main(argv=None):
                    "bundle pin fields need the extra tracks; the parent keeps M7/M8 for the abutment hops)")
     b.add_argument("--lat", default="720", help="the block's own measured clock insertion (ps): the parent balances "
                    "internal flops, so a neighbour's flop sits at the same latency relative to this block's pin")
+    b.add_argument("--lat-ff", default=None, help="the block's FF clock insertion (ps; default 0.6 x --lat)")
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
     b.add_argument("--need", default="40")
     b.add_argument("--hold-margin", default="10", help="ORFS hold repair margin (ps); sign-off stays 25 ps at FF")
