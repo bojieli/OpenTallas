@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare pinned enabled parent sources, then guarded compute-host elaboration.
+"""Prepare pinned enabled parent sources, then guarded E2 elaboration only.
 
 Bacon owns formatter RTL; Gibbs owns parent/config. No source emission, numerical
 fixture, token simulation, implicit retry, synthesis or physical qualification.
@@ -128,19 +128,7 @@ def run(a):
     receipt=work/('post_guard.json' if a.admitted else 'pre_guard.json')
     if receipt.exists() or (not a.admitted and (work/'guard_command.json').exists()):
         raise FileExistsError('Existing admission/attempt preserved; no duplicate queued consumer')
-    if not a.admitted:
-        with (work/'supervisor.json').open('x') as claim:
-            json.dump(dict(pid=os.getpid(),host=socket.gethostname(),memory_gib=a.memory_gib,
-                           cpu_cores=a.cpu_cores,disk_reserve_bytes=a.disk_reserve_bytes),claim)
-    snap=capacity(work)
-    # The sole queued supervisor is light; do not enter the unchanged memory
-    # admission guard or launch the compiler while fresh CPU/disk/RAM fails.
-    if a.wait_for_capacity and not a.admitted:
-        with (work/'capacity_wait.jsonl').open('x') as log:
-            while not fits(snap,a):
-                log.write(json.dumps(snap)+'\n');log.flush()
-                time.sleep(30);snap=capacity(work)
-    write(receipt,snap)
+    snap=capacity(work);write(receipt,snap)
     if not fits(snap,a):print('CAPACITY_REFUSAL no compiler: '+json.dumps(snap));return 75
     if not a.admitted:
         cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--run',
@@ -156,8 +144,7 @@ def run(a):
     write(work/'command.json',cmd)
     env=dict(os.environ,TMPDIR=str(tmp))
     with (work/'elaboration.log').open('w') as log:
-        rc=subprocess.run(['/usr/bin/time','-v','-o',str(work/'resources.log'),*cmd],
-                          cwd=work/'src',env=env,stdout=log,stderr=subprocess.STDOUT).returncode
+        rc=subprocess.run(cmd,cwd=work/'src',env=env,stdout=log,stderr=subprocess.STDOUT).returncode
     (work/'frontend.exit').write_text(str(rc)+'\n')
     log=(work/'elaboration.log').read_text()
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
@@ -175,7 +162,6 @@ def main():
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
     p.add_argument('--host-kind',choices=['epyc2','agi'],default='epyc2')
-    p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
     return prepare(a.work.resolve(),a.body_sha256) if a.prepare else run(a)
