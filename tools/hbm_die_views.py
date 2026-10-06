@@ -353,6 +353,78 @@ def pad_mirror(body, orients, P=48, R=24):
                                    orients=sorted(orients))
 
 
+def bundle_real_pins(macro_text, view, k):
+    """GRT (k-bundled) master with the REAL view's pin plan: bundle pin port[j] (bits j*k .. j*k+k-1) moves to the
+    centroid of those bits' pins in the view, on the view's face for them (N/S on M5, E/W on M4), snapped to the
+    bundled track grid; bundles of one face and layer that would share a track take the nearest free track.
+    Returns (macro text, record)."""
+    from chip_assembly import v41_die as VD
+    trk = {n: (off * k, p * k) for n, d, p, wd, sp, off in VD.ASAP7_LAYERS}
+    w, h = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', macro_text).groups())
+    bits = defaultdict(dict)
+    for nm, pr in view['pins'].items():
+        mm = re.match(r'^(.*)\[(\d+)\]$', nm)
+        if not mm or not pr['rects']:
+            continue
+        ly, b = pr['rects'][0]
+        bits[mm.group(1)][int(mm.group(2))] = ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2, face_of(pr['rects'], view['w'], view['h']))
+    want = []        # (face, layer, desired coordinate along the face, pin name)
+    for pm in re.finditer(r'  PIN (\S+)\n.*?\n  END \1\n', macro_text, re.S):
+        nm = pm.group(1)
+        base, j = re.match(r'^(.*)\[(\d+)\]$', nm).groups()
+        j = int(j)
+        pts = [bits[base][i] for i in range(j * k, (j + 1) * k) if i in bits[base]]
+        if not pts:
+            continue
+        faces = defaultdict(int)
+        for _, _, f in pts:
+            faces[f] += 1
+        f = max(faces, key=faces.get)
+        f = f if f in 'NSEW' else min('NSEW', key=lambda q: dict(N=h - pts[0][1], S=pts[0][1], E=w - pts[0][0],
+                                                                    W=pts[0][0])[q])
+        c = sum(pt[0] if f in 'NS' else pt[1] for pt in pts) / len(pts)
+        want.append((f, 'M5' if f in 'NS' else 'M4', c, nm))
+    hw, depth = 0.012 * k, 0.192 * k
+    place, moved = {}, 0
+    groups = defaultdict(list)
+    for f, ly, c, nm in want:
+        groups[(f, ly)].append((c, nm))
+    for (f, ly), grp in groups.items():
+        off, p = trk[ly]
+        along = w if f in 'NS' else h
+        lo, hi = math.ceil((2 * p - off) / p), math.floor((along - 2 * p - off) / p)
+        used = set()
+        for c, nm in sorted(grp):
+            t = min(max(round((c - off) / p), lo), hi)
+            d = 0
+            while True:      # nearest free track (2-track pitch keeps bundled pins spaced like the generator's)
+                cand = [t + d, t - d] if d else [t]
+                ok = [q for q in cand if lo <= q <= hi and q not in used and q - 1 not in used and q + 1 not in used]
+                if ok:
+                    t = ok[0]
+                    break
+                d += 1
+                if d > hi - lo:
+                    raise ValueError(f'{nm}: no free bundled track on face {f}')
+            used.add(t)
+            pos = off + t * p
+            r = {'S': (pos - hw, 0.0, pos + hw, depth), 'N': (pos - hw, h - depth, pos + hw, h),
+                 'W': (0.0, pos - hw, depth, pos + hw), 'E': (w - depth, pos - hw, w, pos + hw)}[f]
+            place[nm] = (ly, r)
+    def fix(pm):
+        nonlocal moved
+        nm = pm.group(1)
+        if nm not in place:
+            return pm.group(0)
+        ly, r = place[nm]
+        moved += 1
+        return (f'  PIN {nm}\n    DIRECTION INOUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER {ly} ;\n'
+                f'        RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;\n    END\n  END {nm}\n')
+    out = re.sub(r'  PIN (\S+)\n.*?\n  END \1\n', fix, macro_text, flags=re.S)
+    return out, dict(bundle_pins_moved=moved, bundle_pins=len(re.findall(r'\n  PIN ', macro_text)),
+                     faces={f'{f}/{ly}': len(g) for (f, ly), g in groups.items()})
+
+
 def cmd_die(a):
     m, pw, M, real = model()
     views = real_views(a.index)
@@ -388,6 +460,9 @@ def cmd_die(a):
     else:
         cov = dict(H.COV)
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
+        idx = json.loads(Path(a.index).read_text())['masters']
+        mismatched = {n for n in views if idx[n].get('check', {}).get('verdict') == 'MISMATCH'}
+        pinrec = {}
         el = (work / 'elements.lef').read_text()
         for n, lef in views.items():
             r = parse_lef(lef)
@@ -406,11 +481,19 @@ def cmd_die(a):
             pat = r'(MACRO ' + re.escape(n) + r'\n.*?)\n  OBS\n.*?\n  END\n(END ' + re.escape(n) + r'\n)'
             el, k = re.subn(pat, lambda mm: mm.group(1) + '\n' + obs + '\n' + mm.group(2), el, flags=re.S)
             assert k == 1, (n, k)
+            if a.real_pins and n in mismatched:
+                mpat = r'MACRO ' + re.escape(n) + r'\n.*?\nEND ' + re.escape(n) + r'\n'
+                body = re.search(mpat, el, re.S).group(0)
+                nb, rec = bundle_real_pins(body, r, a.k)
+                el = el.replace(body, nb)
+                pinrec[n] = rec
         (work / 'elements.lef').write_text(el)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
     if a.case == 'real' and pads:
         man['mirror_pads'] = pads
+    if a.case == 'grt':
+        man['real_pin_plan'] = pinrec if a.real_pins else 'generator pins (views MATCH or --real-pins off)'
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
 
@@ -492,6 +575,8 @@ def main(argv=None):
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)
     p.add_argument('--tag', default='views')
+    p.add_argument('--real-pins', action='store_true', help='grt: bundle a MISMATCH view\'s pins at its real '
+                   'positions (default: generator positions + the view\'s obstructions)')
     p.set_defaults(fn=cmd_die)
     p = sp.add_parser('die-record')
     p.add_argument('--round', required=True)
