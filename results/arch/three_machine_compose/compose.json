@@ -265,20 +265,20 @@
     "cls": "adopted",
     "verdict": "ADOPT (closed SS60/FF25, exact 5/5)",
     "record": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
-    "variant": "r5b_f3ba",
-    "ss_ps": 0.87,
-    "ff_ps": 7.12,
+    "variant": "r5_f2ba",
+    "ss_ps": 6.27,
+    "ff_ps": 6.92,
     "delta": {
-     "cycles": 112,
-     "AR_tok_s": -3.571
+     "cycles": 0,
+     "AR_tok_s": 0.0
     }
    }
   },
-  "token_cycles": 194067,
-  "AR_us": 161.722,
-  "AR_tok_s": 6183.4,
+  "token_cycles": 193955,
+  "AR_us": 161.629,
+  "AR_tok_s": 6187.0,
   "MTP_mode": "AR (DSpark OFF)",
-  "MTP_tok_s": 6183.4,
+  "MTP_tok_s": 6187.0,
   "dspark_reference": {
    "tok_s": 4346.2,
    "speedup_vs_ar": 0.704,
@@ -289,7 +289,7 @@
   "physical_qualified_full_system": false,
   "inputs": {
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
-   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "3f8cfd196f4c6e2809cb4373ccc64359b9de7473124731f1f8d51735746fa01d",
+   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
    "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0"
   }
  },
@@ -459,7 +459,7 @@
    "results/rtl/dsrom_recovery_20261004/composition.json": "e9bbdf719687984f078effffbc49ad3fbfb744642b13d428a12f6c932339e4cb"
   },
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
-  "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "3f8cfd196f4c6e2809cb4373ccc64359b9de7473124731f1f8d51735746fa01d",
+  "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
