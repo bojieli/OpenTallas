@@ -11616,7 +11616,7 @@ def hbm_swiglu_w2_private_join_model():
     return result
 
 
-def dsrom_protected_vm_model():
-    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
-    from dsrom_protected_vm import model
-    return model()
+def dsrom_protected_vm_model(distributed_cmd=False):
+    """Finite protected xa/xb VM; optional registered macro command service."""
+    from dsrom_protected_vm import model, distributed_model
+    return distributed_model() if distributed_cmd else model()
