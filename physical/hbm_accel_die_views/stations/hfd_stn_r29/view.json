@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_stn_r29",
+ "kind": "stations",
+ "status": "closed",
+ "lef": "hfd_stn_r29.lef",
+ "lib": {
+  "ss": "hfd_stn_r29_ss.lib",
+  "ff": "hfd_stn_r29_ff.lib"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "positions": "exact",
+  "problems": [],
+  "obs_layers": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7",
+   "RVTN",
+   "RVTP"
+  ],
+  "pg_pins": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M6",
+    "M7"
+   ]
+  }
+ },
+ "source": {
+  "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r29",
+  "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+  "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r29 top=physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv DW=60.456 DH=64.776 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+  "exit": [
+   "rc=0",
+   "corner_rc=0",
+   "export_rc=0",
+   "check_rc=0"
+  ],
+  "ss_setup_ps": 25.1,
+  "ff_hold_ps": 473.64,
+  "drc": 0,
+  "closes_signoff": true,
+  "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv",
+  "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc",
+  "generator": "tools/hbm_die_station_gen.py"
+ },
+ "bench": {
+  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench6/hfd_stn_r29",
+  "simulator": "verilator (tools/hbm_die_station_bench.py)",
+  "positive": {
+   "verdict": "PASS",
+   "checked_bits": 301940,
+   "mismatches": 0,
+   "latency_periods": {
+    "a[975]<-b[975]": 1,
+    "b[974]<-a[974]": 1
+   }
+  },
+  "mutant": {
+   "verdict": "FAIL",
+   "mismatches": 28
+  }
+ },
+ "size_um": [
+  60.456,
+  64.776
+ ],
+ "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
+ "sha256": {
+  "hfd_stn_r29.lef": "5ea786f69c95e29df5349571f5bfb0208055b61612a670fd2391e8cf4ef44315",
+  "hfd_stn_r29_ss.lib": "378282824932af80e33750e6991fd2be79332f49cdc86a59ab9052e953546e7c",
+  "hfd_stn_r29_ff.lib": "58d5f48b8eb7c882a68b70ad6b21f94aceef0f593186edefa09dbc14a3706eb6"
+ },
+ "defects": []
+}
