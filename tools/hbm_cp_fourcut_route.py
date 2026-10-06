@@ -94,6 +94,19 @@ def main():
         argv += ['--param','SU_CONTROL_TAIL_CUT=1','--orfs-var','MAX_PLACE_STEP_COEF=1.01']
         argv[argv.index('--place-density')+1]='0.55'
         argv[argv.index('--nickname-tag')+1]='harvey_cp_control_tail_context_r1'
+        access=inputs['finite_pin_via_repair_contract']
+        assert sha(ROOT/access['allocation_path'])==access['allocation_sha256']
+        canonical_access=json.loads((ROOT/access['allocation_path']).read_text())
+        assert canonical_access['allocation_accepted'] and canonical_access['conditional_defect_hunt_ready']
+        assert canonical_access['used']==236 and canonical_access['private_factor_bits']==12
+        for path,digest in canonical_access['hashes'].items():
+            assert sha(ROOT/path)==digest, 'Canonical access dependency changed: '+path
+        assert access['all_pins']==236 and access['minimum_pitch_um']==0.128
+        for path,digest in access['hooks_sha256'].items():
+            assert sha(ROOT/path)==digest, 'Pin access hook changed: '+path
+        index=argv.index('--step-tcl')+1
+        assert argv[index]=='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
+        argv[index]='POST_IO_PLACEMENT=physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl'
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     if finite:
@@ -142,7 +155,9 @@ def main():
     if args.control_tail:
         record.update(control_tail=True,explicit_modeled_density=0.55,gpl_max_phi_coef=1.01,
             physical_ready=inputs.get('finite_pin_via_repair_ready',False),
-            physical_blocker=model['physical_blocker'])
+            physical_blocker=None if inputs.get('finite_pin_via_repair_ready',False) else 'Turing canonical CP236 pin-access acceptance pending',
+            pin_access=inputs['finite_pin_via_repair_contract'],pins_changed=True,
+            parent_IR_budget_conditional=True)
         if not args.prepare_only and not record['physical_ready']:
             raise ValueError(record['physical_blocker'])
     if args.gpl_repair:
