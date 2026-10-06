@@ -791,11 +791,11 @@ module ot_rom_pkg_ctrl_wfc #(
     generate if (SLEW_COPY) begin : g_slew_copy
         (* keep *) reg [UGB-1:0] hi_c [0:NLC-1];
         (* keep *) reg [NW-1:0]  inc_c [0:NLC-1];
-        integer hc;
+        integer hc, ic;   // one loop variable per always block
         always @(posedge clk or negedge rst_q)
             if (!rst_q) begin for (hc = 0; hc < NLC; hc = hc + 1) hi_c[hc] <= {UGB{1'b0}}; end
             else if (rx_hdr) begin for (hc = 0; hc < NLC; hc = hc + 1) hi_c[hc] <= UGB'(in_user >> 5); end
-        always @(posedge clk) for (hc = 0; hc < NLC; hc = hc + 1) inc_c[hc] <= hdr_pos_increment;
+        always @(posedge clk) for (ic = 0; ic < NLC; ic = ic + 1) inc_c[ic] <= hdr_pos_increment;
         for (sgi = 0; sgi < UNG; sgi = sgi + 1) begin : g_s
             assign ug_inc[sgi] = PRECOMP ? inc_c[sgi / 4] : hdr_pos_increment;
             always @(*) gsel_d[sgi] = hi_c[sgi / 4] == UGB'(sgi);
@@ -1801,10 +1801,10 @@ module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D 
     assign l_ready = rdy;
     wire ne = cnt != 0;
     reg [W-1:0] qh;
-    integer i;
+    integer i, j;   // one loop variable per always block
     always @(*) begin
         qh = {W{1'b0}};
-        for (i = 0; i < D; i = i + 1) if (rp[i]) qh = qh | q[i];
+        for (j = 0; j < D; j = j + 1) if (rp[j]) qh = qh | q[j];
     end
     assign c_valid = ne || pvl;
     assign c_data = ne ? qh : pd;
