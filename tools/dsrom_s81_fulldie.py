@@ -2036,8 +2036,8 @@ def where(m, x, y):
 #               a 47.52 um return-stage sub-column per frame.
 # Owner-block interfaces (VM, SU, HC, gather, capture, collective, selector, collector, scan service, controller, BF,
 # NV5) stay placeholders with the port lists below; FINDINGS in results/rtl/dsrom_s81_fulldie_20261004/r8/.
-TIER_COLS8 = (9, 11, 12, 12, 11, 9)
-SPF = 259.2                         # spine <-> field column 0 channel (S14)
+TIER_COLS8 = (10, 11, 11, 11, 11, 10)
+SPF = 518.4                         # spine <-> field column 0 channel (S14; 259.2 overflowed: W chains + VM pins)
 RSC_W = 47.52                       # return-stage sub-column of the node strip
 COL_W8 = 2 * LANE_W + NS_W + RSC_W  # 1,182.816
 COL_PITCH8 = COL_W8 + 8.64
@@ -2778,7 +2778,8 @@ def buses_r8(m):
         if half == 'W':
             p0 = [src_xy, (s14x['W'], src_xy[1])]
         else:
-            p0 = [src_xy, (src_xy[0], corr_c(m)), (s14x['E'], corr_c(m))]
+            cy_ = corr_y(m, f'x{dirn}')
+            p0 = [src_xy, (src_xy[0], cy_), (s14x['E'], cy_)]
         for dirn, tiers in (('dn', [2, 1, 0]), ('up', [3, 4, 5])):
             ys = [g['ch_y'][t] + rowx + 15.0 for t in tiers]
             path = _dedup(p0 + [(s14x[half], y_) for y_ in ys])
@@ -2820,7 +2821,8 @@ def buses_r8(m):
             if half == 'W':
                 path += [(s14x['W'], gy)]
             else:
-                path += [(s14x['E'], corr_c(m)), (x_vch + VCH8 / 2, corr_c(m)), (x_vch + VCH8 / 2, gy)]
+                cy_, vx_ = corr_y(m, f'r{t}'), vch_x(m, f'r{t}')
+                path += [(s14x['E'], cy_), (vx_, cy_), (vx_, gy)]
             path = _dedup(path)
             forced = [abs(xs_[-1] - x_) for x_ in xs_[::-1]]
             lanes_at = []
@@ -2901,6 +2903,28 @@ def buses_r8(m):
             merged.append(b)
     m['buses'] = merged
     return m
+
+
+LANES_VCH, LANES_CORR = 26, 16
+
+
+def vch_x(m, tag):
+    """per-chain x track inside the VCH (spreads the vertical chains over its width instead of one centre line)"""
+    d = m.setdefault('_vch_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_VCH
+    return m['x_vch'] + 60.0 + (VCH8 - 120.0) * (i + 0.5) / LANES_VCH
+
+
+def corr_y(m, tag):
+    """per-chain y track inside the HC crossing corridor"""
+    d = m.setdefault('_corr_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    i = d[tag] % LANES_CORR
+    c0, c1 = m['corridor']
+    return c0 + 60.0 + (c1 - c0 - 120.0) * (i + 0.5) / LANES_CORR
 
 
 def corr_c(m):
@@ -3007,7 +3031,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         return 'W' if st[1] == 'W' else 'E'
 
     def spine_x(side):
-        return s14W if side == 'W' else vchx
+        return s14W if side == 'W' else vch_x(m, f'svc{side}{len(m.get("_vch_lane", {}))}')
 
     def face_pt(sv, off):
         """(x, y) on the svc's field-facing edge, `off` from its east end"""
@@ -3075,7 +3099,8 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 path = [(px, py), (px, strip_y(sv)), (ex_, strip_y(sv)), (ex_, he.y + he.h / 2)]
             else:                                                      # across the die through the VCH
                 yo = yS if blk.y < DIE[1] / 2 else yN
-                path = [(px, py), (px, strip_y(sv)), (vchx, strip_y(sv)), (vchx, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
+                vx_ = vch_x(m, f'{tag}{st}')
+                path = [(px, py), (px, strip_y(sv)), (vx_, strip_y(sv)), (vx_, yo), (ex_, yo), (ex_, he.y + he.h / 2)]
             single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)
             CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(he.name, 'o'), (blk.name, f'{port}{st}')])
     # selector / collector -> VM (ratio CDC beside the VM, VCH side)
@@ -3086,7 +3111,8 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         bx = blk.x + blk.w / 2 + 300.0
         by_ = blk.y + blk.h if name == 'sel' else blk.y
         single(name, 512, 'vr', (blk.name, 'vf', 'vd'), (bx, by_),
-               [(bx, by_), (bx, yo), (vchx, yo), (vchx, he.y + he.h / 2), (he.x + he.w / 2, he.y + he.h / 2)], he)
+               [(bx, by_), (bx, yo), (vch_x(m, name), yo), (vch_x(m, name), he.y + he.h / 2),
+                (he.x + he.w / 2, he.y + he.h / 2)], he)
         CH8.bus(f'h{name}_o', 'local', 515, [(he.name, 'o'), (vm.name, name)])
 
 
@@ -3114,10 +3140,12 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         lx = lk.x + lk.w if side == 'W' else lk.x
         yy = cy + (i - 1.5) * 90.0
         cx = coll.x if side == 'W' else coll.x + coll.w
+        nm = f'K{side}{i}'
         if side == 'W':
             core = [(cx, yy), (s14['W'], yy), (s14['W'], ry)]
         else:
-            core = [(cx, yy), (vchx, yy), (vchx, corr_c(m)), (s14['E'], corr_c(m)), (s14['E'], ry)]
+            vx_, cy_ = vch_x(m, nm), corr_y(m, nm)
+            core = [(cx, yy), (vx_, yy), (vx_, cy_), (s14['E'], cy_), (s14['E'], ry)]
         path = _dedup(core + [(edge[side], ry), (edge[side], ly), (lx, ly)])
         nm = f'K{side}{i}'
         # tx: collective -> macro tx (raw 512); the macro's parallel clock is the chain's forwarded clock
