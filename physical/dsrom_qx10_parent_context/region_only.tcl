@@ -28,7 +28,7 @@ foreach region [$block getRegions] {
     }
     set bounds [$region getBoundaries]
     if {[llength $bounds]!=1} {error "fence has unexpected geometry"}
-    set box [[lindex $bounds 0] getBox]
+    set box [lindex $bounds 0]
     set coords [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]]
     set expected {}
     foreach x [dict get $expected_regions $name] {lappend expected [expr {round($x*$units)}]}
