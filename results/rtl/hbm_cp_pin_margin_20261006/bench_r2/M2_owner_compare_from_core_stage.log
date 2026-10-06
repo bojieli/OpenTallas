@@ -1,0 +1,4 @@
+MISMATCH cyc=898 new=024c0000004e238e6c4f2c11f2eff9 orig_d=005c0000004e238e6c4f2c11f2eff9 diff=021000000000000000000000000000
+EXACT checks=96581 mismatches=115 first=898 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139
+FAIL
+rtl/test/hbm_accel/cp_pin_margin_20261006/tb_cp_pin_margin_exact.sv:140: $finish called at 1011405000 (1ps)

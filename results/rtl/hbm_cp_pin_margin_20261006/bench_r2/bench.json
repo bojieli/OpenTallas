@@ -1,0 +1,154 @@
+{
+ "schema": "hbm.cp.pin-margin.bench.v1",
+ "source_sha256": {
+  "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "fcd6c1b7a7d244e80d56857eae9b414e388ef873c0273f1c6ff93354320b0760",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "cd97f7cdca3c5d701949c91f829e9376bdc4f3474c788b24e67f7f1be9813ff9",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "2423b70ed5e126220b70857ff90390c7042fe82e697af1753c4668ecb5780a53",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+  "rtl/test/hbm_accel/cp_pin_margin_20261006/tb_cp_pin_margin_exact.sv": "f6823fe55a28e7b6cbab7694fc188378c4c1fbc6acde5431d7132df82383c2a9",
+  "rtl/test/hbm_accel/cp_pin_margin_20261006/tb_cp_pin_margin_loop.sv": "e753d2fb293a17eae4768241f6f37c6a8bf28a6d246b8936905e5ef98e0f3150"
+ },
+ "cycles": 400000,
+ "ntx": 3000,
+ "seeds": [
+  1,
+  7
+ ],
+ "results": [
+  {
+   "name": "E_seed1",
+   "kind": "exact",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "EXACT checks=385499 mismatches=0 first=-1 launches=6190 native=2136 leases=1956 release_accepts=1375 done=1342 fault_cycles=191520 upsets=788 owner_changes=939 revokes=123 shared_faults=145 exec_faults=71 raw_cycles=1476 resets=4833"
+  },
+  {
+   "name": "E_seed7",
+   "kind": "exact",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "EXACT checks=384850 mismatches=0 first=-1 launches=6473 native=2088 leases=2021 release_accepts=1436 done=1418 fault_cycles=202699 upsets=835 owner_changes=991 revokes=118 shared_faults=138 exec_faults=58 raw_cycles=1244 resets=5049"
+  },
+  {
+   "name": "M1_fault_final_validity_dropped",
+   "kind": "exact",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "EXACT checks=96581 mismatches=22 first=6795 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139"
+  },
+  {
+   "name": "M2_owner_compare_from_core_stage",
+   "kind": "exact",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "EXACT checks=96581 mismatches=115 first=898 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139"
+  },
+  {
+   "name": "M3_shared_fault_one_stage",
+   "kind": "exact",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "EXACT checks=96581 mismatches=43 first=6290 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139"
+  },
+  {
+   "name": "M4_executor_debt_bypass_dropped",
+   "kind": "exact",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "EXACT checks=96581 mismatches=18 first=6795 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139"
+  },
+  {
+   "name": "M5_owned_final_validity_dropped",
+   "kind": "exact",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "EXACT checks=96581 mismatches=17 first=6795 launches=1457 native=468 leases=467 release_accepts=322 done=316 fault_cycles=45348 upsets=197 owner_changes=241 revokes=29 shared_faults=33 exec_faults=15 raw_cycles=375 resets=1139"
+  },
+  {
+   "name": "L1_orig_nofault",
+   "kind": "loop",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "LOOP PIN=0 REPLAY=0 FAULTS=0 tx=3000 done=3000 bad_frame=0 cp_fault=0 arb_fault_cycles=0 assoc_fault_cycles=0 timeouts=0 w2_leases=650 req=4599 rsp=4599 release_r_low_while_v=989 max_tx_cycles=92 sum_tx_cycles=141554 injected=0 detected=0 late=0 done_after_fault=0"
+  },
+  {
+   "name": "L2_pin_replay_nofault",
+   "kind": "loop",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "LOOP PIN=1 REPLAY=1 FAULTS=0 tx=3000 done=3000 bad_frame=0 cp_fault=0 arb_fault_cycles=0 assoc_fault_cycles=0 timeouts=0 w2_leases=812 req=4586 rsp=4586 release_r_low_while_v=932 max_tx_cycles=107 sum_tx_cycles=185397 injected=0 detected=0 late=0 done_after_fault=0"
+  },
+  {
+   "name": "L3_pin_noreplay_nofault_NEG",
+   "kind": "loop",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "LOOP HANG tx=9 done=8"
+  },
+  {
+   "name": "L4_orig_faults",
+   "kind": "loop",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "LOOP PIN=0 REPLAY=0 FAULTS=1 tx=3000 done=2581 bad_frame=0 cp_fault=419 arb_fault_cycles=531 assoc_fault_cycles=0 timeouts=0 w2_leases=526 req=4280 rsp=4260 release_r_low_while_v=860 max_tx_cycles=96 sum_tx_cycles=119254 injected=419 detected=419 late=0 done_after_fault=0"
+  },
+  {
+   "name": "L5_pin_replay_faults",
+   "kind": "loop",
+   "expect": "PASS",
+   "verdict": "PASS",
+   "ok": true,
+   "summary": "LOOP PIN=1 REPLAY=1 FAULTS=1 tx=3000 done=2499 bad_frame=0 cp_fault=502 arb_fault_cycles=522 assoc_fault_cycles=0 timeouts=0 w2_leases=680 req=4243 rsp=4215 release_r_low_while_v=791 max_tx_cycles=110 sum_tx_cycles=153163 injected=502 detected=502 late=0 done_after_fault=0"
+  },
+  {
+   "name": "L6_pin_replay_faults_bound2_NEG",
+   "kind": "loop",
+   "expect": "FAIL",
+   "verdict": "FAIL",
+   "ok": true,
+   "summary": "LOOP PIN=1 REPLAY=1 FAULTS=1 tx=3000 done=2499 bad_frame=0 cp_fault=502 arb_fault_cycles=522 assoc_fault_cycles=0 timeouts=0 w2_leases=680 req=4243 rsp=4215 release_r_low_while_v=791 max_tx_cycles=110 sum_tx_cycles=153163 injected=502 detected=502 late=381 done_after_fault=0"
+  }
+ ],
+ "all_expected": true,
+ "mutants": {
+  "M1_fault_final_validity_dropped": {
+   "file": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+   "old": "assign fault=fault_g||!v_final;",
+   "new": "assign fault=fault_g;"
+  },
+  "M2_owner_compare_from_core_stage": {
+   "file": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+   "old": "assign in_core=in_q2;assign in_next=in_q1;",
+   "new": "assign in_core=in_q2;assign in_next=in_q2;"
+  },
+  "M3_shared_fault_one_stage": {
+   "file": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+   "old": "assign in_core=in_q2;assign in_next=in_q1;",
+   "new": "assign in_core={in_q2[IW-1:1],in_q1[0]};assign in_next=in_q1;"
+  },
+  "M4_executor_debt_bypass_dropped": {
+   "file": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+   "old": "assign exec_owned=phase_valid?executor_g:(associated&&raw_grant&&!rails_bad);",
+   "new": "assign exec_owned=executor_g&&phase_valid;"
+  },
+  "M5_owned_final_validity_dropped": {
+   "file": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+   "old": "assign owned=owned_g&&v_final;",
+   "new": "assign owned=owned_g;"
+  }
+ }
+}
