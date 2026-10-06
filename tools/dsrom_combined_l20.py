@@ -408,7 +408,8 @@ def cmd_field(a):
     plan = Path(a.plan_base if cfg["plan"] == "base" else a.plan_pq)
     if cfg["qelem"]:
         defs = work / "qelem_defines.sv"
-        defs.write_text(f"`define OT_PAIR_PQ_QELEM 1\n`define OT_PAIR_PQ_QXV {cfg['qelem']}\n")
+        defs.write_text(f"`define OT_PAIR_PQ_QELEM 1\n`define OT_PAIR_PQ_QXV {cfg['qelem']}\n"
+                        f"`define OT_PAIR_PQ_QW {os.environ.get('OT_PQQ_QW', '0')}\n")
         FS.DIE = [defs] + [SWAP_PAIR if p.name == "ot_v41_pair_pq_w17w10.sv" else p for p in FS.DIE] + list(F1.QRTL)
         FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
     status = dict(cfg=a.cfg, **cfg, plan_dir=str(plan))
