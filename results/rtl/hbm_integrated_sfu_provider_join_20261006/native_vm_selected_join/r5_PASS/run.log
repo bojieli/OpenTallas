@@ -1,0 +1,8 @@
+SFU_NATIVE_CHECKED_PUBLICATION cycles=130 reads=8 writes=0 full73=1fffff00019ca001234
+SFU_NATIVE_SRAM_READBACK block=0 cycles=134 addr=64 full73=1fffff00019ca001234
+SFU_NATIVE_SRAM_READBACK block=1 cycles=140 addr=96 full73=1fffff00019ca001234
+SFU_NATIVE_VM_JOIN_PASS 64FP32 actual32SRAM checked2ACK CP8READ zeroCPwrite full73 warm jointretire
+- /srv/opentallas-scratch/codex/hbm-native-sfu-16edbfae1/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:150: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 237ns; walltime 1.205 s; speed 196.445 ns/s
+- Verilator: cpu 1.205 s on 1 threads; allocated 629 MB
