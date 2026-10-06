@@ -1,0 +1,254 @@
+{
+  "owner": "Codex/Dirac item9",
+  "observed_UTC": "2026-10-06T04:24:06.804780+00:00",
+  "source_commit": "090bd3652350efbe578d644fa1ae19e6469c1ab7",
+  "route_root": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1",
+  "containers": [
+    {
+      "id": "26a098e8aad8f60561ca5f24b1d15240f5172b36c3fd12d7031e9b3f413d8f79",
+      "running": true,
+      "pid": 1345292,
+      "source_bound_to_route_root": true,
+      "mounts": [
+        {
+          "source": "/srv/opentallas/repos/codex-item9-20261005",
+          "destination": "/src"
+        },
+        {
+          "source": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs",
+          "destination": "/work"
+        }
+      ]
+    }
+  ],
+  "verdict": "LIVE_ROUTE_NO_FINAL_SSFF_VERDICT",
+  "reports": [
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/5_1_grt.tmp.log",
+      "bytes": 107913,
+      "sha256": "437947617a916d85db5b0505a0c154fc16545bb96df2989e795134f525b27b15",
+      "corner": "WC_INTERMEDIATE_NOT_FINAL_SSFF",
+      "classes": [],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": {
+        "iteration": 1120,
+        "worst_ps": -716.059,
+        "tns_ps": -5777681.0,
+        "endpoint": "data[4082]$_DFF_P_/D"
+      }
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/2_floorplan_final.rpt",
+      "bytes": 16500,
+      "sha256": "16b6d0cf9efac04493e5d6078cdd4952ede1c59086ad6831a88a14c92b0770cd",
+      "corner": null,
+      "classes": [],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": null
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/3_detailed_place.rpt",
+      "bytes": 31687,
+      "sha256": "9e054badfb14dff43e00c19c131f8fe78ecffd67ebaf86e6a4edbc2e1d224bb5",
+      "corner": null,
+      "classes": [
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -422.11,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.g_txs[8].g_on.g_mask_la.g_word[1].g_byte[0].u_mask_bit/q$_DFF_PN0_",
+            "slack_ps": -422.11
+          }
+        },
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.dmask[*]$_DFFE_PP_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -395.96,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.dmask[63]$_DFFE_PP_",
+            "slack_ps": -395.96
+          }
+        },
+        {
+          "start_class": "u_ep.g_on.sw[*]$_DFFE_PN0P_",
+          "end_class": "u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -342.86,
+          "example": {
+            "start": "u_ep.g_on.sw[2]$_DFFE_PN0P_",
+            "end": "u_ep.g_on.g_txs[6].g_on.g_mask_la.g_word[3].g_byte[1].u_mask_bit/q$_DFF_PN0_",
+            "slack_ps": -342.86
+          }
+        }
+      ],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": null
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/3_global_place.rpt",
+      "bytes": 22513,
+      "sha256": "35c80b13410c855d361f094bae20189cb9ab061dd6acbccd5d079f8f6cfdb6b8",
+      "corner": null,
+      "classes": [
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.g_rxs[*].g_on.u_d/q[*]$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -427.97,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.g_rxs[1].g_on.u_d/q[481]$_DFF_PN0_",
+            "slack_ps": -427.97
+          }
+        },
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.dmask[*]$_DFFE_PP_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -408.8,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.dmask[63]$_DFFE_PP_",
+            "slack_ps": -408.8
+          }
+        }
+      ],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": null
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/3_resizer.rpt",
+      "bytes": 31380,
+      "sha256": "7401d7689056d4403c0bd4870f08b6fe2c03d8f2936a01978ef30d890f9231ee",
+      "corner": null,
+      "classes": [
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -424.15,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.g_txs[8].g_on.g_mask_la.g_word[1].g_byte[0].u_mask_bit/q$_DFF_PN0_",
+            "slack_ps": -424.15
+          }
+        },
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.dmask[*]$_DFFE_PP_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -408.8,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.dmask[63]$_DFFE_PP_",
+            "slack_ps": -408.8
+          }
+        },
+        {
+          "start_class": "u_ep.g_on.sw[*]$_DFFE_PN0P_",
+          "end_class": "u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -362.28,
+          "example": {
+            "start": "u_ep.g_on.sw[2]$_DFFE_PN0P_",
+            "end": "u_ep.g_on.g_txs[6].g_on.g_mask_la.g_word[6].g_byte[3].u_mask_bit/q$_DFF_PN0_",
+            "slack_ps": -362.28
+          }
+        }
+      ],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": null
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts_final.rpt",
+      "bytes": 68793,
+      "sha256": "7b675d50fa2e6c6c1b47544c9fd632f8dee1d9c6ba76a99758b00d88f0befd22",
+      "corner": "WC_INTERMEDIATE_NOT_FINAL_SSFF",
+      "classes": [
+        {
+          "start_class": "i_data[*]",
+          "end_class": "data[*]$_DFF_P_",
+          "path_type": "min",
+          "reported_unique_paths": 1,
+          "worst_ps": -803.83,
+          "example": {
+            "start": "i_data[3803]",
+            "end": "data[3803]$_DFF_P_",
+            "slack_ps": -803.83
+          }
+        },
+        {
+          "start_class": "o_rsp_data[*]$_DFF_P_",
+          "end_class": "o_rsp_data[*]",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -708.65,
+          "example": {
+            "start": "o_rsp_data[3583]$_DFF_P_",
+            "end": "o_rsp_data[3583]",
+            "slack_ps": -708.65
+          }
+        },
+        {
+          "start_class": "u_ep.g_on.sw[*]$_DFFE_PN0P_",
+          "end_class": "u_ep.g_on.g_txs[*].g_on.g_mask_la.g_word[*].g_byte[*].u_mask_bit/q$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -370.23,
+          "example": {
+            "start": "u_ep.g_on.sw[2]$_DFFE_PN0P_",
+            "end": "u_ep.g_on.g_txs[6].g_on.g_mask_la.g_word[3].g_byte[1].u_mask_bit/q$_DFF_PN0_",
+            "slack_ps": -370.23
+          }
+        },
+        {
+          "start_class": "rst_n",
+          "end_class": "u_ep.g_on.g_rxs[*].g_on.u_d/q[*]$_DFF_PN0_",
+          "path_type": "max",
+          "reported_unique_paths": 1,
+          "worst_ps": -197.86,
+          "example": {
+            "start": "rst_n",
+            "end": "u_ep.g_on.g_rxs[7].g_on.u_d/q[94]$_DFF_PN0_",
+            "slack_ps": -197.86
+          }
+        },
+        {
+          "start_class": "u_ep.g_on.g_rxs[*].g_on.a_q[*]$_DFFE_PN0P_",
+          "end_class": "o_rsp_data[*]$_DFF_P_",
+          "path_type": "min",
+          "reported_unique_paths": 1,
+          "worst_ps": -6.22,
+          "example": {
+            "start": "u_ep.g_on.g_rxs[1].g_on.a_q[88]$_DFFE_PN0P_",
+            "end": "o_rsp_data[344]$_DFF_P_",
+            "slack_ps": -6.22
+          }
+        }
+      ],
+      "class_counts_cover_reported_paths_only": true,
+      "latest_native_setup_repair": null
+    }
+  ],
+  "existing_records": {},
+  "SS_setup_ps": null,
+  "FF_hold_ps": null,
+  "parent_context_qualified": false,
+  "caller_loaded_context_obligation_retained": true,
+  "adopted": false,
+  "no_tool_or_gate_rerun": true,
+  "no_live_job_changed": true
+}
