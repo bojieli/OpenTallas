@@ -1,0 +1,19 @@
+{
+  "verdict": "FAIL_PREMATURE_FIXTURE_NATIVE_DONE",
+  "runtime_rc": 1,
+  "cycle": 226,
+  "actual_fault": {
+    "sink": 1,
+    "sector": 0,
+    "owner": 0,
+    "cdc": 0,
+    "reset": 0,
+    "caller": 0,
+    "sink_state": 17,
+    "caller_cnt": 1,
+    "caller_row": 1,
+    "operation": 1,
+    "result_v": 1
+  },
+  "cause": "Fixture pulsed native_done after raw producer row four, before three actual caller output registers delivered final callback. Source sink correctly denied a result after finished. Hold native_done until true last callback capture; no extra RTL delay or owner waiver."
+}

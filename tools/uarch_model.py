@@ -9202,11 +9202,8 @@ def hbm_w2_publication_model():
         raise ValueError('W2 minimum actual-shape terminal changed')
     parent_context_path = root / 'results/rtl/hbm_die_takeover_20261005/selected_parent_context.json'
     parent_context = json.loads(parent_context_path.read_text())
-    # Actual owner context is explicit about missing child allocation/loaded CTS.
-    if (parent_context['W2']['usable_slot_bbox_um'] is not None
-        or parent_context['channels']['available_W2_tracks'] is not None
-        or parent_context['clock']['actual_parent_clock_constraint'] is not None):
-        raise ValueError('W2 owner binding changed: consume actual allocation before admission')
+    # This older NULL context remains immutable history. The actual minimum
+    # source parent below now supersedes it for source/geometry composition.
     finite_path = inputs / 'finite_child_d7f4a688e.json'
     finite = json.loads(finite_path.read_text())
     child = finite['W2']
@@ -9217,6 +9214,102 @@ def hbm_w2_publication_model():
     if child['residual_cell_capacity_um2'] < 0:
         raise ValueError('finite W2 child body/CTS/IO/hold budget does not fit')
     paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json', parent_context_path, finite_path]
+    # One additive source successor: replace inherited raw mutable registers,
+    # retain AW3/SYNC2 and install the reserved two SM-domain elastic cuts per
+    # direction. Price actual encoded state and every repair register first.
+    # Each protected bank adds five W6 controller/snapshot/mask words and a
+    # fail-closed complementary sticky-fault pair; no independent TMR credit.
+    bank_bits = lambda words: (words + 5) * 72 + 2
+    parent_protection = dict(
+        default=0, parameter='PROTECTED_PARENT_BOUNDARY',
+        sector_raw_state_bits=3046, sector_words=48,
+        sector_protected_FF_bits=bank_bits(48),
+        caller_join_raw_state_bits=851, caller_join_words=14,
+        caller_output_stages=3, caller_stage_raw_bits=272, caller_stage_words=5,
+        caller_inactive_payload_mux_bits=264, caller_empty_fence_NAND2_allowance=8,
+        caller_protected_FF_bits=bank_bits(14) + 3 * bank_bits(5),
+        gateway_request_stages=2, gateway_response_stages=2,
+        gateway_protected_FF_bits=2 * bank_bits(6) + 2 * bank_bits(5),
+        CDC_depth=8, CDC_SYNC=2, CDC_request_encoded_width=432,
+        CDC_response_encoded_width=360,
+        CDC_memory_FF_bits=8 * (432 + 360),
+        CDC_pointer_banks=4, CDC_pointer_FF_bits=4 * bank_bits(1),
+        CDC_head_FF_bits=bank_bits(6) + bank_bits(5),
+        CDC_Gray_complement_and_synchronizer_bits=96,
+        CDC_new_owner_ledgers=0,
+        CE_repair_edges=5,
+        CE_permission='check plus raw extraction on normal path; snapshot/mask/apply/recheck/scrub off normal path',
+        CE_readyless_condition='freeze existing caller pipeline; a new readyless result while frozen faults closed and retains accepted owner/debt, never releases or successful CPL',
+        added_gateway_roundtrip_edges=4,
+        added_gateway_edges_for_8_publication_transactions=32,
+        CDC_head_capture_edges_each_direction=2,
+        added_CDC_roundtrip_edges=4,
+        added_domain_edges_per_publication_transaction=dict(clk_sm=6,clk_mem=2),
+        added_nominal_ns_per_publication_transaction=6*.8333333333333334+2*1.024,
+        nominal_ns_is_not_a_loaded_clock_or_rate_claim=True,
+        added_CDC_edges_for_8_publication_transactions=32,
+        added_serial_publication_edges_bound=64,
+        calendar_scope='8 selected publication requests; native212 sector transactions may overlap producer work, require actual connected measurement',
+        clk_sm_period_ps=833.3333333333334,
+        clk_mem_period_ps=1024,
+        clk_mem_source='results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc clk_hbm; bind top clk_mem to existing HBM-service domain, not fixture1ns',
+        asynchronous_domains=True,
+        extra_memory_ports=0, extra_boundary_signal_bits=0,
+        gate_passed=False, physical_qualified=False)
+    parent_protection['CDC_protected_FF_bits'] = sum(parent_protection[k] for k in
+        ['CDC_memory_FF_bits','CDC_pointer_FF_bits','CDC_head_FF_bits','CDC_Gray_complement_and_synchronizer_bits'])
+    parent_protection['protected_context_FF_bits'] = ff + 3888 + 72 + sum(parent_protection[k] for k in
+        ['sector_protected_FF_bits','caller_protected_FF_bits','gateway_protected_FF_bits','CDC_protected_FF_bits'])
+    parent_protection['added_FF_bits_vs_prepared_context'] = parent_protection['protected_context_FF_bits'] - 19239
+    # Reuse the one existing codec estimate. Charge every spatial encode/check
+    # bank word, including the protected repair state. Actual mapping replaces
+    # this upper bound; there is no alias/TMR saving or free inherited FF.
+    non_sink_words = 54 + 1 + (48+5) + (14+5) + 3*(5+5) + 2*(6+5) + 2*(5+5) + 8*(6+5) + 4*(1+5) + (6+5)+(5+5)
+    non_sink_ff = parent_protection['protected_context_FF_bits'] - ff
+    parent_protection['non_sink_codec_word_allowance'] = non_sink_words
+    parent_protection['non_sink_cell_body_upper_bound_um2'] = non_sink_ff*.2916 + non_sink_words*codec['pair_cell_body_um2'] + math.ceil(non_sink_ff/7)*.10206
+    parent_protection['source_mux_bit_allowance'] = 11988 + 1575 + 264 + 1220 + 3744
+    parent_protection['non_sink_cell_body_upper_bound_um2'] += parent_protection['source_mux_bit_allowance']*.2 + 8*.10206
+    parent_protection['gateway_cell_body_budget_um2'] = json.loads((root / 'results/rtl/hbm_child_contract_20261005/child_reservations.json').read_text())['gateway_cell_area_budget_um2']
+    gateway_ff = parent_protection['gateway_protected_FF_bits']
+    parent_protection['gateway_cell_body_upper_bound_um2'] = gateway_ff*.2916 + 42*codec['pair_cell_body_um2'] + math.ceil(gateway_ff/7)*.10206 + (1220+1296)*.2
+    parent_protection['gateway_body_upper_bound_fits'] = parent_protection['gateway_cell_body_upper_bound_um2'] <= parent_protection['gateway_cell_body_budget_um2']
+    parent_protection['finite_parent_allocation_condition'] = 'Turing maps actual inherited/protected receiver cells into existing service/gateway; gateway cuts fit the reserved20k body budget; inherited caller/sector/CDC/owner cells require their own existing-service allocation, not free FF or gateway credit. No route or fit/rate claim until actual allocation bound.'
+    joined_rel = 'results/rtl/w2_transaction_pipeline_20261005/parent_min_r7_PASS'
+    joined_dir = root / joined_rel
+    joined = json.loads((joined_dir / 'terminal.json').read_text())
+    joined_pins = json.loads((joined_dir / 'source.json').read_text())
+    for rel, expected in joined_pins.items():
+        if hashlib.sha256((root / rel).read_bytes()).hexdigest() != expected:
+            raise ValueError('W2 protected parent measured source changed: ' + rel)
+    for rel, expected in joined['artifact_sha256'].items():
+        if hashlib.sha256((joined_dir / rel).read_bytes()).hexdigest() != expected:
+            raise ValueError('W2 protected parent terminal changed: ' + rel)
+    assert joined['runtime_exit'] == 0 and joined['accepted'] == joined['consumed'] == 14
+    owner_rel = 'results/uarch/hbm_w2_publication_20261005/inputs/turing_min_parent_20261005'
+    owner_dir = root / owner_rel
+    owner_pins = json.loads((owner_dir / 'source.json').read_text())
+    for rel, expected in owner_pins.items():
+        if hashlib.sha256((owner_dir / rel).read_bytes()).hexdigest() != expected:
+            raise ValueError('Turing actual minimum parent source changed: ' + rel)
+    owner_model = json.loads((owner_dir / 'results/uarch/hbm_w2_min_parent_20261005/model.json').read_text())
+    parent_protection.update(gate_passed=True, joined_minimum_terminal=joined_rel+'/terminal.json',
+        joined_minimum_release_cycle=526, joined_minimum_warm_ack_cycle=545,
+        joined_minimum_accepted=14, joined_minimum_consumed=14,
+        full_native_R2_replayed=False, arithmetic_engine_replayed=False,
+        actual_owner_parent_source=owner_rel+'/physical/hbm_w2_min_parent_20261005/ot_hbm_w2_min_parent.sv',
+        owner_parent_clock_mem_period_ps=owner_model['clock']['clk_mem_period_ps'],
+        composed_mem_clock_period_agrees=(owner_model['clock']['clk_mem_period_ps']==parent_protection['clk_mem_period_ps']),
+        owner_gateway_outline_relative_um=owner_model['area']['gateway_outline_relative_um'],
+        owner_gateway_area_um2=owner_model['area']['gateway_area_um2'],
+        owner_gateway_cell_capacity_um2=owner_model['area']['gateway_area_um2']*owner_model['area']['utilization_ceiling'],
+        owner_triplicate_FF_claim_is_not_W6_allocation=True,
+        inherited_protected_context_allocation_bound=False,
+        missing_owner_inputs=['Turing: bind actual W6 caller/sector/CDC/owner non-sink cell allowance to existing service rectangles; do not charge it free or to sink slot',
+            'Turing: reconcile actual clk_mem1000ps source contract with inherited clk_hbm1024ps and this tested crossing before mapping',
+            'Turing: map the composed actual source once, then supply real SS/FF registered receiver pins/ODB/SPEF/propagated clock loading'])
+    parent_protection['non_sink_upper_bound_fits_owner_gateway_alone'] = parent_protection['non_sink_cell_body_upper_bound_um2'] <= parent_protection['owner_gateway_cell_capacity_um2']
+    paths += [joined_dir/'terminal.json', joined_dir/'source.json', owner_dir/'source.json']
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -9331,10 +9424,12 @@ def hbm_w2_publication_model():
             release_181_plus_planned_edges_is_not_a_measurement=True,
             parent_transport_budget_roundtrip_edges=finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
             parent_transport_budget_for_8_provider_transactions_edges=8*finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
-            transport_budget_not_installed_or_measured=True,
+            transport_budget_installed_and_minimum_measured=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        additive_parent_protection=parent_protection,
         dedicated_W2_context=dict(
-            top='ot_hbm_w2_protected_parent_context', source_preparation_only=True,
+            top='ot_hbm_w2_protected_parent_context', source_preparation_only=False,
+            source_protection_gate_passed=True, joined_minimum_terminal=joined_rel+'/terminal.json',
             caller_basis='ot_hbm_accel_w2_caller NC8/RMAX256/PIO2; existing PQ output registers and result identity join',
             caller_retained_FF_bits=1655,
             caller_FF_derivation='3*(8+8*32)+3*2+2*3 + 11*(32+32+9+1+1)+4+4+4+9+4+1',
@@ -9345,26 +9440,27 @@ def hbm_w2_publication_model():
             existing_AW3_CDC_storage_bits=4880, existing_AW3_CDC_control_bits=82,
             CDC_FF_derivation='8*(337+273) storage +2*(4*4+2*4+1+2*4+2*4) pointer/synchronizer/overflow bits',
             warm_hook_retained_W6_words=1,
-            total_source_declared_state_bits=19239,
-            additional_boundary_registers=0, additional_owner_ledgers=0,
-            added_context_latency_edges=0,
+            predecessor_source_declared_state_bits=19239,
+            total_source_declared_state_bits=parent_protection['protected_context_FF_bits'],
+            additional_boundary_registers=parent_protection['gateway_protected_FF_bits'], additional_owner_ledgers=0,
+            added_context_roundtrip_domain_edges=dict(clk_sm=6,clk_mem=2),
             inherited_registers_are_not_new_W2_slot_area=True,
             inherited_context_area_um2=None, inherited_receiver_bbox_um=None,
             W2_child_bbox_um=child['core_bbox_um'],
             gateway_bbox_um=finite['boundary_transport']['source_receiver_gateway_bbox_um'],
-            gateway_reservation_does_not_install_transport_or_allocate_inherited_registers=True,
+            gateway_transport_installed=True, inherited_protected_register_allocation_bound=False,
             clock_domains=['clk_sm','clk_mem'],
-            crossing_source='rtl/gpu_sys/ot_gpu_mreq_cdc.sv -> ot_gpu_cdc_fifo -> ot_link_afifo; AW3/SYNC2 unchanged',
+            crossing_source='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv; actual full337/273 AW3/SYNC2 protected memory/head/pointer and Gray/complement rails',
             root_resets=['rst_sm_n','rst_mem_n'], local_CP_reset_must_not_reset_either=True,
-            inherited_CDC_storage_control_protection_bound=False,
-            inherited_CDC_protection_gap='actual ot_link_afifo has raw memory and pointer registers; preserve source, require parent protection binding, never infer ECC from wrapper name',
-            inherited_caller_sector_control_protection_bound=False,
+            inherited_CDC_storage_control_protection_bound=True,
+            inherited_CDC_protection_gap='source protection gate passed; mapped rail independence and physical timing remain unqualified',
+            inherited_caller_sector_control_protection_bound=True,
             inherited_control_source_scope='retain existing caller identity/result and sector-map registers; no new unprotected authority or protection waiver',
             H16_budget_source='results/uarch/hbm_attn_h16_context_20261005/model.json#clock_and_IO',
             H16_budget_is_not_W2_propagated_clock_or_receiver_load=True,
             measured_source_receiver_pin_map=None, measured_receiver_load_fF=None,
             actual_propagated_clock_insertion_ps=None, actual_propagated_clock_skew_ps=None,
-            actual_clk_mem_binding=None,
+            actual_clk_mem_binding=dict(tested_period_ps=1024,owner_source_period_ps=1000,reconciled=False),
             dispatch_admitted=False),
         connected_parent_integration=dict(
             parent_source='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv',
