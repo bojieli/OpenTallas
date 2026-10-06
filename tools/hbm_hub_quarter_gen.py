@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import sys
 from pathlib import Path
@@ -301,6 +302,51 @@ def _offs(lst):
     return out
 
 
+GX, GY = 0.432, 0.54          # macro origin grid: lcm(site 0.054, M4/M5 0.048) in x, two rows in y (rail parity)
+
+
+def emit_place(P, w, h, Wq, Hq, edge=10.0, gap=10.0):
+    """ORFS MACRO_PLACEMENT_TCL of the quarter's lanes (w x h each) and the floorplan record.
+
+    x: edge strip | pair 0: column s=0 (MY, pins on its right edge) | channel | column s=1 (R0, pins on its left edge) |
+       gap | pair 1 ... | edge strip.  y: each column is south half (chain k = 2 pair) + port band + north half
+       (chain k = 2 pair + 1); group g = 0 is the one at the band, lane slot i stacks outward; lanes of a column sit on
+       a pitch of h + 0.54 (one free row pair between abutting lanes).  The edge strips keep every die pin's M4 / M5
+       access free of lane obstructions; r2 lanes leave M6 / M7 open, so pins outside the band reach it over the lanes."""
+    dn = lambda v, g: math.floor(v / g + 1e-9) * g
+    up_ = lambda v, g: math.ceil(v / g - 1e-9) * g
+    C2 = P.C2
+    e = up_(edge, GX)
+    gp = up_(gap, GX)
+    c = dn((Wq - 2 * e - 2 * C2 * w - (C2 - 1) * gp) / C2, GX)
+    assert c >= 30.0 - 1e-6, ('channel narrower than 30 um', c)
+    py = h + GY
+    n = P.G * P.L                                   # lanes per half column
+    band = Hq - 2 * edge - 2 * n * py
+    assert band >= 50.0, ('port band thinner than 50 um', band)
+    blo = up_(edge + n * py, GY)
+    bhi = dn(blo + band, GY)
+    xs = []
+    for pr in range(C2):
+        x0 = e + pr * (2 * w + c + gp)
+        xs.append((x0, x0 + w + c))
+    L_ = [f'# tools/hbm_hub_quarter_gen.py --quarter: {P.q["master"]} lane placement ({P.N} x {P.q["lane"]} {w} x {h})']
+    rec = []
+    for j, k, g, s, i in P.lanes():
+        pr, half = divmod(k, 2)
+        r = g * P.L + i
+        x = xs[pr][s]
+        y = blo - (r + 1) * py if half == 0 else bhi + GY + r * py
+        y = round(dn(y, GY) if half == 0 else up_(y, GY), 3)
+        o = 'MY' if s == 0 else 'R0'
+        assert 0 <= x and x + w <= Wq + 1e-6 and 0 <= y and y + h <= Hq + 1e-6, (j, x, y)
+        L_.append(f'place_macro -macro_name {{u_lane_{j}}} -location {{{x:.3f} {y:.3f}}} -orientation {o}')
+        rec.append([j, round(x, 3), y, o])
+    fp = dict(lane_w=w, lane_h=h, quarter=[Wq, Hq], edge=e, gap=gp, channel=round(c, 3), band=[round(blo, 3), round(bhi, 3)],
+              column_x=[[round(a, 3), round(b, 3)] for a, b in xs], lanes=rec)
+    return '\n'.join(L_) + '\n', fp
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--quarter', choices=sorted(QUARTERS), required=True)
@@ -308,6 +354,8 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--nvec', type=int, default=6)
     ap.add_argument('--seed', type=int, default=20261006)
+    ap.add_argument('--lane-size', nargs=2, type=float, metavar=('W', 'H'),
+                    help='also write macro_place.tcl / floorplan.json for lanes of this footprint')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
@@ -323,6 +371,11 @@ def main():
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 flops=dict(boundary=(P.WI + P.WO) * (1 + P.PIPE) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
+    if a.lane_size:
+        pj = json.loads(Path(a.ports).read_text())
+        tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'])
+        (out / 'macro_place.tcl').write_text(tcl)
+        (out / 'floorplan.json').write_text(json.dumps({k: v for k, v in fp.items() if k != 'lanes'}, indent=1) + '\n')
     print(json.dumps(info))
 
 
