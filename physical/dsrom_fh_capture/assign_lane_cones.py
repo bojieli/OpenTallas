@@ -135,8 +135,19 @@ for lane, g in sorted(groups.items()):
         y2 = origin[1] + math.floor((box[3]-origin[1])/sy)*sy
         box = (x1, y1, x2, y2)
         assert y1 >= macros[lane][3]+2000 and x1<x2 and y1<y2
-        odb.dbBox.destroy(old[0])
+        # In 26Q3-1510, dbBox.destroy leaves the old boundary linked in
+        # the serialized region. Replace the region, preserving its group
+        # and every member, instead of leaving two overlapping boundaries.
+        member_ids = {i.getId() for i in cells}
+        name, region_type = region.getName(), region.getRegionType()
+        region.removeGroup(g)
+        odb.dbRegion.destroy(region)
+        region = odb.dbRegion.create(b, name)
+        region.setRegionType(region_type)
+        region.addGroup(g)
         odb.dbBox.create(region, *box)
+        assert {i.getId() for i in g.getInsts()} == member_ids
+        assert [rect(x) for x in region.getBoundaries()] == [box]
     usable = sum(intersection(box, row) for row in rows) - sum(intersection(box, tap) for tap in taps)
     assert padded < usable*0.95, ('guard5 row capacity exceeded', lane, padded, usable)
     receipt['groups'].append(dict(lane=lane, members=len(cells), area_um2=area, padded_area_um2=padded,
@@ -144,6 +155,16 @@ for lane, g in sorted(groups.items()):
                                   capacity_after_guard5_um2=usable*0.95,
                                   guarded_padded_fraction=padded/(usable*0.95)))
 odb.write_db(db, a.output)
+# Verify the actual serialized geometry consumed by GPL, not an in-memory
+# rectangle receipt. C16 exposed that these can differ after box deletion.
+check = odb.dbDatabase.create()
+odb.read_db(check, a.output)
+check_groups = {g.getName(): g for g in check.getChip().getBlock().getGroups()}
+for row in receipt['groups']:
+    g = check_groups[f"fh_lane_{row['lane']}"]
+    assert [rect(x) for x in g.getRegion().getBoundaries()] == [tuple(row['rectangle_dbu'])]
+    assert len(list(g.getInsts())) == row['members']
+receipt['serialized_regions_verified'] = 64
 receipt['output_sha256'] = hashlib.sha256(Path(a.output).read_bytes()).hexdigest()
 receipt.update(geometry_changed=a.rect_strips, macro_geometry_changed=False,
                region_geometry_changed=a.rect_strips, macro_pins_changed=False, logic_changed=False,

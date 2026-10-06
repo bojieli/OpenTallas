@@ -10557,6 +10557,12 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             caller_request_FF_bits=nsm*(width+9), caller_response_FF_bits=nsm*width,
             caller_state_FF_bits=nsm*2,
             caller_FF_cell_floor_um2=nsm*(2*width+11)*DFF_UM2,
+            measured_full32_caller_FF_bits=262528,
+            measured_full32_caller_FF_cell_um2=76561.56288,
+            measured_full32_FSM_bits_per_caller=3,
+            actual_mapped_clock_pins='loaded32_register_pins_r1/summary.json and remote actual_register_pins.jsonl',
+            finite_allocation_and_deficit='results/rtl/hbm_item9_closure_20261005/finite_allocation_r1.json',
+            actual_32SM_registers_are_distributed_not_perimeter_bits=True,
             caller_compute_MACs_per_cycle=0,
             caller_request_bytes_per_capture=nsm*width/8,
             caller_response_bytes_per_capture=width/8,
@@ -10659,6 +10665,10 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             PHY_flit_limit_Gbps=545/0.833,
             full_parent_array_route_requested=False,
             physical_queue_macro_binding=False,
+            queue_FF_and_PF384_reducer_cell_floor_um2=(8*256*545+4*8*64*545+64*545)*DFF_UM2+490159.0422+6144*DFF_UM2,
+            actual_hb_coll_cell_capacity_at30percent_um2=1814.376*1403.976*.30,
+            full_parent_FF_queue_cell_deficit_lower_um2=(8*256*545+4*8*64*545+64*545)*DFF_UM2+490159.0422+6144*DFF_UM2-1814.376*1403.976*.30,
+            area_deficit_is_separate_HA2_vehicle_not_double_charge_with_baseline=True,
             source_ready_optin_binding=True, contextual_SS_FF=False, adopted=False),
         HA2_zero_cycle_structural_successor=dict(
             default_off=True, NC=8, LANES=16, PFMAX=384, OFMAX=48,
@@ -11172,7 +11182,7 @@ def dsrom_wfc_enclosing_stage_price():
     whole-stage producer and C8 accept the same job, not completion authority.
     """
     request_bits = 16+10+21+21+14
-    request_control_bits = 3
+    request_control_bits = 5
     c8_bits = 2*request_bits + (1+21+21+10+14+47+1+47+1+1+1+1+2+1+1)
     core_capture_bits = 21+21+14
     boundary_ff = request_bits+request_control_bits+c8_bits+core_capture_bits
@@ -11212,6 +11222,7 @@ def dsrom_wfc_enclosing_stage_price():
       additional_owned_request_capture_edges=1,
       existing_C8_offer_to_native_core_capture_edges=2,
       exposed_start_to_core_capture_minimum_edges=3,
+      default_OFF_old_user_publication_capture_additional_edges=1,
       enclosing_vs_same_C8_direct_offer_added_edges=1,
       composed_source_job_added_edges=3, composed_received_job_added_edges=4,
       composed_reset_release_added_edges=1,
