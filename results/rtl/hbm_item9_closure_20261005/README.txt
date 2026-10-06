@@ -100,5 +100,5 @@ LEF); failure preserved. Read actual technology/cell LEF for next object reuse.
 Actual balanced request mux TREE1 fullNSM32/NL128 lockstep PASS209 grants/
 2048cycles/0mismatches; newactual32caller binding PASS32completions/128TX/
 256RX/789cycles/0added. Source defaultTREE0 retained, newbalancedmasked tree
-adds0FF/0edges. Prebuild full32 gate proxy53248um2 before removing old mux;
+adds0FF/0edges. Prebuild full32 gate proxy53657.6um2 before removing old mux;
 no area/physical gain claimed until changedmapped cells/actualcontext route.
