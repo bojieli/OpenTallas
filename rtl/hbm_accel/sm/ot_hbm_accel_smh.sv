@@ -466,8 +466,8 @@ endmodule
 //   A   the unpacked row bundles and the x-write beat registered (the format select from 64 kept fmt replicas,
 //       <= 32 loads each), one copy per side;
 //   O   the output registers, one per (side, row) for the row bundle and the x-write bundle (the tiles' first hop);
-// results: lane landing per side, deskew to the farthest column (a column at hop h arrives 2h - 2 cycles after its
-// stack output and waits 2(NH - h)), then the pin chains.  rdone (sv) is column 0's aligned valid.
+// results: lane landing per side, deskew to the farthest column (margin m2: a column at hop h arrives 4h - 4 cycles after its
+// stack output and waits 4(NH - h)), then the pin chains.  rdone (sv) is column 0's aligned valid.
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_smh_front #(
     parameter integer SUB  = 4,
@@ -825,7 +825,8 @@ module ot_hbm_accel_smh_front #(
     assign bout_r = o_b[(SUB/RPT)*BBW +: (SUB/RPT)*BBW];
 
     // ---------------- results: lane landing, deskew, pins ----------------
-    // lane k of a side = the column k + 1 hops away; it arrives 2k cycles after the nearest; wait 2(NH-1-k)
+    // lane k of a side = the column k + 1 hops away; it arrives 4k cycles after the nearest (margin m2: two registers
+    // per tile hop on the row bundle, two per back-end hop on the result lane); wait 4(NH-1-k)
     wire [NC*QLW-1:0] al;                      // aligned per column
     genvar ln;
     generate for (sd = 0; sd < 2; sd = sd + 1) begin : g_qs
@@ -838,9 +839,9 @@ module ot_hbm_accel_smh_front #(
                     .d(lin[QLW-1 -: 2]), .q(land[QLW-1 -: 2]));
                 ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_ld (.clk(clk), .rst_n(rst_n), .en(1'b1),
                     .d(lin[QLW-3:0]), .q(land[QLW-3:0]));
-                ot_hbm_accel_smv_chain #(.W(2), .D(2*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(2), .D(4*(NH-1-ln)), .RST(1)) u_dv (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-1 -: 2]), .q(al[COLN*QLW + QLW - 2 +: 2]));
-                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(2*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
+                ot_hbm_accel_smv_chain #(.W(QLW-2), .D(4*(NH-1-ln)), .RST(0)) u_dd (.clk(clk), .rst_n(rst_n),
                     .d(land[QLW-3:0]), .q(al[COLN*QLW +: QLW-2]));
             end
         end
@@ -944,7 +945,11 @@ module ot_hbm_accel_smh_tile #(
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
         .q(bl[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
-    assign bout = bl;
+    // (margin m2) the pass-through copy lands at the input pins and launches from a second register at the output
+    // pins (+1 per tile hop on the x-write beat, matched by the row bundles' +1 per hop: the margin is unchanged)
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-1]),
+        .q(bout[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bout[BBW-2:0]));
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         // the row bundle of row j (landed, driven on)
@@ -952,7 +957,9 @@ module ot_hbm_accel_smh_tile #(
         wire [RBW-1:0] rl, rp;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rp));
-        assign rout[j*RBW +: RBW] = rp;
+        // (margin m2) landing at the input pins (u_rp), launch from a second register at the output pins (+1 per hop)
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp2 (.clk(clk), .rst_n(rst_n),
+            .d(rp), .q(rout[j*RBW +: RBW]));
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rl));
         wire [BBW-1:0] bk;
@@ -980,8 +987,12 @@ module ot_hbm_accel_smh_tile #(
             .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
             .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
             .gv(gv), .gf(gf), .gy(gy), .gt(gt));
-        // own rows on lanes 0..RPT-1 (lane RPT-1-j = row j), straight from the G1 flops
-        assign gout[(RPT-1-j)*GLW +: GLW] = {gv, gf, gy, gt};
+        // own rows on lanes 0..RPT-1 (lane RPT-1-j = row j): (margin m2) G1 then a launch register at the gout pins
+        // (+1 on every gather lane alike: the back end's deskew is unchanged)
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({gv, gf}),
+            .q(gout[(RPT-1-j)*GLW + GLW - 2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({gy, gt}),
+            .q(gout[(RPT-1-j)*GLW +: GLW-2]));
     end
     // lanes from the tile above moved down one
     // pass-through G1 lanes: two registers across the 510 um tile (landing, then launch), the back end's
@@ -1312,13 +1323,23 @@ module ot_hbm_accel_smh_be #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) cf_q <= 1'b0;
         else cf_q <= gfault | tf | kf;
-    assign qout[0 +: QLW] = {kv, cf_q, ky, krow};
+    // (margin m2) the column's own result lane launches from a register at the qout pins (+1 on every result alike)
+    ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_q0v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({kv, cf_q}),
+        .q(qout[QLW - 2 +: 2]));
+    ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_q0d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d({ky, krow}),
+        .q(qout[0 +: QLW - 2]));
     genvar ln;
+    // (margin m2) pass lanes land at the qin pins and launch from a second register at the qout pins (+1 per hop)
     generate for (ln = 1; ln < NH; ln = ln + 1) begin : g_q
+        wire [QLW-1:0] ql;
         ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1),
-            .d(qin[(ln-1)*QLW + QLW - 2 +: 2]), .q(qout[ln*QLW + QLW - 2 +: 2]));
+            .d(qin[(ln-1)*QLW + QLW - 2 +: 2]), .q(ql[QLW - 2 +: 2]));
         ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1),
-            .d(qin[(ln-1)*QLW +: QLW-2]), .q(qout[ln*QLW +: QLW-2]));
+            .d(qin[(ln-1)*QLW +: QLW-2]), .q(ql[0 +: QLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(ql[QLW - 2 +: 2]), .q(qout[ln*QLW + QLW - 2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(QLW-2)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(ql[0 +: QLW-2]), .q(qout[ln*QLW +: QLW-2]));
     end endgenerate
 endmodule
 

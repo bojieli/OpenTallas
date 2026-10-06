@@ -213,7 +213,7 @@ def front_pins(g, hcore):
 
 # ---------------- ORFS config ----------------
 def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None, period=833,
-              skew=0):
+              skew=0, die_skew=150, hold_io=50):
     lat_ff = lat_ff if lat_ff is not None else round(0.6 * float(lat))
     s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock {period} ps (sign-off 833: run.sh rewrites the",
          "# period of the routed SDC), 60 / 25 ps uncertainty",
@@ -228,8 +228,12 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          "# the parent on the real pair.",
          f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
          f"set dlo {float(lat) - float(lat_ff):g}",
-         "# (margin rule) die clock-arrival difference budgeted on every port: setup +skew, hold -skew",
+         "# (margin rule, clarified 2026-10-06) setup: abutting ports between pieces of one element (one clock region)",
+         "# budget the region pair skew + 25 (skew); the element pins cross a die wire to another region (die_skew).",
+         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io), closed by hold repair.",
          f"set skew {skew}",
+         f"set die_skew {die_skew}",
+         f"set hold_io {hold_io}",
          "set_clock_uncertainty -setup 60 [all_clocks]",
          "set_clock_uncertainty -hold 25 [all_clocks]",
          "set_false_path -from [get_ports rst_n]"]
@@ -241,10 +245,10 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "# the hub's.  The element top keeps the binding ideal-clock die budget and reports it unchanged.",
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
-              "set_input_delay -max [expr 473 + $skew] -clock nbr_clk $elem_in",
-              "set_input_delay -min [expr 833 * 0.2 - $skew] -clock nbr_clk $elem_in",
-              "set_output_delay -max [expr 323 + $skew] -clock nbr_clk $elem_out",
-              "set_output_delay -min [expr 833 * 0.2 + $dlo - $skew] -clock nbr_clk $elem_out",
+              "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+              "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
+              "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
               "set nbr_out [get_ports {rout_* bout_*}]"]
     else:
@@ -252,9 +256,9 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "set nbr_out [all_outputs]"]
     s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
           "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
-          "set_input_delay -min [expr 30 - $skew] -clock nbr_clk $nbr_in",
+          "set_input_delay -min [expr 30 - $hold_io] -clock nbr_clk $nbr_in",
           "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
-          "set_output_delay -min [expr 50 + $dlo - $skew] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
+          "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
           "set_max_fanout 32 [current_design]"]
     if ring:
@@ -888,7 +892,7 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew)
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
     elif a.piece == "be":
         w, h = g["tile_w"], g["be_h"]
         pins = be_pins(w, h, a.variant)
@@ -896,7 +900,7 @@ def cmd_block(a):
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew)
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -917,7 +921,7 @@ def cmd_block(a):
                f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew)
+        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
         # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
@@ -1038,8 +1042,9 @@ def main(argv=None):
     b.add_argument("--cores", default="16")
     b.add_argument("--period", default="833", help="route clock period (ps); sign-off is always 833 (margin rule: "
                    "route at ~770 for +60 ps at 833)")
-    b.add_argument("--skew", default="0", help="die clock-arrival difference budgeted on every port (ps; margin "
-                   "rule >= 150): setup +skew, hold -skew")
+    b.add_argument("--skew", default="0", help="setup budget on abutting piece ports (ps): the element's region pair "
+                   "skew + 25 (90 until the element top measures it)")
+    b.add_argument("--die-skew", default="150", help="setup budget on the element pins (cross a die wire, ps)")
     b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
