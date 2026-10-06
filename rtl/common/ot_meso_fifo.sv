@@ -66,8 +66,11 @@ module ot_meso_fifo #(
                                      // ot_hbm_stn_meso ties .r_rdy(1'b1) (the only NOBP instantiation), and a
                                      // simulation assertion below flags r_rdy == 0.  The r_fault on a would-be push is
                                      // a fail-closed safety net, not the argument.
-    parameter bit CRDREG   = 0       // register the credit-ring readout too (credit return +1 period; data latency
+    parameter bit CRDREG   = 0,      // register the credit-ring readout too (credit return +1 period; data latency
                                      // unchanged; CREDITS + 1 = 9 still covers the round trip)
+    parameter bit OBYP     = 0       // NOBP && RDREG only: the readout flop is the FIFO's last register -- r_d / r_v come
+                                     // straight from it (o_d bypassed, -1 period), so the consumer's own register (a
+                                     // station's per-face pin-launch flop) is the next stage
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -90,6 +93,7 @@ module ot_meso_fifo #(
 );
     localparam int AW = $clog2(DEPTH);
     initial begin
+        if (OBYP && !(NOBP && RDREG)) $error("ot_meso_fifo: OBYP needs NOBP and RDREG");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_meso_fifo: DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_LO + 2 > OFFSET || GUARD_HI < OFFSET + 2 || GUARD_HI > DEPTH)
             $error("ot_meso_fifo: need GUARD_LO+2 <= OFFSET, OFFSET+2 <= GUARD_HI <= DEPTH");
@@ -232,8 +236,14 @@ module ot_meso_fifo #(
         // registered output: o_d is the capture register of the crossing (the arriving word is muxed straight into
         // it when the buffer is empty); its enable 'load' and the select are read-domain signals only.
         logic [W-1:0] o_d; logic o_v;
-        assign r_v      = rrst_n && !r_flt && o_v;
-        assign r_d      = o_d;
+        if (OBYP) begin : g_obyp
+            // the arriving word is presented in the cycle it arrives (d_rd / d_rv are the RDREG readout flops)
+            assign r_v      = rrst_n && !r_flt && r_on && d_hit;
+            assign r_d      = d_rd;
+        end else begin : g_oreg
+            assign r_v      = rrst_n && !r_flt && o_v;
+            assign r_d      = o_d;
+        end
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
 `ifndef SYNTHESIS
