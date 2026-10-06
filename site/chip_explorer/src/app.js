@@ -40,7 +40,7 @@ const DESIGNS = {
     dies: ['hbm_ds', 'hbm_qwen'] },
 };
 const state = { design: lsGet('design', 'ds'), compare: false, hbmModel: lsGet('hbmModel', 'ds'), colorBy: 'kind', zoom: 1,
-  hidden: new Set(), showWire: true, showClock: false, showIR: false, sel: null, arraySel: null, arrayZoom: 'system', cbFilter: 'all' };
+  hidden: new Set(), dieCtx: null, showWire: true, showClock: false, showIR: false, sel: null, arraySel: null, arrayZoom: 'system', cbFilter: 'all' };
 if (!DESIGNS[state.design]) state.design = 'ds';
 function dieKey(){ return state.design === 'hbm' ? (state.hbmModel === 'qwen' ? 'hbm_qwen' : 'hbm_ds') : DESIGNS[state.design].dies[0]; }
 
@@ -140,36 +140,75 @@ function renderCompareStrip(){
 }
 
 /* ================================================================ 1. ARRAY */
+/* Every array view lays itself out in CSS pixels at the panel's own width (arrW), so it fits the panel
+   at any width and text stays at its design size. A ResizeObserver on the panel redraws on resize. */
+function arrW(){ const s = $('arrayScroll'); return Math.max(280, Math.floor((s && s.clientWidth) || 900)); }
+function sizeSvg(svg, W, H){ svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); }
+function txt(parent, x, y, s, o = {}){ const t = svgEl('text', Object.assign({x, y, 'font-size': o.fs || 12, 'font-family': o.mono === false ? 'var(--f-body)' : 'var(--f-mono)', fill: o.fill || css('--muted')}, o.anchor ? {'text-anchor': o.anchor} : {}, o.weight ? {'font-weight': o.weight} : {}), parent); t.textContent = s; return t; }
+/* wrap a string into lines that fit `maxW` px at a mono font of size fs (0.6 em per glyph) */
+function wrapLines(s, maxW, fs){ const per = Math.max(8, Math.floor(maxW / (fs * 0.6))); const out = []; let cur = ''; for (const w of s.split(' ')){ if ((cur + ' ' + w).trim().length > per && cur){ out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); } if (cur) out.push(cur); return out; }
+function txtWrap(parent, x, y, s, maxW, o = {}){ const fs = o.fs || 12, lh = o.lh || fs * 1.35; const ls = wrapLines(s, maxW, fs); ls.forEach((l, i) => txt(parent, x, y + i * lh, l, o)); return ls.length * lh; }
+/* link stroke width from bandwidth: 2 px at <= 50 GB/s, +1.15 px per doubling, capped at 7 px */
+function lw(x){ const g = val(x); if (!g) return 2.5; return Math.max(2, Math.min(7, 2 + 1.15 * Math.log2(Math.max(1, g / 50)))); }
+/* a link: wide transparent hit stroke + visible stroke + optional flow dashes (direction of traffic).
+   Hovering it lights it and its endpoints (elements whose data-id is in a/b). */
+function hotIds(root, ids, on){ for (const id of ids) if (id) root.querySelectorAll(`[data-id="${id}"]`).forEach(n => n.classList.toggle('hot', on)); }
+function link(parent, d, o = {}){
+  const g = svgEl('g', {class: 'lk' + (o.cls ? ' ' + o.cls : '')}, parent);
+  const w = o.w || 2.5;
+  svgEl('path', {d, class: 'lk-hit', 'stroke-width': o.hit || Math.max(12, w + 8)}, g);
+  const ln = svgEl('path', {d, class: 'lk-line', 'stroke-width': w}, g);
+  if (o.dash) ln.setAttribute('stroke-dasharray', o.dash);
+  if (o.arrow) ln.setAttribute('marker-end', 'url(#lkArrow)');
+  if (o.flow) svgEl('path', {d, class: 'lk-flow', 'stroke-width': Math.max(1.2, w * 0.5)}, g);
+  const ends = [].concat(o.ends || []);
+  const root = parent.ownerSVGElement || parent;
+  g.addEventListener('mouseenter', () => { g.classList.add('hot'); hotIds(root, ends, true); });
+  g.addEventListener('mouseleave', () => { g.classList.remove('hot'); hotIds(root, ends, false); hideTip(); });
+  if (o.tip) g.addEventListener('mousemove', ev => showTip(o.tip, ev));
+  return g;
+}
+function linkDefs(svg){
+  const defs = svgEl('defs', {}, svg);
+  const m = svgEl('marker', {id: 'lkArrow', viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: 3.2, markerHeight: 3.2, orient: 'auto-start-reverse', markerUnits: 'strokeWidth'}, defs);
+  svgEl('path', {d: 'M0,1 L9,5 L0,9 z', class: 'lk-head'}, m);
+  const p = svgEl('pattern', {id: 'hatchArr', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)'}, defs); svgEl('rect', {width: 2.2, height: 6, fill: css('--k-res')}, p);
+  return defs;
+}
+function linkTip(name, x, extra){ return `<b>${esc(name)}</b>${x ? `<br>${vs(x, 0)} ${esc(x.unit || '')} · ${esc(st(x))}` : ''}${extra ? '<br>' + extra : ''}`; }
+
 function renderArray(){
   const svg = $('arraySvg'); clear(svg);
   const tools = $('arrayTools'); const leg = $('arrayLegend');
   const d = state.design;
+  const linkLeg = (label, x) => `<span><i class="sw lk-sw" style="height:${Math.round(lw(x))}px"></i>${label}${x ? ' · ' + vs(x, 0) + ' ' + esc(x.unit || '') + ' ' + pill(st(x)) : ''}</span>`;
   if (d === 'ds'){
-    $('arrayLede').textContent = 'The token walks the S81 pipeline. Each cell is one stretch of the critical path between two measured stage hops; its four squares are the TP4 rank dies that hold the layer slice, each with HBM beside it. Shade shows how long the stretch keeps the token. Click a cell to zoom into the stage.';
+    $('arrayLede').textContent = 'The token walks the S81 pipeline as a serpentine: left to right, then back. Each cell is one stretch of the critical path between two measured stage hops; its four squares are the TP4 rank dies that hold the layer slice, each with HBM beside it. Shade shows how long the stretch keeps the token. Click a cell for its breakdown; double-click (or Stage) to zoom in.';
     tools.innerHTML = `<div class="seg" role="group" aria-label="Zoom level"><button type="button" data-az="system" aria-pressed="${state.arrayZoom === 'system'}">System</button><button type="button" data-az="stage" aria-pressed="${state.arrayZoom === 'stage'}">Stage</button></div><span class="muted" style="font-size:12px">${state.arrayZoom === 'stage' ? 'Stage ' + (state.arraySel == null ? 0 : state.arraySel) + ': four rank dies and their links' : 'packages → dies → stages → links'}</span>`;
     tools.querySelectorAll('[data-az]').forEach(b => b.onclick = () => { state.arrayZoom = b.dataset.az; if (state.arraySel == null) state.arraySel = 20; renderArray(); });
     if (state.arrayZoom === 'stage') drawDsStage(svg); else drawDsRibbon(svg);
-    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM rank die (shade: busy time)</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM stack</span><span><i class="sw" style="background:var(--k-link)"></i>stage hop ${vs(DATA.ds_hop, 4)} µs ${pill(st(DATA.ds_hop))}</span><span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--k-res) 0 2px,transparent 2px 5px)"></i>S81 hop-only stage, position not in the record</span><span><i class="sw" style="background:var(--k-attn)"></i>draft dies (DP1-EP5)</span>`;
+    const L = DATA.links || {};
+    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM rank die (shade: busy time)</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM stack</span>${linkLeg('stage hop ' + vs(DATA.ds_hop, 4) + ' µs', L.ds_stage)}${linkLeg('draft replica link', L.ds_draft)}<span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--k-res) 0 2px,transparent 2px 5px)"></i>S81 hop-only stage, position not in the record</span><span><i class="sw" style="background:var(--k-attn)"></i>draft dies (DP1-EP5)</span><span class="muted">Line width scales with link bandwidth; hover a link to light it and its ends.</span>`;
   } else if (d === 'qwen'){
     $('arrayLede').textContent = 'One user’s token runs on a TP4 group: four identical ROM dies, each holding a quarter of every weight matrix and streaming its share of the KV cache from four HBM3E stacks on its east and west edges. The dies meet only at the all-reduce after each attention and MLP block.';
     tools.innerHTML = '<span class="muted" style="font-size:12px">system: 4 dies · 16 HBM3E stacks · TP4 all-reduce</span>';
     drawQwenSystem(svg);
-    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM die</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM3E stack</span><span><i class="sw" style="background:var(--k-link)"></i>all-reduce link</span>`;
+    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>ROM die</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM3E stack</span>${linkLeg('all-reduce link', (DATA.links || {}).qwen_ar)}`;
   } else {
-    $('arrayLede').textContent = state.hbmModel === 'qwen' ? 'Qwen3-8B on the HBM accelerator: a TP4 group of tile dies (iso-silicon with the ROM group) or a TP2 group on the same silicon. Every die streams its weight share from its four stacks every token.' : 'DeepSeek-V4.1 at 1M on the HBM accelerator: 96 dies in tensor parallel (TP-96), each with four HBM3E stacks, joined through a Tomahawk-Ultra switch tier. Collectives cross the switch; about a third of the AR token is the vendor budget for that crossing.';
+    $('arrayLede').textContent = state.hbmModel === 'qwen' ? 'Qwen3-8B on the HBM accelerator: a TP4 group of tile dies (iso-silicon with the ROM group) or a TP2 group on the same silicon. Every die streams its weight share from its four stacks every token.' : 'DeepSeek-V4.1 at 1M on the HBM accelerator: 96 dies in tensor parallel (TP-96), each with four HBM3E stacks, joined through a Tomahawk-Ultra switch tier. Every die stripes its ports across all the switch chips; collectives cross the switch, and about a third of the AR token is the vendor budget for that crossing.';
     tools.innerHTML = `<div class="seg" role="group" aria-label="Model"><button type="button" data-hm="ds" aria-pressed="${state.hbmModel === 'ds'}">DeepSeek die</button><button type="button" data-hm="qwen" aria-pressed="${state.hbmModel === 'qwen'}">Qwen tile die</button></div>`;
     tools.querySelectorAll('[data-hm]').forEach(b => b.onclick = () => { state.hbmModel = b.dataset.hm; lsSet('hbmModel', state.hbmModel); state.sel = null; renderAll(); });
     drawHbmSystem(svg);
-    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>compute die</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM3E stack</span><span><i class="sw" style="background:var(--k-link)"></i>switch chip / link</span>`;
+    leg.innerHTML = `<span><i class="sw" style="background:var(--k-field)"></i>compute die</span><span><i class="sw" style="background:var(--k-hbm)"></i>HBM3E stack</span><span><i class="sw" style="background:var(--k-link)"></i>switch chip</span>${linkLeg('die uplink', (DATA.links || {}).hbm_uplink)}<span class="muted">Hover a die or a switch chip to see its fan-out.</span>`;
   }
 }
 function arrayRead(html){ $('arrayRead').innerHTML = html; }
 function dieGlyph(svg, x, y, w, h, fill, stacks, opts = {}){
-  const g = svgEl('g', {}, svg);
+  const g = svgEl('g', opts.id ? {class: 'nd', 'data-id': opts.id} : {}, svg);
   svgEl('rect', {x, y, width: w, height: h, fill, stroke: css('--die-edge'), 'stroke-width': 0.8, rx: 1}, g);
-  const sw = Math.max(3, w * 0.22), sh = Math.max(3, h * 0.26);
+  const sw = Math.max(3, w * 0.22), sh = Math.max(2.5, Math.min(h * 0.26, 10));
   if (stacks === 'ns'){ for (let i = 0; i < 2; i++){ svgEl('rect', {x: x + w * (0.12 + 0.5 * i), y: y - sh - 1.5, width: sw * 1.2, height: sh, fill: css('--k-hbm')}, g); svgEl('rect', {x: x + w * (0.12 + 0.5 * i), y: y + h + 1.5, width: sw * 1.2, height: sh, fill: css('--k-hbm')}, g); } }
-  if (stacks === 'ew'){ for (let i = 0; i < 2; i++){ svgEl('rect', {x: x - sh - 1.5, y: y + h * (0.12 + 0.5 * i), width: sh, height: sw * 1.2, fill: css('--k-hbm')}, g); svgEl('rect', {x: x + w + 1.5, y: y + h * (0.12 + 0.5 * i), width: sh, height: sw * 1.2, fill: css('--k-hbm')}, g); } }
+  if (stacks === 'ew'){ const sw2 = Math.max(3, h * 0.22), sh2 = Math.max(2.5, Math.min(w * 0.26, 10)); for (let i = 0; i < 2; i++){ svgEl('rect', {x: x - sh2 - 1.5, y: y + h * (0.12 + 0.5 * i), width: sh2, height: sw2 * 1.2, fill: css('--k-hbm')}, g); svgEl('rect', {x: x + w + 1.5, y: y + h * (0.12 + 0.5 * i), width: sh2, height: sw2 * 1.2, fill: css('--k-hbm')}, g); } }
   if (opts.label) { const t = svgEl('text', {x: x + w / 2, y: y + h / 2 + 4, 'text-anchor': 'middle', 'font-size': opts.fs || 11, 'font-family': 'var(--f-mono)'}, g); t.textContent = opts.label; }
   return g;
 }
@@ -178,60 +217,92 @@ function mix(c1, c2, t){ // hex mix for shading
   try { const a = p(c1), b = p(c2); return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join(''); } catch (e) { return c1; }
 }
 function segBusy(s){ let t = 0; for (const k in s.cats) t += s.cats[k]; return t; }
+function keyActivate(g, f){ g.addEventListener('click', f); g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); f(e); } }); }
 function drawDsRibbon(svg){
-  const segs = val(DATA.ds_stages); const extra = val(DATA.ds_extra_hops);
-  const perRow = 20, cw = 50, ch = 64, gx = 10, gy = 30, x0 = 20, y0 = 34;
+  const W = arrW(); const narrow = W < 560;
+  const segs = val(DATA.ds_stages); const extra = val(DATA.ds_extra_hops); const S = DATA.ds_system; const L = DATA.links || {};
   const total = segs.length + extra.count;
+  const cw = narrow ? 30 : 40, ch = narrow ? 34 : 44, gx = narrow ? 11 : 16, gy = narrow ? 30 : 34, turn = narrow ? 14 : 22;
+  const perRow = Math.max(4, Math.floor((W - 2 * turn - 8 + gx) / (cw + gx)));
   const rows = Math.ceil(total / perRow);
-  const W = x0 * 2 + perRow * (cw + gx), Hrib = y0 + rows * (ch + gy);
-  const H = Hrib + 190;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const gridW = perRow * (cw + gx) - gx, xs = Math.round((W - gridW) / 2);
+  linkDefs(svg);
+  const lay = svgEl('g', {}, svg);
+  const head = narrow ? [`token → ${segs.length} stretches + ${extra.count} hop-only stages`, `= ${segs.length + extra.count - 1} stage hops, serpentine`] : [`token → ${segs.length} critical-path stretches + ${extra.count} S81 hop-only stages = ${segs.length + extra.count - 1} stage hops · serpentine: left to right, then right to left`];
+  head.forEach((l, i) => txt(lay, xs, 16 + i * 15, l));
+  const y0 = 16 + head.length * 15 + 12;
+  const pos = k => { const r = Math.floor(k / perRow), c = k % perRow, cc = r % 2 ? perRow - 1 - c : c; return {r, c, x: xs + cc * (cw + gx), y: y0 + r * (ch + gy)}; };
   const maxB = Math.max(...segs.map(segBusy));
   const bg = css('--die'), fc = css('--k-field');
-  const t = svgEl('text', {x: x0, y: 18, 'font-size': 12, 'font-family': 'var(--f-mono)', fill: css('--muted')}); t.textContent = `token → ${segs.length} critical-path stretches + ${extra.count} S81 hop-only stages = ${segs.length + extra.count - 1} stage hops · scroll inside this panel →`; svg.appendChild(t);
+  const linkG = svgEl('g', {}, svg), cellG = svgEl('g', {}, svg);
+  const lwStage = lw(L.ds_stage);
   for (let k = 0; k < total; k++){
-    const r = Math.floor(k / perRow), c = k % perRow;
-    const x = x0 + c * (cw + gx), y = y0 + r * (ch + gy);
-    const g = svgEl('g', {tabindex: 0, role: 'button', 'aria-label': k < segs.length ? `Stretch ${k}` : 'Hop-only stage', style: 'cursor:pointer'}, svg);
+    const {r, c, x, y} = pos(k);
+    const id = 'c' + k;
+    const g = svgEl('g', {tabindex: 0, role: 'button', class: 'nd cell', 'data-id': id, 'aria-label': k < segs.length ? `Stretch ${k}: ${segs[k].layers.join(', ')}` : 'Hop-only stage', style: 'cursor:pointer'}, cellG);
+    svgEl('rect', {x: x - 3, y: y - 5, width: cw + 6, height: ch + 8, fill: 'transparent', stroke: state.arraySel === k ? css('--accent') : 'none', 'stroke-width': 2, rx: 2, class: 'cell-frame'}, g);
     if (k < segs.length){
       const s = segs[k], b = segBusy(s), shade = b ? mix(bg, fc, 0.25 + 0.75 * b / maxB) : bg;
+      const qw = (cw - 4) / 2, qh = (ch - 8) / 2 - 3;
       for (let q = 0; q < 4; q++){
-        const dx = x + (q % 2) * (cw / 2), dy = y + 10 + Math.floor(q / 2) * (ch / 2 - 6);
-        svgEl('rect', {x: dx + 2, y: dy, width: cw / 2 - 6, height: ch / 2 - 12, fill: shade, stroke: state.arraySel === k ? css('--accent') : css('--die-edge'), 'stroke-width': state.arraySel === k ? 2 : 0.7}, g);
-        svgEl('rect', {x: dx + 2, y: dy - 4, width: cw / 2 - 6, height: 2.5, fill: css('--k-hbm')}, g);
+        const dx = x + (q % 2) * (qw + 4), dy = y + 4 + Math.floor(q / 2) * (qh + 7);
+        svgEl('rect', {x: dx, y: dy, width: qw, height: qh, fill: shade, stroke: css('--die-edge'), 'stroke-width': 0.7}, g);
+        svgEl('rect', {x: dx, y: dy - 3.5, width: qw, height: 2.5, fill: css('--k-hbm')}, g);
       }
-      const lab = svgEl('text', {x: x + cw / 2 - 2, y: y + ch + 4, 'text-anchor': 'middle', 'font-size': 9.5, 'font-family': 'var(--f-mono)', fill: css('--muted')}, g);
-      lab.textContent = s.layers.filter(l => l !== 'token').join('·').replace(/L(\d+)/g, '$1') || 'pass';
+      let lab = s.layers.filter(l => l !== 'token').join('·').replace(/L(\d+)/g, '$1').replace('embed', narrow ? 'E' : 'emb') || 'pass';
+      if (lab.length * 5.4 > cw + gx - 2) lab = lab.split('·')[0] + '…';
+      txt(g, x + cw / 2, y + ch + 12, lab, {fs: 9.5, anchor: 'middle'});
       g.addEventListener('mousemove', ev => showTip(`<b>Stretch ${k}</b> · ${esc(s.layers.join(', ') || 'no critical-path work')}<br>busy ${fmt(b, 3)} µs · ${s.n} nodes<br>hop ${fmt(s.hop, 4)} µs ${esc(s.hop_node)}`, ev));
       g.addEventListener('mouseleave', hideTip);
-      const pick = () => { state.arraySel = k; renderDsArrayRead(k); drawSelOutline(); };
-      g.addEventListener('click', pick); g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); } });
-      g.addEventListener('dblclick', () => { state.arraySel = k; state.arrayZoom = 'stage'; renderArray(); renderDsArrayRead(k); });
+      keyActivate(g, () => { state.arraySel = k; renderArray(); const n = $('arraySvg').querySelector(`[data-id="c${k}"]`); if (n) n.focus(); });
+      g.addEventListener('dblclick', () => { state.arraySel = k; state.arrayZoom = 'stage'; renderArray(); });
     } else {
-      const pid = 'hatchArr';
-      if (!svg.querySelector('#' + pid)){ const defs = svgEl('defs', {}, svg); const p = svgEl('pattern', {id: pid, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)'}, defs); svgEl('rect', {width: 2.2, height: 6, fill: css('--k-res')}, p); }
-      svgEl('rect', {x: x + 2, y: y + 6, width: cw - 8, height: ch - 18, fill: `url(#${pid})`, stroke: css('--die-edge'), 'stroke-width': 0.6, 'stroke-dasharray': '3 2'}, g);
+      svgEl('rect', {x: x + 1, y: y + 2, width: cw - 2, height: ch - 4, fill: 'url(#hatchArr)', stroke: css('--die-edge'), 'stroke-width': 0.6, 'stroke-dasharray': '3 2'}, g);
       g.addEventListener('mousemove', ev => showTip(`<b>S81 hop-only stage</b><br>one of ${extra.count} extra stage hops (${fmt(extra.us_each, 4)} µs each, ${fmt(extra.total, 3)} µs total).<br>Its position in the pipeline is not in the composition record.`, ev));
       g.addEventListener('mouseleave', hideTip);
     }
-    if (k < total - 1 && c < perRow - 1) svgEl('line', {x1: x + cw - 3, y1: y + ch / 2, x2: x + cw + gx + 1, y2: y + ch / 2, stroke: css('--k-link'), 'stroke-width': 2}, svg);
+    if (k < total - 1){
+      const n = pos(k + 1), ym = y + ch / 2, yn = n.y + ch / 2;
+      let dpath, turnHere = false;
+      if (n.r === r){ const dir = n.x > x ? 1 : -1; const xa = dir > 0 ? x + cw + 1 : x - 1, xb = dir > 0 ? n.x - 2 : n.x + cw + 2; dpath = `M${xa} ${ym} L${xb} ${ym}`; }
+      else { turnHere = true; const right = r % 2 === 0; const xe = right ? x + cw + 1 : x - 1, xo = right ? x + cw + turn : x - turn; dpath = `M${xe} ${ym} C${xo} ${ym} ${xo} ${yn} ${right ? xe + 1 : xe - 1} ${yn}`; }
+      link(linkG, dpath, {w: lwStage, arrow: true, flow: true, ends: [id, 'c' + (k + 1)], cls: turnHere ? 'turn' : '',
+        tip: linkTip(`Stage hop ${k} → ${k + 1}${turnHere ? ' (row turn)' : ''}`, L.ds_stage, `${vs(DATA.ds_hop, 4)} µs measured: link RTL + light-FEC PHY budget + UCIe + wire stages`)});
+      if (turnHere){ const right = r % 2 === 0; txt(lay, right ? x + cw + turn + 1 : x - turn - 1, (ym + yn) / 2 + 3, '↩', {fs: 11, anchor: right ? 'start' : 'end', fill: css('--muted')}).setAttribute('aria-hidden', 'true'); }
+    }
   }
-  // head dies + draft group
-  const yb = Hrib + 12; const S = DATA.ds_system;
-  const tt = svgEl('text', {x: x0, y: yb + 4, 'font-size': 12, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg);
-  tt.textContent = `head dies ×${val(S.head_dies)} (embed, LM head, norm, DSpark drafter) · draft placement DP1-EP5: ${val(S.draft_primary)} primary + ${val(S.draft_replicas)} expert-replica dies (+${val(S.draft_added)} vs baseline) · ${fmt0(val(S.layer_dies))} layer dies = 81 × TP4`;
-  for (let i = 0; i < val(S.head_dies); i++) dieGlyph(svg, x0 + i * 24, yb + 22, 18, 18, mix(bg, css('--k-tree'), .6), null);
-  const px = x0 + 330, py = yb + 70;
-  for (let i = 0; i < val(S.draft_primary); i++) dieGlyph(svg, px + i * 26, py, 20, 20, css('--k-attn'), null);
-  const reps = val(S.draft_replicas);
-  for (let i = 0; i < reps; i++){
-    const cx = px + 330 + (i % 20) * 22, cy = yb + 34 + Math.floor(i / 20) * 26;
-    svgEl('line', {x1: px + 50, y1: py + 10, x2: cx + 8, y2: cy + 8, stroke: css('--k-link'), 'stroke-width': 0.4, opacity: .6}, svg);
-    dieGlyph(svg, cx, cy, 16, 16, mix(bg, css('--k-attn'), .45), null);
+  // head dies + draft group, reflowed to the width
+  let yb = y0 + rows * (ch + gy) + 6;
+  const textW = W - 2 * xs;
+  yb += txtWrap(lay, xs, yb + 10, `head dies ×${val(S.head_dies)}: embed, LM head, norm, DSpark drafter`, textW, {fs: 11.5}) + 6;
+  const hd = val(S.head_dies), hs = narrow ? 16 : 20, hp = hs + 7;
+  const hPer = Math.max(4, Math.floor((textW + 7) / hp));
+  for (let i = 0; i < hd; i++) dieGlyph(svg, xs + (i % hPer) * hp, yb + Math.floor(i / hPer) * hp, hs, hs, mix(bg, css('--k-tree'), .6), null, {id: 'h' + i});
+  yb += Math.ceil(hd / hPer) * hp + 14;
+  yb += txtWrap(lay, xs, yb + 10, `draft placement DP1-EP5: ${val(S.draft_primary)} primary dies + ${val(S.draft_replicas)} expert-replica dies (+${val(S.draft_added)} vs baseline). Rows are the 3 DSpark blocks; each holds 5 expert TP4 groups. ${fmt0(val(S.layer_dies))} layer dies = 81 × TP4.`, textW, {fs: 11.5}) + 10;
+  // primary TP4 group (left), replica groups in a 5-wide grid (right), joined by a trunk and one link per group
+  const ps = narrow ? 13 : 17, pg = 3;
+  const primX = xs, primY = yb + 6;
+  for (let i = 0; i < val(S.draft_primary); i++) dieGlyph(svg, primX + (i % 2) * (ps + pg), primY + Math.floor(i / 2) * (ps + pg), ps, ps, css('--k-attn'), null, {id: 'dp'});
+  txt(lay, primX, primY + 2 * (ps + pg) + 12, 'primary', {fs: 10});
+  const reps = val(S.draft_replicas), groups = Math.round(reps / 4), perG = 5, gRows = Math.ceil(groups / perG);
+  const gs = narrow ? 9 : 12, gW = 2 * gs + 3;
+  const trunkX = primX + 2 * (ps + pg) + (narrow ? 14 : 24);
+  const gx0 = trunkX + (narrow ? 16 : 26), pitch = Math.min(narrow ? 60 : 90, (xs + textW - gx0 - gW) / (perG - 1));
+  const rowH = 2 * gs + 3 + (narrow ? 16 : 20);
+  const lwD = lw(L.ds_draft);
+  const rmid = r => primY + r * rowH + gs + 1;
+  link(linkG, `M${primX + 2 * (ps + pg) - pg + 1} ${primY + ps} L${trunkX} ${primY + ps} L${trunkX} ${rmid(gRows - 1)}`, {w: lwD + 1, ends: ['dp'], tip: linkTip('Draft trunk (15 replica links per primary die, bundled)', L.ds_draft, `draft hop ${vs(S.draft_hop, 3)} µs measured (ot_dsrom_link_ct)`)});
+  for (let gi = 0; gi < groups; gi++){
+    const r = Math.floor(gi / perG), c = gi % perG; const gx1 = gx0 + c * pitch, gy1 = primY + r * rowH;
+    const id = 'dr' + gi;
+    for (let q = 0; q < 4; q++) dieGlyph(svg, gx1 + (q % 2) * (gs + 3), gy1 + Math.floor(q / 2) * (gs + 3), gs, gs, mix(bg, css('--k-attn'), .45), null, {id});
+    const xPrev = c === 0 ? trunkX : gx0 + (c - 1) * pitch + gW;
+    link(linkG, `M${xPrev} ${rmid(r)} L${gx1 - 1} ${rmid(r)}`, {w: lwD, flow: true, ends: ['dp', id], tip: linkTip(`Replica group ${gi}: DSpark block ${r}, expert group ${c}`, L.ds_draft, `4 dies, one link per primary rank die (light-FEC board + UCIe class)`)});
   }
-  const lt = svgEl('text', {x: px, y: py + 40, 'font-size': 10.5, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg);
-  lt.textContent = `primary TP4 group · 15 replica links per primary die · draft hop ${vs(S.draft_hop, 3)} µs`;
-  svg._outline = true;
+  for (let r = 0; r < 3 && r < gRows; r++) txt(lay, gx0 + (perG - 1) * pitch + gW + 4, rmid(r) + 3, narrow ? '' : `block ${r}`, {fs: 10});
+  yb = primY + gRows * rowH + 4;
+  sizeSvg(svg, W, yb);
   if (state.arraySel == null) state.arraySel = 0;
   renderDsArrayRead(state.arraySel);
 }
@@ -249,65 +320,362 @@ function renderDsArrayRead(k){
 }
 function drawDsStage(svg){
   const k = state.arraySel == null ? 20 : state.arraySel; const s = val(DATA.ds_stages)[k];
-  const W = 980, H = 420; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const W = arrW(), wide = W >= 680; const L = DATA.links || {};
+  linkDefs(svg);
   const bg = css('--die');
-  const t = svgEl('text', {x: 20, y: 24, 'font-size': 13, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg);
-  t.textContent = `Stage view · stretch ${k}: ${s ? s.layers.join(', ') : ''} · TP4 rank dies with four HBM3E stacks each`;
-  // previous stage stub, four rank dies, next stage stub
-  svgEl('rect', {x: 20, y: 150, width: 60, height: 120, fill: 'none', stroke: css('--die-edge'), 'stroke-dasharray': '4 3'}, svg);
-  svgEl('rect', {x: W - 80, y: 150, width: 60, height: 120, fill: 'none', stroke: css('--die-edge'), 'stroke-dasharray': '4 3'}, svg);
-  const lp = svgEl('text', {x: 50, y: 290, 'text-anchor': 'middle', 'font-size': 11, fill: css('--muted')}, svg); lp.textContent = 'stage k−1';
-  const ln = svgEl('text', {x: W - 50, y: 290, 'text-anchor': 'middle', 'font-size': 11, fill: css('--muted')}, svg); ln.textContent = 'stage k+1';
-  for (let r = 0; r < 4; r++){
-    const x = 150 + r * 180, y = 120, w = 140, h = 110;
-    dieGlyph(svg, x, y, w, h, mix(bg, css('--k-field'), .35), 'ns', {label: 'rank ' + r, fs: 13});
-    const sub = svgEl('text', {x: x + w / 2, y: y + h + 46, 'text-anchor': 'middle', 'font-size': 10.5, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg); sub.textContent = '33 × 26 mm layer die';
-    if (r < 3) svgEl('line', {x1: x + w + 4, y1: y + h / 2, x2: x + 176, y2: y + h / 2, stroke: css('--k-link'), 'stroke-width': 2, 'stroke-dasharray': '5 3'}, svg);
-    svgEl('line', {x1: 80, y1: 210, x2: x, y2: y + h * 0.8, stroke: css('--k-link'), 'stroke-width': 1.2, opacity: .7}, svg);
-    svgEl('line', {x1: x + w, y1: y + h * 0.2, x2: W - 80, y2: 210, stroke: css('--k-link'), 'stroke-width': 1.2, opacity: .7}, svg);
+  const lay = svgEl('g', {}, svg), lk = svgEl('g', {}, svg);
+  let y = 18 + txtWrap(lay, 14, 18, `Stage view · stretch ${k}: ${s ? s.layers.join(', ') : ''} · TP4 rank dies, four HBM3E stacks each`, W - 28, {fs: 12.5});
+  const stubW = wide ? 56 : Math.min(160, W * 0.4), stubH = wide ? 120 : 34;
+  let dies = [], prev, next, H;
+  if (wide){
+    const gap = 40, inner = W - 2 * (14 + stubW + 40); const dw = Math.min(150, (inner - 3 * gap) / 4), dh = dw * 0.79;
+    const x0 = (W - (4 * dw + 3 * gap)) / 2, dy = y + 50;
+    for (let r = 0; r < 4; r++) dies.push({x: x0 + r * (dw + gap), y: dy, w: dw, h: dh});
+    prev = {x: 14, y: dy + dh / 2 - stubH / 2, w: stubW, h: stubH}; next = {x: W - 14 - stubW, y: prev.y, w: stubW, h: stubH};
+    H = dy + dh + 70;
+  } else {
+    prev = {x: (W - stubW) / 2, y: y + 6, w: stubW, h: stubH};
+    const gap = 34, dw = Math.min(140, (W - 28 - gap) / 2), dh = dw * 0.79, x0 = (W - (2 * dw + gap)) / 2, dy = prev.y + stubH + 46;
+    for (let r = 0; r < 4; r++) dies.push({x: x0 + (r % 2) * (dw + gap), y: dy + Math.floor(r / 2) * (dh + gap + 14), w: dw, h: dh});
+    next = {x: prev.x, y: dies[3].y + dh + 40, w: stubW, h: stubH};
+    H = next.y + stubH + 16;
   }
-  const n1 = svgEl('text', {x: 150, y: 350, 'font-size': 11.5, fill: css('--ink')}, svg); n1.textContent = 'dashed: TP4 collectives inside the stage (all-gather, all-reduce); solid: stage hop over light-FEC board link + UCIe fan-out.';
-  const n2 = svgEl('text', {x: 150, y: 370, 'font-size': 11.5, fill: css('--muted')}, svg); n2.textContent = 'Double-click any cell in the System view to open it here; the die floorplan below is one of these rank dies.';
+  for (const [b, lab, id] of [[prev, 'stage k−1', 'sp'], [next, 'stage k+1', 'sn']]){
+    const g = svgEl('g', {class: 'nd', 'data-id': id}, svg);
+    svgEl('rect', {x: b.x, y: b.y, width: b.w, height: b.h, fill: 'none', stroke: css('--die-edge'), 'stroke-dasharray': '4 3'}, g);
+    txt(g, b.x + b.w / 2, b.y + b.h / 2 + 4, lab, {fs: 11, anchor: 'middle'});
+  }
+  dies.forEach((d, r) => { dieGlyph(svg, d.x, d.y, d.w, d.h, mix(bg, css('--k-field'), .35), 'ns', {label: 'rank ' + r, fs: 13, id: 'r' + r}); });
+  // stage hops in and out of every rank die (solid), TP4 collectives between ranks (dashed)
+  const lwS = lw(L.ds_stage), lwT = lw(L.ds_tp);
+  dies.forEach((d, r) => {
+    let din, dout;
+    if (wide){ din = `M${prev.x + prev.w} ${prev.y + prev.h / 2} C${prev.x + prev.w + 30} ${prev.y + prev.h / 2} ${d.x - 30} ${d.y + d.h * 0.8} ${d.x - 2} ${d.y + d.h * 0.8}`; dout = `M${d.x + d.w + 1} ${d.y + d.h * 0.2} C${d.x + d.w + 30} ${d.y + d.h * 0.2} ${next.x - 30} ${next.y + next.h / 2} ${next.x - 3} ${next.y + next.h / 2}`; }
+    else { din = `M${prev.x + prev.w / 2} ${prev.y + prev.h} C${prev.x + prev.w / 2} ${d.y - 30} ${d.x + d.w * 0.3} ${prev.y + prev.h + 10} ${d.x + d.w * 0.3} ${d.y - 13}`; dout = `M${d.x + d.w * 0.7} ${d.y + d.h + 13} C${d.x + d.w * 0.7} ${next.y - 10} ${next.x + next.w / 2} ${d.y + d.h + 30} ${next.x + next.w / 2} ${next.y - 3}`; }
+    if (!wide && r < 2) din = `M${prev.x + prev.w / 2} ${prev.y + prev.h} L${d.x + d.w * 0.3} ${d.y - 13}`;
+    if (!wide && r >= 2) dout = `M${d.x + d.w * 0.7} ${d.y + d.h + 13} L${next.x + next.w / 2} ${next.y - 3}`;
+    if (!wide && r >= 2) din = `M${prev.x + prev.w / 2} ${prev.y + prev.h} L${prev.x + prev.w / 2} ${prev.y + prev.h + 4} L${r === 2 ? 6 : W - 6} ${prev.y + prev.h + 18} L${r === 2 ? 6 : W - 6} ${d.y + d.h / 2} L${r === 2 ? d.x - 2 : d.x + d.w + 2} ${d.y + d.h / 2}`;
+    if (!wide && r < 2) dout = `M${r === 0 ? d.x - 2 : d.x + d.w + 2} ${d.y + d.h / 2} L${r === 0 ? 14 : W - 14} ${d.y + d.h / 2} L${r === 0 ? 14 : W - 14} ${next.y + next.h / 2} L${r === 0 ? next.x - 2 : next.x + next.w + 2} ${next.y + next.h / 2}`;
+    link(lk, din, {w: lwS, arrow: true, flow: true, ends: ['sp', 'r' + r], tip: linkTip(`Stage hop in → rank ${r}`, L.ds_stage, `${vs(DATA.ds_hop, 4)} µs measured`)});
+    link(lk, dout, {w: lwS, arrow: true, flow: true, ends: ['r' + r, 'sn'], tip: linkTip(`Stage hop out of rank ${r}`, L.ds_stage, `${vs(DATA.ds_hop, 4)} µs measured`)});
+  });
+  const pairs = wide ? [[0, 1], [1, 2], [2, 3]] : [[0, 1], [2, 3], [0, 2], [1, 3]];
+  for (const [a, b] of pairs){
+    const A = dies[a], B = dies[b]; let d;
+    if (A.y === B.y) d = `M${A.x + A.w + 2} ${A.y + A.h / 2} L${B.x - 2} ${B.y + B.h / 2}`; else d = `M${A.x + A.w / 2} ${A.y + A.h + 13} L${B.x + B.w / 2} ${B.y - 13}`;
+    link(lk, d, {w: lwT, dash: '6 4', ends: ['r' + a, 'r' + b], tip: linkTip(`TP4 collective link, rank ${a} ↔ rank ${b}`, L.ds_tp, 'all-gather and all-reduce inside the stage')});
+  }
+  H += 8 + txtWrap(lay, 14, H, 'Dashed: TP4 collectives inside the stage (all-gather, all-reduce). Solid with arrows: stage hops over the light-FEC board link + UCIe fan-out. The die floorplan below is one of these rank dies.', W - 28, {fs: 11.5, fill: css('--ink')});
+  sizeSvg(svg, W, H + 4);
   renderDsArrayRead(k);
 }
 function drawQwenSystem(svg){
-  const W = 900, H = 330; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-  const g = geo('qwen_rom'); const ar = g.W / g.H; const h = 190, w = h * ar;
+  const W = arrW(), wide = W >= 640; const L = DATA.links || {};
+  linkDefs(svg);
+  const g = geo('qwen_rom'); const ar = g.W / g.H;
+  const lay = svgEl('g', {}, svg), lk = svgEl('g', {}, svg);
+  const y0 = 16 + txtWrap(lay, 14, 18, 'TP4 group · each die streams KV for its heads from its own 4 stacks · all-reduce after attention and after the MLP', W - 28, {fs: 12}) + 14;
+  const cols = wide ? 4 : 2, gap = wide ? 54 : 40;
+  const w = Math.min(150, (W - 28 - (cols - 1) * gap - 30) / cols), h = w / ar;
+  const x0 = (W - (cols * w + (cols - 1) * gap)) / 2;
+  const P = [];
   for (let r = 0; r < 4; r++){
-    const x = 60 + r * 210, y = 60;
-    const gg = dieGlyph(svg, x, y, w, h, mix(css('--die'), css('--k-field'), .35), 'ew', {label: 'rank ' + r, fs: 13});
-    gg.setAttribute('tabindex', 0);
+    const x = x0 + (r % cols) * (w + gap), y = y0 + Math.floor(r / cols) * (h + 50);
+    P.push({x, y});
+    const gg = dieGlyph(svg, x, y, w, h, mix(css('--die'), css('--k-field'), .35), 'ew', {label: 'rank ' + r, fs: 13, id: 'q' + r});
+    gg.setAttribute('tabindex', 0); gg.setAttribute('role', 'img'); gg.setAttribute('aria-label', `Qwen ROM die, rank ${r}`);
     gg.addEventListener('mousemove', ev => showTip(`<b>Qwen ROM die, rank ${r}</b><br>${fmt(val(DATA.dies.qwen_rom.area), 2)} mm² · 1,536 ROM tiles · 4 HBM3E stacks`, ev));
     gg.addEventListener('mouseleave', hideTip);
-    if (r < 3) svgEl('path', {d: `M${x + w + 22} ${y + h + 26} H ${x + 210 - 22}`, stroke: css('--k-link'), 'stroke-width': 2.4, fill: 'none'}, svg);
   }
-  svgEl('path', {d: `M${60 + w / 2} ${60 + h + 26} V ${60 + h + 50} H ${60 + 3 * 210 + w / 2} V ${60 + h + 26}`, stroke: css('--k-link'), 'stroke-width': 1.4, fill: 'none', 'stroke-dasharray': '5 4'}, svg);
-  const t = svgEl('text', {x: 60, y: 40, 'font-size': 12, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg); t.textContent = 'TP4 group · each die streams KV for its heads from its own 4 stacks · all-reduce after attention and after the MLP';
+  const ring = [[0, 1], [1, 2], [2, 3], [3, 0]];
+  const yBus = Math.max(...P.map(p => p.y)) + h + 30;
+  for (const [a, b] of ring){
+    const A = P[a], B = P[b]; let d;
+    if (A.y === B.y && Math.abs(A.x - B.x) < w + gap + 1) d = `M${Math.min(A.x, B.x) + w + 12} ${A.y + h / 2} L${Math.max(A.x, B.x) - 12} ${A.y + h / 2}`;
+    else if (A.x === B.x) d = `M${A.x + w / 2} ${Math.min(A.y, B.y) + h + 4} L${A.x + w / 2} ${Math.max(A.y, B.y) - 4}`;
+    else d = `M${A.x + w / 2} ${A.y + h + 4} L${A.x + w / 2} ${yBus} L${B.x + w / 2} ${yBus} L${B.x + w / 2} ${B.y + h + 4}`;
+    link(lk, d, {w: lw(L.qwen_ar), ends: ['q' + a, 'q' + b], tip: linkTip(`All-reduce link, rank ${a} ↔ rank ${b}`, L.qwen_ar, '')});
+  }
+  sizeSvg(svg, W, yBus + 22);
   arrayRead(`<div class="eyebrow">System</div><h3>Four ROM dies, sixteen stacks</h3><dl><dt>Dies</dt><dd>4 (TP4 ranks)</dd><dt>Die area</dt><dd>${vs(DATA.dies.qwen_rom.area, 2)} mm²</dd><dt>KV fill</dt><dd>3.734 TB/s, 93.4 % of 4-stack peak</dd><dt>Token</dt><dd>${fmt0(val(DATA.rates.qwen.cycles))} cycles</dd></dl><div class="src">${pill('measured')} results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json (ranks 4); STREAM4 fill from results/arch/measured_scoreboard/README.md</div>`);
 }
 function drawHbmSystem(svg){
+  const W = arrW(), narrow = W < 560; const L = DATA.links || {};
+  linkDefs(svg);
+  const lay = svgEl('g', {}, svg), lk = svgEl('g', {}, svg);
   if (state.hbmModel === 'qwen'){
-    const W = 900, H = 320; svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-    const g = geo('hbm_qwen'); const w = 150, h = w / (g.W / g.H);
-    for (let r = 0; r < 4; r++){ const x = 60 + r * 205, y = 80; dieGlyph(svg, x, y, w, h, mix(css('--die'), css('--k-field'), .35), 'ns', {label: 'TP4 rank ' + r}); svgEl('line', {x1: x + w / 2, y1: y + h + 22, x2: 450, y2: 270, stroke: css('--k-link'), 'stroke-width': 1.4}, svg); }
-    svgEl('rect', {x: 390, y: 268, width: 120, height: 26, fill: css('--k-link'), rx: 2}, svg);
-    const tl = svgEl('text', {x: 450, y: 285, 'text-anchor': 'middle', 'font-size': 11, fill: css('--bg')}, svg); tl.textContent = 'switch / direct links';
-    const t = svgEl('text', {x: 60, y: 40, 'font-size': 12, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg); t.textContent = 'Qwen3-8B 8K: TP4 iso-silicon (4 tile dies) or TP2 same silicon (2 dies)';
+    const y0 = 16 + txtWrap(lay, 14, 18, 'Qwen3-8B 8K: TP4 iso-silicon (4 tile dies) or TP2 same silicon (2 dies)', W - 28, {fs: 12}) + 20;
+    const g = geo('hbm_qwen'); const cols = W >= 640 ? 4 : 2, gap = 40; const w = Math.min(150, (W - 28 - (cols - 1) * gap) / cols), h = w / (g.W / g.H);
+    const x0 = (W - (cols * w + (cols - 1) * gap)) / 2;
+    const rowsN = Math.ceil(4 / cols), swY = y0 + rowsN * (h + 34) + 20, swW = Math.min(220, W - 40), swX = (W - swW) / 2;
+    const sw = svgEl('g', {class: 'nd', 'data-id': 'qs'}, svg);
+    svgEl('rect', {x: swX, y: swY, width: swW, height: 26, fill: css('--k-link'), rx: 2}, sw);
+    txt(sw, W / 2, swY + 17, 'switch / direct links', {fs: 11, anchor: 'middle', fill: css('--bg')});
+    for (let r = 0; r < 4; r++){
+      const x = x0 + (r % cols) * (w + gap), y = y0 + Math.floor(r / cols) * (h + 34);
+      dieGlyph(svg, x, y, w, h, mix(css('--die'), css('--k-field'), .35), 'ns', {label: 'TP4 rank ' + r, id: 'qh' + r});
+      const xs = x + w / 2, xe = swX + swW * (0.2 + 0.2 * r);
+      const below = Math.floor(r / cols) === rowsN - 1;
+      const d = below ? `M${xs} ${y + h + 12} L${xs} ${swY - 8} L${xe} ${swY - 8} L${xe} ${swY - 2}` : `M${x - 6} ${y + h / 2} L${r % cols ? x + w + 14 : x - 14} ${y + h / 2} L${r % cols ? x + w + 14 : x - 14} ${swY - 14} L${xe} ${swY - 14} L${xe} ${swY - 2}`;
+      link(lk, below ? d : (r % cols ? `M${x + w + 2} ${y + h / 2} L${x + w + 14} ${y + h / 2} L${x + w + 14} ${swY - 14} L${xe} ${swY - 14} L${xe} ${swY - 2}` : d), {w: lw(L.hbm_qwen), flow: true, ends: ['qh' + r, 'qs'], tip: linkTip(`Rank ${r} link to the switch`, L.hbm_qwen, '')});
+    }
+    sizeSvg(svg, W, swY + 40);
     arrayRead(`<div class="eyebrow">System</div><h3>Qwen tile dies</h3><dl><dt>TP4 AR</dt><dd>${vs(DATA.rates.hbm_qwen.AR)} tok/s</dd><dt>TP2 AR</dt><dd>${vs(DATA.rates.hbm_qwen.AR_tp2)} tok/s</dd><dt>Unpriced TP4</dt><dd>${vs(DATA.rates.hbm_qwen.AR_unpriced)} tok/s</dd><dt>Die</dt><dd>${vs(DATA.dies.hbm_qwen.area, 2)} mm²</dd></dl>${srcLine(DATA.rates.hbm_qwen.AR)}`);
     return;
   }
-  const cols = 16, rows = 6, dw = 34, dh = dw / (24401.52 / 19722.96), gx = 18, gy = 34, x0 = 30, y0 = 54;
-  const W = x0 * 2 + cols * (dw + gx), H = y0 + rows * (dh + gy) + 110;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-  const swY = y0 + 3 * (dh + gy) - gy / 2 - 8;
-  for (let i = 0; i < 96; i++){
-    const r = Math.floor(i / cols), c = i % cols; const x = x0 + c * (dw + gx), y = y0 + r * (dh + gy) + (r >= 3 ? 30 : 0);
-    svgEl('line', {x1: x + dw / 2, y1: r < 3 ? y + dh + 7 : y - 7, x2: x0 + ((i * 7) % 8 + 0.5) * (W - 2 * x0) / 8, y2: swY + 10, stroke: css('--k-link'), 'stroke-width': 0.35, opacity: .55}, svg);
-    dieGlyph(svg, x, y, dw, dh, mix(css('--die'), css('--k-field'), .35), 'ns');
+  const n = val(DATA.hbm_system.dies), nSw = val(DATA.hbm_system.switch_chips) || 8;
+  const y0 = 16 + txtWrap(lay, 14, 18, `${n} dies · TP-${n} · ${4 * n} HBM3E stacks · Tomahawk-Ultra switch tier (${nSw} chips; count is an estimate) · each die stripes its ports over every switch chip`, W - 28, {fs: 12}) + 22;
+  const cols = narrow ? 12 : 16, rowsN = Math.ceil(n / cols), half = Math.ceil(rowsN / 2);
+  const pitch = (W - 24) / cols, gutter = Math.max(9, pitch * 0.32), dw = pitch - gutter, dh = dw / (24401.52 / 19722.96);
+  const rowP = dh + (narrow ? 16 : 22);
+  const swH = narrow ? 18 : 22, swY = y0 + half * rowP + 14;
+  const yBot = swY + swH + 28;
+  const x0 = 12;
+  // switch tier: a band with nSw chips
+  const band = svgEl('rect', {x: x0, y: swY - 6, width: W - 2 * x0, height: swH + 12, fill: 'none', stroke: css('--line'), 'stroke-dasharray': '3 3', rx: 3}, svg);
+  const chipW = (W - 2 * x0 - 8) / nSw;
+  const chipG = [];
+  for (let s = 0; s < nSw; s++){
+    const g = svgEl('g', {class: 'nd sw-chip', 'data-id': 's' + s, tabindex: 0, role: 'img', 'aria-label': `Switch chip ${s}`}, svg);
+    svgEl('rect', {x: x0 + 4 + s * chipW + 3, y: swY, width: chipW - 6, height: swH, fill: css('--k-link'), rx: 2}, g);
+    if (chipW > 50) txt(g, x0 + 4 + s * chipW + chipW / 2, swY + swH / 2 + 4, 'TU ' + s, {fs: 10.5, anchor: 'middle', fill: css('--bg')});
+    chipG.push(g);
   }
-  for (let s = 0; s < 8; s++){ const x = x0 + s * (W - 2 * x0) / 8 + 8; svgEl('rect', {x, y: swY, width: (W - 2 * x0) / 8 - 16, height: 20, fill: css('--k-link'), rx: 2}, svg); }
-  const t = svgEl('text', {x: x0, y: 26, 'font-size': 12, 'font-family': 'var(--f-mono)', fill: css('--muted')}, svg); t.textContent = '96 dies · TP-96 · 384 HBM3E stacks · Tomahawk-Ultra switch tier (8 chips drawn; count is an estimate)';
-  arrayRead(`<div class="eyebrow">System</div><h3>96 dies around a switch tier</h3><dl><dt>Dies</dt><dd>${vs(DATA.hbm_system.dies, 0)}</dd><dt>Switch</dt><dd>${vs(DATA.hbm_system.switch)}</dd><dt>TU share of AR</dt><dd>${vs(DATA.hbm_system.tu_budget_share, 4)}</dd><dt>Die wire added</dt><dd>${vs(DATA.rates.hbm_ds.wire_us, 3)} µs</dd></dl>${srcLine(DATA.hbm_system.dies)}${srcLine(DATA.hbm_system.switch)}`);
+  // fan layer (shown on hover): die column foot -> every switch chip
+  const fan = svgEl('g', {class: 'fan'}, svg);
+  const lwU = lw(L.hbm_uplink);
+  const dieEnds = [];
+  const allIds = Array.from({length: nSw}, (_, s) => 's' + s);
+  for (let i = 0; i < n; i++){
+    const r = Math.floor(i / cols), c = i % cols, top = r < half;
+    const x = x0 + c * pitch + gutter / 2, y = top ? y0 + r * rowP : yBot + (r - half) * rowP;
+    const id = 'hd' + i; dieEnds.push(id);
+    const gg = dieGlyph(svg, x, y, dw, dh, mix(css('--die'), css('--k-field'), .35), 'ns', {id});
+    gg.setAttribute('tabindex', 0); gg.setAttribute('role', 'img'); gg.setAttribute('aria-label', `HBM accelerator die ${i}`);
+    // uplink: a short stub into the right-hand gutter, then down (or up) the gutter to the switch band. Each row uses its own lane in the gutter.
+    const nLane = half, lane = top ? (half - 1 - r) : (r - half);
+    const gxL = x + dw + 2 + (gutter - 4) * (lane + 0.5) / nLane;
+    const ym = y + dh / 2;
+    const yEnd = top ? swY - 1 : swY + swH + 1;
+    const d = `M${x + dw + 1} ${ym} L${gxL} ${ym} L${gxL} ${yEnd}`;
+    const sC = Math.min(nSw - 1, Math.floor((gxL - x0 - 4) / chipW));
+    const lkG = link(lk, d, {w: Math.max(1.6, Math.min(lwU, (gutter - 4) / nLane - 0.6)), flow: true, ends: [id].concat(allIds), tip: linkTip(`Die ${i} uplink`, L.hbm_uplink, `striped over all ${nSw} switch chips; lands on TU ${sC} here`)});
+    const showFan = on => { clear(fan); if (!on) return; for (let s = 0; s < nSw; s++){ const cx = x0 + 4 + s * chipW + chipW / 2; svgEl('path', {d: `M${gxL} ${yEnd} L${cx} ${top ? swY + 3 : swY + swH - 3}`, class: 'fan-line'}, fan); } };
+    lkG.addEventListener('mouseenter', () => showFan(true)); lkG.addEventListener('mouseleave', () => showFan(false));
+    gg.addEventListener('mouseenter', () => { showFan(true); lkG.classList.add('hot'); hotIds(svg, allIds, true); });
+    gg.addEventListener('mouseleave', () => { showFan(false); lkG.classList.remove('hot'); hotIds(svg, allIds, false); hideTip(); });
+    gg.addEventListener('mousemove', ev => showTip(`<b>Die ${i}</b> · TP-${n} rank ${i}<br>${fmt(val(DATA.dies.hbm_ds.area), 1)} mm² · 4 HBM3E stacks<br>uplink striped over ${nSw} switch chips`, ev));
+    gg.addEventListener('focus', () => { lkG.classList.add('hot'); hotIds(svg, allIds, true); }); gg.addEventListener('blur', () => { lkG.classList.remove('hot'); hotIds(svg, allIds, false); });
+  }
+  chipG.forEach((g, s) => {
+    g.addEventListener('mouseenter', () => { svg.querySelectorAll('.lk').forEach(l => l.classList.add('hot')); hotIds(svg, dieEnds.concat(['s' + s]), true); });
+    g.addEventListener('mouseleave', () => { svg.querySelectorAll('.lk').forEach(l => l.classList.remove('hot')); hotIds(svg, dieEnds.concat(['s' + s]), false); hideTip(); });
+    g.addEventListener('mousemove', ev => showTip(`<b>Switch chip ${s}</b> · Tomahawk-Ultra class<br>every die has a port here (striped crossing)<br>${vs(DATA.hbm_system.switch)}`, ev));
+  });
+  const H = yBot + (rowsN - half) * rowP + 4;
+  sizeSvg(svg, W, H);
+  arrayRead(`<div class="eyebrow">System</div><h3>${n} dies around a switch tier</h3><dl><dt>Dies</dt><dd>${vs(DATA.hbm_system.dies, 0)}</dd><dt>Switch</dt><dd>${vs(DATA.hbm_system.switch)}</dd><dt>Uplink</dt><dd>${L.hbm_uplink ? vs(L.hbm_uplink, 0) + ' ' + esc(L.hbm_uplink.unit) : '—'}</dd><dt>TU share of AR</dt><dd>${vs(DATA.hbm_system.tu_budget_share, 4)}</dd><dt>Die wire added</dt><dd>${vs(DATA.rates.hbm_ds.wire_us, 3)} µs</dd></dl>${srcLine(DATA.hbm_system.dies)}${srcLine(DATA.hbm_system.switch)}${L.hbm_uplink ? srcLine(L.hbm_uplink) : ''}`);
+}
+
+/* ================================================================ 2. RACK */
+/* Elevation drawn to scale (ORv3 OpenU = 48 mm, 44 OU, 600 mm frame) with the deployment's racks side by side;
+   packages inside a tray are drawn schematically on the elevation and to scale in the tray plan. */
+const RK_KIND = { power: ['Power shelf', '--busbar'], stage: ['Stage tray (2 stages × TP4)', '--k-field'], head: ['Head tray', '--k-tree'], table: ['Engram table tray', '--k-index'],
+  draft: ['Draft tray (DP1-EP5)', '--k-attn'], compute: ['Compute tray', '--k-field'], qtray: ['Qwen TP4 tray', '--k-field'], switch: ['Switch tray', '--k-link'], host: ['Host', '--k-ctrl'], mgmt: ['Management', '--k-res'] };
+const rackState = { tray: null, rack: 0 };
+function rackW(){ const s = $('rackScroll'); return Math.max(280, Math.floor((s && s.clientWidth) || 900)); }
+function rkData(){ return state.design === 'ds' ? DATA.racks.ds : state.design === 'hbm' ? DATA.racks.hbm : DATA.racks.qwen; }
+function trayList(){ const out = []; val(rkData().racks).forEach((rk, ri) => rk.rows.forEach(r => { if (r.pk) out.push({ri, row: r, rk}); })); return out; }
+function dieRole(p, id){
+  if (p.r === 'stage'){ const m = /s(\d+)r(\d+)/.exec(id); return `stage ${m[1]} rank ${m[2]}`; }
+  return ({head: 'head die ', table: 'Engram table die ', draft: 'draft die ', hbm: 'HBM accelerator die ', qwen: 'Qwen ROM rank '})[p.r] + id.replace(/^[a-z]/, '');
+}
+function trayDies(row){ return row.pk.map(p => p.d.map(id => dieRole(p, id)).join(', ')).join('; '); }
+function stageSpan(rk){ const ss = []; rk.rows.forEach(r => (r.pk || []).forEach(p => { if (p.s != null) ss.push(p.s); })); return ss.length ? `S${Math.min(...ss)}–S${Math.max(...ss)}` : ''; }
+function renderRack(){
+  const d = state.design, RD = rkData(), F = DATA.racks.frame, R = DATA.rates;
+  const racks = val(RD.racks), C = val(RD.counts);
+  const sum = k => racks.reduce((a, r) => a + r[k], 0);
+  const lede = { ds: `The S81 pipeline packed into Open Rack v3 racks with liquid-cooled 1 OU trays of four two-die packages, two pipeline stages a tray. ${racks.length} racks hold ${fmt0(C.dies)} dies. The packing is derived from the legacy rack study's tray, power and cable template; it is not a committed S81 rack design.`,
+    hbm: `The HBM accelerator's ${fmt0(C.dies)} dies in ${C.packages} two-die packages, four packages a liquid-cooled 1 OU tray, around one Tomahawk-Ultra tier of ${C.switch_chips} switch chips. Every package stripes ${C.ports_per_package} ports of 800G over the switch chips, so each collective is one or two switch crossings.`,
+    qwen: 'The Qwen ROM TP4 group is two two-die packages on one tray: a rack holds many independent groups, and one is drawn. Shown for scale beside the two array machines.' }[d];
+  $('rackLede').textContent = lede;
+  // KPI row
+  const kv = (label, v, unit, x) => `<div class="kpi"><div class="k"><span>${esc(label)}</span>${pill(st(x))}</div><div class="v num">${v}<small>${esc(unit)}</small></div></div>`;
+  const rateX = d === 'ds' ? R.ds.MTP : d === 'hbm' ? R.hbm_ds.AR : R.qwen.AR;
+  $('rackKpis').innerHTML = kv('Racks', racks.length, d === 'qwen' ? ' (one group)' : '', RD.racks) + kv('Dies', fmt0(C.dies), '', RD.counts) + kv('Packages', fmt0(C.packages), '', RD.counts) +
+    kv('Provisioned', fmt(sum('prov_kw'), 1), 'kW', RD.racks) + kv('Per user', vs(rateX, 0), d === 'ds' ? 'tok/s MTP' : 'tok/s AR', rateX);
+  // tools: tray kinds legend and selection hint
+  $('rackTools').innerHTML = `<span class="muted" style="font-size:12px">${racks.length > 1 ? racks.length + ' racks side by side · ' : ''}to scale: ${vs(F.ou_mm, 0)} mm OpenU, ${vs(F.usable_ou, 0)} OU · hover a tray for its dies, click it for its plan, click a die to open it below</span>`;
+  const kinds = [...new Set(racks.flatMap(r => r.rows.map(x => x.kind)))];
+  $('rackLegend').innerHTML = kinds.map(k => `<span><i class="sw" style="background:var(${RK_KIND[k][1]})"></i>${esc(RK_KIND[k][0])}</span>`).join('') +
+    `<span><i class="sw" style="background:var(--cool-sup)"></i>coolant supply</span><span><i class="sw" style="background:var(--cool-ret)"></i>coolant return</span><span><i class="sw lk-sw" style="height:3px"></i>${d === 'ds' ? 'token path (stage hops)' : d === 'hbm' ? 'switch uplinks' : 'all-reduce'}</span>`;
+  drawRack();
+  rackTables();
+}
+function drawRack(){
+  const svg = $('rackSvg'); clear(svg); linkDefs(svg);
+  const d = state.design, RD = rkData(), F = DATA.racks.frame; const racks = val(RD.racks);
+  const W = rackW(), narrow = W < 640;
+  const OU = val(F.ou_mm), NOU = d === 'qwen' ? racks[0].used_ou + 1 : val(F.usable_ou), frameW = 600, bayW = val(F.width_mm);
+  // scale: the elevation height is fixed in px; width follows the real 600 mm frame
+  const plan = W >= 820; // tray plan beside the racks when wide, below when narrow
+  const availW0 = (W >= 820) ? W * 0.6 : W, nR = racks.length, gap0 = narrow ? 34 : 56;
+  const k = Math.min((d === 'qwen' ? Math.min(220, NOU * 26) : (narrow ? 520 : 600)) / (NOU * OU), (availW0 - 28 - 30 - (nR - 1) * gap0) / (nR * frameW)); // px per mm
+  const elevH = k * NOU * OU;
+  let rw = frameW * k; const gap = narrow ? 34 : 56, sideL = 28;
+  const availW = plan ? W * 0.6 : W;
+  let n = racks.length; let rackX0 = sideL + (availW - sideL - (n * rw + (n - 1) * gap)) / 2;
+  if (rackX0 < sideL){ rackX0 = sideL; }
+  const y0 = 30;
+  const lay = svgEl('g', {}, svg), body = svgEl('g', {}, svg), lk = svgEl('g', {}, svg);
+  txt(lay, 8, 16, d === 'qwen' ? 'Elevation (to scale): one TP4 tray' : `Elevation (to scale) · ${racks.length} rack${racks.length > 1 ? 's' : ''}, ORv3 ${val(F.usable_ou)} OU`, {fs: 12});
+  const centers = {}; // stage -> [x,y]
+  const trayPos = [];
+  racks.forEach((rk, ri) => {
+    const x = rackX0 + ri * (rw + gap), y = y0;
+    svgEl('rect', {x: x - 4, y: y - 4, width: rw + 8, height: elevH + 8, fill: 'none', stroke: css('--rk-frame'), 'stroke-width': 2.5, rx: 2}, body);
+    const bx = x + (frameW - bayW) / 2 * k, bw = bayW * k;
+    svgEl('rect', {x: bx, y, width: bw, height: elevH, fill: css('--rk-slot')}, body);
+    txt(lay, x + rw / 2, y + elevH + 18, rk.name + (stageSpan(rk) ? ' · ' + stageSpan(rk) : ''), {fs: 11.5, anchor: 'middle', fill: css('--ink'), weight: 600});
+    txt(lay, x + rw / 2, y + elevH + 32, `${rk.used_ou}/${val(F.usable_ou)} OU · ${fmt(rk.prov_kw, 1)} kW`, {fs: 10, anchor: 'middle'});
+    // busbar (left rail) and liquid manifolds (right rails)
+    svgEl('rect', {x: x - 3, y, width: 2.5, height: elevH, fill: css('--busbar')}, body);
+    const ms = x + rw + 3, mr = x + rw + 8;
+    svgEl('line', {x1: ms, y1: y - 2, x2: ms, y2: y + elevH, class: 'cool-sup', 'stroke-width': 2.5}, body);
+    svgEl('line', {x1: mr, y1: y - 2, x2: mr, y2: y + elevH, class: 'cool-ret', 'stroke-width': 2.5}, body);
+    rk.rows.forEach(row => {
+      const ry = y + elevH - (row.ou - 1 + row.h) * OU * k, rh = row.h * OU * k;
+      const col = css(RK_KIND[row.kind][1]);
+      const g = svgEl('g', row.pk ? {class: 'nd rk-tray' + (rackState.tray && rackState.tray.ri === ri && rackState.tray.ou === row.ou ? ' sel' : ''), 'data-id': `t${ri}_${row.ou}`, tabindex: 0, role: 'button', 'aria-label': `${rk.name} OU ${row.ou}: ${row.label}`} : {class: 'nd', 'data-id': `s${ri}_${row.ou}`}, body);
+      svgEl('rect', {x: bx + 0.5, y: ry + 0.5, width: bw - 1, height: Math.max(1, rh - 1), fill: mix(css('--die'), col, row.pk ? .22 : .55), stroke: col, 'stroke-width': 0.8}, g);
+      if (row.pk){
+        // packages drawn schematically along the tray front: dies in field colour, HBM ticks
+        const np = row.pk.length, pw = (bw - 8) / 4;
+        row.pk.forEach((p, i) => {
+          const px = bx + 4 + i * pw + 1, ph = Math.max(2, rh - 3);
+          const dw = (pw - 4) / p.d.length;
+          p.d.forEach((id, j) => svgEl('rect', {x: px + 1 + j * dw, y: ry + 1.5, width: dw - 1, height: ph - 0.5, fill: col, opacity: .85}, g));
+        });
+        if (row.kind !== 'power'){ svgEl('line', {x1: bx + bw, y1: ry + rh * 0.35, x2: ms, y2: ry + rh * 0.35, class: 'cool-sup', 'stroke-width': 1}, body); svgEl('line', {x1: bx + bw, y1: ry + rh * 0.7, x2: mr, y2: ry + rh * 0.7, class: 'cool-ret', 'stroke-width': 1}, body); }
+        row.pk.forEach(p => { if (p.s != null) centers[p.s] = [bx + 6, ry + rh / 2]; });
+        trayPos.push({ri, row, x: bx, y: ry, w: bw, h: rh});
+        g.addEventListener('mousemove', ev => showTip(`<b>${esc(rk.name)} · OU ${row.ou}</b> · ${esc(row.label)}<br>${row.pk.length} packages · ${row.pk.reduce((a, p) => a + p.d.length, 0)} dies · ${fmt(row.w, 0)} W chips<br>${esc(trayDies(row)).slice(0, 420)}`, ev));
+        g.addEventListener('mouseleave', hideTip);
+        keyActivate(g, () => { rackState.tray = {ri, ou: row.ou}; drawRack(); const n2 = $('rackSvg').querySelector(`[data-id="t${ri}_${row.ou}"]`); if (n2) n2.focus(); });
+      } else {
+        if (rh >= 9 && bw > 70) txt(g, bx + 4, ry + rh / 2 + 3.5, row.label.split(' (')[0].slice(0, Math.floor(bw / 5.4)), {fs: 8.5, fill: css('--ink')});
+        g.addEventListener('mousemove', ev => showTip(`<b>${esc(rk.name)} · OU ${row.ou}${row.h > 1 ? '–' + (row.ou + row.h - 1) : ''}</b><br>${esc(row.label)}`, ev));
+        g.addEventListener('mouseleave', hideTip);
+      }
+    });
+    // OU ruler every 10 OU
+    for (let u = 0; u <= NOU; u += 10) txt(lay, x + rw + 12, y + elevH - u * OU * k + 3, String(u), {fs: 8.5});
+  });
+  // overlays: the token path through the stage trays (DS), switch uplinks (HBM), the all-reduce (Qwen)
+  const L = DATA.links || {};
+  if (d === 'ds'){
+    const C = val(RD.counts); let path = '';
+    for (let s = 0; s < C.stages; s++){ const c = centers[s]; if (!c) continue; path += (path ? ' L' : 'M') + c[0] + ' ' + c[1]; }
+    link(lk, path, {w: lw(L.ds_stage), hit: 6, flow: true, tip: linkTip('Token path through the stage trays', L.ds_stage, `${val(RD.hops).tray} hops inside a tray, ${val(RD.hops).rack} tray to tray, ${val(RD.hops).cross} rack to rack`)});
+    // token return: last stage back to the head tray
+    const head = trayPos.find(t => t.row.kind === 'head'); const last = centers[C.stages - 1];
+    if (head && last){ const hx = head.x + head.w / 2, hy = head.y + head.h / 2; const ym = y0 + elevH + 44; link(lk, `M${last[0]} ${last[1]} L${last[0]} ${ym} L${hx} ${ym} L${hx} ${hy}`, {w: 2, dash: '5 4', tip: linkTip('Token return: last stage to the head dies', null, `${vs(DATA.ds_system.draft_hop, 3)} µs draft hop class; token return ${fmt(1.155, 3)} µs measured`)}); }
+  } else if (d === 'hbm'){
+    const sw = racks[0].rows.filter(r => r.kind === 'switch');
+    const rk = racks[0], x = rackX0, bx = x + (frameW - bayW) / 2 * k;
+    const trunkX = rackX0 + rw + 18;
+    const swY = sw.map(r => y0 + elevH - (r.ou - 1 + r.h / 2) * OU * k);
+    trayPos.forEach((t, i) => {
+      const yy = t.y + t.h / 2;
+      link(lk, `M${t.x + t.w * 0.15} ${yy} L${t.x - 10 - (i % 3) * 3} ${yy} L${t.x - 10 - (i % 3) * 3} ${swY[i % swY.length]} L${t.x + 2} ${swY[i % swY.length]}`,
+        {w: Math.min(3.2, lw(L.hbm_uplink) * 0.7), ends: [`t0_${t.row.ou}`].concat(sw.map(r => `s0_${r.ou}`)), tip: linkTip(`Compute tray at OU ${t.row.ou}: ${t.row.pk.length * 8} ports of 800G`, L.hbm_uplink, 'each package stripes 8 ports over all switch chips; drawn as one bundle per tray')});
+    });
+  } else {
+    const t = trayPos[0]; if (t){ link(lk, `M${t.x + t.w * 0.3} ${t.y + t.h / 2} L${t.x + t.w * 0.7} ${t.y + t.h / 2}`, {w: lw(L.qwen_ar), tip: linkTip('TP4 all-reduce between the two packages', L.qwen_ar, '406.6 ns per all-reduce, 72 a token')}); }
+  }
+  let H = y0 + elevH + (d === 'ds' ? 56 : 42);
+  // tray plan to scale (top view): 533 x depth mm, packages 85 x 85 mm with two dies and eight stacks, cold-plate loop
+  const tl = trayList(); if (!rackState.tray && tl.length){ const t0 = tl.find(t => t.row.kind === 'stage' || t.row.kind === 'compute' || t.row.kind === 'qtray') || tl[0]; rackState.tray = {ri: t0.ri, ou: t0.row.ou}; }
+  const sel = tl.find(t => rackState.tray && t.ri === rackState.tray.ri && t.row.ou === rackState.tray.ou);
+  if (sel){
+    const px0 = plan ? availW + 10 : 10, pyy = plan ? y0 : H + 10, pW = plan ? W - availW - 20 : W - 20;
+    const depth = val(F.depth_mm), bay = val(F.width_mm); const kk = Math.min(pW / bay, (plan ? elevH * 0.85 : 360) / depth);
+    const tw = bay * kk, th = depth * kk, tx = px0 + (pW - tw) / 2, ty = pyy + 34;
+    txt(lay, px0, pyy + 12, `Tray plan (to scale): ${val(rkData().racks)[sel.ri].name} OU ${sel.row.ou}`, {fs: 12, fill: css('--ink'), weight: 600});
+    txt(lay, px0, pyy + 26, `${fmt0(bay)} × ${fmt0(depth)} mm · front at the bottom · click a die`, {fs: 10.5});
+    svgEl('rect', {x: tx, y: ty, width: tw, height: th, fill: css('--surface-2'), stroke: css('--rk-frame'), 'stroke-width': 1.5, rx: 3}, svg);
+    const pk = val(F.package_mm)[0], dm = val(F.die_mm), hm = val(F.hbm_mm)[0];
+    const np = sel.row.pk.length, cols = 2, rowsP = Math.ceil(np / cols);
+    const col = css(RK_KIND[sel.row.kind][1]);
+    // cold-plate loop
+    const loop = [];
+    sel.row.pk.forEach((p, i) => {
+      const cx = tx + tw * (i % cols === 0 ? 0.3 : 0.7), cy = ty + th * (0.28 + 0.36 * Math.floor(i / cols)) ;
+      loop.push([cx, cy]);
+    });
+    if (loop.length){ // supply and return manifolds along the rear (right) edge, one branch pair per package cold plate
+      const xs = tx + tw - 10, xr = tx + tw - 18, half = pk * kk / 2;
+      svgEl('line', {x1: xs, y1: ty + 6, x2: xs, y2: ty + th - 6, class: 'cool-sup', 'stroke-width': 3}, svg);
+      svgEl('line', {x1: xr, y1: ty + 6, x2: xr, y2: ty + th - 6, class: 'cool-ret', 'stroke-width': 3}, svg);
+      loop.forEach(c => { svgEl('path', {d: `M${xs} ${c[1] - half * 0.5} H${c[0] - half - 3} V${c[1]}`, class: 'cool-sup', fill: 'none', 'stroke-width': 1.6, 'stroke-dasharray': '4 2'}, svg); svgEl('path', {d: `M${xr} ${c[1] + half * 0.5} H${c[0] + half + 3}`, class: 'cool-ret', fill: 'none', 'stroke-width': 1.6, 'stroke-dasharray': '4 2'}, svg); }); }
+    sel.row.pk.forEach((p, i) => {
+      const [cx, cy] = loop[i]; const s = pk * kk; const x = cx - s / 2, y = cy - s / 2;
+      svgEl('rect', {x, y, width: s, height: s, fill: css('--die'), stroke: css('--die-edge'), 'stroke-width': 1, rx: 2}, svg);
+      // two dies side by side (rotated to portrait), four stacks on each outer edge
+      const dW = dm[0] * kk, dH = dm[1] * kk, gapD = 1.5 * kk;
+      p.d.forEach((id, j) => {
+        const dx = cx - (p.d.length * dW + (p.d.length - 1) * gapD) / 2 + j * (dW + gapD), dy = cy - dH / 2;
+        const g = svgEl('g', {class: 'rk-die', tabindex: 0, role: 'button', 'aria-label': `Open ${dieRole(p, id)} in The die`}, svg);
+        svgEl('rect', {x: dx, y: dy, width: dW, height: dH, fill: mix(css('--die'), col, .6), stroke: css('--die-edge'), 'stroke-width': .8}, g);
+        if (dW > 26) txt(g, dx + dW / 2, dy + dH / 2 + 3, id, {fs: Math.min(10, dW / 4), anchor: 'middle', fill: css('--ink')});
+        g.addEventListener('mousemove', ev => showTip(`<b>${esc(dieRole(p, id))}</b><br>package ${p.id} · ${esc(val(rkData().racks)[sel.ri].name)} OU ${sel.row.ou}<br>click to open this die in The die`, ev));
+        g.addEventListener('mouseleave', hideTip);
+        keyActivate(g, () => jumpToDie(`${dieRole(p, id)} · ${val(rkData().racks)[sel.ri].name}, OU ${sel.row.ou}, package ${p.id}`));
+        for (let q = 0; q < 4; q++){ const hx = j === 0 ? dx - hm * kk - 1 : dx + dW + 1; svgEl('rect', {x: hx, y: dy + q * (dH / 4) + 0.5, width: hm * kk, height: Math.min(hm * kk, dH / 4 - 1), fill: css('--k-hbm')}, svg); }
+      });
+    });
+    txt(lay, tx, ty + th + 14, `${np} packages · ${fmt0(pk)} mm · ${fmt(sel.row.w, 0)} W of chips`, {fs: 10.5});
+    H = Math.max(H, ty + th + 24);
+    renderRackRead(sel);
+  }
+  sizeSvg(svg, W, H);
+}
+function renderRackRead(sel){
+  const RD = rkData(), F = DATA.racks.frame, rk = val(RD.racks)[sel.ri];
+  const dies = sel.row.pk.reduce((a, p) => a + p.d.length, 0);
+  const lim = val(F.cooling_limit_w);
+  $('rackRead').innerHTML = `<div class="eyebrow">${esc(rk.name)} · OU ${sel.row.ou} · ${esc(RK_KIND[sel.row.kind][0])}</div><h3>${esc(sel.row.label)}</h3>
+    <dl><dt>Packages</dt><dd>${sel.row.pk.length}</dd><dt>Dies</dt><dd>${dies}</dd><dt>Chip power</dt><dd>${fmt(sel.row.w, 0)} W</dd>
+    <dt>Per die</dt><dd>${fmt(sel.row.w / dies, 1)} W of ${fmt0(lim)} W liquid limit</dd><dt>At the wall</dt><dd>${fmt(sel.row.w * val(F.wall_factor), 0)} W</dd></dl>
+    <div class="eyebrow" style="margin-top:12px">Dies on this tray</div><p style="font-size:12.5px;margin-top:4px">${esc(trayDies(sel.row))}</p>
+    <div class="eyebrow" style="margin-top:12px">Rack ${esc(rk.name)}</div>
+    <dl><dt>Used</dt><dd>${rk.used_ou} OU · ${rk.trays} trays</dd><dt>Dies</dt><dd>${fmt0(rk.dies)} in ${rk.packages} packages</dd><dt>Power</dt><dd>${fmt(rk.chips_kw, 1)} kW chips · ${fmt(rk.prov_kw, 1)} kW provisioned</dd><dt>Shelves</dt><dd>${rk.shelves} (2N)</dd><dt>Mass</dt><dd>~${fmt0(rk.kg)} kg</dd></dl>
+    ${srcLine(RD.racks)}${RD.die_w ? srcLine(RD.die_w) : ''}`;
+}
+function rackTables(){
+  const d = state.design, RD = rkData(), racks = val(RD.racks), R = DATA.rates;
+  const rows = racks.map(r => `<tr><td class="mono">${esc(r.name)}</td><td>${esc(stageSpan(r) || r.rows.filter(x => x.pk).map(x => RK_KIND[x.kind][0]).filter((v, i, a) => a.indexOf(v) === i).join(', '))}</td><td class="n">${r.used_ou}</td><td class="n">${r.packages}</td><td class="n">${fmt0(r.dies)}</td><td class="n">${fmt(r.chips_kw, 1)}</td><td class="n">${fmt(r.prov_kw, 1)}</td><td class="n">${fmt0(r.kg)}</td></tr>`).join('');
+  const tot = k => racks.reduce((a, r) => a + r[k], 0);
+  const linkBW = d === 'ds' ? `stage hop ${vs(DATA.links.ds_stage, 0)} GB/s ${pill(st(DATA.links.ds_stage))}` : d === 'hbm' ? `switch fabric ${vs(RD.fabric_tbps, 1)} Tb/s ${pill(st(RD.fabric_tbps))}` : `all-reduce link ${vs(DATA.links.qwen_ar, 0)} GB/s ${pill(st(DATA.links.qwen_ar))}`;
+  const ctx = d === 'ds' ? `One user's token crosses all ${racks.length} racks: ${vs(R.ds.AR, 0)} tok/s AR, ${vs(R.ds.MTP, 0)} tok/s MTP per user; all users together saturate at ~${vs(RD.sat_tok_s, 0)} tok/s ${pill(st(RD.sat_tok_s))}. Model system power ${val(RD.system_kw).ar} kW AR, ${val(RD.system_kw).mtp} kW MTP ${pill(st(RD.system_kw))} (the rack sums charge every layer die at the busiest die's saturated power).`
+    : d === 'hbm' ? `${vs(R.hbm_ds.AR, 0)} tok/s AR, ${vs(R.hbm_ds.MTP, 0)} tok/s MTP per user at 1M. Model system power ${val(RD.system_kw).ar} kW at AR ${pill(st(RD.system_kw))}; the rack sum charges every die its in-phase peak.`
+    : `${vs(R.qwen.AR, 0)} tok/s per user at 8K on ${val(RD.system_kw).ar} kW ${pill(st(RD.system_kw))}.`;
+  const nv = val(DATA.racks.nvl72);
+  $('rackTable').innerHTML = `<thead><tr><th>Rack</th><th>Holds</th><th class="n">OU</th><th class="n">Pkgs</th><th class="n">Dies</th><th class="n">Chips kW</th><th class="n">Prov. kW</th><th class="n">kg</th></tr></thead><tbody>${rows}${racks.length > 1 ? `<tr><td><b>Total</b></td><td></td><td class="n">${tot('used_ou')}</td><td class="n">${tot('packages')}</td><td class="n">${fmt0(tot('dies'))}</td><td class="n">${fmt(tot('chips_kw'), 1)}</td><td class="n">${fmt(tot('prov_kw'), 1)}</td><td class="n">${fmt0(tot('kg'))}</td></tr>` : ''}
+    <tr><td class="muted">NVL72</td><td class="muted">GB200 rack, published ${pill(st(DATA.racks.nvl72))}</td><td class="n muted">—</td><td class="n muted">${nv.gpus}</td><td class="n muted">${nv.gpus * 2}</td><td class="n muted">—</td><td class="n muted">${nv.kw}</td><td class="n muted">${fmt0(nv.kg)}</td></tr></tbody>`;
+  $('rackSrc').innerHTML = `${linkBW}. ${ctx}<br>${esc(RD.racks.note || '')} ${pill(st(RD.racks))} ${esc(RD.racks.src)}`;
+  const lc = val(RD.links);
+  $('linkTable').innerHTML = `<thead><tr><th>Class</th><th>Carries</th><th>Medium</th><th class="n">ns / hop</th><th class="n">GB/s</th><th>Status</th></tr></thead><tbody>${lc.map(l => `<tr title="${esc(l.src)}"><td class="mono" style="white-space:nowrap">${esc(l.cls)}</td><td>${esc(l.what)}</td><td>${esc(l.medium)}</td><td class="n">${l.ns == null ? '—' : fmt(l.ns, 1) + (l.ns_hi ? '–' + fmt(l.ns_hi, 0) : '')}</td><td class="n">${l.GBps == null ? '—' : fmt0(l.GBps)}</td><td>${pill(l.st)}</td></tr>`).join('')}</tbody>`;
+  if (d === 'ds'){ const h = val(RD.hops); const kx = val(RD.kp4_extra_us); $('linkNote').innerHTML = `Stage hops in this packing: <b>${h.tray}</b> inside a tray, <b>${h.rack}</b> tray to tray, <b>${h.cross}</b> rack to rack, plus the token return ${pill(st(RD.hops))}. The composition prices every hop on the light-FEC board link; light FEC is not qualified on rack copper, so if the ${h.rack + h.cross} cable hops run full RS(544,514) each costs +${fmt(kx, 4)} µs, +${fmt((h.rack + h.cross) * kx, 2)} µs a token ${pill(st(RD.kp4_extra_us))}.`; }
+  else $('linkNote').innerHTML = esc(RD.links.src);
+}
+function jumpToDie(label){
+  state.dieCtx = label;
+  if (state.design === 'hbm' && state.hbmModel !== 'ds'){ state.hbmModel = 'ds'; lsSet('hbmModel', 'ds'); dieTools(); }
+  state.sel = null; drawDie();
+  $('die').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
+  $('dieCanvas').focus({preventScroll: true});
 }
 
 /* ================================================================ 2. DIE (canvas) */
@@ -433,7 +801,8 @@ function dieReadSummary(){
   const dk = dieKey(); const D = DATA.dies[dk]; const G = geo(dk);
   const counts = {}; G.items.forEach(i => { counts[i.g] = (counts[i.g] || 0) + 1; });
   const rows = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([g, n]) => { const b = blockInfo(dk, g); return `<dt>${esc(b ? b.label : g)}</dt><dd>${fmt0(n)} ${b ? cpill(b.closure) : ''}</dd>`; }).join('');
-  $('dieRead').innerHTML = `<div class="eyebrow">${esc(D.title)}</div><h3>${fmt(G.W / 1000, 2)} × ${fmt(G.H / 1000, 2)} mm</h3>
+  const ctxLine = state.dieCtx ? `<div class="pill" style="color:var(--accent);margin-bottom:8px;white-space:normal">From the rack: ${esc(state.dieCtx)}</div>` : '';
+  $('dieRead').innerHTML = `${ctxLine}<div class="eyebrow">${esc(D.title)}</div><h3>${fmt(G.W / 1000, 2)} × ${fmt(G.H / 1000, 2)} mm</h3>
    <dl><dt>Area</dt><dd>${vs(D.area, 2)} mm² ${pill(st(D.area))}</dd>${D.placed ? `<dt>Placed</dt><dd>${vs(D.placed, 1)} mm²</dd>` : ''}${D.grt ? `<dt>Route</dt><dd>${vs(D.grt)}</dd>` : ''}${D.ir_worst ? `<dt>IR worst</dt><dd>${vs(D.ir_worst, 2)} mV</dd>` : ''}${D.path ? `<dt>Wire stages</dt><dd>block word ${val(D.path).bword_worst}, link ${val(D.path).link_worst} @ ${val(D.path).pitch} µm</dd>` : ''}</dl>
    <div class="eyebrow" style="margin-top:12px">Instances (hover or click a block)</div><dl class="inst">${rows}</dl>${srcLine(D.geo)}`;
 }
@@ -815,17 +1184,20 @@ function closeDrawer(){ $('drawer').hidden = true; $('scrim').hidden = true; $('
 
 /* ================================================================ wiring */
 function renderAll(){
-  renderNotice(); renderHero(); renderArray(); dieTools(); drawDie();
+  renderNotice(); renderHero(); renderArray(); renderRack(); dieTools(); drawDie();
   const wasPlaying = TK.playing; TK.playing = false; buildSteps(); drawToken(); if (wasPlaying && !reduceMotion){ TK.playing = true; requestAnimationFrame(tick); }
   renderWaterfall(); renderClosure(); renderLevers(); renderCompare();
 }
-document.querySelectorAll('[data-design]').forEach(b => b.addEventListener('click', () => { state.design = b.dataset.design; lsSet('design', state.design); state.sel = null; state.hidden.clear(); state.cbFilter = 'all'; state.arraySel = null; state.arrayZoom = 'system'; renderAll(); }));
+document.querySelectorAll('[data-design]').forEach(b => b.addEventListener('click', () => { state.design = b.dataset.design; lsSet('design', state.design); state.sel = null; state.hidden.clear(); state.cbFilter = 'all'; state.arraySel = null; state.arrayZoom = 'system'; rackState.tray = null; state.dieCtx = null; renderAll(); }));
 $('cmpBtn').onclick = () => { state.compare = !state.compare; $('cmpBtn').setAttribute('aria-pressed', String(state.compare)); renderCompareStrip(); if (state.compare) $('cmpStrip').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest'}); };
 $('provBtn').onclick = openDrawer; $('drawerClose').onclick = closeDrawer; $('scrim').onclick = closeDrawer;
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('drawer').hidden) closeDrawer(); });
 bindDie(); bindToken();
 let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawDie(); drawToken(); }, 150); });
-const themeRedraw = () => { renderArray(); drawDie(); drawToken(); renderWaterfall(); renderClosure(); renderLevers(); renderCompare(); };
+// the array and rack views lay out at their panel's width: redraw them when that width changes
+if (window.ResizeObserver){ const lastW = {}; const ro = new ResizeObserver(es => { for (const e of es){ const id = e.target.id, w = Math.floor(e.contentRect.width); if (lastW[id] === w) continue; const first = lastW[id] == null; lastW[id] = w; if (first) continue; requestAnimationFrame(() => { if (id === 'arrayScroll') renderArray(); else drawRack(); }); } }); ro.observe($('arrayScroll')); ro.observe($('rackScroll')); }
+else window.addEventListener('resize', () => { renderArray(); drawRack(); });
+const themeRedraw = () => { renderArray(); renderRack(); drawDie(); drawToken(); renderWaterfall(); renderClosure(); renderLevers(); renderCompare(); };
 if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeRedraw);
 new MutationObserver(themeRedraw).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
 renderAll();

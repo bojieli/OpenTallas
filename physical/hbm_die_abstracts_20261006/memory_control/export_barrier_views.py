@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""E2 admitted barrier K32 retained-view extraction; named SS/FF parasitics.
+"""E2/AGI admitted barrier K32 retained-view extraction; named SS/FF parasitics.
 No synthesis/route replay. Original IO load fixture does not qualify parent.
 """
 import argparse
@@ -35,8 +35,8 @@ def main():
     ap.add_argument("--tmp-dir", type=Path,
                     help="job-local host scratch to bind at /tmp; sets container TMPDIR=/tmp")
     a = ap.parse_args()
-    if '5.199.165.105' not in subprocess.check_output(['hostname', '-I'], text=True).split():
-        raise SystemExit('E2 only; call the guarded export_barrier.py launcher')
+    if not set(subprocess.check_output(['hostname', '-I'], text=True).split())&{'5.199.165.105','155.103.253.226'}:
+        raise SystemExit('E2/AGI only; call the guarded export_barrier.py launcher')
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
     if not (out / 'post_guard_capacity.json').is_file():
         raise SystemExit('missing guarded admission receipt')
