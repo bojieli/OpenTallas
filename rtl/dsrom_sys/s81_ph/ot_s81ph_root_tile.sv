@@ -45,8 +45,9 @@ module ot_s81ph_root_tile #(
     always @(posedge ck[0] or negedge rl) if (!rl) begin lvw <= 1'b0; lve <= 1'b0; end else begin lvw <= li_w[0]; lve <= li_e[0]; end
     always @(posedge ck[0]) begin lww <= li_w[68:1]; lwe <= li_e[68:1]; sel_q <= sel[0]; end
     always @(posedge ck[0]) begin lt_eo <= lt_wi; lt_wo <= lt_ei; end
-    wire lv = sel_q ? lve : lvw;
-    wire [67:0] lw = sel_q ? lwe : lww;      // lw = the 68-b lane word {fault, busy, e, d32, t32, v}
+    reg lv; reg [67:0] lw;                   // selected lane, registered: lw = {fault, busy, e, d32, t32, v}
+    always @(posedge ck[0] or negedge rl) if (!rl) lv <= 1'b0; else lv <= sel_q ? lve : lvw;
+    always @(posedge ck[0]) lw <= sel_q ? lwe : lww;
     wire rv, re, rf; wire [15:0] rrow, rbf; wire [2:0] rpos; wire [31:0] rfp;
     ot_s81ph_ret_root_p #(.D(ROOTD), .QD(ROOTD)) u_root (.clk(ck[0]), .rst_n(rl), .i_v(lv & lw[0]), .i_t(lw[32:1]),
         .i_d(lw[64:33]), .i_e(lw[65]), .r_v(rv), .r_row(rrow), .r_pos(rpos), .r_fp32(rfp), .r_bf16(rbf), .r_e(re), .fault(rf));
