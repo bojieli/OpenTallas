@@ -1,0 +1,49 @@
+{
+  "phase": "MAP_FAIL_RETAINED",
+  "top": "ot_hbm_item9_ha2_native_boundary_context",
+  "parameters": {
+    "CALLER_ONLY": 1,
+    "ENABLE": 1
+  },
+  "source_commit": "b6202de651d3d4eb0358ec7b408a8226e71e7df9",
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_item9_ha2_native_boundary_context.sv": "24dfca226dfd1a5e6cb218ef467840729c925d00d41520d2e917dc6865c479bf"
+  },
+  "NUM_CORES": 16,
+  "memory_guard_GiB": 256,
+  "guard_unchanged": true,
+  "memory_inventory_basis": "Prior active PF384 measured RSS sample Yosys24025044KiB+ABC9538780KiB for267501FF; native caller1468800FF is5.49x. Conservative256GiB envelope includes mapping and analysis reserve; sample scaling is an estimate, not a measured native peak or per-process limit.",
+  "disk_inventory_basis": "Native FF inventory5.49x original map; reserve128GiB free for mapped Verilog/JSON/analysis objects; no file limit.",
+  "child_ABC_replayed": false,
+  "passing_gate_replayed": false,
+  "new_RTL_edges": 0,
+  "ideal_clock": true,
+  "external_IO_bound": false,
+  "wire_RC": false,
+  "CTS": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "config_sha256": "633dd0bfb5032ede62a33e890cf1caadd0e0fbbdef15165b5e8781d1f92213a1",
+  "SDC_sha256": "3f865f26f18f9599097ba8a436dc47de53643810e9a0a64066e5137065343798",
+  "command": [
+    "docker",
+    "run",
+    "--cpus",
+    "16",
+    "--name",
+    "turing-ha2-native-caller-map-r1",
+    "-e",
+    "OMP_NUM_THREADS=16",
+    "-v",
+    "/srv/opentallas-scratch/codex/turing-ha2-native-caller-20261006/source-b6202de65:/src:ro",
+    "-v",
+    "/srv/opentallas-scratch/codex/turing-ha2-native-caller-20261006/map-r1/orfs:/work",
+    "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "bash",
+    "-lc",
+    "python3 /work/preserve_attributes.py && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 synth"
+  ],
+  "map_exit": 2
+}
