@@ -191,6 +191,17 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [18:0]    s_tm0 [0:3];
     reg [18:0]    s_tm1 [0:3];
     reg [18:0]    s_tq [0:3][0:3];   // v13: the four masked terms registered before the sums (s_pw -> s_tm +18 ps)
+    // v13b: the row-count sums as kept Kogge-Stone adders (v13 R16 post-CTS at 770: ABC re-rippled s_tm0 + s_tm1,
+    // s_tm -> s_tot -43.8 ps; R128 s_tq -> s_tm1 -14.6).  Same sums, same registers, same latency.
+    wire [18:0]   s_tm0n [0:3];
+    wire [18:0]   s_tm1n [0:3];
+    wire [18:0]   s_totn [0:3];
+    genvar gst;
+    generate for (gst = 0; gst < 4; gst = gst + 1) begin : g_st
+        ot_v41_ksadd #(.W(19)) u_a0 (.a(s_tq[gst][0]), .b(s_tq[gst][1]), .cin(1'b0), .s(s_tm0n[gst]), .cout());
+        ot_v41_ksadd #(.W(19)) u_a1 (.a(s_tq[gst][2]), .b(s_tq[gst][3]), .cin(1'b0), .s(s_tm1n[gst]), .cout());
+        ot_v41_ksadd #(.W(19)) u_at (.a(s_tm0[gst]), .b(s_tm1[gst]), .cin(1'b0), .s(s_totn[gst]), .cout());
+    end endgenerate
     reg [2:0]     s_np [0:3];        // positions - 1
     reg [3:0]     s_np1 [0:3];       // positions
     reg [VAW-1:0] s_xps [0:3];
@@ -885,9 +896,9 @@ module ot_v41_spine_pqc_w17w10 #(
                 s_tq[ks][1] <= {2'd0, s_pw[ks][61:46], 1'b0} & {19{s_np1[ks][1]}};
                 s_tq[ks][2] <= {1'd0, s_pw[ks][61:46], 2'b0} & {19{s_np1[ks][2]}};
                 s_tq[ks][3] <= {s_pw[ks][61:46], 3'b0} & {19{s_np1[ks][3]}};
-                s_tm0[ks] <= s_tq[ks][0] + s_tq[ks][1];
-                s_tm1[ks] <= s_tq[ks][2] + s_tq[ks][3];
-                s_tot[ks] <= s_tm0[ks] + s_tm1[ks];
+                s_tm0[ks] <= s_tm0n[ks];
+                s_tm1[ks] <= s_tm1n[ks];
+                s_tot[ks] <= s_totn[ks];
             end
             // issue: configuration, then go
             case (ist_st)
