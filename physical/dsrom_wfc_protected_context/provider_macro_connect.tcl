@@ -38,7 +38,7 @@ proc ds_vm_connect {prefix serial_clock} {
       set pins [get_pins -quiet $raw_pattern]
     }
     if {[llength $pins] != 1} {error "Missing literal STA macro clock pin $name/clk"}
-    set clocks [get_clocks -of_objects $pins]
+    set clocks [get_property [lindex $pins 0] clocks]
     if {[llength $clocks] != 1 || [get_full_name [lindex $clocks 0]] ne $serial_clock} {
       error "Macro $name/clk does not have the existing $serial_clock clock"
     }
