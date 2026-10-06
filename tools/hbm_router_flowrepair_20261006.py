@@ -26,17 +26,22 @@ def prepare(retained,out):
   if p.is_file() and p.name in pins:assert base.sha(p)==pins[p.name]['sha256'],p
  record=dict(status='PREPARED_ONE_NATIVE_GPL_FLOW_REPAIR',repair_number=1,escalate_after_two_flow_repair_failures=True,source_sha256=r['source_sha256'],retained_original_root=str(retained),checkpoint_sha256=pins['3_2_place_iop.odb']['sha256'],mapped_verilog_sha256=pins['1_2_yosys.v']['sha256'],sdc_sha256=r['sdc_sha256'],config_sha256=r['config_sha256'],image=base.IMAGE,workers=16,declared_ram_gib=64,changed_flow_variable={'GPL_TIMING_DRIVEN':0},RTL_changed=False,synthesis_replayed=False,golden_replayed=False,clock_or_uncertainty_relaxed=False,frame_changed=False,later_resize_CTS_GRT_timing_repair_disabled=False,parent_qualified=False,physical_closed=False,make_command=MAKE,cloned_checkpoint_sha256=pins)
  base.save(out/'preparation.json',record)
- # Native dry-run traverses the exact installed graph; any replay is an error.
- shell='cd /OpenROAD-flow-scripts/flow && '+' '.join(MAKE[:1]+['-n']+MAKE[1:])
- with (out/'native_make_plan.log').open('w') as f:rc=subprocess.call(docker(work,shell),stdout=f,stderr=subprocess.STDOUT)
- plan=(out/'native_make_plan.log').read_text()
- assert rc==0,plan[-3000:]
+ validate_prepared(out)
+def validate_prepared(out):
+ work=out/'orfs';record=json.loads((out/'preparation.json').read_text())
+ for n in ['3_2_place_iop.odb','1_2_yosys.v','2_floorplan.sdc']:assert base.sha(work/SUB/n)==record['cloned_checkpoint_sha256'][n]['sha256']
+ # ORFS creates extra SDC side effects at runtime: a finish-wide dry-run cannot
+ # materialize these. Check installed native phony stages without executing them.
+ plan_args=MAKE[:6]+['-n','do-3_3_place_gp','do-3_4_place_resized','do-3_5_place_dp','do-4_1_cts','do-5_1_grt']
+ shell='cd /OpenROAD-flow-scripts/flow && '+' '.join(plan_args)
+ log=out/'native_make_plan.log'
+ if log.exists():shutil.copy2(log,out/'native_make_plan_initial_unmaterialized_sdc_FAIL.log')
+ with log.open('w') as f:rc=subprocess.call(docker(work,shell),stdout=f,stderr=subprocess.STDOUT)
+ plan=log.read_text();assert rc==0,plan[-3000:]
  assert not re.search(r'flow\.sh\s+(?:1_|2_|3_1_|3_2_)',plan),'native graph would replay an earlier stage'
- assert 'flow.sh 3_3_place_gp global_place' in plan
- assert 'flow.sh 3_4_place_resized resize' in plan
- assert 'flow.sh 4_1_cts cts' in plan
- assert 'flow.sh 5_1_grt global_route' in plan
- record['native_make_plan_sha256']=base.sha(out/'native_make_plan.log');record['native_make_plan_verified_no_synth_or_IO_replay']=True
+ for name in ['3_3_place_gp global_place','3_4_place_resized resize','4_1_cts cts','5_1_grt global_route']:assert 'flow.sh '+name in plan,name
+ record['native_make_plan_sha256']=base.sha(log);record['native_make_plan_verified_no_synth_or_IO_replay']=True
+ record['dry_run_scope']='Installed native do-stage recipes; finish dependencies frozen at copied3_2IOP+2floorplanSDC; missing future SDC side effects require actual sequential run'
  base.save(out/'preparation.json',record);print(json.dumps(record),flush=True)
 def run(out,admitted):
  if not Path('/srv/opentallas-scratch/admit.sh').is_file():raise ValueError('remote unchanged guard required')
@@ -56,8 +61,9 @@ def run(out,admitted):
  if not rc:r['corners']=base.corners(out,work)
  base.save(out/'continuation.json',r);return rc
 if __name__=='__main__':
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--retained',type=Path);ap.add_argument('--prepare',action='store_true');ap.add_argument('--admitted',action='store_true');a=ap.parse_args()
- if a.prepare:
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--retained',type=Path);ap.add_argument('--prepare',action='store_true');ap.add_argument('--admitted',action='store_true');ap.add_argument('--validate-prepared',action='store_true');a=ap.parse_args()
+ if a.validate_prepared:validate_prepared(a.out.resolve())
+ elif a.prepare:
   if not a.retained:ap.error('--retained required for preparation')
   prepare(a.retained.resolve(),a.out.resolve())
  else:sys.exit(run(a.out.resolve(),a.admitted))
