@@ -331,22 +331,31 @@ proc ::ot_place {re xlo xhi ylo yhi} {
     if {$k < $n} { error "ot_place $re: placed $k of $n in ($xlo $xhi $ylo $yhi)" }
     puts "ot_place $re: $n flops"
 }
-# retire chain (column 0's aligned valid -> issue): 3 stages from the back-end edge upward, the upper two in the
-# ring block's central channel (x 151 .. 273)
-ot_place {^u_sv\.g_s\[0\]} 160 200 270 290
-ot_place {^u_sv\.g_s\[1\]} 170 210 480 500
-ot_place {^u_sv\.g_s\[2\]} 170 210 690 710
-# x-write bundle of the far row (row 1): A above the ring block, M in the side bands beside it
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 785 860
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 785 860
+# (round 9) hub mid-front: line skid data and s1 in the ring block's central channel (x 151 .. 273) at y ~ 480-620;
+# the hop copies H above (row 0) and below (row 1) the ring block on their side; the far row's x-write A / M / O
+# stages along the edge; the response chain stages spread from the south pins to the ring block
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 154 270 470 520
+ot_place {^s1_(w|cv|ct)} 154 270 525 570
+ot_place {^g_h\[0\]\.} 60 200 770 800
+ot_place {^g_h\[2\]\.} 232 372 770 800
+ot_place {^g_h\[1\]\.} 60 200 330 360
+ot_place {^g_h\[3\]\.} 232 372 330 360
+# retire chain (column 0's aligned valid -> issue) from the back-end edge up into the central channel
+ot_place {^u_sv\.g_s\[0\]} 170 210 180 200
+ot_place {^u_sv\.g_s\[1\]} 170 210 320 340
+ot_place {^u_sv\.g_s\[2\]} 170 210 450 465
+# x-write bundle of the far row (row 1): A above the ring block, M beside it, O beside its pins
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 805 870
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 805 870
 ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 3 47 470 660
 ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 378 430 470 660
-# (round 8) the hub stacked in the ring block's central channel (x 151 .. 273), above the bulk copy's queue:
-# line skid data, then s1 (the issue gathers around it), the row-1 hop copies halfway down to row 1
-ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 730 770
-ot_place {^s1_(w|cv|ct)} 152 272 772 815
-ot_place {^g_h\[1\]\.g_rows\.g_r1\.} 152 210 560 640
-ot_place {^g_h\[3\]\.g_rows\.g_r1\.} 214 272 560 640
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bo[dv]} 3 60 230 440
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bo[dv]} 372 430 230 440
+# response chain (south pins -> ring block): four stages
+ot_place {^u_prd\.g_s\[0\]} 100 330 20 50
+ot_place {^u_prd\.g_s\[1\]} 100 330 110 140
+ot_place {^u_prd\.g_s\[2\]} 100 330 200 230
+ot_place {^u_prd\.g_s\[3\]} 100 330 290 320
 # the request skid beside the south pins
 ot_place {^u_rsk\.} 120 200 3 12
 """
