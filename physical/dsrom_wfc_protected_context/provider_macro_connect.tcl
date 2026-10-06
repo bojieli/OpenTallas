@@ -45,16 +45,9 @@ proc ds_vm_connect {prefix serial_clock} {
     lappend cells $inst
   }
   if {$data != 256 || $check != 32} {error "Selected protected VM requires 256 data + 32 check SRAMs; got $data/$check"}
-  # OpenDB names can contain literal backslashes before generated brackets.
-  # Bind PG to each exact retained instance, escaping every regex metacharacter.
-  foreach inst $cells {
-    set name [$inst getName]
-    regsub -all {[][\\.^$*+?(){}|]} $name {\\&} escaped
-    set pattern "^${escaped}\$"
-    add_global_connection -net VDD -inst_pattern $pattern -pin_pattern {^VDD$} -power
-    add_global_connection -net VSS -inst_pattern $pattern -pin_pattern {^VSS$} -ground
-  }
-  global_connect
+  # Explicitly attach real PG ITerms. OpenDB global_connect skips immutable
+  # dont_touch hardmacros; retain that property and do not alter signal pins.
+  foreach inst $cells {ds_vm_bind_pg $inst}
   foreach inst $cells {
     foreach {pin net} {VDD VDD VSS VSS} {
       set term [$inst findITerm $pin]
@@ -67,3 +60,18 @@ proc ds_vm_connect {prefix serial_clock} {
 }
 # Zeno selected source1860 invocation (after his existing SDC):
 # ds_vm_connect u_memory.g_live.u_backend clk_serial
+
+proc ds_vm_bind_pg {inst} {
+  set block [ord::get_db_block]
+  foreach {pin net sigtype} {VDD VDD POWER VSS VSS GROUND} {
+    set term [$inst findITerm $pin]
+    if {$term eq "NULL" || [[$term getMTerm] getSigType] ne $sigtype} {
+      error "Missing actual $sigtype PG pin [$inst getName]/$pin"
+    }
+    set pgnet [$block findNet $net]
+    if {$pgnet eq "NULL"} {set pgnet [odb::dbNet_create $block $net];$pgnet setSigType $sigtype}
+    if {[$pgnet getSigType] ne $sigtype} {error "Wrong real PG net type $net"}
+    $term connect $pgnet
+    if {[$term getNet] ne $pgnet} {error "Exact PG connection failed [$inst getName]/$pin"}
+  }
+}
