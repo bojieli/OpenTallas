@@ -1,0 +1,59 @@
+{
+  "job": "E2 r7 supervisor2914466/compiler3243007",
+  "pinned_source_commit": "4bcde3334eee74fc9923fc26875e575a7020f276",
+  "observation_utc": "2026-10-06T05:34:38Z",
+  "RSS_KiB": 444684372,
+  "CPU_time": "00:14:54",
+  "CPU_percent": 99.9,
+  "host_MemAvailable_GiB_rounded": 248,
+  "confirmed_stage": "Live Verilator --lint-only frontend; no Mdir/obj exists, no C++ build or runtime; exact internal pass not emitted",
+  "last_log": "WIDTHCONCAT ot_hdc_delay.sv:32 in original u_su_exec.u_native.u_rwe; no source error/critical diagnostic",
+  "observed_io": {
+    "rchar": 1992020,
+    "wchar": 159545,
+    "read_bytes": 65536,
+    "write_bytes": 163840
+  },
+  "major_source_shapes": [
+    {
+      "source": "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:7; integrated parent:419",
+      "per_die": {
+        "N": 1024,
+        "M": 256,
+        "D": 5120,
+        "ALAT": 5,
+        "MLAT": 6
+      },
+      "replicas": 2,
+      "native_lane_replicas_total": 2048,
+      "native_SFU_or_full_lane_replicas_total": 512,
+      "reason": "Parent overrides only ENABLE and IMW, so full original executor dimensions apply"
+    },
+    {
+      "source": "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv:112; ot_hbm_accel_su_fused_stream.sv:155",
+      "replicas": 2,
+      "HCpost_groups_per_replica": 256,
+      "reason": "Parallel original native and fused HCpost engines are both elaborated in enabled parent; selectors do not remove engines"
+    },
+    {
+      "source": "rtl/gpu_sys/ot_gpu_memsys.sv:93; rtl/hdc/kv/ot_hdc_hbm_model.sv:110",
+      "model_arrays": 4,
+      "words_per_array": 2097152,
+      "bits_per_word": 256,
+      "total_payload_bytes": 268435456,
+      "reason": "ND2 x NS2 arrays, one shared array per NPC2 partition; explicit per-word initialization ot_gpu_hbm_partition.sv:291"
+    },
+    {
+      "source": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv:162/164",
+      "SM_instances": 4,
+      "IMW": 14,
+      "imem_words_per_SM": 16384,
+      "imem_bits_per_word": 64,
+      "reason": "Four actual fullNL128 SIMT engine instruction/register banks also retained"
+    }
+  ],
+  "inference": "Hundreds of GiB is compiler IR/elaboration overhead for full arithmetic/control hierarchy, not raw HBM payload (256MiB). Expanded 2048 native lanes/512 SFU lanes plus512 fusedHCpost groups are major source candidates. No heap profile captured; per-class allocation/cause not proven.",
+  "reservation": "Prior64GiB declaration underestimated; next source compile must use actual terminal maxRSS and fresh fleet headroom, not reuse64 estimate",
+  "action": "Preserve progressing r7; no duplicate/restart; r8 changed source prepared only; first actual compiler diagnostic direct source owner",
+  "SFU_main": "origin/main641795286 contains actual SFU_C12_ENABLE default0 and u_sfu_c12 line442. Current central working copy may lag. This does not change r7 pinned source, which predates SFU instance."
+}
