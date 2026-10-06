@@ -11143,3 +11143,68 @@ def hbm_cp_fast_frontier_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_fast_frontier_20261006/model.json").read_text())
+
+
+def dsrom_wfc_enclosing_stage_price():
+    """Minimum actual enclosing receiver/held-job context, before source build.
+
+    C8 source is reused unchanged. Full native VM depth and four collective
+    writers remain real mutable storage; no macro-area/clkQ credit is invented.
+    The added request register provides finite retention until both existing
+    whole-stage producer and C8 accept the same job, not completion authority.
+    """
+    request_bits = 16+10+21+21+14
+    request_control_bits = 3
+    c8_bits = 2*request_bits + (1+21+21+10+14+47+1+47+1+1+1+1+2+1+1)
+    core_capture_bits = 21+21+14
+    boundary_ff = request_bits+request_control_bits+c8_bits+core_capture_bits
+    gates = 4*(47+request_bits)+256
+    buffers = 3*boundary_ff+128
+    growth = 2*(boundary_ff*.37908+gates*.08748+buffers*.10206)
+    old = dsrom_wfc_control_pipeline_price()
+    queue = dsrom_wfc_queue_head_price()
+    header = dsrom_wfc_header_cut_price()
+    wfc_body = 23536.2+old['cell_growth_budget_um2']+queue['cell_growth_budget_um2']+header['cell_growth_budget_um2']
+    tracks = 11851+2*boundary_ff+128
+    return dict(schema='opentallas.dsrom.wfc.enclosing_stage_price.v1',
+      MAXU=866, SOURCE_modes=[0,1], MACs_per_cycle=0, replicas=1,
+      shared_native_VM_AW=19, VM_word_address_width=15, VM_lane_bits=32,
+      VM_lanes_per_word=16, VM_words=32768, VM_mutable_bits=16777216,
+      VM_controller_read_bytes_per_cycle=64, VM_controller_write_bytes_per_cycle=64,
+      VM_collective_write_ports=4, VM_collective_write_bytes_per_cycle=256,
+      VM_collective_read_bytes_per_cycle=64, VM_read_latency_edges=1,
+      VM_read_during_write='pre-edge old data, native nonblocking assignment semantics',
+      VM_write_precedence='controller xa first, collective xb0..3 later; later writer wins overlapping native rows',
+      shared_VM_macro=None, shared_VM_macro_area_um2=None,
+      shared_VM_macro_clkQ_SS_ps=None, shared_VM_macro_pin_loads=None,
+      VM_port_capture_bits=512, VM_implemented_as_new_flops=False,
+      retained_request_bits=request_bits, request_control_FF_bits=request_control_bits,
+      actual_reused_C8_FF_bits=c8_bits, native_core_capture_bits=core_capture_bits,
+      enclosing_boundary_FF_bits=boundary_ff, NAND2_reservation=gates,
+      buffer_reservation=buffers, added_boundary_cell_growth_budget_um2=growth,
+      control_body_budget_um2=wfc_body+growth,
+      controller_baseline_track_demand=11851, added_boundary_tracks=2*boundary_ff+128,
+      control_track_demand=tracks, old_local_characterization_tracks=16041,
+      old_local_characterization_tracks_fit=tracks<=16041,
+      physical_selected_WFC_slot_owner='Turing', physical_selected_WFC_slot=None,
+      physical_selected_VM_view_owner='Turing with native tile memory owner',
+      canonical_cfg_prompt_whole_stage_producer_owner='Copernicus',
+      request_boundary_bits=83, result_boundary_bits=101,
+      new_memory_ports=0, new_completion_authorities=0,
+      additional_owned_request_capture_edges=1,
+      existing_C8_offer_to_native_core_capture_edges=2,
+      exposed_start_to_core_capture_minimum_edges=3,
+      enclosing_vs_same_C8_direct_offer_added_edges=1,
+      composed_source_job_added_edges=3, composed_received_job_added_edges=4,
+      composed_reset_release_added_edges=1,
+      token_composition='extra_edges=3*N_source_jobs+4*N_received_jobs+N_resets relative to same native C8 receiver; C8 existing two edges are charged separately in its baseline, actual producer/restore/VM waits add without guessed overlap',
+      token_job_counts=None, whole_token_added_ns=None,
+      target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+      missing_nodes=['canonical cfg_users/plen/glen producer',
+        'canonical synchronous pr_q/pr_qk producer',
+        'accepted owned whole-stage producer with identity and actual ACK',
+        'stage_epoch/entry descriptor and actual context_restored/native_idle/fragment_done',
+        'full-depth native VM physical macro/read clkQ/clock/pin loads',
+        'finite WFC physical rectangle and channel allocation'],
+      P_and_R_ready=False, actual_parent_context_qualified=False,
+      SS_FF_closed=False, adopted=False)
