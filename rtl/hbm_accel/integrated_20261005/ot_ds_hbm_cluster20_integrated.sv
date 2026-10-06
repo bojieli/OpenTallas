@@ -681,7 +681,7 @@ end else begin:g_on
          .release_v(su_release_v),.release_r(su_release_r),.exec_done(su_caller_done),.exec_fault(su_caller_fault),
          .retired_original_ops(su_caller_retired),.shared_fault(shared_fault),.owned(su_qualified_owned),.owned_frontier_terms(su_owned_frontier_terms),.pending(su_pending),
          .quiet(su_quiet),.selected(su_selected),.done(su_done),.fault(su_fault),
-         .selected_pc(su_pc),.held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos));
+         .selected_pc(su_pc),.held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos),.owner_live_next(192'd0));
         // Response valid/ready and captured provider requests are unchanged.
         // New requests use the live veto; admitted execution holds the grant.
         if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
