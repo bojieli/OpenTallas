@@ -1,0 +1,17 @@
+{
+  "owner": "Codex:Fermat:head",
+  "host": "ot-epyc2",
+  "controller_pid": 1968857,
+  "status": "running floorplan",
+  "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C22_checked_receivers",
+  "source_fix": "d0488d023",
+  "receiver_report_hook_sha256": "d76a1e9dba7747a9279921d7c33e7101417bc1290ae78bec7a4624f816f9502d",
+  "receiver_count": 4,
+  "qualification": false,
+  "retained_numerical_cycles": 63028,
+  "report_hook_failures_preserved": [
+    "report_hook_failure_first",
+    "report_hook_failure_supply_prePDN"
+  ],
+  "notes": "Signal-only pin inventory corrected for canonical report_net syntax and prePDN supplies. No RTL/synth/golden changes; terminal attempts retained remote."
+}
