@@ -1,0 +1,7 @@
+{
+  "status": "AUDIT_IMPLEMENTATION_INDEXING_FAILURE_FIXED",
+  "exception": "IndexError: shape mismatch: indexing arrays could not be broadcast together with shapes (1024,) (1024,4)",
+  "cause": "Audit scale sector row index required column broadcast; corrected scale_addr[:, None].",
+  "DUT_execution": false,
+  "source_failure": false
+}

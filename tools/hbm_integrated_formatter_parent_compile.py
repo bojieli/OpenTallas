@@ -227,7 +227,7 @@ def capacity(work):
         load=list(os.getloadavg()),idle_cores=os.cpu_count()*d[3]/sum(d),
         available_bytes=mem,disk_free=shutil.disk_usage(work).free)
 def fits(m,a):
-    return m['load'][0]<128 and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
+    return m['load'][0]<128 and m['load'][0]+a.cpu_cores<=getattr(a,'max_projected_load',128) and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
 
 def run(a):
     work=a.work.resolve();m=verified(work)
@@ -263,7 +263,7 @@ def run(a):
         cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--plan' if a.plan else '--run',
             '--work',str(work),'--tool',str(a.tool.resolve()),'--memory-gib',str(a.memory_gib),
             '--cpu-cores',str(a.cpu_cores),'--disk-reserve-bytes',str(a.disk_reserve_bytes),
-            '--epyc2-hostname',a.epyc2_hostname,'--admitted']
+            '--epyc2-hostname',a.epyc2_hostname,'--max-projected-load',str(a.max_projected_load),'--admitted']
         write(work/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
     tmp=work/'tmp';tmp.mkdir();obj=work/'obj'
@@ -547,7 +547,7 @@ def compile_plan(a):
         cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(Path(__file__).resolve()),
              '--compile-plan','--work',str(work),'--output',str(out),'--tool',str(a.tool.resolve()),
              '--memory-gib',str(a.memory_gib),'--cpu-cores',str(a.cpu_cores),
-             '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--epyc2-hostname',a.epyc2_hostname,'--admitted']
+             '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--epyc2-hostname',a.epyc2_hostname,'--max-projected-load',str(a.max_projected_load),'--admitted']
         if a.retained_models:cmd+=['--retained-models',str(a.retained_models.resolve())]
         if a.enrollment:cmd+=['--enrollment',str(a.enrollment.resolve())]
         write(out/'guard_command.json',cmd)
@@ -672,16 +672,22 @@ def continue_parent(a):
         '--terminal',str(phase.output/'terminal.json'),'--output',str(out/'objects'),
         '--harness',str(a.work/'src'/m['harness_source']),'--reuse-archives',str(a.reuse_archives.resolve()),
         '--workers',str(a.object_workers),'--memory-gib',str(a.object_memory_gib),
-        '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--host',a.epyc2_hostname]
+        '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--host',a.epyc2_hostname,
+        '--max-projected-load',str(a.max_projected_load)]
+    object_reservation=argparse.Namespace(memory_gib=a.object_memory_gib,cpu_cores=a.object_workers,
+        disk_reserve_bytes=a.disk_reserve_bytes,max_projected_load=a.max_projected_load)
+    while not fits(capacity(out),object_reservation):time.sleep(20)
     write(out/'object_command.json',helper)
     rc=subprocess.call(helper)
     if rc:
         write(out/'terminal.json',dict(exit=rc,phase='objects_link',runtime=False));return rc
     # One first norm run. Later Bacon source/testcases are separate pinned work.
     runtime=out/'runtime';runtime.mkdir()
+    runtime_reservation=argparse.Namespace(memory_gib=a.runtime_memory_gib,cpu_cores=1,
+        disk_reserve_bytes=a.disk_reserve_bytes,max_projected_load=a.max_projected_load)
     while True:
         snap=capacity(runtime)
-        if snap['load'][0]<128 and snap['idle_cores']>=1 and snap['available_bytes']>=a.runtime_memory_gib*2**30:break
+        if fits(snap,runtime_reservation):break
         time.sleep(20)
     binary=out/'objects/integrated_bench'
     for path,h in pins.items():
@@ -690,10 +696,10 @@ def continue_parent(a):
         "s=importlib.util.spec_from_file_location('guard_driver',sys.argv[1]); "
         "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
         "row=m.capacity(pathlib.Path(sys.argv[2])); m.write(pathlib.Path(sys.argv[2])/'post_guard.json',row); "
-        "a=types.SimpleNamespace(memory_gib=int(sys.argv[3]),cpu_cores=1,disk_reserve_bytes=int(sys.argv[4])); "
-        "sys.exit(75 if not m.fits(row,a) else subprocess.call(sys.argv[5:]))")
+        "a=types.SimpleNamespace(memory_gib=int(sys.argv[3]),cpu_cores=1,disk_reserve_bytes=int(sys.argv[4]),max_projected_load=float(sys.argv[5])); "
+        "sys.exit(75 if not m.fits(row,a) else subprocess.call(sys.argv[6:]))")
     cmd=[str(Path('/srv/opentallas-scratch/admit.sh')),str(a.runtime_memory_gib),'--',sys.executable,
-         '-c',post_guard_code,str(Path(__file__).resolve()),str(runtime),str(a.runtime_memory_gib),str(a.disk_reserve_bytes),
+         '-c',post_guard_code,str(Path(__file__).resolve()),str(runtime),str(a.runtime_memory_gib),str(a.disk_reserve_bytes),str(a.max_projected_load),
          str(binary),'+DIR=gold']
     write(runtime/'command.json',dict(command=cmd,cwd=str(a.fixture_root),binary_sha256=sha(binary)))
     with (runtime/'run.log').open('x') as log:
@@ -722,6 +728,7 @@ def main():
     p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
+    p.add_argument('--max-projected-load',type=float,default=128,help='Owner CPU priority ceiling, checked before and after unchanged admission guard')
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
