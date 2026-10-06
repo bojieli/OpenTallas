@@ -1,0 +1,14 @@
+{
+  "native_version": "26Q3-1510-g6cb3f2b704",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "verified_ORFS_variable": "GPL_TIMING_DRIVEN",
+  "continuation_value": 0,
+  "verified_native_option": "global_placement -timing_driven",
+  "effect": "Omit optional GPL timing-driven resizer path and GPL-only remove_buffers; leave resize/CTS/GRT timing-repair calls intact",
+  "source": "Actual stopped container9415001ff9ea scripts plus unloaded pinned-native help; no route/gate executed",
+  "sha256": {
+    "installed_variables_excerpt.yaml": "445f2bf4003ae2eb12a3236e41a37a6b9b0bf419f26ecb9ce2419006a1780b1e",
+    "installed_global_place.tcl": "05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33",
+    "openroad_native_help.log": "7e16572f7b1bc93bdb049bdd77ff88bef60c0e3425dc67d3d7f3deb3c5a6b5bd"
+  }
+}
