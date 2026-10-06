@@ -10697,6 +10697,9 @@ def dsrom_window_parent_boundary_model():
     inputs after its terminal; aggregate attention area is not a subslot.
     """
     import re
+    leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
+    leaf_inventory = (json.loads(leaf_inventory_path.read_text())
+                      if leaf_inventory_path.is_file() else None)
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
     macro_dir = Path('physical/asap7_memory_macros') / macro_name
     macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
@@ -10741,6 +10744,7 @@ def dsrom_window_parent_boundary_model():
     sources += [str(macro_dir/f'{macro_name}{suffix}') for suffix in
                 ('.json', '.lef', '_bb.v', '_ss.lib', '_ff.lib')]
     return dict(item=4, status='SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION',
+        leaf_implementation_inventory=leaf_inventory,
         scope='actual packed-block producer/native lifecycle and first attention captures; no whole S81',
         source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
         shape=dict(H=16,D=d,TD=td,NL=nl,TROWS=trows,NT=tiles,NSTAGE=1,PWORDS=pwords,ILV=0,REPL=0),

@@ -88,3 +88,11 @@ TXCTRL changed-source full128 PASS 492 cases over three seeds, identical measure
 Actual32 source clock/load binding recovered from Verilator5.050 elaborated JSON: 32 real4096-bit c_data and32 real4096-bit vr registers; 32 destination receivers per response bit, endpoint/mux clk_sm and link clk_link actualconnections; no ties or exceptions. Finite accepted outer contains32 actualsm slots plus hb_coll; max Manhattan any-bbox-pin upper span23596.224um, existing installed new transport cycles0. 430.56um segmentation is analytical, not installed/clock-qualified. Source bindings/geometry are concrete; propagated insertion and actual routed pin capacitances remain owned continuation. ORFS changed-source full32 synthesis r5 live after nativeYosys0.68 paramoderivation failure preserved.
 
 Actual new result: loaded32/TXCTRL1/OWNER641 fullNL128 ORFS SS synthesis PASS,178333.520399um2 body/90842.643719um2 sequential/304836FF;0synthcheckproblems. Real source32callerFFs remain present; mapped172535280byte netlist+canonicalRTLIL+SSobjects retainedremote for P&R. This exceeds own prior prebuild cell proxy151939um2; record preserved and own bounded model now uses actual178333.52um2 for further placement. Not contextual SSFF signoff; no perimeter pin-fit or clock/macro-load waiver. Corrected HA2 full16/PF384 source passed28words/896BF16/first23 again after declaration-order repair; newr2 physical synth underway, unchanged helper proof reused.
+
+Concrete original-reference HA2 fullLANES16 PF384 terminal PASS: 28 packed
+words / 896 BF16 values, first23cycles, no added cycles, destination rejection
+and runtime rearm PASS (terminal_collection/HA2_full16_corrected_r2). Corrected
+scalar references E1024/6144. Changed CUTS1 fullgolden PASS remains separately
+pinned at HA2_cuts_exact_r2; no DS/Qwen fulltoken or contextualSSFF claim.
+Mapped32 source-clock diagnosis r1 failed before design load (missing technology
+LEF); failure preserved. Read actual technology/cell LEF for next object reuse.

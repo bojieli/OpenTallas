@@ -10,7 +10,9 @@ assert hashlib.sha256(mapped.read_bytes()).hexdigest()==r['artifacts'][str(mappe
 normal=D.normalise_netlist(mapped,out/'mapped.v');shutil.copy2(src/'work/orfs/constraint.sdc',out/'constraint.sdc')
 results=[]
 for corner,lib in [('ss','SS'),('ff','FF')]:
- tcl=f'''foreach f [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/*_RVT_{lib}_*.lib*] {{ read_liberty $f }}
+ tcl=f'''read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef
+read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef
+foreach f [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/*_RVT_{lib}_*.lib*] {{ read_liberty $f }}
 read_verilog /work/mapped.v
 link_design ot_gpu_coll_item9_context32_txctrl
 read_sdc /work/constraint.sdc
