@@ -22,7 +22,7 @@ def model():
       boundary=dict(request_bits=request_bits,response_bits=response_bits,receipt_bits=80,encoded_stream_widths=streams,
         request_bundle_capacity=1,visible_rows_per_bundle=5,C8_retirement_authority=False,
         mutable_packet_and_identity_protection='SECDED transport plus complementary retained state/data',
-        pipeline_fifo_storage_bits=4*sum(streams),tracks_needed=sum(streams),
+        pipeline_fifo_storage_bits=4*sum(streams),transport_control_shadow_bits=66,tracks_needed=sum(streams),
         common_adjacent_channel_um=172.8,planning_capacity_tracks=math.floor(172.8/.096)*4,
         installed_wire_stages=0,loaded_transport_STA_qualified=False),
       geometry=dict(selected_parent_model=str(parent.relative_to(ROOT)),selected_VM_rect_um=[15182.64,11238.48,16197.816,13858.536],
