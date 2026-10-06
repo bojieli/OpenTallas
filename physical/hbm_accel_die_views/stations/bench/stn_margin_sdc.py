@@ -12,6 +12,7 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
   demands ~130 ps of hold buffers per output that the die clock never needs (M2_hfd_meso_r32: FF -7.75 ps against a
   294 ps vclk latency with a 163 ps FF insertion, after 7 hold buffers).  (OpenSTA -min/-max latency is not a
   per-corner split: a -min latency moves the setup capture edge.)
+* meso views: rst (synchroniser input only) is a false path.
 * vclk <-> forwarded clocks: false paths (rst only; resynchronised per domain).
 * route: over-constrained to an effective 770 ps -- setup uncertainty 60 + 63 ps on every clock and the meso crossing
   bound (max_delay -ignore_clock_latency, no uncertainty term) 63 ps tighter; signoff: the 60 ps / 356.667 ps contract.
@@ -49,5 +50,10 @@ fcl = [re.match(r'create_clock -name (f_\S+)', x).group(1) for x in out if re.ma
 for f in fcl:
     out.append(f'set_false_path -from [get_clocks vclk] -to [get_clocks {f}]')
     out.append(f'set_false_path -from [get_clocks {f}] -to [get_clocks vclk]')
+# A meso view's rst terminal reaches only the two-flop resynchronisers of each FIFO domain (ot_hbm_stn_meso wrs/rrs):
+# a synchroniser input carries no single-cycle setup/hold relation (M2_hfd_meso_r32 FF: rst -> rrs[0] -39 ps).
+sv = open(src[:-4] + '.sv').read()
+if 'ot_hbm_stn_meso' in sv and 'rst[0]' not in sv.replace('.rst_n(rst[0])', ''):
+    out.append('set_false_path -from [get_ports {rst[0]}]')
 print('\n'.join(out))
 print(f'# stn_margin_sdc.py {mode}: ck IO vs vclk at insertion {Lmin:g} ps, 0.2 T + 150 ps; over-constraint {OVER:g} ps')
