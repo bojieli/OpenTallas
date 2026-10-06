@@ -63,8 +63,9 @@ EDGE = 20.0
 LINK_STAGE_UM = 430.56          # corridor-gate closing pitch (S81 / Qwen die)
 SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
+WP_DEFAULT = WAYPOINT_UM
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r8'              # the round the records and the pricing are taken from
+FINAL_ROUND = 'r14b'            # the round the records and the pricing are taken from (r8 until 2026-10-05 pm)
 
 # ------------------------------------------------------------------------------------------------ block ledger
 # (mm2, grade, source).  grade: measured (placed/routed record), model (unified-model ledger), estimate (labelled).
@@ -136,14 +137,32 @@ class Inst(S.Inst):
     """S81 instance record with a free attribute dict (SM grid coordinates)."""
 
 
+# Adopted floorplan (r14b; README round history).  Each key is a structural change, absent = the r1-r8 behaviour:
+#   n_mirror_fix  N groups mirror S exactly (a 259.2 um channel between the hub band and N row 1; r1-r8 abutted them)
+#   w_my          W groups mirrored (MY): every group's x face looks at the spine
+#   strip_d       E host strip 2,000 -> 864 um (the host slab spans the die height): 503.7 -> 481.3 mm2
+#   x_chain       x multicast enters at the column nearest the spine and chains outward
+#   port_fix      shared hub masters' copies mirrored and their ports role-named (r1-r8: 128 net ends had no pin)
+#   ew_corridor   SU E <-> W quarter links cross the spine through the router/cmdproc and VM/barrier gaps
+#   sm_xmid       SM x / c pins centred in their pin regions (row-neutral leaves)
+#   spch          spine side channels 1,382.4 -> 1,036.8 um
+#   lanes         every die trunk owns a lane in the spine and hub-edge channels
+#   root_pins     trunk roots leave their spine block at the face end toward their trunk
+#   serdes_mg     250.56 um routing gap beside each SerDes macro's io face (was 103.68)
+ADOPTED = dict(n_mirror_fix=True, x_chain=True, w_my=True, strip_d=864.0, port_fix=True, ew_corridor=True, sm_xmid=True,
+               lanes=True, spch=1036.8, root_pins=True, serdes_mg=250.56)
+R10 = dict(n_mirror_fix=True, w_my=True, strip_d=864.0, x_chain=True, port_fix=True)
+
+
 def build(variant=None):
-    variant = dict(variant or {})
+    variant = dict(variant if variant is not None else ADOPTED)
     smw, smh = sm_dims()
+    strip_d = variant.get('strip_d', STRIP_D)
     grp_w = 4 * (smw + SHAVE) + 5 * CH
     grp_h = 2 * (smh + SHAVE) + 2 * CH
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
     core_w = 2 * grp_w + mid_ch
-    W = up(EDGE + SCH + core_w + SCH + STRIP_D + EDGE, GX)
+    W = up(EDGE + SCH + core_w + SCH + strip_d + EDGE, GX)
     side_h = EDGE + PHY_H + 8.64 + SVC_D + SVC_GAP + grp_h
     hub_h = up(variant.get('hub_h', 7200.0), GY)
     H = up(2 * side_h + hub_h, GY)
@@ -182,10 +201,15 @@ def build(variant=None):
                     if side == 'S':
                         sy = up(yg + CH + row * (smh + SHAVE + CH), GY) if row else up(yg + 0.0, GY)
                     else:
-                        sy = dn(yg + grp_h - (smh + SHAVE) - (CH + row * (smh + SHAVE + CH) if row else 0.0), GY)
+                        if variant.get('n_mirror_fix'):     # r10: r1-r8 abutted N row 1 on the hub band (no CH)
+                            sy = dn(yg + grp_h - (smh + SHAVE) - row * (smh + SHAVE + CH), GY)
+                        else:
+                            sy = dn(yg + grp_h - (smh + SHAVE) - (CH + row * (smh + SHAVE + CH) if row else 0.0), GY)
                     i = 8 * 'SW SE NW NE'.split().index(st) + 4 * row + col
-                    it = Inst(f'sm{i}', 'hfd_sm', sx, sy, smw, smh, 'R0' if side == 'S' else 'MX', kind='sm',
-                              region=f'grp_{st}')
+                    my = variant.get('w_my') and half == 'W'      # r10: W groups mirrored, x face toward the centre
+                    flip = (side == 'N') != (variant.get('row1_flip') and row == 1)   # r12: row 1 mirrored about x
+                    ori = ('R180' if my else 'MX') if flip else ('MY' if my else 'R0')
+                    it = Inst(f'sm{i}', 'hfd_sm', sx, sy, smw, smh, ori, kind='sm', region=f'grp_{st}')
                     it.sm = dict(stack=st, row=row, col=col)
                     insts.append(it)
                     sms.append(it)
@@ -204,18 +228,20 @@ def build(variant=None):
     hs = {n: up(BLOCKS[n][0] * 1e6 / spine_w, GY) for n in BLOCKS if n in
           ('loader', 'router', 'cmdproc', 'coll', 'vm', 'barrier', 'quant')}
     for n in ('coll', 'vm', 'cmdproc'):          # r4: face length for pin escape (r2/r3 GRT hot spot at their faces)
-        hs[n] = max(hs[n], up(variant.get('spine_face_um', 1404.0), GY))
-    cy0 = dn(hmid - hs['coll'] / 2, GY)
-    lower, upper = ['loader', 'router', 'cmdproc'], ['vm', 'barrier', 'quant']
+        hs[n] = max(hs[n], up(variant.get(f'face_{n}', variant.get('spine_face_um', 1404.0)), GY))
+    ctr = variant.get('spine_centre', 'coll')
+    cy0 = dn(hmid - hs[ctr] / 2, GY)
+    lower = variant.get('spine_lower', ['loader', 'router', 'cmdproc'])
+    upper = variant.get('spine_upper', ['vm', 'barrier', 'quant'])
     glo = (cy0 - hy0 - sum(hs[n] for n in lower)) / len(lower)
-    ghi = (hy1 - (cy0 + hs['coll']) - sum(hs[n] for n in upper)) / len(upper)
+    ghi = (hy1 - (cy0 + hs[ctr]) - sum(hs[n] for n in upper)) / len(upper)
     assert min(glo, ghi) >= 43.2, ('spine column too short', glo, ghi)
-    place = [('coll', cy0)]
+    place = [(ctr, cy0)]
     yy = hy0 + glo / 2
     for n in lower:
         place.append((n, yy))
         yy += hs[n] + glo
-    yy = cy0 + hs['coll'] + ghi / 2
+    yy = cy0 + hs[ctr] + ghi / 2
     for n in upper:
         place.append((n, yy))
         yy += hs[n] + ghi
@@ -224,7 +250,19 @@ def build(variant=None):
                   domain='serial_0p9' if n == 'quant' else 'stream_1p2')
         insts.append(it)
         hub[n] = it
+    # r12: the SU E <-> W quarter links (1,024 b each way per pair) cross the spine column through the gap between
+    # router and cmdproc (S pair) and between VM and barrier (N pair); r11 crossed the blocks (402 M6 overflow)
+    geo['ew_y'] = dict(S=(hub['router'].y + hub['router'].h + SHAVE + hub['cmdproc'].y) / 2,
+                       N=(hub['vm'].y + hub['vm'].h + SHAVE + hub['barrier'].y) / 2)
     qh = dn((hh - HCH) / 2, GY)
+
+    def qori(q):
+        """r10: the four copies of a shared hub master (SU / SFU / HC quarters, index quarters, attention tiles) are
+        mirrored images of the SW copy, so one master's pin faces look the same way (spine, equator, hub edge) in every
+        quadrant.  r1-r8 placed all four R0 and took every pin face from the SW copy."""
+        if not variant.get('port_fix'):
+            return 'R0'
+        return {'SW': 'R0', 'SE': 'MY', 'NW': 'MX', 'NE': 'R180'}[q]
 
     def quarters(name, mm2, xw, xe, dom='serial_0p9'):
         """r3: four quarters (SW, NW W of the spine; SE, NE E of it) of qh each around the equator channel, so that
@@ -233,16 +271,21 @@ def build(variant=None):
         for q in ('SW', 'SE', 'NW', 'NE'):
             x_ = dn(xw - w, GX) if q[1] == 'W' else up(xe, GX)
             y_ = hy0 if q[0] == 'S' else dn(hy1 - qh, GY)
-            it = Inst(f'hb_{name}_{q}', f'hfd_{name}', x_, y_, w - SHAVE, qh - SHAVE, kind='hub', region='hub', domain=dom)
+            it = Inst(f'hb_{name}_{q}', f'hfd_{name}', x_, y_, w - SHAVE, qh - SHAVE, qori(q), kind='hub', region='hub',
+                      domain=dom)
             insts.append(it)
             hub[f'{name}_{q}'] = it
         return dn(xw - w - HCH, GX), up(xe + w + HCH, GX)
-    xw, xe = quarters('su', BLOCKS['su'][0] + BLOCKS['su_fused'][0], sx0 - SPCH, sx0 + spine_w + SPCH)
+    spch = variant.get('spch', SPCH)
+    geo['spch'] = spch
+    xw, xe = quarters('su', BLOCKS['su'][0] + BLOCKS['su_fused'][0], sx0 - spch, sx0 + spine_w + spch)
     xw, xe = quarters('sfu', BLOCKS['sfu'][0], xw, xe)
     xw, xe = quarters('hc', BLOCKS['hc'][0], xw, xe)
     regions.append(dict(name='centre', kind='hub', rect=[hub['hc_SW'].x, hy0, hub['hc_SE'].x + hub['hc_SE'].w, hy1]))
-    tw = up(math.sqrt(BLOCKS['attn_tile'][0] * 1e6), GX)
-    th = up(BLOCKS['attn_tile'][0] * 1e6 / tw, GY)
+    # Historical r14b remains replayable. Measured-macro revisions must supply
+    # both dimensions: an area-only square can lose the required halo/grid fit.
+    tw = up(variant.get('attn_tile_w_um', math.sqrt(BLOCKS['attn_tile'][0] * 1e6)), GX)
+    th = up(variant.get('attn_tile_h_um', BLOCKS['attn_tile'][0] * 1e6 / tw), GY)
     tg = 43.2
     assert 4 * th + 3 * tg <= qh + 1e-6, ('attention tiles do not fit the quadrant', 4 * th + 3 * tg, qh)
     iw = up(BLOCKS['index'][0] / 4 * 1e6 / qh, GX)
@@ -258,7 +301,7 @@ def build(variant=None):
             ix_x = up(hub['hc_SE'].x + hub['hc_SE'].w + SHAVE + HCH, GX)
             tx0 = up(ix_x + iw + HCH, GX)
             assert tx0 + 4 * tw + 3 * tg <= x0 + core_w - HCH / 2 + 1e-6, ('E scan quadrant overflows', tx0)
-        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy, iw - SHAVE, qh - SHAVE, kind='hub', region='hub')
+        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy, iw - SHAVE, qh - SHAVE, qori(st), kind='hub', region='hub')
         insts.append(ix)
         hub[f'index_{st}'] = ix
         ty0 = up(qy + (qh - 4 * th - 3 * tg) / 2, GY)
@@ -267,7 +310,7 @@ def build(variant=None):
             row = []
             for c in range(4):
                 it = Inst(f'at_{st}_{r}{c}', 'hfd_attn_tile', up(tx0 + c * (tw + tg), GX), up(ty0 + r * (th + tg), GY),
-                          tw - SHAVE, th - SHAVE, kind='attn_tile', region='hub')
+                          tw - SHAVE, th - SHAVE, qori(st), kind='attn_tile', region='hub')
                 insts.append(it)
                 tiles.append(it)
                 row.append(it)
@@ -284,7 +327,7 @@ def build(variant=None):
     cxm = geo['cx']
     sd_w = dn(mid_ch - 2 * 64.8, GX)
     sl = up(BLOCKS['serdes'][0] / 2 * 1e6 / sd_w, GY)
-    MG = 103.68                                   # channel between macros (pins on each macro's E face)
+    MG = variant.get('serdes_mg', 103.68)          # channel E of each macro (its io pins); r14 option: wider
     for side, n in (('S', 5), ('N', 4)):
         sx = up(cxm - sd_w / 2, GX)
         if side == 'S':
@@ -305,8 +348,8 @@ def build(variant=None):
         top = max(sy + sl, my + rs['h']) if side == 'S' else H - min(sy, my)
         assert top <= side_h + 1e-6, (f'{side} SerDes block reaches the hub band', top, side_h)
         regions.append(dict(name=f'serdes_{side}', kind='link', rect=[sx, min(sy, my), sx + sd_w, max(sy + sl, my + rs['h'])]))
-    ux = up(W - EDGE - STRIP_D, GX)
-    hsl_w = dn(STRIP_D - ru['w'] - 8.64, GX)
+    ux = up(W - EDGE - strip_d, GX)
+    hsl_w = dn(strip_d - ru['w'] - 8.64, GX)
     hsl = up(BLOCKS['host'][0] * 1e6 / hsl_w, GY)
     uy = up(H / 2 - ru['h'] / 2, GY)
     host_mac = Inst('lk_host', ru['name'], ux, uy, ru['w'], ru['h'], 'R0', kind='link', region='link', domain='link')
@@ -314,11 +357,18 @@ def build(variant=None):
     hs = Inst('hs_slab', 'hfd_host_slab', up(ux + ru['w'] + 8.64, GX), up(H / 2 - hsl / 2, GY), hsl_w - SHAVE, hsl - SHAVE,
               kind='host_slab', region='link', domain='link')
     insts.append(hs)
-    regions.append(dict(name='strip_E', kind='link', rect=[W - EDGE - STRIP_D, EDGE, W - EDGE, H - EDGE]))
+    assert hsl <= H - 2 * EDGE, ('host slab taller than the die', hsl)
+    regions.append(dict(name='strip_E', kind='link', rect=[W - EDGE - strip_d, EDGE, W - EDGE, H - EDGE]))
     variant.update(W=W, H=H)
     m = dict(geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, scan=scan, links=links, host=host_mac,
              notes=notes, variant=variant, stn_faces={})
+    if variant.get('r5a_sidebands'):
+        from hbm_r5a_parent_allocation import allocate
+        allocate(m)
     m['buses'], m['paths'] = buses(m)
+    if variant.get('child_contract'):
+        from hbm_die_child_contract import allocations
+        m['child_reservations'] = allocations(m)
     return m
 
 
@@ -348,7 +398,10 @@ def _router(m, B, P):
     g = m['geo']
     faces = m['stn_faces']
     n_wp = [0]
+    pf = m['variant'].get('port_fix')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
+
+    blocked += [tuple(r) for r in m.get('reserved_regions', [])]
 
     def free(x, y, w, h):
         if x < EDGE or y < EDGE or x + w > g['W'] - EDGE or y + h > g['H'] - EDGE:
@@ -398,6 +451,7 @@ def _router(m, B, P):
         leave the chain open and return (last endpoint, bus ids)."""
         seq = []
         acc = 0.0
+        WAYPOINT_UM = m['variant'].get('wp_um', WP_DEFAULT)     # r13 option: station spacing (registered segment)
         for (ax, ay), (bx, by) in zip(pts, pts[1:]):
             L = abs(bx - ax) + abs(by - ay)
             if L <= 0:
@@ -440,6 +494,7 @@ def buses(m):
     hub = m['hub']
     faces = m['stn_faces']
     station, chain = _router(m, B, P)
+    pf = m['variant'].get('port_fix')
 
     def sm_face(it, port):
         f = SM_FACE[port]
@@ -448,6 +503,30 @@ def buses(m):
         return f
     yb0, yb1 = g['side_h'], g['H'] - g['side_h']
     ych = dict(S=yb0 + HCH / 2, N=yb1 - HCH / 2)          # hub-band edge channels
+    lanes = m['variant'].get('lanes')
+    # r13: dedicated lanes.  r12 stacked every die trunk within 140 um of the spine-channel centre line and of the
+    # hub-edge channel centre line, so the 129-bundle x trunk and the link / control / expert trunks jogged around each
+    # other (+200-600 um per 1.7 mm segment, one stage each).  Each trunk now owns a lane sized to its bundle count.
+    sp_off, ed_off = {}, {}
+    pos = 60.0
+    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('xt', 129), ('ct', 23), ('ef', 8)):
+        sp_off[n_] = pos + nb * 1.2 / 2
+        pos += nb * 1.2 + 40.0
+    pos = 30.0
+    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)):
+        ed_off[n_] = pos + nb * 0.8 / 2
+        pos += nb * 0.8 + 25.0
+    spx = (hub['vm'].x, hub['vm'].x + hub['vm'].w)
+
+    def xlane(half_, n_, default):
+        if not lanes:
+            return default
+        return spx[0] - sp_off[n_] if half_ == 'W' else spx[1] + sp_off[n_]
+
+    def ylane(side_, n_, default):
+        if not lanes:
+            return default
+        return (yb0 + HCH - ed_off[n_]) if side_ == 'S' else (yb1 - HCH + ed_off[n_])
     smw = m['groups']['SW']['sms'][0].w + SHAVE
     for st, G in m['groups'].items():
         side, half = G['side'], G['half']
@@ -470,6 +549,11 @@ def buses(m):
         jx = G['x'] + g['grp_w'] + g['mid_ch'] / 2 if half == 'W' else G['x'] - g['mid_ch'] / 2
         jside = 4 if half == 'W' else 0                     # the column channel next to the mid channel
         by_rc = {(s.sm['row'], s.sm['col']): s for s in sms}
+        my = sms[0].orient in ('MY', 'R180')               # r10: mirrored group: x face E, result face W
+        xch = (lambda c_: c_ + 1) if my else (lambda c_: c_)          # channel of column c's x face
+        rch = (lambda c_: c_) if my else (lambda c_: c_ + 1)          # channel of column c's result face
+        vm_ = hub['vm']
+        bias = m['variant'].get('root_bias')
         # (1) weight stream
         for s in sms:
             sid = s.name
@@ -477,6 +561,12 @@ def buses(m):
             if s.sm['row'] == 0:
                 B.append((f'wl_{sid}', 'weight', W_LINE, [(svc.name, f'l{sid}'), (sid, 'd')]))
                 P[f'weight_{sid}'].append(f'wl_{sid}')
+            elif m['variant'].get('row1_flip'):     # r12: row 1's d face looks at the hub-side row channel; the line
+                #                                       climbs the column's result channel (the x leaves own the other)
+                dx = s.x + s.w / 2
+                wx = cxs[rch(c)]
+                pts = [(wx, svc.y + (svc.h if side == 'S' else 0.0)), (wx, y_top), (dx, y_top)]
+                chain(f'wl_{sid}', 'weight', W_LINE, (svc.name, f'l{sid}'), (sid, 'd'), pts, path=f'weight_{sid}')
             else:
                 dx = s.x + s.w / 2
                 pts = [(cxs[c], svc.y + (svc.h if side == 'S' else 0.0)), (cxs[c], y_mid), (dx, y_mid)]
@@ -485,23 +575,41 @@ def buses(m):
         # spine-side vertical channel (between the spine and the SU / SFU halves) and the group's centre column
         # channel (channel 2) that every tree enters by
         vm = hub['vm']
-        xs_sp = hub['vm'].x - SPCH / 2 if half == 'W' else hub['vm'].x + hub['vm'].w + SPCH / 2
+        xs_sp = hub['vm'].x - g['spch'] / 2 if half == 'W' else hub['vm'].x + hub['vm'].w + g['spch'] / 2
         xs_sp += (-60.0 if half == 'W' else 60.0) * (side == 'N')
         cc = cxs[2]
         # (2) activation multicast tree: VM -> spine-side channel -> hub edge channel -> channel 2 -> mid-row channel;
         #     a multicast station per SM column (channel c, west of column c) taps both SMs of the column; the tree
         #     splits at channel 2 into a west arm (1, 0) and an east arm (3)
-        root = _cxy(vm, 'W' if half == 'W' else 'E', 0.3 if side == 'S' else 0.7)
-        pts = [root, (xs_sp, root[1]), (xs_sp, ych[side] + 20.0 * sgn), (cc - 20.0, ych[side] + 20.0 * sgn), (cc - 20.0, y_mid)]
+        root = _cxy(vm, 'W' if half == 'W' else 'E', (0.1 if side == 'S' else 0.9) if bias else (0.3 if side == 'S' else 0.7))
+        xin = m['variant'].get('x_chain')
+        if xin:     # r10: enter at the column nearest the spine and chain outward (r8 entered at column 2: the E groups'
+            #         column-0 leaf doubled back two SM pitches, the x-multicast floor)
+            order = sorted(range(4), key=lambda c_: abs(cxs[xch(c_)] - g['cx']))
+            out_f = 'W' if half == 'W' else 'E'
+            in_f = 'E' if half == 'W' else 'W'
+        else:
+            order = [2]
+        e0 = order[0]
+        ccx = cxs[xch(e0)]
+        xx_ = xlane(half, 'xt', xs_sp)
+        yx_ = ylane(side, 'xt', ych[side] + 20.0 * sgn)
+        pts = [root, (xx_, root[1]), (xx_, yx_), (ccx - 20.0, yx_), (ccx - 20.0, y_mid)]
         prev, trunk = chain(f'xt_{st}', 'x_trunk', W_X, (vm.name, f'x{st}'), None, pts)
         ms = {}
-        ms[2] = station(cc, y_mid, f'xm{st}2', W_X, 'N' if side == 'S' else 'S', 'W', False, kind='mcast',
-                        extra=(up(2 * W_X * 0.048 * 1.1 + 24, GX), up(2 * W_X * 0.048 * 1.1 + 24, GY)))
-        faces[ms[2].master].update(b2='E', t0='S' if side == 'S' else 'N', t1='N' if side == 'S' else 'S')
-        B.append((f'xh_{st}_2', 'x_trunk', W_X, [prev, (ms[2].name, 'a')]))
-        arm = {2: [f'xh_{st}_2']}
-        for c, frm, port in ((1, 2, 'b'), (0, 1, 'b'), (3, 2, 'b2')):
-            ms[c] = station(cxs[c], y_mid, f'xm{st}{c}', W_X, 'E' if c < 2 else 'W', 'W' if c < 2 else 'E', True,
+        ms[e0] = station(ccx, y_mid, f'xm{st}{e0}', W_X, 'N' if side == 'S' else 'S', out_f if xin else 'W', False,
+                         kind='mcast', extra=(up(2 * W_X * 0.048 * 1.1 + 24, GX), up(2 * W_X * 0.048 * 1.1 + 24, GY)))
+        faces[ms[e0].master].update(b2='E', t0='S' if side == 'S' else 'N', t1='N' if side == 'S' else 'S')
+        B.append((f'xh_{st}_{e0}', 'x_trunk', W_X, [prev, (ms[e0].name, 'a')]))
+        arm = {e0: [f'xh_{st}_{e0}']}
+        if xin:
+            steps = [(c_, f_, 'b') for f_, c_ in zip(order, order[1:])]
+            fab = {c_: (in_f, out_f) for c_ in order}
+        else:
+            steps = ((1, 2, 'b'), (0, 1, 'b'), (3, 2, 'b2'))
+            fab = {c_: ('E' if c_ < 2 else 'W', 'W' if c_ < 2 else 'E') for c_ in range(4)}
+        for c, frm, port in steps:
+            ms[c] = station(cxs[xch(c)], y_mid, f'xm{st}{c}', W_X, fab[c][0], fab[c][1], True,
                             kind='mcast', extra=(up(W_X * 0.048 * 1.1 + 24, GX), 0))
             faces[ms[c].master].update(t0='S' if side == 'S' else 'N', t1='N' if side == 'S' else 'S')
             bid = f'xh_{st}_{c}'
@@ -520,9 +628,9 @@ def buses(m):
         for c in (0, 3, 1, 2):
             nb = W_RES * 2 * {0: 1, 3: 1, 1: 2, 2: 4}[c]
             fa = {0: 'W', 1: 'W', 2: 'E', 3: 'E'}[c]
-            gs[c] = station(cxs[c + 1], gy, f'rg{st}{c}', nb, fa, 'N' if side == 'S' else 'S', False, kind='gath',
+            gs[c] = station(cxs[rch(c)], gy, f'rg{st}{c}', nb, fa, 'N' if side == 'S' else 'S', False, kind='gath',
                             extra=(up((nb + 2 * W_RES) * 0.048 * 1.1 + 24, GX), up((nb + 2 * W_RES) * 0.048 * 1.1 + 24, GY)))
-            faces[gs[c].master].update(t0='W', t1='W', a2='W')
+            faces[gs[c].master].update(t0='E' if my else 'W', t1='E' if my else 'W', a2='W')
             for r_ in (0, 1):
                 s = by_rc[(r_, c)]
                 B.append((f'rl_{s.name}', 'result_leaf', W_RES, [(s.name, 'r'), (gs[c].name, f't{r_}')]))
@@ -532,9 +640,9 @@ def buses(m):
         tgt = _cxy(su, 'W' if half == 'W' else 'E', 0.3 if side == 'S' else 0.7) if False else \
             _cxy(su, 'S' if side == 'S' else 'N', 0.3 + 0.4 * (half == 'E'))
         g2 = gs[2]
-        pts = [(g2.x + g2.w / 2, g2.y + g2.h / 2), (cc + 40.0, g2.y + g2.h / 2), (cc + 40.0, ych[side] - 40.0 * sgn),
-               (tgt[0], ych[side] - 40.0 * sgn), tgt]
-        chain(f'rt_{st}', 'result_trunk', W_RES * 8, (g2.name, 'b'), (su.name, f'r{st}'), pts)
+        yr_ = ylane(side, 'rt', ych[side] - 40.0 * sgn)
+        pts = [(g2.x + g2.w / 2, g2.y + g2.h / 2), (cc + 40.0, g2.y + g2.h / 2), (cc + 40.0, yr_), (tgt[0], yr_), tgt]
+        chain(f'rt_{st}', 'result_trunk', W_RES * 8, (g2.name, 'b'), (su.name, 'r' if pf else f'r{st}'), pts)
         tr = [b[0] for b in B if b[0].startswith(f'rt_{st}_')]
         up_arm = {0: [f'rh_{st}_0', f'rh_{st}_1'], 1: [f'rh_{st}_1'], 3: [f'rh_{st}_3'], 2: []}
         for s in sms:
@@ -543,37 +651,64 @@ def buses(m):
         #     spine-side channel -> hub edge channel -> a distribution station in channel 2 at the hub-side row
         #     channel (row 1) and one at the mid-row channel (row 0) -> 46-bit leaves to each SM's c face
         cp = hub['cmdproc']
-        cpt = _cxy(cp, 'W' if half == 'W' else 'E', 0.3 if side == 'S' else 0.7)
-        xcp = xs_sp + (-100.0 if half == 'W' else 100.0)
-        yh = ych[side] + 60.0 * sgn
-        pts = [cpt, (xcp, cpt[1]), (xcp, yh), (cc + 60.0, yh), (cc + 60.0, y_top)]
-        prev, ctr = chain(f'ct_{st}', 'control', 8 * W_CTL, (cp.name, f'c{st}'), None, pts)
-        d1 = station(cc + 60.0, y_top, f'cd{st}1', 8 * W_CTL, 'N' if side == 'S' else 'S', 'S' if side == 'S' else 'N',
-                     False, kind='cdist', extra=(up(8 * W_CTL * 0.048 * 2.2 + 24, GX), up(4 * W_CTL * 0.048 * 2.2 + 24, GY)))
-        B.append((f'cd_{st}_1', 'control', 8 * W_CTL, [prev, (d1.name, 'a')]))
-        d0 = station(cc + 60.0, y_mid, f'cd{st}0', 4 * W_CTL, 'N' if side == 'S' else 'S', 'S' if side == 'S' else 'N',
-                     False, kind='cdist', extra=(up(4 * W_CTL * 0.048 * 2.2 + 24, GX), up(4 * W_CTL * 0.048 * 2.2 + 24, GY)))
-        B.append((f'cd_{st}_0', 'control', 4 * W_CTL, [(d1.name, 'b'), (d0.name, 'a')]))
-        for s in sms:
-            d = d1 if s.sm['row'] == 1 else d0
-            B.append((f'cl_{s.name}', 'control_leaf', W_CTL, [(d.name, f't{s.sm["col"]}'), (s.name, 'c')]))
-            P[f'control_{s.name}'] = ctr + [f'cd_{st}_1'] + ([f'cd_{st}_0'] if s.sm['row'] == 0 else []) + [f'cl_{s.name}']
+        cpt = _cxy(cp, 'W' if half == 'W' else 'E', (0.1 if side == 'S' else 0.9) if bias else (0.3 if side == 'S' else 0.7))
+        xcp = xlane(half, 'ct', xs_sp + (-100.0 if half == 'W' else 100.0))
+        yh = ylane(side, 'ct', ych[side] + 60.0 * sgn)
+        if m['variant'].get('ctl_chain'):
+            # r12: with row 1 flipped both rows' c faces look at the mid-row channel: one control station per column in
+            # that channel above the column, chained outward from the inner column (no star leaves across the group)
+            corder = sorted(range(4), key=lambda c_: abs(by_rc[(0, c_)].x + by_rc[(0, c_)].w / 2 - g['cx']))
+            cin = cxs[4] if half == 'W' else cxs[0]
+            pts = [cpt, (xcp, cpt[1]), (xcp, yh), (cin + (-60.0 if half == 'W' else 60.0), yh),
+                   (cin + (-60.0 if half == 'W' else 60.0), y_mid)]
+            prev, ctr = chain(f'ct_{st}', 'control', 8 * W_CTL, (cp.name, f'c{st}'), None, pts)
+            ofc, ifc = ('W', 'E') if half == 'W' else ('E', 'W')
+            t0f, t1f = ('S', 'N') if side == 'S' else ('N', 'S')
+            arm_c, last = [], prev
+            for j, c_ in enumerate(corder):
+                s0 = by_rc[(0, c_)]
+                d = station(s0.x + s0.w / 2, y_mid, f'cd{st}{c_}', 8 * W_CTL - j * 2 * W_CTL, ifc, ofc, True, kind='cdist',
+                            extra=(0, up(2 * W_CTL * 0.048 * 2.2 + 24, GY)))
+                faces[d.master].update(t0=t0f, t1=t1f)
+                bid = f'cd_{st}_{c_}'
+                B.append((bid, 'control', 8 * W_CTL - j * 2 * W_CTL, [last, (d.name, 'a')]))
+                arm_c = arm_c + [bid]
+                last = (d.name, 'b')
+                for r_ in (0, 1):
+                    sm_ = by_rc[(r_, c_)]
+                    B.append((f'cl_{sm_.name}', 'control_leaf', W_CTL, [(d.name, f't{r_}'), (sm_.name, 'c')]))
+                    P[f'control_{sm_.name}'] = ctr + list(arm_c) + [f'cl_{sm_.name}']
+        else:
+            pts = [cpt, (xcp, cpt[1]), (xcp, yh), (cc + 60.0, yh), (cc + 60.0, y_top)]
+            prev, ctr = chain(f'ct_{st}', 'control', 8 * W_CTL, (cp.name, f'c{st}'), None, pts)
+        if not m['variant'].get('ctl_chain'):
+            d1 = station(cc + 60.0, y_top, f'cd{st}1', 8 * W_CTL, 'N' if side == 'S' else 'S', 'S' if side == 'S' else 'N',
+                         False, kind='cdist', extra=(up(8 * W_CTL * 0.048 * 2.2 + 24, GX), up(4 * W_CTL * 0.048 * 2.2 + 24, GY)))
+            B.append((f'cd_{st}_1', 'control', 8 * W_CTL, [prev, (d1.name, 'a')]))
+            d0 = station(cc + 60.0, y_mid, f'cd{st}0', 4 * W_CTL, 'N' if side == 'S' else 'S', 'S' if side == 'S' else 'N',
+                         False, kind='cdist', extra=(up(4 * W_CTL * 0.048 * 2.2 + 24, GX), up(4 * W_CTL * 0.048 * 2.2 + 24, GY)))
+            B.append((f'cd_{st}_0', 'control', 4 * W_CTL, [(d1.name, 'b'), (d0.name, 'a')]))
+            for s in sms:
+                d = d1 if s.sm['row'] == 1 else d0
+                B.append((f'cl_{s.name}', 'control_leaf', W_CTL, [(d.name, f't{s.sm["col"]}'), (s.name, 'c')]))
+                P[f'control_{s.name}'] = ctr + [f'cd_{st}_1'] + ([f'cd_{st}_0'] if s.sm['row'] == 0 else []) + [f'cl_{s.name}']
         # (5) expert-fetch descriptor: router -> spine-side channel -> hub edge channel -> channel 2 -> svc N face
         rt = hub['router']
         p0 = _cxy(rt, 'W' if half == 'W' else 'E', 0.5)
-        xr = xs_sp + (-140.0 if half == 'W' else 140.0)
+        xr = xlane(half, 'ef', xs_sp + (-140.0 if half == 'W' else 140.0))
         sn = _cxy(svc, 'N' if side == 'S' else 'S', (cc + 80.0 - svc.x) / svc.w)
-        pts = [p0, (xr, p0[1]), (xr, ych[side] + 100.0 * sgn), (cc + 80.0, ych[side] + 100.0 * sgn), sn]
+        ye_ = ylane(side, 'ef', ych[side] + 100.0 * sgn)
+        pts = [p0, (xr, p0[1]), (xr, ye_), (cc + 80.0, ye_), sn]
         chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}')
         # (6) KV rows -> the stack's scan quadrant (attention tiles nearest the stack) and index keys -> its index
         #     quarter: svc outer end -> outer column channel -> hub edge channel -> quadrant face
         sc = m['scan'][st]
         rowt = sc['tiles'][0] if side == 'S' else sc['tiles'][-1]
-        for name, tgt_inst, port, off in (('kv', rowt[0] if half == 'W' else rowt[-1], f'k{st}', -50.0),
-                                          ('ik', sc['index'], f'k{st}', 50.0)):
+        for name, tgt_inst, port, off in (('kv', rowt[0] if half == 'W' else rowt[-1], 'k' if pf else f'k{st}', -50.0),
+                                          ('ik', sc['index'], 'k' if pf else f'k{st}', 50.0)):
             tp = _cxy(tgt_inst, 'S' if side == 'S' else 'N', 0.5)
             so = _cxy(svc, 'W' if half == 'W' else 'E', 0.3 if name == 'kv' else 0.7)
-            yy_ = ych[side] + 40.0 * sgn * (1 if name == 'kv' else -1)
+            yy_ = ylane(side, 'lk0' if name == 'kv' else 'lk1', ych[side] + 40.0 * sgn * (1 if name == 'kv' else -1))
             eo = min(range(5), key=lambda c_: abs(cxs[c_] - tp[0]) + abs(cxs[c_] - so[0]))
             sn = _cxy(svc, 'N' if side == 'S' else 'S', (cxs[eo] + off - svc.x) / svc.w)
             pts = [sn, (cxs[eo] + off, yy_), (tp[0], yy_), tp]
@@ -581,16 +716,24 @@ def buses(m):
         # scan quadrant internals: tile row chains (outer -> inner), row end -> index quarter -> SU; KV down the
         # columns; index quarter -> VM (local top-k for the merge)
         grid = sc['tiles']
+        actual_attn = 'attn_tile_w_um' in m['variant']
+        if actual_attn:
+            # 576 operand bits + 18 controls. LD data remains the 1024-bit
+            # service path. These are reservations, not a new RTL broadcaster.
+            B.append((f'qi_{st}', 'attn_operand', 594,
+                      [(vm.name, f'q{st}'), (rowt[0 if half == 'W' else -1].name, 'q')]))
         for r in range(4):
             row = grid[r] if half == 'W' else grid[r][::-1]
             for a_, b_ in zip(row, row[1:]):
-                B.append((f'ta_{a_.name}', 'attn_chain', 512, [(a_.name, 'o'), (b_.name, 'i')]))
-            B.append((f'tr_{st}{r}', 'attn_root', 512, [(row[-1].name, 'o'), (sc['index'].name, f'a{r}')]))
+                B.append((f'ta_{a_.name}', 'attn_chain', 529 if actual_attn else 512, [(a_.name, 'o'), (b_.name, 'i')]))
+                if actual_attn:
+                    B.append((f'ti_{a_.name}', 'attn_input', 1618, [(a_.name, 'iu'), (b_.name, 'id')]))
+            B.append((f'tr_{st}{r}', 'attn_root', 529 if actual_attn else 512, [(row[-1].name, 'o'), (sc['index'].name, f'a{r}')]))
         for c in range(4):
             for r in range(3):
                 lo, hi_ = (grid[r][c], grid[r + 1][c]) if side == 'S' else (grid[3 - r][c], grid[2 - r][c])
-                B.append((f'tk_{st}{r}{c}', 'attn_kv', 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
-        B.append((f'ao_{st}', 'attn_out', 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, f'a{st}')]))
+                B.append((f'tk_{st}{r}{c}', 'attn_kv', 1618 if actual_attn else 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
+        B.append((f'ao_{st}', 'attn_out', 1058 if actual_attn else 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
         B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = [f'tr_{st}0', f'ao_{st}']
     # ---- hub internal (adjacent slabs across one channel, or vertical in the spine column): direct nets; their
@@ -603,22 +746,42 @@ def buses(m):
                 (f'su_{q}', 'router', 256)]
     hl_ += [('su_SW', 'su_SE', 1024), ('su_SE', 'su_SW', 1024), ('su_SW', 'su_NW', 1024), ('su_NW', 'su_SW', 1024),
             ('su_SE', 'su_NE', 1024), ('su_NE', 'su_SE', 1024), ('su_NW', 'su_NE', 1024), ('su_NE', 'su_NW', 1024)]
+    def role(me, peer):
+        """r10: port names of a shared quarter master name the peer's role, not its quadrant (r1-r8 named t_sfu_SW etc.,
+        so only the SW copy's ports existed in the master: 3 of 4 copies' quadrant-named nets had no pin at that end)."""
+        if not pf or '_' not in me:
+            return peer
+        if '_' not in peer:
+            return peer
+        pt, pq = peer.split('_')
+        mq = me.split('_')[1]
+        if pq == mq:
+            return pt
+        return pt + ('_ew' if pq[0] == mq[0] else '_ns')
     for a_, b_, bits in hl_:
-        B.append((f'hb_{a_}_{b_}', 'hub', bits, [(hub[a_].name, f't_{b_}'), (hub[b_].name, f'f_{a_}')]))
+        B.append((f'hb_{a_}_{b_}', 'hub', bits, [(hub[a_].name, f't_{role(a_, b_)}'), (hub[b_].name, f'f_{role(b_, a_)}')]))
         P[f'hub_{a_}_{b_}'] = [f'hb_{a_}_{b_}']
     # ---- collective -> SerDes: 8 TU ports x 546 b each direction striped over the 9 macros (S centre 5, N centre 4):
     #      spine-side channel -> hub edge channel -> the channel east of the macro -> its E-face pins
     coll = hub['coll']
+    MG_ = m['variant'].get('serdes_mg', 103.68)
     tot = TU_PORTS * TU_FLIT * 2
     per = math.ceil(tot / len(m['links']))
+    lane_j = defaultdict(int)
     for i, lk in enumerate(m['links']):
         side = lk.name[3]
         j = int(lk.name[4:])
         east = lk.x + lk.w / 2 > coll.x + coll.w / 2
         p0 = _cxy(coll, 'E' if east else 'W', 0.15 + 0.14 * j + (0.0 if side == 'S' else 0.07))
-        xsp = (coll.x + coll.w + SPCH / 2 + 60.0 * j - 120.0) if east else (coll.x - SPCH / 2 - 60.0 * j + 120.0)
+        xsp = (coll.x + coll.w + g['spch'] / 2 + 60.0 * j - 120.0) if east else (coll.x - g['spch'] / 2 - 60.0 * j + 120.0)
         yh = ych[side] + (-40.0 * j - 20.0) * (1 if side == 'S' else -1)
-        xg = lk.x + lk.w + 103.68 / 2
+        if lanes:
+            hk = (side, east)
+            ln_ = f'lk{lane_j[hk]}'
+            lane_j[hk] += 1
+            xsp = xlane('E' if east else 'W', ln_, xsp)
+            yh = ylane(side, ln_, yh)
+        xg = lk.x + lk.w + MG_ / 2
         ym = lk.y + lk.h / 2
         pts = [p0, (xsp, p0[1]), (xsp, yh), (xg, yh), (xg, ym), (lk.x + lk.w, ym)]
         chain(f'lk_{lk.name}', 'link', min(per, 1024), (coll.name, f'l{lk.name}'), (lk.name, 'io'), pts,
@@ -677,13 +840,24 @@ def masters(m, k=1):
     for it in m['insts']:
         first.setdefault(it.master, it)
     peers = defaultdict(list)
+    ref = {}
+    pf = m['variant'].get('port_fix')
     for bid, cls, bits, eps in m['buses']:
         for i, (inst, port) in enumerate(eps):
             it = by[inst]
-            if it is not first[it.master]:
+            key = (it.master, port)
+            if pf:      # r10: a port that only another copy uses still gets its pin, placed from that copy's frame
+                if key in ref and ref[key] is not it and ref[key] is first[it.master]:
+                    continue
+                if key in ref and ref[key] is not it and it is not first[it.master]:
+                    continue
+                if key in ref and ref[key] is not it:          # the first copy has it too: prefer the first copy
+                    peers[key] = []
+                ref[key] = it
+            elif it is not first[it.master]:
                 continue
             others = [by[o] for j, (o, _) in enumerate(eps) if j != i]
-            peers[(it.master, port)] += others
+            peers[key] += others
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
     notes.update(m.get('master_notes', {}))
@@ -705,7 +879,7 @@ def masters(m, k=1):
             continue
         if mname.startswith('hfd_svc_') and port == 'phy':
             continue
-        it = first[mname]
+        it = ref.get((mname, port), first[mname])
         ox = sum(o.x + o.w / 2 for o in others) / len(others)
         oy = sum(o.y + o.h / 2 for o in others) / len(others)
         lx, ly = ox - it.x, oy - it.y
@@ -718,15 +892,28 @@ def masters(m, k=1):
             face = ('E' if dx > 0 else 'W') if abs(dx) >= abs(dy) else ('N' if dy > 0 else 'S')   # die frame
             if it.kind == 'spine' and abs(ox - it.x - it.w / 2) > it.w / 2:
                 face = 'E' if dx > 0 else 'W'     # r7: spine blocks escape sideways (N/S faces look at the next block)
-            if it.orient == 'MX':
+            if it.orient in ('MX', 'R180'):
                 face = {'N': 'S', 'S': 'N'}.get(face, face)
-            if it.orient == 'MY':
+            if it.orient in ('MY', 'R180'):
                 face = {'E': 'W', 'W': 'E'}.get(face, face)
-        if it.orient == 'MX':
+        if it.orient in ('MX', 'R180'):
             ly = it.h - ly
-        if it.orient == 'MY':
+        if it.orient in ('MY', 'R180'):
             lx = it.w - lx
         along = ly if face in 'EW' else lx
+        if mname == 'hfd_su' and port in ('t_su_ew', 'f_su_ew') and m['variant'].get('ew_corridor'):
+            ly = m['geo']['ew_y'][it.name[-2]] - it.y
+            if it.orient in ('MX', 'R180'):
+                ly = it.h - ly
+            along = ly
+        if it.kind == 'spine' and m['variant'].get('root_pins') and face in 'EW':
+            # r14: a trunk root (x multicast, control, expert request, link) leaves its spine block at the face end on
+            # the side its trunk heads for (r13: placed by peer projection among the hub nets, +0.6 mm first segment)
+            mt = re.fullmatch(r'[xce](SW|SE|NW|NE)', port) or re.fullmatch(r'llk_([SN])\d', port)
+            if mt:
+                along = 0.0 if mt.group(1)[0] == 'S' else it.h
+        if mname == 'hfd_sm' and port in ('x', 'c') and m['variant'].get('sm_xmid'):
+            along = sum(sm_span[face]) / 2      # r12 option: x / c pins centred in their pin region (row-neutral)
         items[mname][face].append((along, port))
     for mname, fs in items.items():
         mst = M[mname]
@@ -752,7 +939,7 @@ def masters(m, k=1):
             if sum(need) + gap * (len(n) - 1) > room + 1e-6:
                 raise ValueError(f'{mname} face {face}: {sum(need):.1f} um of pins on {room:.1f} um')
             pos, starts = a0, []
-            spread = mname in SPREAD_MASTERS and full >= 500.0 and mname != 'hfd_sm' and not mname.startswith(('hfd_svc_', 'hfd_stn', 'hfd_mcast',
+            spread = mname in SPREAD_MASTERS and not m['variant'].get('no_spread') and full >= 500.0 and mname != 'hfd_sm' and not mname.startswith(('hfd_svc_', 'hfd_stn', 'hfd_mcast',
                                                                                       'hfd_gath', 'hfd_cdist'))
             if spread:          # r4 spread every hub port evenly: overflow 2,519 -> 5,223; r6: coll / VM only
                 g_even = (room - sum(need)) / (len(need) + 1)
@@ -1041,6 +1228,13 @@ def plan_record(m):
     g = m['geo']
     mp = manhattan_paths(m)
     ledger = {k: dict(mm2=round(v[0], 4), grade=v[1], source=v[2]) for k, v in BLOCKS.items()}
+    if 'attn_tile_w_um' in m['variant']:
+        ledger['attn_tile'] = dict(mm2=area['attn_tile']/len(m['tiles']),
+                                  grade='measured macro plus analytical route reservation',
+                                  source='results/rtl/hbm_child_contract_20261005/model.json')
+    else:
+        ledger['attn_tile']['physical_fit'] = False
+        ledger['attn_tile']['note'] = 'Historical 0.5mm2 slots fail measured m6h1 footprint; not current fit evidence.'
     placed = sum(area.values())
     return dict(
         schema='opentallas.hbm-accel-die-floorplan.v1', tool='tools/hbm_accel_die_fp.py', tool_sha256=sha('tools/hbm_accel_die_fp.py'),
@@ -1051,6 +1245,7 @@ def plan_record(m):
         census=dict(sm=32, sm_per_stack=8, stacks=4, pcs_per_stack=32, attention_tiles=len(m['tiles']),
                     serdes_macros=len(m['links']), tu_ports=TU_PORTS, tu_flit_bits=TU_FLIT - 1),
         block_ledger=ledger, instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
+        child_reservations=m.get('child_reservations'),
         placed_footprint_mm2=round(placed, 2), utilisation_of_die=round(placed / (g['W'] * g['H'] / 1e6), 3),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items()},
         clock_domains=dict(stream_1p2='SM array, attention, index, collective endpoint, VM, cmdproc, router, waypoints '
@@ -1326,6 +1521,20 @@ def case_ir(m, work, window, cov):
     return meta
 
 
+def variant_arg(v):
+    if v == 'service-attn-r1':
+        return dict(ADOPTED, hub_h=12355.2, attn_tile_w_um=1349.136,
+                    attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
+    """'' -> the adopted default; 'r8' -> the r1-r8 geometry; a JSON dict -> those keys (absent keys = r8 behaviour)."""
+    if not v:
+        return None
+    if v == 'r8':
+        return {}
+    if v == 'r10':
+        return dict(R10)
+    if v == 'adopted':
+        return dict(ADOPTED)
+    return json.loads(v)
 # ================================================================================================================
 # Qwen3-8B HBM accelerator die (the HA8 W12 vehicle's own organisation: 1,536 tiles, 4 HBM3E stacks, 421.5 MiB SRAM)
 # ================================================================================================================
@@ -1937,7 +2146,7 @@ set_clock_groups -asynchronous -group {clk_stream} -group {clk_serial} -group {c
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'check', 'real', 'grt', 'ir', 'irwin', 'record', 'price'])
+    ap.add_argument('mode', choices=['plan', 'check', 'real', 'grt', 'ir', 'irwin', 'record', 'price', 'floor'])
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--tag', default='base')
@@ -2009,6 +2218,10 @@ def main(argv=None):
     if a.mode == 'record':
         import hbm_accel_die_price as PR
         return PR.record(m, a.work, a.out, a.only)
+    if a.mode == 'floor':
+        import hbm_accel_die_price as PR
+        PR.floor(m)
+        return 0
     if a.mode == 'price':
         import hbm_accel_die_price as PR
         return PR.price(m, a.work, a.out)

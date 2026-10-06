@@ -6465,7 +6465,7 @@
  "me_ops_source": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json",
  "scope": "Qwen3-8B HBM accelerator tile die (the HA8 W12 vehicle's organisation): the vehicle cycles carry its own bd / nws / tws stage parameters; the floorplan prices the excess of the routed depths over them per ME op, plus the die-level collective run per crossing and the fill + status depth per KV first access and once a token.  Deltas are clamped at 0 (a shorter floorplan path is not credited).  Bounds from routed length, not die-level STA.",
  "tool_sha256": {
-  "fp": "90f0ed680c0cd1d36c874f35c39ae7127f5ed3671d9dd1f6bd48ae90d3bd07b2",
-  "price": "6061e0b980eb5806eca85158fe4264061db1cd1d5d47d5c38dadfdb81c3af436"
+  "fp": "23e3fde66bf20e70a3f0ee0cd8baf2b515b8476a4f09a0ab867c4cdaaa8f2604",
+  "price": "6768f15531e186175b231be0c3fd8d793df8f22178cb3b6a24abdd3e6a00c350"
  }
 }

@@ -1,0 +1,7 @@
+min_delay/hold group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_e.i2x_q0[88]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  402.86  389.51  -13.35 (VIOLATED)
+

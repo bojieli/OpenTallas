@@ -1,0 +1,42 @@
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 12.0 (stable)
+Compile cleanup...
+ ...     6208 functors (net_fun pool=524288 bytes)
+                362 logic
+                  0 bufif
+                  0 resolv
+                428 signals
+ ...     1425 filters (net_fil pool=524288 bytes)
+ ...    10831 opcodes (270336 bytes)
+ ...      983 nets
+ ...     6437 vvp_nets (1048544 bytes)
+ ...        2 arrays (50 words)
+ ...      114 memories
+                114 logic (4221534 words)
+                  0 real (0 words)
+ ...      161 scopes
+ ... 0.048329 seconds, 84804.0/76812.0/6076.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+PASS_COMB_DEFAULT active-source-local-line unchanged; count0 deterministic/rejected; no mutation
+PASS_W2_SECTOR_PARENT_PERMITS cases=2 reads=6 returns=6 held=12 foreign=4 seats_retained=1
+SCOPE adapter bytes/handshakes ONLY; native result publication/owner release NOT exercised
+src/rtl/test/hbm_accel/tb_hbm_integrated_w2_sector_adapter.sv:221: $finish called at 392510 (1ps)
+ ...execute Postsim callbacks
+ ... 10.9841 seconds, 510624.0/502944.0/6148.0 KBytes size/rss/shared
+Event counts:
+        1169 time steps (pool=113)
+       20004 thread schedule events
+       35023 assign events
+             ...assign(vec4) pool=9362
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=1536
+             ...assign(word/r) pool=204
+        2863 other events (pool=4096)

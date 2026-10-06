@@ -957,6 +957,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2142,
@@ -1937,6 +1938,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2144,
@@ -15032,6 +15034,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2137,
@@ -16012,6 +16015,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2140,
@@ -28213,6 +28217,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2141,
@@ -28299,6 +28304,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2141,
@@ -29575,6 +29581,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2141,
@@ -29661,6 +29668,7 @@
      25760.16
     ]
    },
+   "no_core_load": "Window has zero modeled core power. Grid/load sites and power bumps may remain, but a zero-current solve is not loaded IR evidence.",
    "pass": true,
    "pass_interior": true,
    "peak_rss_mb": 2142,
@@ -36836,7 +36844,7 @@
  "ir_summary": {
   "ir1": {
    "all_pass": false,
-   "completed": 154,
+   "completed": 152,
    "failing": [
     "ir1/c_w02_10",
     "ir1/c_w03_10",
@@ -36850,45 +36858,57 @@
     "ir1/c_w13_10"
    ],
    "incomplete": [],
-   "no_core_load_windows": [],
-   "windows": 154,
+   "no_core_load_windows": [
+    "ir1/c_w00_10",
+    "ir1/c_w01_10"
+   ],
+   "windows": 152,
    "worst_interior_rail_to_rail_mv": 37.6,
    "worst_window": "ir1/c_w12_10"
   },
   "ir2": {
    "all_pass": true,
-   "completed": 154,
+   "completed": 152,
    "failing": [],
    "incomplete": [],
-   "no_core_load_windows": [],
-   "windows": 154,
+   "no_core_load_windows": [
+    "ir2/c_w00_10",
+    "ir2/c_w01_10"
+   ],
+   "windows": 152,
    "worst_interior_rail_to_rail_mv": 23.54,
    "worst_window": "ir2/c_w05_10"
   },
   "ir2s25": {
    "all_pass": true,
-   "completed": 14,
+   "completed": 12,
    "failing": [],
    "incomplete": [],
-   "no_core_load_windows": [],
-   "windows": 14,
+   "no_core_load_windows": [
+    "ir2s25/c_w00_10",
+    "ir2s25/c_w01_10"
+   ],
+   "windows": 12,
    "worst_interior_rail_to_rail_mv": 23.54,
    "worst_window": "ir2s25/c_w05_10"
   },
   "ir2s33": {
    "all_pass": true,
-   "completed": 14,
+   "completed": 12,
    "failing": [],
    "incomplete": [],
-   "no_core_load_windows": [],
-   "windows": 14,
+   "no_core_load_windows": [
+    "ir2s33/c_w00_10",
+    "ir2s33/c_w01_10"
+   ],
+   "windows": 12,
    "worst_interior_rail_to_rail_mv": 19.09,
    "worst_window": "ir2s33/c_w12_10"
   }
  },
  "schema": "opentallas.hbm-accel-die-floorplan.feasibility.v1",
  "tool_sha256": {
-  "fp": "90f0ed680c0cd1d36c874f35c39ae7127f5ed3671d9dd1f6bd48ae90d3bd07b2",
-  "price": "6061e0b980eb5806eca85158fe4264061db1cd1d5d47d5c38dadfdb81c3af436"
+  "fp": "23e3fde66bf20e70a3f0ee0cd8baf2b515b8476a4f09a0ab867c4cdaaa8f2604",
+  "price": "6768f15531e186175b231be0c3fd8d793df8f22178cb3b6a24abdd3e6a00c350"
  }
 }

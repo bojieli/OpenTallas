@@ -1,0 +1,4862 @@
+{
+  "BC_min": {
+    "path_count": 130,
+    "all_endpoint_classes": {
+      "u.u_rwd.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 57,
+        "worst": {
+          "startpoint": "u.u_rwd.genblk1.g_line.line[31395]$_DFF_P_",
+          "endpoint": "u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_",
+          "slack_ps": -67.723885,
+          "launch_clock_insertion_ps": 807.467712,
+          "capture_clock_insertion_ps": 917.479675,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -12.716245,
+            "library hold time": 12.847997,
+            "data arrival time": 874.887451,
+            "data required time": 942.611328
+          },
+          "launch_clock_arrival_at_CLK_ps": 807.467712,
+          "capture_clock_arrival_at_CLK_ps": 917.479675,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cs.g_line.r[][]$_DFF_P_": {
+        "count": 39,
+        "worst": {
+          "startpoint": "u.u_cs.g_line.r[221][46]$_DFF_P_",
+          "endpoint": "u.u_cs.g_line.r[220][46]$_DFF_P_",
+          "slack_ps": -64.033836,
+          "launch_clock_insertion_ps": 809.34198,
+          "capture_clock_insertion_ps": 911.799622,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -12.716245,
+            "library hold time": 12.775059,
+            "data arrival time": 872.824524,
+            "data required time": 936.858398
+          },
+          "launch_clock_arrival_at_CLK_ps": 809.34198,
+          "capture_clock_arrival_at_CLK_ps": 911.799622,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.g_lane[].u_lane.u.q[]$_DFF_P_": {
+        "count": 17,
+        "worst": {
+          "startpoint": "u.g_lane[17].u_lane.u.r[294]$_DFF_P_",
+          "endpoint": "u.g_lane[17].u_lane.u.q[58]$_DFF_P_",
+          "slack_ps": -34.554302,
+          "launch_clock_insertion_ps": 815.723816,
+          "capture_clock_insertion_ps": 911.735352,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -21.575186,
+            "library hold time": 12.865386,
+            "data arrival time": 893.471252,
+            "data required time": 928.025574
+          },
+          "launch_clock_arrival_at_CLK_ps": 815.723816,
+          "capture_clock_arrival_at_CLK_ps": 911.735352,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_bt.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 5,
+        "worst": {
+          "startpoint": "u.u_bt.genblk1.g_line.line[737]$_DFF_P_",
+          "endpoint": "u.u_bt.genblk1.g_line.line[1243]$_DFF_P_",
+          "slack_ps": -33.797077,
+          "launch_clock_insertion_ps": 817.360779,
+          "capture_clock_insertion_ps": 898.608887,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -17.074398,
+            "library hold time": 12.708756,
+            "data arrival time": 885.446228,
+            "data required time": 919.243286
+          },
+          "launch_clock_arrival_at_CLK_ps": 817.360779,
+          "capture_clock_arrival_at_CLK_ps": 898.608887,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_ce.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.u_cs.g_line.r[1][91]$_DFF_P_",
+          "endpoint": "u.u_ce.genblk1.g_line.line[91]$_DFF_P_",
+          "slack_ps": -27.363945,
+          "launch_clock_insertion_ps": 795.728516,
+          "capture_clock_insertion_ps": 867.584351,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -20.790092,
+            "library hold time": 11.183753,
+            "data arrival time": 855.614075,
+            "data required time": 882.978027
+          },
+          "launch_clock_arrival_at_CLK_ps": 795.728516,
+          "capture_clock_arrival_at_CLK_ps": 867.584351,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_ca.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.u_ca.genblk1.g_line.line[66]$_DFF_P_",
+          "endpoint": "u.u_ca.genblk1.g_line.line[256]$_DFF_P_",
+          "slack_ps": -11.570633,
+          "launch_clock_insertion_ps": 821.387512,
+          "capture_clock_insertion_ps": 878.06665,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -17.014223,
+            "library hold time": 12.014436,
+            "data arrival time": 886.496277,
+            "data required time": 898.066895
+          },
+          "launch_clock_arrival_at_CLK_ps": 821.387512,
+          "capture_clock_arrival_at_CLK_ps": 878.06665,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.g_bt.t_c[]$_DFF_P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.u_bt.genblk1.g_line.line[2581]$_DFF_P_",
+          "endpoint": "u.g_bt.t_c[51]$_DFF_P_",
+          "slack_ps": -10.780376,
+          "launch_clock_insertion_ps": 806.38855,
+          "capture_clock_insertion_ps": 867.101868,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -12.716245,
+            "library hold time": 10.17765,
+            "data arrival time": 878.782959,
+            "data required time": 889.563293
+          },
+          "launch_clock_arrival_at_CLK_ps": 806.38855,
+          "capture_clock_arrival_at_CLK_ps": 867.101868,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_ci.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.u_ci.genblk1.g_line.line[327]$_DFF_P_",
+          "endpoint": "u.u_ci.genblk1.g_line.line[517]$_DFF_P_",
+          "slack_ps": -10.273782,
+          "launch_clock_insertion_ps": 821.367981,
+          "capture_clock_insertion_ps": 877.631165,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -17.014223,
+            "library hold time": 11.955941,
+            "data arrival time": 887.299072,
+            "data required time": 897.572876
+          },
+          "launch_clock_arrival_at_CLK_ps": 821.367981,
+          "capture_clock_arrival_at_CLK_ps": 877.631165,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.g_lane[].u_lane.u.r[]$_DFF_P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.u_bt.genblk1.g_line.line[2802]$_DFF_P_",
+          "endpoint": "u.g_lane[63].u_lane.u.r[507]$_DFF_P_",
+          "slack_ps": -9.209023,
+          "launch_clock_insertion_ps": 810.465881,
+          "capture_clock_insertion_ps": 865.466492,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -17.074398,
+            "library hold time": 11.839642,
+            "data arrival time": 876.022705,
+            "data required time": 885.23175
+          },
+          "launch_clock_arrival_at_CLK_ps": 810.465881,
+          "capture_clock_arrival_at_CLK_ps": 865.466492,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cm.g_line.r[][]$_DFF_P_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.u_cm.g_line.r[19][142]$_DFF_P_",
+          "endpoint": "u.u_cm.g_line.r[18][142]$_DFF_P_",
+          "slack_ps": -3.72008,
+          "launch_clock_insertion_ps": 824.025391,
+          "capture_clock_insertion_ps": 871.689087,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -17.014223,
+            "library hold time": 11.831759,
+            "data arrival time": 887.786499,
+            "data required time": 891.506592
+          },
+          "launch_clock_arrival_at_CLK_ps": 824.025391,
+          "capture_clock_arrival_at_CLK_ps": 871.689087,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_rrd.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.u_rrd.genblk1.g_line.line[853]$_DFF_P_",
+          "endpoint": "u.u_rrd.genblk1.g_line.line[1301]$_DFF_P_",
+          "slack_ps": -2.758516,
+          "launch_clock_insertion_ps": 809.884766,
+          "capture_clock_insertion_ps": 860.386475,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -20.790092,
+            "library hold time": 12.253907,
+            "data arrival time": 874.091797,
+            "data required time": 876.850342
+          },
+          "launch_clock_arrival_at_CLK_ps": 809.884766,
+          "capture_clock_arrival_at_CLK_ps": 860.386475,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      }
+    },
+    "report_sha256": "99a42fb8d135d6b93d2772564386d22b574931155600b5e01b94ce322d4c5c69"
+  },
+  "WC_max": {
+    "path_count": 3972,
+    "all_endpoint_classes": {
+      "u.pl_a[]$_DFFE_PP_": {
+        "count": 19,
+        "worst": {
+          "startpoint": "u.q_nin[7]$_DFFE_PP_",
+          "endpoint": "u.pl_a[22]$_DFFE_PP_",
+          "slack_ps": -745.78363,
+          "launch_clock_insertion_ps": 1276.614502,
+          "capture_clock_insertion_ps": 1232.9829100000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.96843,
+            "data arrival time": 2746.634521,
+            "data required time": 2000.85083
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.614502,
+          "capture_clock_arrival_at_CLK_ps": 2065.98291,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pl_d[]$_DFFE_PP_": {
+        "count": 20,
+        "worst": {
+          "startpoint": "u.q_bhalf$_DFFE_PP_",
+          "endpoint": "u.pl_d[23]$_DFFE_PP_",
+          "slack_ps": -744.853271,
+          "launch_clock_insertion_ps": 1276.213867,
+          "capture_clock_insertion_ps": 1224.1572270000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -3.082532,
+            "data arrival time": 2768.496826,
+            "data required time": 2023.643433
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.213867,
+          "capture_clock_arrival_at_CLK_ps": 2057.157227,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pl_b[]$_DFFE_PP_": {
+        "count": 18,
+        "worst": {
+          "startpoint": "u.q_nin[4]$_DFFE_PP_",
+          "endpoint": "u.pl_b[23]$_DFFE_PP_",
+          "slack_ps": -743.414246,
+          "launch_clock_insertion_ps": 1265.972168,
+          "capture_clock_insertion_ps": 1231.408691,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -2.973085,
+            "data arrival time": 2774.418457,
+            "data required time": 2031.004272
+          },
+          "launch_clock_arrival_at_CLK_ps": 1265.972168,
+          "capture_clock_arrival_at_CLK_ps": 2064.408691,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pl_o[]$_DFFE_PP_": {
+        "count": 17,
+        "worst": {
+          "startpoint": "u.q_nin[4]$_DFFE_PP_",
+          "endpoint": "u.pl_o[23]$_DFFE_PP_",
+          "slack_ps": -736.141174,
+          "launch_clock_insertion_ps": 1265.972168,
+          "capture_clock_insertion_ps": 1232.9545899999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -3.835647,
+            "data arrival time": 2750.096436,
+            "data required time": 2013.9552
+          },
+          "launch_clock_arrival_at_CLK_ps": 1265.972168,
+          "capture_clock_arrival_at_CLK_ps": 2065.95459,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pl_c[]$_DFFE_PP_": {
+        "count": 17,
+        "worst": {
+          "startpoint": "u.q_nin[4]$_DFFE_PP_",
+          "endpoint": "u.pl_c[23]$_DFFE_PP_",
+          "slack_ps": -722.92395,
+          "launch_clock_insertion_ps": 1265.972168,
+          "capture_clock_insertion_ps": 1253.3266600000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 35.024204,
+            "library setup time": -2.643968,
+            "data arrival time": 2781.630859,
+            "data required time": 2058.707031
+          },
+          "launch_clock_arrival_at_CLK_ps": 1265.972168,
+          "capture_clock_arrival_at_CLK_ps": 2086.32666,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_wl[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.s_no[2]$_SDFFCE_PP0P_",
+          "endpoint": "u.r_wl[23]$_DFFE_PP_",
+          "slack_ps": -703.141113,
+          "launch_clock_insertion_ps": 1279.719604,
+          "capture_clock_insertion_ps": 1235.5920409999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.410408,
+            "library setup time": -3.10404,
+            "data arrival time": 2741.039307,
+            "data required time": 2037.898315
+          },
+          "launch_clock_arrival_at_CLK_ps": 1279.719604,
+          "capture_clock_arrival_at_CLK_ps": 2068.592041,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.row[]$_DFFE_PP_": {
+        "count": 120,
+        "worst": {
+          "startpoint": "u.a_ostep[0]$_DFFE_PP_",
+          "endpoint": "u.row[106]$_DFFE_PP_",
+          "slack_ps": -701.345886,
+          "launch_clock_insertion_ps": 1272.335205,
+          "capture_clock_insertion_ps": 1240.5190429999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.062069,
+            "data arrival time": 2723.846924,
+            "data required time": 2022.501099
+          },
+          "launch_clock_arrival_at_CLK_ps": 1272.335205,
+          "capture_clock_arrival_at_CLK_ps": 2073.519043,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.vb[]$_DFFE_PP_": {
+        "count": 120,
+        "worst": {
+          "startpoint": "u.a_ls[1]$_DFFE_PP_",
+          "endpoint": "u.vb[95]$_DFFE_PP_",
+          "slack_ps": -695.954834,
+          "launch_clock_insertion_ps": 1273.008057,
+          "capture_clock_insertion_ps": 1232.8159179999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -3.743585,
+            "data arrival time": 2723.071045,
+            "data required time": 2027.116211
+          },
+          "launch_clock_arrival_at_CLK_ps": 1273.008057,
+          "capture_clock_arrival_at_CLK_ps": 2065.815918,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pl_n[]$_DFFE_PP_": {
+        "count": 18,
+        "worst": {
+          "startpoint": "u.q_nin[3]$_DFFE_PP_",
+          "endpoint": "u.pl_n[22]$_DFFE_PP_",
+          "slack_ps": -668.799927,
+          "launch_clock_insertion_ps": 1265.771118,
+          "capture_clock_insertion_ps": 1236.824219,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -2.750209,
+            "data arrival time": 2705.442383,
+            "data required time": 2036.642456
+          },
+          "launch_clock_arrival_at_CLK_ps": 1265.771118,
+          "capture_clock_arrival_at_CLK_ps": 2069.824219,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_ni[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_ni[0]$_DFFE_PP_",
+          "slack_ps": -626.911621,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1237.800049,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -2.892731,
+            "data arrival time": 2659.862793,
+            "data required time": 2032.951172
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2070.800049,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ch_r$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_acc[5]$_SDFFE_PP0P_",
+          "endpoint": "u.ch_r$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "slack_ps": -625.623535,
+          "launch_clock_insertion_ps": 1271.827759,
+          "capture_clock_insertion_ps": 1237.9196780000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 27.430725,
+            "library setup time": -9.781695,
+            "data arrival time": 2654.192139,
+            "data required time": 2028.568604
+          },
+          "launch_clock_arrival_at_CLK_ps": 1271.827759,
+          "capture_clock_arrival_at_CLK_ps": 2070.919678,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_nvs[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.r_ls[2]$_DFFE_PP_",
+          "endpoint": "u.r_nvs[7]$_DFFE_PP_",
+          "slack_ps": -613.362061,
+          "launch_clock_insertion_ps": 1286.523193,
+          "capture_clock_insertion_ps": 1236.674316,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.410408,
+            "library setup time": -21.991989,
+            "data arrival time": 2633.45459,
+            "data required time": 2020.092529
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.523193,
+          "capture_clock_arrival_at_CLK_ps": 2069.674316,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_ni[]$_SDFFCE_PN0P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_ni[18]$_SDFFCE_PN0P_",
+          "slack_ps": -608.944458,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1231.8835450000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.883026,
+            "data arrival time": 2621.989014,
+            "data required time": 2013.044678
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2064.883545,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_no[]$_SDFFCE_PP0P_": {
+        "count": 15,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_no[7]$_SDFFCE_PP0P_",
+          "slack_ps": -605.677734,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1239.907471,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -6.122622,
+            "data arrival time": 2637.506348,
+            "data required time": 2031.828735
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2072.907471,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.wrap_r$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_ls[2]$_DFFE_PP_",
+          "endpoint": "u.wrap_r$_DFFE_PP_",
+          "slack_ps": -593.192627,
+          "launch_clock_insertion_ps": 1270.36084,
+          "capture_clock_insertion_ps": 1232.469971,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 34.432678,
+            "library setup time": -2.522106,
+            "data arrival time": 2630.572998,
+            "data required time": 2037.380493
+          },
+          "launch_clock_arrival_at_CLK_ps": 1270.36084,
+          "capture_clock_arrival_at_CLK_ps": 2065.469971,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ck_r$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.ck_r$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "slack_ps": -586.823242,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1233.099365,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.252346,
+            "data arrival time": 2582.380615,
+            "data required time": 1995.557251
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2066.099365,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_b[]$_DFFE_PP_": {
+        "count": 13,
+        "worst": {
+          "startpoint": "u.q_bhalf$_DFFE_PP_",
+          "endpoint": "u.ph_b[14]$_DFFE_PP_",
+          "slack_ps": -583.452637,
+          "launch_clock_insertion_ps": 1276.213867,
+          "capture_clock_insertion_ps": 1229.5229490000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -15.44148,
+            "data arrival time": 2600.103027,
+            "data required time": 2016.650391
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.213867,
+          "capture_clock_arrival_at_CLK_ps": 2062.522949,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_no[]$_SDFFCE_PP1P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_no[0]$_SDFFCE_PP1P_",
+          "slack_ps": -581.965393,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1245.3371579999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -19.674856,
+            "data arrival time": 2605.671387,
+            "data required time": 2023.706055
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2078.337158,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_imm2[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_imm2[27]$_DFFE_PP_",
+          "slack_ps": -566.625,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1232.934326,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.897877,
+            "data arrival time": 2568.497559,
+            "data required time": 2001.872681
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2065.934326,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_imm1[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_imm1[6]$_DFFE_PP_",
+          "slack_ps": -566.519287,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1225.80957,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.431156,
+            "data arrival time": 2561.733887,
+            "data required time": 1995.214722
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2058.80957,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_imm3[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_imm3[31]$_DFFE_PP_",
+          "slack_ps": -551.947815,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.939453,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.377673,
+            "data arrival time": 2543.345703,
+            "data required time": 1991.397949
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.939453,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_aibase[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_aibase[19]$_DFFE_PP_",
+          "slack_ps": -551.809265,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1231.908691,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.149055,
+            "data arrival time": 2553.405273,
+            "data required time": 2001.595947
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2064.908691,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_bsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_bsrc[1]$_DFFE_PP_",
+          "slack_ps": -551.292786,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.9926759999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.849744,
+            "data arrival time": 2542.271973,
+            "data required time": 1990.979126
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.992676,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_arelu$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_arelu$_DFFE_PP_",
+          "slack_ps": -550.430359,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.162354,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.736277,
+            "data arrival time": 2540.692871,
+            "data required time": 1990.262451
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.162354,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_csrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_csrc[1]$_DFFE_PP_",
+          "slack_ps": -550.382202,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.6889649999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.88181,
+            "data arrival time": 2541.025635,
+            "data required time": 1990.643433
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.688965,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_amin$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_amin$_DFFE_PP_",
+          "slack_ps": -549.473145,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.9379880000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.48653,
+            "data arrival time": 2540.760986,
+            "data required time": 1991.287842
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.937988,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_m2[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_m2[1]$_DFFE_PP_",
+          "slack_ps": -549.336792,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1232.116943,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.249359,
+            "data arrival time": 2551.040771,
+            "data required time": 2001.703979
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2065.116943,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_a[]$_DFFE_PP_": {
+        "count": 12,
+        "worst": {
+          "startpoint": "u.q_asi[1]$_DFFE_PP_",
+          "endpoint": "u.ph_a[15]$_DFFE_PP_",
+          "slack_ps": -549.156494,
+          "launch_clock_insertion_ps": 1299.876709,
+          "capture_clock_insertion_ps": 1232.7209469999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -3.235372,
+            "data arrival time": 2563.478271,
+            "data required time": 2014.321777
+          },
+          "launch_clock_arrival_at_CLK_ps": 1299.876709,
+          "capture_clock_arrival_at_CLK_ps": 2065.720947,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_e1[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_e1[0]$_DFFE_PP_",
+          "slack_ps": -548.950439,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1231.834229,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.642265,
+            "data arrival time": 2549.97876,
+            "data required time": 2001.028198
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2064.834229,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_m1[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_m1[0]$_DFFE_PP_",
+          "slack_ps": -548.691101,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1222.0539549999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.815585,
+            "data arrival time": 2539.765625,
+            "data required time": 1991.074707
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2055.053955,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_d[]$_DFFE_PP_": {
+        "count": 14,
+        "worst": {
+          "startpoint": "u.q_bhalf$_DFFE_PP_",
+          "endpoint": "u.ph_d[15]$_DFFE_PP_",
+          "slack_ps": -548.423096,
+          "launch_clock_insertion_ps": 1276.213867,
+          "capture_clock_insertion_ps": 1234.840088,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.764679,
+            "library setup time": -15.690256,
+            "data arrival time": 2573.337646,
+            "data required time": 2024.914429
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.213867,
+          "capture_clock_arrival_at_CLK_ps": 2067.840088,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_arnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_arnd$_DFFE_PP_",
+          "slack_ps": -548.345825,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1222.168213,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.647796,
+            "data arrival time": 2539.702637,
+            "data required time": 1991.356812
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2055.168213,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_ad[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_ad[1]$_DFFE_PP_",
+          "slack_ps": -541.481506,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1228.656982,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.629104,
+            "data arrival time": 2539.345947,
+            "data required time": 1997.86438
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2061.656982,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_dsrc[1]$_DFFE_PP_",
+          "slack_ps": -541.182861,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1221.6723630000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.503337,
+            "data arrival time": 2532.188232,
+            "data required time": 1991.005371
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2054.672363,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_asrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_asrc[1]$_DFFE_PP_",
+          "slack_ps": -535.470581,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1222.21875,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.818627,
+            "data arrival time": 2526.706787,
+            "data required time": 1991.236328
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2055.21875,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_e2[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_e2[1]$_DFFE_PP_",
+          "slack_ps": -533.684204,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1230.1953119999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.970156,
+            "data arrival time": 2532.74585,
+            "data required time": 1999.061646
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2063.195312,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_redsq$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_redsq$_DFFE_PP_",
+          "slack_ps": -531.7724,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1234.671875,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.787321,
+            "data arrival time": 2535.493164,
+            "data required time": 2003.720703
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2067.671875,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_rnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_rnd$_DFFE_PP_",
+          "slack_ps": -515.449219,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1233.613037,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.310621,
+            "data arrival time": 2518.588135,
+            "data required time": 2003.138794
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2066.613037,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_redrnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_redrnd$_DFFE_PP_",
+          "slack_ps": -514.324829,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1234.9516600000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.454244,
+            "data arrival time": 2518.658447,
+            "data required time": 2004.333618
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2067.95166,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_cclip$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_cclip$_DFFE_PP_",
+          "slack_ps": -512.914612,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1235.483154,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -14.92626,
+            "data arrival time": 2518.307861,
+            "data required time": 2005.393188
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2068.483154,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.rrow[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.rrow[0]$_DFFE_PP_",
+          "endpoint": "u.rrow[23]$_DFFE_PP_",
+          "slack_ps": -503.925568,
+          "launch_clock_insertion_ps": 1276.557861,
+          "capture_clock_insertion_ps": 1235.5141600000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.570347,
+            "library setup time": -2.596092,
+            "data arrival time": 2539.414062,
+            "data required time": 2035.488403
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.557861,
+          "capture_clock_arrival_at_CLK_ps": 2068.51416,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_chseq[]$_DFFE_PP_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_chseq[7]$_DFFE_PP_",
+          "slack_ps": -498.896271,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1225.772461,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -9.129704,
+            "data arrival time": 2505.249268,
+            "data required time": 2006.353149
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2058.772461,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_seq[]$_DFFE_PP_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_seq[3]$_DFFE_PP_",
+          "slack_ps": -486.039215,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1236.808838,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -17.136387,
+            "data arrival time": 2495.422119,
+            "data required time": 2009.382935
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2069.808838,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.i_v[]$_SDFFE_PP0P_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.a_ls[3]$_DFFE_PP_",
+          "endpoint": "u.i_v[23]$_SDFFE_PP0P_",
+          "slack_ps": -484.963837,
+          "launch_clock_insertion_ps": 1270.362793,
+          "capture_clock_insertion_ps": 1240.559326,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.096771,
+            "library setup time": -15.404383,
+            "data arrival time": 2515.215576,
+            "data required time": 2030.251709
+          },
+          "launch_clock_arrival_at_CLK_ps": 1270.362793,
+          "capture_clock_arrival_at_CLK_ps": 2073.559326,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_wh[]$_DFFE_PP_": {
+        "count": 11,
+        "worst": {
+          "startpoint": "u.r_sh[3]$_DFFE_PP_",
+          "endpoint": "u.r_wh[13]$_DFFE_PP_",
+          "slack_ps": -483.773682,
+          "launch_clock_insertion_ps": 1281.196167,
+          "capture_clock_insertion_ps": 1243.4365229999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 27.670311,
+            "library setup time": -16.42313,
+            "data arrival time": 2511.45752,
+            "data required time": 2027.683838
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.196167,
+          "capture_clock_arrival_at_CLK_ps": 2076.436523,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_chsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_chsrc[0]$_DFFE_PP_",
+          "slack_ps": -478.393555,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1239.365723,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.415369,
+            "data arrival time": 2491.054443,
+            "data required time": 2012.660889
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2072.365723,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_flatbad$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_flatbad$_DFFE_PP_",
+          "slack_ps": -477.933014,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1239.02832,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -24.148275,
+            "data arrival time": 2490.857178,
+            "data required time": 2012.924072
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2072.02832,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_istep[]$_DFFE_PP_": {
+        "count": 120,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_istep[63]$_DFFE_PP_",
+          "slack_ps": -473.684662,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1229.335693,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -8.012366,
+            "data arrival time": 2484.718506,
+            "data required time": 2011.033813
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2062.335693,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_ostep[]$_DFFE_PP_": {
+        "count": 120,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_ostep[64]$_DFFE_PP_",
+          "slack_ps": -472.150757,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1228.31543,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -7.986228,
+            "data arrival time": 2482.190186,
+            "data required time": 2010.039429
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2061.31543,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.s_wnf$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ph_a[0]$_DFFE_PP_",
+          "endpoint": "u.s_wnf$_DFFE_PP_",
+          "slack_ps": -468.335358,
+          "launch_clock_insertion_ps": 1286.266846,
+          "capture_clock_insertion_ps": 1239.027344,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -22.345741,
+            "data arrival time": 2483.061035,
+            "data required time": 2014.725708
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.266846,
+          "capture_clock_arrival_at_CLK_ps": 2072.027344,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_o[]$_DFFE_PP_": {
+        "count": 11,
+        "worst": {
+          "startpoint": "u.q_osi[1]$_DFFE_PP_",
+          "endpoint": "u.ph_o[15]$_DFFE_PP_",
+          "slack_ps": -467.139008,
+          "launch_clock_insertion_ps": 1291.72876,
+          "capture_clock_insertion_ps": 1226.419434,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.794952,
+            "data arrival time": 2475.599854,
+            "data required time": 2008.460938
+          },
+          "launch_clock_arrival_at_CLK_ps": 1291.72876,
+          "capture_clock_arrival_at_CLK_ps": 2059.419434,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_acc[]$_SDFFE_PP0P_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_acc[17]$_SDFFE_PP0P_",
+          "slack_ps": -450.471436,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1227.8571780000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -17.156752,
+            "data arrival time": 2450.882324,
+            "data required time": 2000.411011
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2060.857178,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_istep[]$_DFFE_PP_": {
+        "count": 80,
+        "worst": {
+          "startpoint": "u.r_ls[0]$_SDFFCE_PN0P_",
+          "endpoint": "u.p_istep[47]$_DFFE_PP_",
+          "slack_ps": -448.664886,
+          "launch_clock_insertion_ps": 1281.088867,
+          "capture_clock_insertion_ps": 1233.8071289999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.858386,
+            "data arrival time": 2464.657715,
+            "data required time": 2015.992676
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.088867,
+          "capture_clock_arrival_at_CLK_ps": 2066.807129,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.krow[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.krow[23]$_DFFE_PP_",
+          "slack_ps": -445.192108,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1248.378174,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.480184,
+            "data arrival time": 2467.800537,
+            "data required time": 2022.608276
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2081.378174,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_mark[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_mark[4]$_DFFE_PP_",
+          "slack_ps": -435.856476,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1235.594971,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.645527,
+            "data arrival time": 2445.516357,
+            "data required time": 2009.660034
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2068.594971,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.iv1_r[]$_SDFFCE_PP0P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_ls[0]$_DFFE_PP_",
+          "endpoint": "u.iv1_r[23]$_SDFFCE_PP0P_",
+          "slack_ps": -429.432495,
+          "launch_clock_insertion_ps": 1273.15271,
+          "capture_clock_insertion_ps": 1232.207031,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 40.195957,
+            "library setup time": -15.856046,
+            "data arrival time": 2458.979736,
+            "data required time": 2029.547241
+          },
+          "launch_clock_arrival_at_CLK_ps": 1273.15271,
+          "capture_clock_arrival_at_CLK_ps": 2065.207031,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.iv1_r[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.iv1_r[0]$_DFFE_PP_",
+          "slack_ps": -428.295166,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1227.864258,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -14.416172,
+            "data arrival time": 2431.453613,
+            "data required time": 2003.158569
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2060.864258,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.olast_r$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_nsh[2]$_DFFE_PP_",
+          "endpoint": "u.olast_r$_DFFE_PP_",
+          "slack_ps": -421.500183,
+          "launch_clock_insertion_ps": 1270.701904,
+          "capture_clock_insertion_ps": 1227.402344,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 37.804981,
+            "library setup time": -3.80635,
+            "data arrival time": 2455.901367,
+            "data required time": 2034.401123
+          },
+          "launch_clock_arrival_at_CLK_ps": 1270.701904,
+          "capture_clock_arrival_at_CLK_ps": 2060.402344,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_terms[]$_DFFE_PP_": {
+        "count": 640,
+        "worst": {
+          "startpoint": "u.r_ls[0]$_SDFFCE_PN0P_",
+          "endpoint": "u.p_terms[599]$_DFFE_PP_",
+          "slack_ps": -417.709656,
+          "launch_clock_insertion_ps": 1281.088867,
+          "capture_clock_insertion_ps": 1228.6777339999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.562309,
+            "data arrival time": 2427.869141,
+            "data required time": 2010.159424
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.088867,
+          "capture_clock_arrival_at_CLK_ps": 2061.677734,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_rstep[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_rstep[17]$_DFFE_PP_",
+          "slack_ps": -417.047729,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1235.4770509999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.599454,
+            "data arrival time": 2426.635498,
+            "data required time": 2009.587891
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2068.477051,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_started$_DFFE_PN0P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_started$_DFFE_PN0P_",
+          "slack_ps": -415.018463,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1239.0895999999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.012312,
+            "data arrival time": 2416.806152,
+            "data required time": 2001.787598
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2072.0896,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_n[]$_DFFE_PP_": {
+        "count": 11,
+        "worst": {
+          "startpoint": "u.q_nin[8]$_DFFE_PP_",
+          "endpoint": "u.ph_n[15]$_DFFE_PP_",
+          "slack_ps": -414.066559,
+          "launch_clock_insertion_ps": 1276.939819,
+          "capture_clock_insertion_ps": 1236.727539,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -2.856635,
+            "data arrival time": 2450.506104,
+            "data required time": 2036.439453
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.939819,
+          "capture_clock_arrival_at_CLK_ps": 2069.727539,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_chlead[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_chlead[11]$_DFFE_PP_",
+          "slack_ps": -412.699432,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1229.6047359999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -17.624271,
+            "data arrival time": 2414.390137,
+            "data required time": 2001.690796
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2062.604736,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_chmul[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_chmul[15]$_DFFE_PP_",
+          "slack_ps": -410.738342,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1231.150146,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -17.712536,
+            "data arrival time": 2413.886475,
+            "data required time": 2003.148071
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2064.150146,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ph_c[]$_DFFE_PP_": {
+        "count": 10,
+        "worst": {
+          "startpoint": "u.q_nin[8]$_DFFE_PP_",
+          "endpoint": "u.ph_c[15]$_DFFE_PP_",
+          "slack_ps": -405.715698,
+          "launch_clock_insertion_ps": 1276.939819,
+          "capture_clock_insertion_ps": 1240.496826,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.764679,
+            "library setup time": -16.298161,
+            "data arrival time": 2435.679199,
+            "data required time": 2029.963501
+          },
+          "launch_clock_arrival_at_CLK_ps": 1276.939819,
+          "capture_clock_arrival_at_CLK_ps": 2073.496826,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_dR[]$_DFFE_PP_": {
+        "count": 9,
+        "worst": {
+          "startpoint": "u.r_nvs[0]$_DFFE_PP_",
+          "endpoint": "u.p_dR[7]$_DFFE_PP_",
+          "slack_ps": -390.374176,
+          "launch_clock_insertion_ps": 1277.895874,
+          "capture_clock_insertion_ps": 1236.3166500000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.142355,
+            "library setup time": -6.658621,
+            "data arrival time": 2422.174805,
+            "data required time": 2031.800537
+          },
+          "launch_clock_arrival_at_CLK_ps": 1277.895874,
+          "capture_clock_arrival_at_CLK_ps": 2069.31665,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_istep_h1[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_istep_h1[15]$_DFFE_PP_",
+          "slack_ps": -389.393188,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1233.505615,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -17.049654,
+            "data arrival time": 2395.55957,
+            "data required time": 2006.166382
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2066.505615,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_ls[]$_DFFE_PP_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_ls[2]$_DFFE_PP_",
+          "slack_ps": -383.702393,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1230.5009770000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.567886,
+            "data arrival time": 2387.345947,
+            "data required time": 2003.643433
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2063.500977,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_istep_h3[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_istep_h3[3]$_DFFE_PP_",
+          "slack_ps": -383.029388,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1240.162598,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.257637,
+            "data arrival time": 2396.644775,
+            "data required time": 2013.615234
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2073.162598,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pst[]$_DFF_PN0_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.pst[1]$_DFF_PN0_",
+          "slack_ps": -382.818878,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.8620609999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -32.58358,
+            "data arrival time": 2376.807861,
+            "data required time": 1993.989014
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.862061,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_ni[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_ni[7]$_DFFE_PP_",
+          "slack_ps": -382.642822,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1230.7910160000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.104483,
+            "data arrival time": 2387.039795,
+            "data required time": 2004.396851
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2063.791016,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.b_cw[]$_SDFF_PN0_": {
+        "count": 7,
+        "worst": {
+          "startpoint": "u.o_v[0]$_SDFFE_PP0P_",
+          "endpoint": "u.b_cw[36]$_SDFF_PN0_",
+          "slack_ps": -379.329224,
+          "launch_clock_insertion_ps": 1266.850708,
+          "capture_clock_insertion_ps": 1231.601807,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 28.834824,
+            "library setup time": -20.554932,
+            "data arrival time": 2392.211182,
+            "data required time": 2012.881836
+          },
+          "launch_clock_arrival_at_CLK_ps": 1266.850708,
+          "capture_clock_arrival_at_CLK_ps": 2064.601807,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ov1_r[]$_SDFFCE_PP0P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_nsh[1]$_DFFE_PP_",
+          "endpoint": "u.ov1_r[22]$_SDFFCE_PP0P_",
+          "slack_ps": -373.286743,
+          "launch_clock_insertion_ps": 1268.727417,
+          "capture_clock_insertion_ps": 1228.2077640000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.096771,
+            "library setup time": -15.417725,
+            "data arrival time": 2391.173584,
+            "data required time": 2017.886719
+          },
+          "launch_clock_arrival_at_CLK_ps": 1268.727417,
+          "capture_clock_arrival_at_CLK_ps": 2061.207764,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_obase[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_obase[10]$_DFFE_PP_",
+          "slack_ps": -371.265228,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1239.261963,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.459486,
+            "data arrival time": 2384.778076,
+            "data required time": 2013.512939
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2072.261963,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dst[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_dst[0]$_DFFE_PP_",
+          "slack_ps": -369.634338,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1222.8527829999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.285851,
+            "data arrival time": 2361.037598,
+            "data required time": 1991.40332
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2055.852783,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_gsh[]$_DFFE_PP_": {
+        "count": 5,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.a_gsh[4]$_DFFE_PP_",
+          "slack_ps": -369.436249,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1222.9340820000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.022282,
+            "data arrival time": 2361.184326,
+            "data required time": 1991.748047
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2055.934082,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.b_cw[]$_SDFF_PN1_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.o_v[0]$_SDFFE_PP0P_",
+          "endpoint": "u.b_cw[30]$_SDFF_PN1_",
+          "slack_ps": -362.815765,
+          "launch_clock_insertion_ps": 1266.850708,
+          "capture_clock_insertion_ps": 1235.67749,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 28.834824,
+            "library setup time": -17.031055,
+            "data arrival time": 2383.296875,
+            "data required time": 2020.481079
+          },
+          "launch_clock_arrival_at_CLK_ps": 1266.850708,
+          "capture_clock_arrival_at_CLK_ps": 2068.67749,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_gsh[]$_SDFFCE_PP1P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.q_asi[2]$_DFFE_PP_",
+          "endpoint": "u.p_gsh[0]$_SDFFCE_PP1P_",
+          "slack_ps": -355.904419,
+          "launch_clock_insertion_ps": 1300.020264,
+          "capture_clock_insertion_ps": 1227.7578119999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -22.120319,
+            "data arrival time": 2346.378174,
+            "data required time": 1990.473755
+          },
+          "launch_clock_arrival_at_CLK_ps": 1300.020264,
+          "capture_clock_arrival_at_CLK_ps": 2060.757812,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.fault$_DFF_PN0_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.fault$_DFF_PN0_",
+          "slack_ps": -348.764587,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1240.7990719999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -33.825439,
+            "data arrival time": 2345.44873,
+            "data required time": 1996.684204
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2073.799072,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_ls[]$_SDFFCE_PN0P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.s_ni[3]$_DFFE_PP_",
+          "endpoint": "u.r_ls[0]$_SDFFCE_PN0P_",
+          "slack_ps": -343.808105,
+          "launch_clock_insertion_ps": 1289.477539,
+          "capture_clock_insertion_ps": 1239.753906,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 34.664825,
+            "library setup time": -16.046194,
+            "data arrival time": 2375.18042,
+            "data required time": 2031.372437
+          },
+          "launch_clock_arrival_at_CLK_ps": 1289.477539,
+          "capture_clock_arrival_at_CLK_ps": 2072.753906,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.emitted[]$_DFF_PN0_": {
+        "count": 15,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.emitted[15]$_DFF_PN0_",
+          "slack_ps": -339.038574,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1230.550781,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.008886,
+            "data arrival time": 2332.290771,
+            "data required time": 1993.252197
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2063.550781,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.ov1_r[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.ov1_r[5]$_DFFE_PP_",
+          "slack_ps": -336.115143,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1231.8815920000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -23.869188,
+            "data arrival time": 2333.838135,
+            "data required time": 1997.7229
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2064.881592,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.o_v[]$_SDFFE_PP0P_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.o_v[2]$_SDFFE_PP0P_",
+          "slack_ps": -332.010864,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1228.2338869999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -2.264656,
+            "data arrival time": 2347.69043,
+            "data required time": 2015.679688
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2061.233887,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dF[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_dF[2]$_DFFE_PP_",
+          "slack_ps": -324.290161,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1228.5371089999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -20.837614,
+            "data arrival time": 2321.700195,
+            "data required time": 1997.410034
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2061.537109,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_packed$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_packed$_DFFE_PP_",
+          "slack_ps": -322.138092,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1229.5883789999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -20.092527,
+            "data arrival time": 2321.344238,
+            "data required time": 1999.206177
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2062.588379,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_aind[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_aind[1]$_DFFE_PP_",
+          "slack_ps": -321.612518,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.350098,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.721037,
+            "data arrival time": 2330.951904,
+            "data required time": 2009.339355
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.350098,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_cpair$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_cpair$_DFFE_PP_",
+          "slack_ps": -318.45993,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.3203119999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.904253,
+            "data arrival time": 2327.586426,
+            "data required time": 2009.126465
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.320312,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_qm[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_qm[0]$_DFFE_PP_",
+          "slack_ps": -317.919678,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.3723140000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.177467,
+            "data arrival time": 2327.824951,
+            "data required time": 2009.905151
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.372314,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.e_tot[]$_DFF_PN0_": {
+        "count": 14,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.e_tot[15]$_DFF_PN0_",
+          "slack_ps": -310.55069,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1231.286133,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -25.739914,
+            "data arrival time": 2305.807373,
+            "data required time": 1995.256592
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2064.286133,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_wrap0$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_wrap0$_DFFE_PP_",
+          "slack_ps": -309.287262,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1235.486816,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -19.705378,
+            "data arrival time": 2314.779053,
+            "data required time": 2005.491821
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2068.486816,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_wnf$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_wnf$_DFFE_PP_",
+          "slack_ps": -306.338287,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1228.151367,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -20.229486,
+            "data arrival time": 2303.970459,
+            "data required time": 1997.63208
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2061.151367,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_bad$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.q_asi[1]$_DFFE_PP_",
+          "endpoint": "u.p_bad$_DFFE_PP_",
+          "slack_ps": -304.423584,
+          "launch_clock_insertion_ps": 1299.876709,
+          "capture_clock_insertion_ps": 1233.754395,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 29.568682,
+            "library setup time": -9.591086,
+            "data arrival time": 2331.155762,
+            "data required time": 2026.732178
+          },
+          "launch_clock_arrival_at_CLK_ps": 1299.876709,
+          "capture_clock_arrival_at_CLK_ps": 2066.754395,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cf.g_line.r[][]$_DFF_P_": {
+        "count": 175,
+        "worst": {
+          "startpoint": "u.g_bt.bt_e[6]$_DFF_PN0_",
+          "endpoint": "u.u_cf.g_line.r[4][155]$_DFF_P_",
+          "slack_ps": -291.578552,
+          "launch_clock_insertion_ps": 1269.513672,
+          "capture_clock_insertion_ps": 1221.07373,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -3.703655,
+            "data arrival time": 2293.784912,
+            "data required time": 2002.206421
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.513672,
+          "capture_clock_arrival_at_CLK_ps": 2054.07373,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_istep[]$_SDFFCE_PP0P_": {
+        "count": 36,
+        "worst": {
+          "startpoint": "u.r_ls[1]$_DFFE_PP_",
+          "endpoint": "u.p_istep[23]$_SDFFCE_PP0P_",
+          "slack_ps": -282.498688,
+          "launch_clock_insertion_ps": 1285.654785,
+          "capture_clock_insertion_ps": 1228.523193,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -2.64257,
+            "data arrival time": 2306.42334,
+            "data required time": 2023.924561
+          },
+          "launch_clock_arrival_at_CLK_ps": 1285.654785,
+          "capture_clock_arrival_at_CLK_ps": 2061.523193,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pv_seq[]$_DFFE_PP_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.pv_seq[0]$_DFFE_PP_",
+          "slack_ps": -274.848145,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1226.009277,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -3.00017,
+            "data arrival time": 2287.567383,
+            "data required time": 2012.71936
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2059.009277,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_bhalf$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_bhalf$_DFFE_PP_",
+          "slack_ps": -274.503967,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.2866210000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.530592,
+            "data arrival time": 2283.970459,
+            "data required time": 2009.466431
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.286621,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pst[]$_DFF_PN1_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.pst[0]$_DFF_PN1_",
+          "slack_ps": -259.336761,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1227.9753420000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -26.350698,
+            "data arrival time": 2250.671875,
+            "data required time": 1991.335083
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2060.975342,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dT[]$_DFFE_PP_": {
+        "count": 10,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_dT[7]$_DFFE_PP_",
+          "slack_ps": -254.199768,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1230.668701,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -22.225006,
+            "data arrival time": 2252.35376,
+            "data required time": 1998.154053
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2063.668701,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pv_mark[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.pv_mark[10]$_DFFE_PP_",
+          "slack_ps": -253.520309,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1233.136719,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -2.119188,
+            "data arrival time": 2274.248047,
+            "data required time": 2020.727783
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2066.136719,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.lst_seq[]$_DFFE_PN1P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.lst_seq[0]$_DFFE_PN1P_",
+          "slack_ps": -251.837219,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1225.0666500000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.065254,
+            "data arrival time": 2239.549072,
+            "data required time": 1987.711792
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2058.06665,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dR[]$_DFFE_PP_": {
+        "count": 10,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_dR[1]$_DFFE_PP_",
+          "slack_ps": -244.978256,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1238.0722660000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -21.613316,
+            "data arrival time": 2251.147461,
+            "data required time": 2006.169189
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2071.072266,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_no[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_no[9]$_DFFE_PP_",
+          "slack_ps": -244.299698,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1227.4064939999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.546095,
+            "data arrival time": 2244.870605,
+            "data required time": 2000.570801
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2060.406494,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_terms[]$_SDFFCE_PN0P_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.r_ls[1]$_DFFE_PP_",
+          "endpoint": "u.p_terms[530]$_SDFFCE_PN0P_",
+          "slack_ps": -243.590256,
+          "launch_clock_insertion_ps": 1285.654785,
+          "capture_clock_insertion_ps": 1227.8911130000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -17.585543,
+            "data arrival time": 2238.732178,
+            "data required time": 1995.141846
+          },
+          "launch_clock_arrival_at_CLK_ps": 1285.654785,
+          "capture_clock_arrival_at_CLK_ps": 2060.891113,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_rsh[]$_DFFE_PP_": {
+        "count": 5,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_rsh[3]$_DFFE_PP_",
+          "slack_ps": -242.438965,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1237.8808589999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.284843,
+            "data arrival time": 2253.745361,
+            "data required time": 2011.306519
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2070.880859,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_nsh[]$_DFFE_PP_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_nsh[2]$_DFFE_PP_",
+          "slack_ps": -239.923645,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1229.518066,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.426363,
+            "data arrival time": 2242.72583,
+            "data required time": 2002.802124
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2062.518066,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_terms[]$_SDFFCE_PP0P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.r_ls[0]$_SDFFCE_PN0P_",
+          "endpoint": "u.p_terms[49]$_SDFFCE_PP0P_",
+          "slack_ps": -237.01796,
+          "launch_clock_insertion_ps": 1281.088867,
+          "capture_clock_insertion_ps": 1226.66748,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -19.192423,
+            "data arrival time": 2229.329346,
+            "data required time": 1992.311401
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.088867,
+          "capture_clock_arrival_at_CLK_ps": 2059.66748,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_lt[]$_DFFE_PP_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_lt[2]$_DFFE_PP_",
+          "slack_ps": -235.66304,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1234.9760740000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.307866,
+            "data arrival time": 2245.041748,
+            "data required time": 2009.378662
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2067.976074,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_gather$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_gather$_DFFE_PP_",
+          "slack_ps": -235.027771,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1236.2678219999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.743835,
+            "data arrival time": 2245.262207,
+            "data required time": 2010.234375
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2069.267822,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_olast0$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.p_nsh[1]$_DFFE_PP_",
+          "endpoint": "u.p_olast0$_DFFE_PP_",
+          "slack_ps": -230.145233,
+          "launch_clock_insertion_ps": 1283.319702,
+          "capture_clock_insertion_ps": 1229.545654,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -2.066344,
+            "data arrival time": 2255.668457,
+            "data required time": 2025.523315
+          },
+          "launch_clock_arrival_at_CLK_ps": 1283.319702,
+          "capture_clock_arrival_at_CLK_ps": 2062.545654,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.lst_mark[]$_DFFE_PN0P_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.lst_mark[11]$_DFFE_PN0P_",
+          "slack_ps": -226.718643,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1227.755127,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -31.083593,
+            "data arrival time": 2213.100586,
+            "data required time": 1986.381958
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2060.755127,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cf.g_line.r[][]$_SDFF_PN0_": {
+        "count": 118,
+        "worst": {
+          "startpoint": "u.g_bt.t_g$_DFF_P_",
+          "endpoint": "u.u_cf.g_line.r[7][146]$_SDFF_PN0_",
+          "slack_ps": -221.032974,
+          "launch_clock_insertion_ps": 1272.694458,
+          "capture_clock_insertion_ps": 1214.581055,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -19.163935,
+            "data arrival time": 2201.286377,
+            "data required time": 1980.253296
+          },
+          "launch_clock_arrival_at_CLK_ps": 1272.694458,
+          "capture_clock_arrival_at_CLK_ps": 2047.581055,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cm.g_line.r[][]$_SDFF_PN0_": {
+        "count": 131,
+        "worst": {
+          "startpoint": "u.vp$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "endpoint": "u.u_cm.g_line.r[22][57]$_SDFF_PN0_",
+          "slack_ps": -214.239075,
+          "launch_clock_insertion_ps": 1269.265503,
+          "capture_clock_insertion_ps": 1221.119385,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -20.453077,
+            "data arrival time": 2210.1875,
+            "data required time": 1995.948486
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.265503,
+          "capture_clock_arrival_at_CLK_ps": 2054.119385,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_sfu[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_sfu[1]$_DFFE_PP_",
+          "slack_ps": -213.785217,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1239.8129880000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.473783,
+            "data arrival time": 2227.834717,
+            "data required time": 2014.049561
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2072.812988,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cm.g_line.r[][]$_DFF_P_": {
+        "count": 105,
+        "worst": {
+          "startpoint": "u.vp$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "endpoint": "u.u_cm.g_line.r[7][56]$_DFF_P_",
+          "slack_ps": -210.516724,
+          "launch_clock_insertion_ps": 1269.265503,
+          "capture_clock_insertion_ps": 1218.1059570000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -23.13151,
+            "data arrival time": 2200.773438,
+            "data required time": 1990.256592
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.265503,
+          "capture_clock_arrival_at_CLK_ps": 2051.105957,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_red[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_red[1]$_DFFE_PP_",
+          "slack_ps": -206.647141,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1234.0446780000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.124546,
+            "data arrival time": 2215.277832,
+            "data required time": 2008.630615
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2067.044678,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_L[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_L[2]$_DFFE_PP_",
+          "slack_ps": -202.37767,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1235.514404,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.073191,
+            "data arrival time": 2212.529297,
+            "data required time": 2010.151611
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2068.514404,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_wrap0$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.p_ls[0]$_DFFE_PP_",
+          "endpoint": "u.p_wrap0$_DFFE_PP_",
+          "slack_ps": -202.367462,
+          "launch_clock_insertion_ps": 1271.61084,
+          "capture_clock_insertion_ps": 1231.871826,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 34.432678,
+            "library setup time": -7.974375,
+            "data arrival time": 2233.697754,
+            "data required time": 2031.3302
+          },
+          "launch_clock_arrival_at_CLK_ps": 1271.61084,
+          "capture_clock_arrival_at_CLK_ps": 2064.871826,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.order_fault$_DFF_PN0_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.g_bt.bt_e[6]$_DFF_PN0_",
+          "endpoint": "u.order_fault$_DFF_PN0_",
+          "slack_ps": -186.898712,
+          "launch_clock_insertion_ps": 1269.513672,
+          "capture_clock_insertion_ps": 1233.8559570000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -26.995016,
+            "data arrival time": 2189.041748,
+            "data required time": 2002.143066
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.513672,
+          "capture_clock_arrival_at_CLK_ps": 2066.855957,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dS[]$_DFFE_PP_": {
+        "count": 9,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_dS[1]$_DFFE_PP_",
+          "slack_ps": -165.981674,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1232.108643,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.235727,
+            "data arrival time": 2171.565186,
+            "data required time": 2005.583496
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2065.108643,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_dM[]$_DFFE_PP_": {
+        "count": 6,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_dM[2]$_DFFE_PP_",
+          "slack_ps": -165.909958,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1227.6098630000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.67676,
+            "data arrival time": 2166.553711,
+            "data required time": 2000.643677
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2060.609863,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.g_lane[].u_lane.u.q[]$_DFF_P_": {
+        "count": 115,
+        "worst": {
+          "startpoint": "u.cwp[187]$_DFF_P_",
+          "endpoint": "u.g_lane[42].u_lane.u.q[52]$_DFF_P_",
+          "slack_ps": -159.244171,
+          "launch_clock_insertion_ps": 1278.315186,
+          "capture_clock_insertion_ps": 1253.875732,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -38.525269,
+            "data arrival time": 2159.431152,
+            "data required time": 2000.18689
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.315186,
+          "capture_clock_arrival_at_CLK_ps": 2086.875732,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_imm3[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_imm3[4]$_DFFE_PP_",
+          "slack_ps": -158.904663,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.377441,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.554645,
+            "data arrival time": 2157.563721,
+            "data required time": 1998.659058
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.377441,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_chmul[]$_DFFE_PP_": {
+        "count": 15,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_chmul[7]$_DFFE_PP_",
+          "slack_ps": -158.453033,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1226.7622070000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.256084,
+            "data arrival time": 2158.669434,
+            "data required time": 2000.216431
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2059.762207,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_span$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_span$_DFFE_PP_",
+          "slack_ps": -155.672592,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1229.5727539999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.087069,
+            "data arrival time": 2158.868652,
+            "data required time": 2003.196045
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2062.572754,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_imm1[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_imm1[31]$_DFFE_PP_",
+          "slack_ps": -153.130615,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1222.0014649999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.636824,
+            "data arrival time": 2143.331543,
+            "data required time": 1990.200928
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2055.001465,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_ad[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_ad[2]$_DFFE_PP_",
+          "slack_ps": -150.779175,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.186768,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.570376,
+            "data arrival time": 2163.231934,
+            "data required time": 2012.452637
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.186768,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_arelu$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_arelu$_DFFE_PP_",
+          "slack_ps": -150.719223,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.149902,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.574203,
+            "data arrival time": 2163.131348,
+            "data required time": 2012.411987
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.149902,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_amin$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_amin$_DFFE_PP_",
+          "slack_ps": -150.644394,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.863281,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.29888,
+            "data arrival time": 2163.045166,
+            "data required time": 2012.400757
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.863281,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_nout[]$_DFFE_PP_": {
+        "count": 15,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_nout[6]$_DFFE_PP_",
+          "slack_ps": -148.276947,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1225.650635,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -31.595823,
+            "data arrival time": 2140.375732,
+            "data required time": 1992.098755
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2058.650635,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_m1[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_m1[0]$_DFFE_PP_",
+          "slack_ps": -144.219971,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.082031,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.365801,
+            "data arrival time": 2142.772461,
+            "data required time": 1998.55249
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.082031,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_arnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_arnd$_DFFE_PP_",
+          "slack_ps": -143.205002,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.923096,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -16.005304,
+            "data arrival time": 2141.959229,
+            "data required time": 1998.754272
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.923096,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_aibase[]$_DFFE_PP_": {
+        "count": 23,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_aibase[0]$_DFFE_PP_",
+          "slack_ps": -142.92923,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.75,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.846512,
+            "data arrival time": 2141.669189,
+            "data required time": 1998.739868
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.75,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_packed$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.r_ls[3]$_SDFFCE_PN0P_",
+          "endpoint": "u.r_packed$_DFFE_PP_",
+          "slack_ps": -142.087891,
+          "launch_clock_insertion_ps": 1281.560791,
+          "capture_clock_insertion_ps": 1235.5170899999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.410408,
+            "library setup time": -16.137526,
+            "data arrival time": 2166.87793,
+            "data required time": 2024.790161
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.560791,
+          "capture_clock_arrival_at_CLK_ps": 2068.51709,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_m2[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_m2[1]$_DFFE_PP_",
+          "slack_ps": -141.68689,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.5241700000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.42375,
+            "data arrival time": 2153.623535,
+            "data required time": 2011.936646
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.52417,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_e2[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_e2[1]$_DFFE_PP_",
+          "slack_ps": -141.396896,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1228.8603520000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.476667,
+            "data arrival time": 2152.616943,
+            "data required time": 2011.220093
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2061.860352,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_csrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_csrc[1]$_DFFE_PP_",
+          "slack_ps": -139.631866,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.9201659999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.382205,
+            "data arrival time": 2152.006104,
+            "data required time": 2012.374268
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.920166,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_imm2[]$_DFFE_PP_": {
+        "count": 32,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_imm2[30]$_DFFE_PP_",
+          "slack_ps": -138.779434,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1233.148193,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -15.215357,
+            "data arrival time": 2141.548584,
+            "data required time": 2002.769043
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2066.148193,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_bsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_bsrc[1]$_DFFE_PP_",
+          "slack_ps": -138.743469,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.901367,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.165874,
+            "data arrival time": 2151.31543,
+            "data required time": 2012.571899
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.901367,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_asrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_asrc[1]$_DFFE_PP_",
+          "slack_ps": -138.677734,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1232.16748,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.220023,
+            "data arrival time": 2153.461426,
+            "data required time": 2014.783691
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2065.16748,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_chlead[]$_DFFE_PP_": {
+        "count": 7,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_chlead[5]$_DFFE_PP_",
+          "slack_ps": -137.422745,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1231.3022460000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -16.11132,
+            "data arrival time": 2142.324219,
+            "data required time": 2004.901367
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2064.302246,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_cclip$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_cclip$_DFFE_PP_",
+          "slack_ps": -137.138748,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1232.104248,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.086656,
+            "data arrival time": 2151.99292,
+            "data required time": 2014.854126
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2065.104248,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_dso[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_dso[3]$_DFFE_PP_",
+          "slack_ps": -135.190079,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1223.583252,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.395067,
+            "data arrival time": 2140.422363,
+            "data required time": 2005.232178
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2056.583252,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_dsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_dsrc[1]$_DFFE_PP_",
+          "slack_ps": -134.779739,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.0141600000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.370844,
+            "data arrival time": 2152.259521,
+            "data required time": 2017.479736
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.01416,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_redsq$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_redsq$_DFFE_PP_",
+          "slack_ps": -133.404175,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.241943,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.012498,
+            "data arrival time": 2151.470215,
+            "data required time": 2018.065918
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.241943,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_rnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_rnd$_DFFE_PP_",
+          "slack_ps": -133.240753,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.2009280000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.013929,
+            "data arrival time": 2151.26416,
+            "data required time": 2018.023315
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.200928,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_chseq[]$_DFFE_PP_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_chseq[0]$_DFFE_PP_",
+          "slack_ps": -132.496902,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.165527,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -3.875025,
+            "data arrival time": 2148.497559,
+            "data required time": 2016.000732
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.165527,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_redrnd$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_redrnd$_DFFE_PP_",
+          "slack_ps": -131.704422,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.2465820000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.008918,
+            "data arrival time": 2149.77832,
+            "data required time": 2018.073975
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.246582,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_chsrc[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_chsrc[0]$_DFFE_PP_",
+          "slack_ps": -131.145538,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.13623,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -3.51741,
+            "data arrival time": 2147.474854,
+            "data required time": 2016.329346
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.13623,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_e1[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_e1[2]$_DFFE_PP_",
+          "slack_ps": -130.873093,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.3359380000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -2.055365,
+            "data arrival time": 2148.98999,
+            "data required time": 2018.116821
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.335938,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_bank$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_bank$_DFFE_PP_",
+          "slack_ps": -130.710114,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1231.325684,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -15.024632,
+            "data arrival time": 2136.721436,
+            "data required time": 2006.011353
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2064.325684,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_nsh[]$_SDFFCE_PN0P_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.r_ls[3]$_SDFFCE_PN0P_",
+          "endpoint": "u.r_nsh[1]$_SDFFCE_PN0P_",
+          "slack_ps": -130.503387,
+          "launch_clock_insertion_ps": 1281.560791,
+          "capture_clock_insertion_ps": 1239.036865,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 38.115955,
+            "library setup time": -17.845882,
+            "data arrival time": 2162.810059,
+            "data required time": 2032.306763
+          },
+          "launch_clock_arrival_at_CLK_ps": 1281.560791,
+          "capture_clock_arrival_at_CLK_ps": 2072.036865,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cs.g_line.r[][]$_DFF_P_": {
+        "count": 350,
+        "worst": {
+          "startpoint": "u.u_vml.line[13]$_DFF_PN0_",
+          "endpoint": "u.u_cs.g_line.r[35][80]$_DFF_P_",
+          "slack_ps": -129.186661,
+          "launch_clock_insertion_ps": 1269.216675,
+          "capture_clock_insertion_ps": 1217.9433589999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -5.049161,
+            "data arrival time": 2126.917236,
+            "data required time": 1997.730713
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.216675,
+          "capture_clock_arrival_at_CLK_ps": 2050.943359,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_red[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_red[1]$_DFFE_PP_",
+          "slack_ps": -127.83152,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1229.19043,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -12.075232,
+            "data arrival time": 2142.990723,
+            "data required time": 2015.15918
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2062.19043,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.pv_v$_DFFE_PN0P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.a_v$_DFFE_PN0P_",
+          "endpoint": "u.pv_v$_DFFE_PN0P_",
+          "slack_ps": -126.322731,
+          "launch_clock_insertion_ps": 1275.994263,
+          "capture_clock_insertion_ps": 1239.098145,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.01557,
+            "data arrival time": 2128.115723,
+            "data required time": 2001.792969
+          },
+          "launch_clock_arrival_at_CLK_ps": 1275.994263,
+          "capture_clock_arrival_at_CLK_ps": 2072.098145,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_aso[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_aso[1]$_DFFE_PP_",
+          "slack_ps": -125.632614,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1234.240479,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -20.361647,
+            "data arrival time": 2137.555176,
+            "data required time": 2011.922607
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2067.240479,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.seq_ctr[]$_DFFE_PN0P_": {
+        "count": 7,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.seq_ctr[7]$_DFFE_PN0P_",
+          "slack_ps": -123.818512,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1237.5458979999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -26.44022,
+            "data arrival time": 2124.634766,
+            "data required time": 2000.816162
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2070.545898,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cm.g_line.rv[]$_DFF_PN0_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.vp$_DFF_PN0_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "endpoint": "u.u_cm.g_line.rv[22]$_DFF_PN0_",
+          "slack_ps": -120.726318,
+          "launch_clock_insertion_ps": 1269.265503,
+          "capture_clock_insertion_ps": 1227.34668,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 33.978485,
+            "library setup time": -30.674133,
+            "data arrival time": 2124.377441,
+            "data required time": 2003.651001
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.265503,
+          "capture_clock_arrival_at_CLK_ps": 2060.34668,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_oso[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_oso[1]$_DFFE_PP_",
+          "slack_ps": -115.255142,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1232.848877,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -19.956635,
+            "data arrival time": 2126.191162,
+            "data required time": 2010.936035
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2065.848877,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_tot[]$_DFF_PN0_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.g_rt.rt_v[0]$_DFF_PN0_",
+          "endpoint": "u.r_tot[15]$_DFF_PN0_",
+          "slack_ps": -112.824196,
+          "launch_clock_insertion_ps": 1277.897705,
+          "capture_clock_insertion_ps": 1239.729492,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 37.395199,
+            "library setup time": -26.337618,
+            "data arrival time": 2136.611328,
+            "data required time": 2023.787109
+          },
+          "launch_clock_arrival_at_CLK_ps": 1277.897705,
+          "capture_clock_arrival_at_CLK_ps": 2072.729492,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.cpT[]$_DFF_PN0_": {
+        "count": 10,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.cpT[8]$_DFF_PN0_",
+          "slack_ps": -105.761177,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1229.4489749999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.635452,
+            "data arrival time": 2097.284912,
+            "data required time": 1991.523804
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2062.448975,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_dst[]$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_dst[0]$_DFFE_PP_",
+          "slack_ps": -105.037758,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1236.519531,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -5.341813,
+            "data arrival time": 2134.259521,
+            "data required time": 2029.22168
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2069.519531,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.idle$_DFF_PN1_ (rising edge-triggered flip-flop clocked by core_clk)": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.idle$_DFF_PN1_ (rising edge-triggered flip-flop clocked by core_clk)",
+          "slack_ps": -104.306122,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1234.0241700000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.804577,
+            "data arrival time": 2100.236084,
+            "data required time": 1995.929932
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2067.02417,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_ls[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.s_ni[3]$_DFFE_PP_",
+          "endpoint": "u.r_ls[1]$_DFFE_PP_",
+          "slack_ps": -103.935753,
+          "launch_clock_insertion_ps": 1289.477539,
+          "capture_clock_insertion_ps": 1243.624268,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 37.81797,
+            "library setup time": -10.378554,
+            "data arrival time": 2147.999268,
+            "data required time": 2044.063599
+          },
+          "launch_clock_arrival_at_CLK_ps": 1289.477539,
+          "capture_clock_arrival_at_CLK_ps": 2076.624268,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cf.g_line.rv[]$_DFF_PN0_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.g_bt.bt_e[6]$_DFF_PN0_",
+          "endpoint": "u.u_cf.g_line.rv[4]$_DFF_PN0_",
+          "slack_ps": -103.400841,
+          "launch_clock_insertion_ps": 1269.513672,
+          "capture_clock_insertion_ps": 1227.2246089999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -32.533649,
+            "data arrival time": 2093.374023,
+            "data required time": 1989.973022
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.513672,
+          "capture_clock_arrival_at_CLK_ps": 2060.224609,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_lt2[]$_SDFFCE_PN0P_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.r_ls[1]$_DFFE_PP_",
+          "endpoint": "u.r_lt2[3]$_SDFFCE_PN0P_",
+          "slack_ps": -102.352791,
+          "launch_clock_insertion_ps": 1285.654785,
+          "capture_clock_insertion_ps": 1235.4409179999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.410408,
+            "library setup time": -19.006151,
+            "data arrival time": 2124.198242,
+            "data required time": 2021.845337
+          },
+          "launch_clock_arrival_at_CLK_ps": 1285.654785,
+          "capture_clock_arrival_at_CLK_ps": 2068.440918,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_bso[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_bso[23]$_DFFE_PP_",
+          "slack_ps": -101.651802,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1227.280029,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.647671,
+            "data arrival time": 2110.328125,
+            "data required time": 2008.676392
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2060.280029,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_osi[]$_DFFE_PP_": {
+        "count": 23,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_osi[13]$_DFFE_PP_",
+          "slack_ps": -98.650642,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1234.8046880000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -17.215153,
+            "data arrival time": 2101.076416,
+            "data required time": 2002.425781
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2067.804688,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_asi[]$_DFFE_PP_": {
+        "count": 23,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_asi[16]$_DFFE_PP_",
+          "slack_ps": -97.941879,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1230.0822750000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 11.836309,
+            "library setup time": -18.294464,
+            "data arrival time": 2094.565918,
+            "data required time": 1996.624023
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2063.082275,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_aind[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_aind[0]$_DFFE_PP_",
+          "slack_ps": -94.852127,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1236.609375,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.72994,
+            "data arrival time": 2112.775635,
+            "data required time": 2017.92334
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2069.609375,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_dT[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.r_lt2[1]$_SDFFCE_PN0P_",
+          "endpoint": "u.p_dT[9]$_DFFE_PP_",
+          "slack_ps": -88.712593,
+          "launch_clock_insertion_ps": 1284.474609,
+          "capture_clock_insertion_ps": 1230.6728520000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 27.670311,
+            "library setup time": -16.710423,
+            "data arrival time": 2103.345215,
+            "data required time": 2014.63269
+          },
+          "launch_clock_arrival_at_CLK_ps": 1284.474609,
+          "capture_clock_arrival_at_CLK_ps": 2063.672852,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.cpR[]$_DFF_PN0_": {
+        "count": 7,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.cpR[4]$_DFF_PN0_",
+          "slack_ps": -87.194473,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1233.668701,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -26.568233,
+            "data arrival time": 2084.005127,
+            "data required time": 1996.810669
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2066.668701,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.cpM[]$_DFF_PN0_": {
+        "count": 7,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.cpM[5]$_DFF_PN0_",
+          "slack_ps": -84.221298,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1228.0290530000002,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -27.317944,
+            "data arrival time": 2074.642822,
+            "data required time": 1990.421631
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2061.029053,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.a_v$_DFFE_PN0P_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.a_v$_DFFE_PN0P_",
+          "slack_ps": -81.186836,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1234.8820799999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -42.801773,
+            "data arrival time": 2062.977539,
+            "data required time": 1981.790771
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2067.88208,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_rbase[]$_DFFE_PP_": {
+        "count": 23,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_rbase[11]$_DFFE_PP_",
+          "slack_ps": -80.640831,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1236.900146,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.095289,
+            "data arrival time": 2100.489502,
+            "data required time": 2019.848755
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2069.900146,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_seq[]$_DFFE_PP_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_seq[2]$_DFFE_PP_",
+          "slack_ps": -78.065552,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.773682,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -20.070034,
+            "data arrival time": 2083.479736,
+            "data required time": 2005.414062
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.773682,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_rso[]$_DFFE_PP_": {
+        "count": 17,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_rso[21]$_DFFE_PP_",
+          "slack_ps": -69.109604,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1233.7041020000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.535675,
+            "data arrival time": 2084.322021,
+            "data required time": 2015.212402
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2066.704102,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_cso[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_cso[0]$_DFFE_PP_",
+          "slack_ps": -68.603348,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1234.627441,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.577199,
+            "data arrival time": 2085.69751,
+            "data required time": 2017.094238
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2067.627441,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_nin[]$_DFFE_PP_": {
+        "count": 16,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_nin[1]$_DFFE_PP_",
+          "slack_ps": -68.33889,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1226.20874,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -17.033571,
+            "data arrival time": 2075.558105,
+            "data required time": 2007.219238
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2059.20874,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_L[]$_SDFFCE_PN1P_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.r_nvs[0]$_DFFE_PP_",
+          "endpoint": "u.p_L[0]$_SDFFCE_PN1P_",
+          "slack_ps": -67.907013,
+          "launch_clock_insertion_ps": 1277.895874,
+          "capture_clock_insertion_ps": 1235.6284179999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 34.597881,
+            "library setup time": -20.708067,
+            "data arrival time": 2090.425293,
+            "data required time": 2022.518188
+          },
+          "launch_clock_arrival_at_CLK_ps": 1277.895874,
+          "capture_clock_arrival_at_CLK_ps": 2068.628418,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.r_sh[]$_DFFE_PP_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.r_ls[2]$_DFFE_PP_",
+          "endpoint": "u.r_sh[10]$_DFFE_PP_",
+          "slack_ps": -64.583229,
+          "launch_clock_insertion_ps": 1286.523193,
+          "capture_clock_insertion_ps": 1239.2902829999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 27.670311,
+            "library setup time": -25.720013,
+            "data arrival time": 2078.82373,
+            "data required time": 2014.240601
+          },
+          "launch_clock_arrival_at_CLK_ps": 1286.523193,
+          "capture_clock_arrival_at_CLK_ps": 2072.290283,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_bbase[]$_DFFE_PP_": {
+        "count": 5,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_bbase[10]$_DFFE_PP_",
+          "slack_ps": -61.562756,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1231.8303219999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.581021,
+            "data arrival time": 2075.855957,
+            "data required time": 2014.293213
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2064.830322,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_abase[]$_DFFE_PP_": {
+        "count": 9,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_abase[10]$_DFFE_PP_",
+          "slack_ps": -60.41523,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1231.401123,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.56884,
+            "data arrival time": 2074.291504,
+            "data required time": 2013.876221
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2064.401123,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_csi[]$_DFFE_PP_": {
+        "count": 23,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_csi[19]$_DFFE_PP_",
+          "slack_ps": -58.618668,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1244.577393,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.440829,
+            "data arrival time": 2085.799316,
+            "data required time": 2027.180664
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2077.577393,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_bsi[]$_DFFE_PP_": {
+        "count": 15,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_bsi[22]$_DFFE_PP_",
+          "slack_ps": -58.496761,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1226.16626,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.217503,
+            "data arrival time": 2066.489502,
+            "data required time": 2007.992676
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2059.16626,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_dsi[]$_DFFE_PP_": {
+        "count": 24,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_dsi[19]$_DFFE_PP_",
+          "slack_ps": -57.966965,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1226.103027,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.149145,
+            "data arrival time": 2065.964844,
+            "data required time": 2007.998047
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2059.103027,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_qm[]$_DFFE_PP_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_qm[1]$_DFFE_PP_",
+          "slack_ps": -57.776451,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1236.4548340000001,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.887858,
+            "data arrival time": 2076.387207,
+            "data required time": 2018.61084
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2069.454834,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_cs.g_line.r[][]$_SDFF_PN0_": {
+        "count": 45,
+        "worst": {
+          "startpoint": "u.u_vml.line[13]$_DFF_PN0_",
+          "endpoint": "u.u_cs.g_line.r[276][51]$_SDFF_PN0_",
+          "slack_ps": -57.587269,
+          "launch_clock_insertion_ps": 1269.216675,
+          "capture_clock_insertion_ps": 1219.9301759999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -19.545918,
+            "data arrival time": 2053.253662,
+            "data required time": 1995.66626
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.216675,
+          "capture_clock_arrival_at_CLK_ps": 2052.930176,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_cpair$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_cpair$_DFFE_PP_",
+          "slack_ps": -56.255001,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.9709469999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -15.684064,
+            "data arrival time": 2074.585938,
+            "data required time": 2018.330811
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.970947,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_sfu[]$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_sfu[1]$_DFFE_PP_",
+          "slack_ps": -49.453552,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1224.294434,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -17.110098,
+            "data arrival time": 2054.681885,
+            "data required time": 2005.228271
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2057.294434,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.cpF[]$_DFF_PN0_": {
+        "count": 9,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.cpF[3]$_DFF_PN0_",
+          "slack_ps": -48.448799,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1233.0139159999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -26.844952,
+            "data arrival time": 2044.328247,
+            "data required time": 1995.879517
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2066.013916,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_ce.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 66,
+        "worst": {
+          "startpoint": "u.u_vml.line[13]$_DFF_PN0_",
+          "endpoint": "u.u_ce.genblk1.g_line.line[56]$_DFF_P_",
+          "slack_ps": -48.154591,
+          "launch_clock_insertion_ps": 1269.216675,
+          "capture_clock_insertion_ps": 1213.247192,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 22.282232,
+            "library setup time": -9.123896,
+            "data arrival time": 2047.560181,
+            "data required time": 1999.405518
+          },
+          "launch_clock_arrival_at_CLK_ps": 1269.216675,
+          "capture_clock_arrival_at_CLK_ps": 2046.247192,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_ostep[]$_SDFFCE_PP0P_": {
+        "count": 8,
+        "worst": {
+          "startpoint": "u.q_aso[1]$_DFFE_PP_",
+          "endpoint": "u.p_ostep[12]$_SDFFCE_PP0P_",
+          "slack_ps": -46.720184,
+          "launch_clock_insertion_ps": 1274.678345,
+          "capture_clock_insertion_ps": 1231.0964359999998,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 32.737923,
+            "library setup time": -3.249214,
+            "data arrival time": 2080.30542,
+            "data required time": 2033.585327
+          },
+          "launch_clock_arrival_at_CLK_ps": 1274.678345,
+          "capture_clock_arrival_at_CLK_ps": 2064.096436,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.cpS[]$_DFF_PN0_": {
+        "count": 3,
+        "worst": {
+          "startpoint": "u.ch_r$_DFF_PN0_",
+          "endpoint": "u.cpS[8]$_DFF_PN0_",
+          "slack_ps": -38.214542,
+          "launch_clock_insertion_ps": 1278.411255,
+          "capture_clock_insertion_ps": 1232.818115,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 16.710466,
+            "library setup time": -26.755705,
+            "data arrival time": 2033.987427,
+            "data required time": 1995.772949
+          },
+          "launch_clock_arrival_at_CLK_ps": 1278.411255,
+          "capture_clock_arrival_at_CLK_ps": 2065.818115,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_cbase[]$_DFFE_PP_": {
+        "count": 13,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_cbase[10]$_DFFE_PP_",
+          "slack_ps": -30.122128,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1232.474365,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.677299,
+            "data arrival time": 2043.963257,
+            "data required time": 2013.841064
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2065.474365,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_dbase[]$_DFFE_PP_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_dbase[4]$_DFFE_PP_",
+          "slack_ps": -27.396751,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1232.501221,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -16.001619,
+            "data arrival time": 2041.940186,
+            "data required time": 2014.543457
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2065.501221,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.p_ostep[]$_DFFE_PP_": {
+        "count": 4,
+        "worst": {
+          "startpoint": "u.q_dso[11]$_DFFE_PP_",
+          "endpoint": "u.p_ostep[89]$_DFFE_PP_",
+          "slack_ps": -20.685453,
+          "launch_clock_insertion_ps": 1274.239624,
+          "capture_clock_insertion_ps": 1239.057617,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 27.68985,
+            "library setup time": -2.868907,
+            "data arrival time": 2057.564209,
+            "data required time": 2036.878662
+          },
+          "launch_clock_arrival_at_CLK_ps": 1274.239624,
+          "capture_clock_arrival_at_CLK_ps": 2072.057617,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.q_bhalf$_DFFE_PP_": {
+        "count": 1,
+        "worst": {
+          "startpoint": "u.pst[0]$_DFF_PN1_",
+          "endpoint": "u.q_bhalf$_DFFE_PP_",
+          "slack_ps": -3.08753,
+          "launch_clock_insertion_ps": 1267.623047,
+          "capture_clock_insertion_ps": 1235.1713869999999,
+          "path_terms_ps": {
+            "clock uncertainty": -60.0,
+            "clock reconvergence pessimism": 25.043911,
+            "library setup time": -19.166651,
+            "data arrival time": 2017.13623,
+            "data required time": 2014.048706
+          },
+          "launch_clock_arrival_at_CLK_ps": 1267.623047,
+          "capture_clock_arrival_at_CLK_ps": 2068.171387,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 833.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      }
+    },
+    "report_sha256": "f54d54bf242a507c2150f174021daa5b571165323934ae0bfb6a02cd49f158c8"
+  },
+  "WC_min": {
+    "path_count": 12,
+    "all_endpoint_classes": {
+      "u.u_cs.g_line.r[][]$_DFF_P_": {
+        "count": 2,
+        "worst": {
+          "startpoint": "u.u_cs.g_line.r[221][46]$_DFF_P_",
+          "endpoint": "u.u_cs.g_line.r[220][46]$_DFF_P_",
+          "slack_ps": -26.241009,
+          "launch_clock_insertion_ps": 1232.971558,
+          "capture_clock_insertion_ps": 1360.185425,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -16.710466,
+            "library hold time": 22.014978,
+            "data arrival time": 1364.248901,
+            "data required time": 1390.48999
+          },
+          "launch_clock_arrival_at_CLK_ps": 1232.971558,
+          "capture_clock_arrival_at_CLK_ps": 1360.185425,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      },
+      "u.u_rwd.genblk1.g_line.line[]$_DFF_P_": {
+        "count": 10,
+        "worst": {
+          "startpoint": "u.u_rwd.genblk1.g_line.line[2489]$_DFF_P_",
+          "endpoint": "u.u_rwd.genblk1.g_line.line[9657]$_DFF_P_",
+          "slack_ps": -22.990276,
+          "launch_clock_insertion_ps": 1236.241577,
+          "capture_clock_insertion_ps": 1365.353394,
+          "path_terms_ps": {
+            "clock uncertainty": 25.0,
+            "clock reconvergence pessimism": -16.710466,
+            "library hold time": 22.159548,
+            "data arrival time": 1372.812134,
+            "data required time": 1395.802368
+          },
+          "launch_clock_arrival_at_CLK_ps": 1236.241577,
+          "capture_clock_arrival_at_CLK_ps": 1365.353394,
+          "launch_clock_edge_ps": 0.0,
+          "capture_clock_edge_ps": 0.0,
+          "launch_clock_source_latency_ps": 0.0,
+          "capture_clock_source_latency_ps": 0.0
+        }
+      }
+    },
+    "report_sha256": "cbffd283bd9eadd37ff995180df62af09eb9ffe77779fbd2cef5e3cb4289eaf1"
+  },
+  "BC_max": {
+    "path_count": 0,
+    "all_endpoint_classes": {},
+    "report_sha256": "f5a05b71b72236dfdea1b7eefa9c4944bfc9eb457ec43e2f4c03f52f84f4050d"
+  },
+  "clock_field_correction": {
+    "original_derived_classes_preserved": true,
+    "formula": "network insertion = arrival at CLK - reference edge - source latency",
+    "setup_capture_edge_ps": 833,
+    "hold_same_reference_edge_ps": 0,
+    "native_slack_and_path_counts_unchanged": true
+  }
+}

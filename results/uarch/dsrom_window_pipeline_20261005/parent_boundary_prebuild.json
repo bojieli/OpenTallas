@@ -1,0 +1,107 @@
+{
+  "item": 4,
+  "status": "SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION",
+  "scope": "actual packed-block producer/native lifecycle and first attention captures; no whole S81",
+  "source_sha256": {
+    "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv": "04cabb8fe1dc5ac9fccc767c427a9e7d0825c61b175b331d5d5c785c1d2b13a3",
+    "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv": "f982ac8faf83763458f310d2794795aaa7d4b4479b4f4151120b5a3060738cc7",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+  },
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 4,
+    "TROWS": 640,
+    "NT": 64,
+    "NSTAGE": 1,
+    "PWORDS": 1,
+    "ILV": 0,
+    "REPL": 0
+  },
+  "compute": {
+    "MACs_per_cycle_in_cut": 0,
+    "arithmetic_omitted_at_actual_R0_boundary": true
+  },
+  "state": {
+    "producer_FF_bits": 4338,
+    "descriptor_lifecycle_FF_bits": 280,
+    "native_reset_user_position_guard_generation_FF_bits": 51,
+    "engine_E1_operand_FF_bits": 36864,
+    "tile_R0_operand_FF_bits": 36864,
+    "all_projected_R0_FF_bits": 70656,
+    "all_projected_E1_FF_bits": 45619,
+    "capture_control_upper_FF_bits": 512,
+    "FF_upper_bits": 121456,
+    "FF_cell_floor_um2": 35416.5696
+  },
+  "memory": {
+    "name": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 68,
+    "implementation": "existing actual SRAM_MACRO branch; bind its own aligned LEF and SS/FF views",
+    "logical_payload_bits": 2713600,
+    "physical_capacity_bits": 4456448,
+    "write_ports": 68,
+    "read_ports": 68,
+    "bytes_per_physical_port_per_cycle": 32,
+    "physical_read_bytes_per_cycle": 2176,
+    "physical_write_bytes_per_cycle": 2176,
+    "logical_read_bytes_per_cycle": 2120.0,
+    "logical_write_bytes_per_cycle": 2120.0,
+    "actual_macro_area_um2": null,
+    "SS_clkQ_qualified": false,
+    "mutable_memory_protection_retained_required": true
+  },
+  "communication": {
+    "WINDOW_to_staging_bits_per_cycle": 16960,
+    "staging_to_E1_bits_per_cycle": 36864,
+    "E1_to_R0_bits_per_cycle": 36864,
+    "producer_payload_bits_per_cycle": 264,
+    "producer_identity_bits_per_cycle": 35,
+    "staging_write_enable_fanout": 17,
+    "R0_replicas": 64,
+    "per_tile_operand_bits": 576,
+    "logical_signal_tracks_lower_bound": 90688,
+    "actual_allocated_channel_capacity": null,
+    "route_fit": false
+  },
+  "clock": {
+    "source": "native clk -> source/producer/descriptor/attention staging/E1/R0; rst_s[1] reset",
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "leaf_propagated_CTS_and_input_clock_load": null,
+    "parent_propagated_CTS": null,
+    "real_macro_SS_FF_clkQ_and_loaded_capture_required": true,
+    "IO_waiver": false
+  },
+  "latency": {
+    "added_cycles": 0,
+    "token_gain": 0,
+    "preserves_actual_E1_R0_capture_edges": true,
+    "WINDOW_140ns_performance_miss_retained": true
+  },
+  "area": {
+    "leaf_actual_dimensions_um": null,
+    "leaf_actual_cell_area_um2": null,
+    "extra_control_mux_route_CTS_area_um2": null,
+    "actual_allocated_WINDOW_subslot": null,
+    "aggregate_attention_reservation_is_not_WINDOW_slot": true,
+    "slot_fit": false
+  },
+  "gates": {
+    "ready_for_context_RTL": false,
+    "terminal_leaf_required": true,
+    "own_macro_views_and_actual_slot_required": true,
+    "exact344_completed_no_repeat": true,
+    "parent_SS_FF_qualified": false,
+    "hub_routing_layer_check": false,
+    "adoption": false
+  }
+}

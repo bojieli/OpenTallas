@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL_PROGRESS",
+  "runtime_rc": 1,
+  "cycle": 2001,
+  "writes": 0,
+  "reads": 0,
+  "source_bank_sha256": "fbe36c5437d40b54b7a6a20b9cf35ff7839c903590341b0a0ea5b908c14b6d00",
+  "cause": "Pending actual cold transport/owner instrumentation; invalid-stage zeroing alone did not resolve",
+  "scope": "Changed-source four-row gate"
+}

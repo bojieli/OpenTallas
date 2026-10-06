@@ -25,7 +25,9 @@ module ot_v41_fieldtop_w17w10 #(
     parameter integer VRD = 64,
     parameter integer KMAX = 6144,
     parameter integer BST = 2,
-    parameter integer RST = 1
+    parameter integer RST = 1,
+    parameter integer QELEM = 0,        // 1: the FP8/FP4 pairs are the DS q-element (see ot_v41_pair_w17w10)
+    parameter integer QXV = 9
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -130,7 +132,8 @@ module ot_v41_fieldtop_w17w10 #(
     assign r_bf16 = fr_bf16; assign r_e = fr_e; assign f_fault = fr_fault;
 `else
     wire f_busy;
-    ot_v41_field_w17w10 #(.FAST(FAST), .PP(PP), .BP(BP), .NP(NP), .R(R), .NBF(NBF), .PHW(PHW), .RST(RST)) u_f (
+    ot_v41_field_w17w10 #(.FAST(FAST), .PP(PP), .BP(BP), .NP(NP), .R(R), .NBF(NBF), .PHW(PHW), .RST(RST),
+                          .QELEM(QELEM), .QXV(QXV)) u_f (
         .clk(clk), .rst_n(rst_n), .cfg_go(c_cfg), .cfg_ph(c_ph), .cfg_np(c_np), .go(c_go), .go_bf(c_gobf),
         .xs_v(c_xs_v), .xs_p(c_xs_p), .xs_b(c_xs_b), .xs_sv(c_xs_sv), .xs_q0(c_xs_q0), .xs_e0(c_xs_e0),
         .xs_q1(c_xs_q1), .xs_e1(c_xs_e1), .xs_pos(c_xs_pos), .xb_pos(c_xb_pos), .xb_v(c_xb_v), .xb_b(c_xb_b),

@@ -1,0 +1,191 @@
+{
+  "verdict": "FAIL_RETAINED_OLD_SOURCE_PHYSICAL",
+  "observed_utc": "2026-10-05T21:44:12.489322+00:00",
+  "remote_root": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_reset_src",
+  "route_source_sha256": "26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba",
+  "flow_completed": true,
+  "current_source_qualification": false,
+  "raw_report_sha256": {
+    "done.json": "b217cee3be671d28faef858f1cb0d7cc96f2f8f6fdd012d4fa6465111e1b3b47",
+    "wf_sta.json": "52d5b1f476e6c40668bcd870e872e300aa0d565ad9d55d762e5418c714d2933c",
+    "physical.json": "1dadd186e05a4daf8a623825aa5cc2fa053b2e5e13d76a87163541e5eff78e62",
+    "wf_sta_SS.log": "1065754a7ae6d19f96ed47ed346e86cb4ca215cda0e395d7989ad819e64b23d6",
+    "wf_sta_FF.log": "c532b849a306dee6979994d220ef16e266e2edb3945d927e3de278695b2331d1",
+    "route_args.json": "9ec2a41a7120a2cd831d1a6be5cce9e4a6c55ac657d6dfa27489cefc6c8c7ea3"
+  },
+  "signoff": {
+    "block": false,
+    "incontext": false,
+    "reg2reg": false
+  },
+  "corners": {
+    "SS": {
+      "exit": 0,
+      "done": true,
+      "insertion_ps": [
+        917.5,
+        1006.4
+      ],
+      "block": {
+        "setup_wns_ps": -1066.7,
+        "hold_wns_ps": -644.6,
+        "failing_setup": 220861,
+        "failing_hold": 2144,
+        "worst_max_path": [
+          "rst_q$_DFF_PN0_",
+          "g_wf.eng.g[18].grp/rq$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      },
+      "incontext": {
+        "setup_wns_ps": -1420.4,
+        "hold_wns_ps": 33.0,
+        "failing_setup": 221972,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "rst_n",
+          "rst_q$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      },
+      "reg2reg": {
+        "setup_wns_ps": -496.5,
+        "hold_wns_ps": 33.0,
+        "failing_setup": 220102,
+        "failing_hold": 0,
+        "worst_max_path": [
+          "rst_q$_DFF_PN0_",
+          "g_wf.eng.g[18].grp/rq$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      }
+    },
+    "FF": {
+      "exit": 0,
+      "done": true,
+      "insertion_ps": [
+        576.6,
+        644.2
+      ],
+      "block": {
+        "setup_wns_ps": -382.6,
+        "hold_wns_ps": -384.0,
+        "failing_setup": 717,
+        "failing_hold": 2146,
+        "worst_max_path": [
+          "rst_q$_DFF_PN0_",
+          "g_wf.eng.g[18].grp/rq$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      },
+      "incontext": {
+        "setup_wns_ps": -383.0,
+        "hold_wns_ps": -5.3,
+        "failing_setup": 448,
+        "failing_hold": 2,
+        "worst_max_path": [
+          "rst_n",
+          "rst_q$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      },
+      "reg2reg": {
+        "setup_wns_ps": 77.4,
+        "hold_wns_ps": -5.3,
+        "failing_setup": 0,
+        "failing_hold": 2,
+        "worst_max_path": [
+          "rst_q$_DFF_PN0_",
+          "g_wf.eng.g[18].grp/rq$_DFF_PN0_"
+        ],
+        "worst_min_path": [
+          "rst_q$_DFF_PN0_",
+          "rx_st[0]$_DFF_PN1_"
+        ]
+      }
+    }
+  },
+  "actual_worst_reported_paths": {
+    "SS/block/max": {
+      "start": "rx_st[0]$_DFF_PN1_",
+      "end": "core_token[15] (output port clocked by core_clk)",
+      "slack_ps": -1066.7
+    },
+    "SS/block/min": {
+      "start": "core_done (input port clocked by core_clk)",
+      "end": "txh[13]$_DFFE_PN0P_",
+      "slack_ps": -644.6
+    },
+    "SS/incontext/max": {
+      "start": "cfg_prompt_len[1] (input port clocked by vclk)",
+      "end": "g_wf.eng.steps[16]$_DFF_P_",
+      "slack_ps": -1420.4
+    },
+    "SS/incontext/min": {
+      "start": "g_wf.eng.u0[1]$_DFF_PN0_",
+      "end": "g_wf.eng.u1[1]$_DFF_PN0_",
+      "slack_ps": 33.0
+    },
+    "SS/reg2reg/max": {
+      "start": "g_wf.eng.g[17].grp/lo_r[0]$_DFF_P_",
+      "end": "g_wf.eng.g[17].grp/rec_q[18]$_DFF_P_",
+      "slack_ps": -496.5
+    },
+    "SS/reg2reg/min": {
+      "start": "g_wf.eng.u0[1]$_DFF_PN0_",
+      "end": "g_wf.eng.u1[1]$_DFF_PN0_",
+      "slack_ps": 33.0
+    },
+    "FF/block/max": {
+      "start": "rx_st[0]$_DFF_PN1_",
+      "end": "core_token[15] (output port clocked by core_clk)",
+      "slack_ps": -382.6
+    },
+    "FF/block/min": {
+      "start": "core_done (input port clocked by core_clk)",
+      "end": "txh[12]$_DFFE_PN0P_",
+      "slack_ps": -384.0
+    },
+    "FF/incontext/max": {
+      "start": "cfg_prompt_len[1] (input port clocked by vclk)",
+      "end": "g_wf.eng.steps[16]$_DFF_P_",
+      "slack_ps": -383.0
+    },
+    "FF/incontext/min": {
+      "start": "res_u[5]$_DFFE_PN0P_",
+      "end": "g_wf.eng.rq_u[3][5]$_DFFE_PP_",
+      "slack_ps": -5.3
+    },
+    "FF/reg2reg/max": {
+      "start": "g_wf.eng.b_lo[1]$_DFF_P_",
+      "end": "g_wf.eng.g[19].grp/ringm[83][11]$_DFFE_PP_",
+      "slack_ps": 77.4
+    },
+    "FF/reg2reg/min": {
+      "start": "res_u[5]$_DFFE_PN0P_",
+      "end": "g_wf.eng.rq_u[3][5]$_DFFE_PP_",
+      "slack_ps": -5.3
+    }
+  },
+  "DRC": 0,
+  "antenna": 0,
+  "area_um2": 173250,
+  "context": "routed block / virtualclock surrogate / IO falsepathed internal; actual parent completion/config launch unbound; no headline/adoption",
+  "retained_remote_ODB_SPEF": true,
+  "no_rebuild_or_STA_replay": true
+}

@@ -98,9 +98,9 @@ def record(m, root, out=None, only=''):
             elif man.get('case') == 'c':
                 cases[key] = Q.record_c(d)
                 cases[key]['group'] = d.parent.name
-                if man.get('power_w', 1.0) == 0.0 and man.get('bump_sites', 1) == 0:
-                    cases[key]['no_core_load'] = ('window lies wholly in a link / host strip: no core-grid load and '
-                                                     'no core power bumps (the macros are on their own supplies)')
+                if man.get('power_w', 1.0) == 0.0:
+                    cases[key]['no_core_load'] = ('Window has zero modeled core power. Grid/load sites and power '
+                                                 'bumps may remain, but a zero-current solve is not loaded IR evidence.')
         except Exception as e:  # noqa: BLE001
             cases[key] = dict(error=repr(e))
     ir = defaultdict(list)
@@ -121,10 +121,16 @@ def record(m, root, out=None, only=''):
                            worst_window=worst[1] if worst else None, failing=[r[1] for r in ok if not r[2]],
                            incomplete=[r[1] for r in rows if r[0] is None],
                            no_core_load_windows=ir.get(g_ + '#na', []))
+    out = Path(out) if out else ROOT / F.OUT / 'feasibility.json'
+    if out.is_file():       # r10+: rounds live in two scratch roots; keep every earlier round's record (failures included)
+        old = json.loads(out.read_text())
+        for k_, v_ in old.get('cases', {}).items():
+            cases.setdefault(k_, v_)
+        for k_, v_ in old.get('ir_summary', {}).items():
+            summary.setdefault(k_, v_)
     rec = dict(schema='opentallas.hbm-accel-die-floorplan.feasibility.v1',
                tool_sha256=dict(fp=F.sha('tools/hbm_accel_die_fp.py'), price=F.sha('tools/hbm_accel_die_price.py')),
                cases=cases, ir_summary=summary)
-    out = Path(out) if out else ROOT / F.OUT / 'feasibility.json'
     out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
     print(json.dumps(dict(cases=len(cases), ir_summary=summary), indent=1))
     return 0
@@ -267,6 +273,28 @@ def price(m, grt_work, out=None):
     return 0
 
 
+def floor(m):
+    """Plan-time Manhattan floor of a floorplan (no GRT): every path's stages from the placed station / pin boxes, priced
+    by the same terms as `price` (the stages_430_manhattan basis)."""
+    rp = {}
+    for p, v in F.manhattan_paths(m).items():
+        rp[p] = dict(segments=v['segments'], routed_um=v['um'], stages_430=v['stages_430'], stages_504=v['stages_504'],
+                     stages_430_mean_bundle=v['stages_430'], stages_430_median_bundle=v['stages_430'],
+                     stages_430_manhattan=v['stages_430'])
+    cm = class_max(rp)
+    s_ = _price(m, rp, cm, 'stages_430_manhattan')
+    g_ = s_['compositions']['ds_matched']['rows']['gate']
+    out = dict(die_mm2=round(m['geo']['W'] * m['geo']['H'] / 1e6, 2), one_way_cycles=s_['one_way_cycles'],
+               ds_added_us=s_['compositions']['ds_matched']['added_us'],
+               terms_us={k: v['us'] for k, v in s_['compositions']['ds_matched']['terms'].items()},
+               ds_gate_AR_tok_s=g_['AR_tok_s_priced'], ds_gate_MTP_tok_s=g_['MTP_tok_s_priced'],
+               qwen_tp4=s_['qwen_8k']['b_TP4_iso_silicon']['ar_tok_s_priced'],
+               qwen_tp2=s_['qwen_8k']['a_TP2_same_silicon']['ar_tok_s_priced'],
+               worst={c: e['worst'] for c, e in cm.items() if not c.startswith('hub_')})
+    print(json.dumps(out, indent=1))
+    return out
+
+
 def _price(m, rp, cm, key):
     hz = F.CLK_HZ
 
@@ -323,13 +351,14 @@ def _price(m, rp, cm, key):
         rows = {}
         if tag == 'ds_matched':
             g = comp['gate']
+            tau = g.get('tau', 3.8879)          # the gate's tau (4.159 owner 6-class blend since 2026-10-05; r8 used 3.8879)
             for name, ar, mtp in (('gate', g['AR_us'], g['MTP_step_us']), ('matched', comp['headline']['AR_us'],
                                                                            comp['headline']['MTP_step_us']),
                                   ('today', g['today_AR_us'], g['today_MTP_step_us'])):
                 rows[name] = dict(AR_us=ar, AR_priced_us=round(ar + tot_us, 3), AR_delta_pct=round(100 * tot_us / ar, 2),
                                   MTP_step_us=mtp, MTP_step_priced_us=round(mtp + tot_us, 3),
                                   AR_tok_s_priced=round(1e6 / (ar + tot_us), 1),
-                                  MTP_tok_s_priced=round(3.8879 * 1e6 / (mtp + tot_us), 1))
+                                  MTP_tok_s_priced=round(tau * 1e6 / (mtp + tot_us), 1), tau=tau)
             rows['note'] = ('the MTP step carries the same die-level traversals as the AR walk (the P6 verify walk has '
                             'the AR node sequence; the draft is off-die-path); today-clock rows priced at 1.2 GHz wire '
                             'stages (conservative: their SM clock is lower)')

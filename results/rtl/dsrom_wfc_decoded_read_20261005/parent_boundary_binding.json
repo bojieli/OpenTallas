@@ -1,0 +1,22 @@
+{
+  "current_controller_sha256": "eb97f06009f4cdfed18ed3cce43bb1720b4cd0c3e597c0bb563902e06ca0dd50",
+  "selected_native_parent_source_sha256": {
+    "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv": "04cabb8fe1dc5ac9fccc767c427a9e7d0825c61b175b331d5d5c785c1d2b13a3",
+    "rtl/dsrom_sys/wavefront_parent/native/ot_v41_rt_die_l20_c8.sv": "28bb61720e304949d9342920addc4e0a9b05f8effd011d16dd7008304be8ff01"
+  },
+  "actual_parent_controller": "ot_rom_pkg_ctrl_wf_s81; WFC successor not enrolled",
+  "completion_source": "wf_stage_done / wf_stage_next_token / wf_stage_next_val are external primary inputs of retained native die, held until wf_stage_accepted",
+  "actual_visibility_gate": "c8_write_quiet && !c8_write_quarantine && !c8_write_fault && !coll_busy",
+  "config_source": "wf_cfg_users / wf_cfg_prompt_len / wf_cfg_gen_len external primary inputs selected by PKG_WAVE",
+  "controller_link_context": "actual ot_rom_fabric_router NP3 FW512 BUF4 INPUT_READY_VALID1; controller port0, UCIE port1, boardlink port2",
+  "reset_source": "rst_s[1] rn",
+  "missing": [
+    "source-pinned selected completion producer/capture and true launch clock",
+    "source-pinned configuration producer and clock/held interval",
+    "actual parent port loads, routed insertion and allocated controller slot"
+  ],
+  "typed_join_component_gate": "PASS_COMPONENT_ONLY; actual plan/visibility authority unbound; cannot replace missing caller",
+  "S81_new_native_wiring": "PARKED",
+  "actual_parent_context_qualified": false,
+  "followup": "minimum contextual cut must preserve these exact real gates/router/handshake without inventing completion or coverage authority"
+}

@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_su12_full top=ot_su12_full purpose=signoff_target
+  synth: cells=233669 area=32585.467 um2 seq_area=18426.163 um2 macros=0
+  pnr:   wirelength=914119 um vias=2115720 DRC=0 antenna_nets=0 Fmax=1223.10 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/hbm-su-c12/routes/full_u25/physical.json

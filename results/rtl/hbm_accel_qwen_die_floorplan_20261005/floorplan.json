@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm-accel-qwen-die-floorplan.v1",
  "tool": "tools/hbm_accel_die_fp.py --die qwen",
- "tool_sha256": "90f0ed680c0cd1d36c874f35c39ae7127f5ed3671d9dd1f6bd48ae90d3bd07b2",
+ "tool_sha256": "23e3fde66bf20e70a3f0ee0cd8baf2b515b8476a4f09a0ab867c4cdaaa8f2604",
  "sources_sha256": {
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
@@ -17,7 +17,7 @@
   "results/rtl/hbm_accel_qwen_chains_20261004/composition.json": "8adaa86165110cbd0e34341307b17cef6c09c94847e6929a52034773ec140359",
   "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/physical.json": "855f39c591543ed49ee8b2cbac458c6bb7d6cb16ae3e5df5709c0f2488b56ad3",
   "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/physical.json": "91020a92659193467b443377b23d49dc33637c36fb1fed3f6681c5ce555954d1",
-  "tools/dsrom_s81_fulldie.py": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955",
+  "tools/dsrom_s81_fulldie.py": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
   "tools/qwen_rom_fulldie.py": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118"
  },
  "die": {

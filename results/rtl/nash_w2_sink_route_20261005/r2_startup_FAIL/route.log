@@ -1,0 +1,2 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=0 warnings=0
+--step-tcl 'POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl': no such file /srv/opentallas-scratch2/jobs/nash-w2-sink-route-f835-r1-source/physical/common/ot_macro_track_assert_hook.tcl

@@ -1,0 +1,1527 @@
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+PROBE_CELL rst_q$_DFF_P_
+Net _004486_
+ Pin capacitance: 1.041352-1.377229
+ Wire capacitance: 2.102567
+ Total capacitance: 3.143919-3.479796
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ rst_q$_DFF_P_/QN output (DFFHQNx3_ASAP7_75t_R) (111, 144)
+
+Load pins
+ _283047_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (120, 144)
+ rebuffer37729/A input (BUFx3_ASAP7_75t_R) 0.530438-0.693513 (111, 145)
+
+PROBE_CELL u_l.q[0]$_DFF_P_
+Net _049301_
+ Pin capacitance: 2.435770-3.041690
+ Wire capacitance: 0.285703-0.285704
+ Total capacitance: 2.721473-3.327394
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[0]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (124, 164)
+
+Load pins
+ _283046_/A input (INVx3_ASAP7_75t_R) 1.463160-1.959450 (124, 164)
+ _450139_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (122, 164)
+
+PROBE_CELL u_l.q[672]$_DFF_P_
+Net _049013_
+ Pin capacitance: 1.949826-2.379143
+ Wire capacitance: 7.721129-7.721130
+ Total capacitance: 9.670956-10.100273
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[672]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (121, 146)
+
+Load pins
+ _289180_/B input (OR3x1_ASAP7_75t_R) 0.456504-0.613187 (120, 91)
+ _289306_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (121, 91)
+ _450459_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (121, 146)
+
+PROBE_CELL u_l.q[673]$_DFF_P_
+Net _049012_
+ Pin capacitance: 2.739557-3.598058
+ Wire capacitance: 1.032043-1.032043
+ Total capacitance: 3.771600-4.630101
+ Number of drivers: 1
+ Number of loads: 4
+ Number of pins: 5
+
+Driver pins
+ u_l.q[673]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (158, 187)
+
+Load pins
+ _281335_/A input (INVx2_ASAP7_75t_R) 0.982980-1.320450 (162, 187)
+ _288718_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (162, 187)
+ _446271_/A1 input (OA21x2_ASAP7_75t_R) 0.463569-0.618357 (159, 187)
+ _450460_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (156, 187)
+
+PROBE_CELL u_l.q[674]$_DFF_P_
+Net _049011_
+ Pin capacitance: 0.760179-1.153717
+ Wire capacitance: 3.085321-3.085322
+ Total capacitance: 3.845501-4.239039
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[674]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (175, 195)
+
+Load pins
+ _288708_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (191, 196)
+ place34548/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (176, 195)
+
+PROBE_CELL u_l.q[675]$_DFF_P_
+Net _049010_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 0.907809-0.907809
+ Total capacitance: 2.714500-3.250776
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[675]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (205, 188)
+
+Load pins
+ _281333_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (205, 193)
+ _288698_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (205, 193)
+ _450462_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (204, 188)
+
+PROBE_CELL u_l.q[676]$_DFF_P_
+Net _049009_
+ Pin capacitance: 0.760179-1.153717
+ Wire capacitance: 6.279314-6.279314
+ Total capacitance: 7.039493-7.433031
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[676]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (185, 196)
+
+Load pins
+ _288686_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (217, 196)
+ place34547/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (185, 196)
+
+PROBE_CELL u_l.q[677]$_DFF_P_
+Net _049008_
+ Pin capacitance: 0.760179-1.153717
+ Wire capacitance: 6.932904
+ Total capacitance: 7.693083-8.086620
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[677]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (232, 192)
+
+Load pins
+ _288675_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (264, 192)
+ place34546/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (233, 192)
+
+PROBE_CELL u_l.q[678]$_DFF_P_
+Net _049007_
+ Pin capacitance: 2.008980-2.417640
+ Wire capacitance: 1.582001-1.582002
+ Total capacitance: 3.590981-3.999642
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[678]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (171, 192)
+
+Load pins
+ _450465_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (169, 192)
+ wire37690/A input (BUFx10_ASAP7_75t_R) 1.031220-1.335400 (178, 192)
+
+PROBE_CELL u_l.q[679]$_DFF_P_
+Net _049006_
+ Pin capacitance: 1.472601-1.912106
+ Wire capacitance: 1.746925-1.746926
+ Total capacitance: 3.219526-3.659032
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[679]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (172, 195)
+
+Load pins
+ place34545/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (172, 196)
+ wire37689/A input (BUFx10_ASAP7_75t_R) 1.031220-1.335400 (180, 196)
+
+PROBE_CELL u_l.q[680]$_DFF_P_
+Net _049005_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 1.253007-1.253007
+ Total capacitance: 3.059698-3.595974
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[680]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (261, 197)
+
+Load pins
+ _281328_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (266, 197)
+ _288642_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (266, 197)
+ _450467_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (260, 197)
+
+PROBE_CELL u_l.q[681]$_DFF_P_
+Net _049004_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 2.836217-2.836218
+ Total capacitance: 4.642909-5.179184
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[681]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (218, 228)
+
+Load pins
+ _281327_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (223, 240)
+ _288630_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (223, 242)
+ _450468_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (217, 228)
+
+PROBE_CELL u_l.q[682]$_DFF_P_
+Net _049003_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 7.385360-7.385361
+ Total capacitance: 9.192051-9.728328
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[682]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (160, 240)
+
+Load pins
+ _281326_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (204, 240)
+ _288619_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (204, 241)
+ _450469_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (158, 240)
+
+PROBE_CELL u_l.q[683]$_DFF_P_
+Net _049002_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 3.401386-3.401386
+ Total capacitance: 5.208077-5.744353
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[683]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (173, 255)
+
+Load pins
+ _281325_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (190, 255)
+ _288610_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (190, 255)
+ _450470_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (172, 255)
+
+PROBE_CELL u_l.q[684]$_DFF_P_
+Net _049001_
+ Pin capacitance: 1.271093-1.837433
+ Wire capacitance: 11.408451-11.408452
+ Total capacitance: 12.679544-13.245885
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[684]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (161, 187)
+
+Load pins
+ _281324_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (174, 257)
+ _288601_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (174, 257)
+ place34544/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (161, 187)
+
+PROBE_CELL u_l.q[685]$_DFF_P_
+Net _049000_
+ Pin capacitance: 2.324910-3.018314
+ Wire capacitance: 2.848771-2.848771
+ Total capacitance: 5.173681-5.867085
+ Number of drivers: 1
+ Number of loads: 4
+ Number of pins: 5
+
+Driver pins
+ u_l.q[685]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (127, 249)
+
+Load pins
+ _281323_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (136, 257)
+ _288591_/A2 input (AO21x1_ASAP7_75t_R) 0.375048-0.634173 (133, 254)
+ _446309_/A1 input (OA21x2_ASAP7_75t_R) 0.463569-0.618357 (135, 256)
+ _450472_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (125, 249)
+
+PROBE_CELL u_l.q[686]$_DFF_P_
+Net _048999_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 4.184131-4.184132
+ Total capacitance: 5.990822-6.527099
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[686]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (121, 249)
+
+Load pins
+ _281322_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (131, 263)
+ _288581_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (131, 263)
+ _450473_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (120, 248)
+
+PROBE_CELL u_l.q[687]$_DFF_P_
+Net _048998_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 3.308328-3.308329
+ Total capacitance: 5.115019-5.651296
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[687]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (146, 252)
+
+Load pins
+ _281321_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (151, 267)
+ _288571_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (150, 266)
+ _450474_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (144, 252)
+
+PROBE_CELL u_l.q[688]$_DFF_P_
+Net _048997_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 8.227506-8.227507
+ Total capacitance: 10.034196-10.570473
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[688]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (119, 234)
+
+Load pins
+ _281320_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (158, 255)
+ _288560_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (158, 255)
+ _450475_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (118, 234)
+
+PROBE_CELL u_l.q[689]$_DFF_P_
+Net _048996_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.355635-0.355635
+ Total capacitance: 1.776934-2.014581
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[689]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (216, 168)
+
+Load pins
+ _450476_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (215, 168)
+ place34543/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (217, 168)
+
+PROBE_CELL u_l.q[690]$_DFF_P_
+Net _048995_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 6.321568-6.321568
+ Total capacitance: 8.128259-8.664536
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[690]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (262, 218)
+
+Load pins
+ _281318_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (262, 257)
+ _288534_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (261, 257)
+ _450477_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (261, 218)
+
+PROBE_CELL u_l.q[691]$_DFF_P_
+Net _048994_
+ Pin capacitance: 1.467521-1.912926
+ Wire capacitance: 0.254088
+ Total capacitance: 1.721609-2.167014
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[691]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (168, 250)
+
+Load pins
+ place34542/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (167, 250)
+ wire39646/A input (BUFx12_ASAP7_75t_R) 1.026140-1.336220 (168, 251)
+
+PROBE_CELL u_l.q[692]$_DFF_P_
+Net _048993_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.596795-0.596795
+ Total capacitance: 2.018094-2.255741
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[692]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (135, 244)
+
+Load pins
+ _450479_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (134, 244)
+ place34541/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (137, 245)
+
+PROBE_CELL u_l.q[693]$_DFF_P_
+Net _048992_
+ Pin capacitance: 2.324910-3.018314
+ Wire capacitance: 4.357350-4.357351
+ Total capacitance: 6.682261-7.375665
+ Number of drivers: 1
+ Number of loads: 4
+ Number of pins: 5
+
+Driver pins
+ u_l.q[693]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (131, 211)
+
+Load pins
+ _281315_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (148, 216)
+ _288491_/A2 input (AO21x1_ASAP7_75t_R) 0.375048-0.634173 (148, 212)
+ _446335_/A1 input (OA21x2_ASAP7_75t_R) 0.463569-0.618357 (147, 216)
+ _450480_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (130, 211)
+
+PROBE_CELL u_l.q[694]$_DFF_P_
+Net _048991_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 1.273488-1.273488
+ Total capacitance: 3.080179-3.616455
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[694]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (135, 210)
+
+Load pins
+ _281314_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (141, 212)
+ _288481_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (140, 212)
+ _450481_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (134, 210)
+
+PROBE_CELL u_l.q[695]$_DFF_P_
+Net _048990_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 0.138840-0.138841
+ Total capacitance: 1.945531-2.481807
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[695]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (123, 212)
+
+Load pins
+ _281313_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (123, 212)
+ _288471_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (123, 212)
+ _450482_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (123, 212)
+
+PROBE_CELL u_l.q[696]$_DFF_P_
+Net _048989_
+ Pin capacitance: 0.760179-1.153717
+ Wire capacitance: 3.086448-3.086449
+ Total capacitance: 3.846627-4.240166
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[696]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (105, 186)
+
+Load pins
+ _288461_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (105, 212)
+ place34540/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (105, 187)
+
+PROBE_CELL u_l.q[697]$_DFF_P_
+Net _048988_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 1.694466
+ Total capacitance: 3.501157-4.037433
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[697]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (80, 196)
+
+Load pins
+ _281311_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (79, 206)
+ _288448_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (79, 207)
+ _450484_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (79, 196)
+
+PROBE_CELL u_l.q[698]$_DFF_P_
+Net _048987_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 0.190273-0.190274
+ Total capacitance: 1.996964-2.533241
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[698]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (88, 219)
+
+Load pins
+ _281310_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (88, 220)
+ _288436_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (88, 219)
+ _450485_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (87, 219)
+
+PROBE_CELL u_l.q[699]$_DFF_P_
+Net _048986_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 6.075938-6.075939
+ Total capacitance: 7.882629-8.418906
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[699]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (54, 187)
+
+Load pins
+ _281309_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (54, 225)
+ _288424_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (53, 225)
+ _450486_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (53, 186)
+
+PROBE_CELL u_l.q[700]$_DFF_P_
+Net _048985_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 2.534423-2.534423
+ Total capacitance: 4.341114-4.877390
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[700]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (54, 216)
+
+Load pins
+ _281308_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (53, 229)
+ _288413_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (53, 229)
+ _450487_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (53, 215)
+
+PROBE_CELL u_l.q[701]$_DFF_P_
+Net _048984_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 10.977455-10.977456
+ Total capacitance: 12.784146-13.320423
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[701]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (60, 188)
+
+Load pins
+ _281307_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (65, 256)
+ _288403_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (63, 256)
+ _450488_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (60, 188)
+
+PROBE_CELL u_l.q[702]$_DFF_P_
+Net _048983_
+ Pin capacitance: 1.806691-2.342967
+ Wire capacitance: 7.877088-7.877089
+ Total capacitance: 9.683779-10.220056
+ Number of drivers: 1
+ Number of loads: 3
+ Number of pins: 4
+
+Driver pins
+ u_l.q[702]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (49, 209)
+
+Load pins
+ _281306_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (50, 261)
+ _288393_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (49, 262)
+ _450489_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (49, 209)
+
+PROBE_CELL u_l.q[703]$_DFF_P_
+Net _048982_
+ Pin capacitance: 0.760179-1.153717
+ Wire capacitance: 5.709177
+ Total capacitance: 6.469356-6.862894
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[703]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (55, 207)
+
+Load pins
+ _288380_/B input (AND2x2_ASAP7_75t_R) 0.318798-0.577011 (55, 265)
+ place34539/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (55, 208)
+
+PROBE_CELL u_l.q[747]$_DFF_P_
+Net _048938_
+ Pin capacitance: 2.742749-3.409224
+ Wire capacitance: 0.362242
+ Total capacitance: 3.104991-3.771466
+ Number of drivers: 1
+ Number of loads: 4
+ Number of pins: 5
+
+Driver pins
+ u_l.q[747]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (153, 180)
+
+Load pins
+ _287288_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (153, 180)
+ _299410_/C input (OR3x1_ASAP7_75t_R) 0.493405-0.646268 (154, 180)
+ _446266_/A2 input (AOI211x1_ASAP7_75t_R) 0.763051-0.997000 (153, 180)
+ _450534_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (152, 180)
+
+PROBE_CELL u_l.q[748]$_DFF_P_
+Net _048937_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.172676
+ Total capacitance: 1.658969-1.938632
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[748]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 158)
+
+Load pins
+ _281303_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (95, 158)
+ _450535_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (95, 157)
+
+PROBE_CELL u_l.q[749]$_DFF_P_
+Net _048936_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.237832-0.237832
+ Total capacitance: 1.724125-2.003788
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[749]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 161)
+
+Load pins
+ _281302_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (94, 161)
+ _450536_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (95, 161)
+
+PROBE_CELL u_l.q[750]$_DFF_P_
+Net _048935_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.133599
+ Total capacitance: 1.619892-1.899555
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[750]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (99, 162)
+
+Load pins
+ _281301_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (99, 163)
+ _450537_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (99, 162)
+
+PROBE_CELL u_l.q[751]$_DFF_P_
+Net _048934_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.352885-0.352885
+ Total capacitance: 1.839178-2.118841
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[751]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (100, 163)
+
+Load pins
+ _281300_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (99, 164)
+ _450538_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (99, 163)
+
+PROBE_CELL u_l.q[752]$_DFF_P_
+Net _048933_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.162297-0.162297
+ Total capacitance: 1.583596-1.821243
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[752]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 168)
+
+Load pins
+ _450539_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (95, 168)
+ hold38416/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (95, 168)
+
+PROBE_CELL u_l.q[753]$_DFF_P_
+Net _048932_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.055778
+ Total capacitance: 1.542071-1.821734
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[753]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 167)
+
+Load pins
+ _281298_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (96, 168)
+ _450540_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (96, 167)
+
+PROBE_CELL u_l.q[754]$_DFF_P_
+Net _048931_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.108798
+ Total capacitance: 1.595091-1.874754
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[754]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (97, 163)
+
+Load pins
+ _281297_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (97, 164)
+ _450541_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (97, 163)
+
+PROBE_CELL u_l.q[755]$_DFF_P_
+Net _048930_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.176262
+ Total capacitance: 1.597561-1.835208
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[755]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 173)
+
+Load pins
+ _450542_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (95, 172)
+ hold38414/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (95, 173)
+
+PROBE_CELL u_l.q[756]$_DFF_P_
+Net _048929_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.158950
+ Total capacitance: 1.580249-1.817896
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[756]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (97, 173)
+
+Load pins
+ _450543_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (96, 173)
+ hold39252/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (97, 173)
+
+PROBE_CELL u_l.q[757]$_DFF_P_
+Net _048928_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.240565-0.240565
+ Total capacitance: 1.726858-2.006521
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[757]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (95, 173)
+
+Load pins
+ _281294_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (94, 173)
+ _450544_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (94, 173)
+
+PROBE_CELL u_l.q[758]$_DFF_P_
+Net _048927_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.194887
+ Total capacitance: 1.616186-1.853833
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[758]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (94, 174)
+
+Load pins
+ _450545_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (93, 174)
+ hold38305/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (93, 175)
+
+PROBE_CELL u_l.q[759]$_DFF_P_
+Net _048926_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.158643-0.158643
+ Total capacitance: 1.644936-1.924599
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[759]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (91, 172)
+
+Load pins
+ _281292_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (91, 172)
+ _450546_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (90, 172)
+
+PROBE_CELL u_l.q[760]$_DFF_P_
+Net _048925_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.162652-0.162652
+ Total capacitance: 1.648945-1.928608
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[760]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (86, 172)
+
+Load pins
+ _281291_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (86, 172)
+ _450547_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (85, 172)
+
+PROBE_CELL u_l.q[761]$_DFF_P_
+Net _048924_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.099924-0.099924
+ Total capacitance: 1.586217-1.865880
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[761]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (87, 171)
+
+Load pins
+ _281290_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (86, 172)
+ _450548_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (86, 172)
+
+PROBE_CELL u_l.q[762]$_DFF_P_
+Net _048923_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.132339
+ Total capacitance: 1.618632-1.898295
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[762]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (93, 166)
+
+Load pins
+ _281289_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (93, 166)
+ _450549_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (93, 166)
+
+PROBE_CELL u_l.q[763]$_DFF_P_
+Net _048922_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.168929-0.168929
+ Total capacitance: 1.655222-1.934885
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[763]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (96, 160)
+
+Load pins
+ _281288_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (95, 161)
+ _450550_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (95, 161)
+
+PROBE_CELL u_l.q[764]$_DFF_P_
+Net _048921_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.144320-0.144320
+ Total capacitance: 1.565619-1.803266
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[764]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (93, 160)
+
+Load pins
+ _450551_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (92, 160)
+ hold39735/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (93, 160)
+
+PROBE_CELL u_l.q[765]$_DFF_P_
+Net _048920_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.154125-0.154125
+ Total capacitance: 1.640418-1.920081
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[765]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (92, 162)
+
+Load pins
+ _281286_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (92, 161)
+ _450552_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (91, 161)
+
+PROBE_CELL u_l.q[766]$_DFF_P_
+Net _048919_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.102143-0.102143
+ Total capacitance: 1.588436-1.868099
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[766]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (91, 159)
+
+Load pins
+ _281285_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (91, 159)
+ _450553_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (91, 159)
+
+PROBE_CELL u_l.q[767]$_DFF_P_
+Net _048918_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.126026-0.126027
+ Total capacitance: 1.612319-1.891983
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[767]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (94, 169)
+
+Load pins
+ _281284_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (94, 169)
+ _450554_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (93, 169)
+
+PROBE_CELL u_l.q[768]$_DFF_P_
+Net _048917_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.129043-0.129044
+ Total capacitance: 1.550342-1.787990
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[768]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (91, 160)
+
+Load pins
+ _450555_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (91, 161)
+ hold39271/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (91, 161)
+
+PROBE_CELL u_l.q[769]$_DFF_P_
+Net _048916_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.466206-0.466206
+ Total capacitance: 1.952499-2.232162
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[769]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (97, 175)
+
+Load pins
+ _281282_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (96, 175)
+ _450556_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (97, 175)
+
+PROBE_CELL u_l.q[770]$_DFF_P_
+Net _048915_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.179490-0.179490
+ Total capacitance: 1.665783-1.945446
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[770]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (92, 166)
+
+Load pins
+ _281281_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (91, 166)
+ _450557_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (91, 166)
+
+PROBE_CELL u_l.q[771]$_DFF_P_
+Net _048914_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.331538-0.331538
+ Total capacitance: 1.817831-2.097494
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[771]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (91, 177)
+
+Load pins
+ _281280_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (90, 176)
+ _450558_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (90, 177)
+
+PROBE_CELL u_l.q[772]$_DFF_P_
+Net _048913_
+ Pin capacitance: 1.421299-1.658946
+ Wire capacitance: 0.121452-0.121452
+ Total capacitance: 1.542751-1.780398
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[772]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (89, 174)
+
+Load pins
+ _450559_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (88, 175)
+ hold38171/A input (BUFx2_ASAP7_75t_R) 0.441381-0.577042 (89, 174)
+
+PROBE_CELL u_l.q[773]$_DFF_P_
+Net _048912_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.208351
+ Total capacitance: 1.694644-1.974307
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[773]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (89, 172)
+
+Load pins
+ _281278_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (88, 172)
+ _450560_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (88, 171)
+
+PROBE_CELL u_l.q[774]$_DFF_P_
+Net _048911_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.103143-0.103143
+ Total capacitance: 1.589436-1.869099
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[774]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (90, 171)
+
+Load pins
+ _281277_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (90, 171)
+ _450561_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (89, 170)
+
+PROBE_CELL u_l.q[775]$_DFF_P_
+Net _051209_
+ Pin capacitance: 1.486293-1.765956
+ Wire capacitance: 0.102492
+ Total capacitance: 1.588785-1.868448
+ Number of drivers: 1
+ Number of loads: 2
+ Number of pins: 3
+
+Driver pins
+ u_l.q[775]$_DFF_P_/QN output (DFFHQNx1_ASAP7_75t_R) (91, 176)
+
+Load pins
+ _387687_/A input (INVx1_ASAP7_75t_R) 0.510914-0.683716 (91, 176)
+ _450562_/A input (XNOR2x2_ASAP7_75t_R) 0.972610-1.082240 (92, 176)
+
+PROBE_CLOCK_AND_CAPTURE
+Startpoint: rst_q$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.rr_oh[28][32]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.5727  132.7387 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4394  155.1781 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  25.3037  180.4818 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.2222  203.7040 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.5286  230.2327 ^ clkbuf_5_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.9453  265.1780 ^ clkbuf_8_53_0_clk/Y (BUFx24_ASAP7_75t_R)
+  35.8288  301.0067 ^ clkbuf_leaf_368_clk/Y (BUFx24_ASAP7_75t_R)
+   1.7429  302.7496 ^ rst_q$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)
+  50.5694  353.3189 ^ rst_q$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)
+  15.2713  368.5902 v _283047_/Y (INVx1_ASAP7_75t_R)
+  19.5428  388.1329 v place33627/Y (BUFx6f_ASAP7_75t_R)
+  27.3989  415.5318 v place33548/Y (BUFx6f_ASAP7_75t_R)
+  66.5350  482.0668 v _289886_/Y (AND3x4_ASAP7_75t_R)
+  15.9907  498.0575 v wire37302/Y (BUFx12f_ASAP7_75t_R)
+  63.1399  561.1974 v _289905_/Y (AND3x4_ASAP7_75t_R)
+  28.0970  589.2944 v wire37296/Y (BUFx16f_ASAP7_75t_R)
+ 123.8251  713.1195 v place29223/Y (BUFx12f_ASAP7_75t_R)
+  37.0643  750.1838 v _289927_/Y (AND3x1_ASAP7_75t_R)
+   0.0662  750.2501 v u_dut.rr_oh[28][32]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+           750.2501   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  37.3532  870.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503  915.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4336  938.0371 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.1039  960.1410 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4603  982.6012 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6591 1006.2603 ^ clkbuf_3_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.6614 1028.9218 ^ clkbuf_4_8_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.0358 1053.9575 ^ clkbuf_5_16_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.7225 1085.6801 ^ clkbuf_8_131_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.1155 1115.7954 ^ clkbuf_leaf_2333_clk/Y (BUFx24_ASAP7_75t_R)
+   1.0505 1116.8459 ^ u_dut.rr_oh[28][32]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1056.8459   clock uncertainty
+   2.9307 1059.7767   clock reconvergence pessimism
+  -0.0819 1059.6948   library setup time
+          1059.6948   data required time
+-------------------------------------------------------------
+          1059.6948   data required time
+          -750.2501   data arrival time
+-------------------------------------------------------------
+           309.4448   slack (MET)
+
+
+Startpoint: rst_q$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.rr_oh[28][35]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.5727  132.7387 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4394  155.1781 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  25.3037  180.4818 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.2222  203.7040 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.5286  230.2327 ^ clkbuf_5_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.9453  265.1780 ^ clkbuf_8_53_0_clk/Y (BUFx24_ASAP7_75t_R)
+  35.8288  301.0067 ^ clkbuf_leaf_368_clk/Y (BUFx24_ASAP7_75t_R)
+   1.7429  302.7496 ^ rst_q$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)
+  50.5694  353.3189 ^ rst_q$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)
+  15.2713  368.5902 v _283047_/Y (INVx1_ASAP7_75t_R)
+  19.5428  388.1329 v place33627/Y (BUFx6f_ASAP7_75t_R)
+  27.3989  415.5318 v place33548/Y (BUFx6f_ASAP7_75t_R)
+  66.5350  482.0668 v _289886_/Y (AND3x4_ASAP7_75t_R)
+  15.9907  498.0575 v wire37302/Y (BUFx12f_ASAP7_75t_R)
+  63.1399  561.1974 v _289905_/Y (AND3x4_ASAP7_75t_R)
+  28.0970  589.2944 v wire37296/Y (BUFx16f_ASAP7_75t_R)
+ 123.8251  713.1195 v place29223/Y (BUFx12f_ASAP7_75t_R)
+  36.8373  749.9568 v _289924_/Y (AND3x1_ASAP7_75t_R)
+   0.0768  750.0335 v u_dut.rr_oh[28][35]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+           750.0335   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  37.3532  870.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503  915.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4336  938.0371 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.1039  960.1410 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4603  982.6012 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6591 1006.2603 ^ clkbuf_3_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.6614 1028.9218 ^ clkbuf_4_8_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.0358 1053.9575 ^ clkbuf_5_16_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.7225 1085.6801 ^ clkbuf_8_131_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.2123 1115.8922 ^ clkbuf_leaf_2388_clk/Y (BUFx24_ASAP7_75t_R)
+   0.8851 1116.7773 ^ u_dut.rr_oh[28][35]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1056.7773   clock uncertainty
+   2.9307 1059.7081   clock reconvergence pessimism
+  -0.1785 1059.5297   library setup time
+          1059.5297   data required time
+-------------------------------------------------------------
+          1059.5297   data required time
+          -750.0335   data arrival time
+-------------------------------------------------------------
+           309.4962   slack (MET)
+
+
+Startpoint: rst_q$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.rr_oh[28][34]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.5727  132.7387 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4394  155.1781 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  25.3037  180.4818 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.2222  203.7040 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.5286  230.2327 ^ clkbuf_5_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.9453  265.1780 ^ clkbuf_8_53_0_clk/Y (BUFx24_ASAP7_75t_R)
+  35.8288  301.0067 ^ clkbuf_leaf_368_clk/Y (BUFx24_ASAP7_75t_R)
+   1.7429  302.7496 ^ rst_q$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)
+  50.5694  353.3189 ^ rst_q$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)
+  15.2713  368.5902 v _283047_/Y (INVx1_ASAP7_75t_R)
+  19.5428  388.1329 v place33627/Y (BUFx6f_ASAP7_75t_R)
+  27.3989  415.5318 v place33548/Y (BUFx6f_ASAP7_75t_R)
+  66.5350  482.0668 v _289886_/Y (AND3x4_ASAP7_75t_R)
+  15.9907  498.0575 v wire37302/Y (BUFx12f_ASAP7_75t_R)
+  63.1399  561.1974 v _289905_/Y (AND3x4_ASAP7_75t_R)
+  28.0970  589.2944 v wire37296/Y (BUFx16f_ASAP7_75t_R)
+ 123.8251  713.1195 v place29223/Y (BUFx12f_ASAP7_75t_R)
+  36.9493  750.0688 v _289925_/Y (AND3x1_ASAP7_75t_R)
+   0.0566  750.1255 v u_dut.rr_oh[28][34]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+           750.1255   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  37.3532  870.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503  915.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4336  938.0371 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.1039  960.1410 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4603  982.6012 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6591 1006.2603 ^ clkbuf_3_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.6614 1028.9218 ^ clkbuf_4_8_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.0358 1053.9575 ^ clkbuf_5_16_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.7225 1085.6801 ^ clkbuf_8_131_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.1155 1115.7954 ^ clkbuf_leaf_2333_clk/Y (BUFx24_ASAP7_75t_R)
+   1.0620 1116.8575 ^ u_dut.rr_oh[28][34]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1056.8575   clock uncertainty
+   2.9307 1059.7882   clock reconvergence pessimism
+  -0.1599 1059.6284   library setup time
+          1059.6284   data required time
+-------------------------------------------------------------
+          1059.6284   data required time
+          -750.1255   data arrival time
+-------------------------------------------------------------
+           309.5029   slack (MET)
+
+
+Startpoint: rst_q$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.rr_oh[28][33]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.5727  132.7387 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4394  155.1781 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  25.3037  180.4818 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.2222  203.7040 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.5286  230.2327 ^ clkbuf_5_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.9453  265.1780 ^ clkbuf_8_53_0_clk/Y (BUFx24_ASAP7_75t_R)
+  35.8288  301.0067 ^ clkbuf_leaf_368_clk/Y (BUFx24_ASAP7_75t_R)
+   1.7429  302.7496 ^ rst_q$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)
+  50.5694  353.3189 ^ rst_q$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)
+  15.2713  368.5902 v _283047_/Y (INVx1_ASAP7_75t_R)
+  19.5428  388.1329 v place33627/Y (BUFx6f_ASAP7_75t_R)
+  27.3989  415.5318 v place33548/Y (BUFx6f_ASAP7_75t_R)
+  66.5350  482.0668 v _289886_/Y (AND3x4_ASAP7_75t_R)
+  15.9907  498.0575 v wire37302/Y (BUFx12f_ASAP7_75t_R)
+  63.1399  561.1974 v _289905_/Y (AND3x4_ASAP7_75t_R)
+  28.0970  589.2944 v wire37296/Y (BUFx16f_ASAP7_75t_R)
+ 123.8251  713.1195 v place29223/Y (BUFx12f_ASAP7_75t_R)
+  36.2971  749.4166 v _289926_/Y (AND3x1_ASAP7_75t_R)
+   0.0350  749.4516 v u_dut.rr_oh[28][33]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+           749.4516   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  37.3532  870.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503  915.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4336  938.0371 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.1039  960.1410 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4603  982.6012 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6591 1006.2603 ^ clkbuf_3_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.6614 1028.9218 ^ clkbuf_4_8_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.0358 1053.9575 ^ clkbuf_5_16_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.7225 1085.6801 ^ clkbuf_8_131_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.2123 1115.8922 ^ clkbuf_leaf_2388_clk/Y (BUFx24_ASAP7_75t_R)
+   0.5161 1116.4084 ^ u_dut.rr_oh[28][33]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1056.4084   clock uncertainty
+   2.9307 1059.3392   clock reconvergence pessimism
+  -0.2251 1059.1141   library setup time
+          1059.1141   data required time
+-------------------------------------------------------------
+          1059.1141   data required time
+          -749.4516   data arrival time
+-------------------------------------------------------------
+           309.6625   slack (MET)
+
+
+Startpoint: u_l.q[774]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][12]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  37.3532   37.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503   82.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.8374  105.4410 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4457  127.8867 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.3099  149.1966 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6802  172.8767 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.3072  195.1839 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.9364  220.1204 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.5106  254.6309 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.2456  279.8765 ^ clkbuf_leaf_468_clk/Y (BUFx24_ASAP7_75t_R)
+   3.0337  282.9102 ^ u_l.q[774]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  40.3318  323.2420 ^ u_l.q[774]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.7170  329.9590 v _281277_/Y (INVx1_ASAP7_75t_R)
+   0.0447  330.0038 v u_dut.e1_blk[0][12]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+           330.0038   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.4812  132.6472 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.0080  154.6552 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7530  179.4083 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1689  202.5771 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.1132  228.6903 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.0791  266.7694 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.2702  294.0396 ^ clkbuf_leaf_468_clk/Y (BUFx24_ASAP7_75t_R)
+   3.7303  297.7699 ^ u_dut.e1_blk[0][12]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  322.7699   clock uncertainty
+ -14.1631  308.6068   clock reconvergence pessimism
+  12.6692  321.2761   library hold time
+           321.2761   data required time
+-------------------------------------------------------------
+           321.2761   data required time
+          -330.0038   data arrival time
+-------------------------------------------------------------
+             8.7277   slack (MET)
+
+
+Startpoint: u_l.q[766]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][4]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  37.3532   37.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503   82.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.8374  105.4410 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4457  127.8867 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.3099  149.1966 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6802  172.8767 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.3072  195.1839 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.9364  220.1204 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.5106  254.6309 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.2773  285.9082 ^ clkbuf_leaf_460_clk/Y (BUFx24_ASAP7_75t_R)
+   1.1016  287.0099 ^ u_l.q[766]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.6339  326.6438 ^ u_l.q[766]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.6850  333.3287 v _281285_/Y (INVx1_ASAP7_75t_R)
+   0.0398  333.3686 v u_dut.e1_blk[0][4]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+           333.3686   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.4812  132.6472 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.0080  154.6552 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7530  179.4083 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1689  202.5771 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.1132  228.6903 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.0791  266.7694 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.7963  301.5657 ^ clkbuf_leaf_460_clk/Y (BUFx24_ASAP7_75t_R)
+   1.6304  303.1961 ^ u_dut.e1_blk[0][4]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  328.1961   clock uncertainty
+ -15.6574  312.5386   clock reconvergence pessimism
+  11.9124  324.4510   library hold time
+           324.4510   data required time
+-------------------------------------------------------------
+           324.4510   data required time
+          -333.3686   data arrival time
+-------------------------------------------------------------
+             8.9175   slack (MET)
+
+
+Startpoint: u_l.q[769]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][7]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  37.3532   37.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503   82.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.8374  105.4410 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4457  127.8867 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.3099  149.1966 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6802  172.8767 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.3072  195.1839 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.9364  220.1204 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.3784  254.4988 ^ clkbuf_8_97_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.9804  280.4792 ^ clkbuf_leaf_483_clk/Y (BUFx24_ASAP7_75t_R)
+   0.8819  281.3611 ^ u_l.q[769]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  40.7969  322.1581 ^ u_l.q[769]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   7.1205  329.2785 v _281282_/Y (INVx1_ASAP7_75t_R)
+   0.0414  329.3199 v u_dut.e1_blk[0][7]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+           329.3199   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.4812  132.6472 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.0080  154.6552 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7530  179.4083 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1689  202.5771 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.1132  228.6903 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.9185  266.6088 ^ clkbuf_8_97_0_clk/Y (BUFx24_ASAP7_75t_R)
+  28.9938  295.6026 ^ clkbuf_leaf_470_clk/Y (BUFx24_ASAP7_75t_R)
+   0.4142  296.0168 ^ u_dut.e1_blk[0][7]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  321.0168   clock uncertainty
+ -12.1100  308.9068   clock reconvergence pessimism
+  11.3432  320.2500   library hold time
+           320.2500   data required time
+-------------------------------------------------------------
+           320.2500   data required time
+          -329.3199   data arrival time
+-------------------------------------------------------------
+             9.0699   slack (MET)
+
+
+Startpoint: u_l.q[762]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][0]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  37.3532   37.3532 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  45.2503   82.6035 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.8374  105.4410 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.4457  127.8867 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.3099  149.1966 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6802  172.8767 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.3072  195.1839 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.9364  220.1204 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.5106  254.6309 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  29.3134  283.9443 ^ clkbuf_leaf_457_clk/Y (BUFx24_ASAP7_75t_R)
+   1.4032  285.3475 ^ u_l.q[762]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.7729  325.1204 ^ u_l.q[762]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.7562  331.8766 v _281289_/Y (INVx1_ASAP7_75t_R)
+   0.0419  331.9184 v u_dut.e1_blk[0][0]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+           331.9184   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  38.7258   38.7258 ^ wire37726/Y (BUFx16f_ASAP7_75t_R)
+  46.8084   85.5343 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6318  109.1661 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.4812  132.6472 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.0080  154.6552 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7530  179.4083 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1689  202.5771 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.1132  228.6903 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.0791  266.7694 ^ clkbuf_8_96_0_clk/Y (BUFx24_ASAP7_75t_R)
+  32.3535  299.1228 ^ clkbuf_leaf_457_clk/Y (BUFx24_ASAP7_75t_R)
+   1.8583  300.9811 ^ u_dut.e1_blk[0][0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  325.9811   clock uncertainty
+ -15.1785  310.8026   clock reconvergence pessimism
+  11.9351  322.7377   library hold time
+           322.7377   data required time
+-------------------------------------------------------------
+           322.7377   data required time
+          -331.9184   data arrival time
+-------------------------------------------------------------
+             9.1807   slack (MET)
+
+
+PROBE_DONE

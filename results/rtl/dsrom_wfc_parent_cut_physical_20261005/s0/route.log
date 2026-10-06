@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=ot_dsrom_wfc_parent_cut top=ot_dsrom_wfc_parent_cut purpose=characterization
+  pnr:   wirelength=987693 um vias=1666647 DRC=0 antenna_nets=0 Fmax=747.79 MHz
+  drv:   max_slew=1 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/jobs/zeno-wfc-parent-cut-physical-r1/s0/physical.json

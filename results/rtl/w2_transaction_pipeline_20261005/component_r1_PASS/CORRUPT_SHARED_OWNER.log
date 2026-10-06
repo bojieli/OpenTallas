@@ -1,0 +1,5 @@
+PROVIDER_ACCEPT cycle=23 we=1 byte_address=4128 slot=1
+AUTHORITY_CORRUPTION_ACCEPTED_DEBT_RETAINED control=0 owner=1 tag=f239
+[390000] %Fatal: tb_hbm_integrated_w2_publication_nash.sv:215: Assertion failed in tb_hbm_integrated_w2_publication_nash.check_retained_protection_debt: EXPECTED_AUTHORITY_CORRUPTION_FAIL_CLOSED retained_debt=1 releases=0 root_por=1
+%Error: rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_w2_publication_nash.sv:215: Verilog $stop
+Aborting...

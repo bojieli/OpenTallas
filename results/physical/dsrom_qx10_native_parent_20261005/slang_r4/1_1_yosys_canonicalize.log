@@ -1,0 +1,37 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+13. Executing SLANG frontend.
+13.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+13.2. Executing TRIBUF pass.
+13.3. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+13.4. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+13.5. Executing PROC_INIT pass (extract init attributes).
+13.6. Executing PROC_ROM pass (convert switches to ROMs).
+13.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+13.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+13.9. Executing OPT_EXPR pass (perform const folding).
+14. Executing HIERARCHY pass (managing design hierarchy).
+14.1. Analyzing design hierarchy..
+14.2. Analyzing design hierarchy..
+15. Executing OPT_CLEAN pass (remove unused cells and wires).
+16. Executing RTLIL backend.
+End of script. Logfile hash: 120e01aa9b, time: 2.05s, user: 1.98s, system: 0.13s, MEM: 269.70 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 35% 2x read_slang (0 sec), 29% 14x read_liberty (0 sec), ...
+Elapsed time: 0:02.11[h:]min:sec. CPU time: user 2.03 sys 0.15 (103%). Peak memory: 278216KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          2            271 40ab24b658592a031fd0

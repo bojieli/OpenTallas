@@ -1,0 +1,29 @@
+{"utc": "2026-10-05T22:38:32Z", "idle_cores": 64.98177134158242, "workers": 1, "load": [122.0732421875, 136.54833984375, 101.396484375], "MemAvailable_GiB": 654.8713569641113, "disk_free_GiB": 2221.612403869629, "declared_peak_GiB": 8}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CHECK_SELECTED_POWER_GRID VDD
+[INFO PSM-0040] All shapes on net VDD are connected.
+CHECK_SELECTED_POWER_GRID VSS
+[WARNING PSM-0038] Unconnected shape on net VSS at (304.830um, -0.009um) - (347.976um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (652.806um, -0.009um) - (695.952um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1000.782um, -0.009um) - (1043.928um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1348.758um, -0.009um) - (1349.082um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (304.830um, -0.009um) - (347.976um, 0.009um), layer: M2.
+[WARNING PSM-0038] Unconnected shape on net VSS at (652.806um, -0.009um) - (695.952um, 0.009um), layer: M2.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1000.782um, -0.009um) - (1043.928um, 0.009um), layer: M2.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1348.758um, -0.009um) - (1349.082um, 0.009um), layer: M2.
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_2_Left_10663/VSS at location (304.884um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_2_52432/VSS at location (329.832um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_2_Right_11792/VSS at location (347.922um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_3_Left_11793/VSS at location (652.860um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_3_52433/VSS at location (677.808um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_3_Right_12922/VSS at location (695.898um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_4_Left_14051/VSS at location (1000.836um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_4_52434/VSS at location (1025.784um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_4_Right_15180/VSS at location (1043.874um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_5_Left_16309/VSS at location (1348.812um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_5_Right_17915/VSS at location (1349.028um, 0.000um).
+[ERROR PSM-0069] Check connectivity failed on VSS.
+Error: check_selected_power_grid.tcl, 5 PSM-0069

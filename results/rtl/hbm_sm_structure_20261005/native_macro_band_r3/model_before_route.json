@@ -1,0 +1,499 @@
+{
+  "schema": "opentallas.hbm.smh.native_macro_band.price.v1",
+  "basis": "results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json",
+  "added_pipeline_edges": 0,
+  "added_register_bits": 0,
+  "added_memory_ports": 0,
+  "added_boundary_bits_per_cycle": 0,
+  "added_physical_tracks": 0,
+  "added_replicas": 0,
+  "new_logic_area_um2": 0,
+  "tile_die_um": [
+    319.68,
+    509.76
+  ],
+  "density": 0.6,
+  "repair_boxes_um": [],
+  "repair_area_um2": 0,
+  "repair_area_fraction": 0.0,
+  "baseline_global_capacity_reservation": 0.25,
+  "local_capacity_reservation": 0.25,
+  "layers": [
+    "M2",
+    "M3",
+    "M4"
+  ],
+  "track_impact": "Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.",
+  "latency_delta": "Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.",
+  "composed_AR_us": 441.505,
+  "composed_MTP_step_us": 1002.401,
+  "physical_adopted": false,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "actual_macros": [
+    {
+      "name": "u.g_lf\\[0\\].u_leaf.g_xm\\[0\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        293.76,
+        207.144,
+        334.8
+      ],
+      "location": [
+        112320,
+        293760
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[0\\].u_leaf.g_xm\\[1\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        339.12,
+        207.144,
+        380.16
+      ],
+      "location": [
+        112320,
+        339120
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[0\\].u_leaf.g_xm\\[2\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        384.48,
+        207.144,
+        425.52
+      ],
+      "location": [
+        112320,
+        384480
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[0\\].u_leaf.g_xm\\[3\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        429.84,
+        207.144,
+        470.88
+      ],
+      "location": [
+        112320,
+        429840
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[1\\].u_leaf.g_xm\\[0\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        34.56,
+        207.144,
+        75.6
+      ],
+      "location": [
+        112320,
+        34560
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[1\\].u_leaf.g_xm\\[1\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        79.92,
+        207.144,
+        120.96
+      ],
+      "location": [
+        112320,
+        79920
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[1\\].u_leaf.g_xm\\[2\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        125.28,
+        207.144,
+        166.32
+      ],
+      "location": [
+        112320,
+        125280
+      ],
+      "orientation": "R0"
+    },
+    {
+      "name": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "bbox": [
+        112.32,
+        170.64,
+        207.144,
+        211.68
+      ],
+      "location": [
+        112320,
+        170640
+      ],
+      "orientation": "R0"
+    }
+  ],
+  "macro_band_cells": 1,
+  "macro_extension_um": 0.57,
+  "reservation_bands_um": {
+    "M2": [
+      [
+        112.32,
+        293.19,
+        207.144,
+        293.76
+      ],
+      [
+        112.32,
+        334.8,
+        207.144,
+        335.37
+      ],
+      [
+        112.32,
+        338.55,
+        207.144,
+        339.12
+      ],
+      [
+        112.32,
+        380.16,
+        207.144,
+        380.73
+      ],
+      [
+        112.32,
+        383.91,
+        207.144,
+        384.48
+      ],
+      [
+        112.32,
+        425.52,
+        207.144,
+        426.09
+      ],
+      [
+        112.32,
+        429.27,
+        207.144,
+        429.84
+      ],
+      [
+        112.32,
+        470.88,
+        207.144,
+        471.45
+      ],
+      [
+        112.32,
+        33.99,
+        207.144,
+        34.56
+      ],
+      [
+        112.32,
+        75.6,
+        207.144,
+        76.16999999999999
+      ],
+      [
+        112.32,
+        79.35000000000001,
+        207.144,
+        79.92
+      ],
+      [
+        112.32,
+        120.96,
+        207.144,
+        121.52999999999999
+      ],
+      [
+        112.32,
+        124.71000000000001,
+        207.144,
+        125.28
+      ],
+      [
+        112.32,
+        166.32,
+        207.144,
+        166.89
+      ],
+      [
+        112.32,
+        170.07,
+        207.144,
+        170.64
+      ],
+      [
+        112.32,
+        211.68,
+        207.144,
+        212.25
+      ]
+    ],
+    "M3": [
+      [
+        111.75,
+        293.76,
+        112.32,
+        334.8
+      ],
+      [
+        207.144,
+        293.76,
+        207.714,
+        334.8
+      ],
+      [
+        111.75,
+        339.12,
+        112.32,
+        380.16
+      ],
+      [
+        207.144,
+        339.12,
+        207.714,
+        380.16
+      ],
+      [
+        111.75,
+        384.48,
+        112.32,
+        425.52
+      ],
+      [
+        207.144,
+        384.48,
+        207.714,
+        425.52
+      ],
+      [
+        111.75,
+        429.84,
+        112.32,
+        470.88
+      ],
+      [
+        207.144,
+        429.84,
+        207.714,
+        470.88
+      ],
+      [
+        111.75,
+        34.56,
+        112.32,
+        75.6
+      ],
+      [
+        207.144,
+        34.56,
+        207.714,
+        75.6
+      ],
+      [
+        111.75,
+        79.92,
+        112.32,
+        120.96
+      ],
+      [
+        207.144,
+        79.92,
+        207.714,
+        120.96
+      ],
+      [
+        111.75,
+        125.28,
+        112.32,
+        166.32
+      ],
+      [
+        207.144,
+        125.28,
+        207.714,
+        166.32
+      ],
+      [
+        111.75,
+        170.64,
+        112.32,
+        211.68
+      ],
+      [
+        207.144,
+        170.64,
+        207.714,
+        211.68
+      ]
+    ],
+    "M4": [
+      [
+        112.32,
+        293.19,
+        207.144,
+        293.76
+      ],
+      [
+        112.32,
+        334.8,
+        207.144,
+        335.37
+      ],
+      [
+        112.32,
+        338.55,
+        207.144,
+        339.12
+      ],
+      [
+        112.32,
+        380.16,
+        207.144,
+        380.73
+      ],
+      [
+        112.32,
+        383.91,
+        207.144,
+        384.48
+      ],
+      [
+        112.32,
+        425.52,
+        207.144,
+        426.09
+      ],
+      [
+        112.32,
+        429.27,
+        207.144,
+        429.84
+      ],
+      [
+        112.32,
+        470.88,
+        207.144,
+        471.45
+      ],
+      [
+        112.32,
+        33.99,
+        207.144,
+        34.56
+      ],
+      [
+        112.32,
+        75.6,
+        207.144,
+        76.16999999999999
+      ],
+      [
+        112.32,
+        79.35000000000001,
+        207.144,
+        79.92
+      ],
+      [
+        112.32,
+        120.96,
+        207.144,
+        121.52999999999999
+      ],
+      [
+        112.32,
+        124.71000000000001,
+        207.144,
+        125.28
+      ],
+      [
+        112.32,
+        166.32,
+        207.144,
+        166.89
+      ],
+      [
+        112.32,
+        170.07,
+        207.144,
+        170.64
+      ],
+      [
+        112.32,
+        211.68,
+        207.144,
+        212.25
+      ]
+    ]
+  },
+  "track_edge_slots_withheld_upper_bound": {
+    "M2": 80160,
+    "M3": 37120,
+    "M4": 64128
+  },
+  "physical_tracks_added": 0,
+  "PG_tracks_released": 0,
+  "capacity_above_original": false,
+  "original_resource_ceiling": {
+    "M2": 3722977,
+    "M3": 4603239,
+    "M4": 3525788,
+    "M5": 3721461,
+    "M6": 2821839
+  },
+  "original_overflow": 83,
+  "rejected_all_layer_overflow": 2850,
+  "rejected_zero_capacity_overflow": 2815,
+  "actual_PG": "Retained M1/M2 followpins,M3 via enclosures,M5/M6 stripes; no PG ripup/reduction/relocation",
+  "pin_escape": "Original physical M4 SRAM pins; M5/M6 unmasked; no fictitious endpoint or access point",
+  "replicas": 8,
+  "new_mux_bits": 0,
+  "new_demux_bits": 0,
+  "new_clock_pins": 0,
+  "peak_memory_bytes_per_cycle_delta": 0,
+  "MACs_per_cycle_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "available_signal_layers": [
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "tile_density_parameter": 0.6,
+  "original_routing_usage_fraction": 0.4013,
+  "slot_fit": "Original tile allocation and every cell/macro coordinate unchanged",
+  "source": "GlobalRouter.cpp findInstancesObstructions extends perpendicular to preferred direction; native pin/PG accounting retained",
+  "engine_RTL_changed": false,
+  "area_delta_um2": 0,
+  "latency_delta_cycles": 0,
+  "routed_wire_buffer_and_clock_delta": "Actual route/extraction required; no free physical latency claim",
+  "macro_clk_to_q": "Original SS SRAM library retained; full SS setup/FF hold required",
+  "all_class_closure": false,
+  "parent_context_closed": false,
+  "adopted": false
+}
