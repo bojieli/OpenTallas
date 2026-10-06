@@ -46,7 +46,7 @@ module ot_svc_vpipe #(parameter integer W = 1, parameter integer N = 0) (
     integer k;
     always @(posedge ck or negedge rst_n)
       if (!rst_n) rv <= {N{1'b0}};
-      else rv <= (N == 1) ? v : {rv[N-2:0], v};
+      else begin rv[0] <= v; for (k = 1; k < N; k = k + 1) rv[k] <= rv[k-1]; end
     always @(posedge ck) begin
       r[0] <= d;
       for (k = 1; k < N; k = k + 1) r[k] <= r[k-1];
