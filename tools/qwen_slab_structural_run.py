@@ -58,7 +58,7 @@ def command(a, out):
              "--io-delay-fraction", "0.2", "--stages", "pnr", "--hold-margin-ns", f"{a.hold_margin_ns:g}",
              "--synth-timeout-seconds", "unlimited", "--flow-timeout-seconds", "unlimited",
              "--orfs-var", "ADDER_MAP_FILE=", "--orfs-var", f"NUM_CORES={a.cores}",
-             "--orfs-var", f"SDC_FILE=/src/{S}/port_group_s2.sdc", "--orfs-var", f"QSS_SDC_DIR=/src/{S}",
+             "--orfs-var", f"SDC_FILE=/src/{S}/{a.sdc}", "--orfs-var", f"QSS_SDC_DIR=/src/{S}",
              "--orfs-var", f"QSS_IO_HOLD_EXTRA={a.io_hold_extra:g}",
              "--orfs-var", "PDN_TCL=/src/physical/qwen_slab_m5/pdn_m5.tcl",
              "--orfs-var", f"MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h{h:g}.tcl",
@@ -108,6 +108,9 @@ def main():
                         "pins over the liberty 320 ps limit, worst -193 ps on place_*/A and g_mul[*].g_in.a_q[*]/D")
     p.add_argument("--slew-margin-percent", type=float, default=None,
                    help="ORFS SLEW_MARGIN: repair_design overfixes max-slew to (100 - PCT)%% of the limit")
+    p.add_argument("--sdc", default="port_group_s2.sdc",
+                   help="SDC file in physical/qwen_slab_structural (r10: port_group_s2_slew280.sdc carries the explicit "
+                        "set_max_transition; --max-transition-ns only reaches the runner's own SDC, not SDC_FILE)")
     p.add_argument("--root", type=Path, required=True)
     p.add_argument("--name", required=True)
     a = p.parse_args()
