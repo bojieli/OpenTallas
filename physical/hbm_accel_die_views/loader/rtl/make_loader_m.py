@@ -84,6 +84,110 @@ for _ in range(200):
     _s, _w = _g.getrandbits(32), _g.getrandbits(256)
     assert _fold(_s, _w) == _ap(_MS, _s) ^ _ap(_ML, _w & ((1 << 128) - 1)) ^ _ap(_MH, _w >> 128)
 
+# ARITH (margin-first, ldm7: after the CRC, 2,475 classes at SS -0.9 .. -2.2 ns are ripple-mapped wide counters:
+# (r_idx - f_idx) < VOUT, rem = n_sec - ar_sec -> min -> ar_sec / ar_next adds, req_addr = base + idx << 5, the
+# 32-bit increments).  ABC re-ripples behavioural adders in context, so every wide add is a (* keep *) Kogge-Stone
+# (rtl/hdc/ot_hdc_prefix.sv), differences that only feed compares are kept as registers updated with their operands
+# (rem_q == n_sec - ar_sec, vin == r_idx - f_idx, wa_q / ra_q == m_base + idx << 5 at every edge), and the burst
+# length is computed on 8 bits.  Same values, same cycles (tb_loader_m_equiv.sv).
+LOAD_ARITH = [
+    ("""        wire [31:0] rem = n_sec - ar_sec;
+        wire [31:0] to4k = 32'd128 - {25'd0, ar_next[11:5]};
+        wire [31:0] blen0 = (rem < BURST) ? rem : BURST;
+        wire [31:0] blen = (blen0 < to4k) ? blen0 : to4k;""",
+     """        reg  [31:0] rem_q;                       // ARITH: n_sec - ar_sec
+        wire [7:0]  rem8 = rem_q[7:0];
+        wire        rem_small = ~|rem_q[31:8] && (rem8 < 8'(BURST));
+        wire [7:0]  to4k8 = 8'd128 - {1'b0, ar_next[11:5]};
+        wire [7:0]  blen0_8 = rem_small ? rem8 : 8'(BURST);
+        wire [7:0]  blen8 = (blen0_8 < to4k8) ? blen0_8 : to4k8;
+        wire [31:0] blen = {24'd0, blen8};
+        wire [31:0] ar_sec_nx, rem_nx, cycles_nx, rx_sec_nx;
+        wire [51:0] ar_hi_nx;
+        wire [7:0]  ar_lo_nx = {1'b0, ar_next[11:5]} + blen8;
+        ot_hdc_ksadd_k #(.W(32)) u_k_arsec (.a(ar_sec), .b(blen), .cin(1'b0), .s(ar_sec_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_rem (.a(rem_q), .b(~blen), .cin(1'b1), .s(rem_nx), .cout());
+        ot_hdc_inc_k #(.W(52)) u_k_arhi (.a(ar_next[63:12]), .inc(ar_lo_nx[7]), .y(ar_hi_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_cyc (.a(cycles), .inc(1'b1), .y(cycles_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_rx (.a(rx_sec), .inc(1'b1), .y(rx_sec_nx), .co());"""),
+    ("n_sec <= 0; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;",
+     "n_sec <= 0; ar_sec <= 0; rem_q <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;"),
+    ("busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0;",
+     "busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rem_q <= nbytes >> 5; rx_sec <= 0; out_bursts <= 0;"),
+    ("if (busy) cycles <= cycles + 1;", "if (busy) cycles <= cycles_nx;"),
+    ("""                if (busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) begin
+                    m_arvalid <= 1; m_araddr <= ar_next; m_arlen <= blen[7:0] - 8'd1;
+                    ar_sec <= ar_sec + blen; ar_next <= ar_next + {27'd0, blen, 5'd0};""",
+     """                if (busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) begin
+                    m_arvalid <= 1; m_araddr <= ar_next; m_arlen <= blen[7:0] - 8'd1;
+                    ar_sec <= ar_sec_nx; rem_q <= rem_nx; ar_next <= {ar_hi_nx, ar_lo_nx[6:0], ar_next[4:0]};"""),
+    ("out_bursts <= out_bursts + ((busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)",
+     "out_bursts <= out_bursts + ((busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)"),
+    ("rx_sec <= rx_sec + 1;", "rx_sec <= rx_sec_nx;"),
+    ("""        wire r_can = ms == M_VERIFY && r_idx != m_n && (r_idx - f_idx) < VOUT;""",
+     """        reg  [VB:0] vin;                         // ARITH: r_idx - f_idx (read-backs in flight)
+        reg  [31:0] wa_q, ra_q;                  // ARITH: m_base + w_idx << 5, m_base + r_idx << 5
+        wire [31:0] wa_nx, ra_nx, w_idx_nx, w_ack_nx, r_idx_nx, f_idx_nx;
+        ot_hdc_ksadd_k #(.W(32)) u_k_wa (.a(wa_q), .b(32'd32), .cin(1'b0), .s(wa_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_ra (.a(ra_q), .b(32'd32), .cin(1'b0), .s(ra_nx), .cout());
+        ot_hdc_inc_k #(.W(32)) u_k_wi (.a(w_idx), .inc(1'b1), .y(w_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_wk (.a(w_ack), .inc(1'b1), .y(w_ack_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_ri (.a(r_idx), .inc(1'b1), .y(r_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_fi (.a(f_idx), .inc(1'b1), .y(f_idx_nx), .co());
+        wire r_can = ms == M_VERIFY && r_idx != m_n && vin < VOUT;"""),
+    ("assign req_addr  = m_base + ((ms == M_WRITE ? w_idx : r_idx) << 5);", "assign req_addr  = (ms == M_WRITE) ? wa_q : ra_q;"),
+    ("ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0;",
+     "ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vin <= 0; wa_q <= 0; ra_q <= 0;"),
+    ("if (rsp_we) w_ack <= w_ack + 1;", "if (rsp_we) w_ack <= w_ack_nx;"),
+    ("w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;",
+     "w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;\n"
+     "                        vin <= 0; wa_q <= c_d[31:0]; ra_q <= c_d[31:0];"),
+    ("if (req_v && req_rdy) w_idx <= w_idx + 1;", "if (req_v && req_rdy) begin w_idx <= w_idx_nx; wa_q <= wa_nx; end"),
+    ("""                        if (req_v && req_rdy) r_idx <= r_idx + 1;
+                        if (fold_now) f_idx <= f_idx + 1;""",
+     """                        if (req_v && req_rdy) begin r_idx <= r_idx_nx; ra_q <= ra_nx; end
+                        if (fold_now) f_idx <= f_idx_nx;
+                        vin <= vin + (req_v && req_rdy) - fold_now;"""),
+]
+STORE_ARITH = [
+    (""" wire[31:0] remaining=nsec-aw_sec,to4k=128-{25'b0,aw_next[11:5]};
+ wire[31:0] len0=remaining<BURST?remaining:BURST;
+ wire[31:0] len=len0<to4k?len0:to4k;""",
+     """ // ARITH (see make_loader_m.py): rem_q == nsec - aw_sec, Kogge-Stone adds, 8-bit burst length, range checks on KS sums
+ reg[31:0] rem_q;
+ wire[7:0] rem8=rem_q[7:0];wire rem_small=~|rem_q[31:8]&&(rem8<8'(BURST));
+ wire[7:0] to4k8=8'd128-{1'b0,aw_next[11:5]};wire[7:0] len0_8=rem_small?rem8:8'(BURST);
+ wire[7:0] len8=len0_8<to4k8?len0_8:to4k8;wire[31:0] len={24'd0,len8};
+ wire[31:0] aw_sec_nx,rem_nx,cycles_nx,w_sec_nx,rng_ds,issued_nx,retired_nx,ra_nx;wire[63:0] rng_hs;wire[51:0] aw_hi_nx;wire rng_dc,rng_hc;
+ wire[7:0] aw_lo_nx={1'b0,aw_next[11:5]}+m_awlen+8'd1;
+ ot_hdc_ksadd_k #(.W(32)) u_k_awsec(.a(aw_sec),.b({24'b0,m_awlen}),.cin(1'b1),.s(aw_sec_nx),.cout());
+ ot_hdc_ksadd_k #(.W(32)) u_k_rem(.a(rem_q),.b(~{24'b0,m_awlen}),.cin(1'b0),.s(rem_nx),.cout());
+ ot_hdc_inc_k #(.W(52)) u_k_awhi(.a(aw_next[63:12]),.inc(aw_lo_nx[7]),.y(aw_hi_nx),.co());
+ ot_hdc_inc_k #(.W(32)) u_k_cyc(.a(cycles),.inc(1'b1),.y(cycles_nx),.co());
+ ot_hdc_inc_k #(.W(32)) u_k_ws(.a(w_sec),.inc(1'b1),.y(w_sec_nx),.co());
+ ot_hdc_ksadd_k #(.W(32)) u_k_rngd(.a(daddr),.b(nbytes),.cin(1'b0),.s(rng_ds),.cout(rng_dc));
+ ot_hdc_ksadd_k #(.W(64)) u_k_rngh(.a(haddr),.b({32'b0,nbytes}),.cin(1'b0),.s(rng_hs),.cout(rng_hc));
+ wire rng_bad=(rng_dc&&|rng_ds)||(rng_hc&&|rng_hs);   // {0,daddr}+{0,nbytes} > 2^32 || {0,haddr}+nbytes > 2^64"""),
+    ("cmd_pending<=0;mem_complete<=0;axi_err<=0;nsec<=0;aw_sec<=0;", "cmd_pending<=0;mem_complete<=0;axi_err<=0;nsec<=0;aw_sec<=0;rem_q<=0;"),
+    ("||{1'b0,daddr}+{1'b0,nbytes}>33'h100000000||{1'b0,haddr}+{33'b0,nbytes}>65'h10000000000000000)", "||rng_bad)"),
+    ("busy<=1;cmd_pending<=1;nsec<=nbytes>>5;aw_sec<=0;", "busy<=1;cmd_pending<=1;nsec<=nbytes>>5;aw_sec<=0;rem_q<=nbytes>>5;"),
+    ("if(busy)cycles<=cycles+1;", "if(busy)cycles<=cycles_nx;"),
+    ("w_left==0&&aw_sec!=nsec&&outstanding<MAXOUT)", "w_left==0&&rem_q!=0&&outstanding<MAXOUT)"),
+    ("aw_sec<=aw_sec+{24'b0,m_awlen}+1;aw_next<=aw_next+(({56'b0,m_awlen}+1)<<5);",
+     "aw_sec<=aw_sec_nx;rem_q<=rem_nx;aw_next<={aw_hi_nx,aw_lo_nx[6:0],aw_next[4:0]};"),
+    ("w_sec<=w_sec+1'b1;", "w_sec<=w_sec_nx;"),
+    ("assign req_addr=base+(issued<<5);", "assign req_addr=ra_q;"),
+    (" wire[VB-1:0] slot=issued[VB-1:0],", " reg[31:0] ra_q;   // ARITH: base + issued << 5\n"
+     " ot_hdc_inc_k #(.W(32)) u_k_iss(.a(issued),.inc(1'b1),.y(issued_nx),.co());\n"
+     " ot_hdc_inc_k #(.W(32)) u_k_ret(.a(retired),.inc(1'b1),.y(retired_nx),.co());\n"
+     " ot_hdc_ksadd_k #(.W(32)) u_k_ra(.a(ra_q),.b(32'd32),.cin(1'b0),.s(ra_nx),.cout());\n"
+     " wire[VB-1:0] slot=issued[VB-1:0],"),
+    ("active<=0;fault<=0;base<=0;", "active<=0;fault<=0;base<=0;ra_q<=0;"),
+    ("base<=cd[31:0];total<=cd[63:32];issued<=0;", "base<=cd[31:0];ra_q<=cd[31:0];total<=cd[63:32];issued<=0;"),
+    ("if(send)begin issued<=issued+1'b1;", "if(send)begin issued<=issued_nx;ra_q<=ra_nx;"),
+    ("if(fold)begin retired<=retired+1'b1;", "if(fold)begin retired<=retired_nx;"),
+]
+
 # ---------------- LOAD engine
 t = (SRC / 'ot_hbm_accel_loader.sv').read_text()
 t = edit(t, [
@@ -156,6 +260,7 @@ t = edit(t, [
                 if (mp2_v) vcrc <= crc_s(vcrc) ^ mp2_lo ^ mp2_hi;"""),
     ("""                    M_CPL: if (!k_v) begin""", """                    M_CPL: if (!k_v && !mp_busy) begin"""),
 ])
+t = edit(t, LOAD_ARITH)
 (OUT / 'ot_hfd_loader_m.sv').write_text(
     '// GENERATED by make_loader_m.py from rtl/hbm_accel/loader/ot_hbm_accel_loader.sv (margin-first CRC pipeline; see there)\n' + t)
 
@@ -188,6 +293,7 @@ t = edit(t, [
  if(mp2_v)mcrc<=crc_s(mcrc)^mp2_lo^mp2_hi;
  if(active&&retired==total&&!mp_busy)begin"""),
 ])
+t = edit(t, STORE_ARITH)
 (OUT / 'ot_hfd_store_m.sv').write_text(
     '// GENERATED by make_loader_m.py from rtl/hbm_accel/loader/ot_hbm_accel_store.sv (margin-first CRC pipeline; see there)\n' + t)
 

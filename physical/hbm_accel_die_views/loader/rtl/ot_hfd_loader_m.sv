@@ -145,16 +145,27 @@ module ot_hfd_loader_m #(
         assign m_arburst = 2'd1;                 // INCR
         assign m_rready = busy && dq_rdy;
         wire beat = m_rvalid && m_rready;
-        wire [31:0] rem = n_sec - ar_sec;
-        wire [31:0] to4k = 32'd128 - {25'd0, ar_next[11:5]};
-        wire [31:0] blen0 = (rem < BURST) ? rem : BURST;
-        wire [31:0] blen = (blen0 < to4k) ? blen0 : to4k;
+        reg  [31:0] rem_q;                       // ARITH: n_sec - ar_sec
+        wire [7:0]  rem8 = rem_q[7:0];
+        wire        rem_small = ~|rem_q[31:8] && (rem8 < 8'(BURST));
+        wire [7:0]  to4k8 = 8'd128 - {1'b0, ar_next[11:5]};
+        wire [7:0]  blen0_8 = rem_small ? rem8 : 8'(BURST);
+        wire [7:0]  blen8 = (blen0_8 < to4k8) ? blen0_8 : to4k8;
+        wire [31:0] blen = {24'd0, blen8};
+        wire [31:0] ar_sec_nx, rem_nx, cycles_nx, rx_sec_nx;
+        wire [51:0] ar_hi_nx;
+        wire [7:0]  ar_lo_nx = {1'b0, ar_next[11:5]} + blen8;
+        ot_hdc_ksadd_k #(.W(32)) u_k_arsec (.a(ar_sec), .b(blen), .cin(1'b0), .s(ar_sec_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_rem (.a(rem_q), .b(~blen), .cin(1'b1), .s(rem_nx), .cout());
+        ot_hdc_inc_k #(.W(52)) u_k_arhi (.a(ar_next[63:12]), .inc(ar_lo_nx[7]), .y(ar_hi_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_cyc (.a(cycles), .inc(1'b1), .y(cycles_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_rx (.a(rx_sec), .inc(1'b1), .y(rx_sec_nx), .co());
         always @(posedge clk_host or negedge rst_host_n) begin
             if (!rst_host_n) begin
                 haddr_lo <= 0; haddr_hi <= 0; daddr <= 0; nbytes <= 0; crc_exp <= 0; crc_got <= 32'hFFFFFFFF;
                 vcrc_got <= 0; sectors <= 0; cycles <= 0; status <= 0; done <= 0; busy <= 0; verify <= 0;
                 s_bvalid <= 0; s_rvalid <= 0; s_rdata <= 0;
-                n_sec <= 0; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;
+                n_sec <= 0; ar_sec <= 0; rem_q <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;
                 ar_next <= 0; m_arvalid <= 0; m_araddr <= 0; m_arlen <= 0;
             end else begin
                 // ---- registers ----
@@ -193,25 +204,25 @@ module ot_hfd_loader_m #(
                     if (nbytes == 0 || nbytes[4:0] != 0 || haddr_lo[4:0] != 0 || daddr[4:0] != 0) begin
                         status <= 4'd3; done <= 1;
                     end else begin
-                        busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0;
+                        busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rem_q <= nbytes >> 5; rx_sec <= 0; out_bursts <= 0;
                         ar_next <= haddr; cmd_pend <= 1;
                     end
                 end
-                if (busy) cycles <= cycles + 1;
+                if (busy) cycles <= cycles_nx;
                 if (hp2_v) crc_got <= crc_s(crc_got) ^ hp2_lo ^ hp2_hi;
                 if (cmd_pend && cmd_rdy) cmd_pend <= 0;
                 // ---- AR: bursts that never cross a 4 KB boundary ----
                 if (m_arvalid && m_arready) m_arvalid <= 0;
-                if (busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) begin
+                if (busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) begin
                     m_arvalid <= 1; m_araddr <= ar_next; m_arlen <= blen[7:0] - 8'd1;
-                    ar_sec <= ar_sec + blen; ar_next <= ar_next + {27'd0, blen, 5'd0};
+                    ar_sec <= ar_sec_nx; rem_q <= rem_nx; ar_next <= {ar_hi_nx, ar_lo_nx[6:0], ar_next[4:0]};
                 end
                 // outstanding bursts: +1 at AR issue (registered above), -1 at the last beat
-                out_bursts <= out_bursts + ((busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)
+                out_bursts <= out_bursts + ((busy && !m_arvalid && rem_q != 32'd0 && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)
                                          - ((beat && m_rlast) ? 8'd1 : 8'd0);
                 // ---- R: fold and forward ----
                 if (beat) begin
-                    rx_sec <= rx_sec + 1;
+                    rx_sec <= rx_sec_nx;
                     if (m_rresp != 2'b00) axi_err <= 1;
                 end
                 // ---- completion ----
@@ -257,10 +268,19 @@ module ot_hfd_loader_m #(
         reg [255:0] rob [0:VOUT-1];
         reg [VOUT-1:0] rob_v;
         wire w_can = ms == M_WRITE && w_idx != m_n && d_v && w_out < OUTW[7:0];
-        wire r_can = ms == M_VERIFY && r_idx != m_n && (r_idx - f_idx) < VOUT;
+        reg  [VB:0] vin;                         // ARITH: r_idx - f_idx (read-backs in flight)
+        reg  [31:0] wa_q, ra_q;                  // ARITH: m_base + w_idx << 5, m_base + r_idx << 5
+        wire [31:0] wa_nx, ra_nx, w_idx_nx, w_ack_nx, r_idx_nx, f_idx_nx;
+        ot_hdc_ksadd_k #(.W(32)) u_k_wa (.a(wa_q), .b(32'd32), .cin(1'b0), .s(wa_nx), .cout());
+        ot_hdc_ksadd_k #(.W(32)) u_k_ra (.a(ra_q), .b(32'd32), .cin(1'b0), .s(ra_nx), .cout());
+        ot_hdc_inc_k #(.W(32)) u_k_wi (.a(w_idx), .inc(1'b1), .y(w_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_wk (.a(w_ack), .inc(1'b1), .y(w_ack_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_ri (.a(r_idx), .inc(1'b1), .y(r_idx_nx), .co());
+        ot_hdc_inc_k #(.W(32)) u_k_fi (.a(f_idx), .inc(1'b1), .y(f_idx_nx), .co());
+        wire r_can = ms == M_VERIFY && r_idx != m_n && vin < VOUT;
         assign req_v     = w_can || r_can;
         assign req_we    = ms == M_WRITE;
-        assign req_addr  = m_base + ((ms == M_WRITE ? w_idx : r_idx) << 5);
+        assign req_addr  = (ms == M_WRITE) ? wa_q : ra_q;
         assign req_wdata = d_d;
         assign req_wstrb = 32'hFFFFFFFF;
         assign req_tag   = ms == M_WRITE ? w_idx[TW-1:0] : {{(TW-VB){1'b0}}, r_idx[VB-1:0]};
@@ -284,14 +304,14 @@ module ot_hfd_loader_m #(
         wire mp_busy = mp1_v || mp2_v;
         always @(posedge clk_mem or negedge rst_mem_n) begin
             if (!rst_mem_n) begin
-                ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0;
+                ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vin <= 0; wa_q <= 0; ra_q <= 0;
                 m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;
             end else begin
                 if (k_v && k_rdy) k_v <= 0;
                 if (mp2_v) vcrc <= crc_s(vcrc) ^ mp2_lo ^ mp2_hi;
                 // write acknowledgements / read-back data
                 if (rsp_v) begin
-                    if (rsp_we) w_ack <= w_ack + 1;
+                    if (rsp_we) w_ack <= w_ack_nx;
                     else if (ms == M_VERIFY) begin
                         rob[rsp_tag[VB-1:0]] <= rsp_data;
                     end else m_fault <= 1;
@@ -303,16 +323,18 @@ module ot_hfd_loader_m #(
                     M_IDLE: if (c_v) begin
                         m_base <= c_d[31:0]; m_n <= c_d[63:32]; m_ver <= c_d[64];
                         w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;
+                        vin <= 0; wa_q <= c_d[31:0]; ra_q <= c_d[31:0];
                         ms <= M_WRITE;
                     end
                     M_WRITE: begin
-                        if (req_v && req_rdy) w_idx <= w_idx + 1;
+                        if (req_v && req_rdy) begin w_idx <= w_idx_nx; wa_q <= wa_nx; end
                         if (w_idx == m_n) ms <= M_DRAIN;
                     end
                     M_DRAIN: if (w_ack == m_n) ms <= m_ver ? M_VERIFY : M_CPL;
                     M_VERIFY: begin
-                        if (req_v && req_rdy) r_idx <= r_idx + 1;
-                        if (fold_now) f_idx <= f_idx + 1;
+                        if (req_v && req_rdy) begin r_idx <= r_idx_nx; ra_q <= ra_nx; end
+                        if (fold_now) f_idx <= f_idx_nx;
+                        vin <= vin + (req_v && req_rdy) - fold_now;
                         if (f_idx == m_n) ms <= M_CPL;
                     end
                     M_CPL: if (!k_v && !mp_busy) begin
