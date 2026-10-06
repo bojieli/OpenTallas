@@ -26,6 +26,77 @@ def ports(source, module):
     return names
 
 
+def finite_boundary(source):
+    """Export actual selected inventory/cuts; no new hardware or signoff."""
+    import sys
+    import math
+    root=Path(__file__).resolve().parents[2]
+    sys.path.insert(0,str(root/'tools'))
+    from qwen_stream4_protected_model import model
+    m=model(root)
+    rings=[]
+    keys=('name','payload_bits','depth','pointer_bits','source_domain','destination_domain',
+          'sealed_word_bits','read_ports','write_ports','cache_read_ports',
+          'encode_stage1_DMR_bits','decoder_DMR_stage_bits','coded_memory_FF',
+          'pointer_counter_fault_DMR_and_sync_FF','checked_HCLK_write_cache_DMR_FF',
+          'port_credit_extra_DMR_FF','encoder_capture_stages','accept_to_publication_source_edges',
+          'pointer_visibility_destination_edges','decoder_capture_stages','decoder_cuts','reclamation')
+    for row in m['rings']:
+        rings.append({k:row[k] for k in keys})
+    # Minimal missing term IF the owner agrees to exporting its read-select
+    # leaf for this coded landing width. Never silently select/prize this.
+    group_bits=math.ceil(281/10);groups=math.ceil(504/group_bits)
+    selector_FF=2*64*groups*128
+    checks=3*64*groups*128*2 # primary/inverse and exact fetch-index relation
+    buffers=math.ceil(selector_FF/7)
+    cell=(selector_FF*.2916+checks*.08748+buffers*.10206)/1e6
+    core=cell/m['utilization']
+    link=m['selected_transport']
+    planned_total=link['conservative_area_charge_die_mm2']+core
+    return dict(scope='ACTUAL EXISTING PROTECTED BOUNDARY; rawR8 leaf reuse proposed, not agreed/selected',
+        actual_domains=m['actual_parent_clock_relation'],rings=rings,
+        visibility='2-edge dual-rail pointer sampling +4 destination checked decode cuts after committed encoded slot; not an unconditional CDC metastability/backpressure bound',
+        write_cache='actual WB16 checked cache, separate handoff and completion heads; capture only matching actual WR column. Cache-fill/head publication are real HCLK edges.',
+        ACK_retirement='local AD64 -> checked stack Rpool bardy; root ticket/Rpool retires only consumer marker/live-slot/generation/PC stream_wd_accept',
+        warm='fresh root admission closes; already-reserved control/data drain or hold. POR alone erases pointers/encoder/decoder/cache/ACK debt.',
+        descriptor_GO='4 backend shared boundaries; real desc_commit/go_commit+ordinal3 cross in existing sealed callback rings. No reset-replayed mailbox ACK.',
+        local_wire_spans='literal128PC existing context mapping5..14; ring code/credit hops are in SOURCE clock, receiver is real CLK/HCLK SYNC2. Global stack links41CLK.',
+        receiving_cut=dict(module='ot_qwen_s4_protected_ring u_d0',
+            existing_coded_word_bits=504,landing_owner_valid_bits=8,
+            existing_DMR_capture_FF=2*(504+8),
+            enable='advance = rd_online && !rd_fault && (!v3 || rd_ready)',
+            risk='rawR8 l_q loads unconditionally; protected u_d0 holds owned code/owner/valid on stall. Raw leaf timing does not qualify this1024FF capture-enable tree.',
+            timing_arcs='actual select Q -> local column mux -> checked u_d0.D; actual advance/fault -> u_d0.EN; both code/owner rails; retain decoder u_d1/u_d2/u_d3 and actual hold minima',
+            added_latency_edges=0,physical_qualified=False),
+        loaded_setup_hold_or_slew_measured=False,protected_ETM=None,
+        owner_leaf_reuse=dict(owner='Claude QWEN-PHYS',agreement='PENDING',selected=False,
+            mechanism='owner registered onehot selection/column mux only; no raw pointer/payload/ACK state becomes authority',
+            ports='clk,por_n,current_index,next_index,coded_rows -> code_word,read_fault',
+            existing_protection='checked_state selector INIT1 + existing protected_ring rd_fault/advance/fetch/debt; existing u_d0 captures code_word',
+            raw_width=281,raw_groups=10,max_column_bits=group_bits,
+            coded_landing_bits=504,protected_groups=groups,
+            pieces_per_selector=64,replicated_PC=128,
+            candidate_added_selector_DMR_FF=selector_FF,
+            candidate_selector_check_NAND2=checks,candidate_buffer_estimate=buffers,
+            candidate_added_cell_mm2=cell,candidate_added_core_mm2=core,
+            unchanged_existing_composed_die_mm2=link['conservative_area_charge_die_mm2'],
+            candidate_composed_die_mm2=planned_total,candidate_scalar_margin_to858_mm2=858-planned_total,
+            candidate_composed_latency='same four decoder cuts; no new token-cycle assumption, stalls and existing wire/credit/capture paths still counted',
+            candidate_added_decoder_cycles=0,global_payload_bits_delta=0,
+            local_leaf_input_pins_max=64*group_bits,
+            local_leaf_output_bits_max=group_bits,
+            slot_fit=None,actual_caps_tracks_pin_access_and_clock_loads='owner finite loaded leaf/context required; no raw load equivalence assumed',
+            complete_parent_rebuild_required=False,
+            reuse='existing protected parent/codec/control/source+retained engine archives; incremental changed read-leaf/receiving-cut timing with actual SS60/FF25 loads/clock and zero slew'),
+        source_SHA256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in [root/'rtl/hdc/kv/ot_qwen_s4_protected_ring.sv',
+                      root/'rtl/hdc/kv/ot_qwen_s4_protected_pc.sv',
+                      root/'rtl/hdc/kv/ot_qwen_s4_protected_control.sv',
+                      root/'rtl/hdc/kv/ot_qwen_s4_checked_state.sv',
+                      root/'tools/qwen_stream4_protected_model.py',
+                      root/'tools/qwen_stream4_transport_model.py']})
+
+
 def inspect(source,module):
     names=ports(source,module)
     required={'clk','hclk','por_n','warm_rst_n','l_v','l_sec','l_row','l_data','l_pop',
@@ -33,10 +104,13 @@ def inspect(source,module):
               'h_lv','h_lsec','h_lrow','h_ldata','h_cred','h_wv','h_wsec','h_hand',
               'h_wcon','h_cv','h_csec','h_cdata','h_ctag','h_av','h_atag','c_fault','h_fault'}
     missing=sorted(required-names)
-    return dict(source=str(source),sha256=hashlib.sha256(source.read_bytes()).hexdigest(),module=module,
+    result=dict(source=str(source),sha256=hashlib.sha256(source.read_bytes()).hexdigest(),module=module,
                 verdict='PORT_CONTRACT_READY_PHYSICAL_BINDING_PENDING' if not missing else 'REJECT_PROTECTED_PORT_BINDING',
                 missing_required_ports=missing,ports=sorted(names),physical_qualified=False,
                 qualification='port match alone never proves selected mutable-state protection or SS60FF25/slew closure')
+    if module=='ot_qwen_s4_protected_cdc_consumer_join' and not missing:
+        result['finite_protected_boundary']=finite_boundary(source)
+    return result
 
 
 if __name__=='__main__':
