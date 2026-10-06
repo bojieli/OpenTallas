@@ -7907,6 +7907,32 @@ def hbm_accel_rows():
     return build(sys.modules[__name__])
 
 
+def qwen_code_pair_margin_price():
+    """Margin-first CODE pair (rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv), owner rule
+    2026-10-06. Priced from the RTL register inventory; the headline cost uses the leaf model's measured
+    exposed-edge fraction (results/uarch/qwen_hbm_code_payload_leaf_20261005/model.json, Hubble 15,287 edges)."""
+    banks, ports = 5, 2
+    central_request = ports * 2 + ports * 2 * 13 + ports * 2 + 2 * 13 + 256 + 32      # DMR valid/row, data, checks
+    per_bank = 2 + 2 + 2 + 1 + 2 * 10 + 2 * 3 + 2 * 10 + 2 * 3 + 256 + 32 + 2 * 3   # kept request/write copies
+    output = (ports * 5 * 2 * 2 + ports * 2 + ports * 2 + ports * 288 * 2 + 2660 + 3 * ports + 2)
+    control_delta = -72                                                               # one control word, not two
+    added_ff = central_request + banks * ports * per_bank + output + control_delta
+    edge_fraction = 6.54150585464774e-05
+    added_read_edges = 5
+    return dict(status="PRICED_BEFORE_ROUTE", default_enabled=False,
+                added_read_edges=added_read_edges, added_write_edges_exposed=0,
+                added_write_edges_internal=2, II=1, backpressure=False,
+                added_ff=added_ff, added_ff_breakdown=dict(central_request=central_request,
+                    per_bank_kept=banks * ports * per_bank, mux_transport_output=output, control=control_delta),
+                added_decode64_instances=7, ff_area_um2_proxy=round(added_ff * 0.29160, 1),
+                headline_cost_fraction=added_read_edges * edge_fraction,
+                headline_cost_percent=round(100 * added_read_edges * edge_fraction, 4),
+                pre_approved_limit_percent=2.0,
+                route_period_ps=770, signoff_period_ps=833.333, accept_ss_ps=40, accept_ff_ps=15,
+                fault_semantics="fault-free cycle-exact (+5 edges on responses); new acceptance inhibited one edge "
+                                "after a detection; uncorrectable or post-detection responses never delivered valid")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--hbrom-inputs", help="default-off ROM-fed reusable-compute cluster model input JSON")

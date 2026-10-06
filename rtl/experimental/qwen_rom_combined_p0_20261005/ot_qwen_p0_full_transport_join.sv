@@ -8,6 +8,7 @@ module ot_qwen_p0_full_transport_join #(
     parameter integer PROTECTED_STREAM4 = 0, // source candidate, opt-in until owner gates pass
     parameter integer PARALLEL_TRANSPORT = 0, // owner full32-PC return; defaultOFF
     parameter integer CDC_CONSUMER_JOIN = 0, // existing protected port join only; not raw CDC qualification
+    parameter integer SAME_CYCLE_GO = 0, // default OFF
     parameter integer LANDING_RSEL = 0, // corrected protected owner r9 read; default OFF
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
@@ -272,6 +273,7 @@ module ot_qwen_p0_full_transport_join #(
     ot_qwen_p0_parallel_transport_context #(.ENABLE(PROTECTED_STREAM4),
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
         .LANDING_RSEL(LANDING_RSEL),
+        .SAME_CYCLE_GO(SAME_CYCLE_GO),
         .MEM_WORDS(HBM_LAYERS*131072), .PHASE(HBM_PHASE)) u_transport (
         .clk(producer_clk),
         .hclk(producer_hclk),
