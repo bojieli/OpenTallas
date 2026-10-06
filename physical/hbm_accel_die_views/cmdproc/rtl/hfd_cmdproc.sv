@@ -122,13 +122,66 @@ module hfd_cmdproc (
     assign w_cpN_res_data = cfg[1087:576];
     assign w_cpN_cpl_rdy = 1'd1;
     ot_ds_hbm_cmdproc20 #(.TW(17), .PW(20), .CONTEXT_POSITIONS(1048576), .ENABLE(1), .NSM(16), .NCMD(256)) u_cpN (.clk(w_cpN_clk), .rst_n(w_cpN_rst_n), .cmd_we(w_cpN_cmd_we), .cmd_addr(w_cpN_cmd_addr), .cmd_wdata(w_cpN_cmd_wdata), .db_v(w_cpN_db_v), .db_rdy(w_cpN_db_rdy), .db_token(w_cpN_db_token), .db_pos(w_cpN_db_pos), .db_job(w_cpN_db_job), .db_generation(w_cpN_db_generation), .cpl_position(w_cpN_cpl_position), .cpl_job(w_cpN_cpl_job), .cpl_generation(w_cpN_cpl_generation), .launch_v(w_cpN_launch_v), .launch_pc(w_cpN_launch_pc), .launch_token(w_cpN_launch_token), .launch_pos(w_cpN_launch_pos), .sm_done(w_cpN_sm_done), .sm_fault(w_cpN_sm_fault), .res_v(w_cpN_res_v), .res_data(w_cpN_res_data), .cpl_v(w_cpN_cpl_v), .cpl_rdy(w_cpN_cpl_rdy), .cpl_token(w_cpN_cpl_token), .cpl_status(w_cpN_cpl_status), .cpl_cycles(w_cpN_cpl_cycles), .st_kernels(w_cpN_st_kernels), .st_busy(w_cpN_st_busy));
-    wire [349:0] fold_all = {w_cpN_st_busy ,w_cpN_st_kernels ,w_cpN_cpl_cycles ,w_cpN_cpl_status ,w_cpN_cpl_token ,w_cpN_cpl_v ,w_cpN_cpl_generation ,w_cpN_cpl_job ,w_cpN_cpl_position ,w_cpN_db_rdy ,w_cpS_st_busy ,w_cpS_st_kernels ,w_cpS_cpl_cycles ,w_cpS_cpl_status ,w_cpS_cpl_token ,w_cpS_cpl_v ,w_cpS_cpl_generation ,w_cpS_cpl_job ,w_cpS_cpl_position ,w_cpS_db_rdy};
-    wire fold_0 = ^{fold_all[0], fold_all[6], fold_all[12], fold_all[18], fold_all[24], fold_all[30], fold_all[36], fold_all[42], fold_all[48], fold_all[54], fold_all[60], fold_all[66], fold_all[72], fold_all[78], fold_all[84], fold_all[90], fold_all[96], fold_all[102], fold_all[108], fold_all[114], fold_all[120], fold_all[126], fold_all[132], fold_all[138], fold_all[144], fold_all[150], fold_all[156], fold_all[162], fold_all[168], fold_all[174], fold_all[180], fold_all[186], fold_all[192], fold_all[198], fold_all[204], fold_all[210], fold_all[216], fold_all[222], fold_all[228], fold_all[234], fold_all[240], fold_all[246], fold_all[252], fold_all[258], fold_all[264], fold_all[270], fold_all[276], fold_all[282], fold_all[288], fold_all[294], fold_all[300], fold_all[306], fold_all[312], fold_all[318], fold_all[324], fold_all[330], fold_all[336], fold_all[342], fold_all[348]};
-    wire fold_1 = ^{fold_all[1], fold_all[7], fold_all[13], fold_all[19], fold_all[25], fold_all[31], fold_all[37], fold_all[43], fold_all[49], fold_all[55], fold_all[61], fold_all[67], fold_all[73], fold_all[79], fold_all[85], fold_all[91], fold_all[97], fold_all[103], fold_all[109], fold_all[115], fold_all[121], fold_all[127], fold_all[133], fold_all[139], fold_all[145], fold_all[151], fold_all[157], fold_all[163], fold_all[169], fold_all[175], fold_all[181], fold_all[187], fold_all[193], fold_all[199], fold_all[205], fold_all[211], fold_all[217], fold_all[223], fold_all[229], fold_all[235], fold_all[241], fold_all[247], fold_all[253], fold_all[259], fold_all[265], fold_all[271], fold_all[277], fold_all[283], fold_all[289], fold_all[295], fold_all[301], fold_all[307], fold_all[313], fold_all[319], fold_all[325], fold_all[331], fold_all[337], fold_all[343], fold_all[349]};
-    wire fold_2 = ^{fold_all[2], fold_all[8], fold_all[14], fold_all[20], fold_all[26], fold_all[32], fold_all[38], fold_all[44], fold_all[50], fold_all[56], fold_all[62], fold_all[68], fold_all[74], fold_all[80], fold_all[86], fold_all[92], fold_all[98], fold_all[104], fold_all[110], fold_all[116], fold_all[122], fold_all[128], fold_all[134], fold_all[140], fold_all[146], fold_all[152], fold_all[158], fold_all[164], fold_all[170], fold_all[176], fold_all[182], fold_all[188], fold_all[194], fold_all[200], fold_all[206], fold_all[212], fold_all[218], fold_all[224], fold_all[230], fold_all[236], fold_all[242], fold_all[248], fold_all[254], fold_all[260], fold_all[266], fold_all[272], fold_all[278], fold_all[284], fold_all[290], fold_all[296], fold_all[302], fold_all[308], fold_all[314], fold_all[320], fold_all[326], fold_all[332], fold_all[338], fold_all[344]};
-    wire fold_3 = ^{fold_all[3], fold_all[9], fold_all[15], fold_all[21], fold_all[27], fold_all[33], fold_all[39], fold_all[45], fold_all[51], fold_all[57], fold_all[63], fold_all[69], fold_all[75], fold_all[81], fold_all[87], fold_all[93], fold_all[99], fold_all[105], fold_all[111], fold_all[117], fold_all[123], fold_all[129], fold_all[135], fold_all[141], fold_all[147], fold_all[153], fold_all[159], fold_all[165], fold_all[171], fold_all[177], fold_all[183], fold_all[189], fold_all[195], fold_all[201], fold_all[207], fold_all[213], fold_all[219], fold_all[225], fold_all[231], fold_all[237], fold_all[243], fold_all[249], fold_all[255], fold_all[261], fold_all[267], fold_all[273], fold_all[279], fold_all[285], fold_all[291], fold_all[297], fold_all[303], fold_all[309], fold_all[315], fold_all[321], fold_all[327], fold_all[333], fold_all[339], fold_all[345]};
-    wire fold_4 = ^{fold_all[4], fold_all[10], fold_all[16], fold_all[22], fold_all[28], fold_all[34], fold_all[40], fold_all[46], fold_all[52], fold_all[58], fold_all[64], fold_all[70], fold_all[76], fold_all[82], fold_all[88], fold_all[94], fold_all[100], fold_all[106], fold_all[112], fold_all[118], fold_all[124], fold_all[130], fold_all[136], fold_all[142], fold_all[148], fold_all[154], fold_all[160], fold_all[166], fold_all[172], fold_all[178], fold_all[184], fold_all[190], fold_all[196], fold_all[202], fold_all[208], fold_all[214], fold_all[220], fold_all[226], fold_all[232], fold_all[238], fold_all[244], fold_all[250], fold_all[256], fold_all[262], fold_all[268], fold_all[274], fold_all[280], fold_all[286], fold_all[292], fold_all[298], fold_all[304], fold_all[310], fold_all[316], fold_all[322], fold_all[328], fold_all[334], fold_all[340], fold_all[346]};
-    wire fold_5 = ^{fold_all[5], fold_all[11], fold_all[17], fold_all[23], fold_all[29], fold_all[35], fold_all[41], fold_all[47], fold_all[53], fold_all[59], fold_all[65], fold_all[71], fold_all[77], fold_all[83], fold_all[89], fold_all[95], fold_all[101], fold_all[107], fold_all[113], fold_all[119], fold_all[125], fold_all[131], fold_all[137], fold_all[143], fold_all[149], fold_all[155], fold_all[161], fold_all[167], fold_all[173], fold_all[179], fold_all[185], fold_all[191], fold_all[197], fold_all[203], fold_all[209], fold_all[215], fold_all[221], fold_all[227], fold_all[233], fold_all[239], fold_all[245], fold_all[251], fold_all[257], fold_all[263], fold_all[269], fold_all[275], fold_all[281], fold_all[287], fold_all[293], fold_all[299], fold_all[305], fold_all[311], fold_all[317], fold_all[323], fold_all[329], fold_all[335], fold_all[341], fold_all[347]};
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpS_db_rdy
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_db_rdy[k]), .q());
+    end
+    for (genvar k = 0; k < 20; k = k + 1) begin : g_sink_w_cpS_cpl_position
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_position[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpS_cpl_job
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_job[k]), .q());
+    end
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpS_cpl_generation
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_generation[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpS_cpl_v
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_v[k]), .q());
+    end
+    for (genvar k = 0; k < 17; k = k + 1) begin : g_sink_w_cpS_cpl_token
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_token[k]), .q());
+    end
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpS_cpl_status
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_status[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpS_cpl_cycles
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_cpl_cycles[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpS_st_kernels
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_st_kernels[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpS_st_busy
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpS_st_busy[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpN_db_rdy
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_db_rdy[k]), .q());
+    end
+    for (genvar k = 0; k < 20; k = k + 1) begin : g_sink_w_cpN_cpl_position
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_position[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpN_cpl_job
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_job[k]), .q());
+    end
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpN_cpl_generation
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_generation[k]), .q());
+    end
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpN_cpl_v
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_v[k]), .q());
+    end
+    for (genvar k = 0; k < 17; k = k + 1) begin : g_sink_w_cpN_cpl_token
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_token[k]), .q());
+    end
+    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpN_cpl_status
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_status[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpN_cpl_cycles
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_cpl_cycles[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpN_st_kernels
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_st_kernels[k]), .q());
+    end
+    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpN_st_busy
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpN_st_busy[k]), .q());
+    end
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
     wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));
@@ -137,7 +190,7 @@ module hfd_cmdproc (
     wire fclk_5; ot_fwd_clk_inv u_fclk_5 (.a(clk), .y(fclk_5));
     wire fclk_6; ot_fwd_clk_inv u_fclk_6 (.a(clk), .y(fclk_6));
     wire fclk_7; ot_fwd_clk_inv u_fclk_7 (.a(clk), .y(fclk_7));
-    wire [826:0] od_cNE = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 3'd0, i_f_barrier[31], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 3'd0, i_f_barrier[30], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 3'd0, i_f_barrier[29], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 3'd0, i_f_barrier[28], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 3'd0, i_f_barrier[27], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 3'd0, i_f_barrier[26], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 3'd0, i_f_barrier[25], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8], 3'd0, i_f_barrier[24], 2'd0, fold_5, fold_4, fold_3, fold_2, fold_1, fold_0, w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8]};
+    wire [826:0] od_cNE = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 3'd0, i_f_barrier[31], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 3'd0, i_f_barrier[30], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 3'd0, i_f_barrier[29], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 3'd0, i_f_barrier[28], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 3'd0, i_f_barrier[27], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 3'd0, i_f_barrier[26], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 3'd0, i_f_barrier[25], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8], 3'd0, i_f_barrier[24], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8]};
     wire [826:0] o_cNE;
     for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNE
         ot_hfd_oreg1 u (.clk(clk), .d(od_cNE[k]), .q(o_cNE[k]));

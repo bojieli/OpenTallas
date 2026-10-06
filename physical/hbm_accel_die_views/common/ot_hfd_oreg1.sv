@@ -3,3 +3,7 @@
 module ot_hfd_oreg1 (input wire clk, input wire d, output reg q);
     always @(posedge clk) q <= d;
 endmodule
+// ot_hfd_sink1: a kept local sink register for an RTL output the die interface does not carry (kept_out_regs wrappers).
+module ot_hfd_sink1 (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
+endmodule

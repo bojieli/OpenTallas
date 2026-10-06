@@ -177,7 +177,15 @@ def gen(spec):
     L_ += body
     # fold
     fold_assign = []
-    if folds:
+    if folds and spec.get('kept_out_regs'):
+        # RTL outputs the die interface does not carry: each bit ends in a kept local sink flop (ot_hfd_sink1) beside
+        # its producer, so the logic stays live without the cross-block XOR fold paths
+        for f, w in folds:
+            L_.append(f'    for (genvar k = 0; k < {w}; k = k + 1) begin : g_sink_{f}')
+            L_.append(f'        (* keep *) ot_hfd_sink1 u (.clk(clk), .d({f}[k]), .q());')
+            L_.append('    end')
+        folds_sunk = True
+    elif folds:
         tot = sum(w for _, w in folds)
         allbits = ' ,'.join(f for f, _ in folds[::-1])
         L_.append(f'    wire [{tot - 1}:0] fold_all = {{{allbits}}};')
