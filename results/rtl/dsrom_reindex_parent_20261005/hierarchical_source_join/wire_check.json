@@ -1,0 +1,22 @@
+{
+  "quarters": 4,
+  "keys": 64,
+  "IW": 20,
+  "shared_winner_retention_bodies": 1,
+  "all_key_score_ID_query_ref_ready_clock_bits_connected": true,
+  "top_added_state": 0,
+  "interface_only": true,
+  "physical_qualified": false,
+  "crossed_ID_and_credit_negatives": [
+    {
+      "port": "ks_idx",
+      "refused": true
+    },
+    {
+      "port": "ks_ready",
+      "refused": true
+    }
+  ],
+  "default_off_cells": 0,
+  "default_off_outputs_and_ready_zero": true
+}
