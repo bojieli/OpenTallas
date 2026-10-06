@@ -382,3 +382,212 @@ module ot_hbm_accel_bterm3 (
     assign y = p8_y;
     assign f = p8_f;
 endmodule
+
+// ---------------------------------------------------------------------------
+// The hierarchical SM element's BF16 column (flat in the tile): ot_hbm_accel_tc_col (rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv,
+// pinned, byte-identical) with three registers added for the tile context (post-CTS classes of the 2026-10-05 tile
+// route: x_q -> multiplier decode -90 ps, 8x4 partial products -97 ps, lane sum -> combine tree -64 ps):
+//   * a per-lane second input register (the shared input register no longer drives every lane's decode);
+//   * ot_hbm_accel_smh_bmul: the 8x8 significand product in two stages (four 8x2 partials, then the two 8x4 sums);
+//   * each lane's sum registered in front of the combine tree.
+// Bit-identical (the same products, the same ring, the same tree); latency +3 cycles (input -> column result).
+// ---------------------------------------------------------------------------
+module ot_hbm_accel_smh_tc_col #(
+    parameter integer L    = 16,
+    parameter integer IL   = 8,
+    parameter integer TAGW = 16,
+    parameter integer ALAT = 7          // adder latency: the IL-slot ring needs ALAT <= IL - 1
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire            v,
+    input  wire            first,
+    input  wire            last,
+    input  wire [TAGW-1:0] tag,
+    input  wire [L*16-1:0] w,
+    input  wire [L*16-1:0] x,
+    output wire            ov,
+    output wire [31:0]     y,
+    output wire [TAGW-1:0] otag,
+    output wire            fault
+);
+    localparam integer FB = IL - ALAT;          // ring = acc register + adder + (FB - 1) delay = IL
+    localparam integer ML = 6;                  // ot_hbm_accel_smh_bmul latency
+    reg            v_q, first_q, last_q, v_q2, first_q2, last_q2;
+    reg [L-1:0]    v_ql;
+    reg [TAGW-1:0] tag_q, tag_q2;
+    reg [L*16-1:0] w_q, x_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            v_q <= 1'b0; first_q <= 1'b0; last_q <= 1'b0; v_q2 <= 1'b0; first_q2 <= 1'b0; last_q2 <= 1'b0;
+            v_ql <= {L{1'b0}};
+        end else begin
+            v_q <= v; first_q <= v && first; last_q <= v && last;
+            v_q2 <= v_q; first_q2 <= first_q; last_q2 <= last_q; v_ql <= {L{v_q}};
+        end
+    end
+    always @(posedge clk) begin
+        w_q <= w;
+        x_q <= x;
+        tag_q <= tag; tag_q2 <= tag_q;
+    end
+    wire [ML:0] fl;
+    ot_hdc_vline #(.D(ML)) u_f (.clk(clk), .rst_n(rst_n), .v(first_q2), .vd(fl));
+    // chunk end: the lane's final sum leaves the adder ML (mul) + ALAT (add) cycles after the second input register,
+    // and its register one cycle later
+    localparam integer LL = ML + ALAT + 1;
+    wire [LL:0] ll;
+    ot_hdc_vline #(.D(LL)) u_l (.clk(clk), .rst_n(rst_n), .v(last_q2), .vd(ll));
+    wire [TAGW-1:0] tag_d;
+    ot_hdc_delay #(.W(TAGW), .D(LL)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_q2), .q(tag_d));
+    wire [ML:0] vl;
+    ot_hdc_vline #(.D(ML)) u_v (.clk(clk), .rst_n(rst_n), .v(v_q2), .vd(vl));
+    wire [L*32-1:0] sum;
+    reg  [L*32-1:0] sum_q;
+    wire [L-1:0] lf;
+    genvar l;
+    generate for (l = 0; l < L; l = l + 1) begin : g_lane
+        wire [31:0] prod, fb_pre;
+        reg  [31:0] acc_q;
+        reg  [15:0] w_l, x_l;
+        wire f0, f1;
+        always @(posedge clk) begin w_l <= w_q[16*l +: 16]; x_l <= x_q[16*l +: 16]; end
+        // a bubble multiplies by +0: the slot's sum holds
+        ot_hbm_accel_smh_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(v_q2), .kill(!v_ql[l]), .a({w_l, 16'd0}),
+                                     .b({x_l, 16'd0}), .y(prod), .fault(f0));
+        always @(posedge clk) acc_q <= fl[ML-1] ? 32'd0 : fb_pre;
+        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[ML]), .a(acc_q), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
+        ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*l +: 32]), .q(fb_pre));
+        always @(posedge clk) sum_q[32*l +: 32] <= sum[32*l +: 32];
+        assign lf[l] = f0 | f1;
+    end endgenerate
+    wire tf, t_ov;
+    wire [31:0] t_y;
+    wire [TAGW-1:0] t_tag;
+    ot_gpu_tree #(.N(L), .TAGW(TAGW), .ALAT(ALAT)) u_tree (.clk(clk), .rst_n(rst_n), .v(ll[LL]), .d(sum_q), .tag(tag_d),
+                                             .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
+    reg lane_fault, ov_q, fault_q;
+    reg [31:0] y_q;
+    reg [TAGW-1:0] otag_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin lane_fault <= 1'b0; ov_q <= 1'b0; fault_q <= 1'b0; end
+        else begin
+            lane_fault <= lane_fault | (|lf);
+            ov_q <= t_ov;
+            fault_q <= lane_fault | tf;
+        end
+    always @(posedge clk) begin y_q <= t_y; otag_q <= t_tag; end
+    assign ov = ov_q;
+    assign y = y_q;
+    assign otag = otag_q;
+    assign fault = fault_q;
+endmodule
+
+// ot_hbm_accel_bmul with the 8x8 significand product in two stages (8x2 partials, then the 8x4 sums): LATENCY 6.
+module ot_hbm_accel_smh_bmul (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire        kill,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output reg  [31:0] y,
+    output reg         fault
+);
+    function automatic [17:0] dec;   // {sig[7:0], E[9:0] signed}
+        input [7:0] e;
+        input [6:0] m;
+        integer i;
+        reg [2:0] p;
+        begin
+            if (e != 0) dec = {1'b1, m, e - 10'sd127};
+            else begin
+                p = 0;
+                for (i = 0; i < 7; i = i + 1) if (m[i]) p = i[2:0];
+                dec = {({1'b0, m} << (7 - p)), $signed(-10'sd133) + $signed({7'd0, p})};
+            end
+        end
+    endfunction
+    wire [17:0] da = dec(a[30:23], a[22:16]);
+    wire [17:0] db = dec(b[30:23], b[22:16]);
+    // stage 1: decode
+    reg        s1_v, s1_s, s1_z, s1_nf;
+    reg [7:0]  s1_a, s1_b;
+    reg signed [10:0] s1_e;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= v;
+    end
+    always @(posedge clk) begin
+        s1_s <= a[31] ^ b[31];
+        s1_z <= kill || (a[30:16] == 15'd0) || (b[30:16] == 15'd0);
+        s1_nf <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF);
+        s1_a <= da[17:10]; s1_b <= db[17:10];
+        s1_e <= $signed(da[9:0]) + $signed(db[9:0]);
+    end
+    // stage 2a: four 8x2 partial products
+    reg        t_v, t_s, t_z, t_nf;
+    reg [9:0]  t_q0, t_q1, t_q2, t_q3;
+    reg signed [10:0] t_e8, t_e7;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) t_v <= 1'b0;
+        else t_v <= s1_v;
+    end
+    always @(posedge clk) begin
+        t_s <= s1_s; t_z <= s1_z; t_nf <= s1_nf;
+        t_e8 <= s1_e + 11'sd128; t_e7 <= s1_e + 11'sd127;
+        t_q0 <= s1_a * s1_b[1:0]; t_q1 <= s1_a * s1_b[3:2];
+        t_q2 <= s1_a * s1_b[5:4]; t_q3 <= s1_a * s1_b[7:6];
+    end
+    // stage 2b: the two 8x4 products
+    reg        s2_v, s2_s, s2_z, s2_nf;
+    reg [11:0] s2_pl, s2_ph;
+    reg signed [10:0] s2_e8, s2_e7;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s2_v <= 1'b0;
+        else s2_v <= t_v;
+    end
+    always @(posedge clk) begin
+        s2_s <= t_s; s2_z <= t_z; s2_nf <= t_nf; s2_e8 <= t_e8; s2_e7 <= t_e7;
+        s2_pl <= {2'd0, t_q0} + {t_q1, 2'd0};
+        s2_ph <= {2'd0, t_q2} + {t_q3, 2'd0};
+    end
+    // stage 3: normalise (leading bit 15 or 14) and bias
+    wire [15:0] s2_p;
+    wire        s2_pc;
+    ot_hdc_ksadd_k #(.W(16)) u_psum (.a({4'd0, s2_pl}), .b({s2_ph, 4'd0}), .cin(1'b0), .s(s2_p), .cout(s2_pc));
+    reg        s3_v, s3_s, s3_z, s3_nf;
+    reg [22:0] s3_f;
+    reg signed [10:0] s3_be;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s3_v <= 1'b0;
+        else s3_v <= s2_v;
+    end
+    always @(posedge clk) begin
+        s3_s <= s2_s; s3_z <= s2_z; s3_nf <= s2_nf;
+        if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e8; end
+        else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e7; end
+    end
+    // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
+    reg        s4_v, s4_bad;
+    reg [31:0] s4_y;
+    wire [23:0] sig24 = {1'b1, s3_f};
+    wire [3:0]  sub_sh = 4'd1 - s3_be[3:0];
+    wire [23:0] sub_v = sig24 >> sub_sh;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s4_v <= 1'b0;
+        else s4_v <= s3_v;
+    end
+    always @(posedge clk) begin
+        s4_bad <= 1'b0;
+        if (s3_z && !s3_nf) s4_y <= 32'd0;
+        else if (s3_nf || s3_be > 11'sd254 || s3_be < -11'sd6) begin s4_y <= 32'd0; s4_bad <= 1'b1; end
+        else if (s3_be >= 11'sd1) s4_y <= {s3_s, s3_be[7:0], s3_f};
+        else s4_y <= {s3_s, 8'd0, sub_v[22:0]};
+    end
+    // stage 5: output register
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
+        else begin y <= s4_y; fault <= s4_v && s4_bad; end
+    end
+endmodule

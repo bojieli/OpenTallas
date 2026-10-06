@@ -481,8 +481,9 @@ module ot_hbm_accel_smh_front #(
         ot_hbm_accel_smh_kreg #(.W(2), .RST(1), .EN(1)) u (.clk(clk), .rst_n(rst_n), .en(pd_c[k / 16]),
             .d(fq_c[2*(k / 16) +: 2]), .q(fmt_r[2*k +: 2]));
     end endgenerate
-    // DBF = BF16 column latency - block-dot column latency: 14 with ot_hbm_accel_bterm2, 7 with the tile's bterm3
-    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(7)) u_issue (
+    // DBF = BF16 column latency - block-dot column latency: 14 for sm_pq's columns; the tile's block-dot column is
+    // 7 cycles deeper (bterm3) and its BF16 column 3 deeper (ot_hbm_accel_smh_tc_col): 14 - 7 + 3 = 10
+    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(10)) u_issue (
         .clk(clk), .rst_n(rst_n), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
         .op_gs(h_gs), .op_bf(h_fmt == 2'd0),
         .w_valid(w_valid), .x_rdy(1'b1), .w_ready(w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
@@ -692,6 +693,8 @@ module ot_hbm_accel_smh_tile #(
     localparam integer GLW = 2 + 32 + TAGW;
     localparam integer NG  = (LBS * 266 + NMG - 1) / NMG + (LSB * 16 + NMG - 1) / NMG;   // mask groups per leaf
     // ---- landing: the x-write bundle (driven on to the next tile from these flops) ----
+    // the x-write bundle lands in a pass-through copy (driven on to the next tile) and one copy per leaf (the leaf's
+    // rotator), so neither spans the tile; the copies are bit-identical kept registers
     wire [BBW-1:0] bl;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
         .q(bl[BBW-1]));
@@ -700,10 +703,18 @@ module ot_hbm_accel_smh_tile #(
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         // the row bundle of row j (landed, driven on)
-        wire [RBW-1:0] rl;
+        // the row bundle lands in a pass-through copy (rout) and the leaf's own copy (kept, bit-identical)
+        wire [RBW-1:0] rl, rp;
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rst_n),
+            .d(rin[j*RBW +: RBW]), .q(rp));
+        assign rout[j*RBW +: RBW] = rp;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl (.clk(clk), .rst_n(rst_n),
             .d(rin[j*RBW +: RBW]), .q(rl));
-        assign rout[j*RBW +: RBW] = rl;
+        wire [BBW-1:0] bk;
+        ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkv (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-1]),
+            .q(bk[BBW-1]));
+        ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkd (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(bin[BBW-2:0]),
+            .q(bk[BBW-2:0]));
         // one-hot beat group replicas for this leaf's masks (landed straight from the pins, NG copies)
         wire [NG*NBEAT-1:0] ohr;
         genvar gi;
@@ -717,17 +728,24 @@ module ot_hbm_accel_smh_tile #(
             .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]),
             .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
-            .b_en(bl[BBW-1]), .b_a(bl[BBW-2 -: XW]), .b_d(bl[2047:0]), .ohr(ohr),
+            .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
             .gv(gv), .gf(gf), .gy(gy), .gt(gt));
         // own rows on lanes 0..RPT-1 (lane RPT-1-j = row j), straight from the G1 flops
         assign gout[(RPT-1-j)*GLW +: GLW] = {gv, gf, gy, gt};
     end
     // lanes from the tile above moved down one
+    // pass-through G1 lanes: two registers across the 510 um tile (landing, then launch), the back end's
+    // deskew accounts for 2 per tile hop
     for (ln = RPT; ln < SUB; ln = ln + 1) begin : g_gl
+        wire [GLW-1:0] gm;
         ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1),
-            .d(gin[(ln-RPT)*GLW + GLW - 2 +: 2]), .q(gout[ln*GLW + GLW - 2 +: 2]));
+            .d(gin[(ln-RPT)*GLW + GLW - 2 +: 2]), .q(gm[GLW-2 +: 2]));
         ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1),
-            .d(gin[(ln-RPT)*GLW +: GLW-2]), .q(gout[ln*GLW +: GLW-2]));
+            .d(gin[(ln-RPT)*GLW +: GLW-2]), .q(gm[0 +: GLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(gm[GLW-2 +: 2]), .q(gout[ln*GLW + GLW - 2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(gm[0 +: GLW-2]), .q(gout[ln*GLW +: GLW-2]));
     end endgenerate
 endmodule
 
@@ -881,7 +899,7 @@ module ot_hbm_accel_smh_leaf #(
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
-            ot_hbm_accel_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
+            ot_hbm_accel_smh_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (   // +3 cycles (tile context)
                 .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
                 .w(iw[LBS*266 +: LSB*16]), .x(ix[LBS*266 +: LSB*16]),
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
@@ -943,9 +961,10 @@ module ot_hbm_accel_smh_be #(
     genvar k;
     generate for (k = 0; k < SUB; k = k + 1) begin : g_ln
         localparam integer ROW = SUB - 1 - k;
-        ot_hbm_accel_smv_chain #(.W(2), .D(1 + PM - k / RPT), .RST(1)) u_v (.clk(clk), .rst_n(rst_n),
+        // a lane from tile hop t = k / RPT has passed 2t pass-through registers: deskew 1 + 2 (PM - t)
+        ot_hbm_accel_smv_chain #(.W(2), .D(1 + 2 * (PM - k / RPT)), .RST(1)) u_v (.clk(clk), .rst_n(rst_n),
             .d(gin[k*GLW + GLW - 2 +: 2]), .q(tl[ROW*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smv_chain #(.W(GLW-2), .D(1 + PM - k / RPT), .RST(0)) u_d (.clk(clk), .rst_n(rst_n),
+        ot_hbm_accel_smv_chain #(.W(GLW-2), .D(1 + 2 * (PM - k / RPT)), .RST(0)) u_d (.clk(clk), .rst_n(rst_n),
             .d(gin[k*GLW +: GLW-2]), .q(tl[ROW*GLW +: GLW-2]));
     end endgenerate
     wire              tv_in = tl[GLW - 1];                  // row 0's valid
