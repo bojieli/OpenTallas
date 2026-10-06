@@ -435,6 +435,9 @@ def field_summary(work: Path, cfg_name: str, plan_dir: Path):
     go -> idle + 1, + go -> last row write of the last; each phase at the max over the die's regions; cycles, no
     floorplan wire)."""
     import dsrom_field_spine as FS
+    import dsrom_1m_field as F1
+    fp = json.loads((ROOT / "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json").read_text())["trunk_stages"]
+    W_S81 = 2 * fp["stages_at_504"]["field_one_way"] - F1.BST_IN_VEHICLE      # as tools/dsrom_field_spine.py record
     w = work / f"field_{cfg_name}"
     st = json.loads((w / "status.json").read_text()) if (w / "status.json").exists() else {}
     if st.get("build") != "ok":
@@ -462,7 +465,8 @@ def field_summary(work: Path, cfg_name: str, plan_dir: Path):
         nodes.append(dict(node=f"L{key[0]}.{key[1]}", stage=key[2], phases=len(phs),
                           regions=len({r for ph in phs for r in ph["regions"]}), exact=ok, node_runs_exact=node_ok,
                           rows_checked=sum(x["rows_checked"] for x in stats),
-                          rows_mismatched=sum(x["rows_mismatched"] for x in stats), total_cycles=tot))
+                          rows_mismatched=sum(x["rows_mismatched"] for x in stats), total_cycles=tot,
+                          total_cycles_with_s81_wire=(tot + W_S81 * len(phs)) if tot is not None else None))
     return dict(cfg=cfg_name, build="ok", params=json.loads((w / "build" / "build.json").read_text()).get("params"),
                 nodes=nodes, n_nodes=len(nodes), n_bad=bad, missing_runs=missing,
                 exact=(bad == 0 and missing == 0 and bool(nodes)))
@@ -677,18 +681,41 @@ def crosscheck(w: Path, parts: dict, field: dict) -> list:
     # field
     base = json.loads((ROOT / "results/rtl/dsrom_field_spine_20261004/field_baseline.json").read_text())
     bmap = {n["node"]: n.get("total_cycles") for n in base.get("node_summary", [])}
-    f0 = {n["node"]: n for n in (field.get("pq0") or {}).get("nodes", [])}
-    fq = {n["node"]: n for n in (field.get("pq0_q9") or {}).get("nodes", [])}
-    for n, x in sorted(f0.items()):
-        if bmap.get(n) is not None and x.get("total_cycles") != bmap[n]:
-            out.append(dict(kind="field PQ 0 fresh run != committed v9 baseline (harness)", node=n,
-                            fresh_cycles=x.get("total_cycles"), committed_cycles=bmap[n]))
-        if n in fq and fq[n].get("total_cycles") is not None and x.get("total_cycles") is not None:
-            dlt = fq[n]["total_cycles"] - x["total_cycles"]
-            if dlt:
-                out.append(dict(kind="q-element changes the L20 field node (not in any lever record or composition)",
-                                node=n, pq0_cycles=x["total_cycles"], pq0_q9_cycles=fq[n]["total_cycles"],
-                                delta_cycles=dlt))
+    bmeas = {}
+    for n in base.get("nodes", []):
+        if n.get("layer") == 20 and n.get("measured_cycles") is not None:
+            bmeas[n["node"]] = max(bmeas.get(n["node"], 0), n["measured_cycles"])
+            wire_c = n.get("wire_stage_cycles_s81_floorplan")
+    fresh_meas = {}
+    for n in (field.get("pq0") or {}).get("nodes", []):
+        if n.get("total_cycles") is not None:
+            fresh_meas[n["node"]] = max(fresh_meas.get(n["node"], 0), n["total_cycles"])
+    for n, t in sorted(fresh_meas.items()):
+        if bmeas.get(n) is not None and t != bmeas[n]:
+            out.append(dict(kind="field PQ 0 fresh measured cycles != committed v9 baseline measured cycles", node=n,
+                            fresh=t, committed=bmeas[n]))
+    fp = json.loads((ROOT / "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json").read_text())["trunk_stages"]
+    import dsrom_1m_field as F1
+    w_now = 2 * fp["stages_at_504"]["field_one_way"] - F1.BST_IN_VEHICLE
+    ph1 = [n for n in base.get("nodes", []) if n.get("layer") == 20 and len(n.get("phases", [])) == 1]
+    if ph1 and ph1[0].get("wire_stage_cycles_s81_floorplan") != w_now:
+        out.append(dict(kind="S81 floorplan wire per field phase: the committed v9 record (and so the field_spine / "
+                             "field_spine_pq lever us) charges a different count than the current floorplan.json",
+                        severity="finding", committed_wire_cycles_per_phase=ph1[0]["wire_stage_cycles_s81_floorplan"],
+                        current_floorplan_wire_cycles_per_phase=w_now))
+    def die_level(cfg):          # a node split over two stages (L20 experts on stages 37 a / b): the slower one
+        m = {}
+        for n in (field.get(cfg) or {}).get("nodes", []):
+            t = n.get("total_cycles_with_s81_wire")
+            if t is not None and (n["node"] not in m or t > m[n["node"]]):
+                m[n["node"]] = t
+        return m
+    f0, fq = die_level("pq0"), die_level("pq0_q9")
+    for n, t in sorted(f0.items()):
+        if n in fq:
+            out.append(dict(kind="q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any "
+                                 "lever record or the composition)", severity="finding", node=n, pq0_cycles=t,
+                            pq0_q9_cycles=fq[n], delta_cycles=fq[n] - t))
     return out
 
 

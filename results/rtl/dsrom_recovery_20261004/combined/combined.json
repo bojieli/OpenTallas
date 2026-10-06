@@ -1,0 +1,3685 @@
+{
+ "schema": "opentallas.dsrom-combined.record.v1",
+ "generated_utc": "2026-10-06T07:04:47Z",
+ "source_commit": "29f36e8b06ab6065a96f1e771e478bf103563ff1",
+ "verdict": "PASS",
+ "failures": [],
+ "run_vs_composition": [
+  {
+   "kind": "info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+   "severity": "info",
+   "lever": "su_hcpost",
+   "node": "L20.attn.hc_post",
+   "cdc_us": 0.00495
+  },
+  {
+   "kind": "info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+   "severity": "info",
+   "lever": "su_hcpost",
+   "node": "L20.ffn.hc_post",
+   "cdc_us": 0.00495
+  },
+  {
+   "kind": "info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+   "severity": "info",
+   "lever": "su_norm",
+   "node": "L20.attn.hc_pre",
+   "cdc_us": 0.00495
+  },
+  {
+   "kind": "info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+   "severity": "info",
+   "lever": "su_norm",
+   "node": "L20.ffn.hc_pre",
+   "cdc_us": 0.00495
+  },
+  {
+   "kind": "info: measured CDC kept on a fused 1.2 GHz node with all levers ON (a dependency stays in the 0.9 GHz domain: hc.sinkhorn / hc.pre_post / ffn.weights)",
+   "severity": "info",
+   "lever": "su_swiglu",
+   "node": "L20.ffn.route_w",
+   "cdc_us": 0.00495
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_norm.hc",
+   "case": "L20.attn.hc_pre_norm",
+   "run_us": 0.2675,
+   "run_cycles": 321,
+   "composition_us": 0.2692,
+   "nodes": [
+    "L20.attn.hc_pre",
+    "L20.attn.norm.sumsq",
+    "L20.attn.norm.rsqrt",
+    "L20.attn.norm.scale",
+    "L20.attn.quant"
+   ]
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_norm.hc",
+   "case": "L20.ffn.hc_pre_norm",
+   "run_us": 0.2675,
+   "run_cycles": 321,
+   "composition_us": 0.2692,
+   "nodes": [
+    "L20.ffn.hc_pre",
+    "L20.ffn.norm.sumsq",
+    "L20.ffn.norm.rsqrt",
+    "L20.ffn.norm.scale",
+    "L20.ffn.quant"
+   ]
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_norm.kv",
+   "case": "L20.attn.kv_norm_rope",
+   "run_us": 0.2325,
+   "run_cycles": 279,
+   "composition_us": 0.235,
+   "nodes": [
+    "L20.attn.kv_norm.sumsq",
+    "L20.attn.kv_norm.rsqrt",
+    "L20.attn.kv_norm.scale",
+    "L20.attn.kv_rope_qdq"
+   ]
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_norm.q",
+   "case": "L20.attn.q_norm",
+   "run_us": 0.2375,
+   "run_cycles": 285,
+   "composition_us": 0.2392,
+   "nodes": [
+    "L20.attn.q_norm.sumsq",
+    "L20.attn.q_norm.rsqrt",
+    "L20.attn.q_norm.scale",
+    "L20.attn.q_quant"
+   ]
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_softmax",
+   "case": "L20.attn.softmax_T640",
+   "node": "L20.attn.max",
+   "run_cycles": 93,
+   "run_us": 0.0775,
+   "composition_us": 0.0767
+  },
+  {
+   "kind": "unit run vs composition",
+   "unit": "su_softmax",
+   "case": "L20.attn.softmax_T640",
+   "node": "L20.attn.normalize",
+   "run_cycles": 131,
+   "run_us": 0.10917,
+   "composition_us": 0.1083
+  },
+  {
+   "kind": "S81 floorplan wire per field phase: the committed v9 record (and so the field_spine / field_spine_pq lever us) charges a different count than the current floorplan.json",
+   "severity": "finding",
+   "committed_wire_cycles_per_phase": 80,
+   "current_floorplan_wire_cycles_per_phase": 78
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.attn.a_proj",
+   "pq0_cycles": 1610,
+   "pq0_q9_cycles": 1618,
+   "delta_cycles": 8
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.attn.cmp.wk",
+   "pq0_cycles": 282,
+   "pq0_q9_cycles": 282,
+   "delta_cycles": 0
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.attn.wo_a",
+   "pq0_cycles": 2061,
+   "pq0_q9_cycles": 2061,
+   "delta_cycles": 0
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.attn.wo_b",
+   "pq0_cycles": 380,
+   "pq0_q9_cycles": 385,
+   "delta_cycles": 5
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.attn.wq_b",
+   "pq0_cycles": 756,
+   "pq0_q9_cycles": 767,
+   "delta_cycles": 11
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.ffn.down",
+   "pq0_cycles": 1692,
+   "pq0_q9_cycles": 1723,
+   "delta_cycles": 31
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.ffn.experts_gu",
+   "pq0_cycles": 1817,
+   "pq0_q9_cycles": 1845,
+   "delta_cycles": 28
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.ffn.router",
+   "pq0_cycles": 573,
+   "pq0_q9_cycles": 573,
+   "delta_cycles": 0
+  },
+  {
+   "kind": "q-element (QX 9) vs W10 element on the v9 spine, L20 node, same harness (not in any lever record or the composition)",
+   "severity": "finding",
+   "node": "L20.ffn.shared_gu",
+   "pq0_cycles": 464,
+   "pq0_q9_cycles": 472,
+   "delta_cycles": 8
+  }
+ ],
+ "field": {
+  "pq0": {
+   "cfg": "pq0",
+   "build": "ok",
+   "params": [
+    "-GFAST=1",
+    "-GPP=1",
+    "-GBP=0",
+    "-GNP=32",
+    "-GR=1",
+    "-GNBF=5",
+    "-GPHW=3",
+    "-GVAW=17",
+    "-GPQ=0",
+    "-GGAP=12",
+    "-GGUARD=180",
+    "-GGSLACK=6"
+   ],
+   "nodes": [
+    {
+     "node": "L20.attn.a_proj",
+     "stage": 37,
+     "phases": 3,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 608,
+     "rows_mismatched": 0,
+     "total_cycles": 1376,
+     "total_cycles_with_s81_wire": 1610
+    },
+    {
+     "node": "L20.attn.cmp.wk",
+     "stage": 37,
+     "phases": 1,
+     "regions": 64,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 128,
+     "rows_mismatched": 0,
+     "total_cycles": 204,
+     "total_cycles_with_s81_wire": 282
+    },
+    {
+     "node": "L20.attn.wo_a",
+     "stage": 37,
+     "phases": 4,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2048,
+     "rows_mismatched": 0,
+     "total_cycles": 1749,
+     "total_cycles_with_s81_wire": 2061
+    },
+    {
+     "node": "L20.attn.wo_b",
+     "stage": 37,
+     "phases": 1,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "total_cycles": 302,
+     "total_cycles_with_s81_wire": 380
+    },
+    {
+     "node": "L20.attn.wq_b",
+     "stage": 37,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 12288,
+     "rows_mismatched": 0,
+     "total_cycles": 600,
+     "total_cycles_with_s81_wire": 756
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 37,
+     "phases": 5,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 6400,
+     "rows_mismatched": 0,
+     "total_cycles": 1302,
+     "total_cycles_with_s81_wire": 1692
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 38,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2560,
+     "rows_mismatched": 0,
+     "total_cycles": 531,
+     "total_cycles_with_s81_wire": 687
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 37,
+     "phases": 4,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 4608,
+     "rows_mismatched": 0,
+     "total_cycles": 1505,
+     "total_cycles_with_s81_wire": 1817
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 38,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2304,
+     "rows_mismatched": 0,
+     "total_cycles": 751,
+     "total_cycles_with_s81_wire": 907
+    },
+    {
+     "node": "L20.ffn.router",
+     "stage": 37,
+     "phases": 1,
+     "regions": 48,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "total_cycles": 495,
+     "total_cycles_with_s81_wire": 573
+    },
+    {
+     "node": "L20.ffn.shared_gu",
+     "stage": 37,
+     "phases": 1,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "total_cycles": 386,
+     "total_cycles_with_s81_wire": 464
+    }
+   ],
+   "n_nodes": 11,
+   "n_bad": 0,
+   "missing_runs": 0,
+   "exact": true
+  },
+  "pq0_q9": {
+   "cfg": "pq0_q9",
+   "build": "ok",
+   "params": [
+    "-GFAST=1",
+    "-GPP=1",
+    "-GBP=0",
+    "-GNP=32",
+    "-GR=1",
+    "-GNBF=5",
+    "-GPHW=3",
+    "-GVAW=17",
+    "-GPQ=0",
+    "-GGAP=12",
+    "-GGUARD=180",
+    "-GGSLACK=6"
+   ],
+   "nodes": [
+    {
+     "node": "L20.attn.a_proj",
+     "stage": 37,
+     "phases": 3,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 608,
+     "rows_mismatched": 0,
+     "total_cycles": 1384,
+     "total_cycles_with_s81_wire": 1618
+    },
+    {
+     "node": "L20.attn.cmp.wk",
+     "stage": 37,
+     "phases": 1,
+     "regions": 64,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 128,
+     "rows_mismatched": 0,
+     "total_cycles": 204,
+     "total_cycles_with_s81_wire": 282
+    },
+    {
+     "node": "L20.attn.wo_a",
+     "stage": 37,
+     "phases": 4,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2048,
+     "rows_mismatched": 0,
+     "total_cycles": 1749,
+     "total_cycles_with_s81_wire": 2061
+    },
+    {
+     "node": "L20.attn.wo_b",
+     "stage": 37,
+     "phases": 1,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "total_cycles": 307,
+     "total_cycles_with_s81_wire": 385
+    },
+    {
+     "node": "L20.attn.wq_b",
+     "stage": 37,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 12288,
+     "rows_mismatched": 0,
+     "total_cycles": 611,
+     "total_cycles_with_s81_wire": 767
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 37,
+     "phases": 5,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 6400,
+     "rows_mismatched": 0,
+     "total_cycles": 1333,
+     "total_cycles_with_s81_wire": 1723
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 38,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2560,
+     "rows_mismatched": 0,
+     "total_cycles": 543,
+     "total_cycles_with_s81_wire": 699
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 37,
+     "phases": 4,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 4608,
+     "rows_mismatched": 0,
+     "total_cycles": 1533,
+     "total_cycles_with_s81_wire": 1845
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 38,
+     "phases": 2,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": true,
+     "rows_checked": 2304,
+     "rows_mismatched": 0,
+     "total_cycles": 765,
+     "total_cycles_with_s81_wire": 921
+    },
+    {
+     "node": "L20.ffn.router",
+     "stage": 37,
+     "phases": 1,
+     "regions": 48,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "total_cycles": 495,
+     "total_cycles_with_s81_wire": 573
+    },
+    {
+     "node": "L20.ffn.shared_gu",
+     "stage": 37,
+     "phases": 1,
+     "regions": 128,
+     "exact": true,
+     "node_runs_exact": null,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "total_cycles": 394,
+     "total_cycles_with_s81_wire": 472
+    }
+   ],
+   "n_nodes": 11,
+   "n_bad": 0,
+   "missing_runs": 0,
+   "exact": true
+  },
+  "pq1_q9": {
+   "cfg": "pq1_q9",
+   "build": "FAILED",
+   "build_error": " Use \"/* verilator lint_off MODDUP */\" and lint_on around source to disable this message.\n%Error-MODMISSING: /srv/opentallas-scratch/claude/dsrom-combined/src/rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv:142:13: Cannot find file containing module: 'ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element'\n  142 |             ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element u_not_buildable ();\n      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050\n                   ... This may be because there's no search path specified with -I<dir>.\n                   ... Looked in:\n                        ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element\n                        ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element.v\n                        ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element.sv\n                        /srv/opentallas-scratch/claude/dsrom-combined/run/field_pq1_q9/build/pq/ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element\n                        /srv/opentallas-scratch/claude/dsrom-combined/run/field_pq1_q9/build/pq/ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element.v\n                        /srv/opentallas-scratch/claude/dsrom-combined/run/field_pq1_q9/build/pq/ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element.sv\n                   ... With current working directory '/srv/opentallas-scratch/claude/dsrom-combined/src'\n%Error: Exiting due to 1 error(s)\n"
+  },
+  "pq1": {
+   "cfg": "pq1",
+   "build": "committed",
+   "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
+   "nodes": [
+    {
+     "node": "L20.attn.a_proj",
+     "exact": true,
+     "total_cycles": 1035,
+     "rows_checked": 608
+    },
+    {
+     "node": "L20.attn.cmp.wk",
+     "exact": true,
+     "total_cycles": 284,
+     "rows_checked": 128
+    },
+    {
+     "node": "L20.attn.wo_a",
+     "exact": true,
+     "total_cycles": 789,
+     "rows_checked": 2048
+    },
+    {
+     "node": "L20.attn.wo_b",
+     "exact": true,
+     "total_cycles": 382,
+     "rows_checked": 5120
+    },
+    {
+     "node": "L20.attn.wq_b",
+     "exact": true,
+     "total_cycles": 497,
+     "rows_checked": 12288
+    },
+    {
+     "node": "L20.ffn.down",
+     "exact": true,
+     "total_cycles": 915,
+     "rows_checked": 8960
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "exact": true,
+     "total_cycles": 1072,
+     "rows_checked": 6912
+    },
+    {
+     "node": "L20.ffn.router",
+     "exact": true,
+     "total_cycles": 575,
+     "rows_checked": 96
+    },
+    {
+     "node": "L20.ffn.shared_gu",
+     "exact": true,
+     "total_cycles": 466,
+     "rows_checked": 1152
+    }
+   ],
+   "exact": true
+  }
+ },
+ "static": {
+  "schema": "opentallas.dsrom-combined.static.v1",
+  "generated_utc": "2026-10-06T07:02:24Z",
+  "lever_sources": {
+   "su_hcpost": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv"
+   ],
+   "su_norm": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41/ot_hdc_softplus.sv",
+    "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+    "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/ot_dsrom_su_norm.sv"
+   ],
+   "su_swiglu": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv"
+   ],
+   "su_softmax": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv"
+   ],
+   "su_routeract": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_spsqrt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv"
+   ],
+   "field_spine": [
+    "rtl/common/ot_prefix.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+    "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+    "rtl/v41die/ot_v41_pair_pq_ld.sv",
+    "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
+    "rtl/v41die/ot_v41_retn_w17w10.sv",
+    "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/v41rom/ot_v41_ret.sv",
+    "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv"
+   ],
+   "qelem": [
+    "rtl/common/ot_prefix.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+    "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+    "rtl/v41die/ot_v41_pair_pq_ld.sv",
+    "rtl/v41die/ot_v41_retn_w17w10.sv",
+    "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+    "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_bterm3_w10.sv",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv",
+    "rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_chain3.sv",
+    "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/v41rom/ot_v41_ret.sv",
+    "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/v41rom/ot_v41_segtree3.sv",
+    "rtl/v41rom/ot_v41_segtree4.sv",
+    "rtl/v41rom/ot_v41_segtree5.sv"
+   ]
+  },
+  "per_lever": {
+   "su_hcpost": {
+    "n_files": 5,
+    "n_modules": 26,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "su_norm": {
+    "n_files": 20,
+    "n_modules": 66,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "su_swiglu": {
+    "n_files": 16,
+    "n_modules": 65,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "su_softmax": {
+    "n_files": 14,
+    "n_modules": 57,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "su_routeract": {
+    "n_files": 16,
+    "n_modules": 73,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "field_spine": {
+    "n_files": 28,
+    "n_modules": 37,
+    "conflicts": {},
+    "identical_duplicates": {}
+   },
+   "qelem": {
+    "n_files": 36,
+    "n_modules": 45,
+    "conflicts": {},
+    "identical_duplicates": {}
+   }
+  },
+  "matrix": {
+   "all_off": {
+    "levers_on": [],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 42,
+    "n_modules": 84
+   },
+   "all_on": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax",
+     "su_routeract",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 59,
+    "n_modules": 135
+   },
+   "only_su_hcpost": {
+    "levers_on": [
+     "su_hcpost"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 44,
+    "n_modules": 99
+   },
+   "all_on_minus_su_hcpost": {
+    "levers_on": [
+     "su_norm",
+     "su_swiglu",
+     "su_softmax",
+     "su_routeract",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 62,
+    "n_modules": 137
+   },
+   "only_su_norm": {
+    "levers_on": [
+     "su_norm"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 47,
+    "n_modules": 102
+   },
+   "all_on_minus_su_norm": {
+    "levers_on": [
+     "su_hcpost",
+     "su_swiglu",
+     "su_softmax",
+     "su_routeract",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 59,
+    "n_modules": 134
+   },
+   "only_su_swiglu": {
+    "levers_on": [
+     "su_swiglu"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 46,
+    "n_modules": 104
+   },
+   "all_on_minus_su_swiglu": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_softmax",
+     "su_routeract",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 60,
+    "n_modules": 132
+   },
+   "only_su_softmax": {
+    "levers_on": [
+     "su_softmax"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 45,
+    "n_modules": 97
+   },
+   "all_on_minus_su_softmax": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_routeract",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 61,
+    "n_modules": 139
+   },
+   "only_su_routeract": {
+    "levers_on": [
+     "su_routeract"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 45,
+    "n_modules": 111
+   },
+   "all_on_minus_su_routeract": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax",
+     "field_spine",
+     "qelem"
+    ],
+    "conflicts_without_swap": {
+     "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ],
+     "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+     ]
+    },
+    "conflicts": {},
+    "n_files": 61,
+    "n_modules": 125
+   },
+   "only_field_spine": {
+    "levers_on": [
+     "field_spine"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 42,
+    "n_modules": 84
+   },
+   "all_on_minus_field_spine": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax",
+     "su_routeract",
+     "qelem"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 59,
+    "n_modules": 135
+   },
+   "only_qelem": {
+    "levers_on": [
+     "qelem"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 50,
+    "n_modules": 92
+   },
+   "all_on_minus_qelem": {
+    "levers_on": [
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax",
+     "su_routeract",
+     "field_spine"
+    ],
+    "conflicts_without_swap": {},
+    "conflicts": {},
+    "n_files": 51,
+    "n_modules": 127
+   }
+  },
+  "file_swaps": {
+   "rtl/hdc/ot_hdc_fastfp_lat.sv": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/v41die/ot_v41_pair_pq_w17w10.sv": "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv"
+  },
+  "norm_source": {
+   "main_sha256": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+   "la6_sha256": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+   "same": true,
+   "main_modules": [
+    "ot_dsrom_qadd",
+    "ot_dsrom_rsqrt",
+    "ot_dsrom_su_norm",
+    "ot_dsrom_su_norm_mix"
+   ],
+   "la6_modules": [
+    "ot_dsrom_qadd",
+    "ot_dsrom_rsqrt",
+    "ot_dsrom_su_norm",
+    "ot_dsrom_su_norm_mix"
+   ],
+   "tool_main_vs_la6_same": true,
+   "tb_main_vs_la6_same": true
+  },
+  "qelem_x_pq": {
+   "pq_pair_has_qelem": false,
+   "plain_pair_has_qelem": true,
+   "q_element_has_pq": false,
+   "swap": "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv"
+  },
+  "pin_currency": {
+   "su_hcpost": [
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json",
+     "pins": 6,
+     "drifted": {}
+    }
+   ],
+   "su_norm": [
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_norm/measure.json",
+     "pins": 24,
+     "drifted": {
+      "rtl/hdc/v41x/ot_dsrom_su_norm.sv": {
+       "pinned": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+       "current": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+       "matches_la6_preserved_copy": false
+      },
+      "rtl/test/tb_dsrom_su_norm.sv": {
+       "pinned": "b895d59530a5c00c5ee33884e732ada3e6399cc2bfa0e836cf58144060677ae8",
+       "current": "fcdb57ca72faf67c0a4831c585f65dfd1bc09e42a47a7c40416efefc30d02272",
+       "matches_la6_preserved_copy": false
+      }
+     }
+    },
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_transport_terminal.json",
+     "pins": 0,
+     "drifted": {}
+    }
+   ],
+   "su_swiglu": [
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
+     "pins": 19,
+     "drifted": {}
+    },
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json",
+     "pins": 19,
+     "drifted": {}
+    }
+   ],
+   "su_softmax": [
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json",
+     "pins": 16,
+     "drifted": {}
+    }
+   ],
+   "su_routeract": [
+    {
+     "record": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json",
+     "pins": 25,
+     "drifted": {
+      "tools/dsrom_su_routeract.py": {
+       "pinned": "626842a239162373f40483b4dea463b8940440956617d3aba31e0f6b178828da",
+       "current": "84a53ed9e600a23e031791710dccb0c6cb586e4ab252686b1ca20fbfd3e014a0",
+       "matches_la6_preserved_copy": false
+      }
+     }
+    }
+   ],
+   "field_spine": [
+    {
+     "record": "results/rtl/dsrom_field_spine_20261004/field_baseline.json",
+     "pins": 38,
+     "drifted": {
+      "tools/dsrom_1m_field.py": {
+       "pinned": "b67eb4508aae1d697cf174049c0edc5f181ac101de58544651b3ac7a879df170",
+       "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+       "matches_la6_preserved_copy": false
+      }
+     }
+    },
+    {
+     "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
+     "pins": 38,
+     "drifted": {
+      "tools/dsrom_1m_field.py": {
+       "pinned": "b67eb4508aae1d697cf174049c0edc5f181ac101de58544651b3ac7a879df170",
+       "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+       "matches_la6_preserved_copy": false
+      }
+     }
+    }
+   ],
+   "qelem": [
+    {
+     "record": "results/rtl/dsrom_field_qelem_20261005/field_qelem.json",
+     "pins": 47,
+     "drifted": {
+      "tools/dsrom_1m_field.py": {
+       "pinned": "3177d6a8d7a0f113afc4f38137be5d4010260ba6028331a4c28167a6eec52f11",
+       "current": "c7fd7cd30d6323bf2c7b50feb52867a4923069496c40480ccbde8e984e70491e",
+       "matches_la6_preserved_copy": false
+      }
+     }
+    }
+   ]
+  },
+  "composition_node_claims": {
+   "levers": {
+    "draft": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 0
+    },
+    "field": {
+     "verdict": "REJECT",
+     "exact": true,
+     "n_nodes": 137
+    },
+    "field_spine": {
+     "verdict": "PENDING_SSFF",
+     "exact": true,
+     "n_nodes": 325
+    },
+    "field_spine_pq": {
+     "verdict": "PENDING_SSFF",
+     "exact": true,
+     "n_nodes": 325
+    },
+    "head": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 2
+    },
+    "hop": {
+     "verdict": "REJECT",
+     "exact": true,
+     "n_nodes": 1
+    },
+    "router": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 2
+    },
+    "su_hcpost": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 2
+    },
+    "su_norm": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 22
+    },
+    "su_routeract": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 1
+    },
+    "su_softmax": {
+     "verdict": "PENDING_SSFF",
+     "exact": true,
+     "n_nodes": 15
+    },
+    "su_swiglu": {
+     "verdict": "ADOPT",
+     "exact": true,
+     "n_nodes": 5
+    }
+   },
+   "overlaps": {
+    "alternatives": {
+     "n": 325,
+     "sample": {
+      "E1.wkv": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ],
+      "L0.attn.wo_a": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ],
+      "L0.ffn.experts_gu": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ],
+      "L0.ffn.down": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ],
+      "L1.attn.wo_a": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ],
+      "L1.ffn.experts_gu": [
+       "field",
+       "field_spine",
+       "field_spine_pq"
+      ]
+     }
+    }
+   }
+  },
+  "unresolved_conflicts": {}
+ },
+ "edges": {
+  "schema": "opentallas.dsrom-combined.edges.v1",
+  "generated_utc": "2026-10-06T02:10:23Z",
+  "cases": "/srv/opentallas-scratch2/scratch/claude/dsrom-combined/cases/su_cases.pkl",
+  "cases_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+  "snapshots_sha256": "c53723dcafd755fa3dc0cde401adee3bafb2e6bf1c7c60059cf00313dbc9b4be",
+  "rows": [
+   {
+    "edge": "residual_in: attn.hc_pre_norm == attn.hc_mix",
+    "words": 20480,
+    "producer_words": 20480,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "residual_in: attn.hc_post == attn.hc_pre_norm",
+    "words": 20480,
+    "producer_words": 20480,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "su_hcpost(attn) h -> su_norm(ffn.hc_pre_norm) residual",
+    "words": 20480,
+    "producer_words": 20480,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "su_hcpost(attn) h -> ffn.hc_mix residual",
+    "words": 20480,
+    "producer_words": 20480,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "su_hcpost(attn) h -> su_hcpost(ffn) residual",
+    "words": 20480,
+    "producer_words": 20480,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "attn.hc_mix post -> su_hcpost(attn) post",
+    "words": 4,
+    "producer_words": 4,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "attn.hc_mix exp(comb-max) -> golden Sinkhorn -> su_hcpost(attn) comb",
+    "words": 16,
+    "producer_words": 16,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "ffn.hc_mix post -> su_hcpost(ffn) post",
+    "words": 4,
+    "producer_words": 4,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "ffn.hc_mix exp(comb-max) -> golden Sinkhorn -> su_hcpost(ffn) comb",
+    "words": 16,
+    "producer_words": 16,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "attn.hc_mix pre -> su_norm(ffn.hc_pre_norm) pre (golden mix order: next block)",
+    "words": 4,
+    "producer_words": 4,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "su_routeract sqrt(softplus) (die 0, 96 rows) -> ffn.route input rows 0..95",
+    "words": 96,
+    "producer_words": 96,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   },
+   {
+    "edge": "ffn.route weights -> su_swiglu route_w",
+    "words": 6,
+    "producer_words": 6,
+    "equal": true,
+    "mismatched": 0,
+    "first_mismatch": null
+   }
+  ],
+  "negative_control": {
+   "edge": "su_hcpost(attn) h -> su_norm(ffn.hc_pre_norm) residual",
+   "flipped_word": 10240,
+   "caught": true
+  },
+  "all_equal": true
+ },
+ "units": {
+  "schema": "opentallas.dsrom-combined.units.v1",
+  "generated_utc": "2026-10-06T07:03:23Z",
+  "row_sources": {
+   "su_hcpost": {
+    "kind": "committed, RTL pins current",
+    "files": [
+     "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+    ]
+   },
+   "su_norm": {
+    "kind": "fresh",
+    "files": [
+     "../run/norm/run_hc_dpi_N1024_la6.json",
+     "../run/norm/run_hc_rtl_N64_la6.json",
+     "../run/norm/run_kv_dpi_N512_la6.json",
+     "../run/norm/run_kv_rtl_N64_la6.json",
+     "../run/norm/run_q_dpi_N256_la6.json",
+     "../run/norm/run_q_rtl_N64_la6.json"
+    ]
+   },
+   "su_softmax": {
+    "kind": "committed, RTL pins current",
+    "files": [
+     "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+    ]
+   },
+   "su_swiglu": {
+    "kind": "committed, RTL pins current",
+    "files": [
+     "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json",
+     "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+    ]
+   },
+   "su_routeract": {
+    "kind": "committed, RTL pins current",
+    "files": [
+     "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+    ]
+   }
+  },
+  "rows": [
+   {
+    "unit": "su_hcpost",
+    "case": "L20.attn.hc_post",
+    "l20": true,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L20.ffn.hc_post",
+    "l20": true,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L0.attn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L0.ffn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L3.attn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L3.ffn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L24.attn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "L24.ffn.hc_post",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress000",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress001",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress002",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress003",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress004",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress005",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress006",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress007",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress008",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress009",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress010",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress011",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress012",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress013",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress014",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress015",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress016",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress017",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress018",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress019",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress020",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress021",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress022",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress023",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress024",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress025",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress026",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress027",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress028",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress029",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress030",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_hcpost",
+    "case": "stress031",
+    "l20": false,
+    "exact": true,
+    "cycles": 103,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_hcpost/runs/run_ng256_w33_23_m5a5_h.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L20.attn.hc_pre_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L20.ffn.hc_pre_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L0.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L0.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L3.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L3.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L24.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L24.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "head.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 321,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_hc_dpi_N1024_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L20.attn.hc_pre_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L20.ffn.hc_pre_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L0.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L0.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L3.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L3.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L24.attn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "L24.ffn.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "head.hc_pre_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.hc",
+    "case": "stress.hc.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 460,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_hc_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L20.attn.kv_norm_rope",
+    "l20": true,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L0.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L3.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L24.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 279,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_kv_dpi_N512_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L20.attn.kv_norm_rope",
+    "l20": true,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L0.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L3.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "L24.attn.kv_norm_rope",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.kv",
+    "case": "stress.kv.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 293,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_kv_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L20.attn.q_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L0.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L3.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L24.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 285,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "dpi",
+    "run": "../run/norm/run_q_dpi_N256_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L20.attn.q_norm",
+    "l20": true,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L0.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L3.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "L24.attn.q_norm",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.0",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.1",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.2",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.3",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.4",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_norm.q",
+    "case": "stress.q.5",
+    "l20": false,
+    "exact": true,
+    "cycles": 312,
+    "errors": {
+     "err_y": 0,
+     "err_ro": 0,
+     "err_q": 0
+    },
+    "fp": "rtl",
+    "run": "../run/norm/run_q_rtl_N64_la6.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "L20.attn.softmax_T640",
+    "l20": true,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "L0.attn.softmax_T128",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 61,
+     "attn.exp": 116,
+     "attn.den": 35,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "L3.attn.softmax_T640",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "L24.attn.softmax_T640",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress0_T640",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress1_T128",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 61,
+     "attn.exp": 116,
+     "attn.den": 35,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress2_T640",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress3_T128",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 61,
+     "attn.exp": 116,
+     "attn.den": 35,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress4_T640",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 93,
+     "attn.exp": 148,
+     "attn.den": 50,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_softmax",
+    "case": "stress5_T128",
+    "l20": false,
+    "exact": true,
+    "cycles": {
+     "attn.max": 61,
+     "attn.exp": 116,
+     "attn.den": 35,
+     "attn.sink": 14,
+     "attn.normalize": 131
+    },
+    "errors": {
+     "err_max": 0,
+     "err_es": 0,
+     "err_den": 0,
+     "err_e": 0,
+     "err_o": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L0.swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 240,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L0.shared_swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 190,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L3.swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 240,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L3.shared_swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 190,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L20.swiglu",
+    "l20": true,
+    "exact": true,
+    "cycles": 240,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L20.shared_swiglu",
+    "l20": true,
+    "exact": true,
+    "cycles": 190,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L24.swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 240,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L24.shared_swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 190,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "random.swiglu",
+    "l20": false,
+    "exact": true,
+    "cycles": 250,
+    "errors": {
+     "a_errors": 0,
+     "q_errors": 0,
+     "rope_errors": null
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L0.z_quant",
+    "l20": false,
+    "exact": true,
+    "cycles": 76,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L3.z_quant",
+    "l20": false,
+    "exact": true,
+    "cycles": 76,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L20.z_quant",
+    "l20": true,
+    "exact": true,
+    "cycles": 76,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "L24.z_quant",
+    "l20": false,
+    "exact": true,
+    "cycles": 76,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "random.qfp8",
+    "l20": false,
+    "exact": true,
+    "cycles": 82,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_swiglu",
+    "case": "random.qfp4",
+    "l20": false,
+    "exact": true,
+    "cycles": 82,
+    "errors": {
+     "a_errors": null,
+     "q_errors": 0,
+     "rope_errors": 0
+    },
+    "run": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_NB32_m5a4q5_z_quant.json"
+   },
+   {
+    "unit": "su_routeract.impl0",
+    "case": "L20.die",
+    "l20": true,
+    "exact": true,
+    "cycles": 224,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl0",
+    "case": "all_layers_all_dies",
+    "l20": false,
+    "exact": true,
+    "cycles": 224,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl0",
+    "case": "all_layers_bubbles30",
+    "l20": false,
+    "exact": true,
+    "cycles": 224,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl0",
+    "case": "stress",
+    "l20": false,
+    "exact": true,
+    "cycles": 224,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl0",
+    "case": "stress_bubbles30",
+    "l20": false,
+    "exact": true,
+    "cycles": 224,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl1",
+    "case": "L20.die",
+    "l20": true,
+    "exact": true,
+    "cycles": 132,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl1",
+    "case": "all_layers_all_dies",
+    "l20": false,
+    "exact": true,
+    "cycles": 132,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl1",
+    "case": "all_layers_bubbles30",
+    "l20": false,
+    "exact": true,
+    "cycles": 132,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl1",
+    "case": "stress",
+    "l20": false,
+    "exact": true,
+    "cycles": 132,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   },
+   {
+    "unit": "su_routeract.impl1",
+    "case": "stress_bubbles30",
+    "l20": false,
+    "exact": true,
+    "cycles": 132,
+    "errors": 0,
+    "run": "results/rtl/dsrom_recovery_20261004/su_routeract/sim.json"
+   }
+  ],
+  "missing_units": [],
+  "n_rows": 145,
+  "n_bad": 0,
+  "n_l20": 16,
+  "l20_units": [
+   "su_hcpost",
+   "su_norm",
+   "su_routeract",
+   "su_softmax",
+   "su_swiglu"
+  ],
+  "all_exact": true
+ },
+ "compose": {
+  "schema": "opentallas.dsrom-combined.compose.v1",
+  "generated_utc": "2026-10-06T07:03:23Z",
+  "adopted_on_main": [
+   "su_hcpost",
+   "su_norm",
+   "su_routeract",
+   "su_swiglu"
+  ],
+  "matrix": {
+   "all_off": {
+    "levers_on": [],
+    "excluded": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 620.078,
+    "AR_tok_s": 1612.7,
+    "MTP_tok_s": 4773.2,
+    "II_us": 25.762,
+    "L20_on_critical_path_us": 24.534,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "head",
+     "router"
+    ],
+    "output": ".combined_matrix/all_off/composition.json"
+   },
+   "all_on": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "excluded": [],
+    "candidates": [],
+    "AR_us": 414.834,
+    "AR_tok_s": 2410.6,
+    "MTP_tok_s": 6568.9,
+    "II_us": 19.175,
+    "L20_on_critical_path_us": 18.6153,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_norm",
+     "su_routeract",
+     "su_softmax",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/all_on/composition.json"
+   },
+   "only_field_spine_pq": {
+    "levers_on": [
+     "field_spine_pq"
+    ],
+    "excluded": [
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 513.458,
+    "AR_tok_s": 1947.6,
+    "MTP_tok_s": 5583.5,
+    "II_us": 21.797,
+    "L20_on_critical_path_us": 21.2272,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router"
+    ],
+    "output": ".combined_matrix/only_field_spine_pq/composition.json"
+   },
+   "all_on_minus_field_spine_pq": {
+    "levers_on": [
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "excluded": [
+     "field_spine_pq"
+    ],
+    "candidates": [],
+    "AR_us": 521.454,
+    "AR_tok_s": 1917.7,
+    "MTP_tok_s": 5475.4,
+    "II_us": 23.139,
+    "L20_on_critical_path_us": 21.9219,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_norm",
+     "su_routeract",
+     "su_softmax",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/minus_field_spine_pq/composition.json"
+   },
+   "only_su_hcpost": {
+    "levers_on": [
+     "su_hcpost"
+    ],
+    "excluded": [
+     "field_spine_pq",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 604.348,
+    "AR_tok_s": 1654.7,
+    "MTP_tok_s": 4872.2,
+    "II_us": 25.367,
+    "L20_on_critical_path_us": 24.1413,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_hcpost"
+    ],
+    "output": ".combined_matrix/only_su_hcpost/composition.json"
+   },
+   "all_on_minus_su_hcpost": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "excluded": [
+     "su_hcpost"
+    ],
+    "candidates": [],
+    "AR_us": 430.767,
+    "AR_tok_s": 2321.4,
+    "MTP_tok_s": 6388.0,
+    "II_us": 19.574,
+    "L20_on_critical_path_us": 19.0135,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_norm",
+     "su_routeract",
+     "su_softmax",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/minus_su_hcpost/composition.json"
+   },
+   "only_su_routeract": {
+    "levers_on": [
+     "su_routeract"
+    ],
+    "excluded": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 608.656,
+    "AR_tok_s": 1643.0,
+    "MTP_tok_s": 4844.7,
+    "II_us": 25.475,
+    "L20_on_critical_path_us": 24.2485,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_routeract"
+    ],
+    "output": ".combined_matrix/only_su_routeract/composition.json"
+   },
+   "all_on_minus_su_routeract": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_norm",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "excluded": [
+     "su_routeract"
+    ],
+    "candidates": [],
+    "AR_us": 426.256,
+    "AR_tok_s": 2346.0,
+    "MTP_tok_s": 6438.2,
+    "II_us": 19.461,
+    "L20_on_critical_path_us": 18.9008,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_norm",
+     "su_softmax",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/minus_su_routeract/composition.json"
+   },
+   "only_su_norm": {
+    "levers_on": [
+     "su_norm"
+    ],
+    "excluded": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 578.854,
+    "AR_tok_s": 1727.6,
+    "MTP_tok_s": 5040.9,
+    "II_us": 24.754,
+    "L20_on_critical_path_us": 23.5307,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_norm"
+    ],
+    "output": ".combined_matrix/only_su_norm/composition.json"
+   },
+   "all_on_minus_su_norm": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_swiglu",
+     "su_softmax"
+    ],
+    "excluded": [
+     "su_norm"
+    ],
+    "candidates": [],
+    "AR_us": 456.262,
+    "AR_tok_s": 2191.7,
+    "MTP_tok_s": 6119.5,
+    "II_us": 20.188,
+    "L20_on_critical_path_us": 19.6239,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_routeract",
+     "su_softmax",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/minus_su_norm/composition.json"
+   },
+   "only_su_swiglu": {
+    "levers_on": [
+     "su_swiglu"
+    ],
+    "excluded": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 602.552,
+    "AR_tok_s": 1659.6,
+    "MTP_tok_s": 4888.9,
+    "II_us": 25.144,
+    "L20_on_critical_path_us": 23.9182,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/only_su_swiglu/composition.json"
+   },
+   "all_on_minus_su_swiglu": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_softmax"
+    ],
+    "excluded": [
+     "su_swiglu"
+    ],
+    "candidates": [],
+    "AR_us": 432.36,
+    "AR_tok_s": 2312.9,
+    "MTP_tok_s": 6361.7,
+    "II_us": 19.793,
+    "L20_on_critical_path_us": 19.2312,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_norm",
+     "su_routeract",
+     "su_softmax"
+    ],
+    "output": ".combined_matrix/minus_su_swiglu/composition.json"
+   },
+   "only_su_softmax": {
+    "levers_on": [
+     "su_softmax"
+    ],
+    "excluded": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu"
+    ],
+    "candidates": [],
+    "AR_us": 607.56,
+    "AR_tok_s": 1645.9,
+    "MTP_tok_s": 4851.6,
+    "II_us": 25.451,
+    "L20_on_critical_path_us": 24.2247,
+    "L20_nodes": 47,
+    "applied": [
+     "draft",
+     "head",
+     "router",
+     "su_softmax"
+    ],
+    "output": ".combined_matrix/only_su_softmax/composition.json"
+   },
+   "all_on_minus_su_softmax": {
+    "levers_on": [
+     "field_spine_pq",
+     "su_hcpost",
+     "su_routeract",
+     "su_norm",
+     "su_swiglu"
+    ],
+    "excluded": [
+     "su_softmax"
+    ],
+    "candidates": [],
+    "AR_us": 427.352,
+    "AR_tok_s": 2340.0,
+    "MTP_tok_s": 6426.1,
+    "II_us": 19.485,
+    "L20_on_critical_path_us": 18.9245,
+    "L20_nodes": 48,
+    "applied": [
+     "draft",
+     "field_spine_pq",
+     "head",
+     "router",
+     "su_hcpost",
+     "su_norm",
+     "su_routeract",
+     "su_swiglu"
+    ],
+    "output": ".combined_matrix/minus_su_softmax/composition.json"
+   },
+   "additivity": {
+    "sum_of_single_lever_savings_us": 205.04,
+    "all_on_saving_us": 205.244,
+    "interaction_us": 0.204
+   }
+  }
+ }
+}
