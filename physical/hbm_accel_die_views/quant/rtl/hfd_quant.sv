@@ -31,28 +31,28 @@ module hfd_quant (
     assign w_aq_fp4 = tgl;
     assign w_aq_x = {i_f_vm[1023:0]};
     ot_hdc_actquant u_aq (.clk(w_aq_clk), .rst_n(w_aq_rst_n), .v(w_aq_v), .fp4(w_aq_fp4), .x(w_aq_x), .vo(w_aq_vo), .q(w_aq_q), .e(w_aq_e), .y(w_aq_y), .fault(w_aq_fault));
-    reg [511:0] o_t_su_NE;
-    always @(posedge clk) begin
-        o_t_su_NE <= 512'd0;
-        o_t_su_NE[511:0] <= w_aq_y[511:0];
+    wire [511:0] od_t_su_NE = {w_aq_y[511:0]};
+    wire [511:0] o_t_su_NE;
+    for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[511:0] = o_t_su_NE[511:0];
-    reg [511:0] o_t_su_NW;
-    always @(posedge clk) begin
-        o_t_su_NW <= 512'd0;
-        o_t_su_NW[511:0] <= w_aq_y[511:0];
+    wire [511:0] od_t_su_NW = {w_aq_y[511:0]};
+    wire [511:0] o_t_su_NW;
+    for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_NW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[511:0] = o_t_su_NW[511:0];
-    reg [511:0] o_t_su_SE;
-    always @(posedge clk) begin
-        o_t_su_SE <= 512'd0;
-        o_t_su_SE[511:0] <= w_aq_y[511:0];
+    wire [511:0] od_t_su_SE = {w_aq_y[511:0]};
+    wire [511:0] o_t_su_SE;
+    for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_SE
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[511:0] = o_t_su_SE[511:0];
-    reg [511:0] o_t_su_SW;
-    always @(posedge clk) begin
-        o_t_su_SW <= 512'd0;
-        o_t_su_SW[511:0] <= w_aq_y[511:0];
+    wire [511:0] od_t_su_SW = {w_aq_y[511:0]};
+    wire [511:0] o_t_su_SW;
+    for (genvar k = 0; k < 512; k = k + 1) begin : g_o_t_su_SW
+        ot_hfd_oreg1 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[511:0] = o_t_su_SW[511:0];
 endmodule

@@ -46,5 +46,6 @@ spec = dict(master='hfd_loader', note=(
     'slot 0 -> cmdproc program-store word t_cmdproc[72:0]; clk_host and clk_mem both on the die clock; memory AXI '
     'm_* and rsp_* have no die net (cfg chain / folded).'), instances=[dict(
         name='ld', module='ot_hbm_accel_loader_host', file=F, params=dict(ENABLE=1, ND=2), bind=b)], extra_out=eo)
+spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')
 print(rx - 256, tx)

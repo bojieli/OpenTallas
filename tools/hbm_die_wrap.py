@@ -177,7 +177,15 @@ def gen(spec):
     L_ += body
     # fold
     fold_assign = []
-    if folds:
+    if folds and spec.get('kept_out_regs'):
+        # RTL outputs the die interface does not carry: each bit ends in a kept local sink flop (ot_hfd_sink1) beside
+        # its producer, so the logic stays live without the cross-block XOR fold paths
+        for f, w in folds:
+            L_.append(f'    for (genvar k = 0; k < {w}; k = k + 1) begin : g_sink_{f}')
+            L_.append(f'        (* keep *) ot_hfd_sink1 u (.clk(clk), .d({f}[k]), .q());')
+            L_.append('    end')
+        folds_sunk = True
+    elif folds:
         tot = sum(w for _, w in folds)
         allbits = ' ,'.join(f for f, _ in folds[::-1])
         L_.append(f'    wire [{tot - 1}:0] fold_all = {{{allbits}}};')
@@ -198,12 +206,30 @@ def gen(spec):
     for p, v in sorted(ports.items()):
         if not any(d == 'out' for d in dirs[p]):
             continue
-        L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
-        L_.append(f'    always @(posedge clk) begin')
-        L_.append(f"        o_{p} <= {v['bits']}'d0;")
-        for lo, hi, e in outs.get(p, []):
-            L_.append(f'        o_{p}[{hi - 1}:{lo}] <= {e};')
-        L_.append('    end')
+        if spec.get('kept_out_regs'):
+            # one kept 1-bit flop per die output bit (ot_hfd_oreg1, SYNTH_KEEP_MODULES): yosys would otherwise merge
+            # equal-D output flops (a bit broadcast to several quarter ports, or the constant spare bits) into one
+            # driver of many far-apart ports
+            segs_d, cur = [], 0
+            for lo, hi, e in sorted(outs.get(p, []), key=lambda t: t[0]):
+                if lo > cur:
+                    segs_d.append(f"{lo - cur}'d0")
+                segs_d.append(f'{e}')
+                cur = hi
+            if cur < v['bits']:
+                segs_d.append(f"{v['bits'] - cur}'d0")
+            L_.append(f'    wire [{v["bits"] - 1}:0] od_{p} = {{{", ".join(segs_d[::-1])}}};')
+            L_.append(f'    wire [{v["bits"] - 1}:0] o_{p};')
+            L_.append(f'    for (genvar k = 0; k < {v["bits"]}; k = k + 1) begin : g_o_{p}')
+            L_.append(f'        ot_hfd_oreg1 u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+            L_.append('    end')
+        else:
+            L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
+            L_.append(f'    always @(posedge clk) begin')
+            L_.append(f"        o_{p} <= {v['bits']}'d0;")
+            for lo, hi, e in outs.get(p, []):
+                L_.append(f'        o_{p}[{hi - 1}:{lo}] <= {e};')
+            L_.append('    end')
         segs = []
         i = 0
         arr = dirs[p]

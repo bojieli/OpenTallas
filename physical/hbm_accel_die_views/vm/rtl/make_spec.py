@@ -45,4 +45,5 @@ spec = dict(master='hfd_vm', note=(
     'feeds are ONE placeholder register stage each (no VM function behind them).'),
     instances=[dict(name='mr', module='ot_hbm_die_vm_multicast_root', file=F, params=dict(ENABLE=1), bind=b)],
     extra_out=eo)
+spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')
