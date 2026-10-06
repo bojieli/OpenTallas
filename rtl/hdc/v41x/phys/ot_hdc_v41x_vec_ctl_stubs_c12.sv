@@ -74,7 +74,8 @@ endmodule
 module ot_hdc_v41x_vec_red #(
     parameter integer N = 64, parameter integer LV = 6, parameter integer AW = 24, parameter integer MW = 64,
     parameter integer MLAT = 3, parameter integer ALAT = 3, parameter integer RPAD = 0, parameter integer RSL = 0,
-    parameter integer RTAP = 0, parameter integer ROUT = 0, parameter integer SL = 64
+    parameter integer RTAP = 0, parameter integer ROUT = 0, parameter integer SL = 64,
+    parameter integer ROPI = 0
 ) (
     input  wire clk, input wire rst_n, input wire v_in, input wire [N*32-1:0] x_in, input wire [N-1:0] live_in,
     input  wire mx_in, input wire sq_in, input wire [3:0] lt_in, input wire span_in, input wire [2:0] l_in,

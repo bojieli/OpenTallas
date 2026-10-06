@@ -879,13 +879,7 @@ module ot_hdc_v41x_vec #(
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
         wire [15:0] ce = gr ? cnt_e1 : cnt_e0, cp = gr ? cnt_p1 : cnt_p0;
         wire [7:0]  gds = (gr && ret_i_last) ? ret_i_seq : i_dseq;        // n_idseq for ret_i = gr
-`ifdef OT_NEG_CTL12_CREDIT
-        // NEGATIVE CONTROL (compile-time only): a reduction result's sequence is taken as published whether or
-        // not its last result retired this cycle (a consumer may start before its producer's last result)
-        wire        rsel_k = res_i;
-`else
         wire        rsel_k = res_i && res_i_last;                            // n_irseq's select, applied last
-`endif
         ot_hdc_v41x_chf3 #(.K(KK)) u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cnt(ce),
             .dsq(gds), .rsq0(i_rseq), .rsq1(res_i_seq), .rsel(rsel_k), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
         ot_hdc_v41x_chf3 #(.K(KK)) u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
@@ -904,9 +898,16 @@ module ot_hdc_v41x_vec #(
                              : (promote ? (a_v ? ch_prom_a : ch_prom_i) : emit ? ch_emit : ch_hold);
     // round 7: four kept ret_i selects, each driving a quarter of the control copies
     wire [3:0] n_chq;
+`ifdef OT_NEG_CTL12_CREDIT
+    // NEGATIVE CONTROL (compile-time only): the next-ch copies always take the credit computed for "this cycle
+    // retired" (count + 1), i.e. a consumer may run one element ahead of its producer; the campaign must FAIL.
+    wire ch_sel = 1'b1;
+`else
+    wire ch_sel = ret_i;
+`endif
     genvar gq4;
     generate for (gq4 = 0; gq4 < 4; gq4 = gq4 + 1) begin : g_chq
-        ot_hdc_v41x_ckmux u_ch (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chq[gq4]));
+        ot_hdc_v41x_ckmux u_ch (.s(ch_sel), .a(n_chr[0]), .b(n_chr[1]), .y(n_chq[gq4]));
     end endgenerate
     genvar gk;
     generate if (CTL12 >= 2) begin : g_rep
