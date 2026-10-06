@@ -9,7 +9,7 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
   (the clock travels with its bus) and keeps the 0.2 T budget against its own clock.
 * hold: corner-true IO hold in one SDC (coordinator-approved 2026-10-06; common/make_io_vclk_ff.sh is the post-SDC
   form): with the FF leaf insertion range Lmin..Lmax (4th/5th arguments, measured on a routed view), input -min delay
-  Lmax - L - 50 and output -min delay L - Lmin - 50 against vclk at L, i.e. the neighbour's die-clock leaf lands in
+  Lmax - L - 25 and output -min delay L - Lmin - 25 against vclk at L (with the 25 ps hold uncertainty: 50 ps), i.e. the neighbour's die-clock leaf lands in
   this block's own FF leaf spread with a 50 ps die-skew allowance; the 150 ps die arrival term stays on setup.  One
   SS L on the hold side alone demands ~130 ps of hold buffers per output (M2_hfd_meso_r32: -7.75 ps after 7 buffers).
 * meso views: rst (synchroniser input only) is a false path.
@@ -36,7 +36,7 @@ for l in open(src):
         # MAX leaf insertion minus the 50 ps die-skew allowance, outputs are captured no earlier than its FF MIN leaf
         # insertion plus 50 ps -- one SDC for routing (hold repair at BC) and for both sign-off corners
         if FFM:
-            mn = (Lmax - L - 50) if m.group(1) == 'set_input_delay' else (L - Lmin - 50)
+            mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)   # + 25 ps hold uncertainty = 50
         else:
             mn = 0
         out.append(f'{m.group(1)} {io} -clock vclk{m.group(3) or ""} {m.group(4)}')
