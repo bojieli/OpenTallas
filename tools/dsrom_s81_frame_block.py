@@ -275,7 +275,7 @@ def emit(a):
          " --view asap7 --top dsfd_frame " + " ".join(f"--source {x}" for x in srcs) + " \\",
          f" --macro-view {qn}={rel}/views/{qn} --macro-view {rom}={Path(S.CFG_LEF).parent} \\",
          " --clock-port ck --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 "
-         "--io-delay-fraction 0.2 --stages synth,pnr \\",
+         "--io-delay-fraction 0.2 --stages pnr \\",
          f" --die-area 0 0 {W:.3f} {H:.3f} --core-area 0 0.27 {W:.3f} {H - 0.27:.3f} --place-density ${{PD:-0.45}} "
          "--macro-place-halo 2 2 \\",
          f' --pin-region "^(xf|xd).*=bottom:{px - 60:.2f}-{px + 60:.2f}" --pin-region "^(rf|rd).*=bottom:{pr - 40:.2f}-{pr + 20:.2f}"'
