@@ -25,7 +25,7 @@
 //
 // THE ROW SUM'S TREE.  In a vector: LPH/8 chunk sums, log2(LPH/8) levels.  Across vectors: a streaming binary
 // counter, level t holds a left operand until its right sibling arrives; the row's last item combines with a held
-// operand or passes (its sibling is the +0 padding: x + (+0) = x).  Every level step, pass or add, takes LA + 1
+// operand or passes (its sibling is the +0 padding: x + (+0) = x).  Every level step, pass or add, takes LA_T + 1
 // cycles (the pass / add select is registered), so items stay in order.  The result is tapped at level lt = ceil(log2 nv) (an input).  This is exactly the
 // golden's tree over 2^ceil(log2(T/8)) leaves (ot_hdc_v41x_vec_red's argument).
 //
@@ -50,6 +50,8 @@ module ot_dsrom_su_softmax #(
     parameter integer LA    = 4,
     parameter integer ELM   = LM,        // the exp units' multiplier / add latencies (ot_hdc_v41x_exp)
     parameter integer ELA   = LA,
+    parameter integer ADD6  = 0,         // 1: every add is the six-cut f12 adder (ot_dsrom_su_softmax_add6) at the
+                                         // register-to-register sites; 0: the keep-prefix LAT-4/LAT-5 adder
     parameter integer DIVF12 = 1         // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
 ) (
     input  wire                 clk,
@@ -76,6 +78,7 @@ module ot_dsrom_su_softmax #(
     output wire [H*LPH*16-1:0]  o_d,
     output wire                 fault
 );
+    localparam integer LA_T = ADD6 ? 6 : LA;     // the add latency the pipeline is built around
     localparam integer NL = H * LPH;
     localparam integer CPV = LPH / 8;            // chunks a vector
     localparam integer LVI = $clog2(CPV);        // in-vector tree levels
@@ -174,18 +177,18 @@ module ot_dsrom_su_softmax #(
     end
     always @(posedge clk) if (mxuv[RWU]) mx_d <= mx_up;
     // the sink terms at the root: exp(sink + (-mb)), beside the row sum
-    wire [LA+D_EXP:0] skv;
-    ot_hdc_vline #(.D(LA + D_EXP)) u_skv (.clk(clk), .rst_n(rst_n), .v(mx_v), .vd(skv));
+    wire [LA_T+D_EXP:0] skv;
+    ot_hdc_vline #(.D(LA_T + D_EXP)) u_skv (.clk(clk), .rst_n(rst_n), .v(mx_v), .vd(skv));
     wire [H*32-1:0] sk_d, sk_e;
     reg  [H*32-1:0] sk_hold;
     generate for (h = 0; h < H; h = h + 1) begin : g_sk
         wire fa, fe;
-        ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, mx_v, sink[32*h +: 32],
-                                                   {~mx_d[32*h + 31], mx_d[32*h +: 31]}, sk_d[32*h +: 32], fa);
-        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA]), .x(sk_d[32*h +: 32]),
+        ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+            (clk, rst_n, mx_v, sink[32*h +: 32], {~mx_d[32*h + 31], mx_d[32*h +: 31]}, sk_d[32*h +: 32], fa);
+        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(skv[LA_T]), .x(sk_d[32*h +: 32]),
                                                  .y(sk_e[32*h +: 32]), .vo(), .fault(fe));
     end endgenerate
-    always @(posedge clk) if (skv[LA + D_EXP]) sk_hold <= sk_e;
+    always @(posedge clk) if (skv[LA_T + D_EXP]) sk_hold <= sk_e;
     // the maxima back to the lanes
     wire [H*32-1:0] mx_dn;
     wire [RWD:0]    mxdv;
@@ -215,21 +218,21 @@ module ot_dsrom_su_softmax #(
     always @(posedge clk) begin
         if (rd_on) s_rd <= sbuf[rcnt];
     end
-    wire [LA+D_EXP:0] bv, blast;
-    ot_hdc_vline #(.D(LA + D_EXP)) u_bv (.clk(clk), .rst_n(rst_n), .v(rv), .vd(bv));
-    ot_hdc_vline #(.D(LA + D_EXP)) u_bl (.clk(clk), .rst_n(rst_n), .v(rlast), .vd(blast));
+    wire [LA_T+D_EXP:0] bv, blast;
+    ot_hdc_vline #(.D(LA_T + D_EXP)) u_bv (.clk(clk), .rst_n(rst_n), .v(rv), .vd(bv));
+    ot_hdc_vline #(.D(LA_T + D_EXP)) u_bl (.clk(clk), .rst_n(rst_n), .v(rlast), .vd(blast));
     wire [NL*32-1:0] bd, be;
     generate for (l = 0; l < NL; l = l + 1) begin : g_b
         localparam integer HH = l / LPH;
         wire fa, fe;
         always @(posedge clk) if (mxdv[RWD]) mbn[32*l +: 32] <= {~mx_dn[32*HH + 31], mx_dn[32*HH +: 31]};
-        ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, rv, s_rd[32*l +: 32],
-                                                   mbn[32*l +: 32], bd[32*l +: 32], fa);
-        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA]), .x(bd[32*l +: 32]),
+        ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+            (clk, rst_n, rv, s_rd[32*l +: 32], mbn[32*l +: 32], bd[32*l +: 32], fa);
+        ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
                                                  .y(be[32*l +: 32]), .vo(), .fault(fe));
     end endgenerate
-    wire e_at = bv[LA + D_EXP];
-    wire e_last = blast[LA + D_EXP];
+    wire e_at = bv[LA_T + D_EXP];
+    wire e_last = blast[LA_T + D_EXP];
     wire [DOUT:0] eov;
     ot_hdc_vline #(.D(DOUT)) u_eov (.clk(clk), .rst_n(rst_n), .v(e_at), .vd(eov));
     ot_hdc_delay #(.W(NL*32), .D(DOUT)) u_eod (.clk(clk), .rst_n(rst_n), .d(be), .q(e_d));
@@ -239,9 +242,9 @@ module ot_dsrom_su_softmax #(
     // C. row sum: chunk chains (7 adds), in-vector tree, streaming time levels; RWU; den at the root; RWD
     // =================================================================================================
     // chunk chain: acc0 = x0 (-0 -> +0: the golden's +0 + x0), acc_j = acc_{j-1} + x_j
-    wire [7*LA:0] cv, cl;
-    ot_hdc_vline #(.D(7 * LA)) u_cv (.clk(clk), .rst_n(rst_n), .v(e_at), .vd(cv));
-    ot_hdc_vline #(.D(7 * LA)) u_cl (.clk(clk), .rst_n(rst_n), .v(e_last), .vd(cl));
+    wire [7*LA_T:0] cv, cl;
+    ot_hdc_vline #(.D(7 * LA_T)) u_cv (.clk(clk), .rst_n(rst_n), .v(e_at), .vd(cv));
+    ot_hdc_vline #(.D(7 * LA_T)) u_cl (.clk(clk), .rst_n(rst_n), .v(e_last), .vd(cl));
     wire [NL/8*32-1:0] csum_o;
     generate for (k = 0; k < NL / 8; k = k + 1) begin : g_ch
         wire [32*8-1:0] acc;
@@ -251,16 +254,16 @@ module ot_dsrom_su_softmax #(
         for (j = 1; j < 8; j = j + 1) begin : g_j
             wire [31:0] xj;
             wire fa;
-            ot_hdc_delay #(.W(32), .D(LA * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n), .d(be[32*(8*k+j) +: 32]), .q(xj));
-            ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, cv[LA*(j-1)], acc[32*(j-1) +: 32], xj,
-                                                       acc[32*j +: 32], fa);
+            ot_hdc_delay #(.W(32), .D(LA_T * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n), .d(be[32*(8*k+j) +: 32]), .q(xj));
+            ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+                (clk, rst_n, cv[LA_T*(j-1)], acc[32*(j-1) +: 32], xj, acc[32*j +: 32], fa);
         end
         assign csum_o[32*k +: 32] = acc[32*7 +: 32];
     end endgenerate
     // in-vector tree: LVI levels over each head's CPV chunk sums
-    wire [LA*LVI:0] vtv, vtl;
-    ot_hdc_vline #(.D(LA * LVI)) u_vtv (.clk(clk), .rst_n(rst_n), .v(cv[7*LA]), .vd(vtv));
-    ot_hdc_vline #(.D(LA * LVI)) u_vtl (.clk(clk), .rst_n(rst_n), .v(cl[7*LA]), .vd(vtl));
+    wire [LA_T*LVI:0] vtv, vtl;
+    ot_hdc_vline #(.D(LA_T * LVI)) u_vtv (.clk(clk), .rst_n(rst_n), .v(cv[7*LA_T]), .vd(vtv));
+    ot_hdc_vline #(.D(LA_T * LVI)) u_vtl (.clk(clk), .rst_n(rst_n), .v(cl[7*LA_T]), .vd(vtl));
     generate for (k = 0; k <= LVI; k = k + 1) begin : g_vt
         wire [((NL / 8) >> k)*32-1:0] x;
         if (k == 0) begin : g_0
@@ -268,15 +271,16 @@ module ot_dsrom_su_softmax #(
         end else begin : g_n
             for (l = 0; l < ((NL / 8) >> k); l = l + 1) begin : g_l
                 wire fa;
-                ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, vtv[LA*(k-1)], g_vt[k-1].x[64*l +: 32],
-                                                           g_vt[k-1].x[64*l + 32 +: 32], x[32*l +: 32], fa);
+                ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+                    (clk, rst_n, vtv[LA_T*(k-1)], g_vt[k-1].x[64*l +: 32], g_vt[k-1].x[64*l + 32 +: 32],
+                     x[32*l +: 32], fa);
             end
         end
     end endgenerate
     wire [H*32-1:0] vsum = g_vt[LVI].x;          // head h's vector sum
-    wire            vs_v = vtv[LA*LVI];
-    wire            vs_l = vtl[LA*LVI];
-    // time levels: level t input (v, l, x); output after LA (add or pass)
+    wire            vs_v = vtv[LA_T*LVI];
+    wire            vs_l = vtl[LA_T*LVI];
+    // time levels: level t input (v, l, x); output after LA_T (add or pass)
     wire [(LTMAX+1)*H*32-1:0] tl_x;
     wire [LTMAX:0]            tl_v, tl_l;
     assign tl_x[H*32-1:0] = vsum;
@@ -289,24 +293,24 @@ module ot_dsrom_su_softmax #(
         reg             par;
         wire comb = vi && par;                   // odd item: combine with the held left operand
         wire pass = vi && !par && li;            // even and last: its sibling is +0 padding
-        wire [LA:0] ov, ol, op;
-        ot_hdc_vline #(.D(LA)) u_ov (.clk(clk), .rst_n(rst_n), .v(comb || pass), .vd(ov));
-        ot_hdc_vline #(.D(LA)) u_ol (.clk(clk), .rst_n(rst_n), .v((comb || pass) && li), .vd(ol));
-        ot_hdc_vline #(.D(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(pass), .vd(op));
+        wire [LA_T:0] ov, ol, op;
+        ot_hdc_vline #(.D(LA_T)) u_ov (.clk(clk), .rst_n(rst_n), .v(comb || pass), .vd(ov));
+        ot_hdc_vline #(.D(LA_T)) u_ol (.clk(clk), .rst_n(rst_n), .v((comb || pass) && li), .vd(ol));
+        ot_hdc_vline #(.D(LA_T)) u_op (.clk(clk), .rst_n(rst_n), .v(pass), .vd(op));
         wire [H*32-1:0] sum, pd;
         for (l = 0; l < H; l = l + 1) begin : g_h
             wire fa;
-            ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, comb, held[32*l +: 32], xi[32*l +: 32],
-                                                       sum[32*l +: 32], fa);
+            ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+                (clk, rst_n, comb, held[32*l +: 32], xi[32*l +: 32], sum[32*l +: 32], fa);
         end
-        ot_hdc_delay #(.W(H*32), .D(LA)) u_pd (.clk(clk), .rst_n(rst_n), .d(xi), .q(pd));
-        // the level's output is registered (pass / add select off the next level's adder input path): LA + 1
+        ot_hdc_delay #(.W(H*32), .D(LA_T)) u_pd (.clk(clk), .rst_n(rst_n), .d(xi), .q(pd));
+        // the level's output is registered (pass / add select off the next level's adder input path): LA_T + 1
         reg  [H*32-1:0] xo;
         reg             vo_r, lo_r;
-        always @(posedge clk) xo <= op[LA] ? pd : sum;
+        always @(posedge clk) xo <= op[LA_T] ? pd : sum;
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin vo_r <= 1'b0; lo_r <= 1'b0; end
-            else begin vo_r <= ov[LA]; lo_r <= ol[LA]; end
+            else begin vo_r <= ov[LA_T]; lo_r <= ol[LA_T]; end
         end
         assign tl_x[(k+1)*H*32 +: H*32] = xo;
         assign tl_v[k+1] = vo_r;
@@ -334,17 +338,17 @@ module ot_dsrom_su_softmax #(
     end
     always @(posedge clk) if (esuv[RWU]) es_d <= es_up;
     // den = es + exp(sink - mb) at the root, then RWD to the lanes
-    wire [LA:0]     dnv;
+    wire [LA_T:0]     dnv;
     wire [H*32-1:0] den_r;
-    ot_hdc_vline #(.D(LA)) u_dnv (.clk(clk), .rst_n(rst_n), .v(es_v), .vd(dnv));
+    ot_hdc_vline #(.D(LA_T)) u_dnv (.clk(clk), .rst_n(rst_n), .v(es_v), .vd(dnv));
     generate for (h = 0; h < H; h = h + 1) begin : g_dn
         wire fa;
-        ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, es_v, es_d[32*h +: 32], sk_hold[32*h +: 32],
-                                                   den_r[32*h +: 32], fa);
+        ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+            (clk, rst_n, es_v, es_d[32*h +: 32], sk_hold[32*h +: 32], den_r[32*h +: 32], fa);
     end endgenerate
     wire [H*32-1:0] den_dn;
     wire [RWD:0]    dndv;
-    ot_hdc_vline #(.D(RWD)) u_dndv (.clk(clk), .rst_n(rst_n), .v(dnv[LA]), .vd(dndv));
+    ot_hdc_vline #(.D(RWD)) u_dndv (.clk(clk), .rst_n(rst_n), .v(dnv[LA_T]), .vd(dndv));
     ot_hdc_delay #(.W(H*32), .D(RWD)) u_dnd (.clk(clk), .rst_n(rst_n), .d(den_r), .q(den_dn));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) den_v <= 1'b0; else den_v <= dndv[RWD];
@@ -367,7 +371,7 @@ module ot_dsrom_su_softmax #(
         if (!rst_n) ucnt <= 7'd0;
         else if (piv[DIN]) ucnt <= (ucnt + 7'd1 == NPV) ? 7'd0 : ucnt + 7'd1;
     end
-    localparam integer DR = D_DIV + 1 + LM + LA + 1;     // divide, BF16, mul, add, BF16
+    localparam integer DR = D_DIV + 1 + LM + LA_T + 1;     // divide, BF16, mul, add, BF16
     wire [DR:0] dv;
     ot_hdc_vline #(.D(DR)) u_dv (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .vd(dv));
     wire [6:0] u_q, u_r;                         // vector index at the divide output / at its BF16 register
@@ -392,9 +396,9 @@ module ot_dsrom_su_softmax #(
     end endgenerate
     // RoPE: lane j of a tail vector, element p = u*LPH + j, pair i = (p - (512 - TAIL)) / 2
     wire [NL*16-1:0] o0_d;
-    ot_hdc_delay #(.W(NL*16), .D(LM + LA)) u_o0d (.clk(clk), .rst_n(rst_n), .d(o0), .q(o0_d));
+    ot_hdc_delay #(.W(NL*16), .D(LM + LA_T)) u_o0d (.clk(clk), .rst_n(rst_n), .d(o0), .q(o0_d));
     wire [6:0] u_rd;
-    ot_hdc_delay #(.W(7), .D(LM + LA)) u_urd (.clk(clk), .rst_n(rst_n), .d(u_r), .q(u_rd));
+    ot_hdc_delay #(.W(7), .D(LM + LA_T)) u_urd (.clk(clk), .rst_n(rst_n), .d(u_r), .q(u_rd));
     reg  [NL*16-1:0] ob;
     generate for (l = 0; l < NL; l = l + 1) begin : g_rp
         localparam integer J = l % LPH;
@@ -414,7 +418,8 @@ module ot_dsrom_su_softmax #(
         ot_hdc_qmul_lat #(LM) u_m1 (clk, rst_n, dv[D_DIV + 1], (J % 2 == 0) ? a : b, c, m1, f1);
         ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, dv[D_DIV + 1], (J % 2 == 0) ? b : a, s, m2, f2);
         wire [31:0] m2s = (J % 2 == 0) ? m2 : {~m2[31], m2[30:0]};
-        ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, dv[D_DIV + 1 + LM], m1, m2s, ad, f3);
+        ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
+            (clk, rst_n, dv[D_DIV + 1 + LM], m1, m2s, ad, f3);
         wire tail = ({2'd0, u_rd} * LPH + J) >= (512 - TAIL);
         wire [15:0] adb;
         ot_hdc_kinc #(.W(16), .K(1)) u_bf (.a(ad[31:16]), .inc(ad[15] & (ad[16] | (|ad[14:0]))), .y(adb));

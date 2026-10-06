@@ -45,7 +45,8 @@ RTL = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
        "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
-       "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_softmax.sv"]
+       "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+       "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv", "rtl/hdc/v41x/ot_dsrom_su_softmax.sv"]
 TB = "rtl/test/tb_dsrom_su_softmax.sv"
 # simulation: the keep-prefix integer adders as their behavioural `+` (same function, combinational; the N 1,024
 # SU bench's dpi_beh convention), the FP units as RTL
@@ -192,7 +193,7 @@ def cmd_build(a):
     nvm = nvmax(a.lph)
     ltm = max(1, int(np.ceil(np.log2(nvm))))
     cmd = [verilator(), "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_dsrom_su_softmax",
-           f"-GLPH={a.lph}", f"-GNVMAX={nvm}", f"-GLTMAX={ltm}", f"-GLM={a.lm}", f"-GLA={a.la}", f"-GELM={a.elm}", f"-GELA={a.ela}", "-Mdir", str(obj), "-j", str(a.jobs),
+           f"-GLPH={a.lph}", f"-GNVMAX={nvm}", f"-GLTMAX={ltm}", f"-GLM={a.lm}", f"-GLA={a.la}", f"-GELM={a.elm}", f"-GELA={a.ela}", f"-GADD6={a.add6}", "-Mdir", str(obj), "-j", str(a.jobs),
            "--unroll-count", "4", "-fno-dfg", *[str(ROOT / p) for p in SIM_RTL], str(ROOT / TB), "-CFLAGS", "-O1"]
     subprocess.run(cmd, check=True)
     return 0
@@ -220,7 +221,7 @@ def cmd_run(a):
             "attn.sink": kv["t_den"] - kv["t_es"], "attn.normalize": kv["t_olast"] - kv["t_pv0"]}
         rows.append(row)
         print(m["name"], row["exact"], row["nodes_cycles"], flush=True)
-    res = dict(lph=a.lph, lm=a.lm, la=a.la, elm=a.elm, ela=a.ela, tag=a.tag, rows=rows, all_exact=all(r["exact"] for r in rows), generated_utc=now(),
+    res = dict(lph=a.lph, lm=a.lm, la=a.la, elm=a.elm, ela=a.ela, add6=a.add6, tag=a.tag, rows=rows, all_exact=all(r["exact"] for r in rows), generated_utc=now(),
                source_commit=git_head(), rtl_sha256={p: sha(ROOT / p) for p in RTL + SIM_RTL + [TB]})
     (work / f"run_lph{a.lph}{a.tag}.json").write_text(json.dumps(res, indent=1) + "\n")
     print("RUN", "pass" if res["all_exact"] else "FAIL")
@@ -290,6 +291,7 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--lm", type=int, default=5)
     ap.add_argument("--la", type=int, default=4)
+    ap.add_argument("--add6", type=int, default=0)
     ap.add_argument("--elm", type=int, default=5)
     ap.add_argument("--ela", type=int, default=4)
     ap.add_argument("--tag", default="")
