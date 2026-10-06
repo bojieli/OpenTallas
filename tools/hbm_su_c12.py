@@ -19,7 +19,8 @@ swaps the source lists, sets the campaign's depth model to the c12 depths and EX
         --cases su_cases_v2_ildr.pkl                                                        (the composition's cycles)
     python3 tools/hbm_su_c12.py su-run ... --n 64 --m 16 --fp rtl ...                       (bit-level, N 64)
 Common options (before the subcommand's own): --mlat 6 --alat 6 --opr 1 --ddiv 21 --sidex 3 --fsq 1
---rpad R --rsl S --rtap T --rslice W (defaults: the c12 build).
+--rpad R --rsl S --rtap T --rslice W --gsh G --kimm K (defaults: the c12 build; gsh / kimm: CLAUDE HBM-ABSTRACTS
+hub lane margin, default off).
 """
 from __future__ import annotations
 
@@ -40,7 +41,7 @@ SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_l
         "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"]}
-P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1)
+P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, gsh=0, kimm=0)
 
 
 def take_params(argv):
@@ -62,7 +63,7 @@ def set_c12(VC):
     m, a = P["mlat"], P["alat"]
     assert 3 <= a <= m <= 8, (m, a)
     VC.MLAT, VC.ALAT = m, a
-    VC.D_FETCH, VC.D_FETCH_G = 4 + P["capr"], 6 + P["opr"] + P["capr"]
+    VC.D_FETCH, VC.D_FETCH_G = 4 + P["capr"], 6 + P["opr"] + P["capr"] + P["gsh"]
     VC.D_PRE = 1 + P["opr"]                  # the M1 operand register sits between PRE and M1
     VC.D_DIV = P["ddiv"]
     VC.D_OUT = 1 + P["opr"]                  # the E1 operand register (a constant stage on every element)
@@ -80,7 +81,7 @@ def set_c12(VC):
 
 def vflags():
     g = dict(OPR=P["opr"], DDIV=P["ddiv"], SIDEX=P["sidex"], FSQ=P["fsq"], CAPR=P["capr"], RPAD=P["rpad"], RSL=P["rsl"], ROUT=P["rout"], CTL12=P["ctl12"],
-             RTAP=P["rtap"], RSLICE=P["rslice"])
+             RTAP=P["rtap"], RSLICE=P["rslice"], GSH=P["gsh"], KIMM=P["kimm"])
     return " ".join(f"-G{k}={v}" for k, v in g.items())
 
 
