@@ -14,6 +14,7 @@ from pathlib import Path
 TP, CONTEXT, PER_RANK = 96, 1048576, 512
 PHASE = 'L20.op14.index_scores.pre_candidate_mask.local_top512'
 STORE_SHA = 'f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790'
+GOLD_SHA = '5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45'
 TB = 'rtl/test/hbm_accel/tb_hbm_index_tp96_rank.sv'
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,6 +51,8 @@ def prepare(store, gold, ranks, out):
     from rtl_hdc_v41x_idx_campaign import to_codes
     if sha(store) != STORE_SHA:
         raise ValueError('retained full L20 entering-key source pin differs')
+    if sha(gold) != GOLD_SHA:
+        raise ValueError('captured released L20 all-rank reference/append pin differs')
     keys = np.load(store, mmap_mode='r')
     z = np.load(gold)
     if keys.shape != (CONTEXT-1, 128) or keys.dtype != np.float32:
@@ -93,6 +96,8 @@ def compare(run, inputs):
     from hbm_index_path_sources import RTL
     meta = json.loads((inputs/'inputs.json').read_text())
     rank = meta['rank']
+    if rank and not {STORE_SHA,GOLD_SHA}.issubset(set(meta['source_pins'].values())):
+        raise ValueError('actual retained full-key/gold source bindings required')
     ids = owned_ids(rank)
     scores = [int(s,16) for s in (inputs/'scores.mem').read_text().split()]
     if meta['keys'] != len(ids) or len(scores) != len(ids):
@@ -142,6 +147,7 @@ def compare(run, inputs):
         raise ValueError('source-matched terminal runtime PASS missing')
     return rows, dict(rank=rank, score_compares=len(ids), topk_exact=512,
         candidate_exact=len(blocks), source_phase=PHASE,
+        native_component_frame=dict(job=0xfeed0123,generation=10,position=CONTEXT-1,rank=rank),
         native_source_record_sha256=sha(run/'source.json'),
         input_record_sha256=sha(inputs/'inputs.json'),
         native_output_pins={n:sha(run/n) for n in ('topk.txt','candidates.txt','runtime.log')},

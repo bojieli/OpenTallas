@@ -1,0 +1,2004 @@
+{
+  "status": "ALL95_DISTINCT_NONZERO_RANK_INPUTS_PREPARED_NO_RUNTIME_CREDIT",
+  "rank_count": 95,
+  "actual_keys": 1037648,
+  "gold_reference_comparison_only": true,
+  "score_generation": false,
+  "ranks": [
+    {
+      "rank": 1,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/tmp/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c681830ed34b95d88a6cd295e16c6a9ddcfc51947c2c9fef2f6c01950ced6537",
+      "outputs": {
+        "keys.mem": "5d0e93b1622f3488575867bafda00f280966641e176890f4538193c5765f9e55",
+        "scores.mem": "79658ad51130c1762beb4d4c9fefbaad1429606713668e521af5db47287dc2d3"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input/rank01/inputs.json",
+      "record_sha256": "48fe036a778103fa43eb08cbfe4d371c19a8a34334ae4b5725874ce8b7bf34dd"
+    },
+    {
+      "rank": 2,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "0e68f73b0e8f4c7c9dd5ba65d5eb5aad344a9e70df3cb1ee93a92be04b9a194f",
+      "outputs": {
+        "keys.mem": "e29af2703a451e1fa2266f6e2fcd196c9cf828428843d84f76537c77d130096d",
+        "scores.mem": "2e598fcb9ea2db3b2f7f7317016d4f6087d45e50c0ab99e9e63160f0683722b6"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank02/inputs.json",
+      "record_sha256": "617d9296e9c1fc9b2a5a2361b89624949dd26af18420fdb25736a19cd9d90df9"
+    },
+    {
+      "rank": 3,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "95be9369070cb66dabf1a30e925b0ae78573184e2ab2a2088d345c76b6c5c297",
+      "outputs": {
+        "keys.mem": "60131e05eb9c806f3b6362e0b70e03760d177f20113d72b23e6393cd9f109155",
+        "scores.mem": "82e0ad709d932815d06ade50a25720249ea35b2847cb035b6fcc9146f3e874eb"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank03/inputs.json",
+      "record_sha256": "2dbe16f12ad3d0e3617f1dfbaa280e58e47b9ea1cc84e3b982f35a78a7edaeea"
+    },
+    {
+      "rank": 4,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "1884697024127301abcaa0b8785d505ba07612be61a25cdda0bd45b174d3336c",
+      "outputs": {
+        "keys.mem": "883cc661ec7ed8d8b601e0d6e0e84a2bd7a01dc363e9a5cf6b82dc94ff53614f",
+        "scores.mem": "7aac3af0c38e193da173812786c743fe700f13b0cb2b1bb834d1ad5acc77bab2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank04/inputs.json",
+      "record_sha256": "3527d6d28239c977ff6f810ee08ced3dadc8dadb21eebfb948962ac4af40e56c"
+    },
+    {
+      "rank": 5,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "9050720d528f84fcf82bbf2f18677794e6b0944d08b8760e3cc9b795f83e8469",
+      "outputs": {
+        "keys.mem": "389260635533c5d17f4930ced98129059954cf8248775a87f682998a7bf35196",
+        "scores.mem": "6ccc729dba3aab647662384f63931feee0f5a3241ac05001468772f4d4c2f519"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank05/inputs.json",
+      "record_sha256": "2d691188692b6b179964ed44835651f516c13afd5aa773312ccfb43cacc21de2"
+    },
+    {
+      "rank": 6,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "904f4335ff4808ec456c2b988f92a60486eb0eb9d5de03bbf6b4f97ca9602cd9",
+      "outputs": {
+        "keys.mem": "a0ff69392a1fa559f3fe500f61dddaa931ddc3f86bbe7eccdb1e47631fda6dd3",
+        "scores.mem": "c8b5070e67e7bd9b43ef40b833e4ca8cfddef611e4b274dbefa7268841a94db2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank06/inputs.json",
+      "record_sha256": "ccc4fd9f481cc707e58e5dcd5d9ef54b988dff47feaa99278ca4227c41c5eb75"
+    },
+    {
+      "rank": 7,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "bad5c195e572dcbea71cc377a523f283147aeb8792b09842c7dd53640dfda7e5",
+      "outputs": {
+        "keys.mem": "365eec82636268797ef1301f6698e16b8fdc9708c8868bce1d9c08e607573e89",
+        "scores.mem": "ca1e824ae77958c2ae708089046e8ecb961025bc0ff31b9eb82f5ccf736b009e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank07/inputs.json",
+      "record_sha256": "89c09eecd50f130f501a01d298e890ffe681ad3438f6d50ea7993e1290206351"
+    },
+    {
+      "rank": 8,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "a43087311e6b063e4a58aa5485f0a23560aab8c2b28429520e20176c4638d0ff",
+      "outputs": {
+        "keys.mem": "02bfcace38d955cfa3df2fb499cb3a24ce7d6daf7c7164c9e2490cbdd0e81329",
+        "scores.mem": "3fa9f64eecdc96fb6fad67cc94f0f721ba32a581c9ff81d1962df768859f32a7"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank08/inputs.json",
+      "record_sha256": "de96b75b603e29f195b4e73c54ed0c60f7225f0c6ec86ff11b4fc159a16fe948"
+    },
+    {
+      "rank": 9,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "2ecec15d4352ec42ef0fdeaccb492691e8f9246085c4db6bb630ca7deb5344fa",
+      "outputs": {
+        "keys.mem": "bff228fe00a368037da9407eb794fced80c0c21cc27f39eadf8736ee1a4b6e52",
+        "scores.mem": "43be81a59f4ab9d366377bcc18829c20951fa92597af9fd5f61ad0550aa9731f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank09/inputs.json",
+      "record_sha256": "99b0bdcaf2a12a90c3e6a2ac8925920e5c37ee6aec63a5d4cd3025ab983f1b6e"
+    },
+    {
+      "rank": 10,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "f76676b7f59c0dc82a9b2920dac7c73acd55bd544f600195493136071b289299",
+      "outputs": {
+        "keys.mem": "2ee98b372e4fb91ded8dea33424b019388f2f8df489199aa69b7b8df09b3c45a",
+        "scores.mem": "ce378d7999f77693ebe0451a10afb0543a03b24525a54bb5caa1e37d5f26e991"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank10/inputs.json",
+      "record_sha256": "28d1810eb29e0705c215ef01121b9f15ac60a2f0e9aef9126568e5cab609d2b2"
+    },
+    {
+      "rank": 11,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "69a0afef79b598d3741da828da31dcf42fe7fbf504ffae500f5a673d7009c76f",
+      "outputs": {
+        "keys.mem": "12b43cfdffb57c6cafc9987956dda127e6cf8f867623d121dcb313653012f750",
+        "scores.mem": "f30e8f29f8bdd5356e508f0b926a4bf2f74dab523229d310da76aef7eaad3093"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank11/inputs.json",
+      "record_sha256": "e9e80bbb8345fa2102cdf8b21aaf26ee7a3ac3d8934dce7143e6f9fa34aea4fd"
+    },
+    {
+      "rank": 12,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "a0c53dd6db9ca3f722d3462eb952869f6cec45574d835c0a4d96c2e7485f15ab",
+      "outputs": {
+        "keys.mem": "3efd427926d61299c1187a87537177d6d14fefef341a2128bcb0cdbbaa137bf5",
+        "scores.mem": "5b1204cefcc9610c161ab10b84eb4a3b2cdeb8c3eebfa52d19e671364e8952c7"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank12/inputs.json",
+      "record_sha256": "483e39bf602ec4db2d8b0dd6ecbc014a745a08c6813268f4a7967366ab902601"
+    },
+    {
+      "rank": 13,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b2d34d6176058c38e8c2cdbdfc97cfdc8c74f52de10831d5680793a8587ece14",
+      "outputs": {
+        "keys.mem": "a8a41d9d7efd7e7b3f0637b991b70713b594ca2834325dab68099ed26e10253b",
+        "scores.mem": "dca589ff5788314f8775a9584d4dd94a79ddd25f4fa1d1e4e66c2a0cf337efa8"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank13/inputs.json",
+      "record_sha256": "8914c09eb88c5e2088881a9556f5e408a9fdc46855e9e29306efac35042515f0"
+    },
+    {
+      "rank": 14,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "6e474572d8fa1a9834a0762c5ff19fd65f8375d2048d2c4422c0e645e1f9dbe6",
+      "outputs": {
+        "keys.mem": "70a576f08ce1c96d9957768cecbf68f4552df15b69097bcec4a1bdcad62dd9cf",
+        "scores.mem": "3f64a92b4526bdfd30a486465475d50bf0e7a7ed7f9dff76ec66062ee1569a9e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank14/inputs.json",
+      "record_sha256": "b8e139249251c501c9f5ec367b536b3c26e58bbf9690ecd882ef067b461d01a4"
+    },
+    {
+      "rank": 15,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "6cd2f73221c9caea29a896cd674d068d948b7b44194c457327e5cae023656c02",
+      "outputs": {
+        "keys.mem": "7b7be772b8c06c2326de262754331d17947415e368fe65ea25ce9385d5081f97",
+        "scores.mem": "aeb5a7bb85e10575fa542dcd46cf53baabd7819c0e49fa761b6e84d70bbe7201"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank15/inputs.json",
+      "record_sha256": "f96eca012d7335e88bcfbd94b9777c9b8e237567ce9831e33ded9be93f2f0b2b"
+    },
+    {
+      "rank": 16,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "73d33ccf31fcf1e94abecc445be32c4885c87c46c2262fe7dd543594c8ec8a46",
+      "outputs": {
+        "keys.mem": "800ba8b01a4d85f1f26f1e7334be49f85ab45b601a7edbe96d80f45a7f038d79",
+        "scores.mem": "589e35e2f368093308604171b190321d8cc6d5fded94811826c9b641c1aeeb0a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank16/inputs.json",
+      "record_sha256": "62dd28706515f1bf231d2d11c28bb2efb054ea7c187feb70125dc866792287df"
+    },
+    {
+      "rank": 17,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "8591da8c88176372c84134ae38f8cb8fa44a16788290c458ab04eea848af8d11",
+      "outputs": {
+        "keys.mem": "cc1e9b8640c03c3edd71baeadfff42d4c83300658887a24ac52d61c79640af96",
+        "scores.mem": "ce95804a34c8435b5a6d454f2b1b8886cdecc3072f0226d34db744b71ed84938"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank17/inputs.json",
+      "record_sha256": "596e0da1bc643386742af9f267f469a2ba8ad60f725e64400f85cfc13a8b63fd"
+    },
+    {
+      "rank": 18,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "34d3d1119095a7cc92318fd81ffa8758f4f9ca87634f447fe64fa4e2687aeff2",
+      "outputs": {
+        "keys.mem": "9d75206b79ef4e9d0a69fdd495ce5abca949ecd39f75f3063e9575ef66fce5b6",
+        "scores.mem": "fef40de9b1b679b80b8f2244a4b9a76bec69644931b434481674322d02117ed9"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank18/inputs.json",
+      "record_sha256": "76e7e8881429791f86f80803adeef74568f90ce093eae4a896129c9fa6593548"
+    },
+    {
+      "rank": 19,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "377c919bf2983aed41fcd2bdf05fd379691fca6c282f85c202634437b5f3cb88",
+      "outputs": {
+        "keys.mem": "b49467c97b008f61c8643d754626f3f82ba1dafe14ec246c911d7549a25bc2a6",
+        "scores.mem": "20a6508c51743943e6da00bc4d86737668a49d2c81be8294bbc647246e36b669"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank19/inputs.json",
+      "record_sha256": "59241275dc3ef7f8ebe4820b6bf48c528c71692a531ae3287f542d5f0e286093"
+    },
+    {
+      "rank": 20,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c1ececbf8fc607456074fa3fba0b63c72be98d354119b1bfe8331c599b509f06",
+      "outputs": {
+        "keys.mem": "eef3913b52181a2af62f55c137f9852b7035977c873896fb43f58231cfe6e86d",
+        "scores.mem": "86c9dfb7b32a557643b3d2bed94dc2b5285f6032e5b38713f7eaae4683add1a2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank20/inputs.json",
+      "record_sha256": "f804e6a861174b934e2c80933cdf776e00d3b907349d1842d7e2de3e26fe7de9"
+    },
+    {
+      "rank": 21,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "e8afbc2b51347214c6eec020a24f870cc48b5e4f00000dd567484d28b510889e",
+      "outputs": {
+        "keys.mem": "8cab5a55b3408c6e102dc50a82f267b26a2c6b6b231a902ca7c8b6fbd51c502b",
+        "scores.mem": "8f7ec91c6a58d5b436596fff988c538e8c0302c3e344765fef90dc6428d2d15b"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank21/inputs.json",
+      "record_sha256": "2d17cebd56092fcc92dfd7fcafd9189513774173c6699973e4b7d7fc1b12b318"
+    },
+    {
+      "rank": 22,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "95c6f46495742d5c8376918b69ac58f729e5cfc3828d34d44158cfb302f63932",
+      "outputs": {
+        "keys.mem": "67cef23f7e89ea001bff796cd4873071e10f7ca7f1e5a413b1979899fd34292e",
+        "scores.mem": "9cb6533d15f4a5a44d79d285b850c471074e0641293e1663060d404b980651f9"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank22/inputs.json",
+      "record_sha256": "5076fb806d8083011349a08d590e20a91efafd2fcd45ee807fa081a96028c137"
+    },
+    {
+      "rank": 23,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c044b22cafdf53a2cadfd4f87836b6fad37e8bc974adff9871ae2a7d002f669e",
+      "outputs": {
+        "keys.mem": "0b844feed5dec8669964f3459f6662ad4b2a679d426177a6fe7f642555c5aea8",
+        "scores.mem": "7a56c95305e6c8b54e2e82d5b545f827beb69390732e969be65b8c5c9c445024"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank23/inputs.json",
+      "record_sha256": "985f642cc2899a3cf0ef53b6409dc99e726d90f799fe35f19ee069efe8c38efb"
+    },
+    {
+      "rank": 24,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c1eb1e6e525753bea6e8a05903f1186f6b64b6f2f5657c07ccfe6c78edadf2dd",
+      "outputs": {
+        "keys.mem": "bff207d1746fd98161b1db06b1ae354151949e60c754de0678b0cae22eb08d75",
+        "scores.mem": "82f4cf70e9d54d81c699420b67a07b3a343a7dccef49ab7bfcfa892c32dfc7c8"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank24/inputs.json",
+      "record_sha256": "b372da5de7f59f3b3591e54be0045045c9e399b74ecaa90fbfe588944f145f48"
+    },
+    {
+      "rank": 25,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b8845f36fde220d5555ea6db58a4decc1c8710452646a505044c3559cb9ca48b",
+      "outputs": {
+        "keys.mem": "c8e721007f4cbb0431633bdaebb5ba8b58ddcaa8507d710bc12203de6a677e5d",
+        "scores.mem": "34dd4b0cd8d1a51322228343bcce60318a05ff2da8b370941304e6afd82aaf7d"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank25/inputs.json",
+      "record_sha256": "2abcaa8c8f5d28bf06181eeb8e444184aa9cf543c8dfd1b493ba982c77985a0c"
+    },
+    {
+      "rank": 26,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b950759b5ef96f996a830454f9b87b8ea41e1870a335bd0001f7bd08ec95ed32",
+      "outputs": {
+        "keys.mem": "ccec729ca2bba4aa186c77957b1821a2d9fdca36c8a939dd1f41d4094e937bbb",
+        "scores.mem": "8971ad66161c1ab2e34e454887c1ff827675412c48fb4d7cd6938e4450f1fe68"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank26/inputs.json",
+      "record_sha256": "4ee35d20a947578d9a802aba29338ab158826585cb863cb8bef6b67141ecec97"
+    },
+    {
+      "rank": 27,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "63ef1557329a68e16429448478685851eb289ef3fd427f2a2993099167341fae",
+      "outputs": {
+        "keys.mem": "49cc8638452ba7e90813adb2c1c9ad636be8e1a7cac3163f7acc34fc3a5a74f5",
+        "scores.mem": "c457a397ff55ced8dc74961dda100e4a8e1f221c56c1e617c4d54eae68689a18"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank27/inputs.json",
+      "record_sha256": "93c02218dfb24a484b05d5b871d1e812369d9fd507284c460f11304c5036a228"
+    },
+    {
+      "rank": 28,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "9f6a095fe5d79fb1c158e1b143d6f9a2ba521c4f0752d73c4e0f2d5f32b9502c",
+      "outputs": {
+        "keys.mem": "eb0be399cc3eb738a7a6b90b15fbf4af89fc149390be526cd53a719922f0e8a1",
+        "scores.mem": "57d5746ce24795aa534a4a9c22979970a25550838584b67e79c2bdda805a69af"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank28/inputs.json",
+      "record_sha256": "4d441c4f7931e9c56ed23c3e2b9960c01606739aea1ec116e284c56b71da4dc5"
+    },
+    {
+      "rank": 29,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "69753c8b717305b13d4eb9579168ae03a6ba3e35a2b6a30cb71dc0b7ae956119",
+      "outputs": {
+        "keys.mem": "52ed5aa36ce66dcd5e344d495d9860aebd5ebb69a635aef5fbd3e9be0ee45999",
+        "scores.mem": "4c1291f1f83698c386e21e8c7079aa26555df37bcd70120bfdc07be065549e42"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank29/inputs.json",
+      "record_sha256": "1790b0fc6eff778e5f833019cfad57fd2bdd6fdcc6f60289a9e8e978574f9785"
+    },
+    {
+      "rank": 30,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "bd18667572a56cc3e9b572e64ccd7552b603237fe5b3d9a42b5ee618e272d164",
+      "outputs": {
+        "keys.mem": "d8eebf09ce4935ad40799057c95ae2fb868e8099b3b59e9a11946165a437c400",
+        "scores.mem": "3c65caebc4e76ae22c459eaacdc9e722b491aae242194ef83129d7bc3731d3ec"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank30/inputs.json",
+      "record_sha256": "0f1102a1ca20d4e794f2fedf47fcb507ad0dc29041eb408f8b26bb8028fc3d4b"
+    },
+    {
+      "rank": 31,
+      "keys": 10928,
+      "beats": 171,
+      "blocks": 1366,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/tmp/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "450de24972fe8d3bbf6ad304f702dedc23203b1b44c7b49b0dc911c94067973c",
+      "outputs": {
+        "keys.mem": "555ae1b0ed50c81640df6eeebd937206112b3de34a1cbf0415f801b22ba67e6f",
+        "scores.mem": "d041f6307f93764ffae795790f78bcd23f77255e1d53e3264e0ed494bd4d3922"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input/rank31/inputs.json",
+      "record_sha256": "0dd908a757cf73428e3196de8337402a4286b14027ef83bf54313ed89b92be8c"
+    },
+    {
+      "rank": 32,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "312cdb860b15ba8b711991dfd07193ab6749a99a9eea8ba7ebd8cc245b190171",
+      "outputs": {
+        "keys.mem": "5dea18e2bf874b9ec4f44fb624793f99e0e1b761c0aac8642d5a5b7ad21d248d",
+        "scores.mem": "a9ae78e626e3a9367a73e15fbc5fc628693af363dfd6495dd22242d9a2cd95c9"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank32/inputs.json",
+      "record_sha256": "846c9091dfa39c65c7fde7b99ca3c7d5308686a8d335d3eba65aa2e68e0ad725"
+    },
+    {
+      "rank": 33,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "4d172d16ff1ff564830650361daca594f4bdebcb1bdb7ecf714a7cb39c4ce1f5",
+      "outputs": {
+        "keys.mem": "f45521d74b0a99ac373458e98555e1e8e749c6cd814e5a6f8b4aead990c0c5aa",
+        "scores.mem": "62f2c2c66b06b70842ba21d9e7030dbf8eca0c1dc9a74a044390e70c7680632a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank33/inputs.json",
+      "record_sha256": "ee010f9ac505f1d90dd34f5697c417c58af4673e22e4a772838a88d9957b6ad6"
+    },
+    {
+      "rank": 34,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "ad6b78945bb12c1e61918b8ed03423134c8a93938651ccf9b891fe4ddb64511e",
+      "outputs": {
+        "keys.mem": "abb3ed949ce183f8ed831e6d236b41c6c4cbf622f6e0768f87fb5d63ea89ddd2",
+        "scores.mem": "48bfb096251fc941dfe3caf30bab8e7b9640c168401909650d8ab2c867ed0f42"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank34/inputs.json",
+      "record_sha256": "e21a7d8b632a034fd8913609713a72a9e0ad73f0bb78908d512d57f2b0419aab"
+    },
+    {
+      "rank": 35,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "29856ff5421592b75cf4ffe4742060fc7faa6d6634eab7398793d82abef8b298",
+      "outputs": {
+        "keys.mem": "6d87906352e78218e5faa52514a747b75599ad439ed5f6bd0c356fe7124a0cc2",
+        "scores.mem": "648cda784ba736be26939627a4e51b6549a59446099a2d9ba616e2b65eb14309"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank35/inputs.json",
+      "record_sha256": "0531bbd91d43aaa9b649cafae2bdda93672fccc771c13451255deea2bde43819"
+    },
+    {
+      "rank": 36,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "f32b14e21c70547e385952715ab19164b5cf6e886395c9683124e6cbe695254b",
+      "outputs": {
+        "keys.mem": "7f06aa537d4934e6201920eba920616838d8f6b1543fffc2301b6887187c51f6",
+        "scores.mem": "f4697f38a945d167091b76606397a9e26562bd920a44eed4b45752ea22c3e1fb"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank36/inputs.json",
+      "record_sha256": "41cc6f94c5a6db3e46775937cc8041a6ed45f10bc721516de0f4c81293644bbe"
+    },
+    {
+      "rank": 37,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c0905711d97ccecd62b07165aeabe0e297ffa939a911bdc0f7ef1b3d9a604c1e",
+      "outputs": {
+        "keys.mem": "00852f04ea581009640833c4e7a682cf9e35431303b0520ca10cbb6968b986d3",
+        "scores.mem": "02e6bd0a14d2f2c9a9a638f5b35f9a27785e2e34c309c93c78d2b5b8284a6f02"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank37/inputs.json",
+      "record_sha256": "d8e60d0f6ba31a56a485b12d9593f7be12c41dd9e2e932bdd907a924370d6d31"
+    },
+    {
+      "rank": 38,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "857eb408f746cfa1338049dbb82f76ca0364537f588b7a34bfe3278debece5f6",
+      "outputs": {
+        "keys.mem": "5910c8126dfc7cebc74300c80e0145b1c78219cc3d57a2bcc47255871edc1036",
+        "scores.mem": "60a337ae36a366df7c5984160cc1afaa52c199b3d8ca19530aa581c00dc589c7"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank38/inputs.json",
+      "record_sha256": "8faae92d881a4616d763cd204de9dc701506d3622c2b020c989106cff37dd5f6"
+    },
+    {
+      "rank": 39,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "61e15ddda85228132d8cd466588097401dee1f2010bbe3e3e8e99d6c27a4f3fa",
+      "outputs": {
+        "keys.mem": "de76c2d87fd79356c4698c8e5c5122d4cbd5698117127b23cb8477b2e70ad3ee",
+        "scores.mem": "82d9efbce7f715b2ec9a0df2117ed3482578d7bbb63c08f3adf9015d7e5d9187"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank39/inputs.json",
+      "record_sha256": "b482b4600110a7c6a562fc487ae571978616b39f88e29f7aa82fb528b6dda417"
+    },
+    {
+      "rank": 40,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "1b027caa1797e8a9b7b7c43547ce738e2e2fe5468fcb4d5c760287cca5153a43",
+      "outputs": {
+        "keys.mem": "76a0273495285651b7e3005427a15c42e8fb4e20dde9c3d74ab212f07239ef25",
+        "scores.mem": "ca6701957f69871b81cbeaf834f452e3292b420cd86c171e5eb595b2478a9062"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank40/inputs.json",
+      "record_sha256": "3a322d32a7abeb59b0d1ef14ff3516495375d0293d881a70581e2566282b8640"
+    },
+    {
+      "rank": 41,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "1c615380087617aec9a212a5a8f54a24e80a5b2ccf2b36a21928c1bf212ae907",
+      "outputs": {
+        "keys.mem": "25d002457a8fdeb7c838fc6c3635ac8af0cd23160116edac4e8dc72e3ca0a3cc",
+        "scores.mem": "f07be5c1284e94581aa3004bb3340190c60104eeb0b0d2f3eaa7cd047cdace08"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank41/inputs.json",
+      "record_sha256": "5b410918a4a906ad19a02446d1d8744732df2197c223fb520ecc90e8d3f0cf7a"
+    },
+    {
+      "rank": 42,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "75f4dc6313c711d72cd6e5fbfae87d5b38a6df20095e21fb8232bc3c0c2d2cda",
+      "outputs": {
+        "keys.mem": "660f50b6a190e08298ec8e8f08736db2375b16447e2d695120aa2c7e854703e3",
+        "scores.mem": "206789101db5c4eac77988f5863b406aa65ea5546ecce4ce40aa1099ded103ba"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank42/inputs.json",
+      "record_sha256": "3ee88a90dc8ba7eb5579e948fd7721d6ee5f57c491a7256e5c7f64cb235a20d8"
+    },
+    {
+      "rank": 43,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "16a83b88b923f770f84f9ce6090116d02c1964e77fc024f5c7ea2962cbb1eb13",
+      "outputs": {
+        "keys.mem": "f639c7fec0cb4979057d936d2b15776f3fb0aaddd3fc02529af47d621cf420cf",
+        "scores.mem": "23f0fb337279b5f7e545d10ea0e8270dd7b087a8b5148d977e3b5641d113ada7"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank43/inputs.json",
+      "record_sha256": "81a8a574dc7879f0917841c6e8b3614104ee77225e5a5f72407e94f9a0e3cff3"
+    },
+    {
+      "rank": 44,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c02769b049f798eaa298dd4599b8e45996353c64faf1f7860b76d79c2cd655d6",
+      "outputs": {
+        "keys.mem": "04c0a86b2a208e435ea747907a2e4f8f99eba4b6932736901bc0d85ccc4ab062",
+        "scores.mem": "3eb0664d16c6fc9d3187871b7ed519b59ba826dcc2134f31fd033a5cee25b3b4"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank44/inputs.json",
+      "record_sha256": "8e5ba6e14a37bd65a8af17e7ecee702f9feeef3d6251c5c776c53efe7c54bc02"
+    },
+    {
+      "rank": 45,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "a95cab55647b069fcdd9726180d63e2054e9eeba1f672739a373665340707fa6",
+      "outputs": {
+        "keys.mem": "0a99ec6db0b04835b04d6fd3852580384bc5d9d8beb616149988798ca84babb1",
+        "scores.mem": "ff7ea6b15c37cdca218cae96677e0e3bc0936a04b5866b1a3ecd36beef957e29"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank45/inputs.json",
+      "record_sha256": "908f2349ae186a437febd83d448aa25d1235e8315bfbee278db2d8bcb1392a0d"
+    },
+    {
+      "rank": 46,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "635951c2acc36cff57dc49be5cf8720fcfc3b5e92313707586e04e17adfaa4e2",
+      "outputs": {
+        "keys.mem": "2f19e26e32fdc9c0ebc13cae6cb0992963cf2a6a3097085b6189e1443beb681d",
+        "scores.mem": "2c57367310eedc04f9f82f1791973558618e8d0db8404644d10d7499ec321655"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank46/inputs.json",
+      "record_sha256": "2523be2d0b00e941f06eae7ddf214dd104fd47bfb72f3dce99caef2cc47baa28"
+    },
+    {
+      "rank": 47,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b64fec2e5fe0c7ad5209a12b1ca8134c502d5efb185869ed275c97ec37b2b35e",
+      "outputs": {
+        "keys.mem": "1bfd5b8cf4df63ec059edd3e2ade8046cd59d678484b68966cb2188f9b158913",
+        "scores.mem": "a1a0ad735f05b6fedb7da261fa40e4bef7b5a7c5f771e9b9d37a59de6166210c"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank47/inputs.json",
+      "record_sha256": "76a187f42ebeca30ce87d25bd4f12665db8d60062d262dfd09bce1f28919185c"
+    },
+    {
+      "rank": 48,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "247a786556708f37fb1b0d1722309b09f1db07bdafe90e6f7a42db1ee85d4318",
+      "outputs": {
+        "keys.mem": "057ed5af2cc66cc16fdeacc59d813d43bf0e28b3e0221fda64edbebd812883bc",
+        "scores.mem": "0d20ac3f571cd1cd5856ed5aca005580cbb2dc84ec404ee53721e181b3a6816e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank48/inputs.json",
+      "record_sha256": "c60784d104dcb0dd4bc0cacec5805abaa037a35e84c233042af9d22e63449471"
+    },
+    {
+      "rank": 49,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "6b32e5156a3dceb9c6d00ab778417142990c57302e2816a8f97b84c519975112",
+      "outputs": {
+        "keys.mem": "8ac536df19f7c98497a62ba7e3aacdbd4b80a49d8b3425bbe3e6b7c5b137f725",
+        "scores.mem": "ca10f68d96923aa0472574bac75bee8466d516f79beca4d310131eb3ec15e88f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank49/inputs.json",
+      "record_sha256": "833221e59ba925e2ed0cf63eb2acf394b3967db9958905920a68ae894d2064af"
+    },
+    {
+      "rank": 50,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b0883d90cf7e0c20648dc83a3881bf0fc20c4e8a94b70c370d54050f23de333e",
+      "outputs": {
+        "keys.mem": "4ff3dfd4480f7d2306b5163ec84997287f49c0712e446fc2ec2795f2cfbab423",
+        "scores.mem": "53a229c5dae9fd56adfb0deb68d532776886fce39427ee745bfc012c3ccb69c2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank50/inputs.json",
+      "record_sha256": "901be5d18294349d2ee57918b8e1b5116d4c1063fcf5e3f6c3999387f55832f6"
+    },
+    {
+      "rank": 51,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "23fb95e95989cef84de774d2641920a672a31e5c53ee01e3843892fc6ae313cf",
+      "outputs": {
+        "keys.mem": "b0ef145e88fe311aa32cf7447602169e0458298797bc272e68631ae09ae7c992",
+        "scores.mem": "9f3bad3357fe2f79c24c6c346dc3927aca77803821febbd638007d172e4f9ff2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank51/inputs.json",
+      "record_sha256": "907d03b487a0286b520e7ab0e87dbae90f8eedb39582a8094f119965a9958461"
+    },
+    {
+      "rank": 52,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "eb4dec0a29f49901745fb56e0534e7d39369430f07e7ff95c71652bb369ca146",
+      "outputs": {
+        "keys.mem": "88d7aa273a155198d1c38b0923069ead71c1d12023ba35a13981b360d7e70d9d",
+        "scores.mem": "8362ba1a190249a39b21fefd99a6d50b0bc6e03c5760a027cf70be772fe537fa"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank52/inputs.json",
+      "record_sha256": "a4326561361703b775f8d2fa1dd5697978452cb00c87e499b0fb8bafd1b950a3"
+    },
+    {
+      "rank": 53,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b42e324031b193c56eb47d3d2588f98937f1430c431e1141e946f845bd2ac398",
+      "outputs": {
+        "keys.mem": "5850c495efb51a4d5619b8884a2e5bdb07b889b232be04080ace471b7770006d",
+        "scores.mem": "f6221084002aba720ceda40b0f8d87611da39dd10eae30b0aec242f15e909f3f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank53/inputs.json",
+      "record_sha256": "c5e1bdf66f238d31765172b0d6850149430e8b62a97548ba893ae73a534b1e59"
+    },
+    {
+      "rank": 54,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "fb4f7e5c604c3a24404eea300adb6474ab64d02a69d249c7c0d467677d2348ac",
+      "outputs": {
+        "keys.mem": "31fa3942c77c003a0614207369909248ec51ad38783572e0f5cdd93b9f8ab92e",
+        "scores.mem": "320f4adde538e721a0e3a6976b1f5aeb01cf14849a6369106639bf3d5a6429d1"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank54/inputs.json",
+      "record_sha256": "6dc6cc9beebe8311f5bee0795b3cb8abac0680b6dd1939a13342330844af1664"
+    },
+    {
+      "rank": 55,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "61b5071ac61164fddfae1e2f7d1d2d29b365ad46e7bee4321c8c21e9d231e0f1",
+      "outputs": {
+        "keys.mem": "07a655d8c1af4902fe678c953c29ba2634a281f8620db9f08ee2fa404f4a0ae2",
+        "scores.mem": "71c2bc5c8f67c9210129cdae78b2d6824e4580cb58c257c00b769c757196a1c0"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank55/inputs.json",
+      "record_sha256": "9b73fe1390b1e963d17ef3b31d50db55789550de47cf3bb326460eafa1fdaed5"
+    },
+    {
+      "rank": 56,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "d36836786dbd9454d214ad655b8b9a174c696c834cbbcaa784fded4dc2b7f6e7",
+      "outputs": {
+        "keys.mem": "e5d941ae6dfc27b469d9424c8a267c5ebfe7a713fedc04e9aa26c1ae1c408806",
+        "scores.mem": "d944db92834be4615ab3dfb56f4d99ef3f3b77ffb5c47e3c29366f05032b555b"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank56/inputs.json",
+      "record_sha256": "b0fc7d5ace0a902c8578b10aae7192be37b3cfe56b0503632456f900a6a18731"
+    },
+    {
+      "rank": 57,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "003bb9331fbb54f753ee9c5026cb494293d9b55aa78f9e67800d29ef2ea3e96d",
+      "outputs": {
+        "keys.mem": "139035c39f05e1bcbff54a2506eb9f9da67ec466d9de7acb5e6525f5b0b9017a",
+        "scores.mem": "b41d0e7c4549b806262fc8643d98c1a8f3c67a1a9ec05a5bf5e70f99093d173c"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank57/inputs.json",
+      "record_sha256": "ea0b3872c3a1bb56ba2ba46e6bcbc38ea9e812e0187bc3fb7ca7ce5e4f82f0f5"
+    },
+    {
+      "rank": 58,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "9ec737dd840bf6b50930816b57250dd504a6311f8212dae97b8559e9f2345c18",
+      "outputs": {
+        "keys.mem": "fb9b011945ee060db31850da462c7ced32f5ff9fc40d32be2769c751928d6535",
+        "scores.mem": "df35f545ca8933ca02102b1c4223195a0604f0e8527f5f0e2715834d3e329bfe"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank58/inputs.json",
+      "record_sha256": "0e80e6cf854d07a52a4a3ef07e0ab2ee990cc2fb30711884a5270ea04b2ef135"
+    },
+    {
+      "rank": 59,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "0ca0abbfe9ead19288f559a7233b3cc1c70778a67fce50c44d1cad51785a6f0d",
+      "outputs": {
+        "keys.mem": "7f8e29ad78636583ab3a08a743a6d4cc6b3041649cb3aef3b5d218c604a65884",
+        "scores.mem": "64f67bd8b7613ef628153bfa355f28f942c1f33b92a5d3fe89b7d6d1bf6b849b"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank59/inputs.json",
+      "record_sha256": "1abc8a74c8d5629c8fe0007facf1596f2483ebf2f59d6f5a4e23ca3721596a81"
+    },
+    {
+      "rank": 60,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "78b71d56dd62c5c28514cb9c3cf3264334625e336a404055dbb294aac62632b8",
+      "outputs": {
+        "keys.mem": "de1b3301dba8f8a05638f941cfbd97c97bc93c9c5fddde79084b43d489111447",
+        "scores.mem": "e85cd545a08a8e638d1c4c136866543031d78b172db620f78226a19c2e119611"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank60/inputs.json",
+      "record_sha256": "3b877f48fe01f691bd7388ad6da37f6a7b594e5ae0ec81208d480ad566e2379c"
+    },
+    {
+      "rank": 61,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c03c6a4e6419523037340a1e9770082037b50bc558a86044b1fdb02fd45b02c1",
+      "outputs": {
+        "keys.mem": "30a9c7097d66e02ebc50fc264c1b6c606d7015cbeb9c721165d640e6d7d1c5f8",
+        "scores.mem": "fe00f4c5c5b3d2e376ecbda02c55069fa3ae93b31908827243d62f810794af5f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank61/inputs.json",
+      "record_sha256": "8f91137431626e70903b598743f8ec9aeea9a9f6b00a641441969883344cdfcb"
+    },
+    {
+      "rank": 62,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "6ee489b10aa13522fe2be6783aa4d562732c823d06a69679013b23fb5b861bb4",
+      "outputs": {
+        "keys.mem": "cb00bf7851de39a9ff4546959bbc82b0357f6d030c8ed5a3acdd31219a475505",
+        "scores.mem": "848d938fe15a818f5e64030b02817dab9ee1c80475fce4038f414b8f2bb2415a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank62/inputs.json",
+      "record_sha256": "39b286f03e43112d7c6df42e5c52b980241069f10f0ebda7cf0bb19f9fcc982f"
+    },
+    {
+      "rank": 63,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "cafe214cb33d419f995d4e4f3203fb06ac3c186e7e97f84b5346659c011855cb",
+      "outputs": {
+        "keys.mem": "90270e7c12fe91d00a567e997e3972eda7d165e0984194401e7949e2541f0020",
+        "scores.mem": "1ca9326350f31961fb2e0153b834299717c11e421d34db270789cb27bdb4ac7e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank63/inputs.json",
+      "record_sha256": "9d88fcd99c81652387c35ef443a8b1cbb9fdfb426a2b12fbd0770fa4b96bd2cf"
+    },
+    {
+      "rank": 64,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "574fda9114fbd8ec416c246f7ed8249ce75d4186a0db1b05e42ca588ea709505",
+      "outputs": {
+        "keys.mem": "87639305cb953d3381f3ef19bae0d9f788dff4131c1492ab8f67320e4b237588",
+        "scores.mem": "19d6dc902c4c19da2c60f8cc40229cdbdb8c9a536cfe6d7a20f50dc08e28ccc5"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank64/inputs.json",
+      "record_sha256": "bc2e092b1c083596c5b1a93eb92f351a42f8ebeb0cd3fb9dbe7154a959df103e"
+    },
+    {
+      "rank": 65,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "3e6ea401939e9abcff18975d9cc9f1d4004981d9dd3165847726579e98385f0d",
+      "outputs": {
+        "keys.mem": "3536904c0d416083b7f43b85faed7c350d9429e8edfe515c5d40a182882e5e3f",
+        "scores.mem": "98e2970c6fe98b0b8bd36a48d699b10688f02a48bd3105bbd57d289baf6e3afe"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank65/inputs.json",
+      "record_sha256": "fa6cb73e90ebf8828f24b75e949eff9523e1cfdd70c9925df8d1791fe220f8ea"
+    },
+    {
+      "rank": 66,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "36918e94a5ce22d4b17326f3ea04e7ff47498f56f73c76cfc0ab0904e6776219",
+      "outputs": {
+        "keys.mem": "d90bf5f02c2c0e934e104ab09c95091e7ad45d9a057e25b0bab732b10235b9e8",
+        "scores.mem": "468144f6203f02b91b73a487b111fba2d5671b36e193fb99d474d79affdce165"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank66/inputs.json",
+      "record_sha256": "4d00aeab2418b0f5bea8dc266960f3b5dd12365ff3ff14d84482a48877384726"
+    },
+    {
+      "rank": 67,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "219dc0ca901f8cb914118a7f51da434bf2abc2f6c98c7c7adea23d96b328e9d9",
+      "outputs": {
+        "keys.mem": "932a26ec1091466141ab61f7a8bc76babec1c057d60079c89888687e623e637c",
+        "scores.mem": "bf1bf5fa8065fef3cb82ef48678f360fc411eed2cd09beef6803bba45c4ae299"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank67/inputs.json",
+      "record_sha256": "62ea8c496195f070918ad6bb08bc0394bec535bb163cbf113233bf70afef3061"
+    },
+    {
+      "rank": 68,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "7b4e0d065c2cc1ab6957a784f22f629b340bae480b1df6fab4a06f8788ec083f",
+      "outputs": {
+        "keys.mem": "e6fe193d60644bb922adba2d080e3b3cbdc7d18e9fa0a2b00e34e0168bbdabd9",
+        "scores.mem": "53f8245733713b6870f7c92a2395a3b97d20958691825cbbbeac64d914b12e4a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank68/inputs.json",
+      "record_sha256": "99a4a3b8fce4cc0a89d8895003365a99db1649c9c14a3f338a8ea9a12063da3e"
+    },
+    {
+      "rank": 69,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "0b327307805d003e18739a6abf18bb8062e8254629e952db9ad30bc6de4459a6",
+      "outputs": {
+        "keys.mem": "289eb969b808778be0284b4d338dd88509b77ad0ba0f7b9018d74dc0dc8c6393",
+        "scores.mem": "235cea742423763277b00aa6f99d4db18770da96ec6d766f2cc5db941af350da"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank69/inputs.json",
+      "record_sha256": "daf70c04eebb537946e8ee0e7b738e50c954ee12a6de7d8612bd948db984a632"
+    },
+    {
+      "rank": 70,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "e2cd5dcba0cb5b0b6ede6a1e08014d60517e1c998d3eed9183dbc159f4477b48",
+      "outputs": {
+        "keys.mem": "5b44e93c124edf5b1dc3977caf9ca634bf2f2ac3f20a8891a05e15c362895a0a",
+        "scores.mem": "45dfbf9080cc7569b0861e77b9221c5031da43681bc5c23f02f229871f1d71fb"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank70/inputs.json",
+      "record_sha256": "bad5f151644a0c02efff6993043060a75ddf292de193b5ffde21b564e1d5eab3"
+    },
+    {
+      "rank": 71,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "8cc403e13811bebaf0922a3b1a6224de79914b4c024969ab8636ca4260a31b4b",
+      "outputs": {
+        "keys.mem": "24874c0fa432adb96a91d0ea1e5349b4eaab4ccc85510e7902355057c9e5629e",
+        "scores.mem": "e346365620debc484d7ac41b0367b256219777965e0c76263ccbcc7d2a012896"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank71/inputs.json",
+      "record_sha256": "534ecffda1d33189a9f1743edd1b3a7812249206bf2c4b30310fc7cf67666af8"
+    },
+    {
+      "rank": 72,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "ad798899b54b6082c65e48df30febadda882211dd8967a834e55fb2437e865f0",
+      "outputs": {
+        "keys.mem": "5bb60ca6976483aed5a0f3cf711fcd93146382a276c910093c4e9834e16b675a",
+        "scores.mem": "945f687c7bcb294f15b60fa03448a1b3a07784d7ce9b0d88f95e451be140f492"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank72/inputs.json",
+      "record_sha256": "32c1d36340bc78317924d9d297858dea66ddb186a48ad005549b1e710c9e6d4b"
+    },
+    {
+      "rank": 73,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "5b6df711129c66a53f13c1cfb590e065e2e96458a2c2f43ba6d6b54d33d5bdc8",
+      "outputs": {
+        "keys.mem": "d1145638eaf400d4218d682c2451538a613b3cfa220a3fe222bbf94e6d2c9a40",
+        "scores.mem": "259a8578ccee2f9b8ee525b2a9a8adeaef2e6fd14762f13a1089b3506e26eb9e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank73/inputs.json",
+      "record_sha256": "eabeffef17cdafcd698212c5a595276572fa6e76447e89c5b489c14d0c5f5d93"
+    },
+    {
+      "rank": 74,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b09f195d497c2f584b91f4c3b17211f42ff5378e21d77bf9f6a15403b5a46e7a",
+      "outputs": {
+        "keys.mem": "4e55d28b592c892915c5605e1b8181dc6b22fdbc531691ef327e513e4d3c510f",
+        "scores.mem": "24e252aea87e1b9787c549b8f9bb8d758f0ae3a79cbd191b89201339417e3d5c"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank74/inputs.json",
+      "record_sha256": "eb3b3572bddc51c3e872aee59e6b6fd08e4fad18c6ebd325588ffcd47685239f"
+    },
+    {
+      "rank": 75,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "c15fee3f48dc4c1ae8fb9b2a7f604817bf498486f06960d94d4334734f34a0c5",
+      "outputs": {
+        "keys.mem": "e23222e645691f1beb4f5a73afe8a9efce27a48ef5adc7366aad53e148f5f452",
+        "scores.mem": "8ff2687a04a9a7971495faa9dee5efbb937c0924ac043db9a90c8be2ea158187"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank75/inputs.json",
+      "record_sha256": "aa4992d4b69143adb76ca8dac6839f025a196695cace333b145bbd40c61a5317"
+    },
+    {
+      "rank": 76,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "eec9099f7f4534255ef623c3268d16a6adac92e1a006319fc8b5c46833c73a44",
+      "outputs": {
+        "keys.mem": "d09ed5d1cea8478df6a216d9cc113ad6d43363f74b563b28a1460ddf434c04db",
+        "scores.mem": "134c2303235d9abccd6ad57db32d331e2c2cb8d3b17ebd8a7ec875f88f1e3110"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank76/inputs.json",
+      "record_sha256": "83a6cf17f837b6cd5a4d90d64723fcf772e10218faa700f0a44ec154821389f2"
+    },
+    {
+      "rank": 77,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "60576b7d2e5f75f3569514a53cc392afbd6192f65c5ae27f4a18cef66d9e0a75",
+      "outputs": {
+        "keys.mem": "6b79f5dd0ed2376efe8b0b641f90bd363ce12feda352f58dcc429ab5362f8b95",
+        "scores.mem": "fa0f824ee0515093b639c8f87612fc91af0ca93c2cd3634ce8aa5f1dbfc00cf4"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank77/inputs.json",
+      "record_sha256": "9b6c8dabacb04b75beb64eac0fc34203a2d32a511545d2b63e90a8ff148042ea"
+    },
+    {
+      "rank": 78,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "8aadc1eb5e57bd5a8d8975b080216b556fd04f9765a550adc7efc4fa2564d196",
+      "outputs": {
+        "keys.mem": "57e119c3cf2712fab7a314c6c96ec31511c4e07186dfcd67101a9a96dc47b806",
+        "scores.mem": "4bafe66123957689b719384184100c3977cb117d570ba1cf55bb5b9040fb9b6d"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank78/inputs.json",
+      "record_sha256": "9c10aef244663b2f87ca6ee2b7ec748d48a1a8ff341b4a9ffb51184c0d199eb6"
+    },
+    {
+      "rank": 79,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "43b2820839db71636d90af0a31167bbf21e082afa4de6a7fda205eea8a37a34b",
+      "outputs": {
+        "keys.mem": "213cc4e9669bd20ee99259d275c105dd6f8f6abc246ba9e49e1943b94ea82f7b",
+        "scores.mem": "7dd8c0dcc31c127c078adb1cb6e469d3f4936129a8ffff537dc56f6e4ab56764"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank79/inputs.json",
+      "record_sha256": "29ef1e74a2675b57ee2485c279cb27b5a76bb284effd28b1bb1fbfdcdb4035f9"
+    },
+    {
+      "rank": 80,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "d40da8924c44670586fa3fd7d0f5ad74f54f6ba7c54d86c31e9c9259712308a7",
+      "outputs": {
+        "keys.mem": "b8d25a26efa80ff67046686027e2c8f471267214dfbead9f4cfad902dc158ca0",
+        "scores.mem": "8ecc67eda225a201c6f38ad6cda212cb316a89e2639ed42eed5abd640d1a9acb"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank80/inputs.json",
+      "record_sha256": "770359129a5019f42c1f416520cf8b55815b8c1aa1919381c374a68cd1a18476"
+    },
+    {
+      "rank": 81,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "22441bf26cb47f0c18ae4f75ef6cc9ce4921d2b6c7d8d0425752cafb81ac3302",
+      "outputs": {
+        "keys.mem": "642bcfbf263d3d5bdf876877630f26e3592124d776a6c709d6f1ac56bd52e3a2",
+        "scores.mem": "62132af4dcdb70c0e92d785977aa47cf4bd75a7e86de171b9505947c4f1f1339"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank81/inputs.json",
+      "record_sha256": "f7d658e693d212151040aa56d5bdb95b076bb6c78df51bceb99933e1f38e945d"
+    },
+    {
+      "rank": 82,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "a337ac9911b8efbbe93652d140883f63411c5dff6a6fbc59d9fa1683cea9431e",
+      "outputs": {
+        "keys.mem": "fb041c7f7240c444521027d2a15158d716883cd38d45461ed07e6e0e4f898905",
+        "scores.mem": "b7bd36173f1b36b8a3aff3ef2ccffcf3b8fed177a7c7063974ddff57651a6ded"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank82/inputs.json",
+      "record_sha256": "510fdcae3a2c2c4f407584b2c720ce2ca3f881e1a6edf9302f82552798d92dcb"
+    },
+    {
+      "rank": 83,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "dd35a3c2693d34c35254216526c0a684f4b921e77291849cc838f3aa982ba3cd",
+      "outputs": {
+        "keys.mem": "515221021d48596ebe9a5fd93853be2fe6bad60c0300d91fe91832243e94ec8c",
+        "scores.mem": "fee0739bb2657ff7bcea32a122693d7e45c989b6159ccfe97e02d1a7cd5de131"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank83/inputs.json",
+      "record_sha256": "df22987ba35ce86e14ef61bae82cc135e19bf1eae8f710c06ab7adee4f34405d"
+    },
+    {
+      "rank": 84,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "b97dcca12ebc8da33ab6fb370d0f1214e980cb75b131dfdb899371620f9be8c1",
+      "outputs": {
+        "keys.mem": "ccfbb10a1d989ef955954138f63c2eb092922d8b48592405599c95eb5ea66ced",
+        "scores.mem": "426381007c0f50e46972cc9ad3445a738e048433c86ebc182f3ee999abef1173"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank84/inputs.json",
+      "record_sha256": "13199144c0677f14a9837a7bbbe6b783d8263d8b50d1572c278ea9a2f73d2ad2"
+    },
+    {
+      "rank": 85,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "e9d604faf8149c9966e942a54bcbd6c054c37a9d24919313719025d72799b81b",
+      "outputs": {
+        "keys.mem": "cda7894206fd2356e2c0e716e5f4f232ec9cd95af00c9448819af60a65a314ac",
+        "scores.mem": "ca702a21e638e939c4b81377f52282cd7b428a3c85d27f849ec828b2ef342e6f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank85/inputs.json",
+      "record_sha256": "c32bf25832b5461cc86e76eb09488d22fe570ad7d642e096138dc377850ad62f"
+    },
+    {
+      "rank": 86,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "6aa01e8d0c6336673d9dfdd530fe1153fd0fa972302537f98a5ba8f9a142a1dd",
+      "outputs": {
+        "keys.mem": "89602b47363932d294a3412ecf21c60c16c246cb83efde703b76a9c73b2429a9",
+        "scores.mem": "6ca110a53db833b7341640dc32218f429f9c121fe1e14e48adb6bb62ee8c629a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank86/inputs.json",
+      "record_sha256": "14636ea09de901a5e761f6e3ba304ac70c5e8dddf68144b6a20d589e4ff9f919"
+    },
+    {
+      "rank": 87,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "74f53ebc083e772138e154b78ff11c1bf0a21147805e1323cb606fe89cc612e5",
+      "outputs": {
+        "keys.mem": "940bac7b0f8dbf0ad756c5c5b89b3f3c599a948b03a79af150c5a62d149e029b",
+        "scores.mem": "92b7d9276ab409537b6ec73082b2ae0212aeb14710879c74bdba754e8ce6d049"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank87/inputs.json",
+      "record_sha256": "9c3c6885bdd15c7604fa8d3a4665ef1503de33387965d7166498956374e2b559"
+    },
+    {
+      "rank": 88,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "515be4082c7a6cd741b69e51b00651cbb4ac6206155790098dd90b8a52de7b93",
+      "outputs": {
+        "keys.mem": "ec956c8a8d84d77467c51c8f89ee318d3627f0570d7236b1fbd1dc3fc7b4ed13",
+        "scores.mem": "24318d8c7dea6d836006d10273bcff72b23899fc0d68b65b69df94857c52422a"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank88/inputs.json",
+      "record_sha256": "92d122333ef91f6311f20ff8c6b45b3c5989f958955bf0428d26974baf3891e4"
+    },
+    {
+      "rank": 89,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "d782ea4841a1c9197956810f6facce17c4302a9e7c0ad5053e3c3269fba5660e",
+      "outputs": {
+        "keys.mem": "fe9ae7c712453964eb78e791767a4bd24d2d8e1d8fdd0f0cfc757eaa7e19e10b",
+        "scores.mem": "6497652194bc88b1b07f6a731c264be85e5123782637f8969f155f026544f0e2"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank89/inputs.json",
+      "record_sha256": "acd9af8eb6718d8a59af5dd518f8476d50867e08dd2ea0f9a2781e066369c7b2"
+    },
+    {
+      "rank": 90,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "419305ebe033619ca86883845454db2091870bfa5374467e11b4aa530be889df",
+      "outputs": {
+        "keys.mem": "56ed98a06e40437fa06bb39c0d35ff0390559be7170aa565051885551c80f414",
+        "scores.mem": "69a7ac01febb1b8ea247070672d6ab88025d3a7a7494d025c4f5b3120e6eed3f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank90/inputs.json",
+      "record_sha256": "e069eb38b123af03b29fe18b7fd5ee4486abe385b049a876313222f6cc8f3ce4"
+    },
+    {
+      "rank": 91,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "2b8e266f646c9ccbbfa8661817789f1f362d592e78feb8e6f929132c85bf03c7",
+      "outputs": {
+        "keys.mem": "383ee601c8203ed7f0fe6ef38f09bfb948aa2dcf5e662da507a5d4a310215f6a",
+        "scores.mem": "05a3fbe5dd07539307d9d5d212479e645888d6d20e4bbea7d443ae0135fdaa4e"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank91/inputs.json",
+      "record_sha256": "60aa99ca80190866accc28f009e840b79a8cf183cfb0c6c76c6c3a80870edb3c"
+    },
+    {
+      "rank": 92,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "3ebbc6f2edc4cd0707a8ee90c4c66b625508f174fab818047eb9a486fa00c6c8",
+      "outputs": {
+        "keys.mem": "61196d77106046f9c5a3ba8ad15fe82154254071978d977d899458146d8d4ea3",
+        "scores.mem": "d422c53d457b41f98f16d57901380ed52ef6d9d2df61df52e4f39433d4fb26f1"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank92/inputs.json",
+      "record_sha256": "47b37a0fc147c1dcf60bcff8c0a7597f0406cc895f28e05370e0468bf412a579"
+    },
+    {
+      "rank": 93,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "400188346efda655be67b0895ebd1e7934fa8e9e74a5f21543e836c6254be5f2",
+      "outputs": {
+        "keys.mem": "57b92f1f43e2c00c3b4235e82f19cb4912c0a7db13d5704c0610d20e451e0e80",
+        "scores.mem": "17f7353c43238bcdf1e25724f1d2b526747772fd7f383598b019a9cd08a9cc15"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank93/inputs.json",
+      "record_sha256": "bed63c1015ef4743745857eebc27c621f45248a94d656a30bb0bf2a484364af0"
+    },
+    {
+      "rank": 94,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "31ae3afa01c5342b77de3697c38c808685aba37133f13663abc68c5f536fad67",
+      "outputs": {
+        "keys.mem": "ca3bbceb2a2f1c8ce3427d91018f45ecb8d08124d1ff8cfda9ec0bab65e1580e",
+        "scores.mem": "9e35bc843ad5e4737c990271c81f02ea35788473f4f66a02c370a9bb8aa3852b"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank94/inputs.json",
+      "record_sha256": "bafe1bf05925bf37d90e61835b9132854ff1a4da9aff8d6f9eab3d57b58abca8"
+    },
+    {
+      "rank": 95,
+      "keys": 10920,
+      "beats": 171,
+      "blocks": 1365,
+      "quarter_block_limit": 342,
+      "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+      "source_pins": {
+        "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+        "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/source_inputs/noether-tp96-L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45"
+      },
+      "append_source": "saved actual ik20 row",
+      "comparison_only": "scores.mem; never a DUT operand",
+      "payload_sha256": "5e91393d54b7d0da66f30c9b058de7231c81aa781ce6b59514243c8f15261ec8",
+      "outputs": {
+        "keys.mem": "7a3c11bad4114d9d0827ed11c18edbf47c9c83df542ada58f85dc413529c16cc",
+        "scores.mem": "99168b6d98f43ea4507dc2027ff099d440c64e220a2e56a693ee8d7b9b3c2c7f"
+      },
+      "record_path": "/srv/opentallas-scratch/codex/noether-tp96-producer-524e96f72/input_remaining/rank95/inputs.json",
+      "record_sha256": "9916a3cbfb477d640d5719b392cb84c6da5c03aad83a7031a7e5906087da55fa"
+    }
+  ]
+}

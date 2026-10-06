@@ -74,6 +74,7 @@ def main():
     a.add_argument('--workers',type=int,default=1);a.add_argument('--negative',action='store_true')
     a=p.parse_args()
     if a.mode=='build':return build(a.out.resolve())
+    a.out=a.out.resolve()
     if not 1<=a.workers<=16 or len(set(a.ranks))!=len(a.ranks) or any(not 1<=r<96 for r in a.ranks):
         raise ValueError('distinct nonzero TP96 ranks, 1..16 workers; reuse rank0 PASS')
     a.out.mkdir(parents=True,exist_ok=False)
