@@ -2,6 +2,7 @@
 # Attributes are kept in the cut netlist: (* keep *) prefix adders / comparators / issue copies must reach ORFS
 # synthesis (with -noattr ABC re-rippled them: r3 paths through MAJ/OR chains).
 # Margin version (owner rule 2026-10-06): QCC_PERIOD routes over-constrained (0.770); sign-off SS at 833.333 = slack@QCC_PERIOD + (833.333 - QCC_PERIOD*1000) ps (one clock).  FALLBACK suffix n = DEC_LA_NXREG.
+# Boundary: io_ref_skew.sdc (OT_IO_SKEW 150 ps adverse die clock-arrival difference, owner addendum 2026-10-06).
 # In-context route of the Qwen ROM decode core (final DEC_LA + optional issue fallbacks), controller cut.
 # usage: run_variant.sh NAME FALLBACK BOUNDARY(plain|ref) UTIL DENSITY [extra run_abi3_physical args...]
 #   FALLBACK: N (DEC_LA_ISSUE_FB), suffix b = DEC_LA_BOUND, suffix a = DEC_LA_AMQ (e.g. 2ba)
@@ -18,16 +19,16 @@ $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1
 python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json
 mkdir -p $R/context_src/rtl $R/context_src/physical
 $Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1
-cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/
+cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/; mkdir -p $R/context_src/tools; cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/
 ( cd $R/context_src && git init -q && git -c user.name=Claude -c user.email=claude@opentallas.local add -A . && git -c user.name=Claude -c user.email=claude@opentallas.local commit -qm "core ctx $NAME" )
 echo "$(date -Is) prepared: $(python3 -c "import json;d=json.load(open('$R/prep/cut_report.json'));print(d['after_port_bits'])")" >> $R/STATUS.md
 HOOK=()
 if [ "$BND" = ref ]; then
   D=/src/physical/qwen_core_ctx
-  HOOK=(--orfs-var QCC_SDC_DIR=$D --orfs-var PRE_CTS_TCL=$D/pre_cts.tcl --orfs-var POST_CTS_TCL=$D/post_plain.tcl
-        --orfs-var PRE_GLOBAL_ROUTE_TCL=$D/pre_ref.tcl --orfs-var POST_GLOBAL_ROUTE_TCL=$D/post_plain.tcl
-        --orfs-var PRE_DETAIL_ROUTE_TCL=$D/pre_ref.tcl --orfs-var POST_DETAIL_ROUTE_TCL=$D/post_plain.tcl
-        --orfs-var PRE_FILLCELL_TCL=$D/pre_ref.tcl --orfs-var POST_FILLCELL_TCL=$D/post_plain.tcl)
+  HOOK=(--orfs-var QCC_SDC_DIR=$D --orfs-var PRE_CTS_TCL=$D/pre_cts_skew.tcl --orfs-var POST_CTS_TCL=$D/post_plain.tcl
+        --orfs-var PRE_GLOBAL_ROUTE_TCL=$D/pre_ref_skew.tcl --orfs-var POST_GLOBAL_ROUTE_TCL=$D/post_plain.tcl
+        --orfs-var PRE_DETAIL_ROUTE_TCL=$D/pre_ref_skew.tcl --orfs-var POST_DETAIL_ROUTE_TCL=$D/post_plain.tcl
+        --orfs-var PRE_FILLCELL_TCL=$D/pre_ref_skew.tcl --orfs-var POST_FILLCELL_TCL=$D/post_plain.tcl)
 fi
 export OT_ORFS_NUM_CORES=16 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 set +e
@@ -40,5 +41,5 @@ python3 tools/run_abi3_physical.py --source-root $R/context_src --view asap7 --t
  "${HOOK[@]}" "$@" > $R/flow.log 2>&1
 echo $? > $R/flow.exit
 python3 tools/w18/corner_sta.py --orfs-dir $R/work/orfs --output $R/corner_sta_plain.json > $R/sta_plain.log 2>&1
-python3 tools/w18/corner_sta_ref.py --orfs-dir $R/work/orfs --extra-sdc $S/physical/qwen_core_ctx/io_ref.sdc --output $R/corner_sta_ref.json > $R/sta_ref.log 2>&1
+python3 tools/w18/corner_sta_ref.py --orfs-dir $R/work/orfs --extra-sdc $S/physical/qwen_core_ctx/io_ref_skew.sdc --output $R/corner_sta_ref.json > $R/sta_ref.log 2>&1
 echo "$(date -Is) done flow=$(cat $R/flow.exit)" >> $R/STATUS.md
