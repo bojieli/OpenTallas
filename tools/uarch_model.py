@@ -10730,6 +10730,11 @@ def hbm_r5a_provider_return_join_model():
     Reuse the externally held protected full73, not a new owner ledger. The
     provider's 2448 coded bits are already priced by its existing model.
     """
+    gate_path=ROOT/'results/rtl/hbm_r5a_provider_join_20261006/r1_PASS/result.json'
+    gate=json.loads(gate_path.read_text()) if gate_path.exists() else {}
+    checker='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv'
+    changed_pass=(gate.get('status')=='PASS' and gate.get('exit')==0 and
+        gate.get('source_sha256',{}).get(checker)==hashlib.sha256((ROOT/checker).read_bytes()).hexdigest()) if (ROOT/checker).exists() else False
     return dict(item=6,default_OFF=True,PCs=32,MACs_per_cycle=0,
         source='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv',
         caller='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
@@ -10751,7 +10756,9 @@ def hbm_r5a_provider_return_join_model():
             target_ns=140,full_off_package_FEC='consume actual DS-RACK fullFEC handoff'),
         held_frame='actual protected accepted CP/source full73, service-stable through consumer drain; no producer/IRS alias',
         warm='blocks new enrollment upstream; existing issue/return/freed debt drains, no warm POR',
-        gates=dict(changed_join=False,physical=False,performance=False,adopted=False))
+        measured_join=dict(record=str(gate_path.relative_to(ROOT)),READs=64,
+            PCs=32,scope='actual Gibbs coded return hook plus new consumer checker only; full expert numerical gate not inferred'),
+        gates=dict(changed_join=changed_pass,physical=False,performance=False,adopted=False))
 
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
