@@ -39,7 +39,7 @@ def main():
          '--clock-uncertainty-hold-ns','0.025','--orfs-corner','WC','--hold-corners','WC,BC',
          '--io-delay-fraction','0.2','--stages','pnr',
          '--pnr-stop-after',a.pnr_stop_after,
-         '--die-area','0','0','1550','1550','--core-area','5','5','1545','1545',
+         '--die-area','0','0','1900','1900','--core-area','5','5','1895','1895',
          '--place-density','0.5','--orfs-var','ADDER_MAP_FILE=',
          '--orfs-var','IO_PLACER_H=M4 M6 M8',
          '--orfs-var','IO_PLACER_V=M5 M7 M9',
@@ -60,7 +60,10 @@ def main():
              actual_parent_loads=False,adoption=False)
     rec.update(IO_pin_layers={'horizontal':['M4','M6','M8'],'vertical':['M5','M7','M9']},
                IO_min_distance_tracks=2,
-               pin_access_basis='actual unchanged-source full-shape placed-ODB probe:151588 legal positions for70354 signal IO; no CTS/route/parent credit',
+               pin_access_basis='retained1550um probe:151588 legal positions for70354 signal IO; larger1900um frame priced in roomy_leaf_slot_request_r11.json before this change; projected78.9percent of reserved signal budget, actual new frame capacity not yet measured',
+               die_dimensions_um=[1900,1900],
+               geometry_price='results/uarch/dsrom_window_pipeline_20261005/roomy_leaf_slot_request_r11.json',
+               actual_new_frame_pin_capacity_measured=False,
                physical_phase_boundary=a.pnr_stop_after,
                temporary_files='job NVMe /work/tmp through standard Make TMPDIR export',
                synthesis_basis='ORFS WC/SS mapping once; omit redundant host TT mapping; original TT evidence retained')
