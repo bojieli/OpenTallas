@@ -34,9 +34,9 @@ MACRO = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
 MNAME = "ot_sram_1r1w_512x128_m4_r2c2"
 PERIOD_PS = 833
 KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1,
-                             LINK_REG=1, VM_REG=1, RD_PIPE=1, SLEW_COPY=1),
+                             LINK_REG=1, LINK_SEL=1, VM_REG=1, RD_PIPE=1, SLEW_COPY=1),
                  "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1,
-                             LINK_REG=1, VM_REG=1, SLEW_COPY=1)}
+                             LINK_REG=1, LINK_SEL=1, VM_REG=1, SLEW_COPY=1)}
 # Estimated die-tree insertion delay [min, max] ps at the element's clock pins (r1 routes: src 505..588,
 # stg 312..401).  The routed SDC times IO against io_clk carrying it as SOURCE latency (kept after CTS
 # propagates the clocks), i.e. the neighbours' registers hang off the same tree -- the same model as

@@ -141,6 +141,9 @@
 `ifndef OT_WFC_LINK_REG
 `define OT_WFC_LINK_REG 0
 `endif
+`ifndef OT_WFC_LINK_SEL
+`define OT_WFC_LINK_SEL 0
+`endif
 `ifndef OT_WFC_VM_REG
 `define OT_WFC_VM_REG 0
 `endif
@@ -199,6 +202,10 @@ module ot_rom_pkg_ctrl_wfc #(
     //  inbound, +1 outbound per hop.  LINK_DEPTH 4 = the grant round trip: full rate with zero stalls.
     parameter integer LINK_REG = `OT_WFC_LINK_REG,
     parameter integer LINK_DEPTH = 4,
+    // LINK_SEL (LINK_REG): the receive skid's count / grant / pointer next-state computed from registers for
+    // both values of the core side's ready, which then only selects (Shannon split; same function, 0 cycles).
+    // r10 src: core ready (job_done copy -> lk_in_ready) + the count adder chain -> rdy was the worst path, +21.6
+    parameter integer LINK_SEL = `OT_WFC_LINK_SEL,
     // VM_REG: the vector-memory ports launched from flops (the VM is its own hardened element): a write
     // and a read reach the memory one edge later; the read data is taken one edge later (+1 cycle per
     // payload read; a second read in flight counts against the queue space)
@@ -386,7 +393,7 @@ module ot_rom_pkg_ctrl_wfc #(
     (* keep *) reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     generate if (LINK_REG) begin : g_link_reg
-        ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(LINK_DEPTH)) u_rx (.clk(clk), .rst_n(rst_q),
+        ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(LINK_DEPTH), .SEL(LINK_SEL)) u_rx (.clk(clk), .rst_n(rst_q),
             .l_valid(in_valid), .l_ready(in_ready), .l_data({in_last, in_data}),
             .c_valid(lk_in_valid), .c_ready(lk_in_ready), .c_data({lk_in_last, lk_in_data}));
         ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT + 1)) u_tx (.clk(clk), .rst_n(rst_q),
@@ -1779,7 +1786,7 @@ endmodule
 // round trip, so a core side that takes a flit every cycle sees the link at full rate.  The FIFO data
 // path is enabled only from registers (pin valid, write pointer); the core side's ready moves pointers.
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D = 4) (
+module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D = 4, parameter integer SEL = 0) (
     input  wire         clk, rst_n,
     input  wire         l_valid,
     output wire         l_ready,
@@ -1814,10 +1821,30 @@ module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D 
     wire [CB-1:0] cnt_n = cnt + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, popq};
     always @(posedge clk)                // the slot write is enabled from registers only
         for (i = 0; i < D; i = i + 1) if (pvl && wp[i]) q[i] <= pd;
+    // SEL: next state for c_ready = 0 (push = pvl, no pop) and c_ready = 1 (push = pvl && ne, pop = ne), from
+    // registers only; c_ready selects.  Identical function to the cnt_n form.
+`ifdef OT_WFC_NEG_LINK
+    wire [CB-1:0] infl = {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1};                                  // negative control
+`else
+    wire [CB-1:0] infl = {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1} + {{(CB-1){1'b0}}, r2};
+`endif
+    wire [CB-1:0] cnt_s0 = cnt + {{(CB-1){1'b0}}, pvl};
+    wire [CB-1:0] cnt_s1 = cnt + {{(CB-1){1'b0}}, pvl && ne} - {{(CB-1){1'b0}}, ne};
+    wire rdy_s0 = (cnt_s0 + infl) <= CB'(D - 1);
+    wire rdy_s1 = (cnt_s1 + infl) <= CB'(D - 1);
+    wire [D-1:0] wp_s0 = pvl ? {wp[D-2:0], wp[D-1]} : wp;
+    wire [D-1:0] wp_s1 = (pvl && ne) ? {wp[D-2:0], wp[D-1]} : wp;
+    wire [D-1:0] rp_s1 = ne ? {rp[D-2:0], rp[D-1]} : rp;
     always @(posedge clk)
         if (!live) begin
             cnt <= 0; rdy <= 1'b0; r1 <= 1'b0; r2 <= 1'b0;
             wp <= {{(D-1){1'b0}}, 1'b1}; rp <= {{(D-1){1'b0}}, 1'b1};
+        end else if (SEL) begin
+            cnt <= c_ready ? cnt_s1 : cnt_s0;
+            rdy <= c_ready ? rdy_s1 : rdy_s0;
+            wp  <= c_ready ? wp_s1 : wp_s0;
+            rp  <= c_ready ? rp_s1 : rp;
+            r1 <= rdy; r2 <= r1;
         end else begin
             cnt <= cnt_n;
 `ifdef OT_WFC_NEG_LINK
