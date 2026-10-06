@@ -96,6 +96,19 @@ class ComponentReuse(unittest.TestCase):
         document['norm_native_production_candidate']['parameters']['NORM_NATIVE_INPUT_CP']=0
         with self.assertRaises(ValueError):R.selected_parameters(document,True)
 
+    def test_wrapper_top_requires_real_parent_source_pin_and_selected_parameters(self):
+        from unittest.mock import patch
+        rel=Path('wrapper.sv');path=self.work/'src'/rel
+        text='module tb_hbm_integrated_minimum_parent #(parameter ENABLE=0,NORM_NATIVE_VM_ENABLE=0)(input clk); ot_ds_hbm_cluster20_integrated #(.ENABLE(ENABLE)) dut(); endmodule\n'
+        path.write_text(text);parameters={'ENABLE':1,'NORM_NATIVE_VM_ENABLE':1}
+        with patch.object(R,'ROOT',self.work/'src'):
+            self.assertEqual(R.observation_top(None,None,parameters),R.PARENT_TOP)
+            self.assertEqual(R.observation_top(rel,R.sha(path),parameters),R.OBSERVER_TOP)
+            with self.assertRaises(ValueError):R.observation_top(rel,'stale pin',parameters)
+            with self.assertRaises(ValueError):R.observation_top(rel,R.sha(path),dict(parameters,NORM_NATIVE_INPUT_CP=1))
+            path.write_text(text.replace('ot_ds_hbm_cluster20_integrated','easy_leaf'))
+            with self.assertRaises(ValueError):R.observation_top(rel,R.sha(path),parameters)
+
     def test_generation_time_output_tampering_rejects(self):
         d=self.work/'generated';d.mkdir()
         binary=self.work/'verilator_bin';binary.write_text('compiler')
