@@ -30,7 +30,8 @@ module ot_dsrom_window_stage_pipeline #(
     parameter integer NPC = 32,
     parameter integer WTAGW = 13,
     parameter integer BEATW = 4,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter integer SPLIT_COLUMNS = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -218,8 +219,7 @@ module ot_dsrom_window_stage_pipeline #(
                    user0 == owner_user0 && complete_group0[wanted0[6:5]];
         for (genvar k = 0; k < PITCH; k = k + 1) begin : g_col
             localparam integer CWID = (k < 16) ? 256 : 128;
-            reg [CWID-1:0] mem [0:31];
-            reg [CWID-1:0] q;
+            wire [CWID-1:0] q;
             wire [NPC-1:0] chosen;
             wire [CWID-1:0] data_tree [0:2*NPC-2];
             reg [CWID-1:0] wd;
@@ -239,23 +239,33 @@ module ot_dsrom_window_stage_pipeline #(
                 end
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) row_we[r]<=0; else row_we[r]<=|matching;
-                always @(posedge clk) if (row_we[r]) mem[r]<=wd;
                 assign write_sector[(4*r+b)*PITCH+k]=row_we[r];
             end
-            // Four independent eight-entry reads, registered before final mux.
-            reg [CWID-1:0] rq [0:3];
-            reg [1:0] rh;
-            reg read_v;
-            for (genvar group=0;group<4;group=group+1) begin : g_read
-                always @(posedge clk) if (req_v) rq[group]<=mem[8*group+raddr[2:0]];
-            end
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) read_v<=0;
-                else begin
-                    read_v<=req_v;
-                    if(req_v) rh<=raddr[4:3];
-                    if(read_v) q<=rq[rh];
+            if (SPLIT_COLUMNS) begin : g_split
+                (* keep_hierarchy = "yes" *) ot_dsrom_window_column #(.WIDTH(CWID)) u_column (
+                    .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                    .read_v(req_v), .read_addr(raddr), .read_data(q));
+            end else begin : g_flat
+                reg [CWID-1:0] mem [0:31];
+                for (genvar r=0;r<32;r=r+1) begin : g_write
+                    always @(posedge clk) if (row_we[r]) mem[r]<=wd;
                 end
+                reg [CWID-1:0] rq [0:3];
+                reg [CWID-1:0] q_flat;
+                reg [1:0] rh;
+                reg read_v;
+                for (genvar group=0;group<4;group=group+1) begin : g_read
+                    always @(posedge clk) if (req_v) rq[group]<=mem[8*group+raddr[2:0]];
+                end
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) read_v<=0;
+                    else begin
+                        read_v<=req_v;
+                        if(req_v) rh<=raddr[4:3];
+                        if(read_v) q_flat<=rq[rh];
+                    end
+                assign q=q_flat;
+            end
             if (k < 16) begin : g_c
                 assign bank_q[b][256*k +: 256] = q;
             end else begin : g_s
@@ -315,4 +325,38 @@ module ot_dsrom_window_stage_pipeline #(
     initial if (POS_W < 21 || USER_W < 10 || MAX_CONTEXT != 1048576 || WTAGW < 10)
         $fatal(1, "ot_dsrom_window_stage_pipeline parameter contract failed");
 `endif
+endmodule
+
+// One complete full-depth sector column. This hierarchy cut preserves both
+// existing read edges and read-before-write behavior, including payload state
+// across reset. The parent owns the write-data/enable registers and validity.
+module ot_dsrom_window_column #(
+    parameter integer WIDTH=256
+) (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [WIDTH-1:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output reg [WIDTH-1:0] read_data
+);
+    reg [WIDTH-1:0] mem [0:31];
+    reg [WIDTH-1:0] rq [0:3];
+    reg [1:0] rh;
+    reg pending;
+    generate
+        for(genvar row=0;row<32;row=row+1) begin : g_write
+            always @(posedge clk) if(row_we[row]) mem[row]<=write_data;
+        end
+        for(genvar group=0;group<4;group=group+1) begin : g_read
+            always @(posedge clk) if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];
+        end
+    endgenerate
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) pending<=0;
+        else begin
+            pending<=read_v;
+            if(read_v) rh<=read_addr[4:3];
+            if(pending) read_data<=rq[rh];
+        end
 endmodule
