@@ -138,6 +138,8 @@ module tb_wf_ctrl_equiv;
         initial for (int k = 0; k < (1<<VWA); k++) vm[k] = {FLIT/32{h32(k, 0, 32'h5A)}};
         reg [63:0] out_dig = 0, st_dig = 0;
         integer out_cnt = 0, st_cnt = 0;
+        integer in_cnt = 0;                     // inbound flits accepted (identical message stream per instance)
+        always @(posedge clk) if (rst_n && in_valid && admission_ready) in_cnt <= in_cnt + 1;
         function automatic [63:0] mix(input [63:0] d, input [FLIT-1:0] v);
             reg [63:0] x;
             begin
@@ -291,13 +293,18 @@ module tb_wf_ctrl_equiv;
     end
 
     integer fault_cyc [0:1];
-    initial begin fault_cyc[0] = 0; fault_cyc[1] = 0; end
+    integer fault_flit [0:1];
+    initial begin fault_cyc[0] = 0; fault_cyc[1] = 0; fault_flit[0] = 0; fault_flit[1] = 0; end
     always @(posedge clk) begin
-        if (g[0].proto_fault && fault_cyc[0] == 0) fault_cyc[0] = cyc;
-        if (g[1].proto_fault && fault_cyc[1] == 0) fault_cyc[1] = cyc;
+        if (g[0].proto_fault && fault_cyc[0] == 0) begin fault_cyc[0] = cyc; fault_flit[0] = g[0].in_cnt; end
+        if (g[1].proto_fault && fault_cyc[1] == 0) begin fault_cyc[1] = cyc; fault_flit[1] = g[1].in_cnt; end
     end
+    // STREAM (not lockstep): the fault must latch on the same inbound message -- within FDLY accepted flits of
+    // the reference's (both see the same message stream; their cycles differ)
     wire fault_ok = (fault_cyc[0] == 0 && fault_cyc[1] == 0) ||
-                    (fault_cyc[0] != 0 && fault_cyc[1] >= fault_cyc[0] && fault_cyc[1] <= fault_cyc[0] + FDLY);
+                    (fault_cyc[0] != 0 && fault_cyc[1] != 0 &&
+                     ((STREAM && !LOCKSTEP) ? (fault_flit[1] >= fault_flit[0] && fault_flit[1] <= fault_flit[0] + FDLY)
+                                            : (fault_cyc[1] >= fault_cyc[0] && fault_cyc[1] <= fault_cyc[0] + FDLY)));
 
     initial begin
         wait (rst_n);
@@ -306,6 +313,8 @@ module tb_wf_ctrl_equiv;
                                            && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid)))
             @(posedge clk);
         repeat (50) @(posedge clk);
+        if (STREAM)
+            $display("EQUIV FAULTFLIT %0d/%0d", fault_flit[0], fault_flit[1]);
         if (STREAM)
             $display("EQUIV STREAM out=%0d/%0d dig=%h/%h starts=%0d/%0d dig=%h/%h", g[0].out_cnt, g[1].out_cnt,
                      g[0].out_dig, g[1].out_dig, g[0].st_cnt, g[1].st_cnt, g[0].st_dig, g[1].st_dig);
