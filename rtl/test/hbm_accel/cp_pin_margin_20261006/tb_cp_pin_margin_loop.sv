@@ -10,6 +10,8 @@
 // done may follow a CP fault before the next reset.
 module tb_cp_pin_margin_loop;
  parameter integer PIN=0,REPLAY=0,FAULTS=0,SEED=1,NTX=3000,FAULT_BOUND=3;
+ // DET=1: fixed delays, no competing borrower, cdc always drained -> per-transaction latency is a constant
+ parameter integer DET=0;
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;
  integer seed;
@@ -62,20 +64,20 @@ module tb_cp_pin_margin_loop;
   .idle(idle),.fault(arb_fault));
  // --- bookkeeping
  integer tx=0,n_done=0,n_bad_frame=0,n_cp_fault=0,n_arb_fault=0,n_assoc_fault=0,n_timeout=0,n_w2=0,n_req=0,n_rsp=0,n_inj=0,n_inj_detected=0,n_late=0,n_done_after_fault=0,n_rel_toggle=0;
- integer tx_start=0,cyc=0,phase=0,gap=0,inj_at=-1,fault_seen_at=-1,max_tx=0;
+ integer sum_tx=0,tx_start=0,cyc=0,phase=0,gap=0,inj_at=-1,fault_seen_at=-1,max_tx=0;
  reg [31:0] e_job;reg [3:0] e_gen;reg [16:0] e_tok;reg [19:0] e_pos;
  reg fault_latched=0;
  always @(posedge clk)cyc<=cyc+1;
  // memory responder: accept, then answer after a few edges with the same tag
  always @(posedge clk or negedge por_n)if(!por_n)begin m_req_rdy<=0;m_rsp_v<=0;m_pending<=0;end else begin
-  m_req_rdy<=!m_pending&&($random(seed)%3!=0);
-  if(m_req_v&&m_req_rdy&&!m_pending)begin m_pending<=1;m_delay<=($random(seed)&3);m_rsp_tag<=m_req_tag;m_rsp_we<=m_req_we;end
+  m_req_rdy<=!m_pending&&(DET||($random(seed)%3!=0));
+  if(m_req_v&&m_req_rdy&&!m_pending)begin m_pending<=1;m_delay<=DET?1:($random(seed)&3);m_rsp_tag<=m_req_tag;m_rsp_we<=m_req_we;end
   else if(m_pending&&!m_rsp_v)begin if(m_delay==0)m_rsp_v<=1;else m_delay<=m_delay-1;end
   else if(m_rsp_v&&m_rsp_rdy)begin m_rsp_v<=0;m_pending<=0;end
  end
  // executor
  always @(posedge clk or negedge por_n)if(!por_n)begin ex_want<=0;ex_busy<=0;ex_out<=0;exec_done<=0;retired<=4;ex_left<=0;end else begin
-  if(!ex_busy&&!exec_done&&exec_owned)begin ex_busy<=1;ex_left<=($random(seed)&3);ex_wait<=($random(seed)&3);end
+  if(!ex_busy&&!exec_done&&exec_owned)begin ex_busy<=1;ex_left<=DET?2:($random(seed)&3);ex_wait<=DET?1:($random(seed)&3);end
   else if(ex_busy)begin
    if(ex_want&&su_req_v&&req_rdy[2])begin ex_want<=0;ex_out<=1;n_req<=n_req+1;ex_req<=ex_req+1;end
    else if(ex_out&&rsp_v[2])begin ex_out<=0;n_rsp<=n_rsp+1;ex_left<=ex_left-1;end
@@ -88,13 +90,13 @@ module tb_cp_pin_margin_loop;
  end
  // W2 borrower: lease, hold, release with its own tuple
  always @(posedge clk or negedge por_n)if(!por_n)begin w2_lease<=0;w2_owns<=0;w2_rel<=0;end else begin
-  if(!w2_owns&&!w2_lease&&($random(seed)%200)==0)w2_lease<=1;
+  if(!DET&&!w2_owns&&!w2_lease&&($random(seed)%200)==0)w2_lease<=1;
   if(w2_lease&&grants[2])begin w2_lease<=0;w2_owns<=1;w2_hold<=($random(seed)&15);n_w2<=n_w2+1;end
   if(w2_owns&&!w2_rel)begin if(w2_hold>0)w2_hold<=w2_hold-1;else w2_rel<=1;end
   if(w2_rel&&releases[2])begin w2_rel<=0;w2_owns<=0;end
  end
  // cdc drain toggles (release_r and grant safety are non-monotone)
- always @(posedge clk)cdc_drained<=($random(seed)%4)!=0;
+ always @(posedge clk)cdc_drained<=DET||(($random(seed)%4)!=0);
  always @(posedge clk)if(release_v&&!releases[1]&&grants[1])n_rel_toggle<=n_rel_toggle+1;
  // front end: one launch pulse per transaction, frame held until done/fault
  always @(posedge clk)begin
@@ -111,7 +113,7 @@ module tb_cp_pin_margin_loop;
       n_done<=n_done+1;
       if(held_job!==e_job||held_gen!==e_gen||held_token!==e_tok||held_pos!==e_pos)n_bad_frame<=n_bad_frame+1;
       if(cyc-tx_start>max_tx)max_tx<=cyc-tx_start;
-      phase<=0;gap<=($random(seed)&7);
+      phase<=0;gap<=DET?2:($random(seed)&7);sum_tx<=sum_tx+(cyc-tx_start);
      end else if(cyc-tx_start>4000)begin n_timeout<=n_timeout+1;phase<=3;end
     end
    3:;
@@ -125,19 +127,23 @@ module tb_cp_pin_margin_loop;
   if(association_fault)n_assoc_fault<=n_assoc_fault+1;
  end
  // fault injection and recovery (FAULTS=1); non-fault runs reset only on a failure
- integer settle=0;
+ integer settle=0,inj_k=0;
+ reg [8:0] up_phase;reg [6:0] up_status;event up_phase_ev,up_status_ev;
+ always @(up_phase_ev)begin force cp.u_su_cp.on.phase_n=up_phase;#4;release cp.u_su_cp.on.phase_n;end
+ always @(up_status_ev)begin force cp.u_su_cp.on.registered_status.status_q=up_status;#4;release cp.u_su_cp.on.registered_status.status_q;end
  always @(negedge clk)begin
   if(!por_n)begin settle=0;por_n=1;end
   else begin
    settle=settle+1;
-   if(FAULTS&&inj_at<0&&settle>20&&phase==2&&($random(seed)%300)==0)begin : inj
-    integer k;k=$random(seed)%4;if(k<0)k=-k;
+   if(FAULTS&&inj_at<0&&settle>20&&phase==2&&($random(seed)%300)==0)begin
+    inj_k=$random(seed)%4;if(inj_k<0)inj_k=-inj_k;
     inj_at=cyc;n_inj=n_inj+1;
-    case(k)
+    case(inj_k)
      0:inj_shared=1;
      1:if(grants[1])inj_exec=1;else inj_shared=1;
-     2:cp.u_su_cp.on.phase_n[3]=~cp.u_su_cp.on.phase_n[3];
-     3:cp.u_su_cp.on.registered_status.status_q[2]=~cp.u_su_cp.on.registered_status.status_q[2];
+     // state upsets: hold the flipped value from this negedge to the next capture edge
+     2:begin up_phase=cp.u_su_cp.on.phase_n^9'b000001000;->up_phase_ev;end
+     3:begin up_status=cp.u_su_cp.on.registered_status.status_q^7'b0000100;->up_status_ev;end
     endcase
    end
    if((fault_latched&&($random(seed)%32)==0)||(FAULTS&&phase==3)||(inj_at>=0&&cyc-inj_at>200))begin
@@ -150,9 +156,9 @@ module tb_cp_pin_margin_loop;
   repeat(3)@(posedge clk);por_n=1;
   wait(tx>=NTX&&phase==0);
   repeat(20)@(posedge clk);
-  $display("LOOP PIN=%0d REPLAY=%0d FAULTS=%0d tx=%0d done=%0d bad_frame=%0d cp_fault=%0d arb_fault_cycles=%0d assoc_fault_cycles=%0d timeouts=%0d w2_leases=%0d req=%0d rsp=%0d release_r_low_while_v=%0d max_tx_cycles=%0d injected=%0d detected=%0d late=%0d done_after_fault=%0d",
-   PIN,REPLAY,FAULTS,tx,n_done,n_bad_frame,n_cp_fault,n_arb_fault,n_assoc_fault,n_timeout,n_w2,n_req,n_rsp,n_rel_toggle,max_tx,n_inj,n_inj_detected,n_late,n_done_after_fault);
-  if(!FAULTS&&n_done==NTX&&n_bad_frame==0&&n_cp_fault==0&&n_arb_fault==0&&n_assoc_fault==0&&n_timeout==0&&n_req==n_rsp&&n_rel_toggle>0&&n_w2>0)$display("PASS");
+  $display("LOOP PIN=%0d REPLAY=%0d FAULTS=%0d tx=%0d done=%0d bad_frame=%0d cp_fault=%0d arb_fault_cycles=%0d assoc_fault_cycles=%0d timeouts=%0d w2_leases=%0d req=%0d rsp=%0d release_r_low_while_v=%0d max_tx_cycles=%0d sum_tx_cycles=%0d injected=%0d detected=%0d late=%0d done_after_fault=%0d",
+   PIN,REPLAY,FAULTS,tx,n_done,n_bad_frame,n_cp_fault,n_arb_fault,n_assoc_fault,n_timeout,n_w2,n_req,n_rsp,n_rel_toggle,max_tx,sum_tx,n_inj,n_inj_detected,n_late,n_done_after_fault);
+  if(!FAULTS&&n_done==NTX&&n_bad_frame==0&&n_cp_fault==0&&n_arb_fault==0&&n_assoc_fault==0&&n_timeout==0&&n_req==n_rsp&&(DET||(n_rel_toggle>0&&n_w2>0)))$display("PASS");
   else if(FAULTS&&n_inj>50&&n_inj_detected==n_inj&&n_late==0&&n_done_after_fault==0&&n_bad_frame==0)$display("PASS");
   else $display("FAIL");
   $finish;
