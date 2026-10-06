@@ -1,0 +1,63 @@
+{
+  "schema": "dsrom.v9.parent.retained-map-resume.v1",
+  "pid": 940244,
+  "started_ns": 1791237831776126327,
+  "donor_root": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r2",
+  "donor_record_sha256": "a5e6c05ab818a967770ea3e4aa7fd397486815ad1555aa1a72c60dd061513caa",
+  "mapped_netlist_sha256": "0c47087a99067e6622cd8ce3ad357d124099974379ed3d39651713df01e9c1e9",
+  "source_identical": true,
+  "hardware_sources": [
+    {
+      "path": "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context.sv",
+      "sha256": "0379c347f52652be54fecdc2404cd0bccc883cd45f394e2c2f829163e5f3c364",
+      "size_bytes": 8857
+    },
+    {
+      "path": "rtl/v41die/ot_v41_pair_pq_ld.sv",
+      "sha256": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+      "size_bytes": 3742
+    },
+    {
+      "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+      "size_bytes": 2053
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_ret.sv",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "size_bytes": 9658
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "size_bytes": 1505
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "size_bytes": 2051
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "size_bytes": 1395
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "size_bytes": 11904
+    }
+  ],
+  "changed_constraint_API_only": true,
+  "corrected_boundary_sha256": "e7aa011ae64c521493c619d282516eed19e36301ac285fe2313e238a0939b1af",
+  "runtime_limits": {
+    "RLIMIT_CPU": "unlimited",
+    "RLIMIT_AS": "unlimited",
+    "RLIMIT_FSIZE": "unlimited"
+  },
+  "subprocess_wall_timeout": null,
+  "synthesis_reused": true,
+  "exit_code": 1,
+  "ended_ns": 1791241705557754012,
+  "mapped_netlist_unchanged": true
+}

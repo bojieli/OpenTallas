@@ -1,0 +1,100 @@
+{
+  "design": {
+    "antenna": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "area_basis": "place_and_route.metrics.standard_cell_area_um2",
+    "area_um2": 29921.7,
+    "block": "noc_tw_coll_ctx_f12x",
+    "cells": 240499,
+    "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
+    "clock_period_ns": 0.833,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_area_um2": 287908,
+    "description": "ad-hoc block supplied on the command line",
+    "drc": 0,
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
+    "fmax_hz": 860729000.0,
+    "hold_wns_ns": -0.00827305,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "setup_wns_ns": -0.328806,
+    "signal_integrity_clean": false,
+    "signal_integrity_violations": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 6
+    },
+    "sources": [
+      {
+        "path": "rtl/link/ot_link_afifo.sv",
+        "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+        "size_bytes": 4344
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+        "sha256": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+        "size_bytes": 2134
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+        "sha256": "835a3bdc2cb5ee07ce949e238d06ef8320870df5cb322830f61748a033087477",
+        "size_bytes": 7006
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_mux.sv",
+        "sha256": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+        "size_bytes": 3130
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_endpoint.sv",
+        "sha256": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+        "size_bytes": 10592
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv",
+        "sha256": "8c21a27e4b575994f353f12d0f0d61b40126f8d24c93593e1f90e1872b01f5d3",
+        "size_bytes": 14660
+      },
+      {
+        "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx.sv",
+        "sha256": "6be4133adaa327099d92747eafe044fc5c8eb406ba65817f89db87e6a87d9f9b",
+        "size_bytes": 6877
+      }
+    ],
+    "top": "noc_tw_coll_ctx_f12x",
+    "utilization_fraction": 0.103928
+  },
+  "final_artifacts": {
+    "6_final.odb": {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12x_asap7_noc_collctx_f12x_r2/base/6_final.odb",
+      "bytes": 662793151,
+      "sha256": "1aedcee8c66664e988c55f88cfb214deb9bffa52b16cc904fb918dc107933ed8"
+    },
+    "6_final.sdc": {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12x_asap7_noc_collctx_f12x_r2/base/6_final.sdc",
+      "bytes": 2081189,
+      "sha256": "2bc1fedcf38b06deccfb26eddc1f706a5d76d61c7c8be2bcf121de140321ed12"
+    },
+    "6_final.spef": {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12x_asap7_noc_collctx_f12x_r2/base/6_final.spef",
+      "bytes": 332649015,
+      "sha256": "f5a9d07e319a72c73152caf581f30f1ffbac83200ac074e582ccb0d610df7fe1"
+    },
+    "6_final.v": {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12x_asap7_noc_collctx_f12x_r2/base/6_final.v",
+      "bytes": 25194841,
+      "sha256": "589a8016b037418df4facfd9900e60950990cf0144b82acdafb2876a4caad88b"
+    }
+  },
+  "synthesis_snapshot": {
+    "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2/work/orfs/1_2_yosys.raw.v",
+    "sha256": "0d2025edc54bcd6a8efce3603cd71ba3d0a4950c64ea220d38c97ef7772d2e89"
+  }
+}

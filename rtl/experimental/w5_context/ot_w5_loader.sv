@@ -9,6 +9,7 @@
 // loaded when both clear; a second broadcast before the load, or a go before the load finished, is a FAULT.
 // PQ = 0: the pinned loader (load at the broadcast).
 // ---------------------------------------------------------------------------
+(* keep_hierarchy = "yes" *)
 module ot_w5_loader_raw #(
     parameter integer NSEG = 8,
     parameter integer PHW = 6,
@@ -108,13 +109,13 @@ always @(posedge clk or negedge por_n)
 generate if(ENABLE!=0)begin:g_protected
  assign bad=|(sp^sr);
  ot_hdc_cg u_freeze(.clk(clk),.en(!stop|!por_n),.gclk(lc));
- ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_r(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
+ (* keep, dont_touch *) ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_r(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
  .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mr),.cm_q(cm_q),
  .c_v(cr),.c_a(ar),.c_d(dr),.go_e(gr),.ld_busy(br),.fault(fr),.snapshot(sr));
 end else begin:g_default
  assign bad=0;assign sr=sp;assign lc=clk;
 end endgenerate
- ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_p(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
+ (* keep, dont_touch *) ot_w5_loader_raw #(.PHW(6),.PQ(0)) u_p(.clk(lc),.rst_n(por_n),.cfg_go(cfg_go),.cfg_ph(cfg_ph),
  .cfg_np(cfg_np),.go(go),.e_sh_free(1'b1),.e_bank_free(1'b1),.cm_a(mp),.cm_q(cm_q),
  .c_v(cp),.c_a(ap),.c_d(dp),.go_e(gp),.ld_busy(bp),.fault(fp),.snapshot(sp));
 assign cm_a=mp;assign c_a=ap;assign c_d=dp;

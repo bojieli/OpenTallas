@@ -17,7 +17,7 @@ module tb_item9_ha2_fullshape;
     .r_v(cv),.r_m(cm),.r_d(cd),.dupe(cdup),.issue_o(ci),.quiet(cquiet));
   wire [1:0] rv,dup,issue; wire [15:0] rm[0:1];wire [FW-1:0] rd[0:1];
   for(genvar b=0;b<2;b=b+1)begin:g_ref
-    ot_ha2_owner_reduce #(.LANES(LANES),.E(b==0?64:384),.NC(8),.NP(8),.INJ(2),.SLOTREG(1)) ref_dut
+    ot_ha2_owner_reduce #(.LANES(LANES),.E((b==0?64:384)*LANES),.NC(8),.NP(8),.INJ(2),.SLOTREG(1)) ref_dut
       (.clk(clk),.rst_n(ref_rst),.rank(8'd19),.h_v(hv),.h_d(ref_hd),.p_v(pv),.p_flit(ref_pd),
        .r_v(rv[b]),.r_m(rm[b]),.r_d(rd[b]),.dupe(dup[b]),.issue_o(issue[b]));
   end

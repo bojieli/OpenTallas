@@ -1,0 +1,228 @@
+
+-- Running command `read_verilog -sv /out/original.sv; hierarchy -top ot_v41_pair_pq_ld -chparam PQ 0; proc; opt; write_rtlil /out/pq0_native.rtlil; write_verilog -noattr /out/pq0_native.v' --
+
+1. Executing Verilog-2005 frontend: /out/original.sv
+Parsing SystemVerilog input from `/out/original.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_pair_pq_ld'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \PQ = 0
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_v41_pair_pq_ld'.
+Parameter \PQ = 0
+Generating RTLIL representation for module `$paramod\ot_v41_pair_pq_ld\PQ=s32'00000000000000000000000000000000'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_v41_pair_pq_ld
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_v41_pair_pq_ld
+Removing unused module `$paramod\ot_v41_pair_pq_ld\PQ=s32'00000000000000000000000000000000'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+Cleaned up 1 empty switch.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/out/original.sv:47$42 in module ot_v41_pair_pq_ld.
+Marked 2 switch rules as full_case in process $proc$/out/original.sv:72$50 in module ot_v41_pair_pq_ld.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 1 assignment to connection.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+Found async reset \rst_n in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:72$50'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+     1/7: $0\c_v[0:0]
+     2/7: $0\pend[0:0]
+     3/7: $0\ld_np[2:0]
+     4/7: $0\ld_a[10:0]
+     5/7: $0\ld_k[4:0]
+     6/7: $0\ld_run[0:0]
+     7/7: $0\fault[0:0]
+Creating decoders for process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:72$50'.
+     1/1: $0\act[0:0]
+Creating decoders for process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:78$59'.
+     1/1: $0\c_d[47:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_v41_pair_pq_ld.\c_v' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $adff cell `$procdff$94' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\fault' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $adff cell `$procdff$99' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\ld_run' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $adff cell `$procdff$104' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\ld_k' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $adff cell `$procdff$109' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\ld_a' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $dff cell `$procdff$116' with positive edge clock.
+Creating register for signal `\ot_v41_pair_pq_ld.\ld_np' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $dff cell `$procdff$123' with positive edge clock.
+Creating register for signal `\ot_v41_pair_pq_ld.\pend' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+  created $adff cell `$procdff$128' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\act' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:72$50'.
+  created $adff cell `$procdff$133' with positive edge clock and positive level reset.
+Creating register for signal `\ot_v41_pair_pq_ld.\c_a' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:78$59'.
+  created $dff cell `$procdff$134' with positive edge clock.
+Creating register for signal `\ot_v41_pair_pq_ld.\c_d' using process `\ot_v41_pair_pq_ld.$proc$/out/original.sv:78$59'.
+  created $dff cell `$procdff$135' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+Removing empty process `ot_v41_pair_pq_ld.$proc$/out/original.sv:47$42'.
+Found and cleaned up 2 empty switches in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:72$50'.
+Removing empty process `ot_v41_pair_pq_ld.$proc$/out/original.sv:72$50'.
+Found and cleaned up 1 empty switch in `\ot_v41_pair_pq_ld.$proc$/out/original.sv:78$59'.
+Removing empty process `ot_v41_pair_pq_ld.$proc$/out/original.sv:78$59'.
+Cleaned up 6 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_pair_pq_ld.
+<suppressed ~23 debug messages>
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_pair_pq_ld.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_pair_pq_ld'.
+Computing hashes of 52 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+Computing hashes of 44 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_pair_pq_ld..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$78: \ld_run -> 1'0
+      Replacing known input bits on port A of cell $procmux$76: \ld_run -> 1'1
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $ternary$/out/original.sv:61$46.
+Removed 1 multiplexer ports.
+<suppressed ~23 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_pair_pq_ld.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_pair_pq_ld'.
+Computing hashes of 43 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+Handling D = Q on $procdff$99 ($adff) from module ot_v41_pair_pq_ld (removing D path).
+Adding EN signal on $procdff$116 ($dff) from module ot_v41_pair_pq_ld (D = $procmux$69_Y, Q = \ld_a).
+Adding EN signal on $procdff$123 ($dff) from module ot_v41_pair_pq_ld (D = $ternary$/out/original.sv:61$46_Y, Q = \ld_np).
+Adding EN signal on $procdff$133 ($adff) from module ot_v41_pair_pq_ld (D = $procmux$86_Y, Q = \act).
+Handling D = Q on $procdff$128 ($adff) from module ot_v41_pair_pq_ld (removing D path).
+Adding EN signal on $procdff$109 ($adff) from module ot_v41_pair_pq_ld (D = $procmux$74_Y, Q = \ld_k).
+Adding EN signal on $procdff$135 ($dff) from module ot_v41_pair_pq_ld (D = $ternary$/out/original.sv:80$62_Y, Q = \c_d).
+Setting constant 0-bit at position 0 on $procdff$128 ($dlatch) from module ot_v41_pair_pq_ld.
+Setting constant 0-bit at position 0 on $procdff$99 ($dlatch) from module ot_v41_pair_pq_ld.
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_pair_pq_ld..
+Removed 8 unused cells and 56 unused wires.
+<suppressed ~10 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_pair_pq_ld.
+<suppressed ~4 debug messages>
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_pair_pq_ld..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_pair_pq_ld.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_pair_pq_ld'.
+Computing hashes of 37 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+Computing hashes of 36 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_pair_pq_ld..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_pair_pq_ld.
+
+5.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_v41_pair_pq_ld..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_v41_pair_pq_ld.
+Performed a total of 0 changes.
+
+5.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_v41_pair_pq_ld'.
+Computing hashes of 36 cells of `\ot_v41_pair_pq_ld'.
+Finding duplicate cells in `\ot_v41_pair_pq_ld'.
+Removed a total of 0 cells.
+
+5.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_v41_pair_pq_ld..
+
+5.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_v41_pair_pq_ld.
+
+5.23. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing RTLIL backend.
+Output filename: /out/pq0_native.rtlil
+
+7. Executing Verilog backend.
+
+7.1. Executing BMUXMAP pass.
+
+7.2. Executing DEMUXMAP pass.
+Dumping module `\ot_v41_pair_pq_ld'.

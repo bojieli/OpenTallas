@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing CP LAUNCH -> actual shared SU lease. No second borrower/GO authority.
 // Original W6 header/control rows; opt-in boundary control uses protected phase rails.
-module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0)(
+module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0,FOUR_COMBINATIONAL_CUTS=0)(
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -35,7 +35,21 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   (phase[3]&&phase[4])||(phase[3]&&phase[5])||(phase[4]&&phase[5])||
   (phase[6]&&phase[7])||(phase[6]&&phase[8])||(phase[7]&&phase[8])||
   (phase_groups[0]&&phase_groups[1])||(phase_groups[0]&&phase_groups[2])||(phase_groups[1]&&phase_groups[2]);
- wire phase_bad=phase_rails_bad||phase_shape_bad;
+ wire four_phase_valid,four_entry;
+ wire [127:0] capture_frame={55'd0,launch_pos,launch_token,cp_gen,cp_job};
+ wire [71:0] four_pc_code,four_frame_lo,four_frame_hi;
+ if(FOUR_COMBINATIONAL_CUTS)begin:four_combinational_cuts
+  initial if(!BALANCED_OWNER_BOUNDARY)$fatal(1,"four cuts require balanced registered boundary");
+  ot_hbm_cp_four_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  ot_hbm_cp_four_entry entry_check(.pc(launch_pc),.entry(four_entry));
+  ot_hbm_cp_four_encode pc_encoder(.data({32'd0,launch_pc}),.code(four_pc_code));
+  ot_hbm_cp_four_encode lo_encoder(.data(capture_frame[63:0]),.code(four_frame_lo));
+  ot_hbm_cp_four_encode hi_encoder(.data(capture_frame[127:64]),.code(four_frame_hi));
+ end else begin:four_cuts_off
+  assign four_phase_valid=0;assign four_entry=0;
+  assign four_pc_code=0;assign four_frame_lo=0;assign four_frame_hi=0;
+ end
+ wire phase_bad=FOUR_COMBINATIONAL_CUTS?!four_phase_valid:(phase_rails_bad||phase_shape_bad);
  reg [3:0] boundary_state;
  always @*begin
   boundary_state=FAIL;
@@ -105,7 +119,7 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  end
  assign held_job=frame[31:0];assign held_gen=frame[35:32];
  assign held_token=frame[52:36];assign held_pos=frame[72:53];assign selected_pc=REGISTERED_OUTPUTS?decoded_header[31:0]:p[31:0];
- wire entry=launch_pc==32'h80000004||launch_pc==32'hc0000004;
+ wire entry=FOUR_COMBINATIONAL_CUTS?four_entry:(launch_pc==32'h80000004||launch_pc==32'hc0000004);
  wire checked_frame_match=cp_job==held_job&&cp_gen==held_gen&&launch_token==held_token&&launch_pos==held_pos&&launch_pc==selected_pc;
  // PREDECODE cannot dispatch. Check the complete captured header at its
  // registered return, avoiding a decoded-source comparator in the recurrence.
@@ -145,7 +159,7 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire idle_ok=REGISTERED_BOUNDARY?(boundary_ok&&(!checked_valid_q||is_idle||current_owner_ok)):!fault;
  if(BALANCED_OWNER_BOUNDARY)begin:balanced_owner_boundary
   // Complete current PC/frame/padding, not a hash or a registered permission.
-  // 192 bits ->48 four-bit matches ->12 mismatch groups ->3 equal64 roots.
+  // 192 bits ->48 four-bit bit_match ->12 mismatch groups ->3 equal64 roots.
   // Keep alternating NOR/NAND boundaries to prevent positive permit chaining.
   wire [191:0] live_header={55'd0,launch_pos,launch_token,cp_gen,cp_job,32'd0,launch_pc};
   wire [47:0] match4;
@@ -167,6 +181,21 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   assign local_ok[2]=boundary_ok&&checked_valid_q&&checked_status[2]&&lease_granted;
   assign local_ok[3]=boundary_ok&&checked_valid_q&&checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4;
   assign local_ok[4]=boundary_ok&&checked_valid_q&&checked_status[5]&&!lease_granted&&!exec_done;
+  wire live_owner_bad=!(&equal64);
+  if(FOUR_COMBINATIONAL_CUTS)begin:four_output_frontiers
+   // Independent positive factors join only at the final balanced boundary.
+   // Full current192-bit owner and current mutable phase/status veto remain.
+   wire errors_ok=~|{qualified_sticky,exec_fault,shared_fault,ecc_fault_q};
+   ot_hbm_cp_four_and12 pending_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[0],!lease_granted}),.result(pending));
+   ot_hbm_cp_four_and12 lease_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[1],!lease_granted}),.result(lease_v));
+   ot_hbm_cp_four_and12 owned_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted}),.result(owned));
+   ot_hbm_cp_four_and12 release_gate(.bits({1'b1,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4}),.result(release_v));
+   ot_hbm_cp_four_and12 accept_gate(.bits({equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4,release_r}),.result(balanced_release_accept));
+   ot_hbm_cp_four_and12 done_gate(.bits({2'b11,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[5],!lease_granted,!exec_done}),.result(done));
+   wire bypass_owner=is_idle||!checked_valid_q;
+   wire [2:0] quiet_owner=equal64|{3{bypass_owner}};
+   ot_hbm_cp_four_and12 quiet_gate(.bits({4'b1111,quiet_owner,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(quiet));
+  end else begin:original_balanced_frontiers
   ot_hbm_integrated_cp_and4 pending_gate(.bits({equal64,local_ok[0]}),.result(pending));
   ot_hbm_integrated_cp_and4 lease_gate(.bits({equal64,local_ok[1]}),.result(lease_v));
   ot_hbm_integrated_cp_and4 owned_gate(.bits({equal64,local_ok[2]}),.result(owned));
@@ -176,10 +205,10 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   // It never uses the external output gate as next-phase logic input.
   wire accept_local=local_ok[3]&&release_r;
   ot_hbm_integrated_cp_and4 accept_gate(.bits({equal64,accept_local}),.result(balanced_release_accept));
-  wire live_owner_bad=!(&equal64);
-  assign fault=!boundary_ok||(!is_idle&&checked_valid_q&&live_owner_bad);
   assign quiet=boundary_ok&&checked_status[3]&&!lease_granted&&
                (is_idle||!checked_valid_q||!live_owner_bad);
+  end
+  assign fault=!boundary_ok||(!is_idle&&checked_valid_q&&live_owner_bad);
  end else if(GROUPED_OWNER_BOUNDARY)begin:grouped_owner_boundary
   // Complete PC64/frame128 comparison includes every zero padding bit.
   // Byte groups are independent combinational frontiers, not registered
@@ -333,8 +362,12 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
    frame_lo<=ot_gpu_w6_secded_pkg::encode64(0);frame_hi<=ot_gpu_w6_secded_pkg::encode64(0);
   end else if(is_idle&&launch_v==2'b01&&entry&&!recurrence_fault&&(!REGISTERED_BOUNDARY||!control_bad))begin
    captured={55'b0,launch_pos,launch_token,cp_gen,cp_job};
-   frame_lo<=ot_gpu_w6_secded_pkg::encode64(captured[63:0]);frame_hi<=ot_gpu_w6_secded_pkg::encode64(captured[127:64]);
-   pc_code<=ot_gpu_w6_secded_pkg::encode64({32'b0,launch_pc});
+   if(FOUR_COMBINATIONAL_CUTS)begin
+    frame_lo<=four_frame_lo;frame_hi<=four_frame_hi;pc_code<=four_pc_code;
+   end else begin
+    frame_lo<=ot_gpu_w6_secded_pkg::encode64(captured[63:0]);frame_hi<=ot_gpu_w6_secded_pkg::encode64(captured[127:64]);
+    pc_code<=ot_gpu_w6_secded_pkg::encode64({32'b0,launch_pc});
+   end
   end
  end
  always @(posedge clk or negedge por_n)begin
@@ -398,4 +431,69 @@ endmodule
 (* keep_hierarchy = "yes" *)
 module ot_hbm_integrated_cp_and4(input wire [3:0] bits,output wire result);
  assign result=&bits;
+endmodule
+
+// Additive four-cut namespace: combinational only, no independent owner state.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_four_and12(input wire [11:0] bits,output wire result);
+ wire [2:0] group_ok;
+ for(genvar k=0;k<3;k=k+1)begin:g
+  ot_hbm_integrated_cp_and4 a(.bits(bits[k*4+:4]),.result(group_ok[k]));
+ end
+ ot_hbm_integrated_cp_and4 root(.bits({1'b1,group_ok}),.result(result));
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_four_phase(input wire [8:0] q,n,output wire valid);
+ wire [8:0] legal;
+ for(genvar k=0;k<9;k=k+1)begin:word
+  localparam [8:0] Q=9'b1<<k;
+  wire [17:0] bit_match=~({q,n}^{Q,~Q});
+  wire [4:0] leaf;
+  for(genvar j=0;j<4;j=j+1)begin:g
+   ot_hbm_integrated_cp_and4 a(.bits(bit_match[j*4+:4]),.result(leaf[j]));
+  end
+  ot_hbm_integrated_cp_and4 tail(.bits({2'b11,bit_match[17:16]}),.result(leaf[4]));
+  wire first;
+  ot_hbm_integrated_cp_and4 middle(.bits(leaf[3:0]),.result(first));
+  ot_hbm_integrated_cp_and4 root(.bits({2'b11,first,leaf[4]}),.result(legal[k]));
+ end
+ wire [2:0] none;
+ ot_hbm_integrated_cp_nor4 g0(.bits(legal[3:0]),.result(none[0]));
+ ot_hbm_integrated_cp_nor4 g1(.bits(legal[7:4]),.result(none[1]));
+ ot_hbm_integrated_cp_nor4 g2(.bits({3'b0,legal[8]}),.result(none[2]));
+ ot_hbm_integrated_cp_nand4 root(.bits({1'b1,none}),.result(valid));
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_four_entry(input wire [31:0] pc,output wire entry);
+ // Exactly the original two entry PCs; bit30 differs between them. Full live
+ // owner equality elsewhere still compares all32 PC bits, without a mask.
+ wire [31:0] normalized={pc[31],1'b0,pc[29:0]};
+ wire [7:0] leaf;wire [1:0] mismatch;
+ for(genvar k=0;k<8;k=k+1)begin:g
+  localparam [31:0] EXPECT=32'h80000004;
+  ot_hbm_integrated_cp_match4 a(.held(EXPECT[k*4+:4]),.live(normalized[k*4+:4]),.equal(leaf[k]));
+ end
+ ot_hbm_integrated_cp_nand4 m0(.bits(leaf[3:0]),.result(mismatch[0]));
+ ot_hbm_integrated_cp_nand4 m1(.bits(leaf[7:4]),.result(mismatch[1]));
+ ot_hbm_integrated_cp_nor4 root(.bits({2'b0,mismatch}),.result(entry));
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_four_xor4(input wire [3:0] bits,output wire result);
+ assign result=(bits[0]^bits[1])^(bits[2]^bits[3]);
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_four_encode(input wire [63:0] data,output wire [71:0] code);
+ wire [71:0] original=ot_gpu_w6_secded_pkg::encode64(data);
+ assign code[70:0]=original[70:0];
+ // XOR of data+seven Hamming parities cancels exactly the data positions
+ // with odd code-index popcount. These35 terms retain bit71 byte-exactly.
+ wire [35:0] terms={1'b0,data[63],data[60],data[58],data[57],data[56],data[53],data[51],data[50],data[47],data[46],data[44],data[41],data[39],data[38],data[36],data[33],data[32],data[29],data[27],data[26],data[24],data[23],data[21],data[18],data[17],data[14],data[12],data[11],data[10],data[7],data[5],data[4],data[2],data[1],data[0]};
+ wire [8:0] leaf;wire [2:0] middle;
+ for(genvar k=0;k<9;k=k+1)begin:g
+  ot_hbm_cp_four_xor4 a(.bits(terms[k*4+:4]),.result(leaf[k]));
+ end
+ ot_hbm_cp_four_xor4 m0(.bits(leaf[3:0]),.result(middle[0]));
+ ot_hbm_cp_four_xor4 m1(.bits(leaf[7:4]),.result(middle[1]));
+ ot_hbm_cp_four_xor4 m2(.bits({3'b0,leaf[8]}),.result(middle[2]));
+ ot_hbm_cp_four_xor4 root(.bits({1'b0,middle}),.result(code[71]));
 endmodule

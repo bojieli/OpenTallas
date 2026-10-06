@@ -1,0 +1,272 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T23:59:55.381892+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_gpu_coll_item9_context32_txctrl",
+    "clock_port": "clk_sm",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_ports": [
+      "por_n",
+      "issue",
+      "issue_mode",
+      "issue_count",
+      "issue_va"
+    ],
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "results/rtl/hbm_item9_closure_20261005/context32_clocks.sdc",
+          "sha256": "99695d11136a5bbf139f3896e866c0546dbcedb07c11f2239b1b904f5dd43895"
+        }
+      ],
+      "lines": [
+        "create_clock -name mem_clk -period 833 -waveform {0 416.5} [get_ports clk_mem]",
+        "create_clock -name host_clk -period 833 -waveform {0 416.5} [get_ports clk_host]",
+        "set_clock_uncertainty -setup 60 [all_clocks]",
+        "set_clock_uncertainty -hold 25 [all_clocks]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "ingress_clock_port": "clk_link",
+    "ingress_input_delay_max_ns": 0.1666,
+    "ingress_input_delay_min_ns": 0.1666,
+    "ingress_input_ports": [
+      "switch_rx_v",
+      "switch_rx_rec"
+    ],
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1,
+      "NL": 128,
+      "NSM": 32,
+      "OWNER64": 1,
+      "RDUP": 16,
+      "RXOH": 1,
+      "TXCTRL": 1,
+      "TX_MASK_LA": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/gpu_sys/ot_gpu_reset_ctrl.sv",
+        "sha256": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+        "size_bytes": 3732
+      },
+      {
+        "path": "rtl/link/ot_link_afifo.sv",
+        "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+        "size_bytes": 4344
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+        "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+        "size_bytes": 9119
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+        "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+        "size_bytes": 4276
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv",
+        "sha256": "cd641683b29687801af91fdd5edafd89d05007a86386abea2f52e40af349e2ac",
+        "size_bytes": 1675
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv",
+        "sha256": "9f9b4146e47a98f04b4cd0cfdb6dedfeacc1a454a82a46a3d1bccb16efe84801",
+        "size_bytes": 21751
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv",
+        "sha256": "3c1c2ce30562cab1e71aac98e2631ba8c8da4bafe2b8986d28cd2fdceb63e344",
+        "size_bytes": 4160
+      }
+    ],
+    "top": "ot_gpu_coll_item9_context32_txctrl"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\nm9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74\nWarning: Replacing memory \\g_on.ud with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74\n\n9.1. Analyzing design hierarchy..\nTop module:  \\ot_gpu_coll_item9_context32_txctrl\nUsed module:     \\ot_gpu_reset_ctrl\nUsed module:     \\ot_gpu_coll_mux_owner64\nUsed module:         \\ot_gpu_coll_mux_f12\nUsed module:     \\ot_gpu_coll_endpoint_item9_txctrl\nParameter \\ENABLE = 0\nParameter \\NSM = 2\nParameter \\NL = 128\nParameter \\ODUP = 16\n\n9.2. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_gpu_coll_mux_f12'.\nParameter \\ENABLE = 0\nParameter \\NSM = 2\nParameter \\NL = 128\nParameter \\ODUP = 16\nGenerating RTLIL representation for module `$paramod$0e5914799756e125039a477a60cd8a1a9f954e50\\ot_gpu_coll_mux_f12'.\nParameter \\ENABLE = 1\n\n9.3. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_gpu_reset_ctrl'.\nParameter \\ENABLE = 1\nGenerating RTLIL representation for module `$paramod\\ot_gpu_reset_ctrl\\ENABLE=s32'00000000000000000000000000000001'.\nParameter \\ENABLE = 1\nParameter \\NSM = 32\nParameter \\NL = 128\nParameter \\OWNER64 = 1\n\n9.4. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_gpu_coll_mux_owner64'.\nParameter \\ENABLE = 1\nParameter \\NSM = 32\nParameter \\NL = 128\nParameter \\OWNER64 = 1\nGenerating RTLIL representation for module `$paramod$c822fc043897226389373a9fa827f60a90ec8d05\\ot_gpu_coll_mux_owner64'.\nParameter \\ENABLE = 1\nParameter \\TXCTRL = 1\nParameter \\RXOH = 1\nParameter \\TX_MASK_LA = 1\nParameter \\NL = 128\nParameter \\R = 2\nParameter \\RANK = 0\nParameter \\RDUP = 16\nParameter \\XREG = 1\n\n9.5. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_gpu_coll_endpoint_item9_txctrl'.\nParameter \\ENABLE = 1\nParameter \\TXCTRL = 1\nParameter \\RXOH = 1\nParameter \\TX_MASK_LA = 1\nParameter \\NL = 128\nParameter \\R = 2\nParameter \\RANK = 0\nParameter \\RDUP = 16\nParameter \\XREG = 1\nGenerating RTLIL representation for module `$paramod$b90d84607df4c9df20a9dbdc68d0b724d9ff8827\\ot_gpu_coll_endpoint_item9_txctrl'.\nWarning: Replacing memory \\g_on.off_tab with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv:302\nReprocessing module ot_gpu_coll_item9_context32_txctrl because instantiated module $paramod$b90d84607df4c9df20a9dbdc68d0b724d9ff8827\\ot_gpu_coll_endpoint_item9_txctrl has become available.\nGenerating RTLIL representation for module `$paramod$161ce2012126afb12a9ffe203ccd49319226151c\\ot_gpu_coll_item9_context32_txctrl'.\nWarning: Replacing memory \\g_on.dd with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74\nWarning: Replacing memory \\g_on.ud with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74\n\nERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T23:58:18.782286+00:00",
+  "git": {
+    "commit": "a2d51bab7b89f0ca65bdd7d0ced82d18f11330ff",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_gpu_coll_item9_context32_txctrl",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "NSM=32",
+      "--param",
+      "NL=128",
+      "--param",
+      "OWNER64=1",
+      "--param",
+      "TX_MASK_LA=1",
+      "--param",
+      "RXOH=1",
+      "--param",
+      "RDUP=16",
+      "--param",
+      "TXCTRL=1",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_reset_ctrl.sv",
+      "--source",
+      "rtl/link/ot_link_afifo.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv",
+      "--clock-port",
+      "clk_sm",
+      "--ingress-clock-port",
+      "clk_link",
+      "--core-input-port",
+      "por_n",
+      "--core-input-port",
+      "issue",
+      "--core-input-port",
+      "issue_mode",
+      "--core-input-port",
+      "issue_count",
+      "--core-input-port",
+      "issue_va",
+      "--ingress-input-port",
+      "switch_rx_v",
+      "--ingress-input-port",
+      "switch_rx_rec",
+      "--ingress-input-delay-min-ns",
+      ".1666",
+      "--ingress-input-delay-max-ns",
+      ".1666",
+      "--sdc-append",
+      "results/rtl/hbm_item9_closure_20261005/context32_clocks.sdc",
+      "--clock-period-ns",
+      ".833",
+      "--clock-uncertainty-ns",
+      ".06",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      ".2",
+      "--stages",
+      "synth",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "item9_loaded32_synth_r1",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-synth-r4/work",
+      "--output",
+      "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-synth-r4/physical.json"
+    ],
+    "driver": {
+      "commit": "a2d51bab7b89f0ca65bdd7d0ced82d18f11330ff",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/repos/codex-item9-loaded32-min-20261005/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas/repos/codex-item9-loaded32-min-20261005"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas/repos/codex-item9-loaded32-min-20261005"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

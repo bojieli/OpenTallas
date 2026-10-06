@@ -8,7 +8,8 @@ module ot_hdc_v41_fh_macro_ctx #(
     parameter integer NW = 16,
     parameter integer ALAT = 0,
     parameter integer CAPTURE = 0,
-    parameter integer RETURN_EXTRA = 2
+    parameter integer RETURN_EXTRA = 2,
+    parameter integer PROTECT_SPLIT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -48,7 +49,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     wire memory_fault,child_fault;
     wire [G-1:0] child_we;
     wire [(1+32+NW)*G*W-1:0] child_leaf;
-    ot_hdc_v41_fh_sram_return #(.W(W),.G(G),.AW(AW)) u_memory (
+    ot_hdc_v41_fh_sram_return #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT)) u_memory (
         .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),
         .rd_valid(mem_valid),.corrected(mem_corrected),.poisoned(mem_poison),
         .wr_en(wr_en),.wr_addr(wr_addr),.wr_mask(wr_mask),.wr_data(wr_data),
@@ -77,6 +78,9 @@ module ot_hdc_v41_fh_macro_ctx #(
         .o_mask(o_mask),
         .o_data(o_data));
     assign fault=child_fault||memory_fault;
+`ifndef SYNTHESIS
+    initial if(RETURN_EXTRA!=2+PROTECT_SPLIT) $fatal(1,"Protected SRAM return and head latency mismatch");
+`endif
     assign o_we=fault?{G{1'b0}}:child_we;
     for(genvar l=0;l<G*W;l=l+1) begin : g_leaf_fault
         localparam integer CW=1+32+NW;

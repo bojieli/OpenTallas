@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "EXACT_PASS_SYNTH_PASS_FLOORPLAN_RECIPE_FAILURE",
+  "status": "DECODE_SPLIT_EXACT_PASS_C14_PHYSICAL_RUNNING",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -103,5 +103,58 @@
     "sequential_area_um2": 25374.04056,
     "peak_MiB": 2178.015625,
     "elapsed_s": 721.51
+  },
+  "decode_split": {
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "default": 0,
+    "exact_pass": true,
+    "gold4_cycles": 62878,
+    "forced_s1_cycles": 62878,
+    "busy_me": 61845,
+    "added_five_chain_cycles": 25,
+    "accepted_reads": 32512,
+    "released_reads": 32512,
+    "masked_writes": 32352,
+    "corrected_errors": 1,
+    "UE_and_identity_rejected": true,
+    "warm_mask_reset_debt_preserved": true,
+    "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
+    "physical_closed": false,
+    "adopted": false,
+    "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split",
+    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C14_decode_split"
+  },
+  "C11_actual_result": {
+    "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
+    "setup_ws_ps": -105.632,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "terminal_exit": 2,
+    "terminal_reason": "Automatic macro placer locks macros before POST_MACRO_PLACE_TCL attempts planned reposition; ODB-0359",
+    "source": "a3046f074",
+    "RTL_and_arithmetic_unchanged": true
+  },
+  "C12_actual_result": {
+    "stage": "floorplan estimated parasitics before propagated CTS/extracted route",
+    "setup_ws_ps": 81.0209,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "real_macros": 64,
+    "terminal_exit": 1,
+    "terminal_reason": "POST macro placement attempts orientation of automatically LOCKED macro; ODB-0360",
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "successor": "C13_decode_split",
+    "reuse": "completed mapped synthesis and floorplan SHA checked; corrected pre-auto MACRO_PLACEMENT_TCL only; no RTL change or resynthesis"
+  },
+  "C13_actual_result": {
+    "terminal_exit": 2,
+    "terminal_reason": "FLW0024 lower-bound density1.88 with fixed SRAMs included in movable-cell fence groups",
+    "all64_macros_placed": true,
+    "qualified": false,
+    "source_recipe": "b55d4ca0c",
+    "diagnosis": "same ODB, remove fixed SRAMs from movable groups only; measured GPL lower-bound density0.12. Coordinates/regions/source math unchanged",
+    "successor": "C14_decode_split",
+    "source_recipe_successor": "650dc3c64",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d"
   }
 }

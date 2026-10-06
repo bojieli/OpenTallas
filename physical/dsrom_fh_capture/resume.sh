@@ -20,13 +20,54 @@ cfg=R/'work/orfs/config.mk';text=cfg.read_text()
 assert 'export DIE_AREA = 0 0 2000 660' in text
 assert 'export CORE_AREA = 2 2 1998 658' in text
 text='\n'.join(l for l in text.splitlines() if not l.startswith(('export CORE_UTILIZATION =','export CORE_ASPECT_RATIO =','export CORE_MARGIN =')))+'\n'
+text=text.replace('export POST_MACRO_PLACE_TCL =','export MACRO_PLACEMENT_TCL =')
 cfg.write_text(text)
 print('SOURCE_PIN/reused objects verified',p['commit'],flush=True)
 PY
 uptime
 free -g
 df -h "$S" "$R"
-B=/work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base
+B=$(python3 - "$R" <<'PY'
+import re,sys
+from pathlib import Path
+root=Path(sys.argv[1])/'work/orfs'
+name=re.search(r'^export DESIGN_NICKNAME = (\S+)$',(root/'config.mk').read_text(),re.M).group(1)
+assert re.fullmatch(r'[A-Za-z0-9_]+',name)
+print('/work/results/asap7/'+name+'/base')
+PY
+)
+if [ "${OT_FH_ASSIGN_CONES:-0}" = 1 ]; then
+ docker run --rm -e OMP_NUM_THREADS=16 \
+  -e FHCONE_INPUT="$B/2_4_floorplan_pdn.odb" \
+  -e FHCONE_OUTPUT="$B/2_4_floorplan_pdn.cones.odb" \
+  -e FHCONE_RECEIPT=/work/cone_grouping.json \
+  -v "$S:/src:ro" -v "$R/work/orfs:/work" openroad/orfs:latest bash -lc \
+  'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 16 -python /src/physical/dsrom_fh_capture/assign_lane_cones.py'
+ # The original mapped floorplan is retained by the previous terminal run;
+ # this continuation changes group metadata only, with its own hash receipt.
+ python3 - "$R" <<'PY'
+import json,os,shutil,sys
+from pathlib import Path
+r=Path(sys.argv[1])/'work/orfs'
+p=json.loads((r/'cone_grouping.json').read_text())
+assert not p['logic_changed'] and not p['geometry_changed'] and not p['macro_pins_changed']
+base=next(r.glob('results/asap7/*/base/2_4_floorplan_pdn.cones.odb')).parent
+os.replace(base/'2_4_floorplan_pdn.cones.odb',base/'2_4_floorplan_pdn.odb')
+# ORFS materializes its 2_floorplan alias as a regular file in this image.
+shutil.copy2(base/'2_4_floorplan_pdn.odb',base/'2_floorplan.odb')
+PY
+fi
+# Completed floorplan outputs are reusable only when explicitly hashed in
+# reuse.json, just like the mapped synthesis outputs. Never replay synthesis.
+REUSE_ARGS=$(python3 - "$R" <<'PY'
+import json,sys
+from pathlib import Path
+m=json.loads((Path(sys.argv[1])/'reuse.json').read_text())
+for f in m['reused_sha256']:
+    if Path(f).name in {x+'.'+ext for x in ('1_synth','2_1_floorplan','2_2_floorplan_macro','2_3_floorplan_tapcell','2_4_floorplan_pdn','2_floorplan') for ext in ('odb','sdc')}:
+        print('-o /work/'+f,end=' ')
+PY
+)
 exec docker run --rm -e OMP_NUM_THREADS=16 -v "$S:/src:ro" -v "$R/work/orfs:/work" \
  -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc \
- "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 -o $B/1_synth.odb -o $B/1_synth.sdc finish metadata-generate"
+ "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 $REUSE_ARGS finish metadata-generate"

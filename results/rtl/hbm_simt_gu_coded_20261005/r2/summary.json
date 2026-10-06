@@ -1,0 +1,30 @@
+{
+  "source_pin": "5ff88466a147b68697bec06021a7749b55aec28a",
+  "verdict": "PASS_CHANGED_CODED_RETIREMENT_COMPONENT",
+  "default_off_pass": true,
+  "rows": 9216,
+  "CE_cases": 216,
+  "DUE_cases": 6,
+  "root_POR_only_DUE": true,
+  "warm_quarantine_pass": true,
+  "late_CE_completion_pass": true,
+  "actual_accept_only": true,
+  "golden_reused_unchanged": true,
+  "live_full_chain": false,
+  "parent_context_closed": false,
+  "physical_closed": false,
+  "adopted": false,
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-gu-coded-5ff88466a",
+  "evidence_sha256": {
+    "source_pins.json": "a3fd58955166becc1112fbd8debb6e0b5dfff9d58e3527448b065fe642d6c506",
+    "input_source.json": "5c3f3ca1d7ce04b13ff516824e5e60a8a22a0678fc07c9757eaa486bb85b002e",
+    "run_0.log": "96958c34c5b9160bd54821abaacf1f47c4d3377a0eaa9bd89462ec8476539365",
+    "exit.json": "b9a9f2b527e57115b6394e4f7ca2815f12b8b015ef9d11a3cb26ab186741d5e4",
+    "status": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431",
+    "driver.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build_0.log": "7dcc27df0a3aebfb21ac4ef3cc9c25bbcdf35a0c0878adbee3df604f50d2b523",
+    "run_1.log": "1d63255c7724dfd4b361e13f43289025fcdecf0b5a206dff6ca00a89f06a2553",
+    "build_1.log": "7dcc27df0a3aebfb21ac4ef3cc9c25bbcdf35a0c0878adbee3df604f50d2b523",
+    "admission.json": "15cd88abe1b8531d577ee61292f92b07531c75a0a0872baee915af03e74f2c74"
+  }
+}

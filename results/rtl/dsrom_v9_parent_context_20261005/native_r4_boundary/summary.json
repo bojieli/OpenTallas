@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.qx10.native.mapped_boundary.v1",
+  "source_netlist": "/srv/opentallas-scratch/codex/noether-qx10-native-parent-r4-20261005/work/orfs/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/1_2_yosys.v",
+  "source_netlist_sha256": "3b5b8fc95fb5b84b292f3a4bc598ce94baa050f29c7b228ee38bfb4640bd7a51",
+  "engine_reference": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "loader_sha256": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+  "gate": {
+    "master": "ICGx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "clk",
+      "ENA": "\\u_qx.u_e.cg_en_g",
+      "GCLK": "\\u_qx.u_e.g_cg.u_cg.gclk",
+      "SE": "_210863_"
+    }
+  },
+  "gate_enable_startpoints": [
+    "u_qx.u_e.g_qz_cg.u_z/q$_DFF_PN1_/QN"
+  ],
+  "mapped_named_family_counts": {
+    "root_free": 134,
+    "loader_free": 57,
+    "reset_free": 1072,
+    "result_gated": 126,
+    "config_go_free": 10,
+    "XS_gated": 547,
+    "gate_enable_free": 1,
+    "return64_free": 9077,
+    "D3_final": 1630
+  },
+  "count_scope": "Named cells after synthesis merging; counts are not complete logical-port widths. ODB pin-name resolution remains pending.",
+  "source_boundary_widths": {
+    "XS": 549,
+    "result": 126
+  },
+  "go_capture": {
+    "instance": "u_qx.u_e.g_qb.b_go$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "clk",
+      "D": "\\u_qx.go",
+      "QN": "_047064_",
+      "RESETN": "rst_n",
+      "SETN": "_210862_"
+    },
+    "launch_startpoints": [
+      "u_ld.act$_DFFE_PN0P_/QN",
+      "u_sp.g_bst.u_bst.g_line.line[4878]$_DFF_PN0_/QN",
+      "u_sp.g_bst.u_bst.g_line.line[4879]$_DFF_PN0_/QN"
+    ]
+  },
+  "fq_mapped_alias": "u_qx.u_e.fault$_DFF_PN0_",
+  "configuration_macro_receivers": {},
+  "cfg_rom_address_receiver_load_qualified": false,
+  "missing_input_clocks": true,
+  "ODB_pin_resolution": false,
+  "CTS": false,
+  "SPEF": false,
+  "SSFF": false,
+  "scope": "Completed technology-mapped native connectivity; no physical-clock arrival, sensitization, external receiver load or full-field qualification."
+}

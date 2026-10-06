@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_fh_sram_return;
+`ifdef OT_FH_PROTECT_SPLIT
+    localparam integer PROTECT_SPLIT=`OT_FH_PROTECT_SPLIT;
+`else
+    localparam integer PROTECT_SPLIT=0;
+`endif
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0;
     reg [3:0] rd_en=0,wr_en=0;
@@ -14,20 +19,21 @@ module tb_fh_sram_return;
     reg [54:0] gold_ecc[0:63];
     string eccfile;
     ot_hdc_v41_fh_sram_enc u_golden_encode(.payload(golden_payload),.word(golden_word));
-    ot_hdc_v41_fh_sram_return dut(.*);
+    ot_hdc_v41_fh_sram_return #(.PROTECT_SPLIT(PROTECT_SPLIT)) dut(.*);
     function automatic [31:0] value(input integer row,input integer bank);
         value=32'h3f000000 ^ (row<<7) ^ bank;
     endfunction
     integer r,b,g,accepted=0,released=0,writes=0,ces=0;
     reg check_stream=0,warm=0;
-    reg [3:0] ev0=0,ev1=0,ev2=0;
-    reg [8:0] er0[0:3],er1[0:3],er2[0:3];
+    reg [3:0] ev0=0,ev1=0,ev2=0,ev3=0;
+    reg [8:0] er0[0:3],er1[0:3],er2[0:3],er3[0:3];
+    wire [3:0] expected_valid=PROTECT_SPLIT?ev3:ev2;
     always @(posedge clk) begin
-        if(!rst_n) begin ev0<=0;ev1<=0;ev2<=0;end
+        if(!rst_n) begin ev0<=0;ev1<=0;ev2<=0;ev3<=0;end
         else begin
-            ev0<=rd_en;ev1<=ev0;ev2<=ev1;
+            ev0<=rd_en;ev1<=ev0;ev2<=ev1;ev3<=ev2;
             for(integer q=0;q<4;q=q+1) begin
-                er0[q]<=rd_addr[24*q+:24]>>2;er1[q]<=er0[q];er2[q]<=er1[q];
+                er0[q]<=rd_addr[24*q+:24]>>2;er1[q]<=er0[q];er2[q]<=er1[q];er3[q]<=er2[q];
             end
         end
     end
@@ -36,10 +42,10 @@ module tb_fh_sram_return;
             if(wr_committed[q]) writes=writes+1;
             if(corrected[q]) ces=ces+1;
             if(check_stream) begin
-                if(rd_valid[q]!==ev2[q/16]) $fatal(1,"valid/debt lane%0d got%b expected%b",q,rd_valid[q],ev2[q/16]);
-                if(ev2[q/16]) begin
-                    if(rd_data[32*q+:32] !== ((warm&&er2[q/16]==73&&q%2==0)?32'h40400000^q:value(er2[q/16],q)))
-                        $fatal(1,"payload/identity/mask lane%0d row%0d got%x",q,er2[q/16],rd_data[32*q+:32]);
+                if(rd_valid[q]!==expected_valid[q/16]) $fatal(1,"valid/debt lane%0d got%b expected%b",q,rd_valid[q],expected_valid[q/16]);
+                if(expected_valid[q/16]) begin
+                    if(rd_data[32*q+:32] !== ((warm&&(PROTECT_SPLIT?er3[q/16]:er2[q/16])==73&&q%2==0)?32'h40400000^q:value(PROTECT_SPLIT?er3[q/16]:er2[q/16],q)))
+                        $fatal(1,"payload/identity/mask lane%0d row%0d got%x",q,PROTECT_SPLIT?er3[q/16]:er2[q/16],rd_data[32*q+:32]);
                     released=released+1;
                 end
             end
@@ -61,7 +67,7 @@ module tb_fh_sram_return;
             if(kind==1) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[0].u_lane.raw_word_r^55'b1;
             if(kind==2) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[0].u_lane.raw_word_r^55'b11;
             if(kind==3) dut.g_bank[0].u_lane.raw_word_r=dut.g_bank[1].u_lane.raw_word_r;
-            @(negedge clk);#1;
+            @(negedge clk);if(PROTECT_SPLIT) @(negedge clk);#1;
             if(kind==1) begin
                 if(fault||!corrected[0]||!rd_valid[0]||rd_data[31:0]!==value(9,0)) $fatal(1,"single-bit correction");
             end else if(!fault||rd_valid[0]||!poisoned[0]) $fatal(1,"bad word released kind%0d",kind);

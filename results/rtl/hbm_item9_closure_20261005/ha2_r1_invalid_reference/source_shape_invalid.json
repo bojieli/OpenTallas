@@ -1,0 +1,33 @@
+{
+  "verdict": "INVALID_REFERENCE_SHAPE_NO_QUALIFICATION",
+  "reason": "E is scalar elements; atLANES16 referenceE must1024/6144, not64/384",
+  "observed_utc": "2026-10-05T23:15:58.696103+00:00",
+  "own_compiler_pid": 2758764,
+  "command": "/usr/lib/x86_64-linux-gnu/ivl/ivl -C/tmp/ivrlh39f3e360 -C/usr/lib/x86_64-linux-gnu/ivl/vvp.conf -- - ",
+  "cwd": "/home/ubuntu/codex-item9-20261005/ha2-source",
+  "ancestors": [
+    {
+      "pid": 2758764,
+      "command": "/usr/lib/x86_64-linux-gnu/ivl/ivl -C/tmp/ivrlh39f3e360 -C/usr/lib/x86_64-linux-gnu/ivl/vvp.conf -- - "
+    },
+    {
+      "pid": 2758762,
+      "command": "sh -c -- /usr/lib/x86_64-linux-gnu/ivl/ivlpp -L -F\"/tmp/ivrlg239f3e360\" -f\"/tmp/ivrlg39f3e360\" -p\"/tmp/ivrli39f3e360\" |/usr/lib/x86_64-linux-gnu/ivl/ivl -C\"/tmp/ivrlh39f3e360\" -C\"/usr/lib/x86_64-linux-gnu/ivl/vvp.conf\" -- - "
+    },
+    {
+      "pid": 2758761,
+      "command": "iverilog -g2012 -s tb_item9_ha2_fullshape -o /home/ubuntu/codex-item9-20261005/ha2-fullshape-r1/bench.vvp rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_fullshape.sv "
+    },
+    {
+      "pid": 2758759,
+      "command": "bash -c iverilog -g2012 -s tb_item9_ha2_fullshape -o $HOME/codex-item9-20261005/ha2-fullshape-r1/bench.vvp rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_fullshape.sv > $HOME/codex-item9-20261005/ha2-fullshape-r1/build.log 2>&1 && vvp $HOME/codex-item9-20261005/ha2-fullshape-r1/bench.vvp > $HOME/codex-item9-20261005/ha2-fullshape-r1/run.log 2>&1 "
+    },
+    {
+      "pid": 2758756,
+      "command": "bash -c cd $HOME/codex-item9-20261005/ha2-source; mkdir -p $HOME/codex-item9-20261005/ha2-fullshape-r1; $HOME/bin/admit.sh 8 -- bash -c 'iverilog -g2012 -s tb_item9_ha2_fullshape -o $HOME/codex-item9-20261005/ha2-fullshape-r1/bench.vvp rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_fullshape.sv > $HOME/codex-item9-20261005/ha2-fullshape-r1/build.log 2>&1 && vvp $HOME/codex-item9-20261005/ha2-fullshape-r1/bench.vvp > $HOME/codex-item9-20261005/ha2-fullshape-r1/run.log 2>&1'; echo $? > $HOME/codex-item9-20261005/ha2-fullshape-r1/exit "
+    }
+  ],
+  "no_route_process_touched": true,
+  "no_checkpoint_deleted": true,
+  "consumer": "sole own invalid fullshape bench; no valid downstream qualification"
+}

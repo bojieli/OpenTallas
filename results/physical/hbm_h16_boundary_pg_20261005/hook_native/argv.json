@@ -1,0 +1,15 @@
+[
+  "docker",
+  "run",
+  "--rm",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_resume:/baseline:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/h16-boundary-pg-20261005:/contract:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/h16-boundary-pg-20261005/hook_native:/output",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "bash",
+  "-lc",
+  "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -threads 1 /contract/verify_hook.tcl"
+]

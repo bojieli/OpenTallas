@@ -22,13 +22,40 @@ def replace_once(text, old, new):
     return text.replace(old, new)
 
 
-def emit(host, output):
+def emit(host, output, top=TOP, transport_quiet=False):
     raw = Path(host).read_bytes()
     if hashlib.sha256(raw).hexdigest() != HOST_SHA:
         raise ValueError('requires original passing guarded-v2 full36+head host')
     text = raw.decode()
     text = replace_once(text, '#include "Vdie.h"',
                         '#include "Vdie.h"\n#include "clock.hpp"')
+    text = replace_once(text,
+                        '    if (fread(v.data(), 4, KV_ELEMS, fp) != KV_ELEMS) fatal("KV history size");',
+                        '    if (fread(v.data(), 4, KV_ELEMS, fp) != KV_ELEMS || fgetc(fp) != EOF)\n'
+                        '        fatal("P0 actual history must have exact full-layer extent");')
+    text = replace_once(text,
+                        '        if (k < 0) fatal("KV history value is not E4M3", long(e), long(v[e]));',
+                        '        if (k < 0 || (k & 127) == 127)\n'
+                        '            fatal("P0 history must be exact finite E4M3", long(e), long(v[e]));')
+    text = replace_once(text,
+                        '            if (kv_dir.empty()) kvc[d][s].assign(KV_ELEMS, 0);\n'
+                        '            else kvc[d][s] = load_kv_codes',
+                        '            if (kv_dir.empty()) fatal("P0 requires released history for every layer/rank");\n'
+                        '            kvc[d][s] = load_kv_codes')
+    if transport_quiet:
+        text = replace_once(text,
+                            '                for (int d = 0; d < D; d++) busy |= die[d]->kv_wb_busy;',
+                            '                for (int d = 0; d < D; d++)\n'
+                            '                    busy |= die[d]->kv_wb_busy || !die[d]->transport_quiet;')
+        text = replace_once(text,
+                            '                if (cur + 1 == stages.size()) { draining = true; final_cyc = cyc; }',
+                            '                if (cur + 1 == stages.size()) { draining = true; final_cyc = cyc;\n'
+                            '                    for (int d=0; d<D; ++d) die[d]->warm_rst_n=0;\n'
+                            '                }')
+        text = replace_once(text,
+                            '                    printf("WRITEBACK drained=%d after %u cycles past the last stage',
+                            '                    printf("P0_FINAL_VISIBLE core_cycle=%u token_cycle=%u\\n", cyc, final_cyc);\n'
+                            '                    printf("WRITEBACK drained=%d after %u cycles past the last stage')
     text = replace_once(text, 'die[d]->rm_kv_ideal = kv_ideal;',
                         'die[d]->rm_kv_ideal = kv_ideal;\n'
                         '        die[d]->hclk = 0; die[d]->warm_rst_n = 1;')
@@ -37,7 +64,8 @@ def emit(host, output):
                         '    if (POS != 8191 || kv_ideal || stages.size() != 37)\n'
                         '        fatal("P0 requires L0..L35 plus fullhead at exact8K, real KV");\n'
                         '    for (int i = 0; i < 36; ++i)\n'
-                        '        if (stages[i].name != "L" + std::to_string(i)) fatal("P0 layer order");\n'
+                        '        if (stages[i].name != "L" + std::to_string(i) || stages[i].layer != i)\n'
+                        '            fatal("P0 layer name/actual region order");\n'
                         '    if (stages.back().name != "head") fatal("P0 fullhead missing");\n'
                         '    qwen_combined_p0::Clocks clocks;\n'
                         '    auto controller = [&](bool hi) { for (int d=0; d<D; ++d) die[d]->hclk=hi; };\n'
@@ -72,12 +100,15 @@ def emit(host, output):
     (output/'fulltoken.cpp').write_text(text)
     (output/'clock.hpp').write_bytes(Path(__file__).with_name('clock.hpp').read_bytes())
     result = dict(status='PREPARED_SOURCE_JOIN_ONLY', donor_host_sha256=HOST_SHA,
-                  top=TOP, full_token_run=False, adopted=False,
+                  top=top, full_token_run=False, adopted=False,
+                  transport_quiet_required=transport_quiet,
                   die_parameters=dict(BASELINE_AR=1, PROTECTED_STREAM4=1, G=6144,
                       D=4, SW=64, NW=18, SNW=18, HBM_LAYERS=36, NSTK=4,
                       NPC=128, WBW=4, REAL_MEM=1, ENABLE_AR256=1,
                       HBM_PULLIN=0, CORE_FS=833333, CTL_FS=1024000),
                   physical_transport_ready=False,
+                  canonical_verilator='5.050 (must match retained engine objects)',
+                  history_backing='all144 released L0..L35 rank0..3 images; exact finite E4M3; no zero fallback',
                   scope='Actual original-AR consumer to producer protected simulation backend; no transport/physical/token PASS',
                   no_new_arithmetic=True, new_join_storage_bits=0,
                   new_join_latency_cycles=0,
@@ -92,5 +123,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--host', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--top', default=TOP,
+                        help='Owner-supplied final numerical top name; does not create a provider')
+    parser.add_argument('--transport-quiet', action='store_true',
+                        help='Require genuine transport quiet as well as consumer ACK drain before readback')
     args = parser.parse_args()
-    print(json.dumps(emit(args.host, args.output)))
+    print(json.dumps(emit(args.host, args.output, args.top, args.transport_quiet)))

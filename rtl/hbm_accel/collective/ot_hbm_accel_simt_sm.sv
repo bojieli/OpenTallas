@@ -44,6 +44,7 @@ module ot_hbm_accel_simt_sm #(
     parameter integer FLAT       = 5,           // FP pipe depth (5: qualified pipes; 7: W11 SS re-pipelined copies)
     parameter integer HAS_DIV    = 0,           // 1: div.rn / sqrt.rn unit (rtl/abi3 correctly-rounded divider and square root per lane)
     parameter integer HAS_BD     = 0,           // 1: block-scaled (MX FP8/FP4) tensor core rtl/gpu/ot_gpu_sm_bd.sv
+    parameter integer GU_JOIN    = 0,           // default-off caller-enrolled BF16 retirement export
     parameter integer BD_XDEPTH  = 64
 ) (
     input  wire                  clk,
@@ -106,6 +107,40 @@ module ot_hbm_accel_simt_sm #(
     output wire [NL*32-1:0]      coll_resid,
     input  wire [31:0]           coll_rsp_ss,
     input  wire                  coll_rsp_err,
+    // One immutable GU span per kernel launch. The caller installs the actual
+    // CVTBF16 PC/source and released row descriptor under its existing grant.
+    // FRAME is the protected parent's {position20,token17,generation4,job32};
+    // retain its upper identity bits even though this SM's launch API is 16/16.
+    input  wire                  gu_join_launch,
+    input  wire                  gu_join_owner_valid,
+    input  wire [31:0]           gu_join_pc,
+    input  wire [7:0]            gu_join_src,
+    input  wire [8:0]            gu_join_expert,
+    input  wire                  gu_join_matrix, // 0=w1/G, 1=w3/U
+    input  wire [11:0]           gu_join_row_base,
+    input  wire [7:0]            gu_join_lane_first,
+    input  wire [8:0]            gu_join_count,
+    input  wire [72:0]           gu_join_frame,
+    input  wire [31:0]           gu_join_op,
+    output wire                  gu_join_v,
+    input  wire                  gu_join_accept,
+    output wire [NL*16-1:0]      gu_join_bf16,
+    output wire [8:0]            gu_join_out_expert,
+    output wire                  gu_join_out_matrix,
+    output wire [11:0]           gu_join_out_row_base,
+    output wire [7:0]            gu_join_out_lane_first,
+    output wire [8:0]            gu_join_out_count,
+    output wire [72:0]           gu_join_out_frame,
+    output wire [31:0]           gu_join_out_op,
+    output wire [7:0]            gu_join_out_sm,
+    output wire [7:0]            gu_join_out_die,
+    output wire                  gu_join_terminal,
+    // Warm CP reset is quarantined, never mapped to this module's root rst_n.
+    input wire                   gu_join_warm_reset_req,
+    output wire                  gu_join_warm_reset_ack,
+    output wire                  gu_join_retained,
+    output wire                  gu_join_ce,
+    output wire                  gu_join_due,
     // statistics
     output reg  [31:0]           st_instr,
     output reg  [31:0]           st_cycles,
@@ -126,6 +161,13 @@ generate if (ENABLE == 0) begin : g_off
     assign coll_rsp_rdy = 1'b0;
     assign coll_x = 1'b0; assign coll_off = 8'd0; assign coll_nown = 8'd0; assign coll_fuse = 1'b0;
     assign coll_resid = {NL*32{1'b0}};
+    assign gu_join_v = 1'b0; assign gu_join_bf16 = {NL*16{1'b0}};
+    assign gu_join_out_expert = 0; assign gu_join_out_matrix = 0;
+    assign gu_join_out_row_base = 0; assign gu_join_out_lane_first = 0;
+    assign gu_join_out_count = 0; assign gu_join_out_frame = 0;
+    assign gu_join_out_op = 0; assign gu_join_out_sm = 0; assign gu_join_out_die = 0;
+    assign gu_join_terminal = 1'b0;
+    assign gu_join_warm_reset_ack=0;assign gu_join_retained=0;assign gu_join_ce=0;assign gu_join_due=0;
 end else begin : g_on
     localparam integer VW  = NL * 32;
     localparam integer RB  = $clog2(NV);
@@ -179,7 +221,7 @@ end else begin : g_on
     reg [NV-1:0]  pend;
     reg           running, faulted, bar_q;
     reg [IMW-1:0] pc;
-    assign sm_fault = faulted;
+    assign sm_fault = faulted || ((GU_JOIN != 0) && gu_meta_due);
     assign bar_arrive = bar_q;
 
     wire [63:0] ir = imem[pc];
@@ -426,6 +468,99 @@ end else begin : g_on
     reg [RB-1:0]   alu_wd;
     reg [VW-1:0]   alu_wy;
 
+    // GU retirement owns no payload queue: hold the original alu_wy/alu_wv
+    // and destination scoreboard until the enrolled BF16 span is accepted.
+    // PC + source register are literal enrollment, not semantic inference from
+    // a generic CVT opcode, destination, SM number or TC shared-memory address.
+    localparam integer GU_MB=171+IMW+RB; // phase2 + coded completion + actual destination
+    wire gu_en,gu_seen,gu_alu,gu_finished;
+    wire [1:0] gu_phase;
+    wire [RB-1:0] gu_dst_q;
+    wire [IMW-1:0] gu_pc_q;
+    wire [7:0] gu_src_q,gu_first_q,gu_sm_q,gu_die_q;
+    wire [8:0] gu_expert_q,gu_count_q;
+    wire gu_matrix_q;
+    wire [11:0] gu_row_q;
+    wire [72:0] gu_frame_q;
+    wire [31:0] gu_op_q;
+    wire [GU_MB-1:0] gu_state;
+    reg [GU_MB-1:0] gu_next;
+    reg gu_we;
+    wire gu_meta_good,gu_meta_ce,gu_meta_due;
+    assign gu_en=gu_phase!=0;assign gu_seen=gu_phase==3;assign gu_alu=gu_phase==2;
+    assign {gu_phase,gu_finished,gu_pc_q,gu_dst_q,gu_src_q,gu_first_q,
+            gu_sm_q,gu_die_q,gu_expert_q,gu_count_q,gu_matrix_q,gu_row_q,gu_frame_q,gu_op_q}=gu_state;
+    if(GU_JOIN!=0)begin:g_gu_coded
+        ot_hbm_accel_gu_metadata #(.WIDTH(GU_MB)) u_meta(
+            .clk(clk),.rst_n(rst_n),.we(gu_we),.next_data(gu_next),.data(gu_state),
+            .good(gu_meta_good),.ce(gu_meta_ce),.due(gu_meta_due));
+    end else begin:g_gu_unused
+        assign gu_state=0;assign gu_meta_good=1;assign gu_meta_ce=0;assign gu_meta_due=0;
+    end
+    wire gu_owned = gu_join_owner_valid && gu_join_frame == gu_frame_q &&
+                    sm_id == gu_sm_q && die_id == gu_die_q;
+    wire gu_pc_hit = (GU_JOIN != 0) && gu_en && pc == gu_pc_q;
+    wire gu_bound = gu_meta_good && gu_pc_hit && op == O_CVTBF16 && fa == gu_src_q && !gu_seen;
+    wire gu_desc_ok = gu_join_owner_valid && gu_join_pc < (64'd1 << IMW) &&
+        gu_join_src < NV && gu_join_expert < 384 && gu_join_count != 0 &&
+        ({1'b0,gu_join_lane_first}+{1'b0,gu_join_count}) <= NL &&
+        ({1'b0,gu_join_row_base}+gu_join_count) <= 2304 &&
+        gu_join_frame[51:36] == launch_token && gu_join_frame[68:53] == launch_pos;
+    reg gu_payload_ok;
+    integer gu_l;
+    always @* begin
+        gu_payload_ok = 1'b1;
+        for (gu_l=0; gu_l<NL; gu_l=gu_l+1)
+            if (gu_l >= gu_first_q && gu_l < (gu_first_q+gu_count_q))
+                if (alu_wy[gu_l*32 +: 16] != 0 || alu_wy[gu_l*32+23 +: 8] == 8'hff)
+                    gu_payload_ok = 1'b0;
+    end
+    assign gu_join_v = (GU_JOIN != 0) && gu_alu && !faulted && gu_meta_good && gu_owned && gu_payload_ok;
+    for (gl=0; gl<NL; gl=gl+1) begin : g_gu_payload
+        assign gu_join_bf16[gl*16 +: 16] = (GU_JOIN != 0) ? alu_wy[gl*32+16 +: 16] : 16'd0;
+    end
+    assign gu_join_out_expert = (GU_JOIN != 0) ? gu_expert_q : 9'd0;
+    assign gu_join_out_matrix = (GU_JOIN != 0) && gu_matrix_q;
+    assign gu_join_out_row_base = (GU_JOIN != 0) ? gu_row_q : 12'd0;
+    assign gu_join_out_lane_first = (GU_JOIN != 0) ? gu_first_q : 8'd0;
+    assign gu_join_out_count = (GU_JOIN != 0) ? gu_count_q : 9'd0;
+    assign gu_join_out_frame = (GU_JOIN != 0) ? gu_frame_q : 73'd0;
+    assign gu_join_out_op = (GU_JOIN != 0) ? gu_op_q : 32'd0;
+    assign gu_join_out_sm = (GU_JOIN != 0) ? gu_sm_q : 8'd0;
+    assign gu_join_out_die = (GU_JOIN != 0) ? gu_die_q : 8'd0;
+    // Persistent coded terminal debt: CE after the sm_done pulse cannot erase
+    // the successful span's completion visibility. Clear only on a new launch.
+    assign gu_join_terminal = (GU_JOIN != 0) && gu_meta_good && gu_finished && !faulted && gu_owned;
+    assign gu_join_ce = (GU_JOIN != 0) && gu_meta_ce;
+    assign gu_join_due = (GU_JOIN != 0) && gu_meta_due;
+    assign gu_join_retained = (GU_JOIN != 0) &&
+        (running || gu_alu || (gu_en && !gu_finished) || !gu_meta_good || faulted);
+    assign gu_join_warm_reset_ack = (GU_JOIN != 0) && gu_join_warm_reset_req &&
+        !gu_join_retained && drained && bc_idle && l_out==0 && !lrsp_v && !lreq_v;
+    wire gu_fire = gu_join_v && gu_join_accept;
+    wire launch_take = launch_v && !running &&
+        ((GU_JOIN==0) || (gu_meta_good && !faulted && !gu_join_warm_reset_req));
+    // Only actual acceptance changes seen/pending. CE service occurs solely
+    // inside u_meta and cannot inherit an unaccepted downstream permission.
+    always @*begin
+        gu_next=gu_state;gu_we=0;
+        if(GU_JOIN!=0 && gu_meta_good)begin
+            if(launch_take)begin
+                gu_next=gu_join_launch ? {2'd1,1'b0,gu_join_pc[IMW-1:0],{RB{1'b0}},gu_join_src,
+                    gu_join_lane_first,sm_id,die_id,gu_join_expert,gu_join_count,
+                    gu_join_matrix,gu_join_row_base,gu_join_frame,gu_join_op} : {GU_MB{1'b0}};
+                gu_we=1;
+            end
+            if(can_issue && c_alu && gu_bound)begin
+                gu_next[GU_MB-1 -: 2]=2'd2;gu_next[GU_MB-4-IMW -: RB]=rd;gu_we=1;
+            end
+            if(gu_fire)begin gu_next[GU_MB-1 -: 2]=2'd3;gu_we=1;end
+            if(bst==B_DRAIN && drained && gu_en && gu_seen && !faulted)begin
+                gu_next[GU_MB-3]=1'b1;gu_we=1;
+            end
+        end
+    end
+
     // ------------------------------------------------------------------ issue
     wire bad_op = !(op == O_NOP || c_bin || c_un || op == O_MOVI || op == O_LANEID || op == O_MOVU || op == O_SHFL ||
                     (op >= O_UMOVI && op <= O_UADD) || (op >= O_BRA && op <= O_RESULT) ||
@@ -435,7 +570,7 @@ end else begin : g_on
     wire tc_needs_idle = (op == O_TCX || op == O_TCMMA || op == O_TCXB || op == O_TCXE || op == O_TCBMMA);
     wire fp_op = (op == O_FADD || op == O_FMUL);
     wire can_issue = running && !faulted && (bst == B_IDLE) && !hazard && !tc_start && !bd_start && !bc_dv && !(fp_op && fq_left > 1) &&
-                     !(tc_needs_idle && tc_active);
+                     !(tc_needs_idle && tc_active) && !((GU_JOIN != 0) && gu_alu) && gu_meta_good;
     assign busy = running;
     assign coll_req_v = (bst == B_COLL_REQ);
     assign coll_mode = c_mode;
@@ -448,7 +583,7 @@ end else begin : g_on
     assign coll_fuse = (HA3 != 0) && c_fuse;
     assign coll_resid = (HA3 != 0) ? c_resid : {VW{1'b0}};
 
-    wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bd_start && !bc_dv;
+    wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bd_start && !bc_dv && ((GU_JOIN==0) || (gu_meta_good && !gu_alu && !faulted));
     integer i, q;
     // the clocked block's own loop temporaries: the combinational LSU block above has jj/lj/bi, and sharing a
     // module variable between two processes is an ordering race (it diverged under Verilator --threads)
@@ -496,7 +631,17 @@ end else begin : g_on
                 else begin add_v <= 1'b1; addq_d[0] <= {fq_d, fq_q, fq_left == 1}; end
                 fq_q <= fq_q + 1'b1; fq_left <= fq_left - 1'b1;
             end
-            if (alu_wv) begin vr[alu_wd] <= alu_wy; pend[alu_wd] <= 1'b0; end
+            if ((GU_JOIN != 0) && gu_meta_good && gu_en && running && !gu_owned) faulted <= 1'b1;
+            if ((GU_JOIN != 0) && gu_meta_due) faulted <= 1'b1;
+            if (alu_wv || ((GU_JOIN!=0) && gu_alu)) begin
+                if ((GU_JOIN == 0) || (gu_meta_good && (!gu_alu || gu_fire))) begin
+                    vr[(GU_JOIN!=0 && gu_alu)?gu_dst_q:alu_wd] <= alu_wy;
+                    pend[(GU_JOIN!=0 && gu_alu)?gu_dst_q:alu_wd] <= 1'b0;
+                end else begin
+                    alu_wv <= 1'b1; // no retirement, overwrite, drop or EXIT while held
+                    if (gu_meta_good && gu_alu && !gu_payload_ok) faulted <= 1'b1;
+                end
+            end
             // ---- tensor core result rows -> shared memory
             if (tc_start) begin tc_start <= 1'b0; end
             if (bd_start) begin bd_start <= 1'b0; end
@@ -509,11 +654,12 @@ end else begin : g_on
             if (tc_fault) faulted <= 1'b1;
             if (tc_done) tc_active <= 1'b0;
             // ---- launch
-            if (launch_v && !running) begin
+            if (launch_take) begin
                 running <= 1'b1; pc <= launch_pc[IMW-1:0]; faulted <= 1'b0;
                 for (i = 0; i < 16; i = i + 1) ur[i] <= 32'd0;
                 ur[0] <= {16'd0, launch_token}; ur[1] <= {16'd0, launch_pos};
                 ur[2] <= {24'd0, sm_id}; ur[3] <= {24'd0, die_id};
+                if ((GU_JOIN != 0) && gu_join_launch && !gu_desc_ok) faulted <= 1'b1;
             end
             // ---- blocking units
             case (bst)
@@ -578,6 +724,7 @@ end else begin : g_on
                 st_instr <= st_instr + 1;
                 pc <= pc + 1'b1;
                 if (bad_op) faulted <= 1'b1;
+                if ((GU_JOIN != 0) && gu_pc_hit && !gu_bound) faulted <= 1'b1;
                 if (op == O_FADD || op == O_FMUL) begin
                     fq_a <= va; fq_b <= vb; fq_mul <= (op == O_FMUL); fq_d <= rd; fq_q <= 0; fq_left <= NQ;
                     pend[rd] <= 1'b1;
@@ -592,7 +739,7 @@ end else begin : g_on
                     O_UFROMV: ur[fd[3:0]] <= va[imm[LB-1:0]*32 +: 32];
                     O_BRA:    pc <= imm[IMW-1:0];
                     O_BNZ:    if (ur[fa[3:0]] != 0) pc <= imm[IMW-1:0];
-                    O_EXIT:   bst <= B_DRAIN;
+                    O_EXIT:   begin bst <= B_DRAIN; if ((GU_JOIN != 0) && gu_en && !gu_seen) faulted <= 1'b1; end
                     O_BAR:    begin bar_q <= ~bar_q; bst <= B_BAR; end
                     O_MEMBAR: ;                                  // every store completed (acknowledged) at retire
                     O_RESULT: begin res_v <= 1'b1; res_data <= ur[fa[3:0]]; end
