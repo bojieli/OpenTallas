@@ -1,0 +1,2 @@
+FAIL: simulation delta-cycle loop introduced by ACK ready -> illegal -> fault -> receipt consume -> ready combinational feedback. Stopped own simulator; no heavy job. Fixed receipt consume to use checked state permissions independent of illegal. Empty original stdout retained. No PASS claim for r1.
+Correction: preserved stdout contains Icarus stop at465000ticks and its interactive prompt; it is not empty. SIGTERM then terminated this own failed simulator. The trailing space in that immutable tool prompt is retained.

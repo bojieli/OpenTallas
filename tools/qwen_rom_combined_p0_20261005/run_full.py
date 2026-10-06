@@ -96,10 +96,13 @@ def main():
             '--die-header', str(output/'die/Vdie___024root.h'),
             '--tile-header', str(authority/'reuse/tile/Vtile___024root.h'),
             '--out', str(output/'host/rm_access.hpp'),
-            '--consumer-prefix', r['top']+'__DOT__u_join__DOT__u_consumer__DOT__',
-            '--backing-member', r['top']+'__DOT__u_numeric__DOT__mem',
+            '--consumer-prefix', r.get('consumer_prefix', r['top']+'__DOT__u_join__DOT__u_consumer__DOT__'),
+            '--backing-member', r.get('backing_member', r['top']+'__DOT__u_numeric__DOT__mem'),
             '--nport', '48', '--scale-banks', '13', '--code-banks', '5',
             '--crom-words', '1048576', '--hbm-layers', '36', '--kv-ideal', '0', '--embed-rom', '1'])
+        if not (output/'die/Vdie_hier.mk').is_file():
+            stage(output, 'archive_bind', ['python3', str(tools/'bind_full_archives.py'),
+                '--output', str(output), '--authority', str(authority)])
         stage(output, 'compile', r['compile_top']+['-j', str(a.workers), 'CXX=g++-15'])
         stage(output, 'link', r['link'])
         (output/'build_complete').write_text('canonical 5.050 top built with retained leaves\n')

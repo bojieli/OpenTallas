@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.links.native_parent_component.v1",
+  "base_commit": "02223537f8010911b5f19903371333b3c3d13235",
+  "source_hashes": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "8a8cae3449e8216073d4d5fc4c38da32ff9e2486bf0bf1eda83d82d47425b836",
+    "physical/hbm_die_abstracts_20261006/links/parents/variant_tops.sv": "3d084ad83b38307dfaf083f91e419c9f9264bb0e0550f531744d4c532a934e74",
+    "physical/hbm_die_abstracts_20261006/links/parents/tb_native_functions.sv": "62db9bd4b62e3c8c168b8fafa2bc4731e6784b6cf5bec0c06f17e862328187a4",
+    "physical/hbm_die_abstracts_20261006/links/parents/size_functions.py": "88cb2583cb83407a5c2a247e3b2f0957c5bd3a6fc9651df010b59b715328b450"
+  },
+  "tool": "Icarus Verilog version 11.0 (stable) ()",
+  "status": "COMPONENT_FUNCTION_PASS_PARENT_BINDING_AND_PHYSICAL_OPEN",
+  "physical_closed": false,
+  "fullsystem_qualified": false,
+  "prepared_width_classes": 11,
+  "hardened_station_classes": 0,
+  "implementations": 1,
+  "seed": "1062026",
+  "tested": {
+    "multicast_payload_bits": 2063,
+    "multicast_branches": 3,
+    "gather_input_bits": 270,
+    "gather_inputs": 8,
+    "gather_output_bits": 2160
+  },
+  "tests": [
+    "held payload and full192 owner under deterministic per-tap backpressure",
+    "each multicast branch accepted once; no source release without all matching reverse ACKs",
+    "partial gather withheld; ordered join held; one atomic retirement",
+    "quiesce stops input but cannot manufacture drain or release",
+    "actual stored payload CE repairs without lost ownership",
+    "actual stored owner CE while matching reverse ACKs arrive; protected receipt seats retain ACKs",
+    "actual wrong-owner reverse ACK fails closed; debt retained",
+    "actual checked permission bank double-bit UE fails closed; sticky fault"
+  ],
+  "stdout": "results/physical/hbm_die_abstracts_20261006/links/parents/held_seed1062026_ACK_receipts_r2.log",
+  "stdout_sha256": "451ec0a8768341586a9022f26d697b199d0be8c0e48d4ea9a49ad2b9e95f9915",
+  "superseded": "held_seed1062026_initial_without_ACK_receipts.log: initial pre-receipt check only, not final source qualification",
+  "preserved_failure": {
+    "source": "results/physical/hbm_die_abstracts_20261006/links/parents/ACK_receipts_r1_FAIL.sv",
+    "verdict": "results/physical/hbm_die_abstracts_20261006/links/parents/ACK_receipts_r1_failure.txt"
+  },
+  "elaborated_only": [
+    "mcast4 ENABLE1",
+    "gather2 ENABLE1",
+    "gather4 ENABLE1"
+  ],
+  "reset_contract": "Function modes: rst_n[0] cold POR only. Warm recovery requires actual coordinated quiesce/drain; unilateral reset recovery unqualified.",
+  "protection_contract": "Existing W2 protected bank/cut unchanged, including five repair words and complementary failure state per bank; normal permissions suppress consumption during CE repair. Invalid data pins can change during repair; no valid consumption is authorized.",
+  "clock_contract": "MODE0 original four falling captures unchanged. Held MODE1/2 use positive root; four real kept inverter cells drive fclk_o; receiver routing/insertion and SS60FF25 hold open. Existing MODE0 station.sdc is not qualification of held variants.",
+  "parent_binding_open": [
+    "source-generated bit packing and per-slot ownership/cohort mask",
+    "mcast incoming seat reservation and reverse receipt composition",
+    "cdist actual336 forward/24 reverse, not360 all-forward",
+    "duplex source configured tuple, independent RX/TX clocks/resets/credits; defaultTU545 differs from TF5 directional487",
+    "real pin faces/channel dimensions/reset propagation and root ownership",
+    "unified model composition/rate adoption and physical55/60 SS60FF25"
+  ]
+}

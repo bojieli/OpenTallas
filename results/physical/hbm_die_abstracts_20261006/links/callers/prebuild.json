@@ -1,0 +1,42 @@
+{
+  "status": "SOURCE_BOUND_ZERO_STORAGE_ADAPTER_PREBUILD_PARENT_CLOCK_RESET_PROTECTION_OPEN",
+  "source_hashes": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "58b0502d2e6a23451314fe6df3447a7a1329641a6730017b6930ecb8ad3b5c0e",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+    "rtl/hbm_accel/integration/ot_hbm_tu_shared8.sv": "ccb99ba15698537dae682c6f1a717df3672aed75ab7fcd8141fafa5fb7444d4e",
+    "tools/die_top_lint.py": "7948d016146f6173112de1333b15809ffa489f3b0fd9ee3c9566178e0dec5c01",
+    "tools/uarch_model.py": "568a7f46e4a9c916b192354535f4f3d35762781e076f2e0c4cfcbd70be1d723d",
+    "tools/hbm_accel_die_fp.py": "23e3fde66bf20e70a3f0ee0cd8baf2b515b8476a4f09a0ab867c4cdaaa8f2604"
+  },
+  "MACs_per_cycle": 0,
+  "new_state_bits": 0,
+  "new_latency_cycles": 0,
+  "new_memory_ports": 0,
+  "ports": {
+    "control_SM_count": 8,
+    "SM_hier_forward_bits": 106,
+    "SM_hier_reverse_bits": 5,
+    "group_forward_bits": 848,
+    "group_reverse_bits": 40,
+    "legacy_r15_control_bits": 103,
+    "legacy_r15_missing": [
+      "start_ready1 reverse",
+      "op_xb7 forward"
+    ],
+    "result_wire_bits": 270,
+    "result_wire_order": "{fault,data256,row12,rv}",
+    "native_gather_internal_order": "{fault,rv,row12,data256}",
+    "duplex_NPT": 8,
+    "duplex_FW": 512,
+    "duplex_PWT": 545,
+    "PHY_valid_bits_each_direction": 8,
+    "PHY_data_bits_each_direction": 4360,
+    "core_credit_bits_each_direction": 8
+  },
+  "existing_priced_replication": "Existing unified model and die/TU sizing, no new authority, pricing or inventory stream",
+  "floorplan_fit": false,
+  "area_credit": null,
+  "protection": "Transparent named-port mapping only, no mutable seat/control protection added; source owner endpoints retain protection responsibility",
+  "rate_credit": false,
+  "heavy_allowed": false
+}

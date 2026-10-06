@@ -1,0 +1,52 @@
+{
+  "source_mapped_sha256": "96fd23dbff2fd11ef322c6b7a0b13e8650242149afb599f83b2a6a112553f468",
+  "source_commit": "1e85bfa7007aea00ffed216f1ba973eb73dc2388",
+  "shape": {
+    "ENABLE": 1,
+    "NSM": 32,
+    "NL": 128,
+    "OWNER64": 1,
+    "TX_MASK_LA": 1,
+    "RXOH": 1,
+    "RDUP": 16,
+    "TXCTRL": 1,
+    "TREE": 1
+  },
+  "exact_gate_reused": true,
+  "new_RTL_cycles": 0,
+  "utilization_percent": 55,
+  "finite_child_bbox_um": [
+    10866.776,
+    11740.28,
+    11446.776,
+    12740.28
+  ],
+  "minimum_context_core_um": [
+    2,
+    2,
+    582.0,
+    553.88
+  ],
+  "all_32_caller_register_banks_retained": true,
+  "root_clocks": [
+    "clk_sm",
+    "clk_link",
+    "clk_mem",
+    "clk_host"
+  ],
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "PG": "native ASAP7 M1/M2/M5/M6",
+  "CTS": "native all source roots",
+  "IO_budget_is_not_measured_parent_delay": true,
+  "distributed_outer_placement_qualified": false,
+  "adopted": false,
+  "phase": "PREPARED_NOT_ADMITTED",
+  "NUM_CORES": 16,
+  "memory_guard_GiB": 64,
+  "guard_unchanged": true,
+  "config_sha256": "e417144887a99100f2de948f4428da3e5c9d0aeea6ff7b532822963a0081ad66",
+  "pins_sha256": "13ce87088ea38a3cc63d127a2a7572b0c2e4c5f7ca897b29500e91f5ec339ef4",
+  "driver_sha256": "249dafe526932d9c97a5034dfdb92ca28dcddbf8deaace2c7dcaa3e4ae4b53e6"
+}

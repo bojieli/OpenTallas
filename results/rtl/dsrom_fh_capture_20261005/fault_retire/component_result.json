@@ -1,0 +1,46 @@
+{
+  "observed_utc": "2026-10-06T03:38:21.445930+00:00",
+  "source_sha256": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv": "ba3fbe1c1eca211e906cf9921f1894b8162e918de7ab25fb270ea8fa1955de61",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_fh_fault_retire.sv": "ef23e668dd0b7eae5b63d6375e06c3e8e1040c505d3a2cfbe0bf066ed0b09234",
+    "tools/uarch_model.py": "2667762beeb4ef62afa4fb841200727843af063d7a99ff429b12b1b664e7efcb",
+    "results/uarch/dsrom_fh_capture_20261005/fault_retire_before_RTL.json": "cd4c81cad1ae99d14b28c48b914dbb24d1bfc9d9162b5351d3cab5d7194f0e79"
+  },
+  "component_exact": "PASS",
+  "one_stimulus_config": true,
+  "packet_bits": 5510,
+  "stages": 4,
+  "accepted": 163,
+  "released": 161,
+  "reset_aborted": 2,
+  "warm_markers": {
+    "accepted": 33,
+    "released": 32,
+    "reset_aborted": 1
+  },
+  "poison_all64_sources_covered": true,
+  "address_all4_sources_covered": true,
+  "arithmetic_fault_covered": true,
+  "meaningful_negative_controls": [
+    "negative_drop_poison_final.log",
+    "negative_wrong_index_final.log"
+  ],
+  "retained_relays_and_copies": {
+    "ot_hdc_v41_fh_fault_relay": 16,
+    "ot_hdc_v41_fh_fault_copy": 69
+  },
+  "generic_synth_FF_bits": 22141,
+  "generic_synthesis_is_not_ASAP7_mapping": true,
+  "frontend_initial_failure_preserved": "retention.resources",
+  "frontend_correction": "Old local Yosys0.9 requires genvar declarations outside nested generate; declaration-only move, no changed logic; functional calendar evidence retained. Fleetcanonical front end untouched.",
+  "arithmetic_changed": false,
+  "prior_full_G4W16_arithmetic_evidence_replayed": false,
+  "actual_core_cycles": null,
+  "producer_retirement_ack_integrated": false,
+  "physical_route_ready": false,
+  "SS60_FF25_qualified": false,
+  "source_tools_pin": {
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  }
+}
