@@ -17,3 +17,9 @@ module ot_hfd_oreg3 (input wire clk, input wire d, output reg q);
     reg s0, s1;
     always @(posedge clk) begin s0 <= d; s1 <= s0; q <= s1; end
 endmodule
+// ot_hfd_oreg5: face_stages 5 output register (CLAUDE hbm-router: hfd_router out_ids fan out to 5 faces of the 1.4 mm
+// view; at face_stages 3 the core flop -> first stage wire was -179 ps pre-CTS at 770 ps effective).
+module ot_hfd_oreg5 (input wire clk, input wire d, output reg q);
+    reg s0, s1, s2, s3;
+    always @(posedge clk) begin s0 <= d; s1 <= s0; s2 <= s1; s3 <= s2; q <= s3; end
+endmodule
