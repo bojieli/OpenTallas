@@ -70,10 +70,14 @@ if __name__=='__main__':
         new_sdc=(BASE/'cfg_boundary.sdc').read_text()
         prefix=old_sdc[:old_sdc.index('set cfg_captures')]
         if not new_sdc.startswith(prefix): raise SystemExit('mapped-cfg must preserve original numeric/clock constraints')
+        # ABI3 emits executable SDC lines, omitting comments and blanks.
+        def rendered(sdc):
+            return '\n'.join(line for line in sdc.splitlines() if line.strip() and not line.lstrip().startswith('#'))+'\n'
+        old_append=rendered(old_sdc);new_append=rendered(new_sdc)
         for target in (work/'constraint.sdc', result/'1_2_yosys.sdc'):
             text=target.read_text()
-            if text.count(old_sdc)!=1: raise SystemExit('retained cfg SDC append not unique')
-            target.write_text(text.replace(old_sdc,new_sdc))
+            if text.count(old_append)!=1: raise SystemExit('retained cfg SDC append not unique')
+            target.write_text(text.replace(old_append,new_append))
     image=subprocess.check_output(['docker','image','inspect','openroad/orfs:latest',
                                    '--format','{{.Id}}'],text=True).strip()
     if a.region_only:
