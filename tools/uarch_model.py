@@ -10992,6 +10992,8 @@ def hbm_attn_registered_parent_model():
         local_clock_body_and_phase_inverter_fit_qualified=False,
         physical_only_source_fixture=dict(register_bits=source_fixture_ff,
             body_upper_um2=source_fixture_ff*.37908,
+            feedback_logic_gate_reservation=2,feedback_logic_area_upper_um2=2*.2916,
+            actual_source_ready=False,
             role='actual registered producer endpoint for minimum parent physical vehicle, not production engine or full die proof'),
         composed=dict(existing=old['existing_composed_model'],
             attention_steps_per_matched_token=40,
@@ -11002,5 +11004,8 @@ def hbm_attn_registered_parent_model():
         input_IO_policy='minimum registered parent paths have actual launch FFs; no external ideal-clock arrival credited',
         output_IO_policy='receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction',
         baseline_failures_preserved=True, finite_PG_owner='Turing',
-        exact_gate=False, SS_FF_qualified=False, parent_die_qualified=False,
+        exact_gate=True, SS_FF_qualified=False, parent_die_qualified=False,
+        minimum_endpoint_context_route_ready=True,
+        minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
+        engine_source_anchor_qualified=False,
         route_ready=False, gain_credit=None)

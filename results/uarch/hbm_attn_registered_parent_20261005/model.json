@@ -103,6 +103,9 @@
   "physical_only_source_fixture": {
     "register_bits": 1634,
     "body_upper_um2": 619.4167199999999,
+    "feedback_logic_gate_reservation": 2,
+    "feedback_logic_area_upper_um2": 0.5832,
+    "actual_source_ready": false,
     "role": "actual registered producer endpoint for minimum parent physical vehicle, not production engine or full die proof"
   },
   "composed": {
@@ -117,9 +120,12 @@
   "output_IO_policy": "receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction",
   "baseline_failures_preserved": true,
   "finite_PG_owner": "Turing",
-  "exact_gate": false,
+  "exact_gate": true,
   "SS_FF_qualified": false,
   "parent_die_qualified": false,
+  "minimum_endpoint_context_route_ready": true,
+  "minimum_endpoint_context_scope": "literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine",
+  "engine_source_anchor_qualified": false,
   "route_ready": false,
   "gain_credit": null
 }
