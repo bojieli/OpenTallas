@@ -11839,6 +11839,43 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
+def dsrom_wfc_protected_caller_adapter_price():
+    """Actual readyless-to-protected service adapter, before its source build."""
+    import json
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    provider=json.loads((root/'results/uarch/dsrom_protected_vm_20261006/model.json').read_text())
+    owner=47
+    flags=8
+    state=3
+    ff=2*(owner+flags+state+5)
+    ce_existing_ff_upper=6000
+    nand=2*ce_existing_ff_upper+512
+    buffers=2*(ce_existing_ff_upper//4)+128
+    growth=2*(ff*.37908+nand*.08748+buffers*.10206)
+    return dict(schema='opentallas.wfc.protected_caller_adapter.v1',
+      before_RTL=True, MAXU=866,SOURCE=0,layer=19,MACs_per_cycle=0,replicas=1,
+      default_ENABLE=0,default_STRUCTURAL=0,provider=provider,
+      owner_bits=owner,control_flags=flags,state_bits=state,
+      independently_shadowed_caller_control_FF=ff,read_payload_copy_FF=0,
+      read_source='protected provider held reply remains live until actual receiver capture and consumption',
+      native_VM_bytes=2097152,real_VM_macros=288,prompt_macros=14,book_macros=4,
+      new_memory_ports=0,new_completion_authorities=0,new_codecs=0,
+      request_transport_coded_bits=3240,reply_transport_coded_bits=1440,receipt_coded_bits=144,
+      fast_period_ps=833.333333333,slow_period_ps=1111.111111111,
+      SS_setup_ps=60,FF_hold_ps=25,
+      control_clock_enable_reused_FF_upper=ce_existing_ff_upper,
+      control_mux_NAND2_reservation=nand,control_buffer_reservation=buffers,
+      adapter_and_CE_growth_budget_um2=growth,
+      link_router_stalled=False,controller_pause='clock enables; root clocks unchanged, actual router drains independently',
+      latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
+      mandatory_per_A_read_capture_bubble_edges=1,
+      actual_service_wait_edges=None,actual_token_latency_ns=None,
+      allwriter_contract='bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled',
+      global_VM_geometry_owner='Turing current r8/new-frame binding',
+      provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
+
+
 def dsrom_protected_vm_model():
     """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
     from dsrom_protected_vm import model
