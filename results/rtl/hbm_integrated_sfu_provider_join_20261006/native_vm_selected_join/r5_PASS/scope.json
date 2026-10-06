@@ -1,0 +1,43 @@
+{
+  "status": "PASS_NATIVE_SFU_IDENTITY_OPCODE_MECHANISM",
+  "source_candidate": "16edbfae1",
+  "remote_root": "ot-epyc1tb:/srv/opentallas-scratch/codex/hbm-native-sfu-16edbfae1/r5",
+  "arithmetic_case": 0,
+  "opcode": 0,
+  "identity_opcode": true,
+  "same_SRAM_FP32_compares": 64,
+  "CP_reads": 8,
+  "CP_writes": 0,
+  "checked_SRAM_publication_ACKs": 2,
+  "publication_cycle": 130,
+  "readback_cycles": [
+    134,
+    140
+  ],
+  "readback_WORD_addresses": [
+    64,
+    96
+  ],
+  "warm_joint_retire": true,
+  "wrong_owner_actual_asserted_pins": {
+    "fault": 1,
+    "retained": 1,
+    "native_complete_v": 1,
+    "release_v": 0,
+    "grant": 1
+  },
+  "wrong_owner_raw_pin_trace_present": false,
+  "positive_calendar_reverse_ACKs_asserted": 1,
+  "negative_calendar_reverse_ACK_count_printed": false,
+  "all_opcodes_numerical_qualified": false,
+  "integrated_parent_qualified": false,
+  "token_qualified": false,
+  "SSFF_qualified": false,
+  "compiler_peak_RSS_KiB": 78269716,
+  "retained_source_matches_current_files": {
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv": "7dc556c694e79511c2c4b930a113c02e19d7535c846b23a646f0962989f59c0d",
+    "rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv": "e5b569ee317edeaa8a6d21991710833944cb44afe592d5ee24893c24aae28843"
+  },
+  "prior_R3_R4_failures_preserved": true,
+  "next_step": "Bacon parent continuation; Lorentz source/parameter/tool/generated ABI exact reuse only; no unchanged gate replay"
+}
