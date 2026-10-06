@@ -24,13 +24,13 @@
    "RVTP"
   ],
   "pg_pins": {
-   "VDD": [
+   "VSS": [
     "M1",
     "M2",
     "M6",
     "M7"
    ],
-   "VSS": [
+   "VDD": [
     "M1",
     "M2",
     "M6",
@@ -39,9 +39,9 @@
   }
  },
  "source": {
-  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M1_hfd_meso_r1",
-  "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
-  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src16 master=hfd_meso_r1 top=physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sv DW=398.28 DH=71.256 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_meso_r1/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/N3_hfd_meso_r1",
+  "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
+  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_meso_r1 top=physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sv DW=398.28 DH=71.256 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_meso_r1/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
   "exit": [
    "rc=0",
    "corner_rc=0",
@@ -50,37 +50,54 @@
    "signoff_corner_rc=0",
    "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 38.08,
-  "ff_hold_ps": -8.8,
+  "ss_setup_ps": 48.82,
+  "ff_hold_ps": 15.51,
   "drc": 0,
-  "closes_signoff": false,
+  "closes_signoff": true,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
   "margin": {
    "margin": true,
    "ckins_ps": 300,
-   "route_sdc": ".views/M1_hfd_meso_r1/route.sdc",
-   "signoff_sdc": ".views/M1_hfd_meso_r1/signoff.sdc",
+   "route_sdc": ".views/N3_hfd_meso_r1/route.sdc",
+   "signoff_sdc": ".views/N3_hfd_meso_r1/signoff.sdc",
    "recipe": "bench/stn_margin_sdc.py"
   },
   "route_sta": {
-   "ss": -24.92,
-   "ff": -8.8
+   "ss": -14.18,
+   "ff": 15.51
   },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sdc",
   "generator": "tools/hbm_die_station_gen.py"
  },
+ "io_min_delay": {
+  "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+  "ps_per_um": 0.1118,
+  "clkq_ff_ps": 32.2,
+  "view": {
+   "out": {
+    "min_wire_um": 476.352,
+    "min_delay_ps": 53.26,
+    "via": {
+     "inst": "w135_wl_sm23",
+     "port": "b",
+     "to": "sm23",
+     "to_port": "d"
+    }
+   }
+  }
+ },
  "bench": {
-  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench16/hfd_meso_r1",
+  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench21/hfd_meso_r1",
   "simulator": "verilator (tools/hbm_die_station_bench.py)",
   "positive": {
    "verdict": "PASS",
    "checked_bits": 340690,
    "mismatches": 0,
    "latency_periods": {
-    "ck<-a[1099]": 5,
-    "ck<-a[1100]": 5,
-    "ck<-a[1101]": 6
+    "ck<-a[1099]": 4,
+    "ck<-a[1100]": 4,
+    "ck<-a[1101]": 5
    }
   },
   "mutant": {
@@ -94,9 +111,10 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_meso_r1.lef": "9cadf9f694072b7bbcb2192b59968fc9282d15d6cf527fb0c403e10e5efd6654",
-  "hfd_meso_r1_ss.lib": "975dd4bf2316e186549fcafb749a0fb8a24f658a575d03fa80ecc3e852f1803f",
-  "hfd_meso_r1_ff.lib": "ea81655e0057803d7260a14c447dc4e05a3e8c076d42e214e04f0458dc9046b7"
+  "hfd_meso_r1.lef": "c2f1c265137e60588d37ae88f48ca0256f9917da1c284a38cad0f89503cb9626",
+  "hfd_meso_r1_ss.lib": "6ce42a8625ad9c89ba4a1c2a3c05c25390a4dc6df255090cfd515208bd828107",
+  "hfd_meso_r1_ff.lib": "71d236cc66ac7427df83c25cc25866b80040ef6e902218c65117e4d9e2ff50ee"
  },
- "defects": []
+ "defects": [],
+ "note_pin_plan": "N3 route (src21 c1b875694) predates the r16h pin rule fc6dc67e4: check vs current generator MISMATCH (2201 pins moved). Timing SS +48.82 / FF +15.51 stands for the RTL; P1 re-route on the pin rule replaces it."
 }
