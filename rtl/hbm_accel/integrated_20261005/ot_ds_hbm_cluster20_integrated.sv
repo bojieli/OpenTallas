@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
@@ -271,6 +271,8 @@ initial if(NORM_NATIVE_VM_ENABLE&&(!NORM_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||NORM
  (NORM_KIND!=1||NORM_RD!=0||NORM_D*3+(NORM_PUBLISH_QUANT?(NORM_D/NORM_N)*NORM_QROWS*32:0)>16384))))
  $fatal(1,"native norm requires actual CP input lease for HC/KV and output SRAM window <=16384 words");
 initial if(NORM_C12_ENABLE&&(!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20)) $fatal(1,"norm requires enabled protected full73 combined parent");
+initial if(FORMATTER_DIRECT_SOURCE_REPLAY&&(!ENABLE||!COMBINED_ENABLE||!FORMATTER_ENABLE||!FORMATTER_PREINSTALL_ENABLE))
+ $fatal(1,"direct source replay requires actual protected formatter/preinstall parent");
 initial if(SFU_NATIVE_VM_ENABLE&&!SFU_C12_ENABLE) $fatal(1,"native VM requires actual SFUc12 stage");
 initial if(SFU_C12_ENABLE && (!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20))
  $fatal(1,"SFU c12 requires enabled combined full73 parent");
@@ -704,7 +706,9 @@ end else begin:g_on
         wire [31:0] bound_arena_base,bound_arena_limit;
         // Normal producer and formatter consume their own real tagged response.
         wire formatter_response=FORMATTER_ENABLE&&shared_gather_rsp[3:1]==3'd3;
-        wire store_response=NORMAL_GATHER_ENABLE&&(shared_gather_rsp[3:1]==3'd1||shared_gather_rsp[3:1]==3'd2);
+        // Direct-source replay is a scoped minimum harness, not W15 readthrough.
+        // Exclude the unbound normal producer so kind1/2 receipts remain external.
+        wire store_response=NORMAL_GATHER_ENABLE&&!FORMATTER_DIRECT_SOURCE_REPLAY&&(shared_gather_rsp[3:1]==3'd1||shared_gather_rsp[3:1]==3'd2);
         assign shared_gather_req_v=fmt_req_v||store_req_v||gather_req_v[d];
         assign shared_gather_req=fmt_req_v?fmt_req:store_req_v?store_req:gather_req[d*649+:649];
         assign fmt_req_r=shared_gather_req_r&&fmt_req_v;
@@ -714,7 +718,7 @@ end else begin:g_on
         assign gather_rsp[d*637+:637]=shared_gather_rsp;
         assign shared_gather_rsp_r=formatter_response?fmt_rsp_r:store_response?store_rsp_r:gather_rsp_r[d];
         assign gather_release_r[d]=bridge_release_r&&!fmt_retained;
-        ot_hbm_integrated_w15_store #(.ENABLE(NORMAL_GATHER_ENABLE),.VM_AW(VM_AW)) u_normal_store(
+        ot_hbm_integrated_w15_store #(.ENABLE(NORMAL_GATHER_ENABLE&&!FORMATTER_DIRECT_SOURCE_REPLAY),.VM_AW(VM_AW)) u_normal_store(
          .clk(clk_sm),.por_n(rst_sm_n),.go(normal_go[d]),.id_plane(normal_id_plane[d]),
          .command_tag(normal_command_tag[d*16+:16]),.source_word(normal_source_word[d*32+:32]),
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
