@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // One NPC32/full128-row configuration. Released payload, preedge ownership and
 // landing are the oracle; no repeat of the completed whole-source344 campaign.
-module tb_window_stage_read_qualification;
+module tb_window_stage_read_qualification #(parameter integer SPLIT_COLUMNS=0);
     localparam integer NPC=32, NSECT=2176, ROWB=4224;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, job_v=0, req_v=0;
@@ -23,7 +23,7 @@ module tb_window_stage_read_qualification;
     wire [20:0] rsp_first_row;
     wire [3:0] rsp_mask,rsp_valid_mask;
     wire [4*ROWB-1:0] rsp_rows;
-    ot_dsrom_window_stage_pipeline #(.NPC(NPC)) dut (.*);
+    ot_dsrom_window_stage_pipeline #(.NPC(NPC), .SPLIT_COLUMNS(SPLIT_COLUMNS)) dut (.*);
 
     reg [ROWB-1:0] golden[0:127];
     reg [NSECT-1:0] landed=0;
