@@ -66,11 +66,38 @@ def model(root):
         physical_qualified=False,missing_input_clocks=True)
 
 
+def composed_capture_model(root, terms_path):
+    """Fill measured local cells/load/setup; leave wire and clock insertion open."""
+    result = model(root)
+    terms = json.loads(terms_path.read_text())
+    baseline = root / terms['source_model']
+    assert hashlib.sha256(baseline.read_bytes()).hexdigest() == terms['source_model_sha256']
+    assert json.loads(baseline.read_text()) == result
+    assert terms['setup_uncertainty_ps'] == 60 and terms['hold_uncertainty_ps'] == 25
+    assert abs(terms['clock_period_ps'] - result['clocks']['period_ps']) < 1e-6
+    assert terms['new_pipeline_stages'] == 0
+    for corner in ('SS', 'FF'):
+        for mode in ('min', 'max'):
+            row = terms['reported_capture_paths'][corner][mode]
+            path = root / row['file']
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == row['sha256']
+            assert row['unique_endpoints'] == 48
+    result['mapped_capture'] = terms
+    result['inputs'][str(terms_path.relative_to(root))] = hashlib.sha256(terms_path.read_bytes()).hexdigest()
+    result['clocks']['local_capture_cells_load_and_setup_priced'] = True
+    result['clocks']['routed_wire_clock_slew_and_insertion_priced'] = False
+    result['clocks']['SS_remaining_before_wire_and_skew_ps'] = terms['SS_worst']['remaining_before_wire_and_relative_skew_ps']
+    return result
+
+
 if __name__ == '__main__':
     import argparse
     import uarch_model
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--capture-terms', type=Path)
     args=parser.parse_args()
     args.out.parent.mkdir(parents=True,exist_ok=True)
-    args.out.write_text(json.dumps(uarch_model.dsrom_v9_cfg_context_model(),indent=2)+'\n')
+    result = (composed_capture_model(Path(__file__).resolve().parents[1], args.capture_terms.resolve())
+              if args.capture_terms else uarch_model.dsrom_v9_cfg_context_model())
+    args.out.write_text(json.dumps(result,indent=2)+'\n')
