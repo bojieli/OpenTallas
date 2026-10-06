@@ -1,0 +1,18 @@
+{
+  "schema": "w2-rb-station-physical-v1",
+  "top": "ot_hbm_native_frame_station_rb",
+  "parameters": {
+    "ENABLE": 1,
+    "NO": 2
+  },
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "a19c6edd55a97ba343512940845f0ccae4d015cc712812f23dbce5afe93b7cea",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station_rb.sv": "306507450325a12dc757da0c04073b9d2da1d03d6e4a2b20ccc0b9b14c82c1ff",
+    "physical/hbm_w2_check_station_20261006/bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e"
+  },
+  "generated_pins": {
+    "bank_veto_static.sv": "63f9952eb6775db67a3dfaea009c8b57e575193083da0902b2ff05852418dc62",
+    "station_rb_static.sv": "e620aa414b4dfd32ffdbf43ee1a56bf2a1b3e4d12da5c8a84fff544b2c4eb19e"
+  },
+  "lowering": "package imports replaced by the static W6 functions of bank_legacy_static.sv"
+}
