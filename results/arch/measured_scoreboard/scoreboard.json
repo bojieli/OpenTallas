@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "eb44e975f",
+ "generated_from_commit": "3e14c9887",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1266,9 +1266,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1686.5,
+   "value": 1737.9,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1311,9 +1311,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4946.7,
+   "value": 5071.1,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
@@ -1326,9 +1326,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
    "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4624.3,
+   "value": 4740.5,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
@@ -1341,9 +1341,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4079.7,
+   "value": 4182.2,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
@@ -1356,9 +1356,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 5135.2,
+   "value": 5264.3,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1431,9 +1431,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 592.926,
+   "value": 575.4,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1461,9 +1461,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 718.33,
+   "value": 697.713,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1490,9 +1490,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.II_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 25.081,
+   "value": 24.463,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -1712,7 +1712,7 @@
    "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4.159,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
@@ -4599,9 +4599,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "measured_share",
    "note": "rest listed in still_modelled",
-   "value": 0.9999,
+   "value": 0.9998,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "2e4f843abe8f6d7bff4e8c0283409eea215d3e75",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
@@ -5645,31 +5645,136 @@
    "target": "hbm_qwen",
    "section": "rate",
    "key": "ar_tok_s_p8191_tp4_die_wire",
-   "label": "Qwen HBM accel AR TP4 P8191 with the die collective / KV-hop wire stages",
+   "label": "Qwen HBM accel AR TP4 P8191 with the Qwen tile-die wire stages (routed bound, GRT i50, 430.56 um/stage)",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
    "pointer": "qwen_8k.b_TP4_iso_silicon.ar_tok_s_priced",
-   "note": "HA8 W12 vehicle mapped to the SM die collective/service geometry; the W12 tile die is a separate floorplan (Qwen HBM tile die)",
-   "value": 2136.0,
+   "note": "real Qwen tile die (96 x 16 W12 tile elements + SRAM, 4 edge HBM3E stacks): excess of the routed broadcast / tree / block-word depths over the vehicle bd/nws/tws per ME op, collective run per crossing, fill + status per KV first access; bounds from routed length, no die-level STA",
+   "value": 2040.7,
    "resolved": true,
-   "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "14e41e57c 2026-10-05"
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
   },
   "hbm_qwen.ar_tok_s_p8191_tp2_die_wire": {
    "target": "hbm_qwen",
    "section": "rate",
    "key": "ar_tok_s_p8191_tp2_die_wire",
-   "label": "Qwen HBM accel AR TP2 P8191 with the die collective / KV-hop wire stages",
+   "label": "Qwen HBM accel AR TP2 P8191 with the Qwen tile-die wire stages (routed bound, GRT i50)",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
    "pointer": "qwen_8k.a_TP2_same_silicon.ar_tok_s_priced",
-   "note": "as TP4",
-   "value": 1028.6,
+   "note": "as TP4 (TP2 vehicle bd 31 / nws 4 / tws 30)",
+   "value": 1002.0,
    "resolved": true,
-   "blob": "a7418b6bfb3781079b60d2a53e7a968a1245c381",
-   "last_commit": "14e41e57c 2026-10-05"
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp4_die_wire_floor": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire_floor",
+   "label": "Qwen HBM accel AR TP4 P8191 with the tile-die wire stages at the Manhattan floor",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.rows.b_TP4_iso_silicon.ar_tok_s_priced",
+   "note": "no-detour floor of the same floorplan; the routed bound is the separate figure",
+   "value": 2081.8,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp2_die_wire_floor": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire_floor",
+   "label": "Qwen HBM accel AR TP2 P8191 with the tile-die wire stages at the Manhattan floor",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.rows.a_TP2_same_silicon.ar_tok_s_priced",
+   "note": "as TP4",
+   "value": 1012.1,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp4_die_wire_median": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire_median",
+   "label": "Qwen HBM accel AR TP4 P8191 with the tile-die wire stages at the median routed bundle",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_median_bundle.rows.b_TP4_iso_silicon.ar_tok_s_priced",
+   "note": "median k16 bundle of each routed segment (GRT outlier detours excluded); between the floor and the bound",
+   "value": 2068.2,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp2_die_wire_median": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire_median",
+   "label": "Qwen HBM accel AR TP2 P8191 with the tile-die wire stages at the median routed bundle",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_median_bundle.rows.a_TP2_same_silicon.ar_tok_s_priced",
+   "note": "median k16 bundle of each routed segment (GRT outlier detours excluded); between the floor and the bound",
+   "value": 1008.5,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.ar_tok_s_p8191_tp4_spread_die_wire": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_spread_die_wire",
+   "label": "Qwen HBM accel AR TP4 P8191 with SRAM spread (adopted) and the tile-die wire stages (routed bound)",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_AR_spread.ar_tok_s_priced",
+   "note": "chains composition b_AR_spread 2,219.8 + the same per-ME-op / crossing / first-access terms",
+   "value": 2099.5,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.die_wire_added_cycles_tp4": {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "die_wire_added_cycles_tp4",
+   "label": "Qwen HBM TP4 die-level wire cycles added to the AR token (routed bound)",
+   "unit": "cycles",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_TP4_iso_silicon.added_cycles",
+   "note": "at 1.2 GHz; per-term split in wire_stages.json qwen_8k.*.terms",
+   "value": 30975,
+   "resolved": true,
+   "blob": "2fc0498357d58fada9c3c45e7b8914c23fc912bb",
+   "last_commit": "1d5724fb6 2026-10-05"
+  },
+  "hbm_qwen.die_mm2": {
+   "target": "hbm_qwen",
+   "section": "physical",
+   "key": "die_mm2",
+   "label": "Qwen HBM accelerator tile die area (858 mm2 reticle; one die per TP rank)",
+   "unit": "mm2",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/floorplan.json",
+   "pointer": "die.mm2",
+   "note": "1,536 tile elements sized from the measured routed W12 tile core + real SRAM macros; spine/IO from the Qwen ROM die ledgers; see block_ledger grades",
+   "value": 828.17,
+   "resolved": true,
+   "blob": "53e1d33043a90c21f3daae2f16cce66219906c8e",
+   "last_commit": "1d5724fb6 2026-10-05"
   },
   "qwen_rom.ar_tok_s_8k_composed": {
    "target": "qwen_rom",
@@ -5833,7 +5938,7 @@
    "expr": "x0",
    "derived": true,
    "note": "still-modelled terms listed in the composition record",
-   "value": 0.9999,
+   "value": 0.9998,
    "resolved": true,
    "status": "measured"
   },
@@ -5953,7 +6058,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.7759,
+   "value": 0.7995,
    "resolved": true,
    "status": "partial"
   },
@@ -5970,7 +6075,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 1.0563,
+   "value": 1.0828,
    "resolved": true,
    "status": "partial"
   },
@@ -5987,7 +6092,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side tier-2 MODEL: no DS-V4.1 decode measured on any GPU",
-   "value": 6.3188,
+   "value": 6.5114,
    "resolved": true,
    "status": "modelled"
   },
@@ -6004,7 +6109,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled (1.94x MTP sensitivity)",
-   "value": 9.5496,
+   "value": 9.7898,
    "resolved": true,
    "status": "modelled"
   },
@@ -6020,7 +6125,7 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "value": 0.6839,
+   "value": 0.7047,
    "resolved": true,
    "status": "modelled"
   },
@@ -6071,7 +6176,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 0.791,
+   "value": 0.8152,
    "resolved": true,
    "status": "partial"
   },
@@ -6088,7 +6193,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 1.2017,
+   "value": 1.232,
    "resolved": true,
    "status": "partial"
   }
@@ -6780,9 +6885,9 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1686.5,
+    "ds_rom.ar_tok_s_1m": 1737.9,
     "ds_rom.ar_tok_s_1m_as_built": 2211.7,
-    "ds_rom.mtp_tok_s_1m": 4946.7,
+    "ds_rom.mtp_tok_s_1m": 5071.1,
     "ds_rom.mtp_tok_s_1m_as_built": 6333.6
    }
   },
@@ -7073,7 +7178,7 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1686.5,
+    "ds_rom.ar_tok_s_1m": 1737.9,
     "ds_rom.ar_tok_s_1m_s81_window_asbuilt": 829.4,
     "ds_rom.window_s81_lf_us_mean": 0.1366
    }
