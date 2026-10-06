@@ -14,6 +14,7 @@
 #      driver, so the post-GRT repair no longer stops on RSZ-0074; 'none' to omit), FCP (face_stages N: common/
 #      face_chain_place.tcl POST_GLOBAL_PLACE spreads every face chain evenly between its core end and its pin; FCF =
 #      the wrapper's <master>_face_stages.tcl for per-port depths);
+#      HALO (macro place halo "x y" um, default "5 5"; vm14 PDN-0008: halo overlapped rows -> "2 5"),
 #      POSTSDC may list several files (space separated), e.g. signoff_unc60.sdc + vclk_corner_true.sdc
 set -u
 lab=$1; master=$2; topsrc=$3; shift 3
@@ -28,7 +29,7 @@ PS=${POSTSYN:-physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl}; 
 echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} POSTSYN=$PS FCP=${FCP:-} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} PER=${PER:-0.833} IOF=${IOF:-0.2} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs \
-  ${MACROS:+--macro-place-halo 5 5} \
+  ${MACROS:+--macro-place-halo ${HALO:-5 5}} \
   --clock-port ck --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction ${IOF:-0.2} ${SDCA:+--sdc-append $SDCA} --stages pnr \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \

@@ -26,11 +26,63 @@ def edit(text, reps):
     return text
 
 
-CRCF = """    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi)
-    function automatic [31:0] crc_s(input [31:0] s); crc_s = crc_fold(s, 256'd0); endfunction
-    function automatic [31:0] crc_lo(input [255:0] w); crc_lo = crc_fold(32'd0, {128'd0, w[127:0]}); endfunction
-    function automatic [31:0] crc_hi(input [255:0] w); crc_hi = crc_fold(32'd0, {w[255:128], 128'd0}); endfunction
-"""
+POLY = 0x04C11DB7
+
+
+def _fold(s, w, n=256):
+    """crc_fold(s, w) of the RTL (MSB-first shift, w[0] first) on Python ints"""
+    for i in range(n):
+        fb = ((s >> 31) ^ (w >> i)) & 1
+        s = ((s << 1) & 0xFFFFFFFF) ^ (POLY if fb else 0)
+    return s
+
+
+def _masks(nin, col):
+    """32 masks of nin bits: mask[j] bit i = output bit j of the linear map applied to unit vector i"""
+    m = [0] * 32
+    for i in range(nin):
+        y = col(i)
+        for j in range(32):
+            if (y >> j) & 1:
+                m[j] |= 1 << i
+    return m
+
+
+def _lp(name, masks, nin):
+    v = 0
+    for j, m in enumerate(masks):
+        v |= m << (j * nin)
+    return f"    localparam [{32 * nin - 1}:0] {name} = {32 * nin}'h{v:0{(32 * nin) // 4}x};\n"
+
+
+# Margin route ldm7 (SS -3,753 ps at mp1_w -> mp2_lo, a 70-level XNOR chain): the loop-form crc_fold synthesised as
+# the serial 128-step recurrence even with zero state.  The partials and the state fold are now written as explicit
+# GF(2) matrices: output bit j = ^(input & M[j]) -> a balanced $reduce_xor tree (<= 7 XOR levels for 128 inputs,
+# <= 5 for the 32-bit state).  Same linear maps (masks computed from crc_fold itself), so the same values.
+CRCF = ("""    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi),
+    // each written as a constant GF(2) matrix (bit j = XOR-reduce of input & M[j]: balanced trees, not the serial loop)
+""" + _lp('CRC_M_LO', _masks(128, lambda i: _fold(0, 1 << i)), 128)
+        + _lp('CRC_M_HI', _masks(128, lambda i: _fold(0, 1 << (128 + i))), 128)
+        + _lp('CRC_M_S', _masks(32, lambda i: _fold(1 << i, 0)), 32)
+        + """    function automatic [31:0] crc_s(input [31:0] s);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_s[j] = ^(s & CRC_M_S[j*32 +: 32]); end
+    endfunction
+    function automatic [31:0] crc_lo(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_lo[j] = ^(w[127:0] & CRC_M_LO[j*128 +: 128]); end
+    endfunction
+    function automatic [31:0] crc_hi(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_hi[j] = ^(w[255:128] & CRC_M_HI[j*128 +: 128]); end
+    endfunction
+""")
+# self-check of the matrices against the loop form (random vectors)
+import random as _r
+_g = _r.Random(1)
+_ML = _masks(128, lambda i: _fold(0, 1 << i)); _MH = _masks(128, lambda i: _fold(0, 1 << (128 + i)))
+_MS = _masks(32, lambda i: _fold(1 << i, 0))
+_ap = lambda M, x: sum(((bin(x & M[j]).count('1') & 1) << j) for j in range(32))  # noqa: E731
+for _ in range(200):
+    _s, _w = _g.getrandbits(32), _g.getrandbits(256)
+    assert _fold(_s, _w) == _ap(_MS, _s) ^ _ap(_ML, _w & ((1 << 128) - 1)) ^ _ap(_MH, _w >> 128)
 
 # ---------------- LOAD engine
 t = (SRC / 'ot_hbm_accel_loader.sv').read_text()

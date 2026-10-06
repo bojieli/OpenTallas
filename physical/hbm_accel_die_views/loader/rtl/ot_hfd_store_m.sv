@@ -25,10 +25,20 @@ module ot_hfd_store_m #(
  function automatic[31:0] crc_fold(input[31:0] s,input[255:0] w);
  reg fb;integer i;begin crc_fold=s;for(i=0;i<256;i=i+1)begin fb=crc_fold[31]^w[i];crc_fold={crc_fold[30:0],1'b0}^(fb?32'h04c11db7:0);end end
  endfunction
-    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi)
-    function automatic [31:0] crc_s(input [31:0] s); crc_s = crc_fold(s, 256'd0); endfunction
-    function automatic [31:0] crc_lo(input [255:0] w); crc_lo = crc_fold(32'd0, {128'd0, w[127:0]}); endfunction
-    function automatic [31:0] crc_hi(input [255:0] w); crc_hi = crc_fold(32'd0, {w[255:128], 128'd0}); endfunction
+    // margin-first CRC pipeline helpers: crc_fold(s, w) = crc_fold(s, 0) ^ crc_fold(0, w_lo) ^ crc_fold(0, w_hi),
+    // each written as a constant GF(2) matrix (bit j = XOR-reduce of input & M[j]: balanced trees, not the serial loop)
+    localparam [4095:0] CRC_M_LO = 4096'h17830a34c6f00657cee3d501744821122f0614698de00caf9dc7aa02e89042255e0c28d31bc0195f3b8f5405d120844abc1851a6378032be771ea80ba24108957830a34c6f00657cee3d50174482112af0614698de00caf9dc7aa02e89042255f74187057af193a47616955c664065b8ee830e0af5e32748ec2d2ab8cc80cb71dd061c15ebc64e91d85a5571990196e3ad8f321f117c9b747e577fe2464b0cd44c9d6e0ae40930bf324d2ac5f8de38bb993adc15c812617e649a558bf1bc71763275b82b9024c2fcc934ab17e378e2ec64eb7057204985f99269562fc6f1c5d8c9d6e0ae40930bf324d2ac5f8de38bb093adc15c812617e649a558bf1bc7176030d8888dc4bc299b5da9647f43c60fd261b1111b89785336bb52c8fe878c1fa5c362223712f0a66d76a591fd0f183f4a86c4446e25e14cdaed4b23fa1e307e951a0b82e88d329fe2147592f54828dc3923940fe5dc953993e608f0ebe419996050ab15ff7fda757002f234d6bc7b13d3a1562bfeffb4eae005e469ad78f627a7552f5dc93999d397c52b065b85a46e5dbdddb1a6b5c3a17844b5d9b67f00fda87bbb634d6b8742f0896bb36cfe01fb50e0f5ccae11fe83b6dc34b3d8884bd7b2d6689368e50d013a768ab2b064df8e77acd126d1ca1a0274ed156560c9bf1cef4e21479752c402be14c91fc0e73618cd8bc1851a6378032be771ea80ba241089;
+    localparam [4095:0] CRC_M_HI = 4096'h04d101df481b4e5af182fa07eb46de2f09a203be90369cb5e305f40fd68dbc5e1344077d206d396bc60be81fad1b78bc26880efa40da72d78c17d03f5a36f1784d101df481b4e5af182fa07eb46de2f19a203be90369cb5e305f40fd68dbc5e23091760d4ec8d8e6913c7bfd3af155ea6122ec1a9d91b1cd2278f7fa75e2abd5c245d8353b23639a44f1eff4ebc557ab805ab1b53e5d896e786125ee3ccc7178046462b534a05c860140b1db92de3cde08c8c56a6940b90c028163b725bc79bc11918ad4d28172180502c76e4b78f379232315a9a502e4300a058edc96f1e6f246462b534a05c860140b1db92de3cde48c8c56a6940b90c028163b725bc79bc91dc9ac92600c6fdaa1ae8ce35cc9e9bc3b935924c018dfb5435d19c6b993d3787726b2498031bf6a86ba338d7327a6f0ee4d649300637ed50d74671ae64f4de1d84bc8f948ddb3f0eb6a343227d845ecb446902dd9a029bb27569263a4f655f76c5c2184fb5b1d2cbf2fdec0a2aa75c1d8b84309f6b63a597e5fbd814554eb82b5a187cca5773ae80d3d810561ef092a6f920e4602f53b8aebf9f80d2898cc7bdf241c8c05ea7715d7f3f01a513198f7ba9938c743cfa0715e651a334925efc171e37051cf840eb84d48ce61790d01ace3c6e0a39f081d709a919cc2f21a0359c35cc098760b74bbc4a1c3820f72d89c826880efa40da72d78c17d03f5a36f17;
+    localparam [1023:0] CRC_M_S = 1024'h4884122ea44209175221048ba910824554884122aa4420911da602668ed30133c76980992b30d262dd1c7b1f6e8e3d8f37471ec71ba38f630dd1c7b106e8e3d84bf063c2a5f831e152fc18f0a97e0c789c3b141206999827cbc8de3de5e46f1eba7625a115bf00fe0adf807f4debd211ee71fb26f738fd93b3186ce79108245d;
+    function automatic [31:0] crc_s(input [31:0] s);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_s[j] = ^(s & CRC_M_S[j*32 +: 32]); end
+    endfunction
+    function automatic [31:0] crc_lo(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_lo[j] = ^(w[127:0] & CRC_M_LO[j*128 +: 128]); end
+    endfunction
+    function automatic [31:0] crc_hi(input [255:0] w);
+        integer j; begin for (j = 0; j < 32; j = j + 1) crc_hi[j] = ^(w[255:128] & CRC_M_HI[j*128 +: 128]); end
+    endfunction
  generate if(!ENABLE)begin:g_off
  assign s_awready=0;assign s_wready=0;assign s_arready=0;
  always @*begin s_bvalid=0;s_rvalid=0;s_rdata=0;m_awvalid=0;m_awaddr=0;m_awlen=0;end
