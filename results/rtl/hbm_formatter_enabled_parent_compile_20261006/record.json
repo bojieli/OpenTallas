@@ -1,0 +1,20 @@
+{
+  "scope": "Only files.f and enabled fullparent compile runner; no RTL body/parent writes",
+  "parent_source_commit": "0047ad85f",
+  "status": "PREPARED_BODY_PENDING",
+  "source_files": 88,
+  "source_bytes": 972482,
+  "only_missing": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv",
+  "body_owner": "Bacon",
+  "parent_owner": "Gibbs",
+  "copied_runner_missing_body_test": "PASS refuses before any guard/compiler",
+  "runner_source_sha256": "8fb797d4c30401adfb7938aeb0d63e054b3e8386fb08576bb6ff0cba8da49b08",
+  "filelist_sha256": "55d2d9cd7f68ab4ab3bb14391405b1dfaf23a1d6fd6c3f41e2dd8c2e486d8cbe",
+  "source_compile": false,
+  "full_parent_elaborated": false,
+  "numerical": false,
+  "physical_qualified": false,
+  "heavy_job_launched": false,
+  "measured_E2_hostname": "climbing-locust",
+  "existing_W5_dependencies": "preserved; no W5 source/job mutation"
+}

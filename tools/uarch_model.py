@@ -11928,12 +11928,21 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
+def dsrom_wfc_native_two_lease_price():
+    """Legal next-position RX/previous-position TX before serialization RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/native_two_lease_model.json').read_text())
+
+
 def dsrom_wfc_protected_caller_adapter_price():
     """Actual readyless-to-protected service adapter, before its source build."""
     import json
     from pathlib import Path
     root=Path(__file__).resolve().parents[1]
     provider=json.loads((root/'results/uarch/dsrom_protected_vm_20261006/model.json').read_text())
+    receipt=root/'results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r2_PASS/result.json'
+    measured=json.loads(receipt.read_text()) if receipt.is_file() else None
     owner=47
     flags=8
     state=3
@@ -11959,8 +11968,11 @@ def dsrom_wfc_protected_caller_adapter_price():
       link_router_stalled=False,controller_pause='clock enables; root clocks unchanged, actual router drains independently',
       latency='measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit',
       mandatory_per_A_read_capture_bubble_edges=1,
-      actual_service_wait_edges=None,actual_token_latency_ns=None,
-      allwriter_contract='bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled',
+      actual_service_wait_edges=measured['observed_service'] if measured else None,actual_token_latency_ns=None,
+      actual_context_nominal_fast_cycles=measured['nominal']['fast_cycles'] if measured else None,
+      actual_native_capture_fast_edges=measured['nominal']['native_capture_fast_edges'] if measured else None,
+      actual_context_scope='Minimum commonowner native service; config init/preload/retirement fixtures not full numerical engine/token latency',
+      allwriter_contract='bundle XA/XB0..3 native order including sameowner simultaneous XAread/write; old reads before all writes; distinct XB owner backpressured and unaccepted; distinct simultaneous XA RX/TX owners explicitly rejected without serialization',
       global_VM_geometry_owner='Turing current r8/new-frame binding',
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
@@ -12003,6 +12015,18 @@ def hbm_vm_publication_parent_model():
             area='map actual comparators and permission gates; not measured/free',
             clocks='same actual clk_sm; no serial CDC or off-package link',
             new_boundary_token_bits=17, full_parent_physical_closed=False),
+        station_return_bridge=dict(
+            reason='Actual native station source_release has no ready; parent full73 receipt cut may repair',
+            instances=4, useful_receipt_bits=265, valid_bits=1, sticky_fault_bits=1,
+            W6_words_each=5, protected_FF_each=360, extra_protected_FF_total=1440,
+            extra_FF_area_floor_um2=1440*.2916,
+            SRAM_added=0, pipeline_capture_edges=1,
+            boundary_bits_each=73+192+2,
+            clock='same actual clk_sm input as native station seats and parent receipt; no forwarded-clock phase borrowing',
+            admission='one receipt reserved per live quarter transaction; new root read waits old reverse debt',
+            CE='capture owed pulse into empty corrected seat before scrub; hold until actual parent receipt acceptance',
+            DUE='no acknowledgment, retain debt until cold POR',
+            physical_qualified=False),
         boundaries_bits_per_accept=dict(publisher_each=1024+32+73+2,
             index_request=32+6+8+73+7+2, index_response=1024+8+73+7+2,
             activation_write=2063+192+8+73+2,
@@ -12050,3 +12074,28 @@ def hbm_native_index_sram_join_model():
         floorplan_slot_fit=False, parent_qualified=False, physical_closed=False,
         protection_limit='existing query source raw buffers/control remain component source; not whole-index mutable protection qualification',
         token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
+
+
+def hbm_integrated_sfu_c12_stage_model():
+    """Existing protected stage seat + Carson finite framed SFU; before join RTL."""
+    return dict(default_OFF=True, replicas=1, MACs_per_cycle=0,
+        stage_descriptor_model='hbm_integrated_stage_join_model',
+        stage_coded_FF=216, frame_bank_FF=2810,
+        arithmetic_model='results/physical/hbm_die_abstracts_20261006/compute/quarter_size.json:sfu (PRESETS.proposal sfu_lanes/4)',
+        child_request_response_controller_FF=5910,
+        total_enclosure_and_child_wrapper_FF=8936,
+        wrapper_FF_area_floor_um2=8936*.2916,
+        frame_model='results/physical/hbm_die_abstracts_20261006/compute/framed_sfu_before_rtl.json',
+        additional_join_FF=0, additional_join_payload_seats=0, added_pipeline_cycles=0,
+        full_owner_bits=73, frame_compare_bits=73, frame_compare_count=5,
+        comparator_NAND2_reservation=5*4*73,
+        RX_payload_bits_per_accepted_cycle=1024, TX_payload_bits_per_accepted_cycle=1024,
+        RX_bytes_per_accepted_cycle=128, TX_bytes_per_accepted_cycle=128,
+        RX_sideband_bits=76, TX_sideband_bits=79,
+        request_beats=3, response_beats=3, replicas_mux_demux='one caller, one child; no additional mux or replicated owner',
+        routing_tracks_required=2*1024+76+79+5*73,
+        routing_capacity=None, actual_receiver_load=None, mapped_area_um2=None,
+        floorplan_slot_fit=False, physical_closed=False,
+        composed_latency='existing stage enrollment/start +3acceptedRX+actualc12child+3acceptedTX+drainedfinish+persistentcompletion; no new join edge',
+        clock_binding='caller serial1111ps vs child833ps OPEN; same clk port does not confer qualified clock',
+        production_source_binding=False, numerical_qualified=False, token_rate_credit=0)
