@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "scope": "Default-off elaboration only; no enabled engine exactness or physical gate",
+  "tops": [
+    "ot_hbm_sfu_quarter",
+    "ot_hbm_hc_quarter"
+  ],
+  "commands": [
+    "iverilog -g2012 -tnull -s ot_hbm_sfu_quarter physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv",
+    "iverilog -g2012 -tnull -s ot_hbm_hc_quarter physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv"
+  ],
+  "returncodes": [
+    0,
+    0
+  ],
+  "source_manifest_sha256": "0f11cbbc21aa57ba9b58626709625812f363b84236844ce1a8615c74cf5c67a8",
+  "closure": false
+}

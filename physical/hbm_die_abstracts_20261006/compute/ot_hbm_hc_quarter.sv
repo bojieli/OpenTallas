@@ -15,7 +15,7 @@ module ot_hbm_hc_quarter #(parameter integer ENABLE=0,NG=320)(
   assign req_r=0;assign rsp_v=0;assign rsp_tag=0;assign rsp_data=0;assign rsp_error=0;assign fault=0;
  end else begin:g_on
   localparam integer IW=NG*160+672,OW=NG*128+33;
-  wire launch,engine_clk;wire [IW-1:0] payload;wire [OW-1:0] response;
+  wire launch,engine_clk,engine_error_seen;wire [IW-1:0] payload;wire [OW-1:0] response;
   wire [NG*128-1:0] outputs;
   wire [NG-1:0] valids,errors;
   wire [511:0] comb=payload[NG*160+:512];
@@ -24,8 +24,8 @@ module ot_hbm_hc_quarter #(parameter integer ENABLE=0,NG=320)(
   ot_hbm_compute_held_exec #(.IW(IW),.OW(OW)) u_hold(
    .clk(clk),.rst_n(rst_n),.req_v(req_v),.req_r(req_r),
    .req_d({req_tag,req_post,req_comb,req_y,req_rdata}),
-   .rsp_v(rsp_v),.rsp_r(rsp_r),.rsp_d(response),.launch(launch),.engine_clk(engine_clk),.engine_d(payload),
-   .engine_v(&valids),.engine_q({tag,|errors,outputs}),.engine_fault(|errors),.fault(fault));
+   .rsp_v(rsp_v),.rsp_r(rsp_r),.rsp_d(response),.launch(launch),.engine_clk(engine_clk),.engine_error_seen(engine_error_seen),.engine_d(payload),
+   .engine_v(&valids),.engine_q({tag,(|errors)|engine_error_seen,outputs}),.engine_fault(|errors),.fault(fault));
   assign {rsp_tag,rsp_error,rsp_data}=response;
   for(genvar g=0;g<NG;g=g+1)begin:g_group
    ot_dsrom_su_hcpost_group #(.WIN(0),.WOUT(0),.ML(6),.AL(5)) u(
