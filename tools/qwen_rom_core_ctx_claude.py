@@ -25,7 +25,7 @@ OLDROOT = "/srv/opentallas-scratch/claude/qwen-core-decode/src/"
 
 
 def core_text(fallback: int, vpos: int, bound: bool = False, amq: bool = False, nxreg: bool = False,
-              meif: bool = False, suif: bool = False, pinreg: bool = False) -> str:
+              meif: bool = False, suif: bool = False) -> str:
     s = E.emit(E.V.E.CORE.read_text())
     if bound:   # Codex DEC_LA_BOUND: E2 remainder table width ODD*2^H-1 (exact; tools/qwen_rom_core_dec_bound_emit_w12.py)
         import qwen_rom_core_dec_bound_emit_w12 as BD
@@ -41,8 +41,6 @@ def core_text(fallback: int, vpos: int, bound: bool = False, amq: bool = False, 
         s = FB.apply_meif(s)
     if suif:
         s = FB.apply_suif(s)
-    if pinreg:
-        s = FB.apply_pinreg(s)
     # Yosys 0.68 workarounds of the retained screen copy (logic identical).
     s = s.replace("    generate if (VPOS != 0) begin : g_vpos_tiles\n        genvar vpt;\n",
                   "    genvar vpt;\n    generate if (VPOS != 0) begin : g_vpos_tiles\n")
@@ -86,27 +84,19 @@ def main() -> None:
     ap.add_argument("--nxreg", action="store_true", help="also DEC_LA_NXREG (NEXT fields registered at the boundary)")
     ap.add_argument("--meif", action="store_true", help="also DEC_LA_MEIF (registered ME-spine handshake)")
     ap.add_argument("--suif", action="store_true", help="also DEC_LA_SUIF (registered vector-stream handshake)")
-    ap.add_argument("--pinreg", action="store_true", help="also DEC_LA_PINREG (registered input pins; the "
-                    "weight-ROM select ot_qwen_core_wrom_port is black-boxed and exposed with the units: it is the "
-                    "weight-ROM port element's logic)")
     ap.add_argument("--su-in", action="store_true", help="re-cut (coordinator 2026-10-06): the vector stream unit "
                     "(ot_hdc_vstream_rt) is routed INSIDE the core block (not black-boxed), so the issue loop and the "
                     "SU ready / progress handshakes are block-internal")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     (a.out / "gen").mkdir()
-    core = core_text(a.fallback, a.vpos, a.bound, a.amq, a.nxreg, a.meif, a.suif, a.pinreg)
+    core = core_text(a.fallback, a.vpos, a.bound, a.amq, a.nxreg, a.meif, a.suif)
     (a.out / "core.sv").write_text(core)
     (a.out / "gen/ot_hdc_vstream_rt.sv").write_text(E.E.emit_vstream(E.E.VSTREAM.read_text()))
     lines = []
     for line in RETAINED.read_text().splitlines():
         if a.su_in and line.strip() == "blackbox ot_hdc_vstream_rt":
             continue
-        if a.pinreg and line.strip() == "blackbox ot_hdc_stream":
-            lines += [line, "blackbox ot_qwen_core_wrom_port"]
-            continue
-        if a.pinreg and line.startswith("expose -evert"):
-            line += " t:ot_qwen_core_wrom_port t:$paramod*ot_qwen_core_wrom_port*"
         if line.startswith(("dfflibmap", "abc ", "setundef", "splitnets", "tee ", "write_verilog")):
             continue
         if line.startswith("read_verilog "):
@@ -136,8 +126,6 @@ def main() -> None:
                 line += " -chparam DEC_LA_MEIF 1"
             if a.suif:
                 line += " -chparam DEC_LA_SUIF 1"
-            if a.pinreg:
-                line += " -chparam DEC_LA_PINREG 1"
             lines.append(line)
         else:
             lines.append(line)
@@ -150,7 +138,7 @@ def main() -> None:
     lines += ["proc", f"write_json {a.out}/original.json"]
     (a.out / "prepare.ys").write_text("\n".join(lines) + "\n")
     (a.out / "inputs.json").write_text(json.dumps(dict(
-        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, bound=a.bound, amq=a.amq, nxreg=a.nxreg, meif=a.meif, suif=a.suif, pinreg=a.pinreg, su_in=a.su_in, vpos=a.vpos, dec_la=1,
+        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, bound=a.bound, amq=a.amq, nxreg=a.nxreg, meif=a.meif, suif=a.suif, su_in=a.su_in, vpos=a.vpos, dec_la=1,
         parameter_source="results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys (P8191 plain-AR set)",
         clock_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25), indent=2) + "\n")
 

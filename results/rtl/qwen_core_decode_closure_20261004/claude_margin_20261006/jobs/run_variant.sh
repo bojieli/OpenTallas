@@ -5,7 +5,7 @@
 # Boundary: io_ref_skew.sdc (OT_IO_SKEW 150 ps adverse die clock-arrival difference, owner addendum 2026-10-06).
 # In-context route of the Qwen ROM decode core (final DEC_LA + optional issue fallbacks), controller cut.
 # usage: run_variant.sh NAME FALLBACK BOUNDARY(plain|ref) UTIL DENSITY [extra run_abi3_physical args...]
-#   FALLBACK: N (DEC_LA_ISSUE_FB), suffixes in order b = BOUND, a = AMQ, n = NXREG, m = MEIF, s = SUIF, u = SU inside, p = PINREG (e.g. 3banmsp)
+#   FALLBACK: N (DEC_LA_ISSUE_FB), suffixes in order b = BOUND, a = AMQ, n = NXREG, m = MEIF, s = SUIF, u = SU inside (e.g. 3banms)
 set -euo pipefail
 B=${QCC_B:-/srv/opentallas-scratch2/scratch/claude/qwen-core-ctx}   # host root: src/, runs/
 NAME=$1; FB=$2; BND=$3; UTIL=$4; DENS=$5; shift 5
@@ -13,10 +13,10 @@ R=$B/runs/$NAME; S=$B/src
 Y=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
 mkdir -p $R; cd $S
 echo "$(date -Is) start $NAME fb=$FB boundary=$BND util=$UTIL dens=$DENS extra=$* src=$(cat $S/SOURCE_COMMIT)" >> $R/STATUS.md
-BOPT=; CUTOPT=; case $FB in *p) BOPT="$BOPT --pinreg"; CUTOPT=--drop-feedthrough; FB=${FB%p};; esac; case $FB in *u) BOPT="$BOPT --su-in"; FB=${FB%u};; esac; case $FB in *s) BOPT="$BOPT --suif"; FB=${FB%s};; esac; case $FB in *m) BOPT="$BOPT --meif"; FB=${FB%m};; esac; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
+BOPT=; case $FB in *u) BOPT="$BOPT --su-in"; FB=${FB%u};; esac; case $FB in *s) BOPT="$BOPT --suif"; FB=${FB%s};; esac; case $FB in *m) BOPT="$BOPT --meif"; FB=${FB%m};; esac; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
 python3 tools/qwen_rom_core_ctx_claude.py --out $R/prep --fallback $FB $BOPT
 $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1
-python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json $CUTOPT
+python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json
 mkdir -p $R/context_src/rtl $R/context_src/physical
 $Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1
 cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/; mkdir -p $R/context_src/tools; cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/
@@ -41,5 +41,5 @@ python3 tools/run_abi3_physical.py --source-root $R/context_src --view asap7 --t
  "${HOOK[@]}" "$@" > $R/flow.log 2>&1
 echo $? > $R/flow.exit
 python3 tools/w18/corner_sta.py --orfs-dir $R/work/orfs --output $R/corner_sta_plain.json > $R/sta_plain.log 2>&1
-python3 tools/w18/corner_sta_ref.py --orfs-dir $R/work/orfs --extra-sdc $S/physical/qwen_core_ctx/${QCC_SIGNOFF_SDC:-io_ref_skew.sdc} --output $R/corner_sta_ref.json > $R/sta_ref.log 2>&1
+python3 tools/w18/corner_sta_ref.py --orfs-dir $R/work/orfs --extra-sdc $S/physical/qwen_core_ctx/io_ref_skew.sdc --output $R/corner_sta_ref.json > $R/sta_ref.log 2>&1
 echo "$(date -Is) done flow=$(cat $R/flow.exit)" >> $R/STATUS.md
