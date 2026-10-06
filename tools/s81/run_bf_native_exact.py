@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 
 def main():
- p=argparse.ArgumentParser(); p.add_argument('--prepare-only',action='store_true'); p.add_argument('--prepared',action='store_true'); p.add_argument('--work',type=Path,required=True); p.add_argument('--jobs',type=int,default=8); p.add_argument('--verilator',default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'); a=p.parse_args()
+ p=argparse.ArgumentParser(); p.add_argument('--only-negative',action='store_true'); p.add_argument('--prepare-only',action='store_true'); p.add_argument('--prepared',action='store_true'); p.add_argument('--work',type=Path,required=True); p.add_argument('--jobs',type=int,default=8); p.add_argument('--verilator',default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'); a=p.parse_args()
  if a.prepared:
   prepared=json.loads((a.work/'prepared.json').read_text());files=prepared['files'];base=prepared['base'];record=prepared['record']
   for n,d in files.items():
@@ -29,12 +29,12 @@ def main():
   if a.prepare_only: return
  base[0]=a.verilator;base[base.index('-j')+1]=str(a.jobs)
  base=[str(a.work/'dsrom_actual_element_numerical_rom.cpp') if x.startswith('/ABS/FRESH/') else x for x in base]
- for name,negative in [('positive',False),('negative',True)]:
+ for name,negative in ([('negative',True)] if a.only_negative else [('positive',False),('negative',True)]):
   obj='obj_'+name;cmd=base.copy();cmd[cmd.index('--Mdir')+1]=obj
   if negative:
    # One live returned value bit, injected at wrapper boundary; must be detected.
    original=files['ot_s81_bf_native.sv'];mut=original.replace('.pval(pval)', '.pval(negative_value)').replace('    ot_v41_rom_elem_w10 #(', '    ot_v41_rom_elem_w10 #(')
-   mut=mut.replace('    cand_ot_v41_rom_elem_w10 #(', '    wire [32*NB-1:0] negative_value;\n    assign pval = negative_value ^ {{(32*NB-1){1\'b0}},1\'b1};\n    cand_ot_v41_rom_elem_w10 #(')
+   mut=mut.replace('    cand_ot_v41_rom_elem_w10 #(', '    wire [32*NB-1:0] negative_value;\n    assign pval = negative_value ^ {{(32*NB-1){1\'b0}},pv[0]};\n    cand_ot_v41_rom_elem_w10 #(')
    (a.work/'ot_s81_bf_native.sv').write_text(mut)
   with (a.work/(name+'_build.log')).open('w') as f: build=subprocess.run(cmd,cwd=a.work,stdout=f,stderr=subprocess.STDOUT)
   if build.returncode: raise SystemExit('build failed: '+str(a.work/(name+'_build.log')))
