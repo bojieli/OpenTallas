@@ -1,56 +1,36 @@
 {
  "schema": "opentallas.dsrom-recovery.lever.v1",
- "lever": "field_spine_pq",
+ "lever": "qelem_pq",
  "verdict": "PENDING_SSFF",
  "exact": true,
  "ss_ff": {
-  "basis": "routed ORFS (detail route, RCX spef), OpenSTA corner_sta SS 60 ps / FF 25 ps at 0.833 ns; screen top physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv (registered neighbours, 2-cycle ROM models); RTL v8 = this commit",
-  "ss_wns_ps": {
-   "PQ0_R16": 18.74,
-   "PQ1_R16": 13.98,
-   "PQ0_R128": "pending (post-CTS -7.4)",
-   "PQ1_R128": "pending (post-CTS 0.0, post-GRT -13.2)"
-  },
-  "ff_hold_wns_ps": {
-   "PQ0_R16": -0.18,
-   "PQ1_R16": 0.61,
-   "PQ0_R128": "pending",
-   "PQ1_R128": "pending"
-  },
-  "residuals": {
-   "PQ0_R16": "1 hold pin -0.18 ps (bt_d -> BST stage)",
-   "PQ1_R16": "1 max-slew pin (g_ixq[5] copy D, 330 vs 320 ps)"
-  },
-  "old_spine_for_reference": {
-   "PQ0_R16": -684.06,
-   "PQ1_R16": -722.82,
-   "PQ1_R128": -905.9
-  },
-  "route_loop": "Codex: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_field_spine_route.md"
+  "basis": "routed ORFS of the PQ q-element ot_v41_rom_elem_q_qxpq_w10 (QX 10, PQ 1), FH 192.24 (owner frame), OpenSTA SS 60 ps / FF 25 ps at 0.833 ns",
+  "routes": "Z22a-g (results/rtl/dsrom_qelem_pq_20261006/, EPYC1 /srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z22*)",
+  "status": "pending (routes running 2026-10-06)"
  },
  "nodes": {
   "E1.wkv": {
-   "us": 0.619167,
+   "us": 0.6425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): E1.wkv: one-region full-shape ROM field RTL (S81 canonical placement), 6400 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.attn.a_proj": {
    "us": 0.435833,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 135 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -60,37 +40,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.ffn.experts_gu": {
-   "us": 0.945833,
+   "us": 1.001667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 4 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L0.ffn.down": {
-   "us": 0.818333,
+   "us": 0.880833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.attn.a_proj": {
    "us": 0.435833,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 135 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -100,42 +80,42 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L1.ffn.down": {
-   "us": 0.595,
+   "us": 0.635,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.attn.a_proj": {
-   "us": 1.124167,
+   "us": 1.174167,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + r8 die wire 124 cyc over 4 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.attn.cmp.wk": {
-   "us": 0.273333,
+   "us": 0.295,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -145,37 +125,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.ffn.experts_gu": {
-   "us": 0.6025,
+   "us": 0.625,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L2.ffn.down": {
-   "us": 0.565833,
+   "us": 0.61,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -185,37 +165,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L3.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -225,37 +205,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L4.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -265,37 +245,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L5.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -305,37 +285,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L6.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -345,42 +325,42 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L7.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.attn.a_proj": {
-   "us": 1.124167,
+   "us": 1.174167,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + r8 die wire 124 cyc over 4 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.attn.cmp.wk": {
-   "us": 0.273333,
+   "us": 0.295,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -390,37 +370,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.ffn.experts_gu": {
-   "us": 0.6025,
+   "us": 0.625,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L8.ffn.down": {
-   "us": 0.565833,
+   "us": 0.61,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -430,37 +410,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L9.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -470,37 +450,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L10.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -510,37 +490,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L11.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -550,37 +530,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L12.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -590,42 +570,42 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L13.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.attn.a_proj": {
-   "us": 1.124167,
+   "us": 1.174167,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + r8 die wire 124 cyc over 4 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.attn.cmp.wk": {
-   "us": 0.273333,
+   "us": 0.295,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -635,37 +615,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.ffn.experts_gu": {
-   "us": 0.6025,
+   "us": 0.625,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L14.ffn.down": {
-   "us": 0.565833,
+   "us": 0.61,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -675,37 +655,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L15.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -715,37 +695,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L16.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -755,37 +735,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L17.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -795,37 +775,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L18.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.4425,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -835,42 +815,42 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.ffn.experts_gu": {
-   "us": 1.289167,
+   "us": 1.375,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L19.ffn.down": {
-   "us": 0.959167,
+   "us": 1.0375,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 6 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.attn.a_proj": {
-   "us": 0.899167,
+   "us": 0.9325,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 608 rows exact=True, + r8 die wire 124 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.attn.cmp.wk": {
-   "us": 0.273333,
+   "us": 0.295,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -880,37 +860,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.ffn.experts_gu": {
-   "us": 0.945833,
+   "us": 1.001667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 4 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L20.ffn.down": {
-   "us": 0.818333,
+   "us": 0.880833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -920,37 +900,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L21.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -960,37 +940,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L22.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1000,37 +980,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L23.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.attn.a_proj": {
-   "us": 0.674167,
+   "us": 0.690833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + r8 die wire 124 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1040,37 +1020,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.ffn.experts_gu": {
-   "us": 1.1175,
+   "us": 1.19,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L24.ffn.down": {
-   "us": 0.8475,
+   "us": 0.905,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 142 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1080,37 +1060,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L25.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1120,37 +1100,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L26.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1160,37 +1140,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L27.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.attn.a_proj": {
-   "us": 0.674167,
+   "us": 0.690833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + r8 die wire 124 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1200,37 +1180,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.ffn.experts_gu": {
-   "us": 1.1175,
+   "us": 1.19,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L28.ffn.down": {
-   "us": 0.8475,
+   "us": 0.905,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 142 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1240,37 +1220,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L29.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1280,37 +1260,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L30.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1320,37 +1300,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L31.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.attn.a_proj": {
-   "us": 0.674167,
+   "us": 0.690833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + r8 die wire 124 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1360,37 +1340,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.ffn.experts_gu": {
-   "us": 1.1175,
+   "us": 1.19,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L32.ffn.down": {
-   "us": 0.8475,
+   "us": 0.905,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 142 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1400,37 +1380,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L33.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1440,37 +1420,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L34.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1480,37 +1460,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L35.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.attn.a_proj": {
-   "us": 0.674167,
+   "us": 0.690833,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + r8 die wire 124 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.attn.wq_b": {
-   "us": 0.47,
+   "us": 0.5125,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1520,37 +1500,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.ffn.experts_gu": {
-   "us": 1.1175,
+   "us": 1.19,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L36.ffn.down": {
-   "us": 0.8475,
+   "us": 0.905,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 142 cyc over 5 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1560,37 +1540,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L37.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1600,37 +1580,37 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L38.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.attn.a_proj": {
-   "us": 0.435833,
+   "us": 0.438333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 138 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.attn.wq_b": {
-   "us": 0.384167,
+   "us": 0.408333,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 144 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.attn.wo_a": {
-   "us": 0.713333,
+   "us": 0.751667,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 147 cyc over 2 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.attn.wo_b": {
-   "us": 0.374167,
+   "us": 0.4,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 147 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
@@ -1640,25 +1620,25 @@
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 124 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.ffn.shared_gu": {
-   "us": 0.440833,
+   "us": 0.4475,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.ffn.experts_gu": {
-   "us": 0.774167,
+   "us": 0.81,
    "cls": "measured",
-   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 143 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 139 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   },
   "L39.ffn.down": {
-   "us": 0.595,
+   "us": 0.638333,
    "cls": "measured",
    "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 147 cyc over 3 phase(s) (per-region round trip + hub return stations, f157.68)"
   }
  },
  "measurement": {
-  "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
-  "record_sha256": "8888faba2fe29aa6d946ab3218600aa23eddd855067c68d4b533bf169adca37e",
-  "config": "pq",
+  "record": "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem.json",
+  "record_sha256": "459b2182df58e83b207be84ce4429dceb05b87625b5a527c0db8870417da4b41",
+  "config": "pq_qelem",
   "vehicle": "ot_v41_fieldtop_pqc_w17w10 (PQ=1, flat)",
   "placement": "S81 canonical + R93 re-placement (tools/dsrom_recovery_field.py variant)",
   "node_summary": [
@@ -1667,8 +1647,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 460,
-    "us": 0.38333333333333336,
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
     "asbuilt_us": 0.4008333333333333,
     "rows_checked": 448,
     "exact": true
@@ -1678,8 +1658,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -1689,8 +1669,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -1700,8 +1680,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 394,
-    "us": 0.32833333333333337,
+    "total_cycles": 421,
+    "us": 0.35083333333333333,
     "asbuilt_us": 0.33666666666666667,
     "rows_checked": 8192,
     "exact": true
@@ -1712,8 +1692,8 @@
      0,
      1
     ],
-    "total_cycles": 915,
-    "us": 0.7625,
+    "total_cycles": 988,
+    "us": 0.8233333333333334,
     "asbuilt_us": 1.5025,
     "rows_checked": 8960,
     "exact": true
@@ -1724,8 +1704,8 @@
      0,
      1
     ],
-    "total_cycles": 1072,
-    "us": 0.8933333333333333,
+    "total_cycles": 1137,
+    "us": 0.9475,
     "asbuilt_us": 1.5883333333333334,
     "rows_checked": 6912,
     "exact": true
@@ -1735,8 +1715,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -1746,8 +1726,8 @@
     "dies": [
      0
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -1757,8 +1737,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 676,
-    "us": 0.5633333333333334,
+    "total_cycles": 702,
+    "us": 0.585,
     "asbuilt_us": 0.8383333333333333,
     "rows_checked": 6400,
     "exact": true
@@ -1768,8 +1748,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 460,
-    "us": 0.38333333333333336,
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
     "asbuilt_us": 0.4008333333333333,
     "rows_checked": 448,
     "exact": true
@@ -1779,8 +1759,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -1790,8 +1770,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -1801,8 +1781,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 394,
-    "us": 0.32833333333333337,
+    "total_cycles": 424,
+    "us": 0.35333333333333333,
     "asbuilt_us": 0.33666666666666667,
     "rows_checked": 8192,
     "exact": true
@@ -1814,8 +1794,8 @@
      2,
      3
     ],
-    "total_cycles": 647,
-    "us": 0.5391666666666667,
+    "total_cycles": 697,
+    "us": 0.5808333333333333,
     "asbuilt_us": 0.9158333333333333,
     "rows_checked": 8960,
     "exact": true
@@ -1827,8 +1807,8 @@
      2,
      3
     ],
-    "total_cycles": 866,
-    "us": 0.7216666666666667,
+    "total_cycles": 911,
+    "us": 0.7591666666666667,
     "asbuilt_us": 1.1908333333333332,
     "rows_checked": 6912,
     "exact": true
@@ -1838,8 +1818,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -1849,8 +1829,8 @@
     "dies": [
      1
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -1860,8 +1840,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 1305,
-    "us": 1.0875,
+    "total_cycles": 1363,
+    "us": 1.1358333333333335,
     "asbuilt_us": 1.8933333333333333,
     "rows_checked": 736,
     "exact": true
@@ -1871,8 +1851,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 284,
-    "us": 0.23666666666666666,
+    "total_cycles": 308,
+    "us": 0.25666666666666665,
     "asbuilt_us": 0.23416666666666666,
     "rows_checked": 128,
     "exact": true
@@ -1882,8 +1862,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -1893,8 +1873,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -1904,8 +1884,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 497,
-    "us": 0.4141666666666667,
+    "total_cycles": 546,
+    "us": 0.45499999999999996,
     "asbuilt_us": 0.6491666666666667,
     "rows_checked": 12288,
     "exact": true
@@ -1917,8 +1897,8 @@
      4,
      5
     ],
-    "total_cycles": 612,
-    "us": 0.51,
+    "total_cycles": 663,
+    "us": 0.5525,
     "asbuilt_us": 0.8908333333333333,
     "rows_checked": 8960,
     "exact": true
@@ -1930,8 +1910,8 @@
      4,
      5
     ],
-    "total_cycles": 660,
-    "us": 0.55,
+    "total_cycles": 685,
+    "us": 0.5708333333333333,
     "asbuilt_us": 0.7933333333333333,
     "rows_checked": 6912,
     "exact": true
@@ -1941,8 +1921,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -1952,8 +1932,8 @@
     "dies": [
      3
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -1963,8 +1943,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 460,
-    "us": 0.38333333333333336,
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
     "asbuilt_us": 0.4008333333333333,
     "rows_checked": 448,
     "exact": true
@@ -1974,8 +1954,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -1985,8 +1965,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -1996,8 +1976,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 394,
-    "us": 0.32833333333333337,
+    "total_cycles": 424,
+    "us": 0.35333333333333333,
     "asbuilt_us": 0.33666666666666667,
     "rows_checked": 8192,
     "exact": true
@@ -2008,8 +1988,8 @@
      5,
      6
     ],
-    "total_cycles": 1084,
-    "us": 0.9033333333333333,
+    "total_cycles": 1176,
+    "us": 0.98,
     "asbuilt_us": 1.8333333333333333,
     "rows_checked": 8960,
     "exact": true
@@ -2019,8 +1999,8 @@
     "dies": [
      6
     ],
-    "total_cycles": 1484,
-    "us": 1.2366666666666668,
+    "total_cycles": 1589,
+    "us": 1.3241666666666667,
     "asbuilt_us": 2.3833333333333333,
     "rows_checked": 6912,
     "exact": true
@@ -2030,8 +2010,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -2041,8 +2021,8 @@
     "dies": [
      5
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -2052,8 +2032,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 1035,
-    "us": 0.8625,
+    "total_cycles": 1073,
+    "us": 0.8941666666666667,
     "asbuilt_us": 1.3958333333333333,
     "rows_checked": 608,
     "exact": true
@@ -2063,8 +2043,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 284,
-    "us": 0.23666666666666666,
+    "total_cycles": 308,
+    "us": 0.25666666666666665,
     "asbuilt_us": 0.23416666666666666,
     "rows_checked": 128,
     "exact": true
@@ -2074,8 +2054,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -2085,8 +2065,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -2096,8 +2076,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 497,
-    "us": 0.4141666666666667,
+    "total_cycles": 546,
+    "us": 0.45499999999999996,
     "asbuilt_us": 0.6491666666666667,
     "rows_checked": 12288,
     "exact": true
@@ -2108,8 +2088,8 @@
      37,
      38
     ],
-    "total_cycles": 915,
-    "us": 0.7625,
+    "total_cycles": 988,
+    "us": 0.8233333333333334,
     "asbuilt_us": 1.5025,
     "rows_checked": 8960,
     "exact": true
@@ -2120,8 +2100,8 @@
      37,
      38
     ],
-    "total_cycles": 1072,
-    "us": 0.8933333333333333,
+    "total_cycles": 1137,
+    "us": 0.9475,
     "asbuilt_us": 1.5883333333333334,
     "rows_checked": 6912,
     "exact": true
@@ -2131,8 +2111,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -2142,8 +2122,8 @@
     "dies": [
      37
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -2153,8 +2133,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 460,
-    "us": 0.38333333333333336,
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
     "asbuilt_us": 0.4008333333333333,
     "rows_checked": 448,
     "exact": true
@@ -2164,8 +2144,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -2175,8 +2155,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -2186,8 +2166,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 394,
-    "us": 0.32833333333333337,
+    "total_cycles": 424,
+    "us": 0.35333333333333333,
     "asbuilt_us": 0.33666666666666667,
     "rows_checked": 8192,
     "exact": true
@@ -2199,8 +2179,8 @@
      39,
      40
     ],
-    "total_cycles": 647,
-    "us": 0.5391666666666667,
+    "total_cycles": 697,
+    "us": 0.5808333333333333,
     "asbuilt_us": 0.9158333333333333,
     "rows_checked": 8960,
     "exact": true
@@ -2212,8 +2192,8 @@
      39,
      40
     ],
-    "total_cycles": 866,
-    "us": 0.7216666666666667,
+    "total_cycles": 911,
+    "us": 0.7591666666666667,
     "asbuilt_us": 1.1908333333333332,
     "rows_checked": 6912,
     "exact": true
@@ -2223,8 +2203,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -2234,8 +2214,8 @@
     "dies": [
      38
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -2245,8 +2225,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 765,
-    "us": 0.6375000000000001,
+    "total_cycles": 783,
+    "us": 0.6525,
     "asbuilt_us": 0.8983333333333333,
     "rows_checked": 480,
     "exact": true
@@ -2256,8 +2236,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 789,
-    "us": 0.6575,
+    "total_cycles": 833,
+    "us": 0.6941666666666667,
     "asbuilt_us": 1.7283333333333333,
     "rows_checked": 2048,
     "exact": true
@@ -2267,8 +2247,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 382,
-    "us": 0.31833333333333336,
+    "total_cycles": 411,
+    "us": 0.3425,
     "asbuilt_us": 0.33416666666666667,
     "rows_checked": 5120,
     "exact": true
@@ -2278,8 +2258,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 497,
-    "us": 0.4141666666666667,
+    "total_cycles": 546,
+    "us": 0.45499999999999996,
     "asbuilt_us": 0.6491666666666667,
     "rows_checked": 12288,
     "exact": true
@@ -2290,8 +2270,8 @@
      44,
      45
     ],
-    "total_cycles": 950,
-    "us": 0.7916666666666666,
+    "total_cycles": 1022,
+    "us": 0.8516666666666667,
     "asbuilt_us": 1.5275,
     "rows_checked": 8960,
     "exact": true
@@ -2302,8 +2282,8 @@
      44,
      45
     ],
-    "total_cycles": 1278,
-    "us": 1.065,
+    "total_cycles": 1363,
+    "us": 1.1358333333333335,
     "asbuilt_us": 1.9858333333333336,
     "rows_checked": 6912,
     "exact": true
@@ -2313,8 +2293,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 575,
-    "us": 0.4791666666666667,
+    "total_cycles": 573,
+    "us": 0.4775,
     "asbuilt_us": 0.4958333333333334,
     "rows_checked": 96,
     "exact": true
@@ -2324,8 +2304,8 @@
     "dies": [
      44
     ],
-    "total_cycles": 466,
-    "us": 0.38833333333333336,
+    "total_cycles": 472,
+    "us": 0.3933333333333333,
     "asbuilt_us": 0.4058333333333333,
     "rows_checked": 1152,
     "exact": true
@@ -2348,38 +2328,91 @@
    "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
    "rtl/v41die/ot_v41_retn_w17w10.sv",
    "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+   "rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv",
    "rtl/v41rom/ot_v41_bf16_lanes.sv",
    "rtl/v41rom/ot_v41_bf16_lanes2.sv",
    "rtl/v41rom/ot_v41_bmul2.sv",
    "rtl/v41rom/ot_v41_bterm.sv",
    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_bterm3_w10.sv",
+   "rtl/v41rom/ot_v41_bterm4_w10.sv",
    "rtl/v41rom/ot_v41_chain.sv",
    "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_chain3.sv",
+   "rtl/v41rom/ot_v41_chain4.sv",
    "rtl/v41rom/ot_v41_elem_pq_tags.sv",
    "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/v41rom/ot_v41_fadd2.sv",
    "rtl/v41rom/ot_v41_kreg.sv",
    "rtl/v41rom/ot_v41_ret.sv",
    "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
    "rtl/v41rom/ot_v41_rom_elem_w10.sv",
    "rtl/v41rom/ot_v41_segtree.sv",
-   "rtl/v41rom/ot_v41_segtree2.sv"
+   "rtl/v41rom/ot_v41_segtree2.sv",
+   "rtl/v41rom/ot_v41_segtree3.sv",
+   "rtl/v41rom/ot_v41_segtree4.sv",
+   "rtl/v41rom/ot_v41_segtree5.sv"
   ]
  },
- "note": "Closed PQ spine (PQ=1, S81+R93, exact). Adopt (flip verdict to ADOPT) when PQ1_R16 (one max-slew pin) and PQ1_R128 close in the route loop; RTL final.",
- "composed_if_adopted": {
-  "baseline_AR_tok_s": 1710.8,
-  "baseline_MTP_tok_s": 5005.9,
-  "AR_tok_s": 2056.3,
-  "MTP_tok_s": 5822.4,
-  "AR_gain_pct": 20.2,
-  "MTP_gain_pct": 16.3,
-  "note": "tools/dsrom_1m_allmeasured.py on main levers (draft, field_spine, head, router, su_hcpost, su_routeract) with this record set to ADOPT; not applied"
- },
- "physical_cost_note": "pair/element cost unchanged from levers/field.json physical_cost (+1.979 mm2/die, 0 dies); spine screen area in results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md",
+ "note": "PQ spine x DS q-element (ot_v41_rom_elem_qx_pq_w10 PQ=1 QX=10 QW=1, pair FILE SWAP rtl/v41die/swap/ot_v41_pair_pq_w17w10_qelem.sv) at GAP 32 / GUARD 202 / GSLACK 32. Replaces field_spine_pq's nodes when adopted (the S81 die's FP8/FP4 pairs are q-elements; field_spine_pq assumes the W10 element). Adoption waits on the routed PQ q-element (Z22, SS60/FF25) and the owner's go.",
  "field_wire_reprice": {
   "record": "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json",
   "sha256": "2879562821bb118f1b32a1591f7f329e74c4fd653a5d58de54a6b9ff44346074",
   "geom": "f157.68",
   "note": "CLAUDE DS-REPRICE 2026-10-06: node times re-priced from the r8 die's per-frame round trip (was 80 cycles a phase / once a PQ node); measured cycles unchanged"
- }
+ },
+ "composed_if_adopted": {
+  "rule": "tools/dsrom_1m_allmeasured.compose, recovery baseline, full-FEC links, current frame f157.68 (r8 field re-price); qelem_pq in place of field_spine_pq",
+  "main_headline": {
+   "AR_us": 592.466,
+   "AR_tok_s": 1687.9,
+   "MTP_tok_s": 4922.6
+  },
+  "main_plus_field_spine_pq": {
+   "AR_us": 463.443,
+   "AR_tok_s": 2157.8,
+   "MTP_tok_s": 6012.3
+  },
+  "main_plus_qelem_pq": {
+   "AR_us": 471.42,
+   "AR_tok_s": 2121.3,
+   "MTP_tok_s": 5930.8
+  },
+  "all_pending_with_field_spine_pq": {
+   "AR_us": 450.492,
+   "AR_tok_s": 2219.8,
+   "MTP_tok_s": 6141.6
+  },
+  "all_pending_with_qelem_pq": {
+   "AR_us": 458.469,
+   "AR_tok_s": 2181.2,
+   "MTP_tok_s": 6056.6
+  },
+  "delta_vs_field_spine_pq": {
+   "AR_us": 7.977,
+   "AR_pct": -1.69,
+   "MTP_pct": -1.36
+  },
+  "note": "not applied; the taller q-element frame's extra layer dies / stage hops are priced separately in results/rtl/dsrom_field_reprice_r8_20261006/compose.json"
+ },
+ "cycles_vs_field_spine_pq": {
+  "all_59_nodes_s81_wire": {
+   "field_spine_pq": 37808,
+   "qelem_pq": 39719,
+   "delta": 1911
+  },
+  "r8_reprice_f157_68": {
+   "field_spine_pq": 41413,
+   "qelem_pq": 43391,
+   "L20_field_spine_pq": 6541,
+   "L20_qelem_pq": 6885,
+   "L20_delta": 344
+  },
+  "why": "spine GAP 32 / GUARD 202 / GSLACK 32 (the q-element's 17-word configuration replay) against 12 / 180 / 6 for the W10 element; the spine applies them to every op, so the BF16-only nodes (wo_a +44, cmp.wk +24 cycles) slow too although their pairs keep the W10 element -- a per-op GAP by element class would recover them (not built)"
+ },
+ "owner_go": "Default-QELEM headline flip waits on the owner's go: this record stays PENDING_SSFF even after the Z22 route closes"
 }
