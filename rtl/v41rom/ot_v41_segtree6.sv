@@ -94,7 +94,7 @@ module ot_v41_segtree6 #(
     always @* for (int c = 0; c < NQ; c++) begin
         uq[c]  = !svc[c] && !fl[c][0];                                       // use_q
 `ifdef ST6_MUTANT_Q
-        byp[c] = fl[c][0] || (fl[c][1] && !svc[c]);                         // negative control: full queue ignored
+        byp[c] = fl[c][0] || (fl[c][2] && svc[c]);                          // negative control: one-entry bypass dropped
 `else
         byp[c] = fl[c][0] || (fl[c][1] && !svc[c]) || (fl[c][2] && svc[c]);  // qr + use_q == qw
 `endif
