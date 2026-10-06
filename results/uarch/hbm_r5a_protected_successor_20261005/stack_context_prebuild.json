@@ -91,7 +91,11 @@
     "configuration_setup_edges": 3,
     "configuration_service_release_sync_edges": 2,
     "configuration_initialization_not_per_fetch": true,
-    "per_token_40fetch_added_us": 0.14096,
+    "structural_per_token_40fetch_added_us": 0.14096,
+    "charged_added_ns_per_fetch": 3.334,
+    "charge_basis": "matched R4 minus R3 measured first-access",
+    "per_token_40fetch_added_us": 0.13336,
+    "measured_latency_does_not_grant_physical_clock_credit": true,
     "expression": "measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free",
     "first_access_criterion_ns": 140,
     "criterion_independent_of_token_gain": true,
@@ -111,7 +115,9 @@
         "first_access_gate_ns": 140.0,
         "criterion": "all SMs first-expert w1/w3 access, independent of composed token gain"
       },
-      "protection_pass": false
+      "original_R4_protection_pass": false,
+      "protection_pass": true,
+      "verified_protection_record": "results/rtl/hbm_accel_r5a_p2_20261005/stack_context_current.json"
     }
   },
   "targets": {
@@ -125,11 +131,11 @@
     },
     "qwen_hbm": {
       "applicable": true,
-      "added_ns_per_fetch": 3.524
+      "added_ns_per_fetch": 3.334
     },
     "v41_hbm": {
       "applicable": true,
-      "added_ns_per_fetch": 3.524
+      "added_ns_per_fetch": 3.334
     }
   },
   "clocks": {

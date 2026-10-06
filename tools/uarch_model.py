@@ -10367,6 +10367,9 @@ def hbm_r5a_p2_stack_context_model():
         for f,h in current['input_sha256'].items():
             if f.startswith(('rtl/hbm_accel/service/','rtl/gpu/w6/')) and hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=h:
                 raise ValueError('current stack gate belongs to different production RTL')
+    structural_ns=3/1.2+1.024
+    measured_delta_ns=None if r4 is None else round(r4['measured_first_access_worst_ns']-150.423,6)
+    charged_ns=structural_ns if measured_delta_ns is None else measured_delta_ns
     ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
         descriptor_code_and_valid=74,notice_dual_rail=2,
         PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
@@ -10404,7 +10407,11 @@ def hbm_r5a_p2_stack_context_model():
             fixed_added_ns=3/1.2+1.024,configuration_setup_edges=3,
             configuration_service_release_sync_edges=2,
             configuration_initialization_not_per_fetch=True,
-            per_token_40fetch_added_us=40*(3/1.2+1.024)/1000,
+            structural_per_token_40fetch_added_us=40*structural_ns/1000,
+            charged_added_ns_per_fetch=charged_ns,
+            charge_basis='matched R4 minus R3 measured first-access' if measured_delta_ns is not None else 'prebuild structural edges',
+            per_token_40fetch_added_us=40*charged_ns/1000,
+            measured_latency_does_not_grant_physical_clock_credit=True,
             expression='measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free',
             first_access_criterion_ns=140,criterion_independent_of_token_gain=True,
             current_R3_first_access_ns=150.423,estimated_context_first_access_ns=153.947,
@@ -10413,10 +10420,11 @@ def hbm_r5a_p2_stack_context_model():
                 source_commit=r4['source_commit'],record=str(r4path.relative_to(ROOT)),
                 ordinary_cases=len(ordinary),ordinary_pass=ordinary_pass,
                 first_access_ns=r4['measured_first_access_worst_ns'],
-                matched_R3_delta_ns=round(r4['measured_first_access_worst_ns']-150.423,6),
+                matched_R3_delta_ns=measured_delta_ns,
                 component_gain_us=r4['measured_r5a_gain_us_vs_central'],
-                performance=r4['performance'],protection_pass=r4['protection_pass'])),
-        targets={k:dict(applicable=k.endswith('_hbm'),added_ns_per_fetch=3/1.2+1.024 if k.endswith('_hbm') else 0)
+                performance=r4['performance'],original_R4_protection_pass=r4['protection_pass'],
+                protection_pass=protection_pass,verified_protection_record=str(current_path.relative_to(ROOT)) if current is not None else None)),
+        targets={k:dict(applicable=k.endswith('_hbm'),added_ns_per_fetch=charged_ns if k.endswith('_hbm') else 0)
             for k in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
         clocks=dict(stream_ps=833.333333333,service_ps=1024,setup_uncertainty_ps=60,
             hold_uncertainty_ps=25,source_owned_register_relations=True,actual_CTS_and_loads_pending=True),
