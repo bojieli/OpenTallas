@@ -107,3 +107,4 @@ rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv
 rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv
 rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_c12_stage.sv
 rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv
+rtl/hbm_accel/integration/ot_hbm_pcwb_p2_return_bind.sv
