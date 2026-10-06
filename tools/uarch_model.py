@@ -7911,7 +7911,7 @@ def qwen_code_pair_margin_price():
     """Margin-first CODE pair (rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv), owner rule
     2026-10-06. Priced from the RTL register inventory; the headline cost uses the leaf model's measured
     exposed-edge fraction (results/uarch/qwen_hbm_code_payload_leaf_20261005/model.json, Hubble 15,287 edges).
-    Revision 2: control tags and visible metadata as duplicated plain registers (no SECDED decode/encode in the
+    Revision 3 (rev2 plus a corrected-data / DMR slot-enable register before the output flops). Revision 2: control tags and visible metadata as duplicated plain registers (no SECDED decode/encode in the
     one-cycle loop or before the receipt pins), W6 decode split at a registered syndrome before the output flops."""
     banks, ports = 5, 2
     central_request = ports * 2 + ports * 2 * 13 + ports * 2 + 2 * 13 + 256 + 32      # DMR valid/row, data, checks
@@ -7920,15 +7920,16 @@ def qwen_code_pair_margin_price():
     syndrome = ports * 4 * 8
     control_tags, metadata = 59, 192 + 12 + 5 + 13 + 12
     state_delta = 2 * (control_tags + metadata) - (72 + 288 + 72)   # vs leaf control+metadata codes + pipeline code
-    added_ff = central_request + banks * ports * per_bank + output + syndrome + state_delta
+    steer = ports * 256 + 2 * (banks * ports + ports) + 2 * ports       # corrected data, DMR slot enables, flags
+    added_ff = central_request + banks * ports * per_bank + output + syndrome + state_delta + steer
     edge_fraction = 6.54150585464774e-05
-    added_read_edges = 5
-    return dict(status="PRICED_BEFORE_ROUTE", revision=2, default_enabled=False,
+    added_read_edges = 6
+    return dict(status="PRICED_BEFORE_ROUTE", revision=3, default_enabled=False,
                 added_read_edges=added_read_edges, added_write_edges_exposed=0,
                 added_write_edges_internal=2, II=1, backpressure=False,
                 added_ff=added_ff, added_ff_breakdown=dict(central_request=central_request,
                     per_bank_kept=banks * ports * per_bank, mux_transport_output=output, syndrome=syndrome,
-                    duplicated_state_vs_secded=state_delta),
+                    duplicated_state_vs_secded=state_delta, corrected_data_and_slot_enables=steer),
                 codecs=dict(payload_encode64=4, payload_syndrome_for_flags_decode64=8,
                             payload_syndrome_split=8, payload_correction=8,
                             control_and_metadata_secded="replaced by duplicate-and-compare (fail-closed)"),
@@ -7939,7 +7940,10 @@ def qwen_code_pair_margin_price():
                 route_period_ps=770, signoff_period_ps=833.333, accept_ss_ps=40, accept_ff_ps=15,
                 prelayout_probe_r0="SECDED control loop -543 ps, metadata decode->visible pins -439 ps, "
                                    "decode->rom_rd flops -402 ps at 770 ps (EPYC1 probe_r0, floorplan stage)",
-                fault_semantics="fault-free cycle-exact (+5 edges on responses); upsets of tags/metadata fail closed "
+                prelayout_probe_r1="rev2 at 770 ps: SRAM->capture -10.4 ps (clk->q bound), syndrome->rom_rd +36.0, "
+                                   "slot select->rom_rd +39.7 (below the +60 plan) -> rev3 adds the corrected-data/"
+                                   "slot-enable stage (+1 edge)",
+                fault_semantics="fault-free cycle-exact (+6 edges on responses); upsets of tags/metadata fail closed "
                                 "(no silent correction); new acceptance inhibited one edge after a detection; "
                                 "uncorrectable or post-detection responses never delivered valid")
 

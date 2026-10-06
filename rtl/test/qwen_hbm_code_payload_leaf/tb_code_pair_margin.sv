@@ -9,7 +9,7 @@
 // must never deliver the response valid and must raise the sticky fault.
 module tb_code_pair_margin;
   import ot_hbm_r14_pkg::*;
-  localparam integer LAT_DELTA=5, ROWS=4496;
+  localparam integer LAT_DELTA=6, ROWS=4496;
   reg clk=0, por_n=0;
   always #416.6665 clk=~clk;
   reg wr_v=0, wr_span_bound=0, wr_kind=0, visible_r=0;

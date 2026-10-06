@@ -5,7 +5,7 @@
 //
 // Fault-free behaviour: rd_r, wr_r and visible_* are cycle-identical to the
 // original context; rom_rd, rsp_v, rd_corrected and rd_uncorrectable are the
-// original values delayed by exactly LAT_DELTA=5 edges (II1, no backpressure).
+// original values delayed by exactly LAT_DELTA=6 edges (II1, no backpressure).
 // Same-edge read/write order is preserved because read and write requests
 // take the same two register edges to the macro pins.
 //
@@ -16,7 +16,9 @@
 //   E(t+3) bank-local protected capture (assembled 288-bit SECDED code, no enable)
 //   E(t+4) coded 5:1 bank mux register (DMR one-hot select)
 //   E(t+5) coded transport register + registered syndrome + UE/corrected flags
-//   E(t+6) W6 correction, virtual-bank steer, fault gate -> output flops at pins
+//   E(t+6) W6 correction -> corrected-data register; slot enables (DMR) from
+//          virtual bank, valid and fault gate
+//   E(t+7) AND steer into the output flops at the pins
 // Protection: payload stays SECDED-coded until the output stage (decode split
 // at the syndrome register); pipeline tags, visible bit, visible metadata and
 // every derived select/request register are duplicated in kept shadow modules
@@ -271,6 +273,9 @@ module ot_qwen_hbm_code_pair_margin #(
     reg [31:0] syn5 [0:1];        // registered W6 syndrome+overall parity per 72-bit word
     reg [2659:0] rom_rd_q;
     reg [1:0] rsp_v_q, corr_q, unc_q;
+    reg [255:0] cd6 [0:1];
+    reg [9:0] en6_a; wire [9:0] en6_b, en6_next;
+    reg [1:0] v6_a, corr6, unc6; wire [1:0] v6_b, v6_next;
     wire [1:0] sel_err;
     wire [1:0] unc_now, corr_now;
     wire [255:0] out_data [0:1];
@@ -324,16 +329,25 @@ module ot_qwen_hbm_code_pair_margin #(
 `else
     wire gate=fault || (|unc5) || (|sel_err);
 `endif
+    for(genvar p=0;p<2;p=p+1) begin : steer
+      for(genvar b=0;b<BANKS;b=b+1) begin : slot
+        assign en6_next[p*5+b]=osel_a[p][b] && osel_b[p][b] && vld5_a[p] && vld5_b[p] && !gate;
+      end
+      assign v6_next[p]=vld5_a[p] && vld5_b[p] && !gate;
+      always @(posedge clk) cd6[p]<=out_data[p];                 // E(t+6)
+    end
+    ot_qwen_hbm_code_shadow_r #(.W(12)) u_en_b(.clk(clk),.por_n(por_n),.d({en6_next,v6_next}),.q({en6_b,v6_b}));
+    wire out_err=(en6_a!=en6_b) || (v6_a!=v6_b);
     always @(posedge clk or negedge por_n)
-      if(!por_n) begin rom_rd_q<=0; rsp_v_q<=0; corr_q<=0; unc_q<=0; end
+      if(!por_n) begin en6_a<=0; v6_a<=0; corr6<=0; unc6<=0; rom_rd_q<=0; rsp_v_q<=0; corr_q<=0; unc_q<=0; end
       else begin
-        for(integer p=0;p<2;p=p+1) begin
+        en6_a<=en6_next; v6_a<=v6_next; corr6<=corr5; unc6<=unc5;   // E(t+6)
+        for(integer p=0;p<2;p=p+1) begin                             // E(t+7)
           for(integer b=0;b<BANKS;b=b+1)
-            rom_rd_q[(p*5+b)*266+:266]<=(osel_a[p][b] && osel_b[p][b] && vld5_a[p] && vld5_b[p] && !gate) ?
-                                       {10'b0,out_data[p]} : 266'b0;
-          rsp_v_q[p]<=vld5_a[p] && vld5_b[p] && !gate;
+            rom_rd_q[(p*5+b)*266+:266]<=(en6_a[p*5+b] && en6_b[p*5+b]) ? {10'b0,cd6[p]} : 266'b0;
+          rsp_v_q[p]<=v6_a[p] && v6_b[p];
         end
-        corr_q<=corr5; unc_q<=unc5;
+        corr_q<=corr6; unc_q<=unc6;
       end
     assign rom_rd=rom_rd_q; assign rsp_v=rsp_v_q;
     assign rd_corrected=corr_q; assign rd_uncorrectable=unc_q;
@@ -354,7 +368,7 @@ module ot_qwen_hbm_code_pair_margin #(
     ot_qwen_hbm_code_shadow_r #(.W($bits(metadata_t))) u_meta_b(.clk(clk),.por_n(por_n),
       .d(write_fire ? {wr_owned.id,wr_owned.physical_tag,wr_owned.beat,wr_row,wr_column} : meta_b),.q(meta_b));
     wire detect=control_bad || (c.visible && metadata_bad) || (|request_bad) || format_bad ||
-                (|bank_err) || (|sel_err) || (|unc5) || (fq_a!=fq_b);
+                (|bank_err) || (|sel_err) || out_err || (|unc5) || (fq_a!=fq_b);
     ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || detect),.q(fq_b));
     always @(posedge clk or negedge por_n) begin
       if(!por_n) begin ctl_a<=0; meta_a<=0; fq_a<=0; end
