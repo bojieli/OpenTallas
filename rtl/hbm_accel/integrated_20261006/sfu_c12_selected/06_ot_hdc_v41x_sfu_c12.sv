@@ -634,7 +634,7 @@ endmodule
 // of rtl/hdc/v41/ot_hdc_softplus.sv (tools/hdc_golden_v41.softplus, .sqrt), on
 // the fast units:
 //     t = exp(-|x|)            49     ot_hbm_selected_c12__ot_hdc_v41x_exp
-//     u = t / (t + 2)          3 + 19 ot_hdc_qadd, ot_hbm_selected_c12__ot_hdc_v41x_fdiv
+//     u = t / (t + 2)          3 + 19 ot_hbm_selected_c12__ot_hdc_qadd, ot_hbm_selected_c12__ot_hdc_v41x_fdiv
 //     u2 = u * u               3
 //     p = 1/17; p = p*u2 + 1/(2i+1), i = 7 .. 0      8 x (3 + 3)
 //     l = (u * p) * 2          3 + 3
