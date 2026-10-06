@@ -32,10 +32,10 @@ module dsfd_sp_gather #(parameter integer ROOTD = 128, parameter integer ROOT_BL
 );
     localparam integer NR = 128;
     // ---- resets: 2-flop synchronisers per domain
-    reg [1:0] rs_q, rv_q;
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    reg [1:0] rst_s, rv_q;                  // rst_s[1]: the margin SDC's rst_mcp2 cell name
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_q <= 2'b00; else rv_q <= {rv_q[0], 1'b1};
-    wire rs_n = rs_q[1], rv_n = rv_q[1];
+    wire rs_n = rst_s[1], rv_n = rv_q[1];
     // ---- lanes: pin registers, root order
     reg [NR-1:0] lv;
     reg [NR*68-1:0] lw;

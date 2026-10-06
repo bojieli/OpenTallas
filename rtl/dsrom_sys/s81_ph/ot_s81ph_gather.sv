@@ -41,12 +41,12 @@ module ot_s81ph_gather #(
     genvar g;
     wire [1:0] tst_col [0:3];
     generate if (ROOT_BLK == 2) begin : g_tile
-        // columns 0, 1 = roots 0..31, 32..63 (west lanes; column 1's lane passes through column 0),
-        // columns 3, 2 = roots 96..127, 64..95 (east lanes; column 2's lane passes through column 3, mirrored tiles);
-        // root (column c, row k) = 32 c + k; its result leaves the column top in chain slot 31 - k
+        // columns 0, 1 = roots 0..31, 32..63 (west lanes; column 1's lane passes through column 0: lt_wi -> lt_eo),
+        // columns 3, 2 = roots 96..127, 64..95 (east lanes; column 2's lane passes through column 3: lt_ei -> lt_wo);
+        // every tile R0, sel tied per column; root (column c, row k) = 32 c + k leaves the column top in slot 31 - k
         localparam integer NROW = 32;
         localparam integer CW = 53 * NROW;
-        wire [69*NROW-1:0] lthru_w, lthru_e;     // lane thru: column 0 -> 1, column 3 -> 2
+        wire [69*NROW-1:0] lthru_w, lthru_e;     // column 0 -> 1, column 3 -> 2
         genvar c, k;
         for (c = 0; c < 4; c = c + 1) begin : g_c
             wire [CW*(NROW+1)-1:0] ch;
@@ -56,19 +56,16 @@ module ot_s81ph_gather #(
             for (k = 0; k < NROW; k = k + 1) begin : g_k
                 localparam integer R = 32 * c + k;
                 localparam integer RT = (c == 0) ? 32 + k : 64 + k;   // lane passed through (columns 0, 3)
-                wire [68:0] li, lti, lto;
-                if (c == 0 || c == 3) begin : g_own
-                    assign li = {lane_w[68*R +: 68], lane_v[R]};
-                    assign lti = {lane_w[68*RT +: 68], lane_v[RT]};
-                    if (c == 0) begin : g_w assign lthru_w[69*k +: 69] = lto; end
-                    else begin : g_e assign lthru_e[69*k +: 69] = lto; end
-                end else begin : g_in
-                    assign li = (c == 1) ? lthru_w[69*k +: 69] : lthru_e[69*k +: 69];
-                    assign lti = 69'd0;
-                end
-                ot_s81ph_root_tile #(.ROOTD(ROOTD), .NS(NROW), .NL(1)) u_t (.ck(clk), .rs(rsc[k]), .rso(rsc[k+1]),
-                    .li(li), .lti(lti), .lto(lto), .ci(ch[CW*k +: CW]), .co(ch[CW*(k+1) +: CW]),
-                    .fi(fs[2*k +: 2]), .fo(fs[2*(k+1) +: 2]));
+                wire [68:0] li_w, li_e, lt_wi, lt_ei, lt_eo, lt_wo;
+                assign li_w  = (c == 0) ? {lane_w[68*R +: 68], lane_v[R]} : (c == 1) ? lthru_w[69*k +: 69] : 69'd0;
+                assign li_e  = (c == 3) ? {lane_w[68*R +: 68], lane_v[R]} : (c == 2) ? lthru_e[69*k +: 69] : 69'd0;
+                assign lt_wi = (c == 0) ? {lane_w[68*RT +: 68], lane_v[RT]} : 69'd0;
+                assign lt_ei = (c == 3) ? {lane_w[68*RT +: 68], lane_v[RT]} : 69'd0;
+                if (c == 0) begin : g_tw assign lthru_w[69*k +: 69] = lt_eo; end
+                if (c == 3) begin : g_te assign lthru_e[69*k +: 69] = lt_wo; end
+                ot_s81ph_root_tile #(.ROOTD(ROOTD), .NS(NROW)) u_t (.ck(clk), .rs(rsc[k]), .rso(rsc[k+1]),
+                    .sel((c >= 2) ? 1'b1 : 1'b0), .li_w(li_w), .li_e(li_e), .lt_wi(lt_wi), .lt_eo(lt_eo), .lt_ei(lt_ei),
+                    .lt_wo(lt_wo), .ci(ch[CW*k +: CW]), .co(ch[CW*(k+1) +: CW]), .fi(fs[2*k +: 2]), .fo(fs[2*(k+1) +: 2]));
                 assign row_v[R] = ch[CW*NROW + 53*(NROW-1-k)];
                 assign row_d[52*R +: 52] = ch[CW*NROW + 53*(NROW-1-k) + 1 +: 52];
             end

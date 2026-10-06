@@ -3,8 +3,12 @@
     output wire [1695:0] co,
     input wire [1:0] fi,
     output wire [1:0] fo,
-    input wire [68:0] li,
-    input wire [68:0] lti,
-    output wire [68:0] lto,
+    input wire [68:0] li_e,
+    input wire [68:0] li_w,
+    input wire [68:0] lt_ei,
+    output wire [68:0] lt_eo,
+    input wire [68:0] lt_wi,
+    output wire [68:0] lt_wo,
     input wire [0:0] rs,
-    output wire [0:0] rso
+    output wire [0:0] rso,
+    input wire [0:0] sel

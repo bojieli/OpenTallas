@@ -135,10 +135,15 @@ module ot_s81ph_ret_root_p #(
     wire [31:0] x_d = sv ? sum : h_d;
     wire        x_e = sv ? (st_e | err != 2'd0) : h_e;
     wire [31:0] x_t0 = sv_c[0] ? st_c[0] : h_t_c[0];
+    reg [D-1:0] ins_r;                       // slot inserted by the previous decision (one-hot)
+    (* keep *) reg [31:0] w_t_c [0:NC-1];   // its tag / data / error, kept copies (each writes D/NC slots)
+    (* keep *) reg [31:0] w_d_c [0:NC-1];
+    (* keep *) reg [NC-1:0] w_e_c;
     reg  [D-1:0] m1;
     always @* begin
         for (k = 0; k < D; k = k + 1)
-            m1[k] = bv[k] && sibling(bt[k], sv_c[k / SG] ? st_c[k / SG] : h_t_c[k / SG]);
+            // a slot inserted by the previous decision holds its tag in w_t_c until the end of this cycle
+            m1[k] = bv[k] && sibling(ins_r[k] ? w_t_c[k / SG] : bt[k], sv_c[k / SG] ? st_c[k / SG] : h_t_c[k / SG]);
     end
     reg s2_v, s2_cmp, s2_sp, s2_e; reg [31:0] s2_d;
     (* keep *) reg [31:0] s2_t_c [0:NC-1];
@@ -153,7 +158,6 @@ module ot_s81ph_ret_root_p #(
     end
 
     // ------------------------------------------------------------ S2: decision
-    reg [D-1:0] ins_r;                       // slot inserted by the previous decision (one-hot)
 `ifdef S81PH_MUT_NOFWD
     wire [D-1:0] mm = s2_m & bv;                                   // MUTANT: no forwarding of the previous insert
 `else
@@ -194,7 +198,10 @@ module ot_s81ph_ret_root_p #(
         end
     always @(posedge clk) begin
         for (k = 0; k < D; k = k + 1)
-            if (dec_ins && fr_oh[k]) begin bt[k] <= s2_t_c[k / SG]; bd[k] <= s2_d; be[k] <= s2_e; end
+            // buffer data written one cycle after the decision (root_m3 floorplan: decision -> 128 x 66 write
+            // enables = -319 ps); valid bits (bv) still update at the decision
+            if (ins_r[k]) begin bt[k] <= w_t_c[k / SG]; bd[k] <= w_d_c[k / SG]; be[k] <= w_e_c[k / SG]; end
+        for (c = 0; c < NC; c = c + 1) begin w_t_c[c] <= s2_t_c[c]; w_d_c[c] <= s2_d; w_e_c[c] <= s2_e; end
         a3_oh <= hit_oh; a3_d <= s2_d; a3_e <= s2_e; a3_t <= s2_par; a3_right <= s2_right;
         r_row <= s2_t0[28:13]; r_pos <= s2_t0[31:29]; r_fp32 <= s2_d; r_e <= s2_e;
         r_bf16 <= ({1'b0, s2_d} + 33'h7FFF + {32'd0, s2_d[16]}) >> 16;
