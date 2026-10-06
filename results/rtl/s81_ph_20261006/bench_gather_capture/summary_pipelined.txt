@@ -45,3 +45,17 @@ DONE
 == run_p4_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=20 timeouts=0 mismatching_roots=0 RESULT PASS 0err
 DONE
 UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
+## t1: gather ROOT_BLK 2 (4 x 32 abutted ot_s81ph_root_tile chains) + capture cap_p
+== run_t1_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=32 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_m1.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=128 RESULT FAIL 0err
+== run_t1_m2.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=2 RESULT FAIL 0err
+== run_t1_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=61 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=63 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=62 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=37 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=8 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=51 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_t1_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=50 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0

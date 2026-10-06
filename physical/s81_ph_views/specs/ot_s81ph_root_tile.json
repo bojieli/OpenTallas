@@ -1,0 +1,8 @@
+{"master": "ot_s81ph_root_tile", "w_um": 237.624, "h_um": 124.2, "domain": "stream_1p2",
+ "note": "abutted chain tile of dsfd_sp_gather (ROOT_BLK 2): ci/co at identical x (column chain), li (W) and lto (E) at identical y (lane thru to the next column); W = 0.024 mod 0.048 so the MY-mirrored east columns stay on track",
+ "ports": [["ci", 1696, "input", "S", "M5", 2, 0.5], ["co", 1696, "output", "N", "M5", 2, 0.5],
+           ["ck", 1, "input", "S", "M5", 1, 0.02], ["rs", 1, "input", "S", "M5", 1, 0.03],
+           ["fi", 2, "input", "S", "M5", 2, 0.97],
+           ["rso", 1, "output", "N", "M5", 1, 0.03], ["fo", 2, "output", "N", "M5", 2, 0.97],
+           ["li", 69, "input", "W", "M4", 2, 0.3], ["lti", 69, "input", "W", "M4", 2, 0.7],
+           ["lto", 69, "output", "E", "M4", 2, 0.3]]}

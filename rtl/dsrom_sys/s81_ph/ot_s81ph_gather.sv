@@ -16,6 +16,7 @@ module ot_s81ph_gather #(
     parameter integer ROOTD = 128,
     parameter integer NT    = 12,           // trunks (status pairs)
     parameter integer ROOT_BLK = 0          // 1: each root is the hardened ot_s81ph_root_blk (own pin registers)
+                                            // 2: 4 columns x 32 abutted ot_s81ph_root_tile chains (NR 128)
 ) (
     input  wire              clk,
     input  wire              rst_n,             // synchronised, active low
@@ -38,7 +39,46 @@ module ot_s81ph_gather #(
     (* keep *) reg [NG-1:0] rst_c;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_c <= {NG{1'b0}}; else rst_c <= {NG{1'b1}};
     genvar g;
-    generate for (g = 0; g < NR; g = g + 1) begin : g_r
+    wire [1:0] tst_col [0:3];
+    generate if (ROOT_BLK == 2) begin : g_tile
+        // columns 0, 1 = roots 0..31, 32..63 (west lanes; column 1's lane passes through column 0),
+        // columns 3, 2 = roots 96..127, 64..95 (east lanes; column 2's lane passes through column 3, mirrored tiles);
+        // root (column c, row k) = 32 c + k; its result leaves the column top in chain slot 31 - k
+        localparam integer NROW = 32;
+        localparam integer CW = 53 * NROW;
+        wire [69*NROW-1:0] lthru_w, lthru_e;     // lane thru: column 0 -> 1, column 3 -> 2
+        genvar c, k;
+        for (c = 0; c < 4; c = c + 1) begin : g_c
+            wire [CW*(NROW+1)-1:0] ch;
+            wire [2*(NROW+1)-1:0] fs;
+            wire [NROW:0] rsc;
+            assign ch[CW-1:0] = {CW{1'b0}}; assign fs[1:0] = 2'b00; assign rsc[0] = rst_c[c];
+            for (k = 0; k < NROW; k = k + 1) begin : g_k
+                localparam integer R = 32 * c + k;
+                localparam integer RT = (c == 0) ? 32 + k : 64 + k;   // lane passed through (columns 0, 3)
+                wire [68:0] li, lti, lto;
+                if (c == 0 || c == 3) begin : g_own
+                    assign li = {lane_w[68*R +: 68], lane_v[R]};
+                    assign lti = {lane_w[68*RT +: 68], lane_v[RT]};
+                    if (c == 0) begin : g_w assign lthru_w[69*k +: 69] = lto; end
+                    else begin : g_e assign lthru_e[69*k +: 69] = lto; end
+                end else begin : g_in
+                    assign li = (c == 1) ? lthru_w[69*k +: 69] : lthru_e[69*k +: 69];
+                    assign lti = 69'd0;
+                end
+                ot_s81ph_root_tile #(.ROOTD(ROOTD), .NS(NROW), .NL(1)) u_t (.ck(clk), .rs(rsc[k]), .rso(rsc[k+1]),
+                    .li(li), .lti(lti), .lto(lto), .ci(ch[CW*k +: CW]), .co(ch[CW*(k+1) +: CW]),
+                    .fi(fs[2*k +: 2]), .fo(fs[2*(k+1) +: 2]));
+                assign row_v[R] = ch[CW*NROW + 53*(NROW-1-k)];
+                assign row_d[52*R +: 52] = ch[CW*NROW + 53*(NROW-1-k) + 1 +: 52];
+            end
+            assign tst_col[c] = fs[2*NROW +: 2];
+        end
+        assign rv = row_v; assign rf = {NR{1'b0}};
+        always @(posedge clk or negedge rst_n) if (!rst_n) busy_l <= {NR{1'b0}};
+                                              else busy_l <= {{(NR-4){1'b0}}, tst_col[3][1], tst_col[2][1], tst_col[1][1], tst_col[0][1]};
+    end else begin : g_roots
+    for (g = 0; g < NR; g = g + 1) begin : g_r
         wire [67:0] w = lane_w[68*g +: 68];
         if (ROOT_BLK != 0) begin : g_blk
             wire [52:0] o; wire f;
@@ -62,13 +102,15 @@ module ot_s81ph_gather #(
             always @(posedge clk) rdq <= {re[g], rpos[3*g +: 3], rrow[16*g +: 16], rfp[32*g +: 32]};
             assign row_v[g] = rvq; assign row_d[52*g +: 52] = rdq;
         end
+    end
+        assign tst_col[0] = 2'b00; assign tst_col[1] = 2'b00; assign tst_col[2] = 2'b00; assign tst_col[3] = 2'b00;
     end endgenerate
     reg [NR-1:0] cflt;
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin g_fault <= 1'b0; g_busy <= 1'b0; g_live <= 1'b0; cflt <= {NR{1'b0}}; end
         else begin
-            for (i = 0; i < NR; i = i + 1) cflt[i] <= rf[i] | (lane_v[i] & lane_w[68*i + 67]);
+            for (i = 0; i < NR; i = i + 1) cflt[i] <= (ROOT_BLK == 2) ? (i < 4 && tst_col[i % 4][0]) : (rf[i] | (lane_v[i] & lane_w[68*i + 67]));
             g_fault <= g_fault | (|cflt);
             for (i = 0; i < NT; i = i + 1) if (trunk_st[2*i + 1]) g_fault <= 1'b1;
             g_busy <= |busy_l;
