@@ -557,8 +557,62 @@
   },
   "hfd_stn_r11": {
    "kind": "stations",
-   "status": "missing",
-   "instances": 12
+   "status": "closed",
+   "instances": 12,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r11",
+   "lef": "hfd_stn_r11.lef",
+   "lib": {
+    "ss": "hfd_stn_r11_ss.lib",
+    "ff": "hfd_stn_r11_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "RVTN",
+     "RVTP"
+    ],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    }
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r11",
+    "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r11 top=physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv DW=48.792 DH=127.416 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0"
+    ],
+    "ss_setup_ps": 21.96,
+    "ff_hold_ps": 447.61,
+    "drc": 0,
+    "closes_signoff": true,
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   }
   },
   "hfd_stn_r12": {
    "kind": "stations",
@@ -1211,7 +1265,7 @@
   },
   "hfd_stn_r26": {
    "kind": "stations",
-   "status": "interim-not-closed",
+   "status": "closed",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r26",
    "lef": "hfd_stn_r26.lef",
@@ -1250,18 +1304,18 @@
     }
    },
    "source": {
-    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r26",
+    "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r5d55_hfd_stn_r26",
     "SOURCE_COMMIT": "43dabde4d1dfcdbd89638be2f82e5c2ae827d87b",
-    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src6 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
     "exit": [
      "rc=0",
      "corner_rc=0",
      "export_rc=0",
      "check_rc=0"
     ],
-    "ss_setup_ps": 40.02,
-    "ff_hold_ps": 445.46,
-    "drc": 2,
+    "ss_setup_ps": 27.47,
+    "ff_hold_ps": 440.12,
+    "drc": 0,
     "closes_signoff": true,
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc",
@@ -1654,9 +1708,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 4,
-  "closed": 21,
-  "missing": 25,
+  "interim-not-closed": 3,
+  "closed": 23,
+  "missing": 24,
   "reservation": 2
  }
 }
