@@ -278,18 +278,27 @@ def config_mk(name, nick, die, macros, extra):
 HOPS = r"""# front hop flops, FIRM (tools/hbm_accel_smh_physical.py); asap7 has no tapcells, rows alternate orientation
 set ::ot_blk [ord::get_db_block]
 set ::ot_rows {}
-foreach r [$::ot_blk getRows] { lappend ::ot_rows [list [lindex [$r getOrigin] 1] [$r getOrient]] }
-set ::ot_rows [lsort -integer -index 0 $::ot_rows]
+# cut_rows splits a row around the macros: one entry per y
+set ::ot_ry [dict create]
+foreach r [$::ot_blk getRows] { dict set ::ot_ry [lindex [$r getOrigin] 1] [$r getOrient] }
+foreach y [lsort -integer [dict keys $::ot_ry]] { lappend ::ot_rows [list $y [dict get $::ot_ry $y]] }
 proc ::ot_place {re xlo xhi ylo yhi} {
+    set dbu [$::ot_blk getDbUnitsPerMicron]
+    set x0 [expr {int(round(1.08 * $dbu))}]
+    set sw [expr {int(round(0.054 * $dbu))}]
     set names {}
+    set occ [dict create]
     foreach i [$::ot_blk getInsts] {
         set n [$i getName]
-        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $n }
+        if {[regexp $re [string map {"\\" ""} $n]] && [string match *DFF* [[$i getMaster] getName]]} { lappend names $i; continue }
+        if {[$i isPlaced] || [$i getPlacementStatus] eq "FIRM"} {
+            set bb [$i getBBox]
+            if {[$bb yMin] >= $ylo * $dbu - 1 && [$bb yMin] <= $yhi * $dbu} {
+                dict lappend occ [$bb yMin] [list [$bb xMin] [$bb xMax]]
+            }
+        }
     }
-    set names [lsort $names]
-    set dbu [$::ot_blk getDbUnitsPerMicron]
-    set px [expr {int(1.62 * $dbu)}]
-    set k 0
+    set names [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $names]
     set rows {}
     set par 0
     foreach r $::ot_rows {
@@ -298,29 +307,42 @@ proc ::ot_place {re xlo xhi ylo yhi} {
         if {$par % 2 == 0} { lappend rows $r }
         incr par
     }
+    set k 0
     set n [llength $names]
     foreach r $rows {
-        for {set x [expr {int($xlo * $dbu)}]} {$x + $px <= int($xhi * $dbu)} {incr x $px} {
-            if {$k >= $n} { break }
-            set xs [expr {1080 * $dbu / 1000 + (($x - 1080 * $dbu / 1000) / (54 * $dbu / 1000)) * (54 * $dbu / 1000)}]
-            place_inst -name [lindex $names $k] -location [list [expr {double($xs) / $dbu}] [expr {double([lindex $r 0]) / $dbu}]] -orientation [lindex $r 1] -status FIRM
+        set y [lindex $r 0]
+        set busy [expr {[dict exists $occ $y] ? [dict get $occ $y] : {}}]
+        set x [expr {$x0 + (int($xlo * $dbu) - $x0 + $sw - 1) / $sw * $sw}]
+        while {$k < $n} {
+            set inst [lindex $names $k]
+            set w [[$inst getMaster] getWidth]
+            set w2 [expr {$w + 12 * $sw}]   ;# room for the resizer to upsize a FIRM flop in place
+            if {$x + $w2 > int($xhi * $dbu)} { break }
+            set hit 0
+            foreach iv $busy {
+                if {$x < [lindex $iv 1] + $sw && $x + $w2 > [lindex $iv 0] - $sw} { set hit [lindex $iv 1]; break }
+            }
+            if {$hit} { set x [expr {$x0 + ($hit + $sw - $x0 + $sw - 1) / $sw * $sw}]; continue }
+            place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double($y) / $dbu}]] -orientation [lindex $r 1] -status FIRM
+            set x [expr {$x + $w2}]
             incr k
         }
     }
     if {$k < $n} { error "ot_place $re: placed $k of $n in ($xlo $xhi $ylo $yhi)" }
     puts "ot_place $re: $n flops"
 }
-# retire chain (column 0's aligned valid -> issue): 3 stages from the back-end edge upward
-ot_place {^u_sv\.g_s\[0\]} 100 140 270 290
-ot_place {^u_sv\.g_s\[1\]} 100 140 480 500
-ot_place {^u_sv\.g_s\[2\]} 100 140 690 710
+# retire chain (column 0's aligned valid -> issue): 3 stages from the back-end edge upward, the upper two in the
+# ring block's central channel (x 151 .. 273)
+ot_place {^u_sv\.g_s\[0\]} 160 200 270 290
+ot_place {^u_sv\.g_s\[1\]} 170 210 480 500
+ot_place {^u_sv\.g_s\[2\]} 170 210 690 710
 # x-write bundle of the far row (row 1): A above the ring block, M in the side bands beside it
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 790 830
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 790 830
-ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 2 50 530 590
-ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 375 430 530 590
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 785 860
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 785 860
+ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 3 47 470 660
+ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 378 430 470 660
 # the request skid beside the south pins
-ot_place {^u_rsk\.} 135 175 2 8
+ot_place {^u_rsk\.} 120 200 3 12
 """
 
 
@@ -390,6 +412,8 @@ def cmd_block(a):
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
     extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": a.max_layer, "HOLD_SLACK_MARGIN": a.hold_margin,
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_block.tcl", "MACRO_PLACE_HALO": "3 3"}
+    if a.grt_allow:
+        extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
         pins = tile_pins(w, h, a.variant)
@@ -556,6 +580,8 @@ def main(argv=None):
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
     b.add_argument("--need", default="40")
     b.add_argument("--hold-margin", default="10", help="ORFS hold repair margin (ps); sign-off stays 25 ps at FF")
+    b.add_argument("--grt-allow", action="store_true", help="global route may finish with overflow and leave it "
+                   "to detailed route (sign-off still requires zero DRC)")
     b.add_argument("--cores", default="16")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
