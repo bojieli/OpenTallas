@@ -23,7 +23,10 @@ ap.add_argument('--receipt', default=os.environ.get('FHCONE_RECEIPT'), required=
 ap.add_argument('--rect-strips', action='store_true', default=os.environ.get('FHCONE_RECT_STRIPS') == '1')
 ap.add_argument('--shared-partition', choices=('none', 'comb', 'receivers'),
                 default=os.environ.get('FHCONE_SHARED_PARTITION', 'none'))
+ap.add_argument('--vertical-seams', action='store_true',
+                default=os.environ.get('FHCONE_VERTICAL_SEAMS') == '1')
 a = ap.parse_args()
+assert not a.vertical_seams or a.shared_partition != 'none'
 assert Path(a.input).resolve() != Path(a.output).resolve()
 assert not Path(a.output).exists()
 db = odb.dbDatabase.create()
@@ -186,6 +189,15 @@ if a.shared_partition != 'none':
         x2 = origin[0] + math.ceil((right[0] + 5000 - origin[0]) / sx) * sx
         y1 = origin[1] + math.ceil((macros[row * 8 + col][1] + 33000 - origin[1]) / sy) * sy
         y2 = origin[1] + math.floor((min(left[3], right[3]) - origin[1]) / sy) * sy
+        if a.vertical_seams:
+            # The real intermacro gap is free below the lane strip too.
+            # Stay outside BOTH fixed macro halos; no macro or pin moves.
+            ml, mr = macros[row * 8 + col], macros[row * 8 + col + 1]
+            x1 = origin[0] + math.ceil((ml[2] + 2000 - origin[0]) / sx) * sx
+            x2 = origin[0] + math.floor((mr[0] - 2000 - origin[0]) / sx) * sx
+            y1 = origin[1] + math.ceil((max(ml[1], mr[1]) - 1000 - origin[1]) / sy) * sy
+            assert x1 >= ml[2] + 2000 and x2 <= mr[0] - 2000
+        assert x1 < x2 and y1 < y2
         name = f'fh_shared_r{row}_c{col}'
         region = odb.dbRegion.create(b, name)
         region.setRegionType('EXCLUSIVE')
@@ -197,6 +209,7 @@ if a.shared_partition != 'none':
             g.addInst(i)
         shared_groups[(row, col)] = g
     receipt.update(shared_partition=a.shared_partition, local_result_receivers=local_receivers,
+                   vertical_seams=a.vertical_seams,
                    argmax_pair_registers_actual={pair:len(cells) for pair,cells in pair_registers.items()},
                    shared_regions=[])
 for lane, g in sorted(groups.items()):
