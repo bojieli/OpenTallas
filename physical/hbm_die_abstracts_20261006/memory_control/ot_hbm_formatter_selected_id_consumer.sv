@@ -22,6 +22,9 @@ module ot_hbm_formatter_selected_id_consumer #(
  input wire sink_rsp_v,output wire sink_rsp_r,input wire [636:0] sink_rsp,
  output wire consumer_reverse_v,input wire consumer_reverse_r,
  output wire [72:0] consumer_reverse_frame,output wire consumer_sink_ACK_drained,
+ // Qualify BOTH helper source-reverse valid and its returned ready with this
+ // actual adapter drain. The helper must not release formatter context earlier.
+ output wire consumer_adapter_drained,
  output wire retained,output wire [72:0] held_frame,
  output wire [5:0] captured_words,checked_sink_words,
  output wire warm_ack,fault,ce,due
@@ -31,6 +34,7 @@ module ot_hbm_formatter_selected_id_consumer #(
   assign start_r=0;assign caller_pair_v=0;assign caller_pair=0;assign caller_pair_token17=0;
   assign consumer_pairs_r=0;assign sink_req_v=0;assign sink_req=0;assign sink_rsp_r=0;
   assign consumer_reverse_v=0;assign consumer_reverse_frame=0;assign consumer_sink_ACK_drained=0;
+  assign consumer_adapter_drained=0;
   assign retained=0;assign held_frame=0;assign captured_words=0;assign checked_sink_words=0;
   assign warm_ack=0;assign fault=0;assign ce=0;assign due=0;
  end else begin:on
@@ -72,6 +76,7 @@ module ot_hbm_formatter_selected_id_consumer #(
   assign consumer_pairs_r=usable&&state==LOAD&&context_match&&pair_match&&ad_rsp_r;
   wire merger_permit=usable&&state==LOAD&&context_match&&!core_busy;
   wire core_go=usable&&state==MERGE&&context_match&&!merge_started&&!core_busy;
+  wire ad_release_v=usable&&state==ADAPTER_RELEASE&&context_match;
   // Original bodies and reduction/order logic remain byte-identical.
   ot_hbm_accel_index_order_adapter #(.ENABLE(1),.N(96),.NPER(512)) u_order(
    .clk(clk_sm),.por_n(por_n),.start(start_accept),.start_ready(ad_start_ready),
@@ -85,7 +90,7 @@ module ot_hbm_formatter_selected_id_consumer #(
    .rsp_tag(consumer_pairs[529:514]),.rsp_checked(consumer_pairs[1]),.rsp_uncorrectable(consumer_pairs[0]),
    .merger_load_permit(merger_permit),.ld_valid(ad_ld_v),.ld_id(ad_ld_id),.ld_rank(ad_ld_rank),.ld_word(ad_ld_word),.ld_data(ad_ld_data),
    .ordered_loaded(ad_loaded),.merger_done(core_done),
-   .release_v(usable&&state==ADAPTER_RELEASE&&context_match),.release_r(ad_release_r),
+   .release_v(ad_release_v),.release_r(ad_release_r),
    .release_job(held_frame[31:0]),.release_gen(held_frame[35:32]),.release_pos(held_frame[72:53]),
    .result_published(acked==32&&!pending&&merge_finished),.source_reverse_done(reverse_accepted),.done(ad_done),.fault(ad_fault));
   ot_coll_topk_merge #(.N(96),.NMAX(512),.LW(16),.LDW(1),.P(64),.PF(16),.DIG(4)) u_merge(
@@ -118,6 +123,8 @@ module ot_hbm_formatter_selected_id_consumer #(
   assign consumer_reverse_v=usable&&state==REVERSE&&context_match&&debt_clear;
   assign consumer_reverse_frame=held_frame;
   assign consumer_sink_ACK_drained=consumer_reverse_v;
+  assign consumer_adapter_drained=usable&&state==RETIRE&&reverse_accepted&&
+   debt_clear&&!ad_retained;
   assign retained=active||ad_retained||core_busy||fault;
   assign ce=control_ce||fatal_dec[64]||(active&&|landing_ces);
   assign due=control_due||fatal_dec[65]||(active&&|landing_ues);
@@ -143,7 +150,7 @@ module ot_hbm_formatter_selected_id_consumer #(
    if(req_accept)n[89]=1;
    if(rsp_accept)begin n[89]=0;n[88:83]=acked+1'b1;n[113:110]=0;if(acked==31)n[76:73]=REVERSE;end
    if(consumer_reverse_v&&consumer_reverse_r)begin n[108]=1;n[76:73]=ADAPTER_RELEASE;end
-   if(state==ADAPTER_RELEASE&&ad_release_r)n[76:73]=RETIRE;
+   if(ad_release_v&&ad_release_r)n[76:73]=RETIRE;
    if(state==RETIRE&&!ad_retained&&!gather_retained)n=0;
   end
   ot_hbm_accel_gu_metadata #(.WIDTH(192)) control(
