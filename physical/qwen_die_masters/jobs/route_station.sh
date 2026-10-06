@@ -7,18 +7,24 @@ set -uo pipefail
 NAME=$1; KIND=$2; SRC=${SRC:?}; R=${R:?}; W=$R/$NAME; mkdir -p $W; cd $SRC
 D=/src/physical/qwen_die_masters
 if [ "$KIND" = cst ]; then
-  P=(--param TAP=1 --param SPLIT=0 --pin-region '^(a_d|a_r)=top:4-48' --pin-region '^(b_d|b_r)=bottom:4-48'
+  P=(--param DW=508 --param TAP=1 --param SPLIT=0 --pin-region '^(a_d|a_r)=top:4-48' --pin-region '^(b_d|b_r)=bottom:4-48'
      --pin-region '^(t_d|t_r|c_d|c_r|clk|rst_n)(\[|$)=left:8-96')
   INTER='a_d*,a_r,b_d*,b_r'
+elif [ "$KIND" = lsth ]; then
+  # qfd_lst_h_e / _w (20 copies, 34.536 x 97.176): one registered 1056-bit link stage, W -> E
+  P=(--param DW=1056 --param TAP=0 --param SPLIT=0 --pin-region '^(a_d|a_r|clk|rst_n)(\[|$)=left:4-93'
+     --pin-region '^(b_d|b_r|t_d|t_r|c_d|c_r)(\[|$)=right:4-93')
+  INTER='a_d*,a_r,b_d*,b_r'; FW=34.536; FH=97.176
 else
-  P=(--param TAP=1 --param SPLIT=1 --pin-region '^(a_d|a_r|clk|rst_n)(\[|$)=right:8-96' --pin-region '^(b_d|b_r)=left:8-96'
+  P=(--param DW=508 --param TAP=1 --param SPLIT=1 --pin-region '^(a_d|a_r|clk|rst_n)(\[|$)=right:8-96' --pin-region '^(b_d|b_r)=left:8-96'
      --pin-region '^(t_d|t_r)=top:4-48' --pin-region '^(c_d|c_r)=bottom:4-48')
   INTER='a_d*,a_r,b_d*,b_r,t_d*,t_r,c_d*,c_r'
 fi
 export OT_ORFS_NUM_CORES=8 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 echo "$(date -Is) start $NAME $KIND src=$(cat SOURCE_COMMIT 2>/dev/null)" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_die_station --source rtl/physical/ot_qwen_die_station.sv \
-  --param DW=508 "${P[@]}" --die-area 0 0 52.68 103.656 --core-area 2.16 2.16 50.52 101.496 \
+  "${P[@]}" --die-area 0 0 ${FW:-52.68} ${FH:-103.656} \
+  --core-area 2.16 2.16 $(python3 -c "print(round(${FW:-52.68}-2.16,3), round(${FH:-103.656}-2.16,3))") \
   --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr \
   --place-density 0.6 --hold-margin-ns 0.02 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
