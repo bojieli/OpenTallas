@@ -5,6 +5,8 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import shlex
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,6 +20,8 @@ def main():
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
+    parser.add_argument('--resume-resized-sha256',
+                        help='Reuse the mapped netlist and physical stages through validated3_4')
     args = parser.parse_args()
     job = args.job_root.resolve()
     import hbm_cp_parent_context as context
@@ -43,7 +47,8 @@ def main():
                           ('--output', job/'physical.json'),
                           ('--nickname-tag', 'harvey_cp_fourcut_context_r1')]:
         argv[argv.index(option)+1] = str(value)
-    argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1']
+    argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
+             '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     record = dict(schema='hbm.cp.fourcut.context-route.v1', argv=argv,
         checked_sources=checked, exact_gate=model['exact_measurement'],
         exact_sha256=sha(ROOT/model['exact_measurement']),
@@ -67,6 +72,22 @@ def main():
         record['retained_canonical_sha256'] = sha(canonical)
         record['canonical_frontend_reused'] = True
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
+    frozen = {}
+    if args.resume_resized_sha256:
+        checkpoints = list((case/'results').rglob('3_4_place_resized.odb'))
+        assert len(checkpoints) == 1 and sha(checkpoints[0]) == args.resume_resized_sha256
+        for path in checkpoints[0].parent.iterdir():
+            stage = path.name.split('_')
+            if path.suffix not in ('.odb', '.sdc', '.v', '.rtlil') or 'failed' in path.name:
+                continue
+            if stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in ('1','2','3','4')):
+                frozen[path] = sha(path)
+        mapped = checkpoints[0].parent/'1_2_yosys.v'
+        assert mapped in frozen
+        record.update(synthesis_required=False, synthesis_reused=True,
+            resume_resized_sha256=args.resume_resized_sha256,
+            upstream_sha256={str(p.relative_to(case)):h for p,h in frozen.items()})
+        (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     shutil.copyfile(hook, case/'cts_membership.tcl')
     patch = '''from pathlib import Path
 import hashlib,json
@@ -82,7 +103,17 @@ p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
     original_run = driver.run
     def run(command, **kwargs):
         if command[:3] == ['docker', 'run', '--rm'] and 'make DESIGN_CONFIG=/work/config.mk' in command[-1]:
+            if frozen and '1_2_yosys.v && chmod a+w' in command[-1]:
+                assert sha(mapped) == frozen[mapped]
+                return subprocess.CompletedProcess(command, 0,
+                    stdout='REUSED_VALIDATED_FOURCUT_MAPPED_NETLIST '+sha(mapped)+'\n', stderr='')
             command = list(command)
+            if frozen:
+                keep=[]
+                for path in frozen:
+                    keep.extend(['-o','/work/'+str(path.relative_to(case))])
+                command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
+                    'make '+shlex.join(keep)+' DESIGN_CONFIG=/work/config.mk',1)
             if canonical:
                 command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
                     'make -o /work/'+str(canonical.relative_to(case))+' DESIGN_CONFIG=/work/config.mk',1)
@@ -90,6 +121,8 @@ p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
         return original_run(command, **kwargs)
     driver.run = run
     rc = driver.main(argv)
+    for path,digest in frozen.items():
+        assert sha(path) == digest, 'Earlier physical stage changed: '+str(path)
     if canonical:
         assert sha(canonical) == args.canonical_sha256, 'Retained canonical frontend changed'
     (job/'route.exit').write_text(str(rc)+'\n')

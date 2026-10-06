@@ -1,0 +1,7 @@
+read_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_4_place_resized.odb
+source /src/physical/hbm_cp_parent_context_20261005/cts_membership.tcl
+write_db /qualification/bound_before_dpl.odb
+detailed_placement
+check_placement -verbose
+write_db /qualification/qualified_dpl.odb
+puts OT_CP_PRE_DPL_MEMBERSHIP_PASS

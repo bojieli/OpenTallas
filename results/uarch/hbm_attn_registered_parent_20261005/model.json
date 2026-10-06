@@ -60,6 +60,17 @@
   ],
   "macro_replicas": 16,
   "new_macro_replicas": 0,
+  "retained_banks": {
+    "row_instances": 4,
+    "head_instances": 16,
+    "implementation": "kept hierarchical row/head bank instances; wire keep alone actually merged firstmapping to7019FF",
+    "required_total_mapped_FF_count": 36158,
+    "root_and_fixture_FF": 3238,
+    "row_FF": 6472,
+    "head_launch_and_local_POR_FF": 25904,
+    "receiver_FF": 544,
+    "requirement": "confirm actual synthesis instance counts before contextual clock qualification"
+  },
   "finite_cell_space": {
     "core_um": [
       1349.082,
