@@ -6,7 +6,7 @@
   "body_source": "0dbeae18d",
   "failed_generator_preserved": "76158a8b3; evidence410492892",
   "SDC": "physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc",
-  "SDC_sha256": "28d09d1114a4b7f33c96bd26213c81f35cb479e7d37625144b079d94f6362024",
+  "SDC_sha256": "5a6e4c187fd98c472bbdb8d5fe802426b1dd5eec207f654d9702c9fdd8c6ab36",
   "bench": "rtl/test/dsrom_wavefront/tb_wfc_protected_stage.sv",
   "bench_sha256": "0fe4eb2faf4a5895ed03ff50688fe76f4a0258f7e5b120afa70c252bc429ec33",
   "bench_waveforms": "both start high at commonepoch;50pct;rounded833.334/1111.112 ps replaced by exact owner833.333333/1111.111111 preserving3:4",
@@ -14,7 +14,9 @@
   "actual_body_CTS_and_RC": "Remain required; final propagatednetwork, namedcornerSPEF. No ideal body NETWORK assumption.",
   "fault_reset_and_other_IO": "Real untied inputs retained; no delays/loads fabricated or paths waived. Unconstrained/coverage must be reported and any positive internal margin cannot qualify externalIO.",
   "margin_reporting": "WC max and BC min clockpair reg2reg fullclockpaths. Slack remaining after60/25 is allowable combined source insertion/skew/jitter/electrical/extraCTS cost for that path, NOT measured source allowance. Negative slack means zero positive budget. No avg/borrowedphase/slack.",
-  "Zeno_recipe": "Use --body-clock-sdc absolute source/body_ideal_inputs.sdc with existing ownedbodyu55 run.py. Existing append60/25 now matches policy and needs no driver change for this diagnostic option.",
+  "Zeno_recipe": "Current Zeno driver sources owner SDC then clock_inputs.sdc; explicit owner_ideal_input_body branch preserves installed conditional clock contract without requesting IP numbers.",
   "API_validation": "Tcl contract execution only; no OpenSTA/API/physical qualification claimed",
-  "dispatch": "Only Zeno/Kant sole fresh64GiB16CPU unchanged admission; preserve existing healthyjobs. Not dispatched byTuring."
+  "dispatch": "Only Zeno/Kant sole fresh64GiB16CPU unchanged admission; preserve existing healthyjobs. Not dispatched byTuring.",
+  "binder_sha256": "783729661eabe1c570007daa6558cb55c060678cddf487a2f81935de55579202",
+  "driver_sequence_check": "Tcl two-source sequence PASS; no actual OpenSTA API qualification"
 }

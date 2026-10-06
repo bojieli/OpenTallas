@@ -9,6 +9,7 @@ foreach p {fast_clk slow_clk clock_source_fault cold_n fast_rst_n slow_rst_n} {
  }
 }
 set wfc_body_conditional 1
+set wfc_clock_boundary_mode owner_ideal_input_body
 set wfc_clock_source_qualified 0
 set wfc_other_engine_IO_bound 0
 set wfc_headline_allowed 0
