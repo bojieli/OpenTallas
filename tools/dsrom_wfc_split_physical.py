@@ -65,19 +65,43 @@ set_clock_uncertainty -hold 25 [get_clocks io_clk]
 set_input_delay {io} -clock io_clk $ins
 set_output_delay {io} -clock io_clk [all_outputs]
 """
-# --die-skew S (route SDC only): the neighbour's register sits on the same die tree but its clock may arrive
-# up to S ps before / after ours.  IO is timed against core_clk's PROPAGATED arrival at one of the element's
-# own boundary registers (-reference_pin: per corner, so the BC hold repair is not driven by an SS latency
-# estimate), widened by S plus the element's own insertion spread (SPREAD, so any register may be the far
-# one) -- the route then sees what the die150 signoff mode checks: SS setup and FF/SS hold with the die skew.
+# --die-skew S: the neighbour's register sits on the same die tree but its clock may arrive up to S ps before /
+# after ours.  Floorplan / place: io_clk carries the estimated insertion widened by S (setup direction only
+# matters there).  From CTS on (clocks propagated) the repair stages time the IO against core_clk's arrival at
+# one of the element's own boundary registers (-reference_pin, so per corner -- an SS latency estimate would
+# over-pad BC hold on every output), widened by S plus the element's insertion spread (SPREAD_PS).  OpenSTA
+# cannot re-read a written -reference_pin SDC (Signal 11 on the next timing update), so the hooks apply it
+# after the stage's load and put the io_clk form back before the stage writes its SDC.  The CTS repair runs in
+# the POST_CTS hook (SKIP_CTS_REPAIR_TIMING = 1) with the die model; the GRT repair between the GRT hooks.
 SPREAD_PS = 60
-SDC_IO_REF = """# die IO budget: IO vs core_clk at a boundary register, +-{skew} ps die skew + {spread} ps insertion spread
-set refp [lindex [get_pins -quiet {{g_link_reg.u_rx.pv*/CLK}}] 0]
-if {{$refp == ""}} {{ set refp [lindex [all_registers -edge_triggered -clock_pins] 0] }}
-set_input_delay -max {imax} -clock core_clk -reference_pin $refp $ins
-set_input_delay -min {imin} -clock core_clk -reference_pin $refp $ins
-set_output_delay -max {imax} -clock core_clk -reference_pin $refp [all_outputs]
-set_output_delay -min {imin} -clock core_clk -reference_pin $refp [all_outputs]
+HOOK_APPLY = """# CLAUDE WFC die IO model (propagated clocks): IO vs core_clk at a boundary register, +-{skew} +- {spread} ps
+set_propagated_clock [all_clocks]
+set wfc_ins [lsearch -all -inline -not [all_inputs] [get_ports clk]]
+catch {{unset_input_delay -clock [get_clocks io_clk] $wfc_ins}}
+catch {{unset_output_delay -clock [get_clocks io_clk] [all_outputs]}}
+set wfc_refp [lindex [get_pins -quiet {{g_link_reg.u_rx.pv*/CLK}}] 0]
+if {{$wfc_refp == ""}} {{ set wfc_refp [lindex [all_registers -edge_triggered -clock_pins] 0] }}
+puts "WFC_IO_MODEL apply ref [get_full_name $wfc_refp]"
+set_input_delay -max {imax} -clock core_clk -reference_pin $wfc_refp $wfc_ins
+set_input_delay -min {imin} -clock core_clk -reference_pin $wfc_refp $wfc_ins
+set_output_delay -max {imax} -clock core_clk -reference_pin $wfc_refp [all_outputs]
+set_output_delay -min {imin} -clock core_clk -reference_pin $wfc_refp [all_outputs]
+"""
+HOOK_RESTORE = """# CLAUDE WFC: back to the io_clk form before the stage writes its SDC
+set wfc_ins [lsearch -all -inline -not [all_inputs] [get_ports clk]]
+unset_input_delay -clock [get_clocks core_clk] $wfc_ins
+unset_output_delay -clock [get_clocks core_clk] [all_outputs]
+set_input_delay {io} -clock io_clk $wfc_ins
+set_output_delay {io} -clock io_clk [all_outputs]
+puts "WFC_IO_MODEL restore"
+"""
+HOOK_POST_CTS = """source /work/wfc_io_apply.tcl
+repair_timing_helper
+set result [catch {{ log_cmd detailed_placement }} msg]
+if {{ $result != 0 }} {{ error "Detailed placement failed in CTS: $msg" }}
+check_placement -verbose
+log_cmd estimate_parasitics -placement
+source /work/wfc_io_restore.tcl
 """
 SDC_TAIL = """set_load 2.0 [all_outputs]
 set_max_fanout 32 [current_design]
@@ -164,18 +188,24 @@ def cmd_prep(a):
     for kv in a.orfs_var:
         k, v = kv.split("=", 1)
         lines.append(f"export {k} = {v}")
+    if a.die_skew:
+        lines += ["export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/wfc_post_cts.tcl",
+                  "export PRE_GLOBAL_ROUTE_TCL = /work/wfc_io_apply.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/wfc_io_restore.tcl"]
+        io0 = round(0.2 * PERIOD_PS, 1)
+        (case / "wfc_io_apply.tcl").write_text(HOOK_APPLY.format(skew=a.die_skew, spread=SPREAD_PS,
+                                               imax=round(io0 + a.die_skew + SPREAD_PS, 1), imin=round(io0 - a.die_skew - SPREAD_PS, 1)))
+        (case / "wfc_io_restore.tcl").write_text(HOOK_RESTORE.format(io=io0))
+        (case / "wfc_post_cts.tcl").write_text(HOOK_POST_CTS.format())
     (case / "config.mk").write_text("\n".join(lines) + "\n")
     io = round(0.2 * PERIOD_PS, 1)
     rp = a.route_period or PERIOD_PS
     for name, per in (("constraint.sdc", rp), ("signoff.sdc", PERIOD_PS)):
         if a.ideal_io:
             ioc = SDC_IDEAL_IO.format(io=io)
-        elif a.die_skew and name == "constraint.sdc":
-            ioc = SDC_IO_REF.format(skew=a.die_skew, spread=SPREAD_PS, imax=round(io + a.die_skew + SPREAD_PS, 1),
-                                    imin=round(io - a.die_skew - SPREAD_PS, 1))
         else:
             lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
-            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
+            sk = a.die_skew if name == "constraint.sdc" else 0
+            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin - sk, lmax=lmax + sk, lmid=(lmin + lmax) // 2)
         # the route may be over-constrained (owner margin rule: ~770 ps); signoff is always at 833 ps
         (case / name).write_text(SDC.format(p=per, io_clk=ioc) + SDC_TAIL)
     src = a.src.resolve()
