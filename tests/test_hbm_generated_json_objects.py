@@ -32,5 +32,33 @@ class Objects(unittest.TestCase):
         with self.assertRaises(RuntimeError):R.build_one(self.compiler,self.s,o,[],'exact')
         self.assertTrue(o.with_suffix('.log').is_file())
         self.assertFalse(o.with_suffix('.receipt.json').exists())
+    def test_harness_include_change_rejects_old_object(self):
+        include=self.d/'inputs.inc';include.write_text('#define VALUE 73\n')
+        self.s.write_text('#include "inputs.inc"\nint main() { return VALUE; }\n')
+        o=self.d/'harness.o';envelope=R.digest(R.harness_dependencies(self.s))
+        R.build_one(self.compiler,self.s,o,[],envelope)
+        include.write_text('#define VALUE 17\n')
+        changed=R.digest(R.harness_dependencies(self.s))
+        self.assertNotEqual(envelope,changed)
+        with self.assertRaises(ValueError):R.build_one(self.compiler,self.s,o,[],changed)
+    def test_completed_exact_archive_reuses_without_cpp_compile(self):
+        from unittest.mock import patch
+        include=self.d/'include';include.mkdir()
+        model=dict(job=dict(prefix='Vleaf',cflags=[]),json=str(self.d/'Vleaf.json'),
+                   sources=[str(self.s)],runtime=[],include=str(include),options={'use_timing':False},
+                   pins={str(self.s):R.sha(self.s)},tool_pins={})
+        old=self.d/'old';old.mkdir();archiver=Path(shutil.which('ar'))
+        result=R.build([model],old,self.compiler,archiver,1)
+        R.write(old/'inputs.json',dict(models=[model],compiler=R.sha(self.compiler),archiver=R.sha(archiver)))
+        R.write(old/'terminal.json',dict(exit=0,**result))
+        out=self.d/'new';out.mkdir()
+        with patch.object(R,'build_one',side_effect=AssertionError('unchanged child recompiled')):
+            reused=R.build([model],out,self.compiler,archiver,1,reuse_archives=old)
+        self.assertEqual(list(result['libraries'].values()),list(reused['libraries'].values()))
+        changed=dict(model,pins={str(self.s):'changed ABI/source'})
+        other=self.d/'changed';other.mkdir()
+        with patch.object(R,'build_one',side_effect=AssertionError('required changed-child compile')):
+            with self.assertRaisesRegex(AssertionError,'required changed-child'):
+                R.build([changed],other,self.compiler,archiver,1,reuse_archives=old)
 
 if __name__=='__main__':unittest.main()
