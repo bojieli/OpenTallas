@@ -65,7 +65,7 @@ def _isa_bits():
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
-             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False):
+             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -93,7 +93,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.SLAB_GROUP_H = slab_group_h
     v.CDC = cdc
     v.STRIP_SPAN = strip_span or r18
-    v.R18 = r18
+    v.R18 = r18 or r19
+    v.R19 = r19
+    if r19:
+        v.TILE_SLOT = (v.KV_TILE_W, v.TILE_SLOT[1])
+        v.TILE_BODY_W = v.KV_TILE_W - v.CORR
+    r18 = r18 or r19
     if r18:
         if not (cdc and slab_group_h):
             raise ValueError('r18 builds on the r17 die (--slab-group-h and --cdc)')
@@ -881,6 +886,13 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
     def masters(model, k=1, port_bits=None):
         by = {i.name: i for i in model['insts']}
         out = base(model, k, port_bits)
+        if 'qfd_tile_e' in out:
+            # r19: the east-array tile = the (wrapped) west tile with the landing in / out faces swapped
+            t, te = out['qfd_tile'], out['qfd_tile_e']
+            te.ports = {k_: v_ for k_, v_ in t.ports.items()}
+            te.order = list(t.order)
+            te.ports['li'] = ('face',) + t.ports['li'][1:2] + ('E',) + t.ports['li'][3:]
+            te.ports['lo'] = ('face',) + t.ports['lo'][1:2] + ('W',) + t.ports['lo'][3:]
         hub = out['qfd_hub']
         if 'lsw' not in hub.ports:
             hub.face('lsw', v.LINK_TRACKS, 'W', 'M4', hub.h / 8, 1)
@@ -1809,6 +1821,8 @@ def main(argv=None):
     ap.add_argument('--slab-pg', type=float, default=None, help='r17: M8/M9 PG coverage per net over the band slabs '
                     '(default: the tile-field coverage)')
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
+    ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
+                    'fabric from per-stack landing crossbars (KV reconciliation)')
     ap.add_argument('--r18', action='store_true', help='r18: die-top lint Q1-Q14 (no row engines, CDC clusters, clock '
                     'nets, role variants)')
     ap.add_argument('--strip-span', action='store_true', help='r17d: strip/CDC/controller PG regions per stack span')
@@ -1838,7 +1852,8 @@ def main(argv=None):
                     io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
-                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18)
+                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
+                    r19=a.r19)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:

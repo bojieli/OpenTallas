@@ -83,6 +83,14 @@ STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack
 # endpoint grown to take the 32 CDC core sides and the KV-new write; kept under the lfifo_<stack> name); an IO-band
 # CDC slot (io_xfifo, IOX_W long) beside the collective; the PHY clk / rst_n leave the dfi bundle
 R18 = False
+# r19 (KV reconciliation, main e1701384d): tiles KEEP their KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2 = 8 KiB a
+# tile, 12 MiB a die) and take the landing words over a per-tile-row landing fabric (KVL_BITS a row, one registered
+# hop a tile) from each stack's landing crossbar (the qfd_kvc frame, re-sorting the 32 PC landing words of its stack
+# to the rows it serves); the tile slot widens so the full tile's mapped-cell ceiling still fits (KV_TILE_W)
+R19 = False
+KVL_BITS = 768                 # a row's landing bits a cycle: 24 rows x 768 >= 64 PCs x 283 a half array
+KV_TILE_W = 319.68             # (125,000 / 0.5 + 10 ROM + 2 KV macros + 10,000 halo) / 1291.68 + corridor, on 0.432
+KV_MACRO = 'ot_sram_1r1w_128x256_m1_r2c2'
 CDC_HO = 319                   # h_cred 3 + h_wv 1 + h_wsec 24 + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_fault 1
 CDC_CO = 283                   # l_v 1 + l_sec 17 + l_row 8 + l_data 256 + l_pop 1 (l_* = the element's W face)
 KVC_W = 96.768
@@ -177,7 +185,7 @@ def build(spine_w=None, tree_mode='central'):
 def _build(spine_w, tree_mode):
     m = r2()
     fp = m['floorplan']
-    assert fp['tile_slot_um'] == list(TILE_SLOT) and abs(fp['tile_corridor_um'] - CORR) < 1e-9
+    assert (R19 or fp['tile_slot_um'] == list(TILE_SLOT)) and abs(fp['tile_corridor_um'] - CORR) < 1e-9
     notes = []
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
@@ -228,7 +236,7 @@ def _build(spine_w, tree_mode):
     for c in range(COLS):
         xc = col_x(c)
         for r in range(ROWS):
-            insts.append(Inst(f't_{c}_{r}', 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
+            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= 32) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
                               kind='tile', region='tile_field'))
             sy = row_y[r] + dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
             insts.append(Inst(f's_{c}_{r}', 'qfd_cst', xc + TILE_BODY_W, sy, STATION[0] - SHAVE, STATION[1] - SHAVE,
@@ -398,7 +406,12 @@ def _build(spine_w, tree_mode):
             yy = sy0
             renges[st] = []
             if R18:
-                lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc', x_strip, sy0, STRIP_W - SHAVE, span - SHAVE, orient,
+                ky0, kh = sy0, span
+                if R19:
+                    # the landing crossbar spans the 12 tile rows its stack serves (S: rows 0-11, N: rows 12-23)
+                    ky0 = row_y[0] if si == 0 else row_y[12]
+                    kh = (row_y[11] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[12])
+                lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc_n' if (R19 and si == 1) else 'qfd_kvc', x_strip, ky0, STRIP_W - SHAVE, kh - SHAVE, orient,
                                   kind='link_fifo', region='strip')
                 insts.append(lfifos[st])
                 continue
@@ -573,6 +586,16 @@ def buses(m):
             st = f'{side}{"SN"[si]}'
             B.append((f'lnkh_{si}{side}_f', 'link_channel', LINK_TRACKS, [prev, (m['lfifos'][st].name, 'lk')]))
     # in-strip fan, controller ports, PHY DFI
+    if R19:
+        # per-row landing fabric: stack crossbar -> the row's first tile -> ... -> the tile beside the spine
+        for side in 'WE':
+            cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
+            for r in range(ROWS):
+                st = f'{side}{"S" if r < 12 else "N"}'
+                prev = (m['lfifos'][st].name, f'r{r % 12}')
+                for c in cols:
+                    B.append((f'kvl_{side}{r}_{c}', 'kv_land', KVL_BITS, [prev, (f't_{c}_{r}', 'li')]))
+                    prev = (f't_{c}_{r}', 'lo')
     for st, res in m['renges'].items():
         if R18:
             for p, cd in enumerate(m['cdcs'][st]):
@@ -668,10 +691,20 @@ def masters(m, k=1, port_bits=None):
     tw, th = TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE
     sy = dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
     t = mk('qfd_tile', tw, th, 7, 'W12 ROM tile re-frame (10 x ot_rom_4096x266_m8, cell ceiling 125,000 um2 at 0.5): '
-           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets')
+           'internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets' +
+           ('; r19 FULL tile: + KV slice 2 x ot_sram_1r1w_128x256_m1_r2c2 (8 KiB) and the landing-fabric hop (768 b '
+            'registered in / out, the per-tile landing merge)' if R19 else ''))
+    if R19:
+        t.face('li', KVL_BITS, 'W', 'M4', th * 0.78, 1)
+        t.face('lo', KVL_BITS, 'E', 'M4', th * 0.78, 1)
     t.face('tap', TAP_BITS, 'E', 'M4', sy + STATION[1] / 2, 2)
     for i, p in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
         t.area(p, TREE_BITS, 40.0 + 60.0 * i, th / 2, 2)
+    if R19:
+        te = mk('qfd_tile_e', tw, th, 7, t.note + ' (east-array variant: landing flows west)')
+        te.ports, te.order = {k_: v_ for k_, v_ in t.ports.items()}, list(t.order)
+        te.ports['li'] = ('face', KVL_BITS, 'E', 'M4', th * 0.78, 1)
+        te.ports['lo'] = ('face', KVL_BITS, 'W', 'M4', th * 0.78, 1)
     s = mk('qfd_cst', STATION[0] - SHAVE, STATION[1] - SHAVE, 3, 'corridor pipeline station (637 flops + 3 tap '
            'repeater banks): standard cells M1-M3, die routing above')
     s.face('a', CORRIDOR_BITS, 'N', 'M5', s.w / 2, 1)
@@ -740,13 +773,24 @@ def masters(m, k=1, port_bits=None):
             for o in [o for o in c.order if o == 'kv']:
                 c.order.remove(o)
                 c.ports.pop(o)
-            kv = mk('qfd_kvc', STRIP_W - SHAVE, span - SHAVE, 7, 'STREAM4 KV landing concentrator (32 PC landing '
-                    'words -> the stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
-            kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0] - m['lfifos'][st0].y), 1)
-            for p, cd in enumerate(cds):
-                yc = cd.y - m['lfifos'][st0].y
-                kv.face(f'c{p}i', CDC_CO, 'E', 'M4', yc + cd.h * 0.6, 1)
-                kv.face(f'c{p}o', CDC['core_bits'] - CDC_CO, 'E', 'M4', yc - 20.0, 1)
+            reps = [st0] if not R19 else [next(k for k in m['lfifos'] if k.endswith('S')),
+                                          next(k for k in m['lfifos'] if k.endswith('N'))]
+            for rep_ in reps:
+                lf_ = m['lfifos'][rep_]
+                kv = mk(lf_.master, lf_.w, lf_.h, 7, 'STREAM4 KV landing concentrator (32 PC landing words -> the '
+                        'stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
+                kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0 if rep_.endswith('S') else 1] - lf_.y)
+                        if R19 else (m['geo']['stack_cy'][0] - lf_.y), 1)
+                if R19:
+                    kv.note += '; r19: landing crossbar, 32 PC words -> 12 row buses x 768 b (one per tile row)'
+                    ry = m['geo']['row_y']
+                    r0 = 0 if rep_.endswith('S') else 12
+                    for j in range(12):
+                        kv.face(f'r{j}', KVL_BITS, 'W', 'M4', ry[r0 + j] + TILE_SLOT[1] * 0.78 - lf_.y, 1)
+                for p, cd in enumerate(m['cdcs'][rep_]):
+                    yc = cd.y - lf_.y
+                    kv.face(f'c{p}i', CDC_CO, 'E', 'M4', yc + cd.h * 0.6, 1)
+                    kv.face(f'c{p}o', CDC['core_bits'] - CDC_CO, 'E', 'M4', yc - 20.0, 1)
             nmax = 0
         if 'rd' in re_.ports:
             re_.order.remove('rd')
