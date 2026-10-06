@@ -79,7 +79,9 @@ def dispatch(output, source, workers):
     """One changed candidate; wait for CPU fit before the unchanged RAM guard."""
     (output/'dispatch_once').mkdir()
     runner = source/'tools/qwen_rom_combined_p0_20261005/run_full.py'
-    for phase, ram_gib, cpus in [('build', 128, workers), ('runtime', 16, 16)]:
+    # Debug the changed join once at full layer shape, never automatically
+    # start a multi-day full token. The final smoke remains an explicit stage.
+    for phase, ram_gib, cpus in [('build', 128, workers), ('layer-runtime', 16, 16)]:
         while True:
             def ticks():
                 return list(map(int, Path('/proc/stat').read_text().splitlines()[0].split()[1:]))
@@ -115,7 +117,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--source', type=Path, required=True)
-    p.add_argument('--stage', choices=['build', 'finish-build', 'relink-driver', 'runtime', 'dispatch'], required=True)
+    p.add_argument('--stage', choices=['build', 'finish-build', 'relink-driver', 'runtime', 'layer-runtime', 'dispatch'], required=True)
     p.add_argument('--workers', type=int, default=4)
     a = p.parse_args()
     output = a.output
@@ -128,7 +130,7 @@ def main():
     authority = Path('/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1')
     tools = a.source/'tools/qwen_rom_combined_p0_20261005'
     fresh(output, a.stage, 1 if a.stage == 'relink-driver' else
-          (a.workers if a.stage != 'runtime' else 16))
+          (16 if a.stage in ('runtime', 'layer-runtime') else a.workers))
     if a.stage == 'relink-driver':
         if not (output/'reuse_completed_top').is_file():
             raise RuntimeError('explicit completed top reference required; no model build')
@@ -166,6 +168,42 @@ def main():
         return
     if not (output/'build_complete').is_file():
         raise RuntimeError('one completed canonical top build required')
+    if a.stage == 'layer-runtime':
+        from emit import emit_layer
+        layer_host = output/'host/layer.cpp'
+        emit_layer(output/'host/fulltoken.cpp', layer_host)
+        link = [str(layer_host) if x == str(output/'host/fulltoken.cpp') else
+                str(output/'layer_test') if x == str(output/'fulltoken') else x
+                for x in r['link']]
+        stage(output, 'layer_driver_link', link)
+        command = list(r['runtime'])
+        command[0], command[3] = str(output/'layer_test'), str(output/'run_layer')
+        stage(output, 'layer_runtime', command)
+        log = (output/'layer_runtime.log').read_text()
+        if 'QWEN_ROM_COMBINED_P0_FULLSHAPE_LAYER DONE stages=1' not in log or 'WRITEBACK drained=1' not in log:
+            raise RuntimeError('actual L0 completion and protected drain required')
+        comparisons, bad = [], []
+        for rank in range(4):
+            for suffix in ('x', 'kvP'):
+                name = f'L0_die{rank}_{suffix}.hex'
+                got, truth = output/'run_layer'/name, authority/'run'/name
+                exact = got.is_file() and truth.is_file() and got.read_bytes() == truth.read_bytes()
+                comparisons.append(dict(path=name, exact=exact,
+                    sha256=hashlib.sha256(got.read_bytes()).hexdigest() if got.is_file() else None))
+                if not exact:
+                    bad.append(name)
+        result = dict(status='FAIL_LAYER_NUMERICAL' if bad else 'PASS_FULLSHAPE_L0_P8191',
+            output_comparisons=comparisons, failures=bad, full_token_pass=False,
+            layers_executed=1, ranks=4, position=8191, physical_qualified=False,
+            model_and_engine_archives_reused=True, next_layer_prefetch=False,
+            scope='Cold full-shape L0 only; actual clocks, faults, finite transport, warm and validated ACK drain; no overlap/fullhead/all36 claim',
+            core_final_visible=int(re.search(r'P0_FINAL_VISIBLE core_cycle=(\d+)', log)[1]),
+            core_layer=int(re.search(r'token_cycle=(\d+)', log)[1]),
+            controller_rises=int(re.search(r'P0_CLOCK controller_rises=(\d+)', log)[1]))
+        (output/'layer_runtime_terminal.json').write_text(json.dumps(result, indent=2)+'\n')
+        if bad:
+            raise RuntimeError('actual L0 numerical comparison failed')
+        return
     stage(output, 'runtime', r['runtime'])
     log = (output/'runtime.log').read_text()
     if 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE stages=37' not in log or 'WRITEBACK drained=1' not in log:
