@@ -1,13 +1,13 @@
-MISMATCH vec 0 ref 04c250d8500600 dut 2f768b2d8ec561
-MISMATCH vec 2 ref 28d3a6899c541a dut 377469d4d5a21a
-MISMATCH vec 4 ref 2e33f468d03605 dut 2e33f60a351a1b
-MISMATCH vec 5 ref 1f6c62c12c7814 dut 3bd589ec6620fb
-MISMATCH vec 6 ref 01608038100602 dut 2d167b2d128740
-MISMATCH vec 8 ref 208fc639c42a13 dut 208ff7e3ddacc7
-MISMATCH vec 12 ref 1bed45a2a8b621 dut 3eaff7dbc9a8b5
-MISMATCH vec 13 ref 09647160ac3419 dut 33f6c7fbf5de83
-MISMATCH vec 16 ref 00a04018080200 dut 2cb64b1d8ac360
-ROUTER_PS PIPESEL=1 RATE=1 NEG=1 SEED=7 vectors ref=200 dut=200 bad=138 latency ref=23 dut=13..13
+MISMATCH vec 0 ref 04c250d8500600 dut 2bd5ba55268719
+MISMATCH vec 2 ref 28d3a6899c541a dut 3ff469d4ada21a
+MISMATCH vec 4 ref 2e33f468d03605 dut 2e33f46a345e1b
+MISMATCH vec 5 ref 1f6c62c12c7814 dut 2b14b7fbf9f64b
+MISMATCH vec 6 ref 01608038100602 dut 2ff7bbdd128740
+MISMATCH vec 8 ref 208fc639c42a13 dut 3f8fc7bb1cf413
+MISMATCH vec 12 ref 1bed45a2a8b621 dut 37eff7fb7da8b4
+MISMATCH vec 13 ref 09647160ac3419 dut 33eff65a150667
+MISMATCH vec 16 ref 00a04018080200 dut 28b44a1d0a8340
+ROUTER_PS PIPESEL=1 RATE=1 NEG=1 SEED=7 vectors ref=200 dut=200 bad=136 latency ref=23 dut=19..19
 ROUTER_PS FAIL
 FATAL: rtl/test/hbm_router_ps/tb_router_topk_ps.sv:88: ROUTER_PS FAIL
        Time: 5310500 Scope: tb_router_topk_ps

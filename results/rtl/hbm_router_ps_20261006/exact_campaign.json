@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm_router_ps.exact.v1",
  "dut": "rtl/gpu/ot_gpu_router_topk_ps.sv",
- "dut_sha256": "cf5ccf3d5a8b5d0060cc38e634f9adb1a65ecaebe26103802e8331fbca83a18d",
+ "dut_sha256": "da9e9eef5c3fdec2b6900fb4581cc9a3e99f39cdc6080291c978feeded84115a",
  "reference": "rtl/gpu/ot_gpu_router_topk.sv",
  "reference_sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
  "bench": "rtl/test/hbm_router_ps/tb_router_topk_ps.sv",
@@ -18,9 +18,9 @@
    "seed": 7,
    "vectors": 200,
    "dut_vectors": 200,
-   "mismatches": 138,
+   "mismatches": 136,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "FAIL"
   },
   {
@@ -31,9 +31,9 @@
    "seed": 7,
    "vectors": 200,
    "dut_vectors": 200,
-   "mismatches": 144,
+   "mismatches": 143,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "FAIL"
   },
   {
@@ -46,7 +46,7 @@
    "dut_vectors": 200,
    "mismatches": 68,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "FAIL"
   },
   {
@@ -59,7 +59,7 @@
    "dut_vectors": 200,
    "mismatches": 54,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "FAIL"
   },
   {
@@ -72,7 +72,7 @@
    "dut_vectors": 200,
    "mismatches": 25,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "FAIL"
   },
   {
@@ -85,7 +85,7 @@
    "dut_vectors": 200,
    "mismatches": 16,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "FAIL"
   },
   {
@@ -96,9 +96,9 @@
    "seed": 7,
    "vectors": 200,
    "dut_vectors": 200,
-   "mismatches": 103,
+   "mismatches": 106,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "FAIL"
   },
   {
@@ -109,9 +109,9 @@
    "seed": 7,
    "vectors": 200,
    "dut_vectors": 200,
-   "mismatches": 102,
+   "mismatches": 108,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "FAIL"
   },
   {
@@ -124,7 +124,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "PASS"
   },
   {
@@ -137,7 +137,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "PASS"
   },
   {
@@ -150,7 +150,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "PASS"
   },
   {
@@ -163,7 +163,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 13,
+   "latency_dut": 19,
    "verdict": "PASS"
   },
   {
@@ -176,7 +176,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "PASS"
   },
   {
@@ -189,7 +189,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "PASS"
   },
   {
@@ -202,7 +202,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "PASS"
   },
   {
@@ -215,7 +215,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 16,
+   "latency_dut": 22,
    "verdict": "PASS"
   }
  ],
@@ -223,13 +223,14 @@
  "negatives_all_fail": true,
  "vectors_checked": 12000,
  "cycle_cost": {
-  "pipesel1_latency_from_last_beat": 13,
+  "pipesel1_latency_from_last_beat": 19,
   "reference_latency": 23,
-  "delta_vs_reference": -10,
-  "note": "bench latency (cycles from the last beat's in_valid to out_valid); ot_gpu_router_topk_f (the topk_f3 vehicle) is reference+1 = 24 by the same measure, so PIPESEL=1 is -11 cycles a router vector vs the routed vehicle; throughput unchanged (16 scores/cycle, 24 beats a 384-vector)",
-  "pipesel2_latency_from_last_beat": 16,
-  "pipesel2_extra_cycles_per_vector": 24,
-  "pipesel2_note": "fallback: P/2 lanes a cycle, 48 beat-cycles a 384-vector (+24 cycles a layer) and +3 latency vs the reference -> net +17 vs reference"
+  "topk_f_latency": 24,
+  "delta_vs_reference": -4,
+  "delta_vs_topk_f3": -5,
+  "note": "bench latency, cycles from the last beat's in_valid to out_valid; throughput unchanged (16 scores/cycle, 24 beats a 384-vector). Negative cost: no headline recompose needed beyond -5 cycles a router call.",
+  "pipesel2_latency_from_last_beat": 22,
+  "pipesel2_extra_cycles_per_vector": 24
  },
- "rtl_revision": "r2: explicit log-depth (gt,eq) compare trees and adder-tree popcounts (r1 >= operators mapped to a 750 ps ripple chain in the first route's pre-CTS STA)"
+ "rtl_revision": "r3: every key compare split over two registered stages (8-bit chunk gt/eq | log-depth combine), 4 round-robin running banks (3-stage merge recurrence, II 4 per bank), 3-stage pipelined 2-level merge tree. r2 (one-stage compare trees) had a 950 ps S2 compare in the die-view pre-CTS STA; r1 (>= operators) a 750 ps ripple."
 }
