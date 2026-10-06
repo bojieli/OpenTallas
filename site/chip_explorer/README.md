@@ -2,7 +2,10 @@
 
 An interactive single-file companion site for the three designs (Qwen3-8B ROM at 8K, the DeepSeek-V4.1 ROM array at 1M, and the HBM accelerator). It has six sections:
 
-1. **System array:** packages, dies, stages and links. Every array view lays itself out at its panel's width (a ResizeObserver redraws on resize), so the DeepSeek pipeline wraps as a serpentine and nothing scrolls sideways, at desktop or at 400 px. Links are drawn with a `--link` token stroke whose width scales with the link's bandwidth (`DATA.links`); hovering a link lights it and its endpoints, and flow dashes show traffic direction (static under `prefers-reduced-motion`).
+1. **Die floorplans:** drawn to scale from real block geometry (first, the core of the design).
+2. **Animated token:** one decode token on the floorplan.
+3. **Timing and closure.**
+4. **System array:** packages, dies, stages and links. Every array view lays itself out at its panel's width (a ResizeObserver redraws on resize), so the DeepSeek pipeline wraps as a serpentine and nothing scrolls sideways, at desktop or at 400 px. Links are drawn with a `--link` token stroke whose width scales with the link's bandwidth (`DATA.links`); hovering a link lights it and its endpoints, and flow dashes show traffic direction (static under `prefers-reduced-motion`).
 2. **Rack:** ORv3 rack elevations drawn to scale (48 mm OpenU, 44 OU, 600 mm frame) with power shelves, trays, switch tier, busbar and liquid manifolds; the deployment's racks side by side with the token path (DS ROM) or switch uplinks (HBM); a to-scale tray plan; per-rack totals; link classes by distance. Hover a tray for its dies, click it for its plan, click a die to open it in the die section.
 3. **Die floorplans:** drawn to scale from real block geometry.
 4. **Animated token:** one decode token's data path, animated on the floorplan, with a speculation mode.
