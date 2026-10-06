@@ -1,0 +1,53 @@
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:61:44: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'active_rows' generates 11 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_desc_life
+   61 |     wire [10:0] total_beats = (active_rows + NL - 1) / NL;
+      |                                            ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:61:29: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_desc_life
+   61 |     wire [10:0] total_beats = (active_rows + NL - 1) / NL;
+      |                             ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:62:41: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'active_rows' generates 11 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_desc_life
+   62 |     wire [10:0] rows_left = active_rows - beat_count * NL;
+      |                                         ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:62:27: Operator ASSIGNW expects 11 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_desc_life
+   62 |     wire [10:0] rows_left = active_rows - beat_count * NL;
+      |                           ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:65:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'rows_left' generates 11 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_desc_life
+   65 |     always @(*) for (l=0; l<NL; l=l+1) expected_mask[l] = (rows_left > l);
+      |                                                                      ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:112:61: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'active_rows' generates 11 bits.
+                                                                   : ... In instance ot_dsrom_window_parent_context.u_desc_life
+  112 |                         else if (stage_rows < ((active_rows < NL) ? active_rows : NL) ||
+      |                                                             ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:112:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'stage_rows' generates 11 bits.
+                                                                   : ... In instance ot_dsrom_window_parent_context.u_desc_life
+  112 |                         else if (stage_rows < ((active_rows < NL) ? active_rows : NL) ||
+      |                                             ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv:112:67: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'active_rows' generates 11 bits.
+                                                                   : ... In instance ot_dsrom_window_parent_context.u_desc_life
+  112 |                         else if (stage_rows < ((active_rows < NL) ? active_rows : NL) ||
+      |                                                                   ^
+%Warning-WIDTH: rtl/chip/ot_chip_v41x_window_block_guard.sv:24:30: Operator SHIFTR expects 31 bits on the LHS, but LHS's VARREF 'blk_kvt_row' generates 21 bits.
+                                                                 : ... In instance ot_dsrom_window_parent_context.u_guard
+   24 |         ((AW+1)'(blk_kvt_row >> 4) << KVT_SH) +
+      |                              ^~
+%Warning-WIDTH: rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv:58:48: Logical Operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SEPARATE_ROWS' generates 32 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_blocks
+   58 |     wire [POS_W-1:0] issue_abs = SEPARATE_ROWS ? issue_abs_row : issue_row;
+      |                                                ^
+%Warning-WIDTH: rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv:98:36: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SEPARATE_ROWS' generates 32 bits.
+                                                                  : ... In instance ot_dsrom_window_parent_context.u_blocks
+   98 |                     (SEPARATE_ROWS && issue_row >= POS_W'(128)) ||
+      |                                    ^~
+%Warning-WIDTH: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv:38:65: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'wptr' generates 16 bits.
+                                                                                                       : ... In instance ot_dsrom_window_parent_context.u_capture
+   38 |         .clk(clk), .wr_en({NL{kv_go}} & kv_m), .wr_addr(8'(wptr / NL)), .wr_data(kv_w),
+      |                                                                 ^
+%Warning-WIDTH: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv:95:67: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r0_qk_s' generates 16 bits.
+                                                                                                       : ... In instance ot_dsrom_window_parent_context.u_capture
+   95 |         for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk_s + li) < T;
+      |                                                                   ^

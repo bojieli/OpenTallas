@@ -1,0 +1,471 @@
+{
+ "schema": "opentallas.three-machine-compose.v1",
+ "rule": "ADOPT + exact levers only in headlines; PENDING_SSFF reported as conditional; refuses otherwise",
+ "ds_rom": {
+  "tool": "tools/dsrom_1m_allmeasured.py compose() (recovery baseline)",
+  "link_fec": {
+   "hop_tier": "full_fec",
+   "full_fec": {
+    "rack": "results/arch/dsrom_s81_rack_20261006/rack.json",
+    "links": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json",
+    "cable_flight_us": 0.1433,
+    "stage_hops_by_class": {
+     "in-tray": 40,
+     "in-rack": 39,
+     "rack-to-rack": 1
+    },
+    "head_hop": "rack-to-rack",
+    "token_return": "in-rack",
+    "ii_hop_cable_us": 0.0058
+   },
+   "draft_full_fec": {
+    "us": 3.5775,
+    "cycles": 4293,
+    "board_hops": 7,
+    "collective_issues": 36,
+    "hop_delta_cycles": 99,
+    "collective_delta_cycles": 100,
+    "record": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json"
+   },
+   "light_fec_superseded": {
+    "AR_us": 575.4,
+    "AR_tok_s": 1737.9,
+    "MTP_step_us": 820.14,
+    "MTP_tok_s": 5071.1,
+    "MTP_tok_s_tau_published": 4740.5,
+    "II_us": 24.463,
+    "measured_share": 0.9998
+   },
+   "delta_vs_light_fec": {
+    "AR_us": 22.049,
+    "AR_tok_s": -64.1,
+    "MTP_step_us": 28.562,
+    "MTP_tok_s": -170.7
+   },
+   "rule": "OWNER 2026-10-06: full RS(544,514) on every off-package link (stage hops, token return, TP4 collectives, embed and draft links, all re-measured in RTL) + cable flight per hop class (results/arch/dsrom_s81_rack_20261006/rack.json); light FEC kept only as the superseded row"
+  },
+  "AR_us": 597.449,
+  "AR_tok_s": 1673.8,
+  "MTP_step_us": 848.702,
+  "MTP_tok_s": 4900.4,
+  "MTP_tok_s_tau_published": 4581.0,
+  "II_us": 25.05,
+  "measured_share": 0.9998,
+  "tau": 4.159,
+  "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
+  "tau_sensitivity": {
+   "published": {
+    "tau": 3.8879,
+    "MTP_tok_s": 4581.0,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+   },
+   "published_low": {
+    "tau": 3.43,
+    "MTP_tok_s": 4041.5,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+   },
+   "published_high": {
+    "tau": 4.31748,
+    "MTP_tok_s": 5087.2,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+   }
+  },
+  "MTP_physical_qualified": false,
+  "MTP_qualified_headline_rate": null,
+  "still_modelled_total_us": 0,
+  "levers": {
+   "draft": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/draft.json",
+    "delta": {
+     "AR_us": 0.0,
+     "AR_tok_s": 0.0,
+     "MTP_step_us": -27.546,
+     "MTP_tok_s": 154.0
+    }
+   },
+   "head": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
+    "delta": {
+     "AR_us": -102.043,
+     "AR_tok_s": 244.2,
+     "MTP_step_us": -690.094,
+     "MTP_tok_s": 2197.6
+    }
+   },
+   "router": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
+    "delta": {
+     "AR_us": -11.966,
+     "AR_tok_s": 32.9,
+     "MTP_step_us": -13.469,
+     "MTP_tok_s": 76.5
+    }
+   },
+   "su_hcpost": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json",
+    "delta": {
+     "AR_us": -15.73,
+     "AR_tok_s": 43.0,
+     "MTP_step_us": -17.702,
+     "MTP_tok_s": 100.1
+    }
+   },
+   "su_routeract": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json",
+    "delta": {
+     "AR_us": -11.422,
+     "AR_tok_s": 31.4,
+     "MTP_step_us": -12.856,
+     "MTP_tok_s": 73.1
+    }
+   },
+   "su_swiglu": {
+    "cls": "adopted",
+    "verdict": "ADOPT",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
+    "delta": {
+     "AR_us": -17.527,
+     "AR_tok_s": 47.7,
+     "MTP_step_us": -20.617,
+     "MTP_tok_s": 116.2
+    }
+   },
+   "field_spine": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine.json",
+    "delta": {
+     "AR_us": -8.414,
+     "AR_tok_s": 23.9,
+     "MTP_step_us": -9.937,
+     "MTP_tok_s": 58.1
+    },
+    "if_adopted": {
+     "AR_us": 589.035,
+     "AR_tok_s": 1697.7,
+     "MTP_step_us": 838.765,
+     "MTP_tok_s": 4958.5,
+     "MTP_tok_s_tau_published": 4635.3,
+     "II_us": 24.745,
+     "measured_share": 0.9998
+    }
+   },
+   "field_spine_pq": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json",
+    "delta": {
+     "AR_us": -106.62,
+     "AR_tok_s": 363.6,
+     "MTP_step_us": -126.442,
+     "MTP_tok_s": 857.9
+    },
+    "if_adopted": {
+     "AR_us": 490.829,
+     "AR_tok_s": 2037.4,
+     "MTP_step_us": 722.26,
+     "MTP_tok_s": 5758.3,
+     "MTP_tok_s_tau_published": 5383.0,
+     "II_us": 21.085,
+     "measured_share": 0.9997
+    }
+   },
+   "su_norm": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_norm.json",
+    "delta": {
+     "AR_us": -41.657,
+     "AR_tok_s": 125.4,
+     "MTP_step_us": -46.746,
+     "MTP_tok_s": 285.7
+    },
+    "if_adopted": {
+     "AR_us": 555.792,
+     "AR_tok_s": 1799.2,
+     "MTP_step_us": 801.956,
+     "MTP_tok_s": 5186.1,
+     "MTP_tok_s_tau_published": 4848.0,
+     "II_us": 24.032,
+     "measured_share": 1.0
+    }
+   },
+   "su_softmax": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json",
+    "delta": {
+     "AR_us": -12.518,
+     "AR_tok_s": 35.8,
+     "MTP_step_us": -14.071,
+     "MTP_tok_s": 82.6
+    },
+    "if_adopted": {
+     "AR_us": 584.931,
+     "AR_tok_s": 1709.6,
+     "MTP_step_us": 834.631,
+     "MTP_tok_s": 4983.0,
+     "MTP_tok_s_tau_published": 4658.2,
+     "II_us": 24.739,
+     "measured_share": 0.9998
+    }
+   },
+   "field": {
+    "cls": "excluded",
+    "verdict": "REJECT",
+    "exact": true,
+    "record": "results/rtl/dsrom_recovery_20261004/levers/field.json",
+    "note": "cannot close SS at 1.2 GHz (owner rule: new hardware must close SS/FF in context; no rescue loops). Exact: 6,016/6,016 node-region runs bit-exact (170,528 rows), 7 layers, every region. Per-pair hardware closes routed (SS +140.0 ps, FF +5.0"
+   },
+   "hop": {
+    "cls": "excluded",
+    "verdict": "REJECT",
+    "exact": true,
+    "record": "results/rtl/dsrom_recovery_20261004/levers/hop.json",
+    "note": ""
+   }
+  },
+  "conditional_all": {
+   "levers": [
+    "field_spine_pq",
+    "su_norm",
+    "su_softmax"
+   ],
+   "alternatives_not_stacked": {
+    "field_spine": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
+   },
+   "composed": {
+    "AR_us": 436.654,
+    "AR_tok_s": 2290.1,
+    "MTP_step_us": 661.443,
+    "MTP_tok_s": 6287.8,
+    "MTP_tok_s_tau_published": 5877.9,
+    "II_us": 19.757,
+    "measured_share": 1.0
+   },
+   "note": "all PENDING_SSFF levers (alternatives resolved) flipped to ADOPT together; not a headline"
+  }
+ },
+ "qwen_rom": {
+  "position": 8191,
+  "clock_hz": 1200000000.0,
+  "token_cycles_measured": 193955,
+  "levers": {
+   "core_context": {
+    "cls": "adopted",
+    "verdict": "ADOPT (closed SS60/FF25, exact 5/5)",
+    "record": "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json",
+    "variant": "r5_f2ba",
+    "ss_ps": 6.27,
+    "ff_ps": 6.92,
+    "delta": {
+     "cycles": 0,
+     "AR_tok_s": 0.0
+    }
+   }
+  },
+  "token_cycles": 193955,
+  "AR_us": 161.629,
+  "AR_tok_s": 6187.0,
+  "MTP_mode": "AR (DSpark OFF)",
+  "MTP_tok_s": 6187.0,
+  "dspark_reference": {
+   "tok_s": 4346.2,
+   "speedup_vs_ar": 0.704,
+   "tau": 3.1445,
+   "verdict": "AR_MODE",
+   "record": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
+  },
+  "physical_qualified_full_system": false,
+  "inputs": {
+   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
+   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
+   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0"
+  }
+ },
+ "hbm_ds": {
+  "basis": {
+   "record": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "gate_AR_us": 474.808,
+   "gate_MTP_step_us": 1050.638,
+   "tau": 4.159,
+   "gate_AR_tok_s": 2106.1,
+   "gate_MTP_tok_s": 3958.5
+  },
+  "levers": {
+   "joint_PQ_XMAP": {
+    "cls": "exact_credited",
+    "record": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+    "exact": true,
+    "ss_ff_admitted": false,
+    "delta": {
+     "AR_us": -36.416,
+     "MTP_step_us": -77.056
+    },
+    "scope": "eight minimum-component P1/P6 sequences, not a full-token execution",
+    "note": "pipelined issue (item 1) + format-masked x map measured together; replaces the PQ groups once (item 1 alone is not added again)"
+   },
+   "paired_W2_PACK": {
+    "cls": "exact_credited",
+    "record": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+    "exact": true,
+    "ss_ff_admitted": false,
+    "delta": {
+     "AR_us": -6.133,
+     "MTP_step_us": 0.0
+    },
+    "scope": "simultaneous three-lever L20 P1 minimum component; forty-layer exposure remains modeled, not actual full-token execution",
+    "note": "P1 combined measurement; P6 (MTP) increment unmeasured -> 0"
+   }
+  },
+  "not_credited": {
+   "item3_activation_delivery_standalone": "analytic beat-law sensitivity (not an exact measurement; joint_PQ_XMAP carries the measured x map)",
+   "item2_partial_wave / item4_workgroup_layout": "estimates (design notes), not credited",
+   "item5_head": "REJECT"
+  },
+  "levers_AR_us": 432.259,
+  "levers_MTP_step_us": 973.582,
+  "full_fec_AR_us": 462.149,
+  "full_fec_MTP_step_us": 1003.472,
+  "rows": {
+   "floor": {
+    "wire_basis": "stages_430_manhattan",
+    "wire_added_us": 25.914,
+    "full_fec_added_us": 29.89,
+    "AR_us": 488.063,
+    "AR_tok_s": 2048.9,
+    "MTP_step_us": 1029.386,
+    "MTP_tok_s": 4040.3,
+    "MTP_tok_s_tau_published": 3776.9
+   },
+   "median": {
+    "wire_basis": "stages_430_median_bundle",
+    "wire_added_us": 36.783,
+    "full_fec_added_us": 29.89,
+    "AR_us": 498.932,
+    "AR_tok_s": 2004.3,
+    "MTP_step_us": 1040.255,
+    "MTP_tok_s": 3998.1,
+    "MTP_tok_s_tau_published": 3737.4
+   },
+   "bound": {
+    "wire_basis": "stages_430",
+    "wire_added_us": 43.126,
+    "full_fec_added_us": 29.89,
+    "AR_us": 505.275,
+    "AR_tok_s": 1979.1,
+    "MTP_step_us": 1046.598,
+    "MTP_tok_s": 3973.8,
+    "MTP_tok_s_tau_published": 3714.8
+   }
+  },
+  "headline_row": "median",
+  "full_fec": {
+   "crossings_AR": 305,
+   "crossings_MTP_verify": 305,
+   "per_crossing_ns": 98.0,
+   "AR_us": 29.89,
+   "MTP_step_us": 29.89,
+   "endpoint_phy_ns": {
+    "was": 100.0,
+    "now": 198.0
+   },
+   "basis": "OWNER 2026-10-06 full FEC on every off-package link: SUE endpoint link+PHY 100 ns -> full-KP4 channel 198 ns (configs/hardware/technology.json links.rom_board_serdes full_kp4_fec_s 200 ns less 2 ns of board flight); crossings counted from results/rtl/dshbm_matched_reference_20261005/composition.json path (measured_tu_budget rows / 377.6 ns); switch 250 ns unchanged (RM104: includes its PHY/FEC)",
+   "not_charged": "the HBM DSpark draft (45.28 us, W19 estimate) carries no crossing count: not re-priced (HBM-favourable)"
+  },
+  "unvalidated": [
+   "wire stages priced on the matched-reference walk's crossing counts; the PQ levers merge some barriers / x loads, so the barrier and x-broadcast wire terms are an upper charge on the lever row",
+   "HBM levers are exact on minimum components; SS60/FF25 not admitted (comparator credit)",
+   "inherited vendor terms (Tomahawk-Ultra PHY + switch + cable) as in the matched reference, with the endpoint PHY raised to the full-KP4 channel (full_fec)"
+  ],
+  "inputs": {
+   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
+   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
+   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+  }
+ },
+ "ratios": {
+  "ds_rom_over_hbm_ar": 0.8351,
+  "ds_rom_over_hbm_mtp": 1.2257,
+  "hbm_row": "median",
+  "by_wire_basis": {
+   "floor": {
+    "ar": 0.8169,
+    "mtp": 1.2129
+   },
+   "median": {
+    "ar": 0.8351,
+    "mtp": 1.2257
+   },
+   "bound": {
+    "ar": 0.8457,
+    "mtp": 1.2332
+   }
+  }
+ },
+ "lever_summary": {
+  "ds_rom_adopted": [
+   "draft",
+   "head",
+   "router",
+   "su_hcpost",
+   "su_routeract",
+   "su_swiglu"
+  ],
+  "ds_rom_conditional": [
+   "field_spine",
+   "field_spine_pq",
+   "su_norm",
+   "su_softmax"
+  ],
+  "ds_rom_excluded": [
+   "field",
+   "hop"
+  ],
+  "qwen_rom_adopted": [
+   "core_context"
+  ],
+  "hbm_exact_credited": [
+   "joint_PQ_XMAP",
+   "paired_W2_PACK"
+  ]
+ },
+ "inputs": {
+  "levers": {
+   "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+   "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "0d785a9bc3172fd2bd921d90546804ab8213a29e674a3ce3185120feee754608",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "d87125723eaf70b4a8157bbba60841ebeed1787ba3094441901621c9f9550d96",
+   "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
+   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
+   "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
+   "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
+   "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "c9c46013ae2545e1a5a2f227e63ea350087b4cac8b9fb8bf87993e3fbdd99090",
+   "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
+   "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json": "264666bbf72fec3983c1535416983faead2e41c016d8933cb4bae8497db30731",
+   "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "48b20fb7033275a09559b912d839658fd4ef14f10161160ad492c02fc455c7e2"
+  },
+  "ds_rom_composition": {
+   "results/rtl/dsrom_recovery_20261004/composition.json": "e9bbdf719687984f078effffbc49ad3fbfb744642b13d428a12f6c932339e4cb"
+  },
+  "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
+  "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
+  "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+  "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
+  "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
+  "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+ },
+ "tool_sha256": {
+  "tools/three_machine_compose.py": "bbdbc64250c8fe52132eda48baae7fd0a396a73733749fff6465edf1f11380b3"
+ }
+}

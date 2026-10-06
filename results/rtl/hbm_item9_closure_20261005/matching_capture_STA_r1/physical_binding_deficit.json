@@ -1,0 +1,177 @@
+{
+  "owner": "Codex/Dirac ITEM9 -> Turing/Kant",
+  "top": "ot_gpu_coll_item9_pipe_slice",
+  "fullwidth_source": "rtl/gpu_sys/ot_gpu_coll_item9_context32_pipe.sv",
+  "slice_source": "rtl/gpu_sys/ot_gpu_coll_item9_pipe_slice.sv",
+  "mux_source": "rtl/gpu_sys/ot_gpu_coll_mux_item9_pipe.sv",
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv": "c27b8f4b91b09253b224dd3478fcdf4244de24e29a9d349b41190a072f885749",
+    "rtl/gpu_sys/ot_gpu_coll_mux_item9_pipe.sv": "ca2c3e0ebb1aac8a16c9fa82f16cbe6500372318f210410f1273deaf05794dcc",
+    "rtl/gpu_sys/ot_gpu_coll_item9_pipe_slice.sv": "65da3e08fb875648298e945fa18fb4ba6c9415f06708fa956327030efbcb4f89"
+  },
+  "caller_count": 32,
+  "payload_slice_bits": 64,
+  "fullwidth_exact_gate": "results/rtl/hbm_item9_closure_20261005/pipe_exact_r1/result.json",
+  "measured_cycles": 853,
+  "baseline_cycles": 789,
+  "added_cycles_per_collective": 2,
+  "clocks": {
+    "roots": [
+      "clk_sm",
+      "clk_link",
+      "clk_mem",
+      "clk_host"
+    ],
+    "period_ps": 833,
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25,
+    "source_phases_ps": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "candidate_pin_tuple": {
+    "caller_sources": "g_on.g_sm_caller[s].c_data[0:63]",
+    "mux_banks": "g_on.u_mux.g_on.bank_data[b][0:63] (b0..7)",
+    "mux_root": "g_on.u_mux.g_on.held_data[0:63]",
+    "caller_receivers": "g_on.g_sm_caller[s].vr[0:63]",
+    "endpoint_ports": [
+      "endpoint_req_v",
+      "endpoint_req_rdy",
+      "endpoint_mode",
+      "endpoint_count[7:0]",
+      "endpoint_data[63:0]",
+      "endpoint_rsp_v",
+      "endpoint_rsp_rdy",
+      "endpoint_rsp_data[63:0]"
+    ],
+    "actual_endpoint_destination": "g_on.u_ep.g_on.dat[0:63] in full context32_pipe",
+    "actual_reset": "unchanged ot_gpu_reset_ctrl outputs"
+  },
+  "required_binding_fields": [
+    "producer_tuples: actual source hierarchy/pin+clock+min/max arrivals",
+    "receiver_tuples: actual endpoint/caller pins and SS/FF installed load",
+    "clock_pin_tuples: physical root pin/coords and sink/source insertion association; no inherited unclocked28",
+    "corridor_segments: bank-to-root 8x64 payloadbits plus descriptor/control; PG/CTS/reset and other claims removed",
+    "SDC path/SHA: literal actual arrivals/loads and four833/60/25clocks; no generic20percent budget",
+    "pins_Tcl path/SHA: finite legal32caller/bank/root pin positions",
+    "die_bbox_um/core_bbox_um: finite available rows/macros/halo/repair margin; no r14 allocation"
+  ],
+  "floorplan_standardcell_utilization": [
+    55,
+    60
+  ],
+  "canonical_r14_geometry_used": false,
+  "PG_and_clock_tracks_excluded_from_capacity": true,
+  "preparation_driver": "tools/hbm_item9_pipe_slice_physical.py",
+  "candidate_clock_load_requires_mapped_actual_cells": true,
+  "old_ingress_hold": {
+    "report": "route-r1/work/orfs/reports/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/4_cts_final.rpt",
+    "start": "i_data[3803]",
+    "end": "data[3803]$_DFF_P_",
+    "path_type": "min",
+    "corner": "WC",
+    "slack_ps": -803.83,
+    "clock_capture_insertion_ps": 999.4,
+    "input_min_ps": 166.6,
+    "required_ps": 1046.24,
+    "arrival_ps": 242.4,
+    "GRT1180same_capture_class_endpoint": "data[6562]",
+    "GRT1180_WNS_ps": -715.284,
+    "hold_not_setup": true,
+    "pipeline_not_claimed_to_fix_first_IO_edge": true
+  },
+  "old_route_preserved": true,
+  "adopted": false,
+  "parent_closure_open": true,
+  "full_FEC_off_package": true,
+  "light_FEC_130ns_dropped": true,
+  "published_main": "8a2ea94cc76ea0f8a67452e6176564435c7f90d5",
+  "source_step": "267fca44b",
+  "remote_source_repo": "/srv/opentallas/repos/codex-item9-pipe-min-20261006",
+  "remote_source_export": "567a7a668256cbb9148c49502698b042a53f7abb",
+  "old_unadmitted_TREE_variants": "identity+dependency audited; own1558728/1558729 stopped before guard/admittedchild; prepared views and scratch retained",
+  "Turing_station_bridge": "OWNER cbbe427ac PASS19/+1edge/1440FF separate; not a regenerated32caller/PG/rootpin/corridor allocation",
+  "full_FEC_handoff_consumed": "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json (DSROM source-bound evidence; no unsupported HBM numeric transfer)",
+  "time": "2026-10-06T04:56:07.558301+00:00",
+  "minimum_route_launch_ready": false,
+  "missing_minimum_binding": {
+    "ingress_source_and_arrival": {
+      "ports": [
+        "issue[31:0]",
+        "issue_mode[31:0]",
+        "issue_count[255:0]",
+        "issue_va[2047:0]"
+      ],
+      "real_source_reference": "rtl/gpu_sys/ot_gpu_simt_sm.sv:176 va=vr[ra], :620 O_COLL issue / c_data<=va; original32 caller mechanism, not selected smv/TU equivalence",
+      "need": "actual installed producer hierarchy/launch CLK edge/insertion/clkQ+read select+wire min/max at each sourcegroup; no20percent arrival and no borrowed CP insertion"
+    },
+    "endpoint_request_credit_and_payload": {
+      "ports": [
+        "endpoint_req_rdy",
+        "endpoint_req_v",
+        "endpoint_mode",
+        "endpoint_count[7:0]",
+        "endpoint_data[63:0]"
+      ],
+      "receiver": "ot_gpu_coll_item9_context32_pipe.g_on.u_ep.g_on.dat[63:0] and actual coll_req/state/idle_c control",
+      "need": "actual receiver mapped D/enable cells, SS/FF input load per pin, receiver root association and min/max required delays; retained f12 checkpoint alone not the txctrl receiver binding"
+    },
+    "response_and_hold": {
+      "ports": [
+        "endpoint_rsp_v",
+        "endpoint_rsp_data[63:0]",
+        "endpoint_rsp_rdy",
+        "caller_vr[2047:0]",
+        "caller_idle[31:0]",
+        "caller_done[31:0]"
+      ],
+      "source_receiver": "actual endpoint response FF -> g_on.g_sm_caller[s].vr[63:0] for all32 callers",
+      "need": "actual endpoint source clkQ/wire and caller destination selection/feedback D pins/installed output loads; real backpressured credit consumer"
+    },
+    "clock_root_and_fanout": {
+      "roots": [
+        "clk_sm",
+        "clk_link",
+        "clk_mem",
+        "clk_host"
+      ],
+      "policy": "833ps SS60 FF25, source four roots and real reset controller; clk_host has no functional mapped sinks in retained full32 source",
+      "need": "root ODB bterm/iterm and coordinates, SS/FF source insertion/transition/root driver, legal pergroup CTS association; new slice load must come from new mapped cells, not divide full293768pin130.9pF by64"
+    },
+    "pin_rows_PG_corridor": {
+      "groups": "32 caller banks/8 registered partial banks/one held root/pergroup receiver",
+      "need": "finite legal row windows, literal endpoint64+descriptor/credit pin coordinates and available channel segments after PG/clock/reset/other claims; root64 plus bank-to-root8x64 interior wires not freeperimetercredit"
+    },
+    "source_bound_SDC_and_pins": {
+      "need": "SDC and pins Tcl paths/hashes for above actual tuples; no invalid r14 inherited allocation, no budget placeholders"
+    }
+  },
+  "actual_GRT_phase": {
+    "source": "090bd3652350efbe578d644fa1ae19e6469c1ab7",
+    "log": "route-r1/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_owner64_asap7_item9_owner64_rxoh_r1/base/5_1_grt.tmp.log",
+    "iteration1180": {
+      "phase": "hold repair",
+      "WNS_ps": -715.284,
+      "endpoint": "data[6562]$_DFF_P_/D"
+    },
+    "preceding_setup_final": {
+      "WNS_ps": -619.571,
+      "endpoint": "o_tx_rec[122]",
+      "violating_endpoints": 16456
+    },
+    "actual_matching_max_path": "not in retained reports; live in-memory GRT checkpoint not exported; targeted max/min CTS command prepared, explicitly different stage"
+  },
+  "admission": {
+    "E1_load": 201.130859375,
+    "E1_idle_cores": 0.1698938,
+    "E2_load": 174.29,
+    "new_heavy_admitted": false
+  }
+}

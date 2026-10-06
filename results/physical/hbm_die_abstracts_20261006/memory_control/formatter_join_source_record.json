@@ -1,0 +1,40 @@
+{
+  "schema": "hbm.memory_control.formatter_join.source_milestone.v1",
+  "delivered_RTL_source": "4a506770b",
+  "actual_parent_ABI": "Gibbs9d24f8eff/defae6764",
+  "required_ports": [
+    "gather_granted",
+    "gather_frame73",
+    "pair_token17",
+    "pairs_frame73",
+    "release_token17"
+  ],
+  "RTL_SHA256": "95d3e48a9d1d4aebfc65c31373397efff755a4c5fa441229c854dd51f2807f7f",
+  "actual_backing": "existing shared gather_owner 649/637, 2x256 sector provider route; no private provider",
+  "state_FF_delta": 216,
+  "new_SRAM": 0,
+  "component_runtime_r2": "179d4c7df PASS 6144checked publications,4pairs512,8reads,576925cycles,24722realbeats; previous port spellings",
+  "delivered_source_changed_gate": {
+    "source": "4a506770b",
+    "verdict": "PASS",
+    "receipt": "results/physical/hbm_die_abstracts_20261006/memory_control/formatter_join_r3b_PASS/terminal.json",
+    "normal": "6144 causal checked score/ID publications +32 checked sink publications; 4 exact512 pair responses,8 formatterreads;576925cycles,24722 providerbeats",
+    "negative_high_TOKEN17": "actual retained response bit616 flipped; no bridge ACK/pair output, fault and real lease retained",
+    "negative_mutable_control_DUE": "actual gather code[11] XOR72'd3; decode UE, zero backend requests/publication, fault/lease retained",
+    "simulation_backing": "private finite1MiB byte-write-enabled beat-store fixture through actual gather-owner/arbitration/provider handshake, not production SRAM/PHY qualification",
+    "pair_edges_including4_response_stall_edges": [
+      102,
+      101,
+      101,
+      102
+    ]
+  },
+  "first_failure_preserved": "f7d25ef01 r1 immutable FAIL, gatherrow11 DUE beforepacket0 under5.032; no codec/control source edits or claimed toolrootcause. Successor5.050 normal path and deliberately injected controlDUE both tested.",
+  "production_aperture_VM_AW": 21,
+  "parent_qualified": false,
+  "physical_qualified": false,
+  "production_enrollment_qualified": false,
+  "clock": "clk_sm, cold rst_sm_n from Gibbs; context SS60FF25 still open",
+  "actual_selected_parent_source": "d9b4f8488 / df8143b7c",
+  "actual_selected_parent_named_ports_checked": 51
+}

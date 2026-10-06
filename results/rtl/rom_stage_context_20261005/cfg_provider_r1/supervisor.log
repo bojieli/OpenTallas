@@ -1,0 +1,24 @@
+Tue Oct  6 01:09:14 UTC 2026
+ 18:09:14 up 23:13, 49 users,  load average: 41.52, 44.10, 49.17
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 486410809344 76447010816    12664832 661238501376 730207055872
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 919518777344 2229690380288  30% /srv/opentallas-scratch2
+measured_idle_cores 86.79068313271846
+Tue Oct  6 01:09:15 UTC 2026
+ 18:09:15 up 23:13, 49 users,  load average: 41.52, 44.10, 49.17
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 486368595968 76489039872    12673024 661238517760 730249269248
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 919518777344 2229690380288  30% /srv/opentallas-scratch2
+after_guard_idle_cores 86.17425308931644
+MARK go 2999 ready=1
+MARK end 4127 rows=14
+MARK go 19000 ready=1
+MARK end 20128 rows=28
+MARK go 34999 ready=1
+MARK end 36127 rows=42
+PASS actual W5 context rows=42 nonzero=36 beats=168 cycles=36327
+/srv/opentallas-scratch2/codex/w5-context-20261005/cfg-context-r1/output/bench.sv:103: $finish called at 30272524218 (1fs)

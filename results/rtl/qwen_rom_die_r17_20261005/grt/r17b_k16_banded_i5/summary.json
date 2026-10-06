@@ -1,0 +1,188 @@
+{
+ "case": "r17b_i5",
+ "exit": "0",
+ "grt_s": 837,
+ "peak_rss_gb": 12.5,
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 32747,
+   "demand": 2357,
+   "usage_pct": 7.2,
+   "max_h": 0,
+   "max_v": 0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 82181,
+   "demand": 5058,
+   "usage_pct": 6.15,
+   "max_h": 0,
+   "max_v": 1,
+   "overflow": 1
+  },
+  "M6": {
+   "resource": 16895065,
+   "demand": 312442,
+   "usage_pct": 1.85,
+   "max_h": 2,
+   "max_v": 0,
+   "overflow": 11
+  },
+  "M7": {
+   "resource": 16450388,
+   "demand": 5173999,
+   "usage_pct": 31.45,
+   "max_h": 0,
+   "max_v": 2,
+   "overflow": 19
+  },
+  "M8": {
+   "resource": 47542452,
+   "demand": 4191037,
+   "usage_pct": 8.82,
+   "max_h": 3,
+   "max_v": 0,
+   "overflow": 745
+  },
+  "M9": {
+   "resource": 47430866,
+   "demand": 5382620,
+   "usage_pct": 11.35,
+   "max_h": 0,
+   "max_v": 3,
+   "overflow": 4818
+  },
+  "Total": {
+   "resource": 128433699,
+   "demand": 15067513,
+   "usage_pct": 11.73,
+   "max_h": 5,
+   "max_v": 6,
+   "overflow": 5594
+  }
+ },
+ "windows": {
+  "M2": {
+   "windows": 603840,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M3": {
+   "windows": 603840,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M4": {
+   "windows": 603840,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M5": {
+   "windows": 603840,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    0.0,
+    0.0
+   ]
+  },
+  "M6": {
+   "windows": 603840,
+   "over": 1,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0069,
+   "at": [
+    12381.6,
+    12418.56
+   ],
+   "over_bbox_um": [
+    12381.6,
+    12418.56,
+    12381.6,
+    12418.56
+   ]
+  },
+  "M7": {
+   "windows": 603840,
+   "over": 1,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0069,
+   "at": [
+    11975.04,
+    15375.36
+   ],
+   "over_bbox_um": [
+    11975.04,
+    15375.36,
+    11975.04,
+    15375.36
+   ]
+  },
+  "M8": {
+   "windows": 603840,
+   "over": 0,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0,
+   "at": [
+    1478.4,
+    22065.12
+   ]
+  },
+  "M9": {
+   "windows": 603840,
+   "over": 38,
+   "zero_cap_used": 0,
+   "max_ratio": 1.0357,
+   "at": [
+    23506.56,
+    29383.2
+   ],
+   "over_bbox_um": [
+    11642.4,
+    3326.4,
+    23506.56,
+    30307.2
+   ]
+  }
+ }
+}

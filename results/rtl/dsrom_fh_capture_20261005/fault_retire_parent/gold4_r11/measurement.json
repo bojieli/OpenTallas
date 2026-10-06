@@ -1,0 +1,27 @@
+{
+  "status": "PASS_CONNECTED_ENABLEON_EXACT_DEFAULT_OFF_NOT_PHYSICAL_ADOPTED",
+  "source_commit": "1465bcb29ffec7f77839a15d717ef5e682c16a7f",
+  "shape": "MP1 G4W16",
+  "one_original_gold_config": true,
+  "baseline_cycles": 62878,
+  "measured_cycles": 62963,
+  "measured_added_cycles": 85,
+  "per_chain_added_cycles": 17,
+  "tokx_cumulative_added_cycles": [
+    17,
+    34,
+    51,
+    68,
+    85
+  ],
+  "measured_added_ns_at_1p2GHz": 70.83333333333334,
+  "old_candidate_added_cycles": 40,
+  "candidate_underestimated_cycles": 45,
+  "busy_me": 61930,
+  "busy_su": 1037,
+  "golden": "TOKX5/5 and vals exact; VM/KV mismatches0; fault0",
+  "unchanged_evidence_reused": "Prior10gold and protectedSRAM gates, no broad replays",
+  "CPU_guard": "E1pre/postload63.001 idle72.908/76.900 RAM576.843/577.918GiB disk603.161/603.155GiB unchangedadmit16,16cores",
+  "physical": "Pending actual mapped new fault fanout/bank clock/SRAM clkQ/SS60FF25 slew classes. C18/C19 preserved.",
+  "native_endpoint": "Source-owned child endpoint gate PASS8; native data/check VM backend288macro/crossings owned Copernicus, not replayed or claimed physical/numerical qualified by this component."
+}

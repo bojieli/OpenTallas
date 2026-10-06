@@ -1,0 +1,6 @@
+%Error-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:8:8: ... Location of module with timescale
+    8 | module ot_hbm_accel_cdc_fifo #(parameter integer W = 32, parameter integer AW = 5) (
+      |        ^~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 1 error(s)
+        ... See the manual and https://verilator.org for more assistance.

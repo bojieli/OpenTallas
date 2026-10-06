@@ -1,0 +1,3 @@
+`verilator_config
+// Cut one identical SFU child; HC group/lane cuts already exist in pinned RTL.
+hier_block -module "ot_hbm_sfu_result_c12"

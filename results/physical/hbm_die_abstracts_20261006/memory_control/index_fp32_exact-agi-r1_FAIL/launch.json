@@ -1,0 +1,41 @@
+{
+  "status": "FRESH_CPU_FIT_BEFORE_GUARD",
+  "capacity": {
+    "utc": "2026-10-06T04:14:42Z",
+    "CPU_count": 64,
+    "load1": 12.51220703125,
+    "idle_CPU": 57.62805259862242,
+    "MemAvailable_bytes": 38387081216,
+    "NVMe_free_bytes": 305526906880,
+    "CPU_fit": true,
+    "guard_core_sha256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f",
+    "guard_reserve_bytes": 20246159155,
+    "guard_ramping_bytes": 0
+  },
+  "guard_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv": "bd10391e9356b4cf5e2bbe2951fb369501fda0543b343c55164fa82f01bca970"
+  },
+  "requested_CPU": 1,
+  "reservation_GiB": 1,
+  "basis": "single-process Icarus finite10x512x128 SRAM+17SECDED words; 1GiB reservation without process limits",
+  "whole_VM_parent_qualified": false,
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "1",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-894ab1292/physical/hbm_die_abstracts_20261006/memory_control/run_index_fp32_adapter.py",
+    "--root",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-894ab1292",
+    "--out",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/exact-agi-r1",
+    "--admitted"
+  ],
+  "exit": 1,
+  "guard_unchanged": true
+}

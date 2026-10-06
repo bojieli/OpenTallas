@@ -1,0 +1,33 @@
+{
+  "scope": "Actual native request/check and held reply/check clocked receivers in conditional head child; no whole2MiB VM rebuild or backend proof",
+  "source_sha256": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_vm_endpoint_ctx.sv": "bd0ddfe616fac203def469e4a64180860fbe11f322044bf2651d543cd766fbd2",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv": "66eeeab408ca3afee7e3248cacdc41232072735bb123d69396f2e765575e8c99",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv": "f765dae04268ca8eb3a3055803c0edbfad619f04a72079ecad5e5ef7bc4328ff",
+    "rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv": "fa94dd3b03fa80de055866a1d0f443ea94c028033375266639860fa41ead8a02",
+    "physical/dsrom_fh_capture/run.sh": "8787db7147e6dad37dd1ce8580348ad9415849acc6e9115fec3e928ad97453c6",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "gate": "native_endpoint.log PASS8: masked-X, full47owner/32ordinal unchanged, independent8headID, mappedports1..4, published-visibility vsretirement, heldonceACK,bounds",
+  "new_callbacks_FF_bits": 22,
+  "existing_endpoint_FF_upper_bits": 8196,
+  "default_OFF": true,
+  "arithmetic_source_unchanged_since_gold4_r11": true,
+  "no_gold4_replay": true,
+  "actual_capture_clock": "Native source_packet/source_check and held_reply/held_check use same native fast_clk833.333333ps as head; head64 SRAM root clocks and SSclkQ524.072474/FF346.043664ps preserved; parent backend1111.111111ps 3:4 and actual transport remain parent source",
+  "macro_clock_caps_fF": {
+    "SS_each": 8.68376,
+    "FF_each": 10.3732,
+    "SS_head64": 555.76064,
+    "FF_head64": 663.8848
+  },
+  "actual_receiver_pin_caps_fF": null,
+  "mapped_stage_required": true,
+  "conditional_scope": "Native checked_reply_capture/published_reply_v/commit_busy must bind real protected frontend publication/pending. Existing boundary.sdc output exclusions still only observation scope. No unsupported callback/transport/fullparent qualification is claimed.",
+  "numerical_measured_cycles": 62963,
+  "measured_delta": 85,
+  "measured_ns_at_1p2GHz": 70.83333333333334,
+  "next_actual_command": "OT_FH_RETIRE=1 OT_FH_VM_ENDPOINT=1 OT_FH_PROTECT_SPLIT=1 OT_FH_STOP_AFTER=floorplan OT_FH_ROUTE_TAG=C20_fault_retire_native bash physical/dsrom_fh_capture/run.sh ABSOLUTE_NVME_RUN_ROOT",
+  "purpose": "Changed-source mapped+PDN object and actual SS/FF pin/member/row census before full placement; preserve all returned objects. Full-stage resume only after actual modeled membership and loaded-native clock binding. No geometry-only rescue or synth replay."
+}

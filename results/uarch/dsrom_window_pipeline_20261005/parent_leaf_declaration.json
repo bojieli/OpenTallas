@@ -1,0 +1,27 @@
+{
+  "scope": "actual full leaf synthesis declaration for prepared parent cut",
+  "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "declaration": "physical/dsrom_window_parent_context/ot_dsrom_window_pipeline_context_bb.v",
+  "actual_port_source": "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv",
+  "source_sha256": {
+    "physical/dsrom_window_parent_context/ot_dsrom_window_pipeline_context_bb.v": "c24aefbcc745957950d3152fea0bc9f432eeb53933f74e3287282452d35ceaaf",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv": "775c27e5f60c50f040701fefe4b801faac6bcf438a7dd7e849e8c670396f8704"
+  },
+  "measured_scalar_port_bits": 70354,
+  "inventory": "results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json",
+  "preexisting_parent_price": "results/uarch/dsrom_window_pipeline_20261005/parent_caller_prebuild.json",
+  "added_FF_bits": 0,
+  "added_ports": 0,
+  "added_cycles": 0,
+  "behavioral_memory": false,
+  "physical_macro_views_required": [
+    "ot_dsrom_window_pipeline_context.lef",
+    "ot_dsrom_window_pipeline_context_ss.lib",
+    "ot_dsrom_window_pipeline_context_ff.lib"
+  ],
+  "terminal_leaf_required": true,
+  "parent_clock_load_slot_qualified": false,
+  "physical_adoption": false,
+  "verification": "Port declaration copied verbatim from previously elaborated actual top; no repeated passing exact/lint run. Declaration supplies no functional model or physical credit.",
+  "default_shape_only": true
+}
