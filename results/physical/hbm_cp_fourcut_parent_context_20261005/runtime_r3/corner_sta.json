@@ -1,0 +1,37 @@
+{
+  "schema": "hbm.cp.parent-context.corners.v1",
+  "ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -275.79,
+    "tns_ps": -3106.7,
+    "worst_register_d_slack_ps": -36.269653,
+    "worst_reg_to_reg_slack_ps": -36.27,
+    "worst_input_to_reg_slack_ps": 242.33,
+    "worst_output_port_slack_ps": -275.792938,
+    "violating_d_pins": 104,
+    "errors": [],
+    "odb_sha256": "8788296daf72b9e4487442844cce41aa5a267755ea8bf915db3748449c3924e4",
+    "spef_sha256": "2a3fb00cbfed22d9fe60be5bcea800b08e4b0a261b4e0fcd01afeed3d1716c54",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": 6.93,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 6.930276,
+    "worst_reg_to_reg_slack_ps": 14.13,
+    "worst_input_to_reg_slack_ps": 11.58,
+    "worst_output_port_slack_ps": 80.670387,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "8788296daf72b9e4487442844cce41aa5a267755ea8bf915db3748449c3924e4",
+    "spef_sha256": "2a3fb00cbfed22d9fe60be5bcea800b08e4b0a261b4e0fcd01afeed3d1716c54",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+  "uses_extracted_interconnect_and_propagated_clock": true,
+  "external_loads_analytical": true,
+  "parent_budget_adoption": false
+}
