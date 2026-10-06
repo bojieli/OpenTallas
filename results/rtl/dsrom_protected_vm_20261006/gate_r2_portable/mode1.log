@@ -1,0 +1,7 @@
+EVENT txn1 accept_fast689 reply_fast710 retired_fast723 reads0 writes1 CE0
+EVENT txn2 accept_fast725 reply_fast738 retired_fast751 reads1 writes0 CE1
+PASS PROTECTED_DSVM actualSRAM CE corrected golden and positive receipt
+- rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 627ns; walltime 0.211 s; speed 2.929 us/s
+- Verilator: cpu 0.214 s on 1 threads; alloced 511 MB

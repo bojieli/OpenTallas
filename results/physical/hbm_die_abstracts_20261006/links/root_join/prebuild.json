@@ -1,0 +1,34 @@
+{
+  "status": "TOP_FIRST_SOURCE_COMPOSITION_PREBUILD",
+  "root_MACs": 0,
+  "root_banks": 2,
+  "root_rows": 128,
+  "root_payload_bits": 2063,
+  "root_owner_bits": 192,
+  "root_SRAM_macros": 22,
+  "root_source_price": "existing vm_root_prebuild.json and vm_root_composed_component.json, unchanged",
+  "quarter_order": [
+    "SW",
+    "SE",
+    "NW",
+    "NE"
+  ],
+  "root_clock": "n_clk_stream833.333ps actual input root, same clk drives initial child held seats",
+  "root_reset": "n_rst_stream cold POR only; no warm-reset conversion",
+  "branch_fanout": "mandatory1..4 per quarter from enclosing owner, default0 refuses enabled source; no guessed installed count",
+  "test_vehicle": "one consumer per each of4branches, a composed component fixture; no finaldie fanout claim",
+  "protected_child_FF_per_quarter": "3388+650*fanout; actual checked input/controller + per-branch ACK seats",
+  "total_child_FF_with_NO1_fixture": 16152,
+  "extra_join_storage_bits": 0,
+  "extra_join_cycles": 0,
+  "branch_CAPTURE_ARM_cycles": 2,
+  "receipt_return": "actual child source_release/full192 held owner -> root tap_ACK; no ACK_ready invented",
+  "warm": "block new root requests only; existing write ACK/taps/child ACKs continue draining; activation-only warm_drained is a new real term for enclosing reset owner",
+  "model_rate_credit": false,
+  "physical_closed": false,
+  "source_hashes": {
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "624d3c821cce33b0c6c7d7066228c160abdaa198ae0fa41a269cfee053a7d166",
+    "tools/uarch_model.py": "87d4160c5df834a8b5319546412bdda96f326a5b5520b1d072608f59a676f7e8"
+  }
+}
