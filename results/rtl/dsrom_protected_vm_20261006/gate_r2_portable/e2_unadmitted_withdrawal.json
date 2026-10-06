@@ -1,0 +1,21 @@
+{
+  "utc": 1791260262.3692467,
+  "pid": 2428681,
+  "start_ticks": "9392943",
+  "cmd": "python3 copernicus_protected_vm_r2.py ",
+  "cwd": "/srv/opentallas-scratch2/codex/ds-protected-vm-20261006/gate_r2",
+  "children": "",
+  "markers": {
+    "command.json": false,
+    "source_pins.json": false,
+    "build.log": false,
+    "build.exit": false,
+    "terminal.exit": false,
+    "controller.exit": false
+  },
+  "source": "554d7b0c9",
+  "reason": "Owner-authorized sole R2 target AGI with fresh CPU/RAM/disk and unchanged4GiBguard; verified E2 unadmitted only",
+  "target": "ot-agidock128:/srv/opentallas-scratch/codex/ds-protected-vm-20261006/gate_r2_portable",
+  "action": "SIGTERM exact stopped controller then SIGCONT to deliver; preserve all E2 source/scratch",
+  "absent_after": true
+}
