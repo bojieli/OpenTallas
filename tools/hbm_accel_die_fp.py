@@ -1549,6 +1549,7 @@ def build_qwen(variant=None):
         return it
     core_h = up(QBLOCKS['core'][0] * 1e6 / bw, GY)
     core = blk('sp_core', 'qhd_core', QBLOCKS['core'][0], dn(geo['mid'] - core_h / 2, GY))
+    band_port = bool(variant.get('band_ports'))    # put each band's port slice at its own band's mid-height
     # q2: the port slices pack against the core (q1 GRT: 65 % of the i5 overflow was the 6,144-bit port -> core words
     #     climbing over the slabs between them); the scale slabs and the loader spread over the rest of the column
     packed = variant.get('port_core', 0)   # q3: MEASURED q1 spread i50 overflow 0; packing at the core (q2) gave 2,764 (pword at the slab boundary)
@@ -1567,42 +1568,45 @@ def build_qwen(variant=None):
         return dict(scale=QBLOCKS['scale'][0] / 4, port=QBLOCKS['port'][0] / 4, loader=QBLOCKS['loader'][0],
                     host_b=hb_mm2)[kind_]
     PG_ = 2 * Q_GAP                                   # port slice <-> core / port spacing when packed
-    for lo_side, seq, a, b in ((True, lower, y_lo, core.y - Q_GAP), (False, upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
-        hs_ = [up(mm(k_) * 1e6 / bw, GY) for _, k_, _ in seq]
-        ys_ = {}
-        if packed:
-            ports = [i for i, (_, k_, _) in enumerate(seq) if k_ == 'port']
-            rest = [i for i in range(len(seq)) if i not in ports]
-            if lo_side:          # ports top-down from the core, the rest spread below
-                y = core.y - PG_
-                for i in reversed(ports):
-                    y = dn(y - hs_[i], GY)
-                    ys_[i] = y
-                    y -= PG_
-                b2, a2 = y, a
-            else:
-                y = core.y + core.h + SHAVE + PG_
-                for i in ports:
-                    ys_[i] = up(y, GY)
-                    y = ys_[i] + hs_[i] + PG_
-                a2, b2 = y, b
-            gap = (b2 - a2 - sum(hs_[i] for i in rest)) / (len(rest) + 1)
-            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap)
-            y = a2 + gap
-            for i in rest:
-                ys_[i] = up(y, GY)
-                y += hs_[i] + gap
-        else:
-            gap = (b - a - sum(hs_)) / (len(seq) + 1)
-            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a, b, sum(hs_))
-            y = a + gap
-            for i in range(len(seq)):
-                ys_[i] = up(y, GY)
-                y += hs_[i] + gap
-        for i, (name, k_, _) in enumerate(seq):
-            master = f'qhd_{name[3:]}'
-            blk(name, master, mm(k_), ys_[i], kind='host_slab' if k_ == 'host_b' else 'spine',
-                dom='link' if k_ == 'host_b' else 'stream_1p2')
+    # slab order: with band_ports the port slices sit at their own block-row band's mid-height (the q3 bound showed the
+    # port word reaching 81 stages against the vehicle's 38); the scale slabs and the loader fill the remaining column.
+    kinds_of = dict((nn, kk) for nn, kk, _ in lower + upper)
+
+    def slab_gap(occ, need):
+        gs = [(y_lo, occ[0][0])] + [(occ[i][1], occ[i + 1][0]) for i in range(len(occ) - 1)] + \
+             [(occ[-1][1], y_hi)]
+        gs = [g for g in gs if g[1] - g[0] > need + Q_GAP]
+        if not gs:
+            return None
+        gs.sort(key=lambda g: -(g[1] - g[0]))
+        return gs[0]
+    if band_port:
+        ph = up(mm('port') * 1e6 / bw, GY)
+        occ = []
+        for band in range(4):
+            r0 = band * 4
+            ymid = (row_y[r0] + row_y[r0 + 3] + th) / 2
+            yb_ = up(min(max(ymid - ph / 2, y_lo), y_hi - ph), GY)
+            blk(f'sp_port{band}', 'qhd_port', mm('port'), yb_, w=bw)
+            occ.append((yb_, yb_ + ph + SHAVE))
+        occ.sort()
+        rest = [n for n, k_, _ in lower + upper if k_ != 'port']
+        hs_r = [up(mm(kinds_of[n]) * 1e6 / bw, GY) for n in rest]
+        gs = [(y_lo, occ[0][0])] + [(occ[i][1], occ[i + 1][0]) for i in range(len(occ) - 1)] + [(occ[-1][1], y_hi)]
+        gs = [g for g in gs if g[1] - g[0] > 2 * Q_GAP]
+        gs.sort(key=lambda g: -(g[1] - g[0]))          # fill the largest free span first
+        for n, h_ in zip(rest, hs_r):
+            placed = False
+            for gi, (a_, b_) in enumerate(gs):
+                if b_ - a_ >= h_ + 2 * Q_GAP:
+                    blk(n, f'qhd_{n[3:]}', mm(kinds_of[n]), up(a_ + Q_GAP, GY),
+                        kind='host_slab' if n == 'sp_host_b' else 'spine',
+                        dom='link' if n == 'sp_host_b' else 'stream_1p2')
+                    gs[gi] = (a_ + Q_GAP + h_ + Q_GAP, b_)
+                    placed = True
+                    break
+            assert placed, ('no free column span for ' + n, h_, gs, occ)
+        gs.sort(key=lambda g: -(g[1] - g[0]))
     notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
                  f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
     m = dict(die='qwen', geo=geo, insts=insts, regions=regions, internal_nets=[], groups=groups, hub=hub, tiles=tiles, heads=heads,
