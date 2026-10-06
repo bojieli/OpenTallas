@@ -21,6 +21,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     input wire [46:0] native_request_owner,
     input wire [1266:0] native_checked_reply,
     output wire native_request_checked_v,native_reply_checked_v,
+    output wire [3:0] native_permission_capture,
     output wire [2830:0] native_captured_request,native_captured_request_check,
     output wire [1266:0] native_captured_reply,native_captured_reply_check,
     input wire [7:0] commit_ack_id,
@@ -133,6 +134,7 @@ module ot_hdc_v41_fh_macro_ctx #(
     // cannot conceal a slow grant. Existing consumption edge, not new cycles.
     generate if(VM_GUARD) begin : g_native_grant_receiver
         (* keep=1,dont_touch=1 *) reg request_v,request_check,reply_v,reply_check;
+        assign native_permission_capture={reply_check,reply_v,request_check,request_v};
         always @(posedge clk) begin
             if(!native_cold_n) begin
                 request_v<=0;request_check<=1;reply_v<=0;reply_check<=1;
@@ -141,6 +143,8 @@ module ot_hdc_v41_fh_macro_ctx #(
                 reply_v<=native_reply_checked_v;reply_check<=~native_reply_checked_v;
             end
         end
+    end else begin : g_no_grant_receiver
+        assign native_permission_capture=0;
     end endgenerate
     assign fault=RETIRE?parent_fault:(child_fault||memory_fault);
 `ifndef SYNTHESIS

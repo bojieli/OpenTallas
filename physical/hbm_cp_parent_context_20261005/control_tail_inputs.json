@@ -1,0 +1,2291 @@
+{
+  "schema": "hbm.cp.parent-context.physical-inputs.v1",
+  "contract": "results/rtl/hbm_child_contract_20261005/child_reservations.json",
+  "contract_sha256": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f",
+  "checked_sources": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "actual_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "allocation_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": {
+      "actual_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+      "allocation_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": {
+      "actual_sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "allocation_sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": {
+      "actual_sha256": "a4a7bd4bb8d725b6518f8c9d79d10151258c2f082f718a6524789f4d7c91c9ee",
+      "allocation_sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": {
+      "actual_sha256": "9d2c511c15cc5ae5fed84d9a9b6ee8a78b4d68a04b870084dfe450497ddff194",
+      "allocation_sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": {
+      "actual_sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+      "allocation_sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": {
+      "actual_sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+      "allocation_sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": {
+      "actual_sha256": "d58a4a81f082c94a173d02010b572b59c97e10611b6e1523724a3199797bbb70",
+      "allocation_sha256": "d730b8d560ac04b9080e404f22b22d08c475ee1121bf6d342b4e7e2135b964bf",
+      "qualified_combinational_successor": true,
+      "parent_ports_unchanged": true,
+      "private_factor_bits": 12,
+      "added_RTL_FF": 0,
+      "added_cycles": 0
+    }
+  },
+  "die_area_um": [
+    0,
+    0,
+    77.76000000000022,
+    77.76000000000022
+  ],
+  "core_area_um": [
+    17.279999999998836,
+    17.280000000000655,
+    60.47999999999956,
+    60.48000000000138
+  ],
+  "parent_translation_um": [
+    11444.976,
+    9784.8
+  ],
+  "regions": [
+    [
+      "cp_body",
+      [
+        17.279999999998836,
+        17.280000000000655,
+        60.47999999999956,
+        56.159999999999854
+      ]
+    ],
+    [
+      "cp_association",
+      [
+        17.279999999998836,
+        56.159999999999854,
+        22.463999999999942,
+        60.47999999999956
+      ]
+    ]
+  ],
+  "pins": [
+    {
+      "name": "launch_v[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.600000000000364
+      ],
+      "parent_coordinate_um": 9808.4
+    },
+    {
+      "name": "launch_v[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.66400000000067
+      ],
+      "parent_coordinate_um": 9808.464
+    },
+    {
+      "name": "launch_pc[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.728000000000975
+      ],
+      "parent_coordinate_um": 9808.528
+    },
+    {
+      "name": "launch_pc[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.79200000000128
+      ],
+      "parent_coordinate_um": 9808.592
+    },
+    {
+      "name": "launch_pc[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.856000000001586
+      ],
+      "parent_coordinate_um": 9808.656
+    },
+    {
+      "name": "launch_pc[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.920000000000073
+      ],
+      "parent_coordinate_um": 9808.72
+    },
+    {
+      "name": "launch_pc[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        23.98400000000038
+      ],
+      "parent_coordinate_um": 9808.784
+    },
+    {
+      "name": "launch_pc[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.048000000000684
+      ],
+      "parent_coordinate_um": 9808.848
+    },
+    {
+      "name": "launch_pc[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.11200000000099
+      ],
+      "parent_coordinate_um": 9808.912
+    },
+    {
+      "name": "launch_pc[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.176000000001295
+      ],
+      "parent_coordinate_um": 9808.976
+    },
+    {
+      "name": "launch_pc[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.2400000000016
+      ],
+      "parent_coordinate_um": 9809.04
+    },
+    {
+      "name": "launch_pc[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.304000000000087
+      ],
+      "parent_coordinate_um": 9809.104
+    },
+    {
+      "name": "launch_pc[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.368000000000393
+      ],
+      "parent_coordinate_um": 9809.168
+    },
+    {
+      "name": "launch_pc[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.4320000000007
+      ],
+      "parent_coordinate_um": 9809.232
+    },
+    {
+      "name": "launch_pc[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.496000000001004
+      ],
+      "parent_coordinate_um": 9809.296
+    },
+    {
+      "name": "launch_pc[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.56000000000131
+      ],
+      "parent_coordinate_um": 9809.36
+    },
+    {
+      "name": "launch_pc[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.624000000001615
+      ],
+      "parent_coordinate_um": 9809.424
+    },
+    {
+      "name": "launch_pc[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.688000000000102
+      ],
+      "parent_coordinate_um": 9809.488
+    },
+    {
+      "name": "launch_pc[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.752000000000407
+      ],
+      "parent_coordinate_um": 9809.552
+    },
+    {
+      "name": "launch_pc[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.816000000000713
+      ],
+      "parent_coordinate_um": 9809.616
+    },
+    {
+      "name": "launch_pc[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.88000000000102
+      ],
+      "parent_coordinate_um": 9809.68
+    },
+    {
+      "name": "launch_pc[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        24.944000000001324
+      ],
+      "parent_coordinate_um": 9809.744
+    },
+    {
+      "name": "launch_pc[20]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.00800000000163
+      ],
+      "parent_coordinate_um": 9809.808
+    },
+    {
+      "name": "launch_pc[21]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.072000000000116
+      ],
+      "parent_coordinate_um": 9809.872
+    },
+    {
+      "name": "launch_pc[22]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.136000000000422
+      ],
+      "parent_coordinate_um": 9809.936
+    },
+    {
+      "name": "launch_pc[23]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.200000000000728
+      ],
+      "parent_coordinate_um": 9810.0
+    },
+    {
+      "name": "launch_pc[24]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.264000000001033
+      ],
+      "parent_coordinate_um": 9810.064
+    },
+    {
+      "name": "launch_pc[25]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.32800000000134
+      ],
+      "parent_coordinate_um": 9810.128
+    },
+    {
+      "name": "launch_pc[26]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.391999999999825
+      ],
+      "parent_coordinate_um": 9810.192
+    },
+    {
+      "name": "launch_pc[27]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.45600000000013
+      ],
+      "parent_coordinate_um": 9810.256
+    },
+    {
+      "name": "launch_pc[28]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.520000000000437
+      ],
+      "parent_coordinate_um": 9810.32
+    },
+    {
+      "name": "launch_pc[29]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.584000000000742
+      ],
+      "parent_coordinate_um": 9810.384
+    },
+    {
+      "name": "launch_pc[30]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.648000000001048
+      ],
+      "parent_coordinate_um": 9810.448
+    },
+    {
+      "name": "launch_pc[31]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.712000000001353
+      ],
+      "parent_coordinate_um": 9810.512
+    },
+    {
+      "name": "cp_job[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.77599999999984
+      ],
+      "parent_coordinate_um": 9810.576
+    },
+    {
+      "name": "cp_job[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.840000000000146
+      ],
+      "parent_coordinate_um": 9810.64
+    },
+    {
+      "name": "cp_job[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.90400000000045
+      ],
+      "parent_coordinate_um": 9810.704
+    },
+    {
+      "name": "cp_job[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        25.968000000000757
+      ],
+      "parent_coordinate_um": 9810.768
+    },
+    {
+      "name": "cp_job[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.032000000001062
+      ],
+      "parent_coordinate_um": 9810.832
+    },
+    {
+      "name": "cp_job[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.096000000001368
+      ],
+      "parent_coordinate_um": 9810.896
+    },
+    {
+      "name": "cp_job[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.159999999999854
+      ],
+      "parent_coordinate_um": 9810.96
+    },
+    {
+      "name": "cp_job[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.22400000000016
+      ],
+      "parent_coordinate_um": 9811.024
+    },
+    {
+      "name": "cp_job[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.288000000000466
+      ],
+      "parent_coordinate_um": 9811.088
+    },
+    {
+      "name": "cp_job[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.35200000000077
+      ],
+      "parent_coordinate_um": 9811.152
+    },
+    {
+      "name": "cp_job[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.416000000001077
+      ],
+      "parent_coordinate_um": 9811.216
+    },
+    {
+      "name": "cp_job[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.480000000001382
+      ],
+      "parent_coordinate_um": 9811.28
+    },
+    {
+      "name": "cp_job[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.54399999999987
+      ],
+      "parent_coordinate_um": 9811.344
+    },
+    {
+      "name": "cp_job[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.608000000000175
+      ],
+      "parent_coordinate_um": 9811.408
+    },
+    {
+      "name": "cp_job[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.67200000000048
+      ],
+      "parent_coordinate_um": 9811.472
+    },
+    {
+      "name": "cp_job[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.736000000000786
+      ],
+      "parent_coordinate_um": 9811.536
+    },
+    {
+      "name": "cp_job[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.80000000000109
+      ],
+      "parent_coordinate_um": 9811.6
+    },
+    {
+      "name": "cp_job[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.864000000001397
+      ],
+      "parent_coordinate_um": 9811.664
+    },
+    {
+      "name": "cp_job[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.927999999999884
+      ],
+      "parent_coordinate_um": 9811.728
+    },
+    {
+      "name": "cp_job[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        26.99200000000019
+      ],
+      "parent_coordinate_um": 9811.792
+    },
+    {
+      "name": "cp_job[20]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.056000000000495
+      ],
+      "parent_coordinate_um": 9811.856
+    },
+    {
+      "name": "cp_job[21]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.1200000000008
+      ],
+      "parent_coordinate_um": 9811.92
+    },
+    {
+      "name": "cp_job[22]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.184000000001106
+      ],
+      "parent_coordinate_um": 9811.984
+    },
+    {
+      "name": "cp_job[23]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.24800000000141
+      ],
+      "parent_coordinate_um": 9812.048
+    },
+    {
+      "name": "cp_job[24]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.311999999999898
+      ],
+      "parent_coordinate_um": 9812.112
+    },
+    {
+      "name": "cp_job[25]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.376000000000204
+      ],
+      "parent_coordinate_um": 9812.176
+    },
+    {
+      "name": "cp_job[26]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.44000000000051
+      ],
+      "parent_coordinate_um": 9812.24
+    },
+    {
+      "name": "cp_job[27]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.504000000000815
+      ],
+      "parent_coordinate_um": 9812.304
+    },
+    {
+      "name": "cp_job[28]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.56800000000112
+      ],
+      "parent_coordinate_um": 9812.368
+    },
+    {
+      "name": "cp_job[29]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.632000000001426
+      ],
+      "parent_coordinate_um": 9812.432
+    },
+    {
+      "name": "cp_job[30]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.695999999999913
+      ],
+      "parent_coordinate_um": 9812.496
+    },
+    {
+      "name": "cp_job[31]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.76000000000022
+      ],
+      "parent_coordinate_um": 9812.56
+    },
+    {
+      "name": "cp_gen[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.824000000000524
+      ],
+      "parent_coordinate_um": 9812.624
+    },
+    {
+      "name": "cp_gen[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.88800000000083
+      ],
+      "parent_coordinate_um": 9812.688
+    },
+    {
+      "name": "cp_gen[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        27.952000000001135
+      ],
+      "parent_coordinate_um": 9812.752
+    },
+    {
+      "name": "cp_gen[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.01600000000144
+      ],
+      "parent_coordinate_um": 9812.816
+    },
+    {
+      "name": "launch_token[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.079999999999927
+      ],
+      "parent_coordinate_um": 9812.88
+    },
+    {
+      "name": "launch_token[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.144000000000233
+      ],
+      "parent_coordinate_um": 9812.944
+    },
+    {
+      "name": "launch_token[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.20800000000054
+      ],
+      "parent_coordinate_um": 9813.008
+    },
+    {
+      "name": "launch_token[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.272000000000844
+      ],
+      "parent_coordinate_um": 9813.072
+    },
+    {
+      "name": "launch_token[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.33600000000115
+      ],
+      "parent_coordinate_um": 9813.136
+    },
+    {
+      "name": "launch_token[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.400000000001455
+      ],
+      "parent_coordinate_um": 9813.2
+    },
+    {
+      "name": "launch_token[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.463999999999942
+      ],
+      "parent_coordinate_um": 9813.264
+    },
+    {
+      "name": "launch_token[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.528000000000247
+      ],
+      "parent_coordinate_um": 9813.328
+    },
+    {
+      "name": "launch_token[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.592000000000553
+      ],
+      "parent_coordinate_um": 9813.392
+    },
+    {
+      "name": "launch_token[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.65600000000086
+      ],
+      "parent_coordinate_um": 9813.456
+    },
+    {
+      "name": "launch_token[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.720000000001164
+      ],
+      "parent_coordinate_um": 9813.52
+    },
+    {
+      "name": "launch_token[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.78400000000147
+      ],
+      "parent_coordinate_um": 9813.584
+    },
+    {
+      "name": "launch_token[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.847999999999956
+      ],
+      "parent_coordinate_um": 9813.648
+    },
+    {
+      "name": "launch_token[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.912000000000262
+      ],
+      "parent_coordinate_um": 9813.712
+    },
+    {
+      "name": "launch_token[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        28.976000000000568
+      ],
+      "parent_coordinate_um": 9813.776
+    },
+    {
+      "name": "launch_token[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.040000000000873
+      ],
+      "parent_coordinate_um": 9813.84
+    },
+    {
+      "name": "launch_token[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.10400000000118
+      ],
+      "parent_coordinate_um": 9813.904
+    },
+    {
+      "name": "launch_pos[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.168000000001484
+      ],
+      "parent_coordinate_um": 9813.968
+    },
+    {
+      "name": "launch_pos[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.23199999999997
+      ],
+      "parent_coordinate_um": 9814.032
+    },
+    {
+      "name": "launch_pos[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.296000000000276
+      ],
+      "parent_coordinate_um": 9814.096
+    },
+    {
+      "name": "launch_pos[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.360000000000582
+      ],
+      "parent_coordinate_um": 9814.16
+    },
+    {
+      "name": "launch_pos[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.424000000000888
+      ],
+      "parent_coordinate_um": 9814.224
+    },
+    {
+      "name": "launch_pos[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.488000000001193
+      ],
+      "parent_coordinate_um": 9814.288
+    },
+    {
+      "name": "launch_pos[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.5520000000015
+      ],
+      "parent_coordinate_um": 9814.352
+    },
+    {
+      "name": "launch_pos[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.615999999999985
+      ],
+      "parent_coordinate_um": 9814.416
+    },
+    {
+      "name": "launch_pos[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.68000000000029
+      ],
+      "parent_coordinate_um": 9814.48
+    },
+    {
+      "name": "launch_pos[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.744000000000597
+      ],
+      "parent_coordinate_um": 9814.544
+    },
+    {
+      "name": "launch_pos[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.808000000000902
+      ],
+      "parent_coordinate_um": 9814.608
+    },
+    {
+      "name": "launch_pos[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.872000000001208
+      ],
+      "parent_coordinate_um": 9814.672
+    },
+    {
+      "name": "launch_pos[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        29.936000000001513
+      ],
+      "parent_coordinate_um": 9814.736
+    },
+    {
+      "name": "launch_pos[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.0
+      ],
+      "parent_coordinate_um": 9814.8
+    },
+    {
+      "name": "launch_pos[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.064000000000306
+      ],
+      "parent_coordinate_um": 9814.864
+    },
+    {
+      "name": "launch_pos[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.12800000000061
+      ],
+      "parent_coordinate_um": 9814.928
+    },
+    {
+      "name": "launch_pos[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.192000000000917
+      ],
+      "parent_coordinate_um": 9814.992
+    },
+    {
+      "name": "launch_pos[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.256000000001222
+      ],
+      "parent_coordinate_um": 9815.056
+    },
+    {
+      "name": "launch_pos[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.320000000001528
+      ],
+      "parent_coordinate_um": 9815.12
+    },
+    {
+      "name": "launch_pos[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.384000000000015
+      ],
+      "parent_coordinate_um": 9815.184
+    },
+    {
+      "name": "native_launch[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.44800000000032
+      ],
+      "parent_coordinate_um": 9815.248
+    },
+    {
+      "name": "native_launch[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.512000000000626
+      ],
+      "parent_coordinate_um": 9815.312
+    },
+    {
+      "name": "lease_v",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.57600000000093
+      ],
+      "parent_coordinate_um": 9815.376
+    },
+    {
+      "name": "lease_granted",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.640000000001237
+      ],
+      "parent_coordinate_um": 9815.44
+    },
+    {
+      "name": "release_v",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.704000000001543
+      ],
+      "parent_coordinate_um": 9815.504
+    },
+    {
+      "name": "release_r",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.76800000000003
+      ],
+      "parent_coordinate_um": 9815.568
+    },
+    {
+      "name": "exec_done",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.832000000000335
+      ],
+      "parent_coordinate_um": 9815.632
+    },
+    {
+      "name": "exec_fault",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.89600000000064
+      ],
+      "parent_coordinate_um": 9815.696
+    },
+    {
+      "name": "retired_original_ops[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        30.960000000000946
+      ],
+      "parent_coordinate_um": 9815.76
+    },
+    {
+      "name": "retired_original_ops[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.02400000000125
+      ],
+      "parent_coordinate_um": 9815.824
+    },
+    {
+      "name": "retired_original_ops[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.088000000001557
+      ],
+      "parent_coordinate_um": 9815.888
+    },
+    {
+      "name": "retired_original_ops[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.152000000000044
+      ],
+      "parent_coordinate_um": 9815.952
+    },
+    {
+      "name": "shared_fault",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.21600000000035
+      ],
+      "parent_coordinate_um": 9816.016
+    },
+    {
+      "name": "owned",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.280000000000655
+      ],
+      "parent_coordinate_um": 9816.08
+    },
+    {
+      "name": "pending",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.34400000000096
+      ],
+      "parent_coordinate_um": 9816.144
+    },
+    {
+      "name": "quiet",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.408000000001266
+      ],
+      "parent_coordinate_um": 9816.208
+    },
+    {
+      "name": "selected",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.47200000000157
+      ],
+      "parent_coordinate_um": 9816.272
+    },
+    {
+      "name": "done",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.536000000000058
+      ],
+      "parent_coordinate_um": 9816.336
+    },
+    {
+      "name": "fault",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.600000000000364
+      ],
+      "parent_coordinate_um": 9816.4
+    },
+    {
+      "name": "selected_pc[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.66400000000067
+      ],
+      "parent_coordinate_um": 9816.464
+    },
+    {
+      "name": "selected_pc[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.728000000000975
+      ],
+      "parent_coordinate_um": 9816.528
+    },
+    {
+      "name": "selected_pc[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.79200000000128
+      ],
+      "parent_coordinate_um": 9816.592
+    },
+    {
+      "name": "selected_pc[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.856000000001586
+      ],
+      "parent_coordinate_um": 9816.656
+    },
+    {
+      "name": "selected_pc[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.920000000000073
+      ],
+      "parent_coordinate_um": 9816.72
+    },
+    {
+      "name": "selected_pc[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        31.98400000000038
+      ],
+      "parent_coordinate_um": 9816.784
+    },
+    {
+      "name": "selected_pc[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.048000000000684
+      ],
+      "parent_coordinate_um": 9816.848
+    },
+    {
+      "name": "selected_pc[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.11200000000099
+      ],
+      "parent_coordinate_um": 9816.912
+    },
+    {
+      "name": "selected_pc[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.176000000001295
+      ],
+      "parent_coordinate_um": 9816.976
+    },
+    {
+      "name": "selected_pc[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.2400000000016
+      ],
+      "parent_coordinate_um": 9817.04
+    },
+    {
+      "name": "selected_pc[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.30400000000009
+      ],
+      "parent_coordinate_um": 9817.104
+    },
+    {
+      "name": "selected_pc[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.36800000000039
+      ],
+      "parent_coordinate_um": 9817.168
+    },
+    {
+      "name": "selected_pc[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.4320000000007
+      ],
+      "parent_coordinate_um": 9817.232
+    },
+    {
+      "name": "selected_pc[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.496000000001004
+      ],
+      "parent_coordinate_um": 9817.296
+    },
+    {
+      "name": "selected_pc[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.56000000000131
+      ],
+      "parent_coordinate_um": 9817.36
+    },
+    {
+      "name": "selected_pc[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.624000000001615
+      ],
+      "parent_coordinate_um": 9817.424
+    },
+    {
+      "name": "selected_pc[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.6880000000001
+      ],
+      "parent_coordinate_um": 9817.488
+    },
+    {
+      "name": "selected_pc[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.75200000000041
+      ],
+      "parent_coordinate_um": 9817.552
+    },
+    {
+      "name": "selected_pc[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.81600000000071
+      ],
+      "parent_coordinate_um": 9817.616
+    },
+    {
+      "name": "selected_pc[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.88000000000102
+      ],
+      "parent_coordinate_um": 9817.68
+    },
+    {
+      "name": "selected_pc[20]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        32.944000000001324
+      ],
+      "parent_coordinate_um": 9817.744
+    },
+    {
+      "name": "selected_pc[21]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.00800000000163
+      ],
+      "parent_coordinate_um": 9817.808
+    },
+    {
+      "name": "selected_pc[22]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.072000000000116
+      ],
+      "parent_coordinate_um": 9817.872
+    },
+    {
+      "name": "selected_pc[23]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.13600000000042
+      ],
+      "parent_coordinate_um": 9817.936
+    },
+    {
+      "name": "selected_pc[24]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.20000000000073
+      ],
+      "parent_coordinate_um": 9818.0
+    },
+    {
+      "name": "selected_pc[25]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.26400000000103
+      ],
+      "parent_coordinate_um": 9818.064
+    },
+    {
+      "name": "selected_pc[26]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.32800000000134
+      ],
+      "parent_coordinate_um": 9818.128
+    },
+    {
+      "name": "selected_pc[27]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.391999999999825
+      ],
+      "parent_coordinate_um": 9818.192
+    },
+    {
+      "name": "selected_pc[28]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.45600000000013
+      ],
+      "parent_coordinate_um": 9818.256
+    },
+    {
+      "name": "selected_pc[29]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.52000000000044
+      ],
+      "parent_coordinate_um": 9818.32
+    },
+    {
+      "name": "selected_pc[30]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.58400000000074
+      ],
+      "parent_coordinate_um": 9818.384
+    },
+    {
+      "name": "selected_pc[31]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.64800000000105
+      ],
+      "parent_coordinate_um": 9818.448
+    },
+    {
+      "name": "held_job[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.71200000000135
+      ],
+      "parent_coordinate_um": 9818.512
+    },
+    {
+      "name": "held_job[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.77599999999984
+      ],
+      "parent_coordinate_um": 9818.576
+    },
+    {
+      "name": "held_job[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.840000000000146
+      ],
+      "parent_coordinate_um": 9818.64
+    },
+    {
+      "name": "held_job[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.90400000000045
+      ],
+      "parent_coordinate_um": 9818.704
+    },
+    {
+      "name": "held_job[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        33.96800000000076
+      ],
+      "parent_coordinate_um": 9818.768
+    },
+    {
+      "name": "held_job[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.03200000000106
+      ],
+      "parent_coordinate_um": 9818.832
+    },
+    {
+      "name": "held_job[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.09600000000137
+      ],
+      "parent_coordinate_um": 9818.896
+    },
+    {
+      "name": "held_job[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.159999999999854
+      ],
+      "parent_coordinate_um": 9818.96
+    },
+    {
+      "name": "held_job[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.22400000000016
+      ],
+      "parent_coordinate_um": 9819.024
+    },
+    {
+      "name": "held_job[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.288000000000466
+      ],
+      "parent_coordinate_um": 9819.088
+    },
+    {
+      "name": "held_job[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.35200000000077
+      ],
+      "parent_coordinate_um": 9819.152
+    },
+    {
+      "name": "held_job[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.41600000000108
+      ],
+      "parent_coordinate_um": 9819.216
+    },
+    {
+      "name": "held_job[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.48000000000138
+      ],
+      "parent_coordinate_um": 9819.28
+    },
+    {
+      "name": "held_job[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.54399999999987
+      ],
+      "parent_coordinate_um": 9819.344
+    },
+    {
+      "name": "held_job[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.608000000000175
+      ],
+      "parent_coordinate_um": 9819.408
+    },
+    {
+      "name": "held_job[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.67200000000048
+      ],
+      "parent_coordinate_um": 9819.472
+    },
+    {
+      "name": "held_job[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.736000000000786
+      ],
+      "parent_coordinate_um": 9819.536
+    },
+    {
+      "name": "held_job[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.80000000000109
+      ],
+      "parent_coordinate_um": 9819.6
+    },
+    {
+      "name": "held_job[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.8640000000014
+      ],
+      "parent_coordinate_um": 9819.664
+    },
+    {
+      "name": "held_job[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.927999999999884
+      ],
+      "parent_coordinate_um": 9819.728
+    },
+    {
+      "name": "held_job[20]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        34.99200000000019
+      ],
+      "parent_coordinate_um": 9819.792
+    },
+    {
+      "name": "held_job[21]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.056000000000495
+      ],
+      "parent_coordinate_um": 9819.856
+    },
+    {
+      "name": "held_job[22]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.1200000000008
+      ],
+      "parent_coordinate_um": 9819.92
+    },
+    {
+      "name": "held_job[23]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.184000000001106
+      ],
+      "parent_coordinate_um": 9819.984
+    },
+    {
+      "name": "held_job[24]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.24800000000141
+      ],
+      "parent_coordinate_um": 9820.048
+    },
+    {
+      "name": "held_job[25]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.3119999999999
+      ],
+      "parent_coordinate_um": 9820.112
+    },
+    {
+      "name": "held_job[26]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.376000000000204
+      ],
+      "parent_coordinate_um": 9820.176
+    },
+    {
+      "name": "held_job[27]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.44000000000051
+      ],
+      "parent_coordinate_um": 9820.24
+    },
+    {
+      "name": "held_job[28]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.504000000000815
+      ],
+      "parent_coordinate_um": 9820.304
+    },
+    {
+      "name": "held_job[29]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.56800000000112
+      ],
+      "parent_coordinate_um": 9820.368
+    },
+    {
+      "name": "held_job[30]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.632000000001426
+      ],
+      "parent_coordinate_um": 9820.432
+    },
+    {
+      "name": "held_job[31]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.69599999999991
+      ],
+      "parent_coordinate_um": 9820.496
+    },
+    {
+      "name": "held_gen[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.76000000000022
+      ],
+      "parent_coordinate_um": 9820.56
+    },
+    {
+      "name": "held_gen[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.824000000000524
+      ],
+      "parent_coordinate_um": 9820.624
+    },
+    {
+      "name": "held_gen[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.88800000000083
+      ],
+      "parent_coordinate_um": 9820.688
+    },
+    {
+      "name": "held_gen[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        35.952000000001135
+      ],
+      "parent_coordinate_um": 9820.752
+    },
+    {
+      "name": "held_token[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.01600000000144
+      ],
+      "parent_coordinate_um": 9820.816
+    },
+    {
+      "name": "held_token[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.07999999999993
+      ],
+      "parent_coordinate_um": 9820.88
+    },
+    {
+      "name": "held_token[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.14400000000023
+      ],
+      "parent_coordinate_um": 9820.944
+    },
+    {
+      "name": "held_token[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.20800000000054
+      ],
+      "parent_coordinate_um": 9821.008
+    },
+    {
+      "name": "held_token[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.272000000000844
+      ],
+      "parent_coordinate_um": 9821.072
+    },
+    {
+      "name": "held_token[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.33600000000115
+      ],
+      "parent_coordinate_um": 9821.136
+    },
+    {
+      "name": "held_token[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.400000000001455
+      ],
+      "parent_coordinate_um": 9821.2
+    },
+    {
+      "name": "held_token[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.46399999999994
+      ],
+      "parent_coordinate_um": 9821.264
+    },
+    {
+      "name": "held_token[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.52800000000025
+      ],
+      "parent_coordinate_um": 9821.328
+    },
+    {
+      "name": "held_token[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.59200000000055
+      ],
+      "parent_coordinate_um": 9821.392
+    },
+    {
+      "name": "held_token[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.65600000000086
+      ],
+      "parent_coordinate_um": 9821.456
+    },
+    {
+      "name": "held_token[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.720000000001164
+      ],
+      "parent_coordinate_um": 9821.52
+    },
+    {
+      "name": "held_token[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.78400000000147
+      ],
+      "parent_coordinate_um": 9821.584
+    },
+    {
+      "name": "held_token[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.847999999999956
+      ],
+      "parent_coordinate_um": 9821.648
+    },
+    {
+      "name": "held_token[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.91200000000026
+      ],
+      "parent_coordinate_um": 9821.712
+    },
+    {
+      "name": "held_token[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        36.97600000000057
+      ],
+      "parent_coordinate_um": 9821.776
+    },
+    {
+      "name": "held_token[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.04000000000087
+      ],
+      "parent_coordinate_um": 9821.84
+    },
+    {
+      "name": "held_pos[0]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.10400000000118
+      ],
+      "parent_coordinate_um": 9821.904
+    },
+    {
+      "name": "held_pos[1]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.168000000001484
+      ],
+      "parent_coordinate_um": 9821.968
+    },
+    {
+      "name": "held_pos[2]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.23199999999997
+      ],
+      "parent_coordinate_um": 9822.032
+    },
+    {
+      "name": "held_pos[3]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.29600000000028
+      ],
+      "parent_coordinate_um": 9822.096
+    },
+    {
+      "name": "held_pos[4]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.36000000000058
+      ],
+      "parent_coordinate_um": 9822.16
+    },
+    {
+      "name": "held_pos[5]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.42400000000089
+      ],
+      "parent_coordinate_um": 9822.224
+    },
+    {
+      "name": "held_pos[6]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.48800000000119
+      ],
+      "parent_coordinate_um": 9822.288
+    },
+    {
+      "name": "held_pos[7]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.5520000000015
+      ],
+      "parent_coordinate_um": 9822.352
+    },
+    {
+      "name": "held_pos[8]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.615999999999985
+      ],
+      "parent_coordinate_um": 9822.416
+    },
+    {
+      "name": "held_pos[9]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.68000000000029
+      ],
+      "parent_coordinate_um": 9822.48
+    },
+    {
+      "name": "held_pos[10]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.7440000000006
+      ],
+      "parent_coordinate_um": 9822.544
+    },
+    {
+      "name": "held_pos[11]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.8080000000009
+      ],
+      "parent_coordinate_um": 9822.608
+    },
+    {
+      "name": "held_pos[12]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.87200000000121
+      ],
+      "parent_coordinate_um": 9822.672
+    },
+    {
+      "name": "held_pos[13]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        37.93600000000151
+      ],
+      "parent_coordinate_um": 9822.736
+    },
+    {
+      "name": "held_pos[14]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.0
+      ],
+      "parent_coordinate_um": 9822.8
+    },
+    {
+      "name": "held_pos[15]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.064000000000306
+      ],
+      "parent_coordinate_um": 9822.864
+    },
+    {
+      "name": "held_pos[16]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.12800000000061
+      ],
+      "parent_coordinate_um": 9822.928
+    },
+    {
+      "name": "held_pos[17]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.19200000000092
+      ],
+      "parent_coordinate_um": 9822.992
+    },
+    {
+      "name": "held_pos[18]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.25600000000122
+      ],
+      "parent_coordinate_um": 9823.056
+    },
+    {
+      "name": "held_pos[19]",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.32000000000153
+      ],
+      "parent_coordinate_um": 9823.12
+    },
+    {
+      "name": "exec_owned",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.512000000000626
+      ],
+      "parent_coordinate_um": 9823.312
+    },
+    {
+      "name": "new_request_permit",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.57600000000093
+      ],
+      "parent_coordinate_um": 9823.376
+    },
+    {
+      "name": "association_fault",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        38.64000000000124
+      ],
+      "parent_coordinate_um": 9823.44
+    },
+    {
+      "name": "clk",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        17.296000000000653
+      ]
+    },
+    {
+      "name": "por_n",
+      "layer": "M6",
+      "xy_um": [
+        17.279999999998836,
+        17.360000000000653
+      ]
+    }
+  ],
+  "signal_ports": 234,
+  "power_clock_reset_ports_excluded_from_signal_count": true,
+  "reserved_signal_tracks": 236,
+  "available_signal_tracks": 577,
+  "physical_pin_placement_may_snap_to_translated_native_grid": true,
+  "clock": {
+    "parent_port": "clk_sm",
+    "domain": "streaming",
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "added_CDCs": 0,
+    "added_register_stages": 0,
+    "source_phase_ps": 0,
+    "insertion_budget_ps": 100,
+    "local_skew_budget_ps": 10,
+    "skew_budget_must_be_verified": true,
+    "input_delay_max_ps": 166.66666666666669,
+    "input_delay_min_ps": 0,
+    "output_delay_max_ps": 166.66666666666669,
+    "output_delay_min_ps": 0,
+    "IO_false_paths_allowed": false,
+    "output_capacitance_budget_fF": 9.673192,
+    "capacitance_basis": "32um M6 segment plus seven SS DFF D pins; budget, not measured actual load",
+    "max_segment_um": 32,
+    "root_reset": "rst_sm_n",
+    "warm_reset": "cp_reset_n",
+    "warm_reset_must_not_clear_accepted_debt": true,
+    "actual_propagated_insertion_ps": null,
+    "actual_skew_ps": null
+  },
+  "PG_source": "native M1/M2 rails -> M3/M4 local bridge -> M7 -> retained M8/M9; hbm_cp_local_pg model",
+  "measured_load_or_CTS": false,
+  "adopted": false,
+  "parameters": {
+    "ENABLE": 1,
+    "SU_ENABLE": 1,
+    "SU_REGISTERED_OUTPUTS": 1,
+    "SU_REGISTERED_STATUS": 1,
+    "SU_REGISTERED_BOUNDARY": 1,
+    "SU_BALANCED_OWNER_BOUNDARY": 1,
+    "SU_FOUR_COMBINATIONAL_CUTS": 1,
+    "SU_FAST_OWNER_FRONTIER": 1,
+    "SU_PARALLEL_PHASE_VALIDATION": 1,
+    "SU_CONTROL_TAIL_CUT": 1
+  },
+  "source_faithful_top": "ot_hbm_integrated_su_cp_context",
+  "joint_W2_parent_repeat": false,
+  "four_cut_model": "results/uarch/hbm_cp_control_tail_20261006/model.json",
+  "four_cut_model_sha256": "40b39fda3c674d3e44c1d4c755c97c8f6c49d00d7b40b62fd6ebd9699b5914fc",
+  "finite_pin_via_repair_ready": false,
+  "finite_pin_via_repair_contract": null
+}

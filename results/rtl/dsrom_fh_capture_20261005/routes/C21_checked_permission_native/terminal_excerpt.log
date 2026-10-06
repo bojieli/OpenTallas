@@ -1,0 +1,24 @@
+       40 |   0.6527 |  1.570259e+07 |  -20.81% |  3.89e-11 |  (fh_lane_56)
+       40 |   0.7796 |  1.570259e+07 |  -20.81% |  3.86e-11 |  (fh_lane_57)
+       40 |   0.7085 |  1.570259e+07 |  -20.81% |  3.89e-11 |  (fh_lane_58)
+       40 |   0.6524 |  1.570259e+07 |  -20.81% |  3.88e-11 |  (fh_lane_59)
+       40 |   0.6840 |  1.570259e+07 |  -20.81% |  3.81e-11 |  (fh_lane_5)
+       40 |   0.7238 |  1.570259e+07 |  -20.81% |  4.12e-11 |  (fh_lane_60)
+       40 |   0.7284 |  1.570259e+07 |  -20.81% |  3.86e-11 |  (fh_lane_61)
+       40 |   0.7831 |  1.570259e+07 |  -20.81% |  3.89e-11 |  (fh_lane_62)
+       40 |   0.8217 |  1.570259e+07 |  -20.81% |  3.90e-11 |  (fh_lane_63)
+       40 |   0.7362 |  1.570259e+07 |  -20.81% |  3.84e-11 |  (fh_lane_6)
+       40 |   0.7588 |  1.570259e+07 |  -20.81% |  3.86e-11 |  (fh_lane_7)
+       40 |   0.6276 |  1.570259e+07 |  -20.81% |  3.87e-11 |  (fh_lane_8)
+       40 |   0.7737 |  1.570259e+07 |  -20.81% |  3.83e-11 |  (fh_lane_9)
+
+Elapsed time: 0:14.39[h:]min:sec. CPU time: user 13.80 sys 0.58 (99%). Peak memory: 1512524KB.
+Elapsed time: 9:14.98[h:]min:sec. CPU time: user 615.69 sys 81.93 (125%). Peak memory: 2417436KB.
+Elapsed time: 2:33.10[h:]min:sec. CPU time: user 152.68 sys 0.41 (99%). Peak memory: 1184672KB.
+Elapsed time: 0:04.29[h:]min:sec. CPU time: user 4.01 sys 0.28 (100%). Peak memory: 867104KB.
+Elapsed time: 0:21.17[h:]min:sec. CPU time: user 20.67 sys 0.50 (99%). Peak memory: 1678596KB.
+Elapsed time: 1:12.51[h:]min:sec. CPU time: user 343.13 sys 1.07 (474%). Peak memory: 3279652KB.
+make[1]: *** [Makefile:493: do-3_1_place_gp_skip_io] Error 241
+make: *** [Makefile:493: /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C21_checked_permission_native/base/3_1_place_gp_skip_io.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C21_checked_permission_native/physical.json
