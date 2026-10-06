@@ -388,7 +388,6 @@ def sdc_text(rec, E):
         L.append(f'create_generated_clock -name {n} -source [get_ports {sp}] -master_clock {s} -divide_by 1 '
                  f'{"-invert " if inv else ""}[get_ports {{{p}[{i}]}}]')
         clks.append(n)
-    L.append('set_propagated_clock [all_clocks]')
     L.append('set_clock_uncertainty -setup 60 [all_clocks]')
     L.append('set_clock_uncertainty -hold 25 [all_clocks]')
     byclk = {}
