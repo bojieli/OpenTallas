@@ -114,6 +114,7 @@ module tb_hbm_formatter_provider_join;
  wire fmt_checked,fmt_ue,fmt_req_v,fmt_req_r,fmt_rsp_r;wire [648:0] fmt_req;
  wire [636:0] fmt_rsp_raw={held_pos,held_token,held_gen,held_job,rsp_data,rsp_addr,rsp_tag,rsp_kind,rsp_checked};
  wire [636:0] fmt_rsp=fmt_rsp_raw^(inject_token?(637'd1<<600):637'd0);
+ wire formatter_lease_valid;wire [72:0] formatter_lease_frame;
  wire req_v=fmt_mode?fmt_req_v:prep_req_v;
  wire [2:0] req_kind=fmt_mode?fmt_req[2:0]:prep_req_kind;
  wire [31:0] req_addr=fmt_mode?fmt_req[34:3]:prep_req_addr;
@@ -131,6 +132,7 @@ module tb_hbm_formatter_provider_join;
  .clk(clk),.por_n(por_n),.start(fmt_start),.start_ready(fmt_start_r),
  .job(job),.gen(gen),.token(token),.pos(pos),.arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
  .gather_retained(retained),.arena_visible(arena_visible),
+ .owner_valid(formatter_lease_valid),.owner_frame(formatter_lease_frame),
  .pair_v(fmt_pair_v),.pair_r(fmt_pair_r),.pair_job(job),.pair_gen(gen),.pair_token(token),.pair_pos(pos),
  .pair_rank(fmt_rank),.pair_word(fmt_word),.pair_tag(fmt_tag),
  .pairs_v(fmt_pairs_v),.pairs_r(fmt_pairs_r),.pairs(fmt_pairs),.pairs_job(fmt_job),.pairs_gen(fmt_gen),.pairs_pos(fmt_pos),

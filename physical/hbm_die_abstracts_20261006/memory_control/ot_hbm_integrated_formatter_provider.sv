@@ -12,6 +12,7 @@ module ot_hbm_integrated_formatter_provider #(
  input wire clk,por_n,start,output wire start_ready,
  input wire [31:0] job,input wire [3:0] gen,input wire [16:0] token,input wire [19:0] pos,
  input wire [31:0] arena_base,arena_limit,input wire gather_retained,arena_visible,
+ input wire owner_valid,input wire [72:0] owner_frame,
  input wire pair_v,output wire pair_r,
  input wire [31:0] pair_job,input wire [3:0] pair_gen,input wire [16:0] pair_token,
  input wire [19:0] pair_pos,input wire [6:0] pair_rank,input wire [5:0] pair_word,input wire [15:0] pair_tag,
@@ -48,6 +49,8 @@ module ot_hbm_integrated_formatter_provider #(
  wire [32:0] end_byte={1'b0,arena_base}+33'd393216;
  wire bounds=arena_base[5:0]==0&&arena_limit[5:0]==0&&end_byte=={1'b0,arena_limit}&&
    end_byte<=(33'd1<<(VM_AW+6));
+ wire lease_match=owner_valid&&owner_frame==frame;
+ wire start_owner=owner_valid&&owner_frame=={pos,token,gen,job};
  wire pair_match={pair_pos,pair_token,pair_gen,pair_job}==frame;
  wire release_match={release_pos,release_token,release_gen,release_job}==frame;
  wire response_match=bridge_rsp[636:564]==frame&&bridge_rsp[51:20]=={read_addr[25:0],6'b0}&&
@@ -55,24 +58,24 @@ module ot_hbm_integrated_formatter_provider #(
  wire address_ok=read_addr[31:26]==0;
  assign fault=failed||bad||child_fault;
  assign retained=active||child_retained||fault;
- assign start_ready=child_start_ready&&!active&&!fault&&bounds;
- assign pair_r=child_pair_r&&active&&!fault&&pair_match;
- assign pairs_v=child_pairs_v&&active&&!fault;
+ assign start_ready=child_start_ready&&!active&&!fault&&bounds&&start_owner;
+ assign pair_r=child_pair_r&&active&&!fault&&lease_match&&pair_match;
+ assign pairs_v=child_pairs_v&&active&&!fault&&lease_match;
  assign pairs_frame=frame;
- assign release_r=child_release_r&&active&&!fault&&release_match;
+ assign release_r=child_release_r&&active&&!fault&&lease_match&&release_match;
  // Existing ABI: {frame73, payload512, word6, rank7, tag16, BYTEaddr32, kind3}.
  assign bridge_req={frame,512'b0,pairs_word,read_rank,read_tag,{read_addr[25:0],6'b0},3'd3};
- assign bridge_req_v=read_v&&active&&!fault&&address_ok;
- assign read_r=bridge_req_r&&active&&!fault&&address_ok;
+ assign bridge_req_v=read_v&&active&&!fault&&lease_match&&address_ok;
+ assign read_r=bridge_req_r&&active&&!fault&&lease_match&&address_ok;
  // Existing ABI: {frame73, payload512, BYTEaddr32, tag16, kind3, checked1}.
  // The formatter's protected outstanding owner holds ID/rank: rsp637 does
  // not carry them. Address/tag/frame must match before those pins are reused.
- assign bridge_rsp_r=rsp_r&&active&&!fault&&response_match;
+ assign bridge_rsp_r=rsp_r&&active&&!fault&&lease_match&&response_match;
  ot_hbm_accel_index_w15_planemajor_formatter #(.ENABLE(1),.N(96),.NPER(512),.AW(32)) u_formatter(
   .clk(clk),.por_n(por_n),.start(start&&start_ready),.start_ready(child_start_ready),
   .source_job(job),.source_gen(gen),.source_pos(pos),
   .gather_base(arena_base>>6),.gather_limit({1'b0,arena_limit}>>6),
-  .gather_exclusive(gather_retained),.gather_writers_drained(arena_visible&&bounds),
+  .gather_exclusive(gather_retained&&owner_valid),.gather_writers_drained(arena_visible&&bounds),
   .retained(child_retained),.fault(child_fault),
   .pair_v(pair_v&&active&&!fault&&pair_match),.pair_r(child_pair_r),
   .pair_job(pair_job),.pair_gen(pair_gen),.pair_pos(pair_pos),.pair_rank(pair_rank),.pair_word(pair_word),.pair_tag(pair_tag),
@@ -92,7 +95,7 @@ module ot_hbm_integrated_formatter_provider #(
  );
  always @(posedge clk or negedge por_n)begin
   if(!por_n)begin frame_lo<=encode64(0);frame_hi<=encode64(0);control_code<=encode64(0);end
-  else if(bad||child_fault||(active&&!gather_retained)||
+  else if(bad||child_fault||(active&&(!gather_retained||!lease_match))||
     (start&&!start_ready)||(pair_v&&active&&!pair_match)||
     (release_v&&active&&!release_match)||(read_v&&!address_ok)||
     (bridge_rsp_v&&active&&(!response_match||!bridge_rsp[0])))
