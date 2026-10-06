@@ -4,10 +4,24 @@
 No source transformation, synthesis, timing rerun, placeholder pins or free
 channel capacity. Bulk per-cell bindings stay on the compute host.
 """
-import hashlib,json,re,sys
+import hashlib,json,re,sys,time
 from collections import Counter,deque
 from pathlib import Path
 loads,allocation,out=map(Path,sys.argv[1:4]);payload_only='--payload-affinity' in sys.argv[4:];receiver_affinity='--receiver-affinity' in sys.argv[4:];assert not out.exists()
+# Die-lint invalidation holds geometry-dependent work before bulk mapped parsing.
+# The queued source synthesis and intrinsic library-load extraction remain useful.
+# Preserve the old allocation; resume only with a separately regenerated binding.
+hold=out.parent/'ITEM9_PARENT_GEOMETRY_HOLD.json'
+if hold.exists():
+ instruction=json.loads(hold.read_text())
+ replacement=Path(instruction['replacement_allocation'])
+ print('ITEM9_GEOMETRY_HOLD: waiting for regenerated caller allocation '+str(replacement),flush=True)
+ while not replacement.exists():time.sleep(10)
+ candidate=json.loads(replacement.read_text())
+ assert candidate['actual_parent_layout_sha256']!=instruction['invalid_parent_layout_sha256']
+ assert hashlib.sha256(replacement.read_bytes()).hexdigest()!=instruction['invalid_allocation_sha256']
+ assert {x['caller'] for x in candidate['local_caller_proposal']}==set(range(32))
+ allocation=replacement
 s=json.loads((loads/'summary.json').read_text());a=json.loads(allocation.read_text())
 assert s['actual_library_pin_loads'] and not s['physical_qualified']
 raw=loads/'mapped.json';assert hashlib.sha256(raw.read_bytes()).hexdigest()==s['artifacts']['mapped.json']['sha256']
