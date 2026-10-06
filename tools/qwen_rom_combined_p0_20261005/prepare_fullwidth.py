@@ -30,8 +30,12 @@ def main():
             raise ValueError(f'{f}: full-width opt-in parameter missing')
     if 'ot_qwen_s4_parallel_protected_pc' not in adapter.read_text():
         raise ValueError('actual protected sector-lane implementation required')
-    if 'ot_qwen_stream4_cdc_pc' not in adapter.read_text():
-        raise ValueError('protected adapter must instantiate actual raw CDC element')
+    # The owner adapter delegates landing storage through protected_pc/ring.
+    # Inspect that implementation too; the raw CDC need not be a direct child.
+    landing_sources = [adapter, source / 'rtl/hdc/kv/ot_qwen_s4_protected_pc.sv',
+                       source / 'rtl/hdc/kv/ot_qwen_s4_protected_ring.sv']
+    if not any('ot_qwen_stream4_cdc_pc #' in f.read_text() for f in landing_sources):
+        raise ValueError('protected landing implementation lacks actual raw CDC')
     deps = [context, adapter,
             source / 'rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv',
             source / 'rtl/hdc/v41x/ot_hdc_v41x_kreg.sv']
