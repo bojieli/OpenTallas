@@ -64,6 +64,8 @@ def gen(spec):
     rec = V.master_record(master)
     ports = rec['ports']
     fck = fclk_bits(master)
+    for p in spec.get('clock_out_ports', []):      # die outputs driven by the (inverted, kept) block clock
+        fck.setdefault(p, {}).update({b: 'out' for b in range(ports[p]['bits'])})
     dirs = {}
     for p, v in ports.items():
         arr = ['in'] * v['bits']
@@ -81,7 +83,9 @@ def gen(spec):
           f'// Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing',
           f'// instantiates it except the die view route.  {spec.get("note", "")}',
           f'module {master} (']
-    L_.append(',\n'.join(f"    {v['direction']} wire [{v['bits'] - 1}:0] {p}" for p, v in sorted(ports.items())))
+    L_.append(',\n'.join([f"    {v['direction']} wire [{v['bits'] - 1}:0] {p}" for p, v in sorted(ports.items())]
+                          + [f'    /* NOT A GENERATOR PORT (generator-side defect, see note) */ input wire {p}'
+                             for p in spec.get('extra_inputs', [])]))
     L_.append(');')
     ck = spec.get('clock', 'ck[0]')
     L_ += [f'    wire clk = {ck};',
@@ -262,7 +266,10 @@ def gen_tb(spec, cycles=400, seed=20261006):
         T.append(f'    {"reg" if kind == "input" else "wire"} [{v["bits"] - 1}:0] {p};')
         if kind == 'inout':
             T.append(f'    reg [{v["bits"] - 1}:0] drv_{p};')
-    conn = ', '.join(f'.{p}({p})' for p in sorted(ports))
+    xin = spec.get('extra_inputs', [])
+    for p in xin:
+        T.append(f'    reg {p};')
+    conn = ', '.join([f'.{p}({p})' for p in sorted(ports)] + [f'.{p}({p})' for p in xin])
     T.append(f'    {master} dut({conn});')
     # inout drive: drive only the input bits
     dirs = {}
@@ -278,6 +285,8 @@ def gen_tb(spec, cycles=400, seed=20261006):
                     T.append(f"    assign {p}[{i}] = drv_{p}[{i}];")
     T.append('    reg clk = 0; always #0.4165 clk = ~clk;')
     T.append('    always @* ck[0] = clk;' if 'ck' in ports else '')
+    if spec.get('clock') in xin:
+        T.append(f"    always @* {spec['clock']} = clk;")
     # one-cycle delayed copies of every input-capable port
     for p, v in sorted(ports.items()):
         if v['direction'] != 'output':
@@ -331,11 +340,12 @@ def gen_tb(spec, cycles=400, seed=20261006):
             hi = min(v['bits'], k + 32)
             T.append(f'        {tgt}[{hi - 1}:{k}] = $urandom(seed); seed = seed + 1;')
     T += ['    end endtask', '    initial begin']
-    if 'rst' in ports:
-        T.append("        rst = 1;")
+    rstp = 'rst' if 'rst' in ports else spec.get('rst') if spec.get('rst') in xin else None
+    if rstp:
+        T.append(f"        {rstp} = 1;")
     T += ['        randomize_inputs;', '        repeat (8) @(posedge clk);']
-    if 'rst' in ports:
-        T.append("        #0.05 rst = 0;")
+    if rstp:
+        T.append(f"        #0.05 {rstp} = 0;")
     T += [f'        for (cyc = 0; cyc < {cycles}; cyc = cyc + 1) begin', '            @(negedge clk);']
     for a, b in checks:
         T.append(f'            nchk = nchk + 1; if ({a} !== {b}) begin err = err + 1; '
