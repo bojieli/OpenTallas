@@ -2286,6 +2286,23 @@
   "joint_W2_parent_repeat": false,
   "four_cut_model": "results/uarch/hbm_cp_control_tail_20261006/model.json",
   "four_cut_model_sha256": "40b39fda3c674d3e44c1d4c755c97c8f6c49d00d7b40b62fd6ebd9699b5914fc",
-  "finite_pin_via_repair_ready": false,
-  "finite_pin_via_repair_contract": null
+  "finite_pin_via_repair_ready": true,
+  "finite_pin_via_repair_contract": {
+    "all_pins": 236,
+    "minimum_pitch_um": 0.128,
+    "native_sites": 303,
+    "spare_sites": 67,
+    "canonical_allocation_acceptance": "e1a33724f/d23db5afc",
+    "Lagrange_source": "b558d00af",
+    "hooks_sha256": {
+      "results/physical/hbm_cp_pin_access_20261006/pins_only.tcl": "5d8fe74c1cda6f37224eb5165a32daa9f354acb70c31b06d5de61cf65ad05bf2",
+      "physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl": "cc80ea7fbe48395d33be9f9abac914ddf71f9c0ac423af64dd1d508d734fa4fe"
+    },
+    "old_wires_reused": false,
+    "region_PG_clock_load_unchanged": true,
+    "residual_V4_downstream_requires_actual_route": true,
+    "allocation_path": "physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/allocation.json",
+    "allocation_sha256": "1d620df01b91a97da83472f8631dfb880a499705e7d60e77ee1ae32232e6a890"
+  },
+  "parent_IR_budget_conditional_not_launch_blocker": true
 }
