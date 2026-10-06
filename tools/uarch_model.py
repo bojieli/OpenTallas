@@ -10164,10 +10164,10 @@ def dsrom_v9_parent_context_model():
     return model(Path(__file__).resolve().parents[1])
 
 
-def dsrom_qx10_parent_context_model(boundary_hold=False):
+def dsrom_qx10_parent_context_model(boundary_hold=False, hard_cfg=False):
     """Existing full QX10 element plus native parent, in the unchanged slot."""
     from dsrom_qx10_parent_context import model
-    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold)
+    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold, hard_cfg=hard_cfg)
 
 
 def dsrom_window_full_block_pipeline_model():
