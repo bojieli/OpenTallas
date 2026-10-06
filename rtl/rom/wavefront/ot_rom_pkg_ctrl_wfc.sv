@@ -132,6 +132,9 @@
 `ifndef OT_WFC_RDY_LT
 `define OT_WFC_RDY_LT 0
 `endif
+`ifndef OT_WFC_FANOUT_COPY
+`define OT_WFC_FANOUT_COPY 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -158,6 +161,10 @@ module ot_rom_pkg_ctrl_wfc #(
     // RDY_LT: the payload word-free compare (rx word < txh) that gates in_ready / vm_we as a log-depth
     // compare (0 cycles)
     parameter integer RDY_LT = `OT_WFC_RDY_LT,
+    // FANOUT_COPY: kept register copies for the two long nets the routes left over the slew limit --
+    // the header user's low bits into the 28 upos groups (one copy per 4 groups), and the SOURCE
+    // record row / address into each SRAM bank (0 cycles)
+    parameter integer FANOUT_COPY = `OT_WFC_FANOUT_COPY,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -564,11 +571,13 @@ module ot_rom_pkg_ctrl_wfc #(
     initial if (RXW < 2) $fatal(1, "ot_rom_pkg_ctrl_wfc: the pipelined position check needs RXWORDS >= 2");
     wire [NW-1:0] ug_part [0:UNG-1];
     reg  [UNG-1:0] gsel_oh, gw_oh;      // the header user's group (t+2), and for the write (t+3)
+    localparam integer NLC = (UNG + 3) / 4;
+    wire [4:0] ug_lo [0:UNG-1];
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
         ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
-            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2), .rd_early(uchk),
+            .clk(clk), .rst_n(rst_q), .lo(ug_lo[ugi]), .rd(uchk2), .rd_early(uchk),
             .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .wr_early(uchk3 && gsel_oh[ugi]),
             .wdata_early(hdr_pos_inc_w), .part(ug_part[ugi]));
     end endgenerate
@@ -653,6 +662,22 @@ module ot_rom_pkg_ctrl_wfc #(
         end
     end
 
+    genvar lgi;
+    generate if (FANOUT_COPY) begin : g_lo_copy
+        // each copy loads exactly as hdr_user[4:0] does (header edge, reset 0)
+        (* keep *) reg [4:0] lo_c [0:NLC-1];
+        integer lc;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) begin for (lc = 0; lc < NLC; lc = lc + 1) lo_c[lc] <= 5'd0; end
+            else if (rx_hdr) begin for (lc = 0; lc < NLC; lc = lc + 1) lo_c[lc] <= in_user[4:0]; end
+        for (lgi = 0; lgi < UNG; lgi = lgi + 1) begin : g_l
+            assign ug_lo[lgi] = lo_c[lgi / 4];
+        end
+    end else begin : g_lo_shared
+        for (lgi = 0; lgi < UNG; lgi = lgi + 1) begin : g_l
+            assign ug_lo[lgi] = hdr_user[4:0];
+        end
+    end endgenerate
     // -- sequential ---------------------------------------------------------------------
     wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight;   // RESULT after a HIDDEN
     wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
@@ -913,7 +938,7 @@ module ot_rom_pkg_ctrl_wfc #(
     end endgenerate
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users_i), .cfg_prompt_len(cfg_plen_i),
             .cfg_gen_len(cfg_glen_i), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
@@ -1012,6 +1037,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
     parameter integer REC_SRAM = 0,
     parameter integer STEPS_PIPE = 0,   // CFG_Q: steps / steps_m1 from a 2-edge log-depth pipeline
     parameter integer PRECOMP = 0,      // EX-stage compares / increments from registers one edge earlier
+    parameter integer FANOUT_COPY = 0,  // each SRAM bank's write row / address from its own register copy
     parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
     parameter integer MAXU = 16, parameter integer WIN = 6
 ) (
@@ -1142,15 +1168,31 @@ module ot_rom_pkg_ctrl_wfc_src #(
         localparam integer BKW = (NBK > 1) ? $clog2(NBK) : 1;
         wire [NC*MB-1:0] rd_row [0:NBK-1];
         reg  [NC*MB-1:0] m_q [0:NBK-1];
-        wire [NC*MB-1:0] wd_row = {{(NC*MB-RB){1'b0}}, b_row};
         genvar bk, cc;
         for (bk = 0; bk < NBK; bk = bk + 1) begin : g_bank
+            wire [RB-1:0] row_bk;
+            wire [USER_W-1:0] u_bk;
+            if (FANOUT_COPY) begin : g_wcopy
+                // loaded exactly as b_row / b_u are (every edge, same D)
+                (* keep *) reg [RB-1:0] rc;
+                (* keep *) reg [USER_W-1:0] uc;
+                always @(posedge clk) begin
+                    uc <= w_u; rc <= {w_ring, w_rec[RW-1:1]};
+`ifdef OT_WFC_NEG_ROW
+                    if (w_u == 3) rc[RW-1] <= ~w_ring[0];
+`endif
+                end
+                assign row_bk = rc; assign u_bk = uc;
+            end else begin : g_wshared
+                assign row_bk = b_row; assign u_bk = b_u;
+            end
+            wire [NC*MB-1:0] wd_row = {{(NC*MB-RB){1'b0}}, row_bk};
             wire bank_rd = (NBK == 1) || (BKW'(ou >> 9) == BKW'(bk));
-            wire bank_wr = (NBK == 1) || (BKW'(b_u >> 9) == BKW'(bk));
+            wire bank_wr = (NBK == 1) || (BKW'(u_bk >> 9) == BKW'(bk));
             for (cc = 0; cc < NC; cc = cc + 1) begin : g_col
                 ot_sram_1r1w_512x128_m4_r2c2 u_m (
                     .clk(clk), .r_ce_in(st == S_RD0 && bank_rd), .r_addr_in(ou[8:0]), .rd_out(rd_row[bk][cc*MB +: MB]),
-                    .w_ce_in(b_en && bank_wr), .w_addr_in(b_u[8:0]), .wd_in(wd_row[cc*MB +: MB]),
+                    .w_ce_in(b_en && bank_wr), .w_addr_in(u_bk[8:0]), .wd_in(wd_row[cc*MB +: MB]),
                     .w_mask_in({MB{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
             end
             always @(posedge clk) m_q[bk] <= rd_row[bk];
