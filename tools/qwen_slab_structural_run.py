@@ -75,6 +75,10 @@ def command(a, out):
                  f"-delay_buffer_derate {a.cts_derate:g}"]
     if a.rom_lead:
         argv += ["--orfs-var", f"QSS_ROM_LEAD_BUFS={a.rom_lead}"]
+    if a.max_transition_ns is not None:
+        argv += ["--max-transition-ns", f"{a.max_transition_ns:g}"]
+    if a.slew_margin_percent is not None:
+        argv += ["--slew-margin-percent", f"{a.slew_margin_percent:g}"]
     if a.td_only:
         argv += ["--orfs-var", "GPL_ROUTABILITY_DRIVEN=0"]
     for kv in a.orfs_var:
@@ -99,6 +103,11 @@ def main():
     p.add_argument("--io-hold-extra", type=float, default=60.0,
                    help="flow-only extra boundary hold requirement, ps (io_wc.sdc; stricter only)")
     p.add_argument("--cores", type=int, default=20)
+    p.add_argument("--max-transition-ns", type=float, default=None,
+                   help="explicit set_max_transition (ps in ASAP7 library units); the r6d final report shows 120 "
+                        "pins over the liberty 320 ps limit, worst -193 ps on place_*/A and g_mul[*].g_in.a_q[*]/D")
+    p.add_argument("--slew-margin-percent", type=float, default=None,
+                   help="ORFS SLEW_MARGIN: repair_design overfixes max-slew to (100 - PCT)%% of the limit")
     p.add_argument("--root", type=Path, required=True)
     p.add_argument("--name", required=True)
     a = p.parse_args()
