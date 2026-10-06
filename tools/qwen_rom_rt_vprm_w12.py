@@ -94,10 +94,10 @@ def main() -> None:
                     help="DEC_LA_BOUND (tools/qwen_rom_core_dec_bound_emit_w12.py); 0 = core unchanged")
     ap.add_argument("--dec-la-amq", type=int, choices=(0, 1), default=0,
                     help="DEC_LA_AMQ argmax boundary register (+1 cycle per core program END); 0 = core unchanged")
-    ap.add_argument("--dec-la-suif", type=int, choices=(0, 1), default=0,
-                    help="DEC_LA_SUIF: registered core <-> vector-stream handshake (measurement); 0 = core unchanged")
-    ap.add_argument("--dec-la-meif", type=int, choices=(0, 1), default=0,
-                    help="DEC_LA_MEIF: registered core <-> ME-spine handshake (stale-status hold); 0 = core unchanged")
+    ap.add_argument("--dec-la-suif", type=int, choices=(0, 1, 2), default=0,
+                    help="DEC_LA_SUIF: registered core <-> vector-stream handshake (measurement); 0 = core unchanged; 2 = negative control (stale status unmasked)")
+    ap.add_argument("--dec-la-meif", type=int, choices=(0, 1, 2), default=0,
+                    help="DEC_LA_MEIF: registered core <-> ME-spine handshake (stale-status hold); 0 = core unchanged; 2 = negative control (stale status unmasked)")
     ap.add_argument("--dec-la-nxreg", type=int, choices=(0, 1), default=0,
                     help="DEC_LA_NXREG: NEXT fields registered at the core boundary (0 added cycles); 0 = core unchanged")
     ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2, 3), default=0,
@@ -154,11 +154,11 @@ def main() -> None:
     if args.dec_la_meif:
         import qwen_rom_core_issue_fallback_w12
         core_text = qwen_rom_core_issue_fallback_w12.apply_meif(core_text).replace(
-            "parameter integer DEC_LA_MEIF = 0", "parameter integer DEC_LA_MEIF = 1")
+            "parameter integer DEC_LA_MEIF = 0", f"parameter integer DEC_LA_MEIF = {args.dec_la_meif}")
     if args.dec_la_suif:
         import qwen_rom_core_issue_fallback_w12
         core_text = qwen_rom_core_issue_fallback_w12.apply_suif(core_text).replace(
-            "parameter integer DEC_LA_SUIF = 0", "parameter integer DEC_LA_SUIF = 1")
+            "parameter integer DEC_LA_SUIF = 0", f"parameter integer DEC_LA_SUIF = {args.dec_la_suif}")
     core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))

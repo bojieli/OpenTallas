@@ -284,7 +284,7 @@ def apply_meif(text: str) -> str:
     always @(posedge clk) if (me_go) begin
 {caps}
     end
-    wire me_ifhold = me_gop || me_tk_d;
+    wire me_ifhold = (DEC_LA_MEIF == 2) ? 1'b0 : (me_gop || me_tk_d);   // 2 = NEGATIVE CONTROL: stale status unmasked
     generate if (DEC_LA_MEIF != 0) begin : g_meif
         assign me_go_pin = me_gop;
         assign me_ready = me_rdy_q && !me_ifhold;
@@ -354,7 +354,7 @@ def apply_suif(text: str) -> str:
     always @(posedge clk) if (su_go) begin
 """ + "\n".join(caps) + f"""
     end
-    wire su_ifhold = su_gop || su_tk_d;
+    wire su_ifhold = (DEC_LA_SUIF == 2) ? 1'b0 : (su_gop || su_tk_d);   // 2 = NEGATIVE CONTROL: stale status unmasked
     if (DEC_LA_SUIF != 0) begin : g_suif
         assign su_go_pin = su_gop;
         assign su_ready = su_rdy_q && !su_ifhold;
