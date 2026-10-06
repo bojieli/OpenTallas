@@ -75,40 +75,37 @@
     "verdict": "MATCH",
     "positions": "exact",
     "problems": [],
-    "obs_above_generator": [
-     "M8",
-     "M9"
-    ],
+    "obs_above_generator": [],
     "pg_pins": {
      "VDD": [
       "M1",
       "M2",
-      "M8",
-      "M9"
+      "M6",
+      "M7"
      ],
      "VSS": [
       "M1",
       "M2",
-      "M8",
-      "M9"
+      "M6",
+      "M7"
      ]
     },
     "gen_pins": 130,
     "view_pins": 130
    },
    "source": {
-    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55",
+    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45",
     "host": "ot-epyc1tb",
-    "SOURCE_COMMIT": "8c5590c3e9a9669d4b2542ef7fb1401d2666ce18",
-    "ss_setup_ps": 283.48,
-    "ff_hold_ps": 8.54,
+    "SOURCE_COMMIT": "369b4c934fd63644fae5685479072e2f806fa53b",
+    "ss_setup_ps": 197.0,
+    "ff_hold_ps": 20.82,
     "closes_signoff_SS60_FF25": true,
     "clock_period_ns": 0.833,
     "status": "pass",
     "drc": 0,
     "antenna": 0,
-    "cell_um2": 160.278,
-    "seq_um2": 21.3597,
+    "cell_um2": 388.134,
+    "seq_um2": 114.132,
     "core_um2": 49504.8,
     "macro_um2": 0
    }
