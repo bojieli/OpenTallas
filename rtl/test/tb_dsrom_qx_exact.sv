@@ -67,7 +67,10 @@ module tb_dsrom_qx_exact;
 `ifndef QX_QW
 `define QX_QW 0
 `endif
- ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QW(`QX_QW), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+`ifndef QX_QM
+`define QX_QM 0
+`endif
+ ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QW(`QX_QW), .QM(`QX_QM), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
 `else
  ot_v41_rom_elem_q_qx_w10 #(.QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
 `endif
