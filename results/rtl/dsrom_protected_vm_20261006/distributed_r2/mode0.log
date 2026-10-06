@@ -1,0 +1,11 @@
+EVENT txn1 accept_fast2055 reply_fast2083 retired_fast2096 reads0 writes1 CE0
+EVENT txn2 accept_fast2097 reply_fast2112 retired_fast2126 reads1 writes0 CE0
+EVENT txn3 accept_fast2127 reply_fast2256 retired_fast2270 reads3 writes31 CE0
+EVENT txn4 accept_fast2271 reply_fast2294 retired_fast2307 reads3 writes0 CE0
+EVENT txn5 accept_fast2308 reply_fast2336 retired_fast2350 reads0 writes1 CE0
+EVENT txn6 accept_fast2351 reply_fast2374 retired_fast2387 reads3 writes0 CE0
+PASS PROTECTED_DSVM full2MiB 256data+32check 3:4 transactions=6 reads=7 visiblewrites=7 cycles=2387
+- rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm_distributed.sv:110: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.548 s; speed 3.604 us/s
+- Verilator: cpu 0.553 s on 1 threads; alloced 511 MB

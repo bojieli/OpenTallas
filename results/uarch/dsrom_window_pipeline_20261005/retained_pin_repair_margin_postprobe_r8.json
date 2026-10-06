@@ -1,0 +1,79 @@
+{
+  "status": "RETAINED_ACTUAL_PIN_CAPACITY_AND_ANALYTICAL_REPAIR_RESERVE_BEFORE_FULL_ROUTE",
+  "model": {
+    "purpose": "Minimum full-shape pin-access measurement on retained placed ODB before selecting any repaired route or parent slot",
+    "horizontal_layers": [
+      "M4",
+      "M6",
+      "M8"
+    ],
+    "vertical_layers": [
+      "M5",
+      "M7",
+      "M9"
+    ],
+    "preferred_pitch_um": [
+      0.048,
+      0.064,
+      0.08
+    ],
+    "min_distance_tracks": 2,
+    "gross_positions_per_perimeter_um": 24.479166666666664,
+    "retained_leaf_perimeter_um": 6200,
+    "retained_leaf_gross_positions_upper": 151770.8333333333,
+    "actual_PG_blockages_and_legal_positions_required": true,
+    "clock_PG_reserve_fraction": 0.2,
+    "signal_fraction_after_reserve": 0.6,
+    "parent_requested_perimeter_um": 14482.042553191492,
+    "parent_diagnostic_frame_um": [
+      4400,
+      4400
+    ],
+    "parent_diagnostic_raw_positions_upper": 430833.3333333333,
+    "parent_diagnostic_signal_budget_upper": 206800.0,
+    "parent_diagnostic_frame_is_not_allocated": true,
+    "standard_cell_utilization_is_not_pin_or_channel_capacity": true,
+    "macro_bodies_and_halos_and_root_CTS_not_priced_free": true,
+    "added_FF_bits": 0,
+    "added_payload_bits": 0,
+    "added_external_ports": 0,
+    "added_logical_cycles": 0,
+    "full_route_ready": false,
+    "measured_pin_access": true,
+    "retained_source_measured_capacity": {
+      "evidence": "results/physical/dsrom_window_pipeline_20261005/pin_access_r2/record.json",
+      "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+      "die_um": [
+        1550,
+        1550
+      ],
+      "actual_PG_geometry_retained": true,
+      "legal_positions": 151588,
+      "signal_IO": 70354,
+      "raw_signal_fraction": 0.4641132543473098,
+      "conservative_signal_budget": 72762.24,
+      "conservative_budget_fraction": 0.9669026132235621,
+      "conservative_spare_positions": 2408.2400000000052,
+      "reserve_is_analytical_not_measured_clock_or_route_space": true,
+      "changed_source_physical_credit": false,
+      "parent_capacity_extrapolation_is_not_allocation": true,
+      "decision": "Pin placement PASS only; low stdcell utilization does not establish channel, CTS/PG or loaded repair margin. Preserve the running changed-source map; coordinate any larger finite slot before full context routing."
+    },
+    "parent_slot_fit": false,
+    "adoption": false
+  },
+  "input_sha256": {
+    "results/physical/dsrom_window_pipeline_20261005/pin_access_r2/record.json": "ed67842143124320dcccbda9e1643bef3879be05067f28ba226b3432bac87a55"
+  },
+  "changed_source_mapping_preserved": true,
+  "new_RTL": false,
+  "added_FF_ports_payload_cycles": 0,
+  "verification_repeated": false,
+  "new_job_launched": false,
+  "parent_allocation": false,
+  "parent_CTS": false,
+  "routed_SS_FF": false,
+  "default_OFF": true,
+  "WINDOW_140ns_miss_preserved": true,
+  "adoption": false
+}

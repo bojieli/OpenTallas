@@ -105,7 +105,10 @@ module tb_hbm_integrated_sfu_native_vm_join;
   negstep();frame={20'(pos),17'h10001,4'h9,32'hca001234};publication_owner=frame;
   fn=requests[case_i][2050:2048];local_tag=requests[case_i][2082:2051];#1;
   for(j=0;j<8;j=j+1)memory[j]=requests[case_i][j*256+:256];
-  bind_v=1;while(!bind_r)tick();tick();negstep();bind_v=0;#1;
+  bind_v=1;#1;
+  // Fresh POR, no outstanding traffic: the actual drained root must offer bind.
+  if(!bind_r)$fatal(1,"BIND_NOT_READY cycles=%0d fault=%b retained=%b",cycles,vm_fault,vm_retained);
+  tick();negstep();bind_v=0;#1;
   if(!enroll_r)$fatal(1,"NO_REAL_ENROLL");enroll_v=1;tick();negstep();enroll_v=0;
  end endtask
  initial begin
@@ -114,26 +117,36 @@ module tb_hbm_integrated_sfu_native_vm_join;
   // One seed, one actual64-lane operation; Carson owns the eight-opcode gate.
   reset();start(0,1048575);w=0;
   while(!publication_v)begin tick();w=w+1;if(fault||vm_fault||bridge_fault||w>4000)$fatal(1,"NATIVE_JOIN_FAILURE");end
+  $display("SFU_NATIVE_CHECKED_PUBLICATION cycles=%0d reads=%0d writes=%0d full73=%h",cycles,reads,writes,held_frame);
   if(reads!=8||writes!=0||!nv_done||held_frame!==frame)$fatal(1,"PREMATURE_OR_CP_PUBLICATION");
   for(j=0;j<2;j=j+1)begin
    negstep();ir_addr=64+j*32;ir_tag=8'(j);ir_v=1;
-   while(!ir_r)tick();tick();negstep();ir_v=0;
-   while(!ir_rsp_v)tick();negstep();
+   #1; // Settle address/tag/valid BEFORE the acceptance edge.
+   if(!ir_r)$fatal(1,"READ_NOT_READY block=%0d cycles=%0d response_v=%b fault=%b",j,cycles,ir_rsp_v,vm_fault);
+   tick();negstep();ir_v=0;
+   // Accepted IDLE->READ, then READ->CAPTURE->CHECK->RESP: three edges.
+   repeat(3)tick();
+   if(!ir_rsp_v)$fatal(1,"READ_RESPONSE_MISSING block=%0d cycles=%0d response_v=%b fault=%b",j,cycles,ir_rsp_v,vm_fault);
+   negstep();
    if(ir_frame!==frame||ir_rsp_tag!==8'(j)||ir_rank!==41||ir_data!==expected[0][j*1024+:1024])
     $fatal(1,"FIRST_NATIVE_SRAM_NUMERICAL_MISMATCH block=%0d",j);
+   $display("SFU_NATIVE_SRAM_READBACK block=%0d cycles=%0d addr=%0d full73=%h",j,cycles,ir_addr,ir_frame);
    ir_rsp_r=1;tick();negstep();ir_rsp_r=0;
   end
   negstep();warm_req=1;repeat(5)tick();
   if(!publication_v||!retained||warm_ack||vm_warm_ack)$fatal(1,"HELD_COMPLETION_WARM_DEBT");
   negstep();publication_r=1;tick();negstep();publication_r=0;tick();
   if(retained||grant||acks!=1||nv_complete_v)$fatal(1,"NONJOINT_RETIRE");
-  negstep();retire_v=1;while(!retire_r)tick();tick();negstep();retire_v=0;repeat(4)tick();
+  negstep();retire_v=1;#1;
+  // Both response ACKs and joint stage/publisher completion have drained.
+  if(!retire_r)$fatal(1,"ROOT_RETIRE_NOT_READY cycles=%0d readReady=%b response_v=%b stageRetained=%b VMfault=%b",cycles,ir_r,ir_rsp_v,retained,vm_fault);
+  tick();negstep();retire_v=0;repeat(4)tick();
   if(!warm_ack||!vm_warm_ack||vm_retained)$fatal(1,"ROOT_WARM_DRAIN");
   // Caller high TOKEN17 refusal retains stage AND publisher completion.
   reset();start(0,8191);w=0;
   while(!publication_v)begin tick();w=w+1;if(fault||w>4000)$fatal(1,"TOKEN_NEGATIVE_SETUP");end
   negstep();publication_owner=frame^(73'b1<<52);publication_r=1;tick();negstep();publication_r=0;
-  if(!fault||!retained||!nv_complete_v||release_v||!grant)$fatal(1,"TOKEN17_WRONG_JOINT_ACCEPT");
+  if(!fault||!retained||!nv_complete_v||release_v||!grant)$fatal(1,"TOKEN17_REFUSAL_CONTRACT fault=%b retained=%b native_complete=%b release_v=%b grant=%b reverse_ACKs=%0d",fault,retained,nv_complete_v,release_v,grant,acks);
   $display("SFU_NATIVE_VM_JOIN_PASS 64FP32 actual32SRAM checked2ACK CP8READ zeroCPwrite full73 warm jointretire");$finish;
  end
 endmodule
