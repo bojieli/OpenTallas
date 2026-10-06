@@ -110,7 +110,7 @@ module ot_v41_chain4 #(
         for (genvar g2 = 0; g2 < ND; g2 = g2 + 1) begin : g_ps
             localparam integer LO = (105 * g2) / ND, HI = (105 * (g2 + 1)) / ND;
 `ifdef CH_MUTANT_PD
-            assign o0_ext[HI-1:LO] = first_r ? cz[HI-1:LO] : (fwd6[g2] ? c6[HI-1:LO] : (fwd5[g2] ? c5[HI-1:LO] : ca[HI-1:LO]));   // negative control: forward priority swapped
+            assign o0_ext[HI-1:LO] = first_r ? cz[HI-1:LO] : (fwd5[g2] ? c6[HI-1:LO] : (fwd6[g2] ? c5[HI-1:LO] : ca[HI-1:LO]));   // negative control: forward candidates swapped (a priority swap is equivalent: fwd5 and fwd6 are never both set, a back-to-back slot is a hazard)
 `else
             assign o0_ext[HI-1:LO] = first_r ? cz[HI-1:LO] : (fwd5[g2] ? c5[HI-1:LO] : (fwd6[g2] ? c6[HI-1:LO] : ca[HI-1:LO]));
 `endif

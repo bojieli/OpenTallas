@@ -92,12 +92,13 @@ def main() -> None:
                 raise RuntimeError(f"{name} build failed")
         return cmd
 
-    def run(name, seed):
-        p = subprocess.run([str(a.work / name / "Vtb_dsrom_qx_exact"), f"+seed={seed}"], cwd=a.work,
+    def run(name, seed, extra=()):
+        tag = name + "".join("_" + x.lstrip("+") for x in extra)
+        p = subprocess.run([str(a.work / name / "Vtb_dsrom_qx_exact"), f"+seed={seed}", *extra], cwd=a.work,
                            capture_output=True, text=True)
-        log = a.work / f"{name}_seed{seed}.log"
+        log = a.work / f"{tag}_seed{seed}.log"
         log.write_text(p.stdout + p.stderr)
-        return name, seed, p.returncode, p.stdout + p.stderr, sha(log)
+        return tag, seed, p.returncode, p.stdout + p.stderr, sha(log)
 
     record = dict(schema="opentallas.dsrom_qx.exact.v1", verdict="FAIL",
                   git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
@@ -138,7 +139,9 @@ def main() -> None:
         jobs += [("qy0", 400 + s) for s in range(1, m + 1)]
         jobs += [("xs0", 200 + s) for s in range(1, m + 1)]
         jobs += [("neg_dp", 1), ("neg_tree", 1), ("neg_half", 1), ("neg_shadow", 1), ("neg_lu", 3), ("neg_bk", 1),
-                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_ns", 1), ("neg_pd", 1), ("neg_dp10", 1)]
+                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_pd", 1), ("neg_dp10", 1)]
+        # +nan_sparse (bench header): the QX = 10 lane-NaN partials (bterm4 NS) and their negative control on sparse NaNs
+        jobs += [("pos", 1, ("+nan_sparse",)), ("neg_ns", 1, ("+nan_sparse",))]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
             results = list(ex.map(lambda j: run(*j), jobs))
         for name, seed, rc, log, lsha in results:
