@@ -26,7 +26,8 @@ INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
 # Verilator derives each parameter variant and connects generated leaf wrappers.
 # Leave the HBM model inside its partition: init_mem accesses u_model.mem.
 HIER_BLOCKS=[
-    'ot_hdc_v41x_vec_lane','ot_hdc_v41x_vec','ot_hbm_accel_su_parent_exec',
+    'ot_hdc_v41x_vec_lane','ot_hdc_v41x_vsq','ot_hdc_v41x_vred_op',
+    'ot_hdc_v41x_vec_red','ot_hdc_v41x_vec','ot_hbm_accel_su_parent_exec',
     'ot_hdc_v41x_exp','ot_hdc_v41x_rsqrt','ot_hdc_v41x_fdiv','ot_hdc_v41x_softplus',
     'ot_dsrom_su_hcpost_lane','ot_dsrom_su_hcpost_group','ot_dsrom_su_hcpost',
     'ot_gpu_simt_fplane','ot_ds_hbm_simt_sm20','ot_gpu_hbm_partition',
@@ -290,6 +291,10 @@ def compile_plan(a):
         j=ready[0];remaining.remove(j)
         leaf=out/j['prefix'];leaf.mkdir(exist_ok=False)
         cmd=[str(a.tool.resolve()),'--Mdir',j['directory'],'-f',j['verilator_args'],*j['sources']]
+        # JSON fragments carry the encoded child top, while the parent graph
+        # carries its top separately. Preserve the compiler's actual selection.
+        if '--top-module-encoded' not in Path(j['verilator_args']).read_text():
+            cmd+=['--top-module',j['top'],'--prefix',j['prefix']]
         write(leaf/'command.json',cmd)
         write(out/'progress.json',dict(completed=completed,current=j['prefix'],started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
         with (leaf/'frontend.log').open('x') as log:

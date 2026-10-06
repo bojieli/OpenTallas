@@ -1,0 +1,66 @@
+Startpoint: $auto$ff.cc:337:slice$359
+            (rising edge-triggered flip-flop clocked by ref)
+Endpoint: $auto$ff.cc:337:slice$357
+          (rising edge-triggered flip-flop clocked by ref')
+Path Group: ref
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000  277.777771  277.777771   clock ref (rise edge)
+                                  0.000000  277.777771   clock network delay (ideal)
+                      0.000000    0.000000  277.777771 ^ $auto$ff.cc:337:slice$359/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     5    1.497126   42.417877   82.220230  359.998016 ^ $auto$ff.cc:337:slice$359/QN (DFFASRHQNx1_ASAP7_75t_R)
+                     42.417877    0.000000  359.998016 ^ $abc$486$auto$blifparse.cc:397:parse_blif$532/A (NOR2xp33_ASAP7_75t_R)
+     1    0.441529   26.788822   27.679859  387.677856 v $abc$486$auto$blifparse.cc:397:parse_blif$532/Y (NOR2xp33_ASAP7_75t_R)
+                     26.788822    0.000000  387.677856 v $auto$ff.cc:337:slice$357/D (DFFASRHQNx1_ASAP7_75t_R)
+                                            387.677856   data arrival time
+
+                      0.000000  138.888885  138.888885   clock ref' (rise edge)
+                                  0.000000  138.888885   clock network delay (ideal)
+                                 25.000000  163.888885   clock uncertainty
+                                  0.000000  163.888885   clock reconvergence pessimism
+                                            163.888885 ^ $auto$ff.cc:337:slice$357/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 13.273218  177.162109   library hold time
+                                            177.162109   data required time
+---------------------------------------------------------------------------------------------
+                                            177.162109   data required time
+                                           -387.677856   data arrival time
+---------------------------------------------------------------------------------------------
+                                            210.515762   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$359
+            (rising edge-triggered flip-flop clocked by ref)
+Endpoint: $auto$ff.cc:337:slice$358
+          (rising edge-triggered flip-flop clocked by ref')
+Path Group: ref
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000  277.777771  277.777771   clock ref (rise edge)
+                                  0.000000  277.777771   clock network delay (ideal)
+                      0.000000    0.000000  277.777771 ^ $auto$ff.cc:337:slice$359/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     5    1.488444   45.367653   88.322655  366.100433 v $auto$ff.cc:337:slice$359/QN (DFFASRHQNx1_ASAP7_75t_R)
+                     45.367653    0.000000  366.100433 v $abc$486$auto$blifparse.cc:397:parse_blif$488/A (INVx1_ASAP7_75t_R)
+     1    0.251255   19.075869   16.485090  382.585510 ^ $abc$486$auto$blifparse.cc:397:parse_blif$488/Y (INVx1_ASAP7_75t_R)
+                     19.075869    0.000000  382.585510 ^ $abc$486$auto$blifparse.cc:397:parse_blif$533/A (NAND2xp33_ASAP7_75t_R)
+     1    0.441529   18.750711   16.364382  398.949890 v $abc$486$auto$blifparse.cc:397:parse_blif$533/Y (NAND2xp33_ASAP7_75t_R)
+                     18.750711    0.000000  398.949890 v $auto$ff.cc:337:slice$358/D (DFFASRHQNx1_ASAP7_75t_R)
+                                            398.949890   data arrival time
+
+                      0.000000  138.888885  138.888885   clock ref' (rise edge)
+                                  0.000000  138.888885   clock network delay (ideal)
+                                 25.000000  163.888885   clock uncertainty
+                                  0.000000  163.888885   clock reconvergence pessimism
+                                            163.888885 ^ $auto$ff.cc:337:slice$358/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 14.010459  177.899353   library hold time
+                                            177.899353   data required time
+---------------------------------------------------------------------------------------------
+                                            177.899353   data required time
+                                           -398.949890   data arrival time
+---------------------------------------------------------------------------------------------
+                                            221.050552   slack (MET)
+
+

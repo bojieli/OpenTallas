@@ -49,14 +49,16 @@ module tb_hbm_integrated_norm_native_vm_join;
  .activation_rd_v(1'b0),.activation_rd_frame(73'd0),.activation_rd_bank(1'b0),.activation_rd_addr(7'd0),.activation_rd_owner(192'd0),
  .tap_r(4'd0),.tap_ACK_v(4'd0),.tap_ACK_owner(768'd0),.tap_ACK_frame(292'd0),.activation_release_r(1'b0),
  .su_pub_v(loading?load_v:apub_v),.su_pub_r(root_pub_r),.su_pub_frame(frame),.su_pub_addr(loading?load_addr:apub_addr),.su_pub_data(loading?load_data:apub_data),.su_ACK_v(root_ACK_v),.su_ACK_r(loading?load_ACK_r:aACK_r),.publication_ACK_frame(root_ACK_frame),.publication_ACK_addr(root_ACK_addr),
- .index_read_v(checking?ir_v:aread_v),.index_read_r(ir_r),.index_read_frame(frame),.index_read_rank(7'd41),.index_read_addr(checking?ir_addr:aread_addr),.index_read_words(6'd32),.index_read_tag(checking?ir_tag:aread_tag),
- .index_rsp_v(ir_rsp_v),.index_rsp_r(checking?ir_rsp_r:arsp_r),.index_rsp_data(ir_data),.index_rsp_tag(ir_rsp_tag),.index_rsp_frame(ir_frame),.index_rsp_rank(ir_rank),
+ .index_read_v(checking?check_read_v:aread_v),.index_read_r(ir_r),.index_read_frame(frame),.index_read_rank(7'd41),.index_read_addr(checking?check_addr:aread_addr),.index_read_words(6'd32),.index_read_tag(checking?check_tag:aread_tag),
+ .index_rsp_v(ir_rsp_v),.index_rsp_r(checking?check_rsp_r:arsp_r),.index_rsp_data(ir_data),.index_rsp_tag(ir_rsp_tag),.index_rsp_frame(ir_frame),.index_rsp_rank(ir_rank),
  .sfu_source_owned(allocation_valid),.sfu_enroll_v(1'b0),.sfu_enroll_r(nv_enroll_r),.sfu_enroll_frame(frame),.sfu_base_word(32'd64),.sfu_tag(local_tag),
  .sfu_rx_v(1'b0),.sfu_rx_r(nv_tx_r),.sfu_rx_data(nv_tx_d),.sfu_rx_frame(nv_tx_owner),.sfu_rx_index(nv_tx_index),.sfu_rx_last(nv_tx_last),
  .sfu_publication_done(nv_done),.sfu_complete_v(nv_complete_v),.sfu_complete_r(1'b0),.sfu_complete_frame(nv_complete_frame),.sfu_complete_tag(nv_complete_tag),.sfu_retained(),.sfu_drained());
 
  reg loading=1,load_v=0,load_ACK_r=0,checking=0,foreign_response=0;
  reg [31:0] load_addr;reg [1023:0] load_data;
+ reg check_start=0;
+ wire check_read_v,check_rsp_r,check_passed;wire [31:0] check_addr;wire [7:0] check_tag;
  wire root_pub_r,root_ACK_v;wire [72:0] root_ACK_frame;wire [31:0] root_ACK_addr;
  wire aread_v,arsp_r,apub_v,aACK_r;wire [31:0] aread_addr,apub_addr;wire [7:0] aread_tag;wire [6:0] aread_rank;
  wire [1023:0] apub_data;wire child_enable,read_permit,drained,publication_checked,adapter_fault;
@@ -77,12 +79,18 @@ module tb_hbm_integrated_norm_native_vm_join;
  .read_v(aread_v),.read_r(ir_r&&!checking),.read_addr(aread_addr),.read_tag(aread_tag),.read_rank(aread_rank),
  .rsp_v(ir_rsp_v&&!checking),.rsp_r(arsp_r),.rsp_data(ir_data),.rsp_frame(ir_frame^(foreign_response?(73'd1<<52):73'd0)),.rsp_tag(ir_rsp_tag),.rsp_rank(ir_rank),
  .pub_v(apub_v),.pub_r(root_pub_r&&!loading),.pub_addr(apub_addr),.pub_data(apub_data),.ACK_v(root_ACK_v&&!loading),.ACK_r(aACK_r),.ACK_frame(root_ACK_frame),.ACK_addr(root_ACK_addr));
+ ot_hbm_norm_samebank_readback_checker #(.D(64),.GOLDEN_FILE("ey.mem")) u_readback(
+  .clk(clk),.por_n(por_n),.start(check_start),.publication_checked(publication_checked),.lease_retained(retained&&vm_retained),
+  .held_frame(held_frame),.rank(7'd41),.output_base_word(32'd128),
+  .native_ACK_v(root_ACK_v&&!loading),.native_ACK_r(aACK_r),.native_ACK_frame(root_ACK_frame),.native_ACK_addr(root_ACK_addr),
+  .read_v(check_read_v),.read_r(ir_r&&checking),.read_addr(check_addr),.read_words(),.read_tag(check_tag),.read_frame(),.read_rank(),
+  .rsp_v(ir_rsp_v&&checking),.rsp_r(check_rsp_r),.rsp_data(ir_data),.rsp_tag(ir_rsp_tag),.rsp_frame(ir_frame),.rsp_rank(ir_rank),.passed(check_passed));
  reg [31:0] inputs[0:63],gain[0:63],expected[0:63];string dir;integer j,k;
  task tick;begin @(posedge clk);#1;end endtask
  task negstep;begin @(negedge clk);#1;end endtask
  task setup;
  begin
-  negstep();por_n=0;enroll_v=0;publication_r=0;warm_req=0;bind_v=0;retire_v=0;ir_v=0;ir_rsp_r=0;loading=1;checking=0;foreign_response=0;load_v=0;load_ACK_r=0;
+  negstep();por_n=0;enroll_v=0;publication_r=0;warm_req=0;bind_v=0;retire_v=0;ir_v=0;ir_rsp_r=0;loading=1;checking=0;check_start=0;foreign_response=0;load_v=0;load_ACK_r=0;
   frame={20'hfffff,17'h10001,4'h9,32'h9234abcd};publication_owner=frame;
   repeat(3)tick();negstep();por_n=1;tick();
   negstep();bind_v=1;while(!bind_r)tick();tick();negstep();bind_v=0;
@@ -100,14 +108,8 @@ module tb_hbm_integrated_norm_native_vm_join;
   $readmemh({dir,"/x.mem"},inputs);$readmemh({dir,"/w.mem"},gain);$readmemh({dir,"/ey.mem"},expected);
   setup();while(!publication_v)begin tick();if(fault||adapter_fault||vm_fault||bridge_fault)$fatal(1,"NORM_JOIN_FAULT state=%0d",adapter.g_on.state);end
   if(!publication_checked||held_frame!==frame)$fatal(1,"UNCHECKED_NORM_PUB");
-  checking=1;
-  for(j=0;j<2;j=j+1)begin
-   negstep();ir_addr=128+j*32;ir_tag=j;ir_v=1;while(!ir_r)tick();tick();negstep();ir_v=0;
-   while(!ir_rsp_v)tick();negstep();
-   if(ir_frame!==frame||ir_rsp_tag!==j||ir_rank!==41)$fatal(1,"NORM_READBACK_IDENTITY");
-   for(k=0;k<32;k=k+1)if(ir_data[k*32+:32]!==expected[j*32+k])$fatal(1,"FIRST_NORM_MISMATCH lane=%0d got=%08x expected=%08x",j*32+k,ir_data[k*32+:32],expected[j*32+k]);
-   ir_rsp_r=1;tick();negstep();ir_rsp_r=0;
-  end
+  negstep();checking=1;check_start=1;tick();negstep();check_start=0;
+  while(!check_passed)tick();
   checking=0;warm_req=1;repeat(4)tick();if(!retained||warm_ack||vm_warm_ack||!publication_v)$fatal(1,"NORM_WARM_DEBT");
   negstep();publication_r=1;tick();negstep();publication_r=0;tick();if(retained||grant)$fatal(1,"NORM_JOINT_RELEASE");
   negstep();retire_v=1;while(!retire_r)tick();tick();negstep();retire_v=0;repeat(4)tick();if(!warm_ack||!vm_warm_ack||vm_retained)$fatal(1,"NORM_ROOT_RETIRE");
