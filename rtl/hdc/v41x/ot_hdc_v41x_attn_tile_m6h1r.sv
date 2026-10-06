@@ -105,20 +105,20 @@ module ot_attn_tile_m6h1r #(
         end
     endgenerate
     assign ov = gov[0];
-    // The leaves' rst_n is a 3-cycle path (the leaf's reset recovery is 1,062 ps against its clk pin at SS, longer
+    // The leaves' rst_n is a 4-cycle path (option-B leaf: 1,833 ps; was 3) (the leaf's reset recovery is 1,062 ps against its clk pin at SS, longer
     // than a cycle; physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): the tile's rst_n must hold every value for at
-    // least 3 cycles (a quasi-static reset).  Checked here in simulation.
+    // least 4 cycles (a quasi-static reset).  Checked here in simulation.
     // synthesis translate_off
     reg rst_prev = 1'b0;
-    integer rst_age = 3;
+    integer rst_age = 4;
     always @(posedge clk) begin
         if (rst_n !== rst_prev) begin
-            if (rst_age < 3) begin
-                $display("OT_ATTN_TILE_RST_PROTOCOL rst_n changed after %0d cycles (need >= 3)", rst_age);
-                $fatal(1, "ot_attn_tile_m6h1r: rst_n held < 3 cycles");
+            if (rst_age < 4) begin
+                $display("OT_ATTN_TILE_RST_PROTOCOL rst_n changed after %0d cycles (need >= 4)", rst_age);
+                $fatal(1, "ot_attn_tile_m6h1r: rst_n held < 4 cycles");
             end
             rst_age = 1;
-        end else if (rst_age < 3) rst_age = rst_age + 1;
+        end else if (rst_age < 4) rst_age = rst_age + 1;
         rst_prev <= rst_n;
     end
     // synthesis translate_on
@@ -268,15 +268,15 @@ module ot_attn_tile_m6h1q #(
             end
         end
     endgenerate
-    // the leaves' rst_n is a 3-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): rst_n holds every value >= 3 cycles
+    // the leaves' rst_n is a 4-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): rst_n holds every value >= 4 cycles
     // synthesis translate_off
     reg rst_prev = 1'b0;
-    integer rst_age = 3;
+    integer rst_age = 4;
     always @(posedge clk) begin
         if (rst_n !== rst_prev) begin
-            if (rst_age < 3) $fatal(1, "ot_attn_tile_m6h1q: rst_n held < 3 cycles");
+            if (rst_age < 4) $fatal(1, "ot_attn_tile_m6h1q: rst_n held < 4 cycles");
             rst_age = 1;
-        end else if (rst_age < 3) rst_age = rst_age + 1;
+        end else if (rst_age < 4) rst_age = rst_age + 1;
         rst_prev <= rst_n;
     end
     // synthesis translate_on
