@@ -19,8 +19,9 @@ m=re.search(r'MUXLS owner64=1 nsm=32 cycles=2048 grants=(\d+) mismatches=(\d+)',
 assert m and int(m[1])>=32 and int(m[2])==0, s
 PY
 python3 - "$out" <<'PYREC'
-import hashlib,json,sys
+import hashlib,json,sys,re
 from pathlib import Path
-p=Path(sys.argv[1]);files=['rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv','results/rtl/hbm_item9_closure_20261005/tb_item9_mux32_tree_ls.sv']
-(p/'result.json').write_text(json.dumps(dict(verdict='PASS_TREE_FULL32_LOCKSTEP',NSM=32,NL=128,cycles=2048,grants=209,new_cycles=0,source_sha256={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in files},adopted=False),indent=2)+'\n')
+p=Path(sys.argv[1]);m=re.search(r'cycles=(\d+) grants=(\d+) mismatches=(\d+)',(p/'run.log').read_text());assert m and int(m[3])==0
+files=['rtl/gpu_sys/ot_gpu_coll_mux_item9_tree.sv','results/rtl/hbm_item9_closure_20261005/tb_item9_mux32_tree_ls.sv']
+(p/'result.json').write_text(json.dumps(dict(verdict='PASS_TREE_FULL32_LOCKSTEP',NSM=32,NL=128,cycles=int(m[1]),grants=int(m[2]),new_cycles=0,source_sha256={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in files},adopted=False),indent=2)+'\n')
 PYREC
