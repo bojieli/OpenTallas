@@ -1,0 +1,23 @@
+[
+  "/srv/opentallas-scratch/admit.sh",
+  "8",
+  "--",
+  "/usr/bin/python3",
+  "/srv/opentallas-scratch/codex/hbm-enabled-parent-compile-20261006/r6/runner.py",
+  "--run",
+  "--work",
+  "/srv/opentallas-scratch/codex/hbm-enabled-parent-compile-20261006/r6",
+  "--tool",
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "--memory-gib",
+  "8",
+  "--cpu-cores",
+  "1",
+  "--disk-reserve-bytes",
+  "2147483648",
+  "--epyc2-hostname",
+  "vm-xry57mhfyn",
+  "--host-kind",
+  "agi",
+  "--admitted"
+]

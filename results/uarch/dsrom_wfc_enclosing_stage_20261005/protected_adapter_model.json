@@ -371,5 +371,14 @@
     "physical_period_slow_ps": 1111.111111111,
     "token_latency_credit": 0,
     "scope": "service alone; whole L19 numerical engine timeline and parent loaded physical still pending; nominal totals include cold init,866configprefix,preload and real consumer stalls, not token latency"
+  },
+  "selected_native_successor": {
+    "source": "1860b98a0",
+    "receipt": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r4_PASS/result.json",
+    "caller_control_FF": 224,
+    "delta_FF": 98,
+    "legal_distinct_XA_owner_pairs": 41,
+    "supported": true,
+    "native_two_lease_price": "results/uarch/dsrom_wfc_enclosing_stage_20261005/native_two_lease_model.json"
   }
 }
