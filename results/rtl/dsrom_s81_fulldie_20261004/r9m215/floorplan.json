@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
  "tool": "tools/dsrom_s81_fulldie.py --gen r8",
- "tool_sha256": "2c4a7b420ae8c1db4d68d3d30988f163b83bfbd8ae190ab6ea06f75d5784de88",
+ "tool_sha256": "4d9103ae7110ac6e8cd5b9c2a4700399be22ba171fbbaa65921a78c634194757",
  "sources_sha256": {
   "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
   "results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz": "ac62ee768fa0354c90fd66c329c2ed7bd1652ebdf161ff3703a9725586d0c4c0",
@@ -101,7 +101,7 @@
   "rly": 27714,
   "hend": 44,
   "stn": 2593,
-  "hstn": 114
+  "hstn": 121
  },
  "area_mm2_by_kind": {
   "bf": 87.691,
@@ -122,11 +122,11 @@
   "rly": 8.408,
   "hend": 0.327,
   "stn": 1.815,
-  "hstn": 0.086
+  "hstn": 0.089
  },
  "placed_footprint_mm2": 472.37,
  "utilisation": {
-  "placed_over_die": 0.5505,
+  "placed_over_die": 0.5506,
   "field_frames_mm2": 425.13
  },
  "geometry": {
@@ -261,8 +261,8 @@
    "wires": 1468800
   },
   "hub": {
-   "buses": 101,
-   "wires": 81600
+   "buses": 108,
+   "wires": 85248
   },
   "phy_dfi": {
    "buses": 4,
@@ -1158,9 +1158,9 @@
     1024
    ],
    "stations": 13,
-   "length_um": 2714.0,
-   "max_hop_um": 213.8,
-   "last_hop_um": 69.7
+   "length_um": 2834.0,
+   "max_hop_um": 211.7,
+   "last_hop_um": 105.6
   },
   {
    "chain": "hb_vm_hc_s",
@@ -1187,40 +1187,40 @@
    "lanes": [
     512
    ],
-   "stations": 1,
-   "length_um": 292.9,
-   "max_hop_um": 211.2,
-   "last_hop_um": 81.6
+   "stations": 2,
+   "length_um": 532.9,
+   "max_hop_um": 210.0,
+   "last_hop_um": 113.2
   },
   {
    "chain": "hb_gather_capture",
    "lanes": [
     576
    ],
-   "stations": 18,
-   "length_um": 3731.8,
-   "max_hop_um": 214.3,
-   "last_hop_um": 50.8
+   "stations": 19,
+   "length_um": 4091.8,
+   "max_hop_um": 213.8,
+   "last_hop_um": 102.1
   },
   {
    "chain": "hb_capture_vm",
    "lanes": [
     512
    ],
-   "stations": 4,
-   "length_um": 963.0,
-   "max_hop_um": 213.8,
-   "last_hop_um": 122.7
+   "stations": 6,
+   "length_um": 1443.0,
+   "max_hop_um": 211.7,
+   "last_hop_um": 183.2
   },
   {
    "chain": "hb_collective_vm",
    "lanes": [
     512
    ],
-   "stations": 6,
-   "length_um": 1267.8,
+   "stations": 9,
+   "length_um": 1867.8,
    "max_hop_um": 211.7,
-   "last_hop_um": 16.5
+   "last_hop_um": 17.3
   },
   {
    "chain": "hb_su_s_hc_s",
@@ -1258,9 +1258,9 @@
     1024
    ],
    "stations": 7,
-   "length_um": 1305.6,
+   "length_um": 1425.6,
    "max_hop_um": 213.8,
-   "last_hop_um": 36.1
+   "last_hop_um": 76.2
   }
  ],
  "scan_die_power": {
@@ -1360,7 +1360,7 @@
    "floor_added": 4
   },
   "hb_vm_su_n": {
-   "path_um": 2714.0,
+   "path_um": 2834.0,
    "stations": 13,
    "floor_added": 6
   },
@@ -1375,24 +1375,24 @@
    "floor_added": 2
   },
   "hb_vm_gather": {
-   "path_um": 292.9,
-   "stations": 1,
-   "floor_added": 0
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
   },
   "hb_gather_capture": {
-   "path_um": 3731.8,
-   "stations": 18,
-   "floor_added": 8
+   "path_um": 4091.8,
+   "stations": 19,
+   "floor_added": 9
   },
   "hb_capture_vm": {
-   "path_um": 963.0,
-   "stations": 4,
-   "floor_added": 2
+   "path_um": 1443.0,
+   "stations": 6,
+   "floor_added": 3
   },
   "hb_collective_vm": {
-   "path_um": 1267.8,
-   "stations": 6,
-   "floor_added": 2
+   "path_um": 1867.8,
+   "stations": 9,
+   "floor_added": 4
   },
   "hb_su_s_hc_s": {
    "path_um": 1209.6,
@@ -1410,7 +1410,7 @@
    "floor_added": 2
   },
   "hb_hc_n_hc_s": {
-   "path_um": 1305.6,
+   "path_um": 1425.6,
    "stations": 7,
    "floor_added": 3
   }
@@ -1442,7 +1442,7 @@
   }
  },
  "legality_python": {
-  "instances": 57929,
+  "instances": 57936,
   "overlaps": 0,
   "overlap_examples": [],
   "outside": 0,

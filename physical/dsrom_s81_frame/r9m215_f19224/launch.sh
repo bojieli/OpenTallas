@@ -14,6 +14,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --pin-region "^(xf|xd).*=bottom:391.44-511.44" --pin-region "^(rf|rd).*=bottom:1119.06-1179.06" --pin-region "^(ck|rst).*=bottom:531.44-571.44" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
  --step-tcl POST_MACRO_PLACE=physical/dsrom_s81_frame/r9m215_f19224/place.tcl --sdc-append physical/dsrom_s81_frame/r9m215_f19224/frame.sdc \
- --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var NUM_CORES=${CORES:-24} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \
+ --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var NUM_CORES=${CORES:-24} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \
  --orfs-corner WC --pnr-stop-after ${STOP:-finish} --nickname-tag s81frame_${V:-a}_20261006 \
  --output $J/out ${ARGS:-} > $J/launch.log 2>&1

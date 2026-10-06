@@ -2454,8 +2454,8 @@
    "loads": [
     "vm"
    ],
-   "max_bit_um": 607.4,
-   "centroid_um": 607.4,
+   "max_bit_um": 580.8,
+   "centroid_um": 580.8,
    "stages_430": 2,
    "stages_430_centroid": 2
   },
@@ -2706,8 +2706,8 @@
    "loads": [
     "f_hb_vm_su_n_1"
    ],
-   "max_bit_um": 218.1,
-   "centroid_um": 218.1,
+   "max_bit_um": 219.8,
+   "centroid_um": 219.8,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2718,8 +2718,8 @@
    "loads": [
     "su_n"
    ],
-   "max_bit_um": 86.2,
-   "centroid_um": 86.2,
+   "max_bit_um": 173.7,
+   "centroid_um": 124.6,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2730,8 +2730,8 @@
    "loads": [
     "f_hb_vm_hc_s_1"
    ],
-   "max_bit_um": 221.2,
-   "centroid_um": 221.2,
+   "max_bit_um": 247.7,
+   "centroid_um": 247.7,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2742,8 +2742,8 @@
    "loads": [
     "hc_s"
    ],
-   "max_bit_um": 143.3,
-   "centroid_um": 143.3,
+   "max_bit_um": 194.4,
+   "centroid_um": 194.4,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2754,8 +2754,8 @@
    "loads": [
     "f_hb_hc_n_vm_1"
    ],
-   "max_bit_um": 202.0,
-   "centroid_um": 202.0,
+   "max_bit_um": 235.1,
+   "centroid_um": 235.1,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2778,20 +2778,20 @@
    "loads": [
     "f_hb_vm_gather_1"
    ],
-   "max_bit_um": 260.6,
-   "centroid_um": 260.6,
+   "max_bit_um": 232.7,
+   "centroid_um": 208.2,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_vm_gather_d1": {
+  "hb_vm_gather_d2": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_vm_gather_1",
+   "driver": "f_hb_vm_gather_2",
    "loads": [
     "gather"
    ],
-   "max_bit_um": 79.9,
-   "centroid_um": 79.9,
+   "max_bit_um": 110.6,
+   "centroid_um": 110.6,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2802,20 +2802,20 @@
    "loads": [
     "f_hb_gather_capture_1"
    ],
-   "max_bit_um": 207.8,
-   "centroid_um": 207.8,
+   "max_bit_um": 234.7,
+   "centroid_um": 234.7,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_gather_capture_d6": {
+  "hb_gather_capture_d8": {
    "cls": "hub",
    "bits": 576,
-   "driver": "f_hb_gather_capture_6",
+   "driver": "f_hb_gather_capture_8",
    "loads": [
     "capture"
    ],
-   "max_bit_um": 141.2,
-   "centroid_um": 141.2,
+   "max_bit_um": 75.4,
+   "centroid_um": 75.4,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2826,20 +2826,20 @@
    "loads": [
     "f_hb_capture_vm_1"
    ],
-   "max_bit_um": 213.6,
-   "centroid_um": 213.6,
+   "max_bit_um": 209.9,
+   "centroid_um": 209.9,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_capture_vm_d1": {
+  "hb_capture_vm_d4": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_capture_vm_1",
+   "driver": "f_hb_capture_vm_4",
    "loads": [
     "vm"
    ],
-   "max_bit_um": 127.4,
-   "centroid_um": 127.4,
+   "max_bit_um": 41.2,
+   "centroid_um": 41.2,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2850,20 +2850,20 @@
    "loads": [
     "f_hb_collective_vm_1"
    ],
-   "max_bit_um": 214.8,
-   "centroid_um": 214.8,
+   "max_bit_um": 209.9,
+   "centroid_um": 209.9,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_collective_vm_d3": {
+  "hb_collective_vm_d6": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_collective_vm_3",
+   "driver": "f_hb_collective_vm_6",
    "loads": [
     "vm"
    ],
-   "max_bit_um": 123.6,
-   "centroid_um": 123.6,
+   "max_bit_um": 36.3,
+   "centroid_um": 36.3,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2934,8 +2934,8 @@
    "loads": [
     "hc_n"
    ],
-   "max_bit_um": 28.2,
-   "centroid_um": 28.2,
+   "max_bit_um": 79.4,
+   "centroid_um": 79.4,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2946,8 +2946,8 @@
    "loads": [
     "f_hb_hc_n_hc_s_1"
    ],
-   "max_bit_um": 220.7,
-   "centroid_um": 220.7,
+   "max_bit_um": 226.5,
+   "centroid_um": 226.5,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2958,8 +2958,8 @@
    "loads": [
     "hc_s"
    ],
-   "max_bit_um": 209.9,
-   "centroid_um": 160.8,
+   "max_bit_um": 266.3,
+   "centroid_um": 217.2,
    "stages_430": 1,
    "stages_430_centroid": 1
   }
@@ -3031,9 +3031,9 @@
    "floor_added": 4
   },
   "hb_vm_su_n": {
-   "path_um": 2091.9,
+   "path_um": 2211.9,
    "stations": 10,
-   "floor_added": 4
+   "floor_added": 5
   },
   "hb_vm_hc_s": {
    "path_um": 1912.8,
@@ -3046,24 +3046,24 @@
    "floor_added": 2
   },
   "hb_vm_gather": {
-   "path_um": 292.9,
-   "stations": 1,
-   "floor_added": 0
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
   },
   "hb_gather_capture": {
-   "path_um": 1368.8,
-   "stations": 6,
-   "floor_added": 3
+   "path_um": 1728.8,
+   "stations": 8,
+   "floor_added": 4
   },
   "hb_capture_vm": {
-   "path_um": 340.9,
-   "stations": 1,
-   "floor_added": 0
+   "path_um": 820.9,
+   "stations": 4,
+   "floor_added": 1
   },
   "hb_collective_vm": {
-   "path_um": 645.7,
-   "stations": 3,
-   "floor_added": 1
+   "path_um": 1245.7,
+   "stations": 6,
+   "floor_added": 2
   },
   "hb_su_s_hc_s": {
    "path_um": 1209.6,
@@ -3081,7 +3081,7 @@
    "floor_added": 2
   },
   "hb_hc_n_hc_s": {
-   "path_um": 1305.6,
+   "path_um": 1425.6,
    "stations": 6,
    "floor_added": 3
   }
@@ -3107,6 +3107,6 @@
  "stage_um": 430.56,
  "generator": {
   "tool": "tools/dsrom_s81_fulldie.py --gen r8",
-  "sha256": "2c4a7b420ae8c1db4d68d3d30988f163b83bfbd8ae190ab6ea06f75d5784de88"
+  "sha256": "4d9103ae7110ac6e8cd5b9c2a4700399be22ba171fbbaa65921a78c634194757"
  }
 }

@@ -3086,6 +3086,7 @@ def buses_r8(m):
 
 
 LANES_VCH, LANES_CORR = 26, 16
+HUB_LANE_PITCH = 72.0           # r9 hub-bus lane spacing in the VCH (was 12 um: v2 GRT overflow in the VCH west strip)
 
 # ---------------------------------------------------------------- r9: q-element boundary banks and column relays
 # The q element (QELEM Z20c ETM, write_timing_model on the routed odb/spef) has a ~650 ps (SS) internal clock
@@ -3332,10 +3333,12 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         ya = cl(yb, A)
         side = 'hc' if hcA and hcB else ('sp' if not (hcA or hcB) else 'mid')
         k_ = m.setdefault('_hb_lane', {}).setdefault(side, [0])
+        # v2 GRT i50 (r9, 2fcb276fc): overflow 312 / 308 / 768 in the VCH west strip (x_vch + 0..410 um, M7 / M9 up
+        # to 1.19) where the wide hub-bus lanes ran 12 um apart: lanes now HUB_LANE_PITCH apart
         if side == 'sp':
-            vx = m['x_vch'] + 30.0 + 12.0 * k_[0]
+            vx = m['x_vch'] + 30.0 + HUB_LANE_PITCH * k_[0]
         elif side == 'hc':
-            vx = m['x_spe'] - 30.0 - 12.0 * k_[0]
+            vx = m['x_spe'] - 30.0 - HUB_LANE_PITCH * k_[0]
         else:
             vx = m['x_vch'] + VCH8 / 2 + 70.0 * k_[0]
         k_[0] += 1

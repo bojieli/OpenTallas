@@ -2886,8 +2886,8 @@
    "loads": [
     "f_hb_vm_su_n_1"
    ],
-   "max_bit_um": 218.1,
-   "centroid_um": 218.1,
+   "max_bit_um": 219.8,
+   "centroid_um": 219.8,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2898,8 +2898,8 @@
    "loads": [
     "su_n"
    ],
-   "max_bit_um": 80.3,
-   "centroid_um": 80.3,
+   "max_bit_um": 165.2,
+   "centroid_um": 116.1,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2910,8 +2910,8 @@
    "loads": [
     "f_hb_vm_hc_s_1"
    ],
-   "max_bit_um": 272.3,
-   "centroid_um": 272.3,
+   "max_bit_um": 298.9,
+   "centroid_um": 298.9,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2922,8 +2922,8 @@
    "loads": [
     "hc_s"
    ],
-   "max_bit_um": 209.8,
-   "centroid_um": 209.8,
+   "max_bit_um": 261.0,
+   "centroid_um": 261.0,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2958,20 +2958,20 @@
    "loads": [
     "f_hb_vm_gather_1"
    ],
-   "max_bit_um": 209.5,
-   "centroid_um": 209.5,
+   "max_bit_um": 283.8,
+   "centroid_um": 259.3,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_vm_gather_d1": {
+  "hb_vm_gather_d2": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_vm_gather_1",
+   "driver": "f_hb_vm_gather_2",
    "loads": [
     "gather"
    ],
-   "max_bit_um": 81.9,
-   "centroid_um": 81.9,
+   "max_bit_um": 112.6,
+   "centroid_um": 112.6,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -2982,20 +2982,20 @@
    "loads": [
     "f_hb_gather_capture_1"
    ],
-   "max_bit_um": 209.8,
-   "centroid_um": 209.8,
+   "max_bit_um": 232.5,
+   "centroid_um": 232.5,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_gather_capture_d18": {
+  "hb_gather_capture_d19": {
    "cls": "hub",
    "bits": 576,
-   "driver": "f_hb_gather_capture_18",
+   "driver": "f_hb_gather_capture_19",
    "loads": [
     "capture"
    ],
-   "max_bit_um": 8.4,
-   "centroid_um": 8.4,
+   "max_bit_um": 128.5,
+   "centroid_um": 128.5,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -3006,20 +3006,20 @@
    "loads": [
     "f_hb_capture_vm_1"
    ],
-   "max_bit_um": 209.3,
-   "centroid_um": 209.3,
+   "max_bit_um": 209.9,
+   "centroid_um": 209.9,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_capture_vm_d4": {
+  "hb_capture_vm_d6": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_capture_vm_4",
+   "driver": "f_hb_capture_vm_6",
    "loads": [
     "vm"
    ],
-   "max_bit_um": 120.9,
-   "centroid_um": 120.9,
+   "max_bit_um": 258.3,
+   "centroid_um": 258.3,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -3030,20 +3030,20 @@
    "loads": [
     "f_hb_collective_vm_1"
    ],
-   "max_bit_um": 218.9,
-   "centroid_um": 218.9,
+   "max_bit_um": 209.9,
+   "centroid_um": 209.9,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
-  "hb_collective_vm_d6": {
+  "hb_collective_vm_d9": {
    "cls": "hub",
    "bits": 512,
-   "driver": "f_hb_collective_vm_6",
+   "driver": "f_hb_collective_vm_9",
    "loads": [
     "vm"
    ],
-   "max_bit_um": 40.3,
-   "centroid_um": 40.3,
+   "max_bit_um": 65.8,
+   "centroid_um": 65.8,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -3126,8 +3126,8 @@
    "loads": [
     "f_hb_hc_n_hc_s_1"
    ],
-   "max_bit_um": 220.7,
-   "centroid_um": 220.7,
+   "max_bit_um": 196.5,
+   "centroid_um": 196.5,
    "stages_430": 1,
    "stages_430_centroid": 1
   },
@@ -3138,8 +3138,8 @@
    "loads": [
     "hc_s"
    ],
-   "max_bit_um": 149.9,
-   "centroid_um": 149.9,
+   "max_bit_um": 142.0,
+   "centroid_um": 142.0,
    "stages_430": 1,
    "stages_430_centroid": 1
   }
@@ -3211,7 +3211,7 @@
    "floor_added": 4
   },
   "hb_vm_su_n": {
-   "path_um": 2714.0,
+   "path_um": 2834.0,
    "stations": 13,
    "floor_added": 6
   },
@@ -3226,24 +3226,24 @@
    "floor_added": 2
   },
   "hb_vm_gather": {
-   "path_um": 292.9,
-   "stations": 1,
-   "floor_added": 0
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
   },
   "hb_gather_capture": {
-   "path_um": 3731.8,
-   "stations": 18,
-   "floor_added": 8
+   "path_um": 4091.8,
+   "stations": 19,
+   "floor_added": 9
   },
   "hb_capture_vm": {
-   "path_um": 963.0,
-   "stations": 4,
-   "floor_added": 2
+   "path_um": 1443.0,
+   "stations": 6,
+   "floor_added": 3
   },
   "hb_collective_vm": {
-   "path_um": 1267.8,
-   "stations": 6,
-   "floor_added": 2
+   "path_um": 1867.8,
+   "stations": 9,
+   "floor_added": 4
   },
   "hb_su_s_hc_s": {
    "path_um": 1209.6,
@@ -3261,7 +3261,7 @@
    "floor_added": 2
   },
   "hb_hc_n_hc_s": {
-   "path_um": 1305.6,
+   "path_um": 1425.6,
    "stations": 7,
    "floor_added": 3
   }
@@ -3287,6 +3287,6 @@
  "stage_um": 430.56,
  "generator": {
   "tool": "tools/dsrom_s81_fulldie.py --gen r8",
-  "sha256": "2c4a7b420ae8c1db4d68d3d30988f163b83bfbd8ae190ab6ea06f75d5784de88"
+  "sha256": "4d9103ae7110ac6e8cd5b9c2a4700399be22ba171fbbaa65921a78c634194757"
  }
 }
