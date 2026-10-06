@@ -1,0 +1,21 @@
+{
+  "pid": 3538019,
+  "start_ticks": "25496276",
+  "boot_id": "61274e16-7745-49f1-9bae-df70e3eb8702",
+  "utc": "2026-10-06T07:51:06.375840+00:00",
+  "recipe_commit": "581beef92",
+  "argv": [
+    "python3",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r2-cdc6480/physical/dsrom_wfc_protected_context/run.py",
+    "--source",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r2-cdc6480",
+    "--output",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/u55-r2-cdc6480",
+    "--density",
+    "0.55",
+    "--body-clock-sdc",
+    "/srv/opentallas-scratch/codex/zeno-wfc-ideal-body-9915-20261006/source-r2-cdc6480/physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc"
+  ],
+  "sole_owner": "Zeno",
+  "scope": "COND_BODY_DIAGNOSTIC ONLY; source/fault/reset/engineIO UNQUALIFIED no safe-reset/headline"
+}
