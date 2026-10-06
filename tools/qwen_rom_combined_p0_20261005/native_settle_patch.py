@@ -58,12 +58,13 @@ def prepare(source, output):
         '                native_die_evals+=D; ++native_coll_evals;\n'
         '            } else ++native_reentries_skipped;\n'
         '            bool ch = wire_coll();')
+    fabric_call = 'fab[d]->eval_changed();' if 'native_fabric_dirty' in text else 'fab[d]->eval();'
     text = replace_once(text,
-        '                if (fabric_live[d] && fab[d]->propagate()) { ch = true; fab[d]->eval(); }',
+        '                if (fabric_live[d] && fab[d]->propagate()) { ch = true; '+fabric_call+' }',
         '                if (fabric_live[d]) {\n'
         '                    bool dirty=false;\n'
         '                    native_timed(native_propagate_ns,[&]{dirty=fab[d]->propagate();});\n'
-        '                    if(dirty) { ch=true; native_timed(native_fabric_comb_ns,[&]{fab[d]->eval();}); }\n'
+        '                    if(dirty) { ch=true; native_timed(native_fabric_comb_ns,[&]{'+fabric_call+'}); }\n'
         '                }')
     # Preserve the explicit eval -> original pre-edge tile capture ordering.
     # The marker is consumed at the immediately following settle entry, even

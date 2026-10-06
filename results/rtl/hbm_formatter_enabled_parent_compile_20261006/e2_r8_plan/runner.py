@@ -231,98 +231,15 @@ def run(a):
         numerical=False,physical_qualified=False,adopted=False))
     return rc if rc else (2 if dangerous or not hierarchy_complete else 0)
 
-def compile_plan(a):
-    """Consume the completed real parameter graph; never flatten/replan it."""
-    work=a.work.resolve();m=verified(work)
-    out=a.output.resolve()
-    graph=work/'obj/Vot_ds_hbm_cluster20_integrated.json'
-    jobs=json.loads(graph.read_text())['submodules']
-    guard=Path('/srv/opentallas-scratch/admit.sh')
-    if socket.gethostname()!=a.epyc2_hostname or not guard.is_file():
-        raise ValueError('Measured E2 identity/unchanged guard required')
-    if not all(str(p).startswith('/srv/opentallas-scratch2/') for p in (work,out)):
-        raise ValueError('Only own E2 NVMe snapshots')
-    if min(a.memory_gib,a.cpu_cores,a.disk_reserve_bytes)<=0:
-        raise ValueError('Inventory-based admission reservation required')
-    if (work/'plan.exit').read_text().strip()!='0':raise ValueError('Real plan failed')
-    if not a.admitted:
-        out.mkdir(parents=True,exist_ok=False)
-        pins={str(graph):sha(graph)}
-        for j in jobs:pins[j['verilator_args']]=sha(j['verilator_args'])
-        write(out/'inputs.json',dict(plan_sha256=pins,source_sha256=m['source_sha256'],
-            driver_sha256=sha(__file__),parameters=m['parameters'],jobs=len(jobs)))
-        write(out/'supervisor.json',dict(pid=os.getpid(),host=socket.gethostname(),
-              memory_gib=a.memory_gib,cpu_cores=a.cpu_cores))
-    inputs=json.loads((out/'inputs.json').read_text())
-    for path,h in inputs['plan_sha256'].items():
-        if sha(path)!=h:raise ValueError('Derived graph changed '+path)
-    if sha(__file__)!=inputs['driver_sha256']:raise ValueError('Compile driver changed')
-    snap=capacity(out)
-    write(out/('post_guard.json' if a.admitted else 'pre_guard.json'),snap)
-    if not fits(snap,a):return 75
-    if not a.admitted:
-        cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(Path(__file__).resolve()),
-             '--compile-plan','--work',str(work),'--output',str(out),'--tool',str(a.tool.resolve()),
-             '--memory-gib',str(a.memory_gib),'--cpu-cores',str(a.cpu_cores),
-             '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--epyc2-hostname',a.epyc2_hostname,'--admitted']
-        if a.retained_models:cmd+=['--retained-models',str(a.retained_models.resolve())]
-        write(out/'guard_command.json',cmd)
-        return subprocess.run(cmd).returncode
-    completed=[];remaining=list(jobs);rc=0;diagnostics=[]
-    if a.retained_models:
-        old=a.retained_models.resolve()
-        old_inputs=json.loads((old/'inputs.json').read_text())
-        if any(old_inputs[k]!=inputs[k] for k in ('plan_sha256','source_sha256','parameters')):
-            raise ValueError('Retained models differ from real source/parameter plan')
-        for j in list(remaining):
-            terminal=old/j['prefix']/'terminal.json'
-            if terminal.is_file():
-                t=json.loads(terminal.read_text())
-                header=Path(j['directory'])/(j['prefix']+'.h')
-                if t['exit']==0 and t['real_model_header'] and header.is_file():
-                    completed.append(j['prefix']);remaining.remove(j)
-                    diagnostics.extend(t['dangerous_diagnostics'])
-                    write(out/(j['prefix']+'.retained.json'),dict(terminal=str(terminal),header_sha256=sha(header)))
-    while remaining:
-        ready=[j for j in remaining if set(j.get('deps',[]))<=set(completed)
-               and all(Path(s).is_file() for s in j['sources'])]
-        if not ready:raise ValueError('Real dependency wrappers unavailable; no substitute')
-        j=ready[0];remaining.remove(j)
-        leaf=out/j['prefix'];leaf.mkdir(exist_ok=False)
-        cmd=[str(a.tool.resolve()),'--Mdir',j['directory'],'-f',j['verilator_args'],*j['sources']]
-        # JSON fragments carry the encoded child top, while the parent graph
-        # carries its top separately. Preserve the compiler's actual selection.
-        if '--top-module-encoded' not in Path(j['verilator_args']).read_text():
-            cmd+=['--top-module',j['top'],'--prefix',j['prefix']]
-        write(leaf/'command.json',cmd)
-        write(out/'progress.json',dict(completed=completed,current=j['prefix'],started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
-        with (leaf/'frontend.log').open('x') as log:
-            proc=subprocess.Popen(['/usr/bin/time','-v','-o',str(leaf/'resources.log'),*cmd],
-                cwd=work/'src',stdout=log,stderr=subprocess.STDOUT)
-            write(leaf/'process.json',dict(pid=proc.pid,model=j['prefix']))
-            rc=proc.wait()
-        text=(leaf/'frontend.log').read_text()
-        bad=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',text)
-        generated=Path(j['directory'])/(j['prefix']+'.h')
-        write(leaf/'terminal.json',dict(exit=rc,dangerous_diagnostics=bad,real_model_header=generated.is_file()))
-        diagnostics.extend(bad)
-        if rc or not generated.is_file():
-            rc=rc or 2;break
-        completed.append(j['prefix'])
-    write(out/'terminal.json',dict(exit=rc,completed=completed,total=len(jobs),
-          dangerous_diagnostics=diagnostics,full_parent_elaborated=rc==0 and not diagnostics and len(completed)==len(jobs),
-          source_sha256=m['source_sha256'],parameters=m['parameters'],numerical=False,physical_qualified=False))
-    return rc
-
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true')
-    p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
+    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true')
+    p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256) if a.prepare else (compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256) if a.prepare else run(a)
 if __name__=='__main__':raise SystemExit(main())
