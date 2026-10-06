@@ -34,3 +34,12 @@ foreach ot_bt [$ot_blk getBTerms] {
   puts "OT_STN: buffered clock output port [$ot_bt getName] (driver [$ot_inst getName])"
 }
 puts "OT_STN: $ot_n clock output port(s) buffered"
+# FENCE=1 (stn_meso_fence.tcl) regions guide placement only: dissolve them before CTS so the clock-inverter clones,
+# clock buffers and repair buffers CTS adds are legalised freely (measured r8f45_hfd_cdist_r15: DPL-0033 at CTS with
+# the regions kept).  The placed FIFO cells stay where the fenced placement put them.
+foreach ot_r [$ot_blk getRegions] {
+  if {[string match ot_fence_* [$ot_r getName]]} {
+    puts "OT_STN: dissolve [$ot_r getName] ([llength [$ot_r getRegionInsts]] cells) before CTS"
+    odb::dbRegion_destroy $ot_r
+  }
+}
