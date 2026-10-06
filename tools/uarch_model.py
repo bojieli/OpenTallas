@@ -9392,7 +9392,49 @@ def hbm_w2_publication_model():
             'Turing: reconcile actual clk_mem1000ps source contract with inherited clk_hbm1024ps and this tested crossing before mapping',
             'Turing: map the composed actual source once, then supply real SS/FF registered receiver pins/ODB/SPEF/propagated clock loading'])
     parent_protection['non_sink_upper_bound_fits_owner_gateway_alone'] = parent_protection['non_sink_cell_body_upper_bound_um2'] <= parent_protection['owner_gateway_cell_capacity_um2']
-    paths += [joined_dir/'terminal.json', joined_dir/'source.json', owner_dir/'source.json']
+    physical_rel = 'results/uarch/hbm_w2_parent_physical_20261005/model.json'
+    physical = json.loads((root / physical_rel).read_text())
+    map_rel = 'results/physical/hbm_w2_parent_physical_20261006/mapped_r2/terminal.json'
+    mapped = json.loads((root / map_rel).read_text())
+    for rel, expected in physical['source_sha256'].items():
+        if hashlib.sha256((root / rel).read_bytes()).hexdigest() != expected:
+            raise ValueError('Turing actual protected parent source changed: ' + rel)
+    for source in mapped['hardware_sources']:
+        if hashlib.sha256((root / source['path']).read_bytes()).hexdigest() != source['sha256']:
+            raise ValueError('Retained W2 map source changed: ' + source['path'])
+    assert physical['area']['inherited_placement_upper_um2'] <= physical['area']['inherited_outline_um2']
+    assert physical['area']['gateway_subset_upper_um2'] == parent_protection['gateway_cell_body_upper_bound_um2']
+    assert physical['clock']['clk_mem_period_ps'] == parent_protection['clk_mem_period_ps'] == 1024
+    assert mapped['native_synthesis_completed'] and mapped['mapped_DFF_bits'] == 27675
+    parent_protection.update(actual_owner_allocation_source=physical_rel,
+        finite_parent_allocation_condition='Bound to Turing existing inherited/service rectangles and gateway; analytic area fit and1024ps selected. Retained mapped327725cells/27675DFF; region placement/propagated clocks/loads remain physical continuation obligations, no mapped protection-copy credit.',
+        owner_parent_clock_mem_period_ps=1024, composed_mem_clock_period_agrees=True,
+        inherited_protected_context_allocation_bound=True,
+        inherited_relative_bbox_um=physical['area']['inherited_relative_um'],
+        inherited_outline_um2=physical['area']['inherited_outline_um2'],
+        inherited_placement_upper_um2=physical['area']['inherited_placement_upper_um2'],
+        inherited_analytical_slot_fit=True, mapped_terminal=map_rel,
+        mapped_cells=mapped['mapped_cells'], mapped_DFF_bits=mapped['mapped_DFF_bits'],
+        mapped_cell_area_um2=mapped['mapped_cell_area_um2'],
+        mapped_FF_count_is_not_independent_copy_or_protection_proof=True,
+        mapped_region_fit_qualified=mapped['region_fit_qualified'],
+        native_SDC_API_failure='remove_input_delay unsupported; source-identical retained-netlist continuation uses unset_input_delay/unset_output_delay',
+        retained_map_continuation='tools/hbm_w2_parent_resume.py; Turing continuation9801d0f7 owns existing E2 handle; no duplicate',
+        missing_owner_inputs=[
+            'Claude SM/Franklin/Gibbs: actual pre-capture NC8/PIO2 caller port export/replacement hook, with the protected result stages and identity join replacing old stages once; post-capture rv/rop/rrow/rdata are not producer inputs',
+            'Turing: existing retained-map floorplan continuation then actual region/CDC first-stage/CTS/receiver-load/SS60-FF25 extraction; external IO numbers remain budgets'])
+    live_rel = 'results/rtl/hubble_live_swiglu_w2_20261005/runtime_r1_PASS/result.json'
+    live = json.loads((root / live_rel).read_text())
+    assert live['verdict']=='PASS_LIVE_SWIGLU_W2_CONNECTED_PUBLICATION_CPL'
+    assert live['terminal_exits']==dict(compile=0,runtime=0,run_sh=0)
+    for rel, expected in live['evidence_sha256'].items():
+        if hashlib.sha256((root / live_rel).parent.joinpath(rel).read_bytes()).hexdigest() != expected:
+            raise ValueError('Franklin completed live SwiGLU/W2 evidence changed: '+rel)
+    parent_protection.update(live_producer_terminal=live_rel, live_producer_terminal_collected=True,
+        live_producer_release_cycle=live['release_cycle'], live_producer_original_sink=True,
+        live_GU=live['live_GU'], live_producer_new_protected_parent_gate=False)
+    paths += [joined_dir/'terminal.json', joined_dir/'source.json', owner_dir/'source.json',
+        root/physical_rel, root/map_rel, root/live_rel]
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -9528,10 +9570,11 @@ def hbm_w2_publication_model():
             additional_boundary_registers=parent_protection['gateway_protected_FF_bits'], additional_owner_ledgers=0,
             added_context_roundtrip_domain_edges=dict(clk_sm=6,clk_mem=2),
             inherited_registers_are_not_new_W2_slot_area=True,
-            inherited_context_area_um2=None, inherited_receiver_bbox_um=None,
+            inherited_context_area_upper_um2=physical['area']['inherited_subset_upper_um2'],
+            inherited_receiver_bbox_relative_um=physical['area']['inherited_relative_um'],
             W2_child_bbox_um=child['core_bbox_um'],
             gateway_bbox_um=finite['boundary_transport']['source_receiver_gateway_bbox_um'],
-            gateway_transport_installed=True, inherited_protected_register_allocation_bound=False,
+            gateway_transport_installed=True, inherited_protected_register_allocation_bound=True,
             clock_domains=['clk_sm','clk_mem'],
             crossing_source='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv; actual full337/273 AW3/SYNC2 protected memory/head/pointer and Gray/complement rails',
             root_resets=['rst_sm_n','rst_mem_n'], local_CP_reset_must_not_reset_either=True,
@@ -9543,7 +9586,7 @@ def hbm_w2_publication_model():
             H16_budget_is_not_W2_propagated_clock_or_receiver_load=True,
             measured_source_receiver_pin_map=None, measured_receiver_load_fF=None,
             actual_propagated_clock_insertion_ps=None, actual_propagated_clock_skew_ps=None,
-            actual_clk_mem_binding=dict(tested_period_ps=1024,owner_source_period_ps=1000,reconciled=False),
+            actual_clk_mem_binding=dict(tested_period_ps=1024,owner_source_period_ps=1024,reconciled=True,source=physical_rel),
             dispatch_admitted=False),
         connected_parent_integration=dict(
             parent_source='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv',
