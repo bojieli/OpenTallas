@@ -1,0 +1,23 @@
+{
+  "assumed_old_files": [
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/1_2_yosys.sdc",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/1_2_yosys.v",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/1_synth.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/1_synth.sdc",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_1_floorplan.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_1_floorplan.sdc",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_2_floorplan_macro.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_2_floorplan_macro.tcl",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_3_floorplan_tapcell.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_4_floorplan_pdn.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.odb",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.sdc",
+    "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/3_1_place_gp_skip_io.odb"
+  ],
+  "source_case": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_V60_r2/work/orfs",
+  "checkpoint_sha256": "7a5e5dbd0b1838a994d16d853590d749ad40f9b44d80011df278ce189d6fa9b6",
+  "checkpoint_relative": "results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/3_1_place_gp_skip_io.odb",
+  "mapped_sha256": "61953b4c1f77fb40fdb40068f54aaca41fe0aa56100c6ea5fdcdc6f6d3166a47",
+  "sdc_sha256": "aa80cb20cee08acb79fe5e464b838092236600f02769cdcc595110d0adb3323c",
+  "reused_stages": "actual synthesis/floorplan/global-placement-skip-IO; IO correction only, no passing stage replay"
+}
