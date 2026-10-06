@@ -7,7 +7,7 @@ MISMATCH vec 7 ref 038180882c1405 dut 2ff6db5d92c753
 MISMATCH vec 8 ref 1167a208cc4610 dut 2ff77bad9e8a7a
 MISMATCH vec 9 ref 096492407c1c0c dut 0da4b249201c0c
 MISMATCH vec 10 ref 05c2d1287c260a dut 3ffffefcea5b2d
-ROUTER_PS PIPESEL=2 RATE=2 NEG=1 SEED=7 vectors ref=200 dut=200 bad=143 latency ref=23 dut=22..22
+ROUTER_PS PIPESEL=2 RATE=2 NEG=1 SEED=7 vectors ref=200 dut=200 bad=143 latency ref=23 dut=23..23
 ROUTER_PS FAIL
 FATAL: rtl/test/hbm_router_ps/tb_router_topk_ps.sv:88: ROUTER_PS FAIL
-       Time: 10424500 Scope: tb_router_topk_ps
+       Time: 10424500  Scope: tb_router_topk_ps

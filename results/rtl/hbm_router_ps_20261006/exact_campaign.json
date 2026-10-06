@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm_router_ps.exact.v1",
  "dut": "rtl/gpu/ot_gpu_router_topk_ps.sv",
- "dut_sha256": "da9e9eef5c3fdec2b6900fb4581cc9a3e99f39cdc6080291c978feeded84115a",
+ "dut_sha256": "56eb5de51d593dcfdfe1c07ffa494814d5dfa5d823265176745a06836f6a638e",
  "reference": "rtl/gpu/ot_gpu_router_topk.sv",
  "reference_sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
  "bench": "rtl/test/hbm_router_ps/tb_router_topk_ps.sv",
@@ -20,7 +20,7 @@
    "dut_vectors": 200,
    "mismatches": 136,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "FAIL"
   },
   {
@@ -33,7 +33,7 @@
    "dut_vectors": 200,
    "mismatches": 143,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "FAIL"
   },
   {
@@ -46,7 +46,7 @@
    "dut_vectors": 200,
    "mismatches": 68,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "FAIL"
   },
   {
@@ -59,7 +59,7 @@
    "dut_vectors": 200,
    "mismatches": 54,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "FAIL"
   },
   {
@@ -72,7 +72,7 @@
    "dut_vectors": 200,
    "mismatches": 25,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "FAIL"
   },
   {
@@ -85,7 +85,7 @@
    "dut_vectors": 200,
    "mismatches": 16,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "FAIL"
   },
   {
@@ -98,7 +98,7 @@
    "dut_vectors": 200,
    "mismatches": 106,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "FAIL"
   },
   {
@@ -111,7 +111,7 @@
    "dut_vectors": 200,
    "mismatches": 108,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "FAIL"
   },
   {
@@ -124,7 +124,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "PASS"
   },
   {
@@ -137,7 +137,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "PASS"
   },
   {
@@ -150,7 +150,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "PASS"
   },
   {
@@ -163,7 +163,7 @@
    "dut_vectors": 2000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 19,
+   "latency_dut": 20,
    "verdict": "PASS"
   },
   {
@@ -176,7 +176,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "PASS"
   },
   {
@@ -189,7 +189,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "PASS"
   },
   {
@@ -202,7 +202,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "PASS"
   },
   {
@@ -215,7 +215,7 @@
    "dut_vectors": 1000,
    "mismatches": 0,
    "latency_ref": 23,
-   "latency_dut": 22,
+   "latency_dut": 23,
    "verdict": "PASS"
   }
  ],
@@ -223,14 +223,14 @@
  "negatives_all_fail": true,
  "vectors_checked": 12000,
  "cycle_cost": {
-  "pipesel1_latency_from_last_beat": 19,
+  "pipesel1_latency_from_last_beat": 20,
   "reference_latency": 23,
   "topk_f_latency": 24,
-  "delta_vs_reference": -4,
-  "delta_vs_topk_f3": -5,
-  "note": "bench latency, cycles from the last beat's in_valid to out_valid; throughput unchanged (16 scores/cycle, 24 beats a 384-vector). Negative cost: no headline recompose needed beyond -5 cycles a router call.",
-  "pipesel2_latency_from_last_beat": 22,
+  "delta_vs_reference": -3,
+  "delta_vs_topk_f3": -4,
+  "note": "bench latency, cycles from the last beat's in_valid to out_valid; throughput unchanged (16 scores/cycle, 24 beats a 384-vector). Negative cost: no headline recompose needed beyond -4 cycles a router call.",
+  "pipesel2_latency_from_last_beat": 23,
   "pipesel2_extra_cycles_per_vector": 24
  },
- "rtl_revision": "r3: every key compare split over two registered stages (8-bit chunk gt/eq | log-depth combine), 4 round-robin running banks (3-stage merge recurrence, II 4 per bank), 3-stage pipelined 2-level merge tree. r2 (one-stage compare trees) had a 950 ps S2 compare in the die-view pre-CTS STA; r1 (>= operators) a 750 ps ripple."
+ "rtl_revision": "r4: r3 + S5b, NB + 1 kept register copies of the beat list (ot_gpu_router_ps_lcopy) so each bank compare array has its own driver (+1 cycle, feed-forward; r3 die view dv7 post-CTS L5 -> cc6 -275 ps at 770 through a 476 ps fanout tree). r3: every key compare split over two registered stages (8-bit chunk gt/eq | log-depth combine), 4 round-robin running banks (3-stage merge recurrence, II 4 per bank), 3-stage pipelined 2-level merge tree. r2 (one-stage compare trees) had a 950 ps S2 compare in the die-view pre-CTS STA; r1 (>= operators) a 750 ps ripple."
 }

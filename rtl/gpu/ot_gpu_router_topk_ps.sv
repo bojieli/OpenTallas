@@ -22,6 +22,7 @@
 //       lane m > j iff key_j >= key_m (equal keys go to the lower index, as in the reference)
 //   S4  rank of every lane = how many lanes beat it (adder-tree popcount of P - 1 bits)
 //   S5  local top-K of the beat, sorted: slot k = the lane whose rank is k (one-hot AND-OR mux)
+//   S5b NB + 1 kept copies of that list (r4: one per bank compare array + one for the bank muxes)
 //   S6..S8  NB = 4 running top-K banks take the beats round-robin, so a bank sees a beat at most
 //       every 4th cycle and its merge with the running list is a 3-stage recurrence:
 //       S6 chunk compares of the bank's K entries against the beat's K, S7 combine (the running
@@ -33,7 +34,7 @@
 //   S10..S15  2-level merge tree of the 4 bank lists on the full key {okey, ~index} (the banks
 //       interleave indices), 3 stages a level (chunk compare | combine + selects | mux).
 //   S16..S18  ascending by id (compare | rank | select) -> out_ids / out_valid flops at the pins.
-// Latency: in_valid of the last beat at the pins -> out_valid 19 cycles (the reference: 23,
+// Latency: in_valid of the last beat at the pins -> out_valid 20 cycles (r4; r3 19; the reference: 23,
 // ot_gpu_router_topk_f: 24, by the bench's measure).  Throughput unchanged (PIPESEL = 1).
 // Reset: rst_n asserts asynchronously into a 2-flop synchroniser only; all control flops take a
 // registered synchronous reset; datapath flops have no reset and no enable.
@@ -148,6 +149,12 @@ module ot_gpu_router_ps_merge #(
         end
         hq <= h2;
     end
+endmodule
+
+// r4: one kept register copy of the beat's K-list (synthesis keeps the module, so NB + 1 equal-D copies stay
+// separate drivers; route with SYNTH_KEEP_MODULES including ot_gpu_router_ps_lcopy).
+module ot_gpu_router_ps_lcopy #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
 endmodule
 
 module ot_gpu_router_topk_ps_core #(
@@ -341,6 +348,26 @@ module ot_gpu_router_topk_ps_core #(
         l5 <= l4; bank5 <= bank4; fresh5 <= fresh4; hasf5 <= hasf4;
         v5 <= rst_c ? 1'b0 : v4;
     end
+    // ---- S5b (r4): NB + 1 kept register copies of the beat's list, one per bank's S6 compare array and one for
+    // the S8 mux operand (r3 die view dv7_skcts: L5 fanned out to NB * K chunk compares, ~70 loads a bit through
+    // a 476 ps buffer tree, -275 ps at 770 ps post-CTS).  Feed-forward only (+1 cycle latency, outside the
+    // bank recurrence); ot_gpu_router_ps_lcopy is a kept module so synthesis cannot merge the equal-D copies.
+    wire [K*EW-1:0] L5f;
+    wire [K*EW-1:0] L5c [0:NB];
+    genvar gk5, gb5;
+    for (gk5 = 0; gk5 < K; gk5 = gk5 + 1) begin : g_l5f
+        assign L5f[gk5*EW +: EW] = L5[gk5];
+    end
+    for (gb5 = 0; gb5 <= NB; gb5 = gb5 + 1) begin : g_lc
+        ot_gpu_router_ps_lcopy #(.W(K*EW)) u_lc (.clk(clk), .d(L5f), .q(L5c[gb5]));
+    end
+    reg           v5b, l5b, fresh5b;
+    reg [1:0]     bank5b;
+    reg [NB-1:0]  hasf5b;
+    always @(posedge clk) begin
+        l5b <= l5; bank5b <= bank5; fresh5b <= fresh5; hasf5b <= hasf5;
+        v5b <= rst_c ? 1'b0 : v5;
+    end
     // ---- S6 / S7 / S8: NB running banks, 3-stage merge recurrence ----
     reg [EW-1:0]  R   [0:NB*K-1];          // bank b entry i at R[b*K+i]
     reg [15:0]    cc6 [0:NB*K*K-1];        // bank b: [b*K*K + i*K + j] = chunks(R_i, L_j)
@@ -356,13 +383,13 @@ module ot_gpu_router_topk_ps_core #(
         for (b = 0; b < NB; b = b + 1)
             for (i = 0; i < K; i = i + 1)
                 for (j = 0; j < K; j = j + 1)
-                    cc6[b*K*K+i*K+j] <= chunks(R[b*K+i][EW-1:IW], L5[j][EW-1:IW]);
-        for (j = 0; j < K; j = j + 1) Lc6[j] <= L5[j];
+                    cc6[b*K*K+i*K+j] <= chunks(R[b*K+i][EW-1:IW], L5c[b][j*EW+IW +: EW-IW]);
+        for (j = 0; j < K; j = j + 1) Lc6[j] <= L5c[NB][j*EW +: EW];
         for (b = 0; b < NB; b = b + 1) begin
-            mine6[b] <= !rst_c && v5 && (bank5 == b);
-            fresh6[b] <= fresh5;
+            mine6[b] <= !rst_c && v5b && (bank5b == b);
+            fresh6[b] <= fresh5b;
         end
-        l6 <= rst_c ? 1'b0 : (v5 & l5); hasf6 <= hasf5;
+        l6 <= rst_c ? 1'b0 : (v5b & l5b); hasf6 <= hasf5b;
         // S7
         for (b = 0; b < NB; b = b + 1) begin
             for (i = 0; i < K; i = i + 1)
