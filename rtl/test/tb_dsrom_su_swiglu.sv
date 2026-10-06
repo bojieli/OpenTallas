@@ -12,7 +12,8 @@ module tb_dsrom_su_swiglu #(
     parameter integer NOUT = 23,
     parameter integer LM = 5,
     parameter integer LA = 4,
-    parameter integer QLAT = 5
+    parameter integer QLAT = 5,
+    parameter integer IREG = 0
 );
     localparam integer NB = W / 32;
     localparam integer MAXE = 8192;
@@ -43,7 +44,7 @@ module tb_dsrom_su_swiglu #(
     wire [8*W-1:0] q;
     wire [10*NB-1:0] e;
     wire [16*W-1:0] y;
-    ot_dsrom_su_swiglu #(.W(W), .NIN(NIN), .NOUT(NOUT), .ROUTED(ROUTED), .LM(LM), .LA(LA), .QLAT(QLAT)) dut (.clk(clk), .rst_n(rst_n), .v(v), .g(g),
+    ot_dsrom_su_swiglu #(.W(W), .NIN(NIN), .NOUT(NOUT), .ROUTED(ROUTED), .LM(LM), .LA(LA), .QLAT(QLAT), .IREG(IREG)) dut (.clk(clk), .rst_n(rst_n), .v(v), .g(g),
         .u(u), .w(w), .lim(lim), .vo(vo), .q(q), .e(e), .y(y), .fault(fault));
     integer cyc = 0, iv = 0, oa = 0, ov = 0, ea = 0, eq = 0, idle = 0, l, b, k, blk, nchk = 0;
     integer first_in = -1, last_out = -1, a_first = -1, a_last = -1, sat = 0;
