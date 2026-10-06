@@ -197,8 +197,6 @@ module tb_hbm_integrated_expert_pq;
   end
   assign source_ready[7:6]=2'b11;
   wire [5:0] native_ready;
-  // Service-only scope: deterministic finite consumer. No SM numerical,
-  // whole-token or physical-provider transfer from these accepted bytes.
   integer clk_edges=0;
   // Full NC8 production PQ/XMAP SM consumes the actual interleaved GU stream. The fixture's request-tag queue is the same
   // behavioural response bookkeeping as the retained SM bench; no hardware

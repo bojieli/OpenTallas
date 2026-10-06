@@ -23,22 +23,32 @@ def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--out',type=Path,required=True);p.add_argument('--service',type=Path,required=True)
  p.add_argument('--arithmetic',type=Path,required=True);p.add_argument('--ids',required=True)
- p.add_argument('--jobs',type=int,default=16);a=p.parse_args()
- a.out.mkdir(parents=True,exist_ok=False);case=a.out/'case';case.mkdir()
- for name in ('gu.hex','sm_expected.hex'):
-  if sha(a.service/name)!=sha(a.arithmetic/name):raise ValueError('numerical and service source bytes differ: '+name)
- for name in ('gu.hex','sm_expected.hex','w2.hex','cfg_lut.hex'):
-  shutil.copyfile(a.service/name,case/name)
- shutil.copyfile(a.arithmetic/'gold.hex',case/'gold.hex')
- words=[int(x,16) for x in (a.arithmetic/'x.hex').read_text().split()]
- if len(words)!=24:raise ValueError('full GU activation extent')
- (case/'xmap.hex').write_text(''.join(f'{X.pack_fragment(x,2,1):06816x}\n' for x in words))
- sources={s:sha(ROOT/s) for s in SRC}
- command=['verilator','--binary','--timing','-O2','-Wno-fatal','--top-module',TOP,
-  '--Mdir',str(a.out/'obj'),'-j',str(a.jobs),*[str(ROOT/s) for s in SRC]]
- (a.out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
- with (a.out/'build.log').open('w') as log:
-  rc=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT).returncode
+ p.add_argument('--jobs',type=int,default=16)
+ p.add_argument('--step',choices=['all','frontend','build-run'],default='all');a=p.parse_args()
+ if a.step!='build-run':
+  a.out.mkdir(parents=True,exist_ok=False);case=a.out/'case';case.mkdir()
+  for name in ('gu.hex','sm_expected.hex'):
+   if sha(a.service/name)!=sha(a.arithmetic/name):raise ValueError('numerical and service source bytes differ: '+name)
+  for name in ('gu.hex','sm_expected.hex','w2.hex','cfg_lut.hex'):
+   shutil.copyfile(a.service/name,case/name)
+  shutil.copyfile(a.arithmetic/'gold.hex',case/'gold.hex')
+  words=[int(x,16) for x in (a.arithmetic/'x.hex').read_text().split()]
+  if len(words)!=24:raise ValueError('full GU activation extent')
+  (case/'xmap.hex').write_text(''.join(f'{X.pack_fragment(x,2,1):06816x}\n' for x in words))
+  sources={s:sha(ROOT/s) for s in SRC}
+  command=['verilator','--cc','--exe','--main','--timing','-O2','-Wno-fatal','--top-module',TOP,
+   '--Mdir',str(a.out/'obj'),'-j',str(a.jobs),*[str(ROOT/s) for s in SRC]]
+  (a.out/'command.json').write_text(json.dumps(command,indent=2)+'\n')
+  with (a.out/'build.log').open('w') as log:
+   rc=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT).returncode
+  if rc:return rc
+  (a.out/'sources.json').write_text(json.dumps(sources,indent=2)+'\n')
+ else:
+  case=a.out/'case';sources=json.loads((a.out/'sources.json').read_text())
+  if any(sha(ROOT/s)!=h for s,h in sources.items()):raise ValueError('frontend source changed')
+ if a.step=='frontend':return 0
+ with (a.out/'make.log').open('x') as log:
+  rc=subprocess.run(['make','-C',str(a.out/'obj'),'-f','V'+TOP+'.mk','-j',str(a.jobs)],stdout=log,stderr=subprocess.STDOUT).returncode
  if rc:return rc
  exe=a.out/'obj'/('V'+TOP);ids=[int(x) for x in a.ids.split(',')]
  if len(ids)!=6:raise ValueError('six router IDs required')
