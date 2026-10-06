@@ -51,7 +51,7 @@ KEYS = ("QPIPE", "QP_XS", "QP_CAP", "QP_P1", "shift_L", "compared_cycles", "exem
         "gated_edges", "closed_cycles", "hits", "issues", "rows", "nonzero", "classes_mask", "wraps", "q_advances",
         "mtp_restarts", "rejected", "go_gate_closed", "go_mid_drain", "go_walking", "resets")
 CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
-BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"], "pos_qm2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=2"],
+BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"], "pos_qm2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=2"], "pos_qm3": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=3"],
           "neg_qm2z": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Z"], "neg_qm2q": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Q"],
           "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
@@ -148,7 +148,8 @@ def main() -> None:
         # +nan_sparse (bench header): the QX = 10 lane-NaN partials (bterm4 NS) and their negative control on sparse NaNs
         jobs += [("pos", 1, ("+nan_sparse",)), ("neg_ns", 1, ("+nan_sparse",))]
         jobs += [("neg_qmns", 1, ("+nan_sparse",)), ("neg_qmsh", 1)]
-        jobs += [("pos_qm2", s) for s in range(1, n + 1)] + [("pos_qm2", 7), ("neg_qm2z", 1), ("neg_qm2q", 1)]      # QM lane (ot_v41_bterm5_w10) controls
+        jobs += [("pos_qm2", s) for s in range(1, n + 1)] + [("pos_qm2", 7), ("neg_qm2z", 1), ("neg_qm2q", 1)]
+        jobs += [("pos_qm3", s) for s in range(1, n + 1)] + [("pos_qm3", 7)]      # QM lane (ot_v41_bterm5_w10) controls
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
