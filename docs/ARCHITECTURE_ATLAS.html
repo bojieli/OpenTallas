@@ -1577,7 +1577,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Pin access</td><td>every macro pin has an access point; every replicated copy owns its pins (768 element-internal tree hops kept inside the element, no self nets)</td><td>pass</td></tr>
       <tr><td>Global route, 5 / 50 iterations</td><td class="m">overflow 2,539 / 0</td><td>pass</td></tr>
       <tr><td>Static IR drop</td><td class="m">worst 23.54 mV over 152 loaded windows (budget 35 mV); 2 windows carry no core load</td><td>pass</td></tr>
-      <tr><td>Power grid, power</td><td>M8/M9 straps at 0.0878 coverage, 0.25 over the stream services; 775.7 W peak in-phase at an assumed 1.05 W/mm² over the tiles, above the 474.6 W liquid-cooling budget per die (measured tile power is open)</td><td>open</td></tr>
+      <tr><td>Power grid, power</td><td>M8/M9 straps at 0.0878 coverage, 0.25 over the stream services. Measured at the P8191 decode (TT): 309.0 W die average over the token against the 474.6 W liquid-cooling budget (SS 267.3, FF 369.0); tiles 689.6 W in phase while clocked (1.03 W/mm²), 182.3 W averaged; in-phase die bound 967.9 W for at most one stage (Table 6-17e)</td><td>pass (time-averaged)</td></tr>
     </tbody>
   </table></div>
   <div class="tablebox"><table class="data">
@@ -1599,6 +1599,18 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <li>the in-block tree: 2,387 cycles.</li>
   </ul>
   <p>The block word's depth comes from its 6,144-bit width crossing the spine channel, not from the port's band distance, which is why moving the port slices to their bands did not help. With the adopted SRAM-spread composition (2,219.8 tok/s TP4), the same terms give 2,143.0 at the floor and 2,099.5 at the bound.</p>
+  <p><b>Measured power.</b> The tile power is now measured. The TP4 vehicle ran at the routed tile's exact parameters and bit-exact at P8191, for one SRAM layer, one HBM layer and the head. Every fabric clock edge of seven tiles was recorded (one per split-tree class), replayed bit-exact on the tile alone (a corrupted instruction is detected), and mapped register by register onto the routed <code>tile_tp4_t4</code> flops (102,101 of 102,102). OpenSTA then reported the power at the routed SPEF.</p>
+  <p>While the fabric clock runs, the tiles draw 689.6 W: 1.03 W/mm², close to the 1.05 W/mm² the floorplan assumed. The core's engine clock gate already stops the fabric for 73.3% of the token, because HBM layers wait on the stream for 59% of their cycles. Averaged over the token, the tiles therefore draw 182.3 W and the die 309.0 W, which passes the budget at every corner. The in-phase peak exceeds the budget only for the length of one stage (the head runs clocked for 2.7 µs).</p>
+  <p>The binding consequence is on batching rather than on the single user. The budget allows a fabric duty of 0.50 at TT and 0.38 at FF, against 0.27 for one user, so batched requests that fill idle stages are power-capped near half duty. The first lever there is tile-internal clock gating, which costs no rate: the clock network and flop clock pins make up ~57% of the clocked tile power.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17e. Qwen3-8B HBM accelerator tile die power at the P8191 TP4 decode, 1.2 GHz (results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json). Tile terms are measured: routed netlist and SPEF with the exact decode's register activity. The die wire uses routed lengths, measured port activity and measured per-flop energy. The HBM PHY uses the published 0.8 pJ/bit plus idle. The stream services and spine (73.2 W) keep the floorplan's assumed densities. The combinational share is an upper bound: halving it gives tiles of 157.8 W at TT.</caption>
+    <thead><tr><th>Corner</th><th class="r">Tiles clocked (W)</th><th class="r">Tiles, token avg (W)</th><th class="r">Die wire avg (W)</th><th class="r">Die, token avg (W)</th><th class="r">Die in-phase bound (W)</th><th class="r">Max fabric duty at 474.6 W</th></tr></thead>
+    <tbody>
+      <tr class="sel"><td>TT 0.70 V</td><td class="r m">689.6</td><td class="r m">182.3</td><td class="r m">19.9</td><td class="r m">309.0</td><td class="r m">967.9</td><td class="r m">0.50</td></tr>
+      <tr><td>SS 0.63 V</td><td class="r m">542.0</td><td class="r m">144.5</td><td class="r m">16.0</td><td class="r m">267.3</td><td class="r m">785.9</td><td class="r m">0.65</td></tr>
+      <tr><td>FF 0.77 V</td><td class="r m">901.2</td><td class="r m">237.7</td><td class="r m">24.5</td><td class="r m">369.0</td><td class="r m">1,225.6</td><td class="r m">0.38</td></tr>
+    </tbody>
+  </table></div>
   <h3 id="s6-11">6.11 Host interface and runtime</h3>
   <p class="finding">A descriptor-ring host interface, DMA and an OpenAI-compatible endpoint have been exercised with reduced RTL vehicles. Binding them to the adopted Qwen HBM-KV tile and V41x die remains a system integration gate.</p>
 

@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.qwen-slab.verdict.v1",
+ "adopted": "r11c_456_lead2_t260_d75",
+ "element": "ot_qwen_slab_port_group, 777.576 x 455.76 um, MUL_LAT 7, IN_STAGE/AM_SPLIT/S5_CTL/SCALE_PAIR, BW_FIFO=0",
+ "flow": "diamond legalizer, TD-only GPL, CTS -no_obstruction_aware -delay_buffer_derate 0.75, rom_lead 2, SDC port_group_s2_slew260.sdc (explicit set_max_transition 260), SLEW_MARGIN 30, hold margin 20 ps, IO hold extra 80 ps",
+ "signoff": {"SS60_setup_ps": 11.47, "FF25_hold_ps": 4.20, "violating_endpoints": 0, "pins_over_liberty_320ps": 0, "pins_over_flow_target_260ps": 2, "max_cap": 0, "max_fanout": 0, "drc": 0, "antenna": 0},
+ "slew_root_cause": "--max-transition-ns only reached the runner's own SDC; the slab routes with a custom SDC_FILE, so r8/r9 ran at the liberty 320 ps limit with SLEW_MARGIN only (r6d 120 pins, r9b 25, r9d 2); r10/r11 put set_max_transition in the SDC",
+ "cost": "MUL_LAT 7: +217 cycles/token (194,172 cycles, 6,180.1 tok/s vs 6,187.0); 456 L6 (r10e) SS -19.0, 570 L6 (r9c) closes but does not fit the two-column spine",
+ "rejected_this_round": {"r10a": "SS +12.14 but 4 pins > 320", "r10b": "SS +10.13, 3 pins > 320", "r10c": "SS -7.91", "r10d": "FF -1.8", "r10e (L6)": "SS -19.0", "r10f": "SS -3.04 / FF -6.97", "r11a": "SS -46.8", "r11b": "SS -16.03"}
+}

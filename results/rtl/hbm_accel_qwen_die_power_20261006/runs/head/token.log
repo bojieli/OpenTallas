@@ -1,0 +1,10 @@
+images loaded in 10.1 s
+stream: total_words=0 preroll=0 ctl_cycles; words_ready_at_start=0/0
+models constructed in 10.7 s (tiles/die=1536 nodes/die=1488)
+RT_TILE_TRACE 7 tiles of die 0 -> /srv/opentallas-scratch/claude/qwen-hbm-power/runs/head
+STAGE head done cycles=3223 start_cyc=7 end_cyc=3230 me_busy=2658/2658 next_token=18/18 next_val=42282b99/42282b99 seq_fault=0 core_fault=0 coll_fault=0 me_writes=0 su_writes=4097 wall=806s
+HBMSTAT head die0 hbm_wait=0 kv_wait=0 matmul=2564 attention=0 collective=346 stream_unit=295 other=19 ctl_cycles=2627 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=2637 hbm_fault=0 wst_fault=0
+HBMSTAT head die1 hbm_wait=0 kv_wait=0 matmul=2564 attention=0 collective=346 stream_unit=295 other=19 ctl_cycles=2627 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=2637 hbm_fault=0 wst_fault=0
+HBMSTAT head die2 hbm_wait=0 kv_wait=0 matmul=2564 attention=0 collective=346 stream_unit=295 other=19 ctl_cycles=2627 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=2637 hbm_fault=0 wst_fault=0
+HBMSTAT head die3 hbm_wait=0 kv_wait=0 matmul=2564 attention=0 collective=346 stream_unit=295 other=19 ctl_cycles=2627 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=2637 hbm_fault=0 wst_fault=0
+QWEN_HBMACC_TOKEN PASS stages=1 token=18 val=42282b99 die1_token=18 cycles=3230 edges=3230 settle_max=2 wall_s=805.5 RSS_KiB=1248276 threads=4 ctl_cycles=2628 preroll=0

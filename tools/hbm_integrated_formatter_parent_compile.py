@@ -26,8 +26,7 @@ INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
 # Verilator derives each parameter variant and connects generated leaf wrappers.
 # Leave the HBM model inside its partition: init_mem accesses u_model.mem.
 HIER_BLOCKS=[
-    'ot_hdc_v41x_vec_lane','ot_hdc_v41x_vsq','ot_hdc_v41x_vred_op',
-    'ot_hdc_v41x_vec_red','ot_hdc_v41x_vec','ot_hbm_accel_su_parent_exec',
+    'ot_hdc_v41x_vec_lane','ot_hdc_v41x_vec','ot_hbm_accel_su_parent_exec',
     'ot_hdc_v41x_exp','ot_hdc_v41x_rsqrt','ot_hdc_v41x_fdiv','ot_hdc_v41x_softplus',
     'ot_dsrom_su_hcpost_lane','ot_dsrom_su_hcpost_group','ot_dsrom_su_hcpost',
     'ot_gpu_simt_fplane','ot_ds_hbm_simt_sm20','ot_gpu_hbm_partition',
@@ -37,6 +36,10 @@ HIER_BLOCKS=[
     'ot_hbm_selected_c12__ot_hdc_v41x_softplus',
     'ot_hbm_selected_c12__ot_hbm_sfu_result_c12',
     'ot_dsrom_su_norm_mix','ot_dsrom_rsqrt','ot_dsrom_su_norm']
+
+# Future compiler cuts require a measured need; never silently substitute them
+# into a source-only continuation or an existing live model.
+REDUCTION_BLOCKS=['ot_hdc_v41x_vsq','ot_hdc_v41x_vred_op','ot_hdc_v41x_vec_red']
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
@@ -53,7 +56,8 @@ def files():
         if s not in paths:raise ValueError('Missing actual selected source '+s)
     return paths
 
-def prepare(work,body_pin):
+def prepare(work,body_pin,partition_reduction=False):
+    blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
     work.mkdir(parents=True,exist_ok=False)
@@ -79,7 +83,7 @@ def prepare(work,body_pin):
         for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
             if name in declarations:errors.append('Duplicate module '+name+': '+declarations[name]+' / '+path)
             declarations[name]=path
-    for name in HIER_BLOCKS:
+    for name in blocks:
         if name not in declarations:errors.append('Real hierarchy block missing: '+name)
     if BODY in pins:
         text=(ROOT/BODY).read_text()
@@ -124,12 +128,13 @@ def prepare(work,body_pin):
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
     shutil.copyfile(ROOT/LIST,work/'src/files.f')
     hier=work/'src/hierarchy.vlt'
-    hier.write_text('`verilator_config\n'+''.join(f'hier_block -module "{name}"\n' for name in HIER_BLOCKS))
+    hier.write_text('`verilator_config\n'+''.join(f'hier_block -module "{name}"\n' for name in blocks))
     runner=work/'runner.py';shutil.copyfile(Path(__file__),runner)
     m=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         source_sha256=pins,files_f_sha256=sha(ROOT/LIST),runner_sha256=sha(runner),
         binding_sha256=sha(ROOT/'tools/hbm_opt_integrated_20261005_w2_on.py'),
-        hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in HIER_BLOCKS},
+        hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in blocks},
+        partition_reduction=partition_reduction,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
         sources=paths,includes=INCLUDES,parameters=PARAMS,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
@@ -318,6 +323,7 @@ def compile_plan(a):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true')
+    p.add_argument('--partition-reduction',action='store_true',help='Opt-in future real reducer partitions after measured peak/convergence justifies them')
     p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
@@ -325,5 +331,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256) if a.prepare else (compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction) if a.prepare else (compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())

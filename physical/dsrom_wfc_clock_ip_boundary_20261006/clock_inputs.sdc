@@ -2,6 +2,27 @@
 # Supply a source-pinned dictionary BEFORE sourcing this file. No timing defaults.
 # Modes are characterized or research_assumption; the latter yields conditional
 # body timing only, never clock-source/PLL qualification.
+# Owner's later explicit ideal-input BODY option is already installed by the
+# owner SDC that Zeno sources first. It intentionally supplies NO IP numbers.
+# Keep this separate from the numeric characterization/research binder below.
+if {[info exists wfc_clock_boundary_mode] && $wfc_clock_boundary_mode eq "owner_ideal_input_body"} {
+ if {![info exists wfc_evidence_class] || $wfc_evidence_class ne "IDEAL_EXTERNAL_INPUT_DIAGNOSTIC"} {
+  error "Missing explicit ideal external input diagnostic evidence class"
+ }
+ foreach {flag required} {wfc_body_conditional 1 wfc_clock_source_qualified 0 wfc_other_engine_IO_bound 0 wfc_headline_allowed 0} {
+  if {![info exists $flag] || [set $flag] != $required} {
+   error "Ideal-input BODY conditional flag missing or changed: $flag"
+  }
+ }
+ foreach c {clk_fast clk_serial} {
+  if {[llength [get_clocks -quiet $c]] != 1} {error "Missing ideal-input BODY clock $c"}
+ }
+ foreach p {fast_clk slow_clk clock_source_fault cold_n fast_rst_n slow_rst_n} {
+  if {[llength [get_ports -quiet $p]] != 1} {error "Missing ideal-input BODY port $p"}
+ }
+ puts "WFC_BINDER IDEAL_EXTERNAL_INPUT_DIAGNOSTIC NO_IP_NUMBERS_OR_SOURCE_QUALIFICATION"
+ return
+}
 if {![info exists wfc_clock_ip_binding]} {
  error "Missing wfc_clock_ip_binding: actual IP terminals/latency/slew/jitter/reset/fault required"
 }

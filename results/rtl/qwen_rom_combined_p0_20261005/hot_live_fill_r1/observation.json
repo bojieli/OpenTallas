@@ -1,0 +1,63 @@
+{
+  "status": "LIVE_USEFUL_FILL_NOT_TOKEN_PASS",
+  "pid": 439595,
+  "pid_start_ticks": 10498010,
+  "supervisor": 437677,
+  "root": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_hot_12b9f6521",
+  "model_source": "b04e893e7",
+  "protected_source": "3f3c2b790",
+  "host_continuation": "12b9f6521",
+  "method": "Read-only /proc/PID/mem; actual Vdie.h ordered port references and ELF constructor offsets/vtable; bounded16MiB heap scan; no attach/stop/write/compile",
+  "scope": "One actual model object, allocation rank not asserted; asynchronous scalar reads not atomic, not all-rank coverage",
+  "address": "0x6285987fd640",
+  "samples": [
+    {
+      "time": 1791271240.9485943,
+      "cyc": 3521,
+      "core_cycles": 3509,
+      "fill_sectors": 13188,
+      "stall_kv": 2930
+    },
+    {
+      "time": 1791271252.9487903,
+      "cyc": 3573,
+      "core_cycles": 3561,
+      "fill_sectors": 13396,
+      "stall_kv": 2982
+    }
+  ],
+  "unchanged": {
+    "layer": 0,
+    "next_layer": 1,
+    "pos": 8191,
+    "reset_released": 1,
+    "prog_base": 0,
+    "kv_ok": 0,
+    "drained": 1,
+    "mem_fault": 0,
+    "core_fault": 0,
+    "numeric_fault": 0,
+    "kv_fault": 0,
+    "writes": 0,
+    "rsp_stall": 1,
+    "stall_mem": 0,
+    "stall_bridge": 245,
+    "stall_retire": 0,
+    "drain_low": 0
+  },
+  "delta": {
+    "core_cycles": 52,
+    "fill_sectors": 208,
+    "sectors_per_core": 4,
+    "payload_bytes": 6656,
+    "wall_seconds": 12.000196,
+    "wall_seconds_per_core_observation": 0.230773
+  },
+  "interpretation": "Useful finite history-return progress while first segment waits for KV fill; no sampled fill deadlock. No firstL0 numerical or WRACK completion observed. Not an ETA.",
+  "steady_full36_payload_floor_us_at_assumed_1p2GHz": 983.04,
+  "capacity_scope": "Mandatory all36 per-layer reload, not just cold startup; independent of native host evaluation speed; physical qualification remains separate.",
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "live_job_changed": false,
+  "candidate_preparation": "Distinct Descartes pure wideconcat source pending; runner prepared to reuse accepted O3 trace plus meaningful negative gate, fresh admission, no baseline replay or automatic supersession."
+}

@@ -73,6 +73,13 @@ if __name__=='__main__':
         gate=json.loads((a.output/'qualified_native_gate.json').read_text())
         if gate['status']!='PASS_EQUIVALENCE' or not gate['adopted']:
             raise RuntimeError('changed-host trace and speed gate must pass before final smoke')
+        prepared=json.loads((a.output/'prepared.json').read_text())
+        if prepared.get('qualified_hot_gate'):
+            hot=json.loads(Path(prepared['qualified_hot_gate']).read_text())
+            if hot['status']!='PASS_COMPILER_EQUIVALENCE' or not hot['adopted']:
+                raise RuntimeError('compiler trace and speed qualification required')
+            if hot['new_archive_sha256']!=prepared['completed_top_sha256']:
+                raise RuntimeError('selected optimized archive differs from qualified compiler candidate')
     try: dispatch(a) if a.phase=='dispatch' else child(a)
     except Exception as e:
         (a.output/(a.phase+'_terminal.json')).write_text(json.dumps(dict(status='FAIL_'+a.phase.upper(),reason=str(e),full_token_pass=False))+'\n');raise
