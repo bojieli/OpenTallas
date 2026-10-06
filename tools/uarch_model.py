@@ -11220,8 +11220,11 @@ def dsrom_window_parent_boundary_model():
         values = re.search(r'cell_rise\s*\(mc_delay\)\s*\{.*?values\s*\((.*?)\);', lib, re.S)
         clkq = [float(x) for x in re.findall(r'[0-9]+\.[0-9]+', values.group(1))]
         cap = float(re.search(r'pin \(clk\).*?capacitance\s*:\s*([0-9.]+)', lib, re.S).group(1))
+        pin_caps = {p:float(re.search(r'(?:pin|bus) \('+p+r'\).*?capacitance\s*:\s*([0-9.]+)',lib,re.S).group(1))
+                    for p in ('wd_in','w_ce_in','w_addr_in','r_addr_in')}
         corner_views[corner] = dict(clk_cap_fF=cap, clkQ_table_min_ps=min(clkq),
             clkQ_table_max_ps=max(clkq), min_period_ps=macro['timing'][corner]['min_period_ps'],
+            input_pin_cap_fF=pin_caps,
             basis='own predictive compiled corner Liberty; full slew/load table, not routed capture qualification')
     d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
     tiles = nl * (d // td)
@@ -11276,6 +11279,24 @@ def dsrom_window_parent_boundary_model():
             macro_dimensions_um=[macro['area']['macro_width_um'],macro['area']['macro_height_um']],
             corner_views=corner_views,
             total_macro_clk_cap_fF={c:nl*slices*x['clk_cap_fF'] for c,x in corner_views.items()},
+            actual_source_macro_loads=dict(
+                WINDOW_payload_format_bits=nl*rowbits,
+                each_WINDOW_payload_format_bit_macro_wd_fanout=1,
+                constant_padding_macro_wd_bits=nl*(slices*256-rowbits),
+                macro_write_enable_fanout_per_lane=slices,
+                macro_read_write_address_fanout=nl*slices,
+                per_corner={c:dict(
+                    WINDOW_payload_format_bit_sink_cap_fF=x['input_pin_cap_fF']['wd_in'],
+                    WINDOW_payload_format_total_sink_cap_fF=nl*rowbits*x['input_pin_cap_fF']['wd_in'],
+                    per_lane_macro_write_enable_sink_cap_fF=slices*x['input_pin_cap_fF']['w_ce_in'],
+                    per_write_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['w_addr_in'],
+                    per_read_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['r_addr_in'])
+                    for c,x in corner_views.items()},
+                nominal_component_output_load_fF=3.898,
+                only_direct_macro_input_pins=True,
+                intervening_enable_logic_and_route_cap_not_free=True,
+                macro_read_output_to_E1_decode_capture_loaded_STA_required=True,
+                routing_and_clock_and_parent_allocation_not_qualified=True),
             pin_alignment_required='existing ot_macro_track_snap placement and assertion per actual orientation',
             SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
         communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
