@@ -269,6 +269,8 @@ def cmd_run(a):
             params = dict(W=a.w, ROUTED=int(c["routed"]), NIN=NIN, NOUT=NOUT, LM=a.lm, LA=a.la, QLAT=a.qlat)
             if a.ireg:                                       # lanes' pin registers (default off: tags unchanged)
                 params["IREG"] = 1
+            if a.esum:                                       # exp polynomial sum | LZC cut (default off)
+                params["ESUM"] = 1
             exe, tag = build("swiglu", params, a.fp, work)
             n = -(-c["n"] // a.w) * a.w
             gm = (cd / "g.mem").read_text().split()
@@ -310,7 +312,7 @@ def cmd_run(a):
                              cycles=lo - fi + 1, us=round((lo - fi + 1) / FAST * 1e6, 5),
                              exact=bool("PASS" in r.stdout), fp=a.fp, build=tag))
         print(json.dumps(rows[-1]), flush=True)
-    tagf = f"run_{a.fp}_W{a.w}_NB{a.nb}_m{a.lm}a{a.la}q{a.qlat}{'_ireg' if a.ireg else ''}{'_' + a.only.replace(',', '+') if a.only else ''}.json"
+    tagf = f"run_{a.fp}_W{a.w}_NB{a.nb}_m{a.lm}a{a.la}q{a.qlat}{'_ireg' if a.ireg else ''}{'_esum' if a.esum else ''}{'_' + a.only.replace(',', '+') if a.only else ''}.json"
     res = dict(schema="opentallas.dsrom-recovery.su-swiglu.run.v1", generated_utc=now(), fp=a.fp, W=a.w, NB=a.nb, LM=a.lm, LA=a.la, QLAT=a.qlat,
                NIN=NIN, NOUT=NOUT, clock_hz=FAST, rows=rows, status="pass" if rows and all(r["exact"] for r in rows)
                else "fail", source_sha256={p: sha(ROOT / p) for p in RTL + LIB + [ADD6] + list(TB.values())
@@ -335,6 +337,7 @@ def main():
     ap.add_argument("--lm", type=int, default=5, help="FP multiply latency (5: mul_f12_l5, 6: _l6)")
     ap.add_argument("--la", type=int, default=4, help="FP add latency (4: add_f12_l4, 5: _l5x)")
     ap.add_argument("--qlat", type=int, default=5, help="quantiser scale multiply latency")
+    ap.add_argument("--esum", action="store_true", help="swiglu lanes' exp polynomial adds with the sum | LZC cut (ESUM = 1)")
     ap.add_argument("--ireg", action="store_true", help="swiglu lanes with pin registers (IREG = 1, S81-RERUN)")
     ap.add_argument("--nin", type=int, default=None, help="hub stages in (default 33: the ROM's 22 slow stages)")
     ap.add_argument("--nout", type=int, default=None, help="hub stages out (default 23: the ROM's 15 slow stages)")

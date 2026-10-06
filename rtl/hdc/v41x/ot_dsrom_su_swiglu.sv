@@ -38,7 +38,10 @@ module ot_dsrom_su_swiglu_lane #(
     // flop AT THE PIN before the PRE compare / clip, so the lane boundary is register-to-register.  The IO-cut routes
     // r4 / r4_shared hid ~1.0 ns of port -> PRE -> p_g logic (results/rtl/dsrom_s81_fulldie_20261004/r9/deferred_hold);
     // +1 cycle, values unchanged (a pure delay of the operand stream and its valid); the fault OR leaves through a flop.
-    parameter integer IREG = 0
+    parameter integer IREG = 0,
+    // ESUM = 1 (CLAUDE S81-RERUN, default off): the exp polynomial adds carry the sum | LZC cut (ot_dsrom_exp_f12
+    // ASUM; IREG m770 route: that stage was the lane's only SS miss, -10.18 ps at 0.833333 ns); +6 cycles
+    parameter integer ESUM = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -51,7 +54,7 @@ module ot_dsrom_su_swiglu_lane #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer D_EXP = 7 * LM + 6 * LA + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
+    localparam integer D_EXP = 7 * LM + 6 * (LA + ESUM) + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
     localparam integer D_DIV = 21;                    // ot_dsrom_fdiv_f12
     localparam integer KS = 1;
     localparam integer DEPTH = 1 + D_EXP + LA + D_DIV + LM + (ROUTED != 0 ? LM : 0);
@@ -98,7 +101,7 @@ module ot_dsrom_su_swiglu_lane #(
     wire f_e, f_den, f_div, f_m1, f_m2;
     wire [D_EXP:0] ve;
     ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(p_v), .vd(ve));
-    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(p_v), .x({~p_g[31], p_g[30:0]}),
+    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA), .ASUM(ESUM)) u_exp (.clk(clk), .rst_n(rst_n), .v(p_v), .x({~p_g[31], p_g[30:0]}),
                                                 .y(y_exp), .vo(), .fault(f_e));
     ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_den (clk, rst_n, ve[D_EXP], y_exp, 32'h3F800000, den, f_den);
     ot_hdc_delay #(.W(32), .D(D_EXP + LA)) u_gd (.clk(clk), .rst_n(rst_n), .d(p_g), .q(g_d));
@@ -156,7 +159,8 @@ module ot_dsrom_su_swiglu #(
     parameter integer ROUTED = 1,
     parameter integer LM = 5,
     parameter integer LA = 4,
-    parameter integer IREG = 0          // lanes' pin registers (ot_dsrom_su_swiglu_lane IREG), default off
+    parameter integer IREG = 0,         // lanes' pin registers (ot_dsrom_su_swiglu_lane IREG), default off
+    parameter integer ESUM = 0          // lanes' exp sum | LZC cut (ot_dsrom_su_swiglu_lane ESUM), default off
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -182,7 +186,7 @@ module ot_dsrom_su_swiglu #(
     wire [W-1:0] av, af;
     genvar l, b;
     generate for (l = 0; l < W; l = l + 1) begin : g_l
-        ot_dsrom_su_swiglu_lane #(.LM(LM), .LA(LA), .ROUTED(ROUTED), .IREG(IREG)) u (.clk(clk), .rst_n(rst_n), .v(vin[NIN]),
+        ot_dsrom_su_swiglu_lane #(.LM(LM), .LA(LA), .ROUTED(ROUTED), .IREG(IREG), .ESUM(ESUM)) u (.clk(clk), .rst_n(rst_n), .v(vin[NIN]),
             .g(gi[32*l +: 32]), .u(ui[32*l +: 32]), .w(wi[32*l +: 32]), .lim(lim), .a(a[32*l +: 32]), .vo(av[l]),
             .fault(af[l]));
     end endgenerate
