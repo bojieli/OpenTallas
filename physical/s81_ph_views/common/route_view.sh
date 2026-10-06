@@ -26,7 +26,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.45} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/physical/s81_ph_views/common/pdn_view.tcl --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
-  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl POST_CTS=physical/s81_ph_views/common/post_cts_vclk.tcl \
+  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl POST_CTS=${POSTCTS:-physical/s81_ph_views/common/post_cts_vclk.tcl} \
   --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag s81ph_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
