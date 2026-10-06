@@ -110,7 +110,7 @@
  "reset": "rst is asynchronous (false path at the pin); every PC column holds its own 2-flop synchronisers in cks and ckh; status {fault, live} travels on two registered chains (PC0->PC15, PC31->PC16, one register per column) to the centre st register; data registers (rq/k_*/krd/r_*) carry no reset, only valid/state flops do (column reset fanout ~30 async loads)",
  "bench": {
   "tb": "rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv (+ generated test/ot_s81ph_phy_on_bus.sv)",
-  "source": "ea356ef63",
+  "source": "30f98495c",
   "host": "ot-epyc2 Verilator 5.032",
   "gold": [
    "gold: ckh 1024 ps, seed 20261006, 2 phases x 1536 requests PASS",
@@ -123,6 +123,6 @@
    "S81PH_MUT_CREDIT (credit returned on write, not on free): FAIL 885 (overrun drops, timeout, st fault)"
   ],
   "records": "results/rtl/s81_ph_20261006/ctrl/bench/*",
-  "note": "re-run at ea356ef63 ([0:0] 1-bit ports, data registers without reset): every gold and mutant result identical to 080eb7d3d (gold x3 PASS; MUT_PACK 3565, MUT_BEAT 3402, MUT_CREDIT 885 errors)"
+  "note": "re-run at ea356ef63 ([0:0] 1-bit ports, data registers without reset) and at 30f98495c (afifo registered one-hot row enables, write every non-full cycle): every gold and mutant result identical to 080eb7d3d (gold x3 PASS; MUT_PACK 3565, MUT_BEAT 3402, MUT_CREDIT 885 errors)"
  }
 }

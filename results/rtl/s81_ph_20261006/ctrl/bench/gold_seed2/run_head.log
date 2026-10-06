@@ -5,5 +5,5 @@ latency: request rq issue -> PHY accept mean 49.61 max 190.96 cks cycles; respon
 TB_DSFD_CTRL PASS
 - rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv:241: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.926 s; speed 2.163 us/s
-- Verilator: cpu 0.927 s on 1 threads; alloced 1037 MB
+- Verilator: $finish at 2us; walltime 2.840 s; speed 705.822 ns/s
+- Verilator: cpu 2.841 s on 1 threads; alloced 1038 MB
