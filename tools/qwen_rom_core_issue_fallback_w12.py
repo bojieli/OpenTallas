@@ -235,3 +235,76 @@ def apply_nxreg(text: str) -> str:
     for f in fields:
         text = text.replace(f"fqd_{f}[la_nx]", f"((DEC_LA_NXREG != 0) ? nx_{f} : fqd_{f}[la_nx])")
     return text
+
+
+def apply_meif(text: str) -> str:
+    """DEC_LA_MEIF (default 0; coordinator decision 2026-10-06): every core <-> ME-spine handshake crosses a register.
+    The ME spine is a separate die element (the tree / spine datapath), so its interface leaves the core's hardened
+    block through flops: go and the issued fields are registered at the core's output pins (mq_*: captured on the issue
+    edge, held until the next ME issue; go stays raised until the ME's clock enable takes it), and ready / idle /
+    progress are registered at the input pins.  For the two cycles in which the registered status still predates
+    the ME's acceptance (go pending, then the acceptance edge), the core sees the ME as not ready, not idle and with
+    progress 0, so it never issues twice, never passes a wait / barrier / chase on stale status.  Values unchanged;
+    each ME handshake gains its register latency (measured on the token benches)."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_MEIF = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_MEIF = 0\n) (")
+    i = text.index(" u_me (")
+    j = text.index(");", i)
+    inst = text[i:j]
+    fields = re.findall(r"\.(i_\w+)\((me_\w+)\)", inst)
+    widths = {}
+    for _, n in fields:
+        m = re.search(r"\n\s*(?:output\s+)?(?:wire|reg)\s*(\[[^\]]+\])?\s*[^;\n]*\b%s\b[^;]*;" % n, text)
+        assert m, n
+        widths[n] = m.group(1) or ""
+    new = inst
+    for p, n in fields:
+        new = new.replace(f".{p}({n})", f".{p}(mq_{n[3:]})")
+    new = new.replace(".go(me_go)", ".go(me_go_pin)").replace(".ready(me_ready)", ".ready(me_ready_pin)") \
+             .replace(".idle(me_idle)", ".idle(me_idle_pin)").replace(".progress(me_progress)", ".progress(me_progress_pin)")
+    text = text[:i] + new + text[j:]
+    regs = "\n".join(f"    reg {widths[n] + ' ' if widths[n] else ''}mq_{n[3:]};" for _, n in fields)
+    caps = "\n".join(f"            mq_{n[3:]} <= {n};" for _, n in fields)
+    block = f"""    // ---- DEC_LA_MEIF (tools/qwen_rom_core_issue_fallback_w12.py apply_meif): registered ME interface ----
+    wire me_go_pin, me_ready_pin, me_idle_pin;
+    wire [15:0] me_progress_pin;
+{regs}
+    reg me_gop, me_tk_d, me_rdy_q, me_idl_q;
+    reg [15:0] me_prg_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin me_gop <= 1'b0; me_tk_d <= 1'b0; me_rdy_q <= 1'b0; me_idl_q <= 1'b1; me_prg_q <= 16'd0; end
+        else begin
+            me_gop <= me_go ? 1'b1 : (me_en ? 1'b0 : me_gop);       // raised until the ME's enabled clock takes it
+            me_tk_d <= me_gop && me_en;                              // the acceptance edge
+            me_rdy_q <= me_ready_pin; me_idl_q <= me_idle_pin; me_prg_q <= me_progress_pin;
+        end
+    always @(posedge clk) if (me_go) begin
+{caps}
+    end
+    wire me_ifhold = me_gop || me_tk_d;
+    generate if (DEC_LA_MEIF != 0) begin : g_meif
+        assign me_go_pin = me_gop;
+        assign me_ready = me_rdy_q && !me_ifhold;
+        assign me_idle = me_idl_q && !me_ifhold;
+        assign me_progress = me_ifhold ? 16'd0 : me_prg_q;
+    end else begin : g_nomeif
+        assign me_go_pin = me_go;
+        assign me_ready = me_ready_pin;
+        assign me_idle = me_idle_pin;
+        assign me_progress = me_progress_pin;
+    end endgenerate
+"""
+    # the original field nets keep driving mq_* only through the capture (MEIF) or directly (no MEIF): wire them through
+    passthru = "\n".join(f"    wire {widths[n] + ' ' if widths[n] else ''}mqw_{n[3:]} = (DEC_LA_MEIF != 0) ? mq_{n[3:]} : {n};"
+                         for _, n in fields)
+    # insert the block just before the u_me instance statement (after every declaration it needs)
+    k = text.rindex("\n", 0, text.rindex("\n", 0, i)) if False else text.rfind("\n    ", 0, i)
+    stmt_start = text.rfind(";", 0, i)
+    stmt_start = text.index("\n", stmt_start) + 1
+    text = text[:stmt_start] + block + passthru + "\n" + text[stmt_start:]
+    for _, n in fields:
+        text = text.replace(f"(mq_{n[3:]})", f"(mqw_{n[3:]})")
+    return text
