@@ -55,6 +55,14 @@ STRESS = [("s bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("s fp4 K2304 R2 (G2)",
           ("s bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("s fp8 K2304 R2 (G3)", "fp8", 2304, 2, 1),
           ("s fp4 K2304 R2 (G2) b", "fp4", 2304, 2, 1), ("s bf16 K512 R32 (G1) b", "bf16", 512, 32, 1)]
 
+# directed retire-order hazard (the HAZ = 0 negative must fail on the deeper smh pipeline): a deep-D op (BF16 G10:
+# D = DBF + 4 SLAT = 38) followed at once by a shallow one (block-dot G1: D = 0, 8 lines a row), so the second op's
+# first row would reach the stack output ~15 + 8 cycles after the first op's last issue, inside its 38-cycle drain.
+# The stress sequence's follow-ups (G2/G3, 30+ lines a row) drain later than the bf16 row on smh by themselves.
+HAZSEQ = [("h bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("h fp8 K512 R8 (G1)", "fp8", 512, 8, 1),
+          ("h bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("h fp4 K512 R8 (G1)", "fp4", 512, 8, 1),
+          ("h bf16 K5120 R2 (G10)", "bf16", 5120, 2, 1), ("h fp8 K512 R4 (G1) b", "fp8", 512, 4, 1)]
+
 
 def seq_ops(name, serial):
     base = name[3:] if name.startswith("p6_") else name
@@ -70,6 +78,9 @@ def seq_ops(name, serial):
     elif base == "stress":
         ops = MS.WARM + STRESS
         dep = [1] + [0] * len(STRESS)
+    elif base == "haz":
+        ops = MS.WARM + HAZSEQ
+        dep = [1] + [0] * len(HAZSEQ)
     else:
         raise SystemExit(f"unknown sequence {name}")
     if serial:
@@ -112,8 +123,8 @@ def cmd_run(a):
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
-                              + ("_negflip" if a.neg_flip else ""))
-    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip)
+                              + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else ""))
+    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
@@ -178,9 +189,9 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs, smh=False, neg=False):
+def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False):
     src = SRC + (SMH_SRC if smh else [])
-    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else [])
+    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else []) + (["-DOT_SMH_MUT_S1W"] if mut else [])
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     if sim == "verilator":
@@ -209,6 +220,8 @@ def main(argv=None):
     ap.add_argument("--serial", action="store_true")
     ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
+    ap.add_argument("--mut-s1w", action="store_true", help="--smh negative control: compile-time RTL mutant, bit 3 of "
+                    "the front's s1 line register inverted (+define+OT_SMH_MUT_S1W in ot_hbm_accel_smh.sv)")
     ap.add_argument("--neg-flip", action="store_true", help="negative control: bit 3 of every returned line flipped at the response port (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
     ap.add_argument("--trace-from", type=int, default=0)

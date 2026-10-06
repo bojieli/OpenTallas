@@ -664,7 +664,11 @@ module ot_hbm_accel_smh_front #(
         if (!rst_n) s1_cv <= 3'd0;
         else s1_cv <= {adv && row_ok, i_first, i_last};
     always @(posedge clk) begin
+`ifdef OT_SMH_MUT_S1W
+        s1_w <= w_data ^ 1088'd8;               // negative-control mutant only (bench: --mut-s1w); never defined in a build
+`else
         s1_w <= w_data;
+`endif
         s1_ct <= {row_now[RW-1:0], i_glast, si, xa + xb_q};
     end
     wire [NSC*S1W-1:0]  s1c;                   // hop H control, per (side, row)
