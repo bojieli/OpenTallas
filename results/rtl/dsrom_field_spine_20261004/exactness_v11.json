@@ -97,5 +97,6 @@
   "2026-10-05T22:24:53-07:00 rec1 rc=0",
   "2026-10-05T22:31:51-07:00 mutant run rc=1 (expect 1) failed 8",
   "2026-10-05T22:31:51-07:00 DONE"
- ]
+ ],
+ "wire_stages_note": "records regenerated 2026-10-06 against the current main S81 floorplan (field_one_way 40): 2*40 - 2 BST = 78 wire cycles per crossing (v9 records charged 80 from the older 41-stage floorplan, 2 cycles pessimistic)"
 }
