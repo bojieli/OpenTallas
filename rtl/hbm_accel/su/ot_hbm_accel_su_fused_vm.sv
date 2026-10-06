@@ -6,11 +6,14 @@
 // partial routed shards for the original cross-boundary quantisation consumer.
 module ot_hbm_accel_su_fused_vm #(
  parameter integer ENABLE=0,KIND=0,N=1024,D=5120,RD=0,AW=24,
- parameter integer PUBLISH_QUANT=1,ROUTED=1
+ parameter integer PUBLISH_QUANT=1,ROUTED=1,ADOPTED_SWIGLU_QUANT_ONLY=0
 )(
  input wire clk,rst_n,cmd_valid,source_ready,landing_reserved,
  output wire cmd_ready,output reg busy,output wire done,output wire fault,
  input wire [31:0] job_id,
+ // Actual enclosing protected stage owner, held through publication/drain.
+ // Required only by the explicitly selected quant-only SwiGLU hook.
+ input wire [72:0] held_frame,output wire [72:0] q_frame,
  input wire [AW-1:0] xbase,ubase,wbase,ybase,gain_base,
  input wire [511:0] comb,input wire [127:0] post_pre,
  input wire [31:0] n_f,eps,lim,
@@ -87,8 +90,11 @@ module ot_hbm_accel_su_fused_vm #(
    if(state==GAIN && requested==NV && !reply_gain) state<=START;
    if(state==START && start_ready) begin state<=DATA;requested<=0;end
    if(state==DATA && requested==NB && !reply_data) state<=DRAIN;
-   if(ro_valid) ro_index<=ro_index+1;
+   if(ro_valid || (ADOPTED_SWIGLU_QUANT_ONLY && q_valid)) ro_index<=ro_index+1;
    if(y_valid && ro_valid) collision<=1;
+   // Accepted VM replies cannot be silently dropped if the enclosing lease or
+   // whole-output reservation is withdrawn. Retain busy/debt until root POR.
+   if(ADOPTED_SWIGLU_QUANT_ONLY && busy && (!source_ready || !landing_reserved)) collision<=1;
    if(done && !collision) begin busy<=0;state<=IDLE;end
   end
  end
@@ -108,6 +114,28 @@ module ot_hbm_accel_su_fused_vm #(
  end
  wire ef;
  assign fault=ef|collision;
+ generate if(ADOPTED_SWIGLU_QUANT_ONLY) begin:g_adopted_swiglu_quant
+  initial if(KIND!=3 || !PUBLISH_QUANT || D%N!=0 || D/N>256)
+   $fatal(1,"adopted SwiGLU quant-only requires KIND3 and complete quant beats");
+  // Reuse the VM command/one-cycle reader state. No second arithmetic engine,
+  // no duplicate protected owner, no extra payload staging/traversal. ro_index
+  // is unused by KIND3 and is the existing ordered OUTPUT cursor in this mode.
+  assign gain_ready=0;assign start_ready=busy&&landing_reserved;
+  assign engine_busy=busy;assign y_valid=0;assign ro_valid=0;
+  assign y_index=0;assign yd=0;assign rod=0;
+  assign reserve_events=ENABLE?NV:0;
+  assign completion_id=jid;
+  assign done=q_valid && ro_index==NV-1 && requested==NB && !reply_data && !fault;
+  // q_bf16 is QDQ, not original prequant BF16: vm_we remains zero. Parent
+  // completion is still its checked quant landing/drain, never this pulse alone.
+  ot_hbm_integrated_swiglu_quant_adapter #(.ENABLE(ENABLE),.N(N),.ROUTED(ROUTED)) u_quant(
+   .clk(clk),.por_n(rst_n),.launch_permit(busy&&source_ready&&!collision),
+   .landing_reserved(landing_reserved),.in_valid(reply_data),.in_ready(in_ready),
+   .held_frame(held_frame),.landing_index(ro_index),.lim(li),.operands(rd_q),
+   .q_valid(q_valid),.q_frame(q_frame),.q_index(q_index),
+   .q_codes(q_codes),.q_exp(q_exp),.q_bf16(q_bf16),.fault(ef));
+ end else begin:g_original
+ assign q_frame=0;
  ot_hbm_accel_su_fused_stream #(.ENABLE(ENABLE),.KIND(KIND),.N(N),.D(D),.RD(RD),
    .PUBLISH_QUANT(PUBLISH_QUANT),.ROUTED(ROUTED)) u_engine
   (.clk(clk),.rst_n(rst_n),.cmd_valid(state==START),.cmd_id(jid),
@@ -118,4 +146,5 @@ module ot_hbm_accel_su_fused_vm #(
    .in_valid(reply_data),.in_ready(in_ready),.operands(rd_q),.sink_ready(landing_reserved && !collision),
    .y_valid(y_valid),.ro_valid(ro_valid),.q_valid(q_valid),.y_index(y_index),.q_index(q_index),
    .y_data(yd),.ro_data(rod),.q_codes(q_codes),.q_exp(q_exp),.q_bf16(q_bf16),.fault(ef));
+ end endgenerate
 endmodule

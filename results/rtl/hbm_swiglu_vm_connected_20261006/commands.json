@@ -1,0 +1,34 @@
+{
+  "compile": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_hbm_swiglu_vm_connected",
+    "-o",
+    "/tmp/lagrange-swiglu-connected.vvp",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv",
+    "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_swiglu_quant_adapter.sv",
+    "results/rtl/hbm_swiglu_vm_connected_20261006/connected_production_header_probe.sv",
+    "rtl/test/hbm_accel/integrated_20261006/tb_hbm_swiglu_vm_connected.sv"
+  ],
+  "run": [
+    "vvp",
+    "/tmp/lagrange-swiglu-connected.vvp"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+    "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv": "2ef89225cfc197242369a1d1574fc6e7a501f207cdb5c3f50ef14d51f24ff0fd",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_swiglu_quant_adapter.sv": "2927f86c3345388ad3a6e96f6aae6f94ddf56852f5f861850cc56ce53dff2699",
+    "results/rtl/hbm_swiglu_vm_connected_20261006/connected_production_header_probe.sv": "bcf51c25ff6ba9a5ad25468a59a607e99ff8c89abf03773f83c90db51ac91e77",
+    "rtl/test/hbm_accel/integrated_20261006/tb_hbm_swiglu_vm_connected.sv": "2919821b88ff3b279274640cbbb3250d44b7a9488530c8be50c8e51d14f19f19"
+  }
+}
