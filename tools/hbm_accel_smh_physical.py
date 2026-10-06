@@ -218,10 +218,14 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          "set clk_period 833",
          "create_clock -name core_clk -period $clk_period [get_ports clk]",
          "create_clock -name nbr_clk -period $clk_period",
-         "# the neighbour's flop sits at this block's own clock insertion: SS insertion for setup (max), FF insertion",
-         "# for hold (min; the hold check runs at FF, where every insertion is ~0.6 x SS)",
-         f"set_clock_latency -source -max {lat} [get_clocks nbr_clk]",
-         f"set_clock_latency -source -min {lat_ff} [get_clocks nbr_clk]",
+         "# the neighbour's flop sits at this block's own clock insertion, in each corner.  One SDC serves both corners",
+         "# and STA reads -min / -max latency as early / late (a setup check captures an output at the EARLY latency),",
+         "# so nbr_clk carries the SS insertion alone; the FF hold check at an output port, where the neighbour",
+         f"# captures {lat} - {lat_ff} ps earlier than SS, takes that difference in the output min delay (dlo below).",
+         "# At SS the output hold holds by construction (same insertion both sides); input hold at FF is checked by",
+         "# the parent on the real pair.",
+         f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
+         f"set dlo {float(lat) - float(lat_ff):g}",
          "set_clock_uncertainty -setup 60 [all_clocks]",
          "set_clock_uncertainty -hold 25 [all_clocks]",
          "set_false_path -from [get_ports rst_n]"]
@@ -236,7 +240,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "set_input_delay -max 473 -clock nbr_clk $elem_in",
               "set_input_delay -min [expr $clk_period * 0.2] -clock nbr_clk $elem_in",
               "set_output_delay -max 323 -clock nbr_clk $elem_out",
-              "set_output_delay -min [expr $clk_period * 0.2] -clock nbr_clk $elem_out",
+              "set_output_delay -min [expr $clk_period * 0.2 + $dlo] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
               "set nbr_out [get_ports {rout_* bout_*}]"]
     else:
@@ -246,7 +250,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
           "set_input_delay -max 300 -clock nbr_clk $nbr_in",
           "set_input_delay -min 30 -clock nbr_clk $nbr_in",
           "set_output_delay -max 300 -clock nbr_clk $nbr_out",
-          "set_output_delay -min 50 -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
+          "set_output_delay -min [expr 50 + $dlo] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
           "set_max_fanout 32 [current_design]"]
     if ring:
