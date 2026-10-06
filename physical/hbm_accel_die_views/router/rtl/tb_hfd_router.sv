@@ -23,29 +23,20 @@ module tb_hfd_router;
     reg [0:0] d_ck; always @(posedge clk) d_ck <= d3_ck;
     reg [255:0] d0_f_su_NE; always @(posedge clk) d0_f_su_NE <= f_su_NE;
     reg [255:0] d1_f_su_NE; always @(posedge clk) d1_f_su_NE <= d0_f_su_NE;
-    reg [255:0] d2_f_su_NE; always @(posedge clk) d2_f_su_NE <= d1_f_su_NE;
-    reg [255:0] d3_f_su_NE; always @(posedge clk) d3_f_su_NE <= d2_f_su_NE;
-    reg [255:0] d_f_su_NE; always @(posedge clk) d_f_su_NE <= d3_f_su_NE;
+    reg [255:0] d_f_su_NE; always @(posedge clk) d_f_su_NE <= d1_f_su_NE;
     reg [255:0] d0_f_su_NW; always @(posedge clk) d0_f_su_NW <= f_su_NW;
     reg [255:0] d1_f_su_NW; always @(posedge clk) d1_f_su_NW <= d0_f_su_NW;
     reg [255:0] d2_f_su_NW; always @(posedge clk) d2_f_su_NW <= d1_f_su_NW;
-    reg [255:0] d3_f_su_NW; always @(posedge clk) d3_f_su_NW <= d2_f_su_NW;
-    reg [255:0] d_f_su_NW; always @(posedge clk) d_f_su_NW <= d3_f_su_NW;
+    reg [255:0] d_f_su_NW; always @(posedge clk) d_f_su_NW <= d2_f_su_NW;
     reg [255:0] d0_f_su_SE; always @(posedge clk) d0_f_su_SE <= f_su_SE;
     reg [255:0] d1_f_su_SE; always @(posedge clk) d1_f_su_SE <= d0_f_su_SE;
-    reg [255:0] d2_f_su_SE; always @(posedge clk) d2_f_su_SE <= d1_f_su_SE;
-    reg [255:0] d3_f_su_SE; always @(posedge clk) d3_f_su_SE <= d2_f_su_SE;
-    reg [255:0] d_f_su_SE; always @(posedge clk) d_f_su_SE <= d3_f_su_SE;
+    reg [255:0] d_f_su_SE; always @(posedge clk) d_f_su_SE <= d1_f_su_SE;
     reg [255:0] d0_f_su_SW; always @(posedge clk) d0_f_su_SW <= f_su_SW;
     reg [255:0] d1_f_su_SW; always @(posedge clk) d1_f_su_SW <= d0_f_su_SW;
     reg [255:0] d2_f_su_SW; always @(posedge clk) d2_f_su_SW <= d1_f_su_SW;
-    reg [255:0] d3_f_su_SW; always @(posedge clk) d3_f_su_SW <= d2_f_su_SW;
-    reg [255:0] d_f_su_SW; always @(posedge clk) d_f_su_SW <= d3_f_su_SW;
+    reg [255:0] d_f_su_SW; always @(posedge clk) d_f_su_SW <= d2_f_su_SW;
     reg [511:0] d0_f_vm; always @(posedge clk) d0_f_vm <= f_vm;
-    reg [511:0] d1_f_vm; always @(posedge clk) d1_f_vm <= d0_f_vm;
-    reg [511:0] d2_f_vm; always @(posedge clk) d2_f_vm <= d1_f_vm;
-    reg [511:0] d3_f_vm; always @(posedge clk) d3_f_vm <= d2_f_vm;
-    reg [511:0] d_f_vm; always @(posedge clk) d_f_vm <= d3_f_vm;
+    reg [511:0] d_f_vm; always @(posedge clk) d_f_vm <= d0_f_vm;
     reg [0:0] d0_rst; always @(posedge clk) d0_rst <= rst;
     reg [0:0] d1_rst; always @(posedge clk) d1_rst <= d0_rst;
     reg [0:0] d2_rst; always @(posedge clk) d2_rst <= d1_rst;
@@ -133,16 +124,16 @@ module tb_hfd_router;
         #0.05 rst = 0;
         for (cyc = 0; cyc < 4000; cyc = cyc + 1) begin
             @(negedge clk);
-            nchk = nchk + 1; if (t_cmdproc[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[54:54] %h ref %h cyc %0d", t_cmdproc[54:54], q5_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eSW[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[54:54] %h ref %h cyc %0d", eSW[54:54], q5_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eNW[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[54:54] %h ref %h cyc %0d", eNW[54:54], q5_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eSE[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[54:54] %h ref %h cyc %0d", eSE[54:54], q5_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (eNE[54:54] !== q5_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[54:54] %h ref %h cyc %0d", eNE[54:54], q5_rt_out_valid[0:0], cyc); end
-            nchk = nchk + 1; if (t_cmdproc[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[53:0] %h ref %h cyc %0d", t_cmdproc[53:0], q5_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eSW[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[53:0] %h ref %h cyc %0d", eSW[53:0], q5_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eNW[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[53:0] %h ref %h cyc %0d", eNW[53:0], q5_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eSE[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[53:0] %h ref %h cyc %0d", eSE[53:0], q5_rt_out_ids[53:0], cyc); end
-            nchk = nchk + 1; if (eNE[53:0] !== q5_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[53:0] %h ref %h cyc %0d", eNE[53:0], q5_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[54:54] !== q2_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[54:54] %h ref %h cyc %0d", t_cmdproc[54:54], q2_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eSW[54:54] !== q4_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[54:54] %h ref %h cyc %0d", eSW[54:54], q4_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eNW[54:54] !== q4_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[54:54] %h ref %h cyc %0d", eNW[54:54], q4_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eSE[54:54] !== q3_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[54:54] %h ref %h cyc %0d", eSE[54:54], q3_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (eNE[54:54] !== q3_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[54:54] %h ref %h cyc %0d", eNE[54:54], q3_rt_out_valid[0:0], cyc); end
+            nchk = nchk + 1; if (t_cmdproc[53:0] !== q2_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[53:0] %h ref %h cyc %0d", t_cmdproc[53:0], q2_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eSW[53:0] !== q4_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[53:0] %h ref %h cyc %0d", eSW[53:0], q4_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eNW[53:0] !== q4_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNW[53:0] %h ref %h cyc %0d", eNW[53:0], q4_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eSE[53:0] !== q3_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSE[53:0] %h ref %h cyc %0d", eSE[53:0], q3_rt_out_ids[53:0], cyc); end
+            nchk = nchk + 1; if (eNE[53:0] !== q3_rt_out_ids[53:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eNE[53:0] %h ref %h cyc %0d", eNE[53:0], q3_rt_out_ids[53:0], cyc); end
             randomize_inputs;
         end
         $display("TB_hfd_router checks=%0d mismatches=%0d", nchk, err);
