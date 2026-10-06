@@ -154,7 +154,7 @@ def synth(*args, **kwargs):
     (run/'mapped_inventory.json').write_text(json.dumps(result['record'], indent=2)+'\n')
     loads = run / 'receiver'
     subprocess.run(['python3', str(base/'measure_receiver.py'), '--mapped', str(mapped),
-                    '--out', str(loads), '--src', str(ROOT)], check=True, cwd=ROOT)
+                    '--out', str(loads), '--src', str(ROOT), '--image', image], check=True, cwd=ROOT)
     subprocess.run(['python3', str(base/'make_component_sdc.py'), '--loads', str(loads),
                     '--NO', '2', '--out', str(sdc)], check=True, cwd=ROOT)
     return result
