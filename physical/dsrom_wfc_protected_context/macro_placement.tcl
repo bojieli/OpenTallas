@@ -7,13 +7,16 @@ foreach inst [$block getInsts] {
   set master [[$inst getMaster] getName]
   if {$master ni {ot_sram_1r1w_512x128_m4_r2c2 ot_rom_4096x72_m8}} {continue}
   set name [$inst getName]
-  if {[regexp {g_data\[([0-9]+)\]\.g_column\[([0-9]+)\]\.u_data$} $name -> g c]} {
+  # OpenDB retains Yosys escaped generated brackets. Parse the logical
+  # hierarchy while retaining the exact database name for placement.
+  set logical_name [string map [list {\[} {[} {\]} {]}] $name]
+  if {[regexp {g_data\[([0-9]+)\]\.g_column\[([0-9]+)\]\.u_data$} $logical_name -> g c]} {
     set idx [expr {$g*4+$c}];set kind data
-  } elseif {[regexp {g_checks\[([0-9]+)\]\.u_check$} $name -> g]} {
+  } elseif {[regexp {g_checks\[([0-9]+)\]\.u_check$} $logical_name -> g]} {
     set idx [expr {256+$g}];set kind check
-  } elseif {[regexp {u_cfg.*g_bank\[([0-9]+)\]\.u_prompt$} $name -> g]} {
+  } elseif {[regexp {u_cfg.*g_bank\[([0-9]+)\]\.u_prompt$} $logical_name -> g]} {
     set kind prompt
-  } elseif {[regexp {u_whole.*g_rank\[([0-9]+)\]\.u_book$} $name -> g]} {
+  } elseif {[regexp {u_whole.*g_rank\[([0-9]+)\]\.u_book$} $logical_name -> g]} {
     set kind book
   } else {error "Unrecognized actual hardmacro $name"}
   if {$kind in {data check}} {

@@ -32,5 +32,14 @@ class Objects(unittest.TestCase):
         with self.assertRaises(RuntimeError):R.build_one(self.compiler,self.s,o,[],'exact')
         self.assertTrue(o.with_suffix('.log').is_file())
         self.assertFalse(o.with_suffix('.receipt.json').exists())
+    def test_harness_include_change_rejects_old_object(self):
+        include=self.d/'inputs.inc';include.write_text('#define VALUE 73\n')
+        self.s.write_text('#include "inputs.inc"\nint main() { return VALUE; }\n')
+        o=self.d/'harness.o';envelope=R.digest(R.harness_dependencies(self.s))
+        R.build_one(self.compiler,self.s,o,[],envelope)
+        include.write_text('#define VALUE 17\n')
+        changed=R.digest(R.harness_dependencies(self.s))
+        self.assertNotEqual(envelope,changed)
+        with self.assertRaises(ValueError):R.build_one(self.compiler,self.s,o,[],changed)
 
 if __name__=='__main__':unittest.main()

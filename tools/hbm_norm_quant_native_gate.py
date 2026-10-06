@@ -28,6 +28,9 @@ def main():
   if not prep.get('arithmetic_instantiated'):p.error('Recipe does not instantiate actualengine')
   engine=json.loads((src/'results/rtl/hbm_norm_vm_boundary_20261006/connected.json').read_text())['engine_21_sha256']
   for f,h in engine.items():
+   # The retained 21-file receipt includes its old standalone testbench.
+   # This changed join supplies Gauss's fixture; arithmetic RTL stays pinned.
+   if f=='rtl/test/tb_dsrom_su_norm.sv':continue
    if prep['source_sha256'].get(f)!=h:raise ValueError('Actualengine missing or changed dependency '+f)
   bench=src/next(f for f in prep['sources'] if Path(f).name==prep['top']+'.sv')
   import re
