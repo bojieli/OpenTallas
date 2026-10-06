@@ -1,0 +1,47 @@
+job 0 pol 0 T 397 bub 0 frames 12 cyc 878
+job 1 pol 1 T 469 bub 30 frames 18 cyc 1904
+job 2 pol 1 T 610 bub 80 frames 21 cyc 3354
+job 3 pol 0 T 182 bub 0 frames 6 cyc 3782
+job 4 pol 0 T 444 bub 30 frames 18 cyc 4760
+job 5 pol 2 T 117 bub 80 frames 60 cyc 5146
+job 6 pol 2 T 30 bub 0 frames 16 cyc 5258
+job 7 pol 3 T 142 bub 30 frames 4 cyc 5660
+job 8 pol 3 T 78 bub 80 frames 4 cyc 6078
+job 9 pol 2 T 612 bub 0 frames 325 cyc 7986
+job 10 pol 1 T 227 bub 30 frames 12 cyc 8512
+job 11 pol 2 T 244 bub 80 frames 135 cyc 9298
+job 12 pol 3 T 176 bub 0 frames 4 cyc 9738
+job 13 pol 1 T 226 bub 30 frames 11 cyc 10256
+job 14 pol 2 T 458 bub 80 frames 252 cyc 11714
+job 15 pol 3 T 136 bub 0 frames 4 cyc 12038
+job 16 pol 0 T 82 bub 30 frames 4 cyc 12270
+job 17 pol 3 T 90 bub 80 frames 3 cyc 12760
+job 18 pol 1 T 569 bub 0 frames 20 cyc 13982
+job 19 pol 1 T 214 bub 30 frames 12 cyc 14494
+job 20 pol 1 T 350 bub 80 frames 15 cyc 15384
+job 21 pol 2 T 611 bub 0 frames 338 cyc 17300
+job 22 pol 1 T 160 bub 30 frames 10 cyc 17698
+job 23 pol 2 T 142 bub 80 frames 75 cyc 18162
+job 24 pol 2 T 107 bub 0 frames 55 cyc 18506
+job 25 pol 1 T 536 bub 30 frames 15 cyc 19668
+job 26 pol 2 T 396 bub 80 frames 220 cyc 20940
+job 27 pol 2 T 247 bub 0 frames 135 cyc 21736
+job 28 pol 2 T 444 bub 30 frames 223 cyc 23088
+job 29 pol 2 T 315 bub 80 frames 167 cyc 24092
+job 30 pol 0 T 185 bub 0 frames 8 cyc 24530
+job 31 pol 2 T 66 bub 30 frames 35 cyc 24766
+job 32 pol 0 T 10 bub 80 frames 4 cyc 24820
+job 33 pol 2 T 384 bub 0 frames 202 cyc 26022
+job 34 pol 3 T 83 bub 30 frames 4 cyc 26276
+job 35 pol 3 T 53 bub 80 frames 3 cyc 26572
+job 36 pol 3 T 4 bub 0 frames 1 cyc 26622
+job 37 pol 3 T 37 bub 30 frames 2 cyc 26752
+job 38 pol 0 T 374 bub 80 frames 13 cyc 27692
+job 39 pol 1 T 383 bub 0 frames 16 cyc 28540
+RESULT PASS jobs 40/40 words 12912 frames 2482 done 40 errors 0
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv:247: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 24us; walltime 0.050 s; speed 469.287 us/s
+- Verilator: cpu 0.051 s on 1 threads; alloced 1018 MB
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.05
+	Maximum resident set size (kbytes): 8256
