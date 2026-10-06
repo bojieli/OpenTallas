@@ -1469,7 +1469,41 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <li>shared hub blocks took every pin from their south-west copy, so 128 net ends had no pin;</li>
     <li>the east-side quarters faced away from the spine, which made the north-east SU-to-endpoint link route 53 stages against 4.</li>
   </ul>
-  <p>With these fixed, routing lanes reserved for every die trunk, and a corridor through the spine for the SU's east–west links, the 50-iteration route has no overflow (round 14b). At the bound, three terms dominate: the activation multicast from the hub to the farthest SM (64 cycles one way, 291 serial loads, 15.5 µs), endpoint ↔ SerDes (11.2 µs) and the barrier over the routed control tree (343 barriers, 10.3 µs). SU ↔ collective endpoint falls from 22.7 to 2.2 µs. The 17 µs left between bound and floor are not congestion. They come from three sources: segments that route a few hundred µm past a 4-stage station pitch, pins spread along the SerDes and SM faces, and the star leaves of the control tree. Qwen is barely affected (0.4–0.9%): the priced stages add 4,734 cycles to a token of 557,056 (TP4) or 1,161,915 (TP2) cycles.</p>
+  <p>With these fixed, routing lanes reserved for every die trunk, and a corridor through the spine for the SU's east–west links, the 50-iteration route has no overflow (round 14b). At the bound, three terms dominate: the activation multicast from the hub to the farthest SM (64 cycles one way, 291 serial loads, 15.5 µs), endpoint ↔ SerDes (11.2 µs) and the barrier over the routed control tree (343 barriers, 10.3 µs). SU ↔ collective endpoint falls from 22.7 to 2.2 µs. The 17 µs left between bound and floor are not congestion. They come from three sources: segments that route a few hundred µm past a 4-stage station pitch, pins spread along the SerDes and SM faces, and the star leaves of the control tree. Mapped onto this die, Qwen is barely affected (0.4–0.9%): the priced stages add 4,734 cycles to a token of 557,056 (TP4) or 1,161,915 (TP2) cycles. Its own tile die (§6.10.1a) prices higher.</p>
+  <h4 id="s6-10-die-qwen">6.10.1a HBM accelerator die floorplan (Qwen3-8B tile organisation)</h4>
+  <p class="finding"><b>Finding: the Qwen3-8B HBM accelerator's own tile die routes cleanly. Its on-die wire adds 3.5–5.6% to the TP4 token and 2.0–3.1% to the TP2 token, several times the 0.4–0.9% estimated by mapping the Qwen vehicle onto the DeepSeek die above.</b> That mapping priced only the collective and stream-service distances. On the tile die, the cost comes mostly from the depth of the instruction / activation broadcast and of the block-word return across a 32 mm field.</p>
+  <p>The die is 32,149 × 25,760 µm (828.2 mm², 29.8 mm² inside the 858 mm² reticle); there is one die per tensor-parallel rank. It follows the method of floorplan, then one hardened element, then replication. The element is the measured routed W12 tile logic (0.249 mm² TP2 / 0.244 mm² TP4 core) plus its share of the code and KV SRAM in real ASAP7 macros (eight <code>ot_sram_1rw_2048x128_m4</code> and two <code>ot_sram_1r1w_1024x256_m2_r2c2</code>), plus its corridor and fill forwarding banks. That makes 313.6 × 1,388.9 µm (0.4356 mm²), replicated as 96 columns × 16 rows (1,536 elements, 480 MiB of SRAM against the 421.5 MiB goal). Each of the four HBM3E stacks serves a 24-column quarter. Its PHY sits on the north or south edge, with the stream service between the PHY and the field, and each column's fill runs through the column's own elements (4 stages per element pitch). The split tree reduces 4 × 4 tile blocks inside the field; 96 block words then cross to four port slices in a 2.0 mm centre spine, which also holds the core (tree top, VM / x root, sequencer, SU64 + SFU, stream control), the scale stores and the loader. The SerDes sit at the spine's south end and the host link at its north end. Blocks fill 93.2% of the die. The core, port, scale and IO blocks are sized from model ledgers and labelled as such in the record.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17c. Qwen3-8B HBM accelerator tile die: physical checks, round q3a, OpenROAD (results/rtl/hbm_accel_qwen_die_floorplan_20261005/feasibility.json). The record keeps every round. Round q2, which packed the port slices against the core, ended at 2,764 overflows and was rejected. IR round 1, with 0.1639 strap coverage over the stream services, failed 10 north-edge windows at up to 37.6 mV. A band-located port-slice variant was rejected at the Manhattan floor (52 against 47 block-word stages, for 9 mm² more).</caption>
+    <thead><tr><th>Check</th><th>Result</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Legality</td><td class="m">1,737 instances, 0 overlaps, 0 outside the die</td><td>pass</td></tr>
+      <tr><td>On-track pins</td><td class="m">0 of 7,378,096 off track</td><td>pass</td></tr>
+      <tr><td>Pin access</td><td>every macro pin has an access point; every replicated copy owns its pins (768 element-internal tree hops kept inside the element, no self nets)</td><td>pass</td></tr>
+      <tr><td>Global route, 5 / 50 iterations</td><td class="m">overflow 2,539 / 0</td><td>pass</td></tr>
+      <tr><td>Static IR drop</td><td class="m">worst 23.54 mV over 152 loaded windows (budget 35 mV); 2 windows carry no core load</td><td>pass</td></tr>
+      <tr><td>Power grid, power</td><td>M8/M9 straps at 0.0878 coverage, 0.25 over the stream services; 775.7 W peak in-phase at an assumed 1.05 W/mm² over the tiles, above the 474.6 W liquid-cooling budget per die (measured tile power is open)</td><td>open</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17d. Tile-die wire stages priced into the Qwen3-8B HBM accelerator's P8191 compositions at 1.2 GHz (results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json). The measured vehicle already carries its own broadcast, tree and block-word depths (TP4: bd 41, nws 5, tws 38; TP2: 31, 4, 30). The floorplan adds only the excess of the routed depths over them, once per ME op (217 a token). It also adds the collective run per switch crossing and the fill and status depth per KV first access. Deltas are clamped at zero. These are bounds from routed length, not die-level timing sign-off.</caption>
+    <thead><tr><th>Basis</th><th class="r">TP4 AR (tok/s)</th><th class="r">TP4 added cycles</th><th class="r">TP2 AR (tok/s)</th><th class="r">TP2 added cycles</th></tr></thead>
+    <tbody>
+      <tr><td>Unpriced composition</td><td class="r m">2,154.2</td><td class="r m">— (557,056)</td><td class="r m">1,032.8</td><td class="r m">— (1,161,915)</td></tr>
+      <tr><td>Floor: straight-line distance</td><td class="r m">2,081.8</td><td class="r m">19,366 (+3.48%)</td><td class="r m">1,012.1</td><td class="r m">23,706 (+2.04%)</td></tr>
+      <tr><td>Median routed bundle</td><td class="r m">2,068.2</td><td class="r m">23,145 (+4.15%)</td><td class="r m">1,008.5</td><td class="r m">27,919 (+2.40%)</td></tr>
+      <tr class="sel"><td>Bound: longest routed bundle</td><td class="r m">2,040.7</td><td class="r m">30,975 (+5.56%)</td><td class="r m">1,002.0</td><td class="r m">35,749 (+3.08%)</td></tr>
+    </tbody>
+  </table></div>
+  <p>At the bound, the TP4 token's 30,975 added cycles split into five terms:</p>
+  <ul>
+    <li>the broadcast: 82 stages one way (50 die-net and 32 element stages) against the vehicle's 41, adding 8,897 cycles;</li>
+    <li>the block-word return: 77 stages against 38, adding 8,463 cycles;</li>
+    <li>the collective run per crossing: 6,862 cycles;</li>
+    <li>the KV first-access fill and status: 4,248 cycles;</li>
+    <li>the in-block tree: 2,387 cycles.</li>
+  </ul>
+  <p>The block word's depth comes from its 6,144-bit width crossing the spine channel, not from the port's band distance, which is why moving the port slices to their bands did not help. With the adopted SRAM-spread composition (2,219.8 tok/s TP4), the same terms give 2,143.0 at the floor and 2,099.5 at the bound.</p>
   <h3 id="s6-11">6.11 Host interface and runtime</h3>
   <p class="finding">A descriptor-ring host interface, DMA and an OpenAI-compatible endpoint have been exercised with reduced RTL vehicles. Binding them to the adopted Qwen HBM-KV tile and V41x die remains a system integration gate.</p>
 
