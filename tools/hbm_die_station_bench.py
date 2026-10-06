@@ -117,61 +117,48 @@ def cmd_check(a):
         for k, b in enumerate(v['bits']):
             inbit[b] = (j, k)
     res = dict(master=a.master, domains={}, mismatches=0, checked_bits=0)
+
+    def expect(src, c, lat):
+        if src == "1'b0":
+            return 0
+        if src == 'rst':
+            return 1
+        ij, ik = inbit[src]
+        iv = seqs[ij].get(c - lat)
+        return None if iv is None else (iv >> ik) & 1
+
     for j, v in order.items():
         if not j.startswith('o'):
             continue
-        bits = v['bits']
-        n = len(bits)
         osq = seqs[j]
         cyc = sorted(c for c in osq if WARM <= c < NCYC - 10)
-        best = None
-        for lat in range(-2, 16):
-            bad = 0
-            for k, b in enumerate(bits):
-                s = mp['map'][b]['src']
-                for c in cyc[:40]:
+        groups = defaultdict(list)          # source input domain -> [(k, out bit, src)]
+        for k, b in enumerate(v['bits']):
+            src = mp['map'][b]['src']
+            groups[inbit[src][0] if src in inbit else 'const'].append((k, b, src))
+        for g, lst in sorted(groups.items()):
+            best = None
+            for lat in range(-2, 16):
+                bad = sum(1 for k, b, src in lst[:64] for c in cyc[:40]
+                          if osq[c] is None or expect(src, c, lat) != (osq[c] >> k) & 1)
+                if best is None or bad < best[1]:
+                    best = (lat, bad)
+                if bad == 0:
+                    break
+            lat = best[0]
+            bad, badbits = 0, set()
+            for k, b, src in lst:
+                for c in cyc:
                     ov = osq[c]
-                    if ov is None:
+                    o = None if ov is None else (ov >> k) & 1
+                    e = expect(src, c, lat)
+                    if e is None or o is None or e != o:
                         bad += 1
-                        continue
-                    o = (ov >> k) & 1
-                    if s == "1'b0":
-                        e = 0
-                    elif s == 'rst':
-                        e = 1
-                    else:
-                        ij, ik = inbit[s]
-                        iv = seqs[ij].get(c - lat)
-                        e = None if iv is None else (iv >> ik) & 1
-                    if e is None or e != o:
-                        bad += 1
-            if best is None or bad < best[1]:
-                best = (lat, bad)
-            if bad == 0:
-                break
-        lat = best[0]
-        bad = 0
-        badbits = set()
-        for k, b in enumerate(bits):
-            s = mp['map'][b]['src']
-            for c in cyc:
-                ov = osq[c]
-                o = None if ov is None else (ov >> k) & 1
-                if s == "1'b0":
-                    e = 0
-                elif s == 'rst':
-                    e = 1
-                else:
-                    ij, ik = inbit[s]
-                    iv = seqs[ij].get(c - lat)
-                    e = None if iv is None else (iv >> ik) & 1
-                if e is None or o is None or e != o:
-                    bad += 1
-                    badbits.add(b)
-        res['domains'][v['dom']] = dict(bits=n, latency_periods=lat, cycles=len(cyc), mismatches=bad,
-                                         bad_bits=sorted(badbits)[:6])
-        res['mismatches'] += bad
-        res['checked_bits'] += n * len(cyc)
+                        badbits.add(b)
+            res['domains'][f"{v['dom']}<-{order[g]['dom'] if g in order else g}"] = dict(
+                bits=len(lst), latency_periods=lat, cycles=len(cyc), mismatches=bad, bad_bits=sorted(badbits)[:6])
+            res['mismatches'] += bad
+            res['checked_bits'] += len(lst) * len(cyc)
     res['verdict'] = 'PASS' if res['mismatches'] == 0 and res['checked_bits'] > 0 else 'FAIL'
     print(json.dumps(res))
     return 0 if res['verdict'] == 'PASS' else 1
