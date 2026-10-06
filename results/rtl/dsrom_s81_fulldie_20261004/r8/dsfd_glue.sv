@@ -1493,30 +1493,6 @@ module dsfd_sstn_e0c0qt (
     assign so = rst;
 endmodule
 
-module dsfd_sstn_e0c0si (
-    output wire [14:0] cc,
-    input wire [14:0] cci,
-    input wire [0:0] ck,
-    input wire [0:0] rs,
-    input wire [1:0] si,
-    output wire [1:0] so,
-    output wire [282:0] xa,
-    input wire [282:0] xai,
-    output wire [265:0] xb,
-    input wire [265:0] xbi,
-    input wire [1:0] c0,
-    input wire [1:0] e0
-);
-    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;
-    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15'd0; else rc <= cci;
-    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
-    assign xb = rb;
-    assign cc = rc;
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | c0 | si;
-    assign so = rst;
-endmodule
-
 module dsfd_sstn_e0c0sinf (
     output wire [14:0] cc,
     input wire [14:0] cci,
@@ -1568,30 +1544,6 @@ module dsfd_sstn_e0c0siqt (
     assign so = rst;
 endmodule
 
-module dsfd_sstn_e0e1c0 (
-    output wire [14:0] cc,
-    input wire [14:0] cci,
-    input wire [0:0] ck,
-    input wire [0:0] rs,
-    output wire [1:0] so,
-    output wire [282:0] xa,
-    input wire [282:0] xai,
-    output wire [265:0] xb,
-    input wire [265:0] xbi,
-    input wire [1:0] c0,
-    input wire [1:0] e0,
-    input wire [1:0] e1
-);
-    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;
-    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15'd0; else rc <= cci;
-    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
-    assign xb = rb;
-    assign cc = rc;
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | e1 | c0;
-    assign so = rst;
-endmodule
-
 module dsfd_sstn_e0e1c0c1 (
     output wire [14:0] cc,
     input wire [14:0] cci,
@@ -1613,33 +1565,6 @@ module dsfd_sstn_e0e1c0c1 (
     assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
     assign xb = rb;
     assign cc = rc;
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | e1 | c0 | c1;
-    assign so = rst;
-endmodule
-
-module dsfd_sstn_e0e1c0c1qt (
-    output wire [14:0] cc,
-    input wire [14:0] cci,
-    input wire [0:0] ck,
-    output wire [265:0] qt,
-    input wire [0:0] rs,
-    output wire [1:0] so,
-    output wire [282:0] xa,
-    input wire [282:0] xai,
-    output wire [265:0] xb,
-    input wire [265:0] xbi,
-    input wire [1:0] c0,
-    input wire [1:0] e0,
-    input wire [1:0] c1,
-    input wire [1:0] e1
-);
-    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;
-    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15'd0; else rc <= cci;
-    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
-    assign xb = rb;
-    assign cc = rc;
-    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer
     always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | e1 | c0 | c1;
     assign so = rst;
 endmodule
@@ -1722,55 +1647,6 @@ module dsfd_sstn_e0e1c0c1siqt (
     assign cc = rc;
     assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer
     always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | e1 | c0 | c1 | si;
-    assign so = rst;
-endmodule
-
-module dsfd_sstn_e0e1c0qt (
-    output wire [14:0] cc,
-    input wire [14:0] cci,
-    input wire [0:0] ck,
-    output wire [265:0] qt,
-    input wire [0:0] rs,
-    output wire [1:0] so,
-    output wire [282:0] xa,
-    input wire [282:0] xai,
-    output wire [265:0] xb,
-    input wire [265:0] xbi,
-    input wire [1:0] c0,
-    input wire [1:0] e0,
-    input wire [1:0] e1
-);
-    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;
-    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15'd0; else rc <= cci;
-    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
-    assign xb = rb;
-    assign cc = rc;
-    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | e1 | c0;
-    assign so = rst;
-endmodule
-
-module dsfd_sstn_e0si (
-    output wire [14:0] cc,
-    input wire [14:0] cci,
-    input wire [0:0] ck,
-    input wire [0:0] rs,
-    input wire [1:0] si,
-    output wire [1:0] so,
-    output wire [282:0] xa,
-    input wire [282:0] xai,
-    output wire [265:0] xb,
-    input wire [265:0] xbi,
-    input wire [1:0] e0
-);
-    reg [282:0] ra; reg [265:0] rb; reg [14:0] rc; reg [1:0] rst;
-    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15'd0; else rc <= cci;
-    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset
-    assign xb = rb;
-    assign cc = rc;
-    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rst <= 2'b00; else rst <= e0 | si;
     assign so = rst;
 endmodule
 

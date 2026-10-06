@@ -371,6 +371,13 @@ def real_blocks_r8(die):
         pm = parse_module(f, mst, prm)
         out[mst] = dict(module=mst, file=f, kind=kind, params=prm, ports=pm['ports'], binding=rp[mst])
     used = {it.master for it in m['insts']}
+    for mst, prm in (('ot_dsrom_head_elem_A', dict(LV=8, PAD=0, JOIN=1, ROWS=32)),
+                     ('ot_dsrom_head_elem_B', dict(LV=6, PAD=2, JOIN=0, ROWS=128))):
+        if mst in used:
+            f = 'rtl/v41rom/ot_dsrom_head_elem.sv'
+            pm = parse_module(f, 'ot_dsrom_head_elem', prm)
+            out[mst] = dict(module='ot_dsrom_head_elem', file=f, kind='routed RTL, closed (recovery lever head)',
+                            params=prm, ports=pm['ports'], binding=rp[mst])
     for mst in sorted(used):
         if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
             f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL
@@ -482,7 +489,7 @@ def build(die, top_fix=False):
     global TOP_FIX
     TOP_FIX = top_fix
     if die.startswith('s81r8'):
-        S.configure('layer' if die == 's81r8_layer' else 'head', 'r8')
+        S.configure(die.split('_', 1)[1], 'r8')
         m = S.build()
         S.finalize_r8(m)
         R8[die] = m
@@ -758,6 +765,8 @@ def lint_connectivity(die, m, real, ports_w):
         for p, (d, w) in rb['ports'].items():
             if R8_ACTIVE[0] and it.master == 'ot_rom_4096x72_m8' and p == 'rd_out':
                 w = 48          # rd_out[71:48]: spare macro columns, no consumer by design (48-b cfg payload)
+            if R8_ACTIVE[0] and (it.master, p) in S.UNUSED_BY_DESIGN:
+                continue        # head element outputs ot_dsrom_head_bundle leaves unconnected (S.UNUSED_BY_DESIGN)
             if w == 1:
                 miss = [] if (p in got or f'{p}[0]' in got) else [p]
             else:
@@ -861,7 +870,7 @@ PIN_FIT_ERRORS = {}
 
 
 def real_lefs(die):
-    return (QPHY_LEF,) if die == 'qwen_rom' else (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF)
+    return (QPHY_LEF,) if die == 'qwen_rom' else (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
 def pin_table(die, m, M, ports_w, real):
@@ -1951,7 +1960,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
-    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_head'])
+    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')

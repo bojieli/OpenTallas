@@ -26,17 +26,14 @@
  },
  "variant": {
   "gen": "r8",
-  "die": "head",
-  "role": "head die (4 stacks; 12 of the rack)",
-  "pairs": 1471,
-  "bf": 316,
+  "die": "layer1",
+  "role": "layer die, 1 HBM3E stack (292 of the rack)",
+  "pairs": 2417,
+  "bf": 519,
   "nv": 0,
-  "head_bundles": 85,
+  "head_bundles": 0,
   "stacks": [
-   "SW",
-   "SE",
-   "NW",
-   "NE"
+   "SW"
   ],
   "elem_frame_h": 157.68,
   "slot_h": 239.76,
@@ -51,13 +48,13 @@
    "slot_h_um": 239.76,
    "slots_per_column": 12,
    "columns": 128,
-   "max_pairs_per_layer_die": 2109,
+   "max_pairs_per_layer_die": 2432,
    "pairs_per_layer_die_now": 2417,
    "layer_field_pairs_total": 783108,
    "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
    "layer_dies_now": 324,
-   "layer_dies_at_max": 372,
-   "extra_layer_dies": 48,
+   "layer_dies_at_max": 323,
+   "extra_layer_dies": -1,
    "inventory_compiled_pairs_TP4": 783264,
    "rack": {
     "scan_dies_4stack": 32,
@@ -79,48 +76,44 @@
   }
  },
  "instances": {
-  "bf": 316,
-  "cfg": 10297,
-  "seq": 1471,
-  "q": 1155,
-  "sstn": 916,
-  "node": 2831,
+  "bf": 519,
+  "cfg": 16919,
+  "seq": 2417,
+  "q": 1898,
+  "sstn": 1521,
+  "node": 4706,
   "cfifo": 128,
-  "hb_elem": 425,
-  "hbglue": 85,
   "hub": 8,
-  "phy": 4,
-  "ctrl": 4,
-  "svc": 4,
+  "phy": 1,
+  "ctrl": 1,
+  "svc": 1,
   "band_blk": 2,
   "link": 8,
-  "rstg": 222,
-  "hend": 44,
-  "stn": 2633
+  "rstg": 497,
+  "hend": 29,
+  "stn": 2034
  },
  "area_mm2_by_kind": {
-  "bf": 49.972,
-  "cfg": 24.683,
-  "seq": 3.075,
-  "q": 74.891,
-  "sstn": 4.787,
-  "node": 19.02,
+  "bf": 82.074,
+  "cfg": 40.557,
+  "seq": 5.052,
+  "q": 123.068,
+  "sstn": 7.948,
+  "node": 31.617,
   "cfifo": 5.171,
-  "hb_elem": 31.908,
-  "hbglue": 3.886,
   "hub": 34.905,
-  "phy": 40.026,
-  "ctrl": 8.446,
-  "svc": 53.612,
+  "phy": 10.006,
+  "ctrl": 2.111,
+  "svc": 13.403,
   "band_blk": 6.341,
   "link": 4.238,
-  "rstg": 0.298,
-  "hend": 0.327,
-  "stn": 1.851
+  "rstg": 0.668,
+  "hend": 0.24,
+  "stn": 1.476
  },
- "placed_footprint_mm2": 367.44,
+ "placed_footprint_mm2": 368.88,
  "utilisation": {
-  "placed_over_die": 0.4282,
+  "placed_over_die": 0.4299,
   "field_frames_mm2": 435.6
  },
  "geometry": {
@@ -166,21 +159,21 @@
   ]
  },
  "forwarded": {
-  "stations": 2633,
-  "ot_fwd_link_stage_instances": 7604,
-  "chains": 62,
+  "stations": 2034,
+  "ot_fwd_link_stage_instances": 6265,
+  "chains": 50,
   "max_hop_um": 430.3,
   "hops_over_430p56": 0,
   "over_examples": [],
-  "meso_fifos": 276,
-  "ratio_cdc_fifos": 12
+  "meso_fifos": 267,
+  "ratio_cdc_fifos": 6
  },
  "field_round_trip_cycles": {
   "farthest_frame": 73,
-  "cycles": 135,
+  "cycles": 140,
   "x_trunk_stages": 60,
-  "column_slot_stages": 9,
-  "root_stages": 2,
+  "column_slot_stages": 12,
+  "root_stages": 4,
   "return_trunk_stages": 59,
   "meso_crossings": 2,
   "crossing_cycles_each": 2,
@@ -188,40 +181,48 @@
  },
  "bus_classes": {
   "x_lane": {
-   "buses": 2754,
-   "wires": 751468
+   "buses": 4202,
+   "wires": 1145765
   },
   "x_ctl": {
-   "buses": 1112,
-   "wires": 16680
+   "buses": 1649,
+   "wires": 24735
   },
-  "stat": {
-   "buses": 6859,
-   "wires": 10802
-  },
-  "col_ret": {
-   "buses": 418,
-   "wires": 27588
-  },
-  "hb_x": {
-   "buses": 170,
-   "wires": 43520
+  "cfg": {
+   "buses": 2417,
+   "wires": 130518
   },
   "go": {
-   "buses": 1556,
-   "wires": 1556
+   "buses": 2417,
+   "wires": 2417
   },
-  "hb_root": {
-   "buses": 595,
-   "wires": 5865
+  "rom_a": {
+   "buses": 2417,
+   "wires": 29004
   },
-  "hb_ctl": {
-   "buses": 425,
-   "wires": 7225
+  "rom_ce": {
+   "buses": 16919,
+   "wires": 16919
   },
-  "hb_res": {
-   "buses": 1700,
-   "wires": 28220
+  "rom_q": {
+   "buses": 16919,
+   "wires": 812112
+  },
+  "stat": {
+   "buses": 11061,
+   "wires": 17416
+  },
+  "ret_leaf": {
+   "buses": 4834,
+   "wires": 304542
+  },
+  "ret_tree": {
+   "buses": 4578,
+   "wires": 302148
+  },
+  "col_ret": {
+   "buses": 625,
+   "wires": 41250
   },
   "col_clock": {
    "buses": 128,
@@ -231,53 +232,29 @@
    "buses": 128,
    "wires": 128
   },
-  "cfg": {
-   "buses": 1471,
-   "wires": 79434
-  },
-  "rom_a": {
-   "buses": 1471,
-   "wires": 17652
-  },
-  "rom_ce": {
-   "buses": 10297,
-   "wires": 10297
-  },
-  "rom_q": {
-   "buses": 10297,
-   "wires": 494256
-  },
-  "ret_leaf": {
-   "buses": 2942,
-   "wires": 185346
-  },
-  "ret_tree": {
-   "buses": 2720,
-   "wires": 179520
-  },
   "local": {
-   "buses": 50,
-   "wires": 27494
+   "buses": 32,
+   "wires": 18230
   },
   "fclk": {
-   "buses": 6311,
-   "wires": 6311
+   "buses": 5700,
+   "wires": 5700
   },
   "lane": {
-   "buses": 6319,
-   "wires": 1497566
+   "buses": 5708,
+   "wires": 1109784
   },
   "hub": {
    "buses": 12,
    "wires": 9280
   },
   "phy_dfi": {
-   "buses": 4,
-   "wires": 88952
+   "buses": 1,
+   "wires": 22238
   },
   "hbm_read": {
-   "buses": 4,
-   "wires": 35456
+   "buses": 1,
+   "wires": 8864
   },
   "top_in": {
    "buses": 2,
@@ -730,126 +707,6 @@
    "last_hop_um": 43.2
   },
   {
-   "chain": "qSE",
-   "lanes": [
-    514
-   ],
-   "stations": 56,
-   "length_um": 22772.8,
-   "max_hop_um": 401.8,
-   "last_hop_um": 371.6
-  },
-  {
-   "chain": "aSE",
-   "lanes": [
-    1026
-   ],
-   "stations": 55,
-   "length_um": 22283.5,
-   "max_hop_um": 430.3,
-   "last_hop_um": 283.4
-  },
-  {
-   "chain": "ixSE",
-   "lanes": [
-    514
-   ],
-   "stations": 26,
-   "length_um": 10681.1,
-   "max_hop_um": 400.0,
-   "last_hop_um": 280.8
-  },
-  {
-   "chain": "coSE",
-   "lanes": [
-    514
-   ],
-   "stations": 89,
-   "length_um": 35847.3,
-   "max_hop_um": 401.8,
-   "last_hop_um": 248.4
-  },
-  {
-   "chain": "qNW",
-   "lanes": [
-    514
-   ],
-   "stations": 31,
-   "length_um": 12604.1,
-   "max_hop_um": 416.9,
-   "last_hop_um": 205.2
-  },
-  {
-   "chain": "aNW",
-   "lanes": [
-    1026
-   ],
-   "stations": 30,
-   "length_um": 12327.5,
-   "max_hop_um": 425.3,
-   "last_hop_um": 353.8
-  },
-  {
-   "chain": "ixNW",
-   "lanes": [
-    514
-   ],
-   "stations": 71,
-   "length_um": 28778.9,
-   "max_hop_um": 401.8,
-   "last_hop_um": 378.0
-  },
-  {
-   "chain": "coNW",
-   "lanes": [
-    514
-   ],
-   "stations": 12,
-   "length_um": 4928.1,
-   "max_hop_um": 401.8,
-   "last_hop_um": 129.6
-  },
-  {
-   "chain": "qNE",
-   "lanes": [
-    514
-   ],
-   "stations": 57,
-   "length_um": 23051.6,
-   "max_hop_um": 401.8,
-   "last_hop_um": 252.3
-  },
-  {
-   "chain": "aNE",
-   "lanes": [
-    1026
-   ],
-   "stations": 56,
-   "length_um": 22566.5,
-   "max_hop_um": 401.8,
-   "last_hop_um": 166.3
-  },
-  {
-   "chain": "ixNE",
-   "lanes": [
-    514
-   ],
-   "stations": 90,
-   "length_um": 36289.0,
-   "max_hop_um": 428.1,
-   "last_hop_um": 287.3
-  },
-  {
-   "chain": "coNE",
-   "lanes": [
-    514
-   ],
-   "stations": 26,
-   "length_um": 10648.2,
-   "max_hop_um": 402.1,
-   "last_hop_um": 248.4
-  },
-  {
    "chain": "sel",
    "lanes": [
     514
@@ -866,7 +723,7 @@
    ],
    "stations": 27,
    "length_um": 10960.9,
-   "max_hop_um": 409.1,
+   "max_hop_um": 402.0,
    "last_hop_um": 160.7
   },
   {
@@ -876,7 +733,7 @@
    ],
    "stations": 48,
    "length_um": 19331.7,
-   "max_hop_um": 429.8,
+   "max_hop_um": 426.8,
    "last_hop_um": 132.5
   },
   {
@@ -896,7 +753,7 @@
    ],
    "stations": 51,
    "length_um": 20713.7,
-   "max_hop_um": 429.0,
+   "max_hop_um": 430.3,
    "last_hop_um": 315.6
   },
   {
@@ -906,8 +763,8 @@
    ],
    "stations": 51,
    "length_um": 20676.5,
-   "max_hop_um": 429.0,
-   "last_hop_um": 276.0
+   "max_hop_um": 429.8,
+   "last_hop_um": 302.4
   },
   {
    "chain": "KW2t",
@@ -927,7 +784,7 @@
    "stations": 42,
    "length_um": 16889.9,
    "max_hop_um": 428.5,
-   "last_hop_um": 123.6
+   "last_hop_um": 124.0
   },
   {
    "chain": "KW3t",
@@ -947,7 +804,7 @@
    "stations": 47,
    "length_um": 19172.4,
    "max_hop_um": 412.1,
-   "last_hop_um": 385.3
+   "last_hop_um": 383.6
   },
   {
    "chain": "KE0t",
@@ -967,7 +824,7 @@
    "stations": 53,
    "length_um": 21537.6,
    "max_hop_um": 420.8,
-   "last_hop_um": 337.0
+   "last_hop_um": 336.5
   },
   {
    "chain": "KE1t",
@@ -1068,7 +925,7 @@
   }
  },
  "legality_python": {
-  "instances": 20553,
+  "instances": 30689,
   "overlaps": 0,
   "overlap_examples": [],
   "outside": 0,
@@ -1083,9 +940,9 @@
    12694.32
   ],
   "field_bf": [
-   12170.384,
+   7404.56,
    3421.68,
-   15353.2,
+   10587.376,
    6321.68
   ],
   "spine": [
@@ -1099,12 +956,6 @@
    0.0,
    9313.696,
    3941.28
-  ],
-  "field_hb": [
-   17630.0,
-   3421.68,
-   20812.816,
-   6321.68
   ]
  },
  "child_reservations": {}

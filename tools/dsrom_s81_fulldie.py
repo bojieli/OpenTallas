@@ -48,7 +48,15 @@ DECISION = 'results/uarch/dsrom_c_recheck_20261004/model.json'
 # OT_S81_Q_LEF (default unset = the R_cap0 abstract below): an alternative routed q abstract for the die-level
 # pin-access check of a successor element (e.g. the QX q-element), same port names, height <= the 157.68 frame.
 Q_LEF = os.environ.get('OT_S81_Q_LEF', 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz')
-CFG_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
+CFG_LEF_V1 = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
+CFG_LEF_V2 = 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef'
+CFG_LEF = CFG_LEF_V1
+HEAD_BUNDLES = 0
+HEAD_A_LEF = 'results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz'
+HEAD_B_LEF = 'results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz'
+HEAD_ELEM_W = dict(A=0.19837, B=0.185753)     # W, reproduced routes (physcost/abstracts/provenance.json)
+MESO_V7 = 'results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json'   # closed slot (ROM inventory note 3)
+MESO_V7_UM2 = 4842.0                          # per W512 D4 slot, results/uarch/meso_fifo_20261004/verdict.json
 FIXED = 'results/uarch/dsrom_c_w4_20261003/inputs/fixed.json'
 CONTRACT = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/physical_contract.json'
 PHY_LEF = 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef'
@@ -75,15 +83,25 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES
     DIE_KIND, GEN = die, gen
-    if die == 'layer':
+    # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
+    CFG_LEF = CFG_LEF_V2 if gen == 'r8' else CFG_LEF_V1
+    REAL_FILES.clear()
+    HEAD_BUNDLES = 0
+    if die in ('layer', 'layer1'):
         PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
     else:
         h = json.loads((ROOT / HEAD_REC).read_text())
         v = next(x for x in h['variants'] if x['NV'] == 5)['head_groups']['12']
         PAIRS, NV_PAIRS = math.ceil(v['content_pairs_per_die']), math.ceil(v['lm_head_pairs_per_die'])
         BF_PAIRS = round((PAIRS - NV_PAIRS) * 519 / 2417)
+        if gen == 'r8':
+            # recovery lever head.json (ADOPT, closed r4_A/r4_B): the lm-head pairs (bf + NV5 nvx + cfg) are replaced
+            # by ot_dsrom_head_bundle units (4 A + 1 B ot_dsrom_head_elem, 128 vocabulary rows each): 129,280 rows /
+            # 128 = 1,010 bundles over the 12 head dies (ROM inventory note 1)
+            PAIRS, NV_PAIRS = PAIRS - NV_PAIRS, 0
+            HEAD_BUNDLES = math.ceil(129280 / 128 / 12)
 
 
 def set_pairs(n):
@@ -238,7 +256,7 @@ REAL_FILES = {}
 def _init_real():
     if REAL_FILES:
         return
-    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF):
+    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF) + ((HEAD_A_LEF, HEAD_B_LEF) if HEAD_BUNDLES else ()):
         REAL_FILES[real_lef(rel)['name']] = rel
 
 
@@ -1076,7 +1094,7 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
 
 
 def inst_power(it):
-    if GEN == 'r8' and it.kind in ('stn', 'hend'):
+    if GEN == 'r8' and it.kind in ('stn', 'hend', 'hb_elem', 'hbglue'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
         return POWER8[it.kind][0]
@@ -1274,7 +1292,10 @@ def case_real(m, work):
     _init_real()
     import gzip
     (work / 'q_elem.lef').write_text(_lef_text(Q_LEF))
-    for rel, nm in ((CFG_LEF, 'cfg.lef'), (PHY_LEF, 'phy.lef'), (SERDES_LEF, 'serdes.lef'), (UCIE_LEF, 'ucie.lef')):
+    for rel, nm in ((CFG_LEF, 'cfg.lef'), (PHY_LEF, 'phy.lef'), (SERDES_LEF, 'serdes.lef'), (UCIE_LEF, 'ucie.lef'),
+                    (HEAD_A_LEF, 'head_a.lef'), (HEAD_B_LEF, 'head_b.lef')):
+        if rel in (HEAD_A_LEF, HEAD_B_LEF) and not HEAD_BUNDLES:
+            continue
         (work / nm).write_text(_lef_text(rel))
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
     write_netlist(m, 1, work / 'die.v')
@@ -1298,7 +1319,7 @@ proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag [expr {{$r/1024}}] MB [clock seconds]" }}
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
-foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef elements.lef}} {{ read_lef /work/$f }}
+foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef {'head_a.lef head_b.lef ' if HEAD_BUNDLES else ''}elements.lef}} {{ read_lef /work/$f }}
 read_verilog /work/die.v
 link_design dsfd_die
 mem linked
@@ -1469,6 +1490,10 @@ def windows(m):
     rb = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'BF'))
     fr = f[rb]
     w['field_bf'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + cw_ + 1000.0, fr['y'] + 2600.0)
+    hbf = [r for r in f if f[r].get('bundles')]
+    if hbf:
+        fr = f[hbf[len(hbf) // 2]]
+        w['field_hb'] = (fr['x'] - 1000.0, fr['y'] - 300.0, fr['x'] + cw_ + 1000.0, fr['y'] + 2600.0)
     if NV_PAIRS:
         rn = max(f, key=lambda r: sum(1 for e in f[r]['elems'] if e[1] == 'NV'))
         fr = f[rn]
@@ -2050,6 +2075,11 @@ LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
 SEQ_WH = (34.56, 60.48)
+STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',))
+HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
+HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
+HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
+HB_GLUE_W = 14000 * FLOP_CLK_W * 1.5        # ~14k flops (2 x 512 BST + 16 lanes x up to 56-deep skew + compare)
 SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spread at 3 tracks (r8 GRT: a 52 um station
                                     # piled the slot-to-slot stream into one M7 column over the element row)
 CF_WH = (850.176, 47.52)
@@ -2087,10 +2117,12 @@ def set_globals_pairs(p, b, n):
 
 def _frames_fit(slots, slot_h):
     """the r8 field packing (as build_r8) of the current PAIRS / BF / NV sets fits `slots` per column"""
-    bounds, bfs, nvs = region_bounds(), bf_sites(), nv_sites()
+    rng, hbf = frame_plan_r8()
+    bfs, nvs = bf_sites(), nv_sites()
     for r in range(ROOTS):
-        slot, half_open, n = -1, None, bounds[r + 1] - bounds[r]
-        for p in range(bounds[r], bounds[r + 1]):
+        lo, hi = rng[r]
+        slot, half_open, n = -1, None, hi - lo
+        for p in range(lo, hi):
             if p in nvs:
                 slot += 2
             elif p in bfs:
@@ -2133,7 +2165,13 @@ def capacity_report():
                 layer_field_pairs_total=total, layer_field_pairs_basis='81 stages x 4 ranks x 2,417 (S81 decision)',
                 layer_dies_now=81 * 4, layer_dies_at_max=math.ceil(total / best) if best else None,
                 extra_layer_dies=(math.ceil(total / best) - 81 * 4) if best else None,
-                inventory_compiled_pairs_TP4=inv.get('compiled_pairs_TP4'))
+                inventory_compiled_pairs_TP4=inv.get('compiled_pairs_TP4'),
+                rack=dict(scan_dies_4stack=32, layer_dies_1stack=292, head_dies=12, table_dies=36, draft_dies=52,
+                          total=424, layer_dies_total=324, head_bundles_per_head_die=math.ceil(129280 / 128 / 12),
+                          source='results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 '
+                                 'table, 1-stack layer dies)'),
+                meso_slot=dict(record=MESO_V7, um2_per_W512_slot=MESO_V7_UM2, cfifo_W564_slots=2,
+                               cfifo_reservation_um2=round(CF_WH[0] * CF_WH[1], 1)))
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
 POWER8 = dict(
     seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
@@ -2161,8 +2199,43 @@ def real_ports_r8():
     phy = real_lef(PHY_LEF)
     dfi = sorted(phy['pins'], key=lambda p: (phy['pins'][p][1][0], p))
     sd = dict(tx=_bus('tx', 512), rx=_bus('rx', 512), ck=['clk'])
-    return {qn: qp, real_lef(CFG_LEF)['name']: cfg, phy['name']: dict(dfi=dfi), real_lef(SERDES_LEF)['name']: sd,
-            real_lef(UCIE_LEF)['name']: sd}
+    out = {qn: qp, real_lef(CFG_LEF)['name']: cfg, phy['name']: dict(dfi=dfi), real_lef(SERDES_LEF)['name']: sd,
+           real_lef(UCIE_LEF)['name']: sd}
+    if HEAD_BUNDLES:
+        he = dict(x=_bus('x', 256), go=['go'], ck=['clk'], rs=['rst_n'], row0=_bus('row0', 17), bv=['b_v'],
+                  bd=_bus('b_d', 32), ov=['o_v'], od=_bus('o_d', 32), done=['done'], brow=_bus('best_row', 17),
+                  bbits=_bus('best_bits', 32), bkey=_bus('best_key', 32), flt=['fault'])
+        out[real_lef(HEAD_A_LEF)['name']] = he
+        out[real_lef(HEAD_B_LEF)['name']] = he
+    return out
+
+
+# outputs no consumer reads in the RTL the die wiring follows (ot_dsrom_head_bundle): A root / logit streams, B logit
+# stream and argmax (the B element is a root1024 producer only); cfg ROM spare columns rd_out[71:48]
+UNUSED_BY_DESIGN = {('ot_dsrom_head_elem_A', p_) for p_ in ('o_v', 'o_d', 'l_v', 'l_d')} | \
+    {('ot_dsrom_head_elem_B', p_) for p_ in ('l_v', 'l_d', 'done', 'best_row', 'best_bits', 'best_key', 'b_v', 'b_d')}
+
+
+def HB_PER_FRAME():
+    return int(SLOTS8 * SLOT_H8 / HB_H + 1e-6)
+
+
+def frame_plan_r8():
+    """frame -> (first pair, last pair + 1) and the head-bundle frames (head die r8: 5 bundles a frame, spread)"""
+    hb = {}
+    if HEAD_BUNDLES:
+        nf = math.ceil(HEAD_BUNDLES / HB_PER_FRAME())
+        fr = sorted({round((i + 0.5) * ROOTS / nf) for i in range(nf)})
+        left = HEAD_BUNDLES
+        for r in fr:
+            hb[r] = min(HB_PER_FRAME(), left)
+            left -= hb[r]
+    rest = [r for r in range(ROOTS) if r not in hb]
+    rng = {r: (0, 0) for r in hb}
+    assert not hb or HB_PER_FRAME() >= 1
+    for i, r in enumerate(rest):
+        rng[r] = (math.floor(i * PAIRS / len(rest)), math.floor((i + 1) * PAIRS / len(rest)))
+    return rng, hb
 
 
 # ---------------------------------------------------------------------------------------- occupancy / placement
@@ -2384,11 +2457,29 @@ def build_r8(variant=None):
     frames, slot_of = {}, {}
     order = [(h, t, c) for h in 'WE' for t in range(TIERS) for c in range(TIER_COLS8[t])]
     assert len(order) == ROOTS
+    rng, hbf = frame_plan_r8()
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
         regions.append(dict(name=f'frame_{r}', kind='field', rect=[x0, y0, x0 + COL_W8, y0 + SLOTS * SLOT_H]))
-        pairs = list(range(bounds[r], bounds[r + 1]))
+        if r in hbf:
+            # head-bundle frame: per bundle a row (B element + glue) under a row of the 4 A elements
+            ra_, rb_ = real_lef(HEAD_A_LEF), real_lef(HEAD_B_LEF)
+            frames[r].update(elems=[], bundles=hbf[r], last_slot=hbf[r] - 1, ret_stages=0)
+            for b in range(hbf[r]):
+                yb = y0 + b * HB_H + 4.32
+                g = f'g{r}_{b}'
+                insts.append(Inst(f'{g}b', rb_['name'], x0 + 4.32, yb, rb_['w'], rb_['h'], kind='hb_elem',
+                                  region=f'frame_{r}', power_w=HEAD_ELEM_W['B']))
+                insts.append(Inst(g, 'dsfd_hbglue', x0 + 4.32 + HB_PITCH[0], yb + 64.8, HB_GLUE[0] - SHAVE,
+                                  HB_GLUE[1] - SHAVE, kind='hbglue', region=f'frame_{r}', power_w=HB_GLUE_W))
+                for q in range(4):
+                    insts.append(Inst(f'{g}a{q}', ra_['name'], x0 + 4.32 + q * HB_PITCH[0], yb + HB_PITCH[1],
+                                      ra_['w'], ra_['h'], kind='hb_elem', region=f'frame_{r}', power_w=HEAD_ELEM_W['A']))
+            insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + CH - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
+                              CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
+            continue
+        pairs = list(range(*rng[r]))
         slot, half_open, elems = -1, None, []
         for p in pairs:
             if p in nvs:
@@ -2508,6 +2599,7 @@ def build_r8(variant=None):
     rp = real_lef(PHY_LEF)
     phys, ctrls, svcs = {}, {}, {}
     xs_phy = [up(x_fw + (x_sp - x_fw) / 2 - PHY_W / 2, GX), up(x_fe + (x_le - x_fe) / 2 - PHY_W / 2, GX)]
+    band_ys = {}
     for side in 'SN':
         for i, xp in enumerate(xs_phy):
             st = f'{side}{"WE"[i]}'
@@ -2521,6 +2613,9 @@ def build_r8(variant=None):
                 yc_ = dn(yp - 8.64 - CTRL_D, GY)
                 ys_ = dn(yc_ - 8.64 - SVC_D, GY)
                 orient = 'MX'
+            band_ys[side] = ys_
+            if st not in STACKS[DIE_KIND]:
+                continue           # 1-stack layer die (scenario C): only the SW stack is built
             phys[st] = Inst(f'phy_{st}', rp['name'], xp, yp, rp['w'], rp['h'], orient, kind='phy', region='phy',
                             domain='hbm')
             ctrls[st] = Inst(f'ctrl_{st}', 'dsfd_ctrl', xp, yc_, PHY_W - SHAVE, CTRL_D - SHAVE, orient, kind='ctrl',
@@ -2535,8 +2630,7 @@ def build_r8(variant=None):
         w = dn(min(gap_x1 - gap_x0 - 2 * 8.64, 2 * SPINE_W), GX)
         h = up(HUB_MM2[name] * 1e6 / w, GY)
         x = up((gap_x0 + gap_x1) / 2 - w / 2, GX)
-        ref = svcs[f'{side}W']
-        y = ref.y if side == 'S' else ref.y + ref.h + SHAVE - h
+        y = band_ys[side] if side == 'S' else band_ys[side] + SVC_D - h
         it = Inst(f'bk_{name}', f'dsfd_bk_{name}', x, y, w - SHAVE, h - SHAVE, kind='band_blk', region='svc')
         insts.append(it)
         hub[name] = it
@@ -2556,8 +2650,11 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', die=DIE_KIND, pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, elem_frame_h=ELEM_FRAME_H,
-                   slot_h=SLOT_H, slots=SLOTS)
+    variant.update(gen='r8', die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+                                                    layer1='layer die, 1 HBM3E stack (292 of the rack)',
+                                                    head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
+                   pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
+                   elem_frame_h=ELEM_FRAME_H, slot_h=SLOT_H, slots=SLOTS)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -2614,8 +2711,45 @@ def buses_r8(m):
 
     def bus(bid, cls, bits, eps):
         B.append((bid, cls, bits, eps))
+    # ---------------- head-bundle frames (head die): column stream up a glue chain, result chain down
+    for r, f in m['frames'].items():
+        if not f.get('bundles'):
+            continue
+        cf = f'cf{r}'
+        nb = f['bundles']
+        col_ck, col_rs = [(cf, 'co')], [(cf, 'rs')]
+        for b in range(nb):
+            gn = f'g{r}_{b}'
+            el = [f'{gn}b'] + [f'{gn}a{q}' for q in range(4)]
+            col_ck += [(gn, 'ck')] + [(e, 'ck') for e in el]
+            col_rs += [(gn, 'rs')] + [(e, 'rs') for e in el]
+            src = cf if b == 0 else f'g{r}_{b - 1}'
+            bus(f'hxa_{r}_{b}', 'x_lane', X0B, [(src, 'xa'), (gn, 'xai')])
+            bus(f'hxb_{r}_{b}', 'x_lane', X1B, [(src, 'xb'), (gn, 'xbi')])
+            bus(f'hcc_{r}_{b}', 'x_ctl', CCB, [(src, 'cc'), (gn, 'cci')])
+            bus(f'hso_{r}_{b}', 'stat', STB, [(gn, 'so'), ((f'g{r}_{b - 1}', 'si') if b else (cf, 'st'))])
+            bus(f'hro_{r}_{b}', 'col_ret', NODEB, [(gn, 'ro'), ((f'g{r}_{b - 1}', 'ri') if b else (cf, 'ri'))])
+            # glue -> elements (skewed x lanes, go, row0, B root demux) and elements -> glue (argmax, B root, fault)
+            bus(f'hex_{r}_{b}a', 'hb_x', 256, [(gn, 'xsa')] + [(f'{gn}a{q}', 'x') for q in range(4)])
+            bus(f'hex_{r}_{b}b', 'hb_x', 256, [(gn, 'xsb'), (f'{gn}b', 'x')])
+            bus(f'hgo_{r}_{b}', 'go', 1, [(gn, 'go')] + [(e, 'go') for e in el])
+            bus(f'hbd_{r}_{b}', 'hb_root', 32, [(gn, 'bd')] + [(f'{gn}a{q}', 'bd') for q in range(4)])
+            bus(f'hbov_{r}_{b}', 'hb_root', 1, [(f'{gn}b', 'ov'), (gn, 'bov')])
+            bus(f'hbod_{r}_{b}', 'hb_root', 32, [(f'{gn}b', 'od'), (gn, 'bod')])
+            bus(f'hr0b_{r}_{b}', 'hb_ctl', 17, [(gn, 'r0b'), (f'{gn}b', 'row0')])
+            bus(f'hbf_{r}_{b}', 'stat', 1, [(f'{gn}b', 'flt'), (gn, 'bflt')])
+            for q in range(4):
+                a = f'{gn}a{q}'
+                bus(f'hr0_{r}_{b}_{q}', 'hb_ctl', 17, [(gn, f'r0a{q}'), (a, 'row0')])
+                bus(f'hbv_{r}_{b}_{q}', 'hb_root', 1, [(gn, f'bv{q}'), (a, 'bv')])
+                for pt, w_ in (('done', 1), ('brow', 17), ('bbits', 32), ('bkey', 32), ('flt', 1)):
+                    bus(f'h{pt}_{r}_{b}_{q}', 'hb_res', w_, [(a, pt), (gn, f'a{q}{pt}')])
+        bus(f'ck_col_{r}', 'col_clock', 1, col_ck)
+        bus(f'rs_col_{r}', 'col_reset', 1, col_rs)
     # ---------------- field, per frame
     for r, f in m['frames'].items():
+        if f.get('bundles'):
+            continue
         cf = f'cf{r}'
         elems = f['elems']
         last = f['last_slot']
@@ -3356,8 +3490,15 @@ def _spread_ports(Mx, k):
             s0 = max(c - span(p_) / 2, lo)
             Mx.ports[p_] = ('face', w, f, ly, s0 + span(p_) / 2, pt)
             lo = s0 + span(p_) + 2 * pk
-        if lo > L:
-            raise ValueError(f'{Mx.name}: bundled face {face} overflows ({lo:.1f} > {L:.1f})')
+        if lo > L:                     # too many bundle pins at the real pitch: pack them at 1 bundle track
+            lo = 2 * pk
+            for p_ in lst:
+                _, w, f, ly, c, pt = Mx.ports[p_]
+                sp_ = max(1, math.ceil(w / k)) * pk
+                Mx.ports[p_] = ('face', w, f, ly, lo + sp_ / 2, 1)
+                lo += sp_ + 2 * pk
+            if lo > L:
+                raise ValueError(f'{Mx.name}: bundled face {face} overflows ({lo:.1f} > {L:.1f})')
     return Mx
 
 
@@ -3645,7 +3786,8 @@ def plan_record_r8(m):
     return dict(
         schema='opentallas.dsrom-s81-fulldie.floorplan.r8.v1', tool='tools/dsrom_s81_fulldie.py --gen r8',
         tool_sha256=sha('tools/dsrom_s81_fulldie.py'),
-        sources_sha256={p_: sha(p_) for p_ in (DECISION, Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF, CFG7_RTL,
+        sources_sha256={p_: sha(p_) for p_ in (DECISION, Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF, CFG7_RTL, MESO_V7,
+                                               HEAD_A_LEF, HEAD_B_LEF, 'rtl/v41rom/ot_dsrom_head_bundle.sv',
                                                'rtl/common/ot_fwd_link_stage.sv', 'rtl/common/ot_meso_fifo.sv',
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
@@ -3673,7 +3815,7 @@ def write_glue(elem_h=None, pairs=None):
     """glue RTL for the union of the layer and head dies (one module per master name; names encode the signature)"""
     keep = (DIE_KIND, PAIRS, BF_PAIRS, NV_PAIRS)
     merged = dict(pdir={}, glue={})
-    for die in ('layer', 'head'):
+    for die in ('layer', 'layer1', 'head'):
         configure(die, 'r8')
         if elem_h:
             slot_geometry(elem_h)
@@ -3682,7 +3824,8 @@ def write_glue(elem_h=None, pairs=None):
         mm = build()
         finalize_r8(mm)
         for k_, v in mm['pdir'].items():
-            assert merged['pdir'].setdefault(k_, v) == v, k_
+            if is_glue(k_):
+                assert merged['pdir'].setdefault(k_, v) == v, k_
         merged['glue'].update(mm['glue'])
     configure(keep[0], 'r8')
     (ROOT / GLUE_RTL).parent.mkdir(parents=True, exist_ok=True)
@@ -3710,7 +3853,7 @@ def main(argv=None):
     ap.add_argument('--out', type=Path)
     ap.add_argument('--psmt', type=Path, help='record: the PSM macro-current control directory (mode psmt)')
     ap.add_argument('--only', default='', help='record: case-name regex (cases built by the current floorplan)')
-    ap.add_argument('--die', default='layer', choices=['layer', 'head'])
+    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
     ap.add_argument('--gen', default='r7', choices=['r7', 'r8'], help='r7: the 21fcf6469 die (default); r8: wired die')
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
@@ -3747,7 +3890,7 @@ def main(argv=None):
         print(json.dumps(trunk_stages(m), indent=1))
         return 0
     if a.mode == 'plan' and a.gen == 'r8':
-        out = ROOT / OUT / 'r8' / ('' if a.die == 'layer' else 'head_die')
+        out = ROOT / OUT / 'r8' / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record_r8(m)
         rec['legality_python'] = legality(m)

@@ -1,15 +1,19 @@
 {
  "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
  "tool": "tools/dsrom_s81_fulldie.py --gen r8",
- "tool_sha256": "53311f52fc405e4a19ae4db1e8d3267709a712850347473218ac2df5b6fdc774",
+ "tool_sha256": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20",
  "sources_sha256": {
   "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
   "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
-  "results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
   "rtl/v41die/ot_s81_cfg7_seq.sv": "be8ed2bedd04427f94a32aff88f11f0427885c94e36fe76c605c1d4b56eec682",
+  "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json": "635ae98aea31f228f7ba2d848c455ea06587e22759b62951cdb4725b3f1e569a",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_A.lef.gz": "0bd29f9155f06f3297b85830dfce439a8fc06352363b3ba81bf86064ac159b80",
+  "results/rtl/dsrom_recovery_20261004/physcost/abstracts/ot_dsrom_head_elem_B.lef.gz": "f12004448d0d630436249918482a8c3747ad2886cd849f06cb99902507c3adea",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
   "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
   "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
   "rtl/common/ot_ratio_cdc_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
@@ -23,9 +27,17 @@
  "variant": {
   "gen": "r8",
   "die": "layer",
+  "role": "scan die (4 HBM3E stacks; 32 of the rack)",
   "pairs": 2417,
   "bf": 519,
   "nv": 0,
+  "head_bundles": 0,
+  "stacks": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
   "elem_frame_h": 157.68,
   "slot_h": 239.76,
   "slots": 12
@@ -46,7 +58,24 @@
    "layer_dies_now": 324,
    "layer_dies_at_max": 323,
    "extra_layer_dies": -1,
-   "inventory_compiled_pairs_TP4": 783264
+   "inventory_compiled_pairs_TP4": 783264,
+   "rack": {
+    "scan_dies_4stack": 32,
+    "layer_dies_1stack": 292,
+    "head_dies": 12,
+    "table_dies": 36,
+    "draft_dies": 52,
+    "total": 424,
+    "layer_dies_total": 324,
+    "head_bundles_per_head_die": 85,
+    "source": "results/arch/dsrom_s81_rack_20261006/rack.json (DS-RACK scenario C: 12 head + 36 table, 1-stack layer dies)"
+   },
+   "meso_slot": {
+    "record": "results/uarch/meso_fifo_20261004/physical/meso_d4_v7/physical.json",
+    "um2_per_W512_slot": 4842.0,
+    "cfifo_W564_slots": 2,
+    "cfifo_reservation_um2": 40400.4
+   }
   }
  },
  "instances": {
@@ -69,7 +98,7 @@
  },
  "area_mm2_by_kind": {
   "bf": 82.074,
-  "cfg": 40.504,
+  "cfg": 40.557,
   "seq": 5.052,
   "q": 123.068,
   "sstn": 7.948,
@@ -85,9 +114,9 @@
   "hend": 0.327,
   "stn": 1.888
  },
- "placed_footprint_mm2": 447.66,
+ "placed_footprint_mm2": 447.71,
  "utilisation": {
-  "placed_over_die": 0.5217,
+  "placed_over_die": 0.5218,
   "field_frames_mm2": 435.6
  },
  "geometry": {
