@@ -3,7 +3,7 @@
 The underlying shared driver is unchanged. Every source transform is recorded.
 No synthesis/route wall, file or address-space cap is imposed.
 """
-import argparse,hashlib,json,sys,types,shutil
+import argparse,hashlib,json,sys,types,shutil,re
 from pathlib import Path
 root=Path(__file__).resolve().parents[4];sys.path.insert(0,str(root/'tools'))
 import run_abi3_physical_persistent as persistent
@@ -28,10 +28,25 @@ if a.reuse_synthesis_dir:
  ev=json.loads((cached.parent/'physical.json').read_text())
  assert ev['flow_completed'] and 'synth' in ev['stages_completed']
  def reuse(view,corner,block,work,period,dont_use):
+  assert ev['design']['parameters']['NO']==block['parameters']['NO'], 'NO2/NO3 cached width mismatch'
+  assert ev['design']['parameters']['ENABLE']==block['parameters']['ENABLE']==1
+  for entry in ev['design']['sources']:
+   assert driver.sha256_file(root/entry['path'])==entry['sha256'], 'cached actual source changed'
   for name in ['mapped.v','mapped.raw.v','stat.txt','synth.ys','yosys.log']:
    shutil.copyfile(cached/name,work/name)
-  record=dict(ev['synthesis']);record['reused_actual_synthesis']=dict(directory=str(cached),mapped_sha256=driver.sha256_file(cached/'mapped.v'),source_record_sha256=driver.sha256_file(cached.parent/'physical.json'))
-  assert record['netlist_normalization']['normalized_netlist_sha256']==driver.sha256_file(work/'mapped.v')
+  record=dict(ev['synthesis'])
+  old_hash=driver.sha256_file(cached/'mapped.v')
+  assert record['netlist_normalization']['normalized_netlist_sha256']==old_hash
+  if block['top']!=ev['design']['top']:
+   pattern=r'(?m)^module\s+'+re.escape(ev['design']['top'])+r'(?=\s*\()'
+   for name in ['mapped.v','mapped.raw.v']:
+    text,count=re.subn(pattern,'module '+block['top'],(work/name).read_text())
+    assert count==1, 'physical variant module rename must be unique'
+    (work/name).write_text(text)
+   record['netlist_normalization']=dict(record['netlist_normalization'])
+   record['netlist_normalization']['normalized_netlist_sha256']=driver.sha256_file(work/'mapped.v')
+   record['netlist_normalization']['raw_netlist_sha256']=driver.sha256_file(work/'mapped.raw.v')
+  record['reused_actual_synthesis']=dict(directory=str(cached),original_mapped_sha256=old_hash,selected_mapped_sha256=driver.sha256_file(work/'mapped.v'),source_record_sha256=driver.sha256_file(cached.parent/'physical.json'),variant_transform='unique top module name only; all cells/nets/ports/connectivity and attributes retained')
   return dict(netlist=work/'mapped.v',record=record)
  driver.run_synthesis=reuse
 raise SystemExit(persistent.launch(driver,argv,workdir=a.persistent_workdir,receipt=a.launch_receipt))
