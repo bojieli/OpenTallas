@@ -19642,46 +19642,6 @@ library (hfd_meso_r32_ss) {
     pin("rst[0]") {
       direction : input;
       capacitance : 0.6091;
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : hold_rising;
-        rise_constraint(scalar) {
-          values("185.48366");
-        }
-        fall_constraint(scalar) {
-          values("198.00771");
-        }
-      }
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : setup_rising;
-        rise_constraint(scalar) {
-          values("-159.02779");
-        }
-        fall_constraint(scalar) {
-          values("-162.80611");
-        }
-      }
-      timing() {
-        related_pin : "a[512]";
-        timing_type : hold_falling;
-        rise_constraint(scalar) {
-          values("147.14902");
-        }
-        fall_constraint(scalar) {
-          values("159.97522");
-        }
-      }
-      timing() {
-        related_pin : "a[512]";
-        timing_type : setup_falling;
-        rise_constraint(scalar) {
-          values("-119.88749");
-        }
-        fall_constraint(scalar) {
-          values("-122.36977");
-        }
-      }
     }
     }
   }

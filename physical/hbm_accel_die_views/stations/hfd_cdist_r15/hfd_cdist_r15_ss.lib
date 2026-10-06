@@ -10090,46 +10090,6 @@ library (hfd_cdist_r15_ss) {
     pin("rst[0]") {
       direction : input;
       capacitance : 2.7351;
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : hold_rising;
-        rise_constraint(scalar) {
-          values("139.39613");
-        }
-        fall_constraint(scalar) {
-          values("156.46835");
-        }
-      }
-      timing() {
-        related_pin : "ck[0]";
-        timing_type : setup_rising;
-        rise_constraint(scalar) {
-          values("-113.01292");
-        }
-        fall_constraint(scalar) {
-          values("-119.64006");
-        }
-      }
-      timing() {
-        related_pin : "a[412]";
-        timing_type : hold_falling;
-        rise_constraint(scalar) {
-          values("143.66548");
-        }
-        fall_constraint(scalar) {
-          values("162.25006");
-        }
-      }
-      timing() {
-        related_pin : "a[412]";
-        timing_type : setup_falling;
-        rise_constraint(scalar) {
-          values("-117.35177");
-        }
-        fall_constraint(scalar) {
-          values("-125.65332");
-        }
-      }
     }
     }
     bus("t0") {
