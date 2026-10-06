@@ -83,10 +83,12 @@ for port, row in net['ports'].items():
    assert region <= 32, (port, i, stride)
    members[bit] |= 1 << region
 boxes = binding['local_allocations']
+cut_x = binding['endpoint_allocation'][0]
 west = sum(1 << int(i) for i, box in boxes.items()
-            if (box[0] + box[2]) / 2 < 10861.776)
+            if (box[0] + box[2]) / 2 < cut_x)
 east = ((1 << 33) - 1) ^ west
-assert west.bit_count() == 16
+assert 0 < west.bit_count() < 32
+capacity = binding.get('parent_channel_upper_before_other_claims')
 clock_bits = set(roots.values())
 crossing = [b for b, mask in enumerate(members)
             if mask & west and mask & east and b not in clock_bits]
@@ -102,9 +104,12 @@ summary = dict(source_mapped_sha256=source['mapped_sha256'],
  actual_region_cell_area_um2=dict(region_area),
  actual_total_cell_area_um2=sum(region_area.values()),
  actual_region_boundary_net_counts=per_region,
- actual_west16_cut_signal_nets=len(crossing),
- optimistic_four_layer_track_upper_before_other_claims=50594,
- actual_west_cut_deficit_before_other_claims=max(0, len(crossing)-50594),
+ actual_west_cut_source_callers=west.bit_count(),actual_cut_x_um=cut_x,
+ actual_west_cut_signal_nets=len(crossing),
+ optimistic_four_layer_track_upper_before_other_claims=capacity,
+ actual_west_cut_deficit_before_other_claims=None if capacity is None else max(0, len(crossing)-capacity),
+ parent_layout_sha256=binding.get('parent_layout_sha256'),
+ parent_geometry_regenerated=binding.get('parent_geometry_regenerated',False),
  four_source_root_connected_library_loads=clock_loads,
  region_bboxes_um={**boxes, '32': binding['endpoint_allocation']},
  actual_cell_memberships=str(out / 'actual_region_cells.tsv'),
