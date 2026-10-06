@@ -642,7 +642,12 @@ module ot_hbm_accel_smh_front #(
     // DBF = BF16 column latency - block-dot column latency: 14 for sm_pq's columns; the tile's block-dot column is
     // 7 cycles deeper (bterm3) and its BF16 column 3 deeper (ot_hbm_accel_smh_tc_col): 14 - 7 + 3 = 10;
     // (margin m1) BF16 column +2 (bmul 7, second lane-sum register), block-dot column +1 (tree-input register): 11
-    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(11)) u_issue (
+`ifdef OT_SMH_MUT_BFDLY
+    localparam integer DBFX = 11 + 64;      // the mutant's BF16 column, priced into the hazard check
+`else
+    localparam integer DBFX = 11;
+`endif
+    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(DBFX)) u_issue (
         .clk(clk), .rst_n(rst_n), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
         .op_gs(h_gs), .op_bf(h_fmt == 2'd0),
         .w_valid(w_valid), .x_rdy(1'b1), .w_ready(w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
@@ -1176,6 +1181,9 @@ module ot_hbm_accel_smh_leaf #(
     wire bov, bfault, fov, ffault;
     wire [31:0] by, fy;
     wire [TAGW-1:0] btag, ftag;
+`ifdef OT_SMH_MUT_BFDLY
+    wire fov_r, ffault_r; wire [31:0] fy_r; wire [TAGW-1:0] ftag_r;
+`endif
     wire [LBS*256-1:0] xq_s;
     wire [LBS*10-1:0]  xe_s;
     genvar qq;
@@ -1192,7 +1200,11 @@ module ot_hbm_accel_smh_leaf #(
             ot_hbm_accel_smh_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (   // +3 cycles (tile context)
                 .clk(clk), .rst_n(rst_n), .v(jv_f), .first(jfirst), .last(jlast), .tag(jtag),
                 .w(jw[LBS*266 +: LSB*16]), .x(jx[LBS*266 +: LSB*16]),
+`ifdef OT_SMH_MUT_BFDLY
+                .ov(fov_r), .y(fy_r), .otag(ftag_r), .fault(ffault_r));
+`else
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
+`endif
         end else begin : g_o
             ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
                 .clk(clk), .rst_n(rst_n), .v(jv_b), .first(jfirst), .last(jlast), .fp4(jfp4), .tag(jtag),
@@ -1204,6 +1216,15 @@ module ot_hbm_accel_smh_leaf #(
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
         end
     endgenerate
+`ifdef OT_SMH_MUT_BFDLY
+    // negative-control mutant only (bench --mut-bfdly; never defined in a build): the BF16 column's output 64 cycles
+    // late, so a BF16 -> block-dot op pair can collide at G1 / the stack (with c = 8 lines a row the real pipeline's
+    // D difference, <= DBF + 4 SLAT = 39, is below the 57-cycle row span and the retire-order hazard is unreachable)
+    wire [1+1+32+TAGW-1:0] mbf;
+    ot_hdc_delay #(.W(2+32+TAGW), .D(64), .RESET(1)) u_mbf (.clk(clk), .rst_n(rst_n), .d({fov_r, ffault_r, fy_r, ftag_r}),
+        .q(mbf));
+    assign {fov, ffault, fy, ftag} = mbf;
+`endif
     // ---- G1: select by the producing column (sm_pq), registered: the tile's lane output flops ----
     reg gv_q, gf_q;
     reg [31:0] gy_q;

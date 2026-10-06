@@ -123,8 +123,8 @@ def cmd_run(a):
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
-                              + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else ""))
-    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w)
+                              + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else ""))
+    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
@@ -189,9 +189,9 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False):
+def compile_bench(sim, params, outdir, jobs, smh=False, neg=False, mut=False, mutbf=False):
     src = SRC + (SMH_SRC if smh else [])
-    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else []) + (["-DOT_SMH_MUT_S1W"] if mut else [])
+    defs = (["-DOT_SMH"] if smh else []) + (["-DOT_SMH_NEG_FLIP"] if neg else []) + (["-DOT_SMH_MUT_S1W"] if mut else []) + (["-DOT_SMH_MUT_BFDLY"] if mutbf else [])
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     if sim == "verilator":
@@ -222,6 +222,8 @@ def main(argv=None):
     ap.add_argument("--expect-fail", action="store_true")
     ap.add_argument("--mut-s1w", action="store_true", help="--smh negative control: compile-time RTL mutant, bit 3 of "
                     "the front's s1 line register inverted (+define+OT_SMH_MUT_S1W in ot_hbm_accel_smh.sv)")
+    ap.add_argument("--mut-bfdly", action="store_true", help="--smh: compile-time mutant, BF16 column output 64 cycles "
+                    "late with the issue's DBF raised to match (+define+OT_SMH_MUT_BFDLY): HAZ = 1 must pass, HAZ = 0 fail")
     ap.add_argument("--neg-flip", action="store_true", help="negative control: bit 3 of every returned line flipped at the response port (+define+OT_SMH_NEG_FLIP)")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
     ap.add_argument("--trace-from", type=int, default=0)
