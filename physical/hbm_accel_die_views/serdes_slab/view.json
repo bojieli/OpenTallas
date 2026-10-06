@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_serdes_slab",
+ "kind": "serdes_slab",
+ "status": "reservation",
+ "lef": "hfd_serdes_slab.lef",
+ "lib": null,
+ "size_um": [
+  2462.376,
+  3656.856
+ ],
+ "instances": 2,
+ "pins": 0,
+ "note": "reservation slab: outline + obstruction M1-M7 only, no logic, no die nets, no timing view (nothing to time); the die route crosses it on M8/M9 as in r16g"
+}
