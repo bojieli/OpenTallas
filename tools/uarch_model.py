@@ -11586,6 +11586,14 @@ def hbm_cp_fast_frontier_model():
         "results/uarch/hbm_cp_fast_frontier_20261006/model.json").read_text())
 
 
+def hbm_cp_phase_parallel_model():
+    """Exact18-bit CP phase successor, bounded price before RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_phase_parallel_20261006/model.json").read_text())
+
+
 def dsrom_wfc_enclosing_stage_price():
     """Minimum actual enclosing receiver/held-job context, before source build.
 
