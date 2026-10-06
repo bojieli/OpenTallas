@@ -1,0 +1,143 @@
+{
+  "schema": "opentallas.qwen.stream4.cdc.r5.exact-terminal.v1",
+  "source_commit": "6fc28b155c419ee79da72f1eb084aae2141f1f64",
+  "total_cases": 32,
+  "runs": [
+    {
+      "log": "final/r5_ALL_ph0.log",
+      "exit": 0,
+      "cases": 15,
+      "status": "PASS_EXACT_SOURCE_COMPONENT",
+      "comparison": [
+        {
+          "name": "ISO_P8191",
+          "measured": {
+            "fill_cycles": 1355,
+            "kv_ok_after_start": 1831
+          },
+          "delta_vs_preserved_ref": {
+            "fill_cycles": 2,
+            "kv_ok_after_start": 28
+          }
+        },
+        {
+          "name": "CHAIN_P8191_early_posted",
+          "measured": {
+            "A_fill_cycles": 1355,
+            "A_kv_ok_after_start": 1365,
+            "B_fill_cycles": 1313,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 65
+          },
+          "delta_vs_preserved_ref": {
+            "A_fill_cycles": 2,
+            "A_kv_ok_after_start": 2,
+            "B_fill_cycles": 1,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 0
+          }
+        }
+      ]
+    },
+    {
+      "log": "final/r5_ALL_ph511000.log",
+      "exit": 0,
+      "cases": 15,
+      "status": "PASS_EXACT_SOURCE_COMPONENT",
+      "comparison": [
+        {
+          "name": "ISO_P8191",
+          "measured": {
+            "fill_cycles": 1355,
+            "kv_ok_after_start": 1830
+          },
+          "delta_vs_preserved_ref": {
+            "fill_cycles": 2,
+            "kv_ok_after_start": 27
+          }
+        },
+        {
+          "name": "CHAIN_P8191_early_posted",
+          "measured": {
+            "A_fill_cycles": 1355,
+            "A_kv_ok_after_start": 1365,
+            "B_fill_cycles": 1314,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 65
+          },
+          "delta_vs_preserved_ref": {
+            "A_fill_cycles": 2,
+            "A_kv_ok_after_start": 2,
+            "B_fill_cycles": 2,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 0
+          }
+        }
+      ]
+    },
+    {
+      "log": "final/r5_CHAIN_ph137000.log",
+      "exit": 0,
+      "cases": 1,
+      "status": "PASS_EXACT_SOURCE_COMPONENT",
+      "comparison": [
+        {
+          "name": "CHAIN_P8191_early_posted",
+          "measured": {
+            "A_fill_cycles": 1354,
+            "A_kv_ok_after_start": 1364,
+            "B_fill_cycles": 1314,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 65
+          },
+          "delta_vs_preserved_ref": {
+            "A_fill_cycles": 1,
+            "A_kv_ok_after_start": 1,
+            "B_fill_cycles": 2,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 0
+          }
+        }
+      ]
+    },
+    {
+      "log": "final/r5_CHAIN_ph901000.log",
+      "exit": 0,
+      "cases": 1,
+      "status": "PASS_EXACT_SOURCE_COMPONENT",
+      "comparison": [
+        {
+          "name": "CHAIN_P8191_early_posted",
+          "measured": {
+            "A_fill_cycles": 1363,
+            "A_kv_ok_after_start": 1373,
+            "B_fill_cycles": 1316,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 65
+          },
+          "delta_vs_preserved_ref": {
+            "A_fill_cycles": 10,
+            "A_kv_ok_after_start": 10,
+            "B_fill_cycles": 4,
+            "B_fill_exposed_after_start": 0,
+            "B_kv_ok_after_start": 0
+          }
+        }
+      ]
+    }
+  ],
+  "scope": "Full128-PC service wrapper; per-PC CDC LD64/WB16/AD64/SYNC2; P8191 fullhistory; same slice words and token HBM codes; 3 contract negatives in each ALL run",
+  "host": "ot-epyc2",
+  "supervisor": 1970686,
+  "supervisor_observed_exited": true,
+  "DRAM_timing_violations": 0,
+  "source_and_executable_pins": "execution_pins.json",
+  "new_build_or_relaunch": false,
+  "existing_job_resumed": true,
+  "near_HBM": 0,
+  "DSpark": false,
+  "added_whole_token_cycles": null,
+  "adopted": false,
+  "physical_state": "REJECT_PHYSICAL_MAX_SLEW; u30 SS+12.19/FF+11.45 with12 slew violations; u50 SS+16.56/FF+8.45 with34; see immutable ../takeover_r5/verdict.json",
+  "protection_state": "Existing protected periodic-provider model requirement unimplemented in bare FIFO candidate; no mutable protection waiver"
+}

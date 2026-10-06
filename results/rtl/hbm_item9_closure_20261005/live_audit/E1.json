@@ -1,0 +1,112 @@
+{
+  "host": "ot-epyc1tb",
+  "observed_utc": "2026-10-05T22:25:08.113692+00:00",
+  "jobs": [
+    {
+      "label": "HA2_PF64",
+      "root": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/ha2red_sr1_r4",
+      "terminal_files": {},
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/ha2red_sr1_r4/work/orfs/results/asap7/opentallas_noc_tw_ha2_reduce_sr1_asap7_noc_ha2red_sr1_r4/base/4_cts.odb",
+          "bytes": 1500978714,
+          "mtime_ns": 1791229011795841672
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/ha2red_sr1_r4/work/orfs/results/asap7/opentallas_noc_tw_ha2_reduce_sr1_asap7_noc_ha2red_sr1_r4/base/4_1_cts.odb",
+          "bytes": 1500978714,
+          "mtime_ns": 1791229005000743414
+        }
+      ]
+    },
+    {
+      "label": "r7_standalone",
+      "root": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8",
+      "terminal_files": {
+        "exit": "rc=1\ncorner_rc=1\n"
+      },
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_cts.odb",
+          "bytes": 128178966,
+          "mtime_ns": 1791181890477686752
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_1_cts.odb",
+          "bytes": 128178966,
+          "mtime_ns": 1791181889946474417
+        }
+      ]
+    },
+    {
+      "label": "txmask_ctx12",
+      "root": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1",
+      "terminal_files": {},
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u12_r1/base/4_cts.odb",
+          "bytes": 141364160,
+          "mtime_ns": 1791185577622242661
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u12_r1/base/4_1_cts.odb",
+          "bytes": 141364160,
+          "mtime_ns": 1791185576849232045
+        }
+      ]
+    },
+    {
+      "label": "txmask_ctx15",
+      "root": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1",
+      "terminal_files": {},
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u15_r1/base/4_cts.odb",
+          "bytes": 135560793,
+          "mtime_ns": 1791185332053870253
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u15_r1/base/4_1_cts.odb",
+          "bytes": 135560793,
+          "mtime_ns": 1791185331243859129
+        }
+      ]
+    },
+    {
+      "label": "txmask_die12",
+      "root": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1",
+      "terminal_files": {},
+      "checkpoints": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_txmask_asap7_boole_coll_txmask_die_u12_r1/base/4_cts.odb",
+          "bytes": 130261165,
+          "mtime_ns": 1791187246051441859
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_txmask_asap7_boole_coll_txmask_die_u12_r1/base/4_1_cts.odb",
+          "bytes": 130261165,
+          "mtime_ns": 1791187245339431063
+        }
+      ]
+    }
+  ],
+  "live_processes": [
+    {
+      "pid": 1439957,
+      "start_ticks": "11211773",
+      "cmd": "/bin/bash ./route.sh ha2red_sr1_r4 noc_tw_ha2_reduce_sr1 --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv --source results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_ha2_reduce.sv ",
+      "cwd": "/srv/opentallas-scratch/claude/hbm-fmax-noc/src"
+    },
+    {
+      "pid": 1439960,
+      "start_ticks": "11211773",
+      "cmd": "python3 tools/run_abi3_physical.py --view asap7 --top noc_tw_ha2_reduce_sr1 --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv --source results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_ha2_reduce.sv --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --core-utilization 30 --place-density 0.55 --hold-margin-ns 0.01 --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 --purpose signoff_target --nickname-tag noc_ha2red_sr1_r4 --keep-workdir /srv/opentallas-scratch/claude/hbm-fmax-noc/routes/ha2red_sr1_r4/work --force --output /srv/opentallas-scratch/claude/hbm-fmax-noc/routes/ha2red_sr1_r4/physical.json ",
+      "cwd": "/srv/opentallas-scratch/claude/hbm-fmax-noc/src"
+    }
+  ],
+  "coowner": "Codex:item9",
+  "prior_owners_retained": true,
+  "new_jobs": 0,
+  "no_signals_sent": true,
+  "no_deleted_files": true
+}

@@ -1,0 +1,132 @@
+{
+  "item": 9,
+  "status": "PREBUILD_DEFAULT_OFF",
+  "mandatory_clock_closure": true,
+  "selected_endpoint": "ot_gpu_coll_endpoint_f12_txmask",
+  "arithmetic": {
+    "MACs_per_cycle": 0,
+    "rounding_changes": 0,
+    "reduction_order_changes": 0
+  },
+  "shape": {
+    "NSM": 2,
+    "NL": 128,
+    "data_bits": 4096,
+    "owner_copies": 64,
+    "owner_bits_per_copy": 1,
+    "max_select_fanout_bits": 64
+  },
+  "memory": {
+    "ingress_bytes_per_accept": 1024.0,
+    "endpoint_bytes_per_accept": 512.0,
+    "TX_bytes_per_cycle": 64,
+    "RX_bytes_per_cycle": 64,
+    "memory_ports_added": 0
+  },
+  "communication": {
+    "SM_ingress_bits_per_cycle": 8214,
+    "mux_endpoint_bits_per_cycle": 4108,
+    "link_record_bits_per_cycle": 546,
+    "response_bits_per_cycle": 4100,
+    "external_boundary_bits_added": 0,
+    "added_local_owner_bits": 48,
+    "owner_update_fanout": 64,
+    "select_mux_bit_equivalents": 4096,
+    "demux_control_outputs": 4,
+    "tracks_needed_lower_bound": 4108,
+    "actual_channel_capacity": null,
+    "actual_parent_channel_fit": false
+  },
+  "area": {
+    "added_owner_FF_bits": 48,
+    "FF_cell_floor_um2": 13.9968,
+    "retained_context_cell_um2": 29809.2,
+    "mux_bit_delta": 0,
+    "extra_buffer_reset_CTS_area_um2": null,
+    "actual_floorplan_slot": null,
+    "actual_slot_fit": false
+  },
+  "characterization_floorplan": {
+    "die_bbox_um": [
+      0,
+      0,
+      540,
+      540
+    ],
+    "core_bbox_um": [
+      2.16,
+      2.16,
+      538.84,
+      538.84
+    ],
+    "core_area_um2": 288025.42240000004,
+    "placement_utilization": 0.3,
+    "baseline_cell_um2": 29809.2,
+    "added_FF_floor_um2": 3585.8052000000002,
+    "onehot_logic_upper_um2": 25395.2,
+    "removed_binary_mux_area_credit_um2": 0,
+    "CTS_reset_buffer_repair_upper_um2": 10000,
+    "prospective_cell_upper_um2": 68790.2052,
+    "analytical_body_fit": true,
+    "bound_basis": "prior routed full128 wrapper cell area; explicit FF inventory; .2um2 gate proxies; 10000um2 CTS/reset/repair allowance",
+    "no_macro_instances": true,
+    "all_IO_timed": true,
+    "actual_outer_allocation_qualified": false
+  },
+  "latency": {
+    "new_mux_cycles_per_collective": 0,
+    "new_mux_cycles_per_record": 0,
+    "new_mux_token_delta_ns": 0,
+    "retained_XREG_cycles_per_collective": 2,
+    "historical_collective_count": 265,
+    "retained_XREG_token_delta_ns": 441.6666666666667,
+    "composed_current_token_delta_ns": null,
+    "fullshape_cycle_gate": false
+  },
+  "clock": {
+    "period_ns": 0.833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "macro_load_and_parent_clock_bound": false
+  },
+  "endpoint_structural_cuts": {
+    "default_off": true,
+    "RXOH": 1,
+    "RDUP": 16,
+    "onehot_lane_select_FF_bits": 8192,
+    "retained_binary_lane_select_FF_bits": 512,
+    "added_select_FF_bits": 7680,
+    "select_FF_delta_floor_um2": 2239.4880000000003,
+    "added_RX_data_copies_FF_bits": 4096,
+    "added_cap_TXword_RXclear_FIFOselect_write_control_FF_bits": 468,
+    "control_FF_delta_floor_um2": 136.46880000000002,
+    "added_RX_data_copies_floor_um2": 1194.3936,
+    "RX_tag_independent_checks": 6,
+    "added_tag_check_FF_bits": 5,
+    "added_tag_FF_floor_um2": 1.4580000000000002,
+    "added_TX_mask_FF_bits": 0,
+    "TX_mask_copy_fanout_bits": 8,
+    "RX_select_copy_fanout_bits": 8,
+    "RX_select_replicas": 512,
+    "onehot_AND_bit_equivalents": 65536,
+    "onehot_OR_bit_equivalents": 61440,
+    "removed_binary_16to1_mux_bit_equivalents": 61440,
+    "comb_cell_delta_um2": null,
+    "clock_reset_route_area_um2": null,
+    "extra_cycles_per_collective": 0,
+    "extra_cycles_per_record": 0,
+    "extra_boundary_bits_per_cycle": 0,
+    "affected_classes": [
+      "RX_binary_lane_select",
+      "RX_FIFO_select_tag_check",
+      "TX_word_select covered by retained qualified-byte TXmask"
+    ]
+  },
+  "gates": {
+    "fullshape_exact": false,
+    "contextual_SS_FF": false,
+    "hub_routing_layer_check": false,
+    "installed": false,
+    "adoption": false
+  }
+}

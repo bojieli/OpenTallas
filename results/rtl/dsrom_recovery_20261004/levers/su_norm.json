@@ -1,0 +1,208 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "su_norm",
+ "verdict": "PENDING_SSFF",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 833.0,
+  "routed": {
+   "divc": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_norm/route/corner_sta_divc.json",
+    "ss_setup_ps": 21.99,
+    "ff_hold_ps": 7.7
+   },
+   "mix_la6": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_norm/route/corner_sta_mix6.json",
+    "ss_setup_ps": 28.96,
+    "ff_hold_ps": 17.58
+   }
+  },
+  "prelayout_screen": {},
+  "closes": false,
+  "basis": "routed minimum components (run_abi3_physical asap7, 0.833 ns, SS setup 60 ps / FF hold 25 ps, FP unit tops kept as hierarchy) + tools/w18/corner_sta.py; pre-layout screens listed for reference"
+ },
+ "nodes": {
+  "*.attn.hc_pre": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.quant": {
+   "us": 0.2675,
+   "source": "ot_dsrom_su_norm LA6 hc q_last: 321 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.hc_pre": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.scale": {
+   "us": 0.2525,
+   "source": "ot_dsrom_su_norm LA6 hc y_last: 303 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.quant": {
+   "us": 0.015,
+   "source": "ot_dsrom_su_norm LA6 hc q_after_y: 18 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.hc_pre": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.scale": {
+   "us": 0.2525,
+   "source": "ot_dsrom_su_norm LA6 hc y_last: 303 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_quant": {
+   "us": 0.2375,
+   "source": "ot_dsrom_su_norm LA6 q q_last: 285 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_rope_qdq": {
+   "us": 0.2325,
+   "source": "ot_dsrom_su_norm LA6 kv q_last: 279 cycles at 1.2 GHz; source-pinned full-shape DPI and N64 RTL golden/stress exact; hub and reduction/broadcast wires included (su_norm/measure.json).",
+   "cls": "measured",
+   "kind": "fused_fast"
+  }
+ },
+ "measurement": {
+  "record": "results/rtl/dsrom_recovery_20261004/su_norm/measure.json",
+  "old_us_per_occurrence": {
+   "attn hc_pre+norm.*+quant": 0.7554,
+   "ffn hc_pre+norm.*": 0.5221,
+   "q_norm.*+q_quant": 0.4888,
+   "kv_norm.*+kv_rope_qdq": 0.5099
+  },
+  "measured_cycles": {
+   "hc": {
+    "y_last": 303,
+    "q_last": 321,
+    "ro_last": -1,
+    "r": 256,
+    "q_after_y": 18
+   },
+   "q": {
+    "y_last": 267,
+    "q_last": 285,
+    "ro_last": -1,
+    "r": 220,
+    "q_after_y": 18
+   },
+   "kv": {
+    "y_last": 248,
+    "q_last": 279,
+    "ro_last": 261,
+    "r": 205,
+    "q_after_y": 31
+   }
+  },
+  "floor_cycles": {
+   "hc": 321,
+   "q": 285,
+   "kv": 279
+  },
+  "registered_transport": {
+   "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_transport_terminal.json",
+   "exact": true,
+   "full_shape": true,
+   "cases": 1,
+   "variant": "hc",
+   "real_rtl": true,
+   "y_last_cycles": 303,
+   "q_last_cycles": 321,
+   "production_adoption": false
+  }
+ },
+ "default": "opt-in: applied only in the recovery baseline; the SU (ot_hdc_v41x_vec) and its lowering are unchanged",
+ "note": "LA6 exact; core16_6a/b/c still running. Input hold remains the parent clock-balance check under su_norm_unit.sdc; no contextual parent closure claim."
+}

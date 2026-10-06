@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm-existing-context-parasitic-policy.v1",
+  "source_sha256": {
+    "tools/hbm_accel_smh_physical.py": "771b65a3b88370e88b67b374fbca2cb613d6643636a50fb57ecff8ec79a4c009",
+    "tools/w18/corner_sta.py": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29"
+  },
+  "smh_generator": {
+    "line": 309,
+    "multiple_STA_corners_in_one_session": false,
+    "separate_SS_FF_OpenROAD_processes": true,
+    "blanket_fix_required": false
+  },
+  "corner_sta": {
+    "multiple_STA_corners_in_one_session": false,
+    "separate_SS_FF_OpenROAD_processes": true
+  },
+  "child_parent_requirement": "Annotate actual parasitics in every defined active STA corner; multi-corner evaluation must use explicit read_spef -corner for each corner.",
+  "existing_die_GRT_IR_is_not_parent_STA": true,
+  "macro_clkQ": {
+    "SS_u30_ps_approx": [
+      608,
+      617
+    ],
+    "load_fF": [
+      2.88,
+      5.76
+    ],
+    "includes_internal_CTS": true,
+    "source": "Lagrange15465 same retained ODB/SPEF diagnosis; supplied owner facts"
+  },
+  "BC_annotation_diagnosis": {
+    "original_FF_hold_ps_approx": -0.671,
+    "explicit_BC_SPEF_FF_hold_ps_approx": 1.486,
+    "source": "15465a7eb",
+    "same_ODB_and_SPEF": true,
+    "setup_hold_uncertainty_ps": [
+      60,
+      25
+    ],
+    "period_ps": 833,
+    "original_failure_preserved": true,
+    "new_route": false
+  },
+  "contextual_input_hold_qualified": false,
+  "new_jobs_launched": false
+}

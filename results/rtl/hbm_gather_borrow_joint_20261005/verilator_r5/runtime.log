@@ -1,0 +1,8 @@
+BRIDGE state=1 grants=001 start=0 req=0 legal=0 frame=1 shared_fault=0
+BRIDGE state=2 grants=001 start=0 req=0 legal=0 frame=1 shared_fault=0
+READY predicates fault=1 bad=1 grant=1 release=0 release_match=1 req=0 legal=0 frame=1
+BAD_ROW row=11 code=000000000000000219 decoded=20000000000000022
+BRIDGE state=15 grants=001 start=0 req=0 legal=0 frame=1 shared_fault=0
+[480000] %Fatal: tb_hbm_gather_borrow_joint.sv:151: Assertion failed in tb_hbm_gather_borrow_joint.acquire: fault before first request state=15
+%Error: rtl/test/hbm_accel/tb_hbm_gather_borrow_joint.sv:151: Verilog $stop
+Aborting...

@@ -1,0 +1,17 @@
+{
+  "verdict": "FRONTEND_FAIL",
+  "numerical_verdict": "NOT_RUN",
+  "source_commit": "d5ecc19030b38cc77f114a8c0db269a20129e9d7",
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/r5a-p2-exact-r1",
+  "exit": 1,
+  "errors": [
+    "sequencer line91 comparison transformed into nonblocking assignment",
+    "sequencer line268 condition consumed into assignment",
+    "cascading end syntax line288"
+  ],
+  "retained": [
+    "refpb_build.log",
+    "refab_build.log"
+  ]
+}

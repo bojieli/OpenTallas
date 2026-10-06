@@ -1,0 +1,108 @@
+{
+  "utc": "2026-10-05T21:06:01.290572+00:00",
+  "verdict": "PASS_COMPONENT_RING_ONLY",
+  "rows": [
+    {
+      "name": "landing",
+      "width": 281,
+      "depth": 64,
+      "kind": 0,
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_s4_protected_ring",
+        "-P",
+        "tb_qwen_s4_protected_ring.WIDTH=281",
+        "-P",
+        "tb_qwen_s4_protected_ring.DEPTH=64",
+        "-P",
+        "tb_qwen_s4_protected_ring.KIND=0",
+        "-o",
+        "/tmp/qwen-s4-ring-k1by2xyr/landing.vvp",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/hdc/kv/ot_qwen_s4_checked_state.sv",
+        "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv",
+        "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ring.sv"
+      ],
+      "build_exit": 0,
+      "exit": 0
+    },
+    {
+      "name": "write",
+      "width": 289,
+      "depth": 16,
+      "kind": 1,
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_s4_protected_ring",
+        "-P",
+        "tb_qwen_s4_protected_ring.WIDTH=289",
+        "-P",
+        "tb_qwen_s4_protected_ring.DEPTH=16",
+        "-P",
+        "tb_qwen_s4_protected_ring.KIND=1",
+        "-o",
+        "/tmp/qwen-s4-ring-k1by2xyr/write.vvp",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/hdc/kv/ot_qwen_s4_checked_state.sv",
+        "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv",
+        "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ring.sv"
+      ],
+      "build_exit": 0,
+      "exit": 0
+    },
+    {
+      "name": "write_done",
+      "width": 9,
+      "depth": 64,
+      "kind": 2,
+      "build_argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_s4_protected_ring",
+        "-P",
+        "tb_qwen_s4_protected_ring.WIDTH=9",
+        "-P",
+        "tb_qwen_s4_protected_ring.DEPTH=64",
+        "-P",
+        "tb_qwen_s4_protected_ring.KIND=2",
+        "-o",
+        "/tmp/qwen-s4-ring-k1by2xyr/write_done.vvp",
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/hdc/kv/ot_qwen_s4_checked_state.sv",
+        "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv",
+        "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ring.sv"
+      ],
+      "build_exit": 0,
+      "exit": 0
+    }
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "5cffe2a3d030e940052e77ba31eff52c9ceeee55c51cd081c6eb7ab98ae178c8",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_ring.sv": "414af13fd7f611034680fae64fe708f8577ca8341650934461ee5f085a82bbcf",
+    "tools/qwen_stream4_protected_ring_check.py": "63c07b9e054246b699073becd8778b3c4ae9dc2ac66ecc363431dc7607ff8b4c",
+    "tools/qwen_stream4_protected_model.py": "10aa758936885b96235ff85a60dbc2abd58d774a65c3d6f52273cb0d3861f33d",
+    "results/rtl/qwen_stream4_protected_20261005/prebuild_model.json": "b94d3f8ceab38a225b03d718f0ec4d0dfd428cb7fbdef4c064c8113235140417"
+  },
+  "CLK_ps": 833.333,
+  "HCLK_ps": 1024,
+  "scope": "one full-depth ring each; ordered180, capacity-held admission pause, CE3, UE, valid wrong-PC seal, primary Gray pointer upset",
+  "adopted": false,
+  "whole_interface_exact32": false,
+  "physical_qualified": false,
+  "unimplemented": [
+    "per-PC write-cache/port wiring",
+    "shared descriptor/GO protection and exact inventory",
+    "actual warm-reset boundary binding"
+  ]
+}

@@ -4167,7 +4167,7 @@
    "pointer": "bases.stages_430_manhattan.ds_gate_AR_priced_us",
    "unit": "us",
    "status": "partial",
-   "note": "no-detour floor of the same r8 floorplan; the routed bound is the separate figure"
+   "note": "no-detour floor of the same r14b floorplan; the routed bound is the separate figure"
   },
   {
    "target": "hbm_ds",
@@ -4178,24 +4178,24 @@
    "pointer": "compositions.ds_matched.rows.gate.MTP_tok_s_priced",
    "unit": "tok/s",
    "status": "partial",
-   "note": "same per-token traversals added to the MTP step (P6 verify walk has the AR node sequence)"
+   "note": "same per-token traversals added to the MTP step (P6 verify walk has the AR node sequence); MTP tok/s at the gate tau 4.159"
   },
   {
    "target": "hbm_ds",
    "section": "rate",
    "key": "die_wire_added_us",
-   "label": "DS HBM die-level wire stages added to the AR token (r8 floorplan, routed bound)",
+   "label": "DS HBM die-level wire stages added to the AR token (r14b floorplan, routed bound)",
    "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
    "pointer": "compositions.ds_matched.added_us",
    "unit": "us",
    "status": "partial",
-   "note": "longest-bundle bound at GRT i50 (overflow 128, not closed); Manhattan floor 30.61 us in wire_stages.json bases"
+   "note": "longest-bundle bound at GRT k16 i50 (overflow 0); median 36.78 us and Manhattan floor 25.91 us in wire_stages.json bases (r8: 102.41 / 67.55 / 30.61 at overflow 128)"
   },
   {
    "target": "hbm_ds",
    "section": "physical",
    "key": "die_mm2",
-   "label": "HBM accelerator compute die area (r8 floorplan, 858 mm2 reticle)",
+   "label": "HBM accelerator compute die area (r14b floorplan, 858 mm2 reticle)",
    "path": "results/rtl/hbm_accel_die_floorplan_20261005/floorplan.json",
    "pointer": "die.mm2",
    "unit": "mm2",
@@ -4211,7 +4211,7 @@
    "pointer": "qwen_8k.b_TP4_iso_silicon.ar_tok_s_priced",
    "unit": "tok/s",
    "status": "partial",
-   "note": "HA8 W12 vehicle mapped to the SM die collective/service geometry; W12 tile die itself not floorplanned"
+   "note": "HA8 W12 vehicle mapped to the SM die collective/service geometry; the W12 tile die is a separate floorplan (Qwen HBM tile die)"
   },
   {
    "target": "hbm_qwen",

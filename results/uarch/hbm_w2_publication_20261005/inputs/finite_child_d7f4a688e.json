@@ -1,0 +1,251 @@
+{
+  "W2": {
+    "CTS_IO_cell_area_budget_um2": 435.69414,
+    "CTS_buffers_budget": 1843,
+    "IO_buffers_budget": 2426,
+    "MACs_per_cycle": 0,
+    "added_boundary_register_cycles": 0,
+    "added_memory_ports": 0,
+    "buffer_budget_is_analytical": true,
+    "cell_body_budget_um2": 24690.884900000005,
+    "core_bbox_um": [
+      11112.336,
+      9802.08,
+      11371.536,
+      10061.28
+    ],
+    "core_relative_um": [
+      250.56,
+      43.2,
+      509.76,
+      302.4
+    ],
+    "external_signal_bits": 1213,
+    "gross_bbox_um": [
+      11095.056,
+      9784.8,
+      11388.816,
+      10078.56
+    ],
+    "gross_relative_um": [
+      233.28,
+      25.92,
+      527.04,
+      319.68
+    ],
+    "hold_repair_cell_area_budget_um2": 1234.5442450000003,
+    "internal_fanout_budget": 7,
+    "logical_instance": "g_on.g_die[d].u_w2_sink",
+    "macro_abstract_installed": false,
+    "measured_fanout": null,
+    "measured_receiver_load_fF": null,
+    "optimisation_default_off": true,
+    "physical_reservation": "hb_cmdproc/w2",
+    "placement_utilisation_ceiling": 0.5,
+    "replicas_per_DS_die": 1,
+    "residual_cell_capacity_um2": 7231.1967149999955,
+    "state_bits_preoptimization": 5616,
+    "usable_outline_um2": 67184.64
+  },
+  "actual_loaded_clock_qualified": false,
+  "allocation_checks": {
+    "channels_fit": true,
+    "claims_disjoint": true,
+    "containment": true,
+    "retained_original_area": true
+  },
+  "boundary_transport": {
+    "RTL_stage_installation": "caller owner must insert/price transport cuts before clock qualification; reservation alone installs no FF",
+    "extra_roundtrip_cycles_per_transaction_budget": 4,
+    "measured_wire_delay_ps": null,
+    "parent_port_binding": "provider arbitration/response queue, result ingress, shared-owner lease and CP callbacks terminate at gateway; no extra memory port",
+    "roundtrip_target_ns": 3.3333333333333335,
+    "routed_envelope_um": 600,
+    "source_receiver_gateway_bbox_um": [
+      10879.056,
+      10104.48,
+      11388.816,
+      10277.28
+    ],
+    "stage_quantum_um": 430.56,
+    "wire_stage_budget_each_direction": 2
+  },
+  "canonical_path": "results/rtl/hbm_child_contract_20261005/child_reservations.json",
+  "canonical_sha256": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f",
+  "channels": [
+    {
+      "available_signal_tracks": 1218,
+      "bbox_um": [
+        10879.056,
+        9802.08,
+        11112.336,
+        9888.48
+      ],
+      "child": "W2",
+      "clock_other_tracks_reserved": 64,
+      "competing_local_signal_tracks": 0,
+      "demand_tracks": 614,
+      "exclusive_reservation": true,
+      "group": "provider",
+      "layer": "M6",
+      "offset_um": 0.016,
+      "pitch_um": 0.064,
+      "ports": [
+        "req_v",
+        "req_r",
+        "req",
+        "rsp_v",
+        "rsp_r",
+        "rsp"
+      ],
+      "raw_tracks": 1350,
+      "relative_bbox_um": [
+        17.28,
+        43.2,
+        250.56,
+        129.6
+      ],
+      "residual_tracks": 604,
+      "via_escape_tracks_reserved": 68
+    },
+    {
+      "available_signal_tracks": 1219,
+      "bbox_um": [
+        11112.336,
+        10061.28,
+        11198.736,
+        10104.48
+      ],
+      "child": "W2",
+      "clock_other_tracks_reserved": 64,
+      "competing_local_signal_tracks": 0,
+      "demand_tracks": 302,
+      "exclusive_reservation": true,
+      "group": "result",
+      "layer": "M7",
+      "offset_um": 0.016,
+      "pitch_um": 0.064,
+      "ports": [
+        "result_v",
+        "result_op",
+        "result_row",
+        "result_data",
+        "native_done"
+      ],
+      "raw_tracks": 1351,
+      "relative_bbox_um": [
+        250.56,
+        302.4,
+        336.96,
+        345.6
+      ],
+      "residual_tracks": 917,
+      "via_escape_tracks_reserved": 68
+    },
+    {
+      "available_signal_tracks": 1219,
+      "bbox_um": [
+        11198.736,
+        10061.28,
+        11285.136,
+        10104.48
+      ],
+      "child": "W2",
+      "clock_other_tracks_reserved": 64,
+      "competing_local_signal_tracks": 0,
+      "demand_tracks": 297,
+      "exclusive_reservation": true,
+      "group": "metadata",
+      "layer": "M7",
+      "offset_um": 0.016,
+      "pitch_um": 0.064,
+      "ports": [
+        "owned",
+        "installed",
+        "reserve_v",
+        "reserve_r",
+        "pair_op",
+        "rows_a",
+        "rows_b",
+        "op_a",
+        "op_b",
+        "base_a",
+        "limit_a",
+        "base_b",
+        "limit_b",
+        "provider_tag",
+        "frame",
+        "source_permit",
+        "retained",
+        "done",
+        "quiet",
+        "fault",
+        "retire_v",
+        "retire_r"
+      ],
+      "raw_tracks": 1351,
+      "relative_bbox_um": [
+        336.96,
+        302.4,
+        423.36,
+        345.6
+      ],
+      "residual_tracks": 922,
+      "via_escape_tracks_reserved": 68
+    }
+  ],
+  "clock": {
+    "IO_false_paths_allowed": false,
+    "actual_propagated_insertion_ps": null,
+    "actual_skew_ps": null,
+    "added_CDCs": 0,
+    "added_register_stages": 0,
+    "capacitance_basis": "32um M6 segment plus seven SS DFF D pins; budget, not measured actual load",
+    "domain": "streaming",
+    "hold_uncertainty_ps": 25,
+    "input_delay_max_ps": 166.66666666666669,
+    "input_delay_min_ps": 0,
+    "insertion_budget_ps": 100,
+    "local_skew_budget_ps": 10,
+    "max_segment_um": 32,
+    "output_capacitance_budget_fF": 9.673192,
+    "output_delay_max_ps": 166.66666666666669,
+    "output_delay_min_ps": 0,
+    "parent_port": "clk_sm",
+    "period_ps": 833.3333333333334,
+    "root_reset": "rst_sm_n",
+    "setup_uncertainty_ps": 60,
+    "skew_budget_must_be_verified": true,
+    "source_phase_ps": 0,
+    "warm_reset": "cp_reset_n",
+    "warm_reset_must_not_clear_accepted_debt": true
+  },
+  "current_sink_changed_admission_gate_only": true,
+  "latency": {
+    "CP_added_local_cycles": 1,
+    "CP_added_target_ns": 0.8333333333333334,
+    "W2_fourrow_target_delta_ns": 28.333333333333336,
+    "W2_measured_fourrow_added_edges": 34,
+    "W2_whole_token_publication_count": null,
+    "note": "Component calendar projection at target clock; no whole-token multiplicity claim",
+    "whole_token_added_latency_ns": null
+  },
+  "owner": "Turing",
+  "parent": {
+    "bbox_um": [
+      10861.776,
+      9758.88,
+      12676.152,
+      11162.856
+    ],
+    "clock_port": "clk_sm",
+    "external_parent_trunks": "M8/M9 over service block; no released PG or trunk credit",
+    "instance": "hb_cmdproc",
+    "lower_metal": "M6 horizontal/M7 vertical local exclusive reservation",
+    "original_claim_preserved": true,
+    "source_snapshot": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv"
+  },
+  "slot_and_ports_and_state_budget_unchanged": true,
+  "source_bound_sink_sha256": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
+  "source_commit": "d7f4a688e"
+}

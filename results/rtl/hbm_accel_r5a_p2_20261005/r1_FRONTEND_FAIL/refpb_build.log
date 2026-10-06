@@ -1,0 +1,15 @@
+%Error: /srv/opentallas-scratch2/jobs/r5a-p2-exact-r1/source/rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv:91:41: syntax error, unexpected begin, expecting IDENTIFIER-for-type
+   91 |     wire rd_block  = REF_MODE ? 1'b0 : (begin ref_c <= RW'(T_RP + T_RTP + 2)); ref_c_bar <= ~(RW'(T_RP + T_RTP + 2))); end
+      |                                         ^~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch2/jobs/r5a-p2-exact-r1/source/rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv:268:15: syntax error, unexpected begin, expecting IDENTIFIER-for-type
+  268 |           if (begin j[6:2] == 5'd31) done[rd_bank] <= 1'b1; j_bar[6:2] == 5'd31) done[rd_bank] <= ~(1'b1); end
+      |               ^~~~~
+%Error: /srv/opentallas-scratch2/jobs/r5a-p2-exact-r1/source/rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv:268:80: syntax error, unexpected ')'
+  268 |           if (begin j[6:2] == 5'd31) done[rd_bank] <= 1'b1; j_bar[6:2] == 5'd31) done[rd_bank] <= ~(1'b1); end
+      |                                                                                ^
+%Error: /srv/opentallas-scratch2/jobs/r5a-p2-exact-r1/source/rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv:288:5: syntax error, unexpected end
+  288 |     end
+      |     ^~~
+%Error: Cannot continue
+        ... This fatal error may be caused by the earlier error(s); resolve those first.

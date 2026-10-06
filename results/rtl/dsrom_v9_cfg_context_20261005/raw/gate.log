@@ -1,0 +1,5 @@
+PASS cfgROM original-loader cycle equality PQ0/PQ1 checks=6070/6070 words=3837/3791 reads=3846/3800 go=201/232 faults=0/3765 full_phases64_reads25_each
+- physical/dsrom_v9_cfg_context/tb_cfgrom_context.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.007 s; speed 623.807 us/s
+- Verilator: cpu 0.008 s on 1 threads; alloced 1018 MB

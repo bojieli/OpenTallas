@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "full_u25",
+  "host": "ot-epyc1tb",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch/claude/hbm-su-c12/src",
+  "original_physical_status": "not_met",
+  "signoff_ss_ff": false,
+  "SS_setup_ps": 15.406454,
+  "FF_hold_ps": -4.862527,
+  "FF_violating_d_pins": 16,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "original_io_false_paths": true,
+  "full_SU_context_qualified": false,
+  "actual_qualified_rate_comparison": null,
+  "adopted": false,
+  "note": "Actual full c12 route fails FF hold in independent single-corner extracted STA. Original native failure preserved. Not a metadata-only or unannotated BC signoff: separate FF evaluator also fails. No margin waiver, automatic tuning or rebuild. Other already running mandatory candidates retained."
+}

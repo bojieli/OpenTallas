@@ -1,0 +1,46 @@
+{
+  "baseline": "native-parent-r4",
+  "resume_variant": "r5",
+  "returncode": 2,
+  "earliest_stage": "2_4_floorplan_pdn",
+  "scalar_array_collision_fixed": true,
+  "all_61_original_source_pins_unchanged": true,
+  "smoke_replayed": false,
+  "synthesis_repeated": false,
+  "mapped_netlist_sha256": "3b5b8fc95fb5b84b292f3a4bc598ce94baa050f29c7b228ee38bfb4640bd7a51",
+  "actual_cause": "Slang gives source fq register its engine output alias u_qx.u_e.fault$_DFF_PN0_; name-only guard rejects the real register",
+  "actual_register": {
+    "name": "u_qx.u_e.fault$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "CLK": "clk",
+    "D": "_070842_",
+    "QN": "_047077_",
+    "RESETN": "u_qx.u_e.g_qb.rst_q"
+  },
+  "actual_D_cone": [
+    {
+      "cell": "_397490_",
+      "master": "INVx1_ASAP7_75t_R",
+      "A": "_206685_",
+      "Y": "_070842_"
+    },
+    {
+      "cell": "_397489_",
+      "master": "AND3x1_ASAP7_75t_R",
+      "A": "_047047_",
+      "B": "_047054_",
+      "C": "_047076_",
+      "Y": "_206685_"
+    }
+  ],
+  "real_QN_producers": {
+    "_047047_": "u_qx.u_e.g_mac[0].g_qyb.bkf_r$_DFF_PN0_",
+    "_047054_": "u_qx.u_e.g_mac[1].g_qyb.bkf_r$_DFF_PN0_",
+    "_047076_": "u_qx.u_e.g_qo.g_qyf.ffq$_DFF_PN0_"
+  },
+  "semantic_relation": "fq_next = ffq | bkf0 | bkf1; AND3 of QN then inversion",
+  "correction": "Accept the exact mapped output alias only with unique real DFF, exact AND3/INV cone, actual ffq + both bkf register identities and common root clock. No constant waiver.",
+  "engine_RTL_changed": false,
+  "full_field_missing_input_clocks": true,
+  "physical_qualified": false
+}

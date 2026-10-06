@@ -1,0 +1,55 @@
+{
+  "source_commit": "72864b2627d044533f8d87ae8ee2d4846c74c5dd",
+  "routes": {
+    "r6a_570_lead1": {
+      "host": "ot-epyc2",
+      "root": "/srv/opentallas-scratch2/scratch/claude/qwen-slab-route/r6a_570_lead1",
+      "driver_exit": 0,
+      "physical_closed": false,
+      "SS_setup_ps": 21.18,
+      "FF_hold_ps": 7.67,
+      "timing_closed": true,
+      "verdict": "FAIL_ROUTED_COMPONENT",
+      "adopted": false,
+      "context": "one fullsize slab port group; no full-die/core closure credit"
+    },
+    "r6b_570_lead2": {
+      "host": "ot-epyc2",
+      "root": "/srv/opentallas-scratch2/scratch/claude/qwen-slab-route/r6b_570_lead2",
+      "driver_exit": 0,
+      "physical_closed": false,
+      "SS_setup_ps": 20.03,
+      "FF_hold_ps": 4.1,
+      "timing_closed": true,
+      "verdict": "FAIL_ROUTED_COMPONENT",
+      "adopted": false,
+      "context": "one fullsize slab port group; no full-die/core closure credit"
+    },
+    "r6d_456_lead2": {
+      "host": "ot-epyc1tb",
+      "root": "/srv/opentallas-scratch/claude/qwen-slab-route/r6d_456_lead2",
+      "driver_exit": 0,
+      "physical_closed": false,
+      "SS_setup_ps": 6.64,
+      "FF_hold_ps": 8.21,
+      "timing_closed": true,
+      "verdict": "FAIL_ROUTED_COMPONENT",
+      "adopted": false,
+      "context": "one fullsize slab port group; no full-die/core closure credit"
+    },
+    "r6c_456_lead1": {
+      "host": "ot-epyc1tb",
+      "root": "/srv/opentallas-scratch/claude/qwen-slab-route/r6c_456_lead1",
+      "driver_exit": 0,
+      "physical_closed": false,
+      "SS_setup_ps": -18.02,
+      "FF_hold_ps": -7.77,
+      "timing_closed": false,
+      "verdict": "FAIL_ROUTED_COMPONENT",
+      "adopted": false,
+      "context": "one fullsize slab port group; no full-die/core closure credit"
+    }
+  },
+  "adopted": false,
+  "scope": "actual inherited r6 jobs only; no source/clock/model/nearHBM change"
+}

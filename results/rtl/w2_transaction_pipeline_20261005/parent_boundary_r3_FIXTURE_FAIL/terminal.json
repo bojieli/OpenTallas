@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL_FIXTURE_CLOCK",
+  "runtime_rc": 1,
+  "cycle": 2001,
+  "writes": 0,
+  "reads": 0,
+  "actual_request_FIFO_wptr": 1,
+  "actual_request_FIFO_rptr": 1,
+  "held_shared_grant": 4,
+  "retained": 1,
+  "source_fault": 0,
+  "cause": "Async CDC request consumed at clk_mem but RAM sampled clk_sm. Provider request/response sequential block must use actual memory clock; no payload oracle or RTL delay adjustment."
+}

@@ -1,0 +1,240 @@
+{
+  "verdict": "PASS_RETAINED_PROTECTIVE_RAILS_CANONICAL_ONLY",
+  "full_parent_json_sha256": "a4ae1db5aef900b3e74d556f2a516a2a6eb5de5c3f2b3a2e3e2e4c49b7812cf7",
+  "generic_FF_state_bits": 6738,
+  "generic_memory_state_bits": 8320,
+  "total_state_bits": 15058,
+  "model_upper_bits": 20000,
+  "technology_mapped": false,
+  "CTS": false,
+  "SSFF": false,
+  "rails": {
+    "u_ld.fault": {
+      "bits": [
+        "0"
+      ],
+      "flop_drivers": []
+    },
+    "u_ld.pend": {
+      "bits": [
+        "0"
+      ],
+      "flop_drivers": []
+    },
+    "g_qx.g_qo.busy_d": {
+      "bits": [
+        4197,
+        6601
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_qo.busy_d",
+          "type": "$adff",
+          "Q": [
+            4197,
+            6601
+          ],
+          "D": [
+            1814,
+            4197
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "00",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000010"
+          }
+        }
+      ]
+    },
+    "g_qx.g_qo.ff_d": {
+      "bits": [
+        6602,
+        6603
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_qo.ff_d",
+          "type": "$adff",
+          "Q": [
+            6602,
+            6603
+          ],
+          "D": [
+            1815,
+            6602
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "00",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000010"
+          }
+        }
+      ]
+    },
+    "g_qx.g_qo.ffq": {
+      "bits": [
+        4285
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_qo.ffq",
+          "type": "$adff",
+          "Q": [
+            4285
+          ],
+          "D": [
+            6602
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "g_qx.g_qo.fq": {
+      "bits": [
+        6515
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_qo.fq",
+          "type": "$adff",
+          "Q": [
+            6515
+          ],
+          "D": [
+            4286
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "g_qx.g_mac[0].bkf_r": {
+      "bits": [
+        4282
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_mac[0].bkf_r",
+          "type": "$adff",
+          "Q": [
+            4282
+          ],
+          "D": [
+            1816
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "g_qx.g_mac[1].bkf_r": {
+      "bits": [
+        4283
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_mac[1].bkf_r",
+          "type": "$adff",
+          "Q": [
+            4283
+          ],
+          "D": [
+            1817
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "u_return.u_n.fault": {
+      "bits": [
+        6516
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$auto$ff.cc:337:slice$576",
+          "type": "$adffe",
+          "Q": [
+            6516
+          ],
+          "D": [
+            "1"
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "sticky_fault": {
+      "bits": [
+        4198
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$auto$ff.cc:337:slice$575",
+          "type": "$adffe",
+          "Q": [
+            4198
+          ],
+          "D": [
+            "1"
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    },
+    "g_qx.g_qb.rst_reg": {
+      "bits": [
+        4130
+      ],
+      "flop_drivers": [
+        {
+          "cell": "$driver$g_qx.g_mac[1].g_mz.u_rst.q",
+          "type": "$adff",
+          "Q": [
+            4130
+          ],
+          "D": [
+            "1"
+          ],
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          }
+        }
+      ]
+    }
+  }
+}

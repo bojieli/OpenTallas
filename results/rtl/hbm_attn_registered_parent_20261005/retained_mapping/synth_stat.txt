@@ -1,0 +1,155 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== $paramod\ot_attn_tile_registered_parent\REGISTER_PARENT=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    69772        -    37264        - wires
+   136587        -    39399        - wire bits
+    35194        -    35098        - public wires
+   102009        -    37233        - public wire bits
+      110        -       14        - ports
+    66925        -     2149        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    69663 4.59E+05     4875 4.45E+05 cells
+      529   38.564      529   38.564   BUFx2_ASAP7_75t_R
+    34540 1.31E+04     2164  820.329   DFFASRHQNx1_ASAP7_75t_R
+    34556 1.51E+03     2164   94.653   INVx1_ASAP7_75t_R
+       21    0.919        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+       16 4.44E+05       16 4.44E+05   ot_attn_hgrp_m6h1
+       20 1.37E+04       20        - submodules
+       16  1.1E+04       16        -   ot_attn_parent_head_bank
+        4 2.74E+03        4        -   ot_attn_parent_row_bank
+
+   Chip area for module '$paramod\ot_attn_tile_registered_parent\REGISTER_PARENT=s32'00000000000000000000000000000001': 458810.205020
+     of which used for sequential elements: 13093.423200 (2.85%)
+
+=== ot_attn_parent_head_bank ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     1626        -     1626        - wires
+     4860        -     4860        - wire bits
+        5        -        5        - public wires
+     3239        -     3239        - public wire bits
+        5        -        5        - ports
+     3239        -     3239        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     3240  684.633     3240  684.633 cells
+     1619  613.731     1619  613.731   DFFASRHQNx1_ASAP7_75t_R
+     1620   70.859     1620   70.859   INVx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\ot_attn_parent_head_bank': 684.633060
+     of which used for sequential elements: 613.730520 (89.64%)
+
+=== ot_attn_parent_row_bank ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     1623        -     1623        - wires
+     4857        -     4857        - wire bits
+        4        -        4        - public wires
+     3238        -     3238        - public wire bits
+        4        -        4        - ports
+     3238        -     3238        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     3237  684.167     3237  684.167 cells
+     1618  613.351     1618  613.351   DFFASRHQNx1_ASAP7_75t_R
+     1618   70.771     1618   70.771   INVx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\ot_attn_parent_row_bank': 684.166500
+     of which used for sequential elements: 613.351440 (89.65%)
+
+=== ot_attn_registered_parent_phys ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    73541        -     3769        - wires
+   140356        -     3769        - wire bits
+    37343        -     2149        - public wires
+   104158        -     2149        - public wire bits
+      112        -        2        - ports
+    66927        -        2        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    72901 4.59E+05     3238  684.341 cells
+      529   38.564        -        -   BUFx2_ASAP7_75t_R
+    36158 1.37E+04     1618  613.351   DFFASRHQNx1_ASAP7_75t_R
+    36174 1.58E+03     1618   70.771   INVx1_ASAP7_75t_R
+       22    0.962        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        -        -   TIELOx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+       16 4.44E+05        -        -   ot_attn_hgrp_m6h1
+        1 4.59E+05        1        - submodules
+        1 4.59E+05        1        -   $paramod\ot_attn_tile_registered_parent\REGISTER_PARENT=s32'00000000000000000000000000000001
+
+   Chip area for module '\ot_attn_registered_parent_phys': 459494.546480
+     of which used for sequential elements: 13706.774640 (2.98%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    72901 4.59E+05     3238  684.341 ot_attn_registered_parent_phys
+    69663 4.59E+05     4875 4.45E+05 $paramod\ot_attn_tile_registered_parent\REGISTER_PARENT=s32'00000000000000000000000000000001
+     3240  684.633     3240  684.633   ot_attn_parent_head_bank
+     3237  684.167     3237  684.167   ot_attn_parent_row_bank
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    73541        -     3769        - wires
+   140356        -     3769        - wire bits
+    37343        -     2149        - public wires
+   104158        -     2149        - public wire bits
+      112        -        2        - ports
+    66927        -        2        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    72901 4.59E+05     3238  684.341 cells
+      529   38.564        -        -   BUFx2_ASAP7_75t_R
+    36158 1.37E+04     1618  613.351   DFFASRHQNx1_ASAP7_75t_R
+    36174 1.58E+03     1618   70.771   INVx1_ASAP7_75t_R
+       22    0.962        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        -        -   TIELOx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+       16 4.44E+05        -        -   ot_attn_hgrp_m6h1
+        1 4.59E+05        1        - submodules
+        1 4.59E+05        1        -   $paramod\ot_attn_tile_registered_parent\REGISTER_PARENT=s32'00000000000000000000000000000001
+
+   Chip area for top module '\ot_attn_registered_parent_phys': 459494.546480
+     of which used for sequential elements: 13706.774640 (2.98%)
+

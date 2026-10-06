@@ -1,0 +1,34 @@
+{
+ "steps": [
+  {
+   "name": "verilate",
+   "seconds": 161.6,
+   "returncode": 0
+  },
+  {
+   "name": "make",
+   "seconds": 552.5,
+   "returncode": 0
+  },
+  {
+   "name": "link",
+   "seconds": 8.9,
+   "returncode": 0
+  }
+ ],
+ "params": [
+  "-GFAST=1",
+  "-GPP=1",
+  "-GBP=0",
+  "-GNP=32",
+  "-GR=1",
+  "-GNBF=5",
+  "-GPHW=2",
+  "-GVAW=16",
+  "-GQELEM=1",
+  "-GQXV=10"
+ ],
+ "qelem": 10,
+ "tb_sha256": "aab8936720401d09ea8f04ee639753e3e36c3093cc54edd0a18ed25a90ec4230",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

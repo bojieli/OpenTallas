@@ -1,0 +1,12 @@
+FAULT_PASS family=0 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=1 retained_valid=0ffffff retained_dirty=1fffffe
+FAULT_PASS family=2 retained_valid=1ffffff retained_dirty=0fffffe
+FAULT_PASS family=3 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=4 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=5 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=6 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=7 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=8 retained_valid=1ffffff retained_dirty=1fffffe
+FAULT_PASS family=9 retained_valid=1ffffff retained_dirty=1fffffe
+PASS protected full25 AO 10 fault families retained debt/no fake ACK/cold-only recovery
+tb_w5_ao_protection.sv:58: $finish called at 840000 (1ps)

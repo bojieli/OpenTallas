@@ -1,0 +1,142 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -1.1610076233736777e-9
+OT_TNS -1.8553471363702556e-6
+Startpoint: por_n (input port clocked by core_clk)
+Endpoint: on.code[7][30]$_DFF_PN0_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 166.67  166.67 ^ input external delay
+   0.00  166.67 ^ por_n (in)
+  59.27  225.93 ^ input2070/Y (BUFx3_ASAP7_75t_R)
+  76.83  302.76 ^ place20464/Y (BUFx6f_ASAP7_75t_R)
+  91.11  393.88 ^ place20459/Y (BUFx6f_ASAP7_75t_R)
+  82.41  476.29 ^ place20458/Y (BUFx3_ASAP7_75t_R)
+  90.42  566.71 ^ place20457/Y (BUFx3_ASAP7_75t_R)
+   2.66  569.37 ^ on.code[7][30]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         569.37   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  47.81  881.14 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.65  920.79 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  36.89  957.68 ^ clkbuf_3_5_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.38  997.06 ^ clkbuf_4_11__f_clk/Y (BUFx24_ASAP7_75t_R)
+  43.05 1040.11 ^ clkbuf_leaf_40_clk/Y (BUFx24_ASAP7_75t_R)
+   0.37 1040.48 ^ on.code[7][30]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00  980.48   clock uncertainty
+   0.00  980.48   clock reconvergence pessimism
+  30.15 1010.63   library recovery time
+        1010.63   data required time
+---------------------------------------------------------
+        1010.63   data required time
+        -569.37   data arrival time
+---------------------------------------------------------
+         441.26   slack (MET)
+
+
+Startpoint: on.code[24][49]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: on.code[24][71]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  49.84   49.84 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.61   91.45 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.32  129.77 ^ clkbuf_3_5_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.66  171.43 ^ clkbuf_4_11__f_clk/Y (BUFx24_ASAP7_75t_R)
+  51.46  222.89 ^ clkbuf_leaf_47_clk/Y (BUFx24_ASAP7_75t_R)
+   2.05  224.94 ^ on.code[24][49]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 103.39  328.34 v on.code[24][49]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  60.40  388.74 ^ _25488_/Y (XOR2x2_ASAP7_75t_R)
+  57.10  445.83 v _25489_/Y (XNOR2x2_ASAP7_75t_R)
+  36.86  482.70 v _25490_/Y (XNOR2x1_ASAP7_75t_R)
+  43.54  526.23 v _25498_/Y (XNOR2x1_ASAP7_75t_R)
+  61.59  587.82 v _25505_/Y (XNOR2x1_ASAP7_75t_R)
+  46.69  634.51 v rebuffer21680/Y (BUFx3_ASAP7_75t_R)
+  29.43  663.94 v rebuffer21679/Y (BUFx2_ASAP7_75t_R)
+  32.06  695.99 v _25759_/Y (AND3x1_ASAP7_75t_R)
+  32.87  728.86 v place16241/Y (BUFx6f_ASAP7_75t_R)
+  36.90  765.76 v _25843_/Y (OA21x2_ASAP7_75t_R)
+  57.10  822.85 v _25845_/Y (OR4x1_ASAP7_75t_R)
+  44.51  867.36 v _25851_/Y (AO22x1_ASAP7_75t_R)
+  53.80  921.16 v _30066_/Y (AO32x1_ASAP7_75t_R)
+  36.03  957.19 v rebuffer21681/Y (BUFx2_ASAP7_75t_R)
+  26.19  983.39 v place14051/Y (BUFx6f_ASAP7_75t_R)
+  37.02 1020.41 ^ _30072_/Y (NOR3x2_ASAP7_75t_R)
+  59.03 1079.44 ^ _30073_/Y (OR2x6_ASAP7_75t_R)
+  47.56 1127.00 ^ place13182/Y (BUFx4f_ASAP7_75t_R)
+  50.84 1177.85 ^ place13168/Y (BUFx2_ASAP7_75t_R)
+  43.07 1220.91 ^ _39961_/Y (OA211x2_ASAP7_75t_R)
+  70.71 1291.62 ^ _39962_/Y (AO21x1_ASAP7_75t_R)
+  75.85 1367.48 v _41688_/Y (XNOR2x2_ASAP7_75t_R)
+  36.01 1403.49 v _41690_/Y (OA21x2_ASAP7_75t_R)
+  56.37 1459.85 v _41709_/Y (OR3x1_ASAP7_75t_R)
+  59.20 1519.06 v _41754_/Y (OR4x1_ASAP7_75t_R)
+  74.89 1593.95 v _41911_/Y (OR4x1_ASAP7_75t_R)
+ 117.15 1711.10 v _42236_/Y (OR5x1_ASAP7_75t_R)
+  56.70 1767.80 v place12135/Y (BUFx6f_ASAP7_75t_R)
+  91.63 1859.43 v _44008_/Y (OR5x1_ASAP7_75t_R)
+  30.91 1890.34 v _44010_/Y (AND4x1_ASAP7_75t_R)
+  50.17 1940.51 v _44011_/Y (OR3x1_ASAP7_75t_R)
+  37.32 1977.83 v _44012_/Y (XNOR2x1_ASAP7_75t_R)
+  39.20 2017.03 v _44013_/Y (XNOR2x1_ASAP7_75t_R)
+  39.25 2056.28 v _47805_/Y (XNOR2x1_ASAP7_75t_R)
+  39.38 2095.65 v _47806_/Y (XNOR2x1_ASAP7_75t_R)
+  16.93 2112.58 ^ _47807_/Y (NAND2x2_ASAP7_75t_R)
+   0.04 2112.62 ^ on.code[24][71]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+        2112.62   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  47.81  881.14 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.48  920.63 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.08  957.71 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.74  996.45 ^ clkbuf_4_14__f_clk/Y (BUFx24_ASAP7_75t_R)
+  40.32 1036.77 ^ clkbuf_leaf_61_clk/Y (BUFx24_ASAP7_75t_R)
+   1.05 1037.82 ^ on.code[24][71]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00  977.82   clock uncertainty
+   2.03  979.85   clock reconvergence pessimism
+ -28.24  951.62   library setup time
+         951.62   data required time
+---------------------------------------------------------
+         951.62   data required time
+        -2112.62   data arrival time
+---------------------------------------------------------
+        -1161.01   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 2455
+OT_WS_REG_D -1161.007568
+OT_WS_OUT -1133.213013
+OT_WS_R2R -1161.007568
+OT_WS_I2R 441.256470

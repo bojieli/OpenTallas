@@ -1,0 +1,50 @@
+{
+  "basis": "results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json",
+  "basis_sha256": "962e28866b66d7bba5a34839370905e6fd5744aab2663108eead11a81dbdc562",
+  "composed_AR_us": 441.505,
+  "composed_MTP_step_us": 1002.401,
+  "change": "Opt-in combinational kept-prefix round increment and parallel exponent carry cases only; same 11-cycle bterm, same IL8 accumulator/order.",
+  "added_cycles": 0,
+  "added_register_bits": 0,
+  "added_memory_bytes_per_cycle": 0,
+  "added_boundary_bits_per_cycle": 0,
+  "added_replicas": 0,
+  "replicated_bterm_lanes": 64,
+  "prefix_inc24_and_nodes": 94,
+  "each_prefix_add12_groups": 37,
+  "parallel_exponent_adders_per_lane": 2,
+  "area": "Combinational mapping delta pending synthesis measurement in existing 319.68x509.76 tile slot; no slot enlargement or closure claim.",
+  "adopt": false,
+  "unified_model": {
+    "schema": "opentallas.hbm.smh.round_prefix.price.v1",
+    "basis": "results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json",
+    "replicas": 64,
+    "bterm_latency_cycles": 11,
+    "accumulator_IL": 8,
+    "added_cycles": 0,
+    "added_register_bits": 0,
+    "MACs_per_cycle_delta": 0,
+    "memory_bytes_per_cycle_delta": 0,
+    "boundary_bits_per_cycle_delta": 0,
+    "boundary_track_delta": 0,
+    "inc24_prefix_AND_nodes": 94,
+    "exponent12_prefix_groups_per_adder": 37,
+    "parallel_exponent_adders_per_lane": 2,
+    "new_mux_bits_per_lane": 12,
+    "new_logic_gate_reservation_per_lane": 512,
+    "tile_bterm_lanes": 4,
+    "tile_new_logic_gate_reservation": 2048,
+    "tile_die_um": [
+      319.68,
+      509.76
+    ],
+    "area_and_slot_fit": "Map reserved gates using actual WC cells; measure mapping delta before route; no area or fit PASS inferred.",
+    "latency_composition_delta_us": 0,
+    "physical_adopted": false,
+    "constraints": {
+      "period_ps": 833,
+      "SS_setup_uncertainty_ps": 60,
+      "FF_hold_uncertainty_ps": 25
+    }
+  }
+}

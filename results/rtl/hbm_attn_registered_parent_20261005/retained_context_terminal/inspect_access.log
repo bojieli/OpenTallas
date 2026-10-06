@@ -1,0 +1,47 @@
+(42.39404296875, 48.41064453125, 61.76806640625)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+UNITS 1000
+TRACK_LAYER M3 WIDTH 18 SPACING 18
+TRACK_X M3 9 37475 36
+TRACK_Y M3 9 37499 36
+TRACK_LAYER M4 WIDTH 24 SPACING 24
+TRACK_X M4 45 37474 36
+TRACK_Y M4 12 28125 48
+TRACK_LAYER M5 WIDTH 24 SPACING 24
+TRACK_X M5 12 28106 48
+TRACK_Y M5 12 28125 48
+MACRO u_tile/registered_parent.row\[0\].head\[0\].u_g 5000 5000 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[0\].head\[1\].u_g 352982 5000 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[0\].head\[2\].u_g 700964 5000 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[0\].head\[3\].u_g 1048946 5000 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[1\].head\[0\].u_g 5000 352982 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[1\].head\[1\].u_g 352982 352982 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[1\].head\[2\].u_g 700964 352982 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[1\].head\[3\].u_g 1048946 352982 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[2\].head\[0\].u_g 5000 700964 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[2\].head\[1\].u_g 352982 700964 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[2\].head\[2\].u_g 700964 700964 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[2\].head\[3\].u_g 1048946 700964 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[3\].head\[0\].u_g 5000 1048946 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[3\].head\[1\].u_g 352982 1048946 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[3\].head\[2\].u_g 700964 1048946 R0
+PIN_LOCAL M4 0 192288 84 192312
+MACRO u_tile/registered_parent.row\[3\].head\[3\].u_g 1048946 1048946 R0
+PIN_LOCAL M4 0 192288 84 192312

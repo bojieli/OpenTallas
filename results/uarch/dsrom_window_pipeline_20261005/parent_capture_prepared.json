@@ -1,0 +1,43 @@
+{
+  "status": "ACTUAL_FIRST_CONSUMER_CAPTURE_PREPARED_NOT_PHYSICALLY_QUALIFIED",
+  "source_pin": "b4fede4fc1341be16c40d20ffa9e36067616513c",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv": "fb3b7974c4f8fb512e831745871246040ffa63368eaa7de2e0140e6ff6232074",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd"
+  },
+  "prebuild_model": "dsrom_window_parent_boundary_model",
+  "prebuild_records": [
+    "parent_boundary_prebuild.json",
+    "parent_boundary_macro_price.json"
+  ],
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 4,
+    "TROWS": 640,
+    "NT": 64,
+    "NSTAGE": 1,
+    "PWORDS": 1,
+    "ILV": 0,
+    "REPL": 0
+  },
+  "macro_count": 68,
+  "E1_FF_upper_bits": 45619,
+  "R0_FF_upper_bits": 70656,
+  "original_capture_blocks_verbatim": true,
+  "added_cycles": 0,
+  "controller_boundary": "Actual act/T/wptr, read address, scheduler tags and PV transposer outputs remain timed terminals. No substitute arithmetic, engine idle or done generation.",
+  "lint": {
+    "iverilog": "PASS elaboration",
+    "verilator": "PASS; two inherited WIDTH warnings at original wptr/NL and r0_qk_s+integer expressions"
+  },
+  "exact344_repeated": false,
+  "leaf_measurement": "existing live pinned job unchanged",
+  "native_wiring": false,
+  "parent_CTS_qualified": false,
+  "slot_fit": false,
+  "adoption": false
+}

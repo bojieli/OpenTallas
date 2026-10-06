@@ -1,0 +1,319 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.782 MB sources in 26 modules, into 66.178 MB in 54 C++ files needing 0.000 MB
+- Verilator: Walltime 14.593 s (elab=2.156, cvt=11.746, bld=0.000); cpu 14.593 s on 1 threads; allocated 753.387 MB
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:89:18: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                           : ... note: In instance 'ot_dsrom_window_pipeline_context.u_wmux'
+   89 |     generate if (!ENABLE) begin : g_off
+      |                  ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv:222:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'STREAM_II1' generates 32 bits.
+                                                                                                  : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe'
+  222 |         if (STREAM_II1) begin : g_stream_ii1
+      |         ^~
+%Warning-WIDTHEXPAND: rtl/chip/ot_chip_v41x_window_row_codec.sv:66:51: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'element_index' generates 9 bits.
+                                                                     : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer.u_codec'
+   66 |         scale = row[4096+8*integer'(element_index >> 5) +: 8];
+      |                                                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:72:23: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'b' generates 30 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   72 |             gs[i] = b + ((gnext + i) << 2);
+      |                       ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:72:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'gnext' generates 16 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   72 |             gs[i] = b + ((gnext + i) << 2);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:72:19: Operator ASSIGN expects 30 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                       : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   72 |             gs[i] = b + ((gnext + i) << 2);
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:75:67: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'gnext' generates 16 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   75 |         v_c = 0; a_c = 0; t_c = 0; l_c = 0; grp_ok = run && gnext < NGRAN;
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:79:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'gnext' generates 16 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   79 |             a_c[gp[i]*AW +: AW] = gs[i]; t_c[gp[i]*TAGW +: TAGW] = gnext + i; l_c[gp[i]*LENW +: LENW] = 4;
+      |                                                                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:79:66: Operator ASSIGN expects 13 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                       : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+   79 |             a_c[gp[i]*AW +: AW] = gs[i]; t_c[gp[i]*TAGW +: TAGW] = gnext + i; l_c[gp[i]*LENW +: LENW] = 4;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:102:38: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 28 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  102 |     wire [AW-3:0] sa1 = base[AW-1:2] + (NGRAN - 1);        
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:102:23: Operator ASSIGNW expects 28 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  102 |     wire [AW-3:0] sa1 = base[AW-1:2] + (NGRAN - 1);        
+      |                       ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:111:19: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 23 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  111 |             nlast <= sa1[AW-3:5] - sa0[AW-3:5];
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:122:49: Operator SUB expects 13 bits on the LHS, but LHS's REPLICATE generates 10 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  122 |                     rtag[q] <= {Grel[q], jq[q]} - {5'd0, j0};
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:122:49: Operator SUB expects 13 bits on the RHS, but RHS's REPLICATE generates 10 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  122 |                     rtag[q] <= {Grel[q], jq[q]} - {5'd0, j0};
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:132:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ISSUE_PC' generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  132 |     assign req_v = ISSUE_PC ? rv : v_c; assign req_addr = ISSUE_PC ? a_p : a_c;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:132:68: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ISSUE_PC' generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  132 |     assign req_v = ISSUE_PC ? rv : v_c; assign req_addr = ISSUE_PC ? a_p : a_c;
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:133:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ISSUE_PC' generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  133 |     assign req_tag = ISSUE_PC ? t_p : t_c; assign req_len = ISSUE_PC ? {NPC{LENW'(4)}} : l_c;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:133:70: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ISSUE_PC' generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  133 |     assign req_tag = ISSUE_PC ? t_p : t_c; assign req_len = ISSUE_PC ? {NPC{LENW'(4)}} : l_c;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:157:59: Operator ADD expects 15 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  157 |                 s1[p] <= {rsp_tag[p*TAGW +: TAGW], 2'b00} + rsp_beat[p*BEATW +: BEATW];
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:157:23: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's ADD generates 15 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  157 |                 s1[p] <= {rsp_tag[p*TAGW +: TAGW], 2'b00} + rsp_beat[p*BEATW +: BEATW];
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:160:50: Operator GTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 12 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  160 |                 s2[p] <= s1[p]; rng2[p] <= s1[p] >= NSECT; d2[p] <= d1[p];
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:165:36: Operator SUB expects 12 bits on the RHS, but RHS's ARRAYSEL generates 7 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  165 |                 k16_5[p] <= (t4[p] - sl4[p]) == 12'd16;                       
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:168:38: Operator ADD expects 30 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  168 |                 if (v1[p] && pc_of(b + s1[p]) != p) pc_sim_bad <= 1'b1;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:168:47: Operator NEQ expects 32 bits on the LHS, but LHS's FUNCREF 'pc_of' generates 5 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  168 |                 if (v1[p] && pc_of(b + s1[p]) != p) pc_sim_bad <= 1'b1;
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:173:26: Operator ADD expects 7 bits on the LHS, but LHS's VARREF 'nb_a' generates 5 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  173 |             nb_q <= nb_a + nb_b;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:173:26: Operator ADD expects 7 bits on the RHS, but RHS's VARREF 'nb_b' generates 5 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  173 |             nb_q <= nb_a + nb_b;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:184:52: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's VARREF 'NSECT' generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  184 |             run <= 1; gnext <= 0; landed <= 0; rem <= NSECT; b <= base;
+      |                                                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:187:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'gnext' generates 16 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  187 |             if (grp_ok) gnext <= gnext + IW;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:187:31: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                        : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  187 |             if (grp_ok) gnext <= gnext + IW;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:189:30: Operator ADD expects 16 bits on the RHS, but RHS's VARREF 'nb_q' generates 7 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  189 |             landed <= landed + nb_q;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:190:24: Operator SUB expects 12 bits on the RHS, but RHS's VARREF 'nb_q' generates 7 bits.
+                                                                                         : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_la'
+  190 |             rem <= rem - nb_q;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:131:64: Operator EQ expects 16 bits on the RHS, but RHS's VARREF 'refill_epoch' generates 9 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  131 |     wire reply_epoch_ok = (s_tag[WIN_STACK*TAGW +: TAGW] >> 5) == refill_epoch;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:132:32: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR_PIPE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  132 |     wire pipe_reply_ok = state == FR_PIPE && !fault && response &&
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:136:29: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR_PIPE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  136 |     wire pipe_issue = state == FR_PIPE && !fault && refill_pending < REFILL_CREDITS &&
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:136:68: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'refill_pending' generates 5 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  136 |     wire pipe_issue = state == FR_PIPE && !fault && refill_pending < REFILL_CREDITS &&
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:138:42: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR_PIPE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  138 |     wire [4:0] fill_sector_index = state == FR_PIPE ? reply_sector : sec;
+      |                                          ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:170:48: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  170 |         wire fill_ok = pipe_reply_ok || (state == FR_DONE && response && !response_poison &&
+      |                                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:224:30: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  224 |     assign blk_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault);
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:225:32: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  225 |     assign prime_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault) && !blk_v;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:226:35: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  226 |     assign prefetch_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault) && !blk_v && !prime_v;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:227:61: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  227 |     assign kv_ok = (REFILL_CREDITS == 1 || !fault) && state == IDLE && stage_valid[aslot] &&
+      |                                                             ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:258:32: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WS' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  258 |             end else if (state == WS) begin
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:254:23: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WC' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  254 |             if (state == WC) begin
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:249:20: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WC' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  249 |         if ((state == WC || state == WS || state == FR) && !addr_bad) begin
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:249:35: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WS' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  249 |         if ((state == WC || state == WS || state == FR) && !addr_bad) begin
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:249:50: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  249 |         if ((state == WC || state == WS || state == FR) && !addr_bad) begin
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:276:19: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  276 |             state <= IDLE; row <= 0; bidx <= 0; sec <= 0; codes <= 0; scale <= 0;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:294:61: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  294 |                 fault <= 1'b1; fault_code[0] <= 1'b1; state <= IDLE;
+      |                                                             ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:331:31: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  331 |                         state <= IDLE;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:336:31: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  336 |                         state <= IDLE;
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:347:93: Operator COND expects 4 bits on the Conditional True, but Conditional True's VARREF 'WS' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  347 |                 ADDR3: begin checked_addr <= row_base + (SEC_W+1)'(sec); state <= sec == 16 ? WS : WC; end
+      |                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:347:93: Operator COND expects 4 bits on the Conditional False, but Conditional False's VARREF 'WC' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  347 |                 ADDR3: begin checked_addr <= row_base + (SEC_W+1)'(sec); state <= sec == 16 ? WS : WC; end
+      |                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:350:27: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'WC_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  350 |                     state <= WC_DONE;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:355:27: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'WS_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  355 |                     state <= WS_DONE;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:361:27: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  361 |                     state <= IDLE;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:363:38: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'FR_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  363 |                 FR: if (grant) state <= FR_DONE;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:367:69: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  367 |                         fault <= 1'b1; fault_code[2] <= 1'b1; state <= IDLE;
+      |                                                                     ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:369:69: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  369 |                         fault <= 1'b1; fault_code[4] <= 1'b1; state <= IDLE;
+      |                                                                     ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:381:35: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  381 |                             state <= IDLE;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:382:65: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'FR' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  382 |                         end else begin sec <= sec + 1'b1; state <= FR; end
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:409:43: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  409 |                                     state <= IDLE;
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:415:32: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  415 |                 default: state <= IDLE;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'IDLE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'WC' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'WC_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'WS' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'WS_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'FR' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'FR_DONE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:295:22: Operator CASE expects 4 bits on the Case Item, but Case Item's VARREF 'FR_PIPE' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  295 |             end else case (state)
+      |                      ^~~~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:293:24: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WC' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  293 |             if ((state == WC || state == WS || state == FR) && addr_bad) begin
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:293:39: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'WS' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  293 |             if ((state == WC || state == WS || state == FR) && addr_bad) begin
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_writer_pipeline.sv:293:54: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'FR' generates 3 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_writer'
+  293 |             if ((state == WC || state == WS || state == FR) && addr_bad) begin
+      |                                                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv:135:43: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'sec_raw' generates 16 bits.
+                                                                                                   : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe.g_la.u_stage'
+  135 |                         bad[0][p]<=sec_raw>=NSECT;
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv:299:42: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 8 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe'
+  299 |                         ck_t={ck_i,2'b00}+ck_l;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv:299:29: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe'
+  299 |                         ck_t={ck_i,2'b00}+ck_l;
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv:300:47: Operator ADD expects 21 bits on the RHS, but RHS's VARREF 'ck_t' generates 9 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe'
+  300 |                         ck_row0[ck_l]<=j_first+ck_t;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_source_pipeline.sv:301:44: Operator LT expects 9 bits on the RHS, but RHS's VARREF 'j_count' generates 8 bits.
+                                                                                                    : ... note: In instance 'ot_dsrom_window_pipeline_context.u_src.g_pipeline.u_pipe'
+  301 |                         ck_use0[ck_l]<=ck_t<j_count;
+      |                                            ^

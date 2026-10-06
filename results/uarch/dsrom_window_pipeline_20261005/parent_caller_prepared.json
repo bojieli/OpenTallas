@@ -1,0 +1,32 @@
+{
+  "status": "SOURCE_CONNECTED_PARENT_PREPARED_WAIT_LEAF_TERMINAL",
+  "source_pin": "855f0ced5afa63fed9c08408cf47cf9dda94054f",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_parent_context.sv": "7b816d86f1de4b5b0f38f22f1d1ef589880894e52b7b434c1f1f29cc947085cb",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_attention_capture_context.sv": "fb3b7974c4f8fb512e831745871246040ffa63368eaa7de2e0140e6ff6232074",
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_pipeline_context.sv": "775c27e5f60c50f040701fefe4b801faac6bcf438a7dd7e849e8c670396f8704",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv": "04cabb8fe1dc5ac9fccc767c427a9e7d0825c61b175b331d5d5c785c1d2b13a3",
+    "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b"
+  },
+  "prebuild_record": "parent_caller_prebuild.json",
+  "native_control_FF_bits": 52,
+  "total_parent_incremental_FF_upper_bits": 121457,
+  "scope": "Actual native WINDOW-only CKV_SELECTED=0, WINDOW_RETAIN_L0=0 caller through full H16/D512/TD32/NL4/TROWS640 macro/E1/R0 cut; actual producer and descriptor modules instantiated unchanged.",
+  "actual_controller_terminals": "Engine act/T/wptr, adapter A_RUN/kv_v/expected mask, scheduler/transposer outputs and engine_idle remain timed IO; no new capture, ready permission, idle or completion generation.",
+  "added_cycles": 0,
+  "macro_count": 68,
+  "lint": {
+    "iverilog": "PASS strict actual leaf-port stub elaboration",
+    "verilator": "PASS with 13 inherited WIDTH warnings; no errors",
+    "stub": "Elaboration only, copied exact unchanged leaf declarations. Physical run requires terminal measured leaf LEF and own SS/FF Liberty."
+  },
+  "native_wiring": false,
+  "exact344_repeated": false,
+  "parent_CTS_qualified": false,
+  "actual_slot_allocated": false,
+  "adoption": false
+}

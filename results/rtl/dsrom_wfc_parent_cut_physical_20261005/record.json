@@ -1,0 +1,43 @@
+{
+  "owner": "Zeno",
+  "remote_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-parent-cut-physical-r1",
+  "cuts": {
+    "s0": {
+      "verdict": "FAIL_ROUTED_CONTEXT_CUT",
+      "corners": {
+        "SS": {
+          "exit": 0,
+          "completed": true,
+          "setup_wns_ps": -504.27245712469926,
+          "hold_wns_ps": 46.976256218300705
+        },
+        "FF": {
+          "exit": 0,
+          "completed": true,
+          "setup_wns_ps": -26.12204896834669,
+          "hold_wns_ps": 7.855022188252292
+        }
+      },
+      "route_exit": 0,
+      "source_unchanged": true,
+      "artifacts_sha256": {
+        "6_final.odb": "425a8a218d528f73bc61a47cdc8cc6138f7e8eb1f6ad6a7065f52b00ff40e6c5",
+        "6_final.spef": "74a645676a42c737ac5bf8a5bddeabafea43af527f7221994668562faf261d4c",
+        "6_final.sdc": "f5414cc2cca39f9444bbfe800f055e361f7143ffc7fd82d4d7e5f2273c1b69d1"
+      }
+    }
+  },
+  "completed_cuts": [
+    "s0"
+  ],
+  "actual_parent_context_qualified": false,
+  "adopted": false,
+  "constraints": {
+    "period_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "exact_gate_reused": "main172c52caa FULLMAXU866 source27712/stage20000; no replay",
+  "preserved": "all remote sources/ODB/SPEF/objects/logs plus immutable old failures",
+  "missing": "WFC external caller/config/VM/prompt arrival/load and selected parent slot; Copernicus field budgets cannot transfer"
+}

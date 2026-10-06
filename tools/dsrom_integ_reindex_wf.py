@@ -53,6 +53,12 @@ NEWEST = 131071
 K = 512
 PL = R.PLACEMENTS["p2"]          # the placement of the measured worst rank (real_rank1_p2, 757 cycles)
 IDX_ARRAY = dict(latency=48, query_settle=24)    # tools/dsrom_1m_measure.py IDX_ARRAY (results/rtl/w11_idx_array.json)
+SRC += ["rtl/dsrom_sys/reindex_parent/"+name for name in (
+    "ot_dsrom_reindex_gather.sv", "ot_dsrom_reindex_gather_parent.sv",
+    "ot_dsrom_reindex_kgctl_parent.sv", "ot_dsrom_reindex_kgdata_parent.sv",
+    "ot_dsrom_reindex_list_macro.sv", "ot_dsrom_reindex_request_cut.sv")]
+SRC += ["rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv", "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv"]
+SRC += ["physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
 
 def sha(p) -> str:

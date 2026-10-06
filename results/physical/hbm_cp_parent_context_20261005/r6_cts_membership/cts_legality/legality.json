@@ -1,0 +1,691 @@
+{
+  "groups": {
+    "cp_body": {
+      "count": 4572,
+      "area_um2": 588.5362800000056
+    },
+    "cp_association": {
+      "count": 5,
+      "area_um2": 0.7144200000000002
+    }
+  },
+  "all_group_containment_violations": [],
+  "clock_count": 61,
+  "clock_area": 13.880160000000009,
+  "clock_outside_finite_body": [],
+  "clock_cells": [
+    {
+      "name": "clkbuf_leaf_3_clk",
+      "bbox": [
+        33.21,
+        37.8,
+        34.398,
+        38.07
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_2_clk",
+      "bbox": [
+        27.432,
+        32.13,
+        28.62,
+        32.4
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_1_clk",
+      "bbox": [
+        19.548,
+        32.13,
+        20.736,
+        32.4
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_0_clk",
+      "bbox": [
+        21.6,
+        26.73,
+        22.788,
+        27.0
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_17_clk",
+      "bbox": [
+        45.9,
+        35.91,
+        47.088,
+        36.18
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_6_clk",
+      "bbox": [
+        22.356,
+        47.79,
+        23.544,
+        48.06
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_5_clk",
+      "bbox": [
+        19.602,
+        41.31,
+        20.79,
+        41.58
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_4_clk",
+      "bbox": [
+        25.434,
+        40.77,
+        26.622,
+        41.04
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_16_clk",
+      "bbox": [
+        51.138,
+        40.23,
+        52.326,
+        40.5
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_15_clk",
+      "bbox": [
+        57.618,
+        40.5,
+        58.806,
+        40.77
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_14_clk",
+      "bbox": [
+        54.432,
+        45.9,
+        55.62,
+        46.17
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_11_clk",
+      "bbox": [
+        43.2,
+        44.28,
+        44.388,
+        44.55
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_10_clk",
+      "bbox": [
+        34.074,
+        42.66,
+        35.262,
+        42.93
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_9_clk",
+      "bbox": [
+        33.534,
+        48.87,
+        34.722,
+        49.14
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_8_clk",
+      "bbox": [
+        26.406,
+        50.76,
+        27.594,
+        51.03
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_7_clk",
+      "bbox": [
+        19.926,
+        52.65,
+        21.114,
+        52.92
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_13_clk",
+      "bbox": [
+        58.59,
+        49.41,
+        59.778,
+        49.68
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_12_clk",
+      "bbox": [
+        48.168,
+        50.49,
+        49.356,
+        50.76
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_18_clk",
+      "bbox": [
+        51.192,
+        33.21,
+        52.38,
+        33.48
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_19_clk",
+      "bbox": [
+        56.538,
+        31.59,
+        57.726,
+        31.86
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_20_clk",
+      "bbox": [
+        56.052,
+        24.57,
+        57.24,
+        24.84
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_21_clk",
+      "bbox": [
+        53.298,
+        20.25,
+        54.486,
+        20.52
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_22_clk",
+      "bbox": [
+        46.44,
+        20.79,
+        47.628,
+        21.06
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_23_clk",
+      "bbox": [
+        41.958,
+        24.03,
+        43.146,
+        24.3
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_24_clk",
+      "bbox": [
+        42.984,
+        29.43,
+        44.172,
+        29.7
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_25_clk",
+      "bbox": [
+        37.044,
+        30.51,
+        38.232,
+        30.78
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_26_clk",
+      "bbox": [
+        34.074,
+        26.46,
+        35.262,
+        26.73
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_27_clk",
+      "bbox": [
+        33.102,
+        18.9,
+        34.29,
+        19.17
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_28_clk",
+      "bbox": [
+        28.512,
+        23.22,
+        29.7,
+        23.49
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_29_clk",
+      "bbox": [
+        20.088,
+        19.98,
+        21.276,
+        20.25
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_0_clk",
+      "bbox": [
+        39.042,
+        35.64,
+        39.69,
+        35.91
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_0__f_clk",
+      "bbox": [
+        27.756,
+        28.08,
+        28.404,
+        28.35
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_1__f_clk",
+      "bbox": [
+        27.216,
+        42.66,
+        27.864,
+        42.93
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_2__f_clk",
+      "bbox": [
+        49.734,
+        27.0,
+        50.382,
+        27.27
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_3__f_clk",
+      "bbox": [
+        50.814,
+        41.85,
+        51.462,
+        42.12
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload0",
+      "bbox": [
+        49.734,
+        27.27,
+        50.922,
+        27.54
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkload1",
+      "bbox": [
+        50.814,
+        42.12,
+        52.002,
+        42.39
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkload2",
+      "bbox": [
+        27.432,
+        32.67,
+        28.08,
+        32.94
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload3",
+      "bbox": [
+        37.044,
+        30.24,
+        37.314,
+        30.51
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload4",
+      "bbox": [
+        34.074,
+        25.92,
+        34.398,
+        26.19
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload5",
+      "bbox": [
+        33.102,
+        19.17,
+        33.318,
+        19.44
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload6",
+      "bbox": [
+        28.296,
+        22.95,
+        28.62,
+        23.22
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload7",
+      "bbox": [
+        20.088,
+        20.25,
+        20.736,
+        20.52
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload8",
+      "bbox": [
+        33.21,
+        37.53,
+        33.588,
+        37.8
+      ],
+      "group": "cp_body",
+      "area": 0.10206
+    },
+    {
+      "name": "clkload9",
+      "bbox": [
+        25.434,
+        41.04,
+        26.622,
+        41.31
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkload10",
+      "bbox": [
+        19.602,
+        41.04,
+        20.25,
+        41.31
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload11",
+      "bbox": [
+        22.356,
+        46.71,
+        22.572,
+        46.98
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload12",
+      "bbox": [
+        26.514,
+        51.03,
+        26.73,
+        51.3
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload13",
+      "bbox": [
+        33.534,
+        48.6,
+        33.804,
+        48.87
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload14",
+      "bbox": [
+        34.074,
+        42.93,
+        34.398,
+        43.2
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload15",
+      "bbox": [
+        56.538,
+        31.05,
+        56.808,
+        31.32
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload16",
+      "bbox": [
+        56.052,
+        24.84,
+        56.322,
+        25.11
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload17",
+      "bbox": [
+        53.298,
+        20.52,
+        53.946,
+        20.79
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload18",
+      "bbox": [
+        46.44,
+        21.06,
+        46.71,
+        21.33
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload19",
+      "bbox": [
+        41.58,
+        24.3,
+        42.228,
+        24.57
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload20",
+      "bbox": [
+        42.984,
+        29.7,
+        43.254,
+        29.97
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload21",
+      "bbox": [
+        43.2,
+        45.63,
+        43.848,
+        45.9
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload22",
+      "bbox": [
+        48.168,
+        49.95,
+        48.438,
+        50.22
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload23",
+      "bbox": [
+        58.59,
+        49.95,
+        59.238,
+        50.22
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload24",
+      "bbox": [
+        51.138,
+        40.5,
+        51.408,
+        40.77
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload25",
+      "bbox": [
+        45.9,
+        35.64,
+        46.17,
+        35.91
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    }
+  ],
+  "other_ungrouped_masters": {},
+  "other_ungrouped_area": {}
+}

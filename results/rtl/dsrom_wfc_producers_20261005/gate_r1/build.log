@@ -1,0 +1,115 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:21:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_wfc_producers.p'
+   21 |  generate if(ENABLE) begin:g_live
+      |           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:32:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.s'
+   32 |  generate if(ENABLE)begin:g_live
+      |           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:67:267: Operator GTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 12 bits.
+                                                                                    : ... note: In instance 'tb_wfc_producers.s'
+   67 |       if(!command_ready[rank]||command_identity[47*rank+:47]!=identity||command_token[21*rank+:21]!=request_token_q||command_home[7*rank+:7]!=q[6:0]||command_entry[14*rank+:14]!=q[20:7]||command_pc[14*rank+:14]!=q[34:21]||command_unit[4*rank+:4]!=q[38:35]||ptr[rank]>=BOOK_WORDS)rank_fault[rank]<=1;
+      |                                                                                                                                                                                                                                                                           ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:77:20: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 12 bits.
+                                                                                   : ... note: In instance 'tb_wfc_producers.s'
+   77 |        if(ptr[rank]==BOOK_WORDS&&retired_groups[rank]==GROUPS-1)finished[rank]<=1;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:77:54: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 8 bits.
+                                                                                   : ... note: In instance 'tb_wfc_producers.s'
+   77 |        if(ptr[rank]==BOOK_WORDS&&retired_groups[rank]==GROUPS-1)finished[rank]<=1;
+      |                                                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:33:56: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   33 |   wire write_prompt=take&&cmd_op==0&&!running&&cmd_user<MAXU&&cmd_pos<PREFIX;
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:33:70: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   33 |   wire write_prompt=take&&cmd_op==0&&!running&&cmd_user<MAXU&&cmd_pos<PREFIX;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:34:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   34 |   wire write_draft=take&&cmd_op==1&&cmd_user<MAXU&&cmd_pos<POSITIONS&&(!running||cmd_epoch==stage_epoch);
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:34:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   34 |   wire write_draft=take&&cmd_op==1&&cmd_user<MAXU&&cmd_pos<POSITIONS&&(!running||cmd_epoch==stage_epoch);
+      |                                                           ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:36:91: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   36 |   wire [15:0] write_index=16'(cmd_user)*(PREFIX+POSITIONS)+16'(write_prompt?cmd_pos:PREFIX+cmd_pos);
+      |                                                                                           ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:36:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   36 |   wire [15:0] write_index=16'(cmd_user)*(PREFIX+POSITIONS)+16'(write_prompt?cmd_pos:PREFIX+cmd_pos);
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:36:26: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                 : ... note: In instance 'tb_wfc_producers.p'
+   36 |   wire [15:0] write_index=16'(cmd_user)*(PREFIX+POSITIONS)+16'(write_prompt?cmd_pos:PREFIX+cmd_pos);
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:43:46: Logical operator IF expects 1 bit on the If, but If's AND generates 32 bits.
+                                                                                 : ... note: In instance 'tb_wfc_producers.p'
+   43 |      if((p&(p-1))!=0)begin for(k=0;k<5;k=k+1)if((p>>k)&1)parity[k]=parity[k]^d[n];n=n+1;end
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:52:88: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pr_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   52 |   wire port_read=rst_n&&!fault&&(scan_issue||(running&&pr_re&&pr_user<cfg_users&&pr_pos<POSITIONS));
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:56:89: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'read_pos' generates 21 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   56 |   wire [15:0] read_index=16'(read_user)*(PREFIX+POSITIONS)+16'(is_prompt?read_pos:PREFIX+read_pos);
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:56:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 16 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   56 |   wire [15:0] read_index=16'(read_user)*(PREFIX+POSITIONS)+16'(is_prompt?read_pos:PREFIX+read_pos);
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:56:25: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                 : ... note: In instance 'tb_wfc_producers.p'
+   56 |   wire [15:0] read_index=16'(read_user)*(PREFIX+POSITIONS)+16'(is_prompt?read_pos:PREFIX+read_pos);
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:78:18: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'clear_row' generates 13 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   78 |      if(clear_row==ROWS-1)begin ready_mem<=1;clear_row<=0;clear_check<=13'h1fff;end
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:84:66: Operator EQ expects 32 or 21 bits on the LHS, but LHS's VARREF 'scan_pos' generates 2 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   84 |      read_last<=scan_issue&&scan_user==pending_q[9:0]-1&&scan_pos==pending_q[30:10]-1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:87:17: Operator EQ expects 32 or 21 bits on the LHS, but LHS's VARREF 'scan_pos' generates 2 bits.
+                                                                                  : ... note: In instance 'tb_wfc_producers.p'
+   87 |      if(scan_pos==pending_q[30:10]-1)begin scan_pos<=0;scan_pos_check<=2'b11;if(scan_user==pending_q[9:0]-1)scan_sent_all<=1;else begin scan_user<=scan_user+1;scan_user_check<=~(scan_user+10'd1);end end
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:41: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cmd_user' generates 10 bits.
+                                                                                   : ... note: In instance 'tb_wfc_producers.p'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>POSITIONS)poison<=1;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:67: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cmd_pos' generates 21 bits.
+                                                                                   : ... note: In instance 'tb_wfc_producers.p'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>POSITIONS)poison<=1;
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:123: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 22 bits.
+                                                                                    : ... note: In instance 'tb_wfc_producers.p'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>POSITIONS)poison<=1;
+      |                                                                                                                           ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:101:123: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 22 bits.
+                                                                                    : ... note: In instance 'tb_wfc_producers.p'
+  101 |        if(running||cmd_user==0||cmd_user>MAXU||cmd_pos==0||cmd_pos>PREFIX||cmd_token==0||cmd_entry!=14'd12||{1'b0,cmd_pos}+{1'b0,cmd_token}-1>POSITIONS)poison<=1;
+      |                                                                                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv:39:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'known' generates 32 bits.
+                                                                          : ... note: In instance 'tb_wfc_producers'
+   39 |   if(pr_qk!==1'(known)||(known&&pr_q!==21'(tok)))$fatal(1,"actual SRAM reply wrong user=%0d pos=%0d block=%0d got=%0d known=%0b",u,pos,blk,pr_q,pr_qk);
+      |                               ^~
+%Error: rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv:44:3: $readmemh loading non-variable
+   44 |   $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank0.hex",books[0]);
+      |   ^~~~~~~~~
+%Error: rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv:45:3: $readmemh loading non-variable
+   45 |   $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank1.hex",books[1]);
+      |   ^~~~~~~~~
+%Error: rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv:46:3: $readmemh loading non-variable
+   46 |   $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank2.hex",books[2]);
+      |   ^~~~~~~~~
+%Error: rtl/dsrom_sys/wfc_producers/tb_wfc_producers.sv:47:3: $readmemh loading non-variable
+   47 |   $readmemh("results/uarch/dsrom_wfc_producers_20261005/book/rank3.hex",books[3]);
+      |   ^~~~~~~~~
+%Error: Exiting due to 4 error(s)
