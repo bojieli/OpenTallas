@@ -96,7 +96,15 @@ def gen(spec):
         if p in ('ck',) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
             continue
         if any(d == 'in' for d in dirs[p]):
-            L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {p};')
+            fs = spec.get('face_stages', 1)
+            if fs == 1:
+                L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {p};')
+            else:   # face_stages: the pin flop plus fs - 1 further stages toward the consumers
+                prev = p
+                for k in range(fs - 1):
+                    L_.append(f'    reg [{v["bits"] - 1}:0] i{k}_{p}; always @(posedge clk) i{k}_{p} <= {prev};')
+                    prev = f'i{k}_{p}'
+                L_.append(f'    reg [{v["bits"] - 1}:0] i_{p}; always @(posedge clk) i_{p} <= {prev};')
     sigs, outs, ncfg, folds = [], {}, 0, []
     cfg_bits = []
     body = []
@@ -221,7 +229,7 @@ def gen(spec):
             L_.append(f'    wire [{v["bits"] - 1}:0] od_{p} = {{{", ".join(segs_d[::-1])}}};')
             L_.append(f'    wire [{v["bits"] - 1}:0] o_{p};')
             L_.append(f'    for (genvar k = 0; k < {v["bits"]}; k = k + 1) begin : g_o_{p}')
-            L_.append(f'        ot_hfd_oreg1 u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+            L_.append(f'        ot_hfd_oreg{spec.get("face_stages", 1)} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
             L_.append('    end')
         else:
             L_.append(f'    reg [{v["bits"] - 1}:0] o_{p};')
@@ -317,6 +325,9 @@ def gen_tb(spec, cycles=400, seed=20261006):
     for p, v in sorted(ports.items()):
         if v['direction'] != 'output':
             src = f'drv_{p}' if v['direction'] == 'inout' else p
+            for k in range(spec.get('face_stages', 1) - 1):
+                T.append(f'    reg [{v["bits"] - 1}:0] d{k}_{p}; always @(posedge clk) d{k}_{p} <= {src};')
+                src = f'd{k}_{p}'
             T.append(f'    reg [{v["bits"] - 1}:0] d_{p}; always @(posedge clk) d_{p} <= {src};')
     checks = []
     for inst in spec['instances']:
@@ -351,7 +362,11 @@ def gen_tb(spec, cycles=400, seed=20261006):
                         n = min(hi - lo, rw - off)
                         checks.append((f'{port}[{lo + n - 1}:{lo}]', f'q_{inst["name"]}_{rp}[{off + n - 1}:{off}]'))
                         off += n
-                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {w};')
+                src = w
+                for k in range(spec.get('face_stages', 1) - 1):
+                    T.append(f'    reg [{rw - 1}:0] q{k}_{inst["name"]}_{rp}; always @(posedge clk) q{k}_{inst["name"]}_{rp} <= {src};')
+                    src = f'q{k}_{inst["name"]}_{rp}'
+                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {src};')
         prm = ', '.join(f'.{k}({v})' for k, v in inst.get('params', {}).items())
         T.append(f'    {inst["module"]} {"#(" + prm + ") " if prm else ""}ref_{inst["name"]} ({", ".join(conns)});')
     T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',

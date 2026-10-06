@@ -9,30 +9,27 @@
   "ff": "hfd_barrier_ff.lib"
  },
  "files_sha256": {
-  "hfd_barrier.lef": "3afc88da7aa6cff73cee66ae6c8598a97125d4e79452137fb3bb9084b1ae0984",
-  "hfd_barrier_ss.lib": "987522d6fc45da0f5eeb0fa281c736b4971685256f092221a519152701a7ddec",
-  "hfd_barrier_ff.lib": "ef98f7be1eee0014be5f8481a108b1478c19a4608692be3c6119398b545e8418"
+  "hfd_barrier.lef": "74bdd04c099997d76f0d2d4dfc0b7c9ae307f250ded52033ee3c88d3e8449031",
+  "hfd_barrier_ss.lib": "86076db0dcd336fe8246fc26a26a636b8a80c45a2b31fd14a21dc48c331b76a6",
+  "hfd_barrier_ff.lib": "23e3a09d644265ee3e23d5cb6b833c858e32e5593fd0e51ed55bc27bb5c30f15"
  },
  "check": {
   "verdict": "MATCH",
   "positions": "exact",
   "problems": [],
-  "obs_above_generator": [
-   "M8",
-   "M9"
-  ],
+  "obs_above_generator": [],
   "pg_pins": {
    "VDD": [
     "M1",
     "M2",
-    "M8",
-    "M9"
+    "M6",
+    "M7"
    ],
    "VSS": [
     "M1",
     "M2",
-    "M8",
-    "M9"
+    "M6",
+    "M7"
    ]
   },
   "gen_pins": 130,
@@ -43,18 +40,18 @@
   36.696
  ],
  "source": {
-  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55",
+  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45",
   "host": "ot-epyc1tb",
-  "SOURCE_COMMIT": "8c5590c3e9a9669d4b2542ef7fb1401d2666ce18",
-  "ss_setup_ps": 283.48,
-  "ff_hold_ps": 8.54,
+  "SOURCE_COMMIT": "369b4c934fd63644fae5685479072e2f806fa53b",
+  "ss_setup_ps": 197.0,
+  "ff_hold_ps": 20.82,
   "closes_signoff_SS60_FF25": true,
   "clock_period_ns": 0.833,
   "status": "pass",
   "drc": 0,
   "antenna": 0,
-  "cell_um2": 160.278,
-  "seq_um2": 21.3597,
+  "cell_um2": 388.134,
+  "seq_um2": 114.132,
   "core_um2": 49504.8,
   "macro_um2": 0
  },
@@ -71,11 +68,7 @@
   "die_output_bits": 64,
   "die_output_bits_driven": 64
  },
- "bench": "physical/hbm_accel_die_views/barrier/rtl/tb_hfd_barrier.sv: 33 checks 0 mismatches (iverilog, seed 20261006); negative = die_top_lint registered stub fails; verilator lint clean",
- "note": "Two closed ot_gpu_barrier_node K32 roots (barrier_k32 SS +330.53 / FF +39.39) behind registered die ports; +2 cycles (die input and output registers) on the barrier round trip vs the bare node.",
- "defects": [
-  "die interface carries only 64 b each way between cmdproc and barrier: two 32-way barrier roots; SM arrive senses reach the barrier only through the cmdproc (no direct SM -> barrier net)",
-  "registered release fan-out collapses in synthesis: rel <= {K{rel_in}} and the 32 output flops merge to one driver per node (73 flops kept vs ~196 in RTL intent); timing closes regardless",
-  "view obstructs M8/M9 under its PDN straps (generator placeholder obs_top 7)"
- ]
+ "bench": "tb_hfd_barrier.sv 800 checks 0 mismatches; negative (face_stages 2 wrapper) fails",
+ "note": "margin-first (owner rule 2026-10-06): kept output regs, face_stages 3 (pin flop + 2 stages each face, +4 cycles barrier round trip vs the b1 view), routed at 770 ps effective (io_vclk_m_145: vclk at the measured 132-159 ps insertion, IO 0.2 T + 150 ps), hold margin 40 ps, signed off at 833/60 SS, 25 FF. Supersedes b1_pd55 (FF +8.54 < +15).",
+ "defects": []
 }

@@ -63,4 +63,5 @@ spec = dict(master='hfd_coll', clock='refclk', rst='por', extra_inputs=['refclk'
     'outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.'),
     instances=[dict(name='ep', module='ot_hbm_accel_tu_endpoint', file=F, params=PRM, bind=b)], extra_out=eo)
 spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
+spec['face_stages'] = 3  # owner margin-first rule 2026-10-06: pin flop + 2 stages each face (1.4 mm views)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')

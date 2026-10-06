@@ -12,8 +12,8 @@ ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT / 'tools'))
 import die_top_lint as L  # noqa: E402
 
-F = 'rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv'
-pm = L.parse_module(F, 'ot_hbm_accel_loader_host', dict(ENABLE=1, ND=2))['ports']
+F = 'physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_host_m.sv'   # margin-first CRC pipeline (make_loader_m.py)
+pm = L.parse_module(F, 'ot_hfd_loader_host_m', dict(ENABLE=1, ND=2))['ports']
 b = dict(clk_host='clk', clk_mem='clk', rst_host_n='rst_n', rst_mem_n='rst_n')
 rx, tx = 256, 0
 for p, (d, w) in pm.items():
@@ -40,12 +40,14 @@ b['req_wdata'] = 'open'
 eo = [('t_cmdproc', 0, 1, 'w_ld_req_v[0]'), ('t_cmdproc', 1, 9, 'w_ld_req_addr[7:0]'),
       ('t_cmdproc', 9, 73, 'w_ld_req_wdata[63:0]')]
 spec = dict(master='hfd_loader', note=(
-    'INTERIM: unchanged ot_hbm_accel_loader_host (ENABLE 1, ND 2; tapeout_hbm_loader_20261004 clock_r2_final '
-    'not_met, host SS -3,672 ps at 1.0 ns, not adopted). Host AXI-lite slave s_*, host master h_* and DMA h_dma_* on '
+    'ot_hfd_loader_host_m (ENABLE 1, ND 2): ot_hbm_accel_loader_host with every CRC-32 fold pipelined (make_loader_m.py; '
+    'the unchanged host: tapeout_hbm_loader_20261004 clock_r2_final not_met, host SS -3,672 ps at 1.0 ns; ld3 -4,229 ps '
+    'at the store CRC); exact vs the unchanged host (tb_loader_m_equiv.sv). Host AXI-lite slave s_*, host master h_* and DMA h_dma_* on '
     f'the host link (rx {rx - 256} of 256 b used, rest of the DMA inputs on the cfg chain; tx {tx} of 256 b); request '
     'slot 0 -> cmdproc program-store word t_cmdproc[72:0]; clk_host and clk_mem both on the die clock; memory AXI '
     'm_* and rsp_* have no die net (cfg chain / folded).'), instances=[dict(
-        name='ld', module='ot_hbm_accel_loader_host', file=F, params=dict(ENABLE=1, ND=2), bind=b)], extra_out=eo)
+        name='ld', module='ot_hfd_loader_host_m', file=F, params=dict(ENABLE=1, ND=2), bind=b)], extra_out=eo)
 spec['kept_out_regs'] = True  # one kept ot_hfd_oreg1 per die output bit (no merged output drivers)
+spec['face_stages'] = 3  # owner margin-first rule 2026-10-06: pin flop + 2 stages each face (1.4 mm views)
 Path(__file__).with_name('spec.json').write_text(json.dumps(spec, indent=1) + '\n')
 print(rx - 256, tx)
