@@ -344,7 +344,7 @@ module ot_hdc_v41x_vec #(
     wire accept = go && ready;
     // CTL12 >= 2: the loop / set-up control of register group g (KC kept copies); otherwise the one control
     localparam integer KC = 26;
-    wire [KC-1:0] PROM, EMIT, WRAPS, STRT, ACC, LAST;
+    wire [KC-1:0] PROM, EMIT, WRAPS, STRT, ACC, LAST, AVC;
     localparam integer KK = (CTL12 >= 2) ? 1 : 0;      // kept-prefix adders / compares
     // raw fields
     reg [NW-1:0] q_nout, q_nin;
@@ -889,19 +889,23 @@ module ot_hdc_v41x_vec #(
     end endgenerate
     // next ch for each value of this cycle's retire; ret_i selects last, in two kept copies (13 control copies each)
     wire [1:0] n_chr;
-    assign n_chr[0] = promote ? (a_v ? cpa_o[0] : cpi_o[0]) : emit ? cem_o[0] : cho_o[0];
-    assign n_chr[1] = promote ? (a_v ? cpa_o[1] : cpi_o[1]) : emit ? cem_o[1] : cho_o[1];
+    // round 7: the selects on control copy 4 (promote / a_v / emit), not the shared combinational ones
+    assign n_chr[0] = PROM[4] ? (AVC[4] ? cpa_o[0] : cpi_o[0]) : EMIT[4] ? cem_o[0] : cho_o[0];
+    assign n_chr[1] = PROM[4] ? (AVC[4] ? cpa_o[1] : cpi_o[1]) : EMIT[4] ? cem_o[1] : cho_o[1];
     wire n_ch = (CTL12 >= 2) ? (ret_i ? n_chr[1] : n_chr[0])
                              : (promote ? (a_v ? ch_prom_a : ch_prom_i) : emit ? ch_emit : ch_hold);
-    wire n_chA, n_chB;
-    ot_hdc_v41x_ckmux u_chA (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chA));
-    ot_hdc_v41x_ckmux u_chB (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chB));
+    // round 7: four kept ret_i selects, each driving a quarter of the control copies
+    wire [3:0] n_chq;
+    genvar gq4;
+    generate for (gq4 = 0; gq4 < 4; gq4 = gq4 + 1) begin : g_chq
+        ot_hdc_v41x_ckmux u_ch (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chq[gq4]));
+    end endgenerate
     genvar gk;
     generate if (CTL12 >= 2) begin : g_rep
         for (gk = 0; gk < KC; gk = gk + 1) begin : g_k
             wire [1:0] kp;
             wire       kav, kst, kck, kch, kwr, kol;
-            ot_hdc_v41x_ckreg #(.W(6), .R(1)) u_r (.clk(clk), .rst_n(rst_n), .d({n_pst, n_av, n_st, n_ck, (gk < KC / 2) ? n_chA : n_chB}),
+            ot_hdc_v41x_ckreg #(.W(6), .R(1)) u_r (.clk(clk), .rst_n(rst_n), .d({n_pst, n_av, n_st, n_ck, n_chq[gk * 4 / KC]}),
                                                  .q({kp, kav, kst, kck, kch}));
             ot_hdc_v41x_ckreg #(.W(2), .R(0)) u_c (.clk(clk), .rst_n(rst_n), .d({n_wr, n_ol}), .q({kwr, kol}));
             wire kem = kav && (kst || kck) && kch;
@@ -911,6 +915,7 @@ module ot_hdc_v41x_vec #(
             assign PROM[gk] = (kp == 2'd3) && (!kav || (kem && kwr && kol));
             assign ACC[gk] = go && (kp == 2'd0);
             assign LAST[gk] = kwr && kol;
+            assign AVC[gk] = kav;
         end
     end else begin : g_one
         assign EMIT = {KC{emit}};
@@ -919,6 +924,7 @@ module ot_hdc_v41x_vec #(
         assign PROM = {KC{promote}};
         assign ACC = {KC{accept}};
         assign LAST = {KC{last_v}};
+        assign AVC = {KC{a_v}};
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin ck_r <= 1'b0; ch_r <= 1'b0; end

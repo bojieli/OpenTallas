@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
- "generated_at": "2026-10-06T13:06:33Z",
+ "generated_at": "2026-10-06T14:00:23Z",
  "wire_stages": {
   "BCAST_STAGES": 0,
   "RET_STAGES": 0
@@ -43,8 +43,8 @@
   "pass_": true
  },
  "verilator_build_seconds": {
-  "N16_M8": 215.1,
-  "N64_M16": 446.7
+  "N16_M8": 186.0,
+  "N64_M16": 443.2
  },
  "random": {
   "N16_M8": [
@@ -2675,7 +2675,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "2cd24466a57c47077da2dcccdbb1b7f8f703e2812e43e610886a768485c892ba",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "cf8c7c91f7d7ce9f2e1c061180a401af8aef0b366e60200cd369cd0725878633",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "4b08beea853fd8004937200729eb576c0d616b1519fa8f0b0f6430d44a5a4b93",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "19db6ca43cb510c0da171d7e561149fa128a8c22301ca602578f8990aa4b24f3",
   "rtl/test/tb_hdc_v41x_vec_c12.sv": "becffec8d415803e91937ce0733d95239c1420e27a7cf5f5554c37ab9893dcdb",
   "rtl/test/tb_hdc_v41x_vec_sfu_c12.sv": "ec827222cbded8b088ec2670773561aa7b125127659207804bb5e0fba6ef6a33",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
