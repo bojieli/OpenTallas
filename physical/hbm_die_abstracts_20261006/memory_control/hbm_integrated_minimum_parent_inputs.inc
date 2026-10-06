@@ -178,7 +178,7 @@ zero(dut.w2_map_tags);
 zero(dut.w2_map_cfg);
 
 // Additive formatter preinstall actual parent ABI; authorityoffers quiet.
-zero(dut.fixture_formatter_enable);zero(dut.fixture_formatter_go);zero(dut.fixture_formatter_consumer_r);
+zero(dut.fixture_formatter_enable);zero(dut.fixture_formatter_go);
 zero(dut.preinstall_begin_v);
 zero(dut.preinstall_begin_frame);
 zero(dut.preinstall_score_base);

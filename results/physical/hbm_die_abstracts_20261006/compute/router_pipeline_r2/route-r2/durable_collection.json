@@ -4,7 +4,7 @@
   "route_docker": "ad31d425b8fb",
   "route_root": "/srv/opentallas-scratch/codex/carson-router-successor-20261006/route-r2",
   "collector_pid": 591065,
-  "publisher_pid": 593030,
+  "publisher_pid": 606414,
   "daemon_parent_pid": 1,
   "collector_log": "/tmp/carson-router-successor-collector-20261006.log",
   "publisher_log": "/tmp/carson-router-successor-publisher-20261006.log",
@@ -24,6 +24,8 @@
   ],
   "source_file_sha256": {
     "tools/hbm_router_successor_collect_20261006.py": "ba207ee60caad08feffbe863a7703e26144e1528e2923f65ff15f4cb5704ee59",
-    "tools/hbm_router_successor_publish_20261006.py": "1beae990e8e4b108cb451c49f99c097aea4fc70b9e186cf6caa1bc5bcb5a9d1f"
-  }
+    "tools/hbm_router_successor_publish_20261006.py": "4c331726acec795abc315ceee1060cb10ba1857edb302567f228e1b457419ca1"
+  },
+  "callback_thread": "01a10f3a-f2f0-7900-9be0-099f8ef029f7",
+  "callback_on_terminal_or_publication_error": true
 }

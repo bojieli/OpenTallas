@@ -43,6 +43,40 @@ def save(p, data):
     p.write_text(json.dumps(data, indent=2) + '\n')
 
 
+def corner_verdict(content, corner, exitcode):
+    """Fail closed on missing STA evidence; process success is not timing closure."""
+    errors = []
+    if exitcode:
+        errors.append(f'STA process exit {exitcode}')
+    if re.search(r'\[ERROR\b', content):
+        errors.append('STA reported an error')
+    if re.findall(r'^OT_CORNER (\S+)\s*$', content, re.M) != [corner]:
+        errors.append('missing or ambiguous corner identity')
+    metrics = {}
+    for name in ('OT_WS', 'OT_WS_R2R', 'OT_VIOL_D_PINS'):
+        values = re.findall(r'^' + name + r' ([^\s]+)\s*$', content, re.M)
+        try:
+            value = float(values[0]) if len(values) == 1 else float('nan')
+        except ValueError:
+            value = float('nan')
+        if not math.isfinite(value):
+            errors.append(f'missing, ambiguous or nonfinite {name}')
+        else:
+            metrics[name] = value
+    if 'OT_VIOL_D_PINS' in metrics and (metrics['OT_VIOL_D_PINS'] < 0 or
+                                      not metrics['OT_VIOL_D_PINS'].is_integer()):
+        errors.append('invalid violating endpoint count')
+    # worst_slack_cmd uses seconds; report path properties use ASAP7 ps.
+    slack = metrics.get('OT_WS')
+    passed = not errors and slack >= 0 and metrics['OT_WS_R2R'] >= 0 and metrics['OT_VIOL_D_PINS'] == 0
+    return dict(evidence_valid=not errors, errors=errors,
+                worst_slack_ps=None if slack is None else slack * 1e12,
+                worst_internal_reg_to_reg_slack_ps=metrics.get('OT_WS_R2R'),
+                violating_d_pins=metrics.get('OT_VIOL_D_PINS'),
+                conditional_internal_timing_pass=passed,
+                parent_qualified=False, full_endpoint_signoff=False)
+
+
 def declaration(kind, name, width):
     return kind + (' ' if width == 1 else f' [{width-1}:0] ') + name
 
@@ -265,7 +299,8 @@ report_check_types -max_slew -max_capacitance -max_fanout -violators
             with (out/('native_'+name+'.log')).open('w') as f:
                 exitcode = subprocess.call(cmd, stdout=f, stderr=subprocess.STDOUT)
             corners[name] = dict(exit=exitcode, named_parasitic_corner=corner,
-                                 tcl_sha256=C.sha(path), log_sha256=C.sha(out/('native_'+name+'.log')))
+                                 tcl_sha256=C.sha(path), log_sha256=C.sha(out/('native_'+name+'.log')),
+                                 **corner_verdict((out/('native_'+name+'.log')).read_text(), name, exitcode))
             if exitcode: break
         r.update(phase='CONNECTED_NATIVE_ROUTE_CORNERS_TERMINAL', corners=corners,
                  retained_sha256={p: C.sha(work/SUB/p) for p in ['6_final.odb', '6_final.spef', '6_final.sdc']})
@@ -273,8 +308,15 @@ report_check_types -max_slew -max_capacitance -max_fanout -violators
         r['actual_final_stdcell_area_um2'] = metrics['finish__design__instance__area__stdcell']
         r['finite_cell_CTS_repair_cap_pass'] = r['actual_final_stdcell_area_um2'] <= r['maximum_final_cell_CTS_repair_um2']
         r['parent_qualified'] = False
+        r['full_endpoint_signoff'] = False
+        r['conditional_internal_timing_pass'] = (
+            set(corners) == {'ss', 'ff'} and
+            all(v['conditional_internal_timing_pass'] for v in corners.values()))
+        r['verdict'] = ('CONDITIONAL_NATIVE_INTERNAL_SSFF_PASS_PARENT_OPEN'
+                        if r['conditional_internal_timing_pass'] and r['finite_cell_CTS_repair_cap_pass']
+                        else 'CONDITIONAL_NATIVE_INTERNAL_SSFF_FAIL_PARENT_OPEN')
         save(out/'route.json', r)
-        if not r['finite_cell_CTS_repair_cap_pass'] or len(corners) != 2 or any(v['exit'] for v in corners.values()):
+        if not r['finite_cell_CTS_repair_cap_pass'] or not r['conditional_internal_timing_pass']:
             return 1
     return rc
 
