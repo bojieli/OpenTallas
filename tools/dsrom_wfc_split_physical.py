@@ -373,6 +373,69 @@ def cmd_record(a):
                       for k, v in rec["cases"].items()}, indent=1))
 
 
+REF_STAGE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"   # the reference controller (wave 1)
+
+
+def stage_jobs(txt):
+    jobs, outs = [], []
+    for line in txt.splitlines():
+        if line.startswith("JOB "):
+            jobs.append({k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line)})
+        elif line.startswith("OUT "):
+            outs.append(int(re.search(r"cycle=(\d+)", line).group(1)))
+    return jobs, outs
+
+
+def cmd_closure(a):
+    """closure.json for tools/dsrom_1m_allmeasured.wfc_closure: the routed record (src + stg cases), the exact
+    benches, and the cycle charge measured on the stage bench against the reference controller."""
+    rec = json.loads(a.record.read_text())
+    els = {}
+    for key, inst in (("src", "src"), ("stg", "stg")):
+        k = next(c for c in rec["cases"] if rec["cases"][c]["inst"] == inst)
+        c = rec["cases"][k]
+        t = c["timing"]
+        els[inst] = dict(route=k, accepted=c["accepted_40_15_die150"],
+                         ss_setup_ps=min(t[m]["ss_setup_ps"] for m in ("incontext", "reg2reg")),
+                         ff_hold_ps=min(t[m]["ff_hold_ps"] for m in ("incontext", "reg2reg")),
+                         die150_ss_setup_ps=t["die150"]["ss_setup_ps"], die150_ff_hold_ps=t["die150"]["ff_hold_ps"],
+                         drc=c["drc_errors"], antenna=c["antenna_violating_nets"], drv=c["drv"],
+                         route_period_ps=c["route_period_ps"], die_skew_ps=c["die_skew_ps"])
+    ref = json.loads(REF_STAGE.read_text())["stage_wave1"]["jobs"]
+    jobs, outs = stage_jobs(a.stage_tail.read_text())
+    assert len(jobs) == len(ref) == len(outs) and "PASS" in a.stage_tail.read_text().split()
+    handoff = max(jobs[i]["start"] - jobs[i - 1]["done"] for i in range(1, len(jobs)))
+    ref_handoff = max(j["handoff_after_prev_done"] for j in ref[1:])
+    out_lat = max(o - j["done"] for j, o in zip(jobs, outs))
+    ref_out = max(j["out_done_after_done"] for j in ref)
+    entry = jobs[0]["start"] - ref[0]["start"]
+    busy0 = ref[0]["busy"]
+    exact = all(x in a.bench_summary.read_text() for x in ("EQUIV PASS",)) and a.exact
+    accepted = all(e["accepted"] for e in els.values())
+    out = dict(schema="opentallas.rtl.dsrom_wfc_split_closure.v1", source_commit=a.source_commit,
+               accepted=accepted, exact=exact,
+               verdict=("CLOSED: src and stg WFC elements routed at 770 ps with the +-150 ps die IO model, signed off at "
+                        "833.333 ps: SS >= +40 / FF >= +15 in context, reg2reg and die150; DRC / antenna / DRV 0; exact"
+                        if accepted and exact else "NOT CLOSED"),
+               acceptance_rule="owner UPDATE 2 (2026-10-06): SS setup >= +40, FF hold >= +15 (incontext, reg2reg, die150), "
+                               "DRC 0, antenna 0, max slew / cap / fanout violators 0 at SS and FF",
+               elements=els, physical_record=str(a.record_rel), bench_summary=str(a.bench_rel),
+               stage_bench=str(a.stage_rel),
+               charge=dict(handoff_cycles=handoff, reference_handoff_cycles=ref_handoff,
+                           measured_interval_overhead=round(handoff / busy0, 6),
+                           reference_interval_overhead=round(ref_handoff / busy0, 6),
+                           hop_delta_cycles=(out_lat - ref_out) + entry,
+                           hop_delta_parts=dict(done_to_out_cycles=out_lat, reference_done_to_out_cycles=ref_out,
+                                                entry_start_delta_cycles=entry),
+                           basis="stage bench w1 (L20 stage, 6 jobs) vs the reference ot_rom_pkg_ctrl_wf wave-1 run "
+                                 "(results/rtl/dsrom_wavefront_verify_20261004/record.json): handoff = max done -> next start; "
+                                 "hop charge = (done -> outbound flit) delta + first-job entry delta (inbound link), "
+                                 "conservatively both on every stage hop"))
+    a.out.write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(dict(accepted=accepted, exact=exact, charge=out["charge"]), indent=1))
+    return 0 if accepted and exact else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -400,8 +463,17 @@ def main():
     r.add_argument("--case", action="append", required=True)
     r.add_argument("--note", action="append", default=[])
     r.add_argument("--out", type=Path, required=True)
+    z = sub.add_parser("closure")
+    z.add_argument("--record", type=Path, required=True)
+    z.add_argument("--stage-tail", type=Path, required=True)
+    z.add_argument("--bench-summary", type=Path, required=True)
+    z.add_argument("--exact", action="store_true", help="every positive bench PASS and every negative FAIL (checked by hand)")
+    z.add_argument("--source-commit", required=True)
+    z.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    {"prep": cmd_prep, "sta": cmd_sta, "check": cmd_check, "record": cmd_record}[a.cmd](a)
+    if a.cmd == "closure":
+        a.record_rel, a.bench_rel, a.stage_rel = (p.resolve().relative_to(ROOT) for p in (a.record, a.bench_summary, a.stage_tail))
+    sys.exit({"prep": cmd_prep, "sta": cmd_sta, "check": cmd_check, "record": cmd_record, "closure": cmd_closure}[a.cmd](a))
 
 
 if __name__ == "__main__":
