@@ -1,0 +1,83 @@
+{
+  "name": "ot_attn_hgrp_m6h1",
+  "interface_scope": "one-head m6h1 leaf; 64 attention tile parents open",
+  "source_signoff_reused": true,
+  "parent_qualified": false,
+  "source_evidence": "b32d59700 one-head m6h1 SS60 FF25",
+  "source_signoff_record": "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/retained_export.json",
+  "source_signoff_hash": "95958aacfe6c6bb34dd46aae9716f9945594f2dc2cd5ea29938188c79e882584",
+  "retained_inputs": {
+    "6_final.odb": "e9e3989ad0fa31f6ba2cbafbc4959bbf6b3e56f5114a065a7a83eea1d880fffb",
+    "6_final.sdc": "6eb93c1474114c27e92b190110607d9a9825fa682b9ff9c21e04d7fe6e621b4e",
+    "6_final.spef": "4bbf6b68578078cac67cfe2f94dd028cd0bce33a1d5533da4b20cdf47e104778"
+  },
+  "files": {
+    "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+    "ot_attn_hgrp_m6h1_ff.lib": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+    "ot_attn_hgrp_m6h1_ss.lib": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b"
+  },
+  "pin_geometry": "pins.json",
+  "macro_size_um": [
+    294.782,
+    294.782
+  ],
+  "parent_endpoint_mapping": null,
+  "parent_receiver_loads": null,
+  "parent_clock_skew": null,
+  "internal_CTS_included": true,
+  "constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "interface_sdc_sha256": "2299a1dad872c2fcdeb379226a7e49fe774f3c250c683f38e263c0d757fddb7b",
+  "fixture_output_load_fF": 3.898,
+  "corners": {
+    "ss": {
+      "liberty": "ot_attn_hgrp_m6h1_ss.lib",
+      "sha256": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b",
+      "time_unit": "1ps",
+      "capacitance_unit": "1fF",
+      "clock_pin": "clk",
+      "clock_pin_capacitance_fF": 16.3802,
+      "internal_clock_tree": {
+        "min_clock_tree_path": {
+          "rise_ps": 416.10757,
+          "fall_ps": 472.56421
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 469.39941,
+          "fall_ps": 525.10248
+        }
+      },
+      "source_setup_ps": 18.91120593455753,
+      "source_hold_ps": null,
+      "interface_extraction_receipt": "abstract.json",
+      "parent_qualified": false
+    },
+    "ff": {
+      "liberty": "ot_attn_hgrp_m6h1_ff.lib",
+      "sha256": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+      "time_unit": "1ps",
+      "capacitance_unit": "1fF",
+      "clock_pin": "clk",
+      "clock_pin_capacitance_fF": 16.8015,
+      "internal_clock_tree": {
+        "min_clock_tree_path": {
+          "rise_ps": 256.08813,
+          "fall_ps": 269.25711
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 299.41638,
+          "fall_ps": 315.46106
+        }
+      },
+      "source_setup_ps": null,
+      "source_hold_ps": 1.5452361612489085,
+      "interface_extraction_receipt": "abstract.json",
+      "parent_qualified": false
+    }
+  },
+  "jobs_rebuilt": 0,
+  "passing_gates_repeated": 0
+}
