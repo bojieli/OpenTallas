@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.hbm.compute.quarter_sources.v1",
+  "sources": {
+    "rtl/hdc/ot_hdc_fastfp_lat_c12.sv": "870020b95d623ed481ec8caebda69cb80f57e43dd824ece5fa31c381ebd4c5ac",
+    "rtl/hdc/ot_hdc_fp32_f12.sv": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "61c22f6180c13408549ee52020cd3150860243c91393b268eddcc308eb46fc24",
+    "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv": "5d09b4df12d1d4da73aa331b3b21cc5af540e289bbf3f45c0773754b489c5584",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
+    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": "16132b073fa54389782f6081f5c26b6f7be53c4941f87932c6b5c82bd3122411",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv": "1dac0e5d52c8082bd908f8a775ac7befd943668928ebfe2be8f533bc17437e62",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "4e30c4df3e54953fc25bfe34d745614ad218f823ea16e9517c57811983d24c1d",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv": "fb5a05ea3ad7ebb24db457733ede40c8da48abe88abe6577b0c0ae64eb2c504e",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_side_result_c12.sv": "7b60ea8e66981e40d6b7f4de93dee8d9be7f01b5199fbac8b07b5936953a52fd"
+  },
+  "default_parameters": {
+    "ENABLE": 0,
+    "SFU_LANES": 64,
+    "HC_POST_NG": 320
+  },
+  "status": "REAL_RTL_WRITTEN_DEFAULT_OFF_SYNTAX_PASS_ENABLED_EXACT_AND_PHYSICAL_PENDING_CPU_FIT",
+  "source_size": "results/physical/hbm_die_abstracts_20261006/compute/quarter_size.json",
+  "side_adapter": "Only module name/vo port added: valid mirrors primitive vo OR into the same y_q result edge; source arithmetic and existing intermediate attributes preserved",
+  "hc_coverage": "HC_POST only; HC_PRE/projection/Sinkhorn/selection remain explicit actual source dependencies",
+  "source_binding": "Existing W2 protected cut/bank unchanged; nonnormal bank pauses engines through actual ICG; no free protection or leaf parent clockQ inheritance",
+  "die_binding": "OPEN: actual wide engine request/response ports require corrected finite 1024b framing and real output consumer; old stub widths are historical",
+  "closure": false,
+  "adopted": false,
+  "exact_gate": "New held parent minimum component one seed plus real UE permission negative, pending capacity. Existing child exact campaign is reused, not replayed.",
+  "physical": "Full 64 SFU / 320 HC groups with protected hold/control/ICG, 55-60% target and 2-4 meaningful geometry variants only with real CPU headroom. Original source and failure evidence unchanged."
+}
