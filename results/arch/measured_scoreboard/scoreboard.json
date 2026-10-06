@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "10337e43f",
+ "generated_from_commit": "819ed256e",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1266,9 +1266,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 1686.5,
+   "value": 1673.8,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1311,9 +1311,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4946.7,
+   "value": 4900.4,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
@@ -1326,9 +1326,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
    "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4624.3,
+   "value": 4581.0,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
@@ -1341,9 +1341,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 4079.7,
+   "value": 4041.5,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
@@ -1356,9 +1356,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 5135.2,
+   "value": 5087.2,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1431,9 +1431,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "AR_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
-   "value": 592.926,
+   "value": 597.449,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1461,9 +1461,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 718.33,
+   "value": 722.697,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1490,9 +1490,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.II_us",
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
-   "value": 25.081,
+   "value": 25.05,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -1712,7 +1712,7 @@
    "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4.159,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
@@ -2104,9 +2104,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.silicon.stacks",
    "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 452,
+   "value": 468,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.total_silicon_mm2": {
@@ -2119,9 +2119,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.silicon.total_mm2",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 801068.0,
+   "value": 865489.3,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_ar_b1_pg": {
@@ -2134,9 +2134,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 5.7992,
+   "value": 6.3722,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_ar_b1_icg": {
@@ -2149,9 +2149,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_icg.J_per_token",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 14.2838,
+   "value": 16.1062,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_mtp_b1_pg": {
@@ -2164,9 +2164,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
    "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 2.2945,
+   "value": 2.5345,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.tok_s_per_kw_ar_b1_pg": {
@@ -2179,9 +2179,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.tok_s_per_kW",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 172.44,
+   "value": 156.93,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.static_w_icg": {
@@ -2194,9 +2194,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_icg.static_w",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 23439.2,
+   "value": 26760.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.sat_ar_tok_s": {
@@ -2882,7 +2882,7 @@
    "note": "uses model rate 2,624.4, not the measured 2,225.7; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 5.771,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_ar_system_w": {
@@ -2897,7 +2897,7 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 12544.3,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_mtp_J_per_token": {
@@ -2912,7 +2912,7 @@
    "note": "note says pending measured draft (6,351.9 rate); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 2.8904,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.ablation_ar_J_per_token": {
@@ -2942,7 +2942,7 @@
    "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 457264.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_logic_mm2": {
@@ -2957,7 +2957,7 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 32688.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.bulk_copy_ss_slack_ps": {
@@ -4378,7 +4378,7 @@
    "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 84096.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_mtp_per_1000mm2": {
@@ -4393,7 +4393,7 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6.1596,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.rom_mtp_per_1000mm2": {
@@ -4406,9 +4406,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_compare.iso_silicon.rows.rom_mtp.per_user_tok_s_per_1000mm2",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 6.0821,
+   "value": 5.662,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.hbm_accel_mtp_per_1000mm2": {
@@ -4423,7 +4423,7 @@
    "note": "MTP pending measured draft; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 10.2418,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_rom_replicas": {
@@ -4436,9 +4436,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.replicas_at_ref_silicon",
    "note": "iso-total-silicon; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 9.526,
+   "value": 10.292,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_rom_agg_b1_ar": {
@@ -4451,9 +4451,9 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_compare.iso_silicon.rows.b200x8_ar.aggregate_b1_tok_s_integer_replicas",
    "note": "vs ROM 2,466.2; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 2402.1,
+   "value": 2669.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_power_sat_ar": {
@@ -4498,7 +4498,7 @@
    "note": "8x689 W measured draw / modelled rate; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 24.3987,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_mtp_b1_J_per_token_1m": {
@@ -4513,7 +4513,7 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 12.5714,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_system_w": {
@@ -4528,7 +4528,7 @@
    "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6512.0,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_ar_b1_tdp_J_per_token_1m": {
@@ -4599,9 +4599,9 @@
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "measured_share",
    "note": "rest listed in still_modelled",
-   "value": 0.9999,
+   "value": 0.9998,
    "resolved": true,
-   "blob": "e313df6e1ded79a821ab60399bb0f65e7f0b353a",
+   "blob": "c38521ba0c13a2d73d2b850303a95563d57c6865",
    "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
@@ -4748,7 +4748,7 @@
    "note": "tools/energy_silicon_measured.py; no Qwen tile gate-level power",
    "value": 0.109,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_qwen.j_per_token_ar_p8191_tp4": {
@@ -4763,7 +4763,7 @@
    "note": "tools/energy_silicon_measured.py",
    "value": 0.7611,
    "resolved": true,
-   "blob": "710d9c19e2384ee9eb6f4079b4c4de460e9b18d3",
+   "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
    "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.ar_tok_s": {
@@ -5788,8 +5788,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json) + 112 cycles (core r5b_f3ba DEC_LA_AMQ, SS +0.87 / FF +7.12 ps) at 1.2 GHz; MTP mode = AR (DSpark OFF); full-system SS/FF not qualified",
    "value": 6187.0,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "qwen_rom.token_cycles_8k_composed": {
    "target": "qwen_rom",
@@ -5803,8 +5803,8 @@
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "value": 193955,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5816,10 +5816,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "ds_rom.conditional_all.composed.AR_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); alternatives not stacked",
-   "value": 2401.7,
+   "value": 2290.1,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5831,10 +5831,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "ds_rom.conditional_all.composed.MTP_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 6541.7,
+   "value": 6287.8,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_ar_tok_s": {
    "target": "hbm_ds",
@@ -5846,10 +5846,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.floor.AR_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis Manhattan",
-   "value": 2182.6,
+   "value": 2048.9,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5861,10 +5861,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.floor.MTP_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 4161.1,
+   "value": 4040.3,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_ar_tok_s": {
    "target": "hbm_ds",
@@ -5876,10 +5876,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.median.AR_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis median routed bundle",
-   "value": 2132.0,
+   "value": 2004.3,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5891,10 +5891,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.median.MTP_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 4116.3,
+   "value": 3998.1,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_ar_tok_s": {
    "target": "hbm_ds",
@@ -5906,10 +5906,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.bound.AR_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis longest routed bundle",
-   "value": 2103.6,
+   "value": 1979.1,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5921,10 +5921,10 @@
    "path": "results/arch/three_machine_compose/compose.json",
    "pointer": "hbm_ds.rows.bound.MTP_tok_s",
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 4090.7,
+   "value": 3973.8,
    "resolved": true,
-   "blob": "a8a844c26859d47f51541d7ed9102ee6fc074256",
-   "last_commit": "7663db638 2026-10-05"
+   "blob": "05f2b80a14233f962417a2b216f0605bc2eff183",
+   "last_commit": "819ed256e 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
@@ -5938,7 +5938,7 @@
    "expr": "x0",
    "derived": true,
    "note": "still-modelled terms listed in the composition record",
-   "value": 0.9999,
+   "value": 0.9998,
    "resolved": true,
    "status": "measured"
   },
@@ -6058,7 +6058,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 0.7759,
+   "value": 0.77,
    "resolved": true,
    "status": "partial"
   },
@@ -6075,7 +6075,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "HBM side: fully-measured accelerator composition (dshbm_1m_allmeasured); not iso-silicon",
-   "value": 1.0563,
+   "value": 1.0464,
    "resolved": true,
    "status": "partial"
   },
@@ -6092,7 +6092,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side tier-2 MODEL: no DS-V4.1 decode measured on any GPU",
-   "value": 6.3188,
+   "value": 6.2713,
    "resolved": true,
    "status": "modelled"
   },
@@ -6109,7 +6109,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "GPU side modelled (1.94x MTP sensitivity)",
-   "value": 9.5496,
+   "value": 9.4602,
    "resolved": true,
    "status": "modelled"
   },
@@ -6125,7 +6125,7 @@
    ],
    "expr": "x0/x1",
    "derived": true,
-   "value": 0.6839,
+   "value": 0.6787,
    "resolved": true,
    "status": "modelled"
   },
@@ -6176,7 +6176,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 0.791,
+   "value": 0.8351,
    "resolved": true,
    "status": "partial"
   },
@@ -6193,7 +6193,7 @@
    "expr": "x0/x1",
    "derived": true,
    "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
-   "value": 1.2017,
+   "value": 1.2257,
    "resolved": true,
    "status": "partial"
   }
@@ -6885,9 +6885,9 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1686.5,
+    "ds_rom.ar_tok_s_1m": 1673.8,
     "ds_rom.ar_tok_s_1m_as_built": 2211.7,
-    "ds_rom.mtp_tok_s_1m": 4946.7,
+    "ds_rom.mtp_tok_s_1m": 4900.4,
     "ds_rom.mtp_tok_s_1m_as_built": 6333.6
    }
   },
@@ -7178,7 +7178,7 @@
    ],
    "path_exists": true,
    "figure_values": {
-    "ds_rom.ar_tok_s_1m": 1686.5,
+    "ds_rom.ar_tok_s_1m": 1673.8,
     "ds_rom.ar_tok_s_1m_s81_window_asbuilt": 829.4,
     "ds_rom.window_s81_lf_us_mean": 0.1366
    }

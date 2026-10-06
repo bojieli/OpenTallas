@@ -28,6 +28,63 @@ SOURCES = [
 ]
 
 
+def caller_boundary_contract():
+    """Resolve the actual D-side replacement hook; never add duplicate stages.
+
+    This is a source integration check, not an SM implementation or a claim
+    that internal nets are exported synthesizable ports in the current caller.
+    """
+    import re
+    pq_rel = 'rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv'
+    caller_rel = 'rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv'
+    protected_rel = 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv'
+    pq, caller, protected = [(ROOT / p).read_text() for p in [pq_rel, caller_rel, protected_rel]]
+    required_pq = ['rv_q <= cv[0]', 'rrow_q <= crow[RW-1:0]; rdata_q <= cy',
+        'fault_q <= fault_q | (|cf) | pack_bad_head | pack_xa_fault',
+        '.d({h_busy, h_arrive, h_released})', '.d({rv_q, fault_q})', '.d({rrow_q, rdata_q})']
+    for fragment in required_pq:
+        if fragment not in pq: raise ValueError('Actual PQ pre-capture source changed: ' + fragment)
+    if '.ctx_valid(start && sm_ready)' not in caller or 'assign start_ready=sm_ready && ctx_ready' not in caller:
+        raise ValueError('Actual caller typed identity admission changed')
+    for fragment in ['stage[2][270]', 'stage[2][265:258]', 'stage[2][257:2]',
+                     'stage[1][268]', 'stage[1][267]', 'stage[1][266]']:
+        if fragment not in protected: raise ValueError('Protected caller code layout changed: '+fragment)
+    port_head = caller.split(');', 1)[0]
+    exported = bool(re.search(r'output\s+(?:wire\s+)?(?:\[[^]]+\]\s+)?producer_cv\b', port_head))
+    return dict(schema='opentallas.w2.actual-caller-replacement-hook.v1',
+        source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in [pq_rel,caller_rel,protected_rel]},
+        shape=dict(NC=8,RMAX=256,RW=8,PIO=2,NCTX=11),
+        actual_D_side=dict(producer_cv='native_w2.u_sm.g_pq.cv[0]',
+            producer_crow='native_w2.u_sm.g_pq.crow[7:0]', producer_cy='native_w2.u_sm.g_pq.cy[255:0]',
+            producer_fault='(|native_w2.u_sm.g_pq.cf) | native_w2.u_sm.g_pq.pack_bad_head | native_w2.u_sm.g_pq.pack_xa_fault | native_w2.req_fault',
+            producer_busy='native_w2.u_sm.g_pq.h_busy', producer_arrive='native_w2.u_sm.g_pq.h_arrive',
+            producer_released='native_w2.u_sm.g_pq.h_released'),
+        identity_admission=dict(caller_start='native_w2.start', caller_sm_ready='native_w2.sm_ready',
+            caller_pair='native_w2.op_pack_w2',caller_bound='native_w2.op_bound',caller_rows='native_w2.op_rows[8:0]',
+            caller_op_a='native_w2.op_id_a',caller_op_b='native_w2.op_id_b',
+            caller_ctx_ready_receiver='native_w2.ctx_ready; replaces u_results readiness once'),
+        stages_replaced=['PQ rv_q/fault_q/rrow_q/rdata_q', 'PQ u_prv_o/u_prd_o PIO2',
+                         'PQ u_pbz PIO2 status', 'caller u_results NCTX11 identity'],
+        stage_count=dict(result_capture=3,status_capture=2,added_against_original=0),
+        protected_representation=dict(stage_words=5,identity_words=14,word_bits=72,
+            backing='u_caller_cut.protected_caller.u_protected.output_stage[0:2].u_state.code and u_identity.code',
+            valid='checked stage[2][270]',row='checked stage[2][265:258]',data='checked stage[2][257:2]',
+            permission='all W6 banks normal and identity valid; CE holds, UE refuses; no encode-after-old-output protection claim'),
+        post_capture_ports_are_not_producer_inputs=['native_w2.rv','native_w2.rop','native_w2.rrow','native_w2.rdata'],
+        upstream_raw_ports_exported=exported, whole_caller_connected=exported,
+        remaining_source_owner='Claude SM, with Franklin/Gibbs selected live caller integration',
+        required_owner_change='Expose this pre-capture source through an explicit port hook and replace the listed old captures/identity once in the ON branch; preserve the OFF caller byte-for-byte. No hierarchical cross-module net reference is a physical port binding.',
+        readyless_callback=True,new_owner_ledgers=0,physical_clock_or_load_qualified=False)
+
+
+def check_caller_binding(bindings):
+    """Reject a post-PIO or incomplete caller join before elaboration/mapping."""
+    expected=caller_boundary_contract()['actual_D_side']
+    if bindings != expected:
+        raise ValueError('W2 producer hook must use actual pre-capture source; post-PIO outputs would duplicate capture/identity stages')
+    return True
+
+
 def prepare():
     from uarch_model import hbm_w2_publication_model
     model = hbm_w2_publication_model()
@@ -68,19 +125,21 @@ def prepare():
                                           str(contract_path.relative_to(ROOT))]},
         sized_context=model['dedicated_W2_context'],
         additive_parent_protection=model['additive_parent_protection'],
+        actual_caller_replacement_hook=caller_boundary_contract(),
+        retained_parent_map='results/physical/hbm_w2_parent_physical_20261006/mapped_r2/terminal.json',
         W2_core_bbox_um=child['core_bbox_um'],
         W2_gross_bbox_um=child['gross_bbox_um'],
         W2_pin_track_allocation=pins,
         W2_receiver_paths=dict(
             result_data_driver='u_caller_cut.protected_caller.u_protected.output_stage[2].u_state/code',
-            result_valid_driver='native_w2.u_sm.g_pq.u_prv_o.g_s[1].g_r.u/q[0]',
+            result_valid_driver='u_caller_cut.protected_caller.u_protected.output_stage[2].u_state/code checked bit270',
             result_identity_driver='u_caller_cut.protected_caller.u_protected.u_identity/code',
             request_capture='g_on.g_die[d].u_shared.u_shared_owner.on.request_hold',
             response_driver='g_on.g_die[d].u_shared.u_shared_owner.on.response_hold',
             owner_driver='g_on.g_die[d].u_shared.u_shared_owner.on.control_code/frame_lo/frame_hi',
             crossing='protected_transport.u_protected_gateway.u_existing_shape_cdc.u_req/u_rsp',
             CP_reset='g_on.g_die[d].u_cp_reset',
-            quiet_output_receiver=None),
+            quiet_output_receiver='all_routes_drained positive root-POR/local-CP warm fence'),
         clock_port_map=dict(clk_sm='selected parent clk_sm', clk_mem='selected parent clk_mem',
                             rst_sm_n='root SM reset', rst_mem_n='root memory reset',
                             cp_reset_n='local CP reset only'),
@@ -89,7 +148,10 @@ def prepare():
         rejected_REGISTERED_clock_evidence=dict(
             setup_skew_ps=old['cts__clock__skew__setup'],
             hold_skew_ps=old['cts__clock__skew__hold'], transferable=False),
-        actual_parent_mapped_netlist=None, actual_parent_ODB=None, actual_parent_SPEF=None,
+        actual_parent_mapped_netlist=dict(host='ot-epyc2',
+            root='/srv/opentallas-scratch2/codex/w2-parent-retained-map-20261006/donor-map-r2',
+            sha256='4cc2d817f9343ed5806b0cbc8794539c28206dd6c5d7c9a34cd8a55b1e526159'),
+        actual_parent_ODB=None, actual_parent_SPEF=None,
         actual_parent_clock_and_receiver_binding=None,
         sink_and_context_geometry_are_not_interchangeable=True,
         source_callbacks_have_no_ready=True, independent_owner_ledgers_added=0,
@@ -102,7 +164,7 @@ def prepare():
         remaining_bindings=model['additive_parent_protection']['missing_owner_inputs'])
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / 'binding.json').write_text(json.dumps(record, indent=2) + '\n')
-    print(f'{TOP}: {len(pins)} finite sink tracks, source cut prepared; physical dispatch HOLD')
+    print(f'{TOP}: {len(pins)} finite sink tracks, retained327725-cell parent map bound; actual caller export/CTS/load HOLD')
     return record
 
 

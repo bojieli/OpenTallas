@@ -1,0 +1,148 @@
+{
+  "status": "PRE_PHYSICAL_BUILD_CLOCK_ENABLE_ROUTE_PRICE",
+  "initial_pre_RTL_record": "read_qualification_prebuild_r2.json",
+  "model": {
+    "item": 4,
+    "status": "PREBUILD_ONLY_DEFAULT_OFF",
+    "shape": {
+      "NPC": 32,
+      "banks": 4,
+      "columns_per_bank": 17,
+      "rows_per_bank": 32,
+      "row_bits": 4224
+    },
+    "arithmetic": {
+      "MACs_per_cycle": 0,
+      "rounding_changes": 0,
+      "golden_reduction_changes": 0
+    },
+    "memory": {
+      "implementation": "actual FF arrays with explicit per-row write enables; no inferred SRAM credit",
+      "payload_FF_bits": 540672,
+      "payload_FF_cell_floor_um2": 157659.95520000003,
+      "write_ports": 68,
+      "aggregate_write_port_capacity_bytes_per_cycle": 2112,
+      "max_write_bytes_per_cycle": 1024,
+      "read_ports": 272,
+      "read_groups_per_column": 4,
+      "logical_read_columns": 68,
+      "max_read_bytes_per_cycle": 8448.0,
+      "terminal_read_bytes_per_cycle": 2112.0,
+      "write_feedback_mux_bits": 540672,
+      "read_mux_2to1_bits": 523776,
+      "protection": "retain bounds, user/full-row tags, order, duplicate landing, poison and transaction identities; no original SRAM/HBM/link protection removed"
+    },
+    "pipeline": {
+      "decode_stages": 5,
+      "decode_FF_upper_bits": 53600,
+      "winner_FF_bits": 2176,
+      "column_payload_FF_bits": 16896,
+      "row_write_enable_FF_bits": 2176,
+      "ack_FF_upper_bits": 9152,
+      "extra_read_FF_bits": 67584,
+      "writer_control_upper_bits": 2048,
+      "read_wanted_snapshot_FF_bits": 88,
+      "read_owner_range_user_snapshot_FF_bits": 53,
+      "read_completion_group_snapshot_FF_bits": 16,
+      "removed_direct_bank_ok_FF_bits": 4,
+      "read_qualification_added_FF_bits": 153,
+      "read_qualification": "fresh accepted-request operands and preedge completion captured with payload; qualification at existing second read edge, not reused permission",
+      "job_control_upper_bits": 1024,
+      "added_FF_upper_bits": 154809,
+      "qualified_ready": "current elastic occupancy and downstream transfer; never permission cached across mutation",
+      "acceptance_debt": "retain accepted original beat identities through actual memory write and stream engine drain"
+    },
+    "communication": {
+      "response_boundary_bits_per_cycle": 8800,
+      "landing_data_bits_per_cycle": 16896,
+      "read_boundary_bits_per_cycle": 16896,
+      "read_control_snapshot_internal_bits_per_cycle": 157,
+      "read_owner_operand_receiver_replicas": 4,
+      "read_owner_operand_max_receiver_fanout": 4,
+      "read_control_directed_bit_routes": 316,
+      "read_control_route_tracks_lower_bound": 316,
+      "read_snapshot_enable_additional_sinks": 157,
+      "read_control_extra_external_ports": 0,
+      "read_control_extra_memory_ports": 0,
+      "replicas": 68,
+      "per_column_winner_inputs": 32,
+      "landing_mux_2to1_bits": 523776,
+      "writer_fanout": "registered per-column payload and per-row enable; decode cannot drive payload array directly",
+      "track_demand_lower_bound": 25696,
+      "actual_parent_channel_capacity": null,
+      "parent_channel_fit": false
+    },
+    "area": {
+      "retained_prelayout_cell_um2": 568089.142192,
+      "new_FF_upper_um2": 45142.3044,
+      "read_qualification_logic_allowance_um2": 69.28416,
+      "read_snapshot_enable_mux_allowance_um2": 54.93744,
+      "read_qualification_logic_savings_credit_um2": 0,
+      "mux_upper_um2": 321024.0,
+      "cell_upper_um2": 934379.6681920001,
+      "physical_core_reservation_um2": 2149073.2368416,
+      "actual_parent_slot": null,
+      "parent_slot_fit": false
+    },
+    "latency": {
+      "job_admission_added_cycles_upper": 4,
+      "landing_added_cycles_upper": 7,
+      "read_added_cycles": 1,
+      "read_qualification_added_cycles": 0,
+      "existing_stream_validation_tail_cycles_upper": 8,
+      "writer_added_cycles_per_block_upper": 8,
+      "rows_per_job": 128,
+      "blocks_in_own_row": 16,
+      "own_row_added_cycles_upper": 128,
+      "added_layer_cycles_upper": 179,
+      "added_layer_ns_upper": 149.16666666666666,
+      "token_layers": 61,
+      "token_added_us_upper": 9.099166666666667,
+      "baseline_token_us": 604.3,
+      "rate_loss_upper_pct": 1.5057366650118595,
+      "mandatory_clock_closure": true,
+      "measured": false
+    },
+    "clock": {
+      "period_ps": 833.3333333333334,
+      "SS_setup_uncertainty_ps": 60,
+      "FF_hold_uncertainty_ps": 25,
+      "real_FF_clkQ_from_corner_liberty": true,
+      "read_snapshot_gross_new_clock_sinks": 157,
+      "read_snapshot_removed_clock_sinks": 4,
+      "read_snapshot_net_logical_clock_sink_delta": 153,
+      "read_snapshot_gross_sink_clock_cap_fF": {
+        "SS": 70.12216599999999,
+        "FF": 81.95557
+      },
+      "read_snapshot_clock_cap_basis": "pinned ORFS DFFHQNx1 SS/FF CLK capacitance in fF; no removed-sink credit, buffer/wire cost and root pin capacitance require actual CTS",
+      "parent_phase_insertion_and_terminal_loads_qualified": false
+    },
+    "gates": {
+      "fullshape_exact": false,
+      "routed_SS_FF": false,
+      "parent_context_closed": false,
+      "adoption": false
+    }
+  },
+  "new_RTL_since_passing_gate": false,
+  "fullshape_exact_gate": "results/rtl/dsrom_window_pipeline_20261005/stage_read_qualification_r2/record.json",
+  "stdcell_capacitance_source": {
+    "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "pin": "CLK",
+    "unit": "fF",
+    "SS": {
+      "cap": 0.446638,
+      "lib_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    "FF": {
+      "cap": 0.52201,
+      "lib_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    }
+  },
+  "actual_mapped_FF_delta": null,
+  "root_clock_cap_measured": false,
+  "new_physical_job_launched": false,
+  "adoption": false
+}
