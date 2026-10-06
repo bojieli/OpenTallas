@@ -405,7 +405,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // ---------------- PQ: banked output tags, op parity, configuration shadow + replay (see the PQ header) ------
     localparam integer CW = 3 * NSEG + 1;       // configuration words per load
     localparam integer RPW = 2 * NSEG + 1;      // replayed words: segments, classes, sub-blocks / positions
-    wire              pq_tp, pq_fault, pq_swap, pq_walking, pq_bank_free;
+    wire              pq_tp, pq_fault, pq_swap, pq_walking, pq_bank_free, pq_sh_free;
     wire [NB*TRW-1:0] pq_tree;
     wire [NB*3-1:0]   pq_pos;
     wire [NB-1:0]     pq_idle;
@@ -445,12 +445,22 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
     ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN)) u_pq (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v_x), .cfg_a(cfg_a_x), .cfg_d(cfg_d_x[25:0]), .go_e(go_e), .go_tag(go_tag_e), .walk_busy(walk_busy),
-        .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(sh_free), .swap(pq_swap), .fault(pq_fault),
+        .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(pq_sh_free), .swap(pq_swap), .fault(pq_fault),
         .t_tree(pq_tree), .t_pos(pq_pos), .q_idle(pq_idle), .q_row(pq_row), .q_idx(pq_idx), .q_n(pq_n));
-    assign walking = pq_walking;
-    // the tags module judges the load bank against go_e; a go still in the boundary / input registers (go_pin, go)
-    // switches the bank before the load's words arrive, so the load waits until that go has reached go_e
-    assign bank_free = pq_bank_free && (PQ == 0 || (!go_pin && !go));
+    // status outputs from registers (element boundary; Z21 post-CTS: the combinational outputs missed the output
+    // budget by 23-39 ps).  The tags module judges the load bank against go_e; a go still in the boundary / input
+    // registers (go_pin, go) switches the bank before the load's words arrive, so bank_free is low from the go_pin
+    // cycle on (registered: from the cycle after go_pin, when the loader can first start after that go's cfg_go).
+    // PQ = 0: the tags module's constants (1, 1) and walk_busy, registered alike.
+    reg st_walking, st_bank_free, st_sh_free;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin st_walking <= 1'b0; st_bank_free <= 1'b1; st_sh_free <= 1'b1; end
+        else begin
+            st_walking <= pq_walking;
+            st_bank_free <= pq_bank_free && (PQ == 0 || (!go_pin && !go));
+            st_sh_free <= pq_sh_free;
+        end
+    assign walking = st_walking; assign bank_free = st_bank_free; assign sh_free = st_sh_free;
     reg [7:0] drain;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) drain <= 8'd0;
