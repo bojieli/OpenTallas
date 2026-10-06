@@ -34,7 +34,7 @@ module tb_index_fp32_sram_adapter;
  reg [7:0] pending_tag;reg [31:0] pending_addr;
  reg outstanding=0;reg negative=0;reg [1023:0] held_data;reg [7:0] held_tag;
  initial forever begin
-  wait(rsp_v);held_tag=rsp_tag;
+  wait(rsp_v);@(negedge clk);held_tag=rsp_tag;
   begin:hold_provider_response
    reg [1094:0] snapshot;snapshot={rsp_tag,rsp_job,rsp_gen,rsp_pos,rsp_rank,rsp_data};
    repeat(3)begin @(negedge clk);if(!rsp_v||{rsp_tag,rsp_job,rsp_gen,rsp_pos,rsp_rank,rsp_data}!==snapshot)$fatal(1,"held protected provider response changed");end

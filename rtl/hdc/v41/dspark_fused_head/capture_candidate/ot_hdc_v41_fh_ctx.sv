@@ -30,6 +30,7 @@ module ot_hdc_v41_fh_ctx #(
     input  wire              rst_n,
     input wire retire_busy,retire_warm_ack,
     output reg warm_emit,
+    output wire leaf_valid, result_valid,
     input  wire              s3_v_in,          // the S3 valid that enters the engine's result valid line
     input  wire [1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1-1:0] a_tag_p_in,
     input  wire [G*W*32-1:0] res_in,
@@ -74,6 +75,8 @@ module ot_hdc_v41_fh_ctx #(
     reg [NW-1:0]     row_q, am_idx;
     reg [LV:0]       tv;
     reg              ov1, ov;
+    assign leaf_valid=tv[0];
+    assign result_valid=ov;
     always @(posedge clk) begin
         a_tag_p <= a_tag_p_in; res_u <= res_in; o_addr1 <= o_addr1_in; o_mask1 <= o_mask1_in;
         mask_q <= leaf_mask_in; row_q <= leaf_row_in; am_idx <= am_idx_in;
