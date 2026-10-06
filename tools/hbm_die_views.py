@@ -554,7 +554,7 @@ def cmd_die(a):
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
         idx = json.loads(Path(a.index).read_text())['masters']
         mismatched = {n for n in views if idx[n].get('check', {}).get('verdict') == 'MISMATCH'}
-        pinrec, regadj = {}, []
+        pinrec, regadj, contract_assumed = {}, [], []
         el = (work / 'elements.lef').read_text()
         for n, lef in views.items():
             r = parse_lef(lef)
@@ -576,6 +576,9 @@ def cmd_die(a):
                     if cur or not mm:
                         keep.append(ln)
             obs = '\n'.join(keep)
+            if n in (a.contract_m89 or ()):   # decided re-hardening to the die contract (PG <= M7): M8/M9 free
+                contract_assumed.append(n)
+                hi = {}
             for ly, rs in hi.items():
                 if len(rs) > 16:        # a reduced outline-minus-pins OBS: its bounding box
                     rs = [(min(r_[0] for r_ in rs), min(r_[1] for r_ in rs), max(r_[2] for r_ in rs),
@@ -607,6 +610,7 @@ def cmd_die(a):
         man['mirror_pads'] = pads
     if a.case == 'grt':
         man['m8_m9_view_blockages'] = len(regadj)
+        man['m8_m9_contract_assumed'] = contract_assumed
         man['real_pin_plan'] = pinrec if a.real_pins else 'generator pins (views MATCH or --real-pins off)'
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
@@ -1078,6 +1082,8 @@ def main(argv=None):
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)
     p.add_argument('--tag', default='views')
+    p.add_argument('--contract-m89', action='append', help='grt: treat this view\'s M8/M9 as free (a decided '
+                   're-hardening to the die PG <= M7 contract, e.g. hfd_attn_tile option B); recorded in the manifest')
     p.add_argument('--real-pins', action='store_true', help='grt: bundle a MISMATCH view\'s pins at its real '
                    'positions (default: generator positions + the view\'s obstructions)')
     p.set_defaults(fn=cmd_die)
