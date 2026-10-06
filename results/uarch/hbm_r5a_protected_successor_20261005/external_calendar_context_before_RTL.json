@@ -1,0 +1,104 @@
+{
+  "item": 6,
+  "enabled_default": false,
+  "source": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv",
+  "fetch_source": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_shared_p2.sv",
+  "shape": {
+    "NPC": 32,
+    "NSM": 8,
+    "DEPTH": 512,
+    "CRED": 32,
+    "replicas_per_die": 4
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "rounding_changes": 0,
+    "reduction_changes": 0
+  },
+  "state": {
+    "added_register_bits": 0,
+    "added_codec_instances": 0,
+    "private_PC_controller_instances": 0,
+    "external_calendar_PC_count": 32,
+    "job_lease_owned_by": "Gibbs sole calendar adapter; not stored by payload caller"
+  },
+  "ports": {
+    "descriptor_bits": 992,
+    "descriptor_ready_bits": 32,
+    "provider_busy_fault_issue_bits": 96,
+    "calendar_notice_bits": 32,
+    "landing_credit_bits": 96,
+    "fetch_reset_bits": 2,
+    "provider_next_ordinal_bits": 512,
+    "return_ordinal_bits": 512,
+    "raw_return_bits_per_cycle": 8192,
+    "coded_return_bits_per_cycle": 11520,
+    "SM_capture_bits_per_cycle": 8192,
+    "new_service_boundary_bits": 1250,
+    "former_row_column_boundary_bits": 1248,
+    "added_tracks_against_existing_boundary": 2,
+    "existing_channel_fit_not_parent_adapter_qualification": true
+  },
+  "memory": {
+    "macro_count": 96,
+    "added_ports": 0,
+    "read_credits_per_PC": 32,
+    "credit_return_event": "actual service-domain CDC landing freed count, not PHY arrival"
+  },
+  "area": {
+    "macro_count": 96,
+    "macro_area_um2": 497052.0,
+    "standard_cell_ceiling_um2": 563641.7312,
+    "predecessor_footprint_floor_mm2": 1.59207,
+    "actual_larger_slot_or_repartition_owned_by": "Turing",
+    "actual_PG_clock_and_loaded_repair_margin_pending": true
+  },
+  "latency": {
+    "added_architectural_edges": 0,
+    "existing_context_charge_ns": 3.334,
+    "parent_calendar_and_receipt_latency_pending": true,
+    "full_off_package_FEC_owned_by": "Claude DS-RACK actual handoff; no light130ns budget",
+    "first_access_FAIL_ns": 153.757,
+    "first_access_target_ns": 140
+  },
+  "reset": {
+    "provider": "whole-provider cold POR only; never fetch configuration reset",
+    "fetch": "existing independently synchronized config release on stream/service clocks",
+    "warm_debt_clear_allowed": false
+  },
+  "gates": {
+    "syntax": false,
+    "exact": false,
+    "protection": false,
+    "physical": false,
+    "performance": false,
+    "adopted": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_shared_p2.sv": "8af077797939f4e3d880e5146b050ce787024d10b6b58c075a6334b9661416ce",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv": "a29421aaf7d62e6b30296eddbcaf819174833b4831a2233038a0ea452e0bff92"
+  },
+  "retained_source_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv": "6e6bfb470c05837e4ac7324f46aad9e0354bea77a7d244dbb7dab19a3ab2d8d6",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv": "fa6630f03dfb92891cac34a7a68ab5ba70d7ba6f8ee0020486ea5e5ba47ff476",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_row_p2.sv": "c4a791e0015bda9569bae75bbc9e5cafbea300dd862e4b056d6e1a9b4a3e4172"
+  },
+  "validation": {
+    "syntax_parser_default_OFF_exit": 0,
+    "command": "verilator --lint-only -Wno-TIMESCALEMOD -Wno-fatal --top-module ot_hbm_accel_expert_stack_shared_p2 <W6/ECC packages + shared leaf/caller>",
+    "enabled_hierarchy_elaboration": "NOT RUN",
+    "golden_or_child_replay": "NOT RUN",
+    "Icarus_parser_exit": 8,
+    "Icarus_diagnostic": "Inherited unsupported elaboration $error and procedural attributed declarations; original leaf parser has identical failure classes. No RTL relaxation.",
+    "initial_Verilator_TIMESCALEMOD": "Missing timescales on packages/auto-blackbox unresolved child types; parser used -Wno-TIMESCALEMOD only, no physical clock change."
+  },
+  "interface_contract": {
+    "descriptor_accept": "desc_v[p] && desc_r[p] at service_clk; row/n held; busy covers accept through final read reservation",
+    "issue": "provider_issue_v[p] actual admitted/prepaid READ reservation, not write/ready/response pulse; seal provider_next_ordinal with external held job and replay that ordinal on response",
+    "credits": "CRED32 per PC; credit_return is actual FIFO slot reclamation in service domain, not raw read arrival. Existing provider CRED64 must not grant expert 64 reads.",
+    "return": "rsp_v[p], rsp_data[p*256+:256], rsp_ordinal[p*16+:16] once per actual returned read; ordered per PC; zero debt/wrong ordinal/>32 debt fail closed",
+    "reset": "por_n cold whole-owner reset only. fetch_service_reset_n/fetch_stream_reset_n are readiness outputs, never reset sole REFpb calendar. No warm reset input or debt erasure.",
+    "lease": "Caller does not store held FRAME73/full owner192; Gibbs provider adapter binds it through descriptor/issue/return and consumer drain. !s_valid alone is NOT full drain proof.",
+    "CA": "No row_v/row_gnt at this seam: sole provider owns its 32 bank controllers and 16 real CA request/grant slots; leaf instantiates zero private controllers."
+  }
+}
