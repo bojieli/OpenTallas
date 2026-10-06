@@ -928,6 +928,8 @@ def domain_crossings(m):
             continue
         if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
             continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
+        if any(i in m.get('r18', {}).get('cdc_hosts', ()) for i, _ in eps):
+            continue                 # Qwen r18: the serial block hosts the ratio FIFO at this port (both clocks pinned)
         ds = [by[i].domain for i, _ in eps]
         if len(set(ds)) > 1:
             r = out[f'{cls}|{"->".join(ds)}']

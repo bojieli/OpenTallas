@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
+ "generator_sha256": "cc1e2c011ceb82403cc38756c0b01a10fc8fc2d7169a533e871a71f7893c6ef3",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
-  "tree_head": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
-  "file_commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c"
+  "sha256": "cc1e2c011ceb82403cc38756c0b01a10fc8fc2d7169a533e871a71f7893c6ef3",
+  "tree_head": "b28c163da473050b244e8948f2e9ea4fd82ac46c",
+  "file_commit": "10337e43fb40597f6d8fec3f89a94cb717400980"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
+  "commit": "b28c163da473050b244e8948f2e9ea4fd82ac46c",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -31,15 +31,15 @@
   "r18": true
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "39db5d50474f596a8aac68e161aace322c2630718ad38e1f7b9956ecfeb884ab",
+ "lint_tool_sha256": "f03eef0d702bec770504e6d6473efd7ca58ec22b1cd9cea70fa109a330b99a56",
  "variant": null,
  "census": {
-  "instances": 3335,
-  "buses": 6622,
-  "net_bits": 2804668,
-  "masters": 42,
+  "instances": 3334,
+  "buses": 6611,
+  "net_bits": 2795402,
+  "masters": 41,
   "real_instances": 132,
-  "placeholder_instances": 3203
+  "placeholder_instances": 3202
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -304,12 +304,6 @@
    "instances": 1
   },
   {
-   "master": "qfd_sp_xfifo",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
-  },
-  {
    "master": "qfd_tile",
    "view": "placeholder",
    "clock": "clock_trunk",
@@ -546,9 +540,31 @@
     "span_um": 1767.6,
     "peer_manhattan_um": 0.2,
     "bits": 9207
+   },
+   {
+    "bus": "crom_q",
+    "cls": "crom",
+    "inst": "sp_constants_sequencer",
+    "master": "qfd_sp_constants_sequencer",
+    "port": "cq",
+    "face": "W",
+    "span_um": 786.2,
+    "peer_manhattan_um": 260.3,
+    "bits": 4096
+   },
+   {
+    "bus": "crom_q",
+    "cls": "crom",
+    "inst": "sp_su64_sfu",
+    "master": "qfd_sp_su64_sfu",
+    "port": "cq",
+    "face": "E",
+    "span_um": 786.2,
+    "peer_manhattan_um": 260.3,
+    "bits": 4096
    }
   ],
-  "pin_spread_count": 8,
+  "pin_spread_count": 10,
   "abut_without_channel": [
    {
     "compute": "tile",
@@ -977,7 +993,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 40,
+  "stubs": 39,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
   "rtl_files": 1,

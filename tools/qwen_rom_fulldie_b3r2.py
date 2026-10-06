@@ -221,16 +221,16 @@ def _r18_post(v, m):
             continue                   # replaced below
         B.append((bid, cl, bits, eps))
     m['buses'] = B
-    # ---- sp_xfifo: in the spine channel, below the hub, clear of the link waypoints
+    # ---- the serial blocks host the decision-C X1/X2/X3 ratio FIFOs at their stream-side ports (r18f: a separate
+    # channel cluster sp_xfifo concentrated 18.5k crossing pins in the channel beside the hub, i5 overflow 16,408
+    # with M8/M9 1.22-1.27 there); SU64 and VM get the stream clock beside their serial one
+    hosts = {'sp_su64_sfu', 'sp_vector_memory'}
     hub = m['hub']
     lv = sorted(i.y + i.h for i in m['insts'] if i.kind == 'link_station' and abs(i.x - g['x_vch']) < 140
                 and i.y + i.h <= hub.y)
     y0 = v.up(max(lv) + 15.0, v.GY)
     y1 = v.dn(hub.y - 30.0, v.GY)
-    xf = v.Inst('sp_xfifo', 'qfd_sp_xfifo', v.up(g['x_vch'] + XF_GAP, v.GX), y0,
-                v.dn(v.VCH - 2 * XF_GAP, v.GX) - v.SHAVE, y1 - y0 - v.SHAVE, kind='xfifo', region='hub', domain='cdc')
-    m['insts'].append(xf)
-    by[xf.name] = xf
+    xf = None
     iox = m['io']['xfifo']
     # ---- new buses (Q9, Q10, Q11)
     m['buses'] += [('emb_a', 'io', 24, [('sp_constants_sequencer', 'ea'), ('io_embedding_rom', 'a')]),
@@ -247,7 +247,12 @@ def _r18_post(v, m):
             B.append((bid, cl, bits, eps))
             continue
         (a, pa), (b, pb) = eps
-        X = iox if (a in io_side and b in io_side) or {a, b} & io_side and 'sp_constants_sequencer' in (a, b) else xf
+        if {a, b} & hosts and not {a, b} & io_side:
+            B.append((bid, cl, bits, eps))
+            xing.append(dict(bus=bid, cls=cl, bits=bits, src=a, dst=b, fifo=(set((a, b)) & hosts).pop() + ' (host)',
+                             domains=[by[a].domain, by[b].domain]))
+            continue
+        X = iox
         B.append((bid, cl, bits, [(a, pa), (X.name, f'i_{bid}')]))
         B.append((bid + '_x', cl, bits, [(X.name, f'o_{bid}'), (b, pb)]))
         xing.append(dict(bus=bid, cls=cl, bits=bits, src=a, dst=b, fifo=X.name,
@@ -270,13 +275,14 @@ def _r18_post(v, m):
             per.setdefault(region_of(it), []).append((it.name, 'ck'))
         elif it.kind == 'cdc':
             per.setdefault(region_of(it), []).append((it.name, 'clk'))
-    per.setdefault(region_of(xf), []).append((xf.name, 'ck'))
+    for h in sorted(hosts):
+        per.setdefault(region_of(by[h]), []).append((h, 'ckx'))
     per.setdefault(region_of(iox), []).append((iox.name, 'ck'))
     CK = [('clk_root', 'clock_trunk', 1, [('io_collective', 'pll_stream'), ('hub_el', 'ck')])]
     for k in sorted(per):
         CK.append((f'clk_r{k}', 'clock_trunk', 1, [('hub_el', f'pll_r{k}')] + per[k]))
     ser = [(i.name, 'ck') for i in m['insts'] if i.domain == 'serial_0p9' and i.name != 'io_collective']
-    CK.append(('clk_serial', 'clock_trunk', 1, [('io_collective', 'pll_serial')] + ser + [(xf.name, 'cks'), (iox.name, 'cks')]))
+    CK.append(('clk_serial', 'clock_trunk', 1, [('io_collective', 'pll_serial')] + ser + [(iox.name, 'cks')]))
     CK.append(('clk_ucie', 'clock_trunk', 1, [('io_collective', 'pll_ucie'), ('io_ucie', 'ck'), (iox.name, 'cku')]))
     CK.append(('clk_serdes', 'clock_trunk', 1, [('io_collective', 'pll_serdes'), ('io_serdes', 'ck'), (iox.name, 'ckd')]))
     RS = []
@@ -293,9 +299,9 @@ def _r18_post(v, m):
             CK.append((f'fck_{bid}', 'clock_trunk', 1, [(eps[0][0], f'fck_{eps[0][1]}'), (eps[1][0], f'fck_{eps[1][1]}')]))
     m['buses'] += CK + RS
     m['r18'] = dict(crossings=xing, clock_nets=len(CK), region_nets=len(per), reset_nets=len(RS),
-                    sp_xfifo=[round(xf.x, 3), round(xf.y, 3), round(xf.w, 3), round(xf.h, 3)],
+                    cdc_hosts=sorted(hosts),
                     io_xfifo=[round(iox.x, 3), round(iox.y, 3), round(iox.w, 3), round(iox.h, 3)],
-                    fifo_bits=dict(sp=sum(x['bits'] for x in xing if x['fifo'] == 'sp_xfifo'),
+                    fifo_bits=dict(hosts=sum(x['bits'] for x in xing if x['fifo'].endswith('(host)')),
                                    io=sum(x['bits'] for x in xing if x['fifo'] == 'io_xfifo')))
     # ---- Q8: role variants (flow direction differs by instance)
     mid = g['mid']
@@ -309,7 +315,7 @@ def _r18_post(v, m):
     _r18_masters(v, m)
 
 
-R18_CK = ('ck', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
+R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n')
 
 
 def _r18_masters(v, m):
@@ -340,14 +346,9 @@ def _r18_masters(v, m):
         if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
             hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
         vm = out['qfd_sp_vector_memory']
-        if 'em' in vm.ports:
-            vm.ports['em'] = ('face', v.IO_BITS, 'E', 'M4', vm.h / 2 + 60, 2)
-        if 'xw' in vm.ports:           # both head chains now leave through the channel CDC cluster
-            vm.ports['xw'] = ('face', vm.ports['xw'][1], 'E', 'M4', vm.h / 2 + 130, 1)
-        xf = next(i for i in model['insts'] if i.name == 'sp_xfifo')
-        if 'qfd_sp_xfifo' not in out:
-            out['qfd_sp_xfifo'] = v.Master('qfd_sp_xfifo', xf.w, xf.h, 3, 'decision-C X1/X2/X3 ratio CDC FIFO cluster '
-                                           '(ot_ratio_cdc_fifo 3:4, depth 4), std cells M1-M3, die routing above')
+        if 'em' in vm.ports:           # the embedding ROM is in the IO band to the north (left of the hub)
+            vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
+        xf = None
         iox = model['io']['xfifo']
         out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
                                        'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
@@ -355,7 +356,7 @@ def _r18_masters(v, m):
         # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
         # faces and staggered cluster groups), the rest in the free intervals from the top
         byn = {i.name: i for i in model['insts']}
-        for X in (xf, iox):
+        for X in (iox,):
             M = out[X.master]
             want = []
             for bid, cl, nb, eps in model['buses']:
@@ -1847,6 +1848,11 @@ def main(argv=None):
     if work.exists() and any(work.iterdir()):
         raise SystemExit('refuse existing output')
     if a.mode == 'grt':
+        if a.r18:
+            # clock / reset / forwarded-clock nets are built by CTS / the reset tree on reserved shielded tracks, not
+            # by the signal router: a 1-bit net is one k-bundled wire (16 tracks), so 150 region / link clock nets
+            # converging on the hub root read as ~2,400 tracks there (r18e i5: M9 1.35 around the hub)
+            m = dict(m, buses=[b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')])
         man = v.case_grt(m, work, a.k, a.tag, a.iters)
         (work / 'run.tcl').write_text((work / 'run.tcl').read_text().replace('mem done', GCELL_OVER_TCL + 'mem done'))
         man.update(b3r2=record(v, m), producer=__file__)
