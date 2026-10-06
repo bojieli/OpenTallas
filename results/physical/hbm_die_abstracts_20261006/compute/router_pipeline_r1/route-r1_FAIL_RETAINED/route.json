@@ -1,0 +1,56 @@
+{
+  "status": "FAIL_RETAINED",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv": "a438d922b44c8af7fe3eca8cdc6513059b18653885fa3b402913d3d1b8e002e4"
+  },
+  "gate_sha256": "45e2f1a6cdd64d7ee34becff914d90788862cdb7de833b24c98db3b7676c6247",
+  "sdc_sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f",
+  "config_sha256": "6033ee6be6e430fc887901db86de321fb482a854b1a1c45f10f0505ee5dd76fc",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "workers": 16,
+  "declared_ram_gib": 64,
+  "ram_basis": "retained16CPU DRT28046084KiB times modeled1.70 cellgrowth =45.5GiB plus reserve; capacity reservation not process cap",
+  "parent_qualified": false,
+  "physical_closed": false,
+  "retained_core_from_DEF_rows": [
+    2.052,
+    2.16,
+    291.384,
+    291.33
+  ],
+  "target_cell_utilization_range": [
+    0.55,
+    0.6
+  ],
+  "command": [
+    "docker",
+    "run",
+    "--name",
+    "carson-router-pipeline-r1",
+    "--cpus",
+    "16",
+    "-e",
+    "OMP_NUM_THREADS=16",
+    "-v",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/route-source-164ed64a3:/src:ro",
+    "-v",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/route-r1/orfs:/work",
+    "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "bash",
+    "-lc",
+    "python3 /work/preserve_attributes.py && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+  ],
+  "flow_returncode": 2,
+  "post_capacity": {
+    "phase": "terminal",
+    "utc": "2026-10-06T06:27:13Z",
+    "load": 61.33203125,
+    "idle_cpus": 47.6326207442597,
+    "cpus": 128,
+    "disk_free_bytes": 1865496485888,
+    "fits": true
+  },
+  "route_log_sha256": "6bc1b4f8209484920fa48ccaa1ba5a0c6bc29333e532d97873fe26e16773d4aa"
+}
