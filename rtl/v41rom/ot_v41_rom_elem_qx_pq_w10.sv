@@ -211,7 +211,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer QW = 0,           // 1: lanes decode the weight codes before their P0 register (bterm4 WD)
     parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
                                         // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
-                                        // 3 = + go / restart candidates registered a cycle early (0 cycles)
+                                        // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -693,6 +693,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx, n_nx0;          // n_nx0: the encoded walk2 step; n_nx = n_nx0, or the one-hot step (QX = 3)
     reg [6*NSEG-1:0] nA, nB, wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
+    // QM >= 3 (BP = 0): f(q + 2) for every q in a configuration-only table registered on the free clock, so xQ2 is
+    // an 8:1 select of registers instead of the per-class subtract / compare on the walker's q (Z20c: w_q -> wQ2 +42.7 ps)
+    reg [6*NSEG-1:0] q2_tab [0:7];
+    always @(posedge clk) for (int t = 0; t < 8; t++) q2_tab[t] <= sbf(4'(t + 2), 2'd3, nu_p, base_live);
     if (FAST != 0) begin : g_nw2
         ot_v41_walk2_w10 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .live(nA[NSEG-1:0]),
             .livq1(nB[NSEG-1:0]), .cur(nA[5*NSEG-1:NSEG]), .qlast(qlast), .nx(n_nx0));
@@ -1297,9 +1301,15 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
     // walker sub-block registers (FAST): see sbf above
     always @(posedge gclk) begin
-        nQ2 <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
-        wQ2 <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
+        nQ2 <= (QM >= 3 && BP == 0) ? q2_tab[n_q] : sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
+        wQ2 <= (QM >= 3 && BP == 0) ? q2_tab[w_q] : sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
     end
+`ifdef QP_CHECK
+    always @(negedge clk) if (QM >= 3 && BP == 0 && rst_n && (w_run || n_run)
+                              && (q2_tab[w_q] !== sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live)
+                                  || q2_tab[n_q] !== sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live)))
+        begin $display("QP_CHECK FAIL QM3 q+2 table %m %t", $time); $fatal(1); end
+`endif
     wire n_step = hit;
     wire n_rst = n_step && !n_nx[UW-1] && n_more;
     wire w_step = issue && w_seg_last && w_cl;
