@@ -1,0 +1,81 @@
+{
+  "verdict": "PASS_MINIMUM_CHANGED_BOUNDARY",
+  "model_before_rtl_commit": "0ed6ebb4f",
+  "assignment": "/tmp/claude-review-20261003/GIBBS_TO_LORENTZ_HBM_SU_PROVIDER_ADAPTER_20261006.txt",
+  "parent_contract_commit": "4c59804ae04cf411477b200f87ea03f23b17f3e1",
+  "source_pins": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "9744b0dbfc057889caf020f5a412494650d17c2cbbda2601821e246974a072e2",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "3d2cd1ddf67a68181e94f61f7f0537e159d074d2d9d0197e7934b51361619205",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv": "c188e01425ce04f5c9748cd9f8ab12893207bc7e109b9061657b516d46ec2264",
+    "rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_su_provider_adapter.sv": "30dfd344ea44edf0e7e311788801168a63d9fb2bb28e73ce45867b188178a0a6"
+  },
+  "selected_parent_sha256": "f0dcfe906acf77fc6768675421bf9cf5eee0d1a49371b4f99ceabcdf3633eed7",
+  "configuration": {
+    "ENABLE": 1,
+    "FAST_OWNER_FRONTIER": 1,
+    "TOKEN_BITS": 17,
+    "POSITION_BITS": 20,
+    "selected_pc_bits": 32,
+    "retired_original_ops_bits": 4
+  },
+  "stimulus_configurations": 1,
+  "checks": 707,
+  "request_bits_walked": 337,
+  "response_bits_walked": 273,
+  "owner_bits_walked": 73,
+  "meaningful_coverage": [
+    "actual source association golden",
+    "new request veto after accepted association",
+    "unmasked response debt under live veto and real grant loss",
+    "read/write payload/tag/class passthrough",
+    "stable backpressure",
+    "defaultOFF allbridgeoutputs zero",
+    "existing complementary-rail fault and coldPOR",
+    "done versus retired3/4 preserved without release inference"
+  ],
+  "negative_controls": {
+    "response_live_veto": {
+      "rc": 1,
+      "expected_failure": "accepted response drain mismatch",
+      "caught": true
+    },
+    "token17_truncation": {
+      "rc": 1,
+      "expected_failure": "full73 identity/PC mismatch",
+      "caught": true
+    }
+  },
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_hbm_integrated_su_provider_adapter",
+    "-o",
+    "gate.vvp",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_su_provider_adapter.sv",
+    "rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_su_provider_adapter.sv"
+  ],
+  "run_command": [
+    "vvp",
+    "-n",
+    "gate.vvp"
+  ],
+  "compiler_version": "Icarus Verilog version 11.0 (stable) ()",
+  "local_scope": "tiny boundary only; compile8192KiB/simulation7424KiB RSS, each below0.1s; no heavyjob/route/fullCP gate",
+  "added_FF": 0,
+  "added_edges": 0,
+  "association_instances_in_enabled_adapter": 1,
+  "existing_association_FF_reused": 2,
+  "default_off": true,
+  "parent_join_owner": "Gibbs",
+  "parent_join_complete": false,
+  "full_token": false,
+  "physical_qualification": false,
+  "adopted": false,
+  "prior_compile_failure": "Bench used reserved task name edge; attempt1 syntaxfailure retained; fixed taskname before first run. No passing-source replay.",
+  "W5": "No W5 files/jobs/dependencies modified; Claude structuralowner retained."
+}
