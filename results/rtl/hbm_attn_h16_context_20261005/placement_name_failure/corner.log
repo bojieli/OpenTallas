@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src/tools/w18/corner_sta.py", line 119, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src/tools/w18/corner_sta.py", line 107, in main
+    sdc=(next((o / "results/asap7").glob("*/base")) / "6_final.sdc").read_text()[:600],
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_pnr/work/orfs/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/6_final.sdc'

@@ -1,0 +1,74 @@
+{
+  "schema": "hbm.cp.parent-context.terminal.v1",
+  "verdict": "BLOCKED_SDC_NETWORK_LATENCY_SYNTAX",
+  "source": {
+    "main_source": "dd60b60c430323d69ff2af78ac83c3eaf1b16fb6",
+    "CP_core_source": "2c384412f",
+    "CP_parent_integration": "72e15410b",
+    "CP_context": "0de6d848a",
+    "W2_parent_join": "a02defe97",
+    "allocation": "d7f4a688e",
+    "analytical_until_CTS": true,
+    "job": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1",
+    "source_root": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-source-r1"
+  },
+  "exit": 1,
+  "completed_at": "2026-10-05T21:29:26.246012+00:00",
+  "route_root": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1",
+  "actual_attempts": 1,
+  "macro_track_gate": "PASS macros0 hooks1 warnings0",
+  "fresh_guards": [
+    {
+      "load1": 50.853515625,
+      "measured_idle_cores": 92.65828321487152,
+      "required_cores": 16
+    },
+    {
+      "load1": 50.853515625,
+      "measured_idle_cores": 88.61615372598031,
+      "required_cores": 16
+    }
+  ],
+  "failed_command": "set_clock_latency -early 90 [get_clocks core_clk]",
+  "error": "STA-0410: -early/-late is only allowed with -source",
+  "stage": "mapped netlist link / SDC parse, before placement/CTS",
+  "SS_setup_ps": null,
+  "FF_hold_ps": null,
+  "DRC": null,
+  "physical_closure": false,
+  "hardware_verdict": "unqualified; constraint parser failure",
+  "network_insertion_budget_ps": [
+    90,
+    100
+  ],
+  "source_phase_ps": 0,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "corrective_dependency": "Turing network-latency contract syntax compatible with pinned OpenSTA; preserve network vs source semantics",
+  "same_source_retry": false,
+  "original_remote_netlists_and_failure_preserved": true,
+  "source_parameters": {
+    "ENABLE": 1,
+    "SU_BALANCED_OWNER_BOUNDARY": 1,
+    "SU_ENABLE": 1,
+    "SU_REGISTERED_BOUNDARY": 1,
+    "SU_REGISTERED_OUTPUTS": 1,
+    "SU_REGISTERED_STATUS": 1
+  },
+  "evidence_sha256": {
+    "route.started": "d3ba7409f3fe2330701041d2a00c099ce4b2827972cfdca2c177d721f442ac67",
+    "admission.log": "743dcfb3dd87751b03dae4a564b7b53248fd075e2d4063519103d7d5d0d7b514",
+    "fresh_guard.py": "09017a2377fbe45b105198f077e25647cc1e49a46bb156c7e85d58925b5c3932",
+    "physical.json": "7c8b0e600e62421e926cab9e1c0457db65e0dc61c357cbb736fccba5f40dd042",
+    "preflight_model.json": "d46741a0e2c1232c58c28093f29f867f557863b5de9cdb9ac90733da8fa815b6",
+    "route.log": "823cc3fa6cb18e0ec95af506328d47c7b5ce7391474f0a717d2536f90d4c55e3",
+    "route.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "constraint.sdc": "b204cccfaa6db2147fc621bdb6399b1571b1a2bb9afccd55358a58f4544a3de5",
+    "retained_outputs.txt": "ed3de21e4aa0f4da7e64d31530b248d0a03d257da3a1f25e26813e974eb91a5c",
+    "validate_model.py": "d2f94842ce4a48ea28477dbe4c3e4b90577167062fbecc9dec2f83e11ba4d51a",
+    "canonical_source_pin.json": "a44224fd4ceec2e7bbc9d31bdae41278c413e193af77f16747064baaa3017222",
+    "route.sh": "d07bc624a800137224d2544affd76085d7ed0d8aff4fed6c974813f8fdaaedbd",
+    "run.sh": "6313dcab581b68774fbce88ac66aa23449301685dfc6631b7a1a0c77eaff3e45"
+  }
+}

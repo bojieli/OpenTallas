@@ -1,0 +1,37 @@
+{
+  "Qwen_a_real": {
+    "exit": 0,
+    "instances": 1737,
+    "on_track_pins": 7378096,
+    "pin_access_done": true,
+    "missing_access": 0,
+    "peak_RSS_KB": 14609872
+  },
+  "Qwen_q2a": {
+    "host": "ot-epyc2",
+    "terminal": false,
+    "last_extra_iteration": "50/50",
+    "action": "preserve existing job"
+  },
+  "Qwen_q2b": {
+    "host": "ot-agidock128",
+    "terminal": false,
+    "last_extra_iteration": "46/50",
+    "action": "preserve existing job"
+  },
+  "Qwen_ir2": {
+    "host": "ot-epyc2",
+    "total_windows": 154,
+    "finished_windows": 77,
+    "finished_exit0": 77,
+    "loaded_finished_windows": 75,
+    "loaded_total_windows": 152,
+    "loaded_finished_PASS": 75,
+    "remaining_loaded": 77,
+    "supervisor": 2797380,
+    "xargs": 2902325,
+    "action": "preserve existing supervisor/admission queue; no relaunch"
+  },
+  "not_new_job": true,
+  "collection_record_UTC": "2026-10-05T21:00:03Z"
+}

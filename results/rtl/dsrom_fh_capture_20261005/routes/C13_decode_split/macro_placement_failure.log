@@ -1,0 +1,91 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/dsrom_fh_capture/macro_place.tcl
+FH_CAPTURE_MACRO bank=0 at 19.872 19.44 group=2462
+FH_CAPTURE_MACRO bank=10 at 499.824 90.72 group=2460
+FH_CAPTURE_MACRO bank=11 at 740.016 90.72 group=2476
+FH_CAPTURE_MACRO bank=12 at 980.208 90.72 group=2478
+FH_CAPTURE_MACRO bank=13 at 1219.9679999999998 90.72 group=2521
+FH_CAPTURE_MACRO bank=14 at 1460.1599999999999 90.72 group=2519
+FH_CAPTURE_MACRO bank=15 at 1699.9199999999998 90.72 group=2539
+FH_CAPTURE_MACRO bank=16 at 19.872 159.84 group=2454
+FH_CAPTURE_MACRO bank=17 at 260.064 159.84 group=2463
+FH_CAPTURE_MACRO bank=18 at 499.824 159.84 group=2552
+FH_CAPTURE_MACRO bank=19 at 740.016 159.84 group=2466
+FH_CAPTURE_MACRO bank=1 at 260.064 19.44 group=2536
+FH_CAPTURE_MACRO bank=20 at 980.208 159.84 group=2472
+FH_CAPTURE_MACRO bank=21 at 1219.9679999999998 159.84 group=2511
+FH_CAPTURE_MACRO bank=22 at 1460.1599999999999 159.84 group=2460
+FH_CAPTURE_MACRO bank=23 at 1699.9199999999998 159.84 group=2463
+FH_CAPTURE_MACRO bank=24 at 19.872 231.12 group=2455
+FH_CAPTURE_MACRO bank=25 at 260.064 231.12 group=2459
+FH_CAPTURE_MACRO bank=26 at 499.824 231.12 group=2455
+FH_CAPTURE_MACRO bank=27 at 740.016 231.12 group=2450
+FH_CAPTURE_MACRO bank=28 at 980.208 231.12 group=2480
+FH_CAPTURE_MACRO bank=29 at 1219.9679999999998 231.12 group=2476
+FH_CAPTURE_MACRO bank=2 at 499.824 19.44 group=2461
+FH_CAPTURE_MACRO bank=30 at 1460.1599999999999 231.12 group=2456
+FH_CAPTURE_MACRO bank=31 at 1699.9199999999998 231.12 group=2453
+FH_CAPTURE_MACRO bank=32 at 19.872 300.24000000000007 group=2475
+FH_CAPTURE_MACRO bank=33 at 260.064 300.24000000000007 group=2538
+FH_CAPTURE_MACRO bank=34 at 499.824 300.24000000000007 group=2509
+FH_CAPTURE_MACRO bank=35 at 740.016 300.24000000000007 group=2524
+FH_CAPTURE_MACRO bank=36 at 980.208 300.24000000000007 group=2536
+FH_CAPTURE_MACRO bank=37 at 1219.9679999999998 300.24000000000007 group=2457
+FH_CAPTURE_MACRO bank=38 at 1460.1599999999999 300.24000000000007 group=2507
+FH_CAPTURE_MACRO bank=39 at 1699.9199999999998 300.24000000000007 group=2530
+FH_CAPTURE_MACRO bank=3 at 740.016 19.44 group=2522
+FH_CAPTURE_MACRO bank=40 at 19.872 369.36000000000007 group=2463
+FH_CAPTURE_MACRO bank=41 at 260.064 369.36000000000007 group=2476
+FH_CAPTURE_MACRO bank=42 at 499.824 369.36000000000007 group=2531
+FH_CAPTURE_MACRO bank=43 at 740.016 369.36000000000007 group=2459
+FH_CAPTURE_MACRO bank=44 at 980.208 369.36000000000007 group=2540
+FH_CAPTURE_MACRO bank=45 at 1219.9679999999998 369.36000000000007 group=2508
+FH_CAPTURE_MACRO bank=46 at 1460.1599999999999 369.36000000000007 group=2455
+FH_CAPTURE_MACRO bank=47 at 1699.9199999999998 369.36000000000007 group=2459
+FH_CAPTURE_MACRO bank=48 at 19.872 440.64000000000004 group=2453
+FH_CAPTURE_MACRO bank=49 at 260.064 440.64000000000004 group=2578
+FH_CAPTURE_MACRO bank=4 at 980.208 19.44 group=2461
+FH_CAPTURE_MACRO bank=50 at 499.824 440.64000000000004 group=2478
+FH_CAPTURE_MACRO bank=51 at 740.016 440.64000000000004 group=2462
+FH_CAPTURE_MACRO bank=52 at 980.208 440.64000000000004 group=2455
+FH_CAPTURE_MACRO bank=53 at 1219.9679999999998 440.64000000000004 group=2471
+FH_CAPTURE_MACRO bank=54 at 1460.1599999999999 440.64000000000004 group=2453
+FH_CAPTURE_MACRO bank=55 at 1699.9199999999998 440.64000000000004 group=2524
+FH_CAPTURE_MACRO bank=56 at 19.872 509.76000000000005 group=2459
+FH_CAPTURE_MACRO bank=57 at 260.064 509.76000000000005 group=2462
+FH_CAPTURE_MACRO bank=58 at 499.824 509.76000000000005 group=2527
+FH_CAPTURE_MACRO bank=59 at 740.016 509.76000000000005 group=2454
+FH_CAPTURE_MACRO bank=5 at 1219.9679999999998 19.44 group=2459
+FH_CAPTURE_MACRO bank=60 at 980.208 509.76000000000005 group=2451
+FH_CAPTURE_MACRO bank=61 at 1219.9679999999998 509.76000000000005 group=2454
+FH_CAPTURE_MACRO bank=62 at 1460.1599999999999 509.76000000000005 group=2468
+FH_CAPTURE_MACRO bank=63 at 1699.9199999999998 509.76000000000005 group=2454
+FH_CAPTURE_MACRO bank=6 at 1460.1599999999999 19.44 group=2453
+FH_CAPTURE_MACRO bank=7 at 1699.9199999999998 19.44 group=2540
+FH_CAPTURE_MACRO bank=8 at 19.872 90.72 group=2456
+FH_CAPTURE_MACRO bank=9 at 260.064 90.72 group=2460
+Took 103 seconds: source /src/physical/dsrom_fh_capture/macro_place.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+[ERROR FLW-0024] Place density exceeds 1.0 (current PLACE_DENSITY_LB_ADDON =  0.05). Please check if the value of  PLACE_DENSITY_LB_ADDON is between 0 and 0.99.
+Error: macro_place.tcl, 6 FLW-0024
+Elapsed time: 1:55.03[h:]min:sec. CPU time: user 130.90 sys 1.05 (114%). Peak memory: 3234412KB.

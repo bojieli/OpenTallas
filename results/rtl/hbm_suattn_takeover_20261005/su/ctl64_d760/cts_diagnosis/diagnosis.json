@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.su.controller.actual_cts_diagnosis.v1",
+  "original_source": "2986b2c94 retainedsource manifests",
+  "preserved_placement_odb_sha256": "9ca233bd4b67945ae903f7eb635e5f97f78dfb895eb5bf94a8bcb9b977db60ee",
+  "diagnostic_thread_count": 1,
+  "original_thread_count": 16,
+  "reconstructed_failed_state_not_original_saved_state": true,
+  "matches_original_aggregate": {
+    "clock_buffers": 7494,
+    "hold_buffers": 60174,
+    "hold_wns_ps": -67.723885,
+    "same_worst_endpoint": "u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D"
+  },
+  "hold_path": {
+    "launch_stage": 4,
+    "capture_stage": 5,
+    "bits_per_stage": 7168,
+    "launch_clock_insertion_ps": 807.467712,
+    "capture_clock_insertion_ps": 917.479675,
+    "arrival_ps": 874.887451,
+    "required_ps": 942.611328,
+    "hold_uncertainty_ps": 25,
+    "CRPR_ps": -12.716245,
+    "library_hold_ps": 12.847997,
+    "IO_path": false,
+    "original_fixture_all_IO_falsepaths": true,
+    "parent_clock_proof": null
+  },
+  "negative_paths": {
+    "FF_hold": 130,
+    "FF_hold_endpoint_classes": 11,
+    "SS_setup": 3972,
+    "SS_setup_endpoint_classes": 197
+  },
+  "hold_buffer_distribution": {
+    "area_um2": 4386.6846000000005,
+    "real_controller_only": 58949,
+    "fixture_only": 1221,
+    "mixed_real_fixture": 4,
+    "unresolved": 0
+  },
+  "adopted": false,
+  "full_parent_context_qualified": false,
+  "successor_source_ready": false,
+  "remaining_work": "Map all197setup/11holdclasses to registered lookahead/flag cuts, preserve realreturn/controlpipes; price exactcycles/area/fanout inexisting composedmodel before source/build. Need actual existingSUparentunit shape/slot/clock/IOloaded context; do not retry density or claimgain againstunqualified m6a5."
+}

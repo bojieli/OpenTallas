@@ -1,0 +1,23 @@
+{
+  "verdict": "RETIRED_SUPERSEDED_BENCH_DEADLOCK",
+  "signal": "SIGTERM",
+  "signaled_pid": 3074006,
+  "source_commit": "0f32da0de21c81f2b3ed0cff3db28d0cbf0700e1",
+  "artifact_consumer_pids": [
+    3068069,
+    3074005,
+    3074006
+  ],
+  "object_files_retained": 124,
+  "object_bytes_retained": 208157570,
+  "binary_sha256": "f1ca1ab3efa6be9750b04b197cefc1f8127d8325c1f08efe47e68a12909a75b9",
+  "source_retained": true,
+  "superseding_main_commit": "ba3d939d2",
+  "numerical_terminal": false,
+  "remaining_cohort_pids": [],
+  "utc": "2026-10-05T22:45:11Z",
+  "logs": {
+    "build.log": "202bae464287f74b17f5717b7d048fb74e5573911a07b62988977e71c16eb027",
+    "seed1.log": "b3a552cb26f61432fbd255deabe1245e33cfc6a5318ce4e9225ffb389c66da29"
+  }
+}

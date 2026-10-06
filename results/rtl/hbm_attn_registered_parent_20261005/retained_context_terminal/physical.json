@@ -1,0 +1,217 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T00:41:37.315742+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_attn_registered_parent_phys",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_attn_registered_parent/parent.sdc",
+          "sha256": "34816b242a42d3998fe345f140dd56e189ed9001ffb4b49399a5344970b15f52"
+        }
+      ],
+      "lines": [
+        "set_clock_latency -source 0 [get_clocks core_clk]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.0,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "physical/hbm_attn_registered_parent/ot_attn_registered_parent_phys.sv",
+        "sha256": "25f824ac081257e6d6e394bd71b3a636d39c69f47505d0dbbe0bbf2753021008",
+        "size_bytes": 1350
+      },
+      {
+        "path": "rtl/hbm_accel/ot_attn_tile_registered_parent.sv",
+        "sha256": "1caa45aaf2758983fc0e06c6257b9ee532ea804c360598be864ebd96422f4195",
+        "size_bytes": 3757
+      },
+      {
+        "path": "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv",
+        "sha256": "db20bcb84304b9e2141d972bfa58a98ae81c6adc73b7f241dea5b0b6fd8ada04",
+        "size_bytes": 1556
+      }
+    ],
+    "top": "ot_attn_registered_parent_phys"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nINFO DRT-0033] Active shape region query size = 0.\n[INFO DRT-0033] V0 shape region query size = 0.\n[INFO DRT-0033] M1 shape region query size = 3639317.\n[INFO DRT-0033] V1 shape region query size = 35017411.\n[INFO DRT-0033] M2 shape region query size = 561984.\n[INFO DRT-0033] V2 shape region query size = 689784.\n[INFO DRT-0033] M3 shape region query size = 1913215.\n[INFO DRT-0033] V3 shape region query size = 461361.\n[INFO DRT-0033] M4 shape region query size = 1087639.\n[INFO DRT-0033] V4 shape region query size = 461361.\n[INFO DRT-0033] M5 shape region query size = 489276.\n[INFO DRT-0033] V5 shape region query size = 316708.\n[INFO DRT-0033] M6 shape region query size = 318186.\n[INFO DRT-0033] V6 shape region query size = 689956.\n[INFO DRT-0033] M7 shape region query size = 299868.\n[INFO DRT-0033] V7 shape region query size = 2370036.\n[INFO DRT-0033] M8 shape region query size = 234193.\n[INFO DRT-0033] V8 shape region query size = 1963140.\n[INFO DRT-0033] M9 shape region query size = 117365.\n[INFO DRT-0033] V9 shape region query size = 0.\n[INFO DRT-0033] Pad shape region query size = 0.\n[INFO DRT-0165] Start pin access.\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[2\\].head\\[3\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[2\\].head\\[0\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[2\\].head\\[2\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[2\\].head\\[1\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[0\\].head\\[3\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[0\\].head\\[0\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[1\\].head\\[0\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[3\\].head\\[3\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[1\\].head\\[3\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[3\\].head\\[2\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[0\\].head\\[2\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[0\\].head\\[1\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[3\\].head\\[0\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[1\\].head\\[2\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[1\\].head\\[1\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\n[ERROR DRT-0073] No access point for u_tile/registered_parent.row\\[3\\].head\\[1\\].u_g/ib[288] (ot_attn_hgrp_m6h1).\nError: global_route.tcl, 175 DRT-0073\n\nElapsed time: 0:04.88[h:]min:sec. CPU time: user 4.65 sys 0.22 (99%). Peak memory: 522444KB.\nElapsed time: 4:49.43[h:]min:sec. CPU time: user 309.17 sys 17.61 (112%). Peak memory: 896064KB.\nElapsed time: 0:05.10[h:]min:sec. CPU time: user 6.54 sys 0.60 (139%). Peak memory: 1434544KB.\nElapsed time: 0:03.49[h:]min:sec. CPU time: user 3.29 sys 0.20 (99%). Peak memory: 457976KB.\nElapsed time: 0:27.66[h:]min:sec. CPU time: user 27.06 sys 0.61 (100%). Peak memory: 1755788KB.\nElapsed time: 1:13.81[h:]min:sec. CPU time: user 260.48 sys 1.10 (354%). Peak memory: 1499336KB.\nElapsed time: 0:04.07[h:]min:sec. CPU time: user 3.82 sys 0.25 (99%). Peak memory: 631116KB.\nElapsed time: 8:53.51[h:]min:sec. CPU time: user 1299.50 sys 70.78 (256%). Peak memory: 11435376KB.\nElapsed time: 1:22.60[h:]min:sec. CPU time: user 112.82 sys 53.27 (201%). Peak memory: 1371760KB.\nElapsed time: 3:05.11[h:]min:sec. CPU time: user 208.83 sys 53.68 (141%). Peak memory: 7431280KB.\nElapsed time: 6:45.93[h:]min:sec. CPU time: user 463.01 sys 40.63 (124%). Peak memory: 8052500KB.\nElapsed time: 0:12.71[h:]min:sec. CPU time: user 32.37 sys 1.54 (266%). Peak memory: 4195164KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T00:14:17.253153+00:00",
+  "git": {
+    "commit": "e5624a88a3c7df16f8517622a87c3a195dda44ec",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_attn_registered_parent_phys",
+      "--source",
+      "physical/hbm_attn_registered_parent/ot_attn_registered_parent_phys.sv",
+      "--source",
+      "rtl/hbm_accel/ot_attn_tile_registered_parent.sv",
+      "--source",
+      "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv",
+      "--macro-view",
+      "ot_attn_hgrp_m6h1=physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--clock-period-ns",
+      "0.8333333333333334",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0",
+      "--sdc-append",
+      "physical/hbm_attn_registered_parent/parent.sdc",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1349.112",
+      "1349.976",
+      "--core-area",
+      "0",
+      "0",
+      "1349.112",
+      "1349.976",
+      "--place-density",
+      "0.50",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/hbm_attn_registered_parent/macro_placement.tcl",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/hbm_fmax_attn_context/pdn.tcl",
+      "--orfs-var",
+      "MACRO_ROWS_HALO_X=5",
+      "--orfs-var",
+      "MACRO_ROWS_HALO_Y=5",
+      "--orfs-var",
+      "IO_PLACER_H=M8",
+      "--orfs-var",
+      "IO_PLACER_V=M9",
+      "--orfs-var",
+      "MIN_CLK_ROUTING_LAYER=M8",
+      "--orfs-var",
+      "MAX_CLK_ROUTING_LAYER=M9",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--step-tcl",
+      "POST_PDN=physical/hbm_fmax_attn_context/vss_boundary_stitches.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/hbm_attn_registered_parent/clock_rc.tcl",
+      "--slew-margin-percent",
+      "30",
+      "--hold-margin-ns",
+      ".010",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "codex_h16_registered_parent_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/work"
+    ],
+    "driver": {
+      "commit": "e5624a88a3c7df16f8517622a87c3a195dda44ec",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.8333333333333334,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

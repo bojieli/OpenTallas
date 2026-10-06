@@ -1,0 +1,32 @@
+ 0 warm-up (router gate shape)    bf16 K 5120 R  1 dep 1 load0      5 post   1046 first_line   1059 last_line   1180 done   1285 exact True
+ 1 wq_a                           fp8  K 5120 R  1 dep 1 load0   1286 post   1807 first_line   1819 last_line   1879 done   1963 exact True
+ 2 wkv                            fp8  K 5120 R  1 dep 0 load0   1809 post   1809 first_line   1891 last_line   1951 done   2035 exact True
+ 3 compressor.wkv                 bf16 K 5120 R  1 dep 0 load0   1811 post   2852 first_line   2859 last_line   2980 done   3085 exact True
+ 4 indexer.weights_proj           bf16 K 5120 R  1 dep 0 load0   2854 post   2854 first_line   2995 last_line   3116 done   3221 exact True
+ 5 wq_b                           fp8  K 1280 R 16 dep 1 load0   3222 post   3431 first_line   3443 last_line   3698 done   3768 exact True
+ 6 indexer.wq_b                   fp8  K 1280 R  2 dep 1 load0   3769 post   3769 first_line   3779 last_line   3838 done   3908 exact True
+ 7 wo_a                           bf16 K  512 R 32 dep 1 load0   3909 post   4014 first_line   4027 last_line   4282 done   4359 exact True
+ 8 wo_b                           fp8  K 8192 R  2 dep 1 load0   4360 post   5193 first_line   5203 last_line   5330 done   5414 exact True
+ 9 router gate                    bf16 K 5120 R  1 dep 1 load0   5415 post   6456 first_line   6467 last_line   6588 done   6693 exact True
+10 expert slot 0 w1               fp4  K 5120 R  1 dep 1 load0   6694 post   7007 first_line   7019 last_line   7077 done   7154 exact True
+11 expert slot 0 w3               fp4  K 5120 R  1 dep 0 load0   7009 post   7009 first_line   7091 last_line   7149 done   7226 exact True
+12 expert slot 1 w1               fp4  K 5120 R  1 dep 0 load0   7011 post   7011 first_line   7163 last_line   7221 done   7298 exact True
+13 expert slot 1 w3               fp4  K 5120 R  1 dep 0 load0   7013 post   7013 first_line   7235 last_line   7293 done   7370 exact True
+14 expert slot 2 w1               fp4  K 5120 R  1 dep 0 load0   7015 post   7015 first_line   7307 last_line   7365 done   7442 exact True
+15 expert slot 2 w3               fp4  K 5120 R  1 dep 0 load0   7017 post   7017 first_line   7379 last_line   7437 done   7514 exact True
+16 expert slot 3 w1               fp4  K 5120 R  1 dep 0 load0   7019 post   7019 first_line   7451 last_line   7509 done   7586 exact True
+17 expert slot 3 w3               fp4  K 5120 R  1 dep 0 load0   7021 post   7021 first_line   7523 last_line   7581 done   7658 exact True
+18 expert slot 4 w1               fp4  K 5120 R  1 dep 0 load0   7023 post   7087 first_line   7595 last_line   7653 done   7730 exact True
+19 expert slot 4 w3               fp4  K 5120 R  1 dep 0 load0   7089 post   7159 first_line   7667 last_line   7725 done   7802 exact True
+20 expert slot 5 w1               fp4  K 5120 R  1 dep 0 load0   7161 post   7231 first_line   7739 last_line   7797 done   7874 exact True
+21 expert slot 5 w3               fp4  K 5120 R  1 dep 0 load0   7233 post   7303 first_line   7811 last_line   7869 done   7946 exact True
+22 expert slot 6 w1               fp8  K 5120 R  1 dep 0 load0   7305 post   7826 first_line   7883 last_line   7943 done   8027 exact True
+23 expert slot 6 w3               fp8  K 5120 R  1 dep 0 load0   7828 post   7828 first_line   7955 last_line   8015 done   8099 exact True
+24 expert slot 0 w2               fp4  K 2304 R  2 dep 1 load0   8100 post   8309 first_line   8315 last_line   8374 done   8444 exact True
+25 expert slot 1 w2               fp4  K 2304 R  2 dep 0 load0   8311 post   8520 first_line   8531 last_line   8590 done   8660 exact True
+26 expert slot 2 w2               fp4  K 2304 R  2 dep 0 load0   8522 post   8731 first_line   8739 last_line   8798 done   8868 exact True
+27 expert slot 3 w2               fp4  K 2304 R  2 dep 0 load0   8733 post   8942 first_line   8955 last_line   9014 done   9084 exact True
+28 expert slot 4 w2               fp4  K 2304 R  2 dep 0 load0   8944 post   9153 first_line   9163 last_line   9222 done   9292 exact True
+29 expert slot 5 w2               fp4  K 2304 R  2 dep 0 load0   9155 post   9364 first_line   9371 last_line   9430 done   9500 exact True
+30 expert slot 6 w2               fp8  K 2304 R  2 dep 0 load0   9366 post   9679 first_line   9691 last_line   9752 done   9829 exact True
+PASS total_cycles 9837 /srv/opentallas-scratch2/scratch/codex/hbmsm-prefix-7380daa57/p6_l20.json

@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.dsrom-qelem-terminal-classes.v1",
+  "terminal_source_commit": "4134cb5e6",
+  "current_source_commit": "0032b7355",
+  "classes": [
+    {
+      "name": "lane_nan",
+      "runs": [
+        "Z17e",
+        "Z17f",
+        "Z17g"
+      ],
+      "worst_ss_ps": -25.6,
+      "source": "ot_v41_bterm4_w10 pa_nan: lane special-value detect and wide NaN OR",
+      "QX10": "NS=1 splits NaN into four 8-lane registered partials without another cycle; already implemented, terminal measurement pending"
+    },
+    {
+      "name": "issue_to_address_counter",
+      "runs": [
+        "Z17e",
+        "Z17g"
+      ],
+      "worst_ss_ps": -26.23,
+      "source": "f_cnt[0] -> issue eligibility -> a_ctr[12] data/enable select",
+      "QX10": "issue wire and a_ctr update remain unchanged; potential remaining class, not a measured QX10 failure"
+    },
+    {
+      "name": "lane_exponent_shift",
+      "runs": [
+        "Z17f"
+      ],
+      "worst_ss_ps": -10.76,
+      "source": "p0_wq -> exponent/subnormal select and exponent addition -> pa_sh[8][3]",
+      "QX10": "pa_sh equation unchanged; potential remaining class, not a measured QX10 failure"
+    },
+    {
+      "name": "lane_shift_csa",
+      "runs": [
+        "Z17e"
+      ],
+      "worst_ss_ps": -18.59,
+      "source": "P1 terms shift -> 32-to-CSAM CSA -> p2_c",
+      "QX10": "P2S and CSAM unchanged; potential remaining class, not a measured QX10 failure"
+    },
+    {
+      "name": "input_alignment_hold",
+      "runs": [
+        "Z17e",
+        "Z17f"
+      ],
+      "worst_ff_ps": -13.351375614037902,
+      "source": "i1_q0 -> upper-half mux -> i2x_q0; short path and launch/capture clock leaf imbalance",
+      "QX10": "alignment registers/mux unchanged; hold still requires actual FF routed measurement; no clock waiver"
+    }
+  ],
+  "route_Z17e_issue_path": {
+    "launch_clock_ps": 550.1,
+    "capture_clock_ps": 507.7,
+    "clock_to_data_delay_ps": 772.1,
+    "SS_setup_uncertainty_ps": 60
+  },
+  "route_Z17e_hold_path": {
+    "launch_clock_ps": 298.6,
+    "capture_clock_ps": 372.7,
+    "data_arrival_ps": 390.6,
+    "data_required_ps": 396.6,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "field_parent_clock_dependency": {
+    "owner_thread": "01a10dba-56f2-74a1-97cb-1e847b3ef221",
+    "message_id": "01a10dc5-66e4-7bb3-b196-5432d0f8f162",
+    "state": "REQUESTED_ACTUAL_CLOCK_SOURCES",
+    "missing_input_clocks": true
+  },
+  "new_engine_RTL": false,
+  "new_routes": false,
+  "composition_updated": false,
+  "qualification": "QX10 must pass its own exact and contextual SS60/FF25 gates and full field timing measurement; QX9 field campaigns do not qualify 0032b7355",
+  "evidence_sha256": {
+    "Z17f/cls_SS.reg.paths": "dec759c8f96b2a663bab221185f8ac7739e4350ef8d20981b61948ebb363fe19",
+    "Z17f/cls_FF.reg.paths": "d4b3fb42b4609ed97585699125a25b13103bc3bd4786d046446c1da8171769f4",
+    "Z17f/cls_FF.skew": "e109cf19d4f7645a374721bda9fad221028d1aa5eb6a89fea8380095fc56c6b4",
+    "Z17f/cls_SS.skew": "9752d6c799db1187833041c15f59a33c3e44e636a2e6133dc2fe66c454916b8d",
+    "Z17g/cls_SS.reg.paths": "3c779fc8a8f7d5f0dbc3aecf3fa1fee05fd4b2e68a4a52e0733e6da7e2484eb3",
+    "Z17g/cls_FF.reg.paths": "bc2b0dddeb2bd3f0f63ea84166cc65136f0a54b28b3f527a1e3937db1ae106e7",
+    "Z17g/cls_FF.skew": "d453d8588b0803bc8af9b0f778c85b060a11c9c938e5f6372c4357640ab5f841",
+    "Z17g/cls_SS.skew": "c5c501e5fcd75e0902ed442da3a649fbe78e5af25582af45acae944bc2bbdb1f",
+    "Z17e/cls_SS.reg.paths": "8588bddb10d8eb3e774b56dc5617eb940c8d986c7882d1da831ece9479bf6911",
+    "Z17e/cls_FF.reg.paths": "80c35547161603dc5700a4b1cbe2a40c6fa06a78d4995074d115379df9d6ee7c",
+    "Z17e/cls_FF.skew": "e7ac0ee061be8af979f87195a76b5fd4d71b9a78d5597441ad614624374d0a78",
+    "Z17e/cls_SS.skew": "f8c882ceef8fa8fc809b5c80ff98a8aa832e61cb1bd81c01ecc3412721fbbec9"
+  },
+  "source_sha256": {
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv": "98f3ceaed54665e3c7405b660c6016d862123b2898083b40952e0453c91a592d",
+    "rtl/v41rom/ot_v41_chain4.sv": "dcd30a7b4bd7b675144967c6d3ae734e43582c229dfd8de55011d0df23076372",
+    "rtl/v41rom/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb"
+  }
+}

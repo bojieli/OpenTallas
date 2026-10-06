@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS_MINIMUM_PARENT_CUT_FUNCTIONAL_ONLY",
+  "model": "results/uarch/dsrom_wfc_decoded_read_20261005/parent_cut_model.json",
+  "source_sha256": {
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_parent_cut.sv": "d69ea0c5376d505832d88c0deabb37948aa744c5c41be8333ea6157d27b380e1",
+    "rtl/test/dsrom_wavefront/tb_wfc_parent_cut.sv": "c76d3565967706fb4763fdeadb4c624fcf4753354b8eec8c359cfa0bc62c229e",
+    "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "eb97f06009f4cdfed18ed3cce43bb1720b4cd0c3e597c0bb563902e06ca0dd50"
+  },
+  "vehicle": {
+    "MAXU": 1,
+    "NW": 21,
+    "FLIT": 512,
+    "SOURCE": 0,
+    "RXWORDS": 41,
+    "XWORDS": 46,
+    "DECODED_READ": 1,
+    "router_NP": 3,
+    "router_BUF": 4,
+    "router_DESTS": 64
+  },
+  "checks": [
+    "actual two-edge parent reset release",
+    "native router port0 controller/port1 UCIE/port2 boardlink",
+    "41 ordered VM writes and one core start",
+    "source-held completion blocked while actual quiet gate false",
+    "47 exact outbound HIDDEN header/payload flits under stalls"
+  ],
+  "new_completion_authority": false,
+  "new_S81_native_wiring": false,
+  "external_producer_clock_loads_bound": false,
+  "physical_context_qualified": false,
+  "fullMAXU_controller_exact": "full_shape/record.json",
+  "adopted": false
+}

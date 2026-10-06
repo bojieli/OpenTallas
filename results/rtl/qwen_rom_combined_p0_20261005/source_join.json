@@ -1,0 +1,81 @@
+{
+  "status": "IMPLEMENTED_SOURCE_JOIN_ONLY",
+  "recovered_authoritative": {
+    "record": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+    "sha256": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
+    "full36_plus_head": true,
+    "position": 8191,
+    "cycles": 193955,
+    "next_token": 18,
+    "winning_logit_bits": "42282b99",
+    "rerun": false
+  },
+  "source_top": "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_rom_combined_p0_20261005.sv",
+  "model_before_new_hardware": {
+    "record": "results/rtl/qwen_stream4_protected_20261005/prebuild_model.json",
+    "sha256": "b597d0d2ec97e0b5df5b0286434cc9f76c274d84c8ae115f47867c2607329567",
+    "incremental_join_MACs_per_cycle": 0,
+    "incremental_join_state_bits": 0,
+    "incremental_join_replicas": 0,
+    "incremental_join_muxes": 0,
+    "incremental_join_cycles": 0,
+    "existing_backend_inventory_reused": true,
+    "physical_wire_qualification": false
+  },
+  "missing_transport": {
+    "implemented": false,
+    "selected": false,
+    "registered_spans_total": 5771,
+    "one_way_max_CLK_edges": 56,
+    "one_way_max_ps": 46666.648,
+    "request_return_min_CLK_edges": 112,
+    "held_payload_bits_per_bidirectional_span": 582,
+    "DMR_payload_FF_lower_bound": 6717444,
+    "DMR_payload_core_mm2_lower_bound": 6.529355568000001,
+    "excluded_from_lower_bound": [
+      "finite owner and backpressure state",
+      "codec/identity checks",
+      "buffer/mux cost",
+      "clock trees",
+      "loaded wire routing"
+    ],
+    "existing_WB_depth": 16,
+    "existing_landing_depth": 64,
+    "WB_one_per_edge_at_max_round_trip": false,
+    "WB_credit_limited_II_edges_lower_bound": 7,
+    "full_token_delta_measured": false,
+    "rate_credit": false,
+    "composition": "serial write/ACK adds outbound plus return spans; landing adds return spans only where exposed; do not multiply hidden fills by layers",
+    "slot_fit_of_added_transport": null,
+    "source_change_required": "protected finite transport and exact backpressure proof before global service route"
+  },
+  "preserved_jobs": {
+    "PVE1": "supervisor2608676/frozen7c4ffde51 fb3/bound1/amq1 build; read-only verified live",
+    "E2": "bbcb sim828649 and c625 followup619940; read-only verified live"
+  },
+  "adopted_flags": {
+    "near_hbm": 0,
+    "dspark": false,
+    "real_mem": 1,
+    "kv_ideal": false,
+    "baseline_ar": 1
+  },
+  "candidate_only": {
+    "PROTECTED_STREAM4": 1,
+    "CRED": 32,
+    "WBUF": 16,
+    "WQ": 4,
+    "PULLIN": 0,
+    "SYNC": 2,
+    "qualification": false
+  },
+  "validation": {
+    "clock_event_order": "PASS compiled C++17 -Wall -Wextra -Werror",
+    "pinned_authoritative_host_emission": "PASS",
+    "full_shape_RTL_lint": "PENDING remote guarded unique source"
+  },
+  "full_token_smoke_launched": false,
+  "full_token_successor_cycles": null,
+  "adopted": false,
+  "next": "Changed consumer lint only; Descartes supplies actual transport readiness/interface. One final owner-approved smoke after actual source ready."
+}

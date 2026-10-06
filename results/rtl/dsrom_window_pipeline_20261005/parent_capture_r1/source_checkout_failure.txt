@@ -1,0 +1,8 @@
+Original shared clone/fetch setup failed before workload admission:
+remote: fatal: unable to read 66fb24bb49ba9343994737041b30bdb6836d0d12
+error: git upload-pack: git-pack-objects died with error.
+fatal: git upload-pack: aborting due to possible repository corruption on the remote side.
+remote: aborting due to possible repository corruption on the remote side.
+fatal: early EOF
+fatal: fetch-pack: invalid index-pack output
+Preserved live WINDOW sources/object store; no cleanup or repair attempted there.

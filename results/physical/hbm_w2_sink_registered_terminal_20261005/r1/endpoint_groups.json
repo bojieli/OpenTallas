@@ -1,0 +1,286 @@
+{
+  "schema": "opentallas.harvey.hbm_sink_terminal.v1",
+  "verdict": "REJECT_SS_SETUP",
+  "source_label": "72c067c9c REGISTERED_SUBBLOCKS=1 / released main73526d5e8",
+  "source_root": "/srv/opentallas-scratch2/jobs/nash-w2-sink-registered-72c067c9c-source-r1",
+  "remote_host": "ot-epyc2",
+  "remote_job": "/srv/opentallas-scratch2/jobs/nash-w2-sink-registered-72c067c9c-route-r1",
+  "supervisor": 3226883,
+  "driver": {
+    "commit": null,
+    "file_modified_since_commit": false,
+    "note": "the sources, their git identity (the record's git block) and the container's /src mount come from --source-root; the driver ran from a different checkout, so git.commit is the sources' commit and runner.driver.commit is the driver's",
+    "path": "/srv/opentallas-scratch/codex/nash-su-side-prefix-88b13fdec-r2/src/tools/run_abi3_physical.py",
+    "same_tree_as_sources": false,
+    "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+    "tree": "/srv/opentallas-scratch/codex/nash-su-side-prefix-88b13fdec-r2/src"
+  },
+  "terminal_rc": "route_rc=0\ncorner_rc=0\n",
+  "corners": {
+    "schema": "opentallas.w18.corner_sta.v1",
+    "orfs_dir": "/srv/opentallas-scratch2/jobs/nash-w2-sink-registered-72c067c9c-route-r1/work/orfs",
+    "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hbm_integrated_w2_result_sink\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {",
+    "setup_ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -733.09,
+      "tns_ps": -1353904.6,
+      "worst_register_d_slack_ps": -733.090149,
+      "worst_reg_to_reg_slack_ps": -733.09,
+      "worst_input_to_reg_slack_ps": 401.08,
+      "worst_output_port_slack_ps": -603.68512,
+      "violating_d_pins": 3610,
+      "errors": [],
+      "odb_sha256": "e0eb0f445bc41bd24f465580f32ee6532bbafe1486bb046de2c498b75be26c5b",
+      "spef_sha256": "21b846671926fce4b7d81c41751a6b936071c28162b81d4d62f64509c5156c5b",
+      "sdc_sha256": "c965647d7f9558f1f1bc45212063740d83d7fb5984afb4ebf683347b5cd14c90"
+    },
+    "hold_ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": 15.65,
+      "tns_ps": 0.0,
+      "worst_register_d_slack_ps": 15.645707,
+      "worst_reg_to_reg_slack_ps": 15.65,
+      "worst_input_to_reg_slack_ps": 57.86,
+      "worst_output_port_slack_ps": 349.68869,
+      "violating_d_pins": 0,
+      "errors": [],
+      "odb_sha256": "e0eb0f445bc41bd24f465580f32ee6532bbafe1486bb046de2c498b75be26c5b",
+      "spef_sha256": "21b846671926fce4b7d81c41751a6b936071c28162b81d4d62f64509c5156c5b",
+      "sdc_sha256": "c965647d7f9558f1f1bc45212063740d83d7fb5984afb4ebf683347b5cd14c90"
+    },
+    "libraries": {
+      "ss": [
+        "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+      ],
+      "ff": [
+        "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+      ]
+    },
+    "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+    "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+    "closes_signoff": false
+  },
+  "physical_metrics": {
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "clock_count": 1,
+    "core_area_um2": 14867.4,
+    "die_area_um2": 15923.9,
+    "drc_errors": 0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    "fmax_hz": 638397000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0,
+    "hold_wns_ns": 0.014371100000000001,
+    "instance_count": 113446,
+    "library_time_unit_ns": 0.001,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "missing_metadata_keys": [],
+    "orfs_aggregate_fmax_hz": 638397000.0,
+    "per_clock_fmax_hz": {},
+    "power_total_w": 0.0140907,
+    "raw_timing_library_units": {
+      "hold_tns_ns": 0,
+      "hold_wns_ns": 14.3711,
+      "setup_tns_ns": -1353900.0,
+      "setup_wns_ns": -733.09
+    },
+    "routed_nets": 39661,
+    "routed_wirelength_um": 176848,
+    "sequential_area_um2": 1178.94,
+    "sequential_cell_count": 3110,
+    "setup_tns_ns": -1353.9,
+    "setup_violations": 3119,
+    "setup_wns_ns": -0.73309,
+    "standard_cell_area_um2": 4797.17,
+    "standard_cell_count": 40781,
+    "utilization_fraction": 0.322664,
+    "vias": 354156
+  },
+  "functional_basis": "Existing owner gate actual4WR/4RD/32words release181 vs162 (+19edges); corrupt no release. No replay or adoption during collection.",
+  "source_hooks": {
+    "slot": "source/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv:48",
+    "payload_select_decode": "same source lines79-85",
+    "payload_view_capture": "same source lines103-105",
+    "control": "same source lines112-140",
+    "protected_view": "same source module ot_hbm_w2_sink_protected_view at file end: majority voting, byte parity, write/scrub registers"
+  },
+  "raw_log": "work/orfs/harvey_grouped_actual_ss_r1.log",
+  "next_source_owner": "main/Claude; no collector source choice or route authority",
+  "preservation": "Original ODB/SPEF/failed physical and corner records remain remote with SHA256 in corners.",
+  "actual_FF_D": {
+    "count": 3110,
+    "groups": {
+      "genblk1.registered_subblocks.control_view.a[]": {
+        "count": 32,
+        "worst_ps": -601.739014,
+        "worst_endpoint": "genblk1.registered_subblocks.control_view.a[1]$_DFFE_PN0N_/D"
+      },
+      "genblk1.registered_subblocks.control_view.pc[]": {
+        "count": 4,
+        "worst_ps": -693.885193,
+        "worst_endpoint": "genblk1.registered_subblocks.control_view.pc[0]$_DFFE_PN0N_/D"
+      },
+      "genblk1.registered_subblocks.metadata[][]": {
+        "count": 341,
+        "worst_ps": -464.224335,
+        "worst_endpoint": "genblk1.registered_subblocks.metadata[0][43]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.metadata_view.a[]": {
+        "count": 512,
+        "worst_ps": -475.850372,
+        "worst_endpoint": "genblk1.registered_subblocks.metadata_view.a[31]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.metadata_view.pc[]": {
+        "count": 64,
+        "worst_ps": -624.827942,
+        "worst_endpoint": "genblk1.registered_subblocks.metadata_view.pc[2]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.payload_code[][]": {
+        "count": 1152,
+        "worst_ps": -464.134735,
+        "worst_endpoint": "genblk1.registered_subblocks.payload_code[2][39]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.payload_view.a[]": {
+        "count": 256,
+        "worst_ps": -654.501648,
+        "worst_endpoint": "genblk1.registered_subblocks.payload_view.a[156]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.payload_view.pc[]": {
+        "count": 32,
+        "worst_ps": -733.090149,
+        "worst_endpoint": "genblk1.registered_subblocks.payload_view.pc[18]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.request_view.a[]": {
+        "count": 306,
+        "worst_ps": -541.565796,
+        "worst_endpoint": "genblk1.registered_subblocks.request_view.a[335]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.request_view.pc[]": {
+        "count": 39,
+        "worst_ps": -612.753601,
+        "worst_endpoint": "genblk1.registered_subblocks.request_view.pc[41]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.reservation_frame_view.a[]": {
+        "count": 74,
+        "worst_ps": -452.463501,
+        "worst_endpoint": "genblk1.registered_subblocks.reservation_frame_view.a[43]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.reservation_frame_view.pc[]": {
+        "count": 10,
+        "worst_ps": -410.025116,
+        "worst_endpoint": "genblk1.registered_subblocks.reservation_frame_view.pc[4]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.response_view.a[]": {
+        "count": 256,
+        "worst_ps": -414.705933,
+        "worst_endpoint": "genblk1.registered_subblocks.response_view.a[135]$_DFFE_PN0P_/D"
+      },
+      "genblk1.registered_subblocks.response_view.pc[]": {
+        "count": 32,
+        "worst_ps": -432.240234,
+        "worst_endpoint": "genblk1.registered_subblocks.response_view.pc[15]$_DFFE_PN0P_/D"
+      }
+    }
+  },
+  "combinational_D": {
+    "count": 500,
+    "groups": {
+      "combinational": {
+        "count": 500,
+        "worst_ps": -733.090149,
+        "worst_endpoint": "_37071_/D"
+      }
+    }
+  },
+  "outputs": {
+    "count": 9,
+    "groups": {
+      "done": {
+        "count": 1,
+        "worst_ps": -557.583984,
+        "worst_endpoint": "done"
+      },
+      "fault": {
+        "count": 1,
+        "worst_ps": -558.716187,
+        "worst_endpoint": "fault"
+      },
+      "quiet": {
+        "count": 1,
+        "worst_ps": -595.019165,
+        "worst_endpoint": "quiet"
+      },
+      "req_v": {
+        "count": 1,
+        "worst_ps": -601.814026,
+        "worst_endpoint": "req_v"
+      },
+      "reserve_r": {
+        "count": 1,
+        "worst_ps": -602.717346,
+        "worst_endpoint": "reserve_r"
+      },
+      "retained": {
+        "count": 1,
+        "worst_ps": -3.378353,
+        "worst_endpoint": "retained"
+      },
+      "retire_r": {
+        "count": 1,
+        "worst_ps": -557.061523,
+        "worst_endpoint": "retire_r"
+      },
+      "rsp_r": {
+        "count": 1,
+        "worst_ps": -582.576111,
+        "worst_endpoint": "rsp_r"
+      },
+      "source_permit": {
+        "count": 1,
+        "worst_ps": -603.68512,
+        "worst_endpoint": "source_permit"
+      }
+    }
+  },
+  "literal_D_warning": "3610 literal */D violations =3110 actual FF D +500 combinational D inputs; original literal scan fields preserved, not substituted for actual FF classification.",
+  "released_source_commit": "73526d5e84129417914832e858dc78610e225800",
+  "source_pin_basis": "Snapshot has no .git: original physical.git.commit=None retained. Both actual enrolled RTL files hash-match and are byte-identical to released commit73526d5e84129417914832e858dc78610e225800.",
+  "source_files": [
+    {
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "size_bytes": 1493
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+      "sha256": "c5a9b95aba28d1e27ddc465b12e2b36f7f249875c7bff593d1045fe53b11132c",
+      "size_bytes": 14660
+    }
+  ]
+}

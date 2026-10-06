@@ -1,0 +1,74 @@
+{
+  "schema": "hbm.cp.parent-context.mapped-resume.v1",
+  "original_root": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1",
+  "original_physical_sha256": "7c8b0e600e62421e926cab9e1c0457db65e0dc61c357cbb736fccba5f40dd042",
+  "mapped_netlist_sha256": "04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e",
+  "corrected_sdc_sha256": "b807df47c8ea1945c2f83cf3b3728ac73a00cd2c12aaef799478962b9d84312b",
+  "hardware_sources": [
+    {
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "size_bytes": 1493
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+      "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "size_bytes": 2175
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+      "sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "size_bytes": 22540
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+      "sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+      "size_bytes": 1067
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+      "sha256": "01799fa336832464849944731114b27ecd22483a6514f36d8929fa8af5de6ef6",
+      "size_bytes": 2283
+    }
+  ],
+  "same_context": true,
+  "changed_network_API_only": true,
+  "source_phase_ps": 0,
+  "analytical_network_latency_ps": [
+    90,
+    100
+  ],
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "original_failure_preserved": true,
+  "synthesis_reused": true,
+  "resume_checkpoint": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/cts_membership_r6/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_place.odb",
+  "resume_checkpoint_sha256": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+  "frozen_upstream_artifacts": {
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_4_floorplan_pdn.odb": "2b97be5fcd7d6cf8c36bab25eeb623741dea7c7695f4779355431a6e603a60b8",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_1_place_gp_skip_io.odb": "5c60d934479f6778223e499f49c2a9ea86bf6a6cca8dba299f3cbd2746e02a35",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_floorplan.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_1_floorplan.odb": "25f99ee77a63088e4a6c4a568e65876e47aa7a7860aa46114126c25851e46c4e",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_place.odb": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_2_floorplan_macro.odb": "25f99ee77a63088e4a6c4a568e65876e47aa7a7860aa46114126c25851e46c4e",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_3_place_gp.odb": "c1ccf15dda807f5d793f25ebe196153d7b903ad72188b2344b7d3d267cf09e9d",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_3_floorplan_tapcell.odb": "40738a82989dbf3c23d5d28804d62e92f1aaf2baff700dfd4a3ee6daeacf3dee",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_1_floorplan.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.v": "04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_2_place_iop.odb": "b6d6ca2a4e3ee7be6aa5a7d05d23268256141b1c05662d414f5c9341c06710c5",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.sdc": "7edd2da68bd4c83bf80da15ebc1f788e1462364a2574af8ff56136018725b68c",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_5_place_dp.odb": "430bcb0a663240663afaa997941324957f9cb7af3e3c6ee7882474f25c7f8f24",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_place.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_synth.odb": "a4d018339957f64d2dccbbc38285bba99e78ad10a18c7d77b841c4ea2b42f106",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_floorplan.odb": "2b97be5fcd7d6cf8c36bab25eeb623741dea7c7695f4779355431a6e603a60b8",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_synth.sdc": "6e6d3f5941c69c77d409fa857246bd82f79275b971f83e1f9dbef7ff9366bd4f",
+    "results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_4_place_resized.odb": "f502362f49257c7af7bef0eead8c80aa474587f461ed48cc7d8777fcee9c4a63"
+  },
+  "inserted_cell_membership": {
+    "hook_sha256": "8d870f5ed39c200a8eb30ac52354d054d8569783e651179a090c295e7413ca75",
+    "model_sha256": "423ce891134468b4f8e368896ece798d20b24bf5d0b194dc9327a5bc60cf4670",
+    "region_geometry_changed": false,
+    "padding_changed": false,
+    "timing_changed": false
+  }
+}

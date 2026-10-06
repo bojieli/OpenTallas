@@ -1,0 +1,44 @@
+{
+  "verdict": "FAIL_REPAIRED_SOURCE_SS_SETUP_FF_HOLD_PASS",
+  "source": "5340736d3",
+  "RTL_pin": "58f890f15",
+  "functional_metadata_gate": "minimum_r3 PASS",
+  "route_rc": 0,
+  "SS_setup_slack_ps": -391.60819031991423,
+  "SS_R2R_slack_ps": -169.807785,
+  "SS_I2R_slack_ps": -18.115898,
+  "FF_hold_slack_ps": 34.03927834044751,
+  "actual_paths": {
+    "ACTUAL_R2R_PATHS": {
+      "startpoint": "code[1][30]$_DFFE_PN0P_",
+      "endpoint": "code[0][38]$_DFFE_PN0P_"
+    },
+    "ACTUAL_I2R_PATHS": {
+      "startpoint": "next_data[48] (input port clocked by core_clk)",
+      "endpoint": "code[0][71]$_DFFE_PN0P_"
+    },
+    "OUTPUT": {
+      "startpoint": "code[0][45]$_DFFE_PN0P_",
+      "endpoint": "data[35] (output port clocked by core_clk)"
+    }
+  },
+  "actual_cost": {
+    "cell_area_um2": 652.163,
+    "cell_count": 5749,
+    "FFs": 216,
+    "sequential_cell_area_um2": 81.8813,
+    "clock_buffers": 22,
+    "clock_inverters": 6,
+    "clock_cell_area_um2": 6.473520000000001,
+    "clock_pin_load_fF": 93.740112,
+    "timing_repair_buffers": 2408,
+    "slot_cell_reservation_um2": 757.92672
+  },
+  "added_payload_bits": 0,
+  "normal_cut_cycles": 0,
+  "CE_scrub_minimum_edges": 1,
+  "adopted": false,
+  "parent_context_closed": false,
+  "physical_admission": false,
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-gu-coded-5340736d3/probe"
+}

@@ -1,0 +1,75 @@
+{
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8",
+  "observed_utc": "2026-10-05T23:08:47.571494+00:00",
+  "checkpoint_inventory": [
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_2_place_iop.odb",
+      "bytes": 110273186
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/1_synth.odb",
+      "bytes": 82115732
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_place.odb",
+      "bytes": 117194008
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/2_2_floorplan_macro.odb",
+      "bytes": 85667288
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_4_place_resized.odb",
+      "bytes": 117194008
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_3_place_gp.odb",
+      "bytes": 116637653
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/2_1_floorplan.odb",
+      "bytes": 85667288
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_1_place_gp_skip_io.odb",
+      "bytes": 109380626
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/2_3_floorplan_tapcell.odb",
+      "bytes": 89347977
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_cts.odb",
+      "bytes": 128178966
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/2_4_floorplan_pdn.odb",
+      "bytes": 109380626
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/3_5_place_dp.odb",
+      "bytes": 117194008
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/2_floorplan.odb",
+      "bytes": 109380626
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/colldie_f12_r8/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_asap7_noc_colldie_f12_r8/base/4_1_cts.odb",
+      "bytes": 128178966
+    }
+  ],
+  "restarted": false,
+  "killed": false,
+  "adoption": false,
+  "artifact_sha256": {
+    "config.mk": "3400915ea07fb7a554931dea620f57813bddb65abac3634264b2f6ceb45ad3dc",
+    "physical.json": "59a65666908d58fcc8a0f1dbfbda32196198ffeabcb9437879bb3dcb3dc23a9c",
+    "4_cts_final.rpt": "d84be26e7ee867a8ede23d6ed1d9d76a7e5e10861bf719de7e61b24d8de75454",
+    "constraint.sdc": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "corner.log": "b634190bcb3aa8d5fec222712abda83067d4a233816184bc485e943e8ec6fcf4",
+    "exit": "b5f44f9f61511a93fef959c15f78fe0e9ab5e6032d212914fba4de83f20d5998",
+    "run.log": "d9bf9ff8c8f3e7d2b2a513667f0ab405e272ca6d8725eed751115b778cd6ef88"
+  }
+}

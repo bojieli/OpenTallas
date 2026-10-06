@@ -1,0 +1,309 @@
+{
+  "verdict": "CANCELLED_SUPERSEDED",
+  "reason": "Owner-authorized purpose retirement after explicit Copernicus individual E2 consumer release 2026-10-05T20:54:49Z: new field context consumes v9 f284/d3d0 + exact c58236160, and has no consumer of this old a721 quantiser-stub R128 screen. Not an RTL failure, signoff closure, wall-time cap or flow rescue.",
+  "consumer_release_file": "/tmp/claude-review-20261003/COPERNICUS_TO_ZENO_E2_INDIVIDUAL_RELEASE_20261005.txt",
+  "source_sha256": "1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7",
+  "before_processes": {
+    "1686763": {
+      "pid": 1686763,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": "5051462",
+      "command": "bash /srv/opentallas-scratch2/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch2/codex/dsrom-field-spine-route/mapped c1r128_h30s50 /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50 1 128 0.03 50 ",
+      "cwd": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f"
+    },
+    "1686781": {
+      "pid": 1686781,
+      "ppid": 1686763,
+      "state": "S",
+      "start_ticks": "5051467",
+      "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 50 --hold-margin-ns 0.03 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=1 --param R=128 --die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84 --nickname-tag dsfs_c1r128_h30s50 --keep-workdir /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work --output /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/physical.json ",
+      "cwd": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f"
+    },
+    "1689084": {
+      "pid": 1689084,
+      "ppid": 1686781,
+      "state": "S",
+      "start_ticks": "5051802",
+      "command": "docker run --rm -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate ",
+      "cwd": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f"
+    }
+  },
+  "container_before": {
+    "Id": "6020b7ad24cc5acbe6d6362a71a42ae36456371179dacb8001f800656c8a0185",
+    "Created": "2026-10-05T15:58:01.655719909Z",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 1689215,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-05T15:58:01.669408576Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+        "Destination": "/src",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Path": "bash",
+    "Args": [
+      "-lc",
+      "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+    ]
+  },
+  "container_children_before": {
+    "1689215": {
+      "pid": 1689215,
+      "ppid": 1689130,
+      "state": "S",
+      "start_ticks": "5051811",
+      "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate ",
+      "cwd": null
+    },
+    "1689248": {
+      "pid": 1689248,
+      "ppid": 1689215,
+      "state": "S",
+      "start_ticks": "5051816",
+      "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate ",
+      "cwd": null
+    },
+    "1932902": {
+      "pid": 1932902,
+      "ppid": 1689248,
+      "state": "S",
+      "start_ticks": "5525276",
+      "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt ",
+      "cwd": null
+    },
+    "1933079": {
+      "pid": 1933079,
+      "ppid": 1932902,
+      "state": "S",
+      "start_ticks": "5525310",
+      "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route ",
+      "cwd": null
+    },
+    "1933081": {
+      "pid": 1933081,
+      "ppid": 1933079,
+      "state": "S",
+      "start_ticks": "5525312",
+      "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route ",
+      "cwd": null
+    },
+    "1933114": {
+      "pid": 1933114,
+      "ppid": 1933081,
+      "state": "S",
+      "start_ticks": "5525326",
+      "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json ",
+      "cwd": null
+    },
+    "1933116": {
+      "pid": 1933116,
+      "ppid": 1933114,
+      "state": "R",
+      "start_ticks": "5525328",
+      "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json ",
+      "cwd": null
+    }
+  },
+  "container_top_before": "PID                 PPID                STAT                COMMAND\n1689215             1689130             Ss                  bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n1689248             1689215             S                   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n1932902             1689248             S                   make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt\n1933079             1932902             S                   bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1933081             1933079             S                   bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1933114             1933081             S                   /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json\n1933116             1933114             Rl                  /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json\n",
+  "openroad_rss_bytes_before": 12431269888,
+  "host_memory_before": {
+    "MemAvailable": 730417344512
+  },
+  "preserved_checkpoints_before": [
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_4_floorplan_pdn.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216163784855950
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_1_place_gp_skip_io.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216240936380102
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_1_floorplan.odb",
+      "bytes": 251902969,
+      "mtime_ns": 1791216144755726670
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/4_cts.odb",
+      "bytes": 329737706,
+      "mtime_ns": 1791220616306083165
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_place.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218916801546434
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_2_floorplan_macro.odb",
+      "bytes": 251902969,
+      "mtime_ns": 1791216149828761135
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/4_1_cts.odb",
+      "bytes": 329737706,
+      "mtime_ns": 1791220614230069076
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_3_place_gp.odb",
+      "bytes": 280388201,
+      "mtime_ns": 1791217461535670257
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_3_floorplan_tapcell.odb",
+      "bytes": 256083790,
+      "mtime_ns": 1791216154248791164
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_2_place_iop.odb",
+      "bytes": 284038267,
+      "mtime_ns": 1791216247952427767
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_5_place_dp.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218915468537387
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/1_synth.odb",
+      "bytes": 249949323,
+      "mtime_ns": 1791215897608045702
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_floorplan.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216164332859673
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_4_place_resized.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218092015948749
+    }
+  ],
+  "stop_actions": [
+    {
+      "pid": 1686763,
+      "signal": "SIGTERM",
+      "pidfd_identity_verified": true
+    },
+    {
+      "pid": 1686781,
+      "signal": "SIGTERM",
+      "pidfd_identity_verified": true
+    },
+    {
+      "container": "6020b7ad24cc5acbe6d6362a71a42ae36456371179dacb8001f800656c8a0185",
+      "child_namespace_pid": 1334,
+      "signal": "SIGTERM",
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "container_running_after": false,
+  "after_processes": [],
+  "active_children_after": [],
+  "host_memory_after": {
+    "MemAvailable": 742707974144
+  },
+  "preserved_checkpoints_after": [
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_4_floorplan_pdn.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216163784855950
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_1_place_gp_skip_io.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216240936380102
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_1_floorplan.odb",
+      "bytes": 251902969,
+      "mtime_ns": 1791216144755726670
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/4_cts.odb",
+      "bytes": 329737706,
+      "mtime_ns": 1791220616306083165
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_place.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218916801546434
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_2_floorplan_macro.odb",
+      "bytes": 251902969,
+      "mtime_ns": 1791216149828761135
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/4_1_cts.odb",
+      "bytes": 329737706,
+      "mtime_ns": 1791220614230069076
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_3_place_gp.odb",
+      "bytes": 280388201,
+      "mtime_ns": 1791217461535670257
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_3_floorplan_tapcell.odb",
+      "bytes": 256083790,
+      "mtime_ns": 1791216154248791164
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_2_place_iop.odb",
+      "bytes": 284038267,
+      "mtime_ns": 1791216247952427767
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_5_place_dp.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218915468537387
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/1_synth.odb",
+      "bytes": 249949323,
+      "mtime_ns": 1791215897608045702
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/2_floorplan.odb",
+      "bytes": 282916843,
+      "mtime_ns": 1791216164332859673
+    },
+    {
+      "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/3_4_place_resized.odb",
+      "bytes": 285717025,
+      "mtime_ns": 1791218092015948749
+    }
+  ],
+  "stopped_utc": "2026-10-05T21:24:41.013122+00:00",
+  "source_retained_in_place": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+  "outputs_retained_in_place": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50",
+  "physical_adopted": false,
+  "full_S81_ready": false
+}

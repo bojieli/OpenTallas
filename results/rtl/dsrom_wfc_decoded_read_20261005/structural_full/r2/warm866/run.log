@@ -1,0 +1,5 @@
+CONTROL_PIPE PASS mode=0 writes=41 starts=1 flits=47 received_launch_delta=0 completion_delta=0 reset_release_delta=0
+CONTROL_PIPE PASS mode=1 writes=41 starts=1 flits=47 received_launch_delta=2 completion_delta=1 reset_release_delta=1
+CONTROL_PIPE_PENDING_RESET PASS captured owner/result cancelled before consume, no publication
+STRUCTURAL_WARM_FULL MAXU866 user865 PASS both modes exact payload/one-shot/quiet/backpressure/warm reset
+/srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r2/rtl/test/dsrom_wavefront/tb_wfc_structural_warm_full.sv:104: $finish called at 2100000 (1ps)

@@ -1,0 +1,78 @@
+Startpoint: g_g[12].u_g (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: oy[408] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock core_clk (rise edge)
+   0.000000    0.000000   clock source latency
+   0.000000    0.000000 ^ clk (in)
+  54.659706   54.659706 ^ wire231593/Y (BUFx12f_ASAP7_75t_R)
+  52.756542  107.416252 ^ wire231592/Y (BUFx24_ASAP7_75t_R)
+ 238.362640  345.778870 ^ wire231591/Y (BUFx24_ASAP7_75t_R)
+  77.460014  423.238892 ^ wire231590/Y (BUFx24_ASAP7_75t_R)
+ 126.078926  549.317810 ^ wire231589/Y (BUFx24_ASAP7_75t_R)
+  96.304131  645.621948 ^ wire231588/Y (BUFx24_ASAP7_75t_R)
+ 157.023499  802.645447 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  44.104553  846.750000 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.874916  887.624939 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  42.457760  930.082703 ^ clkbuf_1_1_2_clk/Y (BUFx24_ASAP7_75t_R)
+  40.680569  970.763245 ^ clkbuf_1_1_3_clk/Y (BUFx24_ASAP7_75t_R)
+  41.448513 1012.211792 ^ clkbuf_1_1_4_clk/Y (BUFx24_ASAP7_75t_R)
+  42.371994 1054.583740 ^ clkbuf_1_1_5_clk/Y (BUFx24_ASAP7_75t_R)
+  36.136204 1090.719971 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.440628 1132.160645 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  41.443848 1173.604492 ^ clkbuf_2_2_2_clk/Y (BUFx24_ASAP7_75t_R)
+  41.581959 1215.186401 ^ clkbuf_2_2_3_clk/Y (BUFx24_ASAP7_75t_R)
+  43.197334 1258.383789 ^ clkbuf_2_2_4_clk/Y (BUFx24_ASAP7_75t_R)
+  42.244762 1300.628540 ^ clkbuf_2_2_5_clk/Y (BUFx24_ASAP7_75t_R)
+  36.192162 1336.820679 ^ clkbuf_3_5_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.514458 1378.335083 ^ clkbuf_3_5_1_clk/Y (BUFx24_ASAP7_75t_R)
+  41.620819 1419.955933 ^ clkbuf_3_5_2_clk/Y (BUFx24_ASAP7_75t_R)
+  40.118687 1460.074585 ^ clkbuf_4_10_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.357471 1501.432129 ^ clkbuf_4_10_1_clk/Y (BUFx24_ASAP7_75t_R)
+  39.977020 1541.409058 ^ clkbuf_4_10_2_clk/Y (BUFx24_ASAP7_75t_R)
+  36.657124 1578.066284 ^ wire231607/Y (BUFx16f_ASAP7_75t_R)
+ 229.912979 1807.979248 ^ wire231606/Y (BUFx24_ASAP7_75t_R)
+  55.325188 1863.304443 ^ wire231605/Y (BUFx24_ASAP7_75t_R)
+ 245.745209 2109.049561 ^ g_g[12].u_g/clk (ot_attn_hgrp_m6h1)
+ 588.766846 2697.816406 v g_g[12].u_g/oy[24] (ot_attn_hgrp_m6h1)
+  33.502758 2731.319092 v wire229962/Y (BUFx12f_ASAP7_75t_R)
+  60.256466 2791.575684 v wire229961/Y (BUFx12f_ASAP7_75t_R)
+  69.879211 2861.454834 v place151928/Y (BUFx6f_ASAP7_75t_R)
+  31.956659 2893.411621 v place151927/Y (BUFx6f_ASAP7_75t_R)
+  32.813751 2926.225342 v wire223365/Y (BUFx16f_ASAP7_75t_R)
+  87.953201 3014.178467 v wire223364/Y (BUFx16f_ASAP7_75t_R)
+ 100.509598 3114.687988 v place151926/Y (BUFx6f_ASAP7_75t_R)
+  32.425175 3147.113281 v place151925/Y (BUFx6f_ASAP7_75t_R)
+  27.717829 3174.831055 v place151924/Y (BUFx6f_ASAP7_75t_R)
+  29.521496 3204.352539 v place151923/Y (BUFx6f_ASAP7_75t_R)
+  30.034864 3234.387451 v place151922/Y (BUFx6f_ASAP7_75t_R)
+  33.273827 3267.661377 v wire210991/Y (BUFx16f_ASAP7_75t_R)
+  98.615784 3366.277100 v wire210990/Y (BUFx16f_ASAP7_75t_R)
+  98.778984 3465.056152 v place151921/Y (BUFx6f_ASAP7_75t_R)
+  33.854031 3498.910156 v place151920/Y (BUFx6f_ASAP7_75t_R)
+  41.491699 3540.401855 v wire206169/Y (BUFx16f_ASAP7_75t_R)
+ 196.818558 3737.220215 v wire206168/Y (BUFx16f_ASAP7_75t_R)
+ 116.565872 3853.786133 v place151919/Y (BUFx6f_ASAP7_75t_R)
+  32.623238 3886.409424 v place151918/Y (BUFx6f_ASAP7_75t_R)
+  35.876190 3922.285645 v place151917/Y (BUFx6f_ASAP7_75t_R)
+  70.047966 3992.333496 v place53606/Y (BUFx5_ASAP7_75t_R)
+ 258.164154 4250.497559 v oy[408] (out)
+            4250.497559   data arrival time
+
+ 833.333008  833.333008   clock core_clk (rise edge)
+   0.000000  833.333008   clock network delay (propagated)
+ -60.000000  773.333008   clock uncertainty
+   0.000000  773.333008   clock reconvergence pessimism
+-166.666702  606.666321   output external delay
+             606.666321   data required time
+-----------------------------------------------------------------
+             606.666321   data required time
+            -4250.497559   data arrival time
+-----------------------------------------------------------------
+            -3643.831543   slack (VIOLATED)
+
+

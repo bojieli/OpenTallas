@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.hbm.smh.grt.termination_provenance.v1",
+  "job": "ot-epyc2:/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r1/tileE",
+  "rc": 137,
+  "cause": "Intentional Codex external cancellation: docker kill --signal=KILL after SIGTERM did not terminate invalid-capacity mapping.",
+  "first_signal_command": "docker kill --signal=TERM codex-smh-local-grt-tileW codex-smh-local-grt-tileE",
+  "terminal_signal_command": "docker kill --signal=KILL codex-smh-local-grt-tileW codex-smh-local-grt-tileE",
+  "reason": "GRT0113 unsigned underflow on already-zero blocked edges with regional r=.5; W derated M2/M3/M4 resource exceeds original. Therefore physical capacity map invalid regardless of any eventual route result.",
+  "tileW_original_vs_derated_resources": {
+    "M2": [
+      5224040,
+      6341254
+    ],
+    "M3": [
+      6189744,
+      7286700
+    ],
+    "M4": [
+      4730289,
+      6209985
+    ]
+  },
+  "memory_need_verdict": "137 is not an OOM or architectural/route-overflow verdict. R1 complete GRT peak unavailable; only actual pin-access peak3077.44MB reported. Retain original W GRT measured peak8962976KB and declared24GiB for continuation.",
+  "old_container_inspect": "Unavailable: --rm removed both old containers/cgroups after explicit cancellation; do not infer historical OOMKilled or memory.events.",
+  "driver_limits": "Pinned command.json has no --memory, --ulimit, wall/file/CPU/address-space deadline. No own future launcher restriction to remove.",
+  "host_pressure_20261005_223154UTC": {
+    "load1": 159.42,
+    "MemAvailable_bytes": 775883608064,
+    "swap_used_bytes": 12836864,
+    "dmesg": "Operation not permitted"
+  },
+  "corrected_continuation_check": {
+    "utc": "2026-10-05T22:32 UTC",
+    "containers": [
+      "codex-smh-local-grt-r2-tileW",
+      "codex-smh-local-grt-r2-tileE"
+    ],
+    "Memory": 0,
+    "MemorySwap": 0,
+    "NanoCpus": 0,
+    "Ulimits": [],
+    "OOMKilled": false,
+    "cgroup_memory_max": "max",
+    "cgroup_memory_high": "max",
+    "memory_events_oom": 0,
+    "memory_events_oom_kill": 0,
+    "ancestor_system_slice_memory_max": "max",
+    "CPU_file_AS_limits": "unlimited",
+    "scope": "Current corrected containers only, not retrospective old-container evidence"
+  },
+  "checkpoints": "R1 source_checkpoint_pin.json and terminal.json confirm unchanged retained4CTS. Original W83/E27 failures, source, ODB, objects and all R1 invalid artifacts retained.",
+  "next": "Corrected r=1 interior-only keepout from same4CTS; current R2 actualguard22:30:04UTC load63.19/MemAvailable799GB,24GiB. No synthesis/place/CTS repeat; detailed route/SSFF still pending.",
+  "adopt": false
+}

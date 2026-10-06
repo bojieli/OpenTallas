@@ -1,0 +1,888 @@
+{
+  "schema": "hbm.item9.current32.finite-parent-contract.v1",
+  "source_main": "a0c8003b7",
+  "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
+  "caller_local_regions": [
+    {
+      "caller": "sm0",
+      "hierarchy": "g_on.g_sm_caller[0]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        625.104,
+        1596.24,
+        2827.848,
+        3669.816
+      ],
+      "child_core_um": [
+        642.384,
+        1613.52,
+        728.7840000000001,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm1",
+      "hierarchy": "g_on.g_sm_caller[1]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        3087.072,
+        1596.24,
+        5289.816000000001,
+        3669.816
+      ],
+      "child_core_um": [
+        3104.3520000000003,
+        1613.52,
+        3190.752,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm2",
+      "hierarchy": "g_on.g_sm_caller[2]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        5549.04,
+        1596.24,
+        7751.784,
+        3669.816
+      ],
+      "child_core_um": [
+        5566.32,
+        1613.52,
+        5652.72,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm3",
+      "hierarchy": "g_on.g_sm_caller[3]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        8011.008,
+        1596.24,
+        10213.752,
+        3669.816
+      ],
+      "child_core_um": [
+        8028.288,
+        1613.52,
+        8114.688,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm4",
+      "hierarchy": "g_on.g_sm_caller[4]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        625.104,
+        4188.24,
+        2827.848,
+        6261.816
+      ],
+      "child_core_um": [
+        642.384,
+        4205.5199999999995,
+        728.7840000000001,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm5",
+      "hierarchy": "g_on.g_sm_caller[5]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        3087.072,
+        4188.24,
+        5289.816000000001,
+        6261.816
+      ],
+      "child_core_um": [
+        3104.3520000000003,
+        4205.5199999999995,
+        3190.752,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm6",
+      "hierarchy": "g_on.g_sm_caller[6]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        5549.04,
+        4188.24,
+        7751.784,
+        6261.816
+      ],
+      "child_core_um": [
+        5566.32,
+        4205.5199999999995,
+        5652.72,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm7",
+      "hierarchy": "g_on.g_sm_caller[7]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        8011.008,
+        4188.24,
+        10213.752,
+        6261.816
+      ],
+      "child_core_um": [
+        8028.288,
+        4205.5199999999995,
+        8114.688,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm8",
+      "hierarchy": "g_on.g_sm_caller[8]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        13324.176,
+        1596.24,
+        15526.92,
+        3669.816
+      ],
+      "child_core_um": [
+        13341.456,
+        1613.52,
+        13427.856,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm9",
+      "hierarchy": "g_on.g_sm_caller[9]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        15786.144,
+        1596.24,
+        17988.888,
+        3669.816
+      ],
+      "child_core_um": [
+        15803.424,
+        1613.52,
+        15889.824,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm10",
+      "hierarchy": "g_on.g_sm_caller[10]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        18248.112,
+        1596.24,
+        20450.856,
+        3669.816
+      ],
+      "child_core_um": [
+        18265.392,
+        1613.52,
+        18351.792,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm11",
+      "hierarchy": "g_on.g_sm_caller[11]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        20710.08,
+        1596.24,
+        22912.824,
+        3669.816
+      ],
+      "child_core_um": [
+        20727.36,
+        1613.52,
+        20813.760000000002,
+        1699.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm12",
+      "hierarchy": "g_on.g_sm_caller[12]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        13324.176,
+        4188.24,
+        15526.92,
+        6261.816
+      ],
+      "child_core_um": [
+        13341.456,
+        4205.5199999999995,
+        13427.856,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm13",
+      "hierarchy": "g_on.g_sm_caller[13]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        15786.144,
+        4188.24,
+        17988.888,
+        6261.816
+      ],
+      "child_core_um": [
+        15803.424,
+        4205.5199999999995,
+        15889.824,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm14",
+      "hierarchy": "g_on.g_sm_caller[14]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        18248.112,
+        4188.24,
+        20450.856,
+        6261.816
+      ],
+      "child_core_um": [
+        18265.392,
+        4205.5199999999995,
+        18351.792,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm15",
+      "hierarchy": "g_on.g_sm_caller[15]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        20710.08,
+        4188.24,
+        22912.824,
+        6261.816
+      ],
+      "child_core_um": [
+        20727.36,
+        4205.5199999999995,
+        20813.760000000002,
+        4291.92
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm16",
+      "hierarchy": "g_on.g_sm_caller[16]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        625.104,
+        21206.88,
+        2827.848,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        642.384,
+        21224.16,
+        728.7840000000001,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm17",
+      "hierarchy": "g_on.g_sm_caller[17]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        3087.072,
+        21206.88,
+        5289.816000000001,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        3104.3520000000003,
+        21224.16,
+        3190.752,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm18",
+      "hierarchy": "g_on.g_sm_caller[18]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        5549.04,
+        21206.88,
+        7751.784,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        5566.32,
+        21224.16,
+        5652.72,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm19",
+      "hierarchy": "g_on.g_sm_caller[19]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        8011.008,
+        21206.88,
+        10213.752,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        8028.288,
+        21224.16,
+        8114.688,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm20",
+      "hierarchy": "g_on.g_sm_caller[20]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        625.104,
+        18874.08,
+        2827.848,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        642.384,
+        18891.36,
+        728.7840000000001,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm21",
+      "hierarchy": "g_on.g_sm_caller[21]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        3087.072,
+        18874.08,
+        5289.816000000001,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        3104.3520000000003,
+        18891.36,
+        3190.752,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm22",
+      "hierarchy": "g_on.g_sm_caller[22]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        5549.04,
+        18874.08,
+        7751.784,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        5566.32,
+        18891.36,
+        5652.72,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm23",
+      "hierarchy": "g_on.g_sm_caller[23]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        8011.008,
+        18874.08,
+        10213.752,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        8028.288,
+        18891.36,
+        8114.688,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm24",
+      "hierarchy": "g_on.g_sm_caller[24]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        13324.176,
+        21206.88,
+        15526.92,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        13341.456,
+        21224.16,
+        13427.856,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm25",
+      "hierarchy": "g_on.g_sm_caller[25]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        15786.144,
+        21206.88,
+        17988.888,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        15803.424,
+        21224.16,
+        15889.824,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm26",
+      "hierarchy": "g_on.g_sm_caller[26]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        18248.112,
+        21206.88,
+        20450.856,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        18265.392,
+        21224.16,
+        18351.792,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm27",
+      "hierarchy": "g_on.g_sm_caller[27]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        20710.08,
+        21206.88,
+        22912.824,
+        23280.456000000002
+      ],
+      "child_core_um": [
+        20727.36,
+        21224.16,
+        20813.760000000002,
+        21310.56
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm28",
+      "hierarchy": "g_on.g_sm_caller[28]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        13324.176,
+        18874.08,
+        15526.92,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        13341.456,
+        18891.36,
+        13427.856,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm29",
+      "hierarchy": "g_on.g_sm_caller[29]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        15786.144,
+        18874.08,
+        17988.888,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        15803.424,
+        18891.36,
+        15889.824,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm30",
+      "hierarchy": "g_on.g_sm_caller[30]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        18248.112,
+        18874.08,
+        20450.856,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        18265.392,
+        18891.36,
+        18351.792,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    },
+    {
+      "caller": "sm31",
+      "hierarchy": "g_on.g_sm_caller[31]",
+      "registers": [
+        "c_data[4095:0]",
+        "vr[4095:0]"
+      ],
+      "source_parent_um": [
+        20710.08,
+        18874.08,
+        22912.824,
+        20947.656000000003
+      ],
+      "child_core_um": [
+        20727.36,
+        18891.36,
+        20813.760000000002,
+        18977.760000000002
+      ],
+      "FF": 8203,
+      "FF_area_floor_um2": 2391.9948000000004,
+      "positive_CTS_repair_reserve_um2": 1000,
+      "cell_cap_50pct_um2": 3732.4800000000005,
+      "clock": "clk_sm phase0"
+    }
+  ],
+  "caller_local_FF_total": 262496,
+  "caller_vector_state_bits": 262144,
+  "actual_total_mapped_um2": 178333.520399,
+  "actual_total_FF": 304836,
+  "endpoint_parent_um": [
+    10861.776,
+    11735.28,
+    12676.152,
+    13139.256
+  ],
+  "endpoint_child_core_um": [
+    10879.056,
+    11752.56,
+    11527.056,
+    12400.56
+  ],
+  "endpoint_child_gross_um": [
+    10861.776,
+    11735.28,
+    11544.336,
+    12417.84
+  ],
+  "endpoint_cap_50pct_um2": 209952,
+  "endpoint_cells_conservative_after_caller_FF_floor_um2": 101789.68679899999,
+  "additional_CTS_PG_hold_reserve_um2": 40000,
+  "roots": [
+    "g_on.u_ep.clk_sm",
+    "g_on.u_mux.clk",
+    "g_on.g_sm_caller[s].clk_sm",
+    "g_on.u_rst.clk_sm",
+    "g_on.u_rst.clk_link",
+    "g_on.u_rst.clk_mem",
+    "g_on.u_rst.clk_host"
+  ],
+  "phase_ps": 0,
+  "period_ps": 833.3333333333,
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "installed_clock_macro_terminal": false,
+  "request_bits": 131072,
+  "response_unique_bits": 4096,
+  "response_receiver_count": 32,
+  "response_loads_per_bit": 32,
+  "source_response": "u_mux.s_rsp_data4096sharedbroadcast ->32real4096bitvr receivers; not131072independentresponsewires",
+  "tracks": {
+    "shared_spine_um": 1036.8,
+    "raw_M6_M8_capacity": 29159,
+    "raw_M7_M9_capacity": 29159,
+    "single_spine_allrequest_deficit_before_PG_and_otherclaims": 101913,
+    "W_E_faces_after_PG_via_64clock_upper": 34366,
+    "N_S_faces_after_PG_via_64clock_upper": 44431,
+    "candidate_caller_split": [
+      7,
+      7,
+      9,
+      9
+    ],
+    "candidate_face_req_plus_broadcast": [
+      32768,
+      32768,
+      40960,
+      40960
+    ],
+    "remaining_before_ALL_other_claims": [
+      1598,
+      1598,
+      3471,
+      3471
+    ],
+    "actual_unreserved_capacity_qualified": false
+  },
+  "wire": {
+    "max_bbox_Manhattan_um": 23596.224,
+    "geometric_430p56um_cuts": 55,
+    "installed_pipeline_edges": 0,
+    "source_combinational_path_still_requires_actual_SS_FF": true
+  },
+  "admission": "finitecellgeometryfits; single-spine fullrequest failsrawcapacity. Actual distributedmuxleaf/corridor/all-otherclaim binding required; no physicalroute/clock qualification",
+  "source_is_selected_sm_v_protocol": false,
+  "caller_SM_space": "finite childdecomposition charged againstselectedSMparent; actualmapped SMmacro must preserve these child areas and remainingmechanisms; obstruction notfunctionalmacro",
+  "outerroute_duplicate": false
+}

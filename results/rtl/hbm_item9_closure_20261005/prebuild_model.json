@@ -1,0 +1,72 @@
+{
+  "item": 9,
+  "status": "PREBUILD_DEFAULT_OFF",
+  "mandatory_clock_closure": true,
+  "selected_endpoint": "ot_gpu_coll_endpoint_f12_txmask",
+  "arithmetic": {
+    "MACs_per_cycle": 0,
+    "rounding_changes": 0,
+    "reduction_order_changes": 0
+  },
+  "shape": {
+    "NSM": 2,
+    "NL": 128,
+    "data_bits": 4096,
+    "owner_copies": 64,
+    "owner_bits_per_copy": 1,
+    "max_select_fanout_bits": 64
+  },
+  "memory": {
+    "ingress_bytes_per_accept": 1024.0,
+    "endpoint_bytes_per_accept": 512.0,
+    "TX_bytes_per_cycle": 64,
+    "RX_bytes_per_cycle": 64,
+    "memory_ports_added": 0
+  },
+  "communication": {
+    "SM_ingress_bits_per_cycle": 8214,
+    "mux_endpoint_bits_per_cycle": 4108,
+    "link_record_bits_per_cycle": 546,
+    "response_bits_per_cycle": 4100,
+    "external_boundary_bits_added": 0,
+    "added_local_owner_bits": 48,
+    "owner_update_fanout": 64,
+    "select_mux_bit_equivalents": 4096,
+    "demux_control_outputs": 4,
+    "tracks_needed_lower_bound": 4108,
+    "actual_channel_capacity": null,
+    "actual_parent_channel_fit": false
+  },
+  "area": {
+    "added_owner_FF_bits": 48,
+    "FF_cell_floor_um2": 13.9968,
+    "retained_context_cell_um2": 29809.2,
+    "mux_bit_delta": 0,
+    "extra_buffer_reset_CTS_area_um2": null,
+    "actual_floorplan_slot": null,
+    "actual_slot_fit": false
+  },
+  "latency": {
+    "new_mux_cycles_per_collective": 0,
+    "new_mux_cycles_per_record": 0,
+    "new_mux_token_delta_ns": 0,
+    "retained_XREG_cycles_per_collective": 2,
+    "historical_collective_count": 265,
+    "retained_XREG_token_delta_ns": 441.6666666666667,
+    "composed_current_token_delta_ns": null,
+    "fullshape_cycle_gate": false
+  },
+  "clock": {
+    "period_ns": 0.833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "macro_load_and_parent_clock_bound": false
+  },
+  "gates": {
+    "fullshape_exact": false,
+    "contextual_SS_FF": false,
+    "hub_routing_layer_check": false,
+    "installed": false,
+    "adoption": false
+  }
+}

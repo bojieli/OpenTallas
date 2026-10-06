@@ -1,0 +1,22 @@
+--- route-r3/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv
++++ current/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv
+@@ -14,8 +14,8 @@
+ //     a  = t * w            (ROUTED: the routing weight)            ot_hdc_qmul_lat
+ // and the unrounded a leaves the lane; the BF16 rounding (round to nearest even on the encoding, the lane's OUT
+ // rnd) is the combinational front of the quantiser's input register.  Depth (PRE register -> a):
+-//     1 + D_EXP + LA + D_DIV + LM (+ LM routed) = 1 + 72 + 4 + 21 + 5 + 5 = 108 at LM 5 / LA 4 (the 1.2 GHz
+-//     copies of the SU's exp and divider, rtl/hdc/v41x/ot_dsrom_su_f12.sv: one and two extra stages).
++//     1 + D_EXP + LA + D_DIV + LM (+ LM routed) = 1 + 76 + 4 + 21 + 5 + 5 = 112 at LM 5 / LA 4 (the 1.2 GHz
++//     copies of the SU's exp and divider, rtl/hdc/v41x/ot_dsrom_su_f12.sv: five and two extra stages).
+ //
+ // ot_dsrom_su_swiglu: W lanes (W/32 quantiser blocks a vector, W a multiple of 32).  The operands arrive through
+ // NIN register stages (the hub traverse in: 22 slow stages x 748/504 = 33 at 1.2 GHz; the last one is the lanes'
+@@ -44,7 +44,7 @@
+     output wire        vo,
+     output wire        fault
+ );
+-    localparam integer D_EXP = 7 * LM + 8 * LA + 5;   // ot_dsrom_exp_f12
++    localparam integer D_EXP = 7 * LM + 6 * LA + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
+     localparam integer D_DIV = 21;                    // ot_dsrom_fdiv_f12
+     localparam integer KS = 1;
+     localparam integer DEPTH = 1 + D_EXP + LA + D_DIV + LM + (ROUTED != 0 ? LM : 0);

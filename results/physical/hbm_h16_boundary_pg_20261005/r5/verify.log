@@ -1,0 +1,30 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ORD-0030] Using 1 thread(s).
+[{"x_um": 326.421, "lower_M2_bbox_um": [326.376, -0.009, 326.466, 0.081], "M3_bbox_um": [326.376, 0.018, 326.466, 0.558], "via_centers_um": [[326.421, 0.036], [326.421, 0.54]], "native_tech_via": "VIA23"}, {"x_um": 674.397, "lower_M2_bbox_um": [674.352, -0.009, 674.442, 0.081], "M3_bbox_um": [674.352, 0.018, 674.442, 0.558], "via_centers_um": [[674.397, 0.036], [674.397, 0.54]], "native_tech_via": "VIA23"}, {"x_um": 1022.373, "lower_M2_bbox_um": [1022.328, -0.009, 1022.418, 0.081], "M3_bbox_um": [1022.328, 0.018, 1022.418, 0.558], "via_centers_um": [[1022.373, 0.036], [1022.373, 0.54]], "native_tech_via": "VIA23"}, {"x_um": 1349.037, "lower_M2_bbox_um": [1348.992, -0.009, 1349.082, 0.081], "M3_bbox_um": [1348.992, 0.018, 1349.082, 0.558], "via_centers_um": [[1349.037, 0.036], [1349.037, 0.54]], "native_tech_via": "VIA23"}]
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO PSM-0040] All shapes on net VDD are connected.
+[WARNING PSM-0038] Unconnected shape on net VSS at (304.830um, -0.009um) - (347.976um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (652.806um, -0.009um) - (695.952um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1000.782um, -0.009um) - (1043.928um, 0.009um), layer: M1.
+[WARNING PSM-0038] Unconnected shape on net VSS at (1348.758um, -0.009um) - (1349.082um, 0.009um), layer: M1.
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_2_Left_10663/VSS at location (304.884um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_2_52432/VSS at location (329.832um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_2_Right_11792/VSS at location (347.922um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_3_Left_11793/VSS at location (652.860um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_3_52433/VSS at location (677.808um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_3_Right_12922/VSS at location (695.898um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_4_Left_14051/VSS at location (1000.836um, 0.000um).
+[WARNING PSM-0039] Unconnected instance TAP_TAPCELL_ROW_0_4_52434/VSS at location (1025.784um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_4_Right_15180/VSS at location (1043.874um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_5_Left_16309/VSS at location (1348.812um, 0.000um).
+[WARNING PSM-0039] Unconnected instance PHY_EDGE_ROW_0_5_Right_17915/VSS at location (1349.028um, 0.000um).
+[ERROR PSM-0069] Check connectivity failed on VSS.
+Error: check_stitched.tcl, 3 PSM-0069

@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS_FULL25_RETENTION_EDGE_COMPONENT_DEFAULT_OFF",
+  "source_sha256": {
+    "rtl/v41rom/ot_v41_rom_stage_pg_cdc.sv": "14020df6fc4822ae56fa43f94f3eb43d62f6c50f1f4d1aa46fb5f02f26bd504c",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/test/w5_retention/tb_rom_stage_retention_edge.sv": "a3e4e8a1e9b6268dac7d70c0dbc058679e584c68a5188b04fa6658f1b1232dfb",
+    "tools/uarch_model.py": "bc134511e36e555ffcd94cb26d7577db7b9c0229a7036c0a453073957e144dc8",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "bench": "rtl/test/w5_retention/tb_rom_stage_retention_edge.sv",
+  "model": "results/rtl/rom_stage_retention_edge_20261005/model_before_rtl.json",
+  "host": "ot-epyc2",
+  "remote_root": "/srv/opentallas-scratch2/codex/w5-retention-edge-20261005",
+  "compiler": "iverilog -g2012 -s tb_rom_stage_retention_edge -Ptb_rom_stage_retention_edge.FIX={0,1} -o bench ot_v41_rom_stage_pg_cdc.sv ot_hdc_cg.sv tb_rom_stage_retention_edge.sv",
+  "runner": "vvp bench",
+  "full_retention_entries": 25,
+  "replay_receipts": 50,
+  "default_off_exit": 1,
+  "enabled_exit": 0,
+  "full_stage_ss_ff_closed": false,
+  "actual_parent_clock_loads_qualified": false,
+  "current_residual_power_w": null,
+  "energy_credit": false,
+  "adopted": false,
+  "physical_launch": false,
+  "added_registers": 0,
+  "added_cycles": 0
+}
