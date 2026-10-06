@@ -22,6 +22,7 @@ def main():
          '--place-density','0.55','--max-fanout','32','--max-transition-ns','0.15',
          '--hold-margin-ns','0.008','--orfs-var','ADDER_MAP_FILE=',
          '--orfs-var','TMPDIR=/work/tmp',
+         '--orfs-var','PDN_TCL=/src/physical/dsrom_window_columns/parent_pdn.tcl',
          '--orfs-var','IO_PLACER_H=M4 M6 M8','--orfs-var','IO_PLACER_V=M5 M7 M9',
          '--routing-layers','M2','M9','--macro-place-halo','4','4',
          '--step-tcl','POST_MACRO_PLACE=physical/dsrom_window_columns/place_stage.tcl',
