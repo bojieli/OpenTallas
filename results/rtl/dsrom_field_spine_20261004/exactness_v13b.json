@@ -1,0 +1,118 @@
+{
+ "schema": "opentallas.dsrom.field_spine.v13b_exactness.v1",
+ "spine_rtl_sha256": "ecac11e1d7406b49d5ea6d417ca17eadd3565523394d3e99199d9190399523f3",
+ "quantiser_rtl_sha256": "c3723230b0375ae771ba83d28af66e3fe55f05efe47ed5f95f3143355ccdfcdb",
+ "source_commit": "befda6b30",
+ "host": "ot-epyc2",
+ "bench": "tools/dsrom_field_spine.py run (Verilator; rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp); a run passes only with tb PASS, 0 mismatched and 0 extra rows; the CLI exits 1 on any failed run",
+ "campaigns": [
+  {
+   "config": "PQ=0 baseline",
+   "mode": "phase x region (S81 canonical)",
+   "runs": 20160,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node back-to-back",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node back-to-back (S81+R93)",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "single-phase nodes",
+   "runs": 3792,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  }
+ ],
+ "rows_checked_each_config": 249920,
+ "rows_mismatched": 0,
+ "records": [
+  "results/rtl/dsrom_field_spine_20261004/field_baseline_v13b.json",
+  "results/rtl/dsrom_field_spine_20261004/field_pq_v13b.json"
+ ],
+ "mutant_check": {
+  "mutation": "qb row low-half write takes the high half of the quantiser output (one line)",
+  "runs": 8,
+  "failed": 8,
+  "cli_exit": 1
+ },
+ "quantiser_equivalence_ref": "aq12m_equivalence.json (aq12m = aq12f + 11 cycles, 72,000 cycles lockstep, 3 mutants fail)",
+ "change_vs_v12": "margin-first (owner rule 2026-10-06): quantiser ot_dsrom_aq12m (AQL 18 -> 29); +1 return-select stage; second replica-master stage; registered row-total terms; rd_i + 2 register; 64 g_ixc copies; row-count stage C split; 3 kept streamer control copies",
+ "wire_stages_note": "records at the current main S81 floorplan: 78 wire cycles per crossing",
+ "manifest": [
+  "2026-10-06T13:39:12-07:00 source: v13 sim_src + v13b spine (befda6b30)",
+  "2026-10-06T13:39:14-07:00 mutant diff lines 1",
+  "2026-10-06T13:39:14-07:00 build pq0",
+  "2026-10-06T13:45:19-07:00 build pq0 rc=0",
+  "2026-10-06T13:45:19-07:00 build pq1",
+  "2026-10-06T13:54:27-07:00 build pq1 rc=0",
+  "2026-10-06T13:54:27-07:00 start B_node",
+  "2026-10-06T13:54:27-07:00 start A_phase",
+  "2026-10-06T14:07:43-07:00 end B_node rc=0 failed 0",
+  "2026-10-06T14:07:43-07:00 start B_single",
+  "2026-10-06T14:15:48-07:00 end B_single rc=0 failed 0",
+  "2026-10-06T14:15:48-07:00 start B_np2",
+  "2026-10-06T14:16:40-07:00 end B_np2 rc=0 failed 0",
+  "2026-10-06T14:27:17-07:00 end A_phase rc=0 failed 0",
+  "2026-10-06T14:27:17-07:00 start A_node",
+  "2026-10-06T14:33:01-07:00 end A_node rc=0 failed 0",
+  "2026-10-06T14:33:01-07:00 start A_np2",
+  "2026-10-06T14:33:42-07:00 end A_np2 rc=0 failed 0",
+  "2026-10-06T14:33:42-07:00 records",
+  "2026-10-06T14:33:43-07:00 rec0 rc=0",
+  "2026-10-06T14:33:43-07:00 rec1 rc=0",
+  "2026-10-06T14:42:15-07:00 mutant run rc=1 (expect 1) failed 8",
+  "2026-10-06T14:42:15-07:00 DONE"
+ ],
+ "cycle_delta_vs_v12": {
+  "baseline": {
+   "delta_cycles_histogram": {
+    "1": 9,
+    "4": 7,
+    "6": 4,
+    "12": 21,
+    "13": 1,
+    "14": 1,
+    "15": 1,
+    "24": 2,
+    "36": 5,
+    "48": 2,
+    "60": 4,
+    "72": 2
+   },
+   "node_us_sum_v12": 50.045,
+   "node_us_sum_v13": 50.9308,
+   "pct": 1.77
+  },
+  "pq": {
+   "delta_cycles_histogram": {
+    "1": 16,
+    "6": 7,
+    "12": 36
+   },
+   "node_us_sum_v12": 31.8967,
+   "node_us_sum_v13": 32.305,
+   "pct": 1.28
+  }
+ },
+ "change_vs_v13": "row-count sums s_tm0 / s_tm1 / s_tot as kept Kogge-Stone adders (ot_v41_ksadd); same sums, same latency: node cycles identical to v13 in both PQ modes (59/59 nodes)"
+}
