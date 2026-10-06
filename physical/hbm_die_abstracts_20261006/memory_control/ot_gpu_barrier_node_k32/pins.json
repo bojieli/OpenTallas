@@ -1,0 +1,1059 @@
+{
+  "macro": "ot_gpu_barrier_node",
+  "size_um": [
+    8.66,
+    8.66
+  ],
+  "pins": [
+    {
+      "name": "arr[0]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            2.976,
+            0.084,
+            3.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[10]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.704,
+            0.0,
+            4.728,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[11]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.896,
+            0.0,
+            4.92,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[12]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.8,
+            0.0,
+            4.824,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[13]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.992,
+            0.0,
+            5.016,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[14]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.128,
+            0.0,
+            4.152,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[15]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.032,
+            0.0,
+            4.056,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[16]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.512,
+            0.084,
+            4.536
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[17]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.416,
+            0.084,
+            4.44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[18]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.896,
+            0.084,
+            4.92
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[19]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.704,
+            0.084,
+            4.728
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[1]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            2.88,
+            0.084,
+            2.904
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[20]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.8,
+            0.084,
+            4.824
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[21]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            4.608,
+            0.084,
+            4.632
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[22]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            3.744,
+            0.084,
+            3.768
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[23]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            3.84,
+            0.084,
+            3.864
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[24]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.32,
+            8.66,
+            4.344
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[25]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.28,
+            8.66,
+            5.304
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[26]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.8,
+            8.66,
+            4.824
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[27]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.992,
+            8.66,
+            5.016
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[28]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.704,
+            8.66,
+            4.728
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[29]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.032,
+            8.576,
+            4.056,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[2]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.168,
+            0.0,
+            3.192,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[30]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.936,
+            8.576,
+            3.96,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[31]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.416,
+            8.66,
+            4.44
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[3]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.072,
+            0.0,
+            3.096,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[4]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.976,
+            0.0,
+            3.0,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[5]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.88,
+            0.0,
+            2.904,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[6]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            3.648,
+            0.084,
+            3.672
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[7]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            3.552,
+            0.084,
+            3.576
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[8]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.224,
+            0.0,
+            4.248,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arr[9]",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.32,
+            0.0,
+            4.344,
+            0.084
+          ]
+        }
+      ]
+    },
+    {
+      "name": "clk",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.688,
+            8.576,
+            2.712,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[0]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            6.048,
+            8.576,
+            6.072,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[10]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.072,
+            8.66,
+            3.096
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[11]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.168,
+            8.66,
+            3.192
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[12]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.992,
+            8.576,
+            5.016,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[13]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            6.048,
+            8.66,
+            6.072
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[14]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.648,
+            8.66,
+            3.672
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[15]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.552,
+            8.66,
+            3.576
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[16]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            5.856,
+            8.576,
+            5.88,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[17]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.088,
+            8.66,
+            5.112
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[18]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.896,
+            8.66,
+            4.92
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[19]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.8,
+            8.576,
+            4.824,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[1]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            5.472,
+            8.576,
+            5.496,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[20]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.456,
+            8.66,
+            3.48
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[21]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.512,
+            8.66,
+            4.536
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[22]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.184,
+            8.66,
+            5.208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[23]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.032,
+            8.66,
+            4.056
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[24]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            5.76,
+            8.576,
+            5.784,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[25]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.84,
+            8.66,
+            3.864
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[26]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            5.376,
+            8.576,
+            5.4,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[27]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.896,
+            8.576,
+            4.92,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[28]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            4.704,
+            8.576,
+            4.728,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[29]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.36,
+            8.66,
+            3.384
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[2]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.744,
+            8.66,
+            3.768
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[30]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.608,
+            8.66,
+            4.632
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[31]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.952,
+            8.66,
+            5.976
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[3]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.376,
+            8.66,
+            5.4
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[4]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.128,
+            8.66,
+            4.152
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[5]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.936,
+            8.66,
+            3.96
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[6]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            5.28,
+            8.576,
+            5.304,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[7]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            3.264,
+            8.66,
+            3.288
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[8]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            4.224,
+            8.66,
+            4.248
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel[9]",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            8.576,
+            5.472,
+            8.66,
+            5.496
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rel_in",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.88,
+            8.576,
+            2.904,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rst_n",
+      "direction": "INPUT",
+      "geometry": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.36,
+            8.576,
+            3.384,
+            8.66
+          ]
+        }
+      ]
+    },
+    {
+      "name": "up",
+      "direction": "OUTPUT",
+      "geometry": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            5.568,
+            0.084,
+            5.592
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VDD",
+      "direction": "INOUT",
+      "geometry": [
+        {
+          "layer": "M6",
+          "rect_um": [
+            2.052,
+            2.913,
+            6.642,
+            3.201
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VSS",
+      "direction": "INOUT",
+      "geometry": [
+        {
+          "layer": "M6",
+          "rect_um": [
+            2.052,
+            2.529,
+            6.642,
+            2.817
+          ]
+        }
+      ]
+    }
+  ]
+}

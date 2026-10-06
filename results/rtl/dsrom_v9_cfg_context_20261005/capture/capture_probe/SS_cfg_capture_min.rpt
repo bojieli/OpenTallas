@@ -1,0 +1,1642 @@
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[0]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[0] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[0] (net)
+          35.89    0.00  665.79 v _656_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _656_/Y (AO21x1_ASAP7_75t_R)
+                                  _121_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[0]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[0]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[10]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[10] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[10] (net)
+          35.89    0.00  665.79 v _627_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _627_/Y (AO21x1_ASAP7_75t_R)
+                                  _111_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[10]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[10]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[11]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[11] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[11] (net)
+          35.89    0.00  665.79 v _625_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _625_/Y (AO21x1_ASAP7_75t_R)
+                                  _110_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[11]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[11]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[12]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[12] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[12] (net)
+          35.89    0.00  665.79 v _623_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _623_/Y (AO21x1_ASAP7_75t_R)
+                                  _109_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[12]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[12]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[13]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[13] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[13] (net)
+          35.89    0.00  665.79 v _621_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _621_/Y (AO21x1_ASAP7_75t_R)
+                                  _108_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[13]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[13]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[14]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[14] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[14] (net)
+          35.89    0.00  665.79 v _619_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _619_/Y (AO21x1_ASAP7_75t_R)
+                                  _107_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[14]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[14]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[15]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[15] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[15] (net)
+          35.89    0.00  665.79 v _617_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _617_/Y (AO21x1_ASAP7_75t_R)
+                                  _106_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[15]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[15]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[16]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[16] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[16] (net)
+          35.89    0.00  665.79 v _615_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _615_/Y (AO21x1_ASAP7_75t_R)
+                                  _105_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[16]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[16]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[17]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[17] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[17] (net)
+          35.89    0.00  665.79 v _613_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _613_/Y (AO21x1_ASAP7_75t_R)
+                                  _104_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[17]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[17]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[18]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[18] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[18] (net)
+          35.89    0.00  665.79 v _609_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _609_/Y (AO21x1_ASAP7_75t_R)
+                                  _103_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[18]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[18]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[19]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[19] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[19] (net)
+          35.89    0.00  665.79 v _607_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _607_/Y (AO21x1_ASAP7_75t_R)
+                                  _102_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[19]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[19]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[1]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[1] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[1] (net)
+          35.89    0.00  665.79 v _654_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _654_/Y (AO21x1_ASAP7_75t_R)
+                                  _120_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[1]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[1]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[20]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[20] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[20] (net)
+          35.89    0.00  665.79 v _605_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _605_/Y (AO21x1_ASAP7_75t_R)
+                                  _101_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[20]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[20]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[21]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[21] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[21] (net)
+          35.89    0.00  665.79 v _603_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _603_/Y (AO21x1_ASAP7_75t_R)
+                                  _100_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[21]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[21]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[22]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[22] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[22] (net)
+          35.89    0.00  665.79 v _601_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _601_/Y (AO21x1_ASAP7_75t_R)
+                                  _099_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[22]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[22]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[23]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[23] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[23] (net)
+          35.89    0.00  665.79 v _599_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _599_/Y (AO21x1_ASAP7_75t_R)
+                                  _098_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[23]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[23]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[24]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[24] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[24] (net)
+          35.89    0.00  665.79 v _597_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _597_/Y (AO21x1_ASAP7_75t_R)
+                                  _097_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[24]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[24]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[25]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[25] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[25] (net)
+          35.89    0.00  665.79 v _595_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _595_/Y (AO21x1_ASAP7_75t_R)
+                                  _096_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[25]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[25]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[26]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[26] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[26] (net)
+          35.89    0.00  665.79 v _593_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _593_/Y (AO21x1_ASAP7_75t_R)
+                                  _095_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[26]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[26]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[27]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[27] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[27] (net)
+          35.89    0.00  665.79 v _591_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _591_/Y (AO21x1_ASAP7_75t_R)
+                                  _094_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[27]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[27]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[28]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[28] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[28] (net)
+          35.89    0.00  665.79 v _587_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _587_/Y (AO21x1_ASAP7_75t_R)
+                                  _093_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[28]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[28]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[29]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[29] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[29] (net)
+          35.89    0.00  665.79 v _585_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _585_/Y (AO21x1_ASAP7_75t_R)
+                                  _092_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[29]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[29]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[2]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[2] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[2] (net)
+          35.89    0.00  665.79 v _652_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _652_/Y (AO21x1_ASAP7_75t_R)
+                                  _119_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[2]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[2]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[30]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[30] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[30] (net)
+          35.89    0.00  665.79 v _583_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _583_/Y (AO21x1_ASAP7_75t_R)
+                                  _091_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[30]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[30]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[31]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[31] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[31] (net)
+          35.89    0.00  665.79 v _581_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _581_/Y (AO21x1_ASAP7_75t_R)
+                                  _090_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[31]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[31]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[32]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[32] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[32] (net)
+          35.89    0.00  665.79 v _579_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _579_/Y (AO21x1_ASAP7_75t_R)
+                                  _089_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[32]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[32]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[33]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[33] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[33] (net)
+          35.89    0.00  665.79 v _577_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _577_/Y (AO21x1_ASAP7_75t_R)
+                                  _088_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[33]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[33]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[34]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[34] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[34] (net)
+          35.89    0.00  665.79 v _575_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _575_/Y (AO21x1_ASAP7_75t_R)
+                                  _087_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[34]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[34]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[35]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[35] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[35] (net)
+          35.89    0.00  665.79 v _573_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _573_/Y (AO21x1_ASAP7_75t_R)
+                                  _086_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[35]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[35]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[36]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[36] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[36] (net)
+          35.89    0.00  665.79 v _571_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _571_/Y (AO21x1_ASAP7_75t_R)
+                                  _085_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[36]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[36]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[37]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[37] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[37] (net)
+          35.89    0.00  665.79 v _569_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _569_/Y (AO21x1_ASAP7_75t_R)
+                                  _084_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[37]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[37]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[38]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[38] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[38] (net)
+          35.89    0.00  665.79 v _565_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _565_/Y (AO21x1_ASAP7_75t_R)
+                                  _083_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[38]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[38]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[39]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[39] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[39] (net)
+          35.89    0.00  665.79 v _563_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _563_/Y (AO21x1_ASAP7_75t_R)
+                                  _082_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[39]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[39]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[40]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[40] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[40] (net)
+          35.89    0.00  665.79 v _561_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _561_/Y (AO21x1_ASAP7_75t_R)
+                                  _081_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[40]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[40]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[41]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[41] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[41] (net)
+          35.89    0.00  665.79 v _559_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _559_/Y (AO21x1_ASAP7_75t_R)
+                                  _080_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[41]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[41]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[42]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[42] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[42] (net)
+          35.89    0.00  665.79 v _557_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _557_/Y (AO21x1_ASAP7_75t_R)
+                                  _079_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[42]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[42]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[43]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[43] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[43] (net)
+          35.89    0.00  665.79 v _555_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _555_/Y (AO21x1_ASAP7_75t_R)
+                                  _078_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[43]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[43]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[44]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[44] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[44] (net)
+          35.89    0.00  665.79 v _553_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _553_/Y (AO21x1_ASAP7_75t_R)
+                                  _077_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[44]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[44]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[45]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[45] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[45] (net)
+          35.89    0.00  665.79 v _551_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _551_/Y (AO21x1_ASAP7_75t_R)
+                                  _076_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[45]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[45]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[46]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[46] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[46] (net)
+          35.89    0.00  665.79 v _549_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _549_/Y (AO21x1_ASAP7_75t_R)
+                                  _075_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[46]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[46]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[47]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[47] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[47] (net)
+          35.89    0.00  665.79 v _714_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _714_/Y (AO21x1_ASAP7_75t_R)
+                                  _138_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[47]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[47]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[6]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[6] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[6] (net)
+          35.89    0.00  665.79 v _637_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _637_/Y (AO21x1_ASAP7_75t_R)
+                                  _115_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[6]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[6]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[7]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[7] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[7] (net)
+          35.89    0.00  665.79 v _635_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _635_/Y (AO21x1_ASAP7_75t_R)
+                                  _114_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[7]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[7]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[8]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[8] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[8] (net)
+          35.89    0.00  665.79 v _631_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _631_/Y (AO21x1_ASAP7_75t_R)
+                                  _113_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[8]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[8]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[9]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.32   35.89  665.79  665.79 v g_hard_cfg.u_cfg/rd_out[9] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[9] (net)
+          35.89    0.00  665.79 v _629_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   35.52  701.31 v _629_/Y (AO21x1_ASAP7_75t_R)
+                                  _112_ (net)
+          11.23    0.00  701.31 v u_ld.c_d[9]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         701.31   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[9]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -701.31   data arrival time
+-----------------------------------------------------------------------
+                         662.53   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[3]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.41   36.03  665.86  665.86 v g_hard_cfg.u_cfg/rd_out[3] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[3] (net)
+          36.03    0.00  665.86 v _648_/B (AO21x1_ASAP7_75t_R)
+   0.32   10.76   31.64  697.49 v _648_/Y (AO21x1_ASAP7_75t_R)
+                                  _305_ (net)
+          10.76    0.00  697.49 v _650_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   28.26  725.76 v _650_/Y (AO21x1_ASAP7_75t_R)
+                                  _118_ (net)
+          11.23    0.00  725.76 v u_ld.c_d[3]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         725.76   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[3]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -725.76   data arrival time
+-----------------------------------------------------------------------
+                         686.97   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[4]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.41   36.03  665.86  665.86 v g_hard_cfg.u_cfg/rd_out[4] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[4] (net)
+          36.03    0.00  665.86 v _644_/B (AO21x1_ASAP7_75t_R)
+   0.32   10.76   31.64  697.49 v _644_/Y (AO21x1_ASAP7_75t_R)
+                                  _302_ (net)
+          10.76    0.00  697.49 v _646_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   28.26  725.76 v _646_/Y (AO21x1_ASAP7_75t_R)
+                                  _117_ (net)
+          11.23    0.00  725.76 v u_ld.c_d[4]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         725.76   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[4]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -725.76   data arrival time
+-----------------------------------------------------------------------
+                         686.97   slack (MET)
+
+
+Startpoint: g_hard_cfg.u_cfg
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ld.c_d[5]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+           0.00    0.00    0.00 ^ g_hard_cfg.u_cfg/clk (ot_rom_4096x72_m8)
+   0.41   36.03  665.86  665.86 v g_hard_cfg.u_cfg/rd_out[5] (ot_rom_4096x72_m8)
+                                  g_hard_cfg.q[5] (net)
+          36.03    0.00  665.86 v _640_/B (AO21x1_ASAP7_75t_R)
+   0.32   10.76   31.64  697.49 v _640_/Y (AO21x1_ASAP7_75t_R)
+                                  _299_ (net)
+          10.76    0.00  697.49 v _642_/A2 (AO21x1_ASAP7_75t_R)
+   0.44   11.23   28.26  725.76 v _642_/Y (AO21x1_ASAP7_75t_R)
+                                  _116_ (net)
+          11.23    0.00  725.76 v u_ld.c_d[5]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                         725.76   data arrival time
+
+           0.00    0.00    0.00   clock core_clk (rise edge)
+                   0.00    0.00   clock network delay (ideal)
+                  25.00   25.00   clock uncertainty
+                   0.00   25.00   clock reconvergence pessimism
+                          25.00 ^ u_ld.c_d[5]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.78   38.78   library hold time
+                          38.78   data required time
+-----------------------------------------------------------------------
+                          38.78   data required time
+                        -725.76   data arrival time
+-----------------------------------------------------------------------
+                         686.97   slack (MET)
+
+

@@ -1,0 +1,64 @@
+{
+  "verdict": "PASS_FULL_SHAPE_EXACT_ONLY",
+  "observed_utc": "2026-10-05T21:49:31.406887+00:00",
+  "source_commit": "b79cfcfba",
+  "host": "ot-epyc2",
+  "source_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-decoded-source-r1",
+  "output_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-decoded-exact-r1",
+  "supervisor_pid": 751814,
+  "supervisor_gone": true,
+  "active_cohort_children": 0,
+  "source_sha256": {
+    "tools/dsrom_wfc_decoded_read_exact.sh": "17e54d92a7c8f7a3165da8c194cecda975ba5f70b87827f2faee66ff919968cb",
+    "tools/dsrom_wfc_reset_reference_recipe.sh": "1263cb28038d866202b8ba34494e303d2d214584522f0c44ae3ce07a481b2178",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "eb97f06009f4cdfed18ed3cce43bb1720b4cd0c3e597c0bb563902e06ca0dd50",
+    "rtl/test/dsrom_wavefront/tb_wfc_decoded_read.sv": "5f4ef1734cd27b57178b5c30072322b68c313f4000430633d9fd5d165dae1061",
+    "rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv": "05256a04ac57f098faa1df3c791b8c73efae975bc44883e0bad520da384640b2"
+  },
+  "source_unchanged": true,
+  "cases": {
+    "src866": {
+      "terminal_lines": [
+        "EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=1863518 fin=1732595/1863467 issues=29192/29224 rejects=2846/2846 squashed=1480/1512 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0",
+        "EQUIV PASS"
+      ],
+      "log_sha256": "f502bee6443d90760a521ea3c353c6a5cfefaaae47c8326d7885acd28ea5377a"
+    },
+    "stg866": {
+      "terminal_lines": [
+        "EQUIV STATS source=0 lockstep=1 maxu=866 users=866 cycles=1583387 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1580035 mism=0",
+        "EQUIV PASS"
+      ],
+      "log_sha256": "6ab1bfba353877eb3a63f599072a8f172423f1bb8a02478ec481cd0f754a72c9"
+    }
+  },
+  "full_shape": {
+    "MAXU": 866,
+    "USERS": 866,
+    "FLIT": 512,
+    "NW": 21,
+    "AW": 30,
+    "VWA": 15,
+    "USER_W": 10,
+    "KVW": 32768,
+    "WIN": 6,
+    "SOURCE1_XWORDS": 41,
+    "SOURCE1_RXWORDS": 41,
+    "SOURCE0_XWORDS": 46,
+    "SOURCE0_RXWORDS": 41
+  },
+  "selection": {
+    "DECODED_READ": 1,
+    "LOCAL_CONTROL": 0
+  },
+  "source_expected_tokens": 27712,
+  "stage_lockstep_jobs": 20000,
+  "source_added_pipeline_edges": 0,
+  "admission": "Kant sole launch, unchanged admit12, fresh pre/post CPU/RAM/disk samples retained",
+  "SS60FF25": "UNKNOWN_FOR_NEW_SOURCE",
+  "physical_context_qualified": false,
+  "adopted": false,
+  "old_failed_verdicts_preserved": true,
+  "old_stage_ISA_gate": "retained R12 stage dependency retry; no duplicate ISA/whole-stage proof replay"
+}

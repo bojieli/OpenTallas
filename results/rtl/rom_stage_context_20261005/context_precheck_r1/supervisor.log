@@ -1,0 +1,12 @@
+ 15:33:10 up 20:37, 41 users,  load average: 212.06, 125.78, 81.14
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/codex/w5-context-20261005/source-r5/tools/w5_context_power.py", line 70, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ~~~~^^
+  File "/srv/opentallas-scratch2/codex/w5-context-20261005/source-r5/tools/w5_context_power.py", line 49, in main
+    exe,meta=build(a.work);r=subprocess.run(['vvp','-n',str(exe)],capture_output=True,text=True,cwd=a.work)
+             ~~~~~^^^^^^^^
+  File "/srv/opentallas-scratch2/codex/w5-context-20261005/source-r5/tools/w5_context_power.py", line 41, in build
+    if p.returncode:raise RuntimeError('build failed; retained '+str(work/'build.log'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: build failed; retained /srv/opentallas-scratch2/codex/w5-context-20261005/context-precheck-r1/build.log

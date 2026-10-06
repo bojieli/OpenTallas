@@ -1,0 +1,5 @@
+BAD_ROW 11 code=000000000000000219 decoded=20000000000000022
+FAULT bridge=1 arb=0 provider=0 state=2 bad=1 grant=1 owned=1 failed=0 prior=0 quiet=110
+[15000] %Fatal: tb_hbm_formatter_provider_join.sv:214: Assertion failed in tb_hbm_formatter_provider_join.check_live: unexpected fault at packet 0
+%Error: /srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/f7d25ef01/src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv:214: Verilog $stop
+Aborting...

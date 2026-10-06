@@ -1,0 +1,26 @@
+{
+  "verdict": "FAIL_CANONICAL_FRONTEND_IMPORT",
+  "source_commit": "ecd7db033",
+  "phase": "physical",
+  "returncode": 1,
+  "actual_cause": "Yosys native parser rejects import ot_v41_ret_pkg::* at return module line75, before synthesis mapping/P&R",
+  "functional_result": "Retained64 real gclk accepted beats/16 distinct zero-ROM returnrows PASS",
+  "correction": "Additive selected_return source copy expands each of two imports with byte-identical original package body; same module names/functions/state/protocol/latency. Keep native selected engine frontend and original RTL unchanged.",
+  "original_return_sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+  "lowered_return_sha256": "d76504de606cd939b44e41bed4a637ed74febf6c29315f425612d7920f3e3aad",
+  "smoke_objects_retained": true,
+  "original_source_logs_objects_retained": true,
+  "recipes_changed": false,
+  "frontend_switched": false,
+  "new_density_loops": 0,
+  "physical_qualified": false,
+  "whole_field_missing_input_clocks": true,
+  "files": {
+    "physical.json": "c4c65affba9f9872185003655ef41d1421f5ebd20e16eea22e9b810bafb3490d",
+    "physical.launcher.log": "d9a7d87053eac75a9de671f36a92d9dbda58c225b5a4caa28729709567097d36",
+    "receipt.json": "dc671359d2fbba3d4de92a47bca2e3b4b090f085a9913dc65ffd1f287bfaca93",
+    "physical.started.json": "1fd0279413852c9b69826f3a5644efa778dc2ccbcd233f92dc2ab111000b6210",
+    "capacity.jsonl": "df170137ce2f136fe97fdfc3e1da2cdc994c46aa42b68fb159e34235a97f1ece",
+    "terminal.json": "bd2e03a4ae47014ddaca45867249524f8ff0789253dc3afd4af766a3f6dc8949"
+  }
+}

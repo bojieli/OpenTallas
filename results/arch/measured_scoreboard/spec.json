@@ -11,6 +11,7 @@
  "headline": [
   "qwen_rom.operating_mode_8k",
   "qwen_rom.actual_fulltoken_cycles_8k_stream4",
+  "qwen_rom.ar_tok_s_8k_composed",
   "qwen_rom.dspark_tok_s_8k_stream4",
   "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
   "ds_rom.ar_tok_s_1m",
@@ -18,9 +19,13 @@
   "ds_rom.measured_share_of_ar",
   "ds_rom.rom_over_hbm_ar_1m",
   "ds_rom.rom_over_hbm_mtp_1m",
+  "ds_rom.rom_over_hbm_matched_levers_wire_ar_1m",
+  "ds_rom.rom_over_hbm_matched_levers_wire_mtp_1m",
   "ds_rom.ar_over_b200x8_1m",
   "hbm_ds.ar_tok_s",
   "hbm_ds.mtp_tok_s",
+  "hbm_ds.matched_levers_wire_median_ar_tok_s",
+  "hbm_ds.matched_levers_wire_median_mtp_tok_s",
   "hbm_ds.vendor_budget_share_of_ar",
   "hbm_ds.ar_tok_s_closing_clocks",
   "hbm_ds.measured_share_of_ar",
@@ -4146,6 +4151,347 @@
    "unit": "cycles",
    "status": "measured",
    "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_die_wire",
+   "label": "DS HBM matched gate AR at 1M with the die-floorplan wire stages (routed bound, GRT i50, 430.56 um/stage)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.rows.gate.AR_priced_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "gate 474.808 + routed die wire: x multicast, barrier tree delta, SU<->endpoint, endpoint<->SerDes, expert fetch, KV/index rows, attention out; stage bounds from routed length, no die-level STA"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_die_wire_floor",
+   "label": "DS HBM matched gate AR at 1M with the die-floorplan wire stages at the Manhattan floor",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.ds_gate_AR_priced_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "no-detour floor of the same r14b floorplan; the routed bound is the separate figure"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s_die_wire",
+   "label": "DS HBM matched gate MTP tok/s with the die-floorplan wire stages (routed bound)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.rows.gate.MTP_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "same per-token traversals added to the MTP step (P6 verify walk has the AR node sequence); MTP tok/s at the gate tau 4.159"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "die_wire_added_us",
+   "label": "DS HBM die-level wire stages added to the AR token (r14b floorplan, routed bound)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.added_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "longest-bundle bound at GRT k16 i50 (overflow 0); median 36.78 us and Manhattan floor 25.91 us in wire_stages.json bases (r8: 102.41 / 67.55 / 30.61 at overflow 128)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "physical",
+   "key": "die_mm2",
+   "label": "HBM accelerator compute die area (r14b floorplan, 858 mm2 reticle)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/floorplan.json",
+   "pointer": "die.mm2",
+   "unit": "mm2",
+   "status": "partial",
+   "note": "placed footprint from measured/placed SM context + labelled estimates; see block_ledger grades"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire",
+   "label": "Qwen HBM accel AR TP4 P8191 with the Qwen tile-die wire stages (routed bound, GRT i50, 430.56 um/stage)",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_TP4_iso_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "real Qwen tile die (96 x 16 W12 tile elements + SRAM, 4 edge HBM3E stacks): excess of the routed broadcast / tree / block-word depths over the vehicle bd/nws/tws per ME op, collective run per crossing, fill + status per KV first access; bounds from routed length, no die-level STA"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire",
+   "label": "Qwen HBM accel AR TP2 P8191 with the Qwen tile-die wire stages (routed bound, GRT i50)",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.a_TP2_same_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "as TP4 (TP2 vehicle bd 31 / nws 4 / tws 30)"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire_floor",
+   "label": "Qwen HBM accel AR TP4 P8191 with the tile-die wire stages at the Manhattan floor",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.rows.b_TP4_iso_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "no-detour floor of the same floorplan; the routed bound is the separate figure"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire_floor",
+   "label": "Qwen HBM accel AR TP2 P8191 with the tile-die wire stages at the Manhattan floor",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.rows.a_TP2_same_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "as TP4"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire_median",
+   "label": "Qwen HBM accel AR TP4 P8191 with the tile-die wire stages at the median routed bundle",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_median_bundle.rows.b_TP4_iso_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "median k16 bundle of each routed segment (GRT outlier detours excluded); between the floor and the bound"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire_median",
+   "label": "Qwen HBM accel AR TP2 P8191 with the tile-die wire stages at the median routed bundle",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_median_bundle.rows.a_TP2_same_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "median k16 bundle of each routed segment (GRT outlier detours excluded); between the floor and the bound"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_spread_die_wire",
+   "label": "Qwen HBM accel AR TP4 P8191 with SRAM spread (adopted) and the tile-die wire stages (routed bound)",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_AR_spread.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "chains composition b_AR_spread 2,219.8 + the same per-ME-op / crossing / first-access terms"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "die_wire_added_cycles_tp4",
+   "label": "Qwen HBM TP4 die-level wire cycles added to the AR token (routed bound)",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_TP4_iso_silicon.added_cycles",
+   "unit": "cycles",
+   "status": "partial",
+   "note": "at 1.2 GHz; per-term split in wire_stages.json qwen_8k.*.terms"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "physical",
+   "key": "die_mm2",
+   "label": "Qwen HBM accelerator tile die area (858 mm2 reticle; one die per TP rank)",
+   "path": "results/rtl/hbm_accel_qwen_die_floorplan_20261005/floorplan.json",
+   "pointer": "die.mm2",
+   "unit": "mm2",
+   "status": "partial",
+   "note": "1,536 tile elements sized from the measured routed W12 tile core + real SRAM macros; spine/IO from the Qwen ROM die ledgers; see block_ledger grades"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_tt",
+   "label": "Qwen HBM tile die power, P8191 TP4 decode token average (TT; cooling budget 474.6 W/die)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_avg_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "tiles measured (routed tile_tp4_t4 SPEF + exact decode register activity, ME_IDLE_GATE duty 0.267); die wire composed from routed lengths x measured port activity; HBM PHY published 0.8 pJ/b; stream services + spine 73.2 W floorplan-assumed"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_power_avg_w_tt",
+   "label": "Qwen HBM tile die: 1,536 tiles + SRAM macros, token average (TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_avg_w",
+   "unit": "W",
+   "status": "composed_from_measured",
+   "note": "combinational share is an OpenSTA-propagation upper bound (halved: 157.8 W)"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_clocked_w_per_mm2_tt",
+   "label": "Qwen HBM tile power density while the fabric is clocked (in phase, TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_clocked_w_per_mm2",
+   "unit": "W/mm2",
+   "status": "measured",
+   "note": "floorplan assumed 1.05 W/mm2"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_inphase_bound_w_tt",
+   "label": "Qwen HBM tile die in-phase peak bound (every term at its own worst window, TT)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_peak_window_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "lasts at most one stage (head: 2.7 us clocked); the cooling budget is time-averaged"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_ff",
+   "label": "Qwen HBM tile die power, token average (FF 0.77 V)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.FF.token.die_avg_w",
+   "unit": "W",
+   "status": "partial",
+   "note": "SS 267.3 W"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "max_fabric_duty_at_budget_tt",
+   "label": "Qwen HBM tile die: fabric duty the 474.6 W budget allows (batched fill cap; single user 0.267)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.max_fabric_duty_at_budget",
+   "unit": "fraction",
+   "status": "partial",
+   "note": "FF 0.38"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_J_per_token_tt",
+   "label": "Qwen HBM tile die energy per AR token per die (TT, 4 dies per token at TP4)",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_J_per_token",
+   "unit": "J/token/die",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_composed",
+   "label": "Per-user AR tok/s at 8K: measured STREAM4 P8191 token + adopted in-context core closure cycles",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "qwen_rom.AR_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); 193,955 measured cycles (terminal.json) + 112 cycles (core r5b_f3ba DEC_LA_AMQ, SS +0.87 / FF +7.12 ps) at 1.2 GHz; MTP mode = AR (DSpark OFF); full-system SS/FF not qualified"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "token_cycles_8k_composed",
+   "label": "Qwen ROM P8191 token cycles incl. adopted core-context cycles",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "qwen_rom.token_cycles",
+   "unit": "cycles",
+   "status": "composed_from_measured",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
+  },
+  {
+   "target": "ds_rom",
+   "section": "levers",
+   "key": "ar_tok_s_1m_conditional_all",
+   "label": "CONDITIONAL: DS ROM AR at 1M if every PENDING_SSFF lever closes (not a headline)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.conditional_all.composed.AR_tok_s",
+   "unit": "tok/s",
+   "status": "unvalidated",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); alternatives not stacked"
+  },
+  {
+   "target": "ds_rom",
+   "section": "levers",
+   "key": "mtp_tok_s_1m_conditional_all",
+   "label": "CONDITIONAL: DS ROM MTP at 1M if every PENDING_SSFF lever closes (not a headline)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "ds_rom.conditional_all.composed.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "unvalidated",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_floor_ar_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (floor) AR at 1M",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.floor.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis Manhattan"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_floor_mtp_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (floor) MTP at 1M (tau 4.159)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.floor.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_median_ar_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (median) AR at 1M",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.median.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis median routed bundle"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_median_mtp_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (median) MTP at 1M (tau 4.159)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.median.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_bound_ar_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (bound) AR at 1M",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.bound.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional); levers joint PQ+XMAP and paired W2 PACK (exact on minimum components, SS/FF not admitted); wire basis longest routed bundle"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_levers_wire_bound_mtp_tok_s",
+   "label": "DS HBM matched gate + exact HBM levers + die wire stages (bound) MTP at 1M (tau 4.159)",
+   "path": "results/arch/three_machine_compose/compose.json",
+   "pointer": "hbm_ds.rows.bound.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)"
   }
  ],
  "derived": [
@@ -4328,6 +4674,32 @@
    ],
    "expr": "x0/x1",
    "note": "GPU side modelled",
+   "unit": "x",
+   "section": "ratios"
+  },
+  {
+   "target": "ds_rom",
+   "key": "rom_over_hbm_matched_levers_wire_ar_1m",
+   "label": "DS ROM AR / DS HBM (matched + exact levers + median wire) AR, both 1M",
+   "inputs": [
+    "ds_rom.ar_tok_s_1m",
+    "hbm_ds.matched_levers_wire_median_ar_tok_s"
+   ],
+   "expr": "x0/x1",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
+   "unit": "x",
+   "section": "ratios"
+  },
+  {
+   "target": "ds_rom",
+   "key": "rom_over_hbm_matched_levers_wire_mtp_1m",
+   "label": "DS ROM MTP / DS HBM (matched + exact levers + median wire) MTP, both 1M, tau 4.159",
+   "inputs": [
+    "ds_rom.mtp_tok_s_1m",
+    "hbm_ds.matched_levers_wire_median_mtp_tok_s"
+   ],
+   "expr": "x0/x1",
+   "note": "tools/three_machine_compose.py (guarded: ADOPT+exact levers only; PENDING_SSFF conditional)",
    "unit": "x",
    "section": "ratios"
   }
@@ -4786,6 +5158,17 @@
    "area": "-",
    "route": "-",
    "ir": "-",
+   "ss": "-",
+   "ff": "-"
+  },
+  {
+   "target": "hbm_ds",
+   "block": "HBM accelerator compute die r8 (503.7 mm2, 32 SM + hub, die-level GRT/IR)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json",
+   "verdict": "floorplan legal + pin access PASS, IR PASS 25.41 mV all windows; GRT i50 overflow 128 (open, handed to Codex)",
+   "area": "503.68 mm2 die",
+   "route": "GRT k16 i50 overflow 128",
+   "ir": "25.41 mV",
    "ss": "-",
    "ff": "-"
   }

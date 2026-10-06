@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL_POINTER_WRAP_OVERFLOW",
+  "exit_code": 1,
+  "observed": "healthy phase=5 sent=261 got=252 debt=33 retired=247 faults=01 arrived=0 overflow=1",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "0672238d169cf73ede95d9dac805e8311983228d355563d271138be656591203",
+    "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_packet_link.sv": "52721ccfb5195d80a8ae171de28994bba21bf0a6df3bceceafe5bd79422ede8c"
+  },
+  "physical_qualified": false
+}

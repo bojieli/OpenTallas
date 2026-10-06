@@ -1,0 +1,18 @@
+{
+  "scope": "mandatory WINDOW component, matched refresh/scan/gather corpus",
+  "measured_cases": 344,
+  "clock_hz": 1200000000.0,
+  "clock_physically_qualified": false,
+  "mean_lf_added_cycles": 162.40625,
+  "corpus_worst_added_cycles": 645,
+  "structural_added_cycles_upper": 179,
+  "phase_queue_exposure_above_structural_upper_cycles": 466,
+  "all_61_layers_mean_lf_charge_us": 8.255651041666665,
+  "all_61_layers_corpus_worst_charge_us": 32.787499999999994,
+  "basis": "conservative serial write plus end of WINDOW stream; load not charged twice; producer/consumer overlap remains in actual parent calendar",
+  "measured_leaf": "results/rtl/dsrom_window_pipeline_20261005/matched_latency_price.json",
+  "source_priced": true,
+  "parent_clock_load_slot_qualified": false,
+  "physical_adoption": false,
+  "headline_changed": false
+}

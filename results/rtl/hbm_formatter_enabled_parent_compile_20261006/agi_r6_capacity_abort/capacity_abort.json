@@ -1,0 +1,10 @@
+{
+  "status": "CAPACITY_ABORT",
+  "utc": "2026-10-06T04:49:40Z",
+  "owned_compiler_pid": 3561539,
+  "observed_RSS_KiB": 17605292,
+  "declared_GiB": 8,
+  "AGI_binding_max_GiB": 16,
+  "reason": "Actual enabled full parent expansion exceeded AGI16GiB binding; TERM only owned compiler, preserve all outputs",
+  "source_error_seen": false
+}

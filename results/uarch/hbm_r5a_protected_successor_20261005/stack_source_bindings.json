@@ -1,0 +1,76 @@
+{
+  "source_commit": "8114a40dc",
+  "source_path": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv",
+  "source_sha256": "fa6630f03dfb92891cac34a7a68ab5ba70d7ba6f8ee0020486ea5e5ba47ff476",
+  "top": "ot_hbm_accel_expert_stack_p2",
+  "default_OFF": true,
+  "shape": "32PC/8SM/96SRAM depth512/CRED32",
+  "clocks": {
+    "stream_clk": 833.333333333,
+    "service_clk": 1024
+  },
+  "protection": "W6 SECC codecs, finite elastic payload registers, complementary valid/ordinal/fault rails, corrected1024 capture +16parity; static config one cold-reset load",
+  "boundaries": [
+    {
+      "name": "descriptor",
+      "launch": "on.expert_word[71:0]/ev",
+      "capture": "on.fetch.on.ic[71:0]/iv",
+      "clock": "stream_clk",
+      "bits": 72,
+      "latency_edges": 1
+    },
+    {
+      "name": "configuration",
+      "launch": "on.layout[0:99][71:0]",
+      "capture": "on.fetch.on.loc[0:31].lines/lut",
+      "clock": "stream_clk",
+      "bits": 6400,
+      "relation": "W6decode held layout -> real PC-local captures, synchronized reset release; config not updated while active"
+    },
+    {
+      "name": "notice",
+      "launch": "on.notice_q",
+      "capture": "on.fetch.on.pc[0:31].notice_r",
+      "clock": "service_clk",
+      "bits": 1
+    },
+    {
+      "name": "ordered_return",
+      "launch": "on.phy[0:31].code[359:0]/v",
+      "capture": "on.fetch.on.pc[0:31].land",
+      "clock": "service_clk",
+      "bits": 11520,
+      "latency_edges": 1,
+      "identity": "actual col_v issued ordinal outstanding<=32; actual rsp ordinal checked before encoding"
+    },
+    {
+      "name": "SM_landing",
+      "launch": "on.fetch.on.sm[0:7] output skid",
+      "capture": "on.sm[0:7].coded[1151:0]",
+      "clock": "stream_clk",
+      "bits": 8192,
+      "latency_edges": 1
+    },
+    {
+      "name": "SM_corrected_endpoint",
+      "launch": "on.sm[0:7].coded[1151:0]",
+      "capture": "on.sm[0:7].captured[1023:0]/parity[15:0]",
+      "clock": "stream_clk",
+      "bits": 8192,
+      "latency_edges": 1
+    }
+  ],
+  "external_boundary_total_bits": 25122,
+  "additional_FF_bits": 38576,
+  "additional_cell_ceiling_um2": 71248.7616,
+  "context_layout_minimum_um2": 3485136.545371429,
+  "slot_candidate_um": [
+    2000.16,
+    2000.16
+  ],
+  "actual_mapped_cells": false,
+  "actual_pin_capacitance_extracted": false,
+  "actual_CTS_phase_extracted": false,
+  "external_PHY_clock_load_qualified": false,
+  "performance_adopted": false
+}

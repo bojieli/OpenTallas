@@ -1,0 +1,165 @@
+{
+  "item": 6,
+  "enabled_default": false,
+  "prebuild": true,
+  "source": "additive ot_hbm_accel_expert_stack_p2; old tagged256 stack/service/crossing unchanged",
+  "shape": {
+    "NPC": 32,
+    "NSM": 8,
+    "DEPTH": 512,
+    "CRED": 32,
+    "replicas_per_die": 4
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "rounding_changes": 0,
+    "reduction_changes": 0
+  },
+  "ports_bytes_per_cycle": {
+    "raw_HBM": 1024,
+    "coded_HBM": 1440,
+    "SM_capture": 1024,
+    "configuration_write": 800,
+    "configuration_held_read": 800
+  },
+  "boundaries_bits_per_cycle": {
+    "leaf_descriptor": 72,
+    "leaf_return": 11520,
+    "leaf_SM": 8192,
+    "configuration": 6400,
+    "notice": 1,
+    "physical_external_raw_return": 8736,
+    "physical_external_ordinal": 512,
+    "physical_external_SM": 8208
+  },
+  "cuts": {
+    "descriptor_encode": 1,
+    "return_encode": 1,
+    "SM_encode": 1,
+    "SM_decode_capture": 1,
+    "descriptor_capacity": 1,
+    "PC_return_capacity": 1,
+    "SM_endpoint_capacity": 2,
+    "existing_credit_per_PC": 32,
+    "configuration_updates": "once per cold reset before acceptance",
+    "configuration_protection": "100 held W6 SECDED64 words, bounds checked by real leaf",
+    "PC_identity": "complemented issued/returned ordinal registers, actual col_v issue debt; supplied PHY response ordinal must equal next return and debt must be nonzero",
+    "SM_protection": "16 W6 SECDED64 held words then corrected1024 capture with16 parity bits; double errors or held parity/valid faults refuse publication"
+  },
+  "state": {
+    "FF_bits_by_class": {
+      "configuration_SECC": 7200,
+      "configuration_valid_and_fault": 4,
+      "descriptor_code_and_valid": 74,
+      "notice_dual_rail": 2,
+      "PC_issued_returned_counters": 2048,
+      "PC_codec_slot": 11584,
+      "PC_sticky_fault": 64,
+      "SM_coded_slot": 9232,
+      "SM_capture_payload_parity_valid": 8336,
+      "SM_sticky_fault": 16,
+      "status_synchronizers": 8,
+      "configuration_reset_release_rails": 8
+    },
+    "FF_bits_total": 38576
+  },
+  "replication": {
+    "descriptor_fanout": 1,
+    "PC_encoders": 32,
+    "SM_receivers": 8,
+    "config_leaf_local_replicas": 32,
+    "global_unregistered_payload_mux": false
+  },
+  "area": {
+    "additional_standard_cell_ceiling_um2": 71248.7616,
+    "combined_standard_cell_ceiling_um2": 563641.7312,
+    "macro_count": 96,
+    "macro_area_um2": 497052.0,
+    "required_placement_um2": 3485136.545371429,
+    "child_slot_fit_pending_Turing": true,
+    "clock_PG_and_native_channel_update_pending": true
+  },
+  "routing": {
+    "old_leaf_boundary_tracks": 27488,
+    "new_outer_typed_port_tracks_pending": true,
+    "track_capacity_requires_actual_parent_update": true
+  },
+  "latency": {
+    "added_clk_edges": 3,
+    "added_hclk_edges": 1,
+    "fixed_added_ns": 3.524,
+    "configuration_setup_edges": 3,
+    "configuration_service_release_sync_edges": 2,
+    "configuration_initialization_not_per_fetch": true,
+    "structural_per_token_40fetch_added_us": 0.14096,
+    "charged_added_ns_per_fetch": 3.334,
+    "charge_basis": "matched R4 minus R3 measured first-access",
+    "per_token_40fetch_added_us": 0.13336,
+    "measured_latency_does_not_grant_physical_clock_credit": true,
+    "expression": "measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free",
+    "first_access_criterion_ns": 140,
+    "criterion_independent_of_token_gain": true,
+    "current_R3_first_access_ns": 150.423,
+    "estimated_context_first_access_ns": 153.947,
+    "estimated_composed_gain_us": 12.88204,
+    "measured_context": {
+      "source_commit": "8114a40dc40a8cfd6c18292d20cecf14cba3f396",
+      "record": "results/rtl/hbm_accel_r5a_p2_20261005/r4_STACK_PROTECTION_FAIL/exact.json",
+      "ordinary_cases": 6,
+      "ordinary_pass": true,
+      "first_access_ns": 153.757,
+      "matched_R3_delta_ns": 3.334,
+      "component_gain_us": 12.89,
+      "performance": {
+        "verdict": "FAIL",
+        "first_access_gate_ns": 140.0,
+        "criterion": "all SMs first-expert w1/w3 access, independent of composed token gain"
+      },
+      "original_R4_protection_pass": false,
+      "protection_pass": true,
+      "verified_protection_record": "results/rtl/hbm_accel_r5a_p2_20261005/stack_context_current.json"
+    }
+  },
+  "targets": {
+    "qwen_rom": {
+      "applicable": false,
+      "added_ns_per_fetch": 0
+    },
+    "v41_rom": {
+      "applicable": false,
+      "added_ns_per_fetch": 0
+    },
+    "qwen_hbm": {
+      "applicable": true,
+      "added_ns_per_fetch": 3.334
+    },
+    "v41_hbm": {
+      "applicable": true,
+      "added_ns_per_fetch": 3.334
+    }
+  },
+  "clocks": {
+    "stream_ps": 833.333333333,
+    "service_ps": 1024,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "source_owned_register_relations": true,
+    "actual_CTS_and_loads_pending": true
+  },
+  "current_gate": {
+    "record": "results/rtl/hbm_accel_r5a_p2_20261005/stack_context_current.json",
+    "ordinary_source_commit": "8114a40dc40a8cfd6c18292d20cecf14cba3f396",
+    "verified_mutation_source_commit": "916b7a879537a4fa88cb7f9c4670e225fa2f54a7",
+    "protection_pass": true,
+    "production_RTL_changed_by_mutation_repair": false,
+    "original_unexpected_double_mutation_PASS_retained": true,
+    "actual_two_bit_held_code_at_stream_capture_refused_before_publication": true
+  },
+  "gates": {
+    "exact": true,
+    "protection": true,
+    "physical": false,
+    "performance": false,
+    "adopted": false
+  }
+}

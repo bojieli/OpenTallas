@@ -1,0 +1,9 @@
+TOKX 0 tok=2995 val=3f77f8fb cyc=13378
+TOKX 1 tok=710 val=3f894d52 cyc=25773
+TOKX 2 tok=738 val=3f5b7af2 cyc=38168
+TOKX 3 tok=1219 val=3f830876 cyc=50563
+TOKX 4 tok=1219 val=3f87bea0 cyc=62958
+FH tokx=5 exp_tokx=5 tokx_bad=0 stok_bad=0
+SLICE cycles=62963 heads=0 head_mismatches=0 acc_n=0 exp_acc_n=0 vm_mismatch=0 kv_mismatch=0 fault=0 busy_me=61930 busy_su=1037 busy_qe=0 busy_xu=0 busy_he=0
+PASS
+- /srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/wt-fault-parent-r11/rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_hdc_core_v41_mtp_slice_capture.sv:424: Verilog $finish

@@ -1,0 +1,16 @@
+Mon Oct  5 22:32:48 UTC 2026
+ 15:32:48 up 20:36, 42 users,  load average: 207.66, 117.47, 77.33
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 437044830208 133668769792     8114176 653378056192 779573035008
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 762047741952 2387161415680  25% /srv/opentallas-scratch2
+Linux 7.0.0-34-generic (climbing-locust) 	10/05/26 	_x86_64_	(128 CPU)
+
+15:32:48     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+15:32:49     all   99.84    0.00    0.15    0.00    0.00    0.00    0.00    0.00    0.00    0.02
+15:32:50     all   99.65    0.00    0.31    0.00    0.00    0.01    0.00    0.00    0.00    0.03
+Average:     all   99.74    0.00    0.23    0.00    0.00    0.00    0.00    0.00    0.00    0.02
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+AssertionError: EPYC2 before-guard load >=128

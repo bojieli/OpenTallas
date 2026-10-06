@@ -1,0 +1,17 @@
+[
+  "docker",
+  "run",
+  "--rm",
+  "--name",
+  "codex-smh-local-grt-tileW",
+  "-v",
+  "/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r1/src:/src:ro",
+  "-v",
+  "/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r1/tileW:/work",
+  "-w",
+  "/OpenROAD-flow-scripts/flow",
+  "openroad/orfs:asap7lock",
+  "bash",
+  "-lc",
+  "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=24 do-5_1_grt"
+]

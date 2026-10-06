@@ -1,0 +1,61 @@
+{
+  "status": "PASS_FULLSHAPE_SOURCE_JOIN_LINT",
+  "source_commit": "abe59232a",
+  "driver_commit": "fe81e363c",
+  "host": "ot-epyc2",
+  "job_root": "/srv/opentallas-scratch2/jobs/codex-qwen-combined-p0-abe59232a",
+  "selected": {
+    "layers": 36,
+    "head": true,
+    "G": 6144,
+    "D": 4,
+    "NPC": 128,
+    "NEAR_HBM": 0,
+    "DSpark": false,
+    "PROTECTED_STREAM4": 1,
+    "PULLIN": 0,
+    "KV_IDEAL": false
+  },
+  "terminal": {
+    "exit": 0,
+    "source_stable": true,
+    "scope": "Changed actual fullshape consumer/protected simulation backend elaboration only",
+    "full_token_run": false,
+    "physical_qualified": false,
+    "adopted": false
+  },
+  "warnings": {
+    "CMPCONST": 2,
+    "LATCH": 27,
+    "PINMISSING": 24,
+    "SELRANGE": 1,
+    "UNSIGNED": 1,
+    "WIDTHCONCAT": 4,
+    "WIDTHEXPAND": 131,
+    "WIDTHTRUNC": 100
+  },
+  "validation": {
+    "clock_scheduler": "PASS C++17 warning-as-error event/collision check",
+    "host_emitter": "PASS actual retained a10ea144 guarded-v2 donor; prepared only, no host compilation/runtime"
+  },
+  "raw_evidence_sha256": {
+    "lint.log": "c6e4e2638ae0d850672d3d672e9e0afe179d51ab19dc025a854f56cd75dba638",
+    "source_sha256.json": "ee1a51a5d84b1b38d2257d6d507d37c2f34c2ec68bd738604614e80f2cd5cb5e",
+    "command.json": "565dc49610db6f79bd4776879714568e3d4e1d3e6861aea4f56928b58b93f9b3",
+    "terminal.json": "b59890f0d576e98e96766377f8a1a0e9038ce3531f4113982f9f304395011da9",
+    "admission.json": "c7357b4e3ef7f38723872fe59e9abacfce53047634e21f8544deeae59095d469"
+  },
+  "existing_fulltoken": {
+    "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+    "cycles": 193955,
+    "position": 8191,
+    "next_token": 18,
+    "rerun": false
+  },
+  "protected_successor_fulltoken_measured": false,
+  "protected_successor_cycles": null,
+  "physical_qualification": false,
+  "adopted": false,
+  "missing": "Producer-owned actual finite fullwidth service transport/PHY endpoint binding and contextual protected source qualification; final owner-approved smoke waits for actual source ready",
+  "source_connection": "u_kv descriptor/GO/landing/write/ACK to actual protected simulation backend u_hbm; same logical released-KV backing. Interface-context physical endpoint is producer-owned and not installed by this join."
+}

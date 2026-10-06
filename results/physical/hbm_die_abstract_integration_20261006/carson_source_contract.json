@@ -1,0 +1,349 @@
+{
+ "scope": "Source-bound HBM abstract owner handoff, not placement or full parent qualification",
+ "baseline_inventory_kinds": 23,
+ "baseline_copies": 348,
+ "waypoint_copies": 208,
+ "waypoint_slice_count_per_copy": 1,
+ "waypoint_size_variants_approximately": 11,
+ "not_27_hardened_tops_or208_masters": true,
+ "generator_owner": "Claude HBM-DIE-FIX",
+ "die_placement": "HOLD pending corrected regenerated endpoints/clocks/reset/orientation/sourceABI",
+ "old_r14_clock_pose_corridor_inheritance_valid": false,
+ "old_JSON_port_faces_widths_scope": "historical only; reconcile exactcurrent RTL plus correctedgenerator, not new contract authority",
+ "SS_setup_ps": 60,
+ "FF_hold_ps": 25,
+ "stream_period_ps": 833.3333333333334,
+ "serial_period_ps": 1111.111111111111,
+ "HBM_period_ps": 1024,
+ "source_phase_ps": 0,
+ "parent_clock_insertion_skew_RC_loads_not_measured": true,
+ "utilization_target": [
+  0.55,
+  0.6
+ ],
+ "separate_CTS_PG_routing_reserves_required": true,
+ "macro_loads_are_source_local_before_parent_wire_CTS": true,
+ "one_seed_passing_source_not_replayed": true,
+ "golden_and_meaningful_negative_controls_retained": true,
+ "preserve_attributes_before_intermediate_resynthesis": true,
+ "explicit_corner_SPEF_required": true,
+ "slabs_are_blockages_not_hardened_logic": true,
+ "source_ownership": {
+  "SM_structural": "Claude HBM-SM",
+  "attention_parent": "Claude HBM-SU/ATTN",
+  "CP_child": "Harvey",
+  "W2_child": "Jason",
+  "outer_generator": "Claude HBM-DIE-FIX",
+  "physical_placement_integration": "Turing"
+ },
+ "return_needed": "Own source/top/parameters and real view paths with hashes, actual LEF ports/layers/orientations/obstructions, SS/FF LIB time-cap units+internalclock latency+pin loads, corner source/ODB/SPEF verdict and residual boundaries; missing parents actualRTL before views, no placeholderclosed status",
+ "pending_corrected_generator": {
+  "path": "/home/ubuntu/wt-hbm-die-fix/tools/hbm_accel_die_fp.py",
+  "sha256": "d991625c1e3bc15f7287b012ecca347f6325aa2e890dbe907bfda2a4aa553bfe",
+  "scope": "READ_ONLY r15source deltas; not correctedregeneratedall-endpoint validation receipt"
+ },
+ "pending_r15_deltas": {
+  "SM_weight_bits": 1099,
+  "SM_request_bits": 44,
+  "SM_descriptor_bits": 58,
+  "SM_control_leaf_bits": 103,
+  "attention_ld_bits": 1038,
+  "attention_query_bits": 580,
+  "attention_result_bits": 529,
+  "TU_quarter_inject_bits": 1024,
+  "TU_quarter_delivery_plus_idx_rd_bits": 580,
+  "TU_cmd_rank_pf_go_bits": 25,
+  "TU_status_fault_stall_bits": 33,
+  "SerDes_each_direction_bits_per_macro": 487,
+  "SerDes_full_TX_RX_bits": 974,
+  "host_TX_bits": 256,
+  "host_RX_bits": 256,
+  "clock_reset": "One realnet per root domain reachesall clockedblocks; forwardedstations useactualfclk_i/o and localreset; meso hasactualwclk/rclk, no shared3-bitckfiction"
+ },
+ "owner": "Carson",
+ "owner_id": "01a10f3a-f2f0-7900-9be0-099f8ef029f7",
+ "write_scope": "physical/hbm_die_abstracts_20261006/compute",
+ "work": "ActualSFUHCparents+SUquant existingclosedleaf views; no Claude SM/attention/reducer/controller source edits",
+ "historical_port_requests": [
+  {
+   "family": "hfd_hc",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "HC / mHC quarter (model ledger)",
+   "ledger": [
+    6.087,
+    "model",
+    "hc_fp32_lanes 5.984 + sinkhorn_select_engram 0.103 (same ledger)"
+   ],
+   "size_um": [
+    [
+     494.184,
+     3080.136
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_sfu": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "E"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_quant",
+   "masters": 1,
+   "instances": 1,
+   "status": "NEEDS hardened abstract",
+   "rtl": "ot_hdc_actquant",
+   "ledger": [
+    0.5,
+    "estimate",
+    "ot_hdc_actquant FP4/FP8 quantisers (index_q, chains not fused)"
+   ],
+   "size_um": [
+    [
+     1814.376,
+     276.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "ck": {
+     "bits": 3,
+     "face": "S"
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "S"
+    },
+    "t_su_SW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_NW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "t_su_SE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "t_su_NE": {
+     "bits": 512,
+     "face": "E"
+    }
+   },
+   "kind": "spine"
+  },
+  {
+   "family": "hfd_sfu",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "SFU quarter (model ledger)",
+   "ledger": [
+    8.819,
+    "model",
+    "tools/uarch_model.hbm_gpu_design(v41).dedicated_units_mm2.sfu"
+   ],
+   "size_um": [
+    [
+     715.8,
+     3080.136
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "f_su": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "E"
+    },
+    "t_hc": {
+     "bits": 1024,
+     "face": "W"
+    }
+   },
+   "kind": "hub"
+  },
+  {
+   "family": "hfd_su",
+   "masters": 1,
+   "instances": 4,
+   "status": "NEEDS hardened abstract",
+   "rtl": "SU lane array N1024 quarter (HBM-SU lanes closed) + fused chains",
+   "ledger": [
+    11.96,
+    "measured-placed",
+    "N1024 SU lane array, side 3,458 um (results/rtl/dshbm_1m_allmeasured_20261004/su_n2048/wire_stages.json, from the placed MLAT4/ALAT3 lane 7,349 um2)"
+   ],
+   "size_um": [
+    [
+     1262.28,
+     3080.136
+    ]
+   ],
+   "distinct_sizes": 1,
+   "ports": {
+    "r": {
+     "bits": 2160,
+     "face": "S"
+    },
+    "a": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_sfu": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "t_router": {
+     "bits": 256,
+     "face": "E"
+    },
+    "f_su_ew": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_su_ew": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "f_cmdproc": {
+     "bits": 64,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "E"
+    },
+    "f_coll": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_coll": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "f_vm": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "t_vm": {
+     "bits": 2048,
+     "face": "E"
+    },
+    "f_quant": {
+     "bits": 512,
+     "face": "E"
+    },
+    "f_su_ns": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "t_su_ns": {
+     "bits": 1024,
+     "face": "N"
+    }
+   },
+   "kind": "hub"
+  }
+ ],
+ "adopted_SU_lane_evidence": {
+  "schema": "hbm.su.c12.lane_closure.v1",
+  "date": "2026-10-06",
+  "clock": "0.833 ns (1.2 GHz); SS setup WC + 60 ps, FF hold BC + 25 ps; tools/w18/corner_sta.py on the routed ODB/SPEF",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv, ot_hdc_v41x_sfu_c12.sv, ot_hdc_v41x_vec_side_c12.sv (vehicles rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv), lane/side RTL unchanged since 4866be787",
+  "io": "outputs and inputs false-pathed in the route, then every output and input path checked register-direct on the routed netlist (outcheck.txt: not_register_direct 0)",
+  "routes": {
+   "full_u30_h25": {
+    "top": "ot_su12_full",
+    "ss_setup_ps": 4.77,
+    "ff_hold_ps": 5.33,
+    "closes_signoff": true,
+    "odb_sha256": "4aa5e82406c2e53bfa0a9f3827b3f50418e54b259ac3d2810b75bb1e46f595e8",
+    "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+    "io_check": "outputs 299 input_paths 710 not_register_direct 0",
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/full_u30_h25"
+   },
+   "light_u30": {
+    "top": "ot_su12_light",
+    "ss_setup_ps": 16.17,
+    "ff_hold_ps": 4.27,
+    "closes_signoff": true,
+    "odb_sha256": "c5e6eca078fb204ab1f980847b178827e0676dbaa6c0c2d90d1c6a7fb7befc48",
+    "source": "4866be787 (claude/hbm-su-attn-close-20261005) + reducer r3 working tree",
+    "io_check": "outputs 265 input_paths 1042 not_register_direct 0",
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/light_u30"
+   },
+   "sfu_u25": {
+    "top": "ot_su12_sfu",
+    "ss_setup_ps": 4.89,
+    "ff_hold_ps": 0.7,
+    "closes_signoff": true,
+    "odb_sha256": "a0623fc5753c2bc474a698002f7c76b5f8b0a11c638a5480fa2dea11b508fdda",
+    "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+    "io_check": "outputs 266 input_paths 929 not_register_direct 0",
+    "root": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-su-c12/routes/sfu_u25"
+   },
+   "sfu_u30_h20": {
+    "top": "ot_su12_sfu",
+    "ss_setup_ps": 19.04,
+    "ff_hold_ps": 8.13,
+    "closes_signoff": true,
+    "odb_sha256": "5d721a20e69e2d46d88ef35ea282b5d1300b57c8d90a935252839d790d9dedbf",
+    "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+    "io_check": "outputs 266 input_paths 929 not_register_direct 0",
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/sfu_u30_h20"
+   },
+   "side_u25": {
+    "top": "ot_su12_side",
+    "ss_setup_ps": 3.66,
+    "ff_hold_ps": 1.78,
+    "closes_signoff": true,
+    "odb_sha256": "14644e3c53be1136d9aa04889d29d76934454747c46440d1fe580181ddfa0031",
+    "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+    "io_check": "outputs 33 input_paths 36 not_register_direct 0",
+    "root": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-su-c12/routes/side_u25"
+   },
+   "side_u30": {
+    "top": "ot_su12_side",
+    "ss_setup_ps": 18.16,
+    "ff_hold_ps": 1.01,
+    "closes_signoff": true,
+    "odb_sha256": "04ece99988e8231f9ec3b54cb38c7d4d425bd7a73305f487d69f4fe534ce4aab",
+    "source": "4866be787 (claude/hbm-su-attn-close-20261005) + reducer r3 working tree",
+    "io_check": "outputs 33 input_paths 36 not_register_direct 0",
+    "root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-su/routes/side_u30"
+   }
+  },
+  "adopted": {
+   "light_lane": "light_u30",
+   "sfu_lane": "sfu_u30_h20",
+   "side_pipe": "side_u30",
+   "full_lane": "full_u30_h25"
+  },
+  "verdict": "ADOPTED for the HBM SU at 1.2 GHz: the light lane, SFU lane, side pipe and the full-function lane (8 heads of SFU depth in one element) close SS60/FF25 with DRC 0. The SU as a whole is qualified only when the reducer (slice + top) and the controller close; both are routing (see STATUS).",
+  "exactness": "tools/hbm_su_c12.py campaign PASS (results/rtl/hbm_su_c12_20261005/campaign_full.json): SFU equivalence 1M operands, random N16 24/24 + N64 16/16, vehicle 56/56; N1024/M256 v2 + P6 chains exact (su_runs/)",
+  "rate": "DS 1M with every SU at 1.2 GHz (CTL12 cycles): matched AR 2076.1 tok/s, MTP 3884.2 (composition.json). Against the SU at the 0.9 GHz serial-domain policy (same measured chains): +1.60% AR, +2.38% MTP (Codex Lagrange recomposition 2026-10-05T20:43Z)."
+ },
+ "lane_interface": {
+  "path": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+  "sha256": "fb2cffd8d4d607aad13593322ea6e9d08e6b92f5af2a13e3d1d02c7a16da6577",
+  "module_interface_source": "module ot_su12_lane #(\n    parameter integer KIND = 0,\n    parameter integer LANE = 37,\n    parameter integer MLAT = 6,         // multiplier latency (W11 serial domain: 5)\n    parameter integer ALAT = 6,         // FP add latency (W11 serial domain: 4)\n    parameter integer OPR = 1,\n    parameter integer DDIV = 21,\n    parameter integer SIDEX = 4,\n    parameter integer CAPR = 1\n) (\n    input  wire clk, input wire rst_n,\n    input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,\n    input  wire emit, input wire bank, input wire [23:0] o_v, i_v, no, ni, input wire [3:0] ls, lvw,\n    input  wire [119:0] vb, input wire [23:0] krow, obase, aibase, input wire [1:0] aind, input wire [4:0] gsh,\n    input  wire cpair, input wire [1:0] dst, input wire [7:0] srcs,\n    output wire vi_re, output wire [23:0] vi_addr, input wire [31:0] vi_q,\n    output wire [95:0] rd_addr, output wire [3:0] rd_re, output wire [7:0] rd_src, input wire [127:0] rd_q,\n    input  wire cx_arnd, cx_arelu, cx_amin, cx_cclip, input wire [31:0] cx_imm3, input wire [2:0] cp_m1,\n    input  wire [31:0] cp_imm1, input wire [2:0] cm_m1, input wire [1:0] cm_m2, input wire [2:0] cm_qm,\n    input  wire [31:0] cm_imm1, input wire [2:0] ca_ad, input wire [31:0] ca_imm2, input wire [2:0] ci_sfu,\n    cs_sfu, cs_e1, input wire [31:0] cs_imm2, input wire [1:0] ce_e2, input wire [31:0] ce_imm1,\n    input  wire co_rnd, input wire [1:0] co_dst,\n    output wire vm_we, output wire [23:0] vm_waddr, output wire [31:0] vm_wdata, output wire kv_we,\n    output wire [23:0] kv_waddr, output wire [31:0] kv_wdata, output wire ro_v, output wire [31:0] ro_x,\n    output wire fault, output wire coll,\n    output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y\n);"
+ },
+ "scope_caveats": [
+  "Adoptedc12lanes clock833ps, olddie serialquarter clock1111ps is not actualc12 qualification. Bind clocks withClaude generator before integration.",
+  "Lane IO falsepathed in route with register-direct in/out checks, not blanket parent IO qualification. Export real clock-to-Q/cap/setup-hold boundary arcs/internalCTS; parent realwire/skew/load still needed.",
+  "SUwholeparent waits actualreducer/controller, quarter fan-in/out and memory/supportsource, not N1024 closedclaim. HCmustactualoutputreturn, SFUactualinput/output; no oldsink."
+ ]
+}

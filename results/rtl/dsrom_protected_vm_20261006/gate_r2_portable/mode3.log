@@ -1,0 +1,6 @@
+EVENT txn1 accept_fast689 reply_fast710 retired_fast723 reads0 writes1 CE0
+PASS PROTECTED_DSVM negative MODE=3 pending_preserved=1 no_publication=1
+- rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv:26: Verilog $finish
+[617577] %Fatal: tb_dsrom_protected_vm.sv:43: Assertion failed in tb_dsrom_protected_vm.finish_transaction: unexpected fault state5
+%Error: rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv:43: Verilog $stop
+Aborting...

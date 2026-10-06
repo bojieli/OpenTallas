@@ -1,0 +1,479 @@
+{
+  "verdict": "REJECT_TWO_SOURCE_CONTEXTS_ESCALATE_EXISTING_CLAUDE_STRUCTURAL_OWNER",
+  "source_commit": "34223b7b0",
+  "controller_sha256": "601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099",
+  "constraints": {
+    "period_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "structural_owner": "CLAUDE (existing escalation main1d1140f9a; Maxwell acknowledgement main778272203)",
+  "handoff_status": "Historical wavefront source/terminal-collection handoff remains available; structural redesign already assigned to Claude. No new Codex recipe authorised. Spine handoff separately withdrawn.",
+  "variants": [
+    {
+      "name": "src_u40",
+      "verdict": "FAIL_PHYSICAL_SIGNOFF",
+      "route_rc": 0,
+      "sta_signoff": {
+        "block": false,
+        "incontext": false,
+        "reg2reg": false
+      },
+      "corners": {
+        "SS": {
+          "exit": 0,
+          "done": true,
+          "insertion_ps": [
+            925.4,
+            1016.3
+          ],
+          "block": {
+            "setup_wns_ps": -1002.1,
+            "hold_wns_ps": -774.3,
+            "failing_setup": 222055,
+            "failing_hold": 2161,
+            "worst_max_path": [
+              "running$_DFFE_PN0P_",
+              "core_token[7]"
+            ],
+            "worst_max_path_slack_ps": -1002.1,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "core_done",
+              "tx_st[0]$_DFF_PN1_"
+            ],
+            "worst_min_path_slack_ps": -774.3,
+            "worst_min_path_group": "core_clk"
+          },
+          "incontext": {
+            "setup_wns_ps": -1439.9,
+            "hold_wns_ps": 33.8,
+            "failing_setup": 222837,
+            "failing_hold": 0,
+            "worst_max_path": [
+              "cfg_prompt_len[7]",
+              "g_wf.eng.steps_m1[15]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -1439.9,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.p0[12]$_DFF_PN0_",
+              "g_wf.eng.p1[12]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": 33.8,
+            "worst_min_path_group": "core_clk"
+          },
+          "reg2reg": {
+            "setup_wns_ps": -668.0,
+            "hold_wns_ps": 33.8,
+            "failing_setup": 221276,
+            "failing_hold": 0,
+            "worst_max_path": [
+              "g_wf.eng.g[12].grp/lo_r[0]$_DFF_P_",
+              "g_wf.eng.g[12].grp/rec_q[54]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -668.0,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.p0[12]$_DFF_PN0_",
+              "g_wf.eng.p1[12]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": 33.8,
+            "worst_min_path_group": "core_clk"
+          }
+        },
+        "FF": {
+          "exit": 0,
+          "done": true,
+          "insertion_ps": [
+            585.2,
+            653.7
+          ],
+          "block": {
+            "setup_wns_ps": -333.0,
+            "hold_wns_ps": -452.9,
+            "failing_setup": 714,
+            "failing_hold": 2173,
+            "worst_max_path": [
+              "running$_DFFE_PN0P_",
+              "core_token[7]"
+            ],
+            "worst_max_path_slack_ps": -333.0,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "core_done",
+              "tx_st[0]$_DFF_PN1_"
+            ],
+            "worst_min_path_slack_ps": -452.9,
+            "worst_min_path_group": "core_clk"
+          },
+          "incontext": {
+            "setup_wns_ps": -367.7,
+            "hold_wns_ps": -0.1,
+            "failing_setup": 436,
+            "failing_hold": 3,
+            "worst_max_path": [
+              "cfg_prompt_len[7]",
+              "g_wf.eng.steps_m1[17]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -367.7,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.u0[3]$_DFF_PN0_",
+              "g_wf.eng.u1[3]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": -0.1,
+            "worst_min_path_group": "core_clk"
+          },
+          "reg2reg": {
+            "setup_wns_ps": 59.3,
+            "hold_wns_ps": -0.1,
+            "failing_setup": 0,
+            "failing_hold": 3,
+            "worst_max_path": [
+              "g_wf.eng.b_lo[0]$_DFF_P_",
+              "g_wf.eng.g[19].grp/ringm[109][16]$_DFFE_PP_"
+            ],
+            "worst_max_path_slack_ps": 59.3,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.u0[3]$_DFF_PN0_",
+              "g_wf.eng.u1[3]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": -0.1,
+            "worst_min_path_group": "core_clk"
+          }
+        }
+      },
+      "routed_area_um2": 173382,
+      "routed_cells": 1340570,
+      "DRV": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 192
+      },
+      "drc": 0,
+      "antenna": 0,
+      "actual_reported_violating_paths": [
+        {
+          "corner": "SS",
+          "startpoint": "core_done (input port clocked by core_clk)",
+          "endpoint": "tx_st[0]$_DFF_PN1_",
+          "slack_ps": -774.3,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "rst_n (input port clocked by vclk)",
+          "endpoint": "rst_q$_DFF_PN0_ (recovery check against rising-edge clock core_clk)",
+          "slack_ps": -708.5,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "cfg_prompt_len[7] (input port clocked by vclk)",
+          "endpoint": "g_wf.eng.steps_m1[15]$_DFF_P_",
+          "slack_ps": -1439.9,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "in_valid (input port clocked by vclk)",
+          "endpoint": "core_start (output port clocked by vclk)",
+          "slack_ps": -1056.2,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "core_done (input port clocked by core_clk)",
+          "endpoint": "tx_st[0]$_DFF_PN1_",
+          "slack_ps": -452.9,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "rst_n (input port clocked by vclk)",
+          "endpoint": "rst_q$_DFF_PN0_ (recovery check against rising-edge clock core_clk)",
+          "slack_ps": -62.6,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "cfg_prompt_len[7] (input port clocked by vclk)",
+          "endpoint": "g_wf.eng.steps_m1[17]$_DFF_P_",
+          "slack_ps": -367.7,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "in_valid (input port clocked by vclk)",
+          "endpoint": "core_start (output port clocked by vclk)",
+          "slack_ps": -299.4,
+          "recovery_check": false
+        }
+      ],
+      "raw_sha256": {
+        "done.json": "b217cee3be671d28faef858f1cb0d7cc96f2f8f6fdd012d4fa6465111e1b3b47",
+        "physical.json": "ae83dc778df99f6ea5db771994e9963fa9f6bcf682dbbc00aebe3c15994e40d8",
+        "route_args.json": "9ac58cd9b909dfb2a801fcc7cd6640513a678f0b8939d5607b1f8c4655b8b084",
+        "wf_sta.json": "ae7d09f0a77705d26a86ed2e1db92d50eacee8ddf52b4c132f19152613ac2f79",
+        "wf_sta_FF.log": "b45fbac8369d042ceedfc78001edd65b39a59e48409b4739ac730703d02192b0",
+        "wf_sta_SS.log": "aee59087b5e41e9e2f1a45bf7471769f209df1ff138d34816b3f0bcf6c7897be"
+      },
+      "remote_output": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u40_launcher_retry1"
+    },
+    {
+      "name": "src_u45",
+      "verdict": "FAIL_PHYSICAL_SIGNOFF",
+      "route_rc": 0,
+      "sta_signoff": {
+        "block": false,
+        "incontext": false,
+        "reg2reg": false
+      },
+      "corners": {
+        "SS": {
+          "exit": 0,
+          "done": true,
+          "insertion_ps": [
+            885.1,
+            979.0
+          ],
+          "block": {
+            "setup_wns_ps": -967.1,
+            "hold_wns_ps": -630.1,
+            "failing_setup": 221227,
+            "failing_hold": 2144,
+            "worst_max_path": [
+              "tx_st[2]$_DFF_PN0_",
+              "core_token[0]"
+            ],
+            "worst_max_path_slack_ps": -967.1,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "core_done",
+              "txq_w[0]$_DFFE_PN0P_"
+            ],
+            "worst_min_path_slack_ps": -630.1,
+            "worst_min_path_group": "core_clk"
+          },
+          "incontext": {
+            "setup_wns_ps": -1299.7,
+            "hold_wns_ps": 35.8,
+            "failing_setup": 221670,
+            "failing_hold": 0,
+            "worst_max_path": [
+              "cfg_gen_len[2]",
+              "g_wf.eng.steps[13]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -1299.7,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.p0[9]$_DFF_PN0_",
+              "g_wf.eng.p1[9]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": 35.8,
+            "worst_min_path_group": "core_clk"
+          },
+          "reg2reg": {
+            "setup_wns_ps": -568.1,
+            "hold_wns_ps": 35.8,
+            "failing_setup": 220452,
+            "failing_hold": 0,
+            "worst_max_path": [
+              "g_wf.eng.g[7].grp/lo_r[0]$_DFF_P_",
+              "g_wf.eng.g[7].grp/rec_q[1]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -568.1,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.p0[9]$_DFF_PN0_",
+              "g_wf.eng.p1[9]$_DFF_PN0_"
+            ],
+            "worst_min_path_slack_ps": 35.8,
+            "worst_min_path_group": "core_clk"
+          }
+        },
+        "FF": {
+          "exit": 0,
+          "done": true,
+          "insertion_ps": [
+            559.7,
+            633.6
+          ],
+          "block": {
+            "setup_wns_ps": -314.1,
+            "hold_wns_ps": -387.5,
+            "failing_setup": 714,
+            "failing_hold": 2145,
+            "worst_max_path": [
+              "tx_st[2]$_DFF_PN0_",
+              "core_token[0]"
+            ],
+            "worst_max_path_slack_ps": -314.1,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "core_done",
+              "txq_w[0]$_DFFE_PN0P_"
+            ],
+            "worst_min_path_slack_ps": -387.5,
+            "worst_min_path_group": "core_clk"
+          },
+          "incontext": {
+            "setup_wns_ps": -313.9,
+            "hold_wns_ps": -0.5,
+            "failing_setup": 438,
+            "failing_hold": 1,
+            "worst_max_path": [
+              "cfg_gen_len[0]",
+              "g_wf.eng.steps[10]$_DFF_P_"
+            ],
+            "worst_max_path_slack_ps": -313.9,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.g[27].grp/ef[1]$_SDFFE_PN0P_",
+              "g_wf.eng.g[27].grp/f_any$_DFF_P_"
+            ],
+            "worst_min_path_slack_ps": -0.5,
+            "worst_min_path_group": "core_clk"
+          },
+          "reg2reg": {
+            "setup_wns_ps": 42.6,
+            "hold_wns_ps": -0.5,
+            "failing_setup": 0,
+            "failing_hold": 1,
+            "worst_max_path": [
+              "g_wf.eng.b_data[20]$_DFF_P_",
+              "g_wf.eng.g[20].grp/ringm[14][20]$_DFFE_PP_"
+            ],
+            "worst_max_path_slack_ps": 42.6,
+            "worst_max_path_group": "core_clk",
+            "worst_min_path": [
+              "g_wf.eng.g[27].grp/ef[1]$_SDFFE_PN0P_",
+              "g_wf.eng.g[27].grp/f_any$_DFF_P_"
+            ],
+            "worst_min_path_slack_ps": -0.5,
+            "worst_min_path_group": "core_clk"
+          }
+        }
+      },
+      "routed_area_um2": 172247,
+      "routed_cells": 1328298,
+      "DRV": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 295
+      },
+      "drc": 0,
+      "antenna": 0,
+      "actual_reported_violating_paths": [
+        {
+          "corner": "SS",
+          "startpoint": "core_done (input port clocked by core_clk)",
+          "endpoint": "txq_w[0]$_DFFE_PN0P_",
+          "slack_ps": -630.1,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "rst_n (input port clocked by vclk)",
+          "endpoint": "rst_q$_DFF_PN0_ (recovery check against rising-edge clock core_clk)",
+          "slack_ps": -692.4,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "cfg_gen_len[2] (input port clocked by vclk)",
+          "endpoint": "g_wf.eng.steps[13]$_DFF_P_",
+          "slack_ps": -1299.7,
+          "recovery_check": false
+        },
+        {
+          "corner": "SS",
+          "startpoint": "in_valid (input port clocked by vclk)",
+          "endpoint": "core_start (output port clocked by vclk)",
+          "slack_ps": -964.3,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "core_done (input port clocked by core_clk)",
+          "endpoint": "txq_w[0]$_DFFE_PN0P_",
+          "slack_ps": -387.5,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "rst_n (input port clocked by vclk)",
+          "endpoint": "rst_q$_DFF_PN0_ (recovery check against rising-edge clock core_clk)",
+          "slack_ps": -57.1,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "cfg_gen_len[0] (input port clocked by vclk)",
+          "endpoint": "g_wf.eng.steps[10]$_DFF_P_",
+          "slack_ps": -313.9,
+          "recovery_check": false
+        },
+        {
+          "corner": "FF",
+          "startpoint": "in_valid (input port clocked by vclk)",
+          "endpoint": "core_start (output port clocked by vclk)",
+          "slack_ps": -265.0,
+          "recovery_check": false
+        }
+      ],
+      "raw_sha256": {
+        "done.json": "b217cee3be671d28faef858f1cb0d7cc96f2f8f6fdd012d4fa6465111e1b3b47",
+        "physical.json": "7ff38eedf4ff89df60e4bb00cacbcd1a92171d2aa66f464ae44aa1a0d2baeb5e",
+        "route_args.json": "2656e8764c59652d7603b0afa678afc29c31ca3036e3d4734a3974a44d7075a6",
+        "wf_sta.json": "7a5e9a56e4c2473110198210684ce08e499c809ea32b333b1d1c2277f9bf4a33",
+        "wf_sta_FF.log": "3b0041ca258230fc433afbc348bd7910a4ca94c49c7b30fa9869f8b1e3dc7d7e",
+        "wf_sta_SS.log": "9d26598549d88474dad24fcad13bd3199a37e2ede903ea2fb294b09789b2f415"
+      },
+      "remote_output": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u45_launcher_retry1"
+    }
+  ],
+  "physical_adopted": false,
+  "flow_only_rescue_allowed": false,
+  "existing_src_u50": "Already launched, no done.json at read; preserve and collect only, no restart or third rescue",
+  "functional_gates": "Previously committed 14 equivalence cases + dependency-corrected stage PASS retained without replay",
+  "parent_context": "Virtual clock with own min/max insertion and original 20% IO; actual whole-parent clock/arrival binding remains unqualified.",
+  "grouped_source_classes": [
+    {
+      "class": "Configuration length -> engine step capture",
+      "source": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:765-768",
+      "u40_SS_ps": -1439.9,
+      "u45_SS_ps": -1299.7,
+      "cone": "cfg_prompt_len/cfg_gen_len addition/subtraction -> steps/steps_m1; SS context worst, FF setup also fails"
+    },
+    {
+      "class": "Group record read selection",
+      "source": "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:985-996",
+      "u40_SS_internal_ps": -668.0,
+      "u45_SS_internal_ps": -568.1,
+      "cone": "lo_r -> indexed recm/stv -> rec_q; intrinsic register-to-register failure"
+    },
+    {
+      "class": "Adjacent engine/group register hold",
+      "u40_FF_ps": -0.1,
+      "u45_FF_ps": -0.5,
+      "cone": "u0[3]->u1[3]; group27 ef[1]->f_any reduction (source1000)"
+    },
+    {
+      "class": "Boundary output / input-to-output / ideal-clock hold",
+      "cone": "running or tx_st -> core_token; in_valid -> core_start; core_done -> tx_st or txq_w; raw reported paths retained separately from context clocks"
+    },
+    {
+      "class": "Reset context arrival vs internal recovery",
+      "cone": "virtual rst_n -> rst_q recovery fails SS -708.5/-692.4 and FF -62.6/-57.1, while internal rst_q recovery passes SS +111.2/+160.0. Do not relabel as proven internal reset fanout defect or waive upstream binding."
+    },
+    {
+      "class": "Routed slew violations",
+      "u40": 192,
+      "u45": 295,
+      "cone": "Native physical SI totals; no cap/fanout/DRC/antenna errors; counts do not establish all slew endpoint classes."
+    }
+  ]
+}

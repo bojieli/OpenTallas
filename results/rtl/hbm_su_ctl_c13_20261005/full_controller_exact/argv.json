@@ -1,0 +1,21 @@
+[
+  "python3",
+  "tools/hbm_su_ctl_c13.py",
+  "su-run",
+  "--out",
+  "/srv/opentallas-scratch2/codex/hbm-su-ctl13-exact-20261005/out",
+  "--work",
+  "/srv/opentallas-scratch2/codex/hbm-su-ctl13-exact-20261005/work",
+  "--n",
+  "64",
+  "--m",
+  "16",
+  "--bcast",
+  "7",
+  "--ret",
+  "8",
+  "--fp",
+  "dpi_beh",
+  "--cases",
+  "su_cases_v2_ildr.pkl"
+]

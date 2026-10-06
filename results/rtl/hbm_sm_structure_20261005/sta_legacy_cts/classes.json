@@ -1,0 +1,928 @@
+{
+ "setup_SS": {
+  "violating_endpoints": 44218,
+  "tns_ps": -10852122.0,
+  "classes": [
+   {
+    "start": "u_prv_o",
+    "end": "OUTPORT",
+    "endpoints": 2,
+    "worst_ps": -4002.2
+   },
+   {
+    "start": "u_prd_o",
+    "end": "OUTPORT",
+    "endpoints": 268,
+    "worst_ps": -3621.7
+   },
+   {
+    "start": "u_rch",
+    "end": "OUTPORT",
+    "endpoints": 43,
+    "worst_ps": -3574.0
+   },
+   {
+    "start": "u_dch",
+    "end": "OUTPORT",
+    "endpoints": 1,
+    "worst_ps": -3268.3
+   },
+   {
+    "start": "u_pbz",
+    "end": "OUTPORT",
+    "endpoints": 3,
+    "worst_ps": -3265.3
+   },
+   {
+    "start": "u_bc",
+    "end": "u_bc",
+    "endpoints": 848,
+    "worst_ps": -2455.2
+   },
+   {
+    "start": "u_bc",
+    "end": "s1_v",
+    "endpoints": 1,
+    "worst_ps": -1392.4
+   },
+   {
+    "start": "LEAF.woh_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 14375,
+    "worst_ps": -1230.9
+   },
+   {
+    "start": "L2.u_xv",
+    "end": "LEAF.xSRAM",
+    "endpoints": 92,
+    "worst_ps": -1186.2
+   },
+   {
+    "start": "COL.g_col[]",
+    "end": "COL.g_col[]",
+    "endpoints": 7719,
+    "worst_ps": -1045.1
+   },
+   {
+    "start": "LEAF.ifp4",
+    "end": "LEAF.BDmacro",
+    "endpoints": 32,
+    "worst_ps": -959.4
+   },
+   {
+    "start": "COL.g_col[]",
+    "end": "u_issue",
+    "endpoints": 15,
+    "worst_ps": -941.8
+   },
+   {
+    "start": "fmt_q",
+    "end": "DS/DW.u_w",
+    "endpoints": 1521,
+    "worst_ps": -907.2
+   },
+   {
+    "start": "u_bc",
+    "end": "u_issue",
+    "endpoints": 168,
+    "worst_ps": -779.9
+   },
+   {
+    "start": "DG",
+    "end": "COL.g_col[]",
+    "endpoints": 226,
+    "worst_ps": -750.8
+   },
+   {
+    "start": "DS/DW.u_bd",
+    "end": "DS/DW.u_bd",
+    "endpoints": 423,
+    "worst_ps": -721.0
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.wd_q",
+    "endpoints": 1286,
+    "worst_ps": -692.1
+   },
+   {
+    "start": "u_prd",
+    "end": "u_bc",
+    "endpoints": 578,
+    "worst_ps": -678.5
+   },
+   {
+    "start": "LEAF.wd_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 4285,
+    "worst_ps": -663.8
+   },
+   {
+    "start": "L2.u_xa",
+    "end": "LEAF.xSRAM",
+    "endpoints": 503,
+    "worst_ps": -653.6
+   },
+   {
+    "start": "w0_data",
+    "end": "DS/DW.u_bd",
+    "endpoints": 4539,
+    "worst_ps": -648.2
+   },
+   {
+    "start": "w0_oh",
+    "end": "DS/DW.u_bd",
+    "endpoints": 36,
+    "worst_ps": -647.8
+   },
+   {
+    "start": "s1_tag",
+    "end": "DS/DW.u_cd",
+    "endpoints": 30,
+    "worst_ps": -629.1
+   },
+   {
+    "start": "COL.g_col[]",
+    "end": "fault_q",
+    "endpoints": 1,
+    "worst_ps": -583.8
+   },
+   {
+    "start": "DS/DW.u_cd",
+    "end": "DS/DW.u_cd",
+    "endpoints": 7,
+    "worst_ps": -575.5
+   },
+   {
+    "start": "DS/DW.u_w",
+    "end": "L2.u_w",
+    "endpoints": 177,
+    "worst_ps": -564.7
+   },
+   {
+    "start": "u_bc",
+    "end": "s1_w",
+    "endpoints": 654,
+    "worst_ps": -545.7
+   },
+   {
+    "start": "fmt_q",
+    "end": "DS/DW.u_cd",
+    "endpoints": 5,
+    "worst_ps": -510.0
+   },
+   {
+    "start": "DS/DW.u_bd",
+    "end": "L2.u_bd",
+    "endpoints": 484,
+    "worst_ps": -500.1
+   },
+   {
+    "start": "L2.u_w",
+    "end": "LEAF.w3",
+    "endpoints": 2827,
+    "worst_ps": -496.4
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gt",
+    "endpoints": 23,
+    "worst_ps": -482.1
+   },
+   {
+    "start": "s1_w",
+    "end": "DS/DW.u_w",
+    "endpoints": 130,
+    "worst_ps": -450.1
+   },
+   {
+    "start": "u_issue",
+    "end": "s1_xa",
+    "endpoints": 7,
+    "worst_ps": -399.1
+   },
+   {
+    "start": "u_prd",
+    "end": "u_prd",
+    "endpoints": 297,
+    "worst_ps": -395.9
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.wa_q",
+    "endpoints": 40,
+    "worst_ps": -389.2
+   },
+   {
+    "start": "L2.u_cv",
+    "end": "LEAF.c3v",
+    "endpoints": 13,
+    "worst_ps": -365.1
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gf",
+    "endpoints": 7,
+    "worst_ps": -351.7
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gv",
+    "endpoints": 1,
+    "worst_ps": -339.3
+   },
+   {
+    "start": "LEAF.BDmacro",
+    "end": "LEAF.gy",
+    "endpoints": 264,
+    "worst_ps": -333.0
+   },
+   {
+    "start": "LEAF.we_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 16,
+    "worst_ps": -329.8
+   },
+   {
+    "start": "LEAF.BDmacro",
+    "end": "LEAF.gt",
+    "endpoints": 17,
+    "worst_ps": -329.3
+   },
+   {
+    "start": "w0_addr",
+    "end": "DS/DW.u_bd",
+    "endpoints": 11,
+    "worst_ps": -329.0
+   },
+   {
+    "start": "u_pst",
+    "end": "fmt_q",
+    "endpoints": 2,
+    "worst_ps": -326.3
+   },
+   {
+    "start": "u_prv",
+    "end": "u_bc",
+    "endpoints": 7,
+    "worst_ps": -325.8
+   },
+   {
+    "start": "L2.u_bv",
+    "end": "LEAF.we_q",
+    "endpoints": 12,
+    "worst_ps": -316.0
+   },
+   {
+    "start": "DS/DW.u_xa",
+    "end": "L2.u_xa",
+    "endpoints": 5,
+    "worst_ps": -314.1
+   },
+   {
+    "start": "u_issue",
+    "end": "s1_tag",
+    "endpoints": 13,
+    "worst_ps": -310.6
+   },
+   {
+    "start": "LEAF.BDmacro",
+    "end": "LEAF.gf",
+    "endpoints": 6,
+    "worst_ps": -309.3
+   },
+   {
+    "start": "u_pst",
+    "end": "u_issue",
+    "endpoints": 21,
+    "worst_ps": -304.7
+   },
+   {
+    "start": "LEAF.wa_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 132,
+    "worst_ps": -287.2
+   },
+   {
+    "start": "LEAF.itag",
+    "end": "LEAF.BDmacro",
+    "endpoints": 13,
+    "worst_ps": -283.8
+   },
+   {
+    "start": "fmt_q",
+    "end": "DS/DW.u_cv",
+    "endpoints": 7,
+    "worst_ps": -279.1
+   },
+   {
+    "start": "LEAF.ix",
+    "end": "LEAF.BDmacro",
+    "endpoints": 771,
+    "worst_ps": -276.7
+   },
+   {
+    "start": "u_dch",
+    "end": "u_bc",
+    "endpoints": 104,
+    "worst_ps": -255.7
+   },
+   {
+    "start": "LEAF.BDmacro",
+    "end": "LEAF.gv",
+    "endpoints": 7,
+    "worst_ps": -246.1
+   },
+   {
+    "start": "L2.u_cd",
+    "end": "LEAF.c3d",
+    "endpoints": 17,
+    "worst_ps": -240.0
+   },
+   {
+    "start": "DG",
+    "end": "DG",
+    "endpoints": 43,
+    "worst_ps": -230.5
+   },
+   {
+    "start": "LEAF.ibf",
+    "end": "LEAF.gy",
+    "endpoints": 58,
+    "worst_ps": -224.8
+   },
+   {
+    "start": "LEAF.xSRAM",
+    "end": "LEAF.ix",
+    "endpoints": 872,
+    "worst_ps": -218.4
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gy",
+    "endpoints": 54,
+    "worst_ps": -206.6
+   },
+   {
+    "start": "w0_en",
+    "end": "DS/DW.u_bv",
+    "endpoints": 2,
+    "worst_ps": -204.4
+   },
+   {
+    "start": "DS/DW.u_cd",
+    "end": "L2.u_cd",
+    "endpoints": 5,
+    "worst_ps": -192.2
+   },
+   {
+    "start": "LEAF.gy",
+    "end": "DG",
+    "endpoints": 32,
+    "worst_ps": -188.9
+   },
+   {
+    "start": "LEAF.ix",
+    "end": "LEAF.TCmacro",
+    "endpoints": 1,
+    "worst_ps": -135.0
+   },
+   {
+    "start": "LEAF.iw",
+    "end": "LEAF.BDmacro",
+    "endpoints": 14,
+    "worst_ps": -116.8
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.woh_q",
+    "endpoints": 2,
+    "worst_ps": -115.2
+   },
+   {
+    "start": "LEAF.gf",
+    "end": "DG",
+    "endpoints": 1,
+    "worst_ps": -110.9
+   },
+   {
+    "start": "s1_xa",
+    "end": "DS/DW.u_xa",
+    "endpoints": 2,
+    "worst_ps": -99.5
+   },
+   {
+    "start": "s1_last",
+    "end": "DS/DW.u_cd",
+    "endpoints": 2,
+    "worst_ps": -72.1
+   },
+   {
+    "start": "LEAF.itag",
+    "end": "LEAF.TCmacro",
+    "endpoints": 2,
+    "worst_ps": -58.2
+   },
+   {
+    "start": "u_rch",
+    "end": "u_bc",
+    "endpoints": 16,
+    "worst_ps": -49.9
+   },
+   {
+    "start": "s1_first",
+    "end": "DS/DW.u_cd",
+    "endpoints": 2,
+    "worst_ps": -26.1
+   },
+   {
+    "start": "LEAF.ifirst",
+    "end": "LEAF.BDmacro",
+    "endpoints": 1,
+    "worst_ps": -22.7
+   },
+   {
+    "start": "DS/DW.u_w",
+    "end": "DS/DW.u_w",
+    "endpoints": 1,
+    "worst_ps": -19.2
+   },
+   {
+    "start": "LEAF.iw",
+    "end": "LEAF.TCmacro",
+    "endpoints": 12,
+    "worst_ps": -17.5
+   },
+   {
+    "start": "u_issue",
+    "end": "u_issue",
+    "endpoints": 4,
+    "worst_ps": -12.8
+   }
+  ]
+ },
+ "hold_FF": {
+  "violating_endpoints": 45576,
+  "tns_ps": -12069745.1,
+  "classes": [
+   {
+    "start": "INPORT",
+    "end": "u_prd",
+    "endpoints": 1098,
+    "worst_ps": -2356.6
+   },
+   {
+    "start": "INPORT",
+    "end": "w0_data",
+    "endpoints": 2048,
+    "worst_ps": -2269.5
+   },
+   {
+    "start": "INPORT",
+    "end": "u_pop",
+    "endpoints": 40,
+    "worst_ps": -2184.8
+   },
+   {
+    "start": "INPORT",
+    "end": "u_prl",
+    "endpoints": 1,
+    "worst_ps": -2180.7
+   },
+   {
+    "start": "INPORT",
+    "end": "u_dch",
+    "endpoints": 60,
+    "worst_ps": -2179.1
+   },
+   {
+    "start": "INPORT",
+    "end": "u_pst",
+    "endpoints": 1,
+    "worst_ps": -2177.7
+   },
+   {
+    "start": "OUTPORT",
+    "end": "u_rch",
+    "endpoints": 7,
+    "worst_ps": -2107.5
+   },
+   {
+    "start": "INPORT",
+    "end": "w0_en",
+    "endpoints": 1,
+    "worst_ps": -2088.9
+   },
+   {
+    "start": "INPORT",
+    "end": "w0_addr",
+    "endpoints": 7,
+    "worst_ps": -2075.0
+   },
+   {
+    "start": "INPORT",
+    "end": "w0_oh",
+    "endpoints": 13,
+    "worst_ps": -1980.8
+   },
+   {
+    "start": "INPORT",
+    "end": "u_prv",
+    "endpoints": 1,
+    "worst_ps": -1824.9
+   },
+   {
+    "start": "LEAF.iw",
+    "end": "LEAF.TCmacro",
+    "endpoints": 7190,
+    "worst_ps": -500.5
+   },
+   {
+    "start": "LEAF.ix",
+    "end": "LEAF.TCmacro",
+    "endpoints": 6283,
+    "worst_ps": -496.4
+   },
+   {
+    "start": "COL.g_col[]",
+    "end": "COL.g_col[]",
+    "endpoints": 1141,
+    "worst_ps": -468.6
+   },
+   {
+    "start": "DS/DW.u_bd",
+    "end": "DS/DW.u_bd",
+    "endpoints": 918,
+    "worst_ps": -468.0
+   },
+   {
+    "start": "DS/DW.u_w",
+    "end": "DS/DW.u_w",
+    "endpoints": 218,
+    "worst_ps": -451.5
+   },
+   {
+    "start": "DS/DW.u_bd",
+    "end": "L2.u_bd",
+    "endpoints": 1313,
+    "worst_ps": -445.3
+   },
+   {
+    "start": "u_bc",
+    "end": "s1_w",
+    "endpoints": 49,
+    "worst_ps": -442.8
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.wd_q",
+    "endpoints": 1110,
+    "worst_ps": -430.0
+   },
+   {
+    "start": "LEAF.itag",
+    "end": "LEAF.TCmacro",
+    "endpoints": 288,
+    "worst_ps": -421.5
+   },
+   {
+    "start": "DG",
+    "end": "DG",
+    "endpoints": 70,
+    "worst_ps": -420.2
+   },
+   {
+    "start": "DS/DW.u_xa",
+    "end": "L2.u_xa",
+    "endpoints": 9,
+    "worst_ps": -405.1
+   },
+   {
+    "start": "DS/DW.u_xa",
+    "end": "DS/DW.u_xa",
+    "endpoints": 4,
+    "worst_ps": -404.7
+   },
+   {
+    "start": "LEAF.iv_f",
+    "end": "LEAF.TCmacro",
+    "endpoints": 28,
+    "worst_ps": -366.9
+   },
+   {
+    "start": "DS/DW.u_w",
+    "end": "L2.u_w",
+    "endpoints": 220,
+    "worst_ps": -362.4
+   },
+   {
+    "start": "DS/DW.u_bv",
+    "end": "L2.u_bv",
+    "endpoints": 2,
+    "worst_ps": -331.7
+   },
+   {
+    "start": "fmt_q",
+    "end": "DS/DW.u_cd",
+    "endpoints": 2,
+    "worst_ps": -325.6
+   },
+   {
+    "start": "s1_w",
+    "end": "DS/DW.u_w",
+    "endpoints": 59,
+    "worst_ps": -311.3
+   },
+   {
+    "start": "LEAF.ilast",
+    "end": "LEAF.TCmacro",
+    "endpoints": 17,
+    "worst_ps": -302.4
+   },
+   {
+    "start": "s1_v",
+    "end": "DS/DW.u_xv",
+    "endpoints": 1,
+    "worst_ps": -299.3
+   },
+   {
+    "start": "LEAF.ifirst",
+    "end": "LEAF.TCmacro",
+    "endpoints": 19,
+    "worst_ps": -293.8
+   },
+   {
+    "start": "LEAF.iw",
+    "end": "LEAF.BDmacro",
+    "endpoints": 11853,
+    "worst_ps": -281.0
+   },
+   {
+    "start": "LEAF.ix",
+    "end": "LEAF.BDmacro",
+    "endpoints": 4343,
+    "worst_ps": -275.9
+   },
+   {
+    "start": "LEAF.xSRAM",
+    "end": "LEAF.ix",
+    "endpoints": 2408,
+    "worst_ps": -266.1
+   },
+   {
+    "start": "LEAF.w3",
+    "end": "LEAF.iw",
+    "endpoints": 799,
+    "worst_ps": -248.8
+   },
+   {
+    "start": "LEAF.gy",
+    "end": "DG",
+    "endpoints": 20,
+    "worst_ps": -237.9
+   },
+   {
+    "start": "LEAF.iv_b",
+    "end": "LEAF.BDmacro",
+    "endpoints": 18,
+    "worst_ps": -237.5
+   },
+   {
+    "start": "LEAF.itag",
+    "end": "LEAF.BDmacro",
+    "endpoints": 208,
+    "worst_ps": -227.3
+   },
+   {
+    "start": "u_bc",
+    "end": "u_bc",
+    "endpoints": 51,
+    "worst_ps": -216.2
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.woh_q",
+    "endpoints": 4,
+    "worst_ps": -212.5
+   },
+   {
+    "start": "LEAF.ifp4",
+    "end": "LEAF.BDmacro",
+    "endpoints": 22,
+    "worst_ps": -207.2
+   },
+   {
+    "start": "DG",
+    "end": "COL.g_col[]",
+    "endpoints": 6,
+    "worst_ps": -179.5
+   },
+   {
+    "start": "LEAF.we_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 4,
+    "worst_ps": -162.3
+   },
+   {
+    "start": "LEAF.ilast",
+    "end": "LEAF.BDmacro",
+    "endpoints": 12,
+    "worst_ps": -161.8
+   },
+   {
+    "start": "LEAF.ifirst",
+    "end": "LEAF.BDmacro",
+    "endpoints": 12,
+    "worst_ps": -154.4
+   },
+   {
+    "start": "LEAF.wd_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 3029,
+    "worst_ps": -150.3
+   },
+   {
+    "start": "s1_tag",
+    "end": "DS/DW.u_cd",
+    "endpoints": 4,
+    "worst_ps": -141.6
+   },
+   {
+    "start": "LEAF.c3d",
+    "end": "LEAF.itag",
+    "endpoints": 10,
+    "worst_ps": -126.0
+   },
+   {
+    "start": "s1_v",
+    "end": "DS/DW.u_cv",
+    "endpoints": 1,
+    "worst_ps": -125.7
+   },
+   {
+    "start": "DS/DW.u_cd",
+    "end": "L2.u_cd",
+    "endpoints": 2,
+    "worst_ps": -119.2
+   },
+   {
+    "start": "w0_data",
+    "end": "DS/DW.u_bd",
+    "endpoints": 16,
+    "worst_ps": -115.3
+   },
+   {
+    "start": "L2.u_w",
+    "end": "LEAF.w3",
+    "endpoints": 198,
+    "worst_ps": -114.9
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gy",
+    "endpoints": 63,
+    "worst_ps": -106.6
+   },
+   {
+    "start": "LEAF.wa_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 51,
+    "worst_ps": -96.8
+   },
+   {
+    "start": "u_prd",
+    "end": "u_bc",
+    "endpoints": 115,
+    "worst_ps": -91.9
+   },
+   {
+    "start": "L2.u_cd",
+    "end": "LEAF.c3d",
+    "endpoints": 1,
+    "worst_ps": -85.3
+   },
+   {
+    "start": "DS/DW.u_cd",
+    "end": "DS/DW.u_cd",
+    "endpoints": 3,
+    "worst_ps": -84.3
+   },
+   {
+    "start": "LEAF.c3v",
+    "end": "LEAF.iv_b",
+    "endpoints": 2,
+    "worst_ps": -81.3
+   },
+   {
+    "start": "DS/DW.u_bv",
+    "end": "DS/DW.u_bv",
+    "endpoints": 1,
+    "worst_ps": -64.3
+   },
+   {
+    "start": "L2.u_cv",
+    "end": "LEAF.c3v",
+    "endpoints": 2,
+    "worst_ps": -64.1
+   },
+   {
+    "start": "L2.u_bd",
+    "end": "LEAF.wa_q",
+    "endpoints": 2,
+    "worst_ps": -47.9
+   },
+   {
+    "start": "L2.u_xa",
+    "end": "LEAF.xSRAM",
+    "endpoints": 12,
+    "worst_ps": -38.8
+   },
+   {
+    "start": "w0_addr",
+    "end": "DS/DW.u_bd",
+    "endpoints": 2,
+    "worst_ps": -37.6
+   },
+   {
+    "start": "rdata_q",
+    "end": "u_prd_o",
+    "endpoints": 1,
+    "worst_ps": -35.0
+   },
+   {
+    "start": "LEAF.woh_q",
+    "end": "LEAF.xSRAM",
+    "endpoints": 65,
+    "worst_ps": -34.1
+   },
+   {
+    "start": "LEAF.c3d",
+    "end": "LEAF.ilast",
+    "endpoints": 1,
+    "worst_ps": -29.2
+   },
+   {
+    "start": "LEAF.gt",
+    "end": "DG",
+    "endpoints": 1,
+    "worst_ps": -27.6
+   },
+   {
+    "start": "u_prd_o",
+    "end": "u_prd_o",
+    "endpoints": 6,
+    "worst_ps": -26.3
+   },
+   {
+    "start": "LEAF.c3d",
+    "end": "LEAF.ifp4",
+    "endpoints": 2,
+    "worst_ps": -24.4
+   },
+   {
+    "start": "rrow_q",
+    "end": "u_prd_o",
+    "endpoints": 2,
+    "worst_ps": -23.8
+   },
+   {
+    "start": "LEAF.TCmacro",
+    "end": "LEAF.gf",
+    "endpoints": 2,
+    "worst_ps": -15.5
+   },
+   {
+    "start": "LEAF.c3d",
+    "end": "LEAF.ibf",
+    "endpoints": 1,
+    "worst_ps": -13.7
+   },
+   {
+    "start": "fmt_q",
+    "end": "DS/DW.u_w",
+    "endpoints": 1,
+    "worst_ps": -8.5
+   },
+   {
+    "start": "s1_last",
+    "end": "DS/DW.u_cd",
+    "endpoints": 1,
+    "worst_ps": -7.5
+   },
+   {
+    "start": "DS/DW.u_cv",
+    "end": "DS/DW.u_cv",
+    "endpoints": 1,
+    "worst_ps": -6.5
+   }
+  ]
+ },
+ "scope": "ONE full STA of the legacy flat SM element CTS database (Goodall sm_r2 4_cts.odb, ot_hbm_accel_sm_v ENABLE=1), placement-estimated RC, propagated clocks, actual SS/FF ETMs of tc16/bd_col and SRAMs, 833 ps / 60 / 25 ps, die-budget IO; every violating endpoint (one path each) classified by start/end hierarchy",
+ "database": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2/work/orfs/results/asap7/opentallas_ot_hbm_accel_sm_v_asap7_fsm_sm_r2/base/4_cts.odb (sha256 6f73ebd2...)",
+ "diagnosis": [
+  "clock: 225k register sinks + 202 macro sinks in one 2.2 x 2.07 mm tree: 3.4-4.3 ns insertion, 260-350 ps skew between neighbouring top flops (G1->DG), macro clock pins 366 ps late behind post-CTS long-wire repair (macro clusters of 4 over 393 um), so every top-level class fails, not only the macro boundary",
+  "macro boundary: tc16/bd_col outputs launch after their internal insertion (310-390 ps ETM clock-tree path) on a late pin; inputs fail hold at FF for the same reason (iw/ix -> TC -500 ps)",
+  "fanout: woh_q one-hot -> 788 x-store mask pins + OR (-1231 ps), fmt_q -> 2048 unpack selects (-907 ps), ifp4 -> bd_col fp4 ETM arc (-959 ps, the macro was hardened with false-path IO)",
+  "IO: die budget (473 in / 323 out, ideal clock at the port) fails by the element insertion itself (-4.0 ns out, -2.4 ns FF hold in): a 2 mm element cannot have <= ~300 ps insertion at its boundary flops"
+ ]
+}

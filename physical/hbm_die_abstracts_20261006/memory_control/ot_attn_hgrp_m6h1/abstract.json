@@ -1,0 +1,65 @@
+{
+  "name": "ot_attn_hgrp_m6h1",
+  "orfs_dir": "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/interface:/out",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/interface/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/interface:/out",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/interface/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/scratch-overflow/codex/hbm-attn-context-20261005/interface/interface.sdc",
+    "sha256": "2299a1dad872c2fcdeb379226a7e49fe774f3c250c683f38e263c0d757fddb7b",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "files": {
+    "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+    "ot_attn_hgrp_m6h1_ff.lib": "135ba0be869272642f1b579a983b999da2e105fce385fc70d80830600351f0d8",
+    "ot_attn_hgrp_m6h1_ss.lib": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b"
+  },
+  "ok": true
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.dsrom-qx10-parent-source-preflight.v1",
+  "utc": "2026-10-05T22:47:21Z",
+  "mapped_netlist": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/map_r2/work/orfs/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/1_2_yosys.v",
+  "sha256": "0c47087a99067e6622cd8ce3ad357d124099974379ed3d39651713df01e9c1e9",
+  "current_map_r4_reuses_this_netlist": true,
+  "real_weight_macro_instances": 0,
+  "internal_lane_anchors": 0,
+  "internal_chain_anchors": 0,
+  "internal_tree_anchors": 0,
+  "verdict": "MISSING_LINKED_QX10_ENGINE",
+  "action": "Bind full selected 0032 engine and four real ROMs in the native parent; supply joined CTS/parasitics and literal producer/capture pins before full_boundary.tcl reports SS/FF.",
+  "timing_report_executed": false,
+  "physical_qualified": false,
+  "missing_input_clocks": true
+}

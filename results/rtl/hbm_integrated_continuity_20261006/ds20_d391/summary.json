@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS_ACTUAL_DS20_CAPTURE_LSU_AND_WIDE_LAUNCH_IDENTITY",
+  "source_commit": "89a70b2342a85c6146682c8dc935eba8647dbd2d",
+  "canonical_repair": "d3911f38217c71006fcec266f5ab77f281547c1e",
+  "host": "ot-epyc2",
+  "remote": "/srv/opentallas-scratch2/scratch/codex/hbm-integrated-ds20-89a70b234",
+  "counts": {
+    "X": 8,
+    "adjacent": 7,
+    "LSUread": 102,
+    "LSUwrite": 102,
+    "ACK": 204,
+    "exactbytes": 3072
+  },
+  "launch_checked": {
+    "token17": "0x1ffff",
+    "position20": "0xabcd0"
+  },
+  "sim_time_ns": 342,
+  "fulltoken_gate": false,
+  "historical_STEP0_cause_proven": false,
+  "physical_qualified": false,
+  "source_unchanged": true,
+  "run_sha256": "75ebe90d16d101462571432a9ee4ed179cf0dac92cceb14a8fecdd91e0c8e594"
+}

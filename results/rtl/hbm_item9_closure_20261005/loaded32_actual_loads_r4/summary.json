@@ -1,0 +1,69 @@
+{
+  "mapped_sha256": "fc0035eee0e4a078ffd141beb244c44d7d8a278466876aec9f64f7a313b41c24",
+  "corners": {
+    "SS": {
+      "response_input_pin_count_min": 1,
+      "response_input_pin_count_max": 1,
+      "response_library_load_fF_min": 0.5065,
+      "response_library_load_fF_max": 0.5065,
+      "response_total_library_load_fF": 2074.624,
+      "actual_shared_branch_input_pins_min": 10,
+      "actual_shared_branch_input_pins_max": 10,
+      "actual_shared_branch_library_load_fF_min": 9.248990000000001,
+      "actual_shared_branch_library_load_fF_max": 9.248990000000001,
+      "actual_response_buffer_tree_nodes_min": 5,
+      "actual_response_buffer_tree_nodes_max": 5,
+      "actual_response_leaf_pin_load_fF_min": 27.472819,
+      "actual_response_leaf_pin_load_fF_max": 27.472819,
+      "actual_response_leaf_pin_count_min": 33,
+      "actual_response_leaf_pin_count_max": 33,
+      "clk_sm_total_connected_input_pin_load_fF": 130927.78611142914,
+      "clk_sm_connected_input_pins": 293768,
+      "response_per_bit_remote": "response_SS.json"
+    },
+    "FF": {
+      "response_input_pin_count_min": 1,
+      "response_input_pin_count_max": 1,
+      "response_library_load_fF_min": 0.577042,
+      "response_library_load_fF_max": 0.577042,
+      "response_total_library_load_fF": 2363.564032,
+      "actual_shared_branch_input_pins_min": 10,
+      "actual_shared_branch_input_pins_max": 10,
+      "actual_shared_branch_library_load_fF_min": 10.789799999999998,
+      "actual_shared_branch_library_load_fF_max": 10.789799999999998,
+      "actual_response_buffer_tree_nodes_min": 5,
+      "actual_response_buffer_tree_nodes_max": 5,
+      "actual_response_leaf_pin_load_fF_min": 32.178743,
+      "actual_response_leaf_pin_load_fF_max": 32.178743,
+      "actual_response_leaf_pin_count_min": 33,
+      "actual_response_leaf_pin_count_max": 33,
+      "clk_sm_total_connected_input_pin_load_fF": 152932.37413363368,
+      "clk_sm_connected_input_pins": 293768,
+      "response_per_bit_remote": "response_FF.json"
+    }
+  },
+  "units": "fF",
+  "actual_library_pin_loads": true,
+  "wire_RC_included": false,
+  "propagated_clocks": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "artifacts": {
+    "library_input_caps_ff.json": {
+      "bytes": 32591,
+      "sha256": "39255cf31ea50b384a9f5c867021e2a924053e6c38d11f3c46cd8a67479c896e"
+    },
+    "mapped.json": {
+      "bytes": 994772108,
+      "sha256": "d0f79f1aca319e2c0aea91d0febb0fb8183f725856b257f381c1c4ed7d5e5aa7"
+    },
+    "extract.py": {
+      "bytes": 910,
+      "sha256": "29d693d2f79e0f3d4e0684f0255937b1a5bd0f1be8b9779ad2ea595eddcea37f"
+    },
+    "pins.ys": {
+      "bytes": 250,
+      "sha256": "46f5ec3c6fe985d86ca8d2fe7c58d9bea2570c6cbbd53fa7be6fffacd12e0538"
+    }
+  }
+}

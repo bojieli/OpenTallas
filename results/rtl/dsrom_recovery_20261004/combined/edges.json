@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.dsrom-combined.edges.v1",
+ "generated_utc": "2026-10-06T02:10:23Z",
+ "cases": "/srv/opentallas-scratch2/scratch/claude/dsrom-combined/cases/su_cases.pkl",
+ "cases_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+ "snapshots_sha256": "c53723dcafd755fa3dc0cde401adee3bafb2e6bf1c7c60059cf00313dbc9b4be",
+ "rows": [
+  {
+   "edge": "residual_in: attn.hc_pre_norm == attn.hc_mix",
+   "words": 20480,
+   "producer_words": 20480,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "residual_in: attn.hc_post == attn.hc_pre_norm",
+   "words": 20480,
+   "producer_words": 20480,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "su_hcpost(attn) h -> su_norm(ffn.hc_pre_norm) residual",
+   "words": 20480,
+   "producer_words": 20480,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "su_hcpost(attn) h -> ffn.hc_mix residual",
+   "words": 20480,
+   "producer_words": 20480,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "su_hcpost(attn) h -> su_hcpost(ffn) residual",
+   "words": 20480,
+   "producer_words": 20480,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "attn.hc_mix post -> su_hcpost(attn) post",
+   "words": 4,
+   "producer_words": 4,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "attn.hc_mix exp(comb-max) -> golden Sinkhorn -> su_hcpost(attn) comb",
+   "words": 16,
+   "producer_words": 16,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "ffn.hc_mix post -> su_hcpost(ffn) post",
+   "words": 4,
+   "producer_words": 4,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "ffn.hc_mix exp(comb-max) -> golden Sinkhorn -> su_hcpost(ffn) comb",
+   "words": 16,
+   "producer_words": 16,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "attn.hc_mix pre -> su_norm(ffn.hc_pre_norm) pre (golden mix order: next block)",
+   "words": 4,
+   "producer_words": 4,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "su_routeract sqrt(softplus) (die 0, 96 rows) -> ffn.route input rows 0..95",
+   "words": 96,
+   "producer_words": 96,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  },
+  {
+   "edge": "ffn.route weights -> su_swiglu route_w",
+   "words": 6,
+   "producer_words": 6,
+   "equal": true,
+   "mismatched": 0,
+   "first_mismatch": null
+  }
+ ],
+ "negative_control": {
+  "edge": "su_hcpost(attn) h -> su_norm(ffn.hc_pre_norm) residual",
+  "flipped_word": 10240,
+  "caught": true
+ },
+ "all_equal": true
+}

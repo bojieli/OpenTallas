@@ -1,0 +1,94 @@
+{
+  "core_outline_um": [
+    43.2,
+    43.2
+  ],
+  "extra_cell_area_um2": 0,
+  "additional_RTL_latency_cycles": 0,
+  "memory_ports_added": 0,
+  "rails": {
+    "layers": [
+      "M1",
+      "M2"
+    ],
+    "width_um": 0.018,
+    "pitch_um": 0.54,
+    "followpins": true
+  },
+  "local_bridges": [
+    {
+      "layer": "M3",
+      "width_um": 0.09,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "total_PG_metal_fraction": 0.041666666666666664
+    },
+    {
+      "layer": "M4",
+      "width_um": 0.12,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "total_PG_metal_fraction": 0.05555555555555555
+    },
+    {
+      "layer": "M7",
+      "width_um": 0.16,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "total_PG_metal_fraction": 0.07407407407407407
+    }
+  ],
+  "feed_connections": [
+    [
+      "M1",
+      "M2"
+    ],
+    [
+      "M2",
+      "M3"
+    ],
+    [
+      "M3",
+      "M4"
+    ],
+    [
+      "M4",
+      "M7"
+    ],
+    [
+      "M7",
+      "M8"
+    ],
+    [
+      "M8",
+      "M9"
+    ]
+  ],
+  "intermediate_via_landings": [
+    "M5",
+    "M6"
+  ],
+  "M6_stripes_added": 0,
+  "outer_grid": {
+    "layers": [
+      "M8",
+      "M9"
+    ],
+    "width_um": 0.48,
+    "pitch_um": 2.7669,
+    "total_PG_metal_fraction": 0.34695869023094433,
+    "unchanged": true
+  },
+  "raw_M6_core_tracks": 675,
+  "actual_PDNon_retained_tapcell_projected_M6_tracks": 83,
+  "clock_other_tracks": 64,
+  "signal_via_tracks": 34,
+  "residual_M6_core_tracks": 494,
+  "PG_to_signal_clearance_um": 0.072,
+  "required_signal_tracks": 236,
+  "west_signal_entrance_PG_intersections": 0,
+  "PDN_only_shape_connected": true,
+  "loaded_IR_qualified": false,
+  "placement_CTS_route_qualified": false,
+  "clock_protection_policy_changed": false
+}

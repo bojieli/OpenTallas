@@ -1,0 +1,273 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx16f_ASAP7_75t_R
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 673 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 2 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 673.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 18.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 39.
+[INFO CTS-0024]  Normalized sink region: [(13.8153, 14.8374), (40.1646, 45.5895)].
+[INFO CTS-0025]     Width:  26.3493.
+[INFO CTS-0026]     Height: 30.7521.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 20
+    Sub-region size: 26.3493 X 15.3760
+[INFO CTS-0034]     Segment length (rounded): 8.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 10
+    Sub-region size: 13.1746 X 15.3760
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (200.682 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 39.
+[INFO CTS-0018]     Created 44 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 44 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 9:1, 10:3, 11:1, 13:3, 14:4, 15:1, 16:5, 17:4, 18:6, 19:8, 20:4, 21:2, 22:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 709
+[INFO CTS-0100]  Leaf buffers 39
+[INFO CTS-0101]  Average sink wire length 73.11 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 36
+[INFO CTS-0500] Runtime: 1.81s
+estimate_parasitics -placement
+OT_CP_POST_INSERTION_MEMBERSHIP clock=80 repair=0 shared=0
+OT_FAST_FINITE_AREA region=cp_body actual=830.957939999989 cap=1117.87776
+OT_FAST_FINITE_AREA region=cp_association actual=3.19302 cap=11.19744
+detailed_placement
+[INFO DPL-0006] Core area: 2258.15 um^2
+[INFO DPL-0007] Movable instances area: 834.15 um^2
+[INFO DPL-0008] Fixed instances area within core: 12.86 um^2
+[INFO DPL-0009] Utilization: 37.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 6499 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.03s
+Placement Analysis
+---------------------------------
+total displacement        971.6 u
+average displacement        0.1 u
+max displacement            2.2 u
+original HPWL           18749.3 u
+legalized HPWL          19145.9 u
+delta HPWL                    2 %
+
+estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 9 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 9 out of 9 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -168.989 |    -9532.8 |    -1437.6 |      9 | done
+      10* |       0 |       9 |        0 |      0 |     0 |    +0.0% | -133.868 |    -8318.0 |    -1161.1 |      9 | lease_v
+      20* |       0 |      14 |        2 |      3 |     0 |    +0.1% | -128.666 |    -8295.3 |    -1105.9 |      9 | done
+      30* |       0 |      22 |        2 |      4 |     1 |    +0.1% | -121.076 |    -8036.6 |    -1057.2 |      9 | owned
+      40* |       0 |      27 |        4 |      4 |     4 |    +0.1% | -111.774 |    -6170.7 |     -978.3 |      9 | release_v
+      50* |       0 |      29 |        4 |      4 |    12 |    +0.1% | -110.481 |    -6137.8 |     -967.0 |      9 | lease_v
+      60* |       0 |      30 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6109.2 |     -951.3 |      9 | release_v
+      60* |       0 |      30 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6109.2 |     -951.3 |      9 | release_v
+      61* |       0 |      30 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6109.2 |     -951.3 |      9 | release_v
+      64* |       0 |      30 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6109.2 |     -951.3 |      9 | release_v
+      70* |       0 |      33 |        4 |      4 |    23 |    +0.1% | -108.635 |    -6115.4 |     -936.8 |      9 | release_v
+      70* |       0 |      32 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6106.2 |     -939.7 |      9 | release_v
+      74* |       0 |      33 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6106.2 |     -934.7 |      9 | release_v
+      78* |       0 |      34 |        4 |      4 |    21 |    +0.1% | -108.120 |    -6106.2 |     -929.5 |      9 | release_v
+      80* |       0 |      35 |        4 |      4 |    21 |    +0.2% | -108.120 |    -6103.3 |     -926.9 |      9 | release_v
+      86* |       0 |      37 |        4 |      4 |    21 |    +0.2% | -108.120 |    -6103.3 |     -921.9 |      9 | release_v
+      90* |       0 |      39 |        4 |      4 |    22 |    +0.2% | -108.120 |    -6103.3 |     -916.6 |      9 | release_v
+      91* |       0 |      39 |        4 |      4 |    23 |    +0.2% | -107.950 |    -6100.4 |     -916.0 |      9 | release_v
+      97* |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+      97* |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+      98+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+      99+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     100+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     100+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     101+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     102+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     103+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     104+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     105+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+     106+ |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+    final |       0 |      42 |        4 |      4 |    23 |    +0.2% | -107.950 |    -5480.9 |     -902.7 |      9 | release_v
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0040] Inserted 4 buffers.
+[INFO RSZ-0051] Resized 42 instances: 42 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 23 instances.
+[INFO RSZ-0049] Cloned 4 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 1.98s
+[INFO RSZ-0046] Found 558 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -112.273 | -11342.508 | u_su_cp.on.registered_header.decoder.data_q[4]$_DFFE_PN0P_/RESETN
+       10 |       0 |       7 |            0 |    +0.1% | -63.861 | -6121.380 | u_su_cp.on.registered_status.status_q[4]$_DFF_PN0_/D
+       20 |       0 |      35 |            0 |    +0.3% | -52.096 | -5302.001 | u_su_cp.on.frame_lo[24]$_DFFE_PN0P_/D
+       30 |       0 |      57 |            0 |    +0.5% | -49.998 | -5009.930 | u_su_cp.on.pc_code[18]$_DFFE_PN0P_/D
+       40 |       0 |      86 |            0 |    +0.7% | -49.200 | -4605.228 | u_su_cp.on.frame_lo[4]$_DFFE_PN0P_/D
+       50 |       0 |     106 |            0 |    +0.9% | -48.341 | -4307.526 | u_su_cp.on.frame_lo[6]$_DFFE_PN0P_/D
+       60 |       0 |     128 |            0 |    +1.1% | -47.339 | -4007.301 | u_su_cp.on.pc_code[19]$_DFFE_PN0P_/D
+       70 |       0 |     141 |            0 |    +1.2% | -46.336 | -3816.926 | u_su_cp.on.frame_lo[33]$_DFFE_PN0P_/D
+       80 |       0 |     167 |            0 |    +1.4% | -45.448 | -3452.301 | u_su_cp.on.frame_lo[16]$_DFFE_PN0P_/D
+       90 |       0 |     198 |            0 |    +1.7% | -44.306 | -3039.343 | u_su_cp.on.frame_lo[48]$_DFFE_PN0P_/D
+      100 |       0 |     227 |            0 |    +2.0% | -43.200 | -2515.921 | u_su_cp.on.frame_lo[52]$_DFFE_PN0P_/D
+      110 |       0 |     249 |            0 |    +2.1% | -42.457 | -2190.960 | u_su_cp.on.frame_lo[67]$_DFFE_PN0P_/D
+      120 |       0 |     276 |            0 |    +2.4% | -40.233 | -1786.307 | u_su_cp.on.frame_hi[2]$_DFFE_PN0P_/D
+      130 |       0 |     303 |            0 |    +2.6% | -39.446 | -1493.224 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      140 |       0 |     306 |            0 |    +2.6% | -39.446 | -1454.473 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      150 |       0 |     315 |            0 |    +2.7% | -39.446 | -1372.694 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      160 |       0 |     320 |            0 |    +2.7% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      170 |       0 |     320 |            0 |    +2.7% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      180 |       0 |     320 |            0 |    +2.7% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      190 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      200 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      210 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      220 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      230 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      240 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      250 |       0 |     322 |            0 |    +2.8% | -39.446 | -1330.693 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      260 |       0 |     326 |            0 |    +2.8% | -39.446 | -1319.856 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      270 |       0 |     328 |            0 |    +2.8% | -39.446 | -1319.856 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      280 |       0 |     328 |            0 |    +2.8% | -39.446 | -1319.856 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      290 |       0 |     328 |            0 |    +2.8% | -39.446 | -1319.856 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      300 |       0 |     328 |            0 |    +2.8% | -39.446 | -1319.856 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      310 |       0 |     330 |            0 |    +2.8% | -39.446 | -1310.352 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      320 |       0 |     330 |            0 |    +2.8% | -39.446 | -1310.352 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      330 |       0 |     332 |            0 |    +2.9% | -39.446 | -1306.170 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      340 |       0 |     334 |            0 |    +2.9% | -39.446 | -1299.809 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      350 |       0 |     338 |            0 |    +2.9% | -39.446 | -1265.516 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      360 |       0 |     338 |            0 |    +2.9% | -39.446 | -1265.516 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      370 |       0 |     338 |            0 |    +2.9% | -39.446 | -1265.516 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      380 |       0 |     338 |            0 |    +2.9% | -39.446 | -1265.516 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      390 |       0 |     341 |            0 |    +2.9% | -39.446 | -1256.972 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      400 |       0 |     342 |            0 |    +2.9% | -39.446 | -1256.972 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      410 |       0 |     342 |            0 |    +2.9% | -39.446 | -1256.972 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      420 |       0 |     344 |            0 |    +3.0% | -39.446 | -1233.084 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      430 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      440 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      450 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      460 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      470 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      480 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      490 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      500 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      510 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      520 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      530 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      540 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      550 |       0 |     347 |            0 |    +3.0% | -39.446 | -1209.291 | u_su_cp.on.pc_code[12]$_DFFE_PN0P_/D
+      560 |       0 |     351 |            0 |    +3.0% | -38.156 | -1169.845 | u_su_cp.on.pc_code[13]$_DFFE_PN0P_/D
+      570 |       0 |     390 |            0 |    +3.4% | -32.604 | -816.575 | u_su_cp.on.pc_code[9]$_DFFE_PN0P_/D
+      580 |       0 |     428 |            0 |    +3.7% | -28.081 | -503.704 | u_su_cp.on.pc_code[22]$_DFFE_PN0P_/D
+      590 |       0 |     454 |            0 |    +3.9% | -11.943 | -313.517 | u_su_cp.on.frame_lo[23]$_DFFE_PN0P_/D
+      600 |       0 |     474 |            0 |    +4.1% |  -9.898 | -202.484 | u_su_cp.on.frame_lo[12]$_DFFE_PN0P_/D
+      610 |       0 |     494 |            0 |    +4.2% |  -8.360 | -108.421 | u_su_cp.on.pc_code[21]$_DFFE_PN0P_/D
+      620 |       0 |     514 |            0 |    +4.4% |  -4.420 | -43.372 | u_su_cp.on.frame_lo[29]$_DFFE_PN0P_/D
+      630 |       0 |     534 |            0 |    +4.6% |  -2.122 |  -9.035 | u_su_cp.on.pc_code[13]$_DFFE_PN0P_/D
+      640 |       0 |     543 |            0 |    +4.7% |  -2.122 |  -2.122 | u_su_cp.on.pc_code[13]$_DFFE_PN0P_/D
+      650 |       0 |     552 |            0 |    +4.7% |  -2.122 |  -2.122 | u_su_cp.on.pc_code[13]$_DFFE_PN0P_/D
+      660 |       0 |     562 |            0 |    +4.8% |   8.272 |   0.000 | u_su_cp.on.pc_code[33]$_DFFE_PN0P_/D
+    final |       0 |     566 |            0 |    +4.9% |  10.078 |   0.000 | u_su_cp.on.frame_hi[6]$_DFFE_PN0P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 566 hold buffers.
+[INFO RSZ-0506] Runtime: 4.34s
+Took 7 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=574 shared=0
+OT_FAST_FINITE_AREA region=cp_body actual=873.5023799999914 cap=1117.87776
+OT_FAST_FINITE_AREA region=cp_association actual=3.45546 cap=11.19744
+detailed_placement
+[INFO DPL-0006] Core area: 2258.15 um^2
+[INFO DPL-0007] Movable instances area: 876.96 um^2
+[INFO DPL-0008] Fixed instances area within core: 12.86 um^2
+[INFO DPL-0009] Utilization: 39.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 7073 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        297 |        81 |       216
+        1 |         86 |        12 |        74
+        2 |         55 |         9 |        46
+        3 |         12 |         2 |        10
+        4 |         12 |         2 |        10
+        5 |          8 |         2 |         6
+        6 |         13 |         3 |        10
+        7 |         13 |         3 |        10
+        8 |         22 |         4 |        18
+        9 |         10 |         2 |         8
+       10 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 10.
+[INFO DPL-0500] Runtime: 0.08s
+Placement Analysis
+---------------------------------
+total displacement        311.7 u
+average displacement        0.0 u
+max displacement            2.2 u
+original HPWL           20783.9 u
+legalized HPWL          20950.8 u
+delta HPWL                    1 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 890 um^2 39% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/4_cts.sdc
+Elapsed time: 0:12.39[h:]min:sec. CPU time: user 22.60 sys 4.83 (221%). Peak memory: 369820KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           12            361 c5c834a047dd357a3cff

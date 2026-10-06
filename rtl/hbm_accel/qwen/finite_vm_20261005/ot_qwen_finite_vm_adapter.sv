@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+`default_nettype none
 // Source-matched opt-in VM realization. Physical clock keeps running while the
 // entire native source/controller clock is held. No native edge is admitted
 // across unpaid masked writes. Read snapshot precedes every write of a frame.
@@ -6,6 +7,7 @@
 module ot_qwen_finite_vm_adapter #(
     parameter integer ENABLE=0,
     parameter integer HEAD_CACHE=0,
+    parameter integer W1_FRAME=0,
     parameter integer NR=2256,
     parameter integer NW=1633,
     parameter integer VX0=192,
@@ -33,7 +35,8 @@ module ot_qwen_finite_vm_adapter #(
     localparam integer TAGW=227;
     localparam integer RW=$clog2(NR+1), WW=$clog2(NW+1);
     localparam [3:0] CAP=0,RSLOT=1,RISSUE=2,RWAIT=3,WSLOT=4,
-        WISSUE=5,WWAIT=6,ADMIT=7,HFISSUE=8,HFWAIT=9;
+        WISSUE=5,WWAIT=6,ADMIT=7,HFISSUE=8,HFWAIT=9,
+        LGSTART=10,LGWAIT=11,LRPUT=12,LWSELECT=13,LWPACK=14,LCLEAR=15;
     reg [3:0] state;
     // Immutable owned request/response seats retain the existing W6 code.
     // en/address/data57 fit one encoded64-bit seat; UE holds admission closed.
@@ -59,6 +62,16 @@ module ot_qwen_finite_vm_adapter #(
     reg [RW-1:0] ri;
     reg [WW-1:0] wi;
     reg me_frame;
+    reg leaf_active;
+    reg [5:0] leaf_window,leaf_group;
+    wire leaf_ready,leaf_valid,leaf_fallback,leaf_fault;
+    wire leaf_window_ready,leaf_put_v,leaf_select_ready,leaf_pack_v;
+    wire [NR-1:0] leaf_put_mask;
+    wire [NR*32-1:0] leaf_put_data;
+    wire [14:0] leaf_pack_word;
+    wire [15:0] leaf_pack_mask;
+    wire [511:0] leaf_pack_data;
+
     reg [2047:0] last_window;
     reg [14:0] last_base;
     reg window_valid;
@@ -101,12 +114,15 @@ module ot_qwen_finite_vm_adapter #(
     // Reset is not a rollback of SRAM visibility. Startup reset is allowed;
     // a live owned frame must drain before the caller may reset this unit.
     always @(negedge rst_n)
-        if(ENABLE && (state!=CAP || pack_valid) && native_epoch!=0)
+        if(ENABLE && (state!=CAP || pack_valid))
             $fatal(1,"finite VM reset with owned frame/visibility debt");
 `endif
     // source_me_wanted includes the actual weight-window readiness. A stalled
     // weight path cannot be admitted merely because the activation cache hit.
-    assign native_tick = ENABLE ? (rst_n && !fault && !frame_ue && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
+    // A response must be consumed on a held physical edge, including a stray
+    // pulse on the empty-frame fast path. Gate on bounded event reduction;
+    // the owned FSM checks identity without a227-bit comparator on the gate.
+    assign native_tick = ENABLE ? (rst_n && !fault && !leaf_fault && !frame_ue && !service_event && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
     assign native_me_lease = ENABLE ? (native_tick && ((state==ADMIT)?me_frame:source_me_wanted)) : source_me_wanted;
     assign drained = ENABLE ? (state==CAP && !pack_valid && !fault) : 1'b1;
 
@@ -119,6 +135,7 @@ module ot_qwen_finite_vm_adapter #(
     wire [59:0] wr_ACK_addr;
     wire [63:0] wr_ACK_mask;
     wire wr_fault,rw_fault;
+    wire service_event=rd_valid || (|wr_ACK) || rd_fault || wr_fault || rw_fault;
     wire rd_issue = ENABLE && rst_n && !fault && !frame_ue && (state==RISSUE || (state==HFISSUE && hf_sent<64));
     wire [14:0] rd_base = state==HFISSUE ? (15'd512+{hf_sent[5:0],2'b00}) : requested_base;
     wire wr_issue = ENABLE && rst_n && !fault && !frame_ue && state==WISSUE;
@@ -138,6 +155,32 @@ module ot_qwen_finite_vm_adapter #(
             bank_owner[wb*TAGW+:TAGW]=pending_owner;
         end
     end
+    generate if(W1_FRAME)begin:g_w1
+        // The leaf sees decoded immutable LIVE seats, never a static opcode
+        // or assumed k=0 phase. Nonmatching address/en patterns fall back.
+        if(NR!=2256 || NW!=865 || VX0!=208 || NVX!=2048)begin:g_bad_geometry
+            initial $fatal(1,"W1 leaf requires actual ROM aperture");
+        end
+        ot_qwen_rom_w1_frame_leaf #(.ENABLE(ENABLE)) u_leaf(
+            .clk(clk),.rst_n(rst_n),.frame_start(state==LGSTART && leaf_ready),
+            .frame_clear(state==LCLEAR),.frame_ue(frame_ue),
+            .frame_ready(leaf_ready),.w1_valid(leaf_valid),.fallback_v(leaf_fallback),.fault(leaf_fault),
+            .ren(ren),.raddr(raddr),.wen(wen),.waddr(waddr),.wdata(wdata),
+            .window_v(state==RWAIT && leaf_active && rd_valid &&
+                rd_owner==pending_owner && rd_rot==0 && leaf_window_ready),
+            .window_base(requested_base),.window_words(rd_words),.window_ready(leaf_window_ready),
+            .read_put_v(leaf_put_v),.read_put_ready(state==LRPUT && !frame_ue && !fault),
+            .read_put_mask(leaf_put_mask),.read_put_data(leaf_put_data),
+            .select_v(state==LWSELECT && leaf_select_ready),.select_group({1'b0,leaf_group}),
+            .select_ready(leaf_select_ready),.pack_v(leaf_pack_v),
+            .pack_ready(state==LWPACK && !frame_ue && !fault),
+            .pack_word(leaf_pack_word),.pack_mask(leaf_pack_mask),.pack_data(leaf_pack_data));
+    end else begin:g_no_w1
+        assign leaf_ready=0;assign leaf_valid=0;assign leaf_fallback=0;assign leaf_fault=0;
+        assign leaf_window_ready=0;assign leaf_put_v=0;assign leaf_put_mask=0;assign leaf_put_data=0;
+        assign leaf_select_ready=0;assign leaf_pack_v=0;assign leaf_pack_word=0;
+        assign leaf_pack_mask=0;assign leaf_pack_data=0;
+    end endgenerate
     generate if(ENABLE) begin:g_bound
         ot_qwen_checked_vm_bank #(.TAG_W(TAGW)) u_bank(
             .clk(clk),.rst_n(rst_n),.rd_v(rd_issue),.rd_base_word(rd_base),
@@ -174,7 +217,7 @@ module ot_qwen_finite_vm_adapter #(
     endtask
     always @(posedge clk) begin
         if(!rst_n)begin
-            state<=CAP;ri<=0;wi<=0;fault<=0;native_epoch<=0;transaction<=1;
+            state<=CAP;ri<=0;wi<=0;fault<=0;leaf_active<=0;leaf_window<=0;leaf_group<=0;native_epoch<=0;transaction<=1;
             physical_reads<=0;physical_writes<=0;physical_ACKs<=0;held_edges<=0;
             head_fill_reads<=0;head_hit_edges<=0;
             pack_valid<=0;pack_mask<=0;pack_data<=0;pack_word<=0;
@@ -185,7 +228,9 @@ module ot_qwen_finite_vm_adapter #(
             xpipe<=0;xpipe_en<=0;read_q<=0;
             cache_valid<=0;head_visible<=0;head_coverage<=0;head_producer_owned<=0;hf_sent<=0;hf_received<=0;hf_owner_base<=0;
         end else if(ENABLE && !fault)begin
-            if(rd_fault||wr_fault||rw_fault||frame_ue)fault<=1;
+            if(rd_fault||wr_fault||rw_fault||frame_ue||leaf_fault)fault<=1;
+            if(rd_valid && state!=RWAIT && state!=HFISSUE)fault<=1;
+            if((|wr_ACK) && state!=WWAIT)fault<=1;
             if(!native_tick)held_edges<=held_edges+1;
             if(native_tick && head_source_producer_go)begin
                 head_producer_owned<=1;head_coverage<=0;head_visible<=0;cache_valid<=0;
@@ -215,7 +260,17 @@ module ot_qwen_finite_vm_adapter #(
                     if(HEAD_CACHE && head_visible && !cache_valid && (|read_en[VX0+:NVX]))begin
                         if(transaction>64'hffffffffffffffbf)fault<=1;
                         else begin hf_sent<=0;hf_received<=0;hf_owner_base<=transaction;transaction<=transaction+64;state<=HFISSUE;end
-                    end else state<=RSLOT;
+                    end else state<=W1_FRAME ? LGSTART : RSLOT;
+                end
+            end
+            LGSTART:if(leaf_ready)state<=LGWAIT;
+            LGWAIT:begin
+                if(leaf_fallback)begin leaf_active<=0;state<=RSLOT;end
+                else if(leaf_valid)begin
+                    if(transaction==64'hffffffffffffffff)fault<=1;
+                    else begin leaf_active<=1;leaf_window<=0;leaf_group<=0;
+                        requested_base<=256;pending_owner<=owner(transaction,0);
+                        transaction<=transaction+1;state<=RISSUE;end
                 end
             end
             RSLOT:begin
@@ -241,17 +296,39 @@ module ot_qwen_finite_vm_adapter #(
                     else begin
                         // Rotate physical-bank output back to logical word order.
                         for(integer k=0;k<4;k=k+1)last_window[k*512+:512]<=rd_words[((requested_base[1:0]+k)%4)*512+:512];
-                        last_base<=requested_base;window_valid<=1;state<=RSLOT;
+                        last_base<=requested_base;window_valid<=1;
+                        if(leaf_active)begin
+                            if(!leaf_window_ready)fault<=1;else state<=LRPUT;
+                        end else state<=RSLOT;
                     end
                 end
             end
+            LRPUT:if(leaf_put_v)begin
+                for(integer k=0;k<NR;k=k+1)if(leaf_put_mask[k])
+                    read_seat[k]<=encode64({7'b0,ren[k],raddr[k*24+:24],leaf_put_data[k*32+:32]});
+                if(leaf_window==63)state<=LWSELECT;
+                else if(transaction==64'hffffffffffffffff)fault<=1;
+                else begin leaf_window<=leaf_window+1;requested_base<=requested_base+4;
+                    pending_owner<=owner(transaction,0);transaction<=transaction+1;state<=RISSUE;end
+            end
+            LWSELECT:if(leaf_select_ready)state<=LWPACK;
+            LWPACK:if(leaf_pack_v)begin
+                if(transaction==64'hffffffffffffffff || leaf_pack_word>=((VM_WORDS+15)/16))fault<=1;
+                else begin
+                    pack_word<=leaf_pack_word;pack_mask<=leaf_pack_mask;pack_data<=leaf_pack_data;
+                    pack_valid<=1;pending_owner<=owner(transaction,1);transaction<=transaction+1;state<=WISSUE;
+                end
+            end
+            // Both leaf pipelines have been consumed and the last checked
+            // physical ACK paid before clear. Native/XVM release is later.
+            LCLEAR:begin leaf_active<=0;state<=ADMIT;end
             WSLOT:begin
                 if(wi==NW || (wr_enabled && pack_valid && wa[23:4]!=pack_word))begin
                     if(pack_valid)begin
                         if(transaction==64'hffffffffffffffff)fault<=1;
                         else begin pending_owner<=owner(transaction,1);transaction<=transaction+1;state<=WISSUE;end
                     end
-                    else state<=ADMIT;
+                    else state<=W1_FRAME ? LCLEAR : ADMIT;
                 end else if(!wr_enabled)wi<=wi+1;
                 else if(wa>=VM_WORDS)fault<=1;
                 else begin
@@ -271,7 +348,11 @@ module ot_qwen_finite_vm_adapter #(
                     if(wr_ACK!=(4'b1<<wb)||wr_ACK_owner[wb*TAGW+:TAGW]!=pending_owner ||
                         wr_ACK_addr[wb*15+:15]!=pack_word ||wr_ACK_mask[wb*16+:16]!=pack_mask)fault<=1;
                     else begin
-                        physical_ACKs<=physical_ACKs+1;pack_valid<=0;pack_mask<=0;state<=WSLOT;
+                        physical_ACKs<=physical_ACKs+1;pack_valid<=0;pack_mask<=0;
+                        if(leaf_active)begin
+                            if(leaf_group==47)state<=LCLEAR;
+                            else begin leaf_group<=leaf_group+1;state<=LWSELECT;end
+                        end else state<=WSLOT;
                         if(HEAD_CACHE && pack_word>=512 && pack_word<768)begin
                             cache_valid<=0;
                             if(head_producer_owned && !head_visible)begin
@@ -305,3 +386,5 @@ module ot_qwen_finite_vm_adapter #(
         end
     end
 endmodule
+
+`default_nettype wire

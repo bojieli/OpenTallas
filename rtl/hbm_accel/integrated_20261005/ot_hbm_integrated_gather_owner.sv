@@ -13,6 +13,10 @@ module ot_hbm_integrated_gather_owner #(
  input wire [31:0] job, input wire [3:0] gen,
  input wire [16:0] token, input wire [19:0] pos,
  output wire retained,arena_visible,sink_visible,fault,
+ output wire [31:0] bound_arena_base,bound_arena_limit,
+ // Existing checked shared-borrow grant and existing protected retained frame.
+ // Export only: no second owner seat, grant source, or completion authority.
+ output wire formatter_lease_valid,output wire [72:0] formatter_lease_frame,
  // All addresses here are BYTE addresses. kind: 0 source read, 1 score
  // store, 2 ID store, 3 formatter read, 4 final ID sink store.
  input wire req_v, output wire req_r, input wire [2:0] req_kind,
@@ -38,6 +42,12 @@ module ot_hbm_integrated_gather_owner #(
  input wire result_published,source_reverse_done,
  // Existing native, SU and W2 requesters respectively; no new provider port.
  input wire native_clients_drained,cdc_drained,provider_fault,
+ input wire [3:0] observe_req,observe_rsp,observe_req_we,observe_rsp_we,
+ input wire [63:0] observe_req_tag,observe_rsp_tag,
+ input wire [3:0] return_offer,output wire [3:0] response_authorized,
+ input wire [31:0] native_job,input wire [3:0] native_gen,
+ input wire [16:0] native_token,input wire [19:0] native_pos,
+ output wire native_credit_empty,shared_idle,
  input wire [1:0] peer_lease_v,peer_quiet,peer_release_v,
  input wire [63:0] peer_lease_job,peer_release_job,
  input wire [7:0] peer_lease_gen,peer_release_gen,
@@ -60,6 +70,8 @@ module ot_hbm_integrated_gather_owner #(
  wire [63:0] all_rsp_tag;wire [1023:0] all_rsp_data;
  assign borrow_granted=grants[0];assign borrow_release_ack=releases[0];
  assign borrow_fault=arb_fault|provider_fault;
+ assign formatter_lease_valid=ENABLE&&borrow_granted&&retained&&!fault;
+ assign formatter_lease_frame={held_pos,held_token,held_gen,held_job};
  assign fault=bridge_fault|arb_fault|(ENABLE!=0&&provider_fault);
  assign peer_lease_granted=grants[2:1];assign peer_release_r=releases[2:1];
  assign p_req_rdy={all_req_rdy[3:2],all_req_rdy[0]};assign b_req_rdy=all_req_rdy[1];
@@ -87,5 +99,5 @@ module ot_hbm_integrated_gather_owner #(
   .req_tag({p_req_tag[47:16],b_req_tag,p_req_tag[15:0]}),
   .rsp_v(all_rsp_v),.rsp_rdy({p_rsp_rdy[2:1],b_rsp_rdy,p_rsp_rdy[0]}),
   .rsp_we(all_rsp_we),.rsp_tag(all_rsp_tag),.rsp_data(all_rsp_data),
-  .idle(),.fault(arb_fault),.*);
+  .idle(shared_idle),.fault(arb_fault),.*);
 endmodule

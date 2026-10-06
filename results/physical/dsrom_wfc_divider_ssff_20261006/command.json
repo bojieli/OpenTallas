@@ -1,0 +1,20 @@
+[
+  "docker",
+  "run",
+  "--name",
+  "descartes-wfc-divider-sta-r4",
+  "--cidfile",
+  "/srv/opentallas-scratch2/codex/descartes-wfc-divider-76158/sta-r4/container.id",
+  "-e",
+  "OMP_NUM_THREADS=2",
+  "-v",
+  "/srv/opentallas-scratch2/codex/descartes-wfc-divider-76158/source-ca8f084fc:/src:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/descartes-wfc-divider-76158/sta-r4:/out",
+  "-v",
+  "/srv/opentallas-scratch2/codex/descartes-wfc-divider-76158/internal-r1:/mapped:ro",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "bash",
+  "-lc",
+  "source /OpenROAD-flow-scripts/env.sh; python3 /src/physical/dsrom_wfc_divider_ssff_20261006/run.py --source /src --output /out --inside --reuse-mapped /mapped"
+]

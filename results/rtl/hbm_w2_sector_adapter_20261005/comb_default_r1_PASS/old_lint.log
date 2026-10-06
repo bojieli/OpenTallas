@@ -1,0 +1,6 @@
+%Error-LATCH: old_adapter.sv:54:3: Latch inferred for signal 'ot_hbm_integrated_w2_sector_adapter.g_on.expected_local' (not all control paths of combinational always assign a value)
+                                 : ... Suggest use of always_latch for intentional latches
+   54 |   always @* begin
+      |   ^~~~~~
+              ... For error description see https://verilator.org/warn/LATCH?v=5.032
+%Error: Exiting due to 1 error(s)

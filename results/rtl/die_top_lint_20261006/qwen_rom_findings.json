@@ -1,0 +1,238 @@
+{
+ "schema": "opentallas.die_top_lint.findings.v1",
+ "prefix": "CLAUDE DIE-LINT",
+ "date": "2026-10-06",
+ "die": "qwen_rom",
+ "scope": "Qwen3-8B ROM die r17b (823.78 mm2): tools/qwen_rom_fulldie_b3r2.py selected() with the r17b recipe on claude/qwen-die-rebuild-20261005 @ f76c3603b (not on main; linted through the --qwen-ref overlay on main 4f7fe01f339b); the generated netlist is byte-identical to the r17b_real case die.v (sha256 86a9e54b...). First lint of the Qwen die.",
+ "method": "tools/die_top_lint.py lint --die qwen_rom --qwen-ref f76c3603b: real blocks bound by their ports (ot_hbm3e_phy black box, qfd_cdc -> ot_qwen_stream4_cdc_pc RTL, bundles in the generator order of _cdc_arg); every other master a port-identical registered stub; DIRECTION MODEL dirs_qwen (endpoint 0 upstream, links 528/528, corridor / tap / head chain with one ready bit back)",
+ "census": {
+  "instances": 3357,
+  "buses": 6472,
+  "net_bits": 2921446,
+  "masters": 38,
+  "real_instances": 132,
+  "placeholder_instances": 3225
+ },
+ "generator_tag": {
+  "file": "tools/qwen_rom_fulldie_b3r2.py",
+  "sha256": "41a11726f2bdcf5a27d454e809861be526416251c650120934ad3ac9e4b7bf74",
+  "tree_head": "4f7fe01f339b63dfddea78ebbfe1b0d7c118e9ec",
+  "file_commit": "1e1eff28076b14f89dbf9dc59b63964233677cd7"
+ },
+ "qwen_source": {
+  "ref": "f76c3603b",
+  "commit": "f76c3603b5391b152b71318d9dd28a82e6615a7f",
+  "merge_base": "8045d16e020f3b1847cb045e43936f2d4a131c47",
+  "overlay": "['tools/qwen_rom_die_path_sta.py', 'tools/qwen_rom_die_region_cts.py', 'tools/qwen_rom_fulldie.py', 'tools/qwen_rom_fulldie_b3r2.py']",
+  "root": "/home/ubuntu/wt-dielint-abs/build/dielint_qsrc_f76c3603b539"
+ },
+ "result": {
+  "elaborates": true,
+  "connectivity": "no undriven, multi-driven, floating, unloaded or width-truncated net bit; no duplicate port binding; no replicated copy missing pins (unlike S81 S1-S4 and HBM H1-H4)",
+  "verilator": {
+   "shell_top": {
+    "rc": 0,
+    "time_s": 2.88,
+    "peak_GB": 0.2,
+    "counts": {
+     "Warning-PINMISSING": {
+      "top": 956
+     },
+     "Warning-UNDRIVEN": {
+      "rtl:ot_hbm3e_phy_bb.v": 5
+     },
+     "Warning-UNUSEDPARAM": {
+      "rtl:qwen_rom_lint_top_real_shells.sv": 1
+     },
+     "Warning-UNUSEDSIGNAL": {
+      "rtl:ot_hbm3e_phy_bb.v": 9,
+      "stubs": 2
+     }
+    }
+   },
+   "full_rtl": {
+    "rc": 0,
+    "time_s": 3.65,
+    "peak_GB": 0.24,
+    "counts": {
+     "Warning-PINMISSING": {
+      "rtl:qwen_rom_lint_top.sv": 956
+     },
+     "Warning-UNDRIVEN": {
+      "rtl:ot_hbm3e_phy_bb.v": 5
+     },
+     "Warning-UNUSEDSIGNAL": {
+      "rtl:ot_hbm3e_phy_bb.v": 9,
+      "rtl:ot_qwen_stream4_cdc_pc.sv": 5,
+      "stubs": 2
+     }
+    }
+   },
+   "pinmissing_breakdown": {
+    "CDC clk/hclk/c_arst_n/h_arst_n": 512,
+    "corridor end stations a/b": 128,
+    "tiles hosting no tree node n_a/n_b/n_y (1 per 4x4 block)": 288,
+    "row engine c5 (5-PC engines)": 16,
+    "strip-end row engines fn/fs": 8,
+    "head-chain ends chead e/w": 2,
+    "one-sided lower link corners c_split e/w": 2
+   },
+   "hosts": {
+    "shell": "ot-epyc2 (admit 8 GB)",
+    "full_rtl": "ot-epyc1tb (admit 24 GB)"
+   }
+  }
+ },
+ "findings": [
+  {
+   "id": "Q1",
+   "block": "qfd_cdc (128, bound to ot_qwen_stream4_cdc_pc RTL ports)",
+   "port_or_net": "clk, hclk, c_arst_n, h_arst_n",
+   "cls": "clock / reset: real RTL clock and reset pins with no die net",
+   "evidence": "unbound_real_pins: 4 pins x 128 instances; Verilator PINMISSING 512",
+   "fix": "per-PC CDC frame: core clock from the strip region clock, HCLK from the HBM clock (976.6 MHz) of its stack, both resets; add ck/hck/rst pins to the qfd_cdc abstract",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "blocker"
+  },
+  {
+   "id": "Q2",
+   "block": "qfd_ctrl (4, HBM 976.6 MHz), ot_hbm3e_phy (4)",
+   "port_or_net": "no HBM clock net; PHY clk / rst_n",
+   "cls": "clock: the HBM domain has no clock source or net",
+   "evidence": "clocking: qfd_ctrl NO_CLOCK; the PHY black box clk / rst_n are bits 0/1 of the 9,209-b dfi bundle driven by the placeholder qfd_ctrl; no clock_trunk reaches the strip controllers",
+   "fix": "HBM PLL / clock entry per stack (or from the PHY) and a clock pin on qfd_ctrl; bind PHY clk / rst_n to it, not to the dfi bundle",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "blocker"
+  },
+  {
+   "id": "Q3",
+   "block": "stream-domain blocks",
+   "port_or_net": "clock_trunk nets",
+   "cls": "clock: most blocks have no clock net",
+   "evidence": "clock_trunk reaches only hub_el, io_collective (PLL), 4 x qfd_lfifo and sp_su64_sfu. NO_CLOCK: 24 qfd_reng, 32 link stations (qfd_lst_*), 16 band port slabs, sp_tree_top, sp_constants_sequencer (holds the CLOSED ot_qwen_rom_core), io_embedding_rom, io_ucie, io_serdes",
+   "fix": "one stream clock net per decision-C clock region (120 regions in m[clock_regions]) from the hub root, a serial-domain net for the 0.9 GHz blocks, and a ck pin on every master that holds flops",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "blocker"
+  },
+  {
+   "id": "Q4",
+   "block": "tile field (1,536 qfd_tile, 1,536 qfd_cst, 64 qfd_chead) and sp_vector_memory",
+   "port_or_net": "clock / reset bits inside the corridor (388 b), tap (325 b) and head-chain words",
+   "cls": "clock: field clock has no source",
+   "evidence": "the field clock and reset ride as data bits of the corridor / tap words, whose root is sp_vector_memory (serial 0.9 GHz domain, itself on no clock net); the region-CTS vehicle (qwen_rom_die_region_cts.py) builds a CTS tree per 4 x 4-tile block that the die netlist does not contain",
+   "fix": "feed each decision-C tile-block region clock from the hub clock root (a clock_trunk per region) and take the clock / reset bits out of the corridor word, or state that the corridor clock bits ARE the region tree and give them a stream-domain source",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q5",
+   "block": "serial <-> stream <-> HBM <-> link boundaries",
+   "port_or_net": "17 buses, 11,510 b",
+   "cls": "meso / ratio FIFO gap: clock-domain crossings with no FIFO",
+   "evidence": "clock_domain_crossings: crom_a/crom_q (SU64 0.9 <-> sequencer 1.2, 5,696 b), seq_ib/seq_su/seq_coll/seq_sud (942 b), x3 / attn_ret (1,024 b), head_31/32 (VM 0.9 -> column heads 1.2, 776 b), emb (512 b), kvn_* (strip 1.2 -> controller 976.6 MHz, 4 x 128 b, NOT covered by the STREAM4 CDC), ucie_tx / serdes_tx (0.9 -> link domains). Only the 128 hbm_cdc buses end in a CDC element. Decision C names 3 ratio FIFOs (X1/X2/X3, ot_ratio_cdc_fifo 3:4); none is instantiated",
+   "fix": "instantiate ot_ratio_cdc_fifo (3:4) at each serial/stream crossing, an async FIFO on kvn_*, and the link-side CDC in the collective; or move crom / sequencer into one domain",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q6",
+   "block": "qfd_lst_* (32 link stations) and FIFO slots",
+   "port_or_net": "forwarded stages / tile-tap / block-word FIFOs",
+   "cls": "meso FIFO / forwarded-link instantiation gap",
+   "evidence": "32 link stations = 416 ot_fwd_link_stage W512 slices (152,064 stage bits), 0 instantiated, no forwarded-clock pin; decision-C FIFO slots exist only as AREA: 1,536 tile-tap (2,036 b), 96 block-word (2,048 b), 4 strip-return (2,176 b), 0 FIFO instances or FIFO ports in the netlist",
+   "fix": "as S12 on the S81 die: stage/FIFO instances (or hardened station / slab masters that contain them) with wclk/rclk pins",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q7",
+   "block": "qfd_reng (24) + qfd_hub (1)",
+   "port_or_net": "near-HBM attention",
+   "cls": "placed block that was DROPPED physically",
+   "evidence": "results/uarch/qwen_nearhbm_attn_rtl_20261003/pnr/retry_20261004/verdict.json: verdict DROP (hub post-CTS SS -88.95 ps; row engines never closed); r17b still places 24 row-engine frames (328.3 x 1,998 um) and the combine hub; the hub is also the die clock root",
+   "fix": "owner decision: replace by the closed alternative (KV path without near-HBM attention) or re-open the block; the die area / wire pricing of r17b assumes it",
+   "owner": "OWNER + CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q8",
+   "block": "qfd_cst, qfd_chead, qfd_lst_h, qfd_reng",
+   "port_or_net": "a/b, e/w, fn/fs",
+   "cls": "role-dependent master: one master whose ports change direction by instance",
+   "evidence": "placeholder_port_direction_conflicts: qfd_cst.a/b, qfd_chead.e/w, qfd_lst_h.e/w, qfd_reng.fn/fs each have 2 direction signatures (north vs south corridor half, W vs E channel, strip order); mirroring fixes geometry only",
+   "fix": "two hardened masters per family (N/S or W/E flow) or direction-free pin naming (in/out ports assigned per flow, the abstract mirrored)",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q9",
+   "block": "qfd_io_embedding_rom",
+   "port_or_net": "o (512 b out)",
+   "cls": "block shape: source with no input",
+   "evidence": "block_shape: 0 input bits; no token-id / address net reaches the embedding ROM (ot_qwen_rt_embed_rom has an address input)",
+   "fix": "address / valid bus from the sequencer or VM to the embedding ROM",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q10",
+   "block": "qfd_sp_tree_top",
+   "port_or_net": "bw0..bw5 in (3,072 b), md out (2 b)",
+   "cls": "block shape: data sink (ME results never leave the tree top)",
+   "evidence": "block_shape: 3,072 b in, only the 2-b ME-done status out; no result word from the tree top to SU64 / VM / hub",
+   "fix": "result word (>= 512 b) from sp_tree_top to the vector memory / SU64 X path",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "major"
+  },
+  {
+   "id": "Q11",
+   "block": "qfd_io_ucie, qfd_io_serdes",
+   "port_or_net": "ucie_tx / serdes_tx (1,024 b each)",
+   "cls": "link interface: no hard IP view; direction not stated",
+   "evidence": "reservation blocks with no RTL and no LEF (the S81 die uses the ot_pdie_ucie / ot_pdie_serdes pin macros); the one bus per link is named *_tx: this lint assumes 512 tx + 512 rx (as the S81 links); TX-only would leave the die with no collective receive path",
+   "fix": "bind the link reservations to ot_pdie_ucie / ot_pdie_serdes (tx[511:0] / rx[511:0]) and name both directions",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "minor"
+  },
+  {
+   "id": "Q12",
+   "block": "tile column 32 (E array) / tile row 23",
+   "port_or_net": "spine slabs, IO band",
+   "cls": "compute abutting the hub / spine without a channel",
+   "evidence": "abut: 29 E-array column-32 tile / slab pairs touch the spine slabs (port fragments _f*, constants_sequencer) at 0.024 um, and 57 row-23 tile / IO-block pairs touch the IO band (collective, embedding ROM, UCIe, SerDes) at 0.024 um; the W side has the 52.7 um corridor / station column (s_31_* abut the spine at 0.024 um). r17b passes GRT i5 / pin access, so this is a margin, not a failure; b3r14 --edge-gap exists but is off",
+   "fix": "keep, or give the E array the same one-corridor gap as the W array (b3r14 edge gap) when M8/M9 congestion at the spine faces returns in r17c/d",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "minor"
+  },
+  {
+   "id": "Q13",
+   "block": "qfd_hub / qfd_sp_su64_sfu / qfd_sp_vector_memory",
+   "port_or_net": "x3, attn_ret, em",
+   "cls": "pin faces away from the peer",
+   "evidence": "hub x3 / ar on the W face, SU64 q and VM ar on the E face (peers 412 um behind each face); VM em on the S face while the embedding ROM is 16.7 mm north in the IO band; hub lsw on W face, its waypoint 477 um behind",
+   "fix": "move VM em to the N face; hub x3 / ar and SU64 q / VM ar on facing (N/S) faces",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "minor"
+  },
+  {
+   "id": "Q14",
+   "block": "qfd_hub, qfd_port_tiles_2_f2 / 3_f2 / 3_f3",
+   "port_or_net": "hub ls; bw8..bw15",
+   "cls": "abstract ports with no die net",
+   "evidence": "abstract_ports_without_net: hub ls (superseded by lsw/lse after the b3 south split); 23 block-word ports on three fragment slabs",
+   "fix": "drop the dead ports from the abstracts (they become dead pins in a hardened view)",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "info"
+  },
+  {
+   "id": "Q15",
+   "block": "qfd_reng.c0..c5",
+   "port_or_net": "32 PCs over 6 row engines per stack",
+   "cls": "uneven replica binding",
+   "evidence": "2 engines per stack take 6 PCs, 4 take 5 (c5 unbound on 16 of 24; Verilator PINMISSING); the per-engine HBM read demand differs by 20 %",
+   "fix": "only matters if the row engine is kept (Q7)",
+   "owner": "CLAUDE QWEN-PHYS (tools/qwen_rom_fulldie*.py, r17 die)",
+   "severity": "info"
+  }
+ ]
+}

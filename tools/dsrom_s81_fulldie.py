@@ -33,6 +33,7 @@ import bisect
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 from collections import defaultdict
@@ -44,7 +45,9 @@ import qwen_rom_fulldie as Q  # noqa: E402  (Master, lef_text, pin_rects, esc, r
 
 OUT = 'results/rtl/dsrom_s81_fulldie_20261004'
 DECISION = 'results/uarch/dsrom_c_recheck_20261004/model.json'
-Q_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz'
+# OT_S81_Q_LEF (default unset = the R_cap0 abstract below): an alternative routed q abstract for the die-level
+# pin-access check of a successor element (e.g. the QX q-element), same port names, height <= the 157.68 frame.
+Q_LEF = os.environ.get('OT_S81_Q_LEF', 'results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz')
 CFG_LEF = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef'
 FIXED = 'results/uarch/dsrom_c_w4_20261003/inputs/fixed.json'
 CONTRACT = 'results/uarch/dsrom_c_w4_20261003/s82_inputs/physical_contract.json'
@@ -392,22 +395,35 @@ def build(variant=None):
         hub[name] = it
         return it
     centre = ['gather', 'vm', 'capture', 'collective']
+    wfc_rect = None
+    centre_area = dict(HUB_MM2)
+    if DIE_KIND == 'layer':
+        centre.insert(2, 'wfc')
+        centre_area.update(vm=2.659905216, wfc=0.45610905599999996)
     # r4: a SPINE_GAP routing channel between every pair of stacked W-column slabs (b3 GRT: the abutted slab faces
     # carried the 1,024-bit VM <-> SU and the gather/capture buses with no escape room, M8 1.29 / M9 1.15 use/cap)
-    ch = sum(up(HUB_MM2[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
+    ch = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch / 2, GY)
     su_lo = HUB_MM2['su'] * (yc - y_f) / (yc - y_f + y_top - (yc + ch))
     s = slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
-        it = slab(n, HUB_MM2[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
-        yy += up(HUB_MM2[n] * 1e6 / cw, GY) + SPINE_GAP
+        if n == 'wfc':
+            # Real source-sized soft reservation; NEVER a symbolic functional macro.
+            wh = up(centre_area[n] * 1e6 / cw, GY)
+            wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
+        else:
+            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
+        yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
     slab('su_n', HUB_MM2['su'] - su_lo, x_sp, yy, cw, dom='serial_0p9')
     hc_h = up(HUB_MM2['hc'] * 1e6 / cw, GY)
     slab('hc', HUB_MM2['hc'], x_spe, dn(mid - hc_h / 2, GY), cw, dom='serial_0p9')
     for it in insts:
         if it.region == 'spine':
-            assert it.y >= y_f - 1e-6 and it.y + it.h <= y_top + 1e-6, (it.name, it.y, it.y + it.h, y_f, y_top)
+            if DIE_KIND == 'layer':
+                assert it.y >= band + SPINE_GAP and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h, band)
+            else:
+                assert it.y >= y_f - 1e-6 and it.y + it.h <= y_top + 1e-6
     # ---- bands: PHY (edge), controller, scan service; selector (S) and collector (N) between the stacks
     rp = real_lef(PHY_LEF)
     phys, ctrls, svcs = {}, {}, {}
@@ -464,7 +480,25 @@ def build(variant=None):
     model = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=cregions, fifo_of=fifo_of,
                  hub=hub, phys=phys, ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of,
                  x_vch=x_vch, mid=mid, variant=variant)
+    spine_y0 = min(it.y for it in insts if it.region == 'spine')
+    spine_y1 = max(it.y + it.h for it in insts if it.region == 'spine')
+    for reg in regions:
+        if reg['name'] in ('spine', 'vch'):
+            reg['rect'][1] = min(reg['rect'][1], spine_y0)
+            reg['rect'][3] = max(reg['rect'][3], spine_y1)
     model['buses'] = buses(model)            # also adds waypoints / hub FIFO slots
+    # Finite source-sized WFC reservation in the SAME selected S81 layer die.
+    # This is a soft child slot, never a stand-in functional macro abstract.
+    if DIE_KIND == 'layer':
+        reservation_path = ROOT / 'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json'
+        reservation = json.loads(reservation_path.read_text())
+        x0, y0, x1, y1 = wfc_rect
+        reservation['selected_WFC_gross_um'] = wfc_rect
+        reservation['selected_WFC_core_um'] = [x0+17.28, y0+17.28, x1-17.28, y1-17.28]
+        assert all(not (it.x < x1 and it.x + it.w > x0 and
+                        it.y < y1 and it.y + it.h > y0) for it in insts), 'WFC overlaps an existing claim'
+        model['child_reservations'] = {'wfc': reservation}
+        regions.append(dict(name='wfc_selected_child', kind='soft_child_reservation', rect=[x0, y0, x1, y1]))
     return model
 
 
@@ -1964,6 +1998,7 @@ def main(argv=None):
         rec = plan_record(m)
         rec['legality_python'] = legality(m)
         rec['windows_um'] = windows(m)
+        rec['child_reservations'] = m.get('child_reservations', {})
         (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
         svg(m, out / 'floorplan.svg')
         write_def_floorplan(m, out / 'floorplan.def')

@@ -1,0 +1,15 @@
+{
+  "verdict": "FAIL_PRESERVED",
+  "cause": "Periodic source ready phase0 missed stalls in four-beat run; final coverage assertion failed.",
+  "actual_counters": {
+    "accepted": 4,
+    "received": 4,
+    "checked": 61,
+    "refused": 1,
+    "invalid": 3,
+    "stalled": 0
+  },
+  "native_build_exit": 0,
+  "launcher_exit_receipt": "empty due original launcher printf quoting error; actual runtime exit1 in record/log retained",
+  "successor": "native_quarter_r2_PASS uses SAME native objects, sourcebench phase1 only; no native or flat64 rebuild"
+}

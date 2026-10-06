@@ -1,0 +1,115 @@
+{
+  "verdict": "PASS",
+  "source_commit": "a86d3cfd32b62f28e86abcbcd8044b57baf20db1",
+  "remote_host": "ot-epyc2",
+  "remote_job": "/srv/opentallas-scratch2/jobs/hubble-native-connected-w2-r1",
+  "terminal_finished_utc": "2026-10-05T19:38:53Z",
+  "collected_utc": "2026-10-05T20:06:01Z",
+  "exit_codes": {
+    "compile": 0,
+    "runtime": 0,
+    "terminal": 0
+  },
+  "scope": "One original L20 SM4 paired two-row descriptor (operation IDs 0/1), retained actual native GU/SwiGLU operand boundary; live W2 arithmetic -> 337/273 sector adapter -> NS2 provider -> held 1088-bit native return -> protected four-seat publication/readback -> shared release -> END/held CPL.",
+  "counts": {
+    "native_requests": 64,
+    "native_returns": 64,
+    "sector_reads": 212,
+    "actual_numeric_rows": 4,
+    "protected_writes": 4,
+    "verified_readbacks": 4,
+    "shared_releases": 1,
+    "cycles": 12845
+  },
+  "actual_numeric_rows": [
+    {
+      "cycle": 11170,
+      "op": 0,
+      "row": 0,
+      "bits_256": "000000000000000000000000000000000000000000000000000000003dd91184",
+      "fp32_bits": "3dd91184",
+      "matches_retained_comparator": true
+    },
+    {
+      "cycle": 11556,
+      "op": 0,
+      "row": 1,
+      "bits_256": "000000000000000000000000000000000000000000000000000000003caccd6c",
+      "fp32_bits": "3caccd6c",
+      "matches_retained_comparator": true
+    },
+    {
+      "cycle": 12358,
+      "op": 1,
+      "row": 0,
+      "bits_256": "000000000000000000000000000000000000000000000000000000003d9c2d26",
+      "fp32_bits": "3d9c2d26",
+      "matches_retained_comparator": true
+    },
+    {
+      "cycle": 12752,
+      "op": 1,
+      "row": 1,
+      "bits_256": "00000000000000000000000000000000000000000000000000000000bbd91c50",
+      "fp32_bits": "bbd91c50",
+      "matches_retained_comparator": true
+    }
+  ],
+  "readbacks": [
+    {
+      "cycle": 11465,
+      "slot": 0
+    },
+    {
+      "cycle": 12196,
+      "slot": 1
+    },
+    {
+      "cycle": 12655,
+      "slot": 2
+    },
+    {
+      "cycle": 12826,
+      "slot": 3
+    }
+  ],
+  "shared_release_cycle": 12828,
+  "completed_testbench_assertions": [
+    "64 unique native addresses and matched return tags/payloads",
+    "four numeric results equal retained comparators",
+    "source/owner/frame/seat checks and finite producer/consumer drain",
+    "four actual result writes with matched full readbacks",
+    "release after publication and provider/adapter drain",
+    "END/CPL status and complete identity",
+    "CPL stable for 12 cycles while not accepted",
+    "CPL consumed exactly once and doorbell ready restored",
+    "nonzero request and delivery backpressure exercised"
+  ],
+  "retained_engine_hash_match_count": 35,
+  "original_NS2_image_prefix": "/srv/opentallas-scratch2/jobs/hubble-native-connected-w2-r1/original/mem",
+  "installation": "Original mem_d0_p0/p1 images loaded before sparse installed W2 overlays; allocator seats from case/private_alloc.svh.",
+  "claim_limits": {
+    "live_GU_SwiGLU_chain": false,
+    "full_token": false,
+    "silicon_frequency_or_SS_FF_closure": false,
+    "performance_gain_or_adoption": false,
+    "production_RTL_changed": false
+  },
+  "runtime_wall_seconds": 140.813,
+  "evidence_sha256": {
+    "build/command.json": "c34f7ed2e812b7c8768e4db40b9e9f7e8121b3882c19464885ca27c4cade79b9",
+    "build/compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build/compile.log": "2a4a287cb1eccb848ad9f2c7f7f520607dbb5db81fb3ad53d816a831aaed867c",
+    "build/runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build/runtime.log": "45fb34e72aceda6787bc58eb63b97885d2a9fbcf9b91cbf04466a9de214524ea",
+    "build/source_pin.json": "f2b6c90ed004684be384a3347b2e1c44e75b53e65edd182217e78b10af1c5848",
+    "case/expected_rows.hex": "7a711b0848cb66f80b474f464318f7443f05136e5ced7e143d65802320a9f5b2",
+    "case/private_alloc.svh": "0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82",
+    "case/seq.hex": "1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9",
+    "hubble-native-w2-donor-sources.json": "6495713c68e0b0d2a1f937743a5410578a2a09c6e2a6c82d973602d1d72afa86",
+    "run.sh": "641e392465cc0686571cfcc908ab47f370ebf82da3a0a75c15cb2bbc7ae76eee",
+    "source.commit": "644d70d042784d6cec3bbbc3550a6279f652ad83c8f6b2aa0d5b5f13e55a5796",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "toolchain.log": "31ee8ba532711b2dcaef0bb2e203e20284e39ea422325f094074f3c2a9da7996"
+  }
+}

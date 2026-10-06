@@ -1,0 +1,56 @@
+{
+  "name": "ot_attn_hgrp_m6h1",
+  "orfs_dir": "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/macro/ot_attn_hgrp_m6h1:/out",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/leaf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/macro/ot_attn_hgrp_m6h1:/out",
+        "-v",
+        "/srv/opentallas/scratch-overflow/codex/hbm-suattn-takeover-20261005/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "files": {
+    "ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+    "ot_attn_hgrp_m6h1_ff.lib": "484934cafcc02bde4d1041c98ddd828784f45c5ee463048d3a523fb589e90df6",
+    "ot_attn_hgrp_m6h1_ss.lib": "710a7b69676e9e088d6f87661def6a4584732dfd199da0774caa1c128d52c2b5"
+  },
+  "ok": true
+}

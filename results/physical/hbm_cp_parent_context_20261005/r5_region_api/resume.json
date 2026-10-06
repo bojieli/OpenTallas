@@ -1,0 +1,45 @@
+{
+  "schema": "hbm.cp.parent-context.mapped-resume.v1",
+  "original_root": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1",
+  "original_physical_sha256": "7c8b0e600e62421e926cab9e1c0457db65e0dc61c357cbb736fccba5f40dd042",
+  "mapped_netlist_sha256": "04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e",
+  "corrected_sdc_sha256": "b807df47c8ea1945c2f83cf3b3728ac73a00cd2c12aaef799478962b9d84312b",
+  "hardware_sources": [
+    {
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "size_bytes": 1493
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+      "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "size_bytes": 2175
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+      "sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "size_bytes": 22540
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+      "sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+      "size_bytes": 1067
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+      "sha256": "01799fa336832464849944731114b27ecd22483a6514f36d8929fa8af5de6ef6",
+      "size_bytes": 2283
+    }
+  ],
+  "same_context": true,
+  "changed_network_API_only": true,
+  "source_phase_ps": 0,
+  "analytical_network_latency_ps": [
+    90,
+    100
+  ],
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "original_failure_preserved": true,
+  "synthesis_reused": true
+}

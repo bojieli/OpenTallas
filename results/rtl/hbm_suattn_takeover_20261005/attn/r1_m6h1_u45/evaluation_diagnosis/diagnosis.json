@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.hbm.attention.corner_diagnosis.v1",
+  "route": "r1_m6h1_u45",
+  "same_route_verified": true,
+  "odb_sha256": "d741a4162d2295d2ec2b3da2b0dffe3e16a80e0b1a3777fa5fea7d871d45a15b",
+  "spef_sha256": "5942210f9f7087192500910e62eadaa3d6cf45b9bb5f403297fbc7043d3284b2",
+  "sdc_sha256": "6eb93c1474114c27e92b190110607d9a9825fa682b9ff9c21e04d7fe6e621b4e",
+  "image_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "hold_repair_margin_ps": 10,
+  "margin_is_not_signoff_waiver": true,
+  "original_hold_scene": "BC using FF libraries; original report failure is not TT",
+  "experiment": "One source-pinned process defines WC and BC, reads unchanged ODB SDC SPEF without -corner (matching original final_outputs.tcl), reports BC hold -0.67ps; reads exactly same SPEF with -corner BC, reports BC hold +1.49ps and same worst path as original single-FF replay. No corner, library, constraint, route, or hardware change between reports.",
+  "actual_difference": "Extracted parasitic annotation to BC: original no-corner SPEF read populates default WC scene, leaving BC without that extracted annotation; single-FF replay annotates its only scene. Explicit BC annotation reproduces +1.49ps.",
+  "original_failure_retained": true,
+  "qualified_contextual_clock": false,
+  "macro_ss_view": "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib",
+  "macro_ss_clk_q_ov_rise_ps_at_2_88ff": 607.59265,
+  "macro_ss_clk_q_ov_rise_ps_at_5_76ff": 617.25293,
+  "macro_ss_note": "Existing exported u30 macro, not u45. Real SS clock-to-output tables include internal CTS; actual parent loads and clock phase remain required. Input interfaces false-pathed at leaf; no full-tile timing assertion.",
+  "files_sha256": {
+    "original_ff_replay.log": "2d11a72c1184e7193d46dec948a7a03f658e92bdd2ab6891ef30e5658333aa25",
+    "final_outputs.tcl": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c",
+    "diagnose.log": "9bd50fe6d8b8631b930b1ff95ab7e76d87102da1f9becf91809243ebee1387ad",
+    "diagnose.tcl": "188f9b1958336c298ceb4c189336666b37691549b9c4413fbe86bdb6569b9803",
+    "read_liberty.tcl": "2d484b96c98e9931a1e800aee5e6b765a5d3d961c7baf40d6079cad5a57c6d2b",
+    "original_ss_replay.log": "5b3cb3ec5073c1530566c9f81865a2a02952527b20c1ba7e4011ffefebf92548"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "source_commit": "76158a8b3",
+  "source_path": "physical/dsrom_wfc_clock_source_20261006/ot_dsrom_wfc_common_clock_source.sv",
+  "source_SHA256": "efde53cd44c63fcef68439283da31ff4a1d5bc795fdf52a81f3c50b3ffd06eb7",
+  "model": "tools/uarch_model.py::dsrom_wfc_common_clock_source_model",
+  "ENABLE": 1,
+  "state_FF_bits": 16,
+  "root_period_ps": 277.77777777777777,
+  "half_cycle_ps": 138.88888888888889,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "scope": "single unchanged source mapped internal feasibility, ideal master reference; no IO/PLL/parent-clock qualification",
+  "actual_loads": "mapped internal pin caps from exact SS/FF libs; output parent loads absent, no fake caps/drive",
+  "route_admission": false,
+  "route_dependencies": [
+    "internal SS/FF feasible",
+    "source-bound WFC receiver clock-pin/cap inventory",
+    "finite owner clockunit slot/CTS/PG reserve",
+    "actual PLL/IP root transition/duty/jitter boundary"
+  ],
+  "new_functional_replays": 0
+}

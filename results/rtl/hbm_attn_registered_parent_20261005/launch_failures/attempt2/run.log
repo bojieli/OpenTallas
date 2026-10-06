@@ -1,0 +1,1 @@
+--memory-macro is a place-and-route option: the macro views live inside the ORFS image, not on the host, so the host synth and sta stages cannot see them; run --stages pnr

@@ -1,0 +1,21 @@
+{
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-local-grt-r3/tileW",
+  "recipe_commit": "56df6d233",
+  "main_recipe": "9e4dfcd2c",
+  "engine_source": "fc68a22c6",
+  "adopt": false,
+  "all_mandatory_baseline_and_parent_context_closure_required": true,
+  "evidence_sha256": {
+    "config.mk": "bad6b9825ae4e772d510c740aef32a620fe2294e51294cc4877b2e809f1d1f07",
+    "flow.log": "2a29a8e4398880b2e36cc98ce5aba5b0508461491ed9f25f2b0f7963b670d1bd",
+    "source_checkpoint_pin.json": "552bf922b8b42f91c863a8fc89e6c34ef62c1fb077ad11b8ade7c939dffbbe96",
+    "capacity_guard.json": "682411154ccc331628e8a36330e98b48ec2a4d4ce7d807e445adbac4a1385950",
+    "constraint.sdc": "01621be482bf4d2268ec976ba405fee0b64e595f023dcfd2164e728455286e23",
+    "status": "fb4c86401627d1aeddabeeda5744301d803e06776944d85b65b14390f4eaf485",
+    "config.original.mk": "71d8411480fea8688493d2f77b87adda68fe43fe7240a7c3ff181fe788c8e67f",
+    "command.json": "11dea95fd8d881d659c60f7590f12d85f84ed7d0b0c82462a8ecf49b12e07785",
+    "macro_bands.tcl": "c577a7d1f3b477688822ebacbb1b7d070def39a7ecd5e200d46e8d75e07ba386",
+    "terminal.json": "6d198555483bb4320bd604c452441aebe71b872f26fd4ab61ea0d9dd84b0d275",
+    "admission.json": "98e7f42bae7bcfd3b088e41eef3b4d2feee83b1e3bc538583a30541e36eb184e"
+  }
+}

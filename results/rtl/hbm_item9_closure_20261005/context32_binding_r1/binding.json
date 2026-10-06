@@ -1,0 +1,425 @@
+{
+  "shape": {
+    "NSM": 32,
+    "NL": 128
+  },
+  "elaborator": "Verilator5.050 json-only; no numerical baseline rerun",
+  "tree_sha256": "718310cb62a0621abca54e39205573dc858029cff00bd6edb4788d9598b8d53f",
+  "callers": [
+    {
+      "hierarchy": "g_on.g_sm_caller[0]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[1]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[2]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[3]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[4]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[5]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[6]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[7]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[8]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[9]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[10]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[11]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[12]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[13]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[14]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[15]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[16]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[17]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[18]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[19]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[20]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[21]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[22]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[23]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[24]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[25]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[26]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[27]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[28]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[29]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[30]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    },
+    {
+      "hierarchy": "g_on.g_sm_caller[31]",
+      "clock": "clk_sm",
+      "request_bits": 4096,
+      "response_bits": 4096,
+      "state_bits": 11,
+      "source_LOC": "k,38:55,38:57"
+    }
+  ],
+  "cells": {
+    "u_rst": {
+      "module": "ot_gpu_reset_ctrl",
+      "ports": {
+        "por_n": [
+          "por_n"
+        ],
+        "clk_mem": [
+          "clk_mem"
+        ],
+        "clk_link": [
+          "clk_link"
+        ],
+        "clk_sm": [
+          "clk_sm"
+        ],
+        "clk_host": [
+          "clk_host"
+        ],
+        "rst_mem_n": [
+          "rst_mem_n"
+        ],
+        "rst_link_n": [
+          "rst_link_n"
+        ],
+        "rst_sm_n": [
+          "rst_sm_n"
+        ],
+        "rst_host_n": [
+          "rst_host_n"
+        ]
+      }
+    },
+    "u_mux": {
+      "module": "ot_gpu_coll_mux_owner64",
+      "ports": {
+        "clk": [
+          "clk_sm"
+        ],
+        "rst_n": [
+          "rst_sm_n"
+        ],
+        "s_req_v": [
+          "req_v"
+        ],
+        "s_req_rdy": [
+          "req_rdy"
+        ],
+        "s_mode": [
+          "mode"
+        ],
+        "s_count": [
+          "count"
+        ],
+        "s_data": [
+          "data"
+        ],
+        "s_rsp_v": [
+          "rsp_v"
+        ],
+        "s_rsp_rdy": [
+          "rsp_rdy"
+        ],
+        "s_rsp_data": [
+          "rsp_data"
+        ],
+        "m_req_v": [
+          "mv"
+        ],
+        "m_req_rdy": [
+          "mready"
+        ],
+        "m_mode": [
+          "mm"
+        ],
+        "m_count": [
+          "mc"
+        ],
+        "m_data": [
+          "md"
+        ],
+        "m_rsp_v": [
+          "rv"
+        ],
+        "m_rsp_rdy": [
+          "rr"
+        ],
+        "m_rsp_data": [
+          "rd"
+        ]
+      }
+    },
+    "u_ep": {
+      "module": "ot_gpu_coll_endpoint_item9_txctrl",
+      "ports": {
+        "clk_sm": [
+          "clk_sm"
+        ],
+        "rst_sm_n": [
+          "rst_sm_n"
+        ],
+        "coll_req_v": [
+          "mv"
+        ],
+        "coll_req_rdy": [
+          "mready"
+        ],
+        "coll_mode": [
+          "mm"
+        ],
+        "coll_count": [
+          "mc"
+        ],
+        "coll_data": [
+          "md"
+        ],
+        "coll_rsp_v": [
+          "rv"
+        ],
+        "coll_rsp_rdy": [
+          "rr"
+        ],
+        "coll_rsp_data": [
+          "rd"
+        ],
+        "coll_fault": [
+          "fault"
+        ],
+        "clk_link": [
+          "clk_link"
+        ],
+        "rst_link_n": [
+          "rst_link_n"
+        ],
+        "lk_tx_v": [
+          "tx_v"
+        ],
+        "lk_tx_rec": [
+          "tx_rec"
+        ],
+        "lk_rx_v": [
+          ""
+        ],
+        "lk_rx_rec": [
+          ""
+        ]
+      }
+    }
+  },
+  "actual_request_register_bits": 131072,
+  "actual_response_register_bits": 131072,
+  "actual_response_receivers_per_bit": 32,
+  "source_clock_bindings_validated": true,
+  "source_reset": "unchanged ot_gpu_reset_ctrl ordered release; no reset exceptions",
+  "source_protection": "retained endpoint request/tag/count/offset/FIFO overflow; actual request/response handshake",
+  "physical_clock_insertion_measured": false,
+  "physical_receiver_capacitance_measured": false,
+  "contextual_SS_FF": false,
+  "adopted": false
+}

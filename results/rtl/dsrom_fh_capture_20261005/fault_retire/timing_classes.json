@@ -1,0 +1,280 @@
+{
+  "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+  "preCTS_clock_skew_measured": false,
+  "ideal_clock_delay_ps": 0,
+  "classes": {
+    "global_protection_veto_to_argmax": {
+      "SS_setup_ps": -2041.81,
+      "start": "bank56.poison_q",
+      "end": "argmax_consumer12.c25",
+      "cause": "64-bank reduction and distributed veto; 31 buffer/inverter arcs plus8 logic arcs, not clock skew"
+    },
+    "loaded_output_slew": {
+      "remaining": 30,
+      "max_slew_ps": 292.21,
+      "limit_ps": 250,
+      "families": [
+        "leaf key/row/data boundary",
+        "o_addr result-address boundary"
+      ],
+      "no_internal_21_class_closure_claim": true
+    },
+    "high_fanout_distribution": {
+      "C18_first_slew": 8975,
+      "C19_first_slew": 9151,
+      "C18_first_fanout": 2361,
+      "C19_first_fanout": 2361,
+      "C17_resized_fanout_violations": 0,
+      "cause": "Buffer repair can satisfy maxfanout while retaining a multicycle-length serial path"
+    },
+    "short_FP32_register_hold": {
+      "BC_hold_ps": 2.69,
+      "path": "fadd33.s2_code28 -> u_cc.g_r.r61",
+      "actual_propagated_clock_hold": null,
+      "shared_FP32_changed": false
+    },
+    "macro_clkQ_and_capture": {
+      "real_macros": 64,
+      "source_replaced_with_zero_clkQ": false,
+      "distinct_worst_path_measured": false,
+      "qualification_pending": true
+    },
+    "placement_legality": {
+      "first_error": "DPL0033",
+      "wrong_region_cells": 0,
+      "initial_edge_padding": [
+        13,
+        3
+      ],
+      "DPO_site_alignment_overlaps": [
+        15,
+        9
+      ],
+      "separate_from_timing": true
+    }
+  },
+  "paths": {
+    "global_place": {
+      "source": "results/rtl/dsrom_fh_capture_20261005/routes/C17_region_replace/global_place.rpt",
+      "sha256": "7316711487ac0c40d98c2d67888af832318b261ac5f21469d88037318eb89734",
+      "delay_ps": {
+        "clkQ": 89.19,
+        "wire": 756.26,
+        "buffer_inverter": 1434.09,
+        "logic": 659.49
+      },
+      "arc_counts": {
+        "clkQ": 1,
+        "wire": 34,
+        "buffer_inverter": 25,
+        "logic": 8
+      },
+      "sum_ps": 2939.03,
+      "rounding_note": "Printed arc sums differ from printed arrival by <=0.04ps"
+    },
+    "resized": {
+      "source": "results/rtl/dsrom_fh_capture_20261005/routes/C17_region_replace/resized.rpt",
+      "sha256": "7e18f24db18d76973e356605a1e2e0c0f8f9352558ee1ba27282912c149f95fe",
+      "delay_ps": {
+        "clkQ": 89.19,
+        "wire": 569.28,
+        "buffer_inverter": 1541.97,
+        "logic": 585.68
+      },
+      "arc_counts": {
+        "clkQ": 1,
+        "wire": 40,
+        "buffer_inverter": 31,
+        "logic": 8
+      },
+      "sum_ps": 2786.12,
+      "rounding_note": "Printed arc sums differ from printed arrival by <=0.04ps"
+    }
+  },
+  "correction": "One four-edge full-transaction fault retirement cut: local OR8 -> row-pair OR2 ->16 kept OR4 relay registers ->64 local veto copies, matching5510-bit data/mask/row/tag/index packet and4 valid slots.",
+  "parent_dependency": "The existing macro context has no commit/debt acknowledgement to the producer. A context-only delayed fault or leaf cut must not be represented as a qualified production core. Actual warm-index debt/reuse must wait for retirement.",
+  "historical_21_internal_slew": {
+    "source": "results/rtl/dsrom_fh_close_20261004/parallel_fanout_decision.json variants.C9u35",
+    "historical_source_not_current_C17": true,
+    "violators": [
+      {
+        "pin": "_285619_/A1",
+        "limit_ps": 250.0,
+        "slew_ps": 292.78,
+        "slack_ps": -42.78,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[282]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 292.65,
+        "slack_ps": -42.65,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[848]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 280.18,
+        "slack_ps": -30.18,
+        "output_port": false
+      },
+      {
+        "pin": "_283232_/A1",
+        "limit_ps": 250.0,
+        "slew_ps": 276.31,
+        "slack_ps": -26.31,
+        "output_port": false
+      },
+      {
+        "pin": "input29283/A",
+        "limit_ps": 250.0,
+        "slew_ps": 271.54,
+        "slack_ps": -21.54,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[855]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 270.49,
+        "slack_ps": -20.49,
+        "output_port": false
+      },
+      {
+        "pin": "_283201_/A1",
+        "limit_ps": 250.0,
+        "slew_ps": 263.68,
+        "slack_ps": -13.68,
+        "output_port": false
+      },
+      {
+        "pin": "_287048_/B2",
+        "limit_ps": 250.0,
+        "slew_ps": 263.61,
+        "slack_ps": -13.61,
+        "output_port": false
+      },
+      {
+        "pin": "place54967/A",
+        "limit_ps": 250.0,
+        "slew_ps": 263.52,
+        "slack_ps": -13.52,
+        "output_port": false
+      },
+      {
+        "pin": "_279006_/A1",
+        "limit_ps": 250.0,
+        "slew_ps": 258.03,
+        "slack_ps": -8.03,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[1849]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 257.78,
+        "slack_ps": -7.78,
+        "output_port": false
+      },
+      {
+        "pin": "_273552_/Y",
+        "limit_ps": 250.0,
+        "slew_ps": 255.96,
+        "slack_ps": -5.96,
+        "output_port": false
+      },
+      {
+        "pin": "_276649_/B",
+        "limit_ps": 250.0,
+        "slew_ps": 253.15,
+        "slack_ps": -3.15,
+        "output_port": false
+      },
+      {
+        "pin": "_276660_/B",
+        "limit_ps": 250.0,
+        "slew_ps": 253.06,
+        "slack_ps": -3.06,
+        "output_port": false
+      },
+      {
+        "pin": "_276657_/B",
+        "limit_ps": 250.0,
+        "slew_ps": 253.01,
+        "slack_ps": -3.01,
+        "output_port": false
+      },
+      {
+        "pin": "_285623_/A1",
+        "limit_ps": 250.0,
+        "slew_ps": 252.74,
+        "slack_ps": -2.74,
+        "output_port": false
+      },
+      {
+        "pin": "place54960/A",
+        "limit_ps": 250.0,
+        "slew_ps": 252.32,
+        "slack_ps": -2.32,
+        "output_port": false
+      },
+      {
+        "pin": "_287174_/B2",
+        "limit_ps": 250.0,
+        "slew_ps": 252.03,
+        "slack_ps": -2.03,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[281]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 251.66,
+        "slack_ps": -1.66,
+        "output_port": false
+      },
+      {
+        "pin": "place51697/A",
+        "limit_ps": 250.0,
+        "slew_ps": 251.08,
+        "slack_ps": -1.08,
+        "output_port": false
+      },
+      {
+        "pin": "u_fh.u_rh.genblk1.g_line.line[482]$_DFF_P_/D",
+        "limit_ps": 250.0,
+        "slew_ps": 250.12,
+        "slack_ps": -0.12,
+        "output_port": false
+      }
+    ],
+    "families": {
+      "result_hold_register_D": [
+        "u_fh.u_rh.genblk1.g_line.line[282]$_DFF_P_/D",
+        "u_fh.u_rh.genblk1.g_line.line[848]$_DFF_P_/D",
+        "u_fh.u_rh.genblk1.g_line.line[855]$_DFF_P_/D",
+        "u_fh.u_rh.genblk1.g_line.line[1849]$_DFF_P_/D",
+        "u_fh.u_rh.genblk1.g_line.line[281]$_DFF_P_/D",
+        "u_fh.u_rh.genblk1.g_line.line[482]$_DFF_P_/D"
+      ],
+      "route_input_or_buffer_pin": [
+        "input29283/A",
+        "place54967/A",
+        "place54960/A",
+        "place51697/A"
+      ],
+      "anonymous_mapped_pin": [
+        "_285619_/A1",
+        "_283232_/A1",
+        "_283201_/A1",
+        "_287048_/B2",
+        "_279006_/A1",
+        "_273552_/Y",
+        "_276649_/B",
+        "_276660_/B",
+        "_276657_/B",
+        "_285623_/A1",
+        "_287174_/B2"
+      ]
+    },
+    "raw_netlist_availability": "Historical recorded EPYC1 /srv/opentallas-scratch/claude/dsrom-fh-close/runs/C9u35/work no longer exists at read; no anonymous source-cone classification guessed.",
+    "current_21_internal_closure_claim": false
+  }
+}

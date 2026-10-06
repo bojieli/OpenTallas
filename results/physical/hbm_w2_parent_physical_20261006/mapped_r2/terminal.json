@@ -1,0 +1,114 @@
+{
+  "schema": "hbm.w2.parent.native-map-r2.v1",
+  "donor_host": "ot-epyc1tb",
+  "donor_root": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/map_r2",
+  "source_commit": "b2f680b23dc97629413ad9d0bbf21e1a747facc5",
+  "hardware_sources": [
+    {
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "size_bytes": 1493
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "sha256": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+      "size_bytes": 3972
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+      "sha256": "dcc126bc31b1fe79e1d01052cb57437deb2929c3e21535a0b37924ebc1937ff6",
+      "size_bytes": 7290
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+      "sha256": "dfe45d8ed0bf01aef162f05bd3154dcdb7934766c198c7f7d16b69bbad29aa4d",
+      "size_bytes": 4124
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+      "sha256": "c0ab7af47cdbe75491f9be2c3c8c69b244a481417eb9b6a2ab4d14405003125a",
+      "size_bytes": 5004
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+      "sha256": "dcf0922701e5bfb33aaa3905cdee43edaa21be60de9254d1dec47777100a9669",
+      "size_bytes": 2649
+    },
+    {
+      "path": "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+      "sha256": "2659ca75beecd5311e796873722d54ed8710aa84f014677d6dc2be066b34c58b",
+      "size_bytes": 16350
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+      "sha256": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
+      "size_bytes": 25764
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+      "sha256": "17ce25ec8eac80df2fe39d56eb612726072ebf10223d2f3faa436c6ecd77e347",
+      "size_bytes": 5909
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+      "sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+      "size_bytes": 8716
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+      "sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+      "size_bytes": 3492
+    },
+    {
+      "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+      "sha256": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+      "size_bytes": 1345
+    },
+    {
+      "path": "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+      "sha256": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+      "size_bytes": 3195
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+      "size_bytes": 29816
+    },
+    {
+      "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+      "size_bytes": 21613
+    },
+    {
+      "path": "rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+      "sha256": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+      "size_bytes": 3067
+    },
+    {
+      "path": "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+      "sha256": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+      "size_bytes": 2134
+    },
+    {
+      "path": "rtl/link/ot_link_afifo.sv",
+      "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+      "size_bytes": 4344
+    }
+  ],
+  "mapped_netlist_sha256": "4cc2d817f9343ed5806b0cbc8794539c28206dd6c5d7c9a34cd8a55b1e526159",
+  "mapped_netlist_bytes": 41158248,
+  "native_synthesis_completed": true,
+  "mapped_cells": 327725,
+  "mapped_DFF_bits": 27675,
+  "mapped_cell_area_um2": 42770.82366,
+  "mapped_sequential_area_um2": 10005.35004,
+  "native_synthesis_elapsed_seconds": 6653,
+  "native_peak_RAM_MB": 9053.4,
+  "driver_exit": 1,
+  "terminal_cause": "OpenSTA read_sdc invalid command remove_input_delay before 1_synth.odb",
+  "physical_qualification": false,
+  "region_fit_qualified": false,
+  "source_and_protection_unchanged": true,
+  "continuation": "reuse exact retained mapped netlist; unset_input_delay/unset_output_delay API correction only; same first floorplan checkpoint then bind actual CDC/CTS/load/RC",
+  "old_failure_preserved": true
+}

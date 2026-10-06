@@ -1,0 +1,6 @@
+physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v
+physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v
+physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v
+hbm_lint_top_fix_real_shells.sv
+hbm_lint_top_fix_stubs.sv
+hbm_lint_top_fix.sv

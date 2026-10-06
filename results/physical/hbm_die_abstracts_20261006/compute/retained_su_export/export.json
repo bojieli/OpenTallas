@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.hbm.compute.retained_export.v1",
+  "name": "ot_su12_full",
+  "source": {
+    "name": "ot_su12_full",
+    "route_root": "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/retained/ot_su12_full",
+    "host": "ot-epyc1tb",
+    "adoption_commit": "5b68fde75b73d073b48c839283f538418b998b34",
+    "source": "2986b2c94 (claude/hbm-su-attn-close-20261005; lane/side RTL identical since 4866be787)",
+    "corner_record": "results/rtl/hbm_su_c12_20261005/lane_routes/full_u30_h25/corner_sta.json",
+    "hashes": {
+      "odb": "4aa5e82406c2e53bfa0a9f3827b3f50418e54b259ac3d2810b75bb1e46f595e8",
+      "spef": "cc23fb15f9875c1081e9b70d35474204a2c82e97ba8536a30b98a0b5895a3c8d",
+      "sdc": "7a4708e2fa60118eb1cd1cb7b3495c0565e8296a2543921b480ad9cd459f6411"
+    },
+    "ss_setup_ps": 4.77,
+    "ff_hold_ps": 5.33,
+    "io": "outputs 299 input_paths 710 not_register_direct 0",
+    "parent_qualified": false
+  },
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "script_sha256": "c2f9e11be63cba36e03eac02c88079f8fe4f713e4d3eff62f279c0328d10bbb6",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--cpus",
+        "1",
+        "-e",
+        "OMP_NUM_THREADS=1",
+        "-v",
+        "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/retained/ot_su12_full/work/orfs/results/asap7/opentallas_ot_su12_full_asap7_su12_full_u30_h25/base:/base:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/export/ot_su12_full:/out",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-threads",
+        "1",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--cpus",
+        "1",
+        "-e",
+        "OMP_NUM_THREADS=1",
+        "-v",
+        "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/retained/ot_su12_full/work/orfs/results/asap7/opentallas_ot_su12_full_asap7_su12_full_u30_h25/base:/base:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/carson-hbm-compute-abstracts-20261006/export/ot_su12_full:/out",
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-threads",
+        "1",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "source_constraint_sha256": "ba765e4f8f7c7110751b29b05a059c0054770da6459003a358a33f921c9a27da",
+  "interface_sdc_sha256": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+  "interface_scope": "Actual extracted port/clock arcs with source IO falsepaths removed; original internal signoff reused, parent unqualified",
+  "source_signoff_reused": true,
+  "parent_qualified": false,
+  "threads": 1,
+  "files": {
+    "source_constraint.sdc": "ba765e4f8f7c7110751b29b05a059c0054770da6459003a358a33f921c9a27da",
+    "interface.sdc": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "ot_su12_full_ss.lib": "c1467aaeef25234b42b250dbf03c7d0d7dde2e2dfaf3c12ee9422e4f4895f955",
+    "ot_su12_full_ff.lib": "b5afbeedf31e16ba3405923702e7140dbdb5f1f7969d4ee6943055d26027651d",
+    "pins.tsv": "5580e900e58d11c589e89a224c5666f0d70da54075e053a700db3d998923b138",
+    "ot_su12_full.lef": "0ecdcc2efebeae4dca2d936db9adf77e8a6d0f6f66991fbf12fab65f8d33c940"
+  },
+  "status": "EXPORTED_REAL_RETAINED_LEAF"
+}

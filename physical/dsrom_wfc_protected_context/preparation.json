@@ -1,0 +1,22 @@
+{
+  "rtl_source": "1860b98a006d25c5009961adedf8b0fb24e18e9a",
+  "functional_gate": "gate_r4_PASS",
+  "physical_model_commit": "0be8ae2bd",
+  "route_status": "READY_BODY_PENDING_LITERAL_NUMERIC_CLOCK_INPUT_CHARACTERIZATION",
+  "recipe_validation": "source paths exist; Python AST and Tcl completeness checked; no routed/API success inferred",
+  "corners": "SS60/WC and FF25/BC,833.333ps fast/1111.111ps serial commonPLL3:4",
+  "context": "actual protected VM + cfg/prompt/whole-stage producer + WFC/C8 minimum; external endpoints unbound",
+  "parent_closure": false,
+  "functional_replay": false,
+  "top": "ot_dsrom_wfc_protected_inputclock_stage",
+  "common_clock_source": "76158a8b3",
+  "clock_input": "pll_vco:3.6GHz target/50%duty; IP jitter/slew/insertion OPEN",
+  "validation": "Verilator5.050 enabled lint PASS2.78s113408KiB; no provider/golden replay; Tcl source syntax complete",
+  "physical_target": "root277.777778ps /3 fast833.333333 /4 serial1111.111111; SS60FF25 on allclockpaths",
+  "loaded_scope": "actual commondivider+protectedVM/canonicalproducer/WFC/C8; external engine/link/XB endpoints OPEN",
+  "clock_boundary": "fast_clk/slow_clk/clock_source_fault; failed divider excluded",
+  "clock_input_binder": "physical/dsrom_wfc_clock_ip_boundary_20261006/clock_inputs.sdc sourcea4b39285b/main99343daea",
+  "owner_file": "--body-clock-sdc supplies literal wfc_clock_ip_binding dict; retained verbatim",
+  "uncertainty": "source binder applies60pssetup/25pshold PLUS actual extra source uncertainty; driver does not overwrite",
+  "physical_started": false
+}

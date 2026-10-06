@@ -1,0 +1,8 @@
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/objects/asap7/carson_router_pipeline_r1/base
+touch /work/objects/asap7/carson_router_pipeline_r1/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
