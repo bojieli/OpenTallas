@@ -148,7 +148,7 @@ def cmd_sta(a):
         tcl = tcl.replace("read_db $::env(WF_ODB)",
                           f"read_liberty /src/{MACRO}/{MNAME}_[string tolower $::env(WF_LIB)].lib\n"
                           "read_db $::env(WF_ODB)")
-        WF.STA_TCL = tcl
+    WF.STA_TCL = tcl
     # corner_sta mounts the case dir at /work; the macro lib comes from /src
     orig = subprocess.run
 
@@ -159,7 +159,8 @@ def cmd_sta(a):
     WF.subprocess.run = run
     nick = next(case.rglob("results/asap7/*/base/6_final.odb")).parent.parent.name
     rec = WF.corner_sta(case, nick, case)
-    print(json.dumps({c: {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "reg2reg")} |
+    print(json.dumps({c: {"insertion_ps": v.get("insertion_ps")} |
+                      {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "reg2reg")} |
                       {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "reg2reg")}
                       for c, v in rec["corners"].items()}, indent=1))
 
