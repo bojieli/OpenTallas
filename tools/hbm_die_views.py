@@ -293,6 +293,14 @@ def cmd_reservation(a):
     print(json.dumps(view))
 
 
+def _slacks(v):
+    """(SS setup, FF hold) block slack in ps from a view record (the forks' field spellings)."""
+    t = json.dumps(v)
+    ss = re.findall(r'"(?:ss_setup_ps|ss_worst_setup_ps|setup_ss_ps)": (-?[\d.]+)', t)
+    ff = re.findall(r'"(?:ff_hold_ps|ff_worst_hold_ps|ff_worst_hold_slack_ps|hold_ff_ps)": (-?[\d.]+)', t)
+    return (float(ss[0]) if ss else None, float(ff[0]) if ff else None)
+
+
 def cmd_index(a):
     base = ROOT / VIEWS
     m, pw, M, real = model()
@@ -306,13 +314,21 @@ def cmd_index(a):
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
     idx = dict(schema='opentallas.hbm_die_views_index.v1', die='HBM accelerator DS die', round=H.FINAL_ROUND,
                generator_sha256=sha(ROOT / 'tools/hbm_accel_die_fp.py'),
-               status_values=['closed', 'interim-not-closed', 'reservation', 'missing'],
+               status_values=['closed', 'closed-below-margin', 'interim-not-closed', 'reservation', 'missing'],
                masters={}, counts=defaultdict(int))
     for n in need:
         v = rows.get(n)
         st = v['status'] if v else 'missing'
+        margin = None
+        if st == 'closed':      # owner UPDATE 2 (2026-10-06): closed only at SS >= +40 ps and FF >= +15 ps
+            ss_, ff_ = _slacks(v)
+            margin = dict(ss_setup_ps=ss_, ff_hold_ps=ff_, rule='SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)')
+            if ss_ is None or ff_ is None or ss_ < 40.0 or ff_ < 15.0:
+                st = 'closed-below-margin'
         idx['masters'][n] = dict(kind=kind_of(n), status=st, instances=sum(it.master == n for it in m['insts']),
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source') if k in v} if v else {}))
+        if margin:
+            idx['masters'][n]['margin'] = margin
         idx['counts'][st] += 1
     idx['counts'] = dict(idx['counts'])
     (base / 'index.json').write_text(json.dumps(idx, indent=1) + '\n')
@@ -324,7 +340,7 @@ def real_views(index_path):
     idx = json.loads(Path(index_path).read_text())
     out = {}
     for n, v in idx['masters'].items():
-        if v['status'] in ('closed', 'interim-not-closed', 'reservation') and v.get('lef'):
+        if v['status'] in ('closed', 'closed-below-margin', 'interim-not-closed', 'reservation') and v.get('lef'):
             out[n] = ROOT / v['dir'] / v['lef']
     return out
 
@@ -338,7 +354,8 @@ def sta_tcl(m, work, index):
     tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
     and checked inside the station views)."""
     idx = json.loads(Path(index).read_text())['masters']
-    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'interim-not-closed')}
+    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
+                                                                            'interim-not-closed')}
     run = (work / 'run.tcl').read_text()
     head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
     lib_lines = []

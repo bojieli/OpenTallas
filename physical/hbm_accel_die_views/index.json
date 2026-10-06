@@ -5,6 +5,7 @@
  "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
  "status_values": [
   "closed",
+  "closed-below-margin",
   "interim-not-closed",
   "reservation",
   "missing"
@@ -108,6 +109,11 @@
     "seq_um2": 114.132,
     "core_um2": 49504.8,
     "macro_um2": 0
+   },
+   "margin": {
+    "ss_setup_ps": 197.0,
+    "ff_hold_ps": 20.82,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_cdist_r14": {
@@ -137,7 +143,7 @@
   },
   "hfd_gath_r24": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r24",
    "lef": "hfd_gath_r24.lef",
@@ -192,6 +198,11 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 25.16,
+    "ff_hold_ps": 2.45,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_gath_r25": {
@@ -256,11 +267,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 249.19,
+    "ff_hold_ps": 68.51,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_gath_r9": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r9",
    "lef": "hfd_gath_r9.lef",
@@ -315,6 +331,11 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 60.37,
+    "ff_hold_ps": 3.51,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_hc": {
@@ -495,7 +516,7 @@
   },
   "hfd_stn_r0": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r0",
    "lef": "hfd_stn_r0.lef",
@@ -550,11 +571,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r0/hfd_stn_r0.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r0/hfd_stn_r0.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 37.35,
+    "ff_hold_ps": 477.18,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r11": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 12,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r11",
    "lef": "hfd_stn_r11.lef",
@@ -609,11 +635,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 21.96,
+    "ff_hold_ps": 447.61,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r12": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 12,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r12",
    "lef": "hfd_stn_r12.lef",
@@ -668,11 +699,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 18.62,
+    "ff_hold_ps": 476.21,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r13": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 12,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r13",
    "lef": "hfd_stn_r13.lef",
@@ -727,11 +763,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 17.06,
+    "ff_hold_ps": 477.47,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r16": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 24,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r16",
    "lef": "hfd_stn_r16.lef",
@@ -786,11 +827,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 25.51,
+    "ff_hold_ps": 479.17,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r17": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 12,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r17",
    "lef": "hfd_stn_r17.lef",
@@ -845,11 +891,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 22.2,
+    "ff_hold_ps": 485.37,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r18": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r18",
    "lef": "hfd_stn_r18.lef",
@@ -904,11 +955,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 16.99,
+    "ff_hold_ps": 476.04,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r19": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 4,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19",
    "lef": "hfd_stn_r19.lef",
@@ -963,6 +1019,11 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r19/hfd_stn_r19.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 31.45,
+    "ff_hold_ps": 472.17,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r2": {
@@ -1022,11 +1083,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r2/hfd_stn_r2.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r2/hfd_stn_r2.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 65.55,
+    "ff_hold_ps": 71.24,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r20": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r20",
    "lef": "hfd_stn_r20.lef",
@@ -1081,11 +1147,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r20/hfd_stn_r20.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r20/hfd_stn_r20.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 23.23,
+    "ff_hold_ps": 469.72,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r21": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r21",
    "lef": "hfd_stn_r21.lef",
@@ -1140,11 +1211,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r21/hfd_stn_r21.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 21.73,
+    "ff_hold_ps": 478.33,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r22": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r22",
    "lef": "hfd_stn_r22.lef",
@@ -1199,11 +1275,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 14.92,
+    "ff_hold_ps": 478.51,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r23": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 8,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r23",
    "lef": "hfd_stn_r23.lef",
@@ -1258,11 +1339,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 22.92,
+    "ff_hold_ps": 468.32,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r26": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r26",
    "lef": "hfd_stn_r26.lef",
@@ -1317,11 +1403,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 27.47,
+    "ff_hold_ps": 440.12,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r27": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 27,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
    "lef": "hfd_stn_r27.lef",
@@ -1376,11 +1467,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 9.49,
+    "ff_hold_ps": 471.17,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r29": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r29",
    "lef": "hfd_stn_r29.lef",
@@ -1435,11 +1531,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 25.1,
+    "ff_hold_ps": 473.64,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r3": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 16,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r3",
    "lef": "hfd_stn_r3.lef",
@@ -1494,11 +1595,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 3.31,
+    "ff_hold_ps": 494.99,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r30": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 4,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r30",
    "lef": "hfd_stn_r30.lef",
@@ -1553,11 +1659,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 8.06,
+    "ff_hold_ps": 481.45,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r31": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 6,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
    "lef": "hfd_stn_r31.lef",
@@ -1612,11 +1723,16 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 31.66,
+    "ff_hold_ps": 486.23,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_stn_r4": {
    "kind": "stations",
-   "status": "closed",
+   "status": "closed-below-margin",
    "instances": 20,
    "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r4",
    "lef": "hfd_stn_r4.lef",
@@ -1671,6 +1787,11 @@
     "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv",
     "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc",
     "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 19.21,
+    "ff_hold_ps": 433.75,
+    "rule": "SS >= +40 ps, FF >= +15 ps (owner 2026-10-06)"
    }
   },
   "hfd_su": {
@@ -1706,8 +1827,9 @@
  },
  "counts": {
   "interim-not-closed": 2,
-  "closed": 24,
+  "closed": 3,
   "missing": 24,
+  "closed-below-margin": 21,
   "reservation": 2
  }
 }
