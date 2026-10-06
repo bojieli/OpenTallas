@@ -101,7 +101,7 @@ struct Sim {
  void neg(){while(!dut.clk_sm)event();while(dut.clk_sm)event();}
  void edges(unsigned n){while(n--)sm();}
  void settle(){dut.eval();}
- uint64_t progress()const{return uint64_t(dut.fixture_cp_requests)+dut.fixture_cp_returns+dut.fixture_ACKs+dut.fixture_bind_accepts+dut.fixture_enroll_accepts+dut.fixture_read_accepts+dut.fixture_rsp_accepts+dut.fixture_retire_accepts+dut.fixture_db_accepts+dut.fixture_cpl_accepts;}
+ uint64_t progress()const{return uint64_t(dut.fixture_cp_requests)+dut.fixture_cp_returns+dut.fixture_ACKs+dut.fixture_bind_accepts+dut.fixture_enroll_accepts+dut.fixture_read_accepts+dut.fixture_rsp_accepts+dut.fixture_retire_accepts+dut.fixture_db_accepts+dut.fixture_cpl_accepts+dut.fixture_sfu_enroll_accepts+dut.fixture_sfu_cp_requests+dut.fixture_sfu_cp_returns+dut.fixture_sfu_ACKs+dut.fixture_sfu_TXs+dut.fixture_sfu_releases;}
  void healthy(){require(!dut.sys_fault&&!dut.norm_fault&&!dut.sfu_fault&&!dut.sfu_vm_fault&&!dut.fixture_observer_fault,"actual parent/provider fault phase="+phase);}
  template<class F>void wait(F ready){unsigned idle=0;auto old=progress();settle();while(!ready()){
   sm();healthy();auto now=progress();idle=(now!=old)?0:idle+1;old=now;
@@ -110,16 +110,19 @@ struct Sim {
  void held(){healthy();require((dut.norm_retained&1)&&(dut.sfu_vm_retained&1)&&owned(dut.norm_held_frame)&&owned(dut.sfu_vm_held_frame)&&!(dut.cpl_v&1),"held actual parent owner/debt changed");}
  void finish(){dut.final();}
 };
+#include "hbm_integrated_sfu_continuation.inc"
 int main(int argc,char**argv){try{
- std::filesystem::path dir;bool wrong_release=false;
- for(int i=1;i<argc;++i){std::string a=argv[i];if(a.rfind("+DIR=",0)==0)dir=a.substr(5);if(a=="+WRONG_RELEASE")wrong_release=true;
+ std::filesystem::path dir;bool wrong_release=false,sfu_next=false,continue_sfu=false;
+ for(int i=1;i<argc;++i){std::string a=argv[i];if(a.rfind("+DIR=",0)==0)dir=a.substr(5);if(a=="+WRONG_RELEASE")wrong_release=true;if(a=="+SFU_NEXT")sfu_next=true;if(a=="+CONTINUE_SFU")continue_sfu=true;
   require(a.rfind("+gpu_sys_mem_prefix=",0)!=0,"shared prefix aliases both dies; use separate die0/die1 images");}
+ require(!(wrong_release&&(sfu_next||continue_sfu)),"poisoned norm cannot continue SFU");
  require(!dir.empty(),"+DIR=retained_stage_directory required");require(std::filesystem::exists("fixture_manifest.json"),"verified fixture preparation required");Gold gold(dir);
  // Default real parent memsys_adapter prefixes; generated HBM scheduler loads
  // these files itself. Images are prepared separately; C++ never writes SRAM.
  for(auto name:{"die0_p0.hex","die0_p1.hex","die1_p0.hex","die1_p1.hex"})require(std::filesystem::exists(name),std::string("missing actual provider image ")+name);
  Sim s(argc,argv);auto& d=s.dut;
  s.edges(32);s.neg();d.por_n=1;s.phase="actual reset domains";s.wait([&]{return d.rst_sm_n&&(d.db_rdy&1);});
+ if(sfu_next){run_native_sfu_next(s,dir);s.finish();return 0;}
  // Real END-only CP context from Gibbs caller recipe; status2 is mandatory.
  // There is no mathematical RESULT producer in this one-stage session.
  s.neg();d.cmd_we=1;put(d.cmd_addr,0,8,0);put(d.cmd_wdata,0,32,0);put(d.cmd_wdata,32,32,0x20000000);s.sm();s.neg();d.cmd_we=0;
@@ -169,5 +172,6 @@ int main(int argc,char**argv){try{
  require(!(d.sfu_vm_retained&1)&&!(d.norm_retained&1),"completion before owners drained");
  s.neg();d.cpl_rdy=1;s.wait([&]{return d.fixture_cpl_accepts==1;});s.neg();d.cpl_rdy=0;
  s.phase="joint warm reset acknowledgment";s.wait([&]{return (d.cp_reset_ack&1)&&(d.norm_warm_ack&1)&&(d.sfu_vm_warm_ack&1);});
+ if(continue_sfu){run_native_sfu_next(s,dir);s.finish();return 0;}
  std::cout<<"PARENT_ONE_STAGE_PASS stage=L20.attn.hc_pre_norm actual_CP=25600/25600 ACK=400 readback_words=12800 lastWORD=16383 full73_refusal=1 warm_held=1 cpl_status=2 token_qualified=0 SFU_execution_covered=0 formatter_execution_covered=0 physical_qualified=0 cycles="<<s.cycles<<"\n";s.finish();return 0;
  }catch(const std::exception& e){std::cerr<<"PARENT_STAGE_FAIL "<<e.what()<<"\n";return 1;}}
