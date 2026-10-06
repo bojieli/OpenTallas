@@ -221,7 +221,7 @@ def face_of(rects, w, h, eps=0.5):
     return 'xy'
 
 
-def check_lef(master, lef, tol=0.0125):
+def check_lef(master, lef, tol=0.0125, allow_extra=()):
     """compare a view LEF to the generator master: returns dict(verdict, ...)."""
     rec = master_record(master)
     r = parse_lef(lef)
@@ -238,6 +238,8 @@ def check_lef(master, lef, tol=0.0125):
             gen[nm] = (p, layer, (x0 + x1) / 2, (y0 + y1) / 2)
     missing = sorted(set(gen) - set(r['pins']))
     extra = sorted(set(r['pins']) - set(gen))
+    allowed = sorted(p for p in extra if re.sub(r'\[\d+\]$', '', p) in set(allow_extra))
+    extra = [p for p in extra if p not in allowed]
     moved, layer_bad, face_bad = [], [], []
     for nm in set(gen) & set(r['pins']):
         _, layer, cx, cy = gen[nm]
@@ -253,6 +255,7 @@ def check_lef(master, lef, tol=0.0125):
         if gface in 'NSEW' and vf != gface:
             face_bad.append(nm)
     out.update(gen_pins=len(gen), view_pins=len(r['pins']), missing=len(missing), extra=len(extra),
+               die_top_io_pins=allowed,
                moved=len(moved), wrong_layer=len(layer_bad), wrong_face=len(face_bad),
                wrong_face_examples=sorted(face_bad)[:8], missing_examples=missing[:8], extra_examples=extra[:8],
                moved_examples=sorted(moved)[:8], wrong_layer_examples=sorted(layer_bad)[:8],
@@ -270,7 +273,7 @@ def check_lef(master, lef, tol=0.0125):
 
 
 def cmd_check(a):
-    print(json.dumps(check_lef(a.master, a.lef), indent=1))
+    print(json.dumps(check_lef(a.master, a.lef, allow_extra=a.allow_extra or ()), indent=1))
 
 
 def cmd_reservation(a):
@@ -563,6 +566,9 @@ def main(argv=None):
     p = sp.add_parser('check')
     p.add_argument('--master', required=True)
     p.add_argument('--lef', required=True)
+    p.add_argument('--allow-extra', action='append', help='a port the view carries that the die netlist does not '
+                   'connect yet because it is die top I/O (H11, tape-out scope: e.g. hfd_coll refclk / por of the '
+                   'PLL owner); reported as die_top_io_pins, not as a mismatch')
     p.set_defaults(fn=cmd_check)
     p = sp.add_parser('reservation')
     p.add_argument('--master', required=True)
