@@ -311,6 +311,12 @@ def cmd_run(a):
     else:
         if a.fault_retire: raise ValueError("fault retirement requires own capture candidate")
         tb = TB_FH if fused else TB_ASBUILT
+    if a.checked_permission:
+        if not (a.capture_cut and a.fault_retire):
+            raise ValueError("checked permission requires capture and four-edge retirement")
+        srcs=[ROOT/'rtl/dsrom_sys/protected_vm/ot_dsrom_vm_pkg.sv',*srcs,
+              candidate/'ot_hdc_v41_fh_checked_permission.sv',candidate/'ot_hdc_v41_fh_vm_endpoint_ctx.sv']
+        tb=candidate/'tb_hdc_core_v41_mtp_slice_checked.sv'
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
@@ -439,6 +445,7 @@ def main():
     s.add_argument("--variant-rom", action="store_true", help="rewrite the ROM images even if present")
     r = sub.add_parser("run")
     r.add_argument("--slices", type=Path, required=True)
+    r.add_argument("--checked-permission", action="store_true", help="Default-off distributed native checked grant in the actual VM fixture")
     r.add_argument("--fault-retire", action="store_true", help="Default-off full-transaction retirement with real warm commit acknowledgement")
     r.add_argument("--capture-cut", action="store_true", help="Default-off protected return/capture candidate")
     r.add_argument("--capture-return-extra", type=int, choices=(2,3), default=2, help="Matched protected return extra stages;2 retained,3 decode-split")

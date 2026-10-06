@@ -203,10 +203,10 @@ def dsrom_fh_fault_retire_model(integrated_parent=False):
         adoption=False, physical_closed=False)
 
 
-def dsrom_fh_native_vm_endpoint_model():
+def dsrom_fh_native_vm_endpoint_model(distributed_check=False):
     """Existing protected-VM fast capture endpoints in the minimum head child."""
     req,rep=2831,1267
-    return dict(default=0,scope='Conditional head child; source-native fast endpoint copies, no backend duplication',
+    result = dict(default=0,scope='Conditional head child; source-native fast endpoint copies, no backend duplication',
         MACs_per_cycle=0,compute_intensity=0,memory_port_bytes_per_cycle=0,
         boundary_bits_per_cycle=dict(head_write_payload=2048,head_mask=64,head_word=96,
             native_request=req,protected_reply=rep),replicas=1,
@@ -222,8 +222,36 @@ def dsrom_fh_native_vm_endpoint_model():
             clock_PG_repair_margin_required=True,ready_for_route=False),
         fanout='Per enabled lane native accepted_input normalization -> actual source_packet/source_check capture pair; genuine held_reply owner/ordinal/word/mask validation and once-only warm callback.',
         protection='Existing native SECDED/dual-rail parent remains owner; checked readback visibility is distinct from later port_retired/C8. Mirror warm/sent/fault local callback state.',
-        latency='Existing fast endpoint stages, not extra producer cycles; real native backend/readback/3:4 crossings already priced by parent model. Head +40 remains unmeasured.',
+        latency='Existing fast endpoint stages, not extra producer cycles; real native backend/readback/3:4 crossings already priced by parent model. Head four-edge measured +85 cycles remains source-pinned history.',
         adoption=False,physical_closed=False)
+    if distributed_check:
+        banks=(req+31)//32+(rep+31)//32
+        groups=(banks+2+7)//8
+        clusters=(groups+3)//4
+        extra=2*banks+2*8+16+2*(groups+clusters+1)
+        result.update(parameter='CHECK_PIPE', capture_bank_bits=32,
+            capture_banks=banks, extra_control_FF_bits=extra,
+            FF_total=result['FF_total']+extra,
+            architectural_added_cycles=13,
+            check_pipeline_edges=10,
+            latency=dict(request_check_cycles=5,reply_check_cycles=5,
+                candidate_extra_cycles_per_warm_chain=10,
+                candidate_extra_five_chain_cycles=50,
+                candidate_five_chain_cycles=62963+50,
+                measured_five_chain_cycles=63028,
+                measured_extra_five_chain_cycles=65,
+                measured_extra_cycles_per_warm_chain=13,
+                measured_total_delta_vs_capture_decode_split=150,
+                measured_scope='Head warm checked grant/actual fixture commit; ordinary streamed two-edge VM fixture retained, parent transport conditional',
+                requirement='Measure single original fullG4W16 golden with actual checked publication/commit; backend crossing latency remains separate'),
+            flow_control='One native held request and one held checked reply; busy until matching checked publication; no payload overwrite, no early or repeated warm ACK; new accept while held quarantines.',
+            fanout='32-bit local mirror comparison/sticky protection controls only its capture bank; full error reduction only scalar fault/publication, never thousands of capture enables. Registered8x32 identity checks.',
+            protection='Immediate live mismatch still vetoes publication/ACK; registered check age and held tuple grant cannot hide a late mirror fault. Protected local fault/age/once state.',
+            slot_added_area_proxy_um2=extra*DFF_UM2,
+            routing_tracks_added=8+2*banks,
+            acceptance_rate='Native one-outstanding provider; do not assume streaming one/cycle. Actual caller must hold/retry before acceptance; targeted golden checks no lost producer writes.',
+            physical_closed=False,adoption=False)
+    return result
 
 
 def dsrom_field_spine_route_price(r=16, pq=0):
@@ -12288,11 +12316,12 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
-def dsrom_wfc_protected_context_physical_price():
+def dsrom_wfc_protected_context_physical_price(distributed_cmd=False):
     """Actual minimum R4 WFC/producer/C8/protected VM, no whole S81 array."""
     import json
     from pathlib import Path
-    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/protected_context_physical_model.json').read_text())
+    name='protected_context_distributed_physical_model.json' if distributed_cmd else 'protected_context_physical_model.json'
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005'/name).read_text())
 
 
 def dsrom_wfc_native_two_lease_price():
@@ -12344,10 +12373,10 @@ def dsrom_wfc_protected_caller_adapter_price():
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
 
-def dsrom_protected_vm_model():
-    """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
-    from dsrom_protected_vm import model
-    return model()
+def dsrom_protected_vm_model(distributed_cmd=False):
+    """Finite protected xa/xb VM; optional registered macro command service."""
+    from dsrom_protected_vm import model, distributed_model
+    return distributed_model() if distributed_cmd else model()
 
 
 def hbm_vm_publication_parent_model():
