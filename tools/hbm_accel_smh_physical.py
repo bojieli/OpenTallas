@@ -213,7 +213,7 @@ def front_pins(g, hcore):
 
 # ---------------- ORFS config ----------------
 def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* bin* gin*", lat_ff=None, period=833,
-              skew=0, die_skew=150, hold_io=50):
+              skew=0, die_skew=150, hold_io=50, io_ref=False):
     lat_ff = lat_ff if lat_ff is not None else round(0.6 * float(lat))
     s = [f"# block constraints (tools/hbm_accel_smh_physical.py); clock {period} ps (sign-off 833: run.sh rewrites the",
          "# period of the routed SDC), 60 / 25 ps uncertainty",
@@ -254,7 +254,21 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     else:
         s += [f"set nbr_in [get_ports {{{nbr_in}}}]",
               "set nbr_out [all_outputs]"]
-    s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
+    if io_ref:
+        s += ["# abutting ports (m2g, 2026-10-06): the neighbour piece's flop sits on the same element clock tree, so its",
+              "# clock arrives at THIS block's insertion in EVERY corner.  Reference the abutting port delays to a register",
+              "# clock pin of this block (-reference_pin: the propagated arrival at that pin, per corner) instead of nbr_clk",
+              "# with the SS insertion as a fixed source latency: the latter made FF input hold optimistic by lat - lat_ff and",
+              "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
+              "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
+              "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_input_delay -min [expr 30 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
+              "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
+              "set_load 2.0 [all_outputs]",
+              "set_max_fanout 32 [current_design]"]
+    else:
+        s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
           "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
           "set_input_delay -min [expr 30 - $hold_io] -clock nbr_clk $nbr_in",
           "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
@@ -892,7 +906,7 @@ def cmd_block(a):
                "  place_macro -macro_name [$ot_inst getName] -location $ot_xy($j:$mi) -orientation R0",
                "  incr ot_n", "}",
                "if {$ot_n != 8} { error \"macro_place: placed $ot_n of 8\" }"]
-        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        sdc = sdc_block(a.lat, static_inputs=("xs_*",), lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     elif a.piece == "be":
         w, h = g["tile_w"], g["be_h"]
         pins = be_pins(w, h, a.variant)
@@ -900,7 +914,7 @@ def cmd_block(a):
         name = "ot_hbm_accel_smh_be_" + ("e" if a.variant == "toE" else "w")
         tcl = None
         extra["PDN_TCL"] = "/src/tools/chip_assembly/tcl/pdn_block.tcl"
-        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        sdc = sdc_block(a.lat, nbr_in="gin* qin*", lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
     else:
         pos, die, hcore = floorplan(g)
         w, h = g["front_w"], hcore
@@ -921,7 +935,7 @@ def cmd_block(a):
                f"  if {{$gg == 0}} {{ place_macro -macro_name [$ot_inst getName] -location [list {xl} $y] -orientation MY }} \\",
                f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
-        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
+        sdc = sdc_block(a.lat, element_io=True, ring=True, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew, io_ref=a.io_ref)
         # (round 7) long-haul pipeline flops pre-placed FIRM along their routes (the placer clumped each chain at
         # one end: the retire chain sat at y 60-211 with the issue at ~900): see HOPS
         (work / "hops.tcl").write_text(HOPS)
@@ -1046,6 +1060,8 @@ def main(argv=None):
                    "skew + 25 (90 until the element top measures it)")
     b.add_argument("--die-skew", default="150", help="setup budget on the element pins (cross a die wire, ps)")
     b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
+    b.add_argument("--io-ref", action="store_true", help="abutting port delays referenced to a register clock pin of "
+                   "the block (per-corner insertion) instead of nbr_clk with the SS insertion as source latency")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
     t.add_argument("--out", required=True)
