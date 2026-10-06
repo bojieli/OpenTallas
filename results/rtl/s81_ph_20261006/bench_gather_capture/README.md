@@ -23,3 +23,15 @@ Cycle cost (phase completion, VM sees `drained`, vs the core's in-clock 128-port
 +9..10 (hardened root sub-blocks), independent of the phase size: back-to-back 56-row bursts per root drain at the
 2-row serial words without backlog (no hold overflow).  Per dependent weight phase this is the fixed latency of pin
 registers, the stream->serial crossing and the status crossing.
+
+## Pipelined root + capture core (2026-10-06 PM, `summary_pipelined.txt`)
+
+root_m1 (W10 root as the hardened sub-block) failed floorplan repair at -4.36 ns and cap_m1 (rd64 core) reached
+post-CTS WNS -2995 ps: both are one-cycle 128-wide loops.  Replacements (default on): `ot_s81ph_ret_root_p`
+(ROOT_BLK PIPE 1) and `ot_s81ph_cap_p` (dsfd_sp_capture CORE 1).  Bench `+UNORD`: non-fault runs compare every
+root's writes as a multiset (the pipelined root can complete a root's rows in another order; addresses within a
+phase are distinct, so VM state is identical; `reordered_roots` reported), fault runs are fail-closed (DUT faults
+and every DUT write is the write of an individually valid row of the phase: the pipelined capture stops writes 6
+cycles after the first bad row, rd64 after 1).  Result: 9 cases PASS; mutants BF16_TRUNC, LANE_SWAP, NOFWD (root
+forwarding removed), NOOVER (capture quota check removed) all FAIL.  Phase completion: +13..34 stream cycles vs the
+reference (was +9..10): root +~18 (deep add LAT 8, S1-S3), capture +~6.
