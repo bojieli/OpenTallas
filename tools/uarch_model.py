@@ -12315,11 +12315,12 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
-def dsrom_wfc_protected_context_physical_price():
+def dsrom_wfc_protected_context_physical_price(distributed_cmd=False):
     """Actual minimum R4 WFC/producer/C8/protected VM, no whole S81 array."""
     import json
     from pathlib import Path
-    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/protected_context_physical_model.json').read_text())
+    name='protected_context_distributed_physical_model.json' if distributed_cmd else 'protected_context_physical_model.json'
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005'/name).read_text())
 
 
 def dsrom_wfc_native_two_lease_price():
