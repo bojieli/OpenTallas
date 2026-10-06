@@ -360,12 +360,73 @@
     "MTP_step_us": 12.437,
     "MTP_tok_s": -110.8
    }
+  },
+  "r9m215f198.72": {
+   "label": "S81-RERUN r9 MARGIN-FIRST: common-clock hops <= 215 um (FH 192.24)",
+   "elem_h": 198.72,
+   "fh": 192.24,
+   "pairs_per_layer_die": 2050,
+   "layer_dies": 383,
+   "extra_layer_dies": 59,
+   "stages": 96,
+   "extra_stage_hops": 15,
+   "farthest_round_trip": {
+    "layer": 151,
+    "layer1": 152
+   },
+   "wire_per_region": {
+    "min": 68,
+    "max": 174,
+    "mean": 122.61
+   },
+   "headline": {
+    "AR_us": 619.467,
+    "AR_tok_s": 1614.3,
+    "MTP_step_us": 874.457,
+    "MTP_tok_s": 4756.1,
+    "MTP_tok_s_tau_published": 4446.1,
+    "II_us": 25.797,
+    "measured_share": 1.0001
+   },
+   "conditional_all": {
+    "AR_us": 468.65,
+    "AR_tok_s": 2133.8,
+    "MTP_step_us": 696.166,
+    "MTP_tok_s": 5974.1,
+    "MTP_tok_s_tau_published": 5584.7,
+    "II_us": 20.302,
+    "measured_share": 1.0001
+   },
+   "headline_delta_vs_old80": {
+    "AR_us": 63.446,
+    "AR_tok_s": -184.2,
+    "MTP_step_us": 72.248,
+    "MTP_tok_s": -428.3
+   },
+   "conditional_all_delta_vs_old80": {
+    "AR_us": 31.767,
+    "AR_tok_s": -155.1,
+    "MTP_step_us": 34.47,
+    "MTP_tok_s": -311.3
+   },
+   "headline_delta_vs_current_frame": {
+    "AR_us": 27.001,
+    "AR_tok_s": -73.6,
+    "MTP_step_us": 29.578,
+    "MTP_tok_s": -166.5
+   },
+   "conditional_delta_vs_current_frame": {
+    "AR_us": 18.158,
+    "AR_tok_s": -86.0,
+    "MTP_step_us": 18.978,
+    "MTP_tok_s": -167.5
+   }
   }
  },
  "tool_sha256": {
-  "tools/dsrom_field_reprice_r8.py": "fb00396ad542baa4194893ab0cb7a0d178e3998f2fa3a93357e4db21fe5632aa"
+  "tools/dsrom_field_reprice_r8.py": "3fde513a214c59c3d9c09d4b56b97a475b8b6bd5f82f10109402664e0a6810a5"
  },
  "inputs": {
-  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "b778b9ee30e9d3b97f2ae7baf44e579e196f9c9ed0683666ba1236b03672d199"
+  "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json": "019358c71e9d6f4545f73f4a4dd7f8d3212abd93051ee4e2c6c3cb3f29f2b637"
  }
 }

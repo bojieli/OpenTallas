@@ -2387,7 +2387,7 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
-    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn'):
+    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
         L = _poly_len(path)
@@ -2397,9 +2397,12 @@ class Chains:
         fi = 0
         while True:
             nxt = stops[fi] if fi < len(stops) else None
-            if nxt is None and _mh(cur, end) <= LINK_STAGE_UM - 30.0 and L - pos <= LINK_STAGE_UM - 30.0:
+            R_ = reach or LINK_STAGE_UM
+            if nxt is None and _mh(cur, end) <= R_ - 30.0 and L - pos <= R_ - 30.0:
                 break
             step = STEP9 if REV == 'r9' else STEP8
+            if reach:                        # common-clock chains (CC_REACH): station step inside the shorter reach
+                step = min(step, reach - 5.0)
             if nxt is not None and nxt - pos <= step:
                 target, must = nxt, True
                 fi += 1
@@ -2413,7 +2416,7 @@ class Chains:
                 (cx, cy), d = _poly_at(path, t_)
                 horiz = d in 'EW'
                 w, h = stn_dims(lanes, horiz)
-                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz)
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, reach=reach)
                 if placed is None:
                     if must:
                         placed = self.P.near(cx, cy, w, h, allowed, prev=None, horiz=horiz, span=200.0, rows=16)
@@ -2424,7 +2427,7 @@ class Chains:
                 (cx, cy), d = _poly_at(path, t_)
                 horiz = d in 'EW'
                 w, h = stn_dims(lanes, horiz)
-                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24)
+                placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
             if placed is None:
                 raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
             x, y = placed
@@ -2672,7 +2675,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(gen='r8', rev=REV, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(gen='r8', rev=REV, cc_reach_um=CC_REACH, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3092,6 +3095,22 @@ LANES_VCH, LANES_CORR = 26, 16
 # max_clock_tree_path), so every other column path is glue to glue.  +1 cycle on the way in, +1 on the way out.
 BANK_H = 6.48
 BANK_RULE_UM = 430.0           # common-clock glue reach used for relays (the 430.56 um stage less pin spread)
+# MARGIN-FIRST (owner rule 2026-10-06): a common-clock (one CTS tree) hop does not close at 440 um (meso_fifo verdict
+# fwd_hop2_synchronous_counterfactual: SS -330 ps); --cc-reach-um caps every common-clock hop (hub-bus stations, end
+# block -> slab stations, column relays) below the forwarded 430.56 um reach.  Default = the r9 value (unchanged).
+CC_REACH = LINK_STAGE_UM
+
+
+def out_rev():
+    """record directory of the revision: r9, or r9m<reach> for a MARGIN-FIRST common-clock reach"""
+    return REV if CC_REACH >= LINK_STAGE_UM else f'{REV}m{int(round(CC_REACH))}'
+
+
+def set_cc_reach(um):
+    global CC_REACH, BANK_RULE_UM
+    if um:
+        CC_REACH = float(um)
+        BANK_RULE_UM = min(430.0, CC_REACH - 0.56)
 QBANK_IN = ('x0', 'x1', 'cfg', 'go')
 QBANK_OUT = ('r0', 'r1', 'st')
 BANK_PORTS = {}
@@ -3268,11 +3287,11 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
     b = (fx, min(max(a[1], Bk.y + 6.0), Bk.y + Bk.h - 6.0))
     path = _dedup([a, (b[0], a[1]), b])
     L = _poly_len(path)
-    if L <= LINK_STAGE_UM - 60.0:
+    if L <= CC_REACH - 60.0:
         CH8.bus(name, 'local', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0, floor_added=0)
         return
-    sts = CH8.run(name, [bits], path, allowed, a)
+    sts = CH8.run(name, [bits], path, allowed, a, reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
         it.kind, it.domain = 'hstn', dom
@@ -3300,7 +3319,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         y_ = lo + (hi - lo) * (0.25 + 0.5 * ((lane[0] * 0.37) % 1.0))
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
-    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= LINK_STAGE_UM - 60.0:
+    elif hcA == hcB and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - 60.0:
         # stacked neighbours in one column: face to face across the gap, one hop
         g_ = max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h)
         CH8.bus(f'hb_{a_}_{b_}', 'hub', bits, [(A.name, pa), (Bk.name, pb)])
@@ -3323,11 +3342,11 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb):
         path = _dedup([(fx(A), ya), (vx, ya), (vx, yb), (fx(Bk), yb)])
     name = f'hb_{a_}_{b_}'
     L = _poly_len(path)
-    if L <= LINK_STAGE_UM - 30.0:
+    if L <= CC_REACH - 30.0:
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
-    sts = CH8.run(name, [bits], path, [cor['vch']], path[0])
+    sts = CH8.run(name, [bits], path, [cor['vch']], path[0], reach=CC_REACH if CC_REACH < LINK_STAGE_UM else None)
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
         it.kind, it.domain = 'hstn', A.domain
@@ -4163,7 +4182,7 @@ def write_glue(elem_h=None, pairs=None):
                 assert merged['pdir'].setdefault(k_, v) == v, k_
         merged['glue'].update(mm['glue'])
     configure(keep[0], 'r8')
-    gp = ROOT / GLUE_RTL.replace('/r8/', f'/{REV}/')
+    gp = ROOT / GLUE_RTL.replace('/r8/', f'/{out_rev()}/')
     gp.parent.mkdir(parents=True, exist_ok=True)
     gp.write_text(glue_rtl(merged))
 
@@ -4196,7 +4215,10 @@ def main(argv=None):
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
+    ap.add_argument('--cc-reach-um', type=float, help='r9: common-clock hop cap (hub / end-block stations, column '
+                    'relays); default the forwarded 430.56 um (MARGIN-FIRST variant: 215)')
     a = ap.parse_args(argv)
+    set_cc_reach(a.cc_reach_um)
     global REV, HEAD_DIES
     REV, HEAD_DIES = a.rev, a.head_dies
     configure(a.die, a.gen)
@@ -4230,7 +4252,7 @@ def main(argv=None):
         print(json.dumps(trunk_stages(m), indent=1))
         return 0
     if a.mode == 'plan' and a.gen == 'r8':
-        out = ROOT / OUT / REV / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
+        out = ROOT / OUT / out_rev() / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record_r8(m)
         rec['legality_python'] = legality(m)
@@ -4273,6 +4295,7 @@ def main(argv=None):
                     configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                     if v_.get('gen') == 'r8':
                         REV = v_.get('rev', 'r8')
+                        set_cc_reach(v_.get('cc_reach_um'))
                         HEAD_DIES = v_.get('head_dies', 12)
                         configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                         slot_geometry(v_.get('elem_frame_h'))

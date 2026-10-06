@@ -3,7 +3,7 @@
  "tool": "tools/dsrom_s81_frame_block.py",
  "die": "layer",
  "rev": "r9",
- "cc_reach_um": 430.56,
+ "cc_reach_um": 215.0,
  "elem_h": 198.72,
  "pairs": 2050,
  "frame": 63,
@@ -30,7 +30,7 @@
   "node": 33,
   "cfifo": 1,
   "rstg": 3,
-  "rly": 65
+  "rly": 224
  },
  "ports": {
   "xf": [
@@ -62,7 +62,7 @@
   "x": 451.44,
   "ret": 1159.06
  },
- "relays_x": 1,
- "relays_ret": 4,
+ "relays_x": 2,
+ "relays_ret": 14,
  "bank_stages": 2
 }

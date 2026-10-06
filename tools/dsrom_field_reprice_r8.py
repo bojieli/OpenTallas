@@ -61,6 +61,11 @@ GEOMS = {
     "r9f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9",
                       q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
                       label="S81-RERUN r9 die, FH 192.24 (10 slots; hub stations + q banks + column relays)"),
+    # MARGIN-FIRST (owner rule 2026-10-06): every common-clock hop (hub-bus / end-block stations, column relays) capped
+    # at 215 um -- a synchronous 440 um span measured SS -330 ps (meso_fifo verdict fwd_hop2_synchronous_counterfactual)
+    "r9m215f198.72": dict(elem_h=198.72, fh=192.24, pairs=2050, rev="r9", cc_reach=215.0,
+                          q_lef="results/rtl/dsrom_qz_20261004/Z20/Z20c/routed_element.lef.gz",
+                          label="S81-RERUN r9 MARGIN-FIRST: common-clock hops <= 215 um (FH 192.24)"),
 }
 LAYER_PAIRS_TOTAL = 81 * 4 * 2417          # 783,108 layer-field pairs (S81 decision)
 TP = 4
@@ -94,6 +99,7 @@ def cmd_geometry(a):
     import dsrom_s81_fulldie as S
     import die_top_lint as L
     S.REV = g.get("rev", "r8")
+    S.set_cc_reach(g.get("cc_reach"))
     S.Q_LEF = os.environ.get("OT_S81_Q_LEF", S.Q_LEF)
     S.configure(a.die, "r8")
     S.slot_geometry(g["elem_h"])
