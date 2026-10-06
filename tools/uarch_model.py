@@ -11106,3 +11106,11 @@ def hbm_attn_registered_parent_model():
         minimum_endpoint_context_scope='literal H16 canonical macro ETMs plus actual registered broadcast/receivers; kept sequential producer fixture, not actual enclosing engine',
         engine_source_anchor_qualified=False,
         route_ready=False, gain_credit=None)
+
+
+def hbm_cp_fast_frontier_model():
+    """Default-off exact CP receiver/owner successor, priced before RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_fast_frontier_20261006/model.json").read_text())

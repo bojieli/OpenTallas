@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // One real CP LAUNCH/END, protected CP + real common borrower + association.
 // Transaction consumer tests wiring/debt, not SU arithmetic or full-token rate.
-module tb_su_cp_parent_association #(parameter integer PARENT_CONTEXT_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0);
+module tb_su_cp_parent_association #(parameter integer PARENT_CONTEXT_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_ready=0;
  reg [7:0] cmd_addr=0;reg [63:0] cmd_data=0;
@@ -17,7 +17,7 @@ module tb_su_cp_parent_association #(parameter integer PARENT_CONTEXT_TEST=0,FOU
  wire [16:0] held_token;wire [19:0] held_pos;
  wire [2:0] grants,releases;wire shared_fault,shared_idle,native_empty;
  reg exec_done=0;reg [3:0] retired=0;
- wire exec_owned,new_permit,association_fault;
+ wire exec_owned,new_permit,association_fault;wire [11:0] owned_frontier_terms;
  reg request_v=0,response_ready=0;
  wire [3:0] req_rdy,rsp_v,rsp_we;wire [63:0] rsp_tag;wire [1023:0] rsp_data;
  wire m_req_v,m_req_we,m_rsp_rdy;wire [31:0] m_req_addr,m_req_strb;
@@ -33,24 +33,24 @@ module tb_su_cp_parent_association #(parameter integer PARENT_CONTEXT_TEST=0,FOU
   .sm_fault({1'b0,cp_fault|association_fault}),.res_v(2'd0),.res_data(64'd0),
   .cpl_v(cpl_v),.cpl_rdy(cpl_ready&&routes_drained));
  generate if(PARENT_CONTEXT_TEST)begin:context_on
- ot_hbm_integrated_su_cp_context #(.ENABLE(1),.SU_ENABLE(1),.SU_REGISTERED_OUTPUTS(1),.SU_REGISTERED_STATUS(1),.SU_REGISTERED_BOUNDARY(1),.SU_BALANCED_OWNER_BOUNDARY(1),.SU_FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST)) binding(
+ ot_hbm_integrated_su_cp_context #(.ENABLE(1),.SU_ENABLE(1),.SU_REGISTERED_OUTPUTS(1),.SU_REGISTERED_STATUS(1),.SU_REGISTERED_BOUNDARY(1),.SU_BALANCED_OWNER_BOUNDARY(1),.SU_FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.SU_FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST)) binding(
   .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(live_pc),.cp_job(live_job),.cp_gen(live_gen),.launch_token(live_token),.launch_pos(live_pos),
   .lease_v(lease_v),.lease_granted(grants[1]),.release_v(release_v),.release_r(releases[1]),.exec_done(exec_done),.exec_fault(1'b0),
   .retired_original_ops(retired),.shared_fault(shared_fault),.owned(qualified_owned),.pending(pending),.quiet(quiet),.selected(selected),.done(done),.fault(cp_fault),
   .selected_pc(held_pc),.held_job(held_job),.held_gen(held_gen),.held_token(held_token),.held_pos(held_pos),.exec_owned(exec_owned),.new_request_permit(new_permit),.association_fault(association_fault));
  end else begin:original
- ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.BALANCED_OWNER_BOUNDARY(1),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST)) binding(
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.BALANCED_OWNER_BOUNDARY(1),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST)) binding(
   .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(live_pc),.cp_job(live_job),.cp_gen(live_gen),.launch_token(live_token),.launch_pos(live_pos),
   .lease_v(lease_v),.lease_granted(grants[1]),.release_v(release_v),.release_r(releases[1]),.exec_done(exec_done),.exec_fault(1'b0),
-  .retired_original_ops(retired),.shared_fault(shared_fault),.owned(qualified_owned),.pending(pending),.quiet(quiet),.selected(selected),.done(done),.fault(cp_fault),
+  .retired_original_ops(retired),.shared_fault(shared_fault),.owned(qualified_owned),.owned_frontier_terms(owned_frontier_terms),.pending(pending),.quiet(quiet),.selected(selected),.done(done),.fault(cp_fault),
   .selected_pc(held_pc),.held_job(held_job),.held_gen(held_gen),.held_token(held_token),.held_pos(held_pos));
- ot_hbm_integrated_su_cp_association #(.ENABLE(1)) association(
-  .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),
+ ot_hbm_integrated_su_cp_association #(.ENABLE(1),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST)) association(
+  .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),.qualified_owned_terms(owned_frontier_terms),
   .exec_owned(exec_owned),.new_request_permit(new_permit),.fault(association_fault));
  end endgenerate
  wire off_owned,off_permit,off_fault;
  ot_hbm_integrated_su_cp_association baseline(
-  .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),
+  .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),.qualified_owned_terms(owned_frontier_terms),
   .exec_owned(off_owned),.new_request_permit(off_permit),.fault(off_fault));
  ot_hbm_integrated_sm0_borrow #(.ENABLE(1)) owner(
   .clk(clk),.por_n(por_n),.native_clients_drained(1'b1),.cdc_drained(1'b1),
