@@ -240,5 +240,28 @@
     "native_all_member_row_tap_guard5_and_reload_pass": true,
     "slot_growth_mm2": 0,
     "added_cycles": 0
+  },
+  "C16_terminal": {
+    "observed_at": "2026-10-06T01:24:58.137298+00:00",
+    "terminal": true,
+    "supervisor_absent": 1824378,
+    "outer_rc_file_missing": true,
+    "actual_make_exit": 2,
+    "first_error": "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+    "first_error_line": 316564,
+    "log_sha256": "091cce73ce5eb165ff9277db66c11664696ec564a3c3823d42d975d06d5dbc7e",
+    "preserved_failed_checkpoint": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C16_rect_strips/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+    "structural_failure": "Region placement check failed (270427); serialized region had old rectangle plus strip, corrected single-boundary region API used in C17/C18/C19",
+    "last_edge_spacing_violations": 6354,
+    "last_padding_violations": 630,
+    "preCTS_SS_setup_ps": -2568.27,
+    "preCTS_hold_ps": -6.23,
+    "qualification": false,
+    "restart": false
+  },
+  "current_physical_successors": {
+    "C17b": "live EPYC1 preserved; no new E1 jobs",
+    "C18": "live E2 comb shared partition supervisor2546022 source3c45 all105regions verified",
+    "C19": "live E2 receiver partition supervisor2562095 source3c45 all105regions verified"
   }
 }
