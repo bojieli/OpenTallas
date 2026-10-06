@@ -1,0 +1,232 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T05:53:39.722736+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_accel_expert_stack_p2",
+    "clock_port": "stream_clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_accel/r5a_stack_p2_clocks.sdc",
+          "sha256": "a4e56756bf998a69c3108363c44cd11dd6dbd8b28d6d566fbcbbdeff96d0ad18"
+        }
+      ],
+      "lines": [
+        "create_clock -name h_clk -period 1024 [get_ports service_clk]",
+        "set_clock_uncertainty -setup 60 [get_clocks h_clk]",
+        "set_clock_uncertainty -hold 25 [get_clocks h_clk]",
+        "set_clock_groups -asynchronous -group [get_clocks core_clk] -group [get_clocks h_clk]",
+        "remove_input_delay [all_inputs -no_clocks]",
+        "remove_output_delay [all_outputs]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv",
+        "sha256": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+        "size_bytes": 1120
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv",
+        "sha256": "214baf61951dbfb62d9bb7766b01ddd418cad0f461a534f574d67e58e3a4643a",
+        "size_bytes": 2068
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv",
+        "sha256": "d7a2043b17da497637eb721a3f039d04b444b955fd78fe208348ba1c2cc32a4f",
+        "size_bytes": 24517
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv",
+        "sha256": "6e6bfb470c05837e4ac7324f46aad9e0354bea77a7d244dbb7dab19a3ab2d8d6",
+        "size_bytes": 20588
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv",
+        "sha256": "fa6630f03dfb92891cac34a7a68ab5ba70d7ba6f8ee0020486ea5e5ba47ff476",
+        "size_bytes": 8162
+      },
+      {
+        "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+        "sha256": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+        "size_bytes": 672
+      }
+    ],
+    "top": "ot_hbm_accel_expert_stack_p2"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\n. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).\n5.12. Executing OPT_MERGE pass (detect identical cells).\n5.13. Executing OPT_DFF pass (perform DFF optimizations).\n5.14. Executing OPT_CLEAN pass (remove unused cells and wires).\n5.15. Executing OPT_EXPR pass (perform const folding).\n5.16. Finished fast OPT passes. (There is nothing left to do.)\n6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).\n7. Executing TECHMAP pass (map to technology primitives).\n7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v\n7.2. Continuing TECHMAP pass.\n8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).\n8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).\n9. Executing OPT pass (performing simple optimizations).\n9.1. Executing OPT_EXPR pass (perform const folding).\n9.2. Executing OPT_MERGE pass (detect identical cells).\n9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).\n9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).\n9.5. Executing OPT_MERGE pass (detect identical cells).\n9.6. Executing OPT_DFF pass (perform DFF optimizations).\n9.7. Executing OPT_CLEAN pass (remove unused cells and wires).\n9.8. Executing OPT_EXPR pass (perform const folding).\n9.9. Rerunning OPT passes. (Maybe there is more to do..)\n9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).\n9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).\n9.12. Executing OPT_MERGE pass (detect identical cells).\n9.13. Executing OPT_DFF pass (perform DFF optimizations).\n9.14. Executing OPT_CLEAN pass (remove unused cells and wires).\n9.15. Executing OPT_EXPR pass (perform const folding).\n9.16. Finished fast OPT passes. (There is nothing left to do.)\n10. Executing SETUNDEF pass (replace undef values with defined constants).\nabc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/opentallas_ot_hbm_accel_expert_stack_p2_asap7_r5a_stack_p2_mapr2/base/abc.constr -D 833.333\n11. Executing ABC pass (technology mapping using ABC).\n11.1. Extracting gate netlist of module `\\ot_hbm_accel_expert_stack_p2' to `<abc-temp-dir>/input.blif'..\nERROR: ABC failed with status F\n\nElapsed time: 0:41.78[h:]min:sec. CPU time: user 49.96 sys 1.42 (122%). Peak memory: 2011744KB.\nElapsed time: 5:57:39.98[h:]min:sec. CPU time: user 21852.18 sys 45.29 (102%). Peak memory: 14848420KB.\nmake[1]: *** [Makefile:297: do-yosys] Error 1\nmake: *** [Makefile:311: /work/results/asap7/opentallas_ot_hbm_accel_expert_stack_p2_asap7_r5a_stack_p2_mapr2/base/1_2_yosys.v] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T23:55:15.160509+00:00",
+  "git": {
+    "commit": "f6fd8e306749eaa66aecadb7938a6625bb58bdce",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_accel_expert_stack_p2",
+      "--param",
+      "ENABLE=1",
+      "--clock-port",
+      "stream_clk",
+      "--clock-period-ns",
+      ".833333333333",
+      "--clock-uncertainty-ns",
+      ".060",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--stages",
+      "pnr",
+      "--pnr-stop-after",
+      "floorplan",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--macro-view",
+      "ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--die-area",
+      "0",
+      "0",
+      "2000.16",
+      "2000.16",
+      "--core-area",
+      "19.44",
+      "19.44",
+      "1980.72",
+      "1980.72",
+      "--sdc-append",
+      "physical/hbm_accel/r5a_stack_p2_clocks.sdc",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/hbm_accel/r5a_p2_macro_local.tcl",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--nickname-tag",
+      "r5a_stack_p2_mapr2",
+      "--keep-heavy-artifacts",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/map_r2/flow",
+      "--output",
+      "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/map_r2/physical.json",
+      "--purpose",
+      "characterization",
+      "--source",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_p2.sv",
+      "--source",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+      "--orfs-var",
+      "SYNTH_SLANG_ARGS=--unroll-limit 65536"
+    ],
+    "driver": {
+      "commit": "f6fd8e306749eaa66aecadb7938a6625bb58bdce",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/source/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/source"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/source"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

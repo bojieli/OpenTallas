@@ -3,6 +3,33 @@
 import hashlib,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def reset_first_enable(text):
+ # Same event semantics: reset dominates, CE gates only the non-reset arm.
+ # Slang requires the async-reset test directly under the clocked statement.
+ pattern=r'(always\s*@\(posedge clk\s+or negedge (\w+)\))\s+if \(advance \|\| !\2\)'
+ matches=list(re.finditer(pattern,text))
+ for m in reversed(matches):
+  reset=m.group(2)
+  lead=re.match(r'\s*(?:begin\s*)?if\s*\(!'+reset+r'\)\s*',text[m.end():])
+  if not lead:raise ValueError('Async reset must be first statement')
+  pos=m.end()+lead.end()
+  if text.startswith('begin',pos):
+   depth=0;end=None
+   tokens=r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|\bbegin\b|\bend\b'
+   for t in re.finditer(tokens,text[pos:]):
+    if t.group()=='begin':depth+=1
+    elif t.group()=='end':
+     depth-=1
+     if depth==0:end=pos+t.end();break
+   if end is None:raise ValueError('Unbalanced reset arm')
+  else:end=text.index(';',pos)+1
+  arm=re.match(r'\s*else\b',text[end:])
+  if not arm:raise ValueError('Async reset requires nonreset arm')
+  cut=end+arm.end()
+  text=text[:cut]+' if (advance)'+text[cut:]
+  text=text[:m.start()]+m.group(1)+text[m.end():]
+ return text
+
 def main():
  out=ROOT/'rtl/rom/wavefront/context/protected_20261006';out.mkdir(exist_ok=True)
  ctrl_path=ROOT/'rtl/rom/wavefront/context/enclosing_20261005/ot_rom_pkg_ctrl_wfc_enclosed.sv'
@@ -46,6 +73,7 @@ def main():
         end
 '''+needle)
  s=s.replace('        if (!rx_enable) begin\n            in_ready = 1\'b0; rx_hdr = 1\'b0; rx_res = 1\'b0;', '        if (!write_step) begin st_rx=0;st_new=0;st_q=0;st_fb=0;st_wk=0;start_i=0;end\n        if (!rx_enable) begin\n            in_ready = 1\'b0; rx_hdr = 1\'b0; rx_res = 1\'b0;')
+ s=reset_first_enable(s)
  cp=out/'ot_rom_pkg_ctrl_wfc_enclosed_vm.sv';cp.write_text(s)
  pp=ROOT/'rtl/rom/wavefront/context/enclosing_20261005/ot_dsrom_wfc_parent_enclosed.sv';s=pp.read_text()
  s=s.replace('ot_dsrom_wfc_parent_enclosed','ot_dsrom_wfc_parent_enclosed_vm').replace('ot_rom_pkg_ctrl_wfc_enclosed','ot_rom_pkg_ctrl_wfc_enclosed_vm')
