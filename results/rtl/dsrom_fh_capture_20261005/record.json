@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "DECODE_SPLIT_EXACT_PASS_C14_PHYSICAL_RUNNING",
+  "status": "DECODE_SPLIT_EXACT_PASS_C15_CORRECTED_CONES_PHYSICAL_RUNNING",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -122,7 +122,7 @@
     "physical_closed": false,
     "adopted": false,
     "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split",
-    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C14_decode_split"
+    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C15_cone_grouped"
   },
   "C11_actual_result": {
     "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
@@ -156,5 +156,22 @@
     "successor": "C14_decode_split",
     "source_recipe_successor": "650dc3c64",
     "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d"
+  },
+  "C14_actual_result": {
+    "stage": "global placement idealclock, estimated placed RC before CTS",
+    "setup_ws_ps": -4475.26,
+    "hold_ws_ps": -5.69979,
+    "qualified": false,
+    "macros": 64,
+    "critical_start": "u_head.u_fh.g_fadd[55].g_lat.u_add.s1_big[0]",
+    "critical_end": "u_head.u_fh.g_fadd[55].g_lat.u_add.u_cb.g_r.r[53]",
+    "actual_cause": "ABC anonymous comb gates not in lane fences while named FFs are; _361371_ groupNone with g_fadd55 nets",
+    "actual_stage_after": "DPL old diamond search LIVE; not killed/restarted/sourcechanged",
+    "successor": "C15_cone_grouped",
+    "successor_recipe": "d59e97224",
+    "RTL_unchanged": true,
+    "extra_cycles": 0,
+    "max_guarded_group_padded_occupancy": 0.1400986124726005,
+    "slot_growth_mm2": 0
   }
 }
