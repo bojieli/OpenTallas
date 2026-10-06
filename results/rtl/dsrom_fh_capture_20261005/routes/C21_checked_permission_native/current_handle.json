@@ -26,12 +26,16 @@
   "corners": "SS60 FF25 833.333ps all64realSRAM/actualclkQ loads +grantreceiver",
   "structural_corrections": "Local32bit checked capture, registered protected error/identity permission; macro-free site-aligned fences guard5; fixed macros/pins; mandatorycheckplacement preserved DPO disabled after C20actualfailure",
   "no_duplicate": true,
-  "status": "ADMITTED source synthesis active",
+  "status": "TERMINAL superseded physical context retention failure",
   "container": "97ea57529269",
   "yosys_pid": 1136685,
   "physical_qualified": false,
   "retained_mapped_objects_reuse": "Arithmetic source unchanged; new native guard logic requires one honest new mapping. Existing C20 ODBs retained as immutable failure history.",
   "attribute_audit": "PNR-only helper path bypasses host synth write_verilog -noattr line700. Actual Slang canonicalize intermediate .rtlil preserves keep/dont_touch; mapped independent guard state counts still required.",
   "source_model": "results/uarch/dsrom_fh_capture_20261005/checked_permission/measured.json",
-  "result_collection": "Source-bound logs and reports, not previous C20 physical.json. No current SSFF verdict."
+  "result_collection": "Source-bound logs and reports, not previous C20 physical.json. No current SSFF verdict.",
+  "current_controller": null,
+  "current_container": null,
+  "terminal": "terminal.json",
+  "authoritative_current_result": "actual_failure.json"
 }
