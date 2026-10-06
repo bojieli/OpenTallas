@@ -11,14 +11,16 @@
   "fwd": 0,
   "meso": 1,
   "launch": 1,
-  "outputs_mapped": 412
+  "outputs_mapped": 412,
+  "wchk": true
  },
  "hfd_gath_r10": {
   "role": "gather",
   "fwd": 0,
   "meso": 3,
   "launch": 5,
-  "outputs_mapped": 2160
+  "outputs_mapped": 2160,
+  "wchk": true
  },
  "hfd_gath_r24": {
   "role": "gather",
@@ -32,7 +34,8 @@
   "fwd": 0,
   "meso": 3,
   "launch": 5,
-  "outputs_mapped": 2160
+  "outputs_mapped": 2160,
+  "wchk": true
  },
  "hfd_gath_r8": {
   "role": "gather",
@@ -53,35 +56,42 @@
   "fwd": 5,
   "meso": 5,
   "launch": 0,
-  "outputs_mapped": 6189
+  "outputs_mapped": 6189,
+  "wchk": true,
+  "pin_stages": 2,
+  "fdly": 10
  },
  "hfd_mcast_r6": {
   "role": "mcast",
   "fwd": 5,
   "meso": 5,
   "launch": 0,
-  "outputs_mapped": 6189
+  "outputs_mapped": 6189,
+  "wchk": true
  },
  "hfd_mcast_r7": {
   "role": "mcast",
   "fwd": 0,
   "meso": 5,
   "launch": 0,
-  "outputs_mapped": 4126
+  "outputs_mapped": 4126,
+  "wchk": true
  },
  "hfd_meso_r1": {
   "role": "meso",
   "fwd": 0,
   "meso": 3,
   "launch": 0,
-  "outputs_mapped": 1099
+  "outputs_mapped": 1099,
+  "wchk": true
  },
  "hfd_meso_r28": {
   "role": "meso",
   "fwd": 0,
   "meso": 1,
   "launch": 1,
-  "outputs_mapped": 974
+  "outputs_mapped": 974,
+  "wchk": true
  },
  "hfd_meso_r32": {
   "role": "meso",

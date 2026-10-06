@@ -163,6 +163,7 @@ def main(argv=None):
     ap.add_argument("--configs", default=",".join(CONFIGS))
     ap.add_argument("--rdreg", action="store_true", help="ot_meso_fifo RDREG=1 (registered data-ring readout, +1 period)")
     ap.add_argument("--crdreg", action="store_true", help="ot_meso_fifo CRDREG=1 (registered credit-ring readout)")
+    ap.add_argument("--wchk", action="store_true", help="ot_meso_fifo WCHK=1 (chunked data-ring write, 0 periods)")
     ap.add_argument("--obyp", action="store_true", help="ot_meso_fifo OBYP=1 (readout flop is the last register; -1 period)")
     ap.add_argument("--nobp", action="store_true", help="ot_meso_fifo NOBP=1 (no receive buffer; consumer always ready: "
                     "every run +rdy1=1, no bp mode, EARLY_CREDIT not applicable; negative control: bp mode must fault)")
@@ -175,6 +176,8 @@ def main(argv=None):
         os.environ["CRDREG"] = "1"
     if a.obyp:
         os.environ["OBYP"] = "1"
+    if a.wchk:
+        os.environ["WCHK"] = "1"
     if a.rdreg:
         os.environ["RDREG"] = "1"
         OUT_REG_PERIODS = 1 if a.obyp else 2   # data side: readout flop (+ the output register unless OBYP)
@@ -191,6 +194,7 @@ def main(argv=None):
     out["nobp"] = bool(a.nobp)
     out["crdreg"] = bool(a.crdreg)
     out["obyp"] = bool(a.obyp)
+    out["wchk"] = bool(a.wchk)
     for name in a.configs.split(","):
         cfg = CONFIGS[name]
         tb = build(a.work, name, cfg)

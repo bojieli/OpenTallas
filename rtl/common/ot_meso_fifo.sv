@@ -68,6 +68,11 @@ module ot_meso_fifo #(
                                      // a fail-closed safety net, not the argument.
     parameter bit CRDREG   = 0,      // register the credit-ring readout too (credit return +1 period; data latency
                                      // unchanged; CREDITS + 1 = 9 still covers the round trip)
+    parameter bit WCHK     = 0,      // data-ring write in 64-bit chunks, each with its own registered one-hot write-slot
+                                     // copy (kept hierarchy, fanout 64, not W x DEPTH) and written every cycle: the
+                                     // slot data no longer waits on w_send (the writer state / credit net); validity
+                                     // stays in the slot's v bits, so the reader takes exactly the same words.  Same
+                                     // latency.  Default off.
     parameter bit OBYP     = 0       // NOBP && RDREG only: the readout flop is the FIFO's last register -- r_d / r_v come
                                      // straight from it (o_d bypassed, -1 period), so the consumer's own register (a
                                      // station's per-face pin-launch flop) is the next stage
@@ -126,7 +131,7 @@ module ot_meso_fifo #(
         // credit ring rclk -> wclk
         logic [0:0]   c_rd; logic c_rv, c_lap_ok, c_glo, c_ghi;
 
-        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG)) u_data (
+        ot_meso_ring #(.W(W), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(RDREG), .WCHK(WCHK)) u_data (
             .tclk(wclk), .t_v(w_send), .t_d(w_d),
             .rclk(rclk), .r_align(r_align), .r_on(r_on),
             .r_d(d_rd), .r_v(d_rv), .r_lap_ok(d_lap_ok), .r_glo_ok(d_glo), .r_ghi_ok(d_ghi)
@@ -332,8 +337,9 @@ module ot_meso_ring #(
     parameter int OFFSET   = 2,
     parameter int GUARD_LO = 0,
     parameter int GUARD_HI = 4,
-    parameter bit RDREG    = 0       // readout flops: r_d / r_v / r_lap_ok captured at the consuming rclk edge (r_v,
+    parameter bit RDREG    = 0,      // readout flops: r_d / r_v / r_lap_ok captured at the consuming rclk edge (r_v,
                                      // r_lap_ok masked by r_on of that cycle), presented one period later
+    parameter bit WCHK     = 0       // chunked write (see ot_meso_fifo WCHK): ot_meso_wch per 64 bits
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -367,7 +373,22 @@ module ot_meso_ring #(
         tg <= tc ^ (tc >> 1);                    // Gray of the index written at this edge
         tc <= tc + 1'b1;
     end
-    always_ff @(posedge tclk) if (t_v) s_d[tc[AW-1:0]] <= t_d;
+    if (WCHK) begin : g_wchk
+        // every slot write lands at the same edge as the unchunked form (slot tc[AW-1:0]); the chunk's slot register
+        // is loaded one edge ahead with the next index, so it equals tc's slot from the first edge after power-up
+        localparam int NCW = (W % 64 == 0) ? W / 64 : 1;
+        localparam int WCW = W / NCW;
+        wire [AW-1:0] nxt = tc[AW-1:0] + AW'(1);
+        for (genvar c = 0; c < NCW; c++) begin : wch
+            logic [DEPTH*WCW-1:0] sd_c;
+            ot_meso_wch #(.W(WCW), .DEPTH(DEPTH)) u_wch (.clk(tclk), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
+            for (genvar i = 0; i < DEPTH; i++) begin : sl
+                assign s_d[i][c*WCW +: WCW] = sd_c[i*WCW +: WCW];
+            end
+        end
+    end else begin : g_wone
+        always_ff @(posedge tclk) if (t_v) s_d[tc[AW-1:0]] <= t_d;
+    end
 
     // ---------------- receive (rclk) ----------------
     // rising-edge sample (time t) and falling-edge sample (time t - T/2), both 3-FF synchronised and aligned
@@ -519,5 +540,23 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         assign y = y_q;
     end else begin : g_comb
         assign y = y_c;
+    end
+endmodule
+
+// One chunk of the data-ring write (WCHK): its own one-hot copy of the write slot, loaded with the next index one edge
+// ahead, and the chunk's DEPTH slots written every cycle.  Kept hierarchy keeps the replicated slot registers apart.
+(* keep_hierarchy *)
+module ot_meso_wch #(parameter int W = 64, parameter int DEPTH = 4) (
+    input  logic                     clk,
+    input  logic [$clog2(DEPTH)-1:0] nxt,
+    input  logic [W-1:0]             d,
+    output logic [DEPTH*W-1:0]       sd
+);
+    logic [DEPTH-1:0] we;
+    logic [W-1:0] m [DEPTH];
+    always_ff @(posedge clk) we <= DEPTH'(1) << nxt;
+    for (genvar i = 0; i < DEPTH; i++) begin : sl
+        always_ff @(posedge clk) if (we[i]) m[i] <= d;
+        assign sd[i*W +: W] = m[i];
     end
 endmodule
