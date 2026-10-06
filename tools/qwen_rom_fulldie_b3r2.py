@@ -65,7 +65,8 @@ def _isa_bits():
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
-             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False):
+             slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
+             tree_interleave=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -173,8 +174,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['spread_pins'] = spread or b3r6
     m['b3r2']['b3r6_channel_pins'] = b3r6
     if tree_cols:
-        _tree_cols(v, tree_cols)
+        _tree_cols(v, tree_cols, interleave=tree_interleave)
     m['b3r2']['b3r7_tree_pin_columns'] = tree_cols
+    m['b3r2']['r20_tree_pin_interleave'] = tree_interleave
     m['b3r2']['b3r8_bw_align'] = bw_align
     m['b3r2']['b3r9_east_mirror'] = east_mirror
     m['b3r2']['b3r10_bw_edge'] = bw_edge
@@ -1197,11 +1199,15 @@ def _io_faces(v):
 TREE_COL_UM = 9.24          # one GRT gcell (the k16 GRT grid pitch, gcell_over.txt x step)
 
 
-def _tree_cols(v, ncols):
+def _tree_cols(v, ncols, interleave=False):
     """b3r7: the tile's four tree-word area pins (t_out, n_a, n_b, n_y; 32 bundled M8 pins each) laid out as ncols
     sub-columns one gcell apart instead of one 82 um stack at one x.  b3r5's per-gcell dump: 13.1k of the 19.4k
     M9 overflow sits over the tile bodies at the tree-pin x (column offsets 246-292 um), 7-8 M9 tracks a gcell
-    carrying a 32-wire word that leaves one x."""
+    carrying a 32-wire word that leaves one x.
+    interleave (r20): the four ports' sub-columns interleave across the body (port i, sub-column j at
+    x = 10 + (4 j + i) gcells) instead of four 6-gcell groups: r18j i50 / r19 i5 M9 overflow is 1-gcell-wide vertical
+    lines of tree words (tree nets 57k of 60k blamed gcell-hits) at the pin-group x and in the corridor."""
+    stride = 4 if interleave else 1
     base_masters, base_rects = v.masters, v.pin_rects
 
     def masters(model, k=1, port_bits=None):
@@ -1211,8 +1217,8 @@ def _tree_cols(v, ncols):
             spec = t.ports[pn]
             if spec[0] == 'area' and len(spec) == 5:
                 # x 10 + 60 i (was 40 + 60 i): the ncols sub-columns stay inside the 260.9 um body
-                x = 10.0 + 60.0 * i
-                if x + (ncols - 1) * TREE_COL_UM + 0.4 * k > min(x + 60.0, t.w - 2.0) - 1e-6:
+                x = 10.0 + (TREE_COL_UM * i if interleave else 60.0 * i)
+                if x + (ncols - 1) * stride * TREE_COL_UM + 0.4 * k > (t.w - 2.0 if interleave else min(x + 60.0, t.w - 2.0)) - 1e-6:
                     raise ValueError(f'tree pin columns: {ncols} do not fit')
                 t.ports[pn] = ('area', spec[1], x, spec[3], spec[4], ncols)
         return out
@@ -1244,7 +1250,7 @@ def _tree_cols(v, ncols):
             step = pp * k * pitch
             y = off * k + round((yc - per * step / 2 - off * k) / (pp * k)) * pp * k + ri * step
             hw = 0.020 * k
-            xx = x + ci * TREE_COL_UM
+            xx = x + ci * stride * TREE_COL_UM
             out.append((nm, layer, (xx, y - hw, xx + 0.4 * k, y + hw)))
         return out
     v.masters, v.pin_rects = masters, pin_rects
@@ -1823,6 +1829,8 @@ def main(argv=None):
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
     ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
                     'fabric from per-stack landing crossbars (KV reconciliation)')
+    ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
+                    'the tile body')
     ap.add_argument('--r18', action='store_true', help='r18: die-top lint Q1-Q14 (no row engines, CDC clusters, clock '
                     'nets, role variants)')
     ap.add_argument('--strip-span', action='store_true', help='r17d: strip/CDC/controller PG regions per stack span')
@@ -1853,7 +1861,7 @@ def main(argv=None):
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19)
+                    r19=a.r19, tree_interleave=a.tree_interleave)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:
