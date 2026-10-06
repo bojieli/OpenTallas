@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
- "round": "r16g",
- "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+ "round": "r16h",
+ "generator_sha256": "5ef5953be303f77ab213c78d22d6befdb09ec9c8f816ad3e9752b8e8d13e2c0d",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -23,24 +23,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_above_generator": [
-     "M8",
-     "M9"
+    "positions": "exact",
+    "size_view": [
+     1349.112,
+     1349.976
     ],
-    "pg_pins": {
-     "VDD": [
-      "M7",
-      "M8"
-     ],
-     "VSS": [
-      "M7",
-      "M8"
-     ]
-    },
-    "gen_pins": 9155,
-    "view_pins": 9155
+    "size_gen": [
+     1349.112,
+     1349.976
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/attn/routes/r2_c4",
@@ -74,25 +67,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_above_generator": [],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    },
-    "gen_pins": 130,
-    "view_pins": 130
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     36.696
+    ],
+    "size_gen": [
+     1399.656,
+     36.696
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45",
@@ -153,33 +138,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     109.704,
+     110.136
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     109.704,
+     110.136
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r1_hfd_gath_r24",
@@ -222,33 +191,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     81.192,
+     82.056
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     81.192,
+     82.056
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r1_hfd_gath_r8",
@@ -286,33 +239,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     109.704,
+     110.136
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     109.704,
+     110.136
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r1_hfd_gath_r9",
@@ -349,7 +286,21 @@
    "instances": 1,
    "dir": "physical/hbm_accel_die_views/host_slab",
    "lef": "hfd_host_slab.lef",
-   "lib": null
+   "lib": null,
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     594.408,
+     16824.216
+    ],
+    "size_gen": [
+     594.408,
+     16824.216
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_index_q": {
    "kind": "index_q",
@@ -407,26 +358,20 @@
     "ff": "hfd_router_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "positions": "exact",
-    "problems": [],
-    "obs_above_generator": [],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    },
-    "gen_pins": 2118,
-    "view_pins": 2118
+    "verdict": "MISMATCH",
+    "problems": [
+     "size 1399.66 x 133.896 != 1399.656 x 326.28"
+    ],
+    "positions": "2118 pins off the generator position (same face)",
+    "size_view": [
+     1399.66,
+     133.896
+    ],
+    "size_gen": [
+     1399.656,
+     326.28
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40",
@@ -451,7 +396,21 @@
    "instances": 2,
    "dir": "physical/hbm_accel_die_views/serdes_slab",
    "lef": "hfd_serdes_slab.lef",
-   "lib": null
+   "lib": null,
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     2462.376,
+     3656.856
+    ],
+    "size_gen": [
+     2462.376,
+     3656.856
+    ],
+    "die_top_io_pins": []
+   }
   },
   "hfd_sfu": {
    "kind": "sfu",
@@ -474,12 +433,6 @@
      "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
      "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer"
     ],
-    "gen_pins": 3581,
-    "view_pins": 3581,
-    "missing": 0,
-    "extra": 0,
-    "wrong_face_pins": 231,
-    "wrong_layer": 162,
     "positions": "3419 pins off the generator position (same face)",
     "size_view": [
      2202.77,
@@ -489,54 +442,7 @@
      2202.744,
      2073.576
     ],
-    "per_port_faces": {
-     "c": {
-      "generator_face": "N",
-      "view_faces": {
-       "N": 45,
-       "S": 58
-      }
-     },
-     "ck": {
-      "generator_face": "N",
-      "view_faces": {
-       "N": 1
-      }
-     },
-     "r": {
-      "generator_face": "E",
-      "view_faces": {
-       "E": 98,
-       "S": 34,
-       "N": 128,
-       "W": 10
-      }
-     },
-     "q": {
-      "generator_face": "S",
-      "view_faces": {
-       "S": 44
-      }
-     },
-     "d": {
-      "generator_face": "S",
-      "view_faces": {
-       "S": 1099
-      }
-     },
-     "rst": {
-      "generator_face": "N",
-      "view_faces": {
-       "S": 1
-      }
-     },
-     "x": {
-      "generator_face": "W",
-      "view_faces": {
-       "W": 2063
-      }
-     }
-    }
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2/work/orfs (results .../base/4_cts.odb + 4_cts.sdc)",
@@ -570,33 +476,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     70.392,
+     60.456
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     70.392,
+     60.456
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r0",
@@ -634,33 +524,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     48.792,
+     127.416
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     48.792,
+     127.416
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r11",
@@ -698,33 +572,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     55.704,
+     64.776
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     55.704,
+     64.776
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r12",
@@ -762,33 +620,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     64.344,
+     56.136
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     64.344,
+     56.136
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r13",
@@ -826,33 +668,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     18.984,
+     118.776
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     18.984,
+     118.776
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r16",
@@ -890,33 +716,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     115.752,
+     19.416
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     115.752,
+     19.416
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r17",
@@ -954,33 +764,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     66.936,
+     60.456
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     66.936,
+     60.456
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r18",
@@ -1018,33 +812,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     60.024,
+     66.936
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     60.024,
+     66.936
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r19",
@@ -1082,33 +860,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     14.664,
+     142.536
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     14.664,
+     142.536
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r2_hfd_stn_r2",
@@ -1146,33 +908,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     66.072,
+     60.456
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     66.072,
+     60.456
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r20",
@@ -1210,33 +956,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     59.592,
+     66.936
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     59.592,
+     66.936
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r21",
@@ -1274,33 +1004,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     42.744,
+     73.416
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     42.744,
+     73.416
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r22",
@@ -1338,33 +1052,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     72.552,
+     43.176
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     72.552,
+     43.176
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r23",
@@ -1402,33 +1100,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     126.12,
+     49.656
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     126.12,
+     49.656
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r5d55_hfd_stn_r26",
@@ -1466,33 +1148,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     63.48,
+     62.616
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     63.48,
+     62.616
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r27",
@@ -1530,33 +1196,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     60.456,
+     64.776
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     60.456,
+     64.776
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r29",
@@ -1594,33 +1244,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     14.664,
+     142.536
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     14.664,
+     142.536
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r3",
@@ -1658,33 +1292,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     77.736
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r30",
@@ -1722,33 +1340,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     72.984,
+     41.016
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     72.984,
+     41.016
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r3_hfd_stn_r31",
@@ -1786,33 +1388,17 @@
    },
    "check": {
     "verdict": "MATCH",
-    "positions": "exact",
     "problems": [],
-    "obs_layers": [
-     "M1",
-     "M2",
-     "M3",
-     "M4",
-     "M5",
-     "M6",
-     "M7",
-     "RVTN",
-     "RVTP"
+    "positions": "exact",
+    "size_view": [
+     120.936,
+     51.816
     ],
-    "pg_pins": {
-     "VDD": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ],
-     "VSS": [
-      "M1",
-      "M2",
-      "M6",
-      "M7"
-     ]
-    }
+    "size_gen": [
+     120.936,
+     51.816
+    ],
+    "die_top_io_pins": []
    },
    "source": {
     "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/r9d30_hfd_stn_r4",

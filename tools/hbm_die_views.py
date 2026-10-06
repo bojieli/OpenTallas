@@ -329,6 +329,10 @@ def cmd_index(a):
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source') if k in v} if v else {}))
         if margin:
             idx['masters'][n]['margin'] = margin
+        if v and v.get('lef'):     # re-check against the CURRENT generator round (a view routed on an older outline)
+            c_ = check_lef(n, ROOT / v['dir'] / v['lef'], allow_extra=v.get('die_top_io', ()))
+            idx['masters'][n]['check'] = {k: c_[k] for k in ('verdict', 'problems', 'positions', 'size_view',
+                                                                 'size_gen', 'die_top_io_pins')}
         idx['counts'][st] += 1
     idx['counts'] = dict(idx['counts'])
     (base / 'index.json').write_text(json.dumps(idx, indent=1) + '\n')
