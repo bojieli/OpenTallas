@@ -2,6 +2,30 @@
 import hashlib,json,math
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def hierarchical_parent_join_model():
+    """Four literal quarters around the existing shared winner/retention body."""
+    return dict(default_enabled=False, quarters_per_rank=4, keys_per_quarter=16,
+        keys_per_rank=64, ranks_in_existing_model=4, quarters_across_ranks=16,
+        MACs_per_cycle_per_quarter=16*32*128, new_MACs_per_cycle=0,
+        key_bytes_per_cycle_per_quarter=1088, score_bytes_per_cycle_per_quarter=32,
+        key_boundary_bits_per_quarter=9077, score_boundary_bits_per_quarter=614,
+        query_bits_per_quarter=569, HBM_PC_ports_per_rank=128,
+        shared_selector_instances_per_rank=1, shared_replay_controller_instances_per_rank=1,
+        selector_line_memory=dict(quarters=4, words_per_quarter=256,
+            bits_per_word=16*(17+20), total_bits=4*256*16*(17+20),
+            source='ot_dsrom_reindex_chain.lm',
+            mutable_protection_qualification=False),
+        list_macros_per_quarter=16, list_macros_per_rank=64,
+        extra_registers=0, extra_cycles=0, added_token_latency_us=0,
+        scorer_latency='Existing100-cycle term once; accepted100..102 includes actual backpressure.',
+        gather_latency='Existing739 versus KC8738+1 retained; no extra scorer/replay charge.',
+        ready_relation='Perquarter ks_valid&ks_ready and sc_valid&sc_ready; shared replay waits real drained debts.',
+        area='Four reused literal NS4 quarters plus ONE unchanged shared chain. No physical fit against HBM20.57mm2 placeholder; measured mapped area still required.',
+        floorplan=dict(allocation_qualified=False, extra_channel_tracks_qualified=False,
+            cell_estimate_mm2=23.67273884544, footprint_at_50pct_mm2=47.34547769088,
+            estimate_scope='Existing four-quarter scorer/join estimate, not a mapped DSROM die allocation; excludes shared selector/protection/CTS/PG.'),
+        synthesis='Map literal quarter once, preserve attributes/port shape; link four copies to a separately synthesized unchanged shared chain, never duplicate winner or retention.',
+        numerical_gate_replay=False, physical_qualified=False, adopted=False)
 def native_quarter_join_model():
     """Wiring to the existing W11 scorer; no new engine or calendar stage."""
     source=ROOT/'rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv'
@@ -44,6 +68,7 @@ def model():
     actual_cycles=measured['worst_rank']['cycles'] if source_matched else None
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
         MACs_per_cycle=0,rounding_and_reduction_changes=0,native_quarter_port_join=native_quarter_join_model(),
+        hierarchical_synthesis_join=hierarchical_parent_join_model(),
         list_memory=dict(macro=name,macros_per_stack=banks,macro_json_sha256=hashlib.sha256((path/(name+'.json')).read_bytes()).hexdigest(),logical_bits=slots*entries*lbw,physical_bits=banks*512*128,
             code='SECDED35 per payload14+full logical entry address14; two independently masked64-bit fields per128-bit macro word',
             write_entries_per_cycle=1,write_logical_bytes_per_cycle=1.75,write_physical_bytes_per_cycle=8,read_entries_per_cycle=2,read_logical_bytes_per_cycle=3.5,read_physical_bytes_per_cycle=16,
