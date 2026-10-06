@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "source_commit": "3b0b60b31bfedcbb9538a1a3e63f5f06f63941a6",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "7dbf297534f2aac1bc3c58c7977bcd9cdfd0a90fbcc669ed8bc025058077943c",
+    "rtl/dsrom_sys/s81_window_la/pipeline/tb_window_column_split.sv": "780f6fa5631f07b94d6cd3b38eaebbdec326217f73f8ab4a011243efae055005"
+  },
+  "rows": 32,
+  "widths": [
+    128,
+    256
+  ],
+  "comparisons": 1569,
+  "read_write_collisions": 517,
+  "positive_exit": 0,
+  "negative_exit": 1,
+  "added_cycles": 0,
+  "split_columns_default": 0,
+  "coverage": [
+    "all32rowaddresses",
+    "uninitialized four-state equality",
+    "same-row read-before-write",
+    "back-to-back requests",
+    "read bubbles",
+    "multirow writes",
+    "reset pending read cancellation",
+    "reset payload retention"
+  ],
+  "physical_closed": false
+}

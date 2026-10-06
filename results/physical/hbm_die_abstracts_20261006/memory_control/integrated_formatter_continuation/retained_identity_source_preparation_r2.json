@@ -1,0 +1,41 @@
+{
+  "status": "RETAINED_CP_TO_PROTECTED_SOURCE_IDENTITY_HARNESS_WRITTEN",
+  "source_paths": {
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_integrated_minimum_parent.sv": "423cd792783c9dccb0a408389ae7efb4e342c068d36f4d7287c891a69144dda4",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_formatter_continuation.inc": "e67a3ac7010e735dbd634045ce199f96bdde5f792029f8d8da6d9fd2181ea3b1",
+    "physical/hbm_die_abstracts_20261006/memory_control/INTEGRATED_FORMATTER_CONTINUATION_20261006.txt": "09620bc1afa180b1ff77f052bf2e0634f1d6815b9c205901be7257cce27a365b"
+  },
+  "source_checks": {
+    "CPP_wrapper_member_names": 285,
+    "readonly_CP_observation": true,
+    "identity_copy_and_plane_mapping_static_checks": true,
+    "compile": false,
+    "runtime": false
+  },
+  "mapping": {
+    "words_per_plane": 3072,
+    "bits_per_word": 512,
+    "file_line": "32*source_rank7+source_word5",
+    "plane0": "score",
+    "plane1": "ID",
+    "lanes": "16 little-endian U32",
+    "layer": 20,
+    "candidate_source_layer": 20,
+    "candidate_masked": false
+  },
+  "identity_path": [
+    "counted actual CP doorbell acceptance",
+    "observed fixture_formatter_actual_cp_frame",
+    "accepted protected preinstall_frame",
+    "source frame and arena request frame"
+  ],
+  "negative": "observed accepted CP frame with only TOKEN17 bit16 toggled",
+  "held_ACK_and_reverse_checks_preserved": true,
+  "producer_state_at_handoff": "frontend progressing; all96 actual publications not yet supplied",
+  "numerical_child_owner": "Gauss",
+  "compile_link_runtime_owner": "Lorentz",
+  "jobs_launched": 0,
+  "passing_gates_replayed": 0,
+  "full_token_qualified": false,
+  "physical_qualified": false
+}

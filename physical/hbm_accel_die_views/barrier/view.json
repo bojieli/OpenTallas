@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_barrier",
+ "kind": "barrier",
+ "status": "closed",
+ "lef": "hfd_barrier.lef",
+ "lib": {
+  "ss": "hfd_barrier_ss.lib",
+  "ff": "hfd_barrier_ff.lib"
+ },
+ "files_sha256": {
+  "hfd_barrier.lef": "3afc88da7aa6cff73cee66ae6c8598a97125d4e79452137fb3bb9084b1ae0984",
+  "hfd_barrier_ss.lib": "987522d6fc45da0f5eeb0fa281c736b4971685256f092221a519152701a7ddec",
+  "hfd_barrier_ff.lib": "ef98f7be1eee0014be5f8481a108b1478c19a4608692be3c6119398b545e8418"
+ },
+ "check": {
+  "verdict": "MATCH",
+  "positions": "exact",
+  "problems": [],
+  "obs_above_generator": [
+   "M8",
+   "M9"
+  ],
+  "pg_pins": {
+   "VDD": [
+    "M1",
+    "M2",
+    "M8",
+    "M9"
+   ],
+   "VSS": [
+    "M1",
+    "M2",
+    "M8",
+    "M9"
+   ]
+  },
+  "gen_pins": 130,
+  "view_pins": 130
+ },
+ "size_um": [
+  1399.656,
+  36.696
+ ],
+ "source": {
+  "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/b1_pd55",
+  "host": "ot-epyc1tb",
+  "SOURCE_COMMIT": "8c5590c3e9a9669d4b2542ef7fb1401d2666ce18",
+  "ss_setup_ps": 283.48,
+  "ff_hold_ps": 8.54,
+  "closes_signoff_SS60_FF25": true,
+  "clock_period_ns": 0.833,
+  "status": "pass",
+  "drc": 0,
+  "antenna": 0,
+  "cell_um2": 160.278,
+  "seq_um2": 21.3597,
+  "core_um2": 49504.8,
+  "macro_um2": 0
+ },
+ "wrapper": {
+  "master": "hfd_barrier",
+  "cfg_bits": 0,
+  "cfg_inputs": [],
+  "folded_output_bits": 0,
+  "folded_outputs": [],
+  "forwarded_clock_outputs": 0,
+  "forwarded_clock_inputs": 0,
+  "die_input_bits": 66,
+  "die_input_bits_used": 64,
+  "die_output_bits": 64,
+  "die_output_bits_driven": 64
+ },
+ "bench": "physical/hbm_accel_die_views/barrier/rtl/tb_hfd_barrier.sv: 33 checks 0 mismatches (iverilog, seed 20261006); negative = die_top_lint registered stub fails; verilator lint clean",
+ "note": "Two closed ot_gpu_barrier_node K32 roots (barrier_k32 SS +330.53 / FF +39.39) behind registered die ports; +2 cycles (die input and output registers) on the barrier round trip vs the bare node.",
+ "defects": [
+  "die interface carries only 64 b each way between cmdproc and barrier: two 32-way barrier roots; SM arrive senses reach the barrier only through the cmdproc (no direct SM -> barrier net)",
+  "registered release fan-out collapses in synthesis: rel <= {K{rel_in}} and the 32 output flops merge to one driver per node (73 flops kept vs ~196 in RTL intent); timing closes regardless",
+  "view obstructs M8/M9 under its PDN straps (generator placeholder obs_top 7)"
+ ]
+}

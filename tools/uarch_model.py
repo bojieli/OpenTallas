@@ -12785,3 +12785,11 @@ def dsrom_wfc_ideal_input_body_model():
         routing_tracks_needed=dict(body_clock_inputs=2, fault=1),
         channel_capacity=None, floorplan_slot_fit=False,
         waveform_basis='tb_wfc_protected_stage fast/slow both start high at common epoch,50pct duty and3:4; owner exact833.333/1111.111 periods replace bench decimal rounding only')
+
+
+def hbm_cp_owner_veto_polarity_model():
+    """Bounded exact current192-bit veto/output price before RTL; zero added edges."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())

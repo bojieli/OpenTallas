@@ -352,6 +352,10 @@ always @(posedge clk)begin
  if(preinstall_source_ACK_v&&preinstall_source_ACK_r)begin
   if(preinstall_source_ACK_frame!=preinstall_begin_frame)$fatal(1,"wrong ACK frame");
   acks<=acks+1;
+  if((acks+1)%96==0)begin
+   $display("PROGRESS ACK=%0d/6144 writes=%0d reads=%0d frame=%h lease=%b state=%0d req=%b/%b rsp=%b/%b tag=%h ACK=%b/%b",acks+1,writes,reads,preinstall_source_ACK_frame,dut.grants[0],dut.u_preinstall.on.state,m_req_v,m_req_rdy,m_rsp_v,m_rsp_rdy,m_rsp_tag,preinstall_source_ACK_v,preinstall_source_ACK_r);
+   $fflush();
+  end
  end
  if(reservation_v&&reservation_r)receipt_count<=receipt_count+1;
 end
@@ -527,6 +531,7 @@ p_rsp_rdy=0;
  // Fixture-only disjoint spans. Actual parent requires emitted installation.
  preinstall_score_base=32'h81000;preinstall_id_base=32'hb1000;
  preinstall_capacity=33'h100000;preinstall_layer=20;preinstall_candidate_source_layer=20;
+ if(!$test$plusargs("POSITIVE_ONLY"))begin
  reset_all();load_desc(7);
  @(negedge clk);preinstall_begin_v=1;#1;
  if(preinstall_begin_r||reservation_v||dut.grants[0])$fatal(1,"partial descriptor permitted book/lease");
@@ -548,6 +553,7 @@ p_rsp_rdy=0;
  @(negedge clk);dut.u_preinstall.on.control.code[0]=dut.u_preinstall.on.control.code[0]^72'd3;
  edge_wait();if(!preinstall_due||!preinstall_retained||reservation_v)$fatal(1,"DUE not quarantined");
  $display("NEGATIVE protected DUE quarantined");
+ end
  reset_all();load_desc(8);begin_install();records();
  writes=0;reads=0;acks=0;
  // Backpressure ACK, warm drains accepted IO but forbids next source capture.

@@ -1,0 +1,154 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hfd_sm",
+ "kind": "sm",
+ "status": "interim-not-closed",
+ "lef": "hfd_sm.lef",
+ "lib": {
+  "ss": "hfd_sm_ss.lib",
+  "ff": "hfd_sm_ff.lib"
+ },
+ "check": {
+  "verdict": "MISMATCH",
+  "problems": [
+   "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
+   "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer"
+  ],
+  "gen_pins": 3581,
+  "view_pins": 3581,
+  "missing": 0,
+  "extra": 0,
+  "wrong_face_pins": 231,
+  "wrong_layer": 162,
+  "positions": "3419 pins off the generator position (same face)",
+  "size_view": [
+   2202.77,
+   2072.79
+  ],
+  "size_gen": [
+   2202.744,
+   2073.576
+  ],
+  "per_port_faces": {
+   "c": {
+    "generator_face": "N",
+    "view_faces": {
+     "N": 45,
+     "S": 58
+    }
+   },
+   "ck": {
+    "generator_face": "N",
+    "view_faces": {
+     "N": 1
+    }
+   },
+   "r": {
+    "generator_face": "E",
+    "view_faces": {
+     "E": 98,
+     "S": 34,
+     "N": 128,
+     "W": 10
+    }
+   },
+   "q": {
+    "generator_face": "S",
+    "view_faces": {
+     "S": 44
+    }
+   },
+   "d": {
+    "generator_face": "S",
+    "view_faces": {
+     "S": 1099
+    }
+   },
+   "rst": {
+    "generator_face": "N",
+    "view_faces": {
+     "S": 1
+    }
+   },
+   "x": {
+    "generator_face": "W",
+    "view_faces": {
+     "W": 2063
+    }
+   }
+  }
+ },
+ "source": {
+  "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2/work/orfs (results .../base/4_cts.odb + 4_cts.sdc)",
+  "stage": "post-CTS placement (NOT routed): no whole-SM routed database exists; HBM-SM routes the element as pieces (back ends beE/beW r5 closed, tiles r5 routing, front r9 running; STATUS /srv/opentallas/scratch-overflow/claude/hbm-sm-struct/STATUS.md)",
+  "host": "ot-epyc1tb",
+  "rtl": "ot_hbm_accel_sm_v NC8 SUB4 LBS2 LSB16 XD128 RMAX4096 MAX_OUT512 DS3 DG3 DW4 PIO2 (sm_r2 provider, results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/capture.json source_sha256 3b4bd73f...)",
+  "parasitics": "estimate_parasitics -placement (setRC), propagated clock, sm_r2 4_cts.sdc",
+  "ss_worst_slack_ps": -4002.2,
+  "ff_worst_hold_slack_ps": -2356.6,
+  "drc": null,
+  "violators": "legacy-CTS STA (results/rtl/hbm_sm_structure_20261005/sta_legacy_cts/classes.json): setup 44,218 endpoints TNS -10,852 ns; hold 45,576 endpoints TNS -12,070 ns",
+  "sub_views": [
+   "physical/hbm_accel_sm_views/ot_hbm_accel_tc16",
+   "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col",
+   "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "owner": "Claude HBM-SM (structural redesign: macro->G1 SS -482 / FF -107 ps; src8 15/15 exact; AR +1.07% / MTP -0.52%; branch claude/hbm-sm-structure-20261005)",
+  "export_tcl": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/sm/export_{ss,ff}.tcl"
+ },
+ "remote": {
+  "host": "ot-epyc1tb",
+  "dir": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/sm",
+  "full_lef": {
+   "file": "sm_rtlpins.lef",
+   "bytes": 113530008,
+   "sha256": "52e0d6ac7de9576941cc34c83c507a5fc59b39f4672e26d13d3d472942c3d859",
+   "note": "RTL pin names; renamed copy reproducible with rename_pins.py"
+  },
+  "libs_rtlpins": [
+   "sm_rtlpins_ss.lib",
+   "sm_rtlpins_ff.lib"
+  ]
+ },
+ "sha256": {
+  "hfd_sm.lef": "7651f1336d6cf7cd59bb202d6b3d054c5ce5f173ee69bec25fcae3f68686716e",
+  "hfd_sm_ss.lib": "1f9953525eb1eb7b48203efb18be2a4cfbdedd865867f7cb50a6ecf172e62795",
+  "hfd_sm_ff.lib": "cc13d6d1cb20451d997aa69f22ec1ab4dcb23233108ec3e604d0645b915c8cd7"
+ },
+ "pin_mapping": "rename_pins.py: RTL pin -> die bit through tools/die_top_lint.py hfd_sm binding (r16g: d=rsp_v/tag/data 1099, q=req 43 out+req_ready, x=xw 2063, r=rv/rrow/rdata/fault 270, c=start/op/busy/arrive/release/released + d_valid/d_base/d_lines/d_ready 103, ck=clk, rst=rst_n); 3,581/3,581 bits bound, 0 RTL pins without a die bit; positions kept as placed",
+ "pdn_contract": {
+  "contract": "die owns M8/M9; block exposes M7 PG stripes 0.288 um @ 10.8 um (VDD x=1.0, VSS x=6.4)",
+  "view_pg_layers": {
+   "VDD": [
+    "M8"
+   ],
+   "VSS": [
+    "M8"
+   ]
+  },
+  "view_obs_layers": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7",
+   "M8",
+   "RVTN",
+   "RVTP"
+  ],
+  "breaks_contract": true,
+  "detail": "PG pins on M8 (101 M8 OBS rects): the sm_r2 context PDN straps reach M8; no M7 PG stripes exposed"
+ },
+ "defects": [
+  "NOT CLOSED: post-CTS SS worst -4,002 ps / FF hold worst -2,357 ps (sm_r2 legacy element; structural redesign owned by HBM-SM)",
+  "PDN contract: PG pins and OBS on M8 (die owns M8/M9; block must expose M7 stripes 0.288 um @ 10.8 um) -> die route loses M8 over 32 x 4.57 mm2 SMs",
+  "Size: view 2202.77 x 2072.79 vs generator slot 2202.744 x 2073.576 (view 0.026 um wider; generator H snapped 0.786 um taller)",
+  "Faces: c 58/103 bits on S (generator N); r 172/270 bits off E (N 128, S 34, W 10); rst on S (generator N); d/q/x/ck agree",
+  "Layers: 162 r pins on M4/M5 other than the generator layer for their face",
+  "Positions: 3,419/3,581 pins off the generator positions (same face): sm_r2 pin regions are not the generator pin plan",
+  "H17 still open: physical/hbm_accel_sm_views tc16/bd_col _bb.v declare no parameters, ot_hbm_accel_sm_v instantiates ot_hbm_accel_bd_col #(.LB,.IL,.TAGW) (TCK!=0 path) -> Verilator PINNOTFOUND"
+ ]
+}
