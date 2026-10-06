@@ -40,6 +40,8 @@ module tb_hfd_index_q;
   end
   initial begin
     vm_prev = {512{1'bx}};
+    begin : k0 integer j; for (j = 0; j < 32; j = j + 1) kd[j*32 +: 32] = $urandom; end
+    kexp[0] = kd[511:0] ^ kd[1023:512]; ks = 1;
     repeat (6) @(posedge ck); rst = 1;
     fork : w
       begin wait (got[0] + got[1] + got[2] + got[3] == 256 && kg >= 390); repeat (40) @(posedge ck); disable w; end

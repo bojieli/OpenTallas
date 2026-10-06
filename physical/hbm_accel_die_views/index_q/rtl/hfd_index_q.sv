@@ -60,7 +60,7 @@ module hfd_index_q #(parameter integer A_ST = 6, K_ST = 14) (   // wire stages: 
   wire [511:0] kh [0:1]; wire [1:0] ke;
   generate for (g = 0; g < 2; g = g + 1) begin : gk
     wire full_; wire [2:0] fr_;
-    ot_hbm_accel_cdc_fifo #(.W(512), .AW(2)) u_x (.wclk(k[1024+g]), .wrst_n(rst[0]), .we(1'b1),
+    ot_hbm_accel_cdc_fifo #(.W(512), .AW(2)) u_x (.wclk(~k[1024+g]), .wrst_n(rst[0]), .we(1'b1),
       .wdata(k[g*512 +: 512]), .full(full_), .rd_freed(fr_), .rclk(c), .rrst_n(rn), .re(1'b1), .rdata(kh[g]),
       .empty(ke[g]));
   end endgenerate

@@ -13,7 +13,8 @@
 //     to SM tag[2:0]; kind 1 KV row read (4 sectors on KV_PC) -> kv {v, tag13, data1024}; kind 2 index-key read
 //     (4 sectors on IK_PC) -> ik data1024;
 //   every path that crosses the 8.5 mm block is pipelined (wire stages, *_ST, <= 430 um a stage);
-//   forwarded inputs (row-1 SM requests, e) land through ot_hbm_accel_cdc_fifo clocked by their forwarded clock;
+//   forwarded inputs (row-1 SM requests, e) land through ot_hbm_accel_cdc_fifo written on the FALLING edge of their
+//     forwarded clock (the data changes on its rising edge, as ot_fwd_link_stage launches);
 //   forwarded outputs (row-1 lines, kv, ik) carry ck as their forwarded clock (ot_svc_fclk_buf).
 // Every die input lands in a flop (or a FIFO write port), every die output leaves a flop.
 module ot_svc_fclk_buf (input wire a, output wire y);  // kept: the forwarded clock / PHY clock driver
@@ -151,7 +152,7 @@ module ot_hbm_svc_core #(
     reg pend, hv; reg [41:0] hd;
     if (FWD[i]) begin : fwd                                  // forwarded row-1 request: two-clock FIFO
       wire full_, empty_; wire [2:0] fr_;
-      ot_hbm_accel_cdc_fifo #(.W(42), .AW(2)) u_x (.wclk(q_fclk[i]), .wrst_n(rst), .we(q_v[i]),
+      ot_hbm_accel_cdc_fifo #(.W(42), .AW(2)) u_x (.wclk(~q_fclk[i]), .wrst_n(rst), .we(q_v[i]),
         .wdata(q_d[i*42 +: 42]), .full(full_), .rd_freed(fr_), .rclk(ck), .rrst_n(rn), .re(iv),
         .rdata(id_), .empty(empty_));
       assign ine = !empty_;
@@ -180,7 +181,7 @@ module ot_hbm_svc_core #(
   reg cpend, chv; reg [126:0] chd;
   wire e_re = !e_empty && !cpend;
   wire c_take, cb, cv; wire [126:0] cd;
-  ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_fclk), .wrst_n(rst), .we(e_d[0]), .wdata(e_d[127:1]),
+  ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(~e_fclk), .wrst_n(rst), .we(e_d[0]), .wdata(e_d[127:1]),
     .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
   always @(posedge ck or negedge rn) if (!rn) cpend <= 1'b0; else if (e_re) cpend <= 1'b1; else if (cb) cpend <= 1'b0;
   ot_svc_vpipe #(.W(127), .N(E_ST)) u_ep (.ck(ck), .rst_n(rn), .v(e_re), .d(ed), .qv(cv), .q(cd));
