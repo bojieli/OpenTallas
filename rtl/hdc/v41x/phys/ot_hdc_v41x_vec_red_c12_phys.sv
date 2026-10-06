@@ -114,3 +114,48 @@ module ot_hdc_v41x_vred_top1024_c12_g1 (
     ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(6), .RPAD(1), .RSL(2), .RTAP(1),
                            .ROUT(1), .ROGS(1), .SL(64)) u (.*);
 endmodule
+
+// MARGIN VERSION (OWNER RULE 2026-10-06: SS >= +40 at 833.333 when routed at 770): every reducer op registers its
+// operands (ROPI 1: op latency ALAT + 1 = 7), and the top registers the OUT address adds / BF16 roundings once more
+// (ROUT 2), one OUT bundle copy per 2 slots (ROGS 2).  Depth: D_RED + 7 + 1, D_RSTEP + 1.
+module ot_hdc_v41x_vred_slice64_c12m (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire [2047:0] x_in,
+    input  wire [63:0]   live_in,
+    input  wire          mx_in,
+    input  wire          sq_in,
+    output wire [479:0]  lv_o,
+    output wire          fault_o
+);
+    ot_hdc_v41x_vred_slice #(.SL(64), .MLAT(6), .ALAT(7), .RPAD(1), .RSL(1), .ROPI(1)) u (.*);
+endmodule
+
+module ot_hdc_v41x_vred_top1024_c12m (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v_in,
+    input  wire          mx_in,
+    input  wire [3:0]    lt_in,
+    input  wire          span_in,
+    input  wire [2:0]    l_in,
+    input  wire          last_in,
+    input  wire [7:0]    nres_in,
+    input  wire          rnd_in,
+    input  wire [23:0]   rbase_in,
+    input  wire [4:0]    rsh_in,
+    input  wire [8:0]    meta_in,
+    input  wire [7679:0] lv_in,
+    input  wire [15:0]   sfault_in,
+    output wire [127:0]  o_we,
+    output wire [3071:0] o_addr,
+    output wire [4095:0] o_data,
+    output wire [8:0]    o_meta,
+    output wire          o_ev,
+    output wire          busy,
+    output wire          fault
+);
+    ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(7), .RPAD(1), .RSL(2), .RTAP(1),
+                           .ROUT(2), .ROGS(2), .SL(64), .ROPI(1)) u (.*);
+endmodule

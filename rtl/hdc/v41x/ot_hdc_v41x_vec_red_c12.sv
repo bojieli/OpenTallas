@@ -19,9 +19,13 @@
 //   ROUT  the OUT stage's inputs (packed tap and TIME result) are registered, per-slot copies              +1
 //         (ROUT = 1: a slot's o_addr / o_data are exact whenever its o_we is set and o_meta whenever o_ev is;
 //         unwritten slots carry 0 instead of the original's leftover TIME result)
+//   ROPI  (margin, default 0) every add/max op registers its operands before the adder and the max compare: the op
+//         is ALAT + 1 deep (the CHAIN 7 (ALAT + 1), every TREE / TIME level ALAT + 1) -- slices and top take
+//         ALAT + ROPI as their op latency; ROUT = 2 adds a second OUT register (the address adds / BF16 rounding
+//         registered before the final slot select)
 // All four are constant offsets on every result (packed taps and spanning TIME results alike):
 //   result depth after the retire = 2 + MLAT + 7 ALAT + RPAD + RSL + RTAP + ROUT + ALAT lt (+ ALAT L spanning)
-// i.e. D_RED = 2 + MLAT + 7*ALAT + RPAD + RSL + RTAP + ROUT and D_RSTEP = ALAT (RSL may be 0, 1 or 2).
+// i.e. D_RED = 2 + MLAT + 7*(ALAT + ROPI) + RPAD + RSL + RTAP + ROUT and D_RSTEP = ALAT + ROPI (RSL 0, 1 or 2).
 // RSL = 2 adds a second boundary register at the top's entry (the slice keeps one), so every port of both pieces is
 // register-direct (busy then comes from one register holding the same value as the original's OR).
 // The status `fault` OR is registered twice more inside each slice when RSL >= 1 (per chunk, then the slice;
@@ -41,7 +45,8 @@ module ot_hdc_v41x_vec_red #(
     parameter integer RTAP = 0,
     parameter integer ROUT = 0,
     parameter integer ROGS = 4,         // ROUT bundle copies: one per ROGS slots (1, 2 or 4; ROUT >= 1 only)
-    parameter integer SL = 64           // lanes a slice (capped at N), a power of two >= 8
+    parameter integer SL = 64,          // lanes a slice (capped at N), a power of two >= 8
+    parameter integer ROPI = 0          // margin: op operand registers (+1 a reducer op)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -77,12 +82,12 @@ module ot_hdc_v41x_vec_red #(
     wire [NS-1:0]    sf;
     genvar s;
     generate for (s = 0; s < NS; s = s + 1) begin : g_sl
-        ot_hdc_v41x_vred_slice #(.SL(S), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL)) u_s (.clk(clk), .rst_n(rst_n),
+        ot_hdc_v41x_vred_slice #(.SL(S), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL), .ROPI(ROPI)) u_s (.clk(clk), .rst_n(rst_n),
             .v_in(v_in), .x_in(x_in[S*32*s +: S*32]), .live_in(live_in[S*s +: S]), .mx_in(mx_in), .sq_in(sq_in),
             .lv_o(lv[SW*s +: SW]), .fault_o(sf[s]));
     end endgenerate
-    ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                           .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
+    ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL),
+                           .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S), .ROPI(ROPI)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
         .span_in(span_in), .l_in(l_in), .last_in(last_in), .nres_in(nres_in), .rnd_in(rnd_in), .rbase_in(rbase_in),
         .rsh_in(rsh_in), .meta_in(meta_in), .lv_in(lv), .sfault_in(sf), .o_we(o_we), .o_addr(o_addr), .o_data(o_data),
         .o_meta(o_meta), .o_ev(o_ev), .busy(busy), .fault(fault));
@@ -97,7 +102,8 @@ module ot_hdc_v41x_vred_slice #(
     parameter integer MLAT = 3,
     parameter integer ALAT = 3,
     parameter integer RPAD = 0,
-    parameter integer RSL = 0
+    parameter integer RSL = 0,
+    parameter integer ROPI = 0          // ALAT here is the op latency (the adder's + ROPI)
 ) (
     input  wire                         clk,
     input  wire                         rst_n,
@@ -111,7 +117,7 @@ module ot_hdc_v41x_vred_slice #(
 );
     localparam integer NC = SL / 8;
     localparam integer LS = $clog2(NC);
-    localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
+    localparam integer K = (MLAT != 3 || ALAT - ROPI != 3) ? 1 : 0;
     localparam integer DCH = 7 * ALAT;
     // -- IN
     reg  [SL*32-1:0] i_x;
@@ -170,7 +176,7 @@ module ot_hdc_v41x_vred_slice #(
             wire [31:0] xj;
             ot_hdc_delay #(.W(32), .D(ALAT * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
                 .d(c_x[32*(8*c + j) +: 32]), .q(xj));
-            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[ALAT * (j - 1)]),
+            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT), .IREG(ROPI)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[ALAT * (j - 1)]),
                 .mx(mxl[ALAT * (j - 1)]), .a(acc[32*(j-1) +: 32]), .b(xj), .y(acc[32*j +: 32]), .fault(fch[7*c + j - 1]));
         end
         assign chunk[32*c +: 32] = acc[32*7 +: 32];
@@ -195,7 +201,7 @@ module ot_hdc_v41x_vred_slice #(
         ot_hdc_delay #(.W(1), .D(ALAT)) u_md (.clk(clk), .rst_n(rst_n), .d(tmx[lv-1]), .q(md));
         wire [NC*32-1:0] q;
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
-            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tmx[lv-1]),
+            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT), .IREG(ROPI)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tmx[lv-1]),
                 .a(lvl[lv-1][32*(2*p) +: 32]), .b(lvl[lv-1][32*(2*p+1) +: 32]), .y(q[32*p +: 32]), .fault(pf[p]));
         end
         assign q[NC*32-1 : (NC >> lv)*32] = 0;
@@ -239,7 +245,8 @@ module ot_hdc_v41x_vred_top #(
     parameter integer RTAP = 0,
     parameter integer ROUT = 0,
     parameter integer ROGS = 4,
-    parameter integer SL = 64
+    parameter integer SL = 64,
+    parameter integer ROPI = 0          // ALAT here is the op latency (the adder's + ROPI)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -270,7 +277,7 @@ module ot_hdc_v41x_vred_top #(
     localparam integer SC = SL / 8;                 // chunks a slice
     localparam integer LS = $clog2(SC);             // tree levels inside a slice
     localparam integer SW = (2 * SC - 1) * 32;
-    localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
+    localparam integer K = (MLAT != 3 || ALAT - ROPI != 3) ? 1 : 0;
     localparam integer DCH = 7 * ALAT;
     localparam integer TAG = 1 + 4 + 1 + 3 + 1 + 8 + 1 + AW + 5 + MW;
     // -- IN, SQ, RPAD, CHAIN: the tag and the valid
@@ -361,7 +368,7 @@ module ot_hdc_v41x_vred_top #(
         assign pre_t[lv] = tdp;
         wire [NC*32-1:0] q;
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
-            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
+            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT), .IREG(ROPI)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
                 .a(lvl[lv-1][32*(2*p) +: 32]), .b(lvl[lv-1][32*(2*p+1) +: 32]), .y(q[32*p +: 32]), .fault(pf[p]));
         end
         assign q[NC*32-1 : (NC >> lv)*32] = 0;
@@ -448,7 +455,7 @@ module ot_hdc_v41x_vred_top #(
         always @(posedge clk) if (in_v && !held_v && !pass) held <= in_x;
         wire [31:0] s_, pd;
         wire f;
-        ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held), .b(in_x),
+        ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT), .IREG(ROPI)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held), .b(in_x),
                                   .y(s_), .fault(f));
         wire [TAG+1-1:0] od;
         ot_hdc_delay #(.W(TAG + 1 + 32), .D(ALAT)) u_od (.clk(clk), .rst_n(rst_n), .d({in_t, pair, in_x}), .q({od, pd}));
@@ -521,12 +528,38 @@ module ot_hdc_v41x_vred_top #(
         wire [31:0] gx = ob[ko*BW + TAG +: 32];
         ot_hdc_kinc #(.W(16), .K(K)) u_trbf (.a(gx[31:16]), .inc(gx[15] & (gx[16] | (|gx[14:0]))), .y(tr_hi[16*ko +: 16]));
     end endgenerate
+    // ROUT >= 2 (margin): the address adds, the BF16 roundings, the tap words and the bundle registered once more
+    // (the bundle as per-group kept copies again), so the final slot registers see only their select (+1)
+    wire [NG*BW-1:0] obf;
+    wire [NC*32-1:0] oxf, oxf_r, pk_bff;
+    wire [NC*AW-1:0] pk_addrf;
+    wire [NG*16-1:0] tr_hif;
+    wire             opk1, otr1;
+    generate if (ROUT >= 2) begin : g_ro2
+        genvar g2;
+        for (g2 = 0; g2 < NG; g2 = g2 + 1) begin : g_c2
+            ot_hdc_v41x_red_kreg #(.W(BW)) u_b2 (.clk(clk), .rst_n(rst_n), .d(ob[g2*BW +: BW]), .q(obf[g2*BW +: BW]));
+        end
+        ot_hdc_delay #(.W(NC*32 + NC*32 + NC*AW + NG*16), .D(1)) u_o2 (.clk(clk), .rst_n(rst_n),
+            .d({ox, pk_bf, pk_addr, tr_hi}), .q({oxf_r, pk_bff, pk_addrf, tr_hif}));
+`ifdef OT_NEG_RED_ROUT2
+        // NEGATIVE CONTROL (compile-time only): the tap words skip the second OUT register (one cycle early);
+        // the exact campaign must FAIL with this defined
+        assign oxf = ox;
+`else
+        assign oxf = oxf_r;
+`endif
+        ot_hdc_delay #(.W(2), .D(1), .RESET(1)) u_ov1 (.clk(clk), .rst_n(rst_n), .d({pk_v, tr_v}), .q({opk1, otr1}));
+    end else begin : g_ro1
+        assign {obf, oxf, pk_bff, pk_addrf, tr_hif} = {ob, ox, pk_bf, pk_addr, tr_hi};
+        assign {opk1, otr1} = 2'b00;
+    end endgenerate
     // per slot: the OUT bundle of its group, unpacked
     wire [NC-1:0]     s_pk, s_tv;
     wire [NC*TAG-1:0] s_tt, s_rt;
     wire [NC*32-1:0]  s_rx;
     generate for (ko = 0; ko < NC; ko = ko + 1) begin : g_su
-        assign {s_pk[ko], s_tt[ko*TAG +: TAG], s_tv[ko], s_rx[32*ko +: 32], s_rt[ko*TAG +: TAG]} = ob[(ko/GS)*BW +: BW];
+        assign {s_pk[ko], s_tt[ko*TAG +: TAG], s_tv[ko], s_rx[32*ko +: 32], s_rt[ko*TAG +: TAG]} = obf[(ko/GS)*BW +: BW];
     end endgenerate
     integer k;
     always @(posedge clk or negedge rst_n) begin
@@ -540,20 +573,20 @@ module ot_hdc_v41x_vred_top #(
     end
     always @(posedge clk) begin
         for (k = 0; k < NC; k = k + 1) begin
-            o_addr[k*AW +: AW] <= s_pk[k] ? pk_addr[k*AW +: AW] : s_rt[k*TAG + TAG-20 -: AW];
-            o_data[32*k +: 32] <= s_pk[k] ? (s_tt[k*TAG + TAG-19] ? pk_bf[32*k +: 32] : ox[32*k +: 32])
-                                          : (s_rt[k*TAG + TAG-19] ? {tr_hi[16*(k/GS) +: 16], 16'd0} : s_rx[32*k +: 32]);
+            o_addr[k*AW +: AW] <= s_pk[k] ? pk_addrf[k*AW +: AW] : s_rt[k*TAG + TAG-20 -: AW];
+            o_data[32*k +: 32] <= s_pk[k] ? (s_tt[k*TAG + TAG-19] ? pk_bff[32*k +: 32] : oxf[32*k +: 32])
+                                          : (s_rt[k*TAG + TAG-19] ? {tr_hif[16*(k/GS) +: 16], 16'd0} : s_rx[32*k +: 32]);
         end
         o_meta <= s_pk[0] ? s_tt[MW-1:0] : s_rt[MW-1:0];
     end
     wire busy_c = i_v || (|vq) || c_v || (|vch) || (|sv0) || (|rsl_live) || (|tv) || (|tb) || tap_v || (|sval) ||
-                  (|sb) || (|o_we) || ((ROUT > 0) ? (opk || otr) : 1'b0);
+                  (|sb) || (|o_we) || ((ROUT > 0) ? (opk || otr) : 1'b0) || ((ROUT > 1) ? (opk1 || otr1) : 1'b0);
     // RSL >= 1: busy is one register holding the same value: every term of busy_c is (or is implied by) a register,
     // so busy(t+1) is the OR of those registers' next values, formed here from their inputs
     generate if (RSL >= 1) begin : g_bq
         wire bnext = v_in || (|vq[MLAT-1:0]) || ((RPAD > 0) ? vq[MLAT] : 1'b0) || (|vch[DCH-1:0]) || (|sb0) ||
                      (|rsl_next) || (|tb) || ((RTAP > 0) ? tap_vc : 1'b0) || (|bn) ||
-                     ((ROUT > 0) ? (pk_v || tr_v || (opk ? (ob[TAG+33 + (TAG-11) -: 8] != 8'd0) : otr))
+                     ((ROUT > 0) ? (pk_v || tr_v || opk1 || otr1 || (opk ? (obf[TAG+33 + (TAG-11) -: 8] != 8'd0) : otr))
                                  : (pk_v ? (tap_t[TAG-11 -: 8] != 8'd0) : tr_v));
         reg bq;
         always @(posedge clk or negedge rst_n) if (!rst_n) bq <= 1'b0; else bq <= bnext;
@@ -565,7 +598,8 @@ endmodule
 
 module ot_hdc_v41x_vred_op #(
     parameter integer K = 0,
-    parameter integer LAT = 3
+    parameter integer LAT = 3,          // the op's latency
+    parameter integer IREG = 0          // 1: operands (and valid / max) registered first; the adder is LAT - 1 deep
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -580,12 +614,23 @@ module ot_hdc_v41x_vred_op #(
     function automatic [31:0] okey(input [31:0] x);
         okey = x[31] ? ~x : {1'b1, x[30:0]};
     endfunction
-    wire [31:0] ys, ym;
+    localparam integer AL = LAT - IREG;
+    wire [31:0] ys, ym, ai, bi;
+    wire        vi, mxi;
+    generate if (IREG > 0) begin : g_ir
+        reg [31:0] ar, br;
+        reg        vr, mr;
+        always @(posedge clk) begin ar <= a; br <= b; mr <= mx; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= v;
+        assign {ai, bi, vi, mxi} = {ar, br, vr, mr};
+    end else begin : g_ni
+        assign {ai, bi, vi, mxi} = {a, b, v, mx};
+    end endgenerate
     wire mxd;
     wire ab_ge;
-    ot_hdc_qadd_lat #(.KEEP(K), .LAT(LAT)) u_add (clk, rst_n, v && !mx, a, b, ys, fault);
-    ot_hdc_kge #(.W(32), .K(K)) u_ge (.a(okey(a)), .b(okey(b)), .ge(ab_ge));
-    ot_hdc_delay #(.W(32), .D(LAT)) u_m (.clk(clk), .rst_n(rst_n), .d(ab_ge ? a : b), .q(ym));
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(AL)) u_add (clk, rst_n, vi && !mxi, ai, bi, ys, fault);
+    ot_hdc_kge #(.W(32), .K(K)) u_ge (.a(okey(ai)), .b(okey(bi)), .ge(ab_ge));
+    ot_hdc_delay #(.W(32), .D(AL)) u_m (.clk(clk), .rst_n(rst_n), .d(ab_ge ? ai : bi), .q(ym));
     // the result select's last stage in its own kept register: every op's copy stays a separate cell (the ops of
     // one CHAIN step / TREE level carry the same flag, and merged it drove hundreds of multiplexer bits)
     wire mx1;

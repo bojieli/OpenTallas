@@ -40,7 +40,7 @@ SWAP = {"rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_l
         "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv"],
         "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": ["rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv"]}
-P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1)
+P = dict(mlat=6, alat=6, opr=1, ddiv=21, sidex=4, fsq=1, capr=1, rpad=1, rsl=2, rtap=1, rout=1, rslice=64, ctl12=1, ropi=0)
 
 
 def take_params(argv):
@@ -68,8 +68,8 @@ def set_c12(VC):
     VC.D_OUT = 1 + P["opr"]                  # the E1 operand register (a constant stage on every element)
     VC.D_M1 = VC.D_STAGE = m
     VC.D_AD = a + P["opr"]
-    VC.D_RSTEP = a
-    VC.D_RED = 2 + m + 7 * a + P["rpad"] + P["rsl"] + P["rtap"] + P["rout"]
+    VC.D_RSTEP = a + P["ropi"]                # reducer op: the adder + ROPI operand register
+    VC.D_RED = 2 + m + 7 * (a + P["ropi"]) + P["rpad"] + P["rsl"] + P["rtap"] + P["rout"]
     d_exp = 7 * m + 8 * a + 4
     d_sig = d_exp + a + P["ddiv"]
     sx = P["sidex"]
@@ -80,7 +80,7 @@ def set_c12(VC):
 
 def vflags():
     g = dict(OPR=P["opr"], DDIV=P["ddiv"], SIDEX=P["sidex"], FSQ=P["fsq"], CAPR=P["capr"], RPAD=P["rpad"], RSL=P["rsl"], ROUT=P["rout"], CTL12=P["ctl12"],
-             RTAP=P["rtap"], RSLICE=P["rslice"])
+             RTAP=P["rtap"], RSLICE=P["rslice"], ROPI=P["ropi"])
     return " ".join(f"-G{k}={v}" for k, v in g.items())
 
 

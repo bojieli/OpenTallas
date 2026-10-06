@@ -197,6 +197,7 @@ module ot_hdc_v41x_vec #(
     parameter integer RTAP = 0,         // c12 reducer: tap register
     parameter integer ROUT = 0,         // c12 reducer: OUT input register
     parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
+    parameter integer ROPI = 0,         // c12 reducer margin: op operand registers (every reducer op ALAT + 1)
     parameter integer CTL12 = 0         // c12 controller: pipelined set-up, registered emit-loop conditions
 ) (
     input  wire              clk,
@@ -319,7 +320,7 @@ module ot_hdc_v41x_vec #(
                        D_RSQ = 1 + 9 * MLAT + 3 * ALAT + SIDEX, D_SQRT = 31 + SIDEX,
                        D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV + SIDEX, D_EG = 33 + D_SIG + SIDEX;
     localparam [15:0] H_A = ALAT;
-    localparam [15:0] H_R = ALAT;                        // a reducer TREE / TIME level
+    localparam [15:0] H_R = ALAT + ROPI;                        // a reducer TREE / TIME level
     localparam [15:0] H_F5 = 5 + OPR + CAPR, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;   // gather fetch, M1 divide / multiply
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
@@ -531,7 +532,7 @@ module ot_hdc_v41x_vec #(
         if (pst == 2'd1 && sst == 3'd5) r_nvs <= r_wl + {r_wh, 8'd0};
     end
     // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 7 ALAT, TREE ALAT lt)
-    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP + ROUT
+    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
                       + H_R[9:0] * c_lt;
     wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, c_L} : 10'd0);
     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
@@ -618,7 +619,7 @@ module ot_hdc_v41x_vec #(
             r2_wq <= wq_w;
             r2_nslot <= ONE_CW << c_nsh; r2_ostep <= c_ostep; r2_rstep <= s_wnf ? {AW{1'b0}} : q_rso << c_nsh;
             // c_dT = c_dS + the constant stages + H_R * c_lt, in two steps
-            r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP + ROUT;
+            r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT;
             r2_lth <= H_R[9:0] * c_lt;
         end
         if (pst == 2'd1 && sst == 4'd8) r2_dT <= r2_dTa + r2_lth;
@@ -875,20 +876,24 @@ module ot_hdc_v41x_vec #(
     end
     wire [1:0] cpa_o, cpi_o, cem_o, cho_o;
     genvar gr;
-    // round 8: each credit function's count compare (cnt >= nd, cnt[15] clear) is REGISTERED one cycle ahead from the
-    // next-cycle operands (ot_hdc_v41x_cok: one subtract and one carry-save compare in parallel), so the next-ch path
-    // is a boolean of registered bits and short sequence compares.  ok*[gr]: the compare for this cycle's retire = gr.
-    reg [1:0] okA, okI, okE, okH;        // cpa (pvm_e count, chain lead), cpi / cem / cho (pv_mark count; lead, need1, need0)
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
+        wire [15:0] ce = gr ? cnt_e1 : cnt_e0, cp = gr ? cnt_p1 : cnt_p0;
         wire [7:0]  gds = (gr && ret_i_last) ? ret_i_seq : i_dseq;        // n_idseq for ret_i = gr
-        ot_hdc_v41x_chf2 u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cok(okA[gr]),
-            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
-        ot_hdc_v41x_chf2 u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cok(okI[gr]),
-            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpi_o[gr]));
-        ot_hdc_v41x_chf2 u_cem (.src(a_chsrc), .cseq(a_chseq), .nd(need1_r), .pvv(pv_v), .pvs(pv_seq), .cok(okE[gr]),
-            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cem_o[gr]));
-        ot_hdc_v41x_chf2 u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cok(okH[gr]),
-            .dsq(gds), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
+`ifdef OT_NEG_CTL12_CREDIT
+        // NEGATIVE CONTROL (compile-time only): a reduction result's sequence is taken as published whether or
+        // not its last result retired this cycle (a consumer may start before its producer's last result)
+        wire        rsel_k = res_i;
+`else
+        wire        rsel_k = res_i && res_i_last;                            // n_irseq's select, applied last
+`endif
+        ot_hdc_v41x_chf3 #(.K(KK)) u_cpa (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(1'b1), .pvs(a_seq), .cnt(ce),
+            .dsq(gds), .rsq0(i_rseq), .rsq1(res_i_seq), .rsel(rsel_k), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpa_o[gr]));
+        ot_hdc_v41x_chf3 #(.K(KK)) u_cpi (.src(q_chsrc), .cseq(q_chseq), .nd(q_chlead), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+            .dsq(gds), .rsq0(i_rseq), .rsq1(res_i_seq), .rsel(rsel_k), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cpi_o[gr]));
+        ot_hdc_v41x_chf3 #(.K(KK)) u_cem (.src(a_chsrc), .cseq(a_chseq), .nd(need1_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+            .dsq(gds), .rsq0(i_rseq), .rsq1(res_i_seq), .rsel(rsel_k), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cem_o[gr]));
+        ot_hdc_v41x_chf3 #(.K(KK)) u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
+            .dsq(gds), .rsq0(i_rseq), .rsq1(res_i_seq), .rsel(rsel_k), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
     end endgenerate
     // next ch for each value of this cycle's retire; ret_i selects last, in two kept copies (13 control copies each)
     wire [1:0] n_chr;
@@ -1029,36 +1034,6 @@ module ot_hdc_v41x_vec #(
     ot_hdc_kadd #(.W(24), .K(KK)) u_acc2 (.a(acc2_r), .b({8'd0, a_chmul}), .cin(1'b0), .s(acc2_n), .cout(unused_lc[5]));
     ot_hdc_kadd #(.W(16), .K(KK)) u_nd1 (.a(a_chlead), .b(acc2_r[23:8]), .cin(1'b0), .s(need1_n), .cout(unused_lc[6]));
     wire [23:0] acc_n = (CTL12 >= 2) ? acc1_r : a_acc + {8'd0, a_chmul};
-    // round 8: the next-cycle operands of the registered count compares
-    reg  [15:0] need2_r;                 // == need1_n (a_chlead + acc2_r[23:8]), kept one cycle ahead
-    wire [15:0] a_chlead_nx = PROM[10] ? q_chlead : a_chlead;
-    wire [23:0] acc2_nx = PROM[11] ? {7'd0, q_chmul, 1'b0} : EMIT[11] ? acc2_n : acc2_r;
-    wire [15:0] need2_n;
-    wire        unused_n2;
-    ot_hdc_kadd #(.W(16), .K(KK)) u_nd2 (.a(a_chlead_nx), .b(acc2_nx[23:8]), .cin(1'b0), .s(need2_n), .cout(unused_n2));
-    always @(posedge clk) need2_r <= need2_n;
-    wire [15:0] qlead_nx = ACC[24] ? i_ch_lead : q_chlead;
-    wire [15:0] need1_nx = PROM[11] ? r2_need1 : EMIT[11] ? need2_r : need1_r;
-    wire [15:0] need0_nx = PROM[11] ? q_chlead : EMIT[11] ? need1_r : need0_r;
-    wire [15:0] xp_nx = pv_upd ? (STRT[14] ? a_mark : e_tot) : pv_mark;              // pv_mark next
-    wire [15:0] xe_nx = nst_k ? (am_e ? e_tot : a_mark) : e_tot;                     // pvm_e next (less ce_c)
-    wire        ce_c = !nst_k && EMIT[14];                                            // e_tot_n = e_tot + 1
-    wire [15:0] rr [0:2];
-    assign rr[0] = r_tot; assign rr[1] = rtot1_r; assign rr[2] = rtot2_r;
-    wire [2:0] fA, fI, fE, fH;
-    genvar gj;
-    generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_cok
-        ot_hdc_v41x_cok #(.K(KK)) u_a (.r(rr[gj]), .x(xe_nx), .c(ce_c), .nd(qlead_nx), .ok(fA[gj]));
-        ot_hdc_v41x_cok #(.K(KK)) u_i (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(qlead_nx), .ok(fI[gj]));
-        ot_hdc_v41x_cok #(.K(KK)) u_e (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(need1_nx), .ok(fE[gj]));
-        ot_hdc_v41x_cok #(.K(KK)) u_h (.r(rr[gj]), .x(xp_nx), .c(1'b0), .nd(need0_nx), .ok(fH[gj]));
-    end endgenerate
-    always @(posedge clk) begin
-        okA <= ret_i ? fA[2:1] : fA[1:0];
-        okI <= ret_i ? fI[2:1] : fI[1:0];
-        okE <= ret_i ? fE[2:1] : fE[1:0];
-        okH <= ret_i ? fH[2:1] : fH[1:0];
-    end
     // group 1: the position
     always @(posedge clk) begin
         if (PROM[1]) begin a_no <= p_no; a_ni <= p_ni; o_v <= 0; i_v <= 0; end
@@ -1366,7 +1341,7 @@ module ot_hdc_v41x_vec #(
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE)) u_red (.clk(clk), .rst_n(rst_n),
+                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE), .ROPI(ROPI)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),
@@ -1598,43 +1573,28 @@ module ot_hdc_v41x_ckreg #(parameter integer W = 1, parameter integer R = 0) (
     end endgenerate
 endmodule
 
-// round 8: ok = (cnt[15] clear) && cnt >= nd for cnt = (r - x - c) mod 2^16, without a subtract-then-compare chain:
-// cnt and its no-borrow bit nn from one adder, V = r - x - c - nd (19-bit signed) from a carry-save sum and a second
-// adder in parallel; cnt - nd = V (nn) or V + 2^16 (borrow).
-module ot_hdc_v41x_cok #(parameter integer K = 1) (
-    input  wire [15:0] r, x, nd,
-    input  wire        c,
-    output wire        ok
-);
-    wire [15:0] cnt;
-    wire        nn;
-    ot_hdc_kadd #(.W(16), .K(K)) u_a (.a(r), .b(~x), .cin(!c), .s(cnt), .cout(nn));
-    wire [18:0] A = {3'b000, r}, B = {3'b111, ~x}, C = {3'b111, ~nd};
-    wire [18:0] cs = A ^ B ^ C;
-    wire [18:0] mj = (A & B) | (A & C) | (B & C);
-    wire [18:0] V;
-    wire        unused_v;
-    ot_hdc_kadd #(.W(19), .K(K)) u_v (.a(cs), .b({mj[17:0], !c}), .cin(1'b1), .s(V), .cout(unused_v));
-    assign ok = !cnt[15] && (nn ? !V[18] : (!V[18] || V[18:16] == 3'b111));
-endmodule
-
-// the credit function of ot_hdc_v41x_chf with its count compare registered (cok)
-module ot_hdc_v41x_chf2 (
+// round 10: ot_hdc_v41x_chf with the reduction-sequence candidate selected last: d_r for both candidates of n_irseq
+// (the published sequence before / after this cycle's reduction result) in parallel, rsel picks the sign bit
+module ot_hdc_v41x_chf3 #(parameter integer K = 1) (
     input  wire [1:0]  src,
     input  wire [7:0]  cseq,
     input  wire [15:0] nd,
     input  wire        pvv,
     input  wire [7:0]  pvs,
-    input  wire        cok,
-    input  wire [7:0]  dsq, rsq,
+    input  wire [15:0] cnt,
+    input  wire [7:0]  dsq, rsq0, rsq1,
+    input  wire        rsel,
     input  wire [7:0]  x_dseq, x_seq,
     input  wire [15:0] x_cnt,
     output wire        ok
 );
     localparam [1:0] CH_NONE = 0, CH_SELF = 1, CH_RES = 2;
-    wire [7:0] d_s = dsq - cseq, d_r = rsq - cseq, d_x = x_dseq - cseq;
-    assign ok = (src == CH_NONE) ? 1'b1 :
-                (src == CH_SELF) ? (!d_s[7] || (pvv && pvs == cseq && cok)) :
-                (src == CH_RES)  ? !d_r[7] :
-                (!d_x[7] || (x_seq == cseq && x_cnt >= nd));
+    wire [7:0] d_s = dsq - cseq, d_r0 = rsq0 - cseq, d_r1 = rsq1 - cseq, d_x = x_dseq - cseq;
+    wire cnt_ge, x_ge;
+    ot_hdc_kge #(.W(16), .K(K)) u_c (.a(cnt), .b(nd), .ge(cnt_ge));
+    ot_hdc_kge #(.W(16), .K(K)) u_x (.a(x_cnt), .b(nd), .ge(x_ge));
+    wire ok_s = !d_s[7] || (pvv && pvs == cseq && !cnt[15] && cnt_ge);
+    wire ok_x = !d_x[7] || (x_seq == cseq && x_ge);
+    wire ok_r = rsel ? !d_r1[7] : !d_r0[7];
+    assign ok = (src == CH_NONE) ? 1'b1 : (src == CH_SELF) ? ok_s : (src == CH_RES) ? ok_r : ok_x;
 endmodule
