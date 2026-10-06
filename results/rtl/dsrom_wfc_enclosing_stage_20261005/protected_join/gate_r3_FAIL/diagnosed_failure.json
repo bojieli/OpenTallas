@@ -1,0 +1,12 @@
+{
+  "verdict": "FAIL_DIAGNOSED_UNREACHABLE_OVERLAP",
+  "source": "d20fbd1e8",
+  "reason": "RTL write_step flagsWA qualifier suppresses RXheader on every read-only issue, so native TX finishes before nextRX header enters. No native pair printed; fork wait split_pairs>0 unreachable. Correct normal read-only ISSUE RXheader acceptance; only paired firstread suppresses RX. No arbitrary time cap",
+  "pid": 3543191,
+  "ppid": 3542669,
+  "starttick": "35221524",
+  "cmd": "/srv/opentallas-scratch/codex/zeno-wfc-protected-join-r3/out/obj/Vtb_wfc_protected_stage",
+  "boot_id": "7873415f-cbde-49b4-8228-e44b66bf6895",
+  "signal": "SIGTERM",
+  "preserve": "All source/partiallogs/objects/binary in place"
+}

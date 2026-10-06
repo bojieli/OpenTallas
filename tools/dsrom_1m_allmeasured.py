@@ -57,6 +57,9 @@ WAVE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"
 DRAFT_REC = ROOT / "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json"
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-recovery levers (baseline "recovery")
 WAVE_PHYSICAL = ROOT / "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
+FULL_FEC_LINKS = REC / "links_full_fec.json"                  # OWNER 2026-10-06 full-FEC baseline (RTL)
+FULL_FEC_RACK = ROOT / "results/arch/dsrom_s81_rack_20261006/rack.json"   # hop classes (cable flight beyond 0.3 m)
+DEFAULT_HOP_TIER = "full_fec"   # OWNER 2026-10-06: full RS(544,514) on every off-package link; light_fec = history
 CLK = 1.2e9
 SLOW = 0.9e9
 EXTRA_HOPS = M.S81_EXTRA_HOPS
@@ -152,25 +155,42 @@ def suffix_nodes(g, suf):
     return [n for n in g.nodes if n.endswith("." + suf) or n == suf]
 
 
+def full_fec_inputs():
+    """(links_full_fec.json, rack.json): the owner's full-FEC baseline (2026-10-06)."""
+    return json.loads(FULL_FEC_LINKS.read_text()), json.loads(FULL_FEC_RACK.read_text())
+
+
 def apply_links(P, links, tier="light_fec"):
     h = dict(links["hop"])
+    colls = links["collectives"]
+    phy = "light-FEC PHY VENDOR BUDGET 130 ns"
+    ret_extra = 0
     if tier == "kp4_209ns":     # rack-cable full-KP4 tier (technology.json rom_rack_cable_serdes): sensitivity
         h.update(total_cycles=h["kp4_sensitivity"]["total_cycles"], token_return=h["token_return_kp4_sensitivity"])
+    if tier == "full_fec":      # OWNER 2026-10-06: every off-package link on full RS(544,514), all measured in RTL
+        lf, rk = full_fec_inputs()
+        assert lf["exact"] and lf["status"] == "pass"
+        h.update(total_cycles=lf["hop"]["total_cycles"], token_return=lf["token_return"])
+        colls = lf["collectives"]
+        phy = "full-KP4 PHY VENDOR BUDGET 209 ns"
+        ret_extra = rk["hop_summary"]["token_return_extra_cycles_each"]
     hop_s = h["total_cycles"] / CLK
     for n, nd in P.g.nodes.items():
         if nd.get("kind") == "hop" and nd.get("hop_kind") in ("substage", "head", "stage"):
             P.put(n, hop_s, f"stage hop: ot_dsrom_link_rt RTL {h['measured_endpoint_cycles']} cyc (40,976 B, 64-B flits) "
-                            f"+ light-FEC PHY VENDOR BUDGET 130 ns + UCIe fan-out 10 ns + 2x45 routed wire stages",
+                            f"+ {phy} + UCIe fan-out 10 ns + 2x45 routed wire stages ({h['total_cycles']} cyc)",
                   cls="measured+vendor_phy")
     tr = h["token_return"]
-    P.put("token.return", tr["total_cycles"] / CLK,
-          f"token return: {tr['traversals']} x (link_rt endpoint 6 cyc + light-FEC PHY VENDOR BUDGET 156 cyc) + 90 wire",
+    P.put("token.return", (tr["total_cycles"] + tr["traversals"] * ret_extra) / CLK,
+          f"token return: {tr['traversals']} x (link_rt endpoint 6 cyc + {phy}"
+          + (f" + {ret_extra} cyc cable flight" if ret_extra else "") + ") + 90 wire",
           cls="measured+vendor_phy")
-    for suf, c in links["collectives"].items():
+    for suf, c in colls.items():
         for n in suffix_nodes(P.g, suf):
             if n in P.rows:          # rows_allgather already inside the measured CKV path
                 continue
-            P.put(n, c["cycles"] / CLK, f"TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz), "
+            P.put(n, c["cycles"] / CLK, f"TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz"
+                                         f"{', board leg full RS(544,514)' if tier == 'full_fec' else ''}), "
                                          f"{c['op']} {c['payload_B']} B, bit-exact", cls="measured")
     return hop_s
 
@@ -356,10 +376,39 @@ def apply_engram(P, eng):
     return dict(nodes=n, exact=eng["exact"])
 
 
-def apply_embed(P, emb):
+def apply_embed(P, emb, tier="light_fec"):
     e = emb["nodes"]["embed"]
-    P.put("embed", e["us"] * 1e-6, f"embed: {e['source']}", cls="measured" if e["exact"] else "measured_not_exact")
-    return dict(us=e["us"], parts={k: round(v["us"], 4) for k, v in e["parts"].items()}, exact=e["exact"])
+    us, note = e["us"], ""
+    if tier == "full_fec":      # the embed's TP4 owner->4 ranks all-gather moves by the measured full-FEC shift
+        lf, _ = full_fec_inputs()
+        assert lf["collective_delta_cycles"]["constant"]
+        d = lf["collective_delta_cycles"]["values"][0]
+        us += d / CLK * 1e6
+        note = f" + {d} cyc full-FEC board leg (links_full_fec.json, constant over every measured TP4 payload)"
+    P.put("embed", us * 1e-6, f"embed: {e['source']}{note}", cls="measured" if e["exact"] else "measured_not_exact")
+    return dict(us=round(us, 4), parts={k: round(v["us"], 4) for k, v in e["parts"].items()}, exact=e["exact"])
+
+
+def draft_full_fec_delta(blocks_record, links):
+    """Full-FEC increment of the DSpark draft blocks (us): every board hop on a block's critical path (cls
+    measured+vendor_phy, us > 0) moves by the measured hop shift (+ the draft-link cable flight from the rack record);
+    every TP4 collective by the measured collective shift per issue (issues = node us / the S81 single-issue us)."""
+    lf, rk = full_fec_inputs()
+    dh = lf["hop"]["delta_cycles"] + rk["hop_summary"]["draft_link_extra_cycles_each"]
+    dc = lf["collective_delta_cycles"]["values"][0]
+    single = {k: v["us"] for k, v in links["collectives"].items()}
+    cyc, n_hop, n_coll = 0, 0, 0
+    for b in json.loads(Path(blocks_record).read_text())["stages"].values():
+        for x in b["critical_path"]:
+            if x["cls"] == "measured+vendor_phy" and x["us"] > 0:
+                cyc += dh
+                n_hop += 1
+            elif x["node"] in single:
+                k = max(1, round(x["us"] / single[x["node"]]))
+                cyc += k * dc
+                n_coll += k
+    return dict(us=cyc / CLK * 1e6, cycles=cyc, board_hops=n_hop, collective_issues=n_coll, hop_delta_cycles=dh,
+                collective_delta_cycles=dc, record=rel(blocks_record))
 
 
 def su_with_qdq(su, q):
@@ -460,7 +509,10 @@ def main():
     ap.add_argument("--recovery", type=Path, default=RECOVERY)
     ap.add_argument("--window", default="s81", choices=("s81", "stream_la", "asbuilt_c1"),
                     help="s81 (default): the S81-bound window record; stream_la / asbuilt_c1: the audit's component")
-    ap.add_argument("--hop-tier", default="light_fec", choices=("light_fec", "kp4_209ns"))
+    ap.add_argument("--hop-tier", default=DEFAULT_HOP_TIER, choices=("full_fec", "light_fec", "kp4_209ns"),
+                    help="full_fec (default, OWNER 2026-10-06): every off-package link on full RS(544,514) -- stage "
+                         "hops, token return, TP4 collectives, embed and draft links, measured in RTL, + cable flight "
+                         "per hop class; light_fec: the superseded 130 ns board budget (history)")
     a = ap.parse_args()
     return compose(a)
 
@@ -497,7 +549,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     if "engram" in recs:
         info["engram"] = apply_engram(P, recs["engram"])
     if "embed" in recs:
-        info["embed"] = apply_embed(P, recs["embed"])
+        info["embed"] = apply_embed(P, recs["embed"], a.hop_tier)
     if "su" in recs:
         import dsrom_1m_allmeasured_adapters as AD
         su = recs["su"]
@@ -517,7 +569,16 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         graph_hook(g, P, base_patches, info)
     t, path = classify(g, P, base_patches)
     hop_extra = info.get("hop_us", M.HOP_US)
-    ar = t + EXTRA_HOPS * hop_extra
+    cable_us, ii_cable_us = 0.0, 0.0
+    if a.hop_tier == "full_fec":   # cable flight beyond the 0.3 m inside the measured hop, per hop class (rack record)
+        _, rk = full_fec_inputs()
+        hs = rk["hop_summary"]
+        cable_us = (hs["stage_hop_extra_cycles"] + hs["head_hop_extra_cycles"]) / CLK * 1e6
+        ii_cable_us = max(x["extra_cycles"] for x in rk["stage_hops"]) / CLK * 1e6
+        info["full_fec"] = dict(rack=rel(FULL_FEC_RACK), links=rel(FULL_FEC_LINKS), cable_flight_us=round(cable_us, 4),
+                                stage_hops_by_class=hs["stage_hops"], head_hop=rk["head_hop"]["cls"],
+                                token_return=rk["token_return"]["cls"], ii_hop_cable_us=round(ii_cable_us, 4))
+    ar = t + EXTRA_HOPS * hop_extra + cable_us
     # ---- MTP: wavefront verify with this composition's stage busy times (measured handoff rule) + DSpark draft
     wave = json.loads(WAVE.read_text())["composition"]
     segs = stage_busy(g)
@@ -526,7 +587,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         if s["hop"] == "token.return":          # the head stage: lm_head sweep is its occupancy (terminal overlaps)
             s["busy_us"] = max(s["busy_us"] - info.get("head", {}).get("argmax_drain_us", 0.0), head_occ)
     worst = max(segs, key=lambda s: s["busy_us"])
-    ii = worst["busy_us"] * (1 + wave["measured_interval_overhead"]) + hop_extra
+    ii = worst["busy_us"] * (1 + wave["measured_interval_overhead"]) + hop_extra + ii_cable_us
     verify = ar + M.WAVEFRONT["positions"] * ii
     dr = json.loads(DRAFT_REC.read_text())["result"]
     r_markov = dr["transfer_ratios"]["markov_over_head_macs_full"]
@@ -534,6 +595,11 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     blocks_us = db["blocks_total_us"] if db else 3 * dr["block5_us"]
     if "draft_blocks" in info:                  # recovery lever re-measured the three blocks
         blocks_us = info["draft_blocks"]["us"]
+        if a.hop_tier == "full_fec":
+            src = ROOT / info["draft_blocks"]["source"].split(" ")[0]
+            fd = draft_full_fec_delta(src, recs["links"])
+            info["draft_blocks"]["full_fec"] = fd
+            blocks_us += fd["us"]
     draft = blocks_us + 5 * head_occ * (1 + r_markov)
     step = verify + draft + M.DRAFT["seed_commit_us"]
     mtp = M.DRAFT["tau"] * 1e6 / step
@@ -542,6 +608,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     for p in path:
         by[p["cls"]] = round(by.get(p["cls"], 0.0) + p["us"], 3)
     by["extra_S81_hops"] = round(EXTRA_HOPS * hop_extra, 3)
+    if cable_us:
+        by["cable_flight"] = round(cable_us, 3)
     fam = {}
     for p in modelled:
         f = p["node"].split(".", 1)[1] if p["node"].startswith(("L", "E")) else p["node"]
@@ -575,8 +643,9 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
                               "+661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"))
     else:
         still.append(dict(term="CDC fast->slow crossings on SU nodes", us=sub_us, why="W18 ratio-FIFO latency, no CDC bench"))
-    still.append(dict(term="light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)", us=None,
-                      why="VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"))
+    still.append(dict(term=("full-KP4 PHY (209 ns a board or cable hop, OWNER full-FEC baseline 2026-10-06)"
+                            if a.hop_tier == "full_fec" else "light-FEC PHY (130 ns a board hop)") + " and UCIe PHY (10 ns)",
+                      us=None, why="VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"))
     if "su_qdq_wired" in recs:
         done.append(dict(term="quantiser hub network stages (22 + 15 slow cycles) simulated as RTL stages",
                          record="su_qdq_wired.json", nodes=info.get("qdq_wired_simulated_nodes"),

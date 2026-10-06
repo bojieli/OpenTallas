@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing CP LAUNCH -> actual shared SU lease. No second borrower/GO authority.
 // Original W6 header/control rows; opt-in boundary control uses protected phase rails.
-module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0,FOUR_COMBINATIONAL_CUTS=0,FAST_OWNER_FRONTIER=0)(
+module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0,FOUR_COMBINATIONAL_CUTS=0,FAST_OWNER_FRONTIER=0,PARALLEL_PHASE_VALIDATION=0)(
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -14,6 +14,8 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  output wire [31:0] selected_pc,held_job,output wire [3:0] held_gen,
  output wire [16:0] held_token,output wire [19:0] held_pos,output wire [11:0] owned_frontier_terms
 );
+ initial if(PARALLEL_PHASE_VALIDATION&&!FAST_OWNER_FRONTIER)
+  $fatal(1,"parallel phase requires measured fast frontier parent");
  if(ENABLE==0||!FAST_OWNER_FRONTIER)assign owned_frontier_terms=0;
  initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires four cuts");
  generate if(ENABLE==0)begin:off
@@ -43,7 +45,11 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  if(FOUR_COMBINATIONAL_CUTS)begin:four_combinational_cuts
   initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires exact four cuts");
   initial if(!BALANCED_OWNER_BOUNDARY)$fatal(1,"four cuts require balanced registered boundary");
-  ot_hbm_cp_four_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  if(PARALLEL_PHASE_VALIDATION)begin:parallel_phase
+   ot_hbm_cp_parallel_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  end else begin:retained_phase
+   ot_hbm_cp_four_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  end
   if(FAST_OWNER_FRONTIER)begin:fast_entry
    ot_hbm_cp_frontier_entry entry_check(.pc(launch_pc),.entry(four_entry));
   end else begin:prior_entry
@@ -573,4 +579,47 @@ module ot_hbm_cp_frontier_and12 #(parameter integer FAST=0)(input wire [11:0] bi
   assign yes[0]=~|no[1:0];assign yes[1]=~|no[3:2];
   assign result=&yes;
  end
+endmodule
+
+// All nine legal protected18-bit words, decomposed without a held mirror.
+// n drives only its XOR complement check; q drives eight pair exclusions.
+// No registers, added cycles, or delayed current-fault qualification.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_phase_nand2(input wire [1:0] bits,output wire result);
+ assign result=~&bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_phase_nor2(input wire [1:0] bits,output wire result);
+ assign result=~|bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_parallel_phase(input wire [8:0] q,n,output wire valid);
+ wire [8:0] complementary=q^n;
+ wire [2:0] rails_bad,empty;
+ wire rails_ok,present;
+ for(genvar k=0;k<3;k=k+1)begin:rails
+  ot_hbm_cp_frontier_nand3 r(.bits(complementary[k*3+:3]),.result(rails_bad[k]));
+  ot_hbm_cp_frontier_nor3 p(.bits(q[k*3+:3]),.result(empty[k]));
+ end
+ ot_hbm_cp_frontier_nor3 rroot(.bits(rails_bad),.result(rails_ok));
+ ot_hbm_cp_frontier_nand3 proot(.bits(empty),.result(present));
+ wire [35:0] pair_ok;
+ for(genvar a=0;a<8;a=a+1)begin:pair_a
+  for(genvar b=a+1;b<9;b=b+1)begin:pair_b
+   localparam integer INDEX=a*(17-a)/2+b-a-1;
+   ot_hbm_cp_phase_nand2 exclude_pair(.bits({q[a],q[b]}),.result(pair_ok[INDEX]));
+  end
+ end
+ wire [11:0] bad;wire [3:0] good;wire [1:0] upper_bad;
+ wire one_or_zero;
+ for(genvar k=0;k<12;k=k+1)begin:pair_leaf
+  ot_hbm_cp_frontier_nand3 g(.bits(pair_ok[k*3+:3]),.result(bad[k]));
+ end
+ for(genvar k=0;k<4;k=k+1)begin:pair_middle
+  ot_hbm_cp_frontier_nor3 g(.bits(bad[k*3+:3]),.result(good[k]));
+ end
+ ot_hbm_cp_frontier_nand3 u0(.bits(good[2:0]),.result(upper_bad[0]));
+ ot_hbm_cp_frontier_nand3 u1(.bits({2'b11,good[3]}),.result(upper_bad[1]));
+ ot_hbm_cp_phase_nor2 root(.bits(upper_bad),.result(one_or_zero));
+ assign valid=rails_ok&&present&&one_or_zero;
 endmodule

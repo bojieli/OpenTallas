@@ -1,0 +1,66 @@
+{
+  "status": "ACTUAL_VMROOT_SHARED_STATION_COMPOSITION_COMPONENT_PASS",
+  "base_commit": "a8e33cd59f3c637ac6bbe6d65ad80fd5d358b0aa",
+  "source_hashes": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "624d3c821cce33b0c6c7d7066228c160abdaa198ae0fa41a269cfee053a7d166",
+    "physical/hbm_die_abstracts_20261006/links/root_join/ot_hbm_activation_station_join.sv": "5ff0a6a040b0cb72becc0f33e8e06c745d6198916c3176d623c6821b524abee7",
+    "physical/hbm_die_abstracts_20261006/links/root_join/tb_activation_join.sv": "d41b36d675272e7da2bb866919f59b594758325ed2d30c627157245ef08df0c6"
+  },
+  "seed": "1062026",
+  "source_owner_binding": "TURING_TO_BACON_GIBBS_GAUSS_TOP_FIRST_ENDPOINTS_20261006.json: SW/SE/NW/NE, full192 matching child retirement -> root ACK, actual stream root/cold POR",
+  "fixture": {
+    "root_banks": 2,
+    "rows_each": 128,
+    "real_SRAM_macros": 22,
+    "payload_bits": 2063,
+    "owner_bits": 192,
+    "quarter_count": 4,
+    "consumers_per_quarter": 1,
+    "actual_installed_fanouts": "UNKNOWN; enabled top requires explicit F_SW/F_SE/F_NW/F_NE1..4"
+  },
+  "checks": [
+    "verified-write receipt held across warm request until actual wr_ACK_ready",
+    "accepted root read reaches real child seats despite new-admission quiesce",
+    "one exact payload/owner acceptance per quarter",
+    "no root release from child capture alone",
+    "actual child owner CE with ACK arrival retains receipt and full192 root ACK association",
+    "one native_release after all actual matching child receipts",
+    "wrong child owner leaves debt and blocks new admission/activation-only warm drain"
+  ],
+  "no_memory_zero_init": true,
+  "functional_clock_ns": 10,
+  "physical_clock_target_ns": 0.833333333,
+  "closed": false,
+  "physical_qualified": false,
+  "fullsystem_qualified": false,
+  "existing_leaf_PASS_replayed": false,
+  "station_implementation_count": 1,
+  "station_instance_count_in_fixture": 4,
+  "waypoint_inventory_copies": 208,
+  "inventory_kinds": 23,
+  "inventory_copies": 348,
+  "stdout": "results/physical/hbm_die_abstracts_20261006/links/root_join/join_seed1062026_r3.log",
+  "stdout_sha256": "039b42a39d26cd3312cede867552aa4b09d4de523187543565e22ca9212ee151",
+  "preserved": [
+    "r1/r2 fixture-literal warning logs and r1 source; attempted replacement failure recorded"
+  ],
+  "pending": [
+    "actual per-quarter downstream fanout and destination writevisibility ACK owner binding",
+    "clock/root/reset receiver context SS60FF25",
+    "install activation_drained as genuine new term in enclosing all_routes_drained, not full reset_ack",
+    "actual gather issuer192/cohort/readyless finite response tuple requested directly Turing/Gibbs"
+  ],
+  "FEC": {
+    "this_join": "internal/onpackage activation transport",
+    "off_package": "FULL_FEC every board/in-rack/rack-to-rack link DSROM/HBMacc",
+    "full_FEC_owner_handoff": "PENDING Claude DS-RACK",
+    "off_package_budget_ns": null,
+    "light_130ns_inherited": false
+  }
+}

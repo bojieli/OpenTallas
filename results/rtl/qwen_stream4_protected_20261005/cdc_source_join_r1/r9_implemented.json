@@ -1,0 +1,74 @@
+{
+  "timestamp_UTC": "2026-10-06T05:00:08.781400+00:00",
+  "verdict": "PASS_MINIMUM_CHANGED_PROTECTED_R9_BINDING",
+  "owner_raw_source": "c8ba43664 RSEL1",
+  "source_SHA256": {
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "940859f9bdba12420a80d146fef5a055641aec7a3b4dd12e1836843d17168a75",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "07914b51a3aaef174fa46f30ba92e9a39e23fc89e11f2132a2663118366d0bbb",
+    "rtl/hdc/kv/ot_qwen_s4_protected_cdc_consumer_join.sv": "bb4caa4cdf1125d210d9c524a5d9be893d8556a3401c6a1034b6d7c990ac2f4b",
+    "rtl/hdc/kv/ot_qwen_s4_transport_context.sv": "25404add8c6f947d6a51f495a9dd2f2fa40ce16a6a5d14c9efdd4c021b1ef938",
+    "tools/qwen_stream4_protected_model.py": "805e3ca1356cc0755a4c49f2fb15e5045c4fc1bbf6054ce261acee124ad2552d",
+    "tools/qwen_stream4_numeric/cdc_source_ports.py": "7d5ded8429baf149da7fd28b824c23c6c95a394e725fb6fec8b0f7d072d3b9f9",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_r9_read.sv": "45c20797f885fe30a07664d6beec6fa0aa871aeba19d01da736d6a554c34fb9f",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_protected_r9_join.sv": "46167caae707c2ac1200b2d04eee3f887a1cc4ccf5b2f5e5d8bd7f3671020488"
+  },
+  "source_module": "ot_qwen_s4_protected_ring READ_RSEL=1 / r9_read.column[0..17]",
+  "code_bits": 504,
+  "groups": 18,
+  "max_group_bits": 29,
+  "existing_held_capture": "u_d0.EN=advance; full code/owner/valid held on stall; warm never resets leaf",
+  "failclosed": "group selector complementary-rail or exact-current-hot mismatch -> read_select_fault -> rd_fault; prevents advance/fetch/delivery/retire, retains source debt",
+  "production_parameter_chain": "ot_qwen_s4_transport_context ENABLE=1 CDC_CONSUMER_JOIN=1 LANDING_RSEL=1 -> adapter -> protectedPC -> u_l.READ_RSEL=1",
+  "external_ABI": "unchanged genuine warm_rst_n and wd_accept; no raw pulse ACK mapped to unconditional retire",
+  "minimum_golden": {
+    "status": "PASS",
+    "clocks_ps": {
+      "CLK": 833.333,
+      "HCLK": 1024
+    },
+    "ordered_rows": 180,
+    "depth": 64,
+    "exact_per_edge": "valid/ready/fault + valid payload/owner vs existing protected four-cut ring, wrap and held admission pause",
+    "added_decoder_cycles_observed_in_minimum": 0,
+    "negative_controls": [
+      "CE3 corrected",
+      "UE held debt",
+      "wrongPC seal held debt",
+      "pointer corruption no false credit",
+      "selector primary upset no release",
+      "coherently wrong selector rails rejected by protected fetch identity"
+    ],
+    "whole_CDC_15_case_replay": false
+  },
+  "actual_adapter_join": {
+    "status": "PASS",
+    "MEM_WORDS": 4718592,
+    "local_wire_spans": 14,
+    "mechanisms": [
+      "real warm_rst_n admission pause",
+      "held landing/WR/ACK drain under warm",
+      "explicit wd_accept backpressure",
+      "40WR cache wrap and ordered completion",
+      "shared descriptorGO ordinal consumed callback",
+      "cache upset quarantines owned WR debt"
+    ]
+  },
+  "canonical_5_050_selected_adapter_lint": "PASS ENABLE=1 LANDING_RSEL=1",
+  "runtime1959093_modified": false,
+  "new_fulltoken_started": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "global_return_frames_per_core_per_rank": 4,
+  "functional_owner_start_authorized": true,
+  "physical_pending": [
+    "actual loaded heldD0 EN/data arcs SS60FF25",
+    "actual parent slots/pins/clock and gatedME relation",
+    "r9 successor route terminals"
+  ],
+  "historical_void": [
+    "r6",
+    "r7",
+    "r8"
+  ],
+  "historical_evidence_preserved": true
+}

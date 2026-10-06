@@ -1,0 +1,44 @@
+{
+  "scope": "Source-bound real native array interface compile only; full engine runtime/mapped receiver clocks remain unqualified",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv": "40d83065ae01b0019ae2abc98ff3b5935a8aa14d5be8add774d6245bffe64b88",
+    "tools/dsrom_reindex_parent_model.py": "2ffe783944e25e84f1c3396d933a003d3bf300395badae6c801838571a201af3"
+  },
+  "golden_arithmetic_source_unchanged": true,
+  "same_source_golden_replayed": false,
+  "parent_qualified": false,
+  "mapping_qualified": false,
+  "runs": [
+    {
+      "ENABLE": 0,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-Wall",
+        "-tnull",
+        "-s",
+        "ot_dsrom_reindex_native_quarter",
+        "-Pot_dsrom_reindex_native_quarter.ENABLE=0",
+        "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv",
+        "results/rtl/dsrom_reindex_parent_20261005/native_quarter_port_join/native_array_interface.sv"
+      ],
+      "returncode": 0
+    },
+    {
+      "ENABLE": 1,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-Wall",
+        "-tnull",
+        "-s",
+        "ot_dsrom_reindex_native_quarter",
+        "-Pot_dsrom_reindex_native_quarter.ENABLE=1",
+        "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_native_quarter.sv",
+        "results/rtl/dsrom_reindex_parent_20261005/native_quarter_port_join/native_array_interface.sv"
+      ],
+      "returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "reason": "Actual native station source_release has no ready; parent full73 receipt cut may repair",
+  "instances": 4,
+  "useful_receipt_bits": 265,
+  "valid_bits": 1,
+  "sticky_fault_bits": 1,
+  "W6_words_each": 5,
+  "protected_FF_each": 360,
+  "extra_protected_FF_total": 1440,
+  "extra_FF_area_floor_um2": 419.90400000000005,
+  "SRAM_added": 0,
+  "pipeline_capture_edges": 1,
+  "boundary_bits_each": 267,
+  "clock": "same actual clk_sm input as native station seats and parent receipt; no forwarded-clock phase borrowing",
+  "admission": "one receipt reserved per live quarter transaction; new root read waits old reverse debt",
+  "CE": "capture owed pulse into empty corrected seat before scrub; hold until actual parent receipt acceptance",
+  "DUE": "no acknowledgment, retain debt until cold POR",
+  "physical_qualified": false
+}

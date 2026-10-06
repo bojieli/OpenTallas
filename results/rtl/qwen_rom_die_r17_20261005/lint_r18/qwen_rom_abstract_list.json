@@ -1,0 +1,2306 @@
+{
+ "schema": "opentallas.rom_die_abstract_list.v1",
+ "die": "qwen_rom",
+ "generator": "tools/qwen_rom_fulldie_b3r2.py",
+ "generator_tag": {
+  "file": "tools/qwen_rom_fulldie_b3r2.py",
+  "sha256": "d808cac35fb3b29df2a844d36f0e64e9dfd72026959041a76192fa128a25f032",
+  "tree_head": "e2a72c4f346d9900c625bd0c5dd3cbc04e95e2a2",
+  "file_commit": "f76c3603b5391b152b71318d9dd28a82e6615a7f"
+ },
+ "qwen_source": {
+  "root": "/home/ubuntu/wt-qwen-die",
+  "ref": "None",
+  "commit": "e2a72c4f346d9900c625bd0c5dd3cbc04e95e2a2",
+  "overlay": "[]"
+ },
+ "qwen_recipe": {
+  "b3r3": true,
+  "b3r6": true,
+  "tree_cols": 6,
+  "bw_align": true,
+  "bw_edge": true,
+  "io_faces": true,
+  "bw_edge_inner": true,
+  "bw_sp": 200,
+  "m6_strip": 40,
+  "slab_group_h": 455.76,
+  "cdc": "183.048,183.048",
+  "r18": true
+ },
+ "variant": null,
+ "die_um": [
+  24650.784,
+  32801.76
+ ],
+ "status_codes": [
+  "REAL_VIEW",
+  "REAL_VIEW_NOT_CLOSED",
+  "RTL_CLOSED",
+  "RTL_OPEN",
+  "NO_RTL_TOP",
+  "RESERVATION_ONLY"
+ ],
+ "summary": {
+  "kinds": 22,
+  "copies": 3335,
+  "families_by_status": {
+   "REAL_VIEW": 1,
+   "REAL_VIEW_NOT_CLOSED": 0,
+   "RTL_CLOSED": 1,
+   "RTL_OPEN": 11,
+   "NO_RTL_TOP": 9,
+   "RESERVATION_ONLY": 0
+  },
+  "instances_by_status": {
+   "REAL_VIEW": 4,
+   "REAL_VIEW_NOT_CLOSED": 0,
+   "RTL_CLOSED": 32,
+   "RTL_OPEN": 1691,
+   "NO_RTL_TOP": 1608,
+   "RESERVATION_ONLY": 0
+  }
+ },
+ "families": [
+  {
+   "family": "ot_hbm3e_phy",
+   "kind": "phy",
+   "domain": [
+    "hbm_976p6"
+   ],
+   "masters": [
+    "ot_hbm3e_phy"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     833.496,
+     12000.12
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "dfi": {
+     "bits": 9207,
+     "face": "LEF"
+    },
+    "clk": {
+     "bits": 1,
+     "face": "LEF"
+    },
+    "rst_n": {
+     "bits": 1,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "black box physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v",
+   "status": "REAL_VIEW",
+   "hardened_view": [
+    "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef + _ss/_tt/_ff.lib"
+   ],
+   "closure": "generated macro (tools/mem_compiler/hbm_phy_gen.py), assumed boundary timing",
+   "owner": "-",
+   "note": "\"PHY + controller abstract\": its clk / rst_n are bits of the dfi bundle from qfd_ctrl",
+   "generator_note": []
+  },
+  {
+   "family": "qfd_cdc",
+   "kind": "cdc",
+   "domain": [
+    "cdc"
+   ],
+   "masters": [
+    "qfd_cdc"
+   ],
+   "distinct_masters": 1,
+   "instances": 128,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     183.048,
+     183.048
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "h": {
+     "bits": 613,
+     "face": "E"
+    },
+    "c": {
+     "bits": 585,
+     "face": "W"
+    },
+    "clk": {
+     "bits": 1,
+     "face": "S"
+    },
+    "hclk": {
+     "bits": 1,
+     "face": "S"
+    },
+    "h_arst_n": {
+     "bits": 1,
+     "face": "S"
+    },
+    "c_arst_n": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "ot_qwen_stream4_cdc_pc (rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv; r7 RTL claude/qwen-stream4-cdc-20261005 @ ae2227660)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "core 0.833 / HBM 1.024 ns: r5 timing met but 12/34 slew pins REJECT (results/rtl/qwen_stream4_cdc_20261005/takeover_r5/verdict.json); r7c_u50 SS -1.06 (1 endpoint) / FF +10.14, slew 0 (EPYC1, uncommitted)",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "bound to its RTL ports here: clk / hclk / c_arst_n / h_arst_n have no die net",
+   "generator_note": [
+    "STREAM4 per-PC CDC element (ot_qwen_stream4_cdc_pc, routed frame)"
+   ]
+  },
+  {
+   "family": "qfd_chead_e",
+   "kind": "head",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_chead_e"
+   ],
+   "distinct_masters": 1,
+   "instances": 32,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     52.68,
+     103.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "n": {
+     "bits": 323,
+     "face": "N"
+    },
+    "s": {
+     "bits": 323,
+     "face": "S"
+    },
+    "w": {
+     "bits": 323,
+     "face": "W"
+    },
+    "e": {
+     "bits": 323,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "area"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "column head: head-chain station + corridor split north/south (E flow variant)"
+   ]
+  },
+  {
+   "family": "qfd_chead_w",
+   "kind": "head",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_chead_w"
+   ],
+   "distinct_masters": 1,
+   "instances": 32,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     52.68,
+     103.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "n": {
+     "bits": 323,
+     "face": "N"
+    },
+    "s": {
+     "bits": 323,
+     "face": "S"
+    },
+    "w": {
+     "bits": 323,
+     "face": "W"
+    },
+    "e": {
+     "bits": 323,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "area"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "column head: head-chain station + corridor split north/south (W flow variant)"
+   ]
+  },
+  {
+   "family": "qfd_cst_n",
+   "kind": "station",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_cst_n"
+   ],
+   "distinct_masters": 1,
+   "instances": 768,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     52.68,
+     103.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "a": {
+     "bits": 323,
+     "face": "N"
+    },
+    "b": {
+     "bits": 323,
+     "face": "S"
+    },
+    "tap": {
+     "bits": 323,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "area"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "corridor pipeline station (637 flops + 3 tap repeater banks): standard cells M1-M3, die routing above (N flow variant)"
+   ]
+  },
+  {
+   "family": "qfd_cst_s",
+   "kind": "station",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_cst_s"
+   ],
+   "distinct_masters": 1,
+   "instances": 768,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     52.68,
+     103.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "a": {
+     "bits": 323,
+     "face": "N"
+    },
+    "b": {
+     "bits": 323,
+     "face": "S"
+    },
+    "tap": {
+     "bits": 323,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "area"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "corridor pipeline station (637 flops + 3 tap repeater banks): standard cells M1-M3, die routing above (S flow variant)"
+   ]
+  },
+  {
+   "family": "qfd_ctrl",
+   "kind": "ctrl",
+   "domain": [
+    "hbm_976p6"
+   ],
+   "masters": [
+    "qfd_ctrl"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     247.512,
+     12141.336
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "phy": {
+     "bits": 9207,
+     "face": "E"
+    },
+    "c0": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c1": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c2": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c3": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c4": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c5": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c6": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c7": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c8": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c9": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c10": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c11": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c12": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c13": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c14": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c15": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c16": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c17": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c18": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c19": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c20": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c21": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c22": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c23": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c24": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c25": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c26": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c27": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c28": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c29": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c30": {
+     "bits": 613,
+     "face": "W"
+    },
+    "c31": {
+     "bits": 613,
+     "face": "W"
+    },
+    "pll_hbm": {
+     "bits": 1,
+     "face": "E"
+    },
+    "hrst": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "rtl_top": "ot_hbm_r14_stream_stack (rtl/model_ready_hbm_r14/) + per-PC KV service rtl/hdc/kv/ot_qwen_rt_kv_stream*_service.sv",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "controller ck2 r6 CLOSED at 1.024 ns SS +19.0 / FF +2.94 (results/uarch/qwen_hbm_sustained_bw_20261003/physical-ss-ck2-r6-PASS.json); merge_r8 +25.57 / +3.86; the per-PC KV service (11.878 mm2/die) never routed",
+   "owner": "CODEX",
+   "note": "HBM 976.6 MHz domain; no clock net on the die (NO_CLOCK)",
+   "generator_note": [
+    "streaming HBM controller (0.159 mm2/die, claude/qwen-hbm-sustained-bw @ 52ce3e9c1) + per-PC KV service (kept + ambiguous 11.878 mm2/die): 976.6 MHz"
+   ]
+  },
+  {
+   "family": "qfd_hub",
+   "kind": "hub_element",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_hub"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     412.536,
+     412.536
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "ln": {
+     "bits": 2112,
+     "face": "E"
+    },
+    "x3": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ar": {
+     "bits": 512,
+     "face": "E"
+    },
+    "lsw": {
+     "bits": 1056,
+     "face": "E"
+    },
+    "lse": {
+     "bits": 1056,
+     "face": "E"
+    },
+    "pll_r0": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r1": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r2": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r3": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r4": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r5": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r6": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r7": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r8": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r9": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r10": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r11": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r12": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r13": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r14": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r15": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r16": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r17": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r18": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r19": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r20": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r21": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r22": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r23": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r24": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r25": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r26": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r27": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r28": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r29": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r30": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r31": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r32": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r33": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r34": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r35": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r36": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r37": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r38": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r39": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r40": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r41": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r42": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r43": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r44": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r45": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r46": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r47": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r48": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r49": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r50": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r51": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r52": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r53": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r54": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r55": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r56": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r57": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r58": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r59": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r60": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r61": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r62": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r63": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r64": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r65": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r66": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r67": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r68": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r69": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r70": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r71": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r72": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r73": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r74": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r75": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r76": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r77": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r78": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r79": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r80": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r81": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r82": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r83": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r84": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r85": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r86": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r87": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r88": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r89": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r90": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r91": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r92": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r93": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r94": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r95": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r96": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r97": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r98": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r99": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r100": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r101": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r102": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r103": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r105": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r106": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r108": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r109": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r111": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r112": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_r116": {
+     "bits": 1,
+     "face": "N"
+    },
+    "pll_r120": {
+     "bits": 1,
+     "face": "N"
+    },
+    "fck_ln": {
+     "bits": 1,
+     "face": "N"
+    },
+    "fck_lsw": {
+     "bits": 1,
+     "face": "S"
+    },
+    "fck_lse": {
+     "bits": 1,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "area"
+    }
+   },
+   "rtl_top": "ot_qwen_nearhbm_attn_hub{,_p} (rtl/hdc/nearhbm/) + 4 link endpoints + X3 staging",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "hub_r7 SS -1,036.9 / FF -16.4, 2,473 slew; hub_r9 post-CTS -88.95 stopped, DROP (same verdict.json)",
+   "owner": "OWNER DECISION (near-HBM attention DROPPED)",
+   "note": "near-HBM combine of a dropped block; also the die clock root (ck_root -> ck_* trunks)",
+   "generator_note": [
+    "hub element: 4 stack-link endpoints (FIFO 8) and the stream clock root (near-HBM combine DROPPED)"
+   ]
+  },
+  {
+   "family": "qfd_io_collective",
+   "kind": "io",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "qfd_io_collective"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     2302.104,
+     1563.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "vt": {
+     "bits": 512,
+     "face": "S"
+    },
+    "vr": {
+     "bits": 512,
+     "face": "S"
+    },
+    "u": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "s": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "ur": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "sr": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "sd": {
+     "bits": 66,
+     "face": "E"
+    },
+    "pll_stream": {
+     "bits": 1,
+     "face": "S"
+    },
+    "pll_serial": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_ucie": {
+     "bits": 1,
+     "face": "E"
+    },
+    "pll_serdes": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "rtl_top": "ot_rom_oneshot_die (rtl/rom/ot_rom_oneshot_allreduce.sv) + rtl/rom/collectives/",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "screen only: -1,208 ps reg-to-reg (~490 MHz) (results/rtl/risk_clock_loops_20261003/screens/qwen/oneshot_die_d32_833.json)",
+   "owner": "CODEX",
+   "note": "serial 0.9 GHz; die PLL / clock root",
+   "generator_note": [
+    "IO band block collective"
+   ]
+  },
+  {
+   "family": "qfd_io_embedding_rom",
+   "kind": "io",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_io_embedding_rom"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     7063.608,
+     1563.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "o": {
+     "bits": 512,
+     "face": "E"
+    },
+    "a": {
+     "bits": 24,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "ot_qwen_rt_embed_rom (rtl/hdc/ot_qwen_rt_embed_rom.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed",
+   "owner": "CODEX",
+   "note": "no address input net on the die",
+   "generator_note": [
+    "IO band block embedding_rom"
+   ]
+  },
+  {
+   "family": "qfd_io_serdes",
+   "kind": "io",
+   "domain": [
+    "link_serdes"
+   ],
+   "masters": [
+    "qfd_io_serdes"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     2557.848,
+     1563.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "c": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "r": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "n/a",
+   "owner": "CODEX",
+   "note": "SerDes PHY reservation (4 mm2): hard IP abstract needed (the S81 die uses ot_pdie_serdes)",
+   "generator_note": [
+    "IO band block serdes"
+   ]
+  },
+  {
+   "family": "qfd_io_ucie",
+   "kind": "io",
+   "domain": [
+    "link_ucie"
+   ],
+   "masters": [
+    "qfd_io_ucie"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     6394.872,
+     1563.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "c": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "r": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "n/a",
+   "owner": "CODEX",
+   "note": "UCIe PHY reservation (10 mm2): hard IP abstract needed (the S81 die uses ot_pdie_ucie)",
+   "generator_note": [
+    "IO band block ucie"
+   ]
+  },
+  {
+   "family": "qfd_io_xfifo",
+   "kind": "xfifo",
+   "domain": [
+    "cdc"
+   ],
+   "masters": [
+    "qfd_io_xfifo"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     86.376,
+     1563.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "i_ucie_tx": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "o_ucie_tx": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "i_serdes_tx": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "o_serdes_tx": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "i_seq_coll": {
+     "bits": 66,
+     "face": "S"
+    },
+    "o_seq_coll": {
+     "bits": 66,
+     "face": "W"
+    },
+    "i_ucie_rx": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "o_ucie_rx": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "i_serdes_rx": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "o_serdes_rx": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    },
+    "cks": {
+     "bits": 1,
+     "face": "S"
+    },
+    "cku": {
+     "bits": 1,
+     "face": "W"
+    },
+    "ckd": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "IO-band CDC cluster: sequencer -> collective ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs"
+   ]
+  },
+  {
+   "family": "qfd_kvc",
+   "kind": "link_fifo",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_kvc"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     96.744,
+     12141.336
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "lk": {
+     "bits": 1056,
+     "face": "W"
+    },
+    "c0": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c1": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c2": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c3": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c4": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c5": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c6": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c7": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c8": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c9": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c10": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c11": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c12": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c13": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c14": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c15": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c16": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c17": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c18": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c19": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c20": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c21": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c22": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c23": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c24": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c25": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c26": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c27": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c28": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c29": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c30": {
+     "bits": 585,
+     "face": "E"
+    },
+    "c31": {
+     "bits": 585,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "fck_lk": {
+     "bits": 1,
+     "face": "W"
+    },
+    "crst": {
+     "bits": 1,
+     "face": "E"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "STREAM4 KV landing concentrator (32 PC landing words -> the stack link, KV-new write into the CDC write queues) + strip-end link endpoint"
+   ]
+  },
+  {
+   "family": "qfd_lst_*",
+   "kind": "link_station",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_lst_c",
+    "qfd_lst_c_split",
+    "qfd_lst_h_e",
+    "qfd_lst_h_w",
+    "qfd_lst_v",
+    "qfd_lst_v_split"
+   ],
+   "distinct_masters": 6,
+   "instances": 32,
+   "per_master": {
+    "qfd_lst_c": 1,
+    "qfd_lst_c_split": 2,
+    "qfd_lst_h_e": 10,
+    "qfd_lst_h_w": 10,
+    "qfd_lst_v": 3,
+    "qfd_lst_v_split": 6
+   },
+   "placeholder_size_um": [
+    [
+     34.536,
+     97.176
+    ],
+    [
+     130.008,
+     34.536
+    ],
+    [
+     130.008,
+     97.176
+    ],
+    [
+     260.04,
+     34.536
+    ],
+    [
+     260.04,
+     97.176
+    ]
+   ],
+   "distinct_sizes": 5,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "v": {
+     "bits": 2112,
+     "face": "S",
+     "masters": 2
+    },
+    "w": {
+     "bits": 1056,
+     "face": "W",
+     "masters": 4
+    },
+    "e": {
+     "bits": 1056,
+     "face": "E",
+     "masters": 4
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N/S/area"
+    },
+    "fck_v": {
+     "bits": 1,
+     "face": "N/S",
+     "masters": 2
+    },
+    "fck_w": {
+     "bits": 1,
+     "face": "W/area",
+     "masters": 4
+    },
+    "fck_e": {
+     "bits": 1,
+     "face": "E/area",
+     "masters": 4
+    },
+    "a": {
+     "bits": 2112,
+     "face": "S",
+     "masters": 2
+    },
+    "b": {
+     "bits": 2112,
+     "face": "N",
+     "masters": 2
+    },
+    "fck_a": {
+     "bits": 1,
+     "face": "S",
+     "masters": 2
+    },
+    "fck_b": {
+     "bits": 1,
+     "face": "N",
+     "masters": 2
+    }
+   },
+   "rtl_top": "link span vehicle qcg_link_span430 (rtl/chip/physical/qcg/qcg_link_span430.v); station = 4 registered stages",
+   "status": "RTL_CLOSED",
+   "hardened_view": null,
+   "closure": "E_tile_r2 SS +63.8 / FF +172.6, E_strip_r2 SS +69.3 / FF +141.4, slew 0 (results/rtl/qwen_corridor_gate_20261003/item7_E_*_r2_terminal)",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "parameterised link-station family (v: 2 x 1056, c: corner split, h: 1056, v_split / c_split: one link); the station master is not hardened",
+   "generator_note": [
+    "b3 lower corner, one stack link",
+    "b3 one lower stack link, half channel"
+   ]
+  },
+  {
+   "family": "qfd_port_tiles_*",
+   "kind": "spine_block",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_port_tiles_0",
+    "qfd_port_tiles_0_f1",
+    "qfd_port_tiles_1",
+    "qfd_port_tiles_1_f1",
+    "qfd_port_tiles_2",
+    "qfd_port_tiles_2_f1",
+    "qfd_port_tiles_2_f2",
+    "qfd_port_tiles_2_f3",
+    "qfd_port_tiles_3",
+    "qfd_port_tiles_3_f1",
+    "qfd_port_tiles_3_f2",
+    "qfd_port_tiles_3_f3",
+    "qfd_port_tiles_4",
+    "qfd_port_tiles_4_f1",
+    "qfd_port_tiles_5",
+    "qfd_port_tiles_5_f1"
+   ],
+   "distinct_masters": 16,
+   "instances": 16,
+   "per_master": {
+    "qfd_port_tiles_0": 1,
+    "qfd_port_tiles_0_f1": 1,
+    "qfd_port_tiles_1": 1,
+    "qfd_port_tiles_1_f1": 1,
+    "qfd_port_tiles_2": 1,
+    "qfd_port_tiles_2_f1": 1,
+    "qfd_port_tiles_2_f2": 1,
+    "qfd_port_tiles_2_f3": 1,
+    "qfd_port_tiles_3": 1,
+    "qfd_port_tiles_3_f1": 1,
+    "qfd_port_tiles_3_f2": 1,
+    "qfd_port_tiles_3_f3": 1,
+    "qfd_port_tiles_4": 1,
+    "qfd_port_tiles_4_f1": 1,
+    "qfd_port_tiles_5": 1,
+    "qfd_port_tiles_5_f1": 1
+   },
+   "placeholder_size_um": [
+    [
+     777.576,
+     457.896
+    ],
+    [
+     777.576,
+     915.816
+    ],
+    [
+     777.576,
+     1373.736
+    ],
+    [
+     777.576,
+     2289.576
+    ],
+    [
+     777.576,
+     2747.496
+    ],
+    [
+     777.576,
+     3205.416
+    ]
+   ],
+   "distinct_sizes": 7,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "bw0": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw1": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw2": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw3": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw4": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw5": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw6": {
+     "bits": 512,
+     "face": "W/area",
+     "masters": 6
+    },
+    "bw7": {
+     "bits": 512,
+     "face": "W/area",
+     "masters": 6
+    },
+    "cf1": {
+     "bits": 512,
+     "face": "E",
+     "masters": 6
+    },
+    "rw": {
+     "bits": 512,
+     "face": "N/S",
+     "masters": 6
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N/S/W"
+    },
+    "bw8": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw9": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw10": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw11": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw12": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw13": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw14": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "bw15": {
+     "bits": 512,
+     "face": "area",
+     "masters": 6
+    },
+    "cw0": {
+     "bits": 512,
+     "face": "W",
+     "masters": 1
+    },
+    "cw1": {
+     "bits": 512,
+     "face": "W",
+     "masters": 1
+    },
+    "cf2": {
+     "bits": 512,
+     "face": "E",
+     "masters": 2
+    },
+    "cf3": {
+     "bits": 512,
+     "face": "E",
+     "masters": 2
+    },
+    "cw2": {
+     "bits": 512,
+     "face": "W",
+     "masters": 3
+    },
+    "cw3": {
+     "bits": 512,
+     "face": "W",
+     "masters": 3
+    },
+    "cw4": {
+     "bits": 512,
+     "face": "W",
+     "masters": 1
+    },
+    "cw5": {
+     "bits": 512,
+     "face": "W",
+     "masters": 1
+    }
+   },
+   "rtl_top": "8 x ot_qwen_slab_port_group (rtl/physical/ot_qwen_slab_port_group.sv) per slab + 8 block-word meso FIFOs (meso_d4_v7) + scale ROM",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "456 variant r6d_456_lead2 SS +6.64 / FF +8.21 but 120 slew pins, FAIL_ROUTED_COMPONENT (results/rtl/qwen_slab_share_20261005/takeover_r6/physical/terminal.json); r10a-f routing (EPYC1)",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "parameterised band-slab family: 6 primaries + 10 fragments (_f1/_f2/_f3); the die netlist has one master per slab, not 96 port-group instances",
+   "generator_note": [
+    "spine reservation slab qfd_port_tiles_0",
+    "spine reservation slab qfd_port_tiles_0_f1"
+   ]
+  },
+  {
+   "family": "qfd_sp_constants_sequencer",
+   "kind": "spine_block",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_sp_constants_sequencer"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     777.576,
+     2775.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "cq": {
+     "bits": 4096,
+     "face": "N"
+    },
+    "ca": {
+     "bits": 1600,
+     "face": "N"
+    },
+    "su": {
+     "bits": 492,
+     "face": "N"
+    },
+    "ib": {
+     "bits": 382,
+     "face": "N"
+    },
+    "cd": {
+     "bits": 66,
+     "face": "N"
+    },
+    "ea": {
+     "bits": 24,
+     "face": "N"
+    },
+    "md": {
+     "bits": 2,
+     "face": "N"
+    },
+    "sd": {
+     "bits": 2,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    }
+   },
+   "rtl_top": "ot_qwen_rom_core (rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv) + VP sequencer ot_qwen_tp_seq_w12_vp (rtl/rom/) + constant ROM",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "core CLOSED r5b_f3ba SS +0.87 / FF +7.12 in die context (results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json, main c694570d6); sequencer CLOSED SS +4.56 / FF +14.32 (results/rtl/qwen_dspark_closure_20261004/routes/seqvp_la*_0833); constant ROM not routed",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "core + sequencer closed (no hardened view); the slab is open only on its constant ROM",
+   "generator_note": [
+    "spine reservation slab qfd_sp_constants_sequencer"
+   ]
+  },
+  {
+   "family": "qfd_sp_su64_sfu",
+   "kind": "spine_block",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "qfd_sp_su64_sfu"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     777.576,
+     2058.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "q": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E"
+    },
+    "cq": {
+     "bits": 4096,
+     "face": "N"
+    },
+    "ca": {
+     "bits": 1600,
+     "face": "N"
+    },
+    "si": {
+     "bits": 492,
+     "face": "N"
+    },
+    "sd": {
+     "bits": 2,
+     "face": "N"
+    }
+   },
+   "rtl_top": "ot_hdc_vstream_rt SW64 (generated) + ot_hdc_sfu",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never measured (vstream_sw64 screen never committed)",
+   "owner": "CODEX",
+   "note": "serial 0.9 GHz",
+   "generator_note": [
+    "spine reservation slab qfd_sp_su64_sfu"
+   ]
+  },
+  {
+   "family": "qfd_sp_tree_top",
+   "kind": "spine_block",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_sp_tree_top"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     777.576,
+     3084.456
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "bw0": {
+     "bits": 512,
+     "face": "area"
+    },
+    "bw1": {
+     "bits": 512,
+     "face": "area"
+    },
+    "bw2": {
+     "bits": 512,
+     "face": "area"
+    },
+    "bw3": {
+     "bits": 512,
+     "face": "area"
+    },
+    "bw4": {
+     "bits": 512,
+     "face": "area"
+    },
+    "bw5": {
+     "bits": 512,
+     "face": "area"
+    },
+    "r": {
+     "bits": 512,
+     "face": "S"
+    },
+    "md": {
+     "bits": 2,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "ot_qwen_me_sptree_w12 (rtl/hdc/ot_qwen_me_spine_h_w12.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "sptree_tp2_t3 timed out: partial SS -8.76 / FF +1.88; ME spine never synthesised (24 h yosys timeout)",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "ME result compaction",
+   "generator_note": [
+    "spine reservation slab qfd_sp_tree_top"
+   ]
+  },
+  {
+   "family": "qfd_sp_vector_memory",
+   "kind": "spine_block",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "qfd_sp_vector_memory"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     777.576,
+     933.096
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "xw": {
+     "bits": 323,
+     "face": "E"
+    },
+    "xe": {
+     "bits": 323,
+     "face": "E"
+    },
+    "ar": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ct": {
+     "bits": 512,
+     "face": "N"
+    },
+    "cr": {
+     "bits": 512,
+     "face": "N"
+    },
+    "em": {
+     "bits": 512,
+     "face": "E"
+    },
+    "tr": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ib": {
+     "bits": 382,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N"
+    }
+   },
+   "rtl_top": "ot_qwen_rom_w1_frame_leaf (rtl/rom/qwen_vm_active_frame_20261005/)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "exact bench PASS, no physical claim (results/rtl/qwen_rom_w1_frame_leaf_20261005/README.md)",
+   "owner": "CODEX",
+   "note": "serial 0.9 GHz; x root",
+   "generator_note": [
+    "spine reservation slab qfd_sp_vector_memory"
+   ]
+  },
+  {
+   "family": "qfd_sp_xfifo",
+   "kind": "xfifo",
+   "domain": [
+    "cdc"
+   ],
+   "masters": [
+    "qfd_sp_xfifo"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     199.992,
+     1643.736
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "i_head_31": {
+     "bits": 323,
+     "face": "W"
+    },
+    "o_head_31": {
+     "bits": 323,
+     "face": "W"
+    },
+    "i_head_32": {
+     "bits": 323,
+     "face": "W"
+    },
+    "o_head_32": {
+     "bits": 323,
+     "face": "E"
+    },
+    "i_x3": {
+     "bits": 512,
+     "face": "W"
+    },
+    "o_x3": {
+     "bits": 512,
+     "face": "W"
+    },
+    "i_attn_ret": {
+     "bits": 512,
+     "face": "W"
+    },
+    "o_attn_ret": {
+     "bits": 512,
+     "face": "W"
+    },
+    "i_emb": {
+     "bits": 512,
+     "face": "W"
+    },
+    "o_emb": {
+     "bits": 512,
+     "face": "W"
+    },
+    "i_seq_ib": {
+     "bits": 382,
+     "face": "E"
+    },
+    "o_seq_ib": {
+     "bits": 382,
+     "face": "W"
+    },
+    "i_seq_su": {
+     "bits": 492,
+     "face": "E"
+    },
+    "o_seq_su": {
+     "bits": 492,
+     "face": "W"
+    },
+    "i_seq_sud": {
+     "bits": 2,
+     "face": "W"
+    },
+    "o_seq_sud": {
+     "bits": 2,
+     "face": "E"
+    },
+    "i_crom_a": {
+     "bits": 1600,
+     "face": "W"
+    },
+    "o_crom_a": {
+     "bits": 1600,
+     "face": "E"
+    },
+    "i_crom_q": {
+     "bits": 4096,
+     "face": "E"
+    },
+    "o_crom_q": {
+     "bits": 4096,
+     "face": "W"
+    },
+    "i_tt_res": {
+     "bits": 512,
+     "face": "W"
+    },
+    "o_tt_res": {
+     "bits": 512,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W"
+    },
+    "cks": {
+     "bits": 1,
+     "face": "W"
+    }
+   },
+   "rtl_top": "UNKNOWN (new master: add it to the family table)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "",
+   "owner": "?",
+   "note": "",
+   "generator_note": [
+    "decision-C X1/X2/X3 ratio CDC FIFO cluster (ot_ratio_cdc_fifo 3:4, depth 4), std cells M1-M3, die routing above"
+   ]
+  },
+  {
+   "family": "qfd_tile",
+   "kind": "tile",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "qfd_tile"
+   ],
+   "distinct_masters": 1,
+   "instances": 1536,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     260.904,
+     1291.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "tap": {
+     "bits": 323,
+     "face": "E"
+    },
+    "t_out": {
+     "bits": 512,
+     "face": "area"
+    },
+    "n_a": {
+     "bits": 512,
+     "face": "area"
+    },
+    "n_b": {
+     "bits": 512,
+     "face": "area"
+    },
+    "n_y": {
+     "bits": 512,
+     "face": "area"
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S"
+    }
+   },
+   "rtl_top": "ot_qwen_rom_tile_w12 / logic ot_qwen_rom_tile_logic_w12 (rtl/hdc/ot_qwen_rom_tile_w12.sv) + 10 x ot_rom_4096x266_m8",
+   "status": "RTL_OPEN",
+   "hardened_view": [
+    "sub-view only: physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ (ROM macro LEF)"
+   ],
+   "closure": "logic-only tile routes tp4_t4 SS -18.9 / FF -1.64 (6 slew), tp2_t4 SS -83.8 / FF +0.93 (results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/tile_failures_r1.json); full tile i605 failed",
+   "owner": "CLAUDE QWEN-PHYS",
+   "note": "the re-framed die tile (centred tap row, M8 tree pins) was never routed",
+   "generator_note": [
+    "W12 ROM tile re-frame (10 x ot_rom_4096x266_m8, cell ceiling 125,000 um2 at 0.5): internal routing M1-M7 (ORFS asap7 MAX_ROUTING_LAYER), M8/M9 over the top for die nets"
+   ]
+  }
+ ]
+}

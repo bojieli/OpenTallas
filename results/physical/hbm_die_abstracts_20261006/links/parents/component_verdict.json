@@ -6,9 +6,9 @@
     "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
     "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
     "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
-    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "8a8cae3449e8216073d4d5fc4c38da32ff9e2486bf0bf1eda83d82d47425b836",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "624d3c821cce33b0c6c7d7066228c160abdaa198ae0fa41a269cfee053a7d166",
     "physical/hbm_die_abstracts_20261006/links/parents/variant_tops.sv": "3d084ad83b38307dfaf083f91e419c9f9264bb0e0550f531744d4c532a934e74",
-    "physical/hbm_die_abstracts_20261006/links/parents/tb_native_functions.sv": "62db9bd4b62e3c8c168b8fafa2bc4731e6784b6cf5bec0c06f17e862328187a4",
+    "physical/hbm_die_abstracts_20261006/links/parents/tb_native_functions.sv": "ec5308d7915bfd575d21b7fdcc2f25db4409280b55a90b1875dc7953918bbcd0",
     "physical/hbm_die_abstracts_20261006/links/parents/size_functions.py": "88cb2583cb83407a5c2a247e3b2f0957c5bd3a6fc9651df010b59b715328b450"
   },
   "tool": "Icarus Verilog version 11.0 (stable) ()",
@@ -34,10 +34,11 @@
     "actual stored payload CE repairs without lost ownership",
     "actual stored owner CE while matching reverse ACKs arrive; protected receipt seats retain ACKs",
     "actual wrong-owner reverse ACK fails closed; debt retained",
-    "actual checked permission bank double-bit UE fails closed; sticky fault"
+    "actual checked permission bank double-bit UE fails closed; sticky fault",
+    "actual CE in an empty ACK receipt seat blocks new ownership and drain until repair completes"
   ],
-  "stdout": "results/physical/hbm_die_abstracts_20261006/links/parents/held_seed1062026_ACK_receipts_r2.log",
-  "stdout_sha256": "451ec0a8768341586a9022f26d697b199d0be8c0e48d4ea9a49ad2b9e95f9915",
+  "stdout": "results/physical/hbm_die_abstracts_20261006/links/parents/held_seed1062026_ACK_reservation_r3.log",
+  "stdout_sha256": "61d9172b788bd2e169b09144ea1fde96ef70463455c4ef55a14f5b40995d5ae5",
   "superseded": "held_seed1062026_initial_without_ACK_receipts.log: initial pre-receipt check only, not final source qualification",
   "preserved_failure": {
     "source": "results/physical/hbm_die_abstracts_20261006/links/parents/ACK_receipts_r1_FAIL.sv",
@@ -58,5 +59,6 @@
     "duplex source configured tuple, independent RX/TX clocks/resets/credits; defaultTU545 differs from TF5 directional487",
     "real pin faces/channel dimensions/reset propagation and root ownership",
     "unified model composition/rate adoption and physical55/60 SS60FF25"
-  ]
+  ],
+  "previous_passing_source_commit": "8153da4d7: previous receipt r2 verdict preserved; new test required by ACK reservation availability change"
 }

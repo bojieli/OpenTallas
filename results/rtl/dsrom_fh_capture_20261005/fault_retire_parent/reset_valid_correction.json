@@ -1,0 +1,13 @@
+{
+  "scope": "Connected source reset correction before numerical admission",
+  "cause": "Retained packet payload may contain stale progress/leaf-valid flags after reset; four resettable valid slots own retirement events",
+  "correction": "Gate fh_retired_ov and fh_retired_leaf_v with retired_v; no arithmetic/rounding/order/source primitive change; no extra FF/cycles",
+  "source_sha256": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_core_v41.sv": "ef3500b988c4b0f6e7cba841db42a354e23efb2ee330852b872de84de8191d8d"
+  },
+  "old_controller": 2457561,
+  "old_source": "5130dca3e",
+  "old_source_numerical_result": null,
+  "old_source_no_admitted_child": true,
+  "old_source_retained": true
+}
