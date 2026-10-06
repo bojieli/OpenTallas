@@ -8946,5 +8946,44 @@
     "Gauss_next": "Use new bank/cut in own exact station source with defaults0. Static codec expansion only if needed, preserving four codecs and state machine; retain attrs. Map actual FF/area/current-check fanout against existing H55/V60 slot, bind SS60/FF25 and real receiver/forwarded clock. Fix native constantone POWER tie separately once changed source qualified. No unchanged density route.",
     "Turing_next": "Consume NO2 15420/NO3 16646 source FF, quarter65358; four-stage serial publication added-edge upper68(56.6667ns), actual changed gate release90. Actual fit/loadedclock/old-calendar delta remain open; no cached owner/ready credit.",
     "physical_qualified": false
+  },
+  "station_CHECK_registered_handoff": {
+    "controller_source_owner": "Codex",
+    "physical_vehicle_tie_mapping_route_owner": "Descartes",
+    "parent_cost_owner": "Turing",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv",
+    "parameters": {
+      "REGISTERED_CURRENT": 0,
+      "REGISTERED_CHECK": 0
+    },
+    "physical_selected_parameters": {
+      "REGISTERED_CURRENT": 1,
+      "REGISTERED_CHECK": 1
+    },
+    "bank_hook": "ot_hbm_w2_protected_bank_check_pipeline #(.WORDS(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "cut_hook": "ot_hbm_w2_protected_cut_check_pipeline #(.W(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "binding": "CHECK/VERIFY/EVAL/REPAIR phases0/1/2/3; exact216bit W6 checker-input mirror per stripe plus protected4bit verdict; CURRENT equality remains. Mirror/parity/verdict mutations fail closed. CE correction goes through CHECK and VERIFY again.",
+    "dependencies": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv"
+    ],
+    "gate": "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json",
+    "checker_checks": 36,
+    "parent_checks": 19,
+    "CE_edges": 7,
+    "added_load_edges_vs_R2": 1,
+    "NO2_source_FF_bits": 30396,
+    "NO3_source_FF_bits": 32774,
+    "quarter_source_FF_bits": 128718,
+    "quarter_added_source_FF_bits_vs_R2": 63360,
+    "chain_incremental_serial_edge_upper": 68,
+    "chain_incremental_latency_upper_ns": 56.66666666666667,
+    "slot_clock_binding": "Reuse actual NO2 core382.644x95.31/36469.79964um2 and current source-specific receiver/clock/POR contract SS60FF25. Map added FF/clock/check binding tracks; no copied R2 area/fanout/clock closure credit.",
+    "physical_next": "Descartes owns vehicle adaptation/static codec expansion/native tie implementation; replace bank/cut calls only and propagate new default0 REGISTERED_CHECK through station/frame top. Preserve four codecs/attributes/protected phase. One changed-source mapping/context route after actual fit/admission. No same-source geometry variants or gate replay.",
+    "parent_next": "Turing composes actual NO2/NO3 inventories and incremental VERIFY calendar; actual warm parent unchanged32macros/full73/owner192. Published calendar94/99 has shifted startup origin; no clean measured chain delta claimed.",
+    "rejected_parent": "results/physical/hbm_w2_current_station_20261006/r2/terminal_result.json",
+    "gate_passed": true,
+    "physical_qualified": false
   }
 }

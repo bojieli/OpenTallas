@@ -1,0 +1,43 @@
+{
+  "status": "FAILED_ODB_CHANNEL_PIN_FANOUT_DIAGNOSED",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2/terminal_extract/grt_diagnosis_r1",
+  "base_terminal_commit": "47511749d250c00e4feac520c604f45c993e8a58",
+  "original_GRT_layer_overflow": {
+    "M2": 5165,
+    "M3": 43,
+    "M4": 4680,
+    "M5": 11,
+    "M6": 1299,
+    "M7": 1
+  },
+  "horizontal_preferred_layer_overflow_fraction": 0.9950888472185017,
+  "interior_overflow_fraction": 0.8494508438253415,
+  "x100_to150um_band_overflow": 7346,
+  "x100_to150um_band_overflow_fraction": 0.6559514242343066,
+  "pin_access_stdCellPinNoAp": 0,
+  "pin_access_stdCellPinCnt": 460252,
+  "boundary_terminals_including_two_PG": 7797,
+  "signal_boundary_pin_shapes": 7795,
+  "signal_pin_center_pitch_um": {
+    "M5": 0.048,
+    "M7": 0.064
+  },
+  "PG_shape_note": "M6 INOUT shapes and zero spacing belong to overlapping power/ground stripes; they are not signal pin-spacing violations.",
+  "boundary_in_data_owner_frame_hold_buffers": 7892,
+  "all_hold_buffers": 8750,
+  "boundary_in_data_owner_frame_hold_buffer_fraction": 0.9019428571428572,
+  "instructions_to_source_owner": "Address surviving checker/reduction/control depth AND multi-thousand-sink distribution on the actual protected bank. A registered global broadcast retains channel load. Keep identity/held repair/recheck/debt/POR-warm semantics and price genuine new stages before successor RTL/route.",
+  "source_owner": "Jason",
+  "sole_successor_physical_owner": "Codex-Descartes",
+  "no_same_source_route_or_functional_replay": true,
+  "qualification": "No final extracted SS/FF or detailed-route DRC; no installed-parent qualification.",
+  "capacity_readback": {
+    "load1": 31.42,
+    "cpu_total": 128,
+    "RAM_available_bytes": 733772288000,
+    "NVMe_free_bytes": 468653379584,
+    "analysis_threads": 1
+  },
+  "interpretation_limit": "Net membership does not causally allocate overflow. Original GRT/report total11199 is authoritative; raw OpenDB getters return11163, discrepancy preserved. Pin-access PASS does not imply detailed-route DRC PASS."
+}

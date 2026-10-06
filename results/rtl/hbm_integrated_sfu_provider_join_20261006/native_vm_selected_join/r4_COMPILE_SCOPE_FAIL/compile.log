@@ -1,0 +1,124 @@
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_wr_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:13:41: ... Location of port declaration
+   13 |  input wire activation_wr_v,output wire activation_wr_r,
+      |                                         ^~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:17:14: ... Location of port declaration
+   17 |  output wire activation_ACK_v,input wire activation_ACK_r,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:21: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_ACK_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:18:62: ... Location of port declaration
+   18 |  output wire [72:0] activation_ACK_frame,output wire [191:0] activation_ACK_owner,
+      |                                                              ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_rd_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:19:41: ... Location of port declaration
+   19 |  input wire activation_rd_v,output wire activation_rd_r,
+      |                                         ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:22:20: ... Location of port declaration
+   22 |  output wire [3:0] tap_v,input wire [3:0] tap_r,
+      |                    ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_data'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:27: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:23:60: ... Location of port declaration
+   23 |  output wire [4*2063-1:0] tap_data,output wire [4*192-1:0] tap_owner,
+      |                                                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:25: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_source_clk'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:24:53: ... Location of port declaration
+   24 |  output wire [4*73-1:0] tap_frame,output wire [3:0] tap_source_clk,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'tap_ACK_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:25:47: ... Location of port declaration
+   25 |  input wire [3:0] tap_ACK_v,output wire [3:0] tap_ACK_r,
+      |                                               ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:27:14: ... Location of port declaration
+   27 |  output wire activation_release,input wire activation_release_r,
+      |              ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:21: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'activation_release_owner'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:28:66: ... Location of port declaration
+   28 |  output wire [72:0] activation_release_frame,output wire [191:0] activation_release_owner,
+      |                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'su_pub_r'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:29:34: ... Location of port declaration
+   29 |  input wire su_pub_v,output wire su_pub_r,input wire [72:0] su_pub_frame,
+      |                                  ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'su_ACK_v'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:31:14: ... Location of port declaration
+   31 |  output wire su_ACK_v,input wire su_ACK_r,
+      |              ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'publication_ACK_addr'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:32:21: ... Location of port declaration
+   32 |  output wire [31:0] publication_ACK_addr,output wire [72:0] publication_ACK_frame,
+      |                     ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:44:51: Instance has missing pin: 'publication_ACK_frame'
+   44 |  ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) vm(
+      |                                                   ^~
+                     /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv:32:61: ... Location of port declaration
+   32 |  output wire [31:0] publication_ACK_addr,output wire [72:0] publication_ACK_frame,
+      |                                                             ^~~~~~~~~~~~~~~~~~~~~
+%Error: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:125:101: Can't find definition of 'u_index' in dotted scope/variable: 'vm.u_vm.u_index'
+  125 |    if(!ir_r)$fatal(1,"READ_NOT_READY block=%0d cycles=%0d indexstate=%0d fault=%b",j,cycles,vm.u_vm.u_index.on.state,vm_fault);
+      |                                                                                                     ^~~~~~~
+        ... Known scopes under 'vm.u_vm': <no instances found>
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:129:112: Can't find definition of 'u_index' in dotted scope/variable: 'vm.u_vm.u_index'
+  129 |    if(!ir_rsp_v)$fatal(1,"READ_RESPONSE_MISSING block=%0d cycles=%0d indexstate=%0d fault=%b",j,cycles,vm.u_vm.u_index.on.state,vm_fault);
+      |                                                                                                                ^~~~~~~
+        ... Known scopes under 'vm.u_vm': <no instances found>
+%Error: /srv/opentallas-scratch2/codex/hbm-native-sfu-r4-c0a3333a7/source/rtl/hbm_accel/integrated_20261006/tb_hbm_integrated_sfu_native_vm_join.sv:142:118: Can't find definition of 'u_index' in dotted scope/variable: 'vm.u_vm.u_index'
+  142 |   if(!retire_r)$fatal(1,"ROOT_RETIRE_NOT_READY cycles=%0d indexstate=%0d stageRetained=%b VMfault=%b",cycles,vm.u_vm.u_index.on.state,retained,vm_fault);
+      |                                                                                                                      ^~~~~~~
+        ... Known scopes under 'vm.u_vm': <no instances found>
+%Error: Exiting due to 3 error(s)

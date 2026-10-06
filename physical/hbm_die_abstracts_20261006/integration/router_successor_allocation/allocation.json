@@ -1,0 +1,283 @@
+{
+  "schema": "opentallas.router.source_bound_allocation.v1",
+  "evidence_class": "FINITE_ALLOCATION_WITH_ACTUAL_MAPPED_INTERNAL_RECEIVERS_NOT_PARENT_SIGNOFF",
+  "generator": {
+    "path": "tools/hbm_accel_die_fp.py",
+    "sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+    "variant": {
+      "n_mirror_fix": true,
+      "x_chain": true,
+      "w_my": true,
+      "strip_d": 864.0,
+      "port_fix": true,
+      "ew_corridor": true,
+      "sm_xmid": true,
+      "lanes": true,
+      "spch": 1244.16,
+      "root_pins": true,
+      "serdes_mg": 250.56,
+      "orient_fix": true,
+      "clk_dom": true,
+      "sm_rtl_w": true,
+      "sm_desc": true,
+      "link_rtl": true,
+      "coll_rtl": true,
+      "attn_rtl": true,
+      "hub_io": true,
+      "fwd": true,
+      "rq_chain": true,
+      "stn_share": true,
+      "hub_h": 12100.0,
+      "spine_h": 7500.0,
+      "spine_w": 1399.68,
+      "face_vm": 2000.0,
+      "attn_tile_w_um": 1349.136,
+      "attn_tile_h_um": 1350.0,
+      "face_fix": true,
+      "W": 24401.52,
+      "H": 24621.84
+    },
+    "owner": "Claude HBM-DIE-FIX; apply only this router envelope revision; generator not edited"
+  },
+  "existing_router_bbox_um": [
+    11069.136,
+    9434.88,
+    12468.792000000001,
+    9568.776
+  ],
+  "required_router_envelope_um": [
+    11069.136,
+    9338.688,
+    12468.792,
+    9664.968
+  ],
+  "child_bbox_um": [
+    11074.32,
+    9343.872,
+    11390.276,
+    9659.828
+  ],
+  "halo_um": 5,
+  "halo_bbox_um": [
+    11069.32,
+    9338.872,
+    11395.276,
+    9664.828
+  ],
+  "child_frame_um": [
+    0,
+    0,
+    315.956,
+    315.956
+  ],
+  "child_core_um": [
+    2.052,
+    2.16,
+    313.909,
+    313.855
+  ],
+  "core_area_um2": 97204.26761499999,
+  "cell_CTS_repair_cap_um2": 55892.45387862499,
+  "target_final_utilization": 0.575,
+  "mapped_cell_area_um2": 49127.9,
+  "remaining_cell_CTS_repair_um2": 6764.553878624989,
+  "preRTL_allowance_um2": 55842.23568,
+  "allowance_fit": true,
+  "parent_overlap_conflicts": [],
+  "parent_route_qualified": false,
+  "physical_closed": false,
+  "die_dimensions_um": [
+    24401.52,
+    24621.84
+  ],
+  "envelope_added_um2": 269271.4199039996,
+  "neighbor_gaps_um": {
+    "loader_to_envelope": 327.192,
+    "envelope_to_cmdproc": 327.192,
+    "each_gap_reduction": 96.192
+  },
+  "native_channel": {
+    "M6_horizontal_pitch_um": 0.064,
+    "M7_vertical_pitch_um": 0.064,
+    "M6_y_offset_um": 0.016,
+    "M7_x_offset_um": 0.016,
+    "source": "actual installed platform openRoad/make_tracks.tcl from immutable ORFS image16470cea",
+    "remaining_each_parent_gap_geometric_tracks": 5112,
+    "previous_each_gap_geometric_tracks": 6615,
+    "each_gap_track_loss": 1503,
+    "usable_parent_tracks": "not inferred: existing PG/clock/other bus claims must be subtracted by canonical generator owner",
+    "child_input_tracks": 514,
+    "child_output_tracks": 55,
+    "clock_reset_tracks": 2,
+    "input_signal_pitch_um": 0.512,
+    "output_signal_pitch_um": 0.512,
+    "source_pin_file": "pins.tcl",
+    "native_route_layers": "M2-M7, clock M4-M7; no claimed free M8/M9 signals",
+    "internal_bundles": "31 nodes at levels16/8/4/2/1, four distributed cuts528/360/360/360 per node; model perlevel counts are summed distinct segments, never a single spine cut",
+    "routing_CTS_PG_reserve": "57.5% final cell cap leaves42.5% core row area; actual PDN blockage, vias and routed congestion must be measured, this is no PG connectivity/track-fit verdict"
+  },
+  "mapped_source": {
+    "commit": "9e74a6096",
+    "RTL_sha256": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+    "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
+    "remote_root": "/srv/opentallas-scratch/codex/carson-router-successor-20261006/map-r2",
+    "actual_receiver_file": "actual_local_controls_and_loads.json",
+    "mapped_FF": 93309,
+    "retained_local_controls": {
+      "x_first": 32,
+      "c_first": 32,
+      "x_v": 32,
+      "c_v": 32,
+      "x_last": 32,
+      "c_last": 32,
+      "finished": 32
+    }
+  },
+  "clock": {
+    "port": "clk",
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "SS_sink_sum_fF": 41669.39682206345,
+    "FF_sink_sum_fF": 48699.3678300437,
+    "sink_count": 93309,
+    "root_cap_insertion_slew": "unbound; sinksum is not root load",
+    "source_qualified": false
+  },
+  "leaf_IO": {
+    "input_output_min_max_ps": 166.6,
+    "output_load_fF": 3.898,
+    "evidence": "existing explicit standalone research boundary; not measured full73 Gibbs parent",
+    "reset": "real rst_n recovery/removal retained; no falsepath",
+    "parent_producer_receiver": "Gibbs full73 protected enrollment source timing remains open; abstract256SU/512VM/64cmd wiring is not a substituted measured parent"
+  },
+  "latency": {
+    "original_tail_cycles": 23,
+    "previous_tail_cycles": 28,
+    "new_tail_cycles": 48,
+    "incremental_cycles": 20,
+    "total_cycles_vs_original": 25,
+    "incremental_DS40_token_ns": 666.6666666667,
+    "total_DS40_token_ns_vs_original": 833.3333333333,
+    "II_cycles": 24,
+    "count_delta_once": true
+  },
+  "recommendation": "/tmp/claude-review-20261003/LAGRANGE_ROUTER_HIERARCHY_CHUNK14_RECOMMENDATION.patch.txt",
+  "launch_scope": "Carson sole retained-map child route under explicit standalone IO contract, native PG/CTS/route/extracted SSFF; no full-parent adoption; Kant sole admission. No new mapping/golden replay.",
+  "allocation_binding": "New finite parent router envelope required; old133.896um height cannot contain this child. No generator/outer-route duplication.",
+  "owner": "Turing",
+  "macro_master": "ot_hbm_router_topk_successor",
+  "leaf_source_sha256": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+  "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
+  "die_area_um": [
+    0,
+    0,
+    315.956,
+    315.956
+  ],
+  "core_area_um": [
+    2.052,
+    2.16,
+    313.909,
+    313.855
+  ],
+  "timing_contract_sdc_sha256": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93",
+  "allocation_reserved": true,
+  "actual_parent_instance": {
+    "selected_instance": "hb_router",
+    "installed_successor": false,
+    "required_resize": [
+      11069.136,
+      9338.688,
+      12468.792,
+      9664.968
+    ],
+    "scope": "source-pinned local child route; canonical generator owner applies required parent revision"
+  },
+  "producer_port_binding": {
+    "source": "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv",
+    "ports": [
+      "in_vals[511:0]",
+      "in_valid",
+      "in_last"
+    ],
+    "local_receivers": "g_on.g_lane[g].u_lane.x_q (g0..31,J=g%16 FP32 word into okey), x_v/first/last and beat_base/fresh_bank real control cones",
+    "external_producer": "Gibbs full73 protected controller/formatter mapped caller timing unavailable; explicitly unresolved",
+    "arrival_contract": "existing standalone166.6ps min/max at input, not measured producerclkQ/wire",
+    "native_fp32_bits_per_cycle": 512
+  },
+  "receiver_port_binding": {
+    "ports": [
+      "out_ids[53:0]",
+      "out_valid"
+    ],
+    "local_producers": "g_on.s6 q ->i6 (6x9 IDbits), g_on.vpipe[45] ->out_valid",
+    "internal_actual_receiver_caps": "actual_local_controls_and_loads.json; literal mapped cell/pin tuples, real local control loadsSSFF",
+    "external_receiver": "Gibbs full73 delivery/held result enrollment unmapped/unresolved; no generic64cmd bus substituted",
+    "load_contract_fF": 3.898,
+    "load_evidence": "assigned standalone leaf boundary only, no parent qualified credit"
+  },
+  "clock_reset_binding": {
+    "clock_port": "clk",
+    "reset_port": "rst_n",
+    "source": "source pin clk, explicit ideal primary-input diagnostic833ps; not installed hb_coll.pll_stream characterization",
+    "setup_hold_uncertainty_ps": [
+      60,
+      25
+    ],
+    "reset_checks": "native real asynchronous recovery/removal kept;166.6ps min/max boundary is conditional, external resetdistribution unknown",
+    "actual_CLK_sink_caps": {
+      "port": "clk",
+      "period_ps": 833,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "SS_sink_sum_fF": 41669.39682206345,
+      "FF_sink_sum_fF": 48699.3678300437,
+      "sink_count": 93309,
+      "root_cap_insertion_slew": "unbound; sinksum is not root load",
+      "source_qualified": false
+    },
+    "source_qualified": false
+  },
+  "corridor_reservation": {
+    "child_source_pins": "pins.tcl",
+    "child_geometry": [
+      11074.32,
+      9343.872,
+      11390.276,
+      9659.828
+    ],
+    "native_grid": {
+      "M6_horizontal_pitch_um": 0.064,
+      "M7_vertical_pitch_um": 0.064,
+      "M6_y_offset_um": 0.016,
+      "M7_x_offset_um": 0.016,
+      "source": "actual installed platform openRoad/make_tracks.tcl from immutable ORFS image16470cea",
+      "remaining_each_parent_gap_geometric_tracks": 5112,
+      "previous_each_gap_geometric_tracks": 6615,
+      "each_gap_track_loss": 1503,
+      "usable_parent_tracks": "not inferred: existing PG/clock/other bus claims must be subtracted by canonical generator owner",
+      "child_input_tracks": 514,
+      "child_output_tracks": 55,
+      "clock_reset_tracks": 2,
+      "input_signal_pitch_um": 0.512,
+      "output_signal_pitch_um": 0.512,
+      "source_pin_file": "pins.tcl",
+      "native_route_layers": "M2-M7, clock M4-M7; no claimed free M8/M9 signals",
+      "internal_bundles": "31 nodes at levels16/8/4/2/1, four distributed cuts528/360/360/360 per node; model perlevel counts are summed distinct segments, never a single spine cut",
+      "routing_CTS_PG_reserve": "57.5% final cell cap leaves42.5% core row area; actual PDN blockage, vias and routed congestion must be measured, this is no PG connectivity/track-fit verdict"
+    },
+    "halo": [
+      11069.32,
+      9338.872,
+      11395.276,
+      9664.828
+    ],
+    "parent_remaining_gaps_um": [
+      327.192,
+      327.192
+    ],
+    "parent_usable_signal_tracks": "unqualified afterPG/other claims; finite loss1503 geometrictracks pergap charged",
+    "internal_route": "actual M2-M7 native route within child core; preserve distributed node cuts and final57.5% cap, verify congestion/PG/CTS rather than assert free tracks"
+  }
+}
