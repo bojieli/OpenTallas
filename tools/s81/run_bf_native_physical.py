@@ -25,16 +25,17 @@ def command(a):
  for s in SOURCES: cmd+=['--source',s]
  if a.margin:
   # margin-first (owner rule 2026-10-06): PINREG=1 register-to-register pins, routed at 770 ps with the die IO
-  # budget (insertion +/- 150 ps, 100 ps wire/station on the max side), slot-width die, signed off at 833.333 ps
-  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns','0.0','--core-input-delay-max-ns','0.40',
-   '--output-delay-min-ns','-0.30','--output-delay-max-ns','0.10','--false-path-from','rst_n',
+  # budget on setup (insertion +/- 150 ps, 100 ps wire/station on the max side), owner hold model (FF insertion ~175,
+  # 50 ps hold IO: in min 125 / out min -225, hold repaired at the FF corner), slot-width die, signed off at 833.333 ps
+  cmd+=['--param','PINREG=1','--clock-period-ns','.770','--core-input-delay-min-ns','0.125','--core-input-delay-max-ns','0.40',
+   '--output-delay-min-ns','-0.225','--output-delay-max-ns','0.10','--false-path-from','rst_n',
    '--die-area','0','0',str(a.die_w),str(a.die_h),'--core-area','2.16','2.16',str(round(a.die_w-2.16,3)),str(round(a.die_h-2.16,3)),
-   '--slew-margin-percent','20','--hold-margin-ns','0.040','--orfs-var','PLACE_DENSITY_LB_ADDON=',
+   '--hold-corners','BC','--slew-margin-percent','20','--hold-margin-ns','0.040','--orfs-var','PLACE_DENSITY_LB_ADDON=',
    '--step-tcl','PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl','--step-tcl','PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl']
  else:
-  cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2']
+  cmd+=['--clock-period-ns','.833','--io-delay-fraction','.2','--hold-corners','WC,BC']
  cmd+=['--clock-uncertainty-ns','.060',
- '--clock-uncertainty-hold-ns','.025','--orfs-corner','WC','--hold-corners','WC,BC',
+ '--clock-uncertainty-hold-ns','.025','--orfs-corner','WC',
  '--stages','pnr','--synth-timeout-seconds','unlimited',
  '--flow-timeout-seconds','unlimited','--core-utilization',str(a.util),
  '--place-density','.60','--max-transition-ns','.25',
