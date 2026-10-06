@@ -40,6 +40,13 @@ d.update(SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["viola
 clean = all(si.get(k) == 0 for k in ("max_slew_violations", "max_cap_violations", "max_fanout_violations")) \
     and d["drc"] == 0 and d["antenna"] == 0
 d["verdict"] = "PASS" if sta.get("closes_signoff") and clean and act == exp else "FAIL"
+# v13 margin-first sign-off (owner rule 2026-10-06): SS setup >= +60 ps and FF hold >= +15 ps at 833.333 ps with the
+# IO budget of signoff_r<R>.sdc (OT_FS_MARGIN=1, set by phys13.sh); MARGIN_FAIL if it closes without the margin
+import os  # noqa: E402
+if os.environ.get("OT_FS_MARGIN") == "1":
+    d["margin"] = dict(ss_min_ps=60, ff_min_ps=15, post_sdc=sta.get("post_sdc"))
+    if d["verdict"] == "PASS" and not ((d["SS_ps"] or -1e9) >= 60 and (d["FF_ps"] or -1e9) >= 15):
+        d["verdict"] = "MARGIN_FAIL"
 (out / f"{tag}_terminal.json").write_text(json.dumps(d, indent=1) + "\n")
-print(json.dumps({k: d[k] for k in ("tag", "verdict", "SS_ps", "FF_ps", "SI", "drc")}))
+print(json.dumps({k: d[k] for k in ("tag", "verdict", "SS_ps", "FF_ps", "SI", "drc", "SS_pins", "FF_pins")}))
 sys.exit(0 if d["verdict"] == "PASS" else 1)
