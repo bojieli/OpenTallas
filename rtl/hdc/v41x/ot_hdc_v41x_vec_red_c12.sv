@@ -46,7 +46,8 @@ module ot_hdc_v41x_vec_red #(
     parameter integer ROUT = 0,
     parameter integer ROGS = 4,         // ROUT bundle copies: one per ROGS slots (1, 2 or 4; ROUT >= 1 only)
     parameter integer SL = 64,          // lanes a slice (capped at N), a power of two >= 8
-    parameter integer ROPI = 0          // margin: op operand registers (+1 a reducer op)
+    parameter integer ROPI = 0,         // margin: op operand registers (+1 a reducer op)
+    parameter integer RKC = 0           // margin: top keeps copies of the tap-hit sources / tap tag (no added cycle)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -87,7 +88,7 @@ module ot_hdc_v41x_vec_red #(
             .lv_o(lv[SW*s +: SW]), .fault_o(sf[s]));
     end endgenerate
     ot_hdc_v41x_vred_top #(.N(N), .LV(LV), .AW(AW), .MW(MW), .MLAT(MLAT), .ALAT(ALAT + ROPI), .RPAD(RPAD), .RSL(RSL),
-                           .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S), .ROPI(ROPI)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
+                           .RTAP(RTAP), .ROUT(ROUT), .ROGS(ROGS), .SL(S), .ROPI(ROPI), .RKC(RKC)) u_t (.clk(clk), .rst_n(rst_n), .v_in(v_in), .mx_in(mx_in), .lt_in(lt_in),
         .span_in(span_in), .l_in(l_in), .last_in(last_in), .nres_in(nres_in), .rnd_in(rnd_in), .rbase_in(rbase_in),
         .rsh_in(rsh_in), .meta_in(meta_in), .lv_in(lv), .sfault_in(sf), .o_we(o_we), .o_addr(o_addr), .o_data(o_data),
         .o_meta(o_meta), .o_ev(o_ev), .busy(busy), .fault(fault));
@@ -247,6 +248,7 @@ module ot_hdc_v41x_vred_top #(
     parameter integer ROGS = 4,
     parameter integer SL = 64,
     parameter integer ROPI = 0          // ALAT here is the op latency (the adder's + ROPI)
+    , parameter integer RKC = 0         // margin: kept copies of the tap-hit sources and of the tap tag (no added cycle)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -325,6 +327,8 @@ module ot_hdc_v41x_vred_top #(
     wire [LS:0] rsl_live, rsl_next;
     wire [LC:0]    pre_v;
     wire [TAG-1:0] pre_t [0:LC];
+    wire [LC:0]    pre2_v;                // RKC: pre_v / pre_t one cycle earlier (the inputs of their last stage)
+    wire [TAG-1:0] pre2_t [0:LC];
     generate for (lv = 0; lv <= LS; lv = lv + 1) begin : g_rsl
         if (RSL > 0) begin : g_r
             wire [RSL:0] vr;
@@ -337,6 +341,13 @@ module ot_hdc_v41x_vred_top #(
             assign rsl_next[lv] = |vr[RSL-1:0];
             assign pre_v[lv] = vr[RSL-1];
             assign pre_t[lv] = tp;
+            if (RSL >= 2) begin : g_p2
+                ot_hdc_delay #(.W(TAG), .D(RSL - 2)) u_tp2 (.clk(clk), .rst_n(rst_n), .d(st0[lv]), .q(pre2_t[lv]));
+                assign pre2_v[lv] = vr[RSL-2];
+            end else begin : g_p2n
+                assign pre2_t[lv] = {TAG{1'b0}};
+                assign pre2_v[lv] = 1'b0;
+            end
         end else begin : g_w0
             assign tv[lv] = sv0[lv];
             assign tt[lv] = st0[lv];
@@ -344,6 +355,8 @@ module ot_hdc_v41x_vred_top #(
             assign rsl_next[lv] = 1'b0;
             assign pre_v[lv] = 1'b0;
             assign pre_t[lv] = {TAG{1'b0}};
+            assign pre2_v[lv] = 1'b0;
+            assign pre2_t[lv] = {TAG{1'b0}};
         end
         assign tb[lv] = sb0[lv];
         assign tf[lv] = 1'b0;
@@ -366,6 +379,8 @@ module ot_hdc_v41x_vred_top #(
         ot_hdc_delay #(.W(TAG), .D(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tdp), .q(td));
         assign pre_v[lv] = vd[ALAT-1];
         assign pre_t[lv] = tdp;
+        assign pre2_v[lv] = vd[ALAT-2];
+        ot_hdc_delay #(.W(TAG), .D(ALAT - 2)) u_tdp2 (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(pre2_t[lv]));
         wire [NC*32-1:0] q;
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
             ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT), .IREG(ROPI)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
@@ -394,9 +409,24 @@ module ot_hdc_v41x_vred_top #(
         wire [(LC+1)*NC-1:0] hw;          // level h's copy for word g at h*NC + g
         ot_hdc_v41x_red_kreg #(.W(LC + 1)) u_h (.clk(clk), .rst_n(rst_n), .d(hp), .q(hit));
         genvar g, hh;
+        // RKC: the word copies are fed from NHC kept copies of hp, each formed from the levels' sources one cycle
+        // earlier and registered (= hp this cycle), so no single pre_v / pre_t register drives all NC word copies
+        // (tm_u30_h15 @770: g_slv[2] line -> g_hitr u_hw -29 ps, one register into 129 copies)
+        localparam integer NHC = (NC + 15) / 16;
+        wire [NHC*(LC+1)-1:0] hcv;
+        genvar c;
+        for (c = 0; c < NHC; c = c + 1) begin : g_hc
+            if (RKC != 0) begin : g_k
+                reg [LC:0] hpe;
+                always @(*) for (h = 0; h <= LC; h = h + 1) hpe[h] = pre2_v[h] && (pre2_t[h][TAG-2 -: 4] == h);
+                ot_hdc_v41x_red_kreg #(.W(LC + 1)) u_hc (.clk(clk), .rst_n(rst_n), .d(hpe), .q(hcv[c*(LC+1) +: LC+1]));
+            end else begin : g_n
+                assign hcv[c*(LC+1) +: LC+1] = hp;
+            end
+        end
         for (g = 0; g < NC; g = g + 1) begin : g_w
             wire [LC:0] hq;
-            ot_hdc_v41x_red_kreg #(.W(LC + 1)) u_hw (.clk(clk), .rst_n(rst_n), .d(hp), .q(hq));
+            ot_hdc_v41x_red_kreg #(.W(LC + 1)) u_hw (.clk(clk), .rst_n(rst_n), .d(hcv[(g/16)*(LC+1) +: LC+1]), .q(hq));
             for (hh = 0; hh <= LC; hh = hh + 1) begin : g_b
                 assign hw[hh*NC + g] = hq[hh];
             end
@@ -495,9 +525,32 @@ module ot_hdc_v41x_vred_top #(
         // the TIME result only ever writes slot 0 (o_we = tr_v && k == 0): only group 0's copy carries it, so it
         // does not fan out across the slots; the other groups' slots hold 0 in o_addr / o_data while they are
         // not written (o_we = 0; the original left the TIME result there, which no consumer reads)
+        // RKC: the tap tag / valid as NTC kept copies (one per 8 slot groups), so no single tap register drives every
+        // group's bundle (tm_u30_h15 @770: u_tap line -> g_ro g_c u_b -47 ps, one register into 64 copies)
+        localparam integer NTC = (NG + 7) / 8;
+        wire [NTC*(TAG+1)-1:0] tcp;
+        for (gg = 0; gg < NTC; gg = gg + 1) begin : g_tc
+            if (RKC != 0) begin : g_k
+                wire [TAG:0] tq;
+`ifdef OT_NEG_RED_RKC
+                // NEGATIVE CONTROL (compile-time only): the tag copies one cycle late; the exact campaign must FAIL
+                ot_hdc_delay #(.W(TAG), .D(RTAP)) u_tp (.clk(clk), .rst_n(rst_n), .d(tap_tc), .q(tq[TAG-1:0]));
+`else
+                ot_hdc_delay #(.W(TAG), .D(RTAP - 1)) u_tp (.clk(clk), .rst_n(rst_n), .d(tap_tc), .q(tq[TAG-1:0]));
+`endif
+                ot_hdc_delay #(.W(1), .D(RTAP - 1), .RESET(1)) u_tpv (.clk(clk), .rst_n(rst_n), .d(tap_vc), .q(tq[TAG]));
+                ot_hdc_v41x_red_kregr #(.W(1)) u_tv (.clk(clk), .rst_n(rst_n), .d(tq[TAG]), .q(tcp[gg*(TAG+1) + TAG]));
+                ot_hdc_v41x_red_kreg #(.W(TAG)) u_tc (.clk(clk), .rst_n(rst_n), .d(tq[TAG-1:0]), .q(tcp[gg*(TAG+1) +: TAG]));
+            end else begin : g_n
+                assign tcp[gg*(TAG+1) +: TAG+1] = {tap_v, tap_t};
+            end
+        end
         for (gg = 0; gg < NG; gg = gg + 1) begin : g_c
+            wire [TAG:0]   tci = tcp[(gg/8)*(TAG+1) +: TAG+1];
+            wire [TAG-1:0] tct = tci[TAG-1:0];
+            wire           tcpk = tci[TAG] && !tct[TAG-6];
             ot_hdc_v41x_red_kreg #(.W(BW)) u_b (.clk(clk), .rst_n(rst_n),
-                .d((gg == 0) ? {pk_v, tap_t, tr_v, tr_x, tr_t} : {pk_v, tap_t, 1'b0, 32'd0, {TAG{1'b0}}}),
+                .d((gg == 0) ? {tcpk, tct, tr_v, tr_x, tr_t} : {tcpk, tct, 1'b0, 32'd0, {TAG{1'b0}}}),
                 .q(ob[gg*BW +: BW]));
         end
     end else begin : g_rw
@@ -646,6 +699,14 @@ module ot_hdc_v41x_red_kreg #(parameter integer W = 1) (
     input  wire clk, input wire rst_n, input wire [W-1:0] d, output reg [W-1:0] q
 );
     always @(posedge clk) q <= d;
+endmodule
+
+// the same with an asynchronous reset (kept copies of a reset valid)
+(* keep_hierarchy *)
+module ot_hdc_v41x_red_kregr #(parameter integer W = 1) (
+    input  wire clk, input wire rst_n, input wire [W-1:0] d, output reg [W-1:0] q
+);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= {W{1'b0}}; else q <= d;
 endmodule
 
 module ot_hdc_v41x_vsq #(

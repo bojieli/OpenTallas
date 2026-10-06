@@ -198,6 +198,7 @@ module ot_hdc_v41x_vec #(
     parameter integer ROUT = 0,         // c12 reducer: OUT input register
     parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
     parameter integer ROPI = 0,         // c12 reducer margin: op operand registers (every reducer op ALAT + 1)
+    parameter integer RKC = 0,          // c12 reducer margin: kept copies of the tap-hit sources / tap tag (no cycle)
     parameter integer CTL12 = 0         // c12 controller: pipelined set-up, registered emit-loop conditions
 ) (
     input  wire              clk,
@@ -572,8 +573,24 @@ module ot_hdc_v41x_vec #(
     reg  [4*CW-1:0] r2_wq;
     wire [4*CW-1:0] wq_w;
     wire [CW-1:0]   wsum_w;
+    // round 11 (margin): each 4-bit slice product s_no[4q+3:4q] * r2_sh is registered as its carry-save pair at
+    // sub-step 7 (r2_wqs / r2_wqc) and carry-propagated at sub-step 8 into r2_wq; the four-slice sum is sub-step 9
+    // (a non-flattening reduction's set-up takes one more cycle: S2_LR 9 -> 10). Round-10 route: s_no -> cmul4 -> r2_wq
+    // -59.2 ps @770 (+4.2 @833.333), the only class under +40.
+    reg  [4*CW-1:0] r2_wqs, r2_wqc;
+    wire [4*CW-1:0] wqs_w, wqc_w;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_wq
-        ot_hdc_v41x_cmul4 #(.W(CW), .K(KK)) u_m (.f(s_no[4*gq +: 4]), .x(r2_sh), .y(wq_w[gq*CW +: CW]));
+        wire [CW-1:0] m0 = s_no[4*gq]     ? r2_sh        : {CW{1'b0}};
+        wire [CW-1:0] m1 = s_no[4*gq + 1] ? (r2_sh << 1) : {CW{1'b0}};
+        wire [CW-1:0] m2 = s_no[4*gq + 2] ? (r2_sh << 2) : {CW{1'b0}};
+        wire [CW-1:0] m3 = s_no[4*gq + 3] ? (r2_sh << 3) : {CW{1'b0}};
+        wire [CW-1:0] a1 = m0 ^ m1 ^ m2;
+        wire [CW-1:0] b1 = ((m0 & m1) | (m0 & m2) | (m1 & m2)) << 1;
+        assign wqs_w[gq*CW +: CW] = a1 ^ b1 ^ m3;
+        assign wqc_w[gq*CW +: CW] = ((a1 & b1) | (a1 & m3) | (b1 & m3)) << 1;
+        wire wq_co;
+        ot_hdc_kadd #(.W(CW), .K(KK)) u_m (.a(r2_wqs[gq*CW +: CW]), .b(r2_wqc[gq*CW +: CW]), .cin(1'b0),
+                                           .s(wq_w[gq*CW +: CW]), .cout(wq_co));
     end endgenerate
     ot_hdc_v41x_csum4 #(.W(CW), .K(KK)) u_ws (.a(r2_wq[0 +: CW]), .b(r2_wq[CW +: CW] << 4), .c(r2_wq[2*CW +: CW] << 8),
                                               .d(r2_wq[3*CW +: CW] << 12), .y(wsum_w));
@@ -581,7 +598,13 @@ module ot_hdc_v41x_vec #(
     wire        nva_unused;
     ot_hdc_kadd #(.W(CW + 1), .K(KK)) u_nva (.a({1'b0, s_ni}), .b({1'b0, (ONE_CW << c_ls) - ONE_CW}), .cin(1'b0),
                                             .s(nva_w), .cout(nva_unused));
-    wire [3:0] S2_LR = s_wnf ? 4'd9 : 4'd8;     // the levels L; the result depth and the check one step later
+`ifdef OT_NEG_CTL12_WQ
+    // NEGATIVE CONTROL (compile-time only): the levels L read the slice-product sum a cycle early (round-10 timing);
+    // the exact campaign must FAIL with this defined
+    wire [3:0] S2_LR = s_wnf ? 4'd9 : 4'd8;
+`else
+    wire [3:0] S2_LR = s_wnf ? 4'd10 : 4'd8;
+`endif     // the levels L; the result depth and the check one step later
     reg  [9:0] r2_dT, r2_dR, r2_dTa, r2_lth;
     reg  [AW-1:0] r2_gstr;
     reg  [15:0] r2_need1;
@@ -616,14 +639,15 @@ module ot_hdc_v41x_vec #(
         end
         if (pst == 2'd1 && sst == 4'd7) begin
             r2_nvs <= r2_nva >> c_ls;                    // replaced at S7 for a non-flattening reduction
-            r2_wq <= wq_w;
+            r2_wqs <= wqs_w; r2_wqc <= wqc_w;
             r2_nslot <= ONE_CW << c_nsh; r2_ostep <= c_ostep; r2_rstep <= s_wnf ? {AW{1'b0}} : q_rso << c_nsh;
             // c_dT = c_dS + the constant stages + H_R * c_lt, in two steps
             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT;
             r2_lth <= H_R[9:0] * c_lt;
         end
         if (pst == 2'd1 && sst == 4'd8) r2_dT <= r2_dTa + r2_lth;
-        if (pst == 2'd1 && sst == 4'd8 && s_wnf) r2_nvs <= wsum_w;
+        if (pst == 2'd1 && sst == 4'd8) r2_wq <= wq_w;
+        if (pst == 2'd1 && sst == 4'd9 && s_wnf) r2_nvs <= wsum_w;
         if (pst == 2'd1 && sst == S2_LR) r2_L <= c2_L;
         if (pst == 2'd1 && sst == S2_LR + 4'd1) begin
             r2_dR <= r2_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, r2_L} : 10'd0);
@@ -1342,7 +1366,7 @@ module ot_hdc_v41x_vec #(
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE), .ROPI(ROPI)) u_red (.clk(clk), .rst_n(rst_n),
+                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE), .ROPI(ROPI), .RKC(RKC)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),

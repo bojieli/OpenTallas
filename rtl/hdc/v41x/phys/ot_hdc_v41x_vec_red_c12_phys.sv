@@ -118,6 +118,8 @@ endmodule
 // MARGIN VERSION (OWNER RULE 2026-10-06: SS >= +40 at 833.333 when routed at 770): every reducer op registers its
 // operands (ROPI 1: op latency ALAT + 1 = 7), and the top registers the OUT address adds / BF16 roundings once more
 // (ROUT 2), one OUT bundle copy per 2 slots (ROGS 2).  Depth: D_RED + 7 + 1, D_RSTEP + 1.
+// The top also keeps copies of the tap-hit sources and the tap tag (RKC 1, no added cycle): tm_u30_h15 routed at 770
+// signed off SS +16.36 / FF +7.88 at 833.333 on those two fanout classes.
 module ot_hdc_v41x_vred_slice64_c12m (
     input  wire          clk,
     input  wire          rst_n,
@@ -157,5 +159,5 @@ module ot_hdc_v41x_vred_top1024_c12m (
     output wire          fault
 );
     ot_hdc_v41x_vred_top #(.N(1024), .LV(6), .AW(24), .MW(9), .MLAT(6), .ALAT(7), .RPAD(1), .RSL(2), .RTAP(1),
-                           .ROUT(2), .ROGS(2), .SL(64), .ROPI(1)) u (.*);
+                           .ROUT(2), .ROGS(2), .SL(64), .ROPI(1), .RKC(1)) u (.*);
 endmodule
