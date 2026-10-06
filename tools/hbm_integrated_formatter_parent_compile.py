@@ -86,7 +86,7 @@ def observation_top(observation_wrapper,wrapper_pin,parameters):
     return top
 
 def prepare(work,body_pin,partition_reduction=False,native_norm_production=False,
-            observation_wrapper=None,wrapper_pin=None):
+            observation_wrapper=None,wrapper_pin=None,harness_source=None,fixture_preparer=None):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
@@ -97,7 +97,18 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         if str(observation_wrapper) in paths:raise ValueError('Duplicate observation wrapper source')
         paths.append(str(observation_wrapper))
     work.mkdir(parents=True,exist_ok=False)
-    all_files=paths+INCLUDES
+    companions=[]
+    for source in (harness_source,fixture_preparer):
+        if source:
+            if source.is_absolute() or '..' in source.parts:raise ValueError('Committed root-relative harness source required')
+            companions.append(str(source))
+    if harness_source:
+        for name in re.findall(r'^\s*#include\s+"([^"]+)"',(ROOT/harness_source).read_text(),re.M):
+            if name=='V'+top+'.h':continue  # Real generated header is a later dependency.
+            rel=harness_source.parent/name
+            if '..' in rel.parts:raise ValueError('Unsupported harness include path')
+            companions.append(str(rel))
+    all_files=paths+INCLUDES+companions
     missing=[s for s in all_files if not (ROOT/s).is_file()]
     pins={s:sha(ROOT/s) for s in all_files if (ROOT/s).is_file()}
     errors=[]
@@ -176,6 +187,8 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
         native_norm_production=native_norm_production,
         top=top,observation_wrapper=str(observation_wrapper) if observation_wrapper else None,
         observation_wrapper_sha256=wrapper_pin,
+        harness_source=str(harness_source) if harness_source else None,
+        fixture_preparer=str(fixture_preparer) if fixture_preparer else None,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
         sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
@@ -592,6 +605,8 @@ def main():
     p.add_argument('--native-norm-production',action='store_true',help='Consume literal Gibbs published norm production candidate flags')
     p.add_argument('--observation-wrapper',type=Path,help='Actual Bacon additive full-parent observation wrapper')
     p.add_argument('--wrapper-sha256',help='Published Bacon wrapper source SHA')
+    p.add_argument('--harness-source',type=Path,help='Committed Bacon C++ harness and local includes to pin/copy')
+    p.add_argument('--fixture-preparer',type=Path,help='Committed authentic-input preparation helper to pin/copy')
     p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
@@ -599,5 +614,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256,a.harness_source,a.fixture_preparer) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())

@@ -5,7 +5,7 @@ Output objects stay separate from immutable generated models. The caller brings
 an actual successful current-source parent terminal and an optional source-owned
 C++ harness; no surrogate stimulus is emitted here.
 """
-import argparse, concurrent.futures, fcntl, hashlib, json, os, shutil, socket, subprocess, sys, time
+import argparse, concurrent.futures, fcntl, hashlib, json, os, re, shutil, socket, subprocess, sys, time
 from pathlib import Path
 
 def sha(p):
@@ -14,6 +14,18 @@ def write(p,x):
     p.write_text(json.dumps(x,indent=2)+'\n')
 def digest(x):
     return hashlib.sha256(json.dumps(x,sort_keys=True).encode()).hexdigest()
+
+def harness_dependencies(source):
+    pins={};pending=[source]
+    while pending:
+        p=pending.pop().resolve()
+        if str(p) in pins:continue
+        pins[str(p)]=sha(p)
+        for name in re.findall(r'^\s*#include\s+"([^"]+)"',p.read_text(),re.M):
+            path=p.parent/name
+            if not path.is_file() and re.fullmatch(r'V\w+\.h',name):continue
+            pending.append(path)
+    return pins
 
 def model_inputs(graph):
     jobs=json.loads(graph.read_text())['submodules'];models=[]
@@ -85,7 +97,7 @@ def build(models,out,compiler,archiver,workers,harness=None):
     all_runtime.add(str(Path(models[-1]['include'])/'verilated_dpi.cpp'))
     if timing:all_runtime.add(str(Path(models[-1]['include'])/'verilated_timing.cpp'))
     objects=[build_one(compiler,Path(s),runtime/(Path(s).stem+'.o'),opts,envelope) for s in sorted(all_runtime)]
-    harness_object=build_one(compiler,harness,runtime/'harness.o',opts,envelope)
+    harness_object=build_one(compiler,harness,runtime/'harness.o',opts,digest([envelope,harness_dependencies(harness)]))
     binary=out/'integrated_bench'
     subprocess.run([str(compiler),'-pthread',str(harness_object),'-Wl,--start-group',*map(str,libraries),
                     *map(str,objects),'-Wl,--end-group','-latomic','-o',str(binary)],check=True)
@@ -124,6 +136,7 @@ def main():
     models=model_inputs(a.graph);inputs=dict(graph=sha(a.graph),terminal=sha(a.terminal),
         models=models,compiler=sha(a.compiler),archiver=sha(a.archiver),driver=sha(__file__),
         harness=sha(a.harness) if a.harness else None,workers=a.workers)
+    if a.harness:inputs['harness_dependencies']=harness_dependencies(a.harness)
     if set(terminal['completed'])!={m['job']['prefix'] for m in models}:
         raise ValueError('Terminal does not cover this actual generated hierarchy')
     if not a.admitted:out.mkdir(parents=True,exist_ok=True)
