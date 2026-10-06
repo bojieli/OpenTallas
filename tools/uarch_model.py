@@ -10207,7 +10207,7 @@ def dsrom_window_parent_boundary_model():
     slices = (rowbits + 255) // 256
     producer = 16 * (256 + 8) + 2 + 5 + 4 + 2*30 + 2*21 + 1
     lifecycle = 3 + 2*16 + 10 + 4*21 + 4*30 + 2 + 1 + 2*11 + 6
-    native = 2 + 10 + 21 + 1 + 1 + 16
+    native = 2 + 10 + 1 + 21 + 1 + 1 + 16  # capture_ctrl_user preserves controller handoff edge
     # Exact source E1 and R0 operands. No arithmetic or transposer stand-in.
     e_operands = tiles * td * 18
     r0_operands = tiles * td * 18
@@ -10238,6 +10238,7 @@ def dsrom_window_parent_boundary_model():
         compute=dict(MACs_per_cycle_in_cut=0, arithmetic_omitted_at_actual_R0_boundary=True),
         state=dict(producer_FF_bits=producer, descriptor_lifecycle_FF_bits=lifecycle,
             native_reset_user_position_guard_generation_FF_bits=native,
+            native_capture_ctrl_user_FF_bits=1,
             engine_E1_operand_FF_bits=e_operands, tile_R0_operand_FF_bits=r0_operands,
             all_projected_R0_FF_bits=r0_all, all_projected_E1_FF_bits=e_all,
             capture_control_upper_FF_bits=capture_control_upper, FF_upper_bits=ff_upper,
