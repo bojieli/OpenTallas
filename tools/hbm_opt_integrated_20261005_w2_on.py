@@ -21,9 +21,10 @@ OWN_FILES = [OWN + n + '.sv' for n in (
     'ot_hbm_integrated_gather_bridge', 'ot_hbm_integrated_gather_owner',
     'ot_hbm_integrated_su_cp_bind', 'ot_hbm_integrated_su_cp_association',
     'ot_hbm_integrated_header_decode',
-    'ot_hbm_integrated_formatter_provider', 'ot_hbm_integrated_w15_store',
+    'ot_hbm_integrated_w15_store',
     'ot_hbm_integrated_w2_result_sink')]
-PEER_FILES = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
+PEER_FILES = ['physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv',
+              'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
               OWN + 'ot_hbm_integrated_w2_sector_adapter.sv',
               'rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv']
 # Exact installed dimensions: original two-die/four-SM parent.
