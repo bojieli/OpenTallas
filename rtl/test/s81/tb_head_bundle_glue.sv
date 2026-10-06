@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb;
  parameter USE_HARD_DELAY8=0;
+ parameter USE_MIN_DELAY_CELLS=0;
  reg clk=0,rst_n=0,go=0; always #0.5 clk=~clk;
  reg [16:0] row0=0;
  reg [255:0] xa=0,xb=0;
@@ -10,7 +11,7 @@ module tb;
  genvar q;generate for(q=0;q<4;q=q+1)begin
  assign rows[17*q+:17]=refdut.a_row[q];assign bits_[32*q+:32]=refdut.a_bits[q];assign keys[32*q+:32]=refdut.a_key[q];end endgenerate
  wire gd,rv2,f2;wire[255:0] sa,sb;wire[3:0] bv;wire[31:0] bd,rb2;wire[16:0] rr2,r0b;wire[67:0] r0a;
- ot_dsrom_head_bundle_glue #(.USE_HARD_DELAY8(USE_HARD_DELAY8)) dut(.clk(clk),.rst_n(rst_n),.go(go),.row0(row0),.xa(xa),.xb(xb),.bo_v(refdut.bo_v),.bo_d(refdut.bo_d),.b_fault(refdut.b_fault),.a_done(refdut.a_done),.a_fault(refdut.a_fault),.a_row_flat(rows),.a_bits_flat(bits_),.a_key_flat(keys),.go_d(gd),.xsa(sa),.xsb(sb),.bv_r(bv),.bd_r(bd),.row0_a(r0a),.row0_b(r0b),.res_v(rv2),.res_row(rr2),.res_bits(rb2),.fault(f2));
+ ot_dsrom_head_bundle_glue #(.USE_HARD_DELAY8(USE_HARD_DELAY8),.USE_MIN_DELAY_CELLS(USE_MIN_DELAY_CELLS)) dut(.clk(clk),.rst_n(rst_n),.go(go),.row0(row0),.xa(xa),.xb(xb),.bo_v(refdut.bo_v),.bo_d(refdut.bo_d),.b_fault(refdut.b_fault),.a_done(refdut.a_done),.a_fault(refdut.a_fault),.a_row_flat(rows),.a_bits_flat(bits_),.a_key_flat(keys),.go_d(gd),.xsa(sa),.xsb(sb),.bv_r(bv),.bd_r(bd),.row0_a(r0a),.row0_b(r0b),.res_v(rv2),.res_row(rr2),.res_bits(rb2),.fault(f2));
  integer i,j,seed=12345,valids=0;
  initial begin
  repeat(3) @(negedge clk);rst_n=1;
