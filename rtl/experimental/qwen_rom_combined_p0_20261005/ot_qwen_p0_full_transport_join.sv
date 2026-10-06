@@ -64,6 +64,9 @@ module ot_qwen_p0_full_transport_join #(
     output wire [128*24-1:0] h_csec,
     output wire [128*256-1:0] h_cdata,
     output wire [128*9-1:0] h_ctag,
+    output wire [383:0] h_cred_ret,
+    output wire [3:0] h_desc_commit, h_go_commit,
+    output wire [11:0] h_desc_ordinal, h_go_ordinal,
     output wire transport_quiet,
     input  wire              clk,
     input  wire              hclk, // independent periodic 1024ps controller root
@@ -307,6 +310,11 @@ module ot_qwen_p0_full_transport_join #(
         .h_cv(h_cv),
         .h_csec(h_csec),
         .h_cdata(h_cdata),
-        .h_ctag(h_ctag)
+        .h_ctag(h_ctag),
+        .h_cred_ret(h_cred_ret),
+        .h_desc_commit(h_desc_commit),
+        .h_go_commit(h_go_commit),
+        .h_desc_ordinal(h_desc_ordinal),
+        .h_go_ordinal(h_go_ordinal)
     );
 endmodule

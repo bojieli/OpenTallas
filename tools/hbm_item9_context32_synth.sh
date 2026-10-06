@@ -19,8 +19,8 @@ export OT_ORFS_NUM_CORES=16 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_S
 ulimit -t unlimited
 ulimit -f unlimited
 ulimit -v unlimited
-/srv/opentallas-scratch/admit.sh 24 -- python3 tools/run_abi3_physical_aligned_guarded.py \
- --macro-track-gate --view asap7 --top ot_gpu_coll_item9_context32_txctrl \
+/srv/opentallas-scratch/admit.sh 24 -- python3 tools/run_abi3_physical.py \
+ --view asap7 --top ot_gpu_coll_item9_context32_txctrl \
  --param ENABLE=1 --param NSM=32 --param NL=128 --param OWNER64=1 \
  --param TX_MASK_LA=1 --param RXOH=1 --param RDUP=16 --param TXCTRL=1 \
  --source rtl/gpu_sys/ot_gpu_reset_ctrl.sv --source rtl/link/ot_link_afifo.sv \
@@ -36,8 +36,7 @@ ulimit -v unlimited
  --sdc-append results/rtl/hbm_item9_closure_20261005/context32_clocks.sdc \
  --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 \
  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 \
- --die-area 0 0 1814.376 1403.976 --core-area 2.16 2.16 1812.216 1401.816 \
- --stages synth --core-utilization 30 --place-density .55 --orfs-var ADDER_MAP_FILE= \
+ --stages synth \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  --purpose characterization --nickname-tag item9_loaded32_synth_r1 \
  --keep-workdir "$out/work" --output "$out/physical.json" > "$out/run.log" 2>&1
