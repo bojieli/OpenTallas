@@ -3,7 +3,7 @@
 // H16 quad parent ot_attn_tile_m6h1p (lockstep-proven against tile_l: results/rtl/hbm_attn_tile_r_20261006 lockr13_p).
 // ROLE 0: corner tile (packet split over k / q); 1: column tile (packet on ci); 2: row tile (packet on ri);
 // 3: result chain pass-through (no packet, random words on i).  Every cycle: o against the reference (roles 0-2:
-// the parent's output delayed 3; role 3: i delayed 4) and cf / rf against the packet delayed 6.
+// the parent's output delayed 3; role 3: i delayed 4; the word compared whenever valid, valid every cycle) and cf / rf against the packet delayed 6.
 // Prints ATTNDIE role=<r> cycles=<n> mismatches=<m> ov=<compared valid words>; $fatal on any mismatch or no valid word.
 // NEG=1: flips one oy bit of the view's o in the compare (negative control, must fail).
 module tb_hfd_attn_tile (input wire clk);
@@ -89,7 +89,8 @@ module tb_hfd_attn_tile (input wire clk);
         iw[528] <= (($urandom % 3) == 0);
         if (cyc > 16) begin
             if (exp_o[528]) nov <= nov + 1;
-            if (o_c !== exp_o) begin
+            // a result word is defined only while its valid (bit 528) is set: compare valid always, data when valid
+            if (o_c[528] !== exp_o[528] || (exp_o[528] && o_c !== exp_o)) begin
                 mism <= mism + 1;
                 if (mism < 5) $display("MISMATCH o cyc=%0d view %h ref %h", cyc, o_c[528:512], exp_o[528:512]);
             end
