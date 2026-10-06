@@ -6,7 +6,9 @@
 // FP32 sibling adds, complete rows out) restructured for 1.2 GHz with margin: the W10 root decides every candidate
 // in ONE cycle (queue head mux -> norm -> 128 sibling compares -> priority chain -> parent / buffer update), which
 // routed at -4.36 ns (root_m1, PVE1, floorplan repair).  Here:
-//   P0  input: norm(i_t) registered (norm is idempotent: the W10 root applies it at the queue head instead)
+//   P0  input: norm(i_t) over three registered stages (2 + 2 + 1 of norm's 5 iterations; the W10 root applies norm at
+//       the queue head instead: same tag, norm is idempotent).  The parent tag is normalised the same way, one
+//       iteration per stage of the adder's tag delay line (root_m2 floorplan: one-stage norm = -1.2 ns)
 //   Q   input queue = QD-entry flop memory + registered head (kept copies); the head mux is pointer-addressed only
 //   S1  candidate = adder result (priority, as W10) else queue head; D sibling compares against the buffer, the
 //       compare against the candidate now in S2 (forwarding), complete(); registered (kept copies of the candidate)
@@ -41,16 +43,39 @@ module ot_s81ph_ret_root_p #(
     output reg         r_e,
     output reg         fault
 );
-    import ot_v41_ret_pkg::*;
+    // ot_v41_ret_pkg functions, local (yosys-native synthesis keeps the generator's [0:0] port names)
+    function automatic complete(input [31:0] t);
+        complete = t[12:8] == 5'd0 && (6'd1 << t[7:5]) >= {1'b0, t[4:0]};
+    endfunction
+    function automatic sibling(input [31:0] a, input [31:0] b);
+        sibling = a[31:13] == b[31:13] && a[7:5] == b[7:5] && a[4:0] == b[4:0] &&
+                  (a[12:8] ^ b[12:8]) == (5'd1 << a[7:5]);
+    endfunction
     localparam integer QW = $clog2(QD);
     localparam integer LAT = 8;              // ot_fp32_add_rne_deep SPLIT 3'b111
     localparam integer SG = D / NC;          // slots per copy
     integer k, c;
 
     // ------------------------------------------------------------ P0: normalised input
-    reg n_v; reg [31:0] n_t, n_d; reg n_e;
-    always @(posedge clk or negedge rst_n) if (!rst_n) n_v <= 1'b0; else n_v <= i_v;
-    always @(posedge clk) begin n_t <= norm(i_t); n_d <= i_d; n_e <= i_e; end
+    // one iteration of ot_v41_ret_pkg::norm (which is exactly 5 of these in sequence)
+    function automatic [31:0] norm_step(input [31:0] t);
+        reg [18:0] row; reg [4:0] lo, n; reg [2:0] k;
+        begin
+            {row, lo, k, n} = t;
+            if (!(lo == 5'd0 && (6'd1 << k) >= {1'b0, n}) && lo[k] == 1'b0 && ({1'b0, lo} + (6'd1 << k)) >= {1'b0, n})
+                k = k + 3'd1;
+            norm_step = {row, lo, k, n};
+        end
+    endfunction
+    reg n_v, p_v1, p_v2; reg [31:0] n_t, n_d, p_t1, p_d1, p_t2, p_d2; reg n_e, p_e1, p_e2;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin p_v1 <= 1'b0; p_v2 <= 1'b0; n_v <= 1'b0; end
+        else begin p_v1 <= i_v; p_v2 <= p_v1; n_v <= p_v2; end
+    always @(posedge clk) begin
+        p_t1 <= norm_step(norm_step(i_t)); p_d1 <= i_d; p_e1 <= i_e;
+        p_t2 <= norm_step(norm_step(p_t1)); p_d2 <= p_d1; p_e2 <= p_e1;
+        n_t <= norm_step(p_t2); n_d <= p_d2; n_e <= p_e2;
+    end
 
     // ------------------------------------------------------------ adder return (tag / valid delay line)
     reg [LAT-2:0] dv;                        // valid, stages 0..LAT-2
@@ -154,7 +179,7 @@ module ot_s81ph_ret_root_p #(
     // parent tag: lo with bit k cleared, k + 1 (siblings share row/pos/nseg/k and differ in lo bit k)
     wire [2:0] s2_k = s2_t0[7:5];
     wire [4:0] s2_lo = s2_t0[12:8];
-    wire [31:0] s2_par = norm({s2_t0[31:13], s2_lo & ~(5'd1 << s2_k), s2_k + 3'd1, s2_t0[4:0]});
+    wire [31:0] s2_par = {s2_t0[31:13], s2_lo & ~(5'd1 << s2_k), s2_k + 3'd1, s2_t0[4:0]};   // normalised in the delay line
     wire s2_right = s2_lo[s2_k];             // candidate is the right sibling: buffer word is the left operand
     reg a3_v, a3_right, a3_e; reg [31:0] a3_d, a3_t; reg [D-1:0] a3_oh;
     always @(posedge clk or negedge rst_n)
@@ -201,7 +226,11 @@ module ot_s81ph_ret_root_p #(
             sv_c <= {NC{dv[LAT-2]}}; sv <= dv[LAT-2];
         end
     always @(posedge clk) begin
-        dtg <= {dtg[33*(LAT-2)-1:0], tag_in};
+        // delay line stage j < 5 applies norm iteration j to the parent tag (5 iterations = norm)
+        for (c = 0; c < LAT - 1; c = c + 1)
+            if (c < 5) dtg[33*c +: 33] <= {norm_step(c == 0 ? tag_in[32:1] : dtg[33*(c-1) + 1 +: 32]),
+                                           (c == 0) ? tag_in[0] : dtg[33*(c-1)]};
+            else dtg[33*c +: 33] <= dtg[33*(c-1) +: 33];
         for (c = 0; c < NC; c = c + 1) st_c[c] <= dtg[33*(LAT-2) + 1 +: 32];
         st_e <= dtg[33*(LAT-2)];
     end

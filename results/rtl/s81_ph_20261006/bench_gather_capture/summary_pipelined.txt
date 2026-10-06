@@ -32,3 +32,16 @@ MISMATCH root 7: dut write 60831459804e1 is not an individually valid row
 SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=0 ref_drained=0 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=1
 RESULT FAIL
 DONE
+## p4: root norm pipelined (input 3 stages, parent norm in the tag delay line), local pkg functions (yosys-native) + capture cap_p; m3 = NOFWD
+== run_p4_err.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=6 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_m3.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=1 ref_drained=1 dut_drained=0 max_extra_cycles=50000 timeouts=1 mismatching_roots=128 RESULT FAIL 0err
+== run_p4_mix.log: SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix11.log: SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix12.log: SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_mix13.log: SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=36 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_over.log: SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=13 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_range.log: SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=4 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_rreq.log: SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=23 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+== run_p4_trace.log: SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=20 timeouts=0 mismatching_roots=0 RESULT PASS 0err
+DONE
+UNORD reordered_roots=128 fault_run_dut_writes_not_in_ref=0
