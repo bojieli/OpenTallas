@@ -1,0 +1,33 @@
+{
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 16.12,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 16.123215,
+  "worst_reg_to_reg_slack_ps": 16.12,
+  "worst_input_to_reg_slack_ps": Infinity,
+  "worst_output_port_slack_ps": 1000000000.0,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "67c9eef5dbcc645e3b6eb14063763b9bf68b4551404f599a827be8cd76327f10",
+  "spef_sha256": "9d2ac5fe5358e2945882f6845e56309b8395fc0945423e253772e73c8d4f8166",
+  "sdc_sha256": "bc9e94ddc9f497db4b27d4ad64bfa063b016f3bf636895e2577101117f213c34"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 2.49,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 2.490092,
+  "worst_reg_to_reg_slack_ps": 2.49,
+  "worst_input_to_reg_slack_ps": Infinity,
+  "worst_output_port_slack_ps": 1000000000.0,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "67c9eef5dbcc645e3b6eb14063763b9bf68b4551404f599a827be8cd76327f10",
+  "spef_sha256": "9d2ac5fe5358e2945882f6845e56309b8395fc0945423e253772e73c8d4f8166",
+  "sdc_sha256": "bc9e94ddc9f497db4b27d4ad64bfa063b016f3bf636895e2577101117f213c34"
+ },
+ "closes_signoff": true
+}

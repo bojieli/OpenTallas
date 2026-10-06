@@ -1,0 +1,71 @@
+{
+ "schema": "hbm.attn.quad_closure.v1",
+ "date": "2026-10-06",
+ "clock": "0.833 ns (1.2 GHz); SS setup WC + 60 ps, FF hold BC + 25 ps; tools/w18/corner_sta.py with the leaf macro views (--macro physical/hbm_attn_tile_r/top_pins/ot_attn_hgrp_m6h1)",
+ "element": "ot_attn_tile_m6h1q (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m6h1r.sv): four one-head leaves ot_attn_hgrp_m6h1 (pins on the top edge) around one 60 um register strip, two R0 below and two MX above; one HC register bank per column registers the 1,618-bit packet + rst_n and drives that column's two leaves; outputs straight from the leaves; first head qgid a static input (one macro replicated four times per H16)",
+ "leaf": {
+  "route": "E2 /srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_l/lt_u45",
+  "ss_setup_ps": 14.14,
+  "ff_hold_ps": 1.42,
+  "drc": 0,
+  "views": "physical/hbm_attn_tile_r/top_pins/ot_attn_hgrp_m6h1 (241.4 x 241.4 um, all 1,662 signal pins top-edge M5)"
+ },
+ "adopted_route": "t13_q4g12_bd150",
+ "quad_routes": {
+  "t12_q4g12": {
+   "ss_setup_ps": 20.45,
+   "ff_hold_ps": 63.14,
+   "closes_signoff": true,
+   "args": "SRC=src_t10 TPARAM= CTSA= C=q4g12 DW=514.89 DH=562.95 PD=0.50 HM=0.010 --param GB=0",
+   "source": "d77a867b3 (claude/hbm-attn-close-20261005) quad QH2 t10"
+  },
+  "t12_q4g12_bd150": {
+   "ss_setup_ps": 25.64,
+   "ff_hold_ps": 38.0,
+   "closes_signoff": true,
+   "args": "SRC=src_t10 TPARAM= CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 C=q4g12 DW=514.89 DH=562.95 PD=0.50 HM=0.010 --param GB=0",
+   "source": "d77a867b3 (claude/hbm-attn-close-20261005) quad QH2 t10"
+  },
+  "t12_q4g12_s75": {
+   "ss_setup_ps": 19.04,
+   "ff_hold_ps": 63.22,
+   "closes_signoff": true,
+   "args": "SRC=src_t10 TPARAM= CTSA= C=q4g12 DW=514.89 DH=562.95 PD=0.50 HM=0.010 --param GB=0",
+   "source": "d77a867b3 (claude/hbm-attn-close-20261005) quad QH2 t10"
+  },
+  "t12_q4g40": {
+   "ss_setup_ps": 9.72,
+   "ff_hold_ps": 57.74,
+   "closes_signoff": true,
+   "args": "SRC=src_t10 TPARAM= CTSA= C=q4g40 DW=542.862 DH=562.95 PD=0.50 HM=0.010 --param GB=0",
+   "source": "d77a867b3 (claude/hbm-attn-close-20261005) quad QH2 t10"
+  },
+  "t13_q4g12": {
+   "ss_setup_ps": 22.23,
+   "ff_hold_ps": 63.06,
+   "closes_signoff": true,
+   "args": "SRC=src_t13 TPARAM= CTSA= C=q4g12 DW=514.89 DH=562.95 PD=0.50 HM=0.010",
+   "source": "3f19f3331 (claude/hbm-attn-close-20261005) quad qgid t13"
+  },
+  "t13_q4g12_bd150": {
+   "ss_setup_ps": 36.38,
+   "ff_hold_ps": 33.13,
+   "closes_signoff": true,
+   "args": "SRC=src_t13 TPARAM= CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 C=q4g12 DW=514.89 DH=562.95 PD=0.50 HM=0.010",
+   "source": "3f19f3331 (claude/hbm-attn-close-20261005) quad qgid t13"
+  },
+  "t13_q4g40_bd150": {
+   "ss_setup_ps": 32.69,
+   "ff_hold_ps": 41.89,
+   "closes_signoff": true,
+   "args": "SRC=src_t13 TPARAM= CTSA=-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 C=q4g40 DW=542.862 DH=562.95 PD=0.50 HM=0.010",
+   "source": "3f19f3331 (claude/hbm-attn-close-20261005) quad qgid t13"
+  }
+ },
+ "physical": "die 514.89 x 562.95 um (core inset 0.54 um top/bottom for the edge VSS rail), DRC 0, max slew / cap / fanout clean (slew-margin 60 %), VDD/VSS connected (PSM), physical.json closed = true, inputs register-direct (outcheck: 3,236 input paths, 0 not register-direct)",
+ "reset": "leaf rst_n setup 1,638.6 ps (SS) > one cycle: rst_n is a 3-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc) under the quasi-static reset protocol asserted in simulation",
+ "exactness": "lockstep vs ot_hdc_v41x_attn_tile_l: four quads (ot_attn_tile_m6h1x) 0 mismatches / 4447 outputs, the quad parent (ot_attn_tile_m6h1p) 0 / 4445, negative control rc=1 (lockr13_*.run)",
+ "cycles": "+1 cycle on the attention tile input (the quad HC bank); the H16 parent ot_attn_tile_m6h1p adds ROOT and ROW (+3 total)",
+ "history": "H16 registered parents t1-t6 (16 leaves, MY/R0 pairs, two-strip / one-strip floorplans) failed CTS on 0.7-1.4 ns register-tree skew in macro channels (diagnostics in E2 hbm-attn/diag); the quad keeps every register sink in one strip beside its leaves",
+ "open": "H16 parent route of four quad macros: the quad abstract blocks M1-M9 and carries M9 power pins, so the parent PDN needs the die PDN contract (Turing) before the parent route; quad views physical/hbm_attn_tile_r/quad/ot_attn_tile_m6h1q"
+}
