@@ -10164,10 +10164,10 @@ def dsrom_v9_parent_context_model():
     return model(Path(__file__).resolve().parents[1])
 
 
-def dsrom_qx10_parent_context_model(boundary_hold=False):
+def dsrom_qx10_parent_context_model(boundary_hold=False, hard_cfg=False):
     """Existing full QX10 element plus native parent, in the unchanged slot."""
     from dsrom_qx10_parent_context import model
-    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold)
+    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold, hard_cfg=hard_cfg)
 
 
 def dsrom_window_full_block_pipeline_model():
@@ -10536,6 +10536,20 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             bound_basis='prior routed full128 wrapper cell area; explicit FF inventory; .2um2 gate proxies; 10000um2 CTS/reset/repair allowance',
             no_macro_instances=True, all_IO_timed=True,
             actual_outer_allocation_qualified=False),
+        balanced_request_mux=dict(
+            optin_parameter='TREE default0; own additive successor only',
+            motivation='actual pinned owner->dat class; current full32 source uses 32-deep conditional overwrite',
+            source_inputs=nsm, payload_bits=width, select_replicas=copies,
+            padded_leaves=1 << (nsm-1).bit_length(),
+            AND_bit_equivalents=nsm*width, OR_bit_equivalents=(nsm-1)*width,
+            select_equalities=nsm*copies, max_local_mask_fanout_bits=(width+copies-1)//copies,
+            combinational_tree_levels=(nsm-1).bit_length(),
+            added_FF_bits=0, added_memory_ports=0, added_boundary_bits=0,
+            conservative_new_gate_area_um2=(nsm*width+(nsm-1)*width+nsm*copies*sb)*.2,
+            removed_priority_mux_area_credit_um2=0,
+            new_cycles_per_collective=0, new_cycles_per_record=0, composed_token_delta_ns=0,
+            source_local_inputs_required=True, actual_clock_load_slot_qualified=False,
+            exact_gate=False, physical_gain_measured=False, adopted=False),
         actual_32SM_caller_context=dict(
             lineage='ot_gpu_simt_sm O_COLL c_data/c_mode/c_count and B_COLL_REQ/B_COLL_RSP; original item9 baseline',
             selected_DS_smv_TU_equivalence=False,

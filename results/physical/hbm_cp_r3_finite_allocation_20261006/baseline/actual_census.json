@@ -1,0 +1,104 @@
+{
+  "ODB_sha256": "24ebc0757ffb28470eec488ce04b7b5148ee67cc66a413d956a727e9cd082766",
+  "baseline_sha256": "689a1f8802da8fe0f6a2320523745d5231b6c5d5fad436db98f2365f784b5400",
+  "DBU": 1000,
+  "group_stats": {
+    "cp_body": {
+      "count": 6929,
+      "area_um2": 868.9971599999863,
+      "movable_area_um2": 868.9971599999863,
+      "fixed_area_um2": 0
+    },
+    "cp_association": {
+      "count": 5,
+      "area_um2": 0.83106,
+      "movable_area_um2": 0.83106,
+      "fixed_area_um2": 0
+    },
+    "None": {
+      "count": 443,
+      "area_um2": 14.842439999999936,
+      "movable_area_um2": 3.1492800000000023,
+      "fixed_area_um2": 11.693159999999914
+    }
+  },
+  "area_classes": {
+    "preCTS_existing": {
+      "count": 6725,
+      "area_um2": 825.7091400000044
+    },
+    "inserted_data_repair": {
+      "count": 578,
+      "area_um2": 42.95267999999976
+    },
+    "inserted_clock_or_dummy": {
+      "count": 74,
+      "area_um2": 16.008840000000006
+    }
+  },
+  "total_cell_area_um2": 884.6706600000055,
+  "fixed_cell_area_um2": 11.693159999999914,
+  "original_region_boxes_DBU": {
+    "cp_body": [
+      [
+        17280,
+        17280,
+        60480,
+        56160
+      ]
+    ],
+    "cp_association": [
+      [
+        17280,
+        56160,
+        22464,
+        60480
+      ]
+    ]
+  },
+  "containment_violations": [],
+  "ungrouped_movable_signal": [
+    "rebuffer3221",
+    "rebuffer3222",
+    "hold3234",
+    "rebuffer3207",
+    "rebuffer3208",
+    "rebuffer3209",
+    "rebuffer3210",
+    "rebuffer3211",
+    "rebuffer3212",
+    "rebuffer3213",
+    "rebuffer3214",
+    "rebuffer3217",
+    "rebuffer3218",
+    "rebuffer3219",
+    "rebuffer3220",
+    "rebuffer3223",
+    "rebuffer3224",
+    "rebuffer3225",
+    "u_su_cp.on.registered_status.balanced_owner_boundary.four_output_frontiers.accept_gate/g\\[2\\].a/rebuffer3226",
+    "hold3235",
+    "hold3236",
+    "hold3237",
+    "hold3238",
+    "hold3239",
+    "hold3240",
+    "hold3241",
+    "hold3242",
+    "hold3243",
+    "hold3244",
+    "hold3245",
+    "hold3246",
+    "hold3247",
+    "hold3248",
+    "hold3249",
+    "hold3250",
+    "hold3251",
+    "hold3252",
+    "hold3253",
+    "hold3254",
+    "u_su_cp.on.four_combinational_cuts.pc_encoder/hold3255",
+    "hold3256",
+    "hold3257"
+  ]
+}

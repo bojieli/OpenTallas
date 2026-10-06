@@ -3,7 +3,7 @@
   "source": {
     "engine": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
     "engine_sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
-    "parent_model_sha256": "9c5a8dfe024a637c333150070321db5d511a0ac822b731371ff0c28036bd49f2",
+    "parent_model_sha256": "c43e12f555852a2a7d56767fa9c2affcb170129f6556747457675a9122171b46",
     "boundary_model_sha256": "555f72b7ac6283635da8b3faaecfba4d05b178cddf2ce2005eb47fbc509548e5",
     "Z18a_synth_stat_sha256": "c6d94322a8e404e6d36698bacfa892faa36cd5869561798d455de2fc97033b58"
   },
@@ -17,7 +17,49 @@
   },
   "memory_bytes_per_cycle": {
     "weight": 68.5,
-    "configuration": 6
+    "configuration": 6,
+    "configuration_macro": 0
+  },
+  "ROM_reliability": {
+    "selected_policy": "fault-free ROM reads, no ECC",
+    "ROM_ECC": false,
+    "SECDED": false,
+    "ROM_parity_sidecars": 0,
+    "weight_physical_bits": 274,
+    "weight_used_packed_FP8_bits": 264,
+    "weight_used_packed_FP4_bits": 272,
+    "weight_metadata": "source exponent fields, not ECC; no ROM checking/correction in selected0032",
+    "configuration_physical_bits": 0,
+    "configuration_payload_bits": 48,
+    "configuration_spare_bits": 0,
+    "configuration_source": "q[47:0]; upper24 unused, not parity",
+    "mutable_control_identity_address_and_fault_protection_retained": true
+  },
+  "configuration_provider": {
+    "selected": false,
+    "default_OFF": true,
+    "source": null,
+    "finite_words": 0,
+    "PHW": 6,
+    "NSEG": 8,
+    "CW": 25,
+    "physical_rows": 0,
+    "macro_replicas": 0,
+    "payload_receiver_bits": 48,
+    "physical_address_bits": 0,
+    "read_enable_bits": 1,
+    "macro_bbox_um": null,
+    "macro_reserved_um2": 0.0,
+    "additional_logic_upper_um2": 0.0,
+    "measured_component_standard_cell_um2": null,
+    "exact_checks_per_PQ": 0,
+    "exact_added_loader_cycles": 0,
+    "actual_receiver_bounds": null,
+    "timing": null,
+    "same_root_clock": true,
+    "original_capture_stage": true,
+    "extra_pipeline_stages": 0,
+    "full_field_clock_qualified": false
   },
   "boundary_bits_per_cycle": {
     "XS": 549,
@@ -30,6 +72,7 @@
     "element": 1,
     "logical_banks": 2,
     "real_weight_ROMs": 4,
+    "real_configuration_ROMs": 0,
     "first_return_node": 1
   },
   "mux_demux_fanout": "unchanged QX10 ping-pong capture mux, QZ_NS8/QZ_NE4 copies, class-valid admission and protected return identity",
@@ -58,11 +101,14 @@
   "area": {
     "Z18a_total_um2": 56737.8513,
     "ROM_um2": 31525.459199999998,
+    "weight_ROM_um2": 31525.459199999998,
+    "configuration_ROM_um2": 0.0,
     "engine_logic_um2": 25212.610800000006,
     "engine_stdcell_available_um2": 45713.548800000004,
     "engine_density": 0.6,
     "parent_conservative_cell_upper_um2": 21413.976,
     "parent_density": 0.5,
+    "parent_available_after_cfg_halo_um2": 123120.05184,
     "sum_conservative_body_um2": 78152.046,
     "analytical_slot_fit": true,
     "routed_slot_fit": false

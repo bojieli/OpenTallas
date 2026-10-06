@@ -96,3 +96,9 @@ scalar references E1024/6144. Changed CUTS1 fullgolden PASS remains separately
 pinned at HA2_cuts_exact_r2; no DS/Qwen fulltoken or contextualSSFF claim.
 Mapped32 source-clock diagnosis r1 failed before design load (missing technology
 LEF); failure preserved. Read actual technology/cell LEF for next object reuse.
+
+Actual balanced request mux TREE1 fullNSM32/NL128 lockstep PASS209 grants/
+2048cycles/0mismatches; newactual32caller binding PASS32completions/128TX/
+256RX/789cycles/0added. Source defaultTREE0 retained, newbalancedmasked tree
+adds0FF/0edges. Prebuild full32 gate proxy53657.6um2 before removing old mux;
+no area/physical gain claimed until changedmapped cells/actualcontext route.
