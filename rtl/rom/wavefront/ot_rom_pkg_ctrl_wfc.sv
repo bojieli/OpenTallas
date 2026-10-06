@@ -123,6 +123,12 @@
 `ifndef OT_WFC_PRECOMP
 `define OT_WFC_PRECOMP 0
 `endif
+`ifndef OT_WFC_IN_DEC
+`define OT_WFC_IN_DEC 0
+`endif
+`ifndef OT_WFC_TXQ_SLICE
+`define OT_WFC_TXQ_SLICE 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -139,6 +145,13 @@ module ot_rom_pkg_ctrl_wfc #(
     // PRECOMP: compares / increments of values that are stable for >= 1 cycle before use are taken
     // from registers loaded one edge earlier, and the remaining counters use log-depth increments (0 cycles)
     parameter integer PRECOMP = `OT_WFC_PRECOMP,
+    // IN_DEC: in_ready / rx_* as a final AND-OR of the decoded inbound type over state-only readiness
+    // terms (kept nets), so the link's type bits pass two gate levels to in_ready (0 cycles)
+    parameter integer IN_DEC = `OT_WFC_IN_DEC,
+    // TXQ_SLICE (needs CONTROL_PIPE): the outbound queue in 16 slices, each with its own copies of the
+    // registered completion, read-in-flight, write and read pointers (one-hot), so no control net fans
+    // out to all 512 x TXQ queue bits (0 cycles)
+    parameter integer TXQ_SLICE = `OT_WFC_TXQ_SLICE,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -372,7 +385,8 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [NW-1:0]   tx_pos, tx_idx, tx_tok;
     reg [31:0]     tx_val;
     assign out_valid = (txq_n != 0);
-    assign out_data  = txq_d[QUEUE_SHIFT ? 0 : txq_r];
+    wire [FLIT-1:0] txq_slice_out;
+    assign out_data  = TXQ_SLICE ? txq_slice_out : txq_d[QUEUE_SHIFT ? 0 : txq_r];
     assign out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
     wire tx_pop   = out_valid && out_ready;
     wire tx_space = (txq_n + rd_inflight) < TXQ;
@@ -560,6 +574,13 @@ module ot_rom_pkg_ctrl_wfc #(
     wire side_payload = (rx_st == R_SIDE) && in_valid && in_ready;
     reg st_rx, st_new, st_q, st_fb, st_wk;
     reg [USER_W-1:0] st_user;
+    (* keep *) wire d_hid = in_type == MT_HIDDEN;
+    (* keep *) wire d_side = in_type == MT_SIDE;
+    (* keep *) wire ok_idle = rx_enable && rx_st == R_IDLE;
+    (* keep *) wire ok_hid = rx_enable && rx_st == R_IDLE && !pend;
+    (* keep *) wire ok_res = rx_enable && rx_st == R_IDLE && !(WF && e_rfull);
+    (* keep *) wire ok_body = rx_enable && rx_st != R_IDLE && (rx_st == R_SIDE || (core_free && rx_word_free));
+    wire d_res = !d_hid && !d_side;
     always @(*) begin
         in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0;
         vm_we = 1'b0; vm_waddr = rx_word;
@@ -584,6 +605,12 @@ module ot_rom_pkg_ctrl_wfc #(
         end else begin
             in_ready = core_free && rx_word_free;
             vm_we = in_valid && in_ready;
+        end
+        if (IN_DEC) begin
+            in_ready = ok_body || (d_hid && ok_hid) || (d_side && ok_idle) || (d_res && ok_res);
+            rx_hdr = in_valid && d_hid && ok_hid;
+            rx_side = in_valid && d_side && ok_idle;
+            rx_res = in_valid && d_res && ok_res;
         end
         rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
         rx_side_last = side_payload && in_last && side_user < MAXU;
@@ -831,6 +858,47 @@ module ot_rom_pkg_ctrl_wfc #(
             txq_n <= txq_n + (q_push ? 1'b1 : 1'b0) - (tx_pop ? 1'b1 : 1'b0);
         end
     end
+
+    generate if (TXQ_SLICE) begin : g_txq_slice
+        localparam integer NS = 16, SW = FLIT / NS;
+        initial if (!CONTROL_PIPE || QUEUE_SHIFT || LOCAL_CONTROL || FLIT % NS != 0)
+            $fatal(1, "ot_rom_pkg_ctrl_wfc: TXQ_SLICE needs CONTROL_PIPE, no QUEUE_SHIFT / LOCAL_CONTROL");
+        wire [FLIT-1:0] w_hid = SEND_HIDDEN ?
+            header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val, FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0) :
+            header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val, {NW{1'b0}}, 16'd0);
+        wire [FLIT-1:0] w_res = header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val, {NW{1'b0}}, 16'd0);
+        wire [FLIT-1:0] w_sid = header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0, {NW{1'b0}}, SIDE_A);
+        genvar s, b;
+        for (s = 0; s < NS; s = s + 1) begin : g_s
+            // copies: jd = job_done (the completion register's own D), rd = rd_inflight, ws / rs = txq_w / txq_r one-hot
+            (* keep *) reg jd, rd;
+            (* keep *) reg [TXQ-1:0] ws, rs;
+            reg [SW-1:0] qd [0:TXQ-1];
+            always @(posedge clk or negedge rst_q)
+                if (!rst_q) begin
+                    jd <= 1'b0; rd <= 1'b0; ws <= {{(TXQ-1){1'b0}}, 1'b1}; rs <= {{(TXQ-1){1'b0}}, 1'b1};
+                end else begin
+                    jd <= completion_qual && !job_done; rd <= vm_re;
+                    if (q_push) ws <= (ws << 1) | (ws >> (TXQ - 1));
+                    if (tx_pop) rs <= (rs << 1) | (rs >> (TXQ - 1));
+                end
+            wire wr = jd || q_hdr_r || q_hdr_s || rd;
+            wire [SW-1:0] wd = jd ? w_hid[s*SW +: SW] : q_hdr_r ? w_res[s*SW +: SW] : q_hdr_s ? w_sid[s*SW +: SW]
+                                                     : vm_rq[s*SW +: SW];
+            for (b = 0; b < TXQ; b = b + 1) begin : g_b
+                always @(posedge clk) if (wr && ws[b]) qd[b] <= wd;
+            end
+            reg [SW-1:0] o;
+            integer k;
+            always @(*) begin
+                o = {SW{1'b0}};
+                for (k = 0; k < TXQ; k = k + 1) if (rs[k]) o = o | qd[k];
+            end
+            assign txq_slice_out[s*SW +: SW] = o;
+        end
+    end else begin : g_txq_whole
+        assign txq_slice_out = {FLIT{1'b0}};
+    end endgenerate
 
     generate if (WF) begin : g_wf
         ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
