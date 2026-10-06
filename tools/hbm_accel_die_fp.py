@@ -1587,6 +1587,10 @@ def build_qwen(variant=None):
             r0 = band * 4
             ymid = (row_y[r0] + row_y[r0 + 3] + th) / 2
             yb_ = up(min(max(ymid - ph / 2, y_lo), y_hi - ph), GY)
+            cz0, cz1 = core.y - Q_GAP - ph, core.y + core.h + SHAVE + Q_GAP     # clear of the core slab
+            if yb_ < cz1 and yb_ + ph > cz0:                                     # band mid-height is inside the core
+                yb_ = dn(cz0 - Q_GAP, GY) if ymid < (cz0 + cz1) / 2 else up(cz1 + Q_GAP, GY)
+            yb_ = up(min(max(yb_, y_lo), y_hi - ph), GY)
             blk(f'sp_port{band}', 'qhd_port', mm('port'), yb_, w=bw)
             occ.append((yb_, yb_ + ph + SHAVE))
         occ.sort()
@@ -1607,6 +1611,17 @@ def build_qwen(variant=None):
                     break
             assert placed, ('no free column span for ' + n, h_, gs, occ)
         gs.sort(key=lambda g: -(g[1] - g[0]))
+    for seq, a_, b_ in ((lower, y_lo, core.y - Q_GAP), (upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
+        if band_port:
+            continue
+        hs_ = [up(mm(k_) * 1e6 / bw, GY) for _, k_, _ in seq]
+        gap = (b_ - a_ - sum(hs_)) / (len(seq) + 1)
+        assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a_, b_, sum(hs_))
+        y = a_ + gap
+        for (name, k_, _), h_ in zip(seq, hs_):
+            blk(name, f'qhd_{name[3:]}', mm(k_), up(y, GY), kind='host_slab' if k_ == 'host_b' else 'spine',
+                dom='link' if k_ == 'host_b' else 'stream_1p2')
+            y += h_ + gap
     notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
                  f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
     m = dict(die='qwen', geo=geo, insts=insts, regions=regions, internal_nets=[], groups=groups, hub=hub, tiles=tiles, heads=heads,
