@@ -37,13 +37,13 @@ puts OT_RECEIVER_CAPS_DONE
 exit
 '''.replace('CORNER',corner)
  out.joinpath(f'caps_{corner}.tcl').write_text(tcl)
- cmd=['docker','run','--rm','-v',f'{a.mapped.resolve()}:/mapped.v:ro','-v',f'{out}:/out','--entrypoint','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad',a.image,'-exit','-no_init','-threads','1',f'/out/caps_{corner}.tcl']
+ cmd=['docker','run','--rm','-v',f'{a.mapped.resolve()}:/mapped.v:ro','-v',f'{out}:/out','--entrypoint','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta',a.image,'-exit','-no_init',f'/out/caps_{corner}.tcl']
  with out.joinpath(f'caps_{corner}.log').open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
  if r.returncode or 'OT_RECEIVER_CAPS_DONE' not in out.joinpath(f'caps_{corner}.log').read_text():raise SystemExit(f'actual receiver cap extraction failed {corner}')
  tables={}
  for line in out.joinpath(f'caps_{corner}.tsv').read_text().splitlines()[1:]:
   name,cap,count,sinks=line.split('\t',3);tables[name]=float(cap)
  out.joinpath(f'caps_{corner}.json').write_text(json.dumps(tables,indent=2)+'\n')
-manifest={'source_mapped_sha256':hashlib.sha256(a.mapped.read_bytes()).hexdigest(),'tool':'actual OpenROAD26Q3 reader','image':subprocess.check_output(['docker','image','inspect',a.image,'--format','{{.Id}}'],text=True).strip(),'time_unit':'ps','cap_unit':'fF','context':'measured source-local adjacent copy, external SM/die routing OPEN','corner_files':{n:hashlib.sha256(out.joinpath(n).read_bytes()).hexdigest() for n in ['caps_ss.tsv','caps_ff.tsv','caps_ss.json','caps_ff.json']}}
+manifest={'source_mapped_sha256':hashlib.sha256(a.mapped.read_bytes()).hexdigest(),'tool':'actual OpenSTA shipped in ORFS26Q3 image; no geometry invented','image':subprocess.check_output(['docker','image','inspect',a.image,'--format','{{.Id}}'],text=True).strip(),'time_unit':'ps','cap_unit':'fF','context':'measured source-local adjacent copy, external SM/die routing OPEN','corner_files':{n:hashlib.sha256(out.joinpath(n).read_bytes()).hexdigest() for n in ['caps_ss.tsv','caps_ff.tsv','caps_ss.json','caps_ff.json']}}
 out.joinpath('receiver.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Actual SS/FF selected receiver pin caps measured')
