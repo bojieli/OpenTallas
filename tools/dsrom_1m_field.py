@@ -96,6 +96,12 @@ TB = ROOT / "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp"
 TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/v41_rom_ksplit_bankmap.py",
          ROOT / "tools/rtl_v41_rom_array.py", ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py",
          ROOT / "tools/v41_die_field.py"]
+# --qelem N (default 0 = off): the FP8/FP4 pairs are the DS-V4.1 ROM q-element the S81 die is built from
+# (ot_v41_rom_elem_q_qx_w10 at its routed parameters, QX = N; ot_v41_pair_w17w10 QELEM), BF16-capable pairs keep W10's
+QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10", "ot_v41_kreg",
+                                              "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
+                                              "ot_v41_bterm3_w10", "ot_v41_bterm4_w10",
+                                              "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
 S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
 
@@ -480,12 +486,15 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([VERILATOR, "-V"], text=True)).group(1)
     params = ["-GFAST=1", "-GPP=1", "-GBP=0", f"-GNP={NP}", f"-GR={NR}", f"-GNBF={NBF}", f"-GPHW={PHW}", f"-GVAW={VAW}"]
+    rtl = RTL + (QRTL if a.qelem else [])
+    if a.qelem:
+        params += ["-GQELEM=1", f"-GQXV={a.qelem}"]
     mdir = out / "flat"
     steps = []
     for name, cmd in (
             ("verilate", [VERILATOR, "--cc", "-O3", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
                           "--top-module", "ot_v41_fieldtop_w17w10", "--prefix", "Vflat", "--Mdir", str(mdir), *params,
-                          *map(str, DIE + ROMS + RTL)]),
+                          *map(str, DIE + ROMS + rtl)]),
             ("make", ["make", "-C", str(mdir), "-f", "Vflat.mk", f"-j{a.jobs}", "Vflat__ALL.a", "OPT_FAST=-O2",
                       "OPT_SLOW=-O1"]),
             ("link", ["g++", "-std=c++20", "-O2", f"-DNR={NR}", f"-DVAW={VAW}", f"-I{vroot}/include",
@@ -499,7 +508,7 @@ def cmd_build(a):
         print(name, steps[-1], flush=True)
         if p.returncode:
             raise SystemExit(f"{name} failed: {(p.stdout + p.stderr)[-3000:]}")
-    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, tb_sha256=sha(out / "tb"),
+    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, qelem=a.qelem, tb_sha256=sha(out / "tb"),
                                                     simulator=subprocess.check_output([VERILATOR, "--version"],
                                                                                       text=True).strip()),
                                                indent=1) + "\n")
@@ -836,7 +845,8 @@ def cmd_record(a):
                                                               "t_read", "t_x", "t_ret", "issue", "depth", "wire",
                                                               "tree", "ksplit", "adder_levels", "bind")}),
             rows_checked=sum(p["rows_checked"] for p in pos), exact=all(p["exact"] for p in pos)))
-    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES}
+    qelem = build.get("qelem", 0)
+    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES + (QRTL if qelem else [])}
     ck = Ckpt(a.snapshot)
     for f in sorted(set(ck.idx[t] for L in plan["layers"] for t in ck.idx if t.startswith(f"layers.{L}."))):
         ck.raw(next(t for t in ck.idx if ck.idx[t] == f))
@@ -866,6 +876,9 @@ def cmd_record(a):
                         "phases; routed-geometry wire stages added analytically. Not a whole-die simulation; no SS/FF "
                         "timing claim for the field here."),
         vehicle=dict(top="ot_v41_fieldtop_w17w10 (pinned, flat)", NP_slots=NP, R=NR, NBF_slots=NBF,
+                     qelem=(dict(element="ot_v41_rom_elem_q_qx_w10", QX=qelem, slots="FP8/FP4 (non-BF16) pairs",
+                                 params="NB 2 MTP 1 EARLY 1 FAST 1 PP 1 QTIMING_FIX 1 QPIPE 1 QP_XS 1 QP_CAP 0 QP_P1 1 "
+                                        "QP_CSAM 10 QZ 1 QZ_NS 8 QZ_NE 4 QY 1") if qelem else None),
                      bf_slots=BF_SLOTS, FAST=1, PP=1, BP=0, PHW=PHW, VAW=VAW, VRD=64, BST=BST_IN_VEHICLE, RST=1,
                      RD=64, ROOTD=128, return_levels_in_region=6,
                      description=__doc__.split("VEHICLE.")[1].split("PHASES.")[0].strip()),
@@ -914,6 +927,9 @@ def main() -> int:
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--model-dump", type=Path, default=None)
     ap.add_argument("--record", type=Path, default=REC)
+    ap.add_argument("--qelem", type=int, default=0,
+                    help="build: 0 = the pinned W10 element (default); N > 0 = the DS q-element with QX = N on the "
+                         "FP8/FP4 pairs (ot_v41_pair_w17w10 QELEM)")
     a = ap.parse_args()
     G.set_arith("chunk8")
     steps = {"bind-schedules": [cmd_bind_schedules], "plan": [cmd_plan], "extract": [cmd_extract], "build": [cmd_build], "run": [cmd_run],

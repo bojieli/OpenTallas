@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "side_u30",
+  "host": "ot-epyc2",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src",
+  "original_physical_status": "pass",
+  "signoff_ss_ff": true,
+  "SS_setup_ps": 18.158474,
+  "FF_hold_ps": 1.01108,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "original_io_false_paths": true,
+  "output_register_direct_check": "outputs 33 input_paths 36 not_register_direct 0",
+  "mandatory_clock_candidate": true,
+  "full_SU_context_qualified": false,
+  "actual_qualified_rate_comparison": null,
+  "adopted": false,
+  "note": "Needed c12 side clock candidate retained. Leaf reg-reg qualification only: parent loaded IO, fullSU control/SFU/reducer closure and qualified reference rate comparison remain open. Same-clock slower historical projections are not a qualified rejection. No reroute/tuning/adoption."
+}

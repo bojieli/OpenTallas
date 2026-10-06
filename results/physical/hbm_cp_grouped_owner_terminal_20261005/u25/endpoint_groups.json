@@ -1,0 +1,475 @@
+{
+  "schema": "opentallas.harvey.hbm_cp_terminal.v1",
+  "verdict": "REJECT_SS_SETUP",
+  "source_commit": "05883a738fa6219797883d8cd71c802a83b8456c",
+  "production_source_commit": "06335aaab7f478294cd11fd5f71e4a183badc799",
+  "remote_host": "ot-epyc2",
+  "remote_job": "/srv/opentallas-scratch2/jobs/maxwell-cp-grouped-owner-routes-r1/u25",
+  "original_supervisor": 3462915,
+  "original_driver": 3462918,
+  "terminal_exit": 0,
+  "route_exit": 0,
+  "corner_exit": 0,
+  "parameters": {
+    "ENABLE": 1,
+    "REGISTERED_OUTPUTS": 1,
+    "REGISTERED_STATUS": 1,
+    "REGISTERED_BOUNDARY": 1,
+    "GROUPED_OWNER_BOUNDARY": 1
+  },
+  "policy": {
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_fraction": 0.2,
+    "utilization": 25,
+    "density": 0.5
+  },
+  "corners": {
+    "schema": "opentallas.w18.corner_sta.v1",
+    "orfs_dir": "/srv/opentallas-scratch2/jobs/maxwell-cp-grouped-owner-routes-r1/u25/work/orfs",
+    "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hbm_integrated_su_cp_bind\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core",
+    "setup_ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -224.63,
+      "tns_ps": -2005.9,
+      "worst_register_d_slack_ps": -224.632034,
+      "worst_reg_to_reg_slack_ps": -104.39,
+      "worst_input_to_reg_slack_ps": 467.85,
+      "worst_output_port_slack_ps": -224.632034,
+      "violating_d_pins": 69,
+      "errors": [],
+      "odb_sha256": "08bacc5ecd8f9736cf3087bc152487092d75aca036c9aef3b9c74f1488ca17ac",
+      "spef_sha256": "62d987f7fdf33b976f5ee4adec8bdd14ed4cc9af241d05703e46f177102f6a60",
+      "sdc_sha256": "ef1cfb830d4a4d6e855d598ef15006d462e4b08947c6c5c392f14661fae480d6"
+    },
+    "hold_ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": 12.0,
+      "tns_ps": 0.0,
+      "worst_register_d_slack_ps": 12.002628,
+      "worst_reg_to_reg_slack_ps": 12.0,
+      "worst_input_to_reg_slack_ps": 90.03,
+      "worst_output_port_slack_ps": 279.9216,
+      "violating_d_pins": 0,
+      "errors": [],
+      "odb_sha256": "08bacc5ecd8f9736cf3087bc152487092d75aca036c9aef3b9c74f1488ca17ac",
+      "spef_sha256": "62d987f7fdf33b976f5ee4adec8bdd14ed4cc9af241d05703e46f177102f6a60",
+      "sdc_sha256": "ef1cfb830d4a4d6e855d598ef15006d462e4b08947c6c5c392f14661fae480d6"
+    },
+    "libraries": {
+      "ss": [
+        "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+      ],
+      "ff": [
+        "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+      ]
+    },
+    "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+    "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+    "closes_signoff": false
+  },
+  "actual_flip_flop_D_violations": [
+    {
+      "slack_ps": -83.734741,
+      "endpoint": "on.phase_n[3]$_DFF_PN1_/D"
+    },
+    {
+      "slack_ps": -90.642105,
+      "endpoint": "on.phase_n[4]$_DFF_PN1_/D"
+    },
+    {
+      "slack_ps": -61.00148,
+      "endpoint": "on.phase_n[5]$_DFF_PN1_/D"
+    },
+    {
+      "slack_ps": -67.52626,
+      "endpoint": "on.phase_n[7]$_DFF_PN1_/D"
+    },
+    {
+      "slack_ps": -76.811279,
+      "endpoint": "on.phase_q[3]$_DFF_PN0_/D"
+    },
+    {
+      "slack_ps": -104.385612,
+      "endpoint": "on.phase_q[4]$_DFF_PN0_/D"
+    },
+    {
+      "slack_ps": -58.832607,
+      "endpoint": "on.phase_q[5]$_DFF_PN0_/D"
+    },
+    {
+      "slack_ps": -63.932915,
+      "endpoint": "on.phase_q[7]$_DFF_PN0_/D"
+    }
+  ],
+  "combinational_D_input_violations": [
+    {
+      "slack_ps": -81.674171,
+      "endpoint": "_2758_/D"
+    },
+    {
+      "slack_ps": -81.674171,
+      "endpoint": "_2759_/D"
+    },
+    {
+      "slack_ps": -59.261818,
+      "endpoint": "_2778_/D"
+    },
+    {
+      "slack_ps": -73.239441,
+      "endpoint": "_2779_/D"
+    },
+    {
+      "slack_ps": -66.70797,
+      "endpoint": "_2795_/D"
+    },
+    {
+      "slack_ps": -194.2276,
+      "endpoint": "_2818_/D"
+    },
+    {
+      "slack_ps": -162.951599,
+      "endpoint": "_2819_/D"
+    },
+    {
+      "slack_ps": -213.666138,
+      "endpoint": "_2820_/D"
+    },
+    {
+      "slack_ps": -121.911148,
+      "endpoint": "_2821_/D"
+    },
+    {
+      "slack_ps": -203.279419,
+      "endpoint": "_2822_/D"
+    },
+    {
+      "slack_ps": -167.478622,
+      "endpoint": "_2823_/D"
+    },
+    {
+      "slack_ps": -224.632034,
+      "endpoint": "_2835_/D"
+    },
+    {
+      "slack_ps": -61.001595,
+      "endpoint": "_2838_/D"
+    },
+    {
+      "slack_ps": -198.253387,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[0].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -139.832703,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[0].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -213.487091,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[10].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -165.65567,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[10].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -217.120926,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[11].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -170.691406,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[11].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -213.666183,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[12].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -166.230103,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[12].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -203.261322,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[13].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -151.641693,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[13].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -201.106628,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[14].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -148.324417,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[14].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -185.709366,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[15].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -140.431396,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[15].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -155.164032,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[16].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -107.524849,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[16].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -157.894516,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[17].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -116.979424,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[17].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -167.833435,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[18].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -116.2547,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[18].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -111.721191,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[19].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -64.299316,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[19].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -199.788818,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[1].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -148.430939,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[1].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -108.575424,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[20].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -62.18512,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[20].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -110.157913,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[21].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -62.241074,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[21].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -121.911118,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[22].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -73.956093,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[22].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -127.074684,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[23].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -74.28569,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[23].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -162.951584,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[2].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -112.138191,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[2].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -207.595688,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[3].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -160.594376,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[3].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -201.727921,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[4].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -148.783829,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[4].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -167.478607,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[5].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -114.439346,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[5].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -134.473709,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[6].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -83.474312,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[6].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -162.714294,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[7].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -121.23175,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[7].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -224.631973,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[8].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -150.811172,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[8].compare_byte/_18_/D"
+    },
+    {
+      "slack_ps": -223.129349,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[9].compare_byte/_13_/D"
+    },
+    {
+      "slack_ps": -174.459381,
+      "endpoint": "on.registered_status.grouped_owner_boundary.bytes[9].compare_byte/_18_/D"
+    }
+  ],
+  "output_violations": [
+    {
+      "slack_ps": -220.031876,
+      "endpoint": "done"
+    },
+    {
+      "slack_ps": -142.734207,
+      "endpoint": "fault"
+    },
+    {
+      "slack_ps": -213.621124,
+      "endpoint": "lease_v"
+    },
+    {
+      "slack_ps": -213.813416,
+      "endpoint": "owned"
+    },
+    {
+      "slack_ps": -213.611465,
+      "endpoint": "pending"
+    },
+    {
+      "slack_ps": -170.579224,
+      "endpoint": "quiet"
+    },
+    {
+      "slack_ps": -224.632034,
+      "endpoint": "release_v"
+    }
+  ],
+  "literal_D_warning": "69 literal */D violations = 8 actual FF D + 61 combinational D inputs. worst_register_d_slack_ps in original corner JSON is a literal-name scan, not a FF-only metric. all_registers -data_pins also returns asynchronous control pins; only the listed /D FF endpoints are counted here.",
+  "reset": {
+    "SS_recovery_ps": 467.85,
+    "SS_endpoint": "on.registered_header.decoder.held_code[0][12]",
+    "FF_removal_ps": 90.03,
+    "FF_endpoint": "on.phase_q[2]",
+    "evidence": [
+      "u25/w18_sta_ss.log",
+      "u25/w18_sta_ff.log"
+    ]
+  },
+  "physical_metrics": {
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "clock_count": 1,
+    "core_area_um2": 1854.58,
+    "die_area_um2": 2235.97,
+    "drc_errors": 0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    "fmax_hz": 945211000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0,
+    "hold_wns_ns": 0.010624000000000001,
+    "instance_count": 13652,
+    "library_time_unit_ns": 0.001,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "missing_metadata_keys": [],
+    "orfs_aggregate_fmax_hz": 945211000.0,
+    "per_clock_fmax_hz": {},
+    "power_total_w": 0.00165393,
+    "raw_timing_library_units": {
+      "hold_tns_ns": 0,
+      "hold_wns_ns": 10.624,
+      "setup_tns_ns": -2005.89,
+      "setup_wns_ns": -224.632
+    },
+    "routed_nets": 4269,
+    "routed_wirelength_um": 15112,
+    "sequential_area_um2": 185.37,
+    "sequential_cell_count": 489,
+    "setup_tns_ns": -2.00589,
+    "setup_violations": 15,
+    "setup_wns_ns": -0.224632,
+    "standard_cell_area_um2": 553.165,
+    "standard_cell_count": 4577,
+    "utilization_fraction": 0.29827,
+    "vias": 32234
+  },
+  "source_hooks": {
+    "owner_byte_compare": "source/ot_hbm_integrated_su_cp_bind.sv:141-170,315-318",
+    "live_owner_and_shape": "source/ot_hbm_integrated_su_cp_bind.sv:104-114",
+    "phase_feedback": "source/ot_hbm_integrated_su_cp_bind.sv:237-259; release_v&&release_r at250 feeds next_phase RELEASE -> CLEANUP",
+    "reset": "source/ot_hbm_integrated_su_cp_bind.sv:256-258; por_n asynchronous reset preserved"
+  },
+  "comparison": {
+    "prior_record_commit": "06335aaab7f478294cd11fd5f71e4a183badc799",
+    "prior_output_ps": -119.386002,
+    "new_output_ps": -224.632034,
+    "output_change_ps": -105.246032,
+    "prior_true_R2R_ps": 95.6,
+    "new_true_R2R_ps": -104.385612,
+    "R2R_change_ps": -199.985612,
+    "prior_FF_hold_ps": 10.948853,
+    "new_FF_hold_ps": 12.002628
+  },
+  "functional_basis": "Existing owner-reported exact gate PASS8713, unchanged prelease/grant/rearm 5/1/1; no replay during collection. Physical result rejects adoption.",
+  "next_source_owner": "main/Claude structural decision; collector has no RTL or route authority",
+  "remote_ODB_SPEF": "Original artifacts retained remotely with hashes in corners; no source/checkpoint/failed record deleted or overwritten."
+}

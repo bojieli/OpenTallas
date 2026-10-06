@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.dsrom-field-qelem.element-difference.v1",
+ "question": "How the field vehicle's pinned element (ot_v41_rom_elem_w10, as tools/dsrom_1m_field.py builds it: FAST 1, PP 1, BP 0, NB 2, MTP 1, EARLY 1, BF16 0 on FP8/FP4 slots, no QTIMING_FIX / QPIPE) differs from the element the S81 die contains on its FP8/FP4 pairs",
+ "s81_die_contents": {
+  "fp8_fp4_pairs": "1,898 q pairs: the routed abstract ot_v41_rom_elem_q_qp_w10 (510.84 x 126.9 um, R_cap0 readback: QTIMING_FIX 1, QPIPE 1, QP_XS 1, QP_CAP 0, QP_P1 1, QP_CSAM 10; tools/dsrom_s81_fulldie.py Q_LEF); the closure successor is ot_v41_rom_elem_q_qx_w10 (QZ 1, QY 1, QX N) on frame D (510.84 x 151.2, inside the 157.68 um element slot)",
+  "bf16_pairs": "519 pairs placed as a generated placeholder abstract dsfd_bf (1002.888 x 157.68 um), not a routed RTL element; the vehicle keeps the W10 element with BF16 = 1 on its BF16 slots for these (unchanged by this record)"
+ },
+ "differences": [
+  {"item": "QPIPE boundary (QP_XS 1)", "base": "go, go_bf, configuration and x beats used as they arrive", "q": "go, go_bf and the configuration registered on the free clock, rst_n through a local synchroniser, the x beats registered: every input acts one cycle later (the walker / beat relation is unchanged because all inputs move together)", "cycles": "+1 at the input"},
+  {"item": "lane P1 split (QP_P1 1, ot_v41_bterm3_w10 / bterm4 P1S 1)", "base": "ot_v41_bterm2_w10, P1 decode + product in one stage (LATENCY 11)", "q": "P1a decode | P1b product (LATENCY 12)", "cycles": "+1 per term"},
+  {"item": "QPIPE output delay", "base": "partials leave as the segment tree emits them", "q": "the output stage reads QK-delayed shadow tables; outputs (pv/pval/prow/pseg/pnseg/perr/ppos) and busy are delayed L = QP_XS + QP_CAP + QP_P1 = 2 cycles in total relative to the qt element", "cycles": "L = 2 (QP_CAP 0)"},
+  {"item": "first carry-save stage (QP_CSAM 10)", "base": "32 -> 7 in P2", "q": "32 -> 10 in P2, 10 -> 2 in P3 (regrouped, bit-identical)", "cycles": "0"},
+  {"item": "QTIMING_FIX", "base": "single x-need match", "q": "HC = 3 duplicated match copies, frontend cone re-cut", "cycles": "0"},
+  {"item": "QZ", "base": "-", "q": "kept per-macro registers (ot_v41_kreg), registered ICG enable, split reset synchroniser, duplicated selects, chain3", "cycles": "0"},
+  {"item": "QY", "base": "fault port combinational", "q": "registered fault port (+2 fault cycles), r_dp decode at the boundary, walker class-last look-ahead", "cycles": "0 data; fault +2"},
+  {"item": "QX 1..8", "base": "-", "q": "one-hot walker and x-need walker steps, registered case-A / hazard / segment flags, kept go_e copies, lane P2S (bterm4), segment-tree kept copies (segtree4 XC 4)", "cycles": "0 (cycle-identical outputs to the qy element)"},
+  {"item": "segment tree", "base": "ot_v41_segtree2: LAT + 3 = 11 cycles per tree level (LAT 8)", "q": "QX <= 8: ot_v41_segtree3/4, LAT + 3 = 11 (cycle-identical); QX = 9: ot_v41_segtree5, decide stage split, LAT + 4 = 12 cycles per level (output times later and data-dependent, same values and per-segment order)", "cycles": "QX 9: +1 per tree level reached"},
+  {"item": "row-decode fix", "base": "main b9e873649: entry 2NSEG+1+s -> s_row[NSEG+s] for every s", "q": "the q-element copies on claude/dsrom-qz2-20261004 predate it (ot_v41_rom_elem_qx_w10 s_row / so_row decode wrapped s = NSEG-1); this record's copy applies the fix (owner of the closure branch to merge it)", "cycles": "0"}
+ ],
+ "consequence": "Every ROM-field node of the 1M composition (field.json) was measured on an element the S81 die does not contain on its FP8/FP4 pairs: without the q-element's input register, lane P1 split and output delay (and, for QX 9, the extra tree-level cycle).  BF16 phases keep their W10 BF16 element in both measurements."
+}

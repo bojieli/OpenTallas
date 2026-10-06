@@ -1,0 +1,34 @@
+{
+  "scope": "SDC parsing and serialized network/source contract on retained mapped CP context netlist only; no placement, synthesis, CTS, routing or timing closure",
+  "tool": "OpenROAD26Q3-1510-g6cb3f2b704",
+  "corners": {
+    "SS": {
+      "exit": 0
+    },
+    "FF": {
+      "exit": 0
+    }
+  },
+  "network_min_ps": 90,
+  "network_max_ps": 100,
+  "source_phase_ps": 0,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "period_ps": 833.333333333,
+  "original_failure_preserved": "2c976651d",
+  "retained_netlist": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.v",
+  "post_CTS": "remove analytical ideal network bounds; propagated real clock and corner-specific SPEF; original source phase and uncertainties retained",
+  "sha256": {
+    "retained_SS_roundtrip.sdc": "1dc1c1c9207ef2bded174267320466f23507e3ddfcd671d07051fdcbe0974e5c",
+    "contract_FF_r2.log": "6bb5424c3a8fe22a7c5a1d91198852b84d0a0b64d9bfcca7420fdcc1b9026c61",
+    "retained_FF_roundtrip.sdc": "7507505f6cde9ef6bab1b20749311eb058248a6c40651c7f03157de65821ad79",
+    "w2_parent_clk_sm.sdc": "b67f2361bc2dd71f9dd22d902b84310ac4a7230cf9b4a1830a22dd09f1096992",
+    "original_failed_constraint.sdc": "b204cccfaa6db2147fc621bdb6399b1571b1a2bb9afccd55358a58f4544a3de5",
+    "contract_SS_r2.log": "3c65382e83c2ddf28e5e02578360cd2025c0a25eef8853f1b7f54f57225cdff1",
+    "cp_parent_clk_sm.sdc": "9532738e4b67c4d703b49dbd7beecd2dcbdd31e17367358b6f1244cc88128278",
+    "cp_association_parent_clk_sm.sdc": "480d9824c7a7c04e41664b37562176f3bfabdebe96879c432e64822fee1628d2",
+    "check_retained.tcl": "a5e043e248bf348328d7b8bec7fc130010c2a1758438fffbec2c570bdcc04baf",
+    "retained_netlist_constraint.sdc": "b807df47c8ea1945c2f83cf3b3728ac73a00cd2c12aaef799478962b9d84312b"
+  },
+  "retained_netlist_sha256": "04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e"
+}

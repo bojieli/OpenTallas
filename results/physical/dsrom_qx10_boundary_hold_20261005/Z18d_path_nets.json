@@ -1,0 +1,112 @@
+{
+  "netlist_sha256": "2001c437bfdf2c723d5a39f16986fdae6e490b3ea20fda471223404a2a861121",
+  "source_netlist": "/srv/opentallas-scratch/claude/dsrom-qtclose/jobs/Z18d/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qx_w10_asap7_dsrom_qx10_Z18d_20261004/base/6_final.v",
+  "selected_cells": {
+    "u_e.i2x_q0[174]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_869_u_e.g_cg.u_cg.gclk_regs",
+        "D": "_048458_",
+        "QN": "_017286_"
+      }
+    },
+    "u_e.g_mac[0].g_mz.u_x/q[450]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_863_u_e.g_cg.u_cg.gclk_regs",
+        "D": "net29146",
+        "QN": "u_e.g_mac[0].g_mz.u_x/_0080_"
+      }
+    },
+    "u_e.i1_q1[133]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_400_u_e.g_cg.u_cg.gclk_regs",
+        "D": "_000313_",
+        "QN": "_020542_"
+      }
+    },
+    "u_e.i2x_q0[133]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_863_u_e.g_cg.u_cg.gclk_regs",
+        "D": "_048413_",
+        "QN": "_017327_"
+      }
+    },
+    "u_e.g_ir.r_xs_q0[199]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_857_u_e.g_cg.u_cg.gclk_regs",
+        "D": "net21990",
+        "QN": "_016151_"
+      }
+    },
+    "u_e.fw_q0[199]$_DFF_P_": {
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "clknet_leaf_866_u_e.g_cg.u_cg.gclk_regs",
+        "D": "u_e.g_ir.r_xs_q0[199]",
+        "QN": "_015031_"
+      }
+    },
+    "hold29146": {
+      "type": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "_017286_",
+        "Y": "net29145"
+      }
+    },
+    "hold29147": {
+      "type": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "u_e.i2x_q0[174]",
+        "Y": "net29146"
+      }
+    },
+    "_168537_": {
+      "type": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": "net29145",
+        "Y": "u_e.i2x_q0[174]"
+      }
+    },
+    "hold44752": {
+      "type": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "_020542_",
+        "Y": "net44751"
+      }
+    },
+    "_162870_": {
+      "type": "INVx2_ASAP7_75t_R",
+      "pins": {
+        "A": "net44751",
+        "Y": "u_e.i1_q1[133]"
+      }
+    },
+    "_162872_": {
+      "type": "OA21x2_ASAP7_75t_R",
+      "pins": {
+        "A1": "net14230",
+        "A2": "u_e.i1_q1[133]",
+        "B": "_147228_",
+        "Y": "_048413_"
+      }
+    },
+    "hold39957": {
+      "type": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "_016151_",
+        "Y": "net39956"
+      }
+    },
+    "_167413_": {
+      "type": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": "net39956",
+        "Y": "u_e.g_ir.r_xs_q0[199]"
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+SOURCE1_LIFECYCLE MAXU866 PIPE=0 warm_reset_cancel=PASS prompt_reads=3 launches=3 packets=3 accepted_results=3 committed=3 END_users_done=1 post_END_edges=80 prompt_tag_checks=3 held_done_checks=248 fault=0 PASS
+SOURCE1_LIFECYCLE MAXU866 PIPE=1 warm_reset_cancel=PASS prompt_reads=3 launches=3 packets=3 accepted_results=3 committed=3 END_users_done=1 post_END_edges=80 prompt_tag_checks=3 held_done_checks=254 fault=0 PASS
+SOURCE1_LIFECYCLE_ALL PASS
+/srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r3/rtl/test/dsrom_wavefront/tb_wfc_source_lifecycle.sv:93: $finish called at 304000 (1ps)

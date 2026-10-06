@@ -2307,6 +2307,8 @@ def run_pnr(
             ORFS_IMAGE, "bash", "-lc",
             "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; "
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+            "python3 /src/tools/orfs_allcorner_spef.py "
+            "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && "
             "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
             + (f"NUM_CORES={orfs_num_cores()} " if orfs_num_cores() else "")
             + goal,
@@ -2490,6 +2492,11 @@ def run_pnr(
 
     return {
         "platform": platform_name,
+        "extracted_spef_annotation": {
+            "policy": "explicit read_spef -corner for every configured CORNERS scene before finish metrics",
+            "helper": "tools/orfs_allcorner_spef.py",
+            "helper_sha256": sha256_file(ROOT / "tools/orfs_allcorner_spef.py"),
+        },
         **({"w11_endpoint_netlist": endpoint_netlist} if endpoint_netlist else {}),
         "design_nickname": nickname,
         "netlist_normalization": {

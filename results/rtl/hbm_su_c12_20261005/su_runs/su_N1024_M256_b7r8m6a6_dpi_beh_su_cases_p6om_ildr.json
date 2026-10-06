@@ -1,0 +1,9059 @@
+{
+ "schema": "opentallas.rtl.dshbm_baseline_su_chains.v1",
+ "generated_utc": "2026-10-05T20:21:09Z",
+ "source_commit": "",
+ "config": {
+  "N": 1024,
+  "M": 256,
+  "BCAST": 7,
+  "RET": 8,
+  "MLAT": 6,
+  "ALAT": 6,
+  "build_s": 0.0,
+  "fp": "dpi_beh",
+  "fp_note": "as dpi, and the keep-prefix integer adders (rtl/hdc/ot_hdc_prefix.sv) are the behavioural `+` (rtl/test/sim_hdc_prefix_beh.sv, combinational, same function); equivalence: su-equiv at N 64."
+ },
+ "status": "pass",
+ "skipped": [],
+ "chains": [
+  {
+   "chain": "L0.hc_pre_norm.attn",
+   "layer": "L0",
+   "fn": "hc_pre_norm",
+   "op_id": 1,
+   "tag": "attn_norm",
+   "reps": 6,
+   "op_major": true,
+   "ops": 30,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 553,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "3ccfec56395c237aefc1ba31d11ff1fddd98e8fa371f0a836c757a9cd7c220ff",
+   "cycles_end": 553,
+   "first_emit_to_last_write": 530,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 18,
+     "last_write": 73,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 26,
+     "last_write": 81,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 34,
+     "last_write": 89,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 42,
+     "last_write": 97,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 50,
+     "last_write": 105,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 58,
+     "last_write": 113,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 67,
+     "last_emit": 71,
+     "last_write": 126,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 75,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 83,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 91,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 107,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 124,
+     "last_write": 179,
+     "last_result": 294,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 128,
+     "last_emit": 132,
+     "last_write": 187,
+     "last_result": 302,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 136,
+     "last_emit": 140,
+     "last_write": 195,
+     "last_result": 310,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 144,
+     "last_emit": 148,
+     "last_write": 203,
+     "last_result": 318,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 152,
+     "last_emit": 156,
+     "last_write": 211,
+     "last_result": 326,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 160,
+     "last_emit": 164,
+     "last_write": 219,
+     "last_result": 334,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 303,
+     "last_emit": 303,
+     "last_write": 450,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 311,
+     "last_emit": 311,
+     "last_write": 458,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 319,
+     "last_emit": 319,
+     "last_write": 466,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 327,
+     "last_emit": 327,
+     "last_write": 474,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 335,
+     "last_emit": 335,
+     "last_write": 482,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 343,
+     "last_emit": 343,
+     "last_write": 490,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 452,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 460,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 468,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 476,
+     "last_emit": 480,
+     "last_write": 535,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 484,
+     "last_emit": 488,
+     "last_write": 543,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.q_norm_kv_row",
+   "layer": "L0",
+   "fn": "q_norm_kv_row",
+   "op_id": 5,
+   "tag": "q_norm, kv_norm, RoPE, FP8 window row (replicated window)",
+   "reps": 6,
+   "op_major": true,
+   "also_bitexact_window_row": true,
+   "lever_il": true,
+   "ops": 42,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 559,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "9a757ff5c203856920ab638cf80919ef28037f04d91fd2b54b0e0b310305d768",
+   "cycles_end": 559,
+   "first_emit_to_last_write": 536,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 15,
+     "last_write": 70,
+     "last_result": 173,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 23,
+     "last_write": 78,
+     "last_result": 181,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 31,
+     "last_write": 86,
+     "last_result": 189,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 39,
+     "last_write": 94,
+     "last_result": 197,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 47,
+     "last_write": 102,
+     "last_result": 205,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 55,
+     "last_write": 110,
+     "last_result": 213,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 68,
+     "last_emit": 68,
+     "last_write": 123,
+     "last_result": 214,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 125,
+     "last_result": 216,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 133,
+     "last_result": 224,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
+     "last_result": 232,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 149,
+     "last_result": 240,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 157,
+     "last_result": 248,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 182,
+     "last_emit": 182,
+     "last_write": 329,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 190,
+     "last_emit": 190,
+     "last_write": 337,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 198,
+     "last_emit": 198,
+     "last_write": 345,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 206,
+     "last_emit": 206,
+     "last_write": 353,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 214,
+     "last_write": 361,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 222,
+     "last_emit": 222,
+     "last_write": 369,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 230,
+     "last_emit": 230,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 238,
+     "last_emit": 238,
+     "last_write": 385,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 246,
+     "last_emit": 246,
+     "last_write": 393,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 254,
+     "last_write": 401,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 262,
+     "last_emit": 262,
+     "last_write": 409,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 270,
+     "last_emit": 270,
+     "last_write": 417,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 363,
+     "last_emit": 364,
+     "last_write": 419,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 365,
+     "last_emit": 366,
+     "last_write": 421,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 373,
+     "last_emit": 374,
+     "last_write": 429,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 381,
+     "last_emit": 382,
+     "last_write": 437,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 389,
+     "last_emit": 390,
+     "last_write": 445,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 397,
+     "last_emit": 398,
+     "last_write": 453,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 405,
+     "last_emit": 405,
+     "last_write": 460,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 413,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 421,
+     "last_emit": 421,
+     "last_write": 476,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 429,
+     "last_emit": 429,
+     "last_write": 484,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 437,
+     "last_emit": 437,
+     "last_write": 492,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 445,
+     "last_emit": 445,
+     "last_write": 500,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 454,
+     "last_write": 509,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 462,
+     "last_emit": 462,
+     "last_write": 517,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 470,
+     "last_emit": 470,
+     "last_write": 525,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 478,
+     "last_emit": 478,
+     "last_write": 533,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 486,
+     "last_emit": 486,
+     "last_write": 541,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 494,
+     "last_emit": 494,
+     "last_write": 549,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.q_rope",
+   "layer": "L0",
+   "fn": "q_rope",
+   "op_id": 7,
+   "tag": "q RoPE (own head)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 12,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 167,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "cc8ab024b1c01b721e0447d3b952f1438c94dcd280a64052cdf745020097ff97",
+   "cycles_end": 167,
+   "first_emit_to_last_write": 144,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 62,
+     "last_emit": 62,
+     "last_write": 117,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 125,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 133,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 149,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 157,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attend",
+   "layer": "L0",
+   "fn": "attend",
+   "op_id": 8,
+   "tag": "attention of the die's head (window + selection)",
+   "reps": 6,
+   "op_major": true,
+   "T": 128,
+   "ops": 36,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 613,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "b3a3638574e576ef023a26870878e88c1f378de9826f0087f72e4097aa50699a",
+   "cycles_end": 613,
+   "first_emit_to_last_write": 590,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": 148,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": 156,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": 164,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": 172,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": 180,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": 188,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 157,
+     "last_emit": 157,
+     "last_write": 306,
+     "last_result": 385,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 165,
+     "last_emit": 165,
+     "last_write": 314,
+     "last_result": 393,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 173,
+     "last_emit": 173,
+     "last_write": 322,
+     "last_result": 401,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 181,
+     "last_emit": 181,
+     "last_write": 330,
+     "last_result": 409,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 189,
+     "last_emit": 189,
+     "last_write": 338,
+     "last_result": 417,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 197,
+     "last_emit": 197,
+     "last_write": 346,
+     "last_result": 425,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 205,
+     "last_emit": 205,
+     "last_write": 354,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 213,
+     "last_emit": 213,
+     "last_write": 362,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 221,
+     "last_emit": 221,
+     "last_write": 370,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 229,
+     "last_emit": 229,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 237,
+     "last_emit": 237,
+     "last_write": 386,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 245,
+     "last_emit": 245,
+     "last_write": 394,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 394,
+     "last_emit": 394,
+     "last_write": 449,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 402,
+     "last_emit": 402,
+     "last_write": 457,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 410,
+     "last_emit": 410,
+     "last_write": 465,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 418,
+     "last_emit": 418,
+     "last_write": 473,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 426,
+     "last_emit": 426,
+     "last_write": 481,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 434,
+     "last_emit": 434,
+     "last_write": 489,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 443,
+     "last_emit": 444,
+     "last_write": 514,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 451,
+     "last_emit": 452,
+     "last_write": 522,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 459,
+     "last_emit": 460,
+     "last_write": 530,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 467,
+     "last_emit": 468,
+     "last_write": 538,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 475,
+     "last_emit": 476,
+     "last_write": 546,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 483,
+     "last_emit": 484,
+     "last_write": 554,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 508,
+     "last_emit": 508,
+     "last_write": 563,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 516,
+     "last_emit": 516,
+     "last_write": 571,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 524,
+     "last_emit": 524,
+     "last_write": 579,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 532,
+     "last_emit": 532,
+     "last_write": 587,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 540,
+     "last_emit": 540,
+     "last_write": 595,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 548,
+     "last_emit": 548,
+     "last_write": 603,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.hc_post.attn",
+   "layer": "L0",
+   "fn": "hc_post",
+   "op_id": 13,
+   "tag": "hc_post attn",
+   "reps": 6,
+   "op_major": true,
+   "lever_dr": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 558,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "8b63d32dffc07d7f03de003976fbf8ee61f0e855a7516112e20b11a0a313e72f",
+   "cycles_end": 558,
+   "first_emit_to_last_write": 535,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 33,
+     "last_write": 88,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 34,
+     "last_emit": 53,
+     "last_write": 108,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 73,
+     "last_write": 128,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 74,
+     "last_emit": 93,
+     "last_write": 148,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 114,
+     "last_emit": 133,
+     "last_write": 188,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 134,
+     "last_emit": 153,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 154,
+     "last_emit": 173,
+     "last_write": 228,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 174,
+     "last_emit": 193,
+     "last_write": 248,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 194,
+     "last_emit": 213,
+     "last_write": 268,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 233,
+     "last_write": 288,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 253,
+     "last_write": 308,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 273,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 274,
+     "last_emit": 293,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 294,
+     "last_emit": 313,
+     "last_write": 368,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 314,
+     "last_emit": 333,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 334,
+     "last_emit": 353,
+     "last_write": 408,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 354,
+     "last_emit": 373,
+     "last_write": 428,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 374,
+     "last_emit": 393,
+     "last_write": 448,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 394,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 414,
+     "last_emit": 433,
+     "last_write": 488,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 434,
+     "last_emit": 453,
+     "last_write": 508,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 473,
+     "last_write": 528,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 474,
+     "last_emit": 493,
+     "last_write": 548,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.hc_pre_norm.ffn",
+   "layer": "L0",
+   "fn": "hc_pre_norm",
+   "op_id": 15,
+   "tag": "ffn_norm",
+   "reps": 6,
+   "op_major": true,
+   "ops": 30,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 553,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "9cff5fd3743f87ee6987671f879c34fb7ace53084ea2bad121938acbc0a8ff4c",
+   "cycles_end": 553,
+   "first_emit_to_last_write": 530,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 18,
+     "last_write": 73,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 26,
+     "last_write": 81,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 34,
+     "last_write": 89,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 42,
+     "last_write": 97,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 50,
+     "last_write": 105,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 58,
+     "last_write": 113,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 67,
+     "last_emit": 71,
+     "last_write": 126,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 75,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 83,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 91,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 107,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 124,
+     "last_write": 179,
+     "last_result": 294,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 128,
+     "last_emit": 132,
+     "last_write": 187,
+     "last_result": 302,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 136,
+     "last_emit": 140,
+     "last_write": 195,
+     "last_result": 310,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 144,
+     "last_emit": 148,
+     "last_write": 203,
+     "last_result": 318,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 152,
+     "last_emit": 156,
+     "last_write": 211,
+     "last_result": 326,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 160,
+     "last_emit": 164,
+     "last_write": 219,
+     "last_result": 334,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 303,
+     "last_emit": 303,
+     "last_write": 450,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 311,
+     "last_emit": 311,
+     "last_write": 458,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 319,
+     "last_emit": 319,
+     "last_write": 466,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 327,
+     "last_emit": 327,
+     "last_write": 474,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 335,
+     "last_emit": 335,
+     "last_write": 482,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 343,
+     "last_emit": 343,
+     "last_write": 490,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 452,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 460,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 468,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 476,
+     "last_emit": 480,
+     "last_write": 535,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 484,
+     "last_emit": 488,
+     "last_write": 543,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.router_act",
+   "layer": "L0",
+   "fn": "router_act",
+   "op_id": 17,
+   "tag": "sqrt(softplus) on the die's own router rows",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 398,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "8d5e430d69415ebf926171c4d18c9e76368ea9c8cbf9ebd83b45374925021376",
+   "cycles_end": 398,
+   "first_emit_to_last_write": 375,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 17,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 25,
+     "last_write": 356,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 33,
+     "last_write": 364,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 41,
+     "last_write": 372,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 49,
+     "last_write": 380,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 57,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.route",
+   "layer": "L0",
+   "fn": "route",
+   "op_id": 19,
+   "tag": "top-6 + weights (replicated)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 356,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "63d7dd224d038e09b95ff83f5408ba74e3312b2142eb9c72a1ae60d652bac95d",
+   "cycles_end": 356,
+   "first_emit_to_last_write": 333,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 62,
+     "last_emit": 62,
+     "last_write": 120,
+     "last_result": 175,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 128,
+     "last_result": 183,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 136,
+     "last_result": 191,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 144,
+     "last_result": 199,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 152,
+     "last_result": 207,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 160,
+     "last_result": 215,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 184,
+     "last_emit": 184,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 192,
+     "last_emit": 192,
+     "last_write": 247,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 200,
+     "last_emit": 200,
+     "last_write": 255,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 208,
+     "last_emit": 208,
+     "last_write": 263,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 216,
+     "last_emit": 216,
+     "last_write": 271,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 224,
+     "last_emit": 224,
+     "last_write": 279,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 233,
+     "last_emit": 233,
+     "last_write": 306,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 241,
+     "last_emit": 241,
+     "last_write": 314,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 249,
+     "last_emit": 249,
+     "last_write": 322,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 257,
+     "last_emit": 257,
+     "last_write": 330,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 265,
+     "last_emit": 265,
+     "last_write": 338,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 273,
+     "last_emit": 273,
+     "last_write": 346,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s0",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 23,
+   "tag": "expert slot 0 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "cfeb3014a41101b1aabaf43e864ac09459aca3f2414f34be02adff32a60e412e",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s1",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 26,
+   "tag": "expert slot 1 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "99b906c2293b35c27034e8cfff99cc22a4adb0bb6a688817250158bca994c997",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s2",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 29,
+   "tag": "expert slot 2 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "e771b16e0c779c119f3c2143de5af367e4bd5e1e6f03fab848325b07d396d244",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s3",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 32,
+   "tag": "expert slot 3 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "97d5a83b48d5636b48a415182f4d0d38de058b5fe9894cbdf1c3d067c69b46fd",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s4",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 35,
+   "tag": "expert slot 4 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "cfe07990539335d45a975270bd18472b72afb854e4f1b5ede97b419fb75cf647",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s5",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 38,
+   "tag": "expert slot 5 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "4776e3d89b716760e4c95492772823d3a1fb3574ebb89affae9cfc0fe2ab4971",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.swiglu.s6",
+   "layer": "L0",
+   "fn": "swiglu",
+   "op_id": 41,
+   "tag": "expert slot 6 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "d0ef0a05ed19ea493202ad41eac2306d487462f075a42b62737a8758eefd0921",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.moe_sum",
+   "layer": "L0",
+   "fn": "moe_sum",
+   "op_id": 50,
+   "tag": "expert sum in id order, then shared (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 205,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "57e1f7cad033d23d266a312135224e578c12603a4a86fe8c4947e59f4e6d1f97",
+   "cycles_end": 205,
+   "first_emit_to_last_write": 151,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": 124,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": 132,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": 140,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": 148,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": 156,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": 164,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.hc_post.ffn",
+   "layer": "L0",
+   "fn": "hc_post",
+   "op_id": 52,
+   "tag": "hc_post ffn",
+   "reps": 6,
+   "op_major": true,
+   "lever_dr": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 558,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "753bc03519748c07416790f8a09a116c33deaa69e4342c2cdf38f98b1b1b09f3",
+   "cycles_end": 558,
+   "first_emit_to_last_write": 535,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 33,
+     "last_write": 88,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 34,
+     "last_emit": 53,
+     "last_write": 108,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 73,
+     "last_write": 128,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 74,
+     "last_emit": 93,
+     "last_write": 148,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 114,
+     "last_emit": 133,
+     "last_write": 188,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 134,
+     "last_emit": 153,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 154,
+     "last_emit": 173,
+     "last_write": 228,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 174,
+     "last_emit": 193,
+     "last_write": 248,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 194,
+     "last_emit": 213,
+     "last_write": 268,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 233,
+     "last_write": 288,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 253,
+     "last_write": 308,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 273,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 274,
+     "last_emit": 293,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 294,
+     "last_emit": 313,
+     "last_write": 368,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 314,
+     "last_emit": 333,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 334,
+     "last_emit": 353,
+     "last_write": 408,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 354,
+     "last_emit": 373,
+     "last_write": 428,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 374,
+     "last_emit": 393,
+     "last_write": 448,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 394,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 414,
+     "last_emit": 433,
+     "last_write": 488,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 434,
+     "last_emit": 453,
+     "last_write": 508,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 473,
+     "last_write": 528,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 474,
+     "last_emit": 493,
+     "last_write": 548,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.hc_pre_norm.attn",
+   "layer": "L2",
+   "fn": "hc_pre_norm",
+   "op_id": 1,
+   "tag": "attn_norm",
+   "reps": 6,
+   "op_major": true,
+   "ops": 30,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 553,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "bb7071120b502668f3a1053dd83160999c67884705bf9189098710dbbe3f660a",
+   "cycles_end": 553,
+   "first_emit_to_last_write": 530,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 18,
+     "last_write": 73,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 26,
+     "last_write": 81,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 34,
+     "last_write": 89,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 42,
+     "last_write": 97,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 50,
+     "last_write": 105,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 58,
+     "last_write": 113,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 67,
+     "last_emit": 71,
+     "last_write": 126,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 75,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 83,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 91,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 107,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 124,
+     "last_write": 179,
+     "last_result": 294,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 128,
+     "last_emit": 132,
+     "last_write": 187,
+     "last_result": 302,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 136,
+     "last_emit": 140,
+     "last_write": 195,
+     "last_result": 310,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 144,
+     "last_emit": 148,
+     "last_write": 203,
+     "last_result": 318,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 152,
+     "last_emit": 156,
+     "last_write": 211,
+     "last_result": 326,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 160,
+     "last_emit": 164,
+     "last_write": 219,
+     "last_result": 334,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 303,
+     "last_emit": 303,
+     "last_write": 450,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 311,
+     "last_emit": 311,
+     "last_write": 458,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 319,
+     "last_emit": 319,
+     "last_write": 466,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 327,
+     "last_emit": 327,
+     "last_write": 474,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 335,
+     "last_emit": 335,
+     "last_write": 482,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 343,
+     "last_emit": 343,
+     "last_write": 490,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 452,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 460,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 468,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 476,
+     "last_emit": 480,
+     "last_write": 535,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 484,
+     "last_emit": 488,
+     "last_write": 543,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.q_norm_kv_row",
+   "layer": "L2",
+   "fn": "q_norm_kv_row",
+   "op_id": 7,
+   "tag": "q_norm, kv_norm, RoPE, FP8 window row (replicated window)",
+   "reps": 6,
+   "op_major": true,
+   "also_bitexact_window_row": true,
+   "lever_il": true,
+   "ops": 42,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 559,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "qr",
+     "kind": "executor",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv_rope (golden function; FP8 QDQ of the window row is the QE unit, not lowered)",
+     "kind": "golden_fn",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "7969c4ee9bda146c6b4fc350dccf53cb23806eb7bb7ffafdf82c496ff1d184f6",
+   "cycles_end": 559,
+   "first_emit_to_last_write": 536,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 15,
+     "last_write": 70,
+     "last_result": 173,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 23,
+     "last_write": 78,
+     "last_result": 181,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 31,
+     "last_write": 86,
+     "last_result": 189,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 39,
+     "last_write": 94,
+     "last_result": 197,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 47,
+     "last_write": 102,
+     "last_result": 205,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 55,
+     "last_write": 110,
+     "last_result": 213,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 68,
+     "last_emit": 68,
+     "last_write": 123,
+     "last_result": 214,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 125,
+     "last_result": 216,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 133,
+     "last_result": 224,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
+     "last_result": 232,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 149,
+     "last_result": 240,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 157,
+     "last_result": 248,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 182,
+     "last_emit": 182,
+     "last_write": 329,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 190,
+     "last_emit": 190,
+     "last_write": 337,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 198,
+     "last_emit": 198,
+     "last_write": 345,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 206,
+     "last_emit": 206,
+     "last_write": 353,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 214,
+     "last_write": 361,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 222,
+     "last_emit": 222,
+     "last_write": 369,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 230,
+     "last_emit": 230,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 238,
+     "last_emit": 238,
+     "last_write": 385,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 246,
+     "last_emit": 246,
+     "last_write": 393,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 254,
+     "last_write": 401,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 262,
+     "last_emit": 262,
+     "last_write": 409,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 270,
+     "last_emit": 270,
+     "last_write": 417,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 363,
+     "last_emit": 364,
+     "last_write": 419,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 365,
+     "last_emit": 366,
+     "last_write": 421,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 373,
+     "last_emit": 374,
+     "last_write": 429,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 381,
+     "last_emit": 382,
+     "last_write": 437,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 389,
+     "last_emit": 390,
+     "last_write": 445,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 397,
+     "last_emit": 398,
+     "last_write": 453,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 405,
+     "last_emit": 405,
+     "last_write": 460,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 413,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 421,
+     "last_emit": 421,
+     "last_write": 476,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 429,
+     "last_emit": 429,
+     "last_write": 484,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 437,
+     "last_emit": 437,
+     "last_write": 492,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 445,
+     "last_emit": 445,
+     "last_write": 500,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 454,
+     "last_write": 509,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 462,
+     "last_emit": 462,
+     "last_write": 517,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 470,
+     "last_emit": 470,
+     "last_write": 525,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 478,
+     "last_emit": 478,
+     "last_write": 533,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 486,
+     "last_emit": 486,
+     "last_write": 541,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 494,
+     "last_emit": 494,
+     "last_write": 549,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.q_rope",
+   "layer": "L2",
+   "fn": "q_rope",
+   "op_id": 9,
+   "tag": "q RoPE (own head)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 12,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 167,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "q_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "75744c77bb0742aaf3a935c2999a9a15c1cae48fa2fbd6f8a760d396223660fe",
+   "cycles_end": 167,
+   "first_emit_to_last_write": 144,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 448,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 62,
+     "last_emit": 62,
+     "last_write": 117,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 125,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 133,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 149,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 157,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.attend",
+   "layer": "L2",
+   "fn": "attend",
+   "op_id": 18,
+   "tag": "attention of the die's head (window + selection)",
+   "reps": 6,
+   "op_major": true,
+   "T": 640,
+   "ops": 36,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 651,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's PV input)",
+     "kind": "golden_fn",
+     "n": 640,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "533d4c48e39ce6911eac0e7f1ecb5dd07caa6db5da007ce096588da8543793db",
+   "cycles_end": 651,
+   "first_emit_to_last_write": 628,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": 166,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": 174,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": 182,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": 190,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": 198,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": 206,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 175,
+     "last_emit": 177,
+     "last_write": 326,
+     "last_result": 423,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 183,
+     "last_emit": 185,
+     "last_write": 334,
+     "last_result": 431,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 191,
+     "last_emit": 193,
+     "last_write": 342,
+     "last_result": 439,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 199,
+     "last_emit": 201,
+     "last_write": 350,
+     "last_result": 447,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 207,
+     "last_emit": 209,
+     "last_write": 358,
+     "last_result": 455,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 215,
+     "last_emit": 217,
+     "last_write": 366,
+     "last_result": 463,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 223,
+     "last_emit": 223,
+     "last_write": 372,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 231,
+     "last_emit": 231,
+     "last_write": 380,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 239,
+     "last_emit": 239,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 247,
+     "last_emit": 247,
+     "last_write": 396,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 255,
+     "last_emit": 255,
+     "last_write": 404,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 263,
+     "last_emit": 263,
+     "last_write": 412,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 432,
+     "last_emit": 432,
+     "last_write": 487,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 440,
+     "last_emit": 440,
+     "last_write": 495,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 448,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 456,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 464,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 472,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 481,
+     "last_emit": 482,
+     "last_write": 552,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 489,
+     "last_emit": 490,
+     "last_write": 560,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 497,
+     "last_emit": 498,
+     "last_write": 568,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 505,
+     "last_emit": 506,
+     "last_write": 576,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 513,
+     "last_emit": 514,
+     "last_write": 584,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 521,
+     "last_emit": 522,
+     "last_write": 592,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 546,
+     "last_emit": 546,
+     "last_write": 601,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 554,
+     "last_emit": 554,
+     "last_write": 609,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 562,
+     "last_emit": 562,
+     "last_write": 617,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 570,
+     "last_emit": 570,
+     "last_write": 625,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 578,
+     "last_emit": 578,
+     "last_write": 633,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 586,
+     "last_emit": 586,
+     "last_write": 641,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.hc_post.attn",
+   "layer": "L2",
+   "fn": "hc_post",
+   "op_id": 23,
+   "tag": "hc_post attn",
+   "reps": 6,
+   "op_major": true,
+   "lever_dr": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 558,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "d8d20f2f47d5248c3de3d1a88692e47c755394bab6f2591ccdce46ca78cc2e46",
+   "cycles_end": 558,
+   "first_emit_to_last_write": 535,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 33,
+     "last_write": 88,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 34,
+     "last_emit": 53,
+     "last_write": 108,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 73,
+     "last_write": 128,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 74,
+     "last_emit": 93,
+     "last_write": 148,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 114,
+     "last_emit": 133,
+     "last_write": 188,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 134,
+     "last_emit": 153,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 154,
+     "last_emit": 173,
+     "last_write": 228,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 174,
+     "last_emit": 193,
+     "last_write": 248,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 194,
+     "last_emit": 213,
+     "last_write": 268,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 233,
+     "last_write": 288,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 253,
+     "last_write": 308,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 273,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 274,
+     "last_emit": 293,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 294,
+     "last_emit": 313,
+     "last_write": 368,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 314,
+     "last_emit": 333,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 334,
+     "last_emit": 353,
+     "last_write": 408,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 354,
+     "last_emit": 373,
+     "last_write": 428,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 374,
+     "last_emit": 393,
+     "last_write": 448,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 394,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 414,
+     "last_emit": 433,
+     "last_write": 488,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 434,
+     "last_emit": 453,
+     "last_write": 508,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 473,
+     "last_write": 528,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 474,
+     "last_emit": 493,
+     "last_write": 548,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.hc_pre_norm.ffn",
+   "layer": "L2",
+   "fn": "hc_pre_norm",
+   "op_id": 25,
+   "tag": "ffn_norm",
+   "reps": 6,
+   "op_major": true,
+   "ops": 30,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 553,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "c2343139373014540408dcf78e9a9afa060a610d37bce23d80ea3ac73785b9be",
+   "cycles_end": 553,
+   "first_emit_to_last_write": 530,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 18,
+     "last_write": 73,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 26,
+     "last_write": 81,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 34,
+     "last_write": 89,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 42,
+     "last_write": 97,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 50,
+     "last_write": 105,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 58,
+     "last_write": 113,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 67,
+     "last_emit": 71,
+     "last_write": 126,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 75,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 83,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 91,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 107,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 124,
+     "last_write": 179,
+     "last_result": 294,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 128,
+     "last_emit": 132,
+     "last_write": 187,
+     "last_result": 302,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 136,
+     "last_emit": 140,
+     "last_write": 195,
+     "last_result": 310,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 144,
+     "last_emit": 148,
+     "last_write": 203,
+     "last_result": 318,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 152,
+     "last_emit": 156,
+     "last_write": 211,
+     "last_result": 326,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 160,
+     "last_emit": 164,
+     "last_write": 219,
+     "last_result": 334,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 303,
+     "last_emit": 303,
+     "last_write": 450,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 311,
+     "last_emit": 311,
+     "last_write": 458,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 319,
+     "last_emit": 319,
+     "last_write": 466,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 327,
+     "last_emit": 327,
+     "last_write": 474,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 335,
+     "last_emit": 335,
+     "last_write": 482,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 343,
+     "last_emit": 343,
+     "last_write": 490,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 452,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 460,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 468,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 476,
+     "last_emit": 480,
+     "last_write": 535,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 484,
+     "last_emit": 488,
+     "last_write": 543,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.router_act",
+   "layer": "L2",
+   "fn": "router_act",
+   "op_id": 27,
+   "tag": "sqrt(softplus) on the die's own router rows",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 398,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "gsc[0:4]",
+     "kind": "executor",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "07f7ed29bbdf86e20dca608fb61af59f1a1ee3a603244c1e226a7c3da11f99ce",
+   "cycles_end": 398,
+   "first_emit_to_last_write": 375,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 17,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 25,
+     "last_write": 356,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 33,
+     "last_write": 364,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 41,
+     "last_write": 372,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 49,
+     "last_write": 380,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 57,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 4,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 331
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.route",
+   "layer": "L2",
+   "fn": "route",
+   "op_id": 29,
+   "tag": "top-6 + weights (replicated)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 356,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "router (scores + bias)",
+     "kind": "executor",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route_w",
+     "kind": "executor",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "7cc92a1db425df565bdd5cda40830d33755ec33bedf46466fbf5bfc607b37842",
+   "cycles_end": 356,
+   "first_emit_to_last_write": 333,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 62,
+     "last_emit": 62,
+     "last_write": 120,
+     "last_result": 175,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 70,
+     "last_emit": 70,
+     "last_write": 128,
+     "last_result": 183,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 78,
+     "last_emit": 78,
+     "last_write": 136,
+     "last_result": 191,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 144,
+     "last_result": 199,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 94,
+     "last_write": 152,
+     "last_result": 207,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 102,
+     "last_emit": 102,
+     "last_write": 160,
+     "last_result": 215,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 58
+    },
+    {
+     "first_emit": 184,
+     "last_emit": 184,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 192,
+     "last_emit": 192,
+     "last_write": 247,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 200,
+     "last_emit": 200,
+     "last_write": 255,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 208,
+     "last_emit": 208,
+     "last_write": 263,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 216,
+     "last_emit": 216,
+     "last_write": 271,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 224,
+     "last_emit": 224,
+     "last_write": 279,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 233,
+     "last_emit": 233,
+     "last_write": 306,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 241,
+     "last_emit": 241,
+     "last_write": 314,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 249,
+     "last_emit": 249,
+     "last_write": 322,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 257,
+     "last_emit": 257,
+     "last_write": 330,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 265,
+     "last_emit": 265,
+     "last_write": 338,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    },
+    {
+     "first_emit": 273,
+     "last_emit": 273,
+     "last_write": 346,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s0",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 33,
+   "tag": "expert slot 0 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 0",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "7c73ec6053604664c973eab3633de42b87adb568ae1b69fbe8a77b172b61f5ea",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s1",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 36,
+   "tag": "expert slot 1 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 1",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "91412389cd5281c14d633d2ecc2fca5e338f31669fb9aa05c4033eabce2113f9",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s2",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 39,
+   "tag": "expert slot 2 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 2",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "bbebb6cb1e9332ccdcc8271c4ff73c11d233db1841f31fcf93de69a8cad46151",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s3",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 42,
+   "tag": "expert slot 3 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 3",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "852cc7584fc9bcb4f58c92df872b84b2aa93c0987d11cddfea538be62cd9dc27",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s4",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 45,
+   "tag": "expert slot 4 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 4",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "ff5996b3caa541e0867132a855d79501d85a061a1a3ef82f55a0e136e054f790",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s5",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 48,
+   "tag": "expert slot 5 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 5",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "f099b411277e0f8f3bd7bfca76e199e7b40b642eb177f6db22707da0d379cb34",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.swiglu.s6",
+   "layer": "L2",
+   "fn": "swiglu",
+   "op_id": 51,
+   "tag": "expert slot 6 SwiGLU x route weight (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 240,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "ea slot 6",
+     "kind": "executor",
+     "n": 24,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "4f0f0b9e98fc652e733da9b496b1c042c2831d1798bf0a8876f6e3d0aba7c331",
+   "cycles_end": 240,
+   "first_emit_to_last_write": 217,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 190,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 198,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 206,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 214,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 222,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 230,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 24,
+     "depth_model": 176
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.moe_sum",
+   "layer": "L2",
+   "fn": "moe_sum",
+   "op_id": 60,
+   "tag": "expert sum in id order, then shared (own rows)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 205,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "yf rows 0:54",
+     "kind": "executor",
+     "n": 54,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "e715ec4997488e740b1197b8ca3b8fded7bd907fb69d4e7f014b3bb6381db8d3",
+   "cycles_end": 205,
+   "first_emit_to_last_write": 151,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 14,
+     "last_write": 69,
+     "last_result": 124,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 22,
+     "last_write": 77,
+     "last_result": 132,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 30,
+     "last_write": 85,
+     "last_result": 140,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 38,
+     "last_write": 93,
+     "last_result": 148,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 46,
+     "last_write": 101,
+     "last_result": 156,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 54,
+     "last_write": 109,
+     "last_result": 164,
+     "vectors": 1,
+     "nout": 54,
+     "nin": 7,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.hc_post.ffn",
+   "layer": "L2",
+   "fn": "hc_post",
+   "op_id": 62,
+   "tag": "hc_post ffn",
+   "reps": 6,
+   "op_major": true,
+   "lever_dr": true,
+   "ops": 24,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 558,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "h",
+     "kind": "executor",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "35a08a6a8fc7494817eeeead125c7c0f0dbf016aca60ebf031339b853cdf90b1",
+   "cycles_end": 558,
+   "first_emit_to_last_write": 535,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 33,
+     "last_write": 88,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 34,
+     "last_emit": 53,
+     "last_write": 108,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 73,
+     "last_write": 128,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 74,
+     "last_emit": 93,
+     "last_write": 148,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 94,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 114,
+     "last_emit": 133,
+     "last_write": 188,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 134,
+     "last_emit": 153,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 154,
+     "last_emit": 173,
+     "last_write": 228,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 174,
+     "last_emit": 193,
+     "last_write": 248,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 194,
+     "last_emit": 213,
+     "last_write": 268,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 214,
+     "last_emit": 233,
+     "last_write": 288,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 253,
+     "last_write": 308,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 254,
+     "last_emit": 273,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 274,
+     "last_emit": 293,
+     "last_write": 348,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 294,
+     "last_emit": 313,
+     "last_write": 368,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 314,
+     "last_emit": 333,
+     "last_write": 388,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 334,
+     "last_emit": 353,
+     "last_write": 408,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 354,
+     "last_emit": 373,
+     "last_write": 428,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 374,
+     "last_emit": 393,
+     "last_write": 448,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 394,
+     "last_emit": 413,
+     "last_write": 468,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 414,
+     "last_emit": 433,
+     "last_write": 488,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 434,
+     "last_emit": 453,
+     "last_write": 508,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 454,
+     "last_emit": 473,
+     "last_write": 528,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 474,
+     "last_emit": 493,
+     "last_write": 548,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "head.final_norm",
+   "layer": "head",
+   "fn": "final_norm",
+   "op_id": 0,
+   "tag": "final hc_pre + norm",
+   "reps": 6,
+   "op_major": true,
+   "ops": 30,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 553,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "x",
+     "kind": "executor",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "caf53758304da3786a7d47b4cc3d448872daf39c98f783879bff8a7adf28d1cf",
+   "cycles_end": 553,
+   "first_emit_to_last_write": 530,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 18,
+     "last_write": 73,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 26,
+     "last_write": 81,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 34,
+     "last_write": 89,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 42,
+     "last_write": 97,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 50,
+     "last_write": 105,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 58,
+     "last_write": 113,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 67,
+     "last_emit": 71,
+     "last_write": 126,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 75,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 83,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 91,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 107,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 124,
+     "last_write": 179,
+     "last_result": 294,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 128,
+     "last_emit": 132,
+     "last_write": 187,
+     "last_result": 302,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 136,
+     "last_emit": 140,
+     "last_write": 195,
+     "last_result": 310,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 144,
+     "last_emit": 148,
+     "last_write": 203,
+     "last_result": 318,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 152,
+     "last_emit": 156,
+     "last_write": 211,
+     "last_result": 326,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 160,
+     "last_emit": 164,
+     "last_write": 219,
+     "last_result": 334,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 303,
+     "last_emit": 303,
+     "last_write": 450,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 311,
+     "last_emit": 311,
+     "last_write": 458,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 319,
+     "last_emit": 319,
+     "last_write": 466,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 327,
+     "last_emit": 327,
+     "last_write": 474,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 335,
+     "last_emit": 335,
+     "last_write": 482,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 343,
+     "last_emit": 343,
+     "last_write": 490,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 448,
+     "last_write": 503,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 452,
+     "last_emit": 456,
+     "last_write": 511,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 460,
+     "last_emit": 464,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 468,
+     "last_emit": 472,
+     "last_write": 527,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 476,
+     "last_emit": 480,
+     "last_write": 535,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 484,
+     "last_emit": 488,
+     "last_write": 543,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "head.argmax_local",
+   "layer": "head",
+   "fn": "argmax_local",
+   "op_id": 2,
+   "tag": "local argmax (lowest id on ties)",
+   "reps": 6,
+   "op_major": true,
+   "ops": 6,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 223,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "argmax value",
+     "kind": "executor",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "380b6ec8c6410eebb9909950f44fc286c192066172015a5af01887ad25248b86",
+   "cycles_end": 223,
+   "first_emit_to_last_write": 200,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 15,
+     "last_write": 70,
+     "last_result": 173,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 23,
+     "last_write": 78,
+     "last_result": 181,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 31,
+     "last_write": 86,
+     "last_result": 189,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 39,
+     "last_write": 94,
+     "last_result": 197,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 47,
+     "last_write": 102,
+     "last_result": 205,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 55,
+     "last_write": 110,
+     "last_result": 213,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1347,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attend_tail",
+   "layer": "L0",
+   "fn": "attend_tail",
+   "op_id": 8,
+   "tag": "attention of the die's head (window + selection)",
+   "reps": 6,
+   "op_major": true,
+   "T": 128,
+   "ops": 12,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 184,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "100eaa3ef85cb3e1932c9582d6e808168c9924db2f02592be4d402b0397512b7",
+   "cycles_end": 184,
+   "first_emit_to_last_write": 161,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 15,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 23,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 31,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 39,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 47,
+     "last_write": 117,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 55,
+     "last_write": 125,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 79,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 87,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 95,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 103,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 111,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 119,
+     "last_emit": 119,
+     "last_write": 174,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L2.attend_tail",
+   "layer": "L2",
+   "fn": "attend_tail",
+   "op_id": 18,
+   "tag": "attention of the die's head (window + selection)",
+   "reps": 6,
+   "op_major": true,
+   "T": 640,
+   "ops": 12,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 184,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o_own",
+     "kind": "executor",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "b62d7b9a386f316e591279ce426720c39158e5947fdfa8a438f22dfe3a9544ed",
+   "cycles_end": 184,
+   "first_emit_to_last_write": 161,
+   "per_op": [
+    {
+     "first_emit": 14,
+     "last_emit": 15,
+     "last_write": 85,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 22,
+     "last_emit": 23,
+     "last_write": 93,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 30,
+     "last_emit": 31,
+     "last_write": 101,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 38,
+     "last_emit": 39,
+     "last_write": 109,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 46,
+     "last_emit": 47,
+     "last_write": 117,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 54,
+     "last_emit": 55,
+     "last_write": 125,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 70
+    },
+    {
+     "first_emit": 79,
+     "last_emit": 79,
+     "last_write": 134,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 87,
+     "last_emit": 87,
+     "last_write": 142,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 95,
+     "last_emit": 95,
+     "last_write": 150,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 103,
+     "last_emit": 103,
+     "last_write": 158,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 111,
+     "last_emit": 111,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    },
+    {
+     "first_emit": 119,
+     "last_emit": 119,
+     "last_write": 174,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
+    }
+   ],
+   "exact": true
+  }
+ ],
+ "source_sha256": {
+  "tools/dshbm_baseline_measure.py": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "2cd24466a57c47077da2dcccdbb1b7f8f703e2812e43e610886a768485c892ba",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "cf8c7c91f7d7ce9f2e1c061180a401af8aef0b366e60200cd369cd0725878633",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "22989347db13ea685abc666e66453554f7fe6d43ea937a3008bcf90bf4681d18",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "3a6c6d64c04aad1ec4c3b9f5e1d3fdc1d34719550829f2f6ad34a31d83a1a1b9",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+  "rtl/test/sim_hdc_v41x_fastfp_wrap.sv": "c75679080901259e29aa150a804927d6f5e0934ebf2dcc2cf7be09644f2f8459",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+  "rtl/hdc/ot_hdc_fastfp_lat_c12.sv": "870020b95d623ed481ec8caebda69cb80f57e43dd824ece5fa31c381ebd4c5ac",
+  "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv": "863a6af4522f3677fc8e196e1a60c3082ff21d35e0539344e6b87461e521184b",
+  "rtl/test/sim_dsrom_su_add6_dpi.sv": "24e6f903623c2be457fac634ac5124877686804884ea5a9276a09b2dfc5c71c3",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "61c22f6180c13408549ee52020cd3150860243c91393b268eddcc308eb46fc24",
+  "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv": "5d09b4df12d1d4da73aa331b3b21cc5af540e289bbf3f45c0773754b489c5584",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv": "6ec0843db11721a81d6049047f04e9d8552157d32b8d0344dcaaef7b34386cc9",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp": "c00bcabe9e0cfdbb1f01ea410819996c85acdfc1daf1edd8c50e85c8a486f974",
+  "rtl/test/sim_hdc_fp32_lat_tops.sv": "4f8fbce86ce9adb2b90aee5fd08640026d4bcce5546908eddb7813d2000dc23e",
+  "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/test/tb_hdc_v41x_vec_c12.sv": "becffec8d415803e91937ce0733d95239c1420e27a7cf5f5554c37ab9893dcdb"
+ },
+ "cases_sha256": "e3491e868f4cbaeda3de5b8ba20e9bfbbb6a0818442489d2d0a5b4a0a52530a3",
+ "cases": "su_cases_p6om_ildr.pkl",
+ "snapshots_sha256": "cd0fc866753e23d8130b7d0fedc0c352424b40698ba423cb9b575122cd675cbd"
+}

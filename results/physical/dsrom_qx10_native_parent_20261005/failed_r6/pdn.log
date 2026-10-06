@@ -1,0 +1,36 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_qx.u_e.g_mac\[0\].g_pp.u_rom0
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_qx.u_e.g_mac\[0\].g_pp.u_rom1
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_qx.u_e.g_mac\[1\].g_pp.u_rom0
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_qx.u_e.g_mac\[1\].g_pp.u_rom1
+[INFO PDN-0500] Runtime: 4.37s
+source /work/hooks/post_pdn_regions.tcl
+OT_QX10_NATIVE_REGIONS parent_cells=211245 parent_area=22634.677259977074 engine_cells=37202 engine_area=10320.540479997828 macros=4
+OT_QX10_FAULT_FQ_ALIAS register=u_qx.u_e.fault$_DFF_PN0_ actual_OR_producers={u_qx.u_e.g_mac[0].g_qyb.bkf_r$_DFF_PN0_} {u_qx.u_e.g_mac[1].g_qyb.bkf_r$_DFF_PN0_} {u_qx.u_e.g_qo.g_qyf.ffq$_DFF_PN0_}
+Design area 65034 um^2 27% utilization.
+write_db /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:10.97[h:]min:sec. CPU time: user 10.69 sys 0.27 (99%). Peak memory: 932532KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb           10            910 ac767ccbb96cfdce8d0c

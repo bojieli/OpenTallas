@@ -1,0 +1,49 @@
+Startpoint: u_e.g_qz_cg.u_z/q$_DFF_PN1_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock core_clk (rise edge)
+   0.0    0.0   clock source latency
+   0.0    0.0 ^ clk (in)
+  30.6   30.6 ^ delaybuf_3_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.5   63.1 ^ delaybuf_4_core_clk/Y (BUFx24_ASAP7_75t_R)
+  31.7   94.8 ^ delaybuf_5_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.1  126.9 ^ delaybuf_6_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.2  159.1 ^ delaybuf_7_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.4  191.6 ^ delaybuf_8_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.3  223.8 ^ delaybuf_9_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.0  255.9 ^ delaybuf_10_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.1  287.9 ^ delaybuf_11_core_clk/Y (BUFx24_ASAP7_75t_R)
+  32.0  320.0 ^ delaybuf_12_core_clk/Y (BUFx24_ASAP7_75t_R)
+  31.9  351.9 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  33.7  385.6 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  46.9  432.5 ^ clkbuf_1_0__f_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  66.0  498.4 ^ clkbuf_leaf_15_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   2.4  500.9 ^ u_e.g_qz_cg.u_z/q$_DFF_PN1_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 103.5  604.4 v u_e.g_qz_cg.u_z/q$_DFF_PN1_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  45.2  649.6 ^ u_e.g_qz_cg.u_z/_2_/Y (INVx3_ASAP7_75t_R)
+  11.0  660.6 ^ u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+        660.6   data arrival time
+
+ 833.0  833.0   clock core_clk (rise edge)
+   0.0  833.0   clock source latency
+   0.0  833.0 ^ clk (in)
+  40.3  873.3 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  31.0  904.3 ^ clkbuf_1_0__f_clk/Y (BUFx24_ASAP7_75t_R)
+   0.4  904.7 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+ -60.0  844.7   clock uncertainty
+   0.0  844.7   clock reconvergence pessimism
+ -76.5  768.2   library setup time
+        768.2   data required time
+-------------------------------------------------------
+        768.2   data required time
+       -660.6   data arrival time
+-------------------------------------------------------
+        107.6   slack (MET)
+
+

@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_CREDIT_RETENTION_ON_TRANSIENT_RECEIVER_RAIL_MISMATCH",
+  "source_commit": "bbcb3d019",
+  "PC_sha256": "fbfa813d057a9bc3cdc205799da9a96addcd43f0a96ae897e3730a94f3e2acf2",
+  "bench_sha256": "9c8c3c1ae55d60ba8b5229a59decaf19403f6180d0cc8f5743ded2b040fc03c4",
+  "observed": "one retired landing, captured credit then receiver-rail mismatch: emitted credit0, expected1; accepted cache/descriptorGO otherwise drained",
+  "failure_log_sha256": "d3ad9ec6504158683b9b26a199ec81883f0fa8a9134ca9ad714087cbdb6336f5"
+}

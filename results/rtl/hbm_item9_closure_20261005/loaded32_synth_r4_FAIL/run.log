@@ -1,0 +1,67 @@
+FAILED: FlowError: yosys synthesis failed with exit 1:
+m9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74
+Warning: Replacing memory \g_on.ud with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74
+
+9.1. Analyzing design hierarchy..
+Top module:  \ot_gpu_coll_item9_context32_txctrl
+Used module:     \ot_gpu_reset_ctrl
+Used module:     \ot_gpu_coll_mux_owner64
+Used module:         \ot_gpu_coll_mux_f12
+Used module:     \ot_gpu_coll_endpoint_item9_txctrl
+Parameter \ENABLE = 0
+Parameter \NSM = 2
+Parameter \NL = 128
+Parameter \ODUP = 16
+
+9.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_coll_mux_f12'.
+Parameter \ENABLE = 0
+Parameter \NSM = 2
+Parameter \NL = 128
+Parameter \ODUP = 16
+Generating RTLIL representation for module `$paramod$0e5914799756e125039a477a60cd8a1a9f954e50\ot_gpu_coll_mux_f12'.
+Parameter \ENABLE = 1
+
+9.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_reset_ctrl'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_gpu_reset_ctrl\ENABLE=s32'00000000000000000000000000000001'.
+Parameter \ENABLE = 1
+Parameter \NSM = 32
+Parameter \NL = 128
+Parameter \OWNER64 = 1
+
+9.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_coll_mux_owner64'.
+Parameter \ENABLE = 1
+Parameter \NSM = 32
+Parameter \NL = 128
+Parameter \OWNER64 = 1
+Generating RTLIL representation for module `$paramod$c822fc043897226389373a9fa827f60a90ec8d05\ot_gpu_coll_mux_owner64'.
+Parameter \ENABLE = 1
+Parameter \TXCTRL = 1
+Parameter \RXOH = 1
+Parameter \TX_MASK_LA = 1
+Parameter \NL = 128
+Parameter \R = 2
+Parameter \RANK = 0
+Parameter \RDUP = 16
+Parameter \XREG = 1
+
+9.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_coll_endpoint_item9_txctrl'.
+Parameter \ENABLE = 1
+Parameter \TXCTRL = 1
+Parameter \RXOH = 1
+Parameter \TX_MASK_LA = 1
+Parameter \NL = 128
+Parameter \R = 2
+Parameter \RANK = 0
+Parameter \RDUP = 16
+Parameter \XREG = 1
+Generating RTLIL representation for module `$paramod$b90d84607df4c9df20a9dbdc68d0b724d9ff8827\ot_gpu_coll_endpoint_item9_txctrl'.
+Warning: Replacing memory \g_on.off_tab with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_endpoint_item9_txctrl.sv:302
+Reprocessing module ot_gpu_coll_item9_context32_txctrl because instantiated module $paramod$b90d84607df4c9df20a9dbdc68d0b724d9ff8827\ot_gpu_coll_endpoint_item9_txctrl has become available.
+Generating RTLIL representation for module `$paramod$161ce2012126afb12a9ffe203ccd49319226151c\ot_gpu_coll_item9_context32_txctrl'.
+Warning: Replacing memory \g_on.dd with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74
+Warning: Replacing memory \g_on.ud with list of registers. See /srv/opentallas/repos/codex-item9-loaded32-min-20261005/rtl/gpu_sys/ot_gpu_coll_item9_context32_txctrl.sv:74
+
+ERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.
+
+partial record written to /srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-synth-r4/physical.json

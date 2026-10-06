@@ -1,0 +1,9 @@
+PASS_GU_RETIREMENT_EXPORT enabled=1 experts=41,65 matrices=G,U rows=12 stores=12 acks=2 spans=1 held_cycles=1 retained_FP32_input=1 live_full_chain=0
+PASS_CODED_METADATA_CE_ALL_BITS cases=216 words=3 bits=216 no_early_accept=1 destination_protected=1
+PASS_CODED_METADATA_DUE cases=6 fail_hold=1 root_POR_only=1
+PASS_WARM_QUARANTINE_AND_CODED_COMPLETION active_debt_preserved=1 launch_blocked=1 late_CE_terminal_recovers=1
+PASS_REJECT_WRONG_BOUND_SOURCE
+PASS_REJECT_MISSING_CONVERSION
+PASS_REJECT_CHANGED_OWNER_FRAME
+PASS_REJECT_LAUNCH_IDENTITY
+/srv/opentallas-scratch2/scratch/codex/hbmsm-gu-coded-5340736d3/src/rtl/test/hbm_accel/tb_hbm_accel_gu_retirement.sv:172: $finish called at 4330962 (1ps)

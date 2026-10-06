@@ -1,0 +1,7 @@
+view=asap7 corner=TT block=ot_hdc_v41x_vred_top1024_c12 top=ot_hdc_v41x_vred_top1024_c12 purpose=signoff_target
+  synth: cells=440038 area=62873.932 um2 seq_area=15501.446 um2 macros=220201
+  pnr:   wirelength=1509212 um vias=2279821 DRC=0 antenna_nets=0 Fmax=1200.11 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/scratch/claude/hbm-su/red/r6/routes/t6_u30p1/physical.json

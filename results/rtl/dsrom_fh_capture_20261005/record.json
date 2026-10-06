@@ -1,0 +1,306 @@
+{
+  "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
+  "adopted": false,
+  "physical_closed": false,
+  "status": "DECODE_SPLIT_EXACT_PASS_SERIALIZED_REGION_FIX_VALIDATED",
+  "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
+  "memory_source": "55f26355c",
+  "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
+  "reused_evidence": "results/rtl/dsrom_fh_close_20261004/parallel_fanout_decision.json: unchanged primitive/arithmetic evidence only; old failed physical verdicts remain binding history",
+  "unchanged_shared_sources": {
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": {
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "identical_to_retained_41237492": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "identical_to_retained_41237492": true
+    }
+  },
+  "changed_source_gate": {
+    "gold4": {
+      "pass_": true,
+      "cycles": 62873,
+      "busy_me": 61840
+    },
+    "forced_s1": {
+      "pass_": true,
+      "cycles": 62873,
+      "busy_me": 61840
+    },
+    "protected_return": {
+      "G": 4,
+      "W": 16,
+      "rows": 505,
+      "pass_": true,
+      "accepted": 32512,
+      "released": 32512,
+      "writes": 32352,
+      "corrected_errors": 1,
+      "double_bit_rejected": true,
+      "identity_rejected": true,
+      "warm_mask_and_reset_retention": true
+    }
+  },
+  "cycles": {
+    "old_alat7": 62853,
+    "new_capture": 62873,
+    "added_per_five_chain": 20,
+    "added_per_fused_op": 4,
+    "predicted_tail": 48
+  },
+  "model": "results/uarch/dsrom_fh_capture_20261005/loaded_consumers_before_rtl.json",
+  "route": {
+    "host": "ot-epyc2",
+    "path": "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/routes/C10c_capture",
+    "period_ps": 833.333,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "real_protected_macros": 64,
+    "conditional_parent_ports": true,
+    "no_fullparent_qualification": true,
+    "successor_path": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C11_capture",
+    "successor_reuses": "same source mapped netlist,1_synth.odb,1_synth.sdc; corrected initialization mode only"
+  },
+  "launch_failures": {
+    "C10_capture": "realpath new destination absent; exit1 before synthesis",
+    "C10b_capture": "df new destination absent; exit1 before synthesis",
+    "C10c_capture": "ORFS mutually exclusive CORE_UTILIZATION and explicit DIE/CORE; synthesisPASS327455instances; no timing verdict"
+  },
+  "synthesis": {
+    "instances": 327455,
+    "macro_count": 64,
+    "total_including_macros_um2": 384307.9506,
+    "std_cells_um2": 53386.273799999966,
+    "sequential_area_um2": 25374.04056,
+    "peak_MiB": 2178.015625,
+    "elapsed_s": 721.51
+  },
+  "decode_split": {
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "default": 0,
+    "exact_pass": true,
+    "gold4_cycles": 62878,
+    "forced_s1_cycles": 62878,
+    "busy_me": 61845,
+    "added_five_chain_cycles": 25,
+    "accepted_reads": 32512,
+    "released_reads": 32512,
+    "masked_writes": 32352,
+    "corrected_errors": 1,
+    "UE_and_identity_rejected": true,
+    "warm_mask_reset_debt_preserved": true,
+    "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
+    "physical_closed": false,
+    "adopted": false,
+    "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split",
+    "route_successor": "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/routes/C17_region_replace"
+  },
+  "C11_actual_result": {
+    "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
+    "setup_ws_ps": -105.632,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "terminal_exit": 2,
+    "terminal_reason": "Automatic macro placer locks macros before POST_MACRO_PLACE_TCL attempts planned reposition; ODB-0359",
+    "source": "a3046f074",
+    "RTL_and_arithmetic_unchanged": true
+  },
+  "C12_actual_result": {
+    "stage": "floorplan estimated parasitics before propagated CTS/extracted route",
+    "setup_ws_ps": 81.0209,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "real_macros": 64,
+    "terminal_exit": 1,
+    "terminal_reason": "POST macro placement attempts orientation of automatically LOCKED macro; ODB-0360",
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "successor": "C13_decode_split",
+    "reuse": "completed mapped synthesis and floorplan SHA checked; corrected pre-auto MACRO_PLACEMENT_TCL only; no RTL change or resynthesis"
+  },
+  "C13_actual_result": {
+    "terminal_exit": 2,
+    "terminal_reason": "FLW0024 lower-bound density1.88 with fixed SRAMs included in movable-cell fence groups",
+    "all64_macros_placed": true,
+    "qualified": false,
+    "source_recipe": "b55d4ca0c",
+    "diagnosis": "same ODB, remove fixed SRAMs from movable groups only; measured GPL lower-bound density0.12. Coordinates/regions/source math unchanged",
+    "successor": "C14_decode_split",
+    "source_recipe_successor": "650dc3c64",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d"
+  },
+  "C14_actual_result": {
+    "stage": "global placement idealclock, estimated placed RC before CTS",
+    "setup_ws_ps": -4475.26,
+    "hold_ws_ps": -5.69979,
+    "qualified": false,
+    "macros": 64,
+    "critical_start": "u_head.u_fh.g_fadd[55].g_lat.u_add.s1_big[0]",
+    "critical_end": "u_head.u_fh.g_fadd[55].g_lat.u_add.u_cb.g_r.r[53]",
+    "actual_cause": "ABC anonymous comb gates not in lane fences while named FFs are; _361371_ groupNone with g_fadd55 nets",
+    "actual_stage_after": "TERMINAL; failed3_5ODB retained, no kill/restart",
+    "successor": "C15_cone_grouped",
+    "successor_recipe": "d59e97224",
+    "RTL_unchanged": true,
+    "extra_cycles": 0,
+    "max_guarded_group_padded_occupancy": 0.1400986124726005,
+    "slot_growth_mm2": 0,
+    "terminal_exit": 2,
+    "first_error": "DPL0033 detailed placement checks failed",
+    "terminal_record": "results/rtl/dsrom_fh_capture_20261005/routes/C14_decode_split/terminal.json"
+  },
+  "C15_actual_result": {
+    "terminal_exit": 2,
+    "first_error": "GPL0305 Inf/NaN gradient step in3_1_place_gp_skip_io",
+    "earlier_errors": false,
+    "automatic_target_density": 0.06949999978765846,
+    "actual_per_lane_GPL_min_density": [
+      0.08,
+      0.09
+    ],
+    "groups_finished": 63,
+    "stalled_lane": 62,
+    "qualified": false,
+    "successor": "C16_rect_strips",
+    "structural_fix": "All complete mappedlane cones use site-aligned nonmacro standardcell strips above actualSRAMbody29.7um+2umrowhalo; all64actualrow/tap/paddedmembers guard5 measured",
+    "max_guarded_padded_fraction": 0.17848423086885443,
+    "actual_repair_growth_factor": 1.485494547366295,
+    "derived_target_density": 0.27,
+    "slot_growth_mm2": 0,
+    "extra_cycles": 0,
+    "source_RTL_unchanged": true
+  },
+  "C16_actual_result": {
+    "stage": "TERMINAL actualmakeexit2 DPL0033; failedODB retained, not propagated CTS/extracted qualification",
+    "qualified": false,
+    "source_recipe": "41d7f6cb0",
+    "source_RTL_unchanged": true,
+    "actual_regions": "reload from f557b794 checkpoint reveals BOTH intended strip and old original rectangle in each region",
+    "first_source_error": "dbBox.destroy did not unlink old region boundary in serialized ODB; GPL consumed union/old bounds",
+    "actual_lane0_boundaries_dbu": [
+      [
+        18900,
+        52650,
+        244836,
+        84240
+      ],
+      [
+        18872,
+        18440,
+        244872,
+        84440
+      ]
+    ],
+    "successor": "C17_region_replace",
+    "correction": "remove group, destroy/recreate region with exact group/member preservation; assert all64 serialized boundaries and member counts",
+    "setup_ws_ps": -2568.27,
+    "hold_ws_ps": -6.23,
+    "resized_setup_ws_ps": -2234.8,
+    "critical_start": "u_memory.g_bank[55].u_lane/poison_q",
+    "critical_end": "g_argmax_consumer[12].c[19]",
+    "critical_class": "global64-bank fault reduction/veto through first real argmax consumer; not ALAT arithmetic",
+    "reports": [
+      "routes/C16_rect_strips/global_place.rpt",
+      "routes/C16_rect_strips/resized.rpt"
+    ],
+    "terminal_exit": 2,
+    "first_tool_error": "DPL0033 detailed placement checks failed",
+    "terminal_record": "results/rtl/dsrom_fh_capture_20261005/routes/C16_rect_strips/terminal.json"
+  },
+  "shared_partition_successors": {
+    "comb": "C18_shared_comb",
+    "receivers": "C19_shared_receivers",
+    "RTL_unchanged": true,
+    "exact_replayed": false,
+    "native_all_member_row_tap_guard5_and_reload_pass": true,
+    "slot_growth_mm2": 0,
+    "added_cycles": 0
+  },
+  "C16_terminal": {
+    "observed_at": "2026-10-06T01:24:58.137298+00:00",
+    "terminal": true,
+    "supervisor_absent": 1824378,
+    "outer_rc_file_missing": true,
+    "actual_make_exit": 2,
+    "first_error": "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+    "first_error_line": 316564,
+    "log_sha256": "091cce73ce5eb165ff9277db66c11664696ec564a3c3823d42d975d06d5dbc7e",
+    "preserved_failed_checkpoint": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C16_rect_strips/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/3_5_place_dp-failed.odb",
+    "structural_failure": "Region placement check failed (270427); serialized region had old rectangle plus strip, corrected single-boundary region API used in C17/C18/C19",
+    "last_edge_spacing_violations": 6354,
+    "last_padding_violations": 630,
+    "preCTS_SS_setup_ps": -2568.27,
+    "preCTS_hold_ps": -6.23,
+    "qualification": false,
+    "restart": false
+  },
+  "current_physical_successors": {
+    "C17b": "live EPYC1 preserved; no new E1 jobs",
+    "C18": "live E2 comb shared partition supervisor2546022 source3c45 all105regions verified",
+    "C19": "live E2 receiver partition supervisor2562095 source3c45 all105regions verified"
+  },
+  "C18_actual_result": {
+    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "first_timing_driven_setup_estimate_ps": -2384.7242,
+    "qualified": false,
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "host": "ot-epyc2",
+    "supervisor_pid": 2546022,
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb",
+    "shared_partition": "comb",
+    "serialized_lane_regions_verified": 64,
+    "serialized_nonempty_shared_regions_verified": 41,
+    "added_cycles": 0,
+    "head_slot_mm2": 1.32,
+    "exact_replayed": false,
+    "exact_retained_cycles": 62878,
+    "negative_controls_retained": true
+  },
+  "C19_actual_result": {
+    "stage": "LIVE timing-driven placement/routability repair; first estimate only, not saved final placement or CTS/extracted timing",
+    "first_timing_driven_setup_estimate_ps": -2401.015,
+    "qualified": false,
+    "source_recipe": "3c45a456a9f2cf52d04940a5d35347f369127286",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "host": "ot-epyc2",
+    "supervisor_pid": 2562095,
+    "run": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers",
+    "shared_partition": "receivers",
+    "serialized_lane_regions_verified": 64,
+    "serialized_nonempty_shared_regions_verified": 41,
+    "added_cycles": 0,
+    "head_slot_mm2": 1.32,
+    "exact_replayed": false,
+    "exact_retained_cycles": 62878,
+    "negative_controls_retained": true
+  }
+}

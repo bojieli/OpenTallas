@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/codex-item9-loaded32-min-20261005/tools/hbm_item9_actual_loads.py", line 69, in <module>
+    typ=cell['type'];assert typ in lib,(typ,name)
+                            ^^^^^^^^^^
+AssertionError: ('$scopeinfo', 'g_on.u_ep.g_on.g_cap[0].g_on.u_idle')

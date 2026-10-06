@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.hbm.attention.route_terminal.v1",
+  "route": "r1_m6h1_u45",
+  "host": "ot-agidock128",
+  "remote_root": "/home/ubuntu/claude-hbm-attn/routes/r1_m6h1_u45",
+  "source_verified": true,
+  "signoff_ss_ff": true,
+  "setup_ss_ps": 18.926193,
+  "hold_ff_ps": 1.486034,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "physical_runner_status": "not_met",
+  "physical_runner_hold_ps": -0.671463,
+  "physical_runner_corner_label": "TT",
+  "physical_runner_argv_corner": "WC",
+  "physical_runner_failure_preserved": true,
+  "contextual_closure": false,
+  "io_false_pathed": true,
+  "selected": false,
+  "adopted": false,
+  "note": "Explicit SS/FF replay passes; physical runner separately reports one hold violation -0.671463 ps and not_met, with TT-labelled library metadata despite WC argv. Both original records retained; no composite engineering PASS or substitution for exported u30 macro. No variant launched."
+}

@@ -1,0 +1,834 @@
+{
+  "groups": {
+    "cp_body": {
+      "count": 6932,
+      "area_um2": 868.8513599999864
+    },
+    "cp_association": {
+      "count": 5,
+      "area_um2": 0.83106
+    }
+  },
+  "all_group_containment_violations": [],
+  "clock_count": 74,
+  "clock_area": 16.008840000000006,
+  "clock_outside_finite_body": [],
+  "clock_cells": [
+    {
+      "name": "clkbuf_leaf_30_clk",
+      "bbox": [
+        40.338,
+        31.05,
+        41.526,
+        31.32
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_14_clk",
+      "bbox": [
+        49.734,
+        48.33,
+        50.922,
+        48.6
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_13_clk",
+      "bbox": [
+        44.496,
+        49.95,
+        45.684,
+        50.22
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_12_clk",
+      "bbox": [
+        44.226,
+        48.87,
+        45.414,
+        49.14
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_11_clk",
+      "bbox": [
+        42.606,
+        44.82,
+        43.794,
+        45.09
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_10_clk",
+      "bbox": [
+        38.934,
+        40.77,
+        40.122,
+        41.04
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_9_clk",
+      "bbox": [
+        35.262,
+        43.2,
+        36.45,
+        43.47
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_8_clk",
+      "bbox": [
+        35.1,
+        49.95,
+        36.288,
+        50.22
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_7_clk",
+      "bbox": [
+        28.728,
+        50.49,
+        29.916,
+        50.76
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_6_clk",
+      "bbox": [
+        19.278,
+        52.92,
+        20.466,
+        53.19
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_5_clk",
+      "bbox": [
+        20.736,
+        47.52,
+        21.924,
+        47.79
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_4_clk",
+      "bbox": [
+        20.196,
+        43.47,
+        21.384,
+        43.74
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_3_clk",
+      "bbox": [
+        21.33,
+        40.23,
+        22.518,
+        40.5
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_2_clk",
+      "bbox": [
+        28.242,
+        43.2,
+        29.43,
+        43.47
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_1_clk",
+      "bbox": [
+        32.238,
+        39.15,
+        33.426,
+        39.42
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_29_clk",
+      "bbox": [
+        44.55,
+        26.19,
+        45.738,
+        26.46
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_24_clk",
+      "bbox": [
+        55.242,
+        25.11,
+        56.43,
+        25.38
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_23_clk",
+      "bbox": [
+        56.916,
+        29.97,
+        58.104,
+        30.24
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_22_clk",
+      "bbox": [
+        55.944,
+        35.37,
+        57.132,
+        35.64
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_21_clk",
+      "bbox": [
+        49.788,
+        34.02,
+        50.976,
+        34.29
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_20_clk",
+      "bbox": [
+        44.334,
+        36.72,
+        45.522,
+        36.99
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_19_clk",
+      "bbox": [
+        48.546,
+        41.58,
+        49.734,
+        41.85
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_18_clk",
+      "bbox": [
+        54.81,
+        39.69,
+        55.998,
+        39.96
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_17_clk",
+      "bbox": [
+        57.456,
+        44.28,
+        58.644,
+        44.55
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_16_clk",
+      "bbox": [
+        54.378,
+        47.52,
+        55.566,
+        47.79
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_15_clk",
+      "bbox": [
+        55.404,
+        52.11,
+        56.592,
+        52.38
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_28_clk",
+      "bbox": [
+        40.77,
+        21.6,
+        41.958,
+        21.87
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_25_clk",
+      "bbox": [
+        57.294,
+        19.98,
+        58.482,
+        20.25
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_27_clk",
+      "bbox": [
+        48.006,
+        22.68,
+        49.194,
+        22.95
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_26_clk",
+      "bbox": [
+        51.516,
+        20.25,
+        52.704,
+        20.52
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_0_clk",
+      "bbox": [
+        31.698,
+        33.48,
+        32.886,
+        33.75
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_31_clk",
+      "bbox": [
+        35.478,
+        30.51,
+        36.666,
+        30.78
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_32_clk",
+      "bbox": [
+        32.346,
+        26.46,
+        33.534,
+        26.73
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_33_clk",
+      "bbox": [
+        36.72,
+        21.33,
+        37.908,
+        21.6
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_34_clk",
+      "bbox": [
+        31.914,
+        19.98,
+        33.102,
+        20.25
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_35_clk",
+      "bbox": [
+        20.844,
+        29.43,
+        22.032,
+        29.7
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_leaf_36_clk",
+      "bbox": [
+        24.894,
+        31.86,
+        26.082,
+        32.13
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkbuf_0_clk",
+      "bbox": [
+        38.394,
+        36.72,
+        39.042,
+        36.99
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_0__f_clk",
+      "bbox": [
+        30.294,
+        31.59,
+        30.942,
+        31.86
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_1__f_clk",
+      "bbox": [
+        27.702,
+        45.63,
+        28.35,
+        45.9
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_2__f_clk",
+      "bbox": [
+        49.626,
+        29.16,
+        50.274,
+        29.43
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkbuf_2_3__f_clk",
+      "bbox": [
+        49.356,
+        43.2,
+        50.004,
+        43.47
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload0",
+      "bbox": [
+        30.294,
+        31.05,
+        30.834,
+        31.32
+      ],
+      "group": "cp_body",
+      "area": 0.1458
+    },
+    {
+      "name": "clkload1",
+      "bbox": [
+        27.702,
+        45.09,
+        28.89,
+        45.36
+      ],
+      "group": "cp_body",
+      "area": 0.32076
+    },
+    {
+      "name": "clkload2",
+      "bbox": [
+        31.698,
+        34.02,
+        31.968,
+        34.29
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload3",
+      "bbox": [
+        32.238,
+        38.61,
+        32.454,
+        38.88
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload4",
+      "bbox": [
+        35.478,
+        31.32,
+        36.126,
+        31.59
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload5",
+      "bbox": [
+        36.828,
+        21.87,
+        37.098,
+        22.14
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload6",
+      "bbox": [
+        31.86,
+        20.25,
+        32.076,
+        20.52
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload7",
+      "bbox": [
+        20.844,
+        30.24,
+        21.114,
+        30.51
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload8",
+      "bbox": [
+        24.894,
+        32.4,
+        25.434,
+        32.67
+      ],
+      "group": "cp_body",
+      "area": 0.1458
+    },
+    {
+      "name": "clkload9",
+      "bbox": [
+        28.134,
+        41.85,
+        28.782,
+        42.12
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload10",
+      "bbox": [
+        21.33,
+        39.69,
+        21.6,
+        39.96
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload11",
+      "bbox": [
+        20.196,
+        43.74,
+        20.52,
+        44.01
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload12",
+      "bbox": [
+        19.278,
+        53.46,
+        19.602,
+        53.73
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload13",
+      "bbox": [
+        27.756,
+        48.6,
+        28.404,
+        48.87
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload14",
+      "bbox": [
+        35.1,
+        49.41,
+        35.37,
+        49.68
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload15",
+      "bbox": [
+        35.262,
+        44.28,
+        35.91,
+        44.55
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload16",
+      "bbox": [
+        39.312,
+        40.5,
+        39.582,
+        40.77
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload17",
+      "bbox": [
+        56.862,
+        30.51,
+        57.51,
+        30.78
+      ],
+      "group": "cp_body",
+      "area": 0.17496
+    },
+    {
+      "name": "clkload18",
+      "bbox": [
+        55.242,
+        25.38,
+        55.458,
+        25.65
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload19",
+      "bbox": [
+        51.516,
+        20.79,
+        51.786,
+        21.06
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload20",
+      "bbox": [
+        48.006,
+        21.6,
+        48.276,
+        21.87
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload21",
+      "bbox": [
+        44.55,
+        26.46,
+        44.874,
+        26.73
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload22",
+      "bbox": [
+        40.338,
+        31.32,
+        40.608,
+        31.59
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload23",
+      "bbox": [
+        42.606,
+        44.01,
+        42.822,
+        44.28
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload24",
+      "bbox": [
+        44.172,
+        47.52,
+        44.388,
+        47.79
+      ],
+      "group": "cp_body",
+      "area": 0.05832
+    },
+    {
+      "name": "clkload25",
+      "bbox": [
+        49.68,
+        49.41,
+        49.95,
+        49.68
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload26",
+      "bbox": [
+        55.404,
+        51.84,
+        55.782,
+        52.11
+      ],
+      "group": "cp_body",
+      "area": 0.10206
+    },
+    {
+      "name": "clkload27",
+      "bbox": [
+        54.378,
+        46.71,
+        54.648,
+        46.98
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload28",
+      "bbox": [
+        57.456,
+        43.2,
+        57.726,
+        43.47
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    },
+    {
+      "name": "clkload29",
+      "bbox": [
+        54.81,
+        38.88,
+        55.134,
+        39.15
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload30",
+      "bbox": [
+        48.546,
+        42.93,
+        48.87,
+        43.2
+      ],
+      "group": "cp_body",
+      "area": 0.08748
+    },
+    {
+      "name": "clkload31",
+      "bbox": [
+        44.226,
+        36.99,
+        44.496,
+        37.26
+      ],
+      "group": "cp_body",
+      "area": 0.0729
+    }
+  ],
+  "other_ungrouped_masters": {},
+  "other_ungrouped_area": {}
+}

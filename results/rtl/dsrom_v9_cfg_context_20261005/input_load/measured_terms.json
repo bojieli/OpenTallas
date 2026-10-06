@@ -1,0 +1,143 @@
+{
+  "schema": "opentallas.dsrom.cfg.input_load.v1",
+  "derived_netlist_sha256": "df9cebac072636be86e300794e506c21ced768e3d083345dff778cc07ab2577a",
+  "scope": "finite PHW6 HARD_CFG1/PQ0 mapped provider, direct input receiver pins only",
+  "corners": {
+    "SS": {
+      "ports": {
+        "cfg_go": {
+          "receivers": 1,
+          "cap_fF": 0.5065
+        },
+        "cfg_np[0]": {
+          "receivers": 1,
+          "cap_fF": 0.511133
+        },
+        "cfg_np[1]": {
+          "receivers": 1,
+          "cap_fF": 0.511133
+        },
+        "cfg_np[2]": {
+          "receivers": 1,
+          "cap_fF": 0.511133
+        },
+        "cfg_ph[0]": {
+          "receivers": 7,
+          "cap_fF": 3.644506
+        },
+        "cfg_ph[1]": {
+          "receivers": 8,
+          "cap_fF": 4.205284
+        },
+        "cfg_ph[2]": {
+          "receivers": 2,
+          "cap_fF": 1.055679
+        },
+        "cfg_ph[3]": {
+          "receivers": 5,
+          "cap_fF": 2.927046
+        },
+        "cfg_ph[4]": {
+          "receivers": 1,
+          "cap_fF": 0.5065
+        },
+        "cfg_ph[5]": {
+          "receivers": 5,
+          "cap_fF": 2.663513
+        },
+        "clk": {
+          "receivers": 76,
+          "cap_fF": 42.07564500000006
+        },
+        "go": {
+          "receivers": 1,
+          "cap_fF": 0.489888
+        },
+        "rst_n": {
+          "receivers": 16,
+          "cap_fF": 10.052452000000002
+        }
+      },
+      "clock_receiver_families": {
+        "DFFASRHQNx1_ASAP7_75t_R": 8,
+        "DFFHQNx1_ASAP7_75t_R": 67,
+        "ot_rom_4096x72_m8": 1
+      },
+      "macro_clock_cap_fF": 8.6838,
+      "loader_clock_cap_fF": 33.39184500000006,
+      "file": "results/rtl/dsrom_v9_cfg_context_20261005/input_load/input_load_probe/SS_input_receivers.tsv",
+      "sha256": "5b9d0773e50897c9f53d7a708298b862a01c2b261d8e12b28d74ec9cb2a04103"
+    },
+    "FF": {
+      "ports": {
+        "cfg_go": {
+          "receivers": 1,
+          "cap_fF": 0.577042
+        },
+        "cfg_np[0]": {
+          "receivers": 1,
+          "cap_fF": 0.612447
+        },
+        "cfg_np[1]": {
+          "receivers": 1,
+          "cap_fF": 0.612447
+        },
+        "cfg_np[2]": {
+          "receivers": 1,
+          "cap_fF": 0.612447
+        },
+        "cfg_ph[0]": {
+          "receivers": 7,
+          "cap_fF": 4.306287
+        },
+        "cfg_ph[1]": {
+          "receivers": 8,
+          "cap_fF": 5.056562
+        },
+        "cfg_ph[2]": {
+          "receivers": 2,
+          "cap_fF": 1.230737
+        },
+        "cfg_ph[3]": {
+          "receivers": 5,
+          "cap_fF": 3.416648
+        },
+        "cfg_ph[4]": {
+          "receivers": 1,
+          "cap_fF": 0.577042
+        },
+        "cfg_ph[5]": {
+          "receivers": 5,
+          "cap_fF": 3.155494
+        },
+        "clk": {
+          "receivers": 76,
+          "cap_fF": 49.067498999999955
+        },
+        "go": {
+          "receivers": 1,
+          "cap_fF": 0.576139
+        },
+        "rst_n": {
+          "receivers": 16,
+          "cap_fF": 11.771617999999998
+        }
+      },
+      "clock_receiver_families": {
+        "DFFASRHQNx1_ASAP7_75t_R": 8,
+        "DFFHQNx1_ASAP7_75t_R": 67,
+        "ot_rom_4096x72_m8": 1
+      },
+      "macro_clock_cap_fF": 10.3732,
+      "loader_clock_cap_fF": 38.69429899999996,
+      "file": "results/rtl/dsrom_v9_cfg_context_20261005/input_load/input_load_probe/FF_input_receivers.tsv",
+      "sha256": "9a632b56fbb785b1b7046775c6fc28baaa9cc1e39507acc87c6f9c2f69f5f97c"
+    }
+  },
+  "unconnected_inputs": "external_cfg_q and e_sh_free/e_bank_free have no receivers in HARD_CFG1/PQ0; intentional inactive source branches, not clock/load waiver",
+  "enclosing_parent_increment": "not computed; these totals include original 75 loader DFFs. Do not add all76 receivers to existing native loader clock load. Joined mapping must recompute sharing and CTS load.",
+  "clock_wire_buffer_load_priced": false,
+  "clock_insertion_measured": false,
+  "full_field_missing_input_clocks": true,
+  "remote_root": "ot-epyc2:/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005/input_load_probe"
+}

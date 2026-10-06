@@ -1,0 +1,17 @@
+export DESIGN_NICKNAME = copernicus_wfc_producers
+export DESIGN_NAME = ot_dsrom_wfc_producer_context
+export PLATFORM = asap7
+export VERILOG_FILES = /src/physical/dsrom_wfc_producer_context/ot_dsrom_wfc_producer_context.sv /src/rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv /src/rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv /src/rtl/dft/ot_rom_secded_dec.sv /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+export VERILOG_TOP_PARAMS = ENABLE 1
+export SYNTH_HDL_FRONTEND = slang
+export SDC_FILE = /src/physical/dsrom_wfc_producer_context/constraint.sdc
+export ADDITIONAL_LEFS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+export CORNER = WC
+export CORNERS = WC BC
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export ADDER_MAP_FILE =
+export NUM_CORES = 1

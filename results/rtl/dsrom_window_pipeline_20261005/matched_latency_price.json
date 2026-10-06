@@ -1,0 +1,3139 @@
+{
+  "status": "MEASURED_COMPONENT_LATENCY_ONLY_NO_ADOPTION",
+  "baseline_sha256": "2b47432687b829b755f3c5a1916bfcd8ceaf405251395de61a7a47a2b4015aac",
+  "matched_cases": 344,
+  "clk_ps": 833,
+  "note": "stream_cycles already includes load; load delta is diagnostic and never charged twice",
+  "configurations": {
+    "lf": {
+      "mean_write_plus_stream_delta_cycles": 162.40625,
+      "max_write_plus_stream_delta_cycles": 433
+    },
+    "lf_bg": {
+      "mean_write_plus_stream_delta_cycles": 145.203125,
+      "max_write_plus_stream_delta_cycles": 645
+    },
+    "lf_cold": {
+      "mean_write_plus_stream_delta_cycles": 46.90625,
+      "max_write_plus_stream_delta_cycles": 48
+    },
+    "lf_kg_p1": {
+      "mean_write_plus_stream_delta_cycles": 147.375,
+      "max_write_plus_stream_delta_cycles": 232
+    },
+    "lf_kg_p2": {
+      "mean_write_plus_stream_delta_cycles": 146.25,
+      "max_write_plus_stream_delta_cycles": 190
+    },
+    "lf_kgcon_p2": {
+      "mean_write_plus_stream_delta_cycles": 150.875,
+      "max_write_plus_stream_delta_cycles": 154
+    },
+    "lf_scan": {
+      "mean_write_plus_stream_delta_cycles": 184.734375,
+      "max_write_plus_stream_delta_cycles": 567
+    }
+  },
+  "analytical_all_layer_upper_cycles": 179,
+  "physical_closed": false,
+  "parent_qualified": false,
+  "headline_changed": false,
+  "cases": [
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3000,
+      "write_delta_cycles": 107,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 154,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3073,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3146,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3219,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3292,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3365,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3438,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3511,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3584,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3657,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3730,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3803,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3876,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 3949,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4022,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4095,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4168,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4241,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4314,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4387,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4460,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4533,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4606,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4679,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 28,
+      "write_plus_stream_delta_cycles": 165,
+      "stream_end_delta_cycles": 60
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4752,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 11,
+      "write_plus_stream_delta_cycles": 148,
+      "stream_end_delta_cycles": 43
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4825,
+      "write_delta_cycles": 109,
+      "load_delta_cycles": 6,
+      "write_plus_stream_delta_cycles": 147,
+      "stream_end_delta_cycles": 38
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4898,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 4971,
+      "write_delta_cycles": 106,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5044,
+      "write_delta_cycles": 101,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 148,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5117,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5190,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5263,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5336,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5409,
+      "write_delta_cycles": 97,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 144,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5482,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5555,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5628,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5701,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5774,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5847,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5920,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 5993,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6066,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6139,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6212,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6285,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6358,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6431,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6504,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6577,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6650,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6723,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6796,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6869,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 6942,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7015,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7088,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7161,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7234,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7307,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7380,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 208,
+      "write_plus_stream_delta_cycles": 345,
+      "stream_end_delta_cycles": 240
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7453,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 212,
+      "write_plus_stream_delta_cycles": 349,
+      "stream_end_delta_cycles": 244
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7526,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 6,
+      "write_plus_stream_delta_cycles": 143,
+      "stream_end_delta_cycles": 38
+    },
+    {
+      "layer": 0,
+      "config": "lf",
+      "phase": 7599,
+      "write_delta_cycles": 366,
+      "load_delta_cycles": 35,
+      "write_plus_stream_delta_cycles": 433,
+      "stream_end_delta_cycles": 67
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3000,
+      "write_delta_cycles": 107,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 154,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3073,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3146,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3219,
+      "write_delta_cycles": 99,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 146,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3292,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3365,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3438,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3511,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3584,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3657,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3730,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3803,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3876,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 3949,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4022,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4095,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4168,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4241,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4314,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4387,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4460,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4533,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4606,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4679,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 28,
+      "write_plus_stream_delta_cycles": 165,
+      "stream_end_delta_cycles": 60
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4752,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 11,
+      "write_plus_stream_delta_cycles": 148,
+      "stream_end_delta_cycles": 43
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4825,
+      "write_delta_cycles": 109,
+      "load_delta_cycles": 6,
+      "write_plus_stream_delta_cycles": 147,
+      "stream_end_delta_cycles": 38
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4898,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 4971,
+      "write_delta_cycles": 106,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5044,
+      "write_delta_cycles": 101,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 148,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5117,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5190,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5263,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5336,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5409,
+      "write_delta_cycles": 97,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 144,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5482,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5555,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5628,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5701,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5774,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5847,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5920,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 5993,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6066,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6139,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6212,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6285,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6358,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6431,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6504,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6577,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6650,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6723,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6796,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6869,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 6942,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7015,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7088,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7161,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7234,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7307,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7380,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 208,
+      "write_plus_stream_delta_cycles": 345,
+      "stream_end_delta_cycles": 240
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7453,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 212,
+      "write_plus_stream_delta_cycles": 349,
+      "stream_end_delta_cycles": 244
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7526,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 6,
+      "write_plus_stream_delta_cycles": 143,
+      "stream_end_delta_cycles": 38
+    },
+    {
+      "layer": 24,
+      "config": "lf",
+      "phase": 7599,
+      "write_delta_cycles": 366,
+      "load_delta_cycles": 35,
+      "write_plus_stream_delta_cycles": 433,
+      "stream_end_delta_cycles": 67
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3000,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 48,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3073,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 12,
+      "write_plus_stream_delta_cycles": 44,
+      "stream_end_delta_cycles": 44
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3146,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 12,
+      "write_plus_stream_delta_cycles": 44,
+      "stream_end_delta_cycles": 44
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3219,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 12,
+      "write_plus_stream_delta_cycles": 44,
+      "stream_end_delta_cycles": 44
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3292,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 48,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3365,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3438,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3511,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3584,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3657,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3730,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3803,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3876,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 3949,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4022,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4095,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4168,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4241,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4314,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4387,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4460,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4533,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4606,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4679,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4752,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4825,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4898,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 4971,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5044,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5117,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5190,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5263,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5336,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5409,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5482,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 48,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5555,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5628,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5701,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5774,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5847,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5920,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 5993,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6066,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6139,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6212,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6285,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6358,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6431,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6504,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6577,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6650,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6723,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6796,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6869,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 6942,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7015,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7088,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7161,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7234,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7307,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7380,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7453,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7526,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 0,
+      "config": "lf_cold",
+      "phase": 7599,
+      "write_delta_cycles": 0,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 47,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3000,
+      "write_delta_cycles": 178,
+      "load_delta_cycles": 196,
+      "write_plus_stream_delta_cycles": 406,
+      "stream_end_delta_cycles": 228
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3073,
+      "write_delta_cycles": 52,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 99,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3146,
+      "write_delta_cycles": 52,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 99,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3219,
+      "write_delta_cycles": -72,
+      "load_delta_cycles": 17,
+      "write_plus_stream_delta_cycles": -23,
+      "stream_end_delta_cycles": 49
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3292,
+      "write_delta_cycles": 182,
+      "load_delta_cycles": 30,
+      "write_plus_stream_delta_cycles": 244,
+      "stream_end_delta_cycles": 62
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3365,
+      "write_delta_cycles": 267,
+      "load_delta_cycles": -17,
+      "write_plus_stream_delta_cycles": 282,
+      "stream_end_delta_cycles": 15
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3438,
+      "write_delta_cycles": 12,
+      "load_delta_cycles": 10,
+      "write_plus_stream_delta_cycles": 54,
+      "stream_end_delta_cycles": 42
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3511,
+      "write_delta_cycles": 33,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 80,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3584,
+      "write_delta_cycles": -104,
+      "load_delta_cycles": 11,
+      "write_plus_stream_delta_cycles": -61,
+      "stream_end_delta_cycles": 43
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3657,
+      "write_delta_cycles": 66,
+      "load_delta_cycles": 182,
+      "write_plus_stream_delta_cycles": 280,
+      "stream_end_delta_cycles": 214
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3730,
+      "write_delta_cycles": 93,
+      "load_delta_cycles": 17,
+      "write_plus_stream_delta_cycles": 142,
+      "stream_end_delta_cycles": 49
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3803,
+      "write_delta_cycles": 104,
+      "load_delta_cycles": 17,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 49
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3876,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 3949,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 159,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4022,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4095,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 159,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4168,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4241,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 159,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4314,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 153,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4387,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 21,
+      "write_plus_stream_delta_cycles": 158,
+      "stream_end_delta_cycles": 53
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4460,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4533,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 159,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4606,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4679,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 159,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4752,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4825,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 21,
+      "write_plus_stream_delta_cycles": 158,
+      "stream_end_delta_cycles": 53
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4898,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 4971,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 161,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5044,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5117,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 166,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5190,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5263,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 166,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5336,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5409,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 24,
+      "write_plus_stream_delta_cycles": 166,
+      "stream_end_delta_cycles": 56
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5482,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5555,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 190,
+      "write_plus_stream_delta_cycles": 332,
+      "stream_end_delta_cycles": 222
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5628,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 191,
+      "write_plus_stream_delta_cycles": 328,
+      "stream_end_delta_cycles": 223
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5701,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 190,
+      "write_plus_stream_delta_cycles": 327,
+      "stream_end_delta_cycles": 222
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5774,
+      "write_delta_cycles": 77,
+      "load_delta_cycles": 190,
+      "write_plus_stream_delta_cycles": 299,
+      "stream_end_delta_cycles": 222
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5847,
+      "write_delta_cycles": 50,
+      "load_delta_cycles": 19,
+      "write_plus_stream_delta_cycles": 101,
+      "stream_end_delta_cycles": 51
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5920,
+      "write_delta_cycles": 54,
+      "load_delta_cycles": 14,
+      "write_plus_stream_delta_cycles": 100,
+      "stream_end_delta_cycles": 46
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 5993,
+      "write_delta_cycles": 18,
+      "load_delta_cycles": -40,
+      "write_plus_stream_delta_cycles": 10,
+      "stream_end_delta_cycles": -8
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6066,
+      "write_delta_cycles": 68,
+      "load_delta_cycles": -57,
+      "write_plus_stream_delta_cycles": 43,
+      "stream_end_delta_cycles": -25
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6139,
+      "write_delta_cycles": 223,
+      "load_delta_cycles": 207,
+      "write_plus_stream_delta_cycles": 462,
+      "stream_end_delta_cycles": 239
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6212,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": -177,
+      "write_plus_stream_delta_cycles": -40,
+      "stream_end_delta_cycles": -145
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6285,
+      "write_delta_cycles": 109,
+      "load_delta_cycles": -56,
+      "write_plus_stream_delta_cycles": 85,
+      "stream_end_delta_cycles": -24
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6358,
+      "write_delta_cycles": 82,
+      "load_delta_cycles": -34,
+      "write_plus_stream_delta_cycles": 80,
+      "stream_end_delta_cycles": -2
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6431,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 68,
+      "write_plus_stream_delta_cycles": 205,
+      "stream_end_delta_cycles": 100
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6504,
+      "write_delta_cycles": 30,
+      "load_delta_cycles": 12,
+      "write_plus_stream_delta_cycles": 74,
+      "stream_end_delta_cycles": 44
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6577,
+      "write_delta_cycles": 111,
+      "load_delta_cycles": 181,
+      "write_plus_stream_delta_cycles": 324,
+      "stream_end_delta_cycles": 213
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6650,
+      "write_delta_cycles": 20,
+      "load_delta_cycles": 14,
+      "write_plus_stream_delta_cycles": 66,
+      "stream_end_delta_cycles": 46
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6723,
+      "write_delta_cycles": 118,
+      "load_delta_cycles": 208,
+      "write_plus_stream_delta_cycles": 358,
+      "stream_end_delta_cycles": 240
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6796,
+      "write_delta_cycles": 678,
+      "load_delta_cycles": -190,
+      "write_plus_stream_delta_cycles": 520,
+      "stream_end_delta_cycles": -158
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6869,
+      "write_delta_cycles": 95,
+      "load_delta_cycles": -16,
+      "write_plus_stream_delta_cycles": 111,
+      "stream_end_delta_cycles": 16
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 6942,
+      "write_delta_cycles": 497,
+      "load_delta_cycles": 38,
+      "write_plus_stream_delta_cycles": 567,
+      "stream_end_delta_cycles": 70
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7015,
+      "write_delta_cycles": 344,
+      "load_delta_cycles": -144,
+      "write_plus_stream_delta_cycles": 232,
+      "stream_end_delta_cycles": -112
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7088,
+      "write_delta_cycles": 215,
+      "load_delta_cycles": 67,
+      "write_plus_stream_delta_cycles": 314,
+      "stream_end_delta_cycles": 99
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7161,
+      "write_delta_cycles": 276,
+      "load_delta_cycles": -98,
+      "write_plus_stream_delta_cycles": 210,
+      "stream_end_delta_cycles": -66
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7234,
+      "write_delta_cycles": 126,
+      "load_delta_cycles": 30,
+      "write_plus_stream_delta_cycles": 188,
+      "stream_end_delta_cycles": 62
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7307,
+      "write_delta_cycles": 266,
+      "load_delta_cycles": -68,
+      "write_plus_stream_delta_cycles": 230,
+      "stream_end_delta_cycles": -36
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7380,
+      "write_delta_cycles": 131,
+      "load_delta_cycles": 98,
+      "write_plus_stream_delta_cycles": 261,
+      "stream_end_delta_cycles": 130
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7453,
+      "write_delta_cycles": 289,
+      "load_delta_cycles": 11,
+      "write_plus_stream_delta_cycles": 332,
+      "stream_end_delta_cycles": 43
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7526,
+      "write_delta_cycles": 91,
+      "load_delta_cycles": 16,
+      "write_plus_stream_delta_cycles": 139,
+      "stream_end_delta_cycles": 48
+    },
+    {
+      "layer": 20,
+      "config": "lf_scan",
+      "phase": 7599,
+      "write_delta_cycles": 147,
+      "load_delta_cycles": 38,
+      "write_plus_stream_delta_cycles": 217,
+      "stream_end_delta_cycles": 70
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3000,
+      "write_delta_cycles": 178,
+      "load_delta_cycles": 20,
+      "write_plus_stream_delta_cycles": 230,
+      "stream_end_delta_cycles": 52
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3073,
+      "write_delta_cycles": 52,
+      "load_delta_cycles": -10,
+      "write_plus_stream_delta_cycles": 74,
+      "stream_end_delta_cycles": 22
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3146,
+      "write_delta_cycles": 52,
+      "load_delta_cycles": -12,
+      "write_plus_stream_delta_cycles": 72,
+      "stream_end_delta_cycles": 20
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3219,
+      "write_delta_cycles": -72,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": -25,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3292,
+      "write_delta_cycles": 182,
+      "load_delta_cycles": -31,
+      "write_plus_stream_delta_cycles": 183,
+      "stream_end_delta_cycles": 1
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3365,
+      "write_delta_cycles": 267,
+      "load_delta_cycles": -15,
+      "write_plus_stream_delta_cycles": 284,
+      "stream_end_delta_cycles": 17
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3438,
+      "write_delta_cycles": 12,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 59,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3511,
+      "write_delta_cycles": 33,
+      "load_delta_cycles": -21,
+      "write_plus_stream_delta_cycles": 44,
+      "stream_end_delta_cycles": 11
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3584,
+      "write_delta_cycles": -104,
+      "load_delta_cycles": -65,
+      "write_plus_stream_delta_cycles": -137,
+      "stream_end_delta_cycles": -33
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3657,
+      "write_delta_cycles": 66,
+      "load_delta_cycles": 97,
+      "write_plus_stream_delta_cycles": 195,
+      "stream_end_delta_cycles": 129
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3730,
+      "write_delta_cycles": 93,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 140,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3803,
+      "write_delta_cycles": 104,
+      "load_delta_cycles": 4,
+      "write_plus_stream_delta_cycles": 140,
+      "stream_end_delta_cycles": 36
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3876,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 3949,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4022,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4095,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4168,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4241,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4314,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4387,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4460,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4533,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4606,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4679,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4752,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4825,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4898,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 4971,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 13,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 45
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5044,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5117,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 157,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5190,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5263,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 157,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5336,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5409,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 157,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5482,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5555,
+      "write_delta_cycles": 110,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 157,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5628,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 23,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 55
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5701,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": -447,
+      "write_plus_stream_delta_cycles": -310,
+      "stream_end_delta_cycles": -415
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5774,
+      "write_delta_cycles": 77,
+      "load_delta_cycles": -171,
+      "write_plus_stream_delta_cycles": -62,
+      "stream_end_delta_cycles": -139
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5847,
+      "write_delta_cycles": 50,
+      "load_delta_cycles": -40,
+      "write_plus_stream_delta_cycles": 42,
+      "stream_end_delta_cycles": -8
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5920,
+      "write_delta_cycles": 54,
+      "load_delta_cycles": 89,
+      "write_plus_stream_delta_cycles": 175,
+      "stream_end_delta_cycles": 121
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 5993,
+      "write_delta_cycles": 18,
+      "load_delta_cycles": -9,
+      "write_plus_stream_delta_cycles": 41,
+      "stream_end_delta_cycles": 23
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6066,
+      "write_delta_cycles": 68,
+      "load_delta_cycles": -36,
+      "write_plus_stream_delta_cycles": 64,
+      "stream_end_delta_cycles": -4
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6139,
+      "write_delta_cycles": 223,
+      "load_delta_cycles": -135,
+      "write_plus_stream_delta_cycles": 120,
+      "stream_end_delta_cycles": -103
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6212,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 52,
+      "write_plus_stream_delta_cycles": 189,
+      "stream_end_delta_cycles": 84
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6285,
+      "write_delta_cycles": 109,
+      "load_delta_cycles": -108,
+      "write_plus_stream_delta_cycles": 33,
+      "stream_end_delta_cycles": -76
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6358,
+      "write_delta_cycles": 82,
+      "load_delta_cycles": 46,
+      "write_plus_stream_delta_cycles": 160,
+      "stream_end_delta_cycles": 78
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6431,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": -43,
+      "write_plus_stream_delta_cycles": 94,
+      "stream_end_delta_cycles": -11
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6504,
+      "write_delta_cycles": 30,
+      "load_delta_cycles": -19,
+      "write_plus_stream_delta_cycles": 43,
+      "stream_end_delta_cycles": 13
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6577,
+      "write_delta_cycles": 111,
+      "load_delta_cycles": -49,
+      "write_plus_stream_delta_cycles": 94,
+      "stream_end_delta_cycles": -17
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6650,
+      "write_delta_cycles": 20,
+      "load_delta_cycles": -9,
+      "write_plus_stream_delta_cycles": 43,
+      "stream_end_delta_cycles": 23
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6723,
+      "write_delta_cycles": 118,
+      "load_delta_cycles": 4,
+      "write_plus_stream_delta_cycles": 154,
+      "stream_end_delta_cycles": 36
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6796,
+      "write_delta_cycles": 678,
+      "load_delta_cycles": -65,
+      "write_plus_stream_delta_cycles": 645,
+      "stream_end_delta_cycles": -33
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6869,
+      "write_delta_cycles": 95,
+      "load_delta_cycles": -32,
+      "write_plus_stream_delta_cycles": 95,
+      "stream_end_delta_cycles": 0
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 6942,
+      "write_delta_cycles": 497,
+      "load_delta_cycles": -11,
+      "write_plus_stream_delta_cycles": 518,
+      "stream_end_delta_cycles": 21
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7015,
+      "write_delta_cycles": 344,
+      "load_delta_cycles": -105,
+      "write_plus_stream_delta_cycles": 271,
+      "stream_end_delta_cycles": -73
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7088,
+      "write_delta_cycles": 215,
+      "load_delta_cycles": 119,
+      "write_plus_stream_delta_cycles": 366,
+      "stream_end_delta_cycles": 151
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7161,
+      "write_delta_cycles": 276,
+      "load_delta_cycles": -114,
+      "write_plus_stream_delta_cycles": 194,
+      "stream_end_delta_cycles": -82
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7234,
+      "write_delta_cycles": 126,
+      "load_delta_cycles": 64,
+      "write_plus_stream_delta_cycles": 222,
+      "stream_end_delta_cycles": 96
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7307,
+      "write_delta_cycles": 266,
+      "load_delta_cycles": -50,
+      "write_plus_stream_delta_cycles": 248,
+      "stream_end_delta_cycles": -18
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7380,
+      "write_delta_cycles": 131,
+      "load_delta_cycles": -103,
+      "write_plus_stream_delta_cycles": 60,
+      "stream_end_delta_cycles": -71
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7453,
+      "write_delta_cycles": 289,
+      "load_delta_cycles": 55,
+      "write_plus_stream_delta_cycles": 376,
+      "stream_end_delta_cycles": 87
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7526,
+      "write_delta_cycles": 91,
+      "load_delta_cycles": -78,
+      "write_plus_stream_delta_cycles": 45,
+      "stream_end_delta_cycles": -46
+    },
+    {
+      "layer": 20,
+      "config": "lf_bg",
+      "phase": 7599,
+      "write_delta_cycles": 147,
+      "load_delta_cycles": 35,
+      "write_plus_stream_delta_cycles": 214,
+      "stream_end_delta_cycles": 67
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 3000,
+      "write_delta_cycles": 181,
+      "load_delta_cycles": 19,
+      "write_plus_stream_delta_cycles": 232,
+      "stream_end_delta_cycles": 51
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 3585,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 135,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 4170,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 25,
+      "write_plus_stream_delta_cycles": 145,
+      "stream_end_delta_cycles": 57
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 4755,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 135,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 5340,
+      "write_delta_cycles": 91,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 138,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 5925,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 135,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 6510,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 135,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p1",
+      "phase": 7095,
+      "write_delta_cycles": 88,
+      "load_delta_cycles": 4,
+      "write_plus_stream_delta_cycles": 124,
+      "stream_end_delta_cycles": 36
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 3000,
+      "write_delta_cycles": 139,
+      "load_delta_cycles": 19,
+      "write_plus_stream_delta_cycles": 190,
+      "stream_end_delta_cycles": 51
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 3585,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 4170,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": 22,
+      "write_plus_stream_delta_cycles": 157,
+      "stream_end_delta_cycles": 54
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 4755,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 5340,
+      "write_delta_cycles": 101,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 148,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 5925,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 6510,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 150,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kg_p2",
+      "phase": 7095,
+      "write_delta_cycles": 103,
+      "load_delta_cycles": -60,
+      "write_plus_stream_delta_cycles": 75,
+      "stream_end_delta_cycles": -28
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 3000,
+      "write_delta_cycles": 107,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 154,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 3585,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 4170,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 4755,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 4,
+      "write_plus_stream_delta_cycles": 141,
+      "stream_end_delta_cycles": 36
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 5340,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 5925,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 6510,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    },
+    {
+      "layer": 24,
+      "config": "lf_kgcon_p2",
+      "phase": 7095,
+      "write_delta_cycles": 105,
+      "load_delta_cycles": 15,
+      "write_plus_stream_delta_cycles": 152,
+      "stream_end_delta_cycles": 47
+    }
+  ]
+}

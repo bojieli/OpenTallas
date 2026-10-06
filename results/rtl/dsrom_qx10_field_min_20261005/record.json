@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.dsrom-qx10-field-min-functional.v1",
+  "verdict": "PASS_MINIMAL_FUNCTIONAL",
+  "source_commit": "e9b3411a1c26732b6e848ab97a849ed68f85b093",
+  "element_source_commit": "0032b7355",
+  "driver_fix_main_commit": "7e248df54",
+  "shape": {
+    "NP": 32,
+    "R": 1,
+    "NBF": 5,
+    "real_pairs": 18,
+    "real_BF_capable_pairs": 4,
+    "QELEM": 1,
+    "QXV": 10
+  },
+  "cases": [
+    {
+      "phase": "L20.a_proj.fp8",
+      "region": 0,
+      "rows_checked": 6,
+      "go_to_last_w": 409,
+      "go_to_idle": 410,
+      "delta_cycles_vs_qx9": 0,
+      "golden_exact": true
+    },
+    {
+      "phase": "L20.exp158.gu",
+      "region": 0,
+      "rows_checked": 12,
+      "go_to_last_w": 398,
+      "go_to_idle": 399,
+      "delta_cycles_vs_qx9": 0,
+      "golden_exact": true
+    },
+    {
+      "phase": "L20.exp158.w2",
+      "region": 0,
+      "rows_checked": 10,
+      "go_to_last_w": 285,
+      "go_to_idle": 286,
+      "delta_cycles_vs_qx9": 0,
+      "golden_exact": true
+    }
+  ],
+  "total_rows_checked": 28,
+  "physical_qualified": false,
+  "missing_input_clocks": true,
+  "whole_field_clock_claim": false,
+  "composition_updated": false,
+  "claim_boundary": "Only three full-K L20 phases in one full-shape return region. No other phases/regions qualified; old 20160-region campaigns do not qualify QX10. Actual three-case additional latency is zero, not extrapolated into composed rate.",
+  "remote_preserved_work": "/srv/opentallas-scratch/codex/noether-qx10-field-min-20261005",
+  "build_and_objects_preserved": true,
+  "artifact_sha256": {
+    "build.command.json": "f68236a8522e2dde2bdabdc340f7594b8ceed7a45cf7ad7e6f33ca0e3859eef9",
+    "build.log": "a6c6976e2baec5e3da44d85943c39cd1cc790cecbe8ebd0436a3a110a5428f7f",
+    "build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "capacity.jsonl": "b11e14887562f4310f529762cc81d44cb905e74b44b2e365ee9e9e7dbbf292a1",
+    "done": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "functional.command.json": "fbf2a7c259f30c9463e3b57b96c20bf7fa5073631f1553e919e64a9f79bad912",
+    "functional.log": "c848bc808d6a6a98d91871d2d220f5db290faeb68cd78270d5c08d5d1aa7d85c",
+    "functional.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "input_pins.json": "ed8be50c297055057dcb4497e29017ca426162f3e63ea65a5cad4b1e815c5b41",
+    "noether-qx10-field-source-manifest.json": "99617cea93483487c08f00f6cb2da6a242891a57e705548794fc7d4d1a04506d",
+    "qx10/L20.a_proj.fp8/ops.txt": "36761e6a80672dada46a5454e97459397ce33834a33da9b8f33f536a83b27462",
+    "qx10/L20.a_proj.fp8/result.json": "175bdf42054222314de92037de651c4b6d2c5250d2cc925de7ed3b0561986be9",
+    "qx10/L20.a_proj.fp8/sim.log": "f7fa0df34642fe78afb429eb8e4c0fd071bfb623e15b08d42a253bf9080070d2",
+    "qx10/L20.exp158.gu/ops.txt": "e8e222f62e6cb72e67d1b980cac873f53bba8cc60a391cb23e64110964e1291d",
+    "qx10/L20.exp158.gu/result.json": "4a2b23cacba48d9175cacbaa2abf268bc226ebb382a585fc127b87579810ea4e",
+    "qx10/L20.exp158.gu/sim.log": "70430089cbbd7a159f0c0ebaa87d38b88c4f13275b7fb9c2fbb22adf8eeb18ee",
+    "qx10/L20.exp158.w2/ops.txt": "af4e4a53300cf2a569ce7ab78e6fb4b7b970bc0f80b30e5b81d31c6eca29303c",
+    "qx10/L20.exp158.w2/result.json": "37b59db52ab5fd322840deb6d9c2e42ae7e61bc3b7f44517a6cb11f3fa25a61e",
+    "qx10/L20.exp158.w2/sim.log": "787305dabaa84114bf0e0dbd461d30a63fb5c20e0e7ed1419591709c9d83f0f0",
+    "qx9/L20.a_proj.fp8/result.json": "af14865e91509b357637913b534de99357ee2cf3ff9a1d358f59bb4a801a0a53",
+    "qx9/L20.exp158.gu/result.json": "dac69927b83106d4ffc16cb73e9ad42f0c3ea5ae3dfa3e121fc6cac10bef53ca",
+    "qx9/L20.exp158.w2/result.json": "5e5dc5e978385c93fd1dd8e68bc65cd62a84d028e4278432259072499f114e8d",
+    "run.py": "9cd0305547060c759e879a7872bd86535af434561f5a3201f22a62bfba68177e",
+    "started.json": "9c57d2346b1792de33b3672202580262bcd93cbadf802c08b4cc603153e1f7f5",
+    "work/build/build.json": "066c347fd228dde469cda0a6b5cdf5a36b24a3b2b7af431b2da433b4309306ca"
+  }
+}

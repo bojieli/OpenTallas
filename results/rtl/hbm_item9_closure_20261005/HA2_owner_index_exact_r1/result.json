@@ -1,0 +1,39 @@
+{
+  "verdict": "PASS_ACTUAL_RTL_OWNER_INDEX",
+  "tests": 12583168,
+  "legal_PF_values": [
+    16,
+    32,
+    48,
+    64,
+    80,
+    96,
+    112,
+    128,
+    144,
+    160,
+    176,
+    192,
+    208,
+    224,
+    240,
+    256,
+    272,
+    288,
+    304,
+    320,
+    336,
+    352,
+    368,
+    384
+  ],
+  "all_uint16_fragment_indices": true,
+  "all_uint8_rank_aliases": true,
+  "new_decode_cycles": 0,
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv": "e4053cb30b5651236ce2932329850a625e5500924087d86e30381abc77d4f5ff"
+  },
+  "fullshape_numeric_exact": false,
+  "contextual_SS_FF": false,
+  "adopted": false
+}

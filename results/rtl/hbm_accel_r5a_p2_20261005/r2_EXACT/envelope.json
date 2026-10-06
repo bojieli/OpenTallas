@@ -1,0 +1,37 @@
+{
+  "owner": "Codex item6 R5a",
+  "source_commit": "bee4a854a6b924ef1f7014daaeb1c4bf6891533e",
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/r5a-p2-exact-r2",
+  "expected_peak_GiB": 32,
+  "compiler_workers": 8,
+  "runtime_workers": 4,
+  "unchanged_admission": "/srv/opentallas-scratch/admit.sh 32 -- bash run.sh",
+  "load_limit_exclusive": 128,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv": "a005198abd97ec88bbe2c90f12503a3a1ee2b01cc6b72cfeb2f6e48f67f5b7ee",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_p2.sv": "d7a2043b17da497637eb721a3f039d04b444b955fd78fe208348ba1c2cc32a4f",
+    "rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv": "21a2d557e128cbb980c1edb481c5592e744a789522d94c0efff9d36909d9a308",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_p2.sv": "ceafbaf442f2b128cba9766907325e8fe807b0d55df3bb78c11e2fc82594ee53",
+    "rtl/test/hbm_accel/tb_hbm_accel_r5a_p2.sv": "39c4f98a23c06f3b220d0c2be5f831af01718e62ab7c8e856d8f87b8b1dc068b",
+    "tools/hbm_accel_r5a_p2_exact.py": "9d43c260742046d86caf9641ed639e57e45a304c5eaf87c6f3a7ab82a8714f03",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+  },
+  "argv": [
+    "python3",
+    "source/tools/hbm_accel_r5a_p2_exact.py",
+    "--work",
+    "build",
+    "--out",
+    "exact.json",
+    "--jobs",
+    "4"
+  ],
+  "physical_launch": false,
+  "all_shape": "32PC 8SM 96SRAM depth512/CRED32",
+  "model": "results/uarch/hbm_r5a_protected_successor_20261005/model.json",
+  "terminal_writer": "Codex item6"
+}

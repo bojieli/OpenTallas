@@ -298,7 +298,15 @@ def sources(fused, sink=True):
 def cmd_run(a):
     fused = not a.as_built_core
     srcs, defs, C = sources(fused)
-    tb = TB_FH if fused else TB_ASBUILT
+    if a.capture_cut:
+        if not fused: raise ValueError("capture cut requires fused candidate")
+        candidate=SUCCESSOR/'capture_candidate'
+        srcs=[candidate/p.name if p.name in NAMES else p for p in srcs]
+        srcs=srcs+[ROOT/"rtl/hdc"/(n+".sv") for n in ("ot_hdc_fastfp","ot_hdc_prefix","ot_hdc_fp32_add_lat")]
+        defs=defs+["+define+OT_FH_ALAT=7","+define+OT_FH_CAPTURE=1",f"+define+OT_FH_RETURN_EXTRA={a.capture_return_extra}"]
+        tb=candidate/'tb_hdc_core_v41_mtp_slice_capture.sv'
+    else:
+        tb = TB_FH if fused else TB_ASBUILT
     obj = a.run_dir / "obj"
     a.run_dir.mkdir(parents=True, exist_ok=True)
     if not (obj / "Vtb_hdc_core_v41_mtp_slice").exists():
@@ -427,6 +435,8 @@ def main():
     s.add_argument("--variant-rom", action="store_true", help="rewrite the ROM images even if present")
     r = sub.add_parser("run")
     r.add_argument("--slices", type=Path, required=True)
+    r.add_argument("--capture-cut", action="store_true", help="Default-off protected return/capture candidate")
+    r.add_argument("--capture-return-extra", type=int, choices=(2,3), default=2, help="Matched protected return extra stages;2 retained,3 decode-split")
     r.add_argument("--run-dir", type=Path, required=True)
     r.add_argument("--as-built-core", action="store_true")
     r.add_argument("--jobs", type=int, default=8)

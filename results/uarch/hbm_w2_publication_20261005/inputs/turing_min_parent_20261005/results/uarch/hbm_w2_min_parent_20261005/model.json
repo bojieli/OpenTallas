@@ -1,0 +1,103 @@
+{
+  "scope": "Minimum source-faithful enclosing W2 caller/receiver context, same existing hb_cmdproc/gateway",
+  "source_top": "physical/hbm_w2_min_parent_20261005/ot_hbm_w2_min_parent.sv",
+  "child_source_unchanged": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+  "full_shape": {
+    "NC": 8,
+    "RMAX": 256,
+    "PIO": 2,
+    "identity_contexts": 11,
+    "CDC_AW": 3,
+    "CDC_SYNC": 2,
+    "CDC_entries": 8,
+    "request_bits": 337,
+    "response_bits": 273,
+    "prior_credit_rows": 36
+  },
+  "raw_composed_state_bits": 19239,
+  "W2_child_state_bits": 5616,
+  "raw_inherited_state_bits": 13623,
+  "protection": {
+    "reuse_view": "ot_hbm_w2_sink_protected_view triplicate+per-byte parity/vote/scrub",
+    "caller_bits_upper": 5697,
+    "sector_bits": 10287,
+    "CDC_storage_and_control_bits": 17000,
+    "CDC_control": "Reuse actual ot_hbm_accel_cdc_fifo_p2 complementary local and synchronized Gray rails; depth8/SYNC2 unchanged",
+    "added_FF_bits_upper": 23321,
+    "complete_state_bits_upper": 42560,
+    "ROM_or_SRAM_ECC_removed": false,
+    "new_owner_ledgers": 0,
+    "new_payload_queues": 0,
+    "implementation_attributes": "Keep individual copy nets and protected bank hierarchy; no clock dont_touch. Independent mapped copies are mandatory, pending mapping."
+  },
+  "area": {
+    "inherited_FF_ceiling_um2": 19210.88,
+    "logic_gate_positive_ceiling": 40000,
+    "logic_gate_unit_ceiling_um2": 0.15,
+    "CTS_hold_IO_positive_cell_allowance_um2": 6000,
+    "gateway_outline_relative_um": [
+      17.28,
+      345.6,
+      527.04,
+      518.4
+    ],
+    "gateway_area_um2": 88086.528,
+    "utilization_ceiling": 0.5,
+    "W2_original_child_allocation_unchanged": true,
+    "existing_cmdproc_claim_released": false,
+    "parent_cell_ceiling_um2": 31210.88,
+    "placement_ceiling_um2": 62421.76,
+    "fits_existing_gateway": true
+  },
+  "communication": {
+    "MACs_per_cycle_delta": 0,
+    "memory_bytes_per_cycle_delta": 0,
+    "boundary_bits_per_cycle_delta": 0,
+    "required_existing_W2_boundary_signals": 1213,
+    "finite_provider_bits": 614,
+    "finite_result_bits": 302,
+    "finite_metadata_bits": 297,
+    "extra_boundary_signal_tracks": 0,
+    "parent_external_cut_bits_pending_actual_source_inventory": true
+  },
+  "latency": {
+    "added_architectural_cycles": 0,
+    "added_stream_edges": 0,
+    "added_memory_edges": 0,
+    "CDC_depth_and_visibility_unchanged_in_fault_free_case": true,
+    "shared_owner_request_hold_and_response_hold_unchanged": true,
+    "accepted_connected_R2_publication_edges_delta": 17,
+    "accepted_warm_finish_edges_delta": 20,
+    "added_parent_token_latency_us": 0,
+    "actual_timing_and_transport_stage_need_require_real_context": true
+  },
+  "clock": {
+    "clk_sm_period_ps": 833.333333333,
+    "clk_mem_period_ps": 1000,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "clk_sm_phase_ps": 0,
+    "clk_mem_asynchronous_to_clk_sm": true,
+    "root_resets": [
+      "rst_sm_n",
+      "rst_mem_n"
+    ],
+    "CP_warm_reset_cannot_clear_either": true
+  },
+  "gates": {
+    "defaultOFF": true,
+    "protection_component_exact": false,
+    "mapped": false,
+    "actual_ODB_SPEF": false,
+    "SS_FF_closed": false,
+    "parent_endpoint_loads_measured": false,
+    "adopted": false
+  },
+  "source_files": [
+    "physical/hbm_w2_min_parent_20261005/caller_cut.sv",
+    "physical/hbm_w2_min_parent_20261005/ot_hbm_w2_min_parent.sv",
+    "physical/hbm_w2_min_parent_20261005/protected_state.sv",
+    "physical/hbm_w2_min_parent_20261005/result_join.sv",
+    "physical/hbm_w2_min_parent_20261005/sector_adapter.sv"
+  ]
+}

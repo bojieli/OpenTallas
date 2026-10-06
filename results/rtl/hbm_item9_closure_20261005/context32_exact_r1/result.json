@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS_ACTUAL32_CALLER_ENDPOINT_GATHER_EXACT",
+  "completed_callers": 32,
+  "TX_records": 128,
+  "RX_records": 256,
+  "cycles": 789,
+  "added_cycles": 0,
+  "source_commit": "ff11a29f1acc4da880ea08661717b6fc2b009462",
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_item9_context32.sv": "9c7c9f72da0ec5e3869e96162791bd6988a0fa63a4cdae49d3ab52bf7001b2bf",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_cuts.sv": "2c3ffaee85210f8e509e22e9e50838b1c0b55319a4707881037782f904362aa9",
+    "rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv": "cd641683b29687801af91fdd5edafd89d05007a86386abea2f52e40af349e2ac",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_context32.sv": "22c024e666be6f537a535339bc638bc9f29dc340bdeebbd375d3ee1b8682e376"
+  },
+  "scope": "original item9 SIMT caller slice; ordered native gather RX ranks0/1; NOT measured DS sm_v/TU equivalence",
+  "contextual_SS_FF": false,
+  "adoption": false
+}

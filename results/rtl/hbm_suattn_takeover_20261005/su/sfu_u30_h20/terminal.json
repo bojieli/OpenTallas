@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "sfu_u30_h20",
+  "host": "ot-epyc2",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src",
+  "original_physical_status": "pass",
+  "signoff_ss_ff": true,
+  "SS_setup_ps": 19.044321,
+  "FF_hold_ps": 8.131329,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "original_io_false_paths": true,
+  "mandatory_clock_candidate": true,
+  "full_SU_context_qualified": false,
+  "actual_qualified_rate_comparison": null,
+  "adopted": false,
+  "note": "Existing h20 vehicle native and extracted SS/FF leaf pass. Source/constraints retained including original hold repair margin20ps; no change or new waiver. FullSU/context and qualified reference comparison remain open."
+}

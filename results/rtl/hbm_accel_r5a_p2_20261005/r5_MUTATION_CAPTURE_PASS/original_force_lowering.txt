@@ -1,0 +1,31 @@
+                                                             73);
+        if ((3U == vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__MUT)) {
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS0 
+                = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 2U, 1U)));
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.addForce(2U, 2U, 
+                                                                                &(vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS0), 2U);
+        } else {
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS1 
+                = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 0U, 1U)));
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.addForce(0U, 0U, 
+                                                                                &(vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS1), 0U);
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS2 
+                = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 1U, 1U)));
+            vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.addForce(1U, 1U, 
+                                                                                &(vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS2), 1U);
+        }
+        Vtb_hbm_accel_r5a_stack_p2___024root____VbeforeTrig_h16588028__0(vlSelf, 
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__word__BRA__15__KET____DOT__d[2U] 
+        = __Vfunc_decode64__218__Vfuncout[2U];
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS0 
+        = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 2U, 1U)));
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.touch();
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS1 
+        = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 0U, 1U)));
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.touch();
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceRHS2 
+        = (1U & (~ vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.readSelI(0x00000480U, vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded, 1U, 1U)));
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__coded__VforceVec.touch();
+    vlSelfRef.tb_hbm_accel_r5a_stack_p2__DOT__dut__DOT__on__DOT__sm__BRA__0__KET____DOT__par_bad 
+19690d61e0ae0a8d5986b1ba55140e7762cf32fdc3da5ab28f33d4db8f2a856e  /srv/opentallas-scratch2/jobs/r5a-stack-p2-exact-r4/build/build_ref1/obj/Vtb_hbm_accel_r5a_stack_p2___024root__0.cpp
+3928e32739b685cfb11714c3c42759da020706220547cecbbb7dd2832b9d06b7  /srv/opentallas-scratch2/jobs/r5a-stack-p2-exact-r4/build/build_ref1/obj/Vtb_hbm_accel_r5a_stack_p2___024root__5.cpp

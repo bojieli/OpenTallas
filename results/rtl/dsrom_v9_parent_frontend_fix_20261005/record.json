@@ -1,0 +1,366 @@
+{
+  "schema": "opentallas.dsrom.v9.parent.frontend_fault_fix.v1",
+  "verdict": "PASS_MINIMUM_EXACT_AND_RETAINED_PROTECTION_SOURCE",
+  "root_cause": {
+    "source": "rtl/v41die/ot_v41_pair_pq_ld.sv:49",
+    "parameter": {
+      "PQ": 0,
+      "NSEG": 8,
+      "PHW": 6,
+      "CW": 25,
+      "AW": 11
+    },
+    "original_behavior": "fault and pend reset to zero and hold when PQ==0; PQ!=0 retains original set/pending logic.",
+    "unsupported_lowering": "Installed Slang drops reset-only fault and pend to X at process lowering; --no-proc still fails.",
+    "canonical_driver": "map_r2 1_1_yosys_canonicalize.rtlil:24535 connect fault 1x; PQ0 pend also 1x",
+    "mapped_consequence": "Old parent sticky fault D=TIEHI; engine bank/frontend/return fault cones pruned. map_r4 diagnostic/geometry only, no functional SSFF credit.",
+    "native_reader_check": "Original unchanged RTL via native read_verilog -sv folds PQ0 fault/pend to zero, agreeing with original RTL after real reset."
+  },
+  "correction": {
+    "source": "physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv",
+    "module": "ot_v41_pair_pq_ld_frontend",
+    "change": "Explicit default fault<=fault and pend<=pend before original PQ!=0 assignments. Original reset and later set precedence unchanged.",
+    "successor_parent": "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context_frontend.sv",
+    "successor_change": "Only module name and loader instance differ from pinned parent.",
+    "original_loader_sha256": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+    "original_parent_sha256": "0379c347f52652be54fecdc2404cd0bccc883cd45f394e2c2f829163e5f3c364",
+    "fixed_loader_sha256": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+    "fixed_parent_sha256": "f78ccaeeb6eb42a8ccf1750e9afcb0c22c3e6616ea4901b02891784cf24552a6",
+    "fault_tied_or_waived": false,
+    "original_pinned_sources_edited": false
+  },
+  "minimum_exact": {
+    "PQ0": {
+      "checks": 4001,
+      "valid_words": 2326,
+      "admitted_go": 277,
+      "fault_cycles": 0,
+      "reset_checks": 40
+    },
+    "PQ1": {
+      "checks": 4001,
+      "valid_words": 2317,
+      "admitted_go": 263,
+      "fault_cycles": 3648,
+      "reset_checks": 40
+    },
+    "equality": "Original/corrected RTL every output and internal state; lowered fixed Slang every control output, real-loading ROM address and every valid configuration byte. Initial undefined payload/address is not promoted to a valid byte.",
+    "positive_log": "positive.log",
+    "negative_control": "Original default-Slang PQ0 lowering caught at first check after reset: ref=0000 mapped=001x; negative.log.",
+    "tb": "physical/dsrom_v9_parent_context/tb_loader_frontend.sv",
+    "compile_argv": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_loader_frontend",
+      "-o",
+      "RUN/positive.vvp",
+      "rtl/v41die/ot_v41_pair_pq_ld.sv",
+      "physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv",
+      "results/rtl/dsrom_v9_parent_frontend_fix_20261005/pq0_mapped.v",
+      "results/rtl/dsrom_v9_parent_frontend_fix_20261005/pq1_mapped.v",
+      "physical/dsrom_v9_parent_context/tb_loader_frontend.sv"
+    ],
+    "execute_argv": [
+      "vvp",
+      "RUN/positive.vvp"
+    ],
+    "negative_recipe": "Same TB with -DBAD_FRONTEND and pq0_bad_mapped.v in place of pq0_mapped.v; require nonzero exit and lowered-control mismatch."
+  },
+  "retained_parent": {
+    "verdict": "PASS_RETAINED_PROTECTIVE_RAILS_CANONICAL_ONLY",
+    "full_parent_json_sha256": "a4ae1db5aef900b3e74d556f2a516a2a6eb5de5c3f2b3a2e3e2e4c49b7812cf7",
+    "generic_FF_state_bits": 6738,
+    "generic_memory_state_bits": 8320,
+    "total_state_bits": 15058,
+    "model_upper_bits": 20000,
+    "technology_mapped": false,
+    "CTS": false,
+    "SSFF": false,
+    "rails": {
+      "u_ld.fault": {
+        "bits": [
+          "0"
+        ],
+        "flop_drivers": []
+      },
+      "u_ld.pend": {
+        "bits": [
+          "0"
+        ],
+        "flop_drivers": []
+      },
+      "g_qx.g_qo.busy_d": {
+        "bits": [
+          4197,
+          6601
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_qo.busy_d",
+            "type": "$adff",
+            "Q": [
+              4197,
+              6601
+            ],
+            "D": [
+              1814,
+              4197
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "00",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000010"
+            }
+          }
+        ]
+      },
+      "g_qx.g_qo.ff_d": {
+        "bits": [
+          6602,
+          6603
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_qo.ff_d",
+            "type": "$adff",
+            "Q": [
+              6602,
+              6603
+            ],
+            "D": [
+              1815,
+              6602
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "00",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000010"
+            }
+          }
+        ]
+      },
+      "g_qx.g_qo.ffq": {
+        "bits": [
+          4285
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_qo.ffq",
+            "type": "$adff",
+            "Q": [
+              4285
+            ],
+            "D": [
+              6602
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "g_qx.g_qo.fq": {
+        "bits": [
+          6515
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_qo.fq",
+            "type": "$adff",
+            "Q": [
+              6515
+            ],
+            "D": [
+              4286
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "g_qx.g_mac[0].bkf_r": {
+        "bits": [
+          4282
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_mac[0].bkf_r",
+            "type": "$adff",
+            "Q": [
+              4282
+            ],
+            "D": [
+              1816
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "g_qx.g_mac[1].bkf_r": {
+        "bits": [
+          4283
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_mac[1].bkf_r",
+            "type": "$adff",
+            "Q": [
+              4283
+            ],
+            "D": [
+              1817
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "u_return.u_n.fault": {
+        "bits": [
+          6516
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$auto$ff.cc:337:slice$576",
+            "type": "$adffe",
+            "Q": [
+              6516
+            ],
+            "D": [
+              "1"
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "EN_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "sticky_fault": {
+        "bits": [
+          4198
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$auto$ff.cc:337:slice$575",
+            "type": "$adffe",
+            "Q": [
+              4198
+            ],
+            "D": [
+              "1"
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "EN_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      },
+      "g_qx.g_qb.rst_reg": {
+        "bits": [
+          4130
+        ],
+        "flop_drivers": [
+          {
+            "cell": "$driver$g_qx.g_mac[1].g_mz.u_rst.q",
+            "type": "$adff",
+            "Q": [
+              4130
+            ],
+            "D": [
+              "1"
+            ],
+            "parameters": {
+              "ARST_POLARITY": "00000000000000000000000000000000",
+              "ARST_VALUE": "0",
+              "CLK_POLARITY": "00000000000000000000000000000001",
+              "WIDTH": "00000000000000000000000000000001"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "qualification": {
+    "exact_campaign": false,
+    "full_engine": false,
+    "SSFF": false,
+    "whole_field": false,
+    "missing_input_clocks": true,
+    "changed_physical_launched": false,
+    "new_pipeline_edges": 0,
+    "token_rate_credit": 0
+  },
+  "preserved": [
+    "Original pinned loader and parent RTL",
+    "Live map_r4 source/netlist/objects/process",
+    "All original v9 and Z18 jobs/source/objects",
+    "Default, no-proc and fault-only frontend failure artifacts; fault-only variant still leaves PQ0 pend=X"
+  ],
+  "artifact_sha256": {
+    "headroom.json": "4e3b48627585ea42e0e3b1e52eeca25db67be80510da74a4a5725f3da1d4a1e4",
+    "negative.log": "2a06ba557f20e11ea5323dfcc5323d504702391aa9b46c1584f0dcd7bd39d84d",
+    "parent_canonical.log": "87d4d640e89fc5ad109cf7e096054d6d25929b377ebcc1d06afce25798e4983f",
+    "parent_canonical.ys": "22d5f0912b0a062bce1dec7f85f135cc7cefebc6a4e2313f8e9106fbe643f127",
+    "parent_headroom.json": "847701c3d8e82b45519f263cb153f8dc631d7b046297b448a0d06b7827f78f2e",
+    "parent_parent_fixed.json.gz": "79478ebf3f0fa0228d26a0db57fd6e8aa9a0ca3883bfefd4a24cd5995f908f2b",
+    "parent_retained_rails.json": "158d93d2d7913afe4ba6c5943ddb11c25b85edbaff820a4164fe5c69bcae067c",
+    "parent_run.sh": "db32d8b9f4225423c7e2e2b624491ff27b0a6c97c708404d7261cdb6063e134e",
+    "parent_source.sha256": "3d39bcae4936e5d36599fac69536831aa3b1b7821a23182cea1425f2f0831214",
+    "parent_terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "positive.log": "19d8de1e755e73452e280d1b5c35fecceb9c3abea940d9467333301583bc64cf",
+    "pq0_bad_mapped.v": "874b23720208864e1c85ae5ba18d6cc3583bd5df98be2858751cb0acc309aed5",
+    "pq0_default.log": "c4a940767724f93e5cf6fad7730ae32754409774e819b93f96eb3fee8e894850",
+    "pq0_default.rtlil": "858aa02f19e853f2068e0160d6cd012575ae8e9cbc6581038da3dc12939d64a3",
+    "pq0_default.v": "f3d3fc79399deedd3813faed871fa957f355bcae65018c12c94517fd521b9cef",
+    "pq0_fixed.log": "daa415e0970ed5efbfb05cedfed3796f05cc478522a02a374c274bd59e1368eb",
+    "pq0_fixed.rtlil": "9a1dd0f34c35d5b0559706b2719050592b48d81ba0137facb4fa9d82e3b57bbb",
+    "pq0_fixed.v": "8c2e7de39c8f67a7d3578412d23db1e8c5ecdfe212d62fe21b20d08d597be582",
+    "pq0_hold.log": "700c44d1a4c1029be12cf0cbc2ad26a2f5c7550b84aee5dc9cc8177417a7c1a5",
+    "pq0_hold.rtlil": "8a782988a75113fde591dff4f691c0880a889b04d736e7a4dceeb07fa9d83de4",
+    "pq0_hold.v": "a51969fea50d511ea81d143626f3e4321556ef44c1703c3df82501f6a19108ac",
+    "pq0_mapped.v": "25e6e5005558c5623c42a37126aaad2de340a4c500d8a7af0728dc3ff92e651a",
+    "pq0_native.log": "dceb3ef7a06768476202093b3f5b91081e07c52ca7c8852fb9485495054a7efa",
+    "pq0_native.rtlil": "be54d81b53107e6a795db8f3b2cd4b82143cc4df9ea1b04c05c6d8c7328f8b5f",
+    "pq0_native.v": "86b5cf7f1bfda4a58095ab282eebf649da241f9f57e7e7dc38c98be0e70bb8a0",
+    "pq0_no_proc.log": "95bd16eb1ea76f991c0e2ff066c7f877c0ed475d4ca886252cddf879a24ebbf2",
+    "pq1_fixed.log": "a1380b53a3e136a39fc4d164ea65063ca4bc0f39c1b8da0cf01eeaebaf219732",
+    "pq1_fixed.rtlil": "4f92d724ca7548b2a27668440f11f94437f66ddc44390ca5ea25d1a321e4a0fa",
+    "pq1_fixed.v": "a99b5f243f2ce6ae1144150f03c8a58792a215f180a312a7e242e18fc1d7ba34",
+    "pq1_hold.log": "a2651ddda3745da5f1592f07a81239a903322fbe3097ae571aafeb541e0d1c40",
+    "pq1_hold.v": "1c2cb0d82ee08cc44aa6ba8767b04d1233e94c17e1c27a84cfa7dda29ddb3175",
+    "pq1_mapped.v": "0b4345fb5b79686db8fd2e72ca36ad0a8a6081371221f078b92ea2fd6516350f",
+    "pq1_native.log": "8bcf365238f53428f37e5f993bc168fe0379c6d0bb85e9edb8903c3ee2c4ea5c",
+    "pq1_native.rtlil": "26615ad367d7d1656341edf4f35d54406ec12fef8757217feeeb3e7910e4c812",
+    "pq1_native.v": "4fff528057fadac1b6473f921cbc921392f5cb1b5a70f507309ef86409dbc173",
+    "pre_guard.sh": "c19e845d0c5e1bdd29989c5c7081f07cb5e214905f76746a95f8b16502e149c3",
+    "run.sh": "66a2d90d5ae1d4aa49f9be9df56e5f447c4851ee10e3eb0b8b8998e877050cb8",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

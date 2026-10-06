@@ -1,0 +1,200 @@
+{
+  "at": "2026-10-05T23:53:10.964695+00:00",
+  "scope": "actual full MAXU866 SOURCE0 final retained ODB/SPEF only, unchanged SDC833/SS60/FF25/all timed ports",
+  "retained_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-parent-cut-physical-r1/s0",
+  "diagnostic_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-s0-diagnosis-r1",
+  "source1_unchanged": true,
+  "corners": {
+    "SS": {
+      "negative_setup_endpoints": 4692,
+      "negative_output_endpoints": 1649,
+      "negative_internal_endpoints": 3043,
+      "negative_hold_endpoints": 0,
+      "families": {
+        "core_start": {
+          "count": 1,
+          "worst_ps": -504.272461
+        },
+        "vm_we": {
+          "count": 1,
+          "worst_ps": -409.661041
+        },
+        "vm_raddr": {
+          "count": 15,
+          "worst_ps": -385.27121
+        },
+        "vm_re": {
+          "count": 1,
+          "worst_ps": -368.131348
+        },
+        "vm_waddr": {
+          "count": 15,
+          "worst_ps": -351.606232
+        },
+        "vm_wdata": {
+          "count": 507,
+          "worst_ps": -152.268143
+        },
+        "core_busy": {
+          "count": 1,
+          "worst_ps": -140.837784
+        },
+        "out_data": {
+          "count": 506,
+          "worst_ps": -130.176422
+        },
+        "in_ready": {
+          "count": 1,
+          "worst_ps": -128.018097
+        },
+        "core_user": {
+          "count": 10,
+          "worst_ps": -127.781784
+        },
+        "bl_tx_data": {
+          "count": 501,
+          "worst_ps": -120.67997
+        },
+        "bl_rx_ready": {
+          "count": 1,
+          "worst_ps": -107.00946
+        },
+        "u_rtr.od": {
+          "count": 806,
+          "worst_ps": -106.730293
+        },
+        "kv_base": {
+          "count": 10,
+          "worst_ps": -99.729668
+        },
+        "u_rtr.drops": {
+          "count": 32,
+          "worst_ps": -95.558449
+        },
+        "u_ctrl.txq_d": {
+          "count": 1669,
+          "worst_ps": -87.445831
+        },
+        "core_pos": {
+          "count": 21,
+          "worst_ps": -85.142502
+        },
+        "u_rtr.g_in.b_data": {
+          "count": 428,
+          "worst_ps": -81.33683
+        },
+        "bl_tx_last": {
+          "count": 1,
+          "worst_ps": -74.520668
+        },
+        "rtr_drops": {
+          "count": 32,
+          "worst_ps": -60.349281
+        },
+        "core_token": {
+          "count": 21,
+          "worst_ps": -58.314907
+        },
+        "u_rtr.g_in.b_mask": {
+          "count": 12,
+          "worst_ps": -52.395756
+        },
+        "out_valid": {
+          "count": 1,
+          "worst_ps": -49.834469
+        },
+        "bl_tx_valid": {
+          "count": 1,
+          "worst_ps": -48.15398
+        },
+        "u_ctrl.cur_tok": {
+          "count": 21,
+          "worst_ps": -38.971161
+        },
+        "u_ctrl.tx_k": {
+          "count": 2,
+          "worst_ps": -38.62022
+        },
+        "u_ctrl.hdr_pos1": {
+          "count": 4,
+          "worst_ps": -36.250446
+        },
+        "u_ctrl.cur_pos": {
+          "count": 9,
+          "worst_ps": -33.148151
+        },
+        "proto_fault": {
+          "count": 1,
+          "worst_ps": -27.495007
+        },
+        "u_ctrl.txs": {
+          "count": 2,
+          "worst_ps": -26.663561
+        },
+        "u_ctrl.hdr_pos": {
+          "count": 17,
+          "worst_ps": -25.705326
+        },
+        "u_ctrl.hdr_user": {
+          "count": 10,
+          "worst_ps": -23.455793
+        },
+        "u_ctrl.proto_fault": {
+          "count": 1,
+          "worst_ps": -22.817415
+        },
+        "u_ctrl.rxw": {
+          "count": 6,
+          "worst_ps": -20.734303
+        },
+        "out_last": {
+          "count": 1,
+          "worst_ps": -13.735846
+        },
+        "u_ctrl.txh": {
+          "count": 2,
+          "worst_ps": -11.676882
+        },
+        "u_rtr.g_in.cnt": {
+          "count": 2,
+          "worst_ps": -10.654589
+        },
+        "u_ctrl.rx_j": {
+          "count": 10,
+          "worst_ps": -7.35112
+        },
+        "u_ctrl.hdr_tok": {
+          "count": 7,
+          "worst_ps": -3.294365
+        },
+        "u_rtr.busy": {
+          "count": 3,
+          "worst_ps": -2.2361
+        }
+      },
+      "raw_sha256": "bda9ff6b9e7a6c22c953670342c466e5762aee30dcd2d1bfdece3304ff175179",
+      "diagnostic_complete": true
+    },
+    "FF": {
+      "negative_setup_endpoints": 1,
+      "negative_output_endpoints": 1,
+      "negative_internal_endpoints": 0,
+      "negative_hold_endpoints": 0,
+      "families": {
+        "core_start": {
+          "count": 1,
+          "worst_ps": -26.122049
+        }
+      },
+      "raw_sha256": "dbef194f859db3cdd5397442f8cf6df52213a0a7c0d17bf0d8ec13863766bd17",
+      "diagnostic_complete": true
+    }
+  },
+  "macros_present_in_measured_cut": false,
+  "macro_clkQ_credit_ps": 0,
+  "VM_prompt_actual_macro_binding_missing": true,
+  "external_receiver_clock_loads_missing": true,
+  "actual_parent_context_qualified": false,
+  "adopted": false,
+  "RTL_new_physical_measurement_pending": true
+}

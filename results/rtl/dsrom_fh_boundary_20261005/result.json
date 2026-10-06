@@ -1,0 +1,137 @@
+{
+  "verdict": "NOT_CLOSED",
+  "adopted": false,
+  "physical_closed": false,
+  "selected_route": null,
+  "source_commit": "41237492db1d7acca6591da20f7b4ae5de700e5f",
+  "executed_evaluator_commit": "fc41e5aa8",
+  "boundary_measurement": "measurement-r5/result.json",
+  "retained_route_control_ss_setup_ps": 14.394153,
+  "full_shape": {
+    "G": 4,
+    "W": 16,
+    "ALAT": 7,
+    "fp32_lanes": 64,
+    "ra_q_bits": 2048,
+    "ra_bytes_per_cycle": 256
+  },
+  "constraints": {
+    "route_period_ps": 833,
+    "headline_period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "statement": "Stricter original833ps route retained. No clock or uncertainty relaxation."
+  },
+  "result": {
+    "ss": {
+      "exit": 0,
+      "paths_slack_ps": {
+        "input_setup": -121.093468,
+        "input_hold": 410.319824,
+        "address_setup": 465.103516,
+        "address_hold": 74.681816
+      },
+      "valid": true,
+      "boundary_met": false,
+      "macro_lib_sha256": "ca6192f9a802f2d4aba9d1f8790fb702cabda02cae6617746b5754fade16e173",
+      "macro_nominal_clkq_ps": 524.0724742442052,
+      "address_and_ce_load_ff": 2.315064,
+      "unrouted_macro_clock_load_ff": 138.94016,
+      "capture_relation": "same local reference leaf, zero additional SRAM clock skew; unresolved parent CTS",
+      "macro_output_driver": "corner macro nominal clkQ and intrinsic slew; optimistic unloaded source",
+      "unresolved_macro_output_load": "Macro output resistance/load delay is absent; a passing screen cannot qualify this boundary",
+      "macro_constraint_reference": "nominal macro setup/hold; parent input/clock slew tables remain unresolved"
+    },
+    "ff": {
+      "exit": 0,
+      "paths_slack_ps": {
+        "input_setup": 249.298691,
+        "input_hold": 257.133148,
+        "address_setup": 617.449402,
+        "address_hold": 19.057449
+      },
+      "valid": true,
+      "boundary_met": true,
+      "macro_lib_sha256": "18a3127431ea348a3e87052ac5160fc2b46d748f9e70aef454da217102ea7864",
+      "macro_nominal_clkq_ps": 346.0436643943168,
+      "address_and_ce_load_ff": 2.734864,
+      "unrouted_macro_clock_load_ff": 165.9712,
+      "capture_relation": "same local reference leaf, zero additional SRAM clock skew; unresolved parent CTS",
+      "macro_output_driver": "corner macro nominal clkQ and intrinsic slew; optimistic unloaded source",
+      "unresolved_macro_output_load": "Macro output resistance/load delay is absent; a passing screen cannot qualify this boundary",
+      "macro_constraint_reference": "nominal macro setup/hold; parent input/clock slew tables remain unresolved"
+    }
+  },
+  "retained_exactness": {
+    "source_commit": "41237492db1d7acca6591da20f7b4ae5de700e5f",
+    "cases": 10,
+    "passed": 10,
+    "five_chain_cycles": 62853,
+    "as_built_program_cycles": 85708,
+    "scope": "Source-identical retained ALAT7 candidate only; no current-main or parent arithmetic requalification"
+  },
+  "unchanged_original_failure": "results/rtl/dsrom_fh_close_20261004/parallel_fanout_decision.json",
+  "retained_route_failures": {
+    "C9u35_internal_slew_violations": 21,
+    "C9u35_output_slew_violations": 7
+  },
+  "scope": "Conditional full G4W16 child cone; zero additional SRAM skew at local reference leaf. Actual parent SRAM CTS/output loading/protection and depth-selection fabric are unbound.",
+  "reason": "Even unloaded nominal SS SRAM clock-to-Q yields -121.093468ps on ra_q[1227] to lane38 first add-stage carry register. Old166.6ps inputbudget masked this necessary capture-path screen. Previous internal slew failures remain.",
+  "next": "Model and measure an exact default-off local SRAM data/result/valid capture cut before the first ALAT7 stage; then fullshape changed-source gate and real macro/CTS route. Do not retune recipes or credit existing child timing as parent proof.",
+  "evaluator_failures": {
+    "first": "Unsupported OpenSTA collection command",
+    "subsequent": "OpenROAD DatabaseNetwork path simulation SIGSEGV; unmodified ODB control reproduced +14.394153ps. Standalone retained finalnetlist/SPEF OpenSTA produced valid SS/FF.",
+    "disposition": "All attempts retained unchanged; invalid evaluations are not hardware timing verdicts."
+  },
+  "runtime": {
+    "host": "ot-epyc2",
+    "new_routes": 0,
+    "new_arithmetic_benches": 0,
+    "live_jobs": 0,
+    "admit_sh_sha256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+    "execution_load": 42.19,
+    "available_ram_gib": 718,
+    "available_disk_gib": 147
+  },
+  "tool_pins": {
+    "tools/dsrom_fh_boundary_sta.py": "ed5956459e36ea50b5be23df6c02323a34d648a5264bfe73a4065c077516b659",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "artifact_sha256": {
+    "control.log": "6870be0009a127b90be4025f33ed2c400b0b99aa4c761be0dc27bf8ac1400eab",
+    "control.tcl": "7ca42b632f390e9530be6f4e8ed5d8d66651ef44f5278b01acbc5a994ea4bf36",
+    "launch.log": "6b0e5b79b9c06b5cfd585f83383840fb8da481ffcc7656d069662964a3981dff",
+    "launch.sh": "97e95ab45285d9f65ab3fa1082c58c462f53290e74b517cf1fa9f2558ee1c20a",
+    "measurement/boundary.sdc": "cb681a87b94537a44d0becb5ed3ea6a2be74445c7ccfdb2e1cadc24dbed798fe",
+    "measurement/ff.log": "df877d803005e154f7bc9717d8e16dda94f12b12008cc0dce4b8cd2ec3d50008",
+    "measurement/ff.tcl": "290395d1f681f460014918428e67b855e434f90c94fa90899e0dc1e299216d8a",
+    "measurement/result.json": "123131bd2b489615b3ed89624ae36ddb8148f6cb186ecb7d35f69e3387473a19",
+    "measurement/ss.log": "75eda8fa01a4ebd24f3dcbf42cb9653bcc4b7a01b16277b37952f49957bc82c3",
+    "measurement/ss.tcl": "2573e8c034b42c13f22a5ce8eeed5de84304c45658142de87f64fb66cb4f6017",
+    "measurement-r2/boundary.sdc": "788b806a9f12451dd6ed2ecc244389b4fb10d0319836f113b3c9b0dc5f972e4c",
+    "measurement-r2/ff.log": "6e3145cf2c1e40603b447c4bc70cd16e902b68a65b0b28676c68cad78e445da9",
+    "measurement-r2/ff.tcl": "290395d1f681f460014918428e67b855e434f90c94fa90899e0dc1e299216d8a",
+    "measurement-r2/result.json": "3331db359967aa3b39f20eb609f685e67c66753cf5f591c064ed5b4dbc63ce57",
+    "measurement-r2/ss.log": "b6b1b186837e8ccbb6952319b62038b467c1c259f3470641589a9a1dda34f618",
+    "measurement-r2/ss.tcl": "2573e8c034b42c13f22a5ce8eeed5de84304c45658142de87f64fb66cb4f6017",
+    "measurement-r3/boundary.sdc": "788b806a9f12451dd6ed2ecc244389b4fb10d0319836f113b3c9b0dc5f972e4c",
+    "measurement-r3/ff.log": "6e3145cf2c1e40603b447c4bc70cd16e902b68a65b0b28676c68cad78e445da9",
+    "measurement-r3/ff.tcl": "cdfb98115a18b1ec2861cc0f473bf2d3c7e4b6ce042dc6510f5da57b5153e8c2",
+    "measurement-r3/result.json": "76b1321292a9d12671c57c6a26b2eb1b1de028c26355663abc5f1f600df2efb3",
+    "measurement-r3/ss.log": "b6b1b186837e8ccbb6952319b62038b467c1c259f3470641589a9a1dda34f618",
+    "measurement-r3/ss.tcl": "96f0fabea988367b2412c1f0087af01e9bf2ca9da82a35870c50a66b0d37dd39",
+    "measurement-r4/boundary.sdc": "788b806a9f12451dd6ed2ecc244389b4fb10d0319836f113b3c9b0dc5f972e4c",
+    "measurement-r4/ff.log": "7fc8950a9f2954cefcfdb4c9c53611914c370999335bfbc7e5445d74e60da7d1",
+    "measurement-r4/ff.tcl": "4cfa72a8122400f3e0cf2da21486dcc4237e6fde6ae88216cfddc7f9f28d576e",
+    "measurement-r4/result.json": "dd171ca9982d59daa469e89754d58033fc262fd663375fbd6b66abad270718cc",
+    "measurement-r4/ss.log": "957a368e3d5eb069de57242124b04ec08bebedc366fcd4c75e107b2763858525",
+    "measurement-r4/ss.tcl": "fd7a0b10e580b2a225f16e0726fec505c36877b43e87add7b2a9310eb8b5169a",
+    "measurement-r5/boundary.sdc": "788b806a9f12451dd6ed2ecc244389b4fb10d0319836f113b3c9b0dc5f972e4c",
+    "measurement-r5/ff.log": "454e4525de583fe4e776f0f410fa130a117e6fa311d3b6cd555bf831a7e64ac6",
+    "measurement-r5/ff.tcl": "1937d654d42f71eaa4431a0c4db4e05f10631a00e1f8d60033b2ef8dc7ad60ef",
+    "measurement-r5/result.json": "45b785274e02350ecf30ee165b470dcbc9ef5b9665ca1ca954a32c7a3aea82af",
+    "measurement-r5/ss.log": "2aebf31c552088440f7739f5c1242accfcfaa71d9e18973e217aec39f824d977",
+    "measurement-r5/ss.tcl": "44b51acc06172b381388c0ca448be6cf85031903606dd67736bf6eec0f201628"
+  }
+}
