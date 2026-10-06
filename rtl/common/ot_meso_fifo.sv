@@ -58,9 +58,16 @@ module ot_meso_fifo #(
     parameter bit ENABLE   = 0,
     parameter bit RDREG    = 0,      // register the data-ring readout (slot -> one-hot select -> readout flop) before the
                                      // read side: +1 period crossing latency, the crossing arc ends at the select
-    parameter bit NOBP     = 0       // consumer never back-pressures (r_rdy tied 1, die stations): no receive buffer,
-                                     // o_d loads the arriving word directly (same latency); a word that would have to
-                                     // be buffered (r_rdy low) faults the reader closed (r_fault) instead
+    parameter bit NOBP     = 0,      // consumer never back-pressures (r_rdy tied 1, die stations): no receive buffer,
+                                     // o_d loads the arriving word directly (same latency).  INVARIANT (the proof):
+                                     // r_rdy == 1 every cycle => load == 1 => an arriving word goes straight into o_d,
+                                     // push_1 == 0 while empty and cnt stays 0 (cnt_1 = cnt + push_1 - pop from 0);
+                                     // the buffer is never written.  ENFORCED where the FIFO is instantiated:
+                                     // ot_hbm_stn_meso ties .r_rdy(1'b1) (the only NOBP instantiation), and a
+                                     // simulation assertion below flags r_rdy == 0.  The r_fault on a would-be push is
+                                     // a fail-closed safety net, not the argument.
+    parameter bit CRDREG   = 0       // register the credit-ring readout too (credit return +1 period; data latency
+                                     // unchanged; CREDITS + 1 = 9 still covers the round trip)
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -123,7 +130,7 @@ module ot_meso_fifo #(
            ,.dbg_tc(dbg_wc), .dbg_rp(dbg_rp)
 `endif
         );
-        ot_meso_ring #(.W(1), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_cred (
+        ot_meso_ring #(.W(1), .DEPTH(DEPTH), .OFFSET(OFFSET), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI), .RDREG(CRDREG)) u_cred (
             .tclk(rclk), .t_v(c_pulse), .t_d(1'b1),
             .rclk(wclk), .r_align(w_align), .r_on(w_on),
             .r_d(c_rd), .r_v(c_rv), .r_lap_ok(c_lap_ok), .r_glo_ok(c_glo), .r_ghi_ok(c_ghi)
@@ -229,6 +236,11 @@ module ot_meso_fifo #(
         assign r_d      = o_d;
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
+`ifndef SYNTHESIS
+        if (NOBP) begin : g_nobp_check
+            always @(posedge rclk) if (rrst_n && !r_rdy) $error("ot_meso_fifo NOBP: r_rdy low (no-backpressure invariant broken)");
+        end
+`endif
         if (NOBP) begin : g_nobp
             // no buffer: the W-wide 'empty ? d_rd : buf_d[hd]' select (a 512-load control net) and CREDITS x W
             // buffer flops go; with r_rdy = 1 the buffer is provably never used (load = 1, push_1 = 0 when empty)

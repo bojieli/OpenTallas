@@ -163,7 +163,7 @@ class Emit:
         w = len(ibits)
         wn = f'm_{u}'
         self.body.append(f'  wire [{w - 1}:0] {wn};')
-        ri = ', .RI(1), .RDREG(1), .NOBP(1)' if self.margin else ''
+        ri = ', .RI(1), .RDREG(1), .NOBP(1), .CRDREG(1)' if self.margin else ''
         self.body.append(f'  ot_hbm_stn_meso #(.W({w}){ri}) {u} (.fclk_i({ip}[{iclk}]), .d_i({rng(self.mut([(ip, i) for i in ibits]))}), '
                          f'.ck(ck[0]), .rst_n(rst[0]), .d_o({wn}));')
         self.clk_in.append((ip, iclk))
