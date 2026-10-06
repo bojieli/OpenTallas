@@ -133,3 +133,15 @@ carry130.927786pF SS/152.932374pF FF beforephysicalwireRC/CTS. Clock-load
 artifact retains source/mapped/library/JSONhashes; allbulkobjects stayE2.
 Existingprofile showscurrentSTA remainsininputDelayTag/findTag arrival search;
 no hangingdriverkill, constraints unchanged, no repeatedpassedgoldengate.
+
+GEO defaultOFF successor (model6afe377fc beforeRTL5177b9ade): actual32
+caller gate PASS32completions/128TX/256RX/789cycles/0added; mux golden
+PASS209grants/2048cycles/0mismatch/0added. Geographic Boolean leaf grouping
+[0..7,16..23,8..15,24..31], explicit keep on OR intermediates and mask
+equalities, no arithmetic/rounding/priority/credit/state change. Prior TREE
+mapped assignment actually fails WEST97789 vsoptimistic50594 beforeother
+claims (47195deficit); all assignment failures retained. This is a source
+structural fix, not density-only tuning; new SS synthesis queued onE2 only
+for16thread headroom, unchanged24GiBguard/NVMe. No full32physical pass,
+source waiver, installed transport, propagatedclock credit or adoption.
+Allpriorroute/STA/HA2livehandles and completed objects preserved.
