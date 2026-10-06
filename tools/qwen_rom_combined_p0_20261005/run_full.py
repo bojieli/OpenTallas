@@ -65,7 +65,7 @@ def stage(output, name, command):
         rc = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT).returncode
     (output/(name+'.exit')).write_text(str(rc)+'\n')
     if rc:
-        (output/'terminal.json').write_text(json.dumps(dict(
+        (output/(name+'_terminal.json')).write_text(json.dumps(dict(
             status='FAIL_'+name.upper(), exit=rc, full_token_pass=False,
             physical_qualified=False), indent=2)+'\n')
         raise RuntimeError(name+' failed; retained stage will not be replayed')
@@ -141,7 +141,7 @@ def main():
                     controller_rises=int(re.search(r'P0_CLOCK controller_rises=(\d+)', log)[1]),
                     elapsed_fs=int(re.search(r'elapsed_fs=(\d+)', log)[1])),
         scope='Actual protected finite transport and timed numeric backing; physical qualification separate')
-    (output/'terminal.json').write_text(json.dumps(result, indent=2)+'\n')
+    (output/'runtime_terminal.json').write_text(json.dumps(result, indent=2)+'\n')
     if bad:
         raise RuntimeError('actual numerical output comparison failed')
 
