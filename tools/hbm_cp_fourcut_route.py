@@ -72,7 +72,8 @@ def main():
         argv += ['--step-tcl', 'PRE_GLOBAL_PLACE=physical/hbm_cp_parent_context_20261005/fast_frontier_unique_regions.tcl',
                  '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
                  '--orfs-var', f'GPL_RANDOM_SEED={args.variant}',
-                 '--orfs-var', f'OR_SEED={args.variant}']
+                 '--orfs-var', f'OR_SEED={args.variant}',
+                 '--orfs-var', 'PLACE_DENSITY_LB_ADDON=']
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
@@ -91,7 +92,10 @@ def main():
             finite_parent_model_sha256=sha(finite_path), finite_allocation=finite,
             placement_seed=args.variant, detailed_route_seed=args.variant,
             analytical_inputs_until_actual_CTS=True,
-            parent_supply_drop_unmeasured=True)
+            parent_supply_drop_unmeasured=True,
+            explicit_modeled_density=0.5,automatic_density_prequery_disabled=True,
+            canonical_initial_placement_removes_empty_core=True,
+            membership_after_port_buffering=True)
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
@@ -138,6 +142,20 @@ needle='set result [catch { log_cmd detailed_placement } msg]'
 assert s.count(needle)==2, 'Installed CTS legalization API changed'
 print(json.dumps(dict(original_cts_sha256=hashlib.sha256(s.encode()).hexdigest(),membership_calls=2)))
 p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
+'''
+    if finite:
+        # Same installed canonical GPL as Noether a0076e760/c3f2e5fb0:
+        # initial placement removes an empty top-level component. The earlier
+        # automatic-density prequery cannot initialize that empty component.
+        # Preserve exact modeled density0.5 and bind newly inserted IO cells
+        # after native port buffering, before canonical initial placement.
+        patch += '''
+p=Path('/OpenROAD-flow-scripts/flow/scripts/global_place.tcl')
+s=p.read_text()
+needle='proc do_placement { global_placement_args } {'
+assert s.count(needle)==1, 'Installed GPL port-buffer/placement API changed'
+s=s.replace(needle,'source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
+p.write_text(s)
 '''
     (case/'bind_cts_membership.py').write_text(patch)
     import run_abi3_physical as driver
