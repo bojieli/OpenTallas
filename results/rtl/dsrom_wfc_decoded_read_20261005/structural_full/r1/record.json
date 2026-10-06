@@ -1,0 +1,25 @@
+{
+  "verdict": "FAIL_FULL_CHANGED_SOURCE0_DEFAULT_OFF_CYCLE_CHECK",
+  "source_commit": "8e1291a72",
+  "source_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r1",
+  "output_root": "/srv/opentallas-scratch2/jobs/zeno-wfc-structural-exact-r1",
+  "actual_terminal_exit": 134,
+  "MAXU": 866,
+  "USERS": 866,
+  "issues_per_lane": [
+    20000,
+    20000,
+    20000
+  ],
+  "first_fault_header_per_lane": [
+    19961,
+    19961,
+    19961
+  ],
+  "first_default_off_mismatch_cycle": 5804,
+  "SOURCE1_not_run": true,
+  "immutable_objects_retained": true,
+  "possible_driver_same_edge_counter_dependency": true,
+  "diagnosis_not_routed_hardware_failure": true,
+  "adopted": false
+}

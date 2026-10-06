@@ -87,6 +87,9 @@ module tb_wfc_structural_full;
     integer iss_n [0:2];
     integer fin_cyc [0:2];
     integer sent_n [0:2];
+    integer lead_q[0:2];
+    initial for(integer n=0;n<3;n=n+1)lead_q[n]=0;
+    always @(negedge clk)for(integer n=0;n<3;n=n+1)lead_q[n]=sent_n[n];
 
     genvar gi;
     generate for (gi = 0; gi < 3; gi = gi + 1) begin : g
@@ -224,7 +227,7 @@ module tb_wfc_structural_full;
                         left <= left - 1;
                     end
                 end
-                if ((!in_valid || (in_ready && left == 0)) && sent < NJOBS && sent < sent_n[(gi+1)%3]+2 && sent < sent_n[(gi+2)%3]+2 && (h32(cyc, 1, 32'h5E) % 3 != 0)) begin
+                if ((!in_valid || (in_ready && left == 0)) && sent < NJOBS && sent < lead_q[(gi+1)%3]+2 && sent < lead_q[(gi+2)%3]+2 && (h32(cyc, 1, 32'h5E) % 3 != 0)) begin
                     su = h32(sent, 0, 32'h05) % USERS;
                     sp = upn[su];
                     if (sp > 0 && h32(sent, 2, 32'h06) % 6 == 0) sp = sp - 1 - (h32(sent, 3, 32'h07) % WIN);
@@ -369,12 +372,12 @@ module tb_wfc_structural_full;
             $display("STRUCTURAL_STATS source=%0d inst=%0d MAXU=%0d USERS=%0d cycles=%0d fin=%0d issues=%0d committed=%0d errors=%0d rejects=%0d squash=%0d fault_cycle=%0d fault_header=%0d",SOURCE,n,MAXU,USERS,cyc,fin_cyc[n],iss_n[n],ok_n[n],err_n[n],rej_n[n],sq_n[n],fault_cyc[n],first_fault_header[n]);
             if(err_n[n] || (SOURCE && (fin_cyc[n]==0||fault_cyc[n]!=0||ok_n[n]!=USERS*(PLEN+GEN-1))))$fatal(1,"fullshape committed token oracle failed");
         end
+        $display("STRUCTURAL_CALENDAR source=%0d launch_checks=%0d completion_checks=%0d received_plus2=%0d received_wait_max=%0d reset_release_delta=%0d VM_exact=%0d flit_exact=%0d launch_exact=%0d default_off_cycle_mism=%0d",SOURCE,launch_checks,completion_checks,received_plus2,received_wait_max,reset_rx-reset_root,wc,oc,lc,mism);
         if(mism || launch_checks!=iss_n[2] || completion_checks!=iss_n[2] || reset_rx-reset_root!=1)$fatal(1,"default-off or fullshape calendar checks failed");
         if(!SOURCE && (wc!=NJOBS*RXWORDS||oc!=NJOBS*(XWORDS+1)||lc!=NJOBS||
             wn[0]!=wn[1]||wn[1]!=wn[2]||on[0]!=on[1]||on[1]!=on[2]||
             first_fault_header[0]!=first_fault_header[1]||first_fault_header[1]!=first_fault_header[2]||
             received_plus2==0))$fatal(1,"fullshape finite exact join/count/fault ordinal failed");
-        $display("STRUCTURAL_CALENDAR source=%0d launch_checks=%0d completion_checks=%0d received_plus2=%0d received_wait_max=%0d reset_release_delta=%0d VM_exact=%0d flit_exact=%0d launch_exact=%0d default_off_cycle_mism=%0d",SOURCE,launch_checks,completion_checks,received_plus2,received_wait_max,reset_rx-reset_root,wc,oc,lc,mism);
         $display("STRUCTURAL_FULL PASS");$finish;
     end
 endmodule
