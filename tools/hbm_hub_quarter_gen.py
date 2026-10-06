@@ -10,9 +10,10 @@ Structure (one generator for the three quarters, parameters in QUARTERS):
   * BROADCAST: one register chain per (pair, half) carries the lanes' broadcast word (every lane input except the
     per-lane fields) + reset from the boundary outward, one (* keep *) register bank per group (the 2 x L lanes of the
     group read it);  per-lane input fields are a lane-indexed rotation of the group's broadcast bank;
-  * RESULTS: one OR-accumulate chain per (pair, half) carries that chain's share of the die output word inward, one
-    (* keep *) register bank per group; each lane output bit is OR-merged into one slot (results of different lanes
-    occupy disjoint slots when they are valid one at a time: a gather bus);
+  * RESULTS: one XOR-accumulate chain per (pair, half) carries that chain's share of the die output word inward, one
+    (* keep *) register bank per group; each lane output bit is XOR-merged into one slot (the cost of the OR of a
+    gather bus, but every lane output bit stays observable at the die output: an OR of ~57 bits per slot saturated
+    the SU envelope's outputs to all ones and its negative control could not fail);
   * the chains' heads meet at the die-port band; dout = the heads' accumulators.
 
 This is a PHYSICAL ENVELOPE of the quarter: real closed lanes, real register boundary, real wire stages and wiring
@@ -120,7 +121,7 @@ class Plan:
         for j, k, g, s, i in self.lanes():
             lo = self.stub_out(self.lane_inputs(din_bits, j))
             for t, b in enumerate(lo):
-                acc[k][self.slot(j, t)] |= b
+                acc[k][self.slot(j, t)] ^= b
         flat = []
         for k in range(self.K):
             flat += acc[k]
@@ -206,7 +207,7 @@ def emit_rtl(P, neg=False):
             L_.append(f'    wire [{P.WC - 1}:0] nx_{k}_{g};')
             for x in range(P.WC):
                 parts = ([f'{prev}[{x}]'] if prev else []) + terms.get(x, [])
-                L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' | '.join(parts) if parts else "1'b0") + ';')
+                L_.append(f'    assign nx_{k}_{g}[{x}] = ' + (' ^ '.join(parts) if parts else "1'b0") + ';')
             L_.append(f'    (* keep *) reg [{P.WC - 1}:0] acc_{k}_{g};  always @(posedge clk) acc_{k}_{g} <= nx_{k}_{g};')
     L_.append(f'    wire [{P.K * P.WC - 1}:0] heads = {{' + ', '.join(f'acc_{k}_0' for k in reversed(range(P.K))) + '};')
     L_.append(f'    (* keep *) reg [{P.WO - 1}:0] dout_p0;  always @(posedge clk) dout_p0 <= heads[{P.WO - 1}:0];')
