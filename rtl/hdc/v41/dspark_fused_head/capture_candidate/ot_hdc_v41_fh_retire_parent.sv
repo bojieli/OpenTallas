@@ -4,7 +4,7 @@
 // A wrong receipt quarantines debt until reset; emission never clears debt.
 module ot_hdc_v41_fh_retire_parent #(
     parameter integer ENABLE=0, PAYLOAD_BITS=5512,
-    parameter integer MARGIN=0   // ot_hdc_v41_fh_fault_retire MARGIN (+1 retirement cycle)
+    parameter integer MARGIN=0   // ot_hdc_v41_fh_fault_retire MARGIN (+2 retirement cycles)
 )(
     input wire clk,rst_n,
     input wire packet_v, warm,

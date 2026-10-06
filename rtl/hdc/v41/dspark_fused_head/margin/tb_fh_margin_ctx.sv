@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-// ctx MARGIN=1 (zero-cycle group-copy trees) == ctx MARGIN=0, cycle for cycle, open loop.
+// ctx MARGIN=1 (two-level group-copy trees, index replicas) == ctx MARGIN=0 with the same +1 index-write
+// stage (IWX=1), cycle for cycle, open loop. The warm ACK only follows an issued index write (as retirement).
 module tb_fh_margin_ctx;
  parameter integer MUT=0;   // 1: DUT row copy wrong (MUT built into a duplicate check), see below
  localparam integer W=16,G=4,AW=24,NW=16,TW=1+1+1+1+1+2+AW+AW+3*(NW+1)+2+AW+3+AW+1;
@@ -9,7 +10,7 @@ module tb_fh_margin_ctx;
  reg [G*W-1:0] o_mask1_in,leaf_mask_in; reg [NW-1:0] leaf_row_in,am_idx_in;
  wire [TW-1:0] rt0,rt1; wire rv0,rv1,we0,we1,lv0,lv1,ov0,ov1,f0,f1; wire [G-1:0] gf0,gf1,owe0,owe1,re0,re1;
  wire [(1+32+NW)*G*W-1:0] lf0,lf1; wire [G*AW-1:0] oa0,oa1,ra0,ra1; wire [G*W-1:0] om0,om1; wire [G*W*32-1:0] od0,od1;
-`define CTXP(M) .W(W),.G(G),.IL(8),.AW(AW),.NW(NW),.ALAT(7),.CAPTURE(1),.RETURN_EXTRA(5),.RETIRE(1),.MARGIN(M)
+`define CTXP(M) .W(W),.G(G),.IL(8),.AW(AW),.NW(NW),.ALAT(7),.CAPTURE(1),.RETURN_EXTRA(5),.RETIRE(1),.MARGIN(M),.IWX(1)
 `define CTXC .clk(clk),.rst_n(rst_n),.retire_busy(rb),.retire_warm_ack(wack),.s3_v_in(s3_v_in),.a_tag_p_in(tag),.res_in(res_in),.ra_q(ra_q),.go_fus(go_fus),.i_iaddr(i_iaddr),.busy_in(busy_in),.o_we1_in(o_we1_in),.o_addr1_in(o_addr1_in),.o_mask1_in(o_mask1_in),.leaf_mask_in(leaf_mask_in),.leaf_row_in(leaf_row_in),.tv_in(tv_in),.ov1_in(ov1_in),.am_idx_in(am_idx_in)
  ot_hdc_v41_fh_ctx #(`CTXP(0)) ref0(`CTXC,.warm_emit(we0),.leaf_valid(lv0),.result_valid(ov0),.ra_re(re0),.ra_addr(ra0),.r_tag(rt0),.r_v(rv0),.leaf(lf0),.o_we(owe0),.o_addr(oa0),.o_mask(om0),.o_data(od0),.fault(f0),.group_fault(gf0));
  ot_hdc_v41_fh_ctx #(`CTXP(1)) dut(`CTXC,.warm_emit(we1),.leaf_valid(lv1),.result_valid(ov1),.ra_re(re1),.ra_addr(ra1),.r_tag(rt1),.r_v(rv1),.leaf(lf1),.o_we(owe1),.o_addr(oa1),.o_mask(om1),.o_data(od1),.fault(f1),.group_fault(gf1));
@@ -25,7 +26,7 @@ module tb_fh_margin_ctx;
    // busy windows alternate with quiet windows so the pending index write drains and issues
    s3_v_in=((i%200)<120)&&(($random(seed)&3)==0); go_fus=(($random(seed)&63)==0);
    tv_in=((i%200)<120)&&$random(seed); ov1_in=((i%200)<120)&&$random(seed);
-   rb=((i%200)<120)&&(($random(seed)&7)==0); wack=(($random(seed)&15)==0);
+   rb=((i%200)<120)&&(($random(seed)&7)==0); wack=(($random(seed)&15)==0)&&ref0.iw_issued;
    for(j=0;j<TW;j=j+32) tag[j+:32]=$random(seed);
    tag[0]=$random(seed); // fused
    for(j=0;j<G*W;j=j+1) begin res_in[32*j+:32]=$random(seed); ra_q[32*j+:32]=$random(seed); end

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// MARGIN fault retirement (five deep, group faults) == original four-deep retirement one cycle later,
+// MARGIN fault retirement (six deep, group faults) == original four-deep retirement two cycles later,
 // with the original's global arithmetic fault = arithmetic | any group fault.
 module tb_fh_margin_retire;
  parameter integer MUT=0;   // 1: drop group faults in the DUT, 2: compare without the +1 offset
@@ -12,15 +12,15 @@ module tb_fh_margin_retire;
  ot_hdc_v41_fh_fault_retire #(.ENABLE(1),.PACKET_BITS(64),.MARGIN(1)) dut(.clk(clk),.rst_n(rst_n),.packet_v(packet_v),.packet(packet),
   .poison(poison),.address_fault(af),.arithmetic_fault(arith),.group_fault(MUT==1?4'b0:gf),.retired_v(rv1),.retired_packet(rp1),
   .lane_veto(lv1),.write_veto(wv1),.fault(f1),.busy(b1));
- reg [1+64+64+4+1-1:0] q0;
+ reg [1+64+64+4+1-1:0] q0,q00;
  integer i,seed=7,faults=0,vs=0;
- always @(posedge clk) q0<={rv0,rp0,lv0,wv0,f0};
+ always @(posedge clk) begin q00<={rv0,rp0,lv0,wv0,f0}; q0<=q00; end
  initial begin
   packet_v=0;packet=0;poison=0;af=0;gf=0;arith=0;
   repeat(3)@(negedge clk); rst_n=1;
   for(i=0;i<4000;i=i+1) begin
    @(negedge clk);
-   if(i>8 && (MUT==2 ? {rv1,rp1,lv1,wv1,f1}!=={rv0,rp0,lv0,wv0,f0} : {rv1,rp1,lv1,wv1,f1}!==q0)) $fatal(1,"retire lockstep %0d",i);
+   if(i>10 && (MUT==2 ? {rv1,rp1,lv1,wv1,f1}!=={rv0,rp0,lv0,wv0,f0} : {rv1,rp1,lv1,wv1,f1}!==q0)) $fatal(1,"retire lockstep %0d",i);
    if(rv1) vs=vs+1; if(f1) faults=faults+1;
    // sticky faults: re-arm periodically through reset
    if(i%500==499) begin rst_n=0; @(negedge clk); rst_n=1; end
@@ -31,6 +31,6 @@ module tb_fh_margin_retire;
    arith=(($random(seed)&1023)==0);
   end
   if(vs<500||faults<20) $fatal(1,"coverage vs=%0d faults=%0d",vs,faults);
-  $display("PASS margin retire == original +1 cycles=4000 retired=%0d faulted=%0d",vs,faults); $finish;
+  $display("PASS margin retire == original +2 cycles=4000 retired=%0d faulted=%0d",vs,faults); $finish;
  end
 endmodule

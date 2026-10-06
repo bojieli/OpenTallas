@@ -12,10 +12,11 @@ CTX = ['rtl/hdc/ot_hdc_delay.sv', 'rtl/hdc/ot_hdc_fpu.sv', 'rtl/hdc/ot_hdc_sfu.s
        f'{D}/capture_candidate/ot_hdc_v41_matvec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv']
 BENCH = {
   'ctx': dict(top='tb_fh_margin_ctx', srcs=CTX + [f'{D}/margin/tb_fh_margin_ctx.sv'], mut={
-      'fsel_tap': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(fline[DF-2]),.q(fsel_g[fg])', '.d(fline[DF-1]),.q(fsel_g[fg])'),
-      'iwg_tap': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(iw_go_n), .q(iwg_g[ic])', '.d(iw_go), .q(iwg_g[ic])'),
+      'fsel_tap': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(fline[DF-3]),.q(fsel_m[fg])', '.d(fline[DF-2]),.q(fsel_m[fg])'),
+      'iwg_tap': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(iw_go_n), .q(iwg_m[ic])', '.d(iw_go), .q(iwg_m[ic])'),
       'row_copy': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(leaf_row_in), .q(row_qg[rg])', '.d(leaf_row_in ^ 16\'d1), .q(row_qg[rg])'),
-      'rv_tap': (f'{D}/capture_candidate/ot_hdc_v41_matvec.sv', '.D(RETURN_EXTRA - 1)) u_return_valid', '.D(RETURN_EXTRA)) u_return_valid')}),
+      'index_replica': (f'{D}/capture_candidate/ot_hdc_v41_fh_ctx.sv', '.d(am_idx_in), .q(am_idx_x)', '.d(am_idx), .q(am_idx_x)'),
+      'rv_tap': (f'{D}/capture_candidate/ot_hdc_v41_matvec.sv', '.D(RETURN_EXTRA - 2)) u_return_valid', '.D(RETURN_EXTRA - 1)) u_return_valid')}),
   'addr_pipe': dict(top='tb_fh_margin_addr_pipe', srcs=[SRAM, 'rtl/dft/ot_rom_secded_dec.sv', f'{D}/capture_candidate/ot_hdc_v41_fh_sram_return.sv',
       f'{D}/lane_hardened/ot_hdc_v41_fh_sram_return_hardened.sv', f'{D}/margin/tb_fh_margin_addr_pipe.sv'], mut={
       'no_delay_ref': ('PARAM', 'MUT', '1'),

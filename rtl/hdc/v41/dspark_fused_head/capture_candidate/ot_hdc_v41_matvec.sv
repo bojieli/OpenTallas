@@ -185,11 +185,12 @@ module ot_hdc_v41_matvec #(
     reg              iw_issued;
     wire             drained;
     reg              iw_go;
-    reg              iw_go2;
-    wire iw_write_go = FH_CAPTURE ? iw_go2 : iw_go;
+    reg              iw_go2, iw_go3;
+    //: FH_MARGIN: one more index-write stage (the 64-lane select travels centre -> group -> lane)
+    wire iw_write_go = FH_CAPTURE ? (FH_MARGIN ? iw_go3 : iw_go2) : iw_go;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) iw_go2 <= 1'b0;
-        else iw_go2 <= iw_go;
+        if (!rst_n) begin iw_go2 <= 1'b0; iw_go3 <= 1'b0; end
+        else begin iw_go2 <= iw_go; iw_go3 <= iw_go2; end
     wire             iw_go_n;
     assign ready = !active && !fus_busy && (!FAULT_RETIRE || !fh_retire_busy);
 
@@ -560,7 +561,7 @@ module ot_hdc_v41_matvec #(
     wire [NIW-1:0] iwg;
     genvar ic;
     for (ic = 0; ic < NIW; ic = ic + 1) begin : g_iwg
-        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(FH_CAPTURE ? iw_go : iw_go_n), .q(iwg[ic]));
+        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(FH_CAPTURE ? (FH_MARGIN ? iw_go2 : iw_go) : iw_go_n), .q(iwg[ic]));
     end
     wire [NW-1:0] index_local [0:W-1];
     wire [W-1:0] index_mask_local;
@@ -685,7 +686,7 @@ module ot_hdc_v41_matvec #(
     //: is tv[LV-1] a cycle earlier: drained next cycle == drained_nx now (the as-built OR without tv[LV])
     wire drained_nx = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv[LV-1:0]) &&
                       !ov1 && !ov && !(|fline) && (!FAULT_RETIRE || !fh_retire_busy);
-    assign iw_go_n = iw_pend && !iw_go && !(FH_CAPTURE && iw_go2) && drained_nx && (!FAULT_RETIRE || !iw_issued);
+    assign iw_go_n = iw_pend && !iw_go && !(FH_CAPTURE && iw_go2) && !(FH_CAPTURE && FH_MARGIN && iw_go3) && drained_nx && (!FAULT_RETIRE || !iw_issued);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) iw_go <= 1'b0;
         else iw_go <= iw_go_n;
@@ -725,8 +726,9 @@ module ot_hdc_v41_fh_add #(
     parameter integer ALAT = 0,
     parameter integer CAPTURE = 0,
     parameter integer RETURN_EXTRA = 0,
-    // TREE (default 0; margin-first 1, needs CAPTURE and RETURN_EXTRA >= 1): the protected return valid
-    // reaches the 64 lane capture registers through one kept copy per group a cycle earlier. Same cycle.
+    // TREE (default 0; margin-first 1, needs CAPTURE and RETURN_EXTRA >= 2): the protected return valid
+    // reaches the 64 lane capture registers through two kept copies per group (centre-to-group, group),
+    // tapped two cycles earlier. Same cycle.
     parameter integer TREE = 0
 ) (
     input  wire                  clk,
@@ -804,16 +806,18 @@ module ot_hdc_v41_fh_add #(
     wire [G-1:0] protected_vg;
     generate if (TREE) begin : g_rv_tree
 `ifndef SYNTHESIS
-        initial if (!CAPTURE || RETURN_EXTRA < 1) $fatal(1, "TREE needs CAPTURE and RETURN_EXTRA >= 1");
+        initial if (!CAPTURE || RETURN_EXTRA < 2) $fatal(1, "TREE needs CAPTURE and RETURN_EXTRA >= 2");
 `endif
         wire rv_pre;
-        if (RETURN_EXTRA > 1) begin : g_d
-            ot_hdc_delay #(.W(1), .D(RETURN_EXTRA - 1)) u_return_valid (.clk(clk), .rst_n(rst_n), .d(ah_v), .q(rv_pre));
+        wire [G-1:0] rv_mid;
+        if (RETURN_EXTRA > 2) begin : g_d
+            ot_hdc_delay #(.W(1), .D(RETURN_EXTRA - 2)) u_return_valid (.clk(clk), .rst_n(rst_n), .d(ah_v), .q(rv_pre));
         end else begin : g_n
             assign rv_pre = ah_v;
         end
         for (genvar gq = 0; gq < G; gq = gq + 1) begin : g_rvg
-            ot_hdc_v41_fh_kreg u_rvg (.clk(clk), .rst_n(rst_n), .d(rv_pre), .q(protected_vg[gq]));
+            ot_hdc_v41_fh_kreg u_rvm (.clk(clk), .rst_n(rst_n), .d(rv_pre), .q(rv_mid[gq]));
+            ot_hdc_v41_fh_kreg u_rvg (.clk(clk), .rst_n(rst_n), .d(rv_mid[gq]), .q(protected_vg[gq]));
         end
         assign protected_v = protected_vg[0];
     end else begin : g_rv_line

@@ -25,11 +25,13 @@ module ot_hdc_v41_fh_ctx #(
     parameter integer CAPTURE = 0,
     parameter integer RETURN_EXTRA = 0,
     parameter integer RETIRE = 0,
-    // MARGIN (default 0; margin-first 1, needs CAPTURE): zero-cycle broadcast trees - fused-lane select,
-    // index-write go and the return valid reach the 64 lanes through one kept copy per group a cycle
-    // earlier; the leaf row register is kept once per group; group_fault carries the per-group OR of
-    // the lane adder faults (same cycle as fault) so retirement can fold it in locally.
-    parameter integer MARGIN = 0
+    // MARGIN (default 0; margin-first 1, needs CAPTURE): broadcast trees with two kept copies per group
+    // (centre-to-group, group) - fused-lane select and return valid tapped two cycles earlier (same
+    // cycle); the index-write select gains one stage (IW_EXTRA, +1 cycle per index write, as the
+    // gold matvec FH_MARGIN); leaf row and argmax index / index address replicas sit in the groups;
+    // group_fault carries the per-group OR of the lane adder faults (same cycle as fault).
+    parameter integer MARGIN = 0,
+    parameter integer IWX = 0     // the +1 index-write stage alone (reference for MARGIN)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -137,11 +139,13 @@ module ot_hdc_v41_fh_ctx #(
         .p_tq(p_tq), .p_hg(p_hg), .p_oa(p_oa), .p_ots(p_ots), .p_ogs(p_ogs), .p_ops(p_ops), .res_u(res_u),
         .ra_re(ra_re), .ra_addr(ra_addr), .ra_q(ra_q), .fsum(fsum), .ffault(ffault));
     wire [G*W-1:0] fused_lane_v;
-    wire [G-1:0] fsel_g;
+    wire [G-1:0] fsel_g, fsel_m;
     for (genvar fg=0; fg<G; fg=fg+1) begin : g_fsel_group
         if (MARGIN) begin : g_k
-            ot_hdc_v41_fh_kreg u_selg (.clk(clk),.rst_n(rst_n),.d(fline[DF-2]),.q(fsel_g[fg]));
+            ot_hdc_v41_fh_kreg u_selm (.clk(clk),.rst_n(rst_n),.d(fline[DF-3]),.q(fsel_m[fg]));
+            ot_hdc_v41_fh_kreg u_selg (.clk(clk),.rst_n(rst_n),.d(fsel_m[fg]),.q(fsel_g[fg]));
         end else begin : g_n
+            assign fsel_m[fg]=1'b0;
             assign fsel_g[fg]=fline[DF-2];
         end
     end
@@ -169,13 +173,14 @@ module ot_hdc_v41_fh_ctx #(
     reg iw_pend;
     reg iw_issued;
     reg iw_go;
-    reg iw_go2;
-    wire iw_write_go=CAPTURE?iw_go2:iw_go;
+    reg iw_go2, iw_go3;
+    localparam integer IW_EXTRA = (MARGIN || IWX) ? 1 : 0;
+    wire iw_write_go=CAPTURE?(IW_EXTRA?iw_go3:iw_go2):iw_go;
     always @(posedge clk or negedge rst_n)
-        if(!rst_n) iw_go2<=0; else iw_go2<=iw_go;
+        if(!rst_n) begin iw_go2<=0; iw_go3<=0; end else begin iw_go2<=iw_go; iw_go3<=iw_go2; end
     reg [AW-1:0] iaddr_r;
     wire drained_nx = (!RETIRE || !retire_busy) && !(|busy_q) && !s3_v && !(|vline) && !(|tv[LV-1:0]) && !ov1 && !ov && !(|fline);
-    wire iw_go_n = iw_pend && !iw_go && !(CAPTURE && iw_go2) && drained_nx && (!RETIRE || !iw_issued);
+    wire iw_go_n = iw_pend && !iw_go && !(CAPTURE && iw_go2) && !(CAPTURE && IW_EXTRA && iw_go3) && drained_nx && (!RETIRE || !iw_issued);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin iw_pend <= 1'b0; iw_issued<=0; warm_emit<=0; iaddr_r <= 0; iw_go <= 1'b0; end
         else begin
@@ -196,24 +201,36 @@ module ot_hdc_v41_fh_ctx #(
     localparam integer NIW=(G*W+IWG_LANES-1)/IWG_LANES;
     wire [NIW-1:0] iwg;
     genvar ic;
-    wire [G-1:0] iwg_g;
+    wire [G-1:0] iwg_g, iwg_m;
     generate for (ic = 0; ic < G; ic = ic + 1) begin : g_iwg_group
-        if (MARGIN) begin : g_k   // kept replicas of iw_go, one per group
-            ot_hdc_v41_fh_kreg u_iwgg (.clk(clk), .rst_n(rst_n), .d(iw_go_n), .q(iwg_g[ic]));
+        if (MARGIN) begin : g_k   // kept replicas of iw_go (centre-to-group) and iw_go2 (group)
+            ot_hdc_v41_fh_kreg u_iwgm (.clk(clk), .rst_n(rst_n), .d(iw_go_n), .q(iwg_m[ic]));
+            ot_hdc_v41_fh_kreg u_iwgg (.clk(clk), .rst_n(rst_n), .d(iwg_m[ic]), .q(iwg_g[ic]));
         end else begin : g_n
-            assign iwg_g[ic] = iw_go;
+            assign iwg_m[ic] = iw_go;
+            assign iwg_g[ic] = IW_EXTRA ? iw_go2 : iw_go;
         end
     end endgenerate
     generate for (ic = 0; ic < NIW; ic = ic + 1) begin : g_iwg
-        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(CAPTURE?(MARGIN?iwg_g[ic*IWG_LANES/W]:iw_go):iw_go_n), .q(iwg[ic]));
+        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(CAPTURE?iwg_g[ic*IWG_LANES/W]:iw_go_n), .q(iwg[ic]));
     end endgenerate
     wire [G*W*32-1:0] iw_data_old = {{(G*W-1){32'd0}}, {{(32-NW){1'b0}}, am_idx}} << (32 * iw_e[LW-1:0]);
     wire [G*W-1:0]    iw_mask_old = {{(G*W-1){1'b0}}, 1'b1} << iw_e[LW-1:0];
     wire [NW-1:0] index_local [0:W-1];
     wire [W-1:0] index_mask_local;
+    // MARGIN: group-0 replicas of the argmax index (from the port, as am_idx) and of the index
+    // address (one cycle behind iaddr_r, which holds from go_fus acceptance until the index write)
+    wire [NW-1:0] am_idx_x;
+    wire [AW-1:0] iw_e_x;
+    generate if (MARGIN) begin : g_index_replica
+        ot_hdc_v41_fh_kvec #(.N(NW)) u_amg (.clk(clk), .d(am_idx_in), .q(am_idx_x));
+        ot_hdc_v41_fh_kvec #(.N(AW)) u_iag (.clk(clk), .d(iw_e), .q(iw_e_x));
+    end else begin : g_index_direct
+        assign am_idx_x = am_idx; assign iw_e_x = iw_e;
+    end endgenerate
     for (genvar ix=0; ix<W; ix=ix+1) begin : g_index_prepare
         ot_hdc_v41_fh_indexreg #(.NW(NW),.LW(LW),.LANE(ix)) u_index (
-            .clk(clk), .index_in(am_idx), .lane_in(iw_e[LW-1:0]),
+            .clk(clk), .index_in(am_idx_x), .lane_in(iw_e_x[LW-1:0]),
             .index_q(index_local[ix]), .mask_q(index_mask_local[ix]));
     end
     wire [G*W*32-1:0] iw_data;

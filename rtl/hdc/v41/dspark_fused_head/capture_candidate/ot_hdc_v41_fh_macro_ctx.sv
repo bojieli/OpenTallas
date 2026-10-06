@@ -17,6 +17,9 @@ module ot_hdc_v41_fh_macro_ctx #(
     // 64 SRAM lanes are the hardened lane macro and requests reach them through ADDR_PIPE=2
     // distribution registers (RETURN_EXTRA = 2 + PROTECT_SPLIT + 2).
     parameter integer MARGIN = 0, HARD_LANE = 0
+    // MARGIN context folds the duplicate observation buses (result_capture = slices of the captured
+    // request; the two check mirrors) to one tied bit and the argmax level-1 consumer registers to a
+    // parity bit: the registers and every internal load stay, ~7,900 stand-in pins go.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -27,8 +30,10 @@ module ot_hdc_v41_fh_macro_ctx #(
     input wire [1266:0] native_checked_reply,
     output wire native_request_checked_v,native_reply_checked_v,
     output wire [3:0] native_permission_capture,
-    output wire [2830:0] native_captured_request,native_captured_request_check,
-    output wire [1266:0] native_captured_reply,native_captured_reply_check,
+    output wire [2830:0] native_captured_request,
+    output wire [MARGIN==0?2830:0:0] native_captured_request_check,
+    output wire [1266:0] native_captured_reply,
+    output wire [MARGIN==0?1266:0:0] native_captured_reply_check,
     input wire [7:0] commit_ack_id,
     input wire [23:0] commit_ack_word,
     input wire [15:0] commit_ack_mask,
@@ -62,8 +67,8 @@ module ot_hdc_v41_fh_macro_ctx #(
     output wire  [G*W-1:0]    o_mask,
     output wire  [G*W*32-1:0] o_data,
     output wire              fault,
-    output wire [G*W*32+G*W+G*AW+G-1:0] result_capture,
-    output wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1
+    output wire [MARGIN==0?G*W*32+G*W+G*AW+G-1:0:0] result_capture,
+    output wire [MARGIN==0?(1+32+NW)*(G*W/2)-1:0:0] argmax_level1
 );
     wire [G*W*32-1:0] ra_q;
     wire [G*W-1:0] mem_valid,mem_corrected,mem_poison,mem_committed;
@@ -119,6 +124,21 @@ module ot_hdc_v41_fh_macro_ctx #(
         .o_mask(raw_mask),
         .o_data(raw_data));
     wire parent_fault;
+    wire [2830:0] native_request_check_full;
+    wire [1266:0] native_reply_check_full;
+    wire [G*W*32+G*W+G*AW+G-1:0] result_capture_full;
+    wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1_full;
+    generate if (MARGIN==0) begin : g_obs
+        assign native_captured_request_check=native_request_check_full;
+        assign native_captured_reply_check=native_reply_check_full;
+        assign result_capture=result_capture_full;
+        assign argmax_level1=argmax_level1_full;
+    end else begin : g_obs_fold
+        assign native_captured_request_check=1'b0;
+        assign native_captured_reply_check=1'b0;
+        assign result_capture=1'b0;
+        assign argmax_level1=^argmax_level1_full;
+    end endgenerate
     wire native_ack_v,native_fault,native_bounds_fault,native_guard_busy;
     wire [7:0] native_ack_id;
     wire [23:0] native_ack_word;
@@ -134,16 +154,16 @@ module ot_hdc_v41_fh_macro_ctx #(
             .native_ordinal(native_ordinal),.request_owner(native_request_owner),.request_id(commit_id),
             .head_we(o_we),.head_addr(o_addr),.head_mask(o_mask),.head_data(o_data),
             .checked_reply(native_checked_reply),.bounds_fault(native_bounds_fault),.endpoint_fault(native_fault),
-            .captured_request(native_captured_request),.captured_request_check(native_captured_request_check),
-            .captured_reply(native_captured_reply),.captured_reply_check(native_captured_reply_check),
+            .captured_request(native_captured_request),.captured_request_check(native_request_check_full),
+            .captured_reply(native_captured_reply),.captured_reply_check(native_reply_check_full),
             .request_checked_v(native_request_checked_v),.reply_checked_v(native_reply_checked_v),.guard_busy(native_guard_busy),
             .head_ack_v(native_ack_v),.head_ack_id(native_ack_id),.head_ack_word(native_ack_word),.head_ack_mask(native_ack_mask));
     end else begin : g_no_native_load
         assign native_ack_v=0;assign native_ack_id=0;assign native_ack_word=0;assign native_ack_mask=0;
         assign native_fault=0;assign native_bounds_fault=0;assign native_guard_busy=0;
         assign native_request_checked_v=0;assign native_reply_checked_v=0;
-        assign native_captured_request=0;assign native_captured_request_check=0;
-        assign native_captured_reply=0;assign native_captured_reply_check=0;
+        assign native_captured_request=0;assign native_request_check_full=0;
+        assign native_captured_reply=0;assign native_reply_check_full=0;
     end endgenerate
     // Actual clocked grant receiver copies from the fixture/provider boundary.
     // These load the checked permission paths; observation-port false paths
@@ -214,12 +234,12 @@ module ot_hdc_v41_fh_macro_ctx #(
         end
         // Observe the existing native receiving registers; do not keep a
         // second fictitious result receiver after adding the real endpoint.
-        assign result_capture={native_captured_request[2716+:4],captured_head_addr,
+        assign result_capture_full={native_captured_request[2716+:4],captured_head_addr,
             native_captured_request[16+:64],native_captured_request[592+:2048]};
     end else begin : g_legacy_result_observe
         reg [G*W*32+G*W+G*AW+G-1:0] captured;
         always @(posedge clk) captured <= {o_we,o_addr,o_mask,o_data};
-        assign result_capture=captured;
+        assign result_capture_full=captured;
     end endgenerate
     for(genvar p=0;p<G*W/2;p=p+1) begin : g_argmax_consumer
         localparam integer CW=1+32+NW;
@@ -229,6 +249,6 @@ module ot_hdc_v41_fh_macro_ctx #(
             (x0[CW-2-:32]==x1[CW-2-:32]&&x0[NW-1:0]<x1[NW-1:0]));
         reg [CW-1:0] c;
         always @(posedge clk) c<=x0_wins?x0:x1;
-        assign argmax_level1[CW*p+:CW]=c;
+        assign argmax_level1_full[CW*p+:CW]=c;
     end
 endmodule

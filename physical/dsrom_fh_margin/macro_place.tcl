@@ -1,6 +1,7 @@
-# Margin-first fused head (MARGIN=1 HARD_LANE=1): 64 protected SRAM lanes, no region fences.
-# Group g = columns 2g, 2g+1 (8 rows each); rows 0-3 / 4-7 split by a 60 um control band. Bank b: g=b/16,
-# col = 2g + (b%16)/8, row = b%8. 220 um column pitch leaves 46 um for the lane's W/E macro pins and logic.
+# Margin-first fused head (MARGIN=1 HARD_LANE=1): 64 protected SRAM lanes, no region fences, 1000 x 1000.
+# Group g occupies one quadrant (g%2: left/right, g/2: bottom/top) as 2 columns x 8 rows; the centre cross
+# (~80 um) carries the control, retirement and checked endpoint, so every group is <= ~450 um from the centre.
+# Bank b: g=b/16, column (b%16)/8, row b%8; 220 um column pitch leaves 46 um for the W/E macro pins and lane logic.
 # masked FP32 lane. Local raw/correction/encoding flops stay with their macro.
 set block [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -36,10 +37,10 @@ foreach inst [$block getInsts] {
     if {![regexp {g_bank\[(\d+)\].*u_sram} $clean -> b]} {error "Unknown macro $clean"}
     set g [expr {$b/16}]
     set w [expr {$b%16}]
-    set col [expr {2*$g + $w/8}]
+    set col [expr {2*($g%2) + $w/8}]
     set row [expr {$w%8}]
-    set xx [joint_snap [expr {30.0+$col*220.0}] $x0 $xp]
-    set yy [joint_snap [expr {20.0+$row*70.0+($row>=4?60.0:0.0)}] $y0 $yp]
+    set xx [joint_snap [expr {20.0+$col*220.0+(($g%2)?80.0:0.0)}] $x0 $xp]
+    set yy [joint_snap [expr {15.0+$row*58.0+(($g/2)?515.0:0.0)}] $y0 $yp]
     place_inst -name [$inst getName] -location [list $xx $yy] -orientation R0 -status FIRM
     incr n
 }

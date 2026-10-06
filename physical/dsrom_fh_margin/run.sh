@@ -25,9 +25,9 @@ python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top ot_hdc_
  --clock-period-ns 0.770 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
  --orfs-corner WC --hold-corners WC,BC --stages pnr \
  --macro-view "$M=physical/asap7_memory_macros/$M" --macro-place-halo 2 2 \
- --orfs-var ADDER_MAP_FILE= --die-area 0 0 1800 660 --core-area 2 2 1798 658 \
+ --orfs-var ADDER_MAP_FILE= --die-area 0 0 1000 1000 --core-area 2 2 998 998 \
  --orfs-var MACRO_PLACEMENT_TCL=/src/$H/macro_place.tcl \
- --place-density 0.50 --orfs-var PLACE_DENSITY_LB_ADDON= --core-utilization 30 \
+ --place-density 0.55 --orfs-var PLACE_DENSITY_LB_ADDON= --core-utilization 30 \
  --max-transition-ns 0.25 --max-fanout 16 --slew-margin-percent 20 --hold-margin-ns 0.035 \
  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
  --sdc-append physical/dsrom_fh_capture/boundary.sdc --io-delay-fraction 0.2 \
