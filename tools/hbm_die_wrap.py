@@ -210,11 +210,98 @@ def gen(spec):
     fwd = [(p, b) for p, d in sorted(fck.items()) for b, dd in sorted(d.items()) if dd == 'out']
     for k, (p, b) in enumerate(fwd):
         L_.append(f'    wire fclk_{k}; ot_fwd_clk_inv u_fclk_{k} (.a(clk), .y(fclk_{k}));')
+    # shared-source chain trees (spec 'share_tree': {"min": M, "fanout": F}): an output source bit that feeds >= M face
+    # chains is fanned out through kept per-chain-group copies (ot_hfd_oreg1) at the shared chain stages instead of
+    # driving M chains from one core flop: level 0 is one copy per die port, every further level splits a group into
+    # <= F groups contiguous in bit order (pins of a port are placed in bit order), and each chain keeps its own last
+    # stages to the pin.  Every chain still has face_stages flops: cycle-exact, same die latency.
+    tree_leaf, tree_lines, tree_stats = {}, [], dict(sources=0, chains=0, nodes=0)
+    st = spec.get('share_tree')
+    fs = spec.get('face_stages', 1)
+    if st and spec.get('kept_out_regs') and fs > 1:
+        import re
+        src = {}
+        for p in sorted(outs):
+            for lo, hi, e in outs[p]:
+                m = re.fullmatch(r'([A-Za-z_]\w*)\[(\d+):(\d+)\]', e)
+                m1 = re.fullmatch(r'([A-Za-z_]\w*)\[(\d+)\]', e)
+                for j in range(hi - lo):
+                    if m:
+                        key = (m.group(1), int(m.group(3)) + j)
+                    elif m1 and hi - lo == 1:
+                        key = (m1.group(1), int(m1.group(2)))
+                    elif re.fullmatch(r'[A-Za-z_]\w*', e) and hi - lo == 1:
+                        key = (e, 0)
+                    else:
+                        continue
+                    if key[0].startswith('fold_'):
+                        continue
+                    src.setdefault(key, []).append((p, lo + j))
+        F = st.get('fanout', 4)
+        nid = [0]
+
+        def split(ch, level):
+            if level == 0:
+                g = {}
+                for c in ch:
+                    g.setdefault(c[0], []).append(c)
+                return [g[k] for k in sorted(g)]
+            n = min(F, len(ch))
+            return [ch[(i * len(ch)) // n:((i + 1) * len(ch)) // n] for i in range(n)]
+
+        def build(ch, level, drv):
+            for grp in split(ch, level):
+                if len(grp) == 1 or level == fs - 1:
+                    for c in grp:
+                        tree_leaf[c] = (fs - level, drv)
+                    continue
+                k = nid[0]; nid[0] += 1
+                tree_lines.append(f'    wire n_st{k}; (* keep *) ot_hfd_oreg1 u_st{k} (.clk(clk), .d({drv}), .q(n_st{k}));')
+                build(grp, level + 1, f'n_st{k}')
+
+        for key in sorted(src):
+            ch = sorted(src[key])
+            if len(ch) < st.get('min', 3):
+                continue
+            tree_stats['sources'] += 1
+            tree_stats['chains'] += len(ch)
+            build(ch, 0, f'{key[0]}[{key[1]}]')
+        tree_leaf = {c: v for c, v in tree_leaf.items() if v[0] != fs}   # an unshared chain stays a plain chain
+        tree_stats['nodes'] = nid[0]
+        if tree_lines:
+            L_.append(f'    // shared-source chain trees: {tree_stats["sources"]} source bits, {tree_stats["chains"]} chains, '
+                      f'{tree_stats["nodes"]} kept group copies')
+            L_ += tree_lines
     # output registers
     for p, v in sorted(ports.items()):
         if not any(d == 'out' for d in dirs[p]):
             continue
-        if spec.get('kept_out_regs'):
+        if spec.get('kept_out_regs') and tree_leaf:
+            segs_d, cur = [], 0
+            for lo, hi, e in sorted(outs.get(p, []), key=lambda t: t[0]):
+                if lo > cur:
+                    segs_d.append(f"{lo - cur}'d0")
+                segs_d.append(f'{e}')
+                cur = hi
+            if cur < v['bits']:
+                segs_d.append(f"{v['bits'] - cur}'d0")
+            L_.append(f'    wire [{v["bits"] - 1}:0] od_{p} = {{{", ".join(segs_d[::-1])}}};')
+            L_.append(f'    wire [{v["bits"] - 1}:0] o_{p};')
+            k = 0
+            while k < v['bits']:
+                if (p, k) in tree_leaf:
+                    r, drv = tree_leaf[(p, k)]
+                    L_.append(f'    ot_hfd_oreg{r} u_o_{p}_{k} (.clk(clk), .d({drv}), .q(o_{p}[{k}]));')
+                    k += 1
+                    continue
+                j = k
+                while j < v['bits'] and (p, j) not in tree_leaf:
+                    j += 1
+                L_.append(f'    for (genvar k = {k}; k < {j}; k = k + 1) begin : g_o_{p}_{k}')
+                L_.append(f'        ot_hfd_oreg{fs} u (.clk(clk), .d(od_{p}[k]), .q(o_{p}[k]));')
+                L_.append('    end')
+                k = j
+        elif spec.get('kept_out_regs'):
             # one kept 1-bit flop per die output bit (ot_hfd_oreg1, SYNTH_KEEP_MODULES): yosys would otherwise merge
             # equal-D output flops (a bit broadcast to several quarter ports, or the constant spare bits) into one
             # driver of many far-apart ports
@@ -266,6 +353,8 @@ def gen(spec):
                  die_input_bits_used=sum(sum(u) for u in used_in.values()),
                  die_output_bits=sum(d == 'out' for p in dirs for d in dirs[p]),
                  die_output_bits_driven=sum(sum(u) for u in used_out.values()))
+    if tree_lines:
+        stats['share_tree'] = tree_stats
     return '\n'.join(L_) + '\n', stats
 
 
