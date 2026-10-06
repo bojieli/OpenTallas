@@ -9,7 +9,9 @@ floorplan_pdn.odb.  The pilot runs, in ONE OpenROAD process with per-step wall t
 with a checkpoint (write_db) after GRT1, DPL and GRT2 and the routed ODB after DRT; the pilot runs in a container with
 a hard memory guard (run_case.sh <mem_gb>, owner: 450 GB on EPYC1) so an overrun cannot OOM other owners' jobs;
 then OpenSTA in separate processes at SS (60 ps setup uncertainty) and FF (25 ps hold) at 833.333 ps on the routed
-top-level parasitics with the element interface LIBs (tools/qwen_die_element_lib.py) and the real HBM3E PHY lib.
+top-level parasitics with the element views: ETMs of the closed routed elements bound to their die masters
+(tools/qwen_die_etm_map.py: qfd_cdc, qfd_port_tiles_*), assumed-constant views for the rest (listed in views.json),
+and the real HBM3E PHY lib.
 There is no global placement of standard cells (GPL) or detailed placement of macros: every element is a fixed macro;
 the only standard cells are the repeaters repair_design adds.  DRC = the detailed router's final violation count
 (DRT report); a separate KLayout DRC is not part of this pilot.
@@ -38,7 +40,8 @@ proc step {name body} { set t0 [clock milliseconds]
 
 
 def pilot_tcl(threads, libs):
-    reads = '\n'.join(f'read_liberty {x}' for x in SS_LIBS + [f'/work/libs/{libs}_ss.lib', '/work/libs/ot_hbm3e_phy_ss.lib'])
+    reads = '\n'.join(f'read_liberty {x}' for x in SS_LIBS + ['/work/libs/qfd_etm_ss.lib', f'/work/libs/{libs}_ss.lib',
+                                                              '/work/libs/ot_hbm3e_phy_ss.lib'])
     return HEAD + f"""
 set_thread_count {threads}
 step load {{ read_db /work/floorplan_pdn.odb }}
@@ -66,7 +69,7 @@ puts OT_PILOT_DONE
 
 def sta_tcl(corner, libs):
     lib = SS_LIBS if corner == 'ss' else FF_LIBS
-    reads = '\n'.join(f'read_liberty {x}' for x in lib + [f'/work/libs/{libs}_{corner}.lib',
+    reads = '\n'.join(f'read_liberty {x}' for x in lib + [f'/work/libs/qfd_etm_{corner}.lib', f'/work/libs/{libs}_{corner}.lib',
                                                           f'/work/libs/ot_hbm3e_phy_{corner}.lib'])
     unc = '-setup 60' if corner == 'ss' else '-hold 25'
     rep = 'max' if corner == 'ss' else 'min'
