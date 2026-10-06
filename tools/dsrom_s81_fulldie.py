@@ -465,6 +465,16 @@ def build(variant=None):
                  hub=hub, phys=phys, ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of,
                  x_vch=x_vch, mid=mid, variant=variant)
     model['buses'] = buses(model)            # also adds waypoints / hub FIFO slots
+    # Finite source-sized WFC reservation in the SAME selected S81 layer die.
+    # This is a soft child slot, never a stand-in functional macro abstract.
+    if DIE_KIND == 'layer':
+        reservation_path = ROOT / 'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json'
+        reservation = json.loads(reservation_path.read_text())
+        x0, y0, x1, y1 = reservation['selected_WFC_gross_um']
+        assert all(not (it.x < x1 and it.x + it.w > x0 and
+                        it.y < y1 and it.y + it.h > y0) for it in insts), 'WFC overlaps an existing claim'
+        model['child_reservations'] = {'wfc': reservation}
+        regions.append(dict(name='wfc_selected_child', kind='soft_child_reservation', rect=[x0, y0, x1, y1]))
     return model
 
 
@@ -1964,6 +1974,7 @@ def main(argv=None):
         rec = plan_record(m)
         rec['legality_python'] = legality(m)
         rec['windows_um'] = windows(m)
+        rec['child_reservations'] = m.get('child_reservations', {})
         (out / 'floorplan.json').write_text(json.dumps(rec, indent=1) + '\n')
         svg(m, out / 'floorplan.svg')
         write_def_floorplan(m, out / 'floorplan.def')

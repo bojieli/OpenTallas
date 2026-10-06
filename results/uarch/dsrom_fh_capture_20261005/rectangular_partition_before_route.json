@@ -222,5 +222,15 @@
   "exactness": "Same addend-first RNE add and golden reduction/argmax ordering; no arithmetic primitive change",
   "adoption": false,
   "physical_closed": false,
-  "measured_cycles": null
+  "measured_cycles": null,
+  "serialized_region_fix": {
+    "tool": "26Q3-1510-g6cb3f2b704",
+    "same_modeled_geometry": true,
+    "all64_reload_and_members_pass": true,
+    "capacity_record": "results/rtl/dsrom_fh_capture_20261005/routes/C17_region_replace/serialized_region_capacity.json",
+    "helper_sha256": "7e309577bc7312a2392c317596b7e4f5cf9e324a528b21940daf77c459e9df07",
+    "slot_growth_mm2": 0,
+    "extra_cycles": 0,
+    "RTL_unchanged": true
+  }
 }

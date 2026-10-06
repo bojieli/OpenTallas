@@ -1,0 +1,145 @@
+{
+  "source_revision": "e5624a88a",
+  "terminal_utc": "2026-10-06T00:41:37.315742+00:00",
+  "native_terminal": "do-5_1_grt Error1",
+  "first_error": "DRT-0073 ib[288] no access point",
+  "reported_access_error_count": 16,
+  "reported_access_errors": [
+    {
+      "pin": "u_tile/registered_parent.row\\[2\\].head\\[3\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[2\\].head\\[0\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[2\\].head\\[2\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[2\\].head\\[1\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[0\\].head\\[3\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[0\\].head\\[0\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[1\\].head\\[0\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[3\\].head\\[3\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[1\\].head\\[3\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[3\\].head\\[2\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[0\\].head\\[2\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[0\\].head\\[1\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[3\\].head\\[0\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[1\\].head\\[2\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[1\\].head\\[1\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    },
+    {
+      "pin": "u_tile/registered_parent.row\\[3\\].head\\[1\\].u_g/ib[288]",
+      "master": "ot_attn_hgrp_m6h1"
+    }
+  ],
+  "reported_warning_count": 1000,
+  "reported_warning_distinct_pin_count": 1000,
+  "warning_log_may_be_suppressed": true,
+  "recursive_mapped_DFF_count": 36158,
+  "mapped_reach_proof": "../retained_mapping/per_block_mapping.json",
+  "SS_FF_qualified": false,
+  "CTS_setup_WNS_ps": -2712.054,
+  "CTS_setup_skew_report_ps": 1199.21,
+  "actual_skew_launch_latency_ps": 2114.06,
+  "actual_skew_target_latency_ps": 968.02,
+  "clock_uncertainty_setup_ps": 60,
+  "clock_uncertainty_hold_ps": 25,
+  "PG_hook": "5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786",
+  "checkpoints_preserved": "/srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-retained/work",
+  "action": "Inspect saved CTS ODB track grid and native hardened-leaf pin/OBS geometry with Turing; reuse mapped source. Clock/receiver association remains mandatory independently.",
+  "worst_CTS_setup_path": {
+    "launch": "head0 local q[160] falling-phase FF",
+    "capture": "head0 macro ib[160]",
+    "launch_clock_arrival_ps": 2386.84,
+    "launch_reference_edge_ps": 416.666667,
+    "launch_network_insertion_ps": 1970.173333,
+    "capture_clock_arrival_ps": 1834.68,
+    "capture_reference_edge_ps": 833.333333,
+    "capture_network_insertion_ps": 1001.346667,
+    "launch_clkQ_ps": 522.75,
+    "launch_Q_inverter_delay_ps": 1816.08,
+    "last_net_delay_ps": 174.13,
+    "ETM_setup_ps": -406.24,
+    "arrival_ps": 4899.8,
+    "required_ps": 2187.75,
+    "slack_ps": -2712.05,
+    "interpretation": "Real loaded data-driver delay and launch/capture tree insertion mismatch, outside hardened arithmetic. Saved CTS estimates, not extracted routed closure."
+  },
+  "access_geometry": {
+    "ib288_M4_pin_um": [
+      0,
+      192.288,
+      0.084,
+      192.312
+    ],
+    "overlapping_M4_OBS_um": [
+      0.06,
+      80.448,
+      0.137,
+      192.888
+    ],
+    "adjacent_M3_OBS_um": [
+      0.036,
+      192.073,
+      0.558,
+      192.763
+    ],
+    "adjacent_M5_OBS_um": [
+      0.048,
+      188.293,
+      0.264,
+      194.387
+    ],
+    "macro_orientation": "R0 all16",
+    "M4_Y_tracks_dbu": [
+      12,
+      28125,
+      48
+    ],
+    "M5_X_tracks_dbu": [
+      12,
+      28106,
+      48
+    ],
+    "dbu_per_um": 1000,
+    "cause_not_yet_proved": "Reported pin obstruction overlap and track offsets; native hardened leaf comparison/access reproduction required before geometry change."
+  }
+}
