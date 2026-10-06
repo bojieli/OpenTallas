@@ -118,7 +118,7 @@ def cmd_prep(a):
 set -u
 W={case}; S={src}; IMG=openroad/orfs:latest
 cd $W; echo "start $(date -Is)" > $W/status
-/srv/opentallas-scratch/admit.sh {a.need} -- docker run --rm --name claude-wfc-{nick} -v $S:/src:ro -v $W:/work \\
+/srv/opentallas-scratch/admit.sh {a.need} -- docker run --rm --name claude-wfc-{case.parent.name}-{nick} -v $S:/src:ro -v $W:/work \\
   -w /OpenROAD-flow-scripts/flow $IMG bash -lc "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; \\
   source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work \\
   FLOW_VARIANT=base NUM_CORES={a.cores} finish" > $W/flow.log 2>&1
