@@ -27,7 +27,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_die_station --sour
   --core-area 2.16 2.16 $(python3 -c "print(round(${FW:-52.68}-2.16,3), round(${FH:-103.656}-2.16,3))") \
   --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr \
-  --place-density 0.6 --hold-margin-ns 0.02 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
+  --place-density 0.6 --hold-margin-ns ${HM:-0.02} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=8 --orfs-var SDC_FILE=$D/station_p770.sdc --orfs-var QDM_SDC_DIR=$D \
   --orfs-var 'PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks' \
   --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl \
