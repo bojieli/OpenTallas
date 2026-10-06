@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm_router_ps.exact.v1",
  "dut": "rtl/gpu/ot_gpu_router_topk_ps.sv",
- "dut_sha256": "3a6fce3f9565e84bea62c597455bcb107d7e9d9e25c14230c76520c55cc05fd9",
+ "dut_sha256": "cf5ccf3d5a8b5d0060cc38e634f9adb1a65ecaebe26103802e8331fbca83a18d",
  "reference": "rtl/gpu/ot_gpu_router_topk.sv",
  "reference_sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
  "bench": "rtl/test/hbm_router_ps/tb_router_topk_ps.sv",
@@ -230,5 +230,6 @@
   "pipesel2_latency_from_last_beat": 16,
   "pipesel2_extra_cycles_per_vector": 24,
   "pipesel2_note": "fallback: P/2 lanes a cycle, 48 beat-cycles a 384-vector (+24 cycles a layer) and +3 latency vs the reference -> net +17 vs reference"
- }
+ },
+ "rtl_revision": "r2: explicit log-depth (gt,eq) compare trees and adder-tree popcounts (r1 >= operators mapped to a 750 ps ripple chain in the first route's pre-CTS STA)"
 }
