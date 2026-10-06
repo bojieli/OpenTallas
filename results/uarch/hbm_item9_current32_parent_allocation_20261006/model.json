@@ -4,807 +4,679 @@
   "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
   "caller_local_regions": [
     {
-      "caller": "sm0",
-      "hierarchy": "g_on.g_sm_caller[0]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 0,
+      "source_slot": "sm0",
+      "proposed_local_register_bbox_um": [
+        2342.848,
+        3184.816,
+        2822.848,
+        3664.816
       ],
-      "source_parent_um": [
-        625.104,
-        1596.24,
-        2827.848,
-        3669.816
-      ],
-      "child_core_um": [
-        642.384,
-        1613.52,
-        728.7840000000001,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm1",
-      "hierarchy": "g_on.g_sm_caller[1]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 1,
+      "source_slot": "sm1",
+      "proposed_local_register_bbox_um": [
+        4804.816000000001,
+        3184.816,
+        5284.816000000001,
+        3664.816
       ],
-      "source_parent_um": [
-        3087.072,
-        1596.24,
-        5289.816000000001,
-        3669.816
-      ],
-      "child_core_um": [
-        3104.3520000000003,
-        1613.52,
-        3190.752,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm2",
-      "hierarchy": "g_on.g_sm_caller[2]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 2,
+      "source_slot": "sm2",
+      "proposed_local_register_bbox_um": [
+        7266.784,
+        3184.816,
+        7746.784,
+        3664.816
       ],
-      "source_parent_um": [
-        5549.04,
-        1596.24,
-        7751.784,
-        3669.816
-      ],
-      "child_core_um": [
-        5566.32,
-        1613.52,
-        5652.72,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm3",
-      "hierarchy": "g_on.g_sm_caller[3]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 3,
+      "source_slot": "sm3",
+      "proposed_local_register_bbox_um": [
+        9728.752,
+        3184.816,
+        10208.752,
+        3664.816
       ],
-      "source_parent_um": [
-        8011.008,
-        1596.24,
-        10213.752,
-        3669.816
-      ],
-      "child_core_um": [
-        8028.288,
-        1613.52,
-        8114.688,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm4",
-      "hierarchy": "g_on.g_sm_caller[4]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 4,
+      "source_slot": "sm4",
+      "proposed_local_register_bbox_um": [
+        2342.848,
+        5776.816,
+        2822.848,
+        6256.816
       ],
-      "source_parent_um": [
-        625.104,
-        4188.24,
-        2827.848,
-        6261.816
-      ],
-      "child_core_um": [
-        642.384,
-        4205.5199999999995,
-        728.7840000000001,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm5",
-      "hierarchy": "g_on.g_sm_caller[5]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 5,
+      "source_slot": "sm5",
+      "proposed_local_register_bbox_um": [
+        4804.816000000001,
+        5776.816,
+        5284.816000000001,
+        6256.816
       ],
-      "source_parent_um": [
-        3087.072,
-        4188.24,
-        5289.816000000001,
-        6261.816
-      ],
-      "child_core_um": [
-        3104.3520000000003,
-        4205.5199999999995,
-        3190.752,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm6",
-      "hierarchy": "g_on.g_sm_caller[6]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 6,
+      "source_slot": "sm6",
+      "proposed_local_register_bbox_um": [
+        7266.784,
+        5776.816,
+        7746.784,
+        6256.816
       ],
-      "source_parent_um": [
-        5549.04,
-        4188.24,
-        7751.784,
-        6261.816
-      ],
-      "child_core_um": [
-        5566.32,
-        4205.5199999999995,
-        5652.72,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm7",
-      "hierarchy": "g_on.g_sm_caller[7]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 7,
+      "source_slot": "sm7",
+      "proposed_local_register_bbox_um": [
+        9728.752,
+        5776.816,
+        10208.752,
+        6256.816
       ],
-      "source_parent_um": [
-        8011.008,
-        4188.24,
-        10213.752,
-        6261.816
-      ],
-      "child_core_um": [
-        8028.288,
-        4205.5199999999995,
-        8114.688,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm8",
-      "hierarchy": "g_on.g_sm_caller[8]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 8,
+      "source_slot": "sm8",
+      "proposed_local_register_bbox_um": [
+        13329.176,
+        3184.816,
+        13809.176,
+        3664.816
       ],
-      "source_parent_um": [
-        13324.176,
-        1596.24,
-        15526.92,
-        3669.816
-      ],
-      "child_core_um": [
-        13341.456,
-        1613.52,
-        13427.856,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm9",
-      "hierarchy": "g_on.g_sm_caller[9]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 9,
+      "source_slot": "sm9",
+      "proposed_local_register_bbox_um": [
+        15791.144,
+        3184.816,
+        16271.144,
+        3664.816
       ],
-      "source_parent_um": [
-        15786.144,
-        1596.24,
-        17988.888,
-        3669.816
-      ],
-      "child_core_um": [
-        15803.424,
-        1613.52,
-        15889.824,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm10",
-      "hierarchy": "g_on.g_sm_caller[10]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 10,
+      "source_slot": "sm10",
+      "proposed_local_register_bbox_um": [
+        18253.112,
+        3184.816,
+        18733.112,
+        3664.816
       ],
-      "source_parent_um": [
-        18248.112,
-        1596.24,
-        20450.856,
-        3669.816
-      ],
-      "child_core_um": [
-        18265.392,
-        1613.52,
-        18351.792,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm11",
-      "hierarchy": "g_on.g_sm_caller[11]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 11,
+      "source_slot": "sm11",
+      "proposed_local_register_bbox_um": [
+        20715.08,
+        3184.816,
+        21195.08,
+        3664.816
       ],
-      "source_parent_um": [
-        20710.08,
-        1596.24,
-        22912.824,
-        3669.816
-      ],
-      "child_core_um": [
-        20727.36,
-        1613.52,
-        20813.760000000002,
-        1699.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm12",
-      "hierarchy": "g_on.g_sm_caller[12]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 12,
+      "source_slot": "sm12",
+      "proposed_local_register_bbox_um": [
+        13329.176,
+        5776.816,
+        13809.176,
+        6256.816
       ],
-      "source_parent_um": [
-        13324.176,
-        4188.24,
-        15526.92,
-        6261.816
-      ],
-      "child_core_um": [
-        13341.456,
-        4205.5199999999995,
-        13427.856,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm13",
-      "hierarchy": "g_on.g_sm_caller[13]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 13,
+      "source_slot": "sm13",
+      "proposed_local_register_bbox_um": [
+        15791.144,
+        5776.816,
+        16271.144,
+        6256.816
       ],
-      "source_parent_um": [
-        15786.144,
-        4188.24,
-        17988.888,
-        6261.816
-      ],
-      "child_core_um": [
-        15803.424,
-        4205.5199999999995,
-        15889.824,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm14",
-      "hierarchy": "g_on.g_sm_caller[14]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 14,
+      "source_slot": "sm14",
+      "proposed_local_register_bbox_um": [
+        18253.112,
+        5776.816,
+        18733.112,
+        6256.816
       ],
-      "source_parent_um": [
-        18248.112,
-        4188.24,
-        20450.856,
-        6261.816
-      ],
-      "child_core_um": [
-        18265.392,
-        4205.5199999999995,
-        18351.792,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm15",
-      "hierarchy": "g_on.g_sm_caller[15]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 15,
+      "source_slot": "sm15",
+      "proposed_local_register_bbox_um": [
+        20715.08,
+        5776.816,
+        21195.08,
+        6256.816
       ],
-      "source_parent_um": [
-        20710.08,
-        4188.24,
-        22912.824,
-        6261.816
-      ],
-      "child_core_um": [
-        20727.36,
-        4205.5199999999995,
-        20813.760000000002,
-        4291.92
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm16",
-      "hierarchy": "g_on.g_sm_caller[16]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 16,
+      "source_slot": "sm16",
+      "proposed_local_register_bbox_um": [
+        2342.848,
+        21211.88,
+        2822.848,
+        21691.88
       ],
-      "source_parent_um": [
-        625.104,
-        21206.88,
-        2827.848,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        642.384,
-        21224.16,
-        728.7840000000001,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm17",
-      "hierarchy": "g_on.g_sm_caller[17]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 17,
+      "source_slot": "sm17",
+      "proposed_local_register_bbox_um": [
+        4804.816000000001,
+        21211.88,
+        5284.816000000001,
+        21691.88
       ],
-      "source_parent_um": [
-        3087.072,
-        21206.88,
-        5289.816000000001,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        3104.3520000000003,
-        21224.16,
-        3190.752,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm18",
-      "hierarchy": "g_on.g_sm_caller[18]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 18,
+      "source_slot": "sm18",
+      "proposed_local_register_bbox_um": [
+        7266.784,
+        21211.88,
+        7746.784,
+        21691.88
       ],
-      "source_parent_um": [
-        5549.04,
-        21206.88,
-        7751.784,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        5566.32,
-        21224.16,
-        5652.72,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm19",
-      "hierarchy": "g_on.g_sm_caller[19]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 19,
+      "source_slot": "sm19",
+      "proposed_local_register_bbox_um": [
+        9728.752,
+        21211.88,
+        10208.752,
+        21691.88
       ],
-      "source_parent_um": [
-        8011.008,
-        21206.88,
-        10213.752,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        8028.288,
-        21224.16,
-        8114.688,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm20",
-      "hierarchy": "g_on.g_sm_caller[20]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 20,
+      "source_slot": "sm20",
+      "proposed_local_register_bbox_um": [
+        2342.848,
+        18879.08,
+        2822.848,
+        19359.08
       ],
-      "source_parent_um": [
-        625.104,
-        18874.08,
-        2827.848,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        642.384,
-        18891.36,
-        728.7840000000001,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm21",
-      "hierarchy": "g_on.g_sm_caller[21]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 21,
+      "source_slot": "sm21",
+      "proposed_local_register_bbox_um": [
+        4804.816000000001,
+        18879.08,
+        5284.816000000001,
+        19359.08
       ],
-      "source_parent_um": [
-        3087.072,
-        18874.08,
-        5289.816000000001,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        3104.3520000000003,
-        18891.36,
-        3190.752,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm22",
-      "hierarchy": "g_on.g_sm_caller[22]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 22,
+      "source_slot": "sm22",
+      "proposed_local_register_bbox_um": [
+        7266.784,
+        18879.08,
+        7746.784,
+        19359.08
       ],
-      "source_parent_um": [
-        5549.04,
-        18874.08,
-        7751.784,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        5566.32,
-        18891.36,
-        5652.72,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm23",
-      "hierarchy": "g_on.g_sm_caller[23]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 23,
+      "source_slot": "sm23",
+      "proposed_local_register_bbox_um": [
+        9728.752,
+        18879.08,
+        10208.752,
+        19359.08
       ],
-      "source_parent_um": [
-        8011.008,
-        18874.08,
-        10213.752,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        8028.288,
-        18891.36,
-        8114.688,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm24",
-      "hierarchy": "g_on.g_sm_caller[24]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 24,
+      "source_slot": "sm24",
+      "proposed_local_register_bbox_um": [
+        13329.176,
+        21211.88,
+        13809.176,
+        21691.88
       ],
-      "source_parent_um": [
-        13324.176,
-        21206.88,
-        15526.92,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        13341.456,
-        21224.16,
-        13427.856,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm25",
-      "hierarchy": "g_on.g_sm_caller[25]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 25,
+      "source_slot": "sm25",
+      "proposed_local_register_bbox_um": [
+        15791.144,
+        21211.88,
+        16271.144,
+        21691.88
       ],
-      "source_parent_um": [
-        15786.144,
-        21206.88,
-        17988.888,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        15803.424,
-        21224.16,
-        15889.824,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm26",
-      "hierarchy": "g_on.g_sm_caller[26]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 26,
+      "source_slot": "sm26",
+      "proposed_local_register_bbox_um": [
+        18253.112,
+        21211.88,
+        18733.112,
+        21691.88
       ],
-      "source_parent_um": [
-        18248.112,
-        21206.88,
-        20450.856,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        18265.392,
-        21224.16,
-        18351.792,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm27",
-      "hierarchy": "g_on.g_sm_caller[27]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 27,
+      "source_slot": "sm27",
+      "proposed_local_register_bbox_um": [
+        20715.08,
+        21211.88,
+        21195.08,
+        21691.88
       ],
-      "source_parent_um": [
-        20710.08,
-        21206.88,
-        22912.824,
-        23280.456000000002
-      ],
-      "child_core_um": [
-        20727.36,
-        21224.16,
-        20813.760000000002,
-        21310.56
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm28",
-      "hierarchy": "g_on.g_sm_caller[28]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 28,
+      "source_slot": "sm28",
+      "proposed_local_register_bbox_um": [
+        13329.176,
+        18879.08,
+        13809.176,
+        19359.08
       ],
-      "source_parent_um": [
-        13324.176,
-        18874.08,
-        15526.92,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        13341.456,
-        18891.36,
-        13427.856,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm29",
-      "hierarchy": "g_on.g_sm_caller[29]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 29,
+      "source_slot": "sm29",
+      "proposed_local_register_bbox_um": [
+        15791.144,
+        18879.08,
+        16271.144,
+        19359.08
       ],
-      "source_parent_um": [
-        15786.144,
-        18874.08,
-        17988.888,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        15803.424,
-        18891.36,
-        15889.824,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm30",
-      "hierarchy": "g_on.g_sm_caller[30]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 30,
+      "source_slot": "sm30",
+      "proposed_local_register_bbox_um": [
+        18253.112,
+        18879.08,
+        18733.112,
+        19359.08
       ],
-      "source_parent_um": [
-        18248.112,
-        18874.08,
-        20450.856,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        18265.392,
-        18891.36,
-        18351.792,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     },
     {
-      "caller": "sm31",
-      "hierarchy": "g_on.g_sm_caller[31]",
-      "registers": [
-        "c_data[4095:0]",
-        "vr[4095:0]"
+      "caller": 31,
+      "source_slot": "sm31",
+      "proposed_local_register_bbox_um": [
+        20715.08,
+        18879.08,
+        21195.08,
+        19359.08
       ],
-      "source_parent_um": [
-        20710.08,
-        18874.08,
-        22912.824,
-        20947.656000000003
-      ],
-      "child_core_um": [
-        20727.36,
-        18891.36,
-        20813.760000000002,
-        18977.760000000002
-      ],
-      "FF": 8203,
-      "FF_area_floor_um2": 2391.9948000000004,
-      "positive_CTS_repair_reserve_um2": 1000,
-      "cell_cap_50pct_um2": 3732.4800000000005,
-      "clock": "clk_sm phase0"
+      "mapped_FF_count": 8204,
+      "mapped_FF_area_um2": 2392.5488400000004,
+      "true_register_clock": "clk_sm",
+      "register_groups": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "allocation_status": "CONCRETE_PROPOSAL_FOR_TURING_EXISTING_SLOT_NOT_INSTALLED"
     }
   ],
-  "caller_local_FF_total": 262496,
+  "caller_local_FF_total": 262528,
   "caller_vector_state_bits": 262144,
   "actual_total_mapped_um2": 178333.520399,
   "actual_total_FF": 304836,
@@ -815,10 +687,10 @@
     13139.256
   ],
   "endpoint_child_core_um": [
-    10879.056,
-    11752.56,
-    11527.056,
-    12400.56
+    10866.776,
+    11740.28,
+    11446.776,
+    12740.28
   ],
   "endpoint_child_gross_um": [
     10861.776,
@@ -873,7 +745,9 @@
       3471,
       3471
     ],
-    "actual_unreserved_capacity_qualified": false
+    "actual_unreserved_capacity_qualified": false,
+    "flat_admission": false,
+    "resolution": "Dirac actual exactTREE source distribute fullrequestmux leaf+intermediate gates into32SMlocal480squareboxes and rowcorridors before sharedspine. ActualchangedSS synthesis/geometry/CTS/GRT required"
   },
   "wire": {
     "max_bbox_Manhattan_um": 23596.224,
@@ -884,5 +758,60 @@
   "admission": "finitecellgeometryfits; single-spine fullrequest failsrawcapacity. Actual distributedmuxleaf/corridor/all-otherclaim binding required; no physicalroute/clock qualification",
   "source_is_selected_sm_v_protocol": false,
   "caller_SM_space": "finite childdecomposition charged againstselectedSMparent; actualmapped SMmacro must preserve these child areas and remainingmechanisms; obstruction notfunctionalmacro",
-  "outerroute_duplicate": false
+  "outerroute_duplicate": false,
+  "source_mapped_sha256": "fc0035eee0e4a078ffd141beb244c44d7d8a278466876aec9f64f7a313b41c24",
+  "actual_caller_FF_area_um2": 76561.56288000006,
+  "baseline_endpoint_mux": {
+    "proposed_child_bbox_um": [
+      10866.776,
+      11740.28,
+      11446.776,
+      12740.28
+    ],
+    "actual_full32_cell_um2": 178333.520399,
+    "conservative_residual_cell_um2": 101771.95751899995,
+    "new_TREE_gate_upper_no_removed_credit_um2": 53657.600000000006,
+    "conservative_child_cell_um2": 155429.55751899997,
+    "body_capacity_at30percent_um2": 174000.0,
+    "includes_caller_capture_logic_in_residual_to_avoid_unmeasured_credit": true,
+    "CTS_repair_and_PG_actual_pending": true
+  },
+  "endpoint_cap_at30percent_um2": 174000,
+  "protected_HA2_deficit": {
+    "separate_vehicle_not_simultaneous_baseline_charge": true,
+    "actual_queue_storage_bits": 2267200,
+    "queue_FF_floor_um2": 661115.52,
+    "old_actual_PF384_native_cell_um2": 490159.0422,
+    "added_read_FF_floor_um2": 1791.5904,
+    "parent_body_lower_um2": 1153066.1526000001,
+    "slot_cell_capacity_at30percent_um2": 764202.1076927994,
+    "body_cell_deficit_lower_um2": 388864.04490720073,
+    "area_deficit_at30percent_lower_um2": 1296213.4830240025,
+    "required_resolution": "Actual protected queue macro mapping or explicit finite additional allocation; do not build a large flop-array parent"
+  },
+  "central_flat_mux_common_west_cut": {
+    "actual_sources_west": 16,
+    "unselected_data_wires_are_still_physical": true,
+    "request_bits": 65536,
+    "shared_response_bits": 4096,
+    "control_bits": 192,
+    "required_tracks_lower": 69824,
+    "M6_M7_each_upper_before_other_claims": 15325,
+    "M8_M9_each_upper_before_other_claims": 9972,
+    "four_layer_upper_before_other_claims": 50594,
+    "track_deficit_before_other_claims": 19230,
+    "usable_reserved_tracks": 0,
+    "required_resolution": "Distribute masked OR tree before the spine and price/install actual physical transport; no zero-wire 32-input central mux claim"
+  },
+  "root_clock": {
+    "port": "clk_sm",
+    "source_PHASE_ps": 0,
+    "period_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "actual_mapped_caller_clock_sinks": 262528,
+    "physical_root_terminal": "not installed in existing outer ODB; must be installed/measured in own context then bound by Turing",
+    "source_pin_map_remote": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-register-pins-r1/actual_register_pins.jsonl"
+  },
+  "allocation_resolution": "Accept32source-local480square proposals within each selectedSMslot withpositivecost, do notcredit hardmacrofreecellspace. Baseline580x1000body fits30pct with18570.442481um2 residual CTS+repair. HA2 source requires1.296213483mm2 additionalslot (or realprotectedqueuemacromapping); donotlaunchgiantflopparent."
 }
