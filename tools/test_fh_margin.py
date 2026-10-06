@@ -36,7 +36,8 @@ def run(name, b, mut, tmp):
                         '-Wno-MULTIDRIVEN', '--top-module', b['top'], '-Mdir', str(obj), *params, *map(str, srcs)], capture_output=True, text=True)
     if c.returncode: return dict(returncode=c.returncode, output=c.stderr[-800:])
     p = subprocess.run([str(obj / f"V{b['top']}")], capture_output=True, text=True)
-    return dict(returncode=p.returncode, output=(p.stdout + p.stderr).strip().splitlines()[-1][-160:] if (p.stdout + p.stderr).strip() else '')
+    lines = [l for l in (p.stdout + p.stderr).splitlines() if 'PASS' in l or 'Fatal' in l or 'FATAL' in l or 'Error' in l]
+    return dict(returncode=p.returncode, output=(lines[0] if lines else (p.stdout + p.stderr).strip()[-160:])[:200])
 def main():
     ap = argparse.ArgumentParser(description=__doc__); ap.add_argument('--only', nargs='*'); a = ap.parse_args()
     out = {'pass': True, 'cases': {}}
