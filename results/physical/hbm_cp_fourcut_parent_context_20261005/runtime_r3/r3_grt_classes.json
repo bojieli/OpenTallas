@@ -1,0 +1,90 @@
+{
+  "stage": "GRT estimated RC/propagatedCTS; not extracted signoff",
+  "actual_negative_endpoint_counts": {
+    "FF": 3,
+    "OUTPUT": 12
+  },
+  "classes": [
+    {
+      "family": "FF:u_su_cp.on.phase_n[*]$_DFF_PN1_/D",
+      "slack_ps": -15.815016,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "u_su_cp.on.phase_n[3]$_DFF_PN1_"
+    },
+    {
+      "family": "FF:u_su_cp.on.phase_q[*]$_DFF_PN0_/D",
+      "slack_ps": -12.595147,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "u_su_cp.on.phase_q[4]$_DFF_PN0_"
+    },
+    {
+      "family": "OUTPUT:done",
+      "slack_ps": -203.08522,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "done (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:exec_owned",
+      "slack_ps": -249.600677,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "exec_owned (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:fault",
+      "slack_ps": -213.217285,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "fault (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:lease_v",
+      "slack_ps": -201.44136,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "lease_v (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:native_launch[*]",
+      "slack_ps": -85.629951,
+      "launch": "launch_pc[13] (input port clocked by core_clk)",
+      "endpoint": "native_launch[0] (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:new_request_permit",
+      "slack_ps": -234.036621,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "new_request_permit (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:owned",
+      "slack_ps": -205.379166,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "owned (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:pending",
+      "slack_ps": -225.622467,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "pending (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:quiet",
+      "slack_ps": -243.382919,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "quiet (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:release_v",
+      "slack_ps": -208.842728,
+      "launch": "u_su_cp.on.registered_header.decoder.data_q[18]$_DFFE_PN0P_",
+      "endpoint": "release_v (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:selected",
+      "slack_ps": -77.655823,
+      "launch": "launch_pc[13] (input port clocked by core_clk)",
+      "endpoint": "selected (output port clocked by core_clk)"
+    }
+  ],
+  "reset_negative_count": 0,
+  "source_RTL": "174943d5e",
+  "adopted": false
+}

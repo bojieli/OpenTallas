@@ -2,7 +2,7 @@
 // Full-width protected context; physical parallel homes/SSFF remain owner-qualified.
 module ot_qwen_p0_parallel_transport_context #(
     parameter integer ENABLE=0,MEM_WORDS=36*131072,PHASE=0,
-    parameter integer CDC_CONSUMER_JOIN=0,LANDING_RSEL=0,LOCAL_WIRE_SPANS=0 // owner r9 protected landing read
+    parameter integer CDC_CONSUMER_JOIN=0,LANDING_RSEL=0,LOCAL_WIRE_SPANS=0,SAME_CYCLE_GO=0 // owner r9 protected landing read
 )(
     input wire clk, hclk, rst_n, warm_rst_n,
     input wire d_v, go,
@@ -58,7 +58,7 @@ module ot_qwen_p0_parallel_transport_context #(
             wire [3:0] cb;
             // Every stack accepts the same descriptor on one common grant.
             // Warm blocks new root admission; accepted GO/landing/ACK owners drain.
-            ot_qwen_s4_protected_control #(.MEM_ROWS(MEM_WORDS/131072)) u_control(
+            ot_qwen_s4_protected_control #(.MEM_ROWS(MEM_WORDS/131072),.SAME_CYCLE_GO(SAME_CYCLE_GO)) u_control(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(warm_rst_n),
                 .d_v(d_v&&d_rdy),.d_rdy(ready[sk]),.d_row(d_row),.d_n(d_n),.go(go),
                 .desc_v(dv),.desc_r(dr),.desc_row(row),.desc_n(n),

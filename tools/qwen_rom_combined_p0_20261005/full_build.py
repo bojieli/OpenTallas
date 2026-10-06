@@ -98,6 +98,8 @@ def prepare(job, source, numerical_top, provider, output,
     if parallel_transport:
         if not cdc_consumer_join or landing_rsel != 1:
             raise ValueError('parallel protected P0 requires explicit corrected owner RSEL1 join')
+        params = [v for v in params if not v.startswith('-GSAME_CYCLE_GO=')]
+        params += ['-GSAME_CYCLE_GO=1']  # early-go: GO accepted with its own descriptor
         parallel_leaf = source/'rtl/hdc/kv/ot_qwen_s4_parallel_protected_pc.sv'
         if not parallel_leaf.is_file():
             raise FileNotFoundError('actual owner sector-protected RSEL1 leaf required: '+str(parallel_leaf))
