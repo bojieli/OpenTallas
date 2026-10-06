@@ -34,7 +34,7 @@ def main():
             s,n=re.subn(r'(?m)^(MACRO|END) ot_dsrom_window_column\s*$',lambda m:m.group(1)+' '+name,s)
             if n!=2:raise RuntimeError(f'unexpected LEF cell count: {n}')
         else:
-            s,n=re.subn(r'(cell\s*\(\s*)ot_dsrom_window_column(\s*\))',lambda m:m.group(1)+name+m.group(2),s)
+            s,n=re.subn(r'(cell\s*\(\s*"?)ot_dsrom_window_column("?\s*\))',lambda m:m.group(1)+name+m.group(2),s)
             if n!=1:raise RuntimeError(f'unexpected Liberty cell count: {n}')
         f.write_text(s)
     record['files']={f.name:hashlib.sha256(f.read_bytes()).hexdigest()
