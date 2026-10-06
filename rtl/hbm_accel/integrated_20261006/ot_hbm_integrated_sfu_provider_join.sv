@@ -105,7 +105,10 @@ module ot_hbm_integrated_sfu_provider_join #(parameter integer ENABLE=0,NATIVE_V
   end
   if(retained&&!live_owner)n[1259]=1;
   if(NATIVE_VM_PUBLICATION&&native_complete_v&&!native_match)n[1259]=1;
-  if(publication_v&&publication_r&&publication_owner!=held_frame)n[1259]=1;
+  // The shared calendar correctly refuses reverse ACK for a foreign owner.
+  // Check the attempted caller completion BEFORE release_r masks publication_v;
+  // otherwise that refusal hides the invalid full73 identity from sticky debt.
+  if(complete_v&&good&&result_verified&&publication_r&&publication_owner!=held_frame)n[1259]=1;
   if(allowed)begin
    if(phase==LEASE)n[1254:1251]=RREQ;
    if(req_v&&req_r)n[1254:1251]=phase==RREQ?RRSP:phase==WREQ?WRSP:VRSP;

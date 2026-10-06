@@ -517,6 +517,63 @@ def main():
     return compose(a)
 
 
+# CLAUDE DS-REPRICE 2026-10-06: wired S81 r8 die geometry (results/rtl/dsrom_field_reprice_r8_20261006/reprice.json).
+# FIELD_GEOM (adapters) picks the element frame: field wire per region, the hub-slab stations, and -- for the taller
+# q-element frames -- the extra layer dies' stage hops (each at the measured full-FEC stage hop + mean cable flight).
+SU_FUSED_LEVERS = ("su_norm", "su_swiglu", "su_hcpost", "su_softmax")
+FIELD_LEVER_CFG = {"field_spine_pq": "pq", "field_spine": "baseline"}
+
+
+def apply_r8_reprice(P, info, geom):
+    """Re-patch lever-applied field nodes at a non-default geometry, and add the hub-slab stations the r8 die
+    wires as direct nets (SU out path through HC, collective -> VM) beyond what each node already charges."""
+    import dsrom_1m_allmeasured_adapters as AD
+    if not AD.REPRICE.exists():
+        return None
+    rp = json.loads(AD.REPRICE.read_text())
+    G = rp["geoms"].get(geom) or {}
+    out = dict(record=rel(AD.REPRICE), geom=geom, label=G.get("label", "old charge: 80 cycles a field phase"),
+               field_lever_nodes=0, su_fused_nodes=0, su_wired_nodes=0, collective_nodes=0)
+    if geom != rp["default_geom"]:       # lever records carry the default geometry; re-price (geom None = old 80)
+        cache = {}
+        for n, row in list(P.rows.items()):
+            lev = next((k for k in FIELD_LEVER_CFG if row["source"].startswith(k + ":")), None)
+            if lev is None:
+                continue
+            if lev not in cache:
+                lr = json.loads((RECOVERY / "levers" / f"{lev}.json").read_text())
+                cache[lev] = AD.field_rows(P.g, json.loads((ROOT / lr["measurement"]["record"]).read_text()), geom=geom)
+            sec, src, cls, _m = cache[lev][n]
+            tag = row["source"].split(": ", 1)[0]
+            P.put(n, sec, f"{tag}: {src}", cls=row["cls"])
+            out["field_lever_nodes"] += 1
+    if geom is None:
+        out.update(extra_stage_hops=0, stages=81, layer_dies=324)
+        return out
+    hub = G["hub"]
+    su_ex = {k: max(v["su"][sl]["excess_ns"][k] for v in hub.values() for sl in v["su"]) for k in ("fused", "wired")}
+    coll = max(v["collective_vm_added"] for v in hub.values())
+    out.update(su_excess_ns=su_ex, collective_vm_stations=coll)
+    for n, row in list(P.rows.items()):
+        src = row["source"]
+        add_ns = 0.0
+        if src.split(":", 1)[0] in SU_FUSED_LEVERS and row["measured_us"] > 0:
+            add_ns, key = su_ex["fused"], "su_fused_nodes"
+        elif (src.startswith("SU:") or src.startswith("Engram SU chain")) and row["measured_us"] > 0:
+            add_ns, key = su_ex["wired"], "su_wired_nodes"
+        elif src.startswith("TP4 collective") and row["measured_us"] > 0:
+            add_ns, key = coll / CLK * 1e9, "collective_nodes"
+        if add_ns > 0:
+            P.g.nodes[n]["issue"] += add_ns * 1e-9
+            row["measured_us"] = round(row["measured_us"] + add_ns * 1e-3, 4)
+            row["source"] += f" + r8 hub-slab stations {add_ns:.3f} ns"
+            out[key] += 1
+    out["extra_stage_hops"] = G["extra_stage_hops"]
+    out["stages"] = G["stages"]
+    out["layer_dies"] = G["layer_dies"]
+    return out
+
+
 def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_output=True):
     """Replay the timing authority without a CLI subprocess or mutable lever directory.
 
@@ -560,6 +617,11 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         apply_table(P, AD.su_rows(g, su), "SU")
     if a.baseline == "recovery":
         info["levers"] = apply_levers(P, info, a.recovery, excluded_levers)
+    if "field" in recs:
+        import dsrom_1m_allmeasured_adapters as AD
+        r8 = apply_r8_reprice(P, info, AD.FIELD_GEOM)
+        if r8:
+            info["r8_reprice"] = r8
     if candidates:
         info["conditional_candidates"] = [dict(lever=r["lever"], nodes=apply_candidate(P, r)) for r in candidates]
     cdc_nodes = {}
@@ -578,7 +640,13 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         info["full_fec"] = dict(rack=rel(FULL_FEC_RACK), links=rel(FULL_FEC_LINKS), cable_flight_us=round(cable_us, 4),
                                 stage_hops_by_class=hs["stage_hops"], head_hop=rk["head_hop"]["cls"],
                                 token_return=rk["token_return"]["cls"], ii_hop_cable_us=round(ii_cable_us, 4))
-    ar = t + EXTRA_HOPS * hop_extra + cable_us
+    tall = info.get("r8_reprice", {}).get("extra_stage_hops", 0)
+    if tall:        # taller q-element frame: more layer dies -> more pipeline stages, each a full stage hop
+        _, rk = full_fec_inputs()
+        mean_cable = rk["hop_summary"]["stage_hop_extra_cycles"] / len(rk["stage_hops"]) / CLK * 1e6
+        info["r8_reprice"]["extra_stage_hops_us"] = round(tall * (hop_extra + mean_cable), 4)
+        cable_us += tall * mean_cable
+    ar = t + (EXTRA_HOPS + tall) * hop_extra + cable_us
     # ---- MTP: wavefront verify with this composition's stage busy times (measured handoff rule) + DSpark draft
     wave = json.loads(WAVE.read_text())["composition"]
     segs = stage_busy(g)
@@ -607,7 +675,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
     by = {}
     for p in path:
         by[p["cls"]] = round(by.get(p["cls"], 0.0) + p["us"], 3)
-    by["extra_S81_hops"] = round(EXTRA_HOPS * hop_extra, 3)
+    by["extra_S81_hops"] = round((EXTRA_HOPS + tall) * hop_extra, 3)
     if cable_us:
         by["cable_flight"] = round(cable_us, 3)
     fam = {}

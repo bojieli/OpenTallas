@@ -1,0 +1,53 @@
+{
+  "schema": "w2-current-station-physical-v1",
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv": "dccc3897b2afe75223b8d07fcac3ebeff2277a7ae9233aab7771a641a3025959",
+    "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+    "results/rtl/w2_transaction_pipeline_20261005/current_station_r1/ot_hbm_native_station.sv": "522486345f84b5a44b7f7c6428b64fd935f8a64b5ae64ee691a5f6d5d3e427d3",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+    "results/rtl/w2_transaction_pipeline_20261005/current_station_r1/ot_hbm_native_frame_station.sv": "0b8343851a9dc36dd249356dec731f9b269f49983ad7ea20868a6f671621a6a7"
+  },
+  "generated_pins": {
+    "bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+    "bank_current_static.sv": "1ae03d1b14f9f8a8a9560174c776ea4356d5810ca4c7f7a5b3f1be477c2ecb73",
+    "ot_hbm_native_station.sv": "8bff966d474a51e08bb72c5993ced88aba7b6583a15949dd1cdb3dcd33527cc0",
+    "ot_hbm_native_frame_station.sv": "80fa3a42d6c625b9cd18ff8d39a61b9ffea16a4b10222c305571ea8583761776"
+  },
+  "enrolled_source": "9a09d4a58 / main b0bd82528",
+  "top": "ot_hbm_native_frame_station",
+  "parameters": {
+    "ENABLE": 1,
+    "NO": 2,
+    "REGISTERED_CURRENT": 1
+  },
+  "default_REGISTERED_CURRENT": 0,
+  "functional_gates_reused": [
+    "PASS18 bank",
+    "PASS19 native quarter"
+  ],
+  "source_declared_FF_bits": 15420,
+  "NO3_source_FF_bits": 16646,
+  "quarter_source_FF_bits": 65358,
+  "full_payload_bits": 2063,
+  "full_frame_bits": 73,
+  "full_owner_bits": 192,
+  "macro_count": 0,
+  "macro_timing": "none in this station; no SRAM or macro clock credit borrowed",
+  "model_binding": "physical/hbm_w2_parent_context_20261005/binding.json#station_CURRENT_registered_handoff",
+  "serial_added_edge_bound": 68,
+  "nominal_added_ns_bound": 56.6666666667,
+  "existing_changed_gate_parent_release_edge": 90,
+  "source_scope": "registered CURRENT equality/held repair/recheck/debt/POR/warm unchanged",
+  "codec_scope": "existing exact static GF2 functions only; all non-import bytes of new bank unchanged",
+  "clocks": "clk_sm833.333333ps plus four real kept forwarding inversions",
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "target_buffered_utilization_percent": [
+    55,
+    60
+  ],
+  "initial_core_utilization_percent": 38,
+  "sizing_basis": "old NO2 postCTS13751um2 / mapped9393.35454um2 =1.46497 buffering multiplier; 38% initial targets55.63% actual; measured result decides fit",
+  "physical_qualified": false
+}

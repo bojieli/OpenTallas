@@ -1,0 +1,16 @@
+{
+  "status": "FAIL_TOKEN17_REFUSAL_CONTRACT",
+  "observed": "both32word SRAM readbacks exact; warm/joint retire assertions reached; highTOKEN negative fatal",
+  "source_reason": "shared calendar release_match drops release_r for mismatched caller full73; publication_v depends release_r, so previous publication_v-gated sticky identity check cannot observe refused attempt",
+  "reason_kind": "source-derived; failure log has no per-conjunct snapshot",
+  "repair": "check verified completed caller attempt independently of calendar release_r; keep release_v full73 match; set existing W6-coded q[1259] sticky bad bit",
+  "new_state_FF": 0,
+  "new_payload_bits": 0,
+  "new_ports": 0,
+  "added_latency_edges": 0,
+  "arithmetic_changed": false,
+  "golden_changed": false,
+  "source_model": "existing hbm_integrated_sfu_provider_join_model same1260raw W6-coded IO/controller including sticky bad bit; existing full73 equality reused",
+  "physical_qualified": false,
+  "next_gate_required": true
+}
