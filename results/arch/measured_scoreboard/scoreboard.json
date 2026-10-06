@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "3cd1068e8",
+ "generated_from_commit": "ceb869411",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1269,7 +1269,7 @@
    "value": 1798.5,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1314,7 +1314,7 @@
    "value": 5184.4,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
    "target": "ds_rom",
@@ -1329,7 +1329,7 @@
    "value": 4846.5,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
    "target": "ds_rom",
@@ -1344,7 +1344,7 @@
    "value": 4275.7,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
    "target": "ds_rom",
@@ -1359,7 +1359,7 @@
    "value": 5382.0,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1434,7 +1434,7 @@
    "value": 556.021,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1464,7 +1464,7 @@
    "value": 676.204,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1493,7 +1493,7 @@
    "value": 24.037,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -1713,7 +1713,7 @@
    "value": 4.159,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
    "target": "ds_rom",
@@ -2107,7 +2107,7 @@
    "value": 468,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.total_silicon_mm2": {
    "target": "ds_rom",
@@ -2122,7 +2122,7 @@
    "value": 865489.3,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_ar_b1_pg": {
    "target": "ds_rom",
@@ -2137,7 +2137,7 @@
    "value": 6.3722,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_ar_b1_icg": {
    "target": "ds_rom",
@@ -2152,7 +2152,7 @@
    "value": 16.1062,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.j_per_token_mtp_b1_pg": {
    "target": "ds_rom",
@@ -2167,7 +2167,7 @@
    "value": 2.5345,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.tok_s_per_kw_ar_b1_pg": {
    "target": "ds_rom",
@@ -2182,7 +2182,7 @@
    "value": 156.93,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.static_w_icg": {
    "target": "ds_rom",
@@ -2197,7 +2197,7 @@
    "value": 26760.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "ds_rom.sat_ar_tok_s": {
    "target": "ds_rom",
@@ -2883,7 +2883,7 @@
    "value": 5.771,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_ar_system_w": {
    "target": "hbm_ds",
@@ -2898,7 +2898,7 @@
    "value": 12544.3,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_mtp_J_per_token": {
    "target": "hbm_ds",
@@ -2913,7 +2913,7 @@
    "value": 2.8904,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.ablation_ar_J_per_token": {
    "target": "hbm_ds",
@@ -2943,7 +2943,7 @@
    "value": 457264.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.accel_logic_mm2": {
    "target": "hbm_ds",
@@ -2958,7 +2958,7 @@
    "value": 32688.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.bulk_copy_ss_slack_ps": {
    "target": "hbm_ds",
@@ -4379,7 +4379,7 @@
    "value": 84096.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4394,7 +4394,7 @@
    "value": 6.1596,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.rom_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4409,7 +4409,7 @@
    "value": 5.662,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.hbm_accel_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4424,7 +4424,7 @@
    "value": 10.2418,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_rom_replicas": {
    "target": "gpu_ds",
@@ -4439,7 +4439,7 @@
    "value": 10.292,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_rom_agg_b1_ar": {
    "target": "gpu_ds",
@@ -4454,7 +4454,7 @@
    "value": 2669.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_iso_power_sat_ar": {
    "target": "gpu_ds",
@@ -4499,7 +4499,7 @@
    "value": 24.3987,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_mtp_b1_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4514,7 +4514,7 @@
    "value": 12.5714,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_system_w": {
    "target": "gpu_ds",
@@ -4529,7 +4529,7 @@
    "value": 6512.0,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "gpu_ds.b200x8_ar_b1_tdp_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4602,7 +4602,7 @@
    "value": 1.0,
    "resolved": true,
    "blob": "1f0596fd99c907c2554ef75583089fb9a10c5f5d",
-   "last_commit": "ea6256e95 2026-10-05"
+   "last_commit": "8a1780118 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
@@ -4749,7 +4749,7 @@
    "value": 0.109,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_qwen.j_per_token_ar_p8191_tp4": {
    "target": "hbm_qwen",
@@ -4764,7 +4764,7 @@
    "value": 0.7611,
    "resolved": true,
    "blob": "6c170feeefdf622435b1d1174b1416e1304fde60",
-   "last_commit": "2f1eff7dd 2026-10-05"
+   "last_commit": "2036a2c50 2026-10-05"
   },
   "hbm_ds.ar_tok_s": {
    "target": "hbm_ds",
@@ -5579,7 +5579,7 @@
    "value": 533.077,
    "resolved": true,
    "blob": "effde5bede60bb4f8adb126084d5a5af213fe117",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.matched_gate_ar_us_die_wire_floor": {
    "target": "hbm_ds",
@@ -5594,7 +5594,7 @@
    "value": 512.725,
    "resolved": true,
    "blob": "effde5bede60bb4f8adb126084d5a5af213fe117",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_tok_s_die_wire": {
    "target": "hbm_ds",
@@ -5609,7 +5609,7 @@
    "value": 3750.5,
    "resolved": true,
    "blob": "effde5bede60bb4f8adb126084d5a5af213fe117",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.die_wire_added_us": {
    "target": "hbm_ds",
@@ -5624,7 +5624,7 @@
    "value": 58.269,
    "resolved": true,
    "blob": "effde5bede60bb4f8adb126084d5a5af213fe117",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_ds.die_mm2": {
    "target": "hbm_ds",
@@ -5639,7 +5639,7 @@
    "value": 600.81,
    "resolved": true,
    "blob": "1aa5407d23cb540a51bb151ff71f595047597948",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "14e41e57c 2026-10-05"
   },
   "hbm_qwen.ar_tok_s_p8191_tp4_die_wire": {
    "target": "hbm_qwen",
@@ -5776,6 +5776,110 @@
    "blob": "53e1d33043a90c21f3daae2f16cce66219906c8e",
    "last_commit": "1d5724fb6 2026-10-05"
   },
+  "hbm_qwen.die_power_avg_w_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_tt",
+   "label": "Qwen HBM tile die power, P8191 TP4 decode token average (TT; cooling budget 474.6 W/die)",
+   "unit": "W",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_avg_w",
+   "note": "tiles measured (routed tile_tp4_t4 SPEF + exact decode register activity, ME_IDLE_GATE duty 0.267); die wire composed from routed lengths x measured port activity; HBM PHY published 0.8 pJ/b; stream services + spine 73.2 W floorplan-assumed",
+   "value": 308.97899550489154,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.tiles_power_avg_w_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_power_avg_w_tt",
+   "label": "Qwen HBM tile die: 1,536 tiles + SRAM macros, token average (TT)",
+   "unit": "W",
+   "status": "composed_from_measured",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_avg_w",
+   "note": "combinational share is an OpenSTA-propagation upper bound (halved: 157.8 W)",
+   "value": 182.31095185813513,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.tiles_clocked_w_per_mm2_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "tiles_clocked_w_per_mm2_tt",
+   "label": "Qwen HBM tile power density while the fabric is clocked (in phase, TT)",
+   "unit": "W/mm2",
+   "status": "measured",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.tiles_clocked_w_per_mm2",
+   "note": "floorplan assumed 1.05 W/mm2",
+   "value": 1.0306471056145652,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.die_power_inphase_bound_w_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_inphase_bound_w_tt",
+   "label": "Qwen HBM tile die in-phase peak bound (every term at its own worst window, TT)",
+   "unit": "W",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_peak_window_w",
+   "note": "lasts at most one stage (head: 2.7 us clocked); the cooling budget is time-averaged",
+   "value": 967.8814064673489,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.die_power_avg_w_ff": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_power_avg_w_ff",
+   "label": "Qwen HBM tile die power, token average (FF 0.77 V)",
+   "unit": "W",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.FF.token.die_avg_w",
+   "note": "SS 267.3 W",
+   "value": 368.9699381012519,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.max_fabric_duty_at_budget_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "max_fabric_duty_at_budget_tt",
+   "label": "Qwen HBM tile die: fabric duty the 474.6 W budget allows (batched fill cap; single user 0.267)",
+   "unit": "fraction",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.max_fabric_duty_at_budget",
+   "note": "FF 0.38",
+   "value": 0.5039430147706881,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
+  "hbm_qwen.die_J_per_token_tt": {
+   "target": "hbm_qwen",
+   "section": "energy",
+   "key": "die_J_per_token_tt",
+   "label": "Qwen HBM tile die energy per AR token per die (TT, 4 dies per token at TP4)",
+   "unit": "J/token/die",
+   "status": "partial",
+   "path": "results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json",
+   "pointer": "corners.TT.token.die_J_per_token",
+   "value": 0.15140768975478075,
+   "resolved": true,
+   "blob": "914f65290ffd012105b0e01dc15e6836f0eb2ce4",
+   "last_commit": "ceb869411 2026-10-06"
+  },
   "qwen_rom.ar_tok_s_8k_composed": {
    "target": "qwen_rom",
    "section": "rate",
@@ -5789,7 +5893,7 @@
    "value": 6187.0,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "qwen_rom.token_cycles_8k_composed": {
    "target": "qwen_rom",
@@ -5804,7 +5908,7 @@
    "value": 193955,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5819,7 +5923,7 @@
    "value": 2288.9,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_conditional_all": {
    "target": "ds_rom",
@@ -5834,7 +5938,7 @@
    "value": 6285.4,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_ar_tok_s": {
    "target": "hbm_ds",
@@ -5849,7 +5953,7 @@
    "value": 1999.7,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_floor_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5864,7 +5968,7 @@
    "value": 3993.7,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_ar_tok_s": {
    "target": "hbm_ds",
@@ -5879,7 +5983,7 @@
    "value": 1948.8,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_median_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5894,7 +5998,7 @@
    "value": 3944.2,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_ar_tok_s": {
    "target": "hbm_ds",
@@ -5909,7 +6013,7 @@
    "value": 1921.5,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "hbm_ds.matched_levers_wire_bound_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5924,7 +6028,7 @@
    "value": 3917.2,
    "resolved": true,
    "blob": "61440b8799390a3ddb467ac1c0286853fd0b33cb",
-   "last_commit": "82238b79f 2026-10-05"
+   "last_commit": "7663db638 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",

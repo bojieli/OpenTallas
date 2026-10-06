@@ -11201,6 +11201,15 @@ def dsrom_window_parent_boundary_model():
         leaf_inventory_path = ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
+    leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
+    # Existing pinned SS/FF clock pin capacitances; these are sink loads,
+    # never a substitute for the enclosing propagated CTS/root input load.
+    ff_clk_caps = {'ss': {'DFFASRHQNx1_ASAP7_75t_R': .433982,
+                         'DFFHQNx1_ASAP7_75t_R': .446638},
+                   'ff': {'DFFASRHQNx1_ASAP7_75t_R': .503152,
+                         'DFFHQNx1_ASAP7_75t_R': .522010}}
+    leaf_sink_caps = {c: sum(n*ff_clk_caps[c][t] for t,n in leaf_ff_types.items())
+                      for c in ff_clk_caps}
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
     macro_dir = Path('physical/asap7_memory_macros') / macro_name
     macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
@@ -11211,8 +11220,11 @@ def dsrom_window_parent_boundary_model():
         values = re.search(r'cell_rise\s*\(mc_delay\)\s*\{.*?values\s*\((.*?)\);', lib, re.S)
         clkq = [float(x) for x in re.findall(r'[0-9]+\.[0-9]+', values.group(1))]
         cap = float(re.search(r'pin \(clk\).*?capacitance\s*:\s*([0-9.]+)', lib, re.S).group(1))
+        pin_caps = {p:float(re.search(r'(?:pin|bus) \('+p+r'\).*?capacitance\s*:\s*([0-9.]+)',lib,re.S).group(1))
+                    for p in ('wd_in','w_ce_in','w_addr_in','r_addr_in')}
         corner_views[corner] = dict(clk_cap_fF=cap, clkQ_table_min_ps=min(clkq),
             clkQ_table_max_ps=max(clkq), min_period_ps=macro['timing'][corner]['min_period_ps'],
+            input_pin_cap_fF=pin_caps,
             basis='own predictive compiled corner Liberty; full slew/load table, not routed capture qualification')
     d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
     tiles = nl * (d // td)
@@ -11267,6 +11279,24 @@ def dsrom_window_parent_boundary_model():
             macro_dimensions_um=[macro['area']['macro_width_um'],macro['area']['macro_height_um']],
             corner_views=corner_views,
             total_macro_clk_cap_fF={c:nl*slices*x['clk_cap_fF'] for c,x in corner_views.items()},
+            actual_source_macro_loads=dict(
+                WINDOW_payload_format_bits=nl*rowbits,
+                each_WINDOW_payload_format_bit_macro_wd_fanout=1,
+                constant_padding_macro_wd_bits=nl*(slices*256-rowbits),
+                macro_write_enable_fanout_per_lane=slices,
+                macro_read_write_address_fanout=nl*slices,
+                per_corner={c:dict(
+                    WINDOW_payload_format_bit_sink_cap_fF=x['input_pin_cap_fF']['wd_in'],
+                    WINDOW_payload_format_total_sink_cap_fF=nl*rowbits*x['input_pin_cap_fF']['wd_in'],
+                    per_lane_macro_write_enable_sink_cap_fF=slices*x['input_pin_cap_fF']['w_ce_in'],
+                    per_write_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['w_addr_in'],
+                    per_read_address_bit_sink_cap_fF=nl*slices*x['input_pin_cap_fF']['r_addr_in'])
+                    for c,x in corner_views.items()},
+                nominal_component_output_load_fF=3.898,
+                only_direct_macro_input_pins=True,
+                intervening_enable_logic_and_route_cap_not_free=True,
+                macro_read_output_to_E1_decode_capture_loaded_STA_required=True,
+                routing_and_clock_and_parent_allocation_not_qualified=True),
             pin_alignment_required='existing ot_macro_track_snap placement and assertion per actual orientation',
             SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
         communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
@@ -11292,6 +11322,26 @@ def dsrom_window_parent_boundary_model():
                 PPL_required_minimum_perimeter_um=6753.98,
                 error='PPL-0024', terminal_exit=1, CTS_reached=False,
                 actual_parent_clock_load_proof=False),
+            additional_layer_pin_access=dict(
+                purpose='Minimum full-shape pin-access measurement on retained placed ODB before selecting any repaired route or parent slot',
+                horizontal_layers=['M4','M6','M8'],vertical_layers=['M5','M7','M9'],
+                preferred_pitch_um=[.048,.064,.080], min_distance_tracks=2,
+                gross_positions_per_perimeter_um=sum(1/(2*p) for p in (.048,.064,.080)),
+                retained_leaf_perimeter_um=6200,
+                retained_leaf_gross_positions_upper=6200*sum(1/(2*p) for p in (.048,.064,.080)),
+                actual_PG_blockages_and_legal_positions_required=True,
+                clock_PG_reserve_fraction=.20, signal_fraction_after_reserve=.60,
+                parent_requested_perimeter_um=(69082+101082)/
+                    (sum(1/(2*p) for p in (.048,.064,.080))*.80*.60),
+                parent_diagnostic_frame_um=[4400,4400],
+                parent_diagnostic_raw_positions_upper=17600*sum(1/(2*p) for p in (.048,.064,.080)),
+                parent_diagnostic_signal_budget_upper=17600*sum(1/(2*p) for p in (.048,.064,.080))*.80*.60,
+                parent_diagnostic_frame_is_not_allocated=True,
+                standard_cell_utilization_is_not_pin_or_channel_capacity=True,
+                macro_bodies_and_halos_and_root_CTS_not_priced_free=True,
+                added_FF_bits=0, added_payload_bits=0, added_external_ports=0,
+                added_logical_cycles=0, full_route_ready=False,
+                measured_pin_access=False, parent_slot_fit=False, adoption=False),
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
@@ -11301,6 +11351,22 @@ def dsrom_window_parent_boundary_model():
             actual_allocated_channel_capacity=None, route_fit=False),
         clock=dict(source='native clk -> source/producer/descriptor/attention staging/E1/R0; rst_s[1] reset',
             period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            flat_retained_SS_mapped_leaf_option=dict(
+                purpose='Bind real retained SS mapped cells directly when terminal leaf has no routed timing abstract; never manufacture a closed macro',
+                retained_leaf_source_pin=(leaf_inventory or {}).get('source_pin'),
+                leaf_actual_FF_types=leaf_ff_types,
+                leaf_actual_FF_count=sum(leaf_ff_types.values()),
+                parent_control_capture_FF_upper=ff_upper,
+                total_FF_count_upper=sum(leaf_ff_types.values())+ff_upper,
+                leaf_actual_sink_cap_fF=leaf_sink_caps,
+                total_sink_cap_upper_fF={c:leaf_sink_caps[c]+ff_upper*max(ff_clk_caps[c].values())+
+                    nl*slices*corner_views[c]['clk_cap_fF'] for c in ff_clk_caps},
+                macro_clock_count=nl*slices, leaf_replicas=1,
+                actual_parent_root_load_is_not_sink_cap_sum=True,
+                no_new_FF_ports_or_cycles=True,
+                retained_library_and_source_binding_required=True,
+                actual_allocation_required=True, actual_propagated_CTS=False,
+                field_root_clock_qualified=False, adoption=False),
             leaf_propagated_CTS_and_input_clock_load=None, parent_propagated_CTS=None,
             real_macro_SS_FF_clkQ_and_loaded_capture_required=True, IO_waiver=False),
         latency=dict(added_cycles=0, token_gain=0, preserves_actual_E1_R0_capture_edges=True,
@@ -12351,4 +12417,24 @@ def dsrom_wfc_common_clock_source_model():
         routing_tracks_needed=dict(root_clock=1, generated_clocks=2, POR=1, fault=1),
         channel_capacity=None, floorplan_slot_fit=False,
         protection='Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.',
+        physical_closed=False, PLL_IP_qualified=False)
+
+
+def dsrom_wfc_clock_ip_boundary_model():
+    """External coherent clock-IP boundary; not a replacement IP area estimate."""
+    return dict(default=0, replica_count=1, MACs_per_cycle=0,
+        memory_port_bytes_per_cycle=0, communication_intensity=0,
+        boundary_bits_per_cycle=dict(clock_inputs=2, clock_outputs=2,
+                                     phase_valid=1, sticky_fault=1, fault_output=1),
+        state_FF_bits=0, replica_mux_demux_cost=0,
+        combinational_gates=dict(INV=1, OR2=1),
+        IP_area_um2=None, IP_power_W=None, IP_startup_latency_ps=None,
+        routing_tracks_needed=dict(clock=2, validity=1, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        added_pipeline_cycles=0,
+        fast_period_ps=2500/3, slow_period_ps=10000/9,
+        generated_clock_edges=dict(fast=[1,4,7], slow=[1,5,9]),
+        latency_contribution='No data-stage change; characterized IP startup, clock insertion/skew, and quarantine latency remain required missing terms.',
+        protection='External IP must hold phase-valid low before acquisition, and latch fault/invalidity until cold POR after any phase loss. Boundary vetoes enrollment, never gates clock outputs; it does not implement or qualify clock stop.',
+        assumption='Explicit external coherent IP, not implemented divider or qualified PLL',
         physical_closed=False, PLL_IP_qualified=False)
