@@ -398,8 +398,52 @@
   },
   "hfd_router": {
    "kind": "router",
-   "status": "missing",
-   "instances": 1
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/router",
+   "lef": "hfd_router.lef",
+   "lib": {
+    "ss": "hfd_router_ss.lib",
+    "ff": "hfd_router_ff.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "positions": "exact",
+    "problems": [],
+    "obs_above_generator": [],
+    "pg_pins": {
+     "VDD": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ],
+     "VSS": [
+      "M1",
+      "M2",
+      "M6",
+      "M7"
+     ]
+    },
+    "gen_pins": 2118,
+    "view_pins": 2118
+   },
+   "source": {
+    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40",
+    "host": "ot-epyc1tb",
+    "SOURCE_COMMIT": "88844648046df6a5a9c5b459a583127bfaabdd58",
+    "ss_setup_ps": -1197.69,
+    "ff_hold_ps": -553.76,
+    "closes_signoff_SS60_FF25": false,
+    "clock_period_ns": 0.833,
+    "status": "not_met",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 30554.8,
+    "seq_um2": 10021.4,
+    "core_um2": 185548,
+    "macro_um2": 0
+   }
   },
   "hfd_serdes_slab": {
    "kind": "serdes_slab",
@@ -1826,9 +1870,9 @@
   }
  },
  "counts": {
-  "interim-not-closed": 2,
+  "interim-not-closed": 3,
   "closed": 3,
-  "missing": 24,
+  "missing": 23,
   "closed-below-margin": 21,
   "reservation": 2
  }
