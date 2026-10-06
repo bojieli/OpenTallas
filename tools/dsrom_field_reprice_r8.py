@@ -166,7 +166,7 @@ def cmd_regions(a):
     plan = json.loads((pdir / "plan.json").read_text())
     out = dict(schema="opentallas.dsrom-field-reprice-r8.regions.v1", config=a.config, work=str(work),
                plan_dir=str(pdir), plan_sha256=sha(pdir / "plan.json"), phases={}, nodes={})
-    if a.config == "asbuilt":
+    if a.config.startswith("asbuilt"):
         for ph in plan["phases"]:
             rows = {}
             for reg in ph["regions"]:
@@ -275,7 +275,7 @@ def node_table(reg, wire, per_phase_extra=0):
     """{(layer, node, stage): dict(meas, total, phases, exact)} for one regions file; wire(r) -> cycles;
     per_phase_extra: cycles added once per wire crossing (hub buses on the return path, not region-dependent)."""
     out = {}
-    if reg["config"] == "asbuilt":
+    if reg["config"].startswith("asbuilt"):
         grp = {}
         for name, ph in reg["phases"].items():
             grp.setdefault((ph["layer"], ph["node"], ph["stage"]), []).append(ph)
@@ -321,6 +321,9 @@ def cmd_check(a):
 DIES = ("layer", "layer1")
 PROXY_REF = "f198.72"                  # scan die (4 stacks, 32 of the rack) and 1-stack layer die (292)
 CONFIGS = dict(asbuilt=("regions/asbuilt.json.gz", "results/rtl/dsrom_1m_allmeasured_20261004/field.json"),
+               # as-built field with the closed DS q-element QX 10 on the FP8/FP4 pairs (the headline field since the
+               # owner's go, 2026-10-06; tools/dsrom_1m_field.py --qelem 10)
+               asbuilt_qelem10=("regions/asbuilt_qelem10.json.gz", "results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json"),
                baseline=("regions/baseline.json.gz", "results/rtl/dsrom_field_spine_20261004/field_baseline.json"),
                pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"),
                # PQ spine x DS q-element (2026-10-06, GAP 32 / GUARD 202 / GSLACK 32; tools/dsrom_combined_l20.py qelem-lever)
@@ -594,7 +597,7 @@ if __name__ == "__main__":
     p = sub.add_parser("regions")
     p.add_argument("--work", type=Path, required=True)
     p.add_argument("--plan-dir", type=Path, required=True)
-    p.add_argument("--config", required=True, choices=["asbuilt", "baseline", "pq", "pq_qelem"])
+    p.add_argument("--config", required=True, choices=["asbuilt", "asbuilt_qelem10", "baseline", "pq", "pq_qelem"])
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("record")
     p.add_argument("--levers", action="store_true", help="also re-price the field_spine lever records")

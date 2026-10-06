@@ -96,7 +96,8 @@ def reprice_table(field, geom):
         return None
     if "rec" not in _RP:
         _RP["rec"] = json.loads(REPRICE.read_text())
-    cfg = field.get("config", "asbuilt")
+    q = (field.get("vehicle") or {}).get("qelem")
+    cfg = field.get("config") or (f"asbuilt_qelem{q['QX']}" if q else "asbuilt")
     return _RP["rec"]["geoms"][geom]["configs"][cfg]
 
 
