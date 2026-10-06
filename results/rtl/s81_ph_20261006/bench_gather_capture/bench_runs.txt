@@ -1,0 +1,98 @@
+== run_base_err.log
+PHASE 0: ref done 56 cycles after issue, dut +0 cycles
+SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_mix.log
+PHASE 0: ref done 85 cycles after issue, dut +9 cycles
+PHASE 1: ref done 251 cycles after issue, dut +8 cycles
+PHASE 2: ref done 286 cycles after issue, dut +9 cycles
+PHASE 3: ref done 133 cycles after issue, dut +8 cycles
+PHASE 4: ref done 254 cycles after issue, dut +7 cycles
+PHASE 5: ref done 359 cycles after issue, dut +8 cycles
+PHASE 6: ref done 74 cycles after issue, dut +9 cycles
+PHASE 7: ref done 254 cycles after issue, dut +9 cycles
+PHASE 8: ref done 436 cycles after issue, dut +7 cycles
+SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=9 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_mix11.log
+PHASE 0: ref done 113 cycles after issue, dut +9 cycles
+PHASE 1: ref done 89 cycles after issue, dut +8 cycles
+PHASE 2: ref done 440 cycles after issue, dut +9 cycles
+PHASE 3: ref done 68 cycles after issue, dut +7 cycles
+PHASE 4: ref done 137 cycles after issue, dut +8 cycles
+PHASE 5: ref done 127 cycles after issue, dut +8 cycles
+PHASE 6: ref done 85 cycles after issue, dut +8 cycles
+PHASE 7: ref done 120 cycles after issue, dut +7 cycles
+PHASE 8: ref done 165 cycles after issue, dut +8 cycles
+SUMMARY phases=9 writes=18016 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=9 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_mix12.log
+PHASE 0: ref done 82 cycles after issue, dut +8 cycles
+PHASE 1: ref done 162 cycles after issue, dut +9 cycles
+PHASE 2: ref done 222 cycles after issue, dut +9 cycles
+PHASE 3: ref done 76 cycles after issue, dut +7 cycles
+PHASE 4: ref done 115 cycles after issue, dut +8 cycles
+PHASE 5: ref done 166 cycles after issue, dut +9 cycles
+PHASE 6: ref done 112 cycles after issue, dut +7 cycles
+PHASE 7: ref done 146 cycles after issue, dut +9 cycles
+PHASE 8: ref done 122 cycles after issue, dut +9 cycles
+SUMMARY phases=9 writes=15796 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=9 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_mix13.log
+PHASE 0: ref done 78 cycles after issue, dut +8 cycles
+PHASE 1: ref done 110 cycles after issue, dut +9 cycles
+PHASE 2: ref done 177 cycles after issue, dut +8 cycles
+PHASE 3: ref done 80 cycles after issue, dut +9 cycles
+PHASE 4: ref done 153 cycles after issue, dut +8 cycles
+PHASE 5: ref done 157 cycles after issue, dut +8 cycles
+PHASE 6: ref done 83 cycles after issue, dut +8 cycles
+PHASE 7: ref done 117 cycles after issue, dut +8 cycles
+PHASE 8: ref done 129 cycles after issue, dut +8 cycles
+SUMMARY phases=9 writes=9340 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=9 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_over.log
+PHASE 0: ref done 57 cycles after issue, dut +0 cycles
+SUMMARY phases=1 writes=165 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_range.log
+PHASE 0: ref done 58 cycles after issue, dut +0 cycles
+SUMMARY phases=1 writes=45 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=0 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_rreq.log
+PHASE 0: ref done 63 cycles after issue, dut +7 cycles
+SUMMARY phases=1 writes=256 ref_fault=1 dut_fault=1 ref_drained=0 dut_drained=0 max_extra_cycles=7 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_base_trace.log
+PHASE 0: ref done 51 cycles after issue, dut +7 cycles
+PHASE 1: ref done 101 cycles after issue, dut +8 cycles
+SUMMARY phases=2 writes=7744 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=8 timeouts=0 mismatching_roots=0
+RESULT PASS
+== run_m1_mix.log
+PHASE 0: ref done 85 cycles after issue, dut +9 cycles
+PHASE 1: ref done 251 cycles after issue, dut +8 cycles
+PHASE 2: ref done 286 cycles after issue, dut +9 cycles
+PHASE 3: ref done 133 cycles after issue, dut +8 cycles
+PHASE 4: ref done 254 cycles after issue, dut +7 cycles
+PHASE 5: ref done 359 cycles after issue, dut +8 cycles
+PHASE 6: ref done 74 cycles after issue, dut +9 cycles
+PHASE 7: ref done 254 cycles after issue, dut +9 cycles
+PHASE 8: ref done 436 cycles after issue, dut +7 cycles
+MISMATCH root 0 write 4: ref 5b3b0000007e0 dut 5b3a8000007e0
+MISMATCH root 1 write 4: ref 62258000007e1 dut 62250000007e1
+MISMATCH root 2 write 6: ref 5e778000007e4 dut 5e770000007e4
+MISMATCH root 3 write 4: ref 5d370000007e5 dut 5d368000007e5
+MISMATCH root 4 write 4: ref 65610000007e7 dut 65608000007e7
+== run_m2_mix.log
+PHASE 0: ref done 85 cycles after issue, dut +9 cycles
+PHASE 1: ref done 251 cycles after issue, dut +8 cycles
+PHASE 2: ref done 286 cycles after issue, dut +9 cycles
+PHASE 3: ref done 133 cycles after issue, dut +8 cycles
+PHASE 4: ref done 254 cycles after issue, dut +7 cycles
+PHASE 5: ref done 359 cycles after issue, dut +8 cycles
+PHASE 6: ref done 74 cycles after issue, dut +9 cycles
+PHASE 7: ref done 254 cycles after issue, dut +9 cycles
+PHASE 8: ref done 436 cycles after issue, dut +7 cycles
+MISMATCH root 0 write 0: ref 210266540018b dut 22dfc5410018e
+MISMATCH root 1 write 0: ref 22dfc5410018e dut 210266540018b
+SUMMARY phases=9 writes=34208 ref_fault=0 dut_fault=0 ref_drained=1 dut_drained=1 max_extra_cycles=9 timeouts=0 mismatching_roots=2
+RESULT FAIL
