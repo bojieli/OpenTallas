@@ -72,7 +72,7 @@ for name, cell in net['cells'].items():
        row['capacitance_fF'] += lib[cell['type']][pin]
 # Real source/capture projections stay with their caller, never at a perimeter bank.
 port_strides = dict(issue=1, issue_mode=1, issue_count=8, issue_va=4096,
-                    complete=1, observed_vr=4096)
+                    caller_idle=1, caller_done=1, caller_vr=4096)
 for port, row in net['ports'].items():
  stride = port_strides.get(port)
  for i, bit in enumerate(row['bits']):
