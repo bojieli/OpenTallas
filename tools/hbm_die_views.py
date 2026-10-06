@@ -388,6 +388,10 @@ def sta_tcl(m, work, index):
         (work / f'{n}_ff.lib').write_bytes((d / v['lib']['ff']).read_bytes())
         lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
     timed = [it for it in m['insts'] if it.master in libs]
+    by_master = defaultdict(list)
+    for it in timed:
+        if it.master != 'hfd_sm':
+            by_master[it.master].append(it.name)
     clk_nets = {'stream': 'n_clk_stream', 'serial': 'n_clk_serial', 'hbm': 'n_clk_hbm', 'link': 'n_clk_link'}
     head = head.replace('read_verilog /work/die.v', 'define_corners ss ff\n' + '\n'.join(lib_lines) + '\nread_verilog /work/die.v')
     tcl = head + 'source /work/place.tcl\n' + f"""
@@ -425,6 +429,27 @@ if {{[llength $ti]}} {{
   report_checks -path_delay max -corner ss -through $ti -group_path_count 10 -format end -digits 3
   report_checks -path_delay max -corner ss -through $ti -digits 3 -fields {{slew cap input_pins}}
   report_checks -path_delay min -corner ff -through $ti -group_path_count 10 -format end -digits 3
+}}
+# per view (coordinator 2026-10-06): worst die-context setup (SS, 60 + 150 ps) and hold (FF, 25 ps) through each
+# timed master's instance pins, skipping paths that start or end at an SM interim pin (not a closure figure)
+set_clock_uncertainty -setup 0.210 [all_clocks]
+set_clock_uncertainty -hold 0.025 [all_clocks]
+proc ot_vw {{pins kind corner}} {{
+  set best NA
+  foreach pe [find_timing_paths -path_delay $kind -corner $corner -through $pins -group_path_count 40 -endpoint_path_count 1] {{
+    set a [lindex [split [get_full_name [get_property $pe startpoint]] /] 0]
+    set b [lindex [split [get_full_name [get_property $pe endpoint]] /] 0]
+    if {{[string match sm* $a] || [string match sm* $b]}} {{ continue }}
+    set sl [get_property $pe slack]
+    if {{$best eq "NA" || $sl < $best}} {{ set best $sl }}
+  }}
+  return $best
+}}
+foreach {{mst insts}} {{{' '.join('%s {%s}' % (k, ' '.join(v)) for k, v in sorted(by_master.items()))}}} {{
+  set pins {{}}
+  foreach i $insts {{ foreach p [get_pins -quiet $i/*] {{ lappend pins $p }} }}
+  if {{![llength $pins]}} {{ continue }}
+  puts "OT_STA_VIEW $mst insts=[llength $insts] setup_u210=[ot_vw $pins max ss] hold=[ot_vw $pins min ff]"
 }}
 puts "OT_STA_DONE timed_insts=[llength $timed_insts]"
 """
