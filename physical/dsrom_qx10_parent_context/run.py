@@ -25,7 +25,7 @@ RTL += ['rtl/proto/ot_fp32_add_rne_pipe.sv','rtl/common/ot_prefix.sv',
 ROM=[f'physical/asap7_memory_macros/{n}/{n}_bb.v' for n in ('ot_rom_8192x274_m8','ot_rom_4096x274_m8')]
 
 
-def command(out):
+def command(out, boundary_hold=False):
     args=[sys.executable,'tools/run_abi3_physical_persistent.py',
           '--persistent-workdir',str(out/'work'),'--launch-receipt',str(out/'receipt.json'),
           '--view','asap7','--top','ot_v41_qx10_native_parent']
@@ -53,6 +53,8 @@ def command(out):
              '--step-tcl',f'PRE_CTS={BASE}/clock.tcl','--step-tcl',f'POST_CTS={BASE}/clock.tcl',
              '--step-tcl',f'PRE_GLOBAL_ROUTE={BASE}/replay_checks.tcl',
              '--keep-heavy-artifacts','--output',str(out/'physical.json')]
+    if boundary_hold:
+        args += ['--step-tcl',f'POST_DETAIL_PLACE={BASE}/hold_boundary.tcl']
     return args
 
 
@@ -62,13 +64,15 @@ if __name__=='__main__':
     ap.add_argument('--print',action='store_true')
     ap.add_argument('--lint-only',action='store_true')
     ap.add_argument('--phase',choices=('all','smoke','physical'),default='all')
+    ap.add_argument('--boundary-hold',action='store_true')
     a=ap.parse_args();out=a.out.resolve()
-    model=json.loads((ROOT/'results/uarch/dsrom_qx10_parent_context_20261005/model.json').read_text())
+    model_name='boundary_hold_model.json' if a.boundary_hold else 'model.json'
+    model=json.loads((ROOT/'results/uarch/dsrom_qx10_parent_context_20261005'/model_name).read_text())
     if not model['full_context_build_ready']:raise SystemExit('existing model vetoes joined context')
     actual=hashlib.sha256((ROOT/f'{BASE}/selected_0032/ot_v41_rom_elem_qx_w10.sv').read_bytes()).hexdigest()
     if actual!=model['source']['engine_sha256']:raise SystemExit('selected 0032 engine changed')
     if a.print:
-        print(json.dumps(command(out),indent=2));raise SystemExit(0)
+        print(json.dumps(command(out,a.boundary_hold),indent=2));raise SystemExit(0)
     if a.lint_only:
         verilator=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
         raise SystemExit(subprocess.run([str(verilator),'--lint-only','-Wno-fatal','-Wno-lint','-Wno-style',
@@ -103,4 +107,4 @@ if __name__=='__main__':
     if not (out/'smoke.rc').exists() or (out/'smoke.rc').read_text().strip()!='0':
         raise SystemExit('minimum native parent semantic gate is not PASS')
     os.environ['OT_ORFS_NUM_CORES']='4'
-    raise SystemExit(subprocess.run(command(out),cwd=ROOT).returncode)
+    raise SystemExit(subprocess.run(command(out,a.boundary_hold),cwd=ROOT).returncode)
