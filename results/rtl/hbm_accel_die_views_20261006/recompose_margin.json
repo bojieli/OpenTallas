@@ -5,11 +5,11 @@
   "gather": 2,
   "cdist": 2,
   "barrier": 4,
-  "coll": 8,
-  "serdes": 8,
-  "vm": 8,
+  "coll": 6,
+  "serdes": 4,
+  "vm": 6,
   "router": 8,
-  "cmdproc": 4,
+  "cmdproc": 2,
   "quant": 17,
   "quant_points_bound": 161,
   "quant_points_gate": 0
@@ -34,21 +34,21 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 2120,
-    "serdes": 2440,
-    "vm": 2328,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
     "router": 320,
-    "cmdproc": 1372
+    "cmdproc": 686
    },
    "breakdown": {
     "stations_us": 5.553,
     "barrier_us": 1.143,
-    "spine_faces_us": 7.15,
+    "spine_faces_us": 4.635,
     "quant_us_gate": 0.0,
     "quant_us_bound": 2.281,
     "sm_faces_interim_us": 2.475,
-    "total_with_sm_interim_us": 16.321,
-    "total_with_sm_interim_AR_pct": 3.06
+    "total_with_sm_interim_us": 13.806,
+    "total_with_sm_interim_AR_pct": 2.59
    },
    "ds_wire_priced": {
     "AR_us": 533.077,
@@ -59,40 +59,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 13.847,
-     "AR_us": 546.924,
-     "AR_delta_pct": 2.6,
-     "AR_tok_s": 1828.4,
-     "MTP_step_us": 1122.754,
-     "MTP_delta_pct": 1.25,
-     "MTP_tok_s": 3704.3
+     "added_us": 11.332,
+     "AR_us": 544.409,
+     "AR_delta_pct": 2.13,
+     "AR_tok_s": 1836.9,
+     "MTP_step_us": 1120.239,
+     "MTP_delta_pct": 1.02,
+     "MTP_tok_s": 3712.6
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 16.128,
-     "AR_us": 549.205,
-     "AR_delta_pct": 3.03,
-     "AR_tok_s": 1820.8,
-     "MTP_step_us": 1125.035,
-     "MTP_delta_pct": 1.45,
-     "MTP_tok_s": 3696.8
+     "added_us": 13.613,
+     "AR_us": 546.69,
+     "AR_delta_pct": 2.55,
+     "AR_tok_s": 1829.2,
+     "MTP_step_us": 1122.52,
+     "MTP_delta_pct": 1.23,
+     "MTP_tok_s": 3705.1
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1168433,
-     "margin_cycles": 1170147,
-     "added_cycles": 1714,
-     "delta_pct": 0.15,
+     "margin_cycles": 1169709,
+     "added_cycles": 1276,
+     "delta_pct": 0.11,
      "ar_tok_s": 1027.0,
-     "ar_tok_s_margin": 1025.5
+     "ar_tok_s_margin": 1025.9
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 563574,
-     "margin_cycles": 565288,
-     "added_cycles": 1714,
-     "delta_pct": 0.3,
+     "margin_cycles": 564850,
+     "added_cycles": 1276,
+     "delta_pct": 0.23,
      "ar_tok_s": 2129.3,
-     "ar_tok_s_margin": 2122.8
+     "ar_tok_s_margin": 2124.5
     }
    }
   },
@@ -114,21 +114,21 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 2120,
-    "serdes": 2440,
-    "vm": 2328,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
     "router": 320,
-    "cmdproc": 1372
+    "cmdproc": 686
    },
    "breakdown": {
     "stations_us": 5.552,
     "barrier_us": 1.143,
-    "spine_faces_us": 7.15,
+    "spine_faces_us": 4.635,
     "quant_us_gate": 0.0,
     "quant_us_bound": 2.281,
     "sm_faces_interim_us": 2.583,
-    "total_with_sm_interim_us": 16.428,
-    "total_with_sm_interim_AR_pct": 3.12
+    "total_with_sm_interim_us": 13.913,
+    "total_with_sm_interim_AR_pct": 2.65
    },
    "ds_wire_priced": {
     "AR_us": 525.791,
@@ -139,40 +139,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 13.846,
-     "AR_us": 539.637,
-     "AR_delta_pct": 2.63,
-     "AR_tok_s": 1853.1,
-     "MTP_step_us": 1115.467,
-     "MTP_delta_pct": 1.26,
-     "MTP_tok_s": 3728.5
+     "added_us": 11.331,
+     "AR_us": 537.122,
+     "AR_delta_pct": 2.16,
+     "AR_tok_s": 1861.8,
+     "MTP_step_us": 1112.952,
+     "MTP_delta_pct": 1.03,
+     "MTP_tok_s": 3736.9
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 16.127,
-     "AR_us": 541.918,
-     "AR_delta_pct": 3.07,
-     "AR_tok_s": 1845.3,
-     "MTP_step_us": 1117.748,
-     "MTP_delta_pct": 1.46,
-     "MTP_tok_s": 3720.9
+     "added_us": 13.612,
+     "AR_us": 539.403,
+     "AR_delta_pct": 2.59,
+     "AR_tok_s": 1853.9,
+     "MTP_step_us": 1115.233,
+     "MTP_delta_pct": 1.24,
+     "MTP_tok_s": 3729.3
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1167632,
-     "margin_cycles": 1169346,
-     "added_cycles": 1714,
-     "delta_pct": 0.15,
+     "margin_cycles": 1168908,
+     "added_cycles": 1276,
+     "delta_pct": 0.11,
      "ar_tok_s": 1027.7,
-     "ar_tok_s_margin": 1026.2
+     "ar_tok_s_margin": 1026.6
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 562773,
-     "margin_cycles": 564487,
-     "added_cycles": 1714,
-     "delta_pct": 0.3,
+     "margin_cycles": 564049,
+     "added_cycles": 1276,
+     "delta_pct": 0.23,
      "ar_tok_s": 2132.3,
-     "ar_tok_s_margin": 2125.8
+     "ar_tok_s_margin": 2127.5
     }
    }
   },
@@ -194,21 +194,21 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 2120,
-    "serdes": 2440,
-    "vm": 2328,
+    "coll": 1590,
+    "serdes": 1220,
+    "vm": 1746,
     "router": 320,
-    "cmdproc": 1372
+    "cmdproc": 686
    },
    "breakdown": {
     "stations_us": 5.552,
     "barrier_us": 1.143,
-    "spine_faces_us": 7.15,
+    "spine_faces_us": 4.635,
     "quant_us_gate": 0.0,
     "quant_us_bound": 2.281,
     "sm_faces_interim_us": 0.0,
-    "total_with_sm_interim_us": 13.845,
-    "total_with_sm_interim_AR_pct": 2.7
+    "total_with_sm_interim_us": 11.33,
+    "total_with_sm_interim_AR_pct": 2.21
    },
    "ds_wire_priced": {
     "AR_us": 512.725,
@@ -219,40 +219,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 13.846,
-     "AR_us": 526.571,
-     "AR_delta_pct": 2.7,
-     "AR_tok_s": 1899.1,
-     "MTP_step_us": 1102.401,
-     "MTP_delta_pct": 1.27,
-     "MTP_tok_s": 3772.7
+     "added_us": 11.331,
+     "AR_us": 524.056,
+     "AR_delta_pct": 2.21,
+     "AR_tok_s": 1908.2,
+     "MTP_step_us": 1099.886,
+     "MTP_delta_pct": 1.04,
+     "MTP_tok_s": 3781.3
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 16.127,
-     "AR_us": 528.852,
-     "AR_delta_pct": 3.15,
-     "AR_tok_s": 1890.9,
-     "MTP_step_us": 1104.682,
-     "MTP_delta_pct": 1.48,
-     "MTP_tok_s": 3764.9
+     "added_us": 13.612,
+     "AR_us": 526.337,
+     "AR_delta_pct": 2.65,
+     "AR_tok_s": 1899.9,
+     "MTP_step_us": 1102.167,
+     "MTP_delta_pct": 1.25,
+     "MTP_tok_s": 3773.5
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1166501,
-     "margin_cycles": 1168215,
-     "added_cycles": 1714,
-     "delta_pct": 0.15,
+     "margin_cycles": 1167777,
+     "added_cycles": 1276,
+     "delta_pct": 0.11,
      "ar_tok_s": 1028.7,
-     "ar_tok_s_margin": 1027.2
+     "ar_tok_s_margin": 1027.6
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 561642,
-     "margin_cycles": 563356,
-     "added_cycles": 1714,
-     "delta_pct": 0.31,
+     "margin_cycles": 562918,
+     "added_cycles": 1276,
+     "delta_pct": 0.23,
      "ar_tok_s": 2136.6,
-     "ar_tok_s_margin": 2130.1
+     "ar_tok_s_margin": 2131.7
     }
    }
   }

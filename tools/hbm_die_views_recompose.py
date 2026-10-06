@@ -39,9 +39,11 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hbm_accel_die_fp as F  # noqa: E402
 import hbm_accel_die_price as PR  # noqa: E402
 
-# spine face_stages 5 (fd828b957: pin flop + 4 stages, +2 per face over face_stages 3) on the six interim wrappers
-# (router, quant, cmdproc, loader, coll, vm); the closed barrier view stays at face_stages 3 (+4 round trip, measured)
-LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=8, serdes=8, vm=8, router=8, cmdproc=4, quant=17,
+# spine faces sized per face (physical/hbm_accel_die_views/spine_face_stages.json, 6d290c8b3: N = clamp(ceil(d/380 um),
+# 2, 5), added cycles per face = N - 1 over the pre-margin pin flop): collective SU faces 4/4 -> +3 +3, endpoint <->
+# SerDes llk 3 -> +2 +2, VM f_su 5 (SE/SW, bound) -> +4 and x faces 3 -> +2, cmdproc issue faces c* 3 -> +2; router keeps
+# face_stages 5 (+4 +4) until the hbm-router view records its faces; barrier view face_stages 3 (+4 round trip, measured)
+LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=6, serdes=4, vm=6, router=8, cmdproc=2, quant=17,
               quant_points_bound=161, quant_points_gate=0)
 
 
