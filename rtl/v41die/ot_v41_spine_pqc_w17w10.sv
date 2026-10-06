@@ -75,7 +75,7 @@ module ot_v41_spine_pqc_w17w10 #(
     parameter integer GUARD = 180,
     parameter integer GSLACK = 6,
     parameter integer RG = 8,            // regions per replica group (return configuration replicas; v9: 16 -> 8)
-    parameter integer RPT = 1,           // v9: registered repeater stages on the broadcast out, the root inputs and
+    parameter integer RPT = 2,           // v9: registered repeater stages on the broadcast out, the root inputs and
                                          // the row-write outputs (long die-scale nets; each adds RPT cycles)
     parameter integer BW = 1 + PHW + 3 + 1 + 1 + 2 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
 ) (
@@ -524,12 +524,23 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [9:0]   bt_e0, bt_e1;
     reg [3:0]   bt_bsv;
     reg [31:0]  bt_u;
+    // v11: the BF16 read is two stages (v9 R = 128: g_ixb copy -> bb read mux -> bt_d was an SS class, -17.6 ps): stage
+    // 2 reads, per 16-bit lane, the 8 words of the lane's row (selected by the row index p1_hi) into bra; stage 3 selects
+    // one by the sub-index (kept copies g_ixc of p1_bb / p1_bg) into bt_d.  Every other broadcast field passes one
+    // register (bc_hr) so the broadcast stays aligned: +1 cycle on the broadcast.  bb is read at the same cycle as before.
+    reg [127:0] bra [0:63];
     reg [1023:0] bt_d;
     reg         bt_go, bt_gobf, bt_cfg;
     reg [1:0]   bt_tag;
     reg [2:0]   bt_np, bt_pos;
     reg [PHW-1:0] bt_ph;
-    integer kl, ku, kc;
+    integer kl, ku, kc, kj;
+    wire [32*3-1:0] p2_bb;                 // stage-3 copies of p1_bb / p1_bg (kept: identical per byte lane)
+    wire [31:0]     p2_bg;
+    generate for (gc = 0; gc < 32; gc = gc + 1) begin : g_ixc
+        ot_v41_kreg #(.W(4)) u_ix (.clk(clk), .arst_n(rst_n), .d({p1_bb[3*gc +: 3], p1_bg[gc]}),
+                                  .q({p2_bb[3*gc +: 3], p2_bg[gc]}));
+    end endgenerate
     always @(posedge clk) begin
         p1_p <= hw[8:1]; p1_b <= h_fam ? hw[3:1] : hw[11:9]; p1_sv <= hw[13:12]; p1_pos <= h_pos;
         p1_bsv <= hw[7:4]; p1_u <= hw[39:8];
@@ -543,7 +554,12 @@ module ot_v41_spine_pqc_w17w10 #(
         bt_e1 <= p1_g1[0] ? eb[p1_i1[15:0]] : 10'd0;
         for (ku = 0; ku < 4; ku = ku + 1)
             for (kl = 0; kl < 16; kl = kl + 1)
-                bt_d[256*ku + 16*kl +: 16] <= p1_bg[8*ku + kl/2] ? bb[{p1_hi[9*(8*ku + kl/2) +: 9], 4'(kl), p1_bb[3*(8*ku + kl/2) +: 3]}] : 16'd0;
+                for (kj = 0; kj < 8; kj = kj + 1)
+                    bra[16*ku + kl][16*kj +: 16] <= bb[{p1_hi[9*(8*ku + kl/2) +: 9], 4'(kl), 3'(kj)}];
+        // stage 3 of the BF16 read
+        for (ku = 0; ku < 4; ku = ku + 1)
+            for (kl = 0; kl < 16; kl = kl + 1)
+                bt_d[256*ku + 16*kl +: 16] <= p2_bg[8*ku + kl/2] ? bra[16*ku + kl][16*p2_bb[3*(8*ku + kl/2) +: 3] +: 16] : 16'd0;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -557,8 +573,11 @@ module ot_v41_spine_pqc_w17w10 #(
         end
     end
     // ------------------------------------------------------------------ broadcast wire stages
-    wire [BW-1:0] bc_in = {bt_cfg, bt_ph, bt_np, bt_go, bt_gobf, bt_tag, bt_xs_v, bt_p, bt_b, bt_sv, bt_q0, bt_e0, bt_q1,
-                           bt_e1, bt_pos, bt_pos, bt_xb_v, bt_b, bt_bsv, bt_u, bt_d};
+    wire [BW-1025:0] bc_h = {bt_cfg, bt_ph, bt_np, bt_go, bt_gobf, bt_tag, bt_xs_v, bt_p, bt_b, bt_sv, bt_q0, bt_e0, bt_q1,
+                             bt_e1, bt_pos, bt_pos, bt_xb_v, bt_b, bt_bsv, bt_u};
+    reg  [BW-1025:0] bc_hr;                // v11: the non-BF16 fields wait one cycle for the two-stage BF16 read
+    always @(posedge clk or negedge rst_n) if (!rst_n) bc_hr <= '0; else bc_hr <= bc_h;
+    wire [BW-1:0] bc_in = {bc_hr, bt_d};
     wire [BW-1:0] bc;
     generate if (BST + RPT > 0) begin : g_bst
         ot_hdc_delay #(.W(BW), .D(BST + RPT), .RESET(1)) u_bst (.clk(clk), .rst_n(rst_n), .d(bc_in), .q(bc));
@@ -608,9 +627,14 @@ module ot_v41_spine_pqc_w17w10 #(
         assign g_md[4*CFW + gt] = sv[gt] && si[gt];
     end endgenerate
     assign g_md[4*CFW + 4 +: 2] = iss_tag;
+    // v11: the masters (slot registers -> stride adders -> packing) are registered once at the spine before the group
+    // replicas, so the replicas' D is a wire from one register (v9 R = 128: s_ops -> o3/o5/o7 -> 16 replicas across
+    // the die was an SS class, -21.1 ps; +1 cycle on the configuration's way to the return stage)
+    reg  [GRW-1:0]     g_mdr;
+    always @(posedge clk) g_mdr <= g_md;
     wire [NGR*GRW-1:0] g_rep;                               // per region group, kept copies (ot_v41_kreg)
     generate for (gg = 0; gg < NGR; gg = gg + 1) begin : g_grp
-        ot_v41_kreg #(.W(GRW)) u_rep (.clk(clk), .arst_n(rst_n), .d(g_md), .q(g_rep[GRW*gg +: GRW]));
+        ot_v41_kreg #(.W(GRW)) u_rep (.clk(clk), .arst_n(rst_n), .d(g_mdr), .q(g_rep[GRW*gg +: GRW]));
     end endgenerate
     // stages 1 and 2, region-local: the row's op tag registered as kept one-hot copies (0: base, 1: 1/3 x stride,
     // 2: 5/7 x stride, 3: rsplit / format / live (valid-gated), 4: row count (valid-gated))

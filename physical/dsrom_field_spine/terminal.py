@@ -25,6 +25,12 @@ pat = dict(g_ixb=r"u_sp\.g_ixb\[\d+\]\.u_ix", g_ixq=r"u_sp\.g_ixq\[\d+\]\.u_ix",
 exp = dict(g_ixb=32, g_ixq=8, g_sel=4 * R, u_rsfm=R, u_cc=1, g_aqi=9, g_qwe=8, g_bwb=16, u_aoh=2, g_grp=(R + 7) // 8,
            **{f"u_oh{i}": R for i in range(5)})
 act = {k: sum(bool(re.fullmatch(p, n)) for n in names) for k, p in pat.items()}
+# v10 / v11 kept copies: g_ixc (stage-3 BF16 read sub-index, ot_v41_kreg) and the quantisers' s11 exponent copies
+# (ot_dsrom_aq12f g_s11c, inside the kept quantiser hierarchy: named u_sp.g_aq[k].u_aq/g_s11c[j].u_c/...)
+names2 = {"/".join(n.split("/")[:2]) for n in re.findall(r"^\s*DFF\w+\s+\\?(\S+)", net, re.M) if n.count("/") >= 2}
+pat2 = dict(g_ixc=r"u_sp\.g_ixc\[\d+\]\.u_ix", g_s11c=r"u_sp\.g_aq\[\d+\]\.u_aq/g_s11c\[\d+\]\.u_c")
+exp.update(g_ixc=32, g_s11c=8)
+act.update({k: sum(bool(re.fullmatch(p, n)) for n in (names | names2)) for k, p in pat2.items()})
 si = phy.get("signal_integrity_violations", {})
 d.update(SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["violating_d_pins"],
          FF_ps=sta["hold_ff"]["worst_slack_ps"], FF_pins=sta["hold_ff"]["violating_d_pins"], SI=si,
