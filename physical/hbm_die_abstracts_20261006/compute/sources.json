@@ -15,14 +15,14 @@
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv": "4493c1b4c9a6a67565d4a42a8c40a7a633e39817c86451e5c0ae8fb807d6e4f3",
-    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "6eaaec25097655eb682de3950eb9b2b1bb150240dec355e51f8234d694ec50b5",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "76fd1bf686f8cc8b14752928b26883d9c89eee24fe7c0772eff8b1ba4205eb6f",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv": "97da71f71bc40e13cac9aee953f562eee8a976b01fc1f74ce8b244b2eb5e9919",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_side_result_c12.sv": "7b60ea8e66981e40d6b7f4de93dee8d9be7f01b5199fbac8b07b5936953a52fd"
   },
   "default_parameters": {
     "ENABLE": 0,
     "SFU_LANES": 64,
-    "HC_POST_NG": 320
+    "HC_POST_NG": 64
   },
   "status": "REAL_RTL_WRITTEN_DEFAULT_OFF_SYNTAX_PASS_ENABLED_EXACT_AND_PHYSICAL_PENDING_CPU_FIT",
   "source_size": "results/physical/hbm_die_abstracts_20261006/compute/quarter_size.json",
@@ -33,5 +33,6 @@
   "closure": false,
   "adopted": false,
   "exact_gate": "New held parent minimum component one seed plus real UE permission negative, pending capacity. Existing child exact campaign is reused, not replayed.",
-  "physical": "Full 64 SFU / 320 HC groups with protected hold/control/ICG, 55-60% target and 2-4 meaningful geometry variants only with real CPU headroom. Original source and failure evidence unchanged."
+  "physical": "Full 64 SFU / 320 HC groups with protected hold/control/ICG, 55-60% target and 2-4 meaningful geometry variants only with real CPU headroom. Original source and failure evidence unchanged.",
+  "shape": "HC 5120 FP32 MAC budget per die / 4 quarters / 20 multipliers per four-output group = NG64, 256 outputs; the earlier NG320 output-lane interpretation was oversized and is retained only in commit history"
 }
