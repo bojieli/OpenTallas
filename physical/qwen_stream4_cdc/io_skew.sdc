@@ -11,8 +11,8 @@ sta::worst_slack_cmd max
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
 foreach {clk ins outs} {
-  clk  {c_arst_n l_pop w_v w_sec* w_data* w_tag*} {l_v l_sec* l_row* l_data* w_room wd_v wd_tag* c_fault}
-  hclk {h_arst_n h_lv h_lsec* h_lrow* h_ldata* h_hand h_wcon h_av h_atag*} {h_cred* h_wv h_wsec* h_cv h_csec* h_cdata* h_ctag* h_fault}
+  clk  {l_pop w_v w_sec* w_data* w_tag*} {l_v l_sec* l_row* l_data* w_room wd_v wd_tag* c_fault}
+  hclk {h_lv h_lsec* h_lrow* h_ldata* h_hand h_wcon h_av h_atag*} {h_cred* h_wv h_wsec* h_cv h_csec* h_cdata* h_ctag* h_fault}
 } {
   set ref [lindex [all_registers -clock $clk -clock_pins] 0]
   set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]
@@ -23,3 +23,6 @@ foreach {clk ins outs} {
   set_output_delay [expr {0.2*$T - $lmax + $ot_sk}] -max -clock $clk [get_ports $outs]
   set_output_delay [expr {-$lmin - $ot_hk}]         -min -clock $clk [get_ports $outs]
 }
+
+# the raw reset epoch: asynchronous assertion, released through the element's own synchronizers (async assert false-path)
+set_false_path -from [get_ports {c_arst_n h_arst_n}]
