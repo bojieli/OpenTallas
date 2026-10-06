@@ -1,0 +1,229 @@
+{
+  "case": "b",
+  "exit": 0,
+  "wall": "4:11:26",
+  "peak_rss_mb": 12780,
+  "manifest": {
+    "case": "b",
+    "tag": "base",
+    "bundle_k": 16,
+    "congestion_iterations": 50,
+    "empty_baseline": false,
+    "instances": 1737,
+    "bundle_pins": 21689,
+    "bundle_nets": 220855,
+    "wires": 3528204,
+    "coverage": {
+      "field": 0.0878,
+      "hub": 0.0878,
+      "spine": 0.0878,
+      "svc": 0.25,
+      "channel": 0.0878
+    },
+    "variant": {
+      "die": "qwen"
+    }
+  },
+  "grt": {
+    "layers": {
+      "M1": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M2": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M3": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M4": {
+        "resource": 12560,
+        "demand": 208,
+        "usage_pct": 1.66,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M5": {
+        "resource": 241745,
+        "demand": 21867,
+        "usage_pct": 9.05,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M6": {
+        "resource": 9305413,
+        "demand": 947767,
+        "usage_pct": 10.19,
+        "overflow_h": 1,
+        "overflow_v": 0,
+        "overflow_total": 4
+      },
+      "M7": {
+        "resource": 9312070,
+        "demand": 923694,
+        "usage_pct": 9.92,
+        "overflow_h": 0,
+        "overflow_v": 3,
+        "overflow_total": 68
+      },
+      "M8": {
+        "resource": 49006394,
+        "demand": 4820898,
+        "usage_pct": 9.84,
+        "overflow_h": 1,
+        "overflow_v": 0,
+        "overflow_total": 6
+      },
+      "M9": {
+        "resource": 48914983,
+        "demand": 5966797,
+        "usage_pct": 12.2,
+        "overflow_h": 0,
+        "overflow_v": 3,
+        "overflow_total": 2686
+      }
+    },
+    "total": {
+      "resource": 116793165,
+      "demand": 12681231,
+      "usage_pct": 10.86,
+      "overflow_h": 2,
+      "overflow_v": 6,
+      "overflow_total": 2764
+    },
+    "total_wirelength_bundle_um": 121399767.0,
+    "grt_runtime": "04:09:03",
+    "errors": [],
+    "elapsed_s": null
+  },
+  "grt_s": 14943,
+  "wire_by_class": {
+    "tree_spine": {
+      "bundle_nets": 3072,
+      "bundle_um": 33452746.0,
+      "max_um": 26195.4,
+      "wire_m": 535.24
+    },
+    "clock_trunk": {
+      "bundle_nets": 1,
+      "bundle_um": 22074.4,
+      "max_um": 22074.4,
+      "wire_m": 0.35
+    },
+    "corridor_hop": {
+      "bundle_nets": 53760,
+      "bundle_um": 141926.4,
+      "max_um": 18.5,
+      "wire_m": 2.27
+    },
+    "corridor": {
+      "bundle_nets": 7680,
+      "bundle_um": 1381962.1,
+      "max_um": 268.0,
+      "wire_m": 22.11
+    },
+    "collective": {
+      "bundle_nets": 416,
+      "bundle_um": 642318.6,
+      "max_um": 2060.5,
+      "wire_m": 10.28
+    },
+    "phy_dfi": {
+      "bundle_nets": 5560,
+      "bundle_um": 6141985.1,
+      "max_um": 2642.6,
+      "wire_m": 98.27
+    },
+    "fill_hop": {
+      "bundle_nets": 47520,
+      "bundle_um": 1310407.6,
+      "max_um": 489.7,
+      "wire_m": 20.97
+    },
+    "fill": {
+      "bundle_nets": 3168,
+      "bundle_um": 606005.4,
+      "max_um": 249.5,
+      "wire_m": 9.7
+    },
+    "head_chain": {
+      "bundle_nets": 3840,
+      "bundle_um": 1207122.8,
+      "max_um": 545.2,
+      "wire_m": 19.31
+    },
+    "load": {
+      "bundle_nets": 1521,
+      "bundle_um": 2430369.5,
+      "max_um": 5405.4,
+      "wire_m": 38.89
+    },
+    "hub": {
+      "bundle_nets": 16,
+      "bundle_um": 178119.5,
+      "max_um": 14294.3,
+      "wire_m": 2.85
+    },
+    "host": {
+      "bundle_nets": 64,
+      "bundle_um": 108145.0,
+      "max_um": 2679.6,
+      "wire_m": 1.73
+    },
+    "link": {
+      "bundle_nets": 256,
+      "bundle_um": 444083.6,
+      "max_um": 2966.0,
+      "wire_m": 7.11
+    },
+    "spine_port": {
+      "bundle_nets": 1664,
+      "bundle_um": 4635116.2,
+      "max_um": 17768.5,
+      "wire_m": 74.16
+    },
+    "stream_status": {
+      "bundle_nets": 144,
+      "bundle_um": 207678.2,
+      "max_um": 1903.4,
+      "wire_m": 3.32
+    },
+    "tree_block": {
+      "bundle_nets": 92160,
+      "bundle_um": 68489707.4,
+      "max_um": 5636.4,
+      "wire_m": 1095.84
+    }
+  },
+  "errors": [],
+  "sources_sha256": {
+    "/srv/opentallas-scratch2/scratch/claude/qwen-hbm-die/cases/q2a/b_k16_i50/run.log": "1ba5d95ee62c746ff19e64c25efb0682d8029d65f3786a044260082e4b2042f0",
+    "/srv/opentallas-scratch2/scratch/claude/qwen-hbm-die/cases/q2a/b_k16_i50/run.log.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/srv/opentallas-scratch2/scratch/claude/qwen-hbm-die/cases/q2a/b_k16_i50/manifest.json": "3dcff583b24f2914314be98dd47a65b8fb1e6cbc20573f6b3b10ce8d2ff0374c",
+    "/srv/opentallas-scratch2/scratch/claude/qwen-hbm-die/cases/q2a/b_k16_i50/wirelength.csv": "e8288c69a0936c05ee28ee582ea719b1e8ad1e2513320ed5b14d56ea69696a89",
+    "tools/hbm_accel_die_fp.py": "fab0d806cdbf8383e3877bce40f3b5d6e09f8622ef310cf433875240147b18a6",
+    "tools/hbm_accel_die_price.py": "6061e0b980eb5806eca85158fe4264061db1cd1d5d47d5c38dadfdb81c3af436"
+  },
+  "source_commit": "06a6e0b62ac6c3804be07c4cc69711237da1ada5",
+  "verdict": "FAIL_GRT_OVERFLOW_2764",
+  "clock_qualified": false,
+  "adopted": false,
+  "wire_price_record": "results/rtl/hbm_outer_revision_20261005/q2a_wire_price.json",
+  "clock_route_warning": "Original run.log reports n_clk_svc_NE/NW/SE/SW[0] lacking a global route; no clock qualification."
+}

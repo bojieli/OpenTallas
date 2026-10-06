@@ -1,0 +1,197 @@
+{
+  "scope": "Matched serial admission versus overlap on SAME retained PQ RTL; not historical bare-PQ0 or full-token/physical qualification",
+  "terminal_exit": 0,
+  "node_regions": 640,
+  "admission_mode_runs": 1280,
+  "source_commit": "1002323510d8d64bbf90c97d0de7911d724218a5",
+  "calibration_passed": 640,
+  "nodes": [
+    {
+      "node": "L20.attn.wo_a.st37",
+      "regions": 128,
+      "phases": 2,
+      "modes": {
+        "serial": {
+          "exact_rows": 2048,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 871,
+          "idle_cycle_max_region": 872,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            32768
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        },
+        "overlap": {
+          "exact_rows": 2048,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 705,
+          "idle_cycle_max_region": 706,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            32768
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        }
+      },
+      "max_region_stored_visibility_difference_cycles": 166
+    },
+    {
+      "node": "L20.ffn.down.st37",
+      "regions": 128,
+      "phases": 5,
+      "modes": {
+        "serial": {
+          "exact_rows": 6400,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 1274,
+          "idle_cycle_max_region": 1275,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            46080
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        },
+        "overlap": {
+          "exact_rows": 6400,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 831,
+          "idle_cycle_max_region": 832,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            46080
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        }
+      },
+      "max_region_stored_visibility_difference_cycles": 443
+    },
+    {
+      "node": "L20.ffn.down.st38",
+      "regions": 128,
+      "phases": 2,
+      "modes": {
+        "serial": {
+          "exact_rows": 2560,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 521,
+          "idle_cycle_max_region": 522,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            18432
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        },
+        "overlap": {
+          "exact_rows": 2560,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 394,
+          "idle_cycle_max_region": 395,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            18432
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        }
+      },
+      "max_region_stored_visibility_difference_cycles": 127
+    },
+    {
+      "node": "L20.ffn.experts_gu.st37",
+      "regions": 128,
+      "phases": 4,
+      "modes": {
+        "serial": {
+          "exact_rows": 4608,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 1483,
+          "idle_cycle_max_region": 1484,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            81920
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": false
+        },
+        "overlap": {
+          "exact_rows": 4608,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 988,
+          "idle_cycle_max_region": 989,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            81920
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        }
+      },
+      "max_region_stored_visibility_difference_cycles": 495
+    },
+    {
+      "node": "L20.ffn.experts_gu.st38",
+      "regions": 128,
+      "phases": 2,
+      "modes": {
+        "serial": {
+          "exact_rows": 2304,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 741,
+          "idle_cycle_max_region": 742,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            40960
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": false
+        },
+        "overlap": {
+          "exact_rows": 2304,
+          "first_accept": 1,
+          "last_stored_vm_cycle_max_region": 576,
+          "idle_cycle_max_region": 577,
+          "first_go": 35,
+          "input_bytes_per_region": [
+            40960
+          ],
+          "drain_after_vm_commit": [
+            1
+          ],
+          "go_sequences_uniform_all_regions": true
+        }
+      },
+      "max_region_stored_visibility_difference_cycles": 165
+    }
+  ],
+  "physical_admitted": false,
+  "fulltoken_adopted": false,
+  "peak_note": "link.metrics404620KiB; run.metrics151888KiB is driver RSS, NOT aggregate worker maximum. Admission16GiB estimate with actual headroom/reserve; no arbitrary caps.",
+  "rows_per_mode": 17920,
+  "actual_storage_value_assertions": 35840,
+  "all_write_commit_storage_assertions": 107520,
+  "region_max_scope": "Independent full-region measurements; not installed128-root global-barrier run. Same phase counts; noR93elimination credit. Full die-wire/broadcast/CDC/deadline composition Maxwell-owned."
+}

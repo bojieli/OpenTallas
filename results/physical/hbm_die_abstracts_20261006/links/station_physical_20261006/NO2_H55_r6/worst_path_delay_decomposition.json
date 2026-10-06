@@ -1,0 +1,395 @@
+{
+  "status": "ACTUAL_FROZEN_PATH_DELAY_DECOMPOSITION",
+  "cell_arc_count": 52,
+  "cell_delay_ps": 2427.26,
+  "wire_delay_ps": 55.0,
+  "data_arrival_ps": 2482.27,
+  "SS_slack_ps": -1721.01,
+  "limits": "Placement-estimated wire parasitics, ideal clock preCTS. Output Y/QN rows are library cell arcs; input rows are wire arcs; rounding may differ by0.01ps. No architectural cut selected.",
+  "cell_arc_histogram": {
+    "DFFASRHQNx1": 1,
+    "BUFx6f": 5,
+    "XOR2x2": 2,
+    "XNOR2x2": 12,
+    "AO31x2": 1,
+    "AO221x1": 1,
+    "AO22x2": 1,
+    "AO21x1": 15,
+    "BUFx2": 2,
+    "AO211x2": 1,
+    "BUFx3": 2,
+    "OR3x1": 1,
+    "BUFx5": 1,
+    "OA22x2": 1,
+    "OA211x2": 2,
+    "OA21x2": 2,
+    "NAND3x1": 1,
+    "AO222x2": 1
+  },
+  "cell_arcs": [
+    {
+      "delay_ps": 94.14,
+      "arrival_ps": 94.14,
+      "cell": "_121746_",
+      "pin": "QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.94,
+      "arrival_ps": 133.22,
+      "cell": "place53567",
+      "pin": "Y",
+      "master": "BUFx6f_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 51.77,
+      "arrival_ps": 185.17,
+      "cell": "_070154_",
+      "pin": "Y",
+      "master": "XOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 57.98,
+      "arrival_ps": 243.2,
+      "cell": "_070157_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 48.48,
+      "arrival_ps": 291.79,
+      "cell": "_070161_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 60.97,
+      "arrival_ps": 352.83,
+      "cell": "_070162_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 47.8,
+      "arrival_ps": 400.94,
+      "cell": "_070204_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 58.15,
+      "arrival_ps": 459.18,
+      "cell": "_070205_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 39.4,
+      "arrival_ps": 498.79,
+      "cell": "_070215_",
+      "pin": "Y",
+      "master": "AO31x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 56.24,
+      "arrival_ps": 555.47,
+      "cell": "_084113_",
+      "pin": "Y",
+      "master": "AO221x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 59.28,
+      "arrival_ps": 615.07,
+      "cell": "_084114_",
+      "pin": "Y",
+      "master": "AO22x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 47.56,
+      "arrival_ps": 665.25,
+      "cell": "place45439",
+      "pin": "Y",
+      "master": "BUFx6f_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 52.9,
+      "arrival_ps": 751.78,
+      "cell": "_084115_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 35.17,
+      "arrival_ps": 787.03,
+      "cell": "_084116_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 32.7,
+      "arrival_ps": 819.82,
+      "cell": "_084117_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 44.05,
+      "arrival_ps": 863.91,
+      "cell": "_084118_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 46.01,
+      "arrival_ps": 910.63,
+      "cell": "_084119_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 36.6,
+      "arrival_ps": 947.61,
+      "cell": "_084120_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 32.18,
+      "arrival_ps": 979.85,
+      "cell": "_084121_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 31.08,
+      "arrival_ps": 1010.97,
+      "cell": "_084122_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 32.67,
+      "arrival_ps": 1043.66,
+      "cell": "_084123_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.92,
+      "arrival_ps": 1082.64,
+      "cell": "_084124_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 36.59,
+      "arrival_ps": 1119.47,
+      "cell": "_084125_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 44.64,
+      "arrival_ps": 1164.19,
+      "cell": "_084126_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.46,
+      "arrival_ps": 1203.36,
+      "cell": "_084127_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.63,
+      "arrival_ps": 1242.03,
+      "cell": "_084128_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 30.75,
+      "arrival_ps": 1272.98,
+      "cell": "place44221",
+      "pin": "Y",
+      "master": "BUFx6f_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 31.0,
+      "arrival_ps": 1304.22,
+      "cell": "place44220",
+      "pin": "Y",
+      "master": "BUFx2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.03,
+      "arrival_ps": 1342.4,
+      "cell": "_084130_",
+      "pin": "Y",
+      "master": "AO21x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 53.38,
+      "arrival_ps": 1395.86,
+      "cell": "_084153_",
+      "pin": "Y",
+      "master": "AO211x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 35.79,
+      "arrival_ps": 1432.31,
+      "cell": "place43908",
+      "pin": "Y",
+      "master": "BUFx3_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 54.51,
+      "arrival_ps": 1486.85,
+      "cell": "_084165_",
+      "pin": "Y",
+      "master": "OR3x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 62.67,
+      "arrival_ps": 1549.58,
+      "cell": "place43721",
+      "pin": "Y",
+      "master": "BUFx5_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 47.98,
+      "arrival_ps": 1604.23,
+      "cell": "place43720",
+      "pin": "Y",
+      "master": "BUFx6f_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 36.18,
+      "arrival_ps": 1641.97,
+      "cell": "place43718",
+      "pin": "Y",
+      "master": "BUFx3_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 39.58,
+      "arrival_ps": 1681.62,
+      "cell": "_084258_",
+      "pin": "Y",
+      "master": "OA22x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 55.21,
+      "arrival_ps": 1736.86,
+      "cell": "_084259_",
+      "pin": "Y",
+      "master": "OA211x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 56.74,
+      "arrival_ps": 1793.62,
+      "cell": "_084260_",
+      "pin": "Y",
+      "master": "OA211x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 30.04,
+      "arrival_ps": 1823.69,
+      "cell": "_084261_",
+      "pin": "Y",
+      "master": "OA21x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 35.57,
+      "arrival_ps": 1859.34,
+      "cell": "_084262_",
+      "pin": "Y",
+      "master": "NAND3x1_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 35.79,
+      "arrival_ps": 1895.49,
+      "cell": "place40148",
+      "pin": "Y",
+      "master": "BUFx6f_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 33.97,
+      "arrival_ps": 1930.23,
+      "cell": "place40147",
+      "pin": "Y",
+      "master": "BUFx2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 59.55,
+      "arrival_ps": 1989.92,
+      "cell": "_085859_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 54.14,
+      "arrival_ps": 2044.15,
+      "cell": "_085860_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 58.24,
+      "arrival_ps": 2103.14,
+      "cell": "_085864_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 54.85,
+      "arrival_ps": 2158.02,
+      "cell": "_085865_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 58.02,
+      "arrival_ps": 2217.86,
+      "cell": "_085866_",
+      "pin": "Y",
+      "master": "XOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 57.44,
+      "arrival_ps": 2275.33,
+      "cell": "_085909_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 49.8,
+      "arrival_ps": 2325.25,
+      "cell": "_085930_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 54.39,
+      "arrival_ps": 2379.82,
+      "cell": "_085937_",
+      "pin": "Y",
+      "master": "XNOR2x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 63.66,
+      "arrival_ps": 2443.52,
+      "cell": "_085938_",
+      "pin": "Y",
+      "master": "AO222x2_ASAP7_75t_R"
+    },
+    {
+      "delay_ps": 38.67,
+      "arrival_ps": 2482.24,
+      "cell": "_085939_",
+      "pin": "Y",
+      "master": "OA21x2_ASAP7_75t_R"
+    }
+  ]
+}

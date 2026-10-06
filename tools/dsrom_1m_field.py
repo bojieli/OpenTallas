@@ -43,7 +43,9 @@ WIRE.  The vehicle holds the spine's BST = 2 broadcast stages and a root writing
 die geometry adds, per phase: VM x root -> farthest cluster 30 stages (less the 2 in the vehicle) and cluster -> VM
 33 (tools/uarch_model.DIE_SHRUNK_INTERIM expert_wire = 30 + 33, the model graph's own wire term); labelled
 'routed die geometry wire stages'.  The S81 floorplan's own trunk (results/rtl/dsrom_s81_fulldie_20261004
-floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.
+floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.  The COMPOSITION no longer
+uses either: since 2026-10-06 it takes each node's wire from the wired r8 die, per region (tools/dsrom_field_reprice_r8.py,
+results/rtl/dsrom_field_reprice_r8_20261006/reprice.json; adapter dsrom_1m_allmeasured_adapters.field_rows).
 """
 from __future__ import annotations
 
@@ -96,6 +98,17 @@ TB = ROOT / "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp"
 TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/v41_rom_ksplit_bankmap.py",
          ROOT / "tools/rtl_v41_rom_array.py", ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py",
          ROOT / "tools/v41_die_field.py"]
+# --qelem N (default 0 = off): the FP8/FP4 pairs are the DS-V4.1 ROM q-element the S81 die is built from
+# (ot_v41_rom_elem_q_qx_w10 at its routed parameters, QX = N; ot_v41_pair_w17w10 QELEM), BF16-capable pairs keep W10's
+QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10",
+                                              "ot_v41_rom_elem_q_qxpq_w10", "ot_v41_rom_elem_qx_pq_w10", "ot_v41_kreg",
+                                              "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
+                                              "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_bterm5_w10",
+                                              "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_segtree6")]
+# the QX 10 chain / adder files (ot_v41_chain4, ot_v41_fadd2) are listed before they are on main: keep only the
+# sources present, so --qelem builds the q-element of the checked-out tree (CLAUDE DS-INTEGRATION 2026-10-05: with
+# the two missing files the --qelem build failed on main)
+QRTL = [p for p in QRTL if p.exists()]
 SOURCES = sorted(set(RTL + DIE + ROMS + [TB] + TOOLS))
 S81_FILES = [S81 / "matrix_map.jsonl.gz", S81 / "stage_map.json", S81 / "inventory.json", S81 / "binding.json"]
 
@@ -226,6 +239,163 @@ def layer_groups(L, ents, rb, bfs):
                                                        kv[0])))
 
 
+def phase_groups(mats):
+    """Existing emitter partition, shared with metadata-only source binding."""
+    groups = []
+    for m in mats:
+        if groups and not any(illegal(groups[-1] + [m], r) for r in range(128)):
+            groups[-1].append(m)
+        else:
+            groups.append([m])
+    for g in groups:
+        bad = [r for r in range(128) if illegal(g, r)]
+        if bad:
+            raise ValueError((g[0]["alias"], bad[:4], illegal(g, bad[0])))
+    return groups
+
+
+def cmd_bind_schedules(a):
+    """Existing phase partition + literal dispatch metadata; no payload or x."""
+    from dsrom_s81_execution_binding import CanonicalS81Execution
+    from dsrom_stage_program_join import digest
+    coverage = ROOT / "results/rtl/dsrom_recovery_20261004/coverage_manifest"
+    archive = coverage / "inputs/all40_golden_json.json.gz"
+    records = json.loads(gzip.decompress(archive.read_bytes()))
+    golden = {r["layer"]: json.loads(r["json_bytes"]) for r in records}
+    if set(golden) != set(range(40)):
+        raise ValueError("actual all40 source selections required")
+    retained = json.loads(gzip.decompress((coverage / "inputs/retained_plan.json.gz").read_bytes()))
+    layers = [int(x) for x in a.layers.split(",")]
+    if layers != sorted(set(layers)) or not set(layers) <= set(range(40)):
+        raise ValueError("ordered distinct actual layers required")
+    out = a.work.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    execution = CanonicalS81Execution(ROOT)
+    sm = execution.stage_join.stage_map
+    rb, bfs = sm["region_bounds"], set(sm["BF_site_IDs"])
+    entries = {L: [] for L in layers}
+    for row in execution.stage_join.by_identity.values():
+        m = row["matrix"]; L = m["layer"]
+        if L in entries and (m["expert"] is None or m["expert"] in golden[L]["experts"]):
+            entries[L].append(m)
+    pins = dict(execution.input_sha256)
+    for p in (Path(__file__), ROOT/"tools/dsrom_s81_execution_binding.py",
+              ROOT/"tools/dsrom_stage_program_join.py", ROOT/"tools/dsrom_s82_payload_interface.py",
+              ROOT/"tools/hdc_isa_v41.py", ROOT/"tools/v41_rom_ksplit_bankmap.py",
+              ROOT/"tools/v41_die_images_w17w10.py", archive,
+              coverage/"inputs/retained_plan.json.gz"):
+        pins[str(p.relative_to(ROOT))] = sha(p)
+    files, totals = [], dict(source_operations=0, canonical_dispatch_fragments=0,
+                            observer_phases=0, selected_matrix_records=0)
+    for L in layers:
+        g = golden[L]
+        if (g["layer"],g["context"],g["position"],g["arith"]) != (L,1048576,1048575,"chunk8"):
+            raise ValueError("golden source identity mismatch")
+        eids = g["experts"]
+        if len(eids)!=6 or eids!=sorted(set(eids)):
+            raise ValueError("source dispatcher requires actual ascending six EIDs")
+        native, matrix_sources = [], {}
+        for node in execution.target_source_nodes([L],position=1048575,include_head=False):
+            b = execution.source.bindings[node]
+            if not b.get("address_bound"):
+                continue
+            source = execution.source.nodes[node]
+            rank_dispatches=[]
+            for rank in range(4):
+                resolved=execution.source.resolve(node,rank,expert_ids=eids if b["selector_slot"] is not None else None)
+                try:
+                    dispatch=execution.dispatch(node,rank,expert_ids=eids if b["selector_slot"] is not None else None)
+                except ValueError as error:
+                    if str(error)!="original native ME admission fails":
+                        raise
+                    from dsrom_native_weight_address_join import me_failures
+                    # Record source/CFG geometry even when ORIGINAL native ME
+                    # cannot issue. This is NOT an admitted/emitted command.
+                    dispatch=dict(fragments=[])
+                    for rf in resolved["fragments"]:
+                        m=rf["matrix"]; row=execution.stage_join.by_identity[(L,m["alias"])]
+                        dispatch["fragments"].append(dict(stage=row["stage"],rank=rank,
+                            die_id=rf["die_id"],phase=row["phase"],key=row["key"],
+                            gather_local_rows=rf["gather_local_rows"],ordered_K=rf["ordered_K"],
+                            source_matrix_sha256=row["matrix_sha256"],
+                            cfg_logical_range=[25*row["phase"],25*(row["phase"]+1)],
+                            native_dispatch_refused=True,native_admission_failures=me_failures(source["instruction"]),
+                            source_instruction=source["instruction"]))
+                fragments=[]
+                for f,rf in zip(dispatch["fragments"],resolved["fragments"]):
+                    m=rf["matrix"]
+                    record={k:v for k,v in f.items() if k not in ("word","original_word")}
+                    record.update(alias=m["alias"],tensor=m["tensor"],
+                                  source_rank_slice=rf["source_slice"],
+                                  emitted_word_sha256=hashlib.sha256(f["word"].to_bytes(256,"little")).hexdigest() if "word" in f else None)
+                    fragments.append(record)
+                    if rank==0:
+                        matrix_sources.setdefault(m["alias"],[]).append(dict(
+                            node=node, instruction_index=source["instruction_index"],
+                            template_word_sha256=source["template_word_sha256"],
+                            phase=f["phase"],key=f["key"],stage=f["stage"],
+                            source_matrix_sha256=f["source_matrix_sha256"]))
+                rank_dispatches.append(dict(requested_rank=rank,fragments=fragments))
+            native.append(dict(node=node,instruction_index=source["instruction_index"],
+                template_word_sha256=source["template_word_sha256"],selector_slot=b["selector_slot"],
+                selected_expert=eids[b["selector_slot"]] if b["selector_slot"] is not None else None,
+                input_VM_elements=b["consumer_X_FP32_VM_elements"],
+                output_VM_base=b["consumer_output_base_elements"],ranks=rank_dispatches))
+        phases=[]
+        for grp,(node,xsrc,mats) in layer_groups(L,entries[L],rb,bfs).items():
+            stages={m["stage"] for m in mats}
+            if len(stages)!=1:
+                raise ValueError((L,grp,"existing emitter requires single stage",stages))
+            if any(m["K"]!=mats[0]["K"] or (m["fmt"]=="bf16")!=(mats[0]["fmt"]=="bf16") for m in mats):
+                raise ValueError((L,grp,"existing emitter K/format grouping changed"))
+            groups=phase_groups(mats)
+            for group in groups:
+                name=f"L{L}.{grp}"+("" if len(groups)==1 else "."+"+".join(m["alias"] for m in group))
+                for m in group:
+                    original=next(e for e in entries[L] if e["alias"]==m["alias"])
+                    m["source_bindings"]=matrix_sources.get(m["alias"],[])
+                    if not m["source_bindings"]:
+                        raise ValueError((L,m["alias"],"missing literal source binding"))
+                    m["rank_slices"]=original["rank_slices"]
+                    m["ordered_physical_plan_sha256"]=digest(original["plans"])
+                phases.append(dict(layer=L,node=node,phase=name,group=grp,stage=next(iter(stages)),
+                    K=group[0]["K"],out="fp32" if group[0]["fmt"]=="bf16" or grp=="wo_b" else "bf16",
+                    fmts=sorted({m["fmt"] for m in group}),mats=group,
+                    regions=sorted({int(r) for m in group for r in m["regions"]}),
+                    input_source_kind=xsrc,input_activation_available=False))
+        used={m["alias"] for p in phases for m in p["mats"]}
+        if used!=set(matrix_sources):
+            raise ValueError((L,"observer/source matrix coverage differs",used^set(matrix_sources)))
+        record=dict(layer=L,context=1048576,position=1048575,arith="chunk8",experts=eids,
+            observer_phase_count=len(phases),observer_phase_order=[p["phase"] for p in phases],
+            native_source_order=[n["node"] for n in native],native_dispatch=native,
+            phases=phases,rank=0,region_bounds=rb,bf_sites=sorted(bfs),
+            allocation="canonical S81 NP2417/BF519/R128; NO R93 remap",
+            source_schedule_bound=True,native_execution_qualified=False,
+            internal_activation_payloads_provided=False,accepted_runtime_journal=None,
+            native_dispatch_refusals=[dict(node=n["node"],failures=r["fragments"][0]["native_admission_failures"])
+                for n in native for r in n["ranks"][:1] if r["fragments"][0].get("native_dispatch_refused")])
+        path=out/f"L{L:02d}.json.gz"
+        path.write_bytes(gzip.compress(json.dumps(record,sort_keys=True,separators=(",",":")).encode(),mtime=0))
+        files.append(dict(layer=L,path=path.name,sha256=sha(path),
+                          phase_count=len(phases),source_operations=len(native)))
+        totals["observer_phases"]+=len(phases);totals["source_operations"]+=len(native)
+        totals["canonical_dispatch_fragments"]+=sum(len(r["fragments"]) for n in native for r in n["ranks"])
+        totals["selected_matrix_records"]+=len(entries[L])
+        print(f"L{L:02d}: {len(phases)} phases, {len(native)} source ops, source binding ready",flush=True)
+    manifest=dict(schema="opentallas.dsrom.existing-field-source-schedules.v1",layers=layers,
+        inputs=pins,files=files,totals=totals,
+        retained_observer_layers=retained["layers"],
+        missing_layers_resolved=[L for L in layers if L not in retained["layers"]],
+        source_order="Literal demand-r5 instruction order; rank fragment order is existing dispatch order",
+        observer_order="Existing dsrom_1m_field.layer_groups and greedy phase partition; NOT native issue order",
+        current_candidate_difference="Retained planv is S81+R93 BF520. These canonical BF519 schedules have no remap; candidate phase merge must use actual existing R93 source recipe, not inherit canonical CFG IDs.",
+        no_payload_or_activation_generated=True,new_archives=0,new_frontend_builds=0,
+        measured_gain=None,accepted_runtime_journal=None)
+    (out/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+    return 0
+
+
 def cmd_plan(a):
     work = a.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
@@ -294,12 +464,7 @@ def cmd_plan(a):
             # one phase if the S81 placement fits the element in every region (a phase is die-global); else the S81
             # entries (the allocator's own units) are grouped greedily into the fewest legal phases, in order
             bad = [r for r in range(128) if illegal(mats, r)]
-            groups = []
-            for m in mats:
-                if groups and not any(illegal(groups[-1] + [m], r) for r in range(128)):
-                    groups[-1].append(m)
-                else:
-                    groups.append([m])
+            groups = phase_groups(mats)
             for g in groups:
                 bad_g = [r for r in range(128) if illegal(g, r)]
                 assert not bad_g, (L, grp, g[0]["alias"], bad_g[:4], illegal(g, bad_g[0]))
@@ -328,12 +493,15 @@ def cmd_build(a):
     out.mkdir(parents=True, exist_ok=True)
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([VERILATOR, "-V"], text=True)).group(1)
     params = ["-GFAST=1", "-GPP=1", "-GBP=0", f"-GNP={NP}", f"-GR={NR}", f"-GNBF={NBF}", f"-GPHW={PHW}", f"-GVAW={VAW}"]
+    rtl = RTL + (QRTL if a.qelem else [])
+    if a.qelem:
+        params += ["-GQELEM=1", f"-GQXV={a.qelem}"]
     mdir = out / "flat"
     steps = []
     for name, cmd in (
             ("verilate", [VERILATOR, "--cc", "-O3", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
                           "--top-module", "ot_v41_fieldtop_w17w10", "--prefix", "Vflat", "--Mdir", str(mdir), *params,
-                          *map(str, DIE + ROMS + RTL)]),
+                          *map(str, DIE + ROMS + rtl)]),
             ("make", ["make", "-C", str(mdir), "-f", "Vflat.mk", f"-j{a.jobs}", "Vflat__ALL.a", "OPT_FAST=-O2",
                       "OPT_SLOW=-O1"]),
             ("link", ["g++", "-std=c++20", "-O2", f"-DNR={NR}", f"-DVAW={VAW}", f"-I{vroot}/include",
@@ -347,7 +515,7 @@ def cmd_build(a):
         print(name, steps[-1], flush=True)
         if p.returncode:
             raise SystemExit(f"{name} failed: {(p.stdout + p.stderr)[-3000:]}")
-    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, tb_sha256=sha(out / "tb"),
+    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, qelem=a.qelem, tb_sha256=sha(out / "tb"),
                                                     simulator=subprocess.check_output([VERILATOR, "--version"],
                                                                                       text=True).strip()),
                                                indent=1) + "\n")
@@ -684,7 +852,8 @@ def cmd_record(a):
                                                               "t_read", "t_x", "t_ret", "issue", "depth", "wire",
                                                               "tree", "ksplit", "adder_levels", "bind")}),
             rows_checked=sum(p["rows_checked"] for p in pos), exact=all(p["exact"] for p in pos)))
-    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES}
+    qelem = build.get("qelem", 0)
+    srcs = {str(p.relative_to(ROOT)): sha(p) for p in SOURCES + S81_FILES + (QRTL if qelem else [])}
     ck = Ckpt(a.snapshot)
     for f in sorted(set(ck.idx[t] for L in plan["layers"] for t in ck.idx if t.startswith(f"layers.{L}."))):
         ck.raw(next(t for t in ck.idx if ck.idx[t] == f))
@@ -714,6 +883,9 @@ def cmd_record(a):
                         "phases; routed-geometry wire stages added analytically. Not a whole-die simulation; no SS/FF "
                         "timing claim for the field here."),
         vehicle=dict(top="ot_v41_fieldtop_w17w10 (pinned, flat)", NP_slots=NP, R=NR, NBF_slots=NBF,
+                     qelem=(dict(element="ot_v41_rom_elem_q_qx_w10", QX=qelem, slots="FP8/FP4 (non-BF16) pairs",
+                                 params="NB 2 MTP 1 EARLY 1 FAST 1 PP 1 QTIMING_FIX 1 QPIPE 1 QP_XS 1 QP_CAP 0 QP_P1 1 "
+                                        "QP_CSAM 10 QZ 1 QZ_NS 8 QZ_NE 4 QY 1") if qelem else None),
                      bf_slots=BF_SLOTS, FAST=1, PP=1, BP=0, PHW=PHW, VAW=VAW, VRD=64, BST=BST_IN_VEHICLE, RST=1,
                      RD=64, ROOTD=128, return_levels_in_region=6,
                      description=__doc__.split("VEHICLE.")[1].split("PHASES.")[0].strip()),
@@ -748,7 +920,7 @@ def cmd_record(a):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=("plan", "extract", "build", "run", "record", "all"))
+    ap.add_argument("cmd", choices=("plan", "bind-schedules", "extract", "build", "run", "record", "all"))
     ap.add_argument("--snapshot", type=Path, default=Path.home() / ".cache/huggingface/hub/models--deepseek-ai--"
                     "DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277")
     ap.add_argument("--work", type=Path, required=True)
@@ -762,9 +934,12 @@ def main() -> int:
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--model-dump", type=Path, default=None)
     ap.add_argument("--record", type=Path, default=REC)
+    ap.add_argument("--qelem", type=int, default=0,
+                    help="build: 0 = the pinned W10 element (default); N > 0 = the DS q-element with QX = N on the "
+                         "FP8/FP4 pairs (ot_v41_pair_w17w10 QELEM)")
     a = ap.parse_args()
     G.set_arith("chunk8")
-    steps = {"plan": [cmd_plan], "extract": [cmd_extract], "build": [cmd_build], "run": [cmd_run],
+    steps = {"bind-schedules": [cmd_bind_schedules], "plan": [cmd_plan], "extract": [cmd_extract], "build": [cmd_build], "run": [cmd_run],
              "record": [cmd_record], "all": [cmd_plan, cmd_extract, cmd_build, cmd_run, cmd_record]}[a.cmd]
     for s in steps:
         rc = s(a)

@@ -1,0 +1,8 @@
+CMD45 terminal: FAIL_SS_SETUP, no adoption.
+SS -49.052319 ps; FF 5.690448 ps, SS60/FF25 at actual frozen833ps and IO0. Route/corner naturally exit0; physical violations0.
+
+Versus CMD40: setup improves 23.217090 ps; routed cell area changes -4.66 um2. Both fail. Surviving worst path bsel[3] -> next-head stay readiness -> wbr_q is pinned by raw SS log and mapped cell excerpts. No clock relaxation or 1024ps-average reinterpretation.
+
+Next measured decision: preserve current default-off source and stop further leaf/geometry trials. Euclid/Sagan/Rawls own the actual parent enrollment/model/C_A/source-list; Bacon keeps sole leaf ownership. Parent installation, physical clock waveform/distribution, finite command/credit/visibility semantics and composed latency are prerequisites, not claims supplied by this standalone result. Proposed explicit uniform1024ps parent clock is a separate unqualified component assumption. No production PCWB parent was installed at terminal. Existing direct1024ps functional fixture remains intact; no repeated lockstep or connected test.
+
+All own execution processes ended naturally; shared readonly source WT and remote extracted objects remain dependency-protected. Local results WT may be removed after publication; shared remote source is not released until consumers acknowledge.

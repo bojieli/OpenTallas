@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.qwen_capture_gate_failure.v1",
+  "source_commit": "758a94cec",
+  "remote_root": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-capture-20261004",
+  "job_rc": 86,
+  "gate_rc": 1,
+  "verdict": "FAIL_FIFO_DID_NOT_DRAIN",
+  "diagnosis": "Four-state bench leaves unreset free-running ring tc counters at X. tc <= tc+1 cannot leave X. Primitive explicitly allows arbitrary binary power-up; original BW0 bench did not elaborate these rings. Correct gate must select explicit arbitrary binary initial counters without adding hardware reset.",
+  "hardware_or_timing_failure_inferred": false,
+  "raw_sha256": {
+    "build_0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build_0.log": "4f78e5bcea10934861230f2015d043af70815d6a06d0bc00ee785ea22f51045f",
+    "gate_0.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "gate_0.log": "97181c4f0c7b1a989c24717f16da320a1951ee31528df3d4dd01f70c23195488",
+    "job.exit": "816c83d0ac08a94e91547a30df27dbbe88c7643cfa3c99d33120fd361173759a",
+    "job.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_commit.txt": "32869a867936870b920e05bd0b9455960fd995c605964072fe011d71bba6745e"
+  }
+}

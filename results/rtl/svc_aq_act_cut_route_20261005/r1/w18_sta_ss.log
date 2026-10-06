@@ -1,0 +1,66 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -3.2881586342625724e-11
+OT_TNS -3.1070812589462093e-10
+Startpoint: on.pc[1].u.on.hb_oh[26]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: col_bank[9] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  43.45   43.45 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  55.41   98.86 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  50.89  149.75 ^ clkbuf_5_6__f_clk/Y (BUFx24_ASAP7_75t_R)
+  42.71  192.47 ^ clkbuf_leaf_203_clk/Y (BUFx24_ASAP7_75t_R)
+   3.21  195.67 ^ on.pc[1].u.on.hb_oh[26]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 139.36  335.03 ^ on.pc[1].u.on.hb_oh[26]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  74.64  409.68 v _23047_/Y (OAI22x1_ASAP7_75t_R)
+  88.81  498.49 v _23053_/Y (OR5x1_ASAP7_75t_R)
+  53.64  552.13 v _23065_/Y (OA21x2_ASAP7_75t_R)
+  77.89  630.02 v _23066_/Y (OA211x2_ASAP7_75t_R)
+  47.15  677.17 v _23111_/Y (AND2x4_ASAP7_75t_R)
+  31.16  708.33 v place7970/Y (BUFx12f_ASAP7_75t_R)
+  12.40  720.73 ^ _42259_/Y (NAND2x2_ASAP7_75t_R)
+  47.60  768.32 ^ _42260_/Y (OA21x2_ASAP7_75t_R)
+  36.97  805.29 ^ output3855/Y (BUFx6f_ASAP7_75t_R)
+   0.59  805.88 ^ col_bank[9] (out)
+         805.88   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+   0.00  833.00   clock network delay (propagated)
+ -60.00  773.00   clock uncertainty
+   0.00  773.00   clock reconvergence pessimism
+   0.00  773.00   output external delay
+         773.00   data required time
+---------------------------------------------------------
+         773.00   data required time
+        -805.88   data arrival time
+---------------------------------------------------------
+         -32.88   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 33
+OT_WS_REG_D -32.881557
+OT_WS_OUT -32.881588
+OT_WS_R2R -16.291523
+OT_WS_I2R 55.307259

@@ -1,0 +1,69 @@
+{
+  "verdict": "FAIL_PHYSICAL_SCREEN",
+  "SS_ps": -11.27,
+  "FF_ps": -3.81,
+  "SI": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 47
+  },
+  "drc": 0,
+  "antenna": 0,
+  "replicas": {
+    "expected": {
+      "g_ixb": 32,
+      "g_ixq": 8,
+      "g_sel": 512,
+      "u_rsfm": 128,
+      "u_cc": 1,
+      "g_aqi": 4,
+      "g_bwb": 4,
+      "u_oh0": 128,
+      "u_oh1": 128,
+      "u_oh2": 128,
+      "u_oh3": 128,
+      "u_oh4": 128
+    },
+    "actual": {
+      "g_ixb": 32,
+      "g_ixq": 8,
+      "g_sel": 512,
+      "u_rsfm": 128,
+      "u_cc": 1,
+      "g_aqi": 4,
+      "g_bwb": 4,
+      "u_oh0": 128,
+      "u_oh1": 128,
+      "u_oh2": 128,
+      "u_oh3": 128,
+      "u_oh4": 128
+    },
+    "passed": true
+  },
+  "source_sha256": {
+    "physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv": "5189d72f4bad69d5abd1d3a12f0924e9959fe8e5774202a46e5c25c709ecbac2",
+    "rtl/v41die/ot_v41_spine_pqc_w17w10.sv": "1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7",
+    "physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv": "7477703095c17926ee3137b8c1ba6747cd2968ea5f4041704d31c28783fbfdea",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+  },
+  "area_um2": 75058.5,
+  "adopted": false,
+  "all_four_screen_closure": false,
+  "full_S81_die_ready": false,
+  "critical_SS_path": [
+    "u_sp.g_aq[0].u_aq.vo",
+    "u_sp.qb[6][67]"
+  ],
+  "critical_FF_path": [
+    "u_sp.q1_f32[1311]",
+    "u_sp.g_reg[40].q2_f32[31]"
+  ],
+  "SS_violating_D_pins": 27,
+  "FF_violating_D_pins": 22,
+  "period_ns": 0.833333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "remaining_existing_variants_preserved": true
+}

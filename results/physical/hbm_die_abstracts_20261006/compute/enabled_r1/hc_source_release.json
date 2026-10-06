@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED_WAITING_ARITHMETIC_OWNER_CORRECTION",
+  "rejected_sha256": [
+    "16132b073fa54389782f6081f5c26b6f7be53c4941f87932c6b5c82bd3122411"
+  ],
+  "corrected_source_sha256": null,
+  "owner_commit": null,
+  "parameters": {
+    "WIN": 0,
+    "WOUT": 0,
+    "ML": 6,
+    "AL": 5
+  },
+  "required_fix": "m4(y*post) data and e4 phase must align with actual vm ML6 anchor; arithmetic owner owns shared RTL",
+  "historical_failure": "run_ng16_w33_23_m6a5_h: L20attn16786/20480 ff20302/20480; preserve immutable failures",
+  "minimum_gate": "Standalone actual onegroup golden before any full64wrapper compile; matching source/params/tool receipt required",
+  "physical_status": "Corrected arithmetic changes require new source-specific physical qualification; old lane closure is historical"
+}

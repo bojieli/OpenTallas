@@ -1,0 +1,419 @@
+{
+  "schema": "opentallas.hbrom.power_inputs.v1",
+  "status": "analytical_sizing_not_physical_qualification",
+  "source_pins": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "configs/hardware/power_scenarios.json": "727435b50f6acb1f6c542a095715388cf5e3ba1e4713b8ffd3cf5b48a6242a59",
+    "tools/uarch_model.py": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b",
+    "results/rtl/rom_stage_power_gating_20261004/verdict.json": "5f1c37194ec7949b220d0b825263b7808b23aabf8293f62f95e074aba744ba33",
+    "results/rtl/rom_stage_power_gating_20261004/power_by_class.json": "32161f3c3f6bb204ab767897e417abd3c40624462e2e327415be732d4e33e55c"
+  },
+  "primitives": {
+    "rom_read_j_per_byte": {
+      "grade": "assumed",
+      "range_high": 5e-13,
+      "range_low": 2e-14,
+      "source": "Yin et al., JSSC 2023 and JSSC 2025 (doi:10.1109/JSSC.2025.3556008); Cheong et al., A-SSCC 2024; YOLoC, GLSVLSI 2022 (doi:10.1145/3489517.3530576, simulated, supply voltage unpublished); BitROM, ASP-DAC 2026 (post-layout); Ankhdjet 130 nm mask-ROM tile read, arXiv:2608.26206 Table VII (1.20 pJ per ternary weight at tt/27C/1.80V). No fabricated leading-node mask-ROM macro reports read energy at the macro boundary separately from compute.",
+      "value": 8e-14
+    },
+    "sram_read_j_per_byte": {
+      "grade": "assumed",
+      "range_high": 1.27e-11,
+      "range_low": 1.44e-12,
+      "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 L1: control 1.26 / datapath 0.33 / total 1.59 pJ/bit; MI250X L1 datapath 0.18 pJ/bit)",
+      "value": 2.6e-12
+    },
+    "hbm_j_per_byte": {
+      "grade": "measured",
+      "range_high": 1.1776e-10,
+      "range_low": 9.344e-11,
+      "source": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf -- Measuring the Energy of Data Movement on Modern GPU Systems, SC 2025, doi:10.1145/3712285.3759815, Table 3",
+      "value": 1.0488e-10,
+      "boundary": "A100 HBM2e path beyond L2, regressed from board power (nvidia-smi at 1 s): DRAM device + TSV + interposer + processor-side PHY + memory controller + on-chip L2-to-controller movement + control plane (SC'25 Fig. 1 caption: 'memory controller energy is tabulated with HBM energy'; Table 3 A100 HBM control 8.47 / datapath 4.64 / total 13.11 pJ/bit). It is NOT stack power: O'Connor MICRO 2017 puts the HBM2 device at ~3.9 pJ/bit. The die/stack split is in configs/hardware/power_scenarios.json memory.hbm_path."
+    },
+    "operand_delivery_j_per_byte": {
+      "grade": "assumed",
+      "range_high": 8e-13,
+      "range_low": 1.5e-13,
+      "source": "Horowitz, Computing's Energy Problem, ISSCC 2014 (register-file and cache access energies at 45 nm) ; Dally, published 45 nm wire energy, 64 bits x 1 mm = 6 pJ ; repeatered global wire C ~= 0.2 pF/mm at a leading node. NOT sourced to Sze et al. arXiv:1703.09039: that paper's Fig. 22 is NORMALISED ONLY (ALU 1x, RF 1x, NoC 2x, buffer 6x, DRAM 200x) and contains no pJ figure, so it cannot support any absolute constant and the earlier citation of it was a misreading.",
+      "value": 2.3e-13
+    },
+    "clock_energy_j_per_mm2_per_cycle": {
+      "grade": "assumed",
+      "range_high": 1.6e-10,
+      "range_low": 3e-11,
+      "source": "NVIDIA Ampere architecture whitepaper, die area / TDP / clock table for P100 (610 mm2, 300 W, 1480 MHz, 16FF+) and GV100 (815 mm2, 300 W, 1530 MHz, 12FFN), verified verbatim ; the 20-45% clock-network power fraction band from Dobberpuhl 1992, Restle 2001 and Donno 2004, which could not be re-fetched and is the single load-bearing input",
+      "value": 8.5e-11
+    },
+    "memory_interface_idle_w_per_stack": {
+      "grade": "assumed",
+      "range_high": 6.4,
+      "range_low": 1.2,
+      "source": "HBM2 stack IDD2/IDD3N1/IDD5B measurements and an H200 memory-rail idle reading, both from the CMU-SAFARI/HBM-Power artifact drop (2026) for a paper under review -- no venue, no DOI, so this cannot be graded above `assumed` ; cross-checked against Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 2",
+      "value": 2.8
+    },
+    "clock_region_multiplier": {
+      "logic": {
+        "grade": "derived",
+        "note": "1.0 by definition: clock_energy_j_per_mm2_per_cycle is calibrated on a GPU's whole-die TDP density, and a GPU die is the reference clocked-logic region. Compute, interconnect, HBM PHY and overhead area all carry this multiplier. HBM and SerDes PHY is explicitly NOT set to zero: the argument that its energy is already inside energy.hbm_j_per_byte is wrong, because that term is a per-byte access energy and carries no idle PHY or controller floor.",
+        "source": "definition of the calibration region for the clock term",
+        "value": 1.0
+      },
+      "rom_array": {
+        "grade": "assumed",
+        "note": "0.15 -- a mask-ROM array's clocked leaf count per mm2 against a logic region's. VERIFIER'S CAUTION CARRIED, AND IT IS THE REASON THE RANGE REACHES 0.5: 0.15 was derived from a LEAF COUNT, but the measured post-route decomposition in this repository shows distribution -- largely wire, whose length is set by AREA and not by leaf count -- at ~3.4x the leaf pin load. Array-region clock power should therefore scale SUB-LINEARLY with leaf density, so 0.15 is likely optimistic for the ROM side and its low end needs a wire argument rather than a latch count. This multiplier and power.fabric_clock_hz multiply, and together they set the W/mm2 asymmetry between the two sides of the comparison this study exists to make, so they are swept jointly and never asserted.",
+        "range_high": 0.5,
+        "range_low": 0.05,
+        "source": "no published clock-network power for a mask-ROM or compute-in-ROM array; leaf-count argument against the measured wire-dominated distribution at rtl/build/implementation_campaign (post-route, SPEF-extracted)",
+        "value": 0.15
+      },
+      "sram_array": {
+        "grade": "assumed",
+        "note": "0.15, the same class as a ROM array and for the same reason: an SRAM macro's clocked elements are its periphery -- decoders, sense-amp timing, output latches -- and not a flip-flop field over the bitcell area. Swept 0.05-0.5 jointly with the ROM multiplier and the fabric clock.",
+        "range_high": 0.5,
+        "range_low": 0.05,
+        "source": "no vendor SRAM macro clock-power breakdown published",
+        "value": 0.15
+      }
+    },
+    "static_leakage_w_per_mm2": {
+      "logic": {
+        "grade": "assumed",
+        "note": "0.10 W per mm2 of STANDARD-CELL (logic) region at a 7 nm-class node, the CONSERVATIVE PRODUCTION VALUE (2026-09-27, one value for every model: the roofline study, the V4.1 budget and configs/hardware/power_scenarios.json die.leakage_w_per_mm2.logic). WAS 0.06, the ASAP7-chain point estimate described below, which sits under the whole-chip idle anchor: an H100 idles bare at 71.8 W over 814 mm2 (results/arch/power_assumptions.json, validation record 2026-09-27), so 0.06 on the logic alone under-charges a shipping die; 0.10 is the conservative end the power scenarios already used, inside this entry's own 0.011-0.20 range. THE ORIGINAL DERIVATION OF 0.06 FOLLOWS: at 0.70-0.75 V and 85-105 C junction, on a mix weighted toward RVT. THE UNIT IS LOAD-BEARING AND WAS THE SUBMISSION'S worst defect: it is per mm2 of standard-cell region, NOT per mm2 of die, so on a part that is mostly array this term is charged over the logic only. VERIFIER-CORRECTED, 2x UP from the submitted 0.03. The chain is: an executed ASAP7 place-and-route base of 0.74e-3 W/mm2 of 100%-filled cell area at 25 C/0.70 V typical (from this repository's own results/physical_abi3/asap7 metadata, cross-checked three ways against the liberty's 1 pW leakage unit and against real-scale ASAP7 cell areas), times a threshold-flavour mix, a temperature factor and a voltage factor. The correction is in the threshold ladder: the submission put RELATIVE per-flavour offsets (SLVT 0, LVT 0.071, RVT 0.142 V) inside an exponential that needs the ABSOLUTE saturation threshold, and a device with Vth = 0 is not off. That ladder predicts a 25->100 C ratio of 12.69x at typical/nominal, which is BELOW the 13.82x ASAP7's own SS liberty measures at a slower process AND a lower voltage -- impossible. Re-anchoring to absolute Vth_sat (RVT 0.24, LVT 0.169, SLVT 0.098 V, the lowest ladder clearing that floor) moves the combined mix x T x V factor from 14.8 to 25.3 at the low end and 62.4 to 114.8 at the point. The submission's structural claim that leakier flavours scale less steeply, so mix and temperature partly cancel, is separately FALSIFIED by the same library: measured INVx1 FF/TT ratios are 0.638 / 0.546 / 0.646 across RVT/LVT/SLVT -- flat and non-monotonic -- where the model needs a 1.5x spread. The high end 0.20 is CAPPED BY MEASUREMENT, NOT BY THE CHAIN: the chain's own 40/40/20 mix at 105 C and 0.85 V gives 0.43 W/mm2, which is 86% of thermal.cooling_limit_w_per_mm2 and is not physical for a shipping part; 0.19-0.20 is where an A100 lands at ~39% of TDP, the top of ReGate's measured 30-72% static-power band. Grade stays `assumed` and correctly so: ASAP7 is a predictive academic PDK, no datacentre die's Vt mix is published anywhere, and the absolute threshold ladder is inferred from Ioff-per-micron rather than read off a datasheet. WHAT WOULD SETTLE IT: a foundry N7/N6 leakage-per-mm2 figure at a stated PVT, or an ASAP7 SRAM-flavour and LVT/SLVT SS liberty.",
+        "range_high": 0.2,
+        "range_low": 0.011,
+        "source": "conservative production value: whole-chip idle anchor (H100 bare idle 71.8 W over 814 mm2; results/arch/power_assumptions.json, validation record 2026-09-27), as configs/hardware/power_scenarios.json die.leakage_w_per_mm2.logic; the 0.06 point estimate from ASAP7 7.5-track predictive PDK NLDM libraries (RVT/LVT/SLVT TT and SS corners) and this repository's executed ASAP7 place-and-route leakage at results/physical_abi3/asap7/add_bf16_sram_engine/pnr_artifacts/metadata.json ; ReGate, MICRO 2025, arXiv:2508.02536, which reports static power at 30-72% of NPU energy",
+        "value": 0.1,
+        "was": 0.06
+      },
+      "rom_array": {
+        "grade": "assumed",
+        "note": "6.7e-3 W per mm2 of ROM ARRAY at a 7 nm-class node. WAS ZERO, DELIBERATELY, AND ZERO IS NOT PHYSICAL. The reason zero was defensible is now gone: the previous note held it at zero because the submitted companion of 0.006 W/mm2 had no derivation, and \"a companion nobody derived is not evidence\". A derivation now exists and it is built entirely on this file's own entries, so it can be checked line by line: the verified SRAM companion 0.005 W/mm2 over 24.07e6 usable bits/mm2 at 0.8 V is 0.260 nA per 6T cell; over 4 off devices in a 6T that is 0.065 nA per device; a NOR mask-ROM cell has ONE off device, so at this file's own ROM capacity density of 129.63e6 bits/mm2 (0.027 um2 6T cell x 0.33 ratio / 0.52 array efficiency) the array leaks 0.065 nA x 129.63e6 x 0.8 V = 6.73e-3 W/mm2. It rests on five `assumed` entries and is graded accordingly. THE DERIVATION DECLINES TWO REAL ROM-FAVOURABLE CREDITS, which is why it is safe at the point: an array with no read-stability constraint may use HVT or long-channel devices for free, and roughly half of a via-programmed NOR array's cells have no bitline leakage path at all. Qualitative corroboration that ROM array leakage is not negligible: TOM's entire third contribution is power-gating inactive ROM banks, 25.813 W down to 5.33 W. DIRECTION AND WHERE IT BINDS: this is a straight charge against the ROM side and it favours the GPU. On the current HC1 reconstruction the 432.4 mm2 ROM array contributes 2.90 W: it moves the static result from the 50.0 W clocked-idle floor to a 52.54 W enumeration and the whole gate from 85.0 W to 87.6 W -- and it matters on the wafer-class designs, where a 50 W per-device floor cannot bind and 6.7e-3 W/mm2 over hundreds of thousands of mm2 is thousands of watts. Sweep 1.3e-3 to 2.6e-2; note that `range_high` moves DOWN 13% from the incumbent 0.03, because the band is now a bracket around a derived point rather than the ceiling of an undocumented reconstruction, and that 13% is the only part of this edit that runs in the ROM side's favour.",
+        "range_high": 0.026,
+        "range_low": 0.0013,
+        "source": "derived on this file's own entries: power.static_leakage_w_per_mm2.sram_array, sram.array_efficiency, nodes.N7.sram_hd_bitcell_um2, rom.cell_to_sram_cell_area_ratio and rom.array_efficiency, with one off device per NOR mask-ROM cell against four in a 6T ; qualitative corroboration from Guan et al., TOM, arXiv:2602.20662 (bank power gating 25.813 W -> 5.33 W)",
+        "value": 0.0067
+      },
+      "sram_array": {
+        "grade": "assumed",
+        "note": "0.005 W per mm2 of SRAM ARRAY at a 7 nm-class node. This companion's chain VERIFIED and is carried at the verifier's value, one third below the 0.015 that the same submission's 'of array' companion implied. 0.65 array efficiency over a 0.027 um2 N7 6T bitcell is 24.07 Mbit/mm2 of usable cells; at 0.05-1.0 nA of off current per cell and 0.8 V that is 0.96-19.3 mW/mm2, and the point sits at the geometric-centre end of it. Cross-check that reproduces: 537 Mbit at that density is 22.3 mm2 and 0.021-0.43 W. Charged over SRAM array area only -- the KV store on a ROM part, and the non-logic share of a published GPU die.",
+        "range_high": 0.019,
+        "range_low": 0.001,
+        "source": "TSMC N7 0.027 um2 6T HD bitcell (this file, nodes.N7) at sram.array_efficiency, times a per-cell off current of 0.05-1.0 nA at 0.8 V; no vendor SRAM macro leakage published for the target arrays",
+        "value": 0.005
+      }
+    },
+    "link_j_per_bit": {
+      "purpose": "Energy per bit moved on each link class (NEW 2026-09-27, normative/peer-reviewed check). Record: results/arch/power_assumptions.json.",
+      "board_serdes_112g": {
+        "grade": "published",
+        "value": 6.5e-12,
+        "range_low": 5.6e-12,
+        "range_high": 7.5e-12,
+        "note": "112G PAM4 with DSP. The only primary LR-class figure including DSP: 'a total power efficiency of 5.6pJ/b per lane including analog and DSP at 112Gb/s' (5 nm, VLSI 2022); at 7 nm the analog alone is '602 mW per channel, excluding DSP' (JSSC 2021) = 5.4 pJ/b, so LR with DSP at 7 nm is ~6-7 pJ/b. WAS 5 pJ/b (3.5-7) in the V4.1 budget/rack: optimistic for LR; MR measured 2.29 pJ/b (ISSCC 2022, excl. FEC/DSP) and OIF VSR '< 3 pJ/bit likely'. RS FEC adds ~0.9 pJ/b at 40 nm (RS(528,514) '90 mW', IEEE P802.3bj gustlin_01_0312 slide 6), less at N5. Always-on (ungated) lane power at 112 Gb/s = 0.73 W.",
+        "source": "VLSI 2022 doi:10.1109/VLSITechnologyandCir46769.2022.9830304 ; JSSC Jan 2021 doi:10.1109/JSSC.2020.3024261 ; ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731591"
+      },
+      "ucie_advanced": {
+        "grade": "published",
+        "value": 5e-13,
+        "range_low": 2.9e-13,
+        "range_high": 6e-13,
+        "idle_fraction_of_peak": 0.15,
+        "note": "UCIe Hot Chips 2023 electrical summary: 'Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]'; 'Idle Power (% of peak) 15%'. Measured best case: 'exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm ... and 3.5 ns measured FDI-to-FDI latency' (3 nm CoWoS, 16 Gb/s/pin, JSSC 2026). WAS 0.29 pJ/b from a secondary summary: the best case, optimistic for an N5/N6 die; 0.5 pJ/b is the conservative spec-range value.",
+        "source": "UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary ; JSSC 2026 doi:10.1109/JSSC.2026.3651425"
+      },
+      "ucie_standard": {
+        "grade": "published",
+        "value": 1e-12,
+        "range_low": 5.2e-13,
+        "range_high": 1.25e-12,
+        "idle_fraction_of_peak": 0.15,
+        "note": "Spec target 0.5-1 (16G), 0.75-1.25 (24/32G) pJ/b; measured 0.52 (3 nm, 16G, 25 mm, JSSC 2026), 0.58 (22 nm, 32G, CICC 2026), 1.2 (48G, 30 mm, ISSCC 2026).",
+        "source": "UCIe Hot Chips 2023 tutorial ; JSSC 2026 doi:10.1109/JSSC.2026.3651425 ; CICC 2026 doi:10.1109/CICC65509.2026.11509556 ; ISSCC 2026 doi:10.1109/ISSCC49663.2026.11409120"
+      }
+    },
+    "mac_per_format_pj": {
+      "w4a8": {
+        "value": 0.45,
+        "unit": "pJ/MAC",
+        "evidence_class": "published-spec",
+        "boundary": "4-bit weight (FP4 E2M1 / 3.5-bit grouped) x FP8 activation, FP32 accumulate: int8_mult (upper bound: a 2-4 bit mantissa product is smaller than 8x8) + fp32_add; group scale applied once per group, not per MAC",
+        "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+      },
+      "fp4": {
+        "value": 0.45,
+        "unit": "pJ/MAC",
+        "evidence_class": "published-spec",
+        "boundary": "as w4a8 (V4.1 FP4 weights and FP4 indexer keys against FP8/BF16 operands)",
+        "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+      },
+      "fp8": {
+        "value": 0.59,
+        "unit": "pJ/MAC",
+        "evidence_class": "published-spec",
+        "boundary": "FP8 x FP8/BF16, FP32 accumulate: bf16_mult (upper bound for an E4M3 product) + fp32_add",
+        "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+      },
+      "bf16": {
+        "value": 0.59,
+        "unit": "pJ/MAC",
+        "evidence_class": "published-spec",
+        "boundary": "BF16 x BF16 (and BF16 x FP8 attention), FP32 accumulate: bf16_mult + fp32_add",
+        "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+      },
+      "fp32": {
+        "value": 1.69,
+        "unit": "pJ/MAC",
+        "evidence_class": "published-spec",
+        "boundary": "FP32 FMA: fp32_mult + fp32_add",
+        "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+      }
+    },
+    "hbm_path": {
+      "hbm_path_total": {
+        "value": 13.64,
+        "unit": "pJ/bit",
+        "evidence_class": "published-measured",
+        "boundary": "MI250X GCD HBM2e path beyond L2, regressed from board power: DRAM device + TSV + interposer + PHY + memory controller + L2-to-controller movement + control plane. The LARGEST of the four SC'25 parts whose HBM category contains no last-level cache (MI300A's 14.72 carries the 256 MB Infinity Cache on its path and is excluded on boundary, not favourability).",
+        "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, https://escholarship.org/content/qt6189368s/qt6189368s.pdf Table 3 and Fig. 1",
+        "quote": "Fig. 1 caption: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 HBM [pJ/bit] control / datapath / total: A100 8.47 / 4.64 / 13.11; GH200 8.69 / 2.99 / 11.68; MI250X GCD 11.82 / 1.82 / 13.64; MI300A 13.47 / 1.25 / 14.72",
+        "control_plane_meaning": "SC'25 s4.1: 'by performing computations on zeros, we exercise only the control plane'. 'Control' is the data-INDEPENDENT energy of a streamed bit: it holds the controller, PHY clocking, command/address and the DRAM's own row activation and column access (none of which toggle with data values); 'datapath' is the data-dependent toggling on TSVs, interposer, PHY and on-die wires. The control/datapath split is therefore NOT a die/stack split.",
+        "measured_parts": {
+          "a100": 13.11,
+          "gh200": 11.68,
+          "mi250x_gcd": 13.64,
+          "mi300a": 14.72
+        },
+        "was": 13.11
+      },
+      "stack_share": {
+        "value": 3.45,
+        "unit": "pJ/bit",
+        "evidence_class": "published-spec",
+        "boundary": "inside the DRAM stack: row activation 1.21 + bank-to-base-layer data movement incl. TSVs 2.24 pJ/bit (HBM2, 28 nm DRAM model after Rambus; application toggle rates); excludes the 0.3 pJ/bit interposer I/O and ECC",
+        "source": "O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf s2 (Fig. 2 discussion)",
+        "quote": "'switching the capacitance on this datapath requires 2.24 pJ/bit of energy on average. In contrast, transferring the data over the I/O wires on the silicon interposer requires an additional 0.3 pJ/bit ... with the average of 1.21 pJ/bit of activation energy, each HBM2 access incurs 3.92 pJ/bit of energy (including ECC overhead)'",
+        "stack_high_pj_per_bit": 3.92,
+        "stack_high_basis": "O'Connor's whole 3.92 pJ/bit charged to the stack (I/O and ECC included): the stack-power check's conservative end"
+      },
+      "die_share": {
+        "value": null,
+        "unit": "pJ/bit",
+        "evidence_class": "published-spec",
+        "boundary": "hbm_path_total - stack_share = 13.64 - 3.45 = 10.19 pJ/bit charged to the LOGIC DIE: memory controller, PHY (both ends' I/O), ECC, on-die movement to the controller and the controller's control plane. The class is the weaker of its two inputs (a silicon measurement minus a DRAM-model share). NO fixed-function credit is taken: no published source measures an HBM controller or PHY on its own (vendor PHY/controller pages for Rambus, Synopsys, Cadence, Micron and SK hynix give no pJ/bit; checked 2026-09-27), so a streaming controller is charged what the least favourable measured GPU path leaves after the DRAM.",
+        "source": "derived: SC'25 Table 3 (MI250X GCD) minus O'Connor MICRO 2017 s2",
+        "range": {
+          "gh200_hbm3": 8.23,
+          "a100_hbm2e": 9.66,
+          "mi250x_hbm2e": 10.19,
+          "phy_io_floor": 0.8,
+          "note": "GH200 (HBM3, the generation nearest HBM3E) leaves 8.23 and the A100 9.66: both more favourable, not taken. The floor is O'Connor's interposer I/O (both ends, 50% activity, a model): what a die with a free controller would still spend."
+        },
+        "cross_checks": {
+          "tpuv4i": "Jouppi et al., ISCA 2021, Table 2: 'DRAM HBM2 -- 250-450' pJ per 64-bit access at 7 nm (3.9-7.0 pJ/bit), footnote 'HBM2 and GDDR6 also list only the I/O energy' (published-spec, device interface)",
+          "sc25_statement": "SC'25 s6 ('Memory and Caches'): 'only 8-35% of total HBM energy is in the data movement itself. Rather, substantial energy is spent in control and interfaces.'"
+        },
+        "was": "9.66 pJ/bit (A100 13.11 - 3.45), tagged assumed; before that 0.8 pJ/bit to the die (O'Connor Table 3 'I/O (pJ/b)* 0.80', an I/O-only boundary) and 12.31 pJ/bit to the stacks: controller and control-plane energy placed in DRAM stacks that do not dissipate it."
+      },
+      "idle_w_per_stack": {
+        "value": 2.8,
+        "unit": "W/stack",
+        "evidence_class": "assumed",
+        "boundary": "traffic-independent DRAM standby + refresh + trained PHY/controller; charged WHOLLY to the die (conservative for die cooling)",
+        "source": "configs/hardware/technology.json power.memory_interface_idle_w_per_stack (band 1.2-6.4 W)"
+      }
+    },
+    "wire_j_per_bit_mm": {
+      "value": 1e-13,
+      "range_high": 4e-13,
+      "grade": "assumed",
+      "source": "tools/uarch_model.py WIRE_J_PER_BIT_MM",
+      "boundary": "repeated global wire; use actual bit-hop distance; do not also add operand_delivery scalar for same path"
+    }
+  },
+  "measured_reference": {
+    "element_scope": "S81 pair element core ot_v41_rom_elem_w10 (BF16 0, NB 2, MTP, EARLY, FAST, PP; 4 x ot_rom_4096x274_m8) as one power domain: ot_v41_rom_elem_q_pg_w10 PG = 1, routed in the q-frame C (510.84 x 126.9 um)",
+    "corner": "TT predictive ASAP7, 1.2 GHz; not production silicon",
+    "active_w": 0.11596836894750595,
+    "cg_idle_w": 0.003005219390615821,
+    "cg_leakage_w": 0.0002425469137961045,
+    "pg_idle_w": 0.0010641696747820026,
+    "wake_cycles": 92,
+    "wake_energy_j": 7.339e-10,
+    "limitation": "Old complete local-ROM element includes arithmetic, macro and clocks. Cannot assign this wattage to a bare ROM bank or new compute cluster. Active power depends on measured activity, not guaranteed worst-case peak."
+  },
+  "ledger_formulas": {
+    "rom_macro_read_j": "actual macro-output bytes read * rom_read_j_per_byte; include padding, scale bytes and unused words actually read; payload-only bytes are a lower bound",
+    "shared_weight_network_j": "sum_edges(bits_crossing_edge * edge_length_mm * wire_j_per_bit_mm) + explicit FIFO/SRAM write/read and mux/serializer switching; separate fanout branches; no free multicast",
+    "sram_j": "(bytes_read + bytes_written) * sram_read_j_per_byte; using same energy for writes is ASSUMED and must be swept/characterized",
+    "arithmetic_j": "sum_format(MAC_count * mac_per_format_pj * 1e-12) + explicit group scaling/SFU/exact reduction arithmetic not included in MAC; one MAC includes one add so do not recount that add",
+    "clock_j": "sum_region(clock_energy_j_per_mm2_per_cycle * area_mm2 * region_multiplier * enabled_cycles) + disabled-domain residual_clock_w * disabled_time; region density is uncalibrated pending extracted clock activity",
+    "leakage_j": "sum_region(leak_w_per_mm2 * area_mm2 * powered_time + off_leak_w * off_time)",
+    "hbm_j": "8 * actual_HBM_bytes * full_path_pj_per_bit * 1e-12 + stacks * idle_w_per_stack * token_s; include weights for HBM design and KV/index reads/writes for ALL designs",
+    "hbm_cooling_split": "stack dynamic=8*bytes*3.45e-12; logic dynamic=8*bytes*(13.64-3.45)*1e-12, model-derived split not measured chip separation; sum exactly equals full path",
+    "link_j": "sum_link_class(bits * hops * class_energy_j_per_bit) + trained_lane_idle_w * idle_time; honor each source energy boundary before charging TX+RX twice",
+    "wake_j": "sum_domains(number_wakes * measured_or_derived_wake_j); wake latency enters schedule unless proven hidden by known lead time",
+    "single_user_average_w": "sum_all_terms_j_per_token / token_s, including inactive dies and memory stacks",
+    "single_user_peak_w": "max_t sum_all_die_and_stack_active_or_idle_power(t); simultaneous phase schedule required, not sum of each dies independent maximum",
+    "die_thermal_w": "time average for each individual die; package and stack separate; total system average does not prove hottest-die fit",
+    "capacity": "same released packed weights + identical useful KV context and replication policy; total silicon=sum_logic_die_mm2 + sum_HBM_DRAM_die_mm2 + HBM_base_die_mm2; package footprint distinct"
+  },
+  "comparison_rules": [
+    "Matched MAC/precision/exact arithmetic contract, context, batch=1, token stream and speculative acceptance; compute reuse does not remove required arithmetic.",
+    "Keep macro read, compute, clocks and transport disjoint. Measured local element bucket replaces constituent analytical buckets rather than adding to them.",
+    "ROM read primitive is ASSUMED, not measured 1000x advantage against HBM. HBM path includes long movement and controllers while ROM read stops at macro latch.",
+    "Do not credit shared ROM compute with free weight network or free SRAM staging.",
+    "Do not transfer old 2417-pair whole-die static power to a new bank-count/floorplan.",
+    "No SRAM/link/mutable control protection removal; no ROM ECC overhead on candidate.",
+    "Do not combine peak bandwidth of every physical bank with average selected-expert utilization when deriving peak power.",
+    "Technology MAC rung interpolation is weak; use scenario_B exact FP32 accumulation cost as sizing assumption and old measured routed engines only as utilization-specific sensitivity.",
+    "Explicit floorplan clock/leakage remains assumed until real extracted shared cluster measurement."
+  ],
+  "needed_from_model": [
+    "token_s",
+    "all actual macro-output bytes",
+    "weight bytes and format MAC counts per phase",
+    "bank and compute area per clock domain",
+    "active bank and compute cycles per phase",
+    "edge distances / bit hops / fanout",
+    "SRAM write and read bytes",
+    "KV/index HBM bytes including writes and refills",
+    "link bit hops and simultaneously trained lanes",
+    "HBM stacks and total DRAM/base die areas",
+    "gating residency and wake counts"
+  ],
+  "sensitivity": [
+    {
+      "distance_mm": 0.35,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 0.36,
+      "dynamic_w_at_1TB_s": 0.36,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 0.35,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 5.5600000000000005,
+      "dynamic_w_at_1TB_s": 5.5600000000000005,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 0.35,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 1.2,
+      "dynamic_w_at_1TB_s": 1.2,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 0.35,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 6.4,
+      "dynamic_w_at_1TB_s": 6.4,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 1,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 0.88,
+      "dynamic_w_at_1TB_s": 0.88,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 1,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 6.08,
+      "dynamic_w_at_1TB_s": 6.08,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 1,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 3.2800000000000002,
+      "dynamic_w_at_1TB_s": 3.2800000000000002,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 1,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 8.48,
+      "dynamic_w_at_1TB_s": 8.48,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 5,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 4.08,
+      "dynamic_w_at_1TB_s": 4.08,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 5,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 9.280000000000001,
+      "dynamic_w_at_1TB_s": 9.280000000000001,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 5,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 16.08,
+      "dynamic_w_at_1TB_s": 16.08,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 5,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 21.279999999999998,
+      "dynamic_w_at_1TB_s": 21.279999999999998,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 10,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 8.08,
+      "dynamic_w_at_1TB_s": 8.08,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 10,
+      "wire_pj_per_bit_mm": 0.1,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 13.280000000000001,
+      "dynamic_w_at_1TB_s": 13.280000000000001,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 10,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": false,
+      "delivery_pj_per_byte": 32.08,
+      "dynamic_w_at_1TB_s": 32.08,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    },
+    {
+      "distance_mm": 10,
+      "wire_pj_per_bit_mm": 0.4,
+      "weight_sram_write_plus_read": true,
+      "delivery_pj_per_byte": 37.28,
+      "dynamic_w_at_1TB_s": 37.28,
+      "boundary": "ROM read + wire + optional SRAM only; excludes compute, mux/FIFO residual logic, clock and leakage; illustrative NOT candidate power"
+    }
+  ],
+  "break_even": {
+    "formula": "shared ROM improves energy only if saved compute/clock/leakage + saved activation movement > added weight-network + weight-buffer + arbitration/selection + wake energy",
+    "hbm_vs_rom_same_compute": "Delta_E = Wbytes*(e_HBM - e_ROM - e_ROM_network - e_ROM_staging) + Delta_background + Delta_KV_and_activation; sign cannot be decided from primitive ratio alone"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "status": "RUNNING_AT_RECORD_TIME_NO_TERMINAL",
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1",
+  "source_pin": "81ce7328c",
+  "supervisor": 1009202,
+  "driver": 1009763,
+  "frontend": 1009986,
+  "period_ps": 833.3333333333334,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "actual_FF_memory": true,
+  "IO_waiver": false,
+  "routing_layers": [
+    "M2",
+    "M9"
+  ],
+  "parent_clock_loads_slot_qualified": false,
+  "hub_layer_check_pass": false,
+  "component_characterization_only": true,
+  "physical_adoption": false,
+  "exact_record": "results/rtl/dsrom_window_pipeline_20261005/full_exact_summary.json",
+  "note": "No source/settings changes, restart, duplicate or timeout. Default view 3.898fF load and IO20 budget are not qualified enclosing parent loads/arrival proof. M2-M9 component routing does not qualify the hub allocation.",
+  "source_object_store_dependency": "/srv/opentallas-scratch2/jobs/mencius-window-pipeline-r1/src/.git/objects"
+}

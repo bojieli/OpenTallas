@@ -1,0 +1,20 @@
+{
+  "scope": "light JSON consumer rejection checks; no RTL/inference/lint",
+  "rows": [
+    {
+      "case": "failed_baseline",
+      "rejected": true,
+      "reason": "baseline failed"
+    },
+    {
+      "case": "foreign_operand",
+      "rejected": true,
+      "reason": "operand source mismatch"
+    },
+    {
+      "case": "missing_chain",
+      "rejected": true,
+      "reason": "missing baseline chain: L20.attn.hc_pre_norm"
+    }
+  ]
+}

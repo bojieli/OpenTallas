@@ -1,0 +1,189 @@
+{
+  "schema": "opentallas.wfc.canonical_stage.source_binding.v1",
+  "SOURCE": 0,
+  "layer": 19,
+  "MAXU": 866,
+  "default_ENABLE": 0,
+  "default_STRUCTURAL": 0,
+  "new_state_bits": 0,
+  "added_cycles": 0,
+  "producer_ports": 63,
+  "enclosing_ports": 77,
+  "internal_bindings": {
+    "cfg_users": {
+      "width": "[9:0]",
+      "producer_ports": [
+        "cfg_users"
+      ],
+      "enclosing_port": "cfg_users"
+    },
+    "cfg_prompt_len": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "cfg_prompt_len"
+      ],
+      "enclosing_port": "cfg_prompt_len"
+    },
+    "cfg_gen_len": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "cfg_gen_len"
+      ],
+      "enclosing_port": "cfg_gen_len"
+    },
+    "stage_epoch": {
+      "width": "[15:0]",
+      "producer_ports": [
+        "stage_epoch"
+      ],
+      "enclosing_port": "stage_epoch"
+    },
+    "stage_entry": {
+      "width": "[13:0]",
+      "producer_ports": [
+        "stage_entry"
+      ],
+      "enclosing_port": "stage_entry"
+    },
+    "pr_re": {
+      "width": "",
+      "producer_ports": [
+        "pr_re"
+      ],
+      "enclosing_port": "pr_re"
+    },
+    "pr_user": {
+      "width": "[9:0]",
+      "producer_ports": [
+        "pr_user"
+      ],
+      "enclosing_port": "pr_user"
+    },
+    "pr_pos": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "pr_pos"
+      ],
+      "enclosing_port": "pr_pos"
+    },
+    "pr_blk": {
+      "width": "[3:0]",
+      "producer_ports": [
+        "pr_blk"
+      ],
+      "enclosing_port": "pr_blk"
+    },
+    "pr_q": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "pr_q"
+      ],
+      "enclosing_port": "pr_q"
+    },
+    "pr_qk": {
+      "width": "",
+      "producer_ports": [
+        "pr_qk"
+      ],
+      "enclosing_port": "pr_qk"
+    },
+    "stage_request_v": {
+      "width": "",
+      "producer_ports": [
+        "request_v"
+      ],
+      "enclosing_port": "stage_request_v"
+    },
+    "stage_request_ready": {
+      "width": "",
+      "producer_ports": [
+        "request_ready"
+      ],
+      "enclosing_port": "stage_request_ready"
+    },
+    "stage_request_identity": {
+      "width": "[46:0]",
+      "producer_ports": [
+        "request_identity"
+      ],
+      "enclosing_port": "stage_request_identity"
+    },
+    "stage_request_token": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "request_token"
+      ],
+      "enclosing_port": "stage_request_token"
+    },
+    "stage_request_entry": {
+      "width": "[13:0]",
+      "producer_ports": [
+        "request_entry"
+      ],
+      "enclosing_port": "stage_request_entry"
+    },
+    "whole_stage_accepted": {
+      "width": "",
+      "producer_ports": [
+        "whole_stage_accepted"
+      ],
+      "enclosing_port": "whole_stage_accepted"
+    },
+    "whole_stage_v": {
+      "width": "",
+      "producer_ports": [
+        "whole_stage_v"
+      ],
+      "enclosing_port": "whole_stage_v"
+    },
+    "whole_stage_identity": {
+      "width": "[46:0]",
+      "producer_ports": [
+        "whole_stage_identity"
+      ],
+      "enclosing_port": "whole_stage_identity"
+    },
+    "whole_stage_token": {
+      "width": "[20:0]",
+      "producer_ports": [
+        "whole_stage_next_token"
+      ],
+      "enclosing_port": "whole_stage_token"
+    },
+    "whole_stage_value": {
+      "width": "[31:0]",
+      "producer_ports": [
+        "whole_stage_value"
+      ],
+      "enclosing_port": "whole_stage_value"
+    }
+  },
+  "source_sha256": {
+    "physical/dsrom_wfc_producer_context/ot_dsrom_wfc_producer_context.sv": "4b224ef976f27a19e30e8dd491c86d425fadd8bf8a602d14851cdde00ff9e64c",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_enclosing_stage.sv": "17a310698fdf22991c52b0872a9c87d5086c886831e8db60f633ca1375e39c80",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_canonical_stage.sv": "bc565b2aad9f77193cd0b5b8972b4db816ae390fd075051c7a3731164e3ac9ae",
+    "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv": "df20356c9e0a50f2495d56652a8ca8b88dda485ebe1701f77d6163af247e053b",
+    "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv": "aa088639650ef707d92cf8d5e5759feaacc9ace2357f4785c159d31258bb8a26"
+  },
+  "retained_proofs": [
+    "d1a5fbefc",
+    "0d27741b0",
+    "baed7ff2a"
+  ],
+  "active_integration_gate_passed": false,
+  "physical_VM_bound": false,
+  "SS_FF_qualified": false,
+  "book_parameters": "literal retained rank0..3.viamap.hex; passed to unchanged whole-stage ROM model, synthesis view remains true ROM",
+  "defaultOFF_syntax_elaboration": {
+    "exit_code": 0,
+    "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+    "wall_seconds": 0.019,
+    "allocated_MB": 35.152,
+    "scope": "new top ENABLE0 syntax/port elaboration only, not active golden/physical qualification",
+    "log": "canonical_defaultoff_lint.log"
+  },
+  "compatibility_attempts": [
+    "local system Verilator4.038 rejects --timing",
+    "local system Verilator4.038 without --timing rejects source syntax; existing5.050 used for changed top syntax"
+  ]
+}

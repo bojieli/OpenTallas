@@ -1,0 +1,297 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+20. Printing statistics.
+
+=== ot_hbm_router_lane_local ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     2093        -     2093        - wires
+     2385        -     2385        - wire bits
+       11        -       11        - public wires
+      303        -      303        - public wire bits
+        8        -        8        - ports
+      300        -      300        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     2338  278.886     2338  278.886 cells
+       42    3.674       42    3.674   AND2x2_ASAP7_75t_R
+        6    0.525        6    0.525   AND3x1_ASAP7_75t_R
+       14    1.429       14    1.429   AND4x1_ASAP7_75t_R
+       13    1.516       13    1.516   AND5x1_ASAP7_75t_R
+      291   25.457      291   25.457   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+       23    3.353       23    3.353   AO221x1_ASAP7_75t_R
+        9    1.575        9    1.575   AO222x2_ASAP7_75t_R
+       31    4.068       31    4.068   AO22x1_ASAP7_75t_R
+        4    0.933        4    0.933   AO31x2_ASAP7_75t_R
+        5    0.583        5    0.583   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+       14    1.633       14    1.633   AOI21x1_ASAP7_75t_R
+        2    0.408        2    0.408   AOI221x1_ASAP7_75t_R
+       21    3.062       21    3.062   AOI22x1_ASAP7_75t_R
+        1    0.262        1    0.262   BUFx12f_ASAP7_75t_R
+      175   12.758      175   12.758   BUFx2_ASAP7_75t_R
+       10    0.875       10    0.875   BUFx3_ASAP7_75t_R
+        4    0.583        4    0.583   BUFx6f_ASAP7_75t_R
+       13    4.928       13    4.928   DFFASRHQNx1_ASAP7_75t_R
+      293   85.439      293   85.439   DFFHQNx1_ASAP7_75t_R
+      281   12.291      281   12.291   INVx1_ASAP7_75t_R
+        4    0.233        4    0.233   INVx2_ASAP7_75t_R
+       33     4.33       33     4.33   MAJx2_ASAP7_75t_R
+      290   25.369      290   25.369   NAND2x1_ASAP7_75t_R
+        3    0.481        3    0.481   NAND3x1_ASAP7_75t_R
+        1    0.292        1    0.292   NAND3x2_ASAP7_75t_R
+      298   26.069      298   26.069   NOR2x1_ASAP7_75t_R
+        1     0.16        1     0.16   NOR3x1_ASAP7_75t_R
+      258   30.093      258   30.093   OA211x2_ASAP7_75t_R
+       57    5.817       57    5.817   OA21x2_ASAP7_75t_R
+       10     1.75       10     1.75   OA222x2_ASAP7_75t_R
+        2    0.292        2    0.292   OA22x2_ASAP7_75t_R
+        9     1.05        9     1.05   OAI21x1_ASAP7_75t_R
+        6    0.875        6    0.875   OAI22x1_ASAP7_75t_R
+        3    0.262        3    0.262   OR2x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        6    0.612        6    0.612   OR4x1_ASAP7_75t_R
+        6      0.7        6      0.7   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+       67   10.745       67   10.745   XNOR2x2_ASAP7_75t_R
+        1    0.175        1    0.175   XOR2x1_ASAP7_75t_R
+       20    3.208       20    3.208   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hbm_router_lane_local': 278.886240
+     of which used for sequential elements: 90.366840 (32.40%)
+
+=== ot_hbm_router_merge6_cut ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     7922        -     7922        - wires
+     8675        -     8675        - wire bits
+     1096        -     1096        - public wires
+     1849        -     1849        - public wire bits
+        4        -        4        - ports
+      757        -      757        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     8170 1.29E+03     8170 1.29E+03 cells
+     1105   96.665     1105   96.665   AND2x2_ASAP7_75t_R
+       11    0.962       11    0.962   AND3x1_ASAP7_75t_R
+       38    3.878       38    3.878   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+       35    4.082       35    4.082   AND5x1_ASAP7_75t_R
+       10    2.916       10    2.916   AND5x2_ASAP7_75t_R
+      114    9.973      114    9.973   AO21x1_ASAP7_75t_R
+       64    9.331       64    9.331   AO221x1_ASAP7_75t_R
+       46    6.036       46    6.036   AO22x1_ASAP7_75t_R
+        5    1.166        5    1.166   AO31x2_ASAP7_75t_R
+        4    0.467        4    0.467   AO32x1_ASAP7_75t_R
+        3    0.525        3    0.525   AOI211x1_ASAP7_75t_R
+     1050  122.472     1050  122.472   AOI21x1_ASAP7_75t_R
+       13    2.654       13    2.654   AOI221x1_ASAP7_75t_R
+        7    1.021        7    1.021   AOI22x1_ASAP7_75t_R
+      214   15.601      214   15.601   BUFx2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+     2679  781.196     2679  781.196   DFFHQNx1_ASAP7_75t_R
+     1543   67.491     1543   67.491   INVx1_ASAP7_75t_R
+       17    0.991       17    0.991   INVx2_ASAP7_75t_R
+        2    0.175        2    0.175   INVx4_ASAP7_75t_R
+      271   35.561      271   35.561   MAJx2_ASAP7_75t_R
+      140   12.247      140   12.247   NAND2x1_ASAP7_75t_R
+        2    0.321        2    0.321   NAND3x1_ASAP7_75t_R
+       22    1.925       22    1.925   NOR2x1_ASAP7_75t_R
+        3    0.481        3    0.481   NOR3x1_ASAP7_75t_R
+       96   11.197       96   11.197   OA211x2_ASAP7_75t_R
+       91    9.287       91    9.287   OA21x2_ASAP7_75t_R
+        1    0.175        1    0.175   OA222x2_ASAP7_75t_R
+        2    0.292        2    0.292   OA22x2_ASAP7_75t_R
+        9    1.968        9    1.968   OA31x2_ASAP7_75t_R
+        1    0.146        1    0.146   OA33x2_ASAP7_75t_R
+       32    3.732       32    3.732   OAI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   OAI22x1_ASAP7_75t_R
+       14    1.225       14    1.225   OR2x2_ASAP7_75t_R
+       19    1.662       19    1.662   OR3x1_ASAP7_75t_R
+       26    2.654       26    2.654   OR4x1_ASAP7_75t_R
+       11    1.283       11    1.283   OR5x1_ASAP7_75t_R
+      320   51.322      320   51.322   XNOR2x2_ASAP7_75t_R
+        3    0.525        3    0.525   XOR2x1_ASAP7_75t_R
+      143   22.934      143   22.934   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hbm_router_merge6_cut': 1287.034920
+     of which used for sequential elements: 781.196400 (60.70%)
+
+=== ot_hbm_router_topk_successor ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   332100        -    19542        - wires
+   365351        -    20106        - wire bits
+    50804        -    16476        - public wires
+    84055        -    17040        - public wire bits
+      387        -        7        - ports
+    33638        -      571        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   331768 4.93E+04     3682  470.613 cells
+    36141 3.16E+03      542   47.414   AND2x2_ASAP7_75t_R
+      621   54.325       88    7.698   AND3x1_ASAP7_75t_R
+     1638  167.174       12    1.225   AND4x1_ASAP7_75t_R
+       31    3.616        -        -   AND4x2_ASAP7_75t_R
+     1518   177.06       17    1.983   AND5x1_ASAP7_75t_R
+      310   90.396        -        -   AND5x2_ASAP7_75t_R
+        4    0.933        4    0.933   AO211x2_ASAP7_75t_R
+    12998 1.14E+03      152   13.297   AO21x1_ASAP7_75t_R
+       33    3.368        1    0.102   AO21x2_ASAP7_75t_R
+     2740  399.492       20    2.916   AO221x1_ASAP7_75t_R
+      291   50.913        3    0.525   AO222x2_ASAP7_75t_R
+     2454  322.014       36    4.724   AO22x1_ASAP7_75t_R
+      292   68.118        9      2.1   AO31x2_ASAP7_75t_R
+      284   33.126        -        -   AO32x1_ASAP7_75t_R
+      127    22.22        2     0.35   AOI211x1_ASAP7_75t_R
+    33118 3.86E+03      120   13.997   AOI21x1_ASAP7_75t_R
+      473   96.549        6    1.225   AOI221x1_ASAP7_75t_R
+      906  132.095       17    2.479   AOI22x1_ASAP7_75t_R
+       36    9.448        4     1.05   BUFx12f_ASAP7_75t_R
+    12405  904.325      171   12.466   BUFx2_ASAP7_75t_R
+      364   31.843       13    1.137   BUFx3_ASAP7_75t_R
+        2    0.233        2    0.233   BUFx4f_ASAP7_75t_R
+      163   23.765        4    0.583   BUFx6f_ASAP7_75t_R
+      470  178.168       54    20.47   DFFASRHQNx1_ASAP7_75t_R
+    92839 2.71E+04      414  120.722   DFFHQNx1_ASAP7_75t_R
+    57283 2.51E+03      458   20.033   INVx1_ASAP7_75t_R
+      655     38.2        -        -   INVx2_ASAP7_75t_R
+       62    5.424        -        -   INVx4_ASAP7_75t_R
+     9485 1.24E+03       28    3.674   MAJx2_ASAP7_75t_R
+    13838 1.21E+03      218   19.071   NAND2x1_ASAP7_75t_R
+        2    0.292        2    0.292   NAND2x2_ASAP7_75t_R
+      163   26.142        5    0.802   NAND3x1_ASAP7_75t_R
+       32    9.331        -        -   NAND3x2_ASAP7_75t_R
+    10250   896.67       32    2.799   NOR2x1_ASAP7_75t_R
+      131    21.01        6    0.962   NOR3x1_ASAP7_75t_R
+    11269 1.31E+03       37    4.316   OA211x2_ASAP7_75t_R
+     4894  499.482      249   25.413   OA21x2_ASAP7_75t_R
+        2    0.467        2    0.467   OA221x2_ASAP7_75t_R
+      357   62.461        6     1.05   OA222x2_ASAP7_75t_R
+      135   19.683        9    1.312   OA22x2_ASAP7_75t_R
+      286   62.548        7    1.531   OA31x2_ASAP7_75t_R
+       31     4.52        -        -   OA33x2_ASAP7_75t_R
+     1292  150.699       12      1.4   OAI21x1_ASAP7_75t_R
+      226   32.951        3    0.437   OAI22x1_ASAP7_75t_R
+      552   48.289       22    1.925   OR2x2_ASAP7_75t_R
+      927   81.094       82    7.173   OR3x1_ASAP7_75t_R
+     1112  113.491      114   11.635   OR4x1_ASAP7_75t_R
+      606   70.684       73    8.515   OR5x1_ASAP7_75t_R
+       33    1.443        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+    12152 1.95E+03       88   14.113   XNOR2x2_ASAP7_75t_R
+      126   22.045        1    0.175   XOR2x1_ASAP7_75t_R
+     5608  899.411      535   85.803   XOR2x2_ASAP7_75t_R
+       63 4.88E+04       63        - submodules
+       32  8924.36       32        -   ot_hbm_router_lane_local
+       31 3.99E+04       31        -   ot_hbm_router_merge6_cut
+
+   Chip area for module '\ot_hbm_router_topk_successor': 49293.055440
+     of which used for sequential elements: 27250.020000 (55.28%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   331768 4.93E+04     3682  470.613 ot_hbm_router_topk_successor
+     2338  278.886     2338  278.886 ot_hbm_router_lane_local
+     8170 1.29E+03     8170 1.29E+03 ot_hbm_router_merge6_cut
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   332100        -    19542        - wires
+   365351        -    20106        - wire bits
+    50804        -    16476        - public wires
+    84055        -    17040        - public wire bits
+      387        -        7        - ports
+    33638        -      571        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   331768 4.93E+04     3682  470.613 cells
+    36141 3.16E+03      542   47.414   AND2x2_ASAP7_75t_R
+      621   54.325       88    7.698   AND3x1_ASAP7_75t_R
+     1638  167.174       12    1.225   AND4x1_ASAP7_75t_R
+       31    3.616        -        -   AND4x2_ASAP7_75t_R
+     1518   177.06       17    1.983   AND5x1_ASAP7_75t_R
+      310   90.396        -        -   AND5x2_ASAP7_75t_R
+        4    0.933        4    0.933   AO211x2_ASAP7_75t_R
+    12998 1.14E+03      152   13.297   AO21x1_ASAP7_75t_R
+       33    3.368        1    0.102   AO21x2_ASAP7_75t_R
+     2740  399.492       20    2.916   AO221x1_ASAP7_75t_R
+      291   50.913        3    0.525   AO222x2_ASAP7_75t_R
+     2454  322.014       36    4.724   AO22x1_ASAP7_75t_R
+      292   68.118        9      2.1   AO31x2_ASAP7_75t_R
+      284   33.126        -        -   AO32x1_ASAP7_75t_R
+      127    22.22        2     0.35   AOI211x1_ASAP7_75t_R
+    33118 3.86E+03      120   13.997   AOI21x1_ASAP7_75t_R
+      473   96.549        6    1.225   AOI221x1_ASAP7_75t_R
+      906  132.095       17    2.479   AOI22x1_ASAP7_75t_R
+       36    9.448        4     1.05   BUFx12f_ASAP7_75t_R
+    12405  904.325      171   12.466   BUFx2_ASAP7_75t_R
+      364   31.843       13    1.137   BUFx3_ASAP7_75t_R
+        2    0.233        2    0.233   BUFx4f_ASAP7_75t_R
+      163   23.765        4    0.583   BUFx6f_ASAP7_75t_R
+      470  178.168       54    20.47   DFFASRHQNx1_ASAP7_75t_R
+    92839 2.71E+04      414  120.722   DFFHQNx1_ASAP7_75t_R
+    57283 2.51E+03      458   20.033   INVx1_ASAP7_75t_R
+      655     38.2        -        -   INVx2_ASAP7_75t_R
+       62    5.424        -        -   INVx4_ASAP7_75t_R
+     9485 1.24E+03       28    3.674   MAJx2_ASAP7_75t_R
+    13838 1.21E+03      218   19.071   NAND2x1_ASAP7_75t_R
+        2    0.292        2    0.292   NAND2x2_ASAP7_75t_R
+      163   26.142        5    0.802   NAND3x1_ASAP7_75t_R
+       32    9.331        -        -   NAND3x2_ASAP7_75t_R
+    10250   896.67       32    2.799   NOR2x1_ASAP7_75t_R
+      131    21.01        6    0.962   NOR3x1_ASAP7_75t_R
+    11269 1.31E+03       37    4.316   OA211x2_ASAP7_75t_R
+     4894  499.482      249   25.413   OA21x2_ASAP7_75t_R
+        2    0.467        2    0.467   OA221x2_ASAP7_75t_R
+      357   62.461        6     1.05   OA222x2_ASAP7_75t_R
+      135   19.683        9    1.312   OA22x2_ASAP7_75t_R
+      286   62.548        7    1.531   OA31x2_ASAP7_75t_R
+       31     4.52        -        -   OA33x2_ASAP7_75t_R
+     1292  150.699       12      1.4   OAI21x1_ASAP7_75t_R
+      226   32.951        3    0.437   OAI22x1_ASAP7_75t_R
+      552   48.289       22    1.925   OR2x2_ASAP7_75t_R
+      927   81.094       82    7.173   OR3x1_ASAP7_75t_R
+     1112  113.491      114   11.635   OR4x1_ASAP7_75t_R
+      606   70.684       73    8.515   OR5x1_ASAP7_75t_R
+       33    1.443        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+    12152 1.95E+03       88   14.113   XNOR2x2_ASAP7_75t_R
+      126   22.045        1    0.175   XOR2x1_ASAP7_75t_R
+     5608  899.411      535   85.803   XOR2x2_ASAP7_75t_R
+       63 4.88E+04       63        - submodules
+       32  8924.36       32        -   ot_hbm_router_lane_local
+       31 3.99E+04       31        -   ot_hbm_router_merge6_cut
+
+   Chip area for top module '\ot_hbm_router_topk_successor': 49293.055440
+     of which used for sequential elements: 27250.020000 (55.28%)
+

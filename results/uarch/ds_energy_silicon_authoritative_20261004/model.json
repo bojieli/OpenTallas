@@ -2,8 +2,8 @@
  "schema": "opentallas.uarch.ds_energy_silicon_authoritative.v1",
  "date": "2026-10-04",
  "status": "MODEL on authoritative/measured inputs; every non-record constant in ASSUMED",
- "source_commit": "f23c56908ec468c5362cc76be23937ebb74695d5",
- "tau": 3.8879,
+ "source_commit": "4eee27714275b8a9cf60b19c3f4a1ac4849b84fd",
+ "tau": 4.159,
  "sources": {
   "rates": "tools/uarch_model.py hbm_switch_latency_authoritative() (record results/uarch/hbm_switch_latency_authoritative_20261004)",
   "rom_ar": "results/rtl/dsrom_wavefront_verify_20261004/record.json",
@@ -49,7 +49,7 @@
    "basis": "repo record ds_5 (16 dies x 800 mm2, integration fairness) -- ASSUMED die area"
   },
   "rom_mtp_step_energy": {
-   "basis": "ASSUMED: ROM MTP dynamic energy per STEP = C1 170.4 / 164.5 mJ per token x tau 3.649 (work per step is schedule-invariant; the wavefront changes overlap, not work); divided by tau 3.8879"
+   "basis": "ASSUMED: ROM MTP dynamic energy per STEP = C1 170.4 / 164.5 mJ per token x tau 3.649 (work per step is schedule-invariant; the wavefront changes overlap, not work); divided by tau 4.159"
   },
   "rom_mtp_pg_active": {
    "basis": "ASSUMED: wavefront MTP keeps 6 positions + 1 pre-woken stage active: f = 7/S"
@@ -91,41 +91,41 @@
    },
    "hbm_accel": {
     "ar": 2624.4,
-    "mtp_pending_draft": 5937.8,
+    "mtp_pending_draft": 6351.9,
     "hbm_draft_us_estimate": 47.23,
-    "mtp_sens_rom_ratio_as_built": 5230.8,
-    "mtp_sens_rom_ratio_l1_fused": 5501.3,
+    "mtp_sens_rom_ratio_as_built": 5595.5,
+    "mtp_sens_rom_ratio_l1_fused": 5884.9,
     "sensitivity": {
      "as_built": {
       "rom_draft_over_ar": 0.3562,
       "hbm_draft_us": 135.73,
       "step_us": 743.27,
-      "mtp_tok_s": 5230.8
+      "mtp_tok_s": 5595.5
      },
      "l1_fused": {
       "rom_draft_over_ar": 0.2603,
       "hbm_draft_us": 99.19,
       "step_us": 706.73,
-      "mtp_tok_s": 5501.3
+      "mtp_tok_s": 5884.9
      }
     }
    },
    "hbm_accel_measured_comp": {
     "ar": 2562.7,
-    "mtp_pending_draft": 5639.2
+    "mtp_pending_draft": 6032.4
    },
    "ablation_nvls": {
     "ar": 1481.9,
-    "mtp": 3855.1
+    "mtp": 4123.9
    },
    "gpu_faithful_r0": {
     "ar": 358.9,
-    "mtp": 1168.5
+    "mtp": 1249.9
    },
    "b200x8": {
     "ar": 266.9,
     "mtp": 518.0,
-    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 3.8879)"
+    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 4.159)"
    }
   },
   "200K": {
@@ -141,41 +141,41 @@
    },
    "hbm_accel": {
     "ar": 2629.9,
-    "mtp_pending_draft": 5950.0,
+    "mtp_pending_draft": 6364.9,
     "hbm_draft_us_estimate": 47.13,
-    "mtp_sens_rom_ratio_as_built": 5200.0,
-    "mtp_sens_rom_ratio_l1_fused": 5479.0,
+    "mtp_sens_rom_ratio_as_built": 5562.6,
+    "mtp_sens_rom_ratio_l1_fused": 5861.0,
     "sensitivity": {
      "as_built": {
       "rom_draft_over_ar": 0.3718,
       "hbm_draft_us": 141.37,
       "step_us": 747.67,
-      "mtp_tok_s": 5200.0
+      "mtp_tok_s": 5562.6
      },
      "l1_fused": {
       "rom_draft_over_ar": 0.2717,
       "hbm_draft_us": 103.31,
       "step_us": 709.61,
-      "mtp_tok_s": 5479.0
+      "mtp_tok_s": 5861.0
      }
     }
    },
    "hbm_accel_measured_comp": {
     "ar": 2568.1,
-    "mtp_pending_draft": 5650.7
+    "mtp_pending_draft": 6044.8
    },
    "ablation_nvls": {
     "ar": 1483.7,
-    "mtp": 3860.6
+    "mtp": 4129.8
    },
    "gpu_faithful_r0": {
     "ar": 359.0,
-    "mtp": 1169.2
+    "mtp": 1250.7
    },
    "b200x8": {
     "ar": 267.2,
     "mtp": 518.5,
-    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 3.8879)"
+    "mtp_basis": "existing 1.94x B200 MTP sensitivity (not DSpark tau 4.159)"
    }
   }
  },
@@ -320,33 +320,33 @@
      "tok_s": 6294.8,
      "static_w": 21592.0,
      "switch_w": 0.0,
-     "dynamic_w": 1006.7,
-     "system_w": 22598.7,
-     "J_per_token": 3.5901,
-     "J_per_token_check": 3.5901,
-     "tok_s_per_kW": 278.5,
+     "dynamic_w": 941.1,
+     "system_w": 22533.1,
+     "J_per_token": 3.5796,
+     "J_per_token_check": 3.5796,
+     "tok_s_per_kW": 279.4,
      "note": ""
     },
     "mtp_as_built_b1_pg": {
      "tok_s": 6294.8,
      "static_w": 8219.8,
      "switch_w": 0.0,
-     "dynamic_w": 1006.7,
-     "system_w": 9226.5,
-     "J_per_token": 1.4657,
-     "J_per_token_check": 1.4657,
-     "tok_s_per_kW": 682.3,
+     "dynamic_w": 941.1,
+     "system_w": 9160.9,
+     "J_per_token": 1.4553,
+     "J_per_token_check": 1.4553,
+     "tok_s_per_kW": 687.1,
      "note": "f = 7/S"
     },
     "mtp_l1_fused_b1_pg": {
      "tok_s": 6717.8,
      "static_w": 8219.8,
      "switch_w": 0.0,
-     "dynamic_w": 1074.4,
-     "system_w": 9294.2,
-     "J_per_token": 1.3835,
-     "J_per_token_check": 1.3835,
-     "tok_s_per_kW": 722.8,
+     "dynamic_w": 1004.3,
+     "system_w": 9224.1,
+     "J_per_token": 1.3731,
+     "J_per_token_check": 1.3731,
+     "tok_s_per_kW": 728.3,
      "note": "f = 7/S"
     },
     "ar_sat_icg": {
@@ -372,25 +372,25 @@
      "note": "f = 0.417"
     },
     "mtp_as_built_sat_icg": {
-     "tok_s": 19640.7,
+     "tok_s": 21010.2,
      "static_w": 21592.0,
      "switch_w": 0.0,
      "dynamic_w": 3141.1,
      "system_w": 24733.1,
-     "J_per_token": 1.2593,
-     "J_per_token_check": 1.2593,
-     "tok_s_per_kW": 794.1,
+     "J_per_token": 1.1772,
+     "J_per_token_check": 1.1772,
+     "tok_s_per_kW": 849.5,
      "note": "draft serialised on head (ASSUMED)"
     },
     "mtp_l1_fused_sat_icg": {
-     "tok_s": 24442.8,
+     "tok_s": 26147.1,
      "static_w": 21592.0,
      "switch_w": 0.0,
      "dynamic_w": 3909.1,
      "system_w": 25501.1,
-     "J_per_token": 1.0433,
-     "J_per_token_check": 1.0433,
-     "tok_s_per_kW": 958.5,
+     "J_per_token": 0.9753,
+     "J_per_token_check": 0.9753,
+     "tok_s_per_kW": 1025.3,
      "note": "draft serialised on head (ASSUMED)"
     }
    },
@@ -418,14 +418,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 5937.8,
+     "tok_s": 6351.9,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 5653.5,
-     "system_w": 15021.2,
-     "J_per_token": 2.5298,
-     "J_per_token_check": 2.5298,
-     "tok_s_per_kW": 395.3,
+     "dynamic_w": 5653.6,
+     "system_w": 15021.3,
+     "J_per_token": 2.3648,
+     "J_per_token_check": 2.3648,
+     "tok_s_per_kW": 422.9,
      "note": "pending measured draft"
     },
     "ar_sat": {
@@ -440,25 +440,25 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
      "dynamic_w": 14831.3,
      "system_w": 24199.0,
-     "J_per_token": 1.6249,
-     "J_per_token_check": 1.6249,
-     "tok_s_per_kW": 615.4,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
      "note": ""
     },
     "mtp_b1_sens_rom_ratio_as_built": {
-     "tok_s": 5230.8,
+     "tok_s": 5595.5,
      "static_w": 9367.7,
      "switch_w": 4000.0,
      "dynamic_w": 4980.3,
-     "system_w": 14348.1,
-     "J_per_token": 2.743,
-     "J_per_token_check": 2.743,
-     "tok_s_per_kW": 364.6,
+     "system_w": 14348.0,
+     "J_per_token": 2.5642,
+     "J_per_token_check": 2.5642,
+     "tok_s_per_kW": 390.0,
      "note": "HBM draft = ROM measured draft/AR"
     }
    },
@@ -486,14 +486,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 3855.1,
+     "tok_s": 4123.9,
      "static_w": 9367.7,
      "switch_w": 4000.0,
      "dynamic_w": 3670.5,
      "system_w": 13038.2,
-     "J_per_token": 3.3821,
-     "J_per_token_check": 3.3821,
-     "tok_s_per_kW": 295.7,
+     "J_per_token": 3.1616,
+     "J_per_token_check": 3.1616,
+     "tok_s_per_kW": 316.3,
      "note": ""
     },
     "ar_sat": {
@@ -508,14 +508,14 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
      "dynamic_w": 14831.3,
      "system_w": 24199.0,
-     "J_per_token": 1.6249,
-     "J_per_token_check": 1.6249,
-     "tok_s_per_kW": 615.4,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
      "note": ""
     }
    },
@@ -543,14 +543,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 1168.5,
+     "tok_s": 1249.9,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 1112.6,
-     "system_w": 10480.3,
-     "J_per_token": 8.969,
-     "J_per_token_check": 8.969,
-     "tok_s_per_kW": 111.5,
+     "dynamic_w": 1112.5,
+     "system_w": 10480.2,
+     "J_per_token": 8.3848,
+     "J_per_token_check": 8.3848,
+     "tok_s_per_kW": 119.3,
      "note": ""
     },
     "ar_sat": {
@@ -565,14 +565,14 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
      "dynamic_w": 14831.3,
      "system_w": 24199.0,
-     "J_per_token": 1.6249,
-     "J_per_token_check": 1.6249,
-     "tok_s_per_kW": 615.4,
+     "J_per_token": 1.519,
+     "J_per_token_check": 1.519,
+     "tok_s_per_kW": 658.3,
      "note": ""
     }
    },
@@ -651,33 +651,33 @@
      "tok_s": 6475.9,
      "static_w": 21592.0,
      "switch_w": 0.0,
-     "dynamic_w": 999.8,
-     "system_w": 22591.8,
-     "J_per_token": 3.4886,
-     "J_per_token_check": 3.4886,
-     "tok_s_per_kW": 286.6,
+     "dynamic_w": 934.7,
+     "system_w": 22526.7,
+     "J_per_token": 3.4785,
+     "J_per_token_check": 3.4785,
+     "tok_s_per_kW": 287.5,
      "note": ""
     },
     "mtp_as_built_b1_pg": {
      "tok_s": 6475.9,
      "static_w": 8219.8,
      "switch_w": 0.0,
-     "dynamic_w": 999.8,
-     "system_w": 9219.6,
-     "J_per_token": 1.4237,
-     "J_per_token_check": 1.4237,
-     "tok_s_per_kW": 702.4,
+     "dynamic_w": 934.7,
+     "system_w": 9154.4,
+     "J_per_token": 1.4136,
+     "J_per_token_check": 1.4136,
+     "tok_s_per_kW": 707.4,
      "note": "f = 7/S"
     },
     "mtp_l1_fused_b1_pg": {
      "tok_s": 6924.5,
      "static_w": 8219.8,
      "switch_w": 0.0,
-     "dynamic_w": 1069.1,
-     "system_w": 9288.9,
-     "J_per_token": 1.3415,
-     "J_per_token_check": 1.3415,
-     "tok_s_per_kW": 745.5,
+     "dynamic_w": 999.4,
+     "system_w": 9219.2,
+     "J_per_token": 1.3314,
+     "J_per_token_check": 1.3314,
+     "tok_s_per_kW": 751.1,
      "note": "f = 7/S"
     },
     "ar_sat_icg": {
@@ -703,25 +703,25 @@
      "note": "f = 0.400"
     },
     "mtp_as_built_sat_icg": {
-     "tok_s": 19569.6,
+     "tok_s": 20934.2,
      "static_w": 21592.0,
      "switch_w": 0.0,
      "dynamic_w": 3021.4,
      "system_w": 24613.4,
-     "J_per_token": 1.2577,
-     "J_per_token_check": 1.2577,
-     "tok_s_per_kW": 795.1,
+     "J_per_token": 1.1758,
+     "J_per_token_check": 1.1758,
+     "tok_s_per_kW": 850.5,
      "note": "draft serialised on head (ASSUMED)"
     },
     "mtp_l1_fused_sat_icg": {
-     "tok_s": 24332.7,
+     "tok_s": 26029.5,
      "static_w": 21592.0,
      "switch_w": 0.0,
      "dynamic_w": 3756.8,
      "system_w": 25348.8,
-     "J_per_token": 1.0418,
-     "J_per_token_check": 1.0418,
-     "tok_s_per_kW": 959.9,
+     "J_per_token": 0.9739,
+     "J_per_token_check": 0.9739,
+     "tok_s_per_kW": 1026.9,
      "note": "draft serialised on head (ASSUMED)"
     }
    },
@@ -749,14 +749,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 5950.0,
+     "tok_s": 6364.9,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 5568.1,
-     "system_w": 14935.8,
-     "J_per_token": 2.5102,
-     "J_per_token_check": 2.5102,
-     "tok_s_per_kW": 398.4,
+     "dynamic_w": 5561.4,
+     "system_w": 14929.1,
+     "J_per_token": 2.3455,
+     "J_per_token_check": 2.3455,
+     "tok_s_per_kW": 426.3,
      "note": "pending measured draft"
     },
     "ar_sat": {
@@ -771,25 +771,25 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 14588.5,
-     "system_w": 23956.3,
-     "J_per_token": 1.6086,
-     "J_per_token_check": 1.6086,
-     "tok_s_per_kW": 621.7,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
      "note": "1M row carried at 200K"
     },
     "mtp_b1_sens_rom_ratio_as_built": {
-     "tok_s": 5200.0,
+     "tok_s": 5562.6,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 4866.3,
-     "system_w": 14234.0,
-     "J_per_token": 2.7373,
-     "J_per_token_check": 2.7373,
-     "tok_s_per_kW": 365.3,
+     "dynamic_w": 4860.4,
+     "system_w": 14228.1,
+     "J_per_token": 2.5578,
+     "J_per_token_check": 2.5578,
+     "tok_s_per_kW": 391.0,
      "note": "HBM draft = ROM measured draft/AR"
     }
    },
@@ -817,14 +817,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 3860.6,
+     "tok_s": 4129.8,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 3612.8,
-     "system_w": 12980.5,
-     "J_per_token": 3.3623,
-     "J_per_token_check": 3.3623,
-     "tok_s_per_kW": 297.4,
+     "dynamic_w": 3608.4,
+     "system_w": 12976.2,
+     "J_per_token": 3.1421,
+     "J_per_token_check": 3.1421,
+     "tok_s_per_kW": 318.3,
      "note": ""
     },
     "ar_sat": {
@@ -839,14 +839,14 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 14588.5,
-     "system_w": 23956.3,
-     "J_per_token": 1.6086,
-     "J_per_token_check": 1.6086,
-     "tok_s_per_kW": 621.7,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
      "note": "1M row carried at 200K"
     }
    },
@@ -874,14 +874,14 @@
      "note": "switch not charged (as earlier records)"
     },
     "mtp_b1": {
-     "tok_s": 1169.2,
+     "tok_s": 1250.7,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 1094.2,
-     "system_w": 10461.9,
-     "J_per_token": 8.9479,
-     "J_per_token_check": 8.9479,
-     "tok_s_per_kW": 111.8,
+     "dynamic_w": 1092.8,
+     "system_w": 10460.5,
+     "J_per_token": 8.3637,
+     "J_per_token_check": 8.3637,
+     "tok_s_per_kW": 119.6,
      "note": ""
     },
     "ar_sat": {
@@ -896,14 +896,14 @@
      "note": "HISTORICAL saturated aggregate (see ASSUMED.hbm_saturation)"
     },
     "mtp_sat": {
-     "tok_s": 14892.6,
+     "tok_s": 15931.1,
      "static_w": 9367.7,
      "switch_w": 4000.0,
-     "dynamic_w": 14588.5,
-     "system_w": 23956.3,
-     "J_per_token": 1.6086,
-     "J_per_token_check": 1.6086,
-     "tok_s_per_kW": 621.7,
+     "dynamic_w": 14571.6,
+     "system_w": 23939.3,
+     "J_per_token": 1.5027,
+     "J_per_token_check": 1.5027,
+     "tok_s_per_kW": 665.5,
      "note": "1M row carried at 200K"
     }
    },
@@ -977,13 +977,13 @@
     "hbm_accel": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 5.7394,
-     "per_user_mtp_per_1000mm2": 12.9855,
+     "per_user_mtp_per_1000mm2": 13.8911,
      "sat_ar_per_1000mm2": 55.31,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 2624.4,
-      "per_user_mtp": 5937.8,
+      "per_user_mtp": 6351.9,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 2624.4,
       "aggregate_sat_ar_tok_s_integer": 25292.7,
@@ -993,13 +993,13 @@
     "ablation_nvls": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 3.2408,
-     "per_user_mtp_per_1000mm2": 8.4308,
+     "per_user_mtp_per_1000mm2": 9.0186,
      "sat_ar_per_1000mm2": 55.31,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 1481.9,
-      "per_user_mtp": 3855.1,
+      "per_user_mtp": 4123.9,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 1481.9,
       "aggregate_sat_ar_tok_s_integer": 25292.7,
@@ -1009,13 +1009,13 @@
     "gpu_faithful_r0": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 0.7849,
-     "per_user_mtp_per_1000mm2": 2.5554,
+     "per_user_mtp_per_1000mm2": 2.7334,
      "sat_ar_per_1000mm2": 55.31,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 358.9,
-      "per_user_mtp": 1168.5,
+      "per_user_mtp": 1249.9,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 358.9,
       "aggregate_sat_ar_tok_s_integer": 25292.7,
@@ -1085,13 +1085,13 @@
     "hbm_accel": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 5.7514,
-     "per_user_mtp_per_1000mm2": 13.0122,
+     "per_user_mtp_per_1000mm2": 13.9195,
      "sat_ar_per_1000mm2": 91.12,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 2629.9,
-      "per_user_mtp": 5950.0,
+      "per_user_mtp": 6364.9,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 2629.9,
       "aggregate_sat_ar_tok_s_integer": 41663.8,
@@ -1101,13 +1101,13 @@
     "ablation_nvls": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 3.2447,
-     "per_user_mtp_per_1000mm2": 8.4428,
+     "per_user_mtp_per_1000mm2": 9.0315,
      "sat_ar_per_1000mm2": 91.12,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 1483.7,
-      "per_user_mtp": 3860.6,
+      "per_user_mtp": 4129.8,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 1483.7,
       "aggregate_sat_ar_tok_s_integer": 41663.8,
@@ -1117,13 +1117,13 @@
     "gpu_faithful_r0": {
      "total_mm2": 457264.0,
      "per_user_ar_per_1000mm2": 0.7851,
-     "per_user_mtp_per_1000mm2": 2.5569,
+     "per_user_mtp_per_1000mm2": 2.7352,
      "sat_ar_per_1000mm2": 91.12,
      "iso_rom_silicon": {
       "replicas_fractional": 1.752,
       "replicas_integer": 1,
       "per_user_ar": 359.0,
-      "per_user_mtp": 1169.2,
+      "per_user_mtp": 1250.7,
       "concurrent_b1_users_fractional": 1.75,
       "aggregate_b1_ar_tok_s": 359.0,
       "aggregate_sat_ar_tok_s_integer": 41663.8,
@@ -1182,8 +1182,8 @@
     "rule": "pipeline fill: every user keeps the batch-1 rate until the head binds"
    },
    "rom_mtp_as_built": {
-    "tok_s": 19640.7,
-    "users": 3.12,
+    "tok_s": 21010.2,
+    "users": 3.34,
     "per_user": 6294.8
    },
    "hbm_ar": {
@@ -1193,9 +1193,9 @@
     "rule": "column passes: per-user rate falls with batch (HISTORICAL resource model)"
    },
    "hbm_mtp": {
-    "tok_s": 14892.6,
+    "tok_s": 15931.1,
     "users": 4,
-    "per_user": 3723.2
+    "per_user": 3982.8
    },
    "b200x8_ar": {
     "tok_s": 59239.6,
@@ -1211,8 +1211,8 @@
     "rule": "pipeline fill: every user keeps the batch-1 rate until the head binds"
    },
    "rom_mtp_as_built": {
-    "tok_s": 19569.6,
-    "users": 3.02,
+    "tok_s": 20934.2,
+    "users": 3.23,
     "per_user": 6475.9
    },
    "hbm_ar": {
@@ -1222,9 +1222,9 @@
     "rule": "column passes: per-user rate falls with batch (HISTORICAL resource model)"
    },
    "hbm_mtp": {
-    "tok_s": 14892.6,
+    "tok_s": 15931.1,
     "users": 4,
-    "per_user": 3723.2
+    "per_user": 3982.8
    },
    "b200x8_ar": {
     "tok_s": 59239.6,
@@ -1308,18 +1308,18 @@
     ],
     "rom_mtp_sat": {
      "base_occupancy_us": 53.51,
-     "as_built": 19640.7,
-     "l1_fused": 24442.8
+     "as_built": 21010.2,
+     "l1_fused": 26147.1
     },
     "rom_mtp_dyn_J": {
      "step_J": 0.6218,
-     "per_token": 0.1599
+     "per_token": 0.1495
     },
     "hbm_dyn": {
      "ar_b1": 1.4614,
-     "mtp_b1": 0.9521,
+     "mtp_b1": 0.8901,
      "ar_sat": 0.5297,
-     "mtp_sat": 0.9959
+     "mtp_sat": 0.931
     }
    },
    "200K": {
@@ -1343,18 +1343,18 @@
     ],
     "rom_mtp_sat": {
      "base_occupancy_us": 54.23,
-     "as_built": 19569.6,
-     "l1_fused": 24332.7
+     "as_built": 20934.2,
+     "l1_fused": 26029.5
     },
     "rom_mtp_dyn_J": {
      "step_J": 0.6003,
-     "per_token": 0.1544
+     "per_token": 0.1443
     },
     "hbm_dyn": {
      "ar_b1": 1.4451,
-     "mtp_b1": 0.9358,
+     "mtp_b1": 0.8738,
      "ar_sat": 0.5134,
-     "mtp_sat": 0.9796
+     "mtp_sat": 0.9147
     }
    }
   },

@@ -1,0 +1,120 @@
+{
+  "schema": "opentallas.rtl.dsrom_wf_close.reset_equiv.v1",
+  "verdict": "PASS_EXACTNESS_ONLY",
+  "recorded_at": "2026-10-05T03:43:54.266824+00:00",
+  "source_commit": "e3221324e",
+  "controller_physical_pin": "3963c2f30",
+  "controller_hash_matches_current_physical": true,
+  "recipe_source_commit": "c1e6ed36e68489d96d7ea818b23d5acd044b440e",
+  "chosen_recipe": "tools/dsrom_wfc_reset_reference_recipe.sh",
+  "bench": "rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv",
+  "original_bench_preserved_at": "9f4dfd7be:rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv.sv",
+  "reference_boundary": "Only reference exposed in_ready=rst_n_ref&&raw_in_ready; entire observation/stimulus/checker suffix unchanged. No active-cycle, fault, range or golden checks waived.",
+  "source_sha256": {
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+    "rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv": "3c29fbef22cd0d47893a3e97ba5706d6a03991c2fe313067d5455763f76ec4a5",
+    "tools/dsrom_wfc_reset_reference_recipe.sh": "1263cb28038d866202b8ba34494e303d2d214584522f0c44ae3ce07a481b2178"
+  },
+  "host": "ot-epyc2",
+  "outputs": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/reset_equiv_e3221324e",
+  "status": "All original11 retained cases +MAXU866SOURCE1/SOURCE0 +12k-cycle latency case pass; one additive recipe only, no alternatebench or boundarygate replay.",
+  "cases": {
+    "lat12k": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4805972 fin=4804444/4805921 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "5333cb6d5e5cd6d31bc9e825e7032d36f432b562ecd7fa9c1fb15ff53c00ea26",
+      "build_log_sha256": "2c3c013cad9b81d5d97e7eedbf68a79a40e70073b5b70a036cabbae731c26d7b"
+    },
+    "s0_u866": {
+      "stats": "EQUIV STATS source=0 lockstep=1 maxu=866 users=866 cycles=1583387 fin=0/0 issues=20000/20000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=1580031/1580035 mism=0",
+      "pass": true,
+      "run_log_sha256": "42119c742d7372631782aa577aaecdbb61de2c486e59e161996071fc7daeaf53",
+      "build_log_sha256": "f41b0cf299728c1ccbd4c24c988b00c987acc979c0be9b76541299c712c6af47"
+    },
+    "s1_u866": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=866 users=866 cycles=876720 fin=562948/876669 issues=35010/30334 rejects=2846/2223 squashed=7298/2622 committed_ok=27712/27712 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "538b14d0361be495c3893e0f6654a06e43f4352e81f844b8bb3338205ab5942c",
+      "build_log_sha256": "1c195fddae0377dd16eddeb91bfed38e8a5fe926894088c63ed672572309688a"
+    },
+    "src_seed1_maxu16": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=16 users=12 cycles=16934 fin=14536/16883 issues=465/453 rejects=40/40 squashed=81/69 committed_ok=384/384 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "1da073b067006c1a09ce4af8fae447a440f0efc41e7f3df444e3df0594a3ca51",
+      "build_log_sha256": "bd8df81457018a91ea7c4ae125bd28cd9e66b29c9e8e56fcf106da2ae97a54f3"
+    },
+    "src_seed2_maxu40": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=40 users=37 cycles=32886 fin=20518/32835 issues=1331/1159 rejects=137/82 squashed=221/49 committed_ok=1110/1110 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "d594f1f7efffa8aa5429a65384352324480c68f4ee4d417c7ece1b5e70c66900",
+      "build_log_sha256": "8e839d5faff6b32c6e14bc4b810dda5bb783c722676a29187e60d3cc1524ce01"
+    },
+    "src_seed3_maxu40": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=40 users=40 cycles=43568 fin=24429/43517 issues=1615/1438 rejects=108/79 squashed=375/198 committed_ok=1240/1240 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "b52453eda58b36c9cf96f76d901973406c7dda54a8ac4c36bdfb68e3fdc46a8c",
+      "build_log_sha256": "140fbdeb3285d775f058984cb1217624a902f86edfa57953d4971a4794d18525"
+    },
+    "src_seed4_maxu64": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=64 users=50 cycles=98748 fin=90559/98697 issues=1797/1776 rejects=151/151 squashed=147/126 committed_ok=1650/1650 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "6008cd0f8e8866f2efd3dfb86892649101290d24d02f2b552753c8d36013c702",
+      "build_log_sha256": "c4d55d0bf504279150ffbf8895368a2cfea37d393ee6540461601b7a9d92fff8"
+    },
+    "src_seed5_maxu16": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=16 users=16 cycles=14024 fin=7407/13973 issues=632/510 rejects=70/26 squashed=136/14 committed_ok=496/496 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "4e328b15761d678b3d53c899ed917367a73008c706bb78d3c035e5bf49167293",
+      "build_log_sha256": "454dfc382f59fbe8666da4c702ce5e775705d66e55821008e2c22c5ff2e11a5f"
+    },
+    "src_seed6_maxu33": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=33 users=33 cycles=34982 fin=22186/34931 issues=1208/1176 rejects=82/81 squashed=86/54 committed_ok=1122/1122 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "7dfc8e938bf0b431cd78e0bbfd1cd9be59d872b345d0d92d043adf92a58efd43",
+      "build_log_sha256": "534b7bcc9ed3e0a7515b05f52e2579e9fec01012ab360e6ccd69c463277ea341"
+    },
+    "src_seed7_maxu70": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=70 users=66 cycles=58400 fin=31899/58349 issues=2289/2089 rejects=184/109 squashed=243/43 committed_ok=2046/2046 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "455870d0e9d2a60cb10e3a9a65d264f324c0b195f3745ec47ef3c9cf732eef6e",
+      "build_log_sha256": "96e8b944cb41cf408065564d7be9feddeff35f407e66d262434e8ce80fd746d5"
+    },
+    "src_seed8_maxu100": {
+      "stats": "EQUIV STATS source=1 lockstep=0 maxu=100 users=100 cycles=78816 fin=38863/78765 issues=3435/3028 rejects=272/85 squashed=435/28 committed_ok=3000/3000 err=0/0 fault_cyc=0/0 mism=0",
+      "pass": true,
+      "run_log_sha256": "df56303ab34a7b7b24c1909eabf93878db2ede80a97972e68841e6ea7eaf4d4c",
+      "build_log_sha256": "a01ca54efb9ef9feaeacd3de0d9fbd9042d87b3bb8b3b2465b8dfaca13bd0bc8"
+    },
+    "stg_seed1": {
+      "stats": "EQUIV STATS source=0 lockstep=1 maxu=20 users=15 cycles=90078 fin=0/0 issues=3000/3000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=88740/88744 mism=0",
+      "pass": true,
+      "run_log_sha256": "dfaba3bf6af7f47aeb4fd8695a7a19e06b2e3ad5c55adfc227a06427b339991c",
+      "build_log_sha256": "df38ab72a3ce0d443841939774fb495527c80674a195604472d2d1b4ce2bb505"
+    },
+    "stg_seed2": {
+      "stats": "EQUIV STATS source=0 lockstep=1 maxu=40 users=30 cycles=99175 fin=0/0 issues=3000/3000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=97604/97608 mism=0",
+      "pass": true,
+      "run_log_sha256": "6614d8dc94cbca2697463f9d9b0bb37ec94d25abd4899932f7dc700461c785ca",
+      "build_log_sha256": "ee8528d363953b0f3e4a64069808a5e987fe36c6936cafa053a5765e7a595a9f"
+    },
+    "stg_seed3": {
+      "stats": "EQUIV STATS source=0 lockstep=1 maxu=60 users=45 cycles=108192 fin=0/0 issues=3000/3000 rejects=0/0 squashed=0/0 committed_ok=0/0 err=0/0 fault_cyc=106600/106604 mism=0",
+      "pass": true,
+      "run_log_sha256": "e80d1284e4ea1682c842090635f59ccc10b5083802386a4e0825561a4d8b3242",
+      "build_log_sha256": "3698469021e6b75e1364849e5b8abcb8ccfce4146fbe60d11ee116dfff830f61"
+    }
+  },
+  "latency": {
+    "reference_finish_cycles": 4804444,
+    "dut_finish_cycles": 4805921,
+    "added_cycles": 1477,
+    "added_fraction": 0.0003074237102149593,
+    "added_percent": 0.03074237102149593,
+    "issues_per_controller": 400,
+    "added_cycles_per_issue": 3.6925,
+    "same_issue_reject_squash_counts": true
+  },
+  "physical_signoff": "Pending for corrected source; no target rate or full-token exactness claim.",
+  "run_script_sha256": "8bc4e14f8ee7ff880b96627dd8317d84f64a2d30c5e3aa5ce15361cb008ef25e"
+}

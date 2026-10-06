@@ -1,0 +1,44 @@
+{
+  "source_commit": "7957cd35bac553804018405e52083f0c694d2f56",
+  "row_decode_lineage": "b9e8736495b32e68c2bdd20db7bec84c137988ec",
+  "gates": {
+    "frontend": {
+      "verdict": "PASS",
+      "runs": 2,
+      "source_record_sha256": "a498e6edb5a3fd5556cbf0732df18a24dd24ae243b180a53c4ce932388cb6d79"
+    },
+    "qtiming": {
+      "verdict": "PASS",
+      "runs": 11,
+      "source_record_sha256": "f53ef278aff06de1f657513d94b4acd5112fe1a9f55fdaa82b6c93d0e225ac68"
+    },
+    "pg": {
+      "verdict": {
+        "exact_with_gating": true,
+        "mutants_detected": {
+          "no_restore": true,
+          "no_iso": true,
+          "short_lead": true
+        }
+      },
+      "runs": 4,
+      "source_record_sha256": "c09210401390529414bde3fd4cdb2efa18f5fb39764bf4fe0ee8f8812093368f"
+    },
+    "pg_cdc": {
+      "verdict": {
+        "exact_with_gating": true,
+        "mutants_detected": {
+          "spine_late": true,
+          "no_restore": true,
+          "no_iso": true,
+          "short_lead": true
+        }
+      },
+      "runs": 5,
+      "source_record_sha256": "0439e3664d5532d67b2d0d0119616b87b9e481e1ab0a68636941b1325434f1ce"
+    }
+  },
+  "physical_qualified": false,
+  "energy_credit": false,
+  "scope": "Corrected element frontend/QTIMING/PG/PG_CDC gates only; no field or full-token requalification. Rawls owns independent QZ result."
+}

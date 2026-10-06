@@ -1,0 +1,76 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 1327378
+[INFO GRT-0198] Via related Steiner nodes: 35099
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1798896
+[INFO GRT-0112] Final usage 3D: 7637179
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             1170423        710449           60.70%             2 /  0 / 15
+M3             1431180        646701           45.19%             0 /  2 / 39
+M4             1130582        444549           39.32%             2 /  0 /  9
+M5             1344441        138366           10.29%             0 /  2 / 51
+M6             1216305        242206           19.91%             1 /  0 /  4
+M7             1290300         58220            4.51%             0 /  2 / 37
+---------------------------------------------------------------------------------------
+Total          7583231       2240491           29.55%             5 /  6 / 155
+
+[INFO GRT-0018] Total wirelength: 1615174 um
+[INFO GRT-0014] Routed nets: 182974
+[WARNING GRT-0704] Try reduce the layer adjustment from 25% to 12%
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+write_db /work/results/asap7/opentallas_ot_v41_rom_elem_q_qp_w10_asap7_item8_q_scan_fanout_frame_plus15_scan/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0116
+
+Elapsed time: 0:05.49[h:]min:sec. CPU time: user 5.28 sys 0.20 (99%). Peak memory: 625900KB.
+Elapsed time: 3:59.95[h:]min:sec. CPU time: user 264.20 sys 19.86 (118%). Peak memory: 923976KB.
+Elapsed time: 7:27.45[h:]min:sec. CPU time: user 229.11 sys 32.00 (58%). Peak memory: 968964KB.
+Elapsed time: 0:02.53[h:]min:sec. CPU time: user 2.33 sys 0.19 (99%). Peak memory: 480220KB.
+Elapsed time: 0:05.86[h:]min:sec. CPU time: user 5.63 sys 0.22 (99%). Peak memory: 588384KB.
+Elapsed time: 4:03.19[h:]min:sec. CPU time: user 585.20 sys 0.81 (240%). Peak memory: 753708KB.
+Elapsed time: 0:03.02[h:]min:sec. CPU time: user 2.47 sys 0.18 (87%). Peak memory: 500668KB.
+Elapsed time: 16:47.43[h:]min:sec. CPU time: user 2611.06 sys 16.72 (260%). Peak memory: 2366348KB.
+Elapsed time: 1:49.24[h:]min:sec. CPU time: user 126.98 sys 8.12 (123%). Peak memory: 1135328KB.
+Elapsed time: 3:45.49[h:]min:sec. CPU time: user 245.46 sys 11.11 (113%). Peak memory: 3064332KB.
+Elapsed time: 8:37.92[h:]min:sec. CPU time: user 622.10 sys 81.61 (135%). Peak memory: 1906916KB.
+Elapsed time: 10:35.47[h:]min:sec. CPU time: user 3370.07 sys 117.67 (548%). Peak memory: 3367672KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_ot_v41_rom_elem_q_qp_w10_asap7_item8_q_scan_fanout_frame_plus15_scan/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/tapeout-item8-20261004/fanout-plus15/physical.json

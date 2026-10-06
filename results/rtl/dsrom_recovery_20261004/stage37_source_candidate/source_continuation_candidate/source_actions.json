@@ -1,0 +1,262 @@
+{
+  "events": [
+    {
+      "ordinal": 7,
+      "node": "L19.A0",
+      "kind": "runtime_action",
+      "required_provider": "runtime_action",
+      "depends_on": [
+        6
+      ],
+      "catalogue_producer_id": 2360,
+      "native_groups": [
+        1
+      ],
+      "required_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "missing": [
+        "Arch retained source14 accepted Offer/native writer/lease; Epic native restore provider"
+      ],
+      "source_action": {
+        "action": {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": true,
+          "source": 14
+        },
+        "id": "L19.A0",
+        "kind": "runtime_action",
+        "scope": 19
+      },
+      "source_continuation": "native_SU_BYP",
+      "restore": {
+        "source_node": "L14.I63",
+        "source_catalogue_producer": 1792,
+        "source_template_sha256": "d0ca14372349ed80e998c5140108eaf4796bb1ed121c3b5529e9729abd4e6c79",
+        "source_home": 28,
+        "destination_home": 38,
+        "source_dies": [
+          112,
+          113,
+          114,
+          115
+        ],
+        "destination_dies": [
+          152,
+          153,
+          154,
+          155
+        ],
+        "source_address": 447360,
+        "destination_address": 447360,
+        "words": 512,
+        "scalar_format": "raw unsigned ID32",
+        "bytes_per_rank": 2048,
+        "source_native_entry": null,
+        "source_native_pc": null,
+        "source_native_writer": null,
+        "source_accepted_offer": null,
+        "destination_entry": 113,
+        "destination_producer_pc": 113,
+        "destination_end_pc": 114,
+        "destination_catalogue_writer": 2360,
+        "word_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000006d38040000000000000040000000001b4e000000000008000000000369c0000000000100000000006d3800000000000000000040000000001b4e00000001000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fa",
+        "word_sha256": "10603c1ac00c9122a5469f7e222b5f919fb2f679fd8c3d443fcaa1881a7bf2db",
+        "provider_header": "tools/runtime/dsrom/s81_source_selection_restore.hpp",
+        "native_factory": "dsrom_s81_bind_minimum_su256",
+        "required_owner_binding": "Arch retained source14 accepted Offer/native writer/lease; Epic native restore provider",
+        "source_and_destination_numeric_addresses_are_not_aliases": true,
+        "actual_hooks_bound": false
+      },
+      "runtime_binding_required": true
+    },
+    {
+      "ordinal": 116,
+      "node": "L19.fence",
+      "kind": "consumer_done_fence",
+      "required_provider": "consumer_done_fence",
+      "depends_on": [
+        115
+      ],
+      "catalogue_producer_id": 2469,
+      "native_groups": [],
+      "required_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "missing": [
+        "Arch actual accepted terminal context, whole ordered coverage and native visibility/drain pins"
+      ],
+      "source_action": {
+        "contract": "END plus actual vector/collective/persistent publication/return consumers done",
+        "id": "L19.fence",
+        "kind": "consumer_done_fence",
+        "scope": 19
+      },
+      "source_continuation": "native_typed_STAGE_HANDOFF",
+      "terminal": {
+        "source_node": "L19.I114",
+        "fence_node": "L19.fence",
+        "candidate_home": 38,
+        "terminal_entry": 101,
+        "producer_pc": 111,
+        "end_pc": 112,
+        "designation": "intermediate stage/layer handoff, not token terminal",
+        "actual_hooks_bound": false,
+        "request_kind": 1,
+        "request_kind_name": "STAGE_HANDOFF",
+        "token_result_valid": false
+      },
+      "runtime_binding_required": true
+    },
+    {
+      "ordinal": 124,
+      "node": "L20.A0",
+      "kind": "runtime_action",
+      "required_provider": "runtime_action",
+      "depends_on": [
+        123
+      ],
+      "catalogue_producer_id": 2477,
+      "native_groups": [],
+      "required_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "missing": [],
+      "source_action": {
+        "action": {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 20
+        },
+        "id": "L20.A0",
+        "kind": "runtime_action",
+        "scope": 20
+      },
+      "source_continuation": "inactive_optional_restore",
+      "runtime_binding_required": false,
+      "native_reads": 0,
+      "native_writes": 0,
+      "native_ACKs": 0
+    },
+    {
+      "ordinal": 262,
+      "node": "L20.fence",
+      "kind": "consumer_done_fence",
+      "required_provider": "consumer_done_fence",
+      "depends_on": [
+        261
+      ],
+      "catalogue_producer_id": 2615,
+      "native_groups": [],
+      "required_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "missing": [
+        "Arch actual accepted terminal context, whole ordered coverage and native visibility/drain pins"
+      ],
+      "source_action": {
+        "contract": "END plus actual vector/collective/persistent publication/return consumers done",
+        "id": "L20.fence",
+        "kind": "consumer_done_fence",
+        "scope": 20
+      },
+      "source_continuation": "native_typed_STAGE_HANDOFF",
+      "terminal": {
+        "source_node": "L20.I143",
+        "fence_node": "L20.fence",
+        "candidate_home": 40,
+        "terminal_entry": 118,
+        "producer_pc": 128,
+        "end_pc": 129,
+        "designation": "intermediate stage/layer handoff, not token terminal",
+        "actual_hooks_bound": false,
+        "request_kind": 1,
+        "request_kind_name": "STAGE_HANDOFF",
+        "token_result_valid": false
+      },
+      "runtime_binding_required": true
+    }
+  ],
+  "source_selection_restore": {
+    "source_node": "L14.I63",
+    "source_catalogue_producer": 1792,
+    "source_template_sha256": "d0ca14372349ed80e998c5140108eaf4796bb1ed121c3b5529e9729abd4e6c79",
+    "source_home": 28,
+    "destination_home": 38,
+    "source_dies": [
+      112,
+      113,
+      114,
+      115
+    ],
+    "destination_dies": [
+      152,
+      153,
+      154,
+      155
+    ],
+    "source_address": 447360,
+    "destination_address": 447360,
+    "words": 512,
+    "scalar_format": "raw unsigned ID32",
+    "bytes_per_rank": 2048,
+    "source_native_entry": null,
+    "source_native_pc": null,
+    "source_native_writer": null,
+    "source_accepted_offer": null,
+    "destination_entry": 113,
+    "destination_producer_pc": 113,
+    "destination_end_pc": 114,
+    "destination_catalogue_writer": 2360,
+    "word_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000006d38040000000000000040000000001b4e000000000008000000000369c0000000000100000000006d3800000000000000000040000000001b4e00000001000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fa",
+    "word_sha256": "10603c1ac00c9122a5469f7e222b5f919fb2f679fd8c3d443fcaa1881a7bf2db",
+    "provider_header": "tools/runtime/dsrom/s81_source_selection_restore.hpp",
+    "native_factory": "dsrom_s81_bind_minimum_su256",
+    "required_owner_binding": "Arch retained source14 accepted Offer/native writer/lease; Epic native restore provider",
+    "source_and_destination_numeric_addresses_are_not_aliases": true,
+    "actual_hooks_bound": false
+  },
+  "model": {
+    "added_instruction_words_per_rank": 2,
+    "added_active_program_bytes_TP4": 2048,
+    "copied_bytes_per_rank": 2048,
+    "copied_bytes_TP4": 8192,
+    "native_operand_references_per_rank": 2048,
+    "native_prefetch_scalar_reads_per_rank": 512,
+    "native_prefetch_scalar_port_parallelism": 1,
+    "native_publication_writes_per_rank": 512,
+    "native_target_ACKs_per_rank": 512,
+    "added_FF": 0,
+    "added_global_port_bits": 0,
+    "added_response_edges": null,
+    "SU_serial_clock_GHz": 0.9,
+    "loaded_clock_binding_qualified": false,
+    "copy_cycles": null,
+    "transport_cycles": null,
+    "source_lease_hold_cycles": null,
+    "fence_drain_cycles": null,
+    "physical_area": null,
+    "physical_slots": null,
+    "adopted": false
+  }
+}

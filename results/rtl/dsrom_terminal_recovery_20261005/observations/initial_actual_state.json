@@ -1,0 +1,667 @@
+[
+  {
+    "observed_utc": "2026-10-05T19:13:58.449703+00:00",
+    "host": "ot-epyc1tb",
+    "jobs": {
+      "c0r128_h20s40": {
+        "root": "/srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40",
+        "launcher_pid": 164052,
+        "kind": "spine",
+        "containers": [
+          {
+            "id": "b040290f042889081feca9cb046597cf7d516119c6241f8f7fef3fa8bce45d2c",
+            "init_pid": 166680,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch/codex/dsrom-field-spine-route/wt-87841884f",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 164052,
+            "ppid": 1,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /srv/opentallas-scratch/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch/codex/dsrom-field-spine-route/mapped c0r128_h20s40 /srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40 0 128 0.02 40 "
+          },
+          {
+            "pid": 164116,
+            "ppid": 164052,
+            "state": "S",
+            "cpu_ticks": 287,
+            "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 40 --hold-margin-ns 0.02 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=0 --param R=128 --die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84 --nickname-tag dsfs_c0r128_h20s40 --keep-workdir /srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40/work --output /srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40/physical.json "
+          },
+          {
+            "pid": 166546,
+            "ppid": 164116,
+            "state": "S",
+            "cpu_ticks": 107,
+            "command": "docker run --rm -v /srv/opentallas-scratch/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 166680,
+            "ppid": 166624,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 166749,
+            "ppid": 166680,
+            "state": "S",
+            "cpu_ticks": 3,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 2128777,
+            "ppid": 166749,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt "
+          },
+          {
+            "pid": 2128795,
+            "ppid": 2128777,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 2128797,
+            "ppid": 2128795,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 2128816,
+            "ppid": 2128797,
+            "state": "S",
+            "cpu_ticks": 13,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h20s40/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h20s40/base/5_1_grt.json "
+          },
+          {
+            "pid": 2128817,
+            "ppid": 2128816,
+            "state": "R",
+            "cpu_ticks": 1386458,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h20s40/base/5_1_grt.json "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch/codex/dsrom-field-spine-route/routes_c0r128_h20s40/work/orfs/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h20s40/base/5_1_grt.tmp.log",
+          "bytes": 185983,
+          "mtime_ns": 1791227624397441984,
+          "tail": " |    -2118.8 |    256 | u_sp.fq\\[0\\]\\[120\\]$_DFFE_PP_/D\n------------------------------------------------------------------------------------------------------------------------------\n[INFO RSZ-0059] Removed 5 buffers.\n[INFO RSZ-0040] Inserted 20 buffers.\n[INFO RSZ-0051] Resized 122 instances: 122 up, 0 up match, 0 down, 0 VT\n[INFO RSZ-0043] Swapped pins on 6 instances.\n[INFO RSZ-0049] Cloned 20 instances.\n[WARNING RSZ-0062] Unable to repair all setup violations.\n[INFO RSZ-0505] Runtime: 3486.32s\n[INFO RSZ-0046] Found 2013 endpoints with hold violations.\nIteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint\n--------------------------------------------------------------------------------------\n        0 |       0 |       0 |            0 |    +0.0% | -14.713 | -194.057 | o_w_addr[550]$_DFF_P_/D\n       10 |       0 |      29 |            0 |    +0.0% |  -7.234 | -87.111 | o_w_addr[446]$_DFF_P_/D\n       20 |       0 |      59 |            0 |    +0.0% |  -4.624 | -30.587 | u_sp.q0_row[421]$_DFF_P_/D\n       30 |       0 |      88 |            0 |    +0.0% |  -0.620 |  -1.471 | u_sp.q0_row[376]$_DFF_P_/D\n       40 |       0 |     109 |            0 |    +0.0% |   1.104 |   0.000 | u_sp.w_addr[601]$_DFF_P_/D\n       50 |       0 |     129 |            0 |    +0.0% |   2.446 |   0.000 | u_sp.w_addr[1153]$_DFF_P_/D\n       60 |       0 |     149 |            0 |    +0.0% |   3.318 |   0.000 | u_sp.w_addr[451]$_DFF_P_/D\n       70 |       0 |     169 |            0 |    +0.0% |   4.205 |   0.000 | u_sp.w_addr[1149]$_DFF_P_/D\n       80 |       0 |     189 |            0 |    +0.0% |   4.914 |   0.000 | u_sp.w_addr[200]$_DFF_P_/D\n       90 |       0 |     209 |            0 |    +0.0% |   5.326 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[63]$_DFF_PN0_/D\n      100 |       0 |     229 |            0 |    +0.0% |   6.091 |   0.000 | u_sp.q0_f32[3244]$_DFF_P_/D\n      110 |       0 |     249 |            0 |    +0.0% |   7.023 |   0.000 | u_sp.w_addr[557]$_DFF_P_/D\n      120 |       0 |     269 |            0 |    +0.0% |   7.450 |   0.000 | o_w_addr[1894]$_DFF_P_/D\n      130 |       0 |     289 |            0 |    +0.0% |   7.864 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[1816]$_DFF_PN0_/D\n      140 |       0 |     309 |            0 |    +0.0% |   8.234 |   0.000 | u_sp.w_addr[793]$_DFF_P_/D\n      150 |       0 |     327 |            0 |    +0.0% |   8.848 |   0.000 | u_sp.w_addr[560]$_DFF_P_/D\n      160 |       0 |     341 |            0 |    +0.0% |   9.436 |   0.000 | o_w_addr[1913]$_DFF_P_/D\n      170 |       0 |     354 |            0 |    +0.0% |   9.647 |   0.000 | u_sp.w_addr[618]$_DFF_P_/D\n      180 |       0 |     367 |            0 |    +0.0% |   9.947 |   0.000 | u_sp.w_addr[404]$_DFF_P_/D\n      190 |       0 |     379 |            0 |    +0.0% |  10.334 |   0.000 | u_sp.g_reg[21].q2_a[1]$_DFF_P_/D\n      200 |       0 |     391 |            0 |    +0.0% |  10.546 |   0.000 | o_w_addr[290]$_DFF_P_/D\n      210 |       0 |     402 |            0 |    +0.0% |  10.720 |   0.000 | o_w_addr[1906]$_DFF_P_/D\n      220 |       0 |     416 |            0 |    +0.0% |  10.904 |   0.000 | o_w_addr[262]$_DFF_P_/D\n      230 |       0 |     429 |            0 |    +0.0% |  11.103 |   0.000 | u_sp.w_addr[780]$_DFF_P_/D\n      240 |       0 |     441 |            0 |    +0.0% |  11.372 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[54]$_DFF_PN0_/D\n      250 |       0 |     452 |            0 |    +0.0% |  11.544 |   0.000 | u_sp.q0_e[18]$_DFF_P_/D\n      260 |       0 |     463 |            0 |    +0.0% |  11.736 |   0.000 | u_sp.q0_row[423]$_DFF_P_/D\n      270 |       0 |     475 |            0 |    +0.0% |  11.911 |   0.000 | u_sp.q0_f32[895]$_DFF_P_/D\n      280 |       0 |     487 |            0 |    +0.0% |  12.007 |   0.000 | u_sp.w_addr[397]$_DFF_P_/D\n      290 |       0 |     498 |            0 |    +0.0% |  12.155 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[843]$_DFF_PN0_/D\n      300 |       0 |     508 |            0 |    +0.0% |  12.330 |   0.000 | u_sp.g_grp[3].u_rep/q[345]$_DFF_P_/D\n"
+        },
+        "terminal_files": {},
+        "live": true
+      }
+    }
+  },
+  {
+    "observed_utc": "2026-10-05T19:13:58.400612+00:00",
+    "host": "ot-epyc2",
+    "jobs": {
+      "c0r16_h30s40": {
+        "root": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40",
+        "launcher_pid": 1686757,
+        "kind": "spine",
+        "containers": [
+          {
+            "id": "5f7056b1caaad5a2520c5e45dbbeb7a188c0b03fc786aecc8a49b1b58c63b05d",
+            "init_pid": 1688873,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 1686757,
+            "ppid": 1,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /srv/opentallas-scratch2/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch2/codex/dsrom-field-spine-route/mapped c0r16_h30s40 /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40 0 16 0.03 40 "
+          },
+          {
+            "pid": 1686778,
+            "ppid": 1686757,
+            "state": "S",
+            "cpu_ticks": 203,
+            "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 40 --hold-margin-ns 0.03 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=0 --param R=16 --core-utilization 35 --nickname-tag dsfs_c0r16_h30s40 --keep-workdir /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40/work --output /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40/physical.json "
+          },
+          {
+            "pid": 1688831,
+            "ppid": 1686778,
+            "state": "S",
+            "cpu_ticks": 88,
+            "command": "docker run --rm -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1688873,
+            "ppid": 1688850,
+            "state": "S",
+            "cpu_ticks": 2,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1688898,
+            "ppid": 1688873,
+            "state": "S",
+            "cpu_ticks": 2,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 2425018,
+            "ppid": 1688898,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt "
+          },
+          {
+            "pid": 2425356,
+            "ppid": 2425018,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 2425358,
+            "ppid": 2425356,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 2425504,
+            "ppid": 2425358,
+            "state": "S",
+            "cpu_ticks": 9,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/5_1_grt.json "
+          },
+          {
+            "pid": 2425527,
+            "ppid": 2425504,
+            "state": "R",
+            "cpu_ticks": 1407704,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/5_1_grt.json "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r16_h30s40/work/orfs/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/5_1_grt.tmp.log",
+          "bytes": 94231,
+          "mtime_ns": 1791227622815494575,
+          "tail": " 4443 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4240 |       0 |    4453 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4250 |       0 |    4463 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4260 |       0 |    4472 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4270 |       0 |    4482 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4280 |       0 |    4492 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4290 |       0 |    4502 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4300 |       0 |    4512 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4310 |       0 |    4522 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4320 |       0 |    4532 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4330 |       0 |    4542 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4340 |       0 |    4552 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4350 |       0 |    4562 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4360 |       0 |    4572 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4370 |       0 |    4582 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4380 |       0 |    4592 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4390 |       0 |    4602 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4400 |       0 |    4611 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4410 |       0 |    4621 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4420 |       0 |    4631 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4430 |       0 |    4641 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4440 |       0 |    4651 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4450 |       0 |    4661 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4460 |       0 |    4671 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4470 |       0 |    4681 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4480 |       0 |    4691 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4490 |       0 |    4701 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4500 |       0 |    4711 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4510 |       0 |    4721 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4520 |       0 |    4731 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4530 |       0 |    4741 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4540 |       0 |    4751 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4550 |       0 |    4761 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4560 |       0 |    4771 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4570 |       0 |    4781 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4580 |       0 |    4791 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4590 |       0 |    4801 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4600 |       0 |    4811 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4610 |       0 |    4821 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n     4620 |       0 |    4831 |            0 |    +0.8% |  23.888 |   0.000 | u_sp.q1_f[9]$_DFF_PN0_/D\n"
+        },
+        "terminal_files": {},
+        "live": true
+      },
+      "c0r128_h30s50": {
+        "root": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50",
+        "launcher_pid": 1686759,
+        "kind": "spine",
+        "containers": [
+          {
+            "id": "d5783976ec8f88ac2cc1f4294ff35661bb9271b14f962783d979ae5b3fdf4385",
+            "init_pid": 1689359,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 1686759,
+            "ppid": 1,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /srv/opentallas-scratch2/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch2/codex/dsrom-field-spine-route/mapped c0r128_h30s50 /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50 0 128 0.03 50 "
+          },
+          {
+            "pid": 1686780,
+            "ppid": 1686759,
+            "state": "S",
+            "cpu_ticks": 260,
+            "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 50 --hold-margin-ns 0.03 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=0 --param R=128 --die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84 --nickname-tag dsfs_c0r128_h30s50 --keep-workdir /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50/work --output /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50/physical.json "
+          },
+          {
+            "pid": 1689262,
+            "ppid": 1686780,
+            "state": "S",
+            "cpu_ticks": 124,
+            "command": "docker run --rm -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689359,
+            "ppid": 1689310,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689429,
+            "ppid": 1689359,
+            "state": "S",
+            "cpu_ticks": 2,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1961214,
+            "ppid": 1689429,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt "
+          },
+          {
+            "pid": 1961232,
+            "ppid": 1961214,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1961236,
+            "ppid": 1961232,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1961288,
+            "ppid": 1961236,
+            "state": "S",
+            "cpu_ticks": 15,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h30s50/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h30s50/base/5_1_grt.json "
+          },
+          {
+            "pid": 1961423,
+            "ppid": 1961288,
+            "state": "R",
+            "cpu_ticks": 1447391,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h30s50/base/5_1_grt.json "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c0r128_h30s50/work/orfs/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r128_h30s50/base/5_1_grt.tmp.log",
+          "bytes": 201800,
+          "mtime_ns": 1791227632760562711,
+          "tail": " |    -3298.5 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2289+ |       2 |     108 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3298.5 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2290+ |       2 |     108 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3298.5 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2291+ |       2 |     109 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3291.5 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2292+ |       2 |     109 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3291.5 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2295+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2296+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2297+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2298+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2299+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    2300+ |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    323 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n    final |       2 |     112 |       21 |     20 |     9 |    +0.0% |  -21.686 |      -92.9 |    -3276.0 |    322 | u_sp.fq\\[0\\]\\[126\\]$_DFFE_PP_/D\n------------------------------------------------------------------------------------------------------------------------------\n[INFO RSZ-0059] Removed 2 buffers.\n[INFO RSZ-0045] Inserted 21 buffers, 1 to split loads.\n[INFO RSZ-0051] Resized 112 instances: 112 up, 0 up match, 0 down, 0 VT\n[INFO RSZ-0043] Swapped pins on 9 instances.\n[INFO RSZ-0049] Cloned 20 instances.\n[WARNING RSZ-0062] Unable to repair all setup violations.\n[INFO RSZ-0505] Runtime: 3341.78s\n[INFO RSZ-0046] Found 23729 endpoints with hold violations.\nIteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint\n--------------------------------------------------------------------------------------\n        0 |       0 |       0 |            0 |    +0.0% | -32.260 | -772.126 | o_w_addr[530]$_DFF_P_/D\n       10 |       0 |      36 |            0 |    +0.0% | -24.745 | -522.241 | u_sp.w_addr[306]$_DFF_P_/D\n       20 |       0 |      74 |            0 |    +0.0% | -14.370 | -316.212 | u_sp.q0_row[240]$_DFF_P_/D\n       30 |       0 |     114 |            0 |    +0.0% | -10.804 | -185.730 | u_sp.w_addr[434]$_DFF_P_/D\n       40 |       0 |     154 |            0 |    +0.0% |  -5.924 | -96.938 | o_w_addr[395]$_DFF_P_/D\n       50 |       0 |     190 |            0 |    +0.0% |  -4.273 | -46.010 | u_sp.q0_row[431]$_DFF_P_/D\n       60 |       0 |     224 |            0 |    +0.0% |  -2.296 | -13.460 | u_sp.w_data[2678]$_DFF_P_/D\n       70 |       0 |     254 |            0 |    +0.0% |  -0.340 |  -0.860 | u_sp.g_bst.u_bst.genblk1.g_line.line[515]$_DFF_PN0_/D\n       80 |       0 |     284 |            0 |    +0.0% |   0.670 |   0.000 | u_sp.w_addr[510]$_DFF_P_/D\n       90 |       0 |     315 |            0 |    +0.0% |   1.059 |   0.000 | o_w_addr[613]$_DFF_P_/D\n      100 |       0 |     347 |            0 |    +0.0% |   1.731 |   0.000 | u_sp.w_addr[619]$_DFF_P_/D\n      110 |       0 |     377 |            0 |    +0.0% |   1.940 |   0.000 | u_sp.q0_row[374]$_DFF_P_/D\n      120 |       0 |     410 |            0 |    +0.0% |   1.940 |   0.000 | u_sp.q0_row[374]$_DFF_P_/D\n      130 |       0 |     442 |            0 |    +0.0% |   1.940 |   0.000 | u_sp.q0_row[374]$_DFF_P_/D\n      140 |       0 |     472 |            0 |    +0.0% |   1.940 |   0.000 | u_sp.q0_row[374]$_DFF_P_/D\n      150 |       0 |     507 |            0 |    +0.0% |   1.940 |   0.000 | u_sp.q0_row[374]$_DFF_P_/D\n"
+        },
+        "terminal_files": {},
+        "live": true
+      },
+      "c1r128_h20s40": {
+        "root": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40",
+        "launcher_pid": 1686761,
+        "kind": "spine",
+        "containers": [
+          {
+            "id": "d60cab44a12bcd829b1c968246df34e0b59d1ff82aaa39ec98767cc31e0ab84e",
+            "init_pid": 1689097,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 1686761,
+            "ppid": 1,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /srv/opentallas-scratch2/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch2/codex/dsrom-field-spine-route/mapped c1r128_h20s40 /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40 1 128 0.02 40 "
+          },
+          {
+            "pid": 1686779,
+            "ppid": 1686761,
+            "state": "S",
+            "cpu_ticks": 216,
+            "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 40 --hold-margin-ns 0.02 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=1 --param R=128 --die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84 --nickname-tag dsfs_c1r128_h20s40 --keep-workdir /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40/work --output /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40/physical.json "
+          },
+          {
+            "pid": 1689026,
+            "ppid": 1686779,
+            "state": "S",
+            "cpu_ticks": 92,
+            "command": "docker run --rm -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689097,
+            "ppid": 1689060,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689190,
+            "ppid": 1689097,
+            "state": "S",
+            "cpu_ticks": 3,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1855976,
+            "ppid": 1689190,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt "
+          },
+          {
+            "pid": 1855994,
+            "ppid": 1855976,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1855996,
+            "ppid": 1855994,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1856015,
+            "ppid": 1855996,
+            "state": "S",
+            "cpu_ticks": 11,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h20s40/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h20s40/base/5_1_grt.json "
+          },
+          {
+            "pid": 1856016,
+            "ppid": 1856015,
+            "state": "R",
+            "cpu_ticks": 1455527,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h20s40/base/5_1_grt.json "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h20s40/work/orfs/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h20s40/base/5_1_grt.tmp.log",
+          "bytes": 117574,
+          "mtime_ns": 1791227606113380145,
+          "tail": " |    1137 |            0 |    +0.1% |  15.601 |   0.000 | o_w_data[2241]$_DFF_P_/D\n      790 |       0 |    1146 |            0 |    +0.1% |  15.646 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[248]$_DFF_PN0_/D\n      800 |       0 |    1156 |            0 |    +0.1% |  15.710 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[2799]$_DFF_PN0_/D\n      810 |       0 |    1165 |            0 |    +0.1% |  15.765 |   0.000 | u_sp.q1_bf[185]$_DFF_P_/D\n      820 |       0 |    1175 |            0 |    +0.1% |  15.833 |   0.000 | u_sp.w_addr[91]$_DFF_P_/D\n      830 |       0 |    1186 |            0 |    +0.1% |  15.899 |   0.000 | u_sp.q0_f32[3777]$_DFF_P_/D\n      840 |       0 |    1196 |            0 |    +0.1% |  15.975 |   0.000 | u_sp.q0_f32[3161]$_DFF_P_/D\n      850 |       0 |    1206 |            0 |    +0.1% |  16.024 |   0.000 | u_sp.q1_bf[1955]$_DFF_P_/D\n      860 |       0 |    1216 |            0 |    +0.1% |  16.069 |   0.000 | u_sp.g_reg[95].q2_a[9]$_DFF_P_/D\n      870 |       0 |    1227 |            0 |    +0.1% |  16.100 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[2382]$_DFF_PN0_/D\n      880 |       0 |    1237 |            0 |    +0.1% |  16.153 |   0.000 | o_w_addr[108]$_DFF_P_/D\n      890 |       0 |    1247 |            0 |    +0.1% |  16.208 |   0.000 | o_w_data[3429]$_DFF_P_/D\n      900 |       0 |    1257 |            0 |    +0.1% |  16.276 |   0.000 | o_w_data[885]$_DFF_P_/D\n      910 |       0 |    1266 |            0 |    +0.1% |  16.347 |   0.000 | o_bus[480]$_DFF_P_/D\n      920 |       0 |    1274 |            0 |    +0.1% |  16.397 |   0.000 | u_sp.q0_f32[818]$_DFF_P_/D\n      930 |       0 |    1284 |            0 |    +0.1% |  16.428 |   0.000 | o_w_data[511]$_DFF_P_/D\n      940 |       0 |    1293 |            0 |    +0.1% |  16.504 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[651]$_DFF_PN0_/D\n      950 |       0 |    1302 |            0 |    +0.1% |  16.553 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[47]$_DFF_PN0_/D\n      960 |       0 |    1312 |            0 |    +0.1% |  16.642 |   0.000 | o_w_data[2484]$_DFF_P_/D\n      970 |       0 |    1322 |            0 |    +0.1% |  16.690 |   0.000 | u_sp.q0_f32[206]$_DFF_P_/D\n      980 |       0 |    1331 |            0 |    +0.1% |  16.737 |   0.000 | o_w_addr[19]$_DFF_P_/D\n      990 |       0 |    1341 |            0 |    +0.1% |  16.796 |   0.000 | u_sp.q0_f32[544]$_DFF_P_/D\n     1000 |       0 |    1350 |            0 |    +0.1% |  16.837 |   0.000 | u_sp.q0_row[1512]$_DFF_P_/D\n     1010 |       0 |    1360 |            0 |    +0.1% |  16.907 |   0.000 | u_sp.g_reg[11].q2_bf[10]$_DFF_P_/D\n     1020 |       0 |    1370 |            0 |    +0.1% |  16.957 |   0.000 | u_sp.w_data[3706]$_DFF_P_/D\n     1030 |       0 |    1380 |            0 |    +0.1% |  17.021 |   0.000 | o_w_data[1300]$_DFF_P_/D\n     1040 |       0 |    1390 |            0 |    +0.1% |  17.043 |   0.000 | o_bus[1380]$_DFF_P_/D\n     1050 |       0 |    1400 |            0 |    +0.1% |  17.076 |   0.000 | o_w_addr[27]$_DFF_P_/D\n     1060 |       0 |    1410 |            0 |    +0.1% |  17.115 |   0.000 | u_sp.g_reg[11].q2_bf[0]$_DFF_P_/D\n     1070 |       0 |    1421 |            0 |    +0.1% |  17.162 |   0.000 | u_sp.q0_f32[211]$_DFF_P_/D\n     1080 |       0 |    1431 |            0 |    +0.1% |  17.209 |   0.000 | u_sp.q1_bf[1598]$_DFF_P_/D\n     1090 |       0 |    1441 |            0 |    +0.1% |  17.237 |   0.000 | u_sp.bt_u[26]$_DFF_P_/D\n     1100 |       0 |    1451 |            0 |    +0.1% |  17.293 |   0.000 | o_bus[1009]$_DFF_P_/D\n     1110 |       0 |    1461 |            0 |    +0.1% |  17.330 |   0.000 | u_sp.q0_row[875]$_DFF_P_/D\n     1120 |       0 |    1471 |            0 |    +0.1% |  17.369 |   0.000 | u_sp.g_reg[104].q2_f32[19]$_DFF_P_/D\n     1130 |       0 |    1481 |            0 |    +0.1% |  17.409 |   0.000 | u_sp.w_data[2331]$_DFF_P_/D\n     1140 |       0 |    1491 |            0 |    +0.1% |  17.436 |   0.000 | u_sp.q1_f32[4008]$_DFF_P_/D\n     1150 |       0 |    1501 |            0 |    +0.1% |  17.477 |   0.000 | o_w_data[3463]$_DFF_P_/D\n"
+        },
+        "terminal_files": {},
+        "live": true
+      },
+      "c1r128_h30s50": {
+        "root": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50",
+        "launcher_pid": 1686763,
+        "kind": "spine",
+        "containers": [
+          {
+            "id": "6020b7ad24cc5acbe6d6362a71a42ae36456371179dacb8001f800656c8a0185",
+            "init_pid": 1689215,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 1686763,
+            "ppid": 1,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /srv/opentallas-scratch2/codex/dsrom-field-spine-route/flow-variant.sh /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f /srv/opentallas-scratch2/codex/dsrom-field-spine-route/mapped c1r128_h30s50 /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50 1 128 0.03 50 "
+          },
+          {
+            "pid": 1686781,
+            "ppid": 1686763,
+            "state": "S",
+            "cpu_ticks": 256,
+            "command": "python3 tools/run_abi3_physical.py --view asap7 --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --corner TT --orfs-corner WC --hold-corners WC,BC --max-transition-ns --max-fanout 32 --slew-margin-percent 50 --hold-margin-ns 0.03 --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var TMPDIR=/work/tmp --orfs-var SYNTH_NETLIST_FILES=/work/reused_mapped.v --keep-heavy-artifacts --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --stages pnr --false-path-io --top ot_v41_pqc_spine_screen --source physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv --source rtl/v41die/ot_v41_spine_pqc_w17w10.sv --source physical/dsrom_recovery_field/ot_hdc_actquant_screen_stub.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/v41rom/ot_v41_kreg.sv --source rtl/common/ot_prefix.sv --orfs-var VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS --param PQ=1 --param R=128 --die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84 --nickname-tag dsfs_c1r128_h30s50 --keep-workdir /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work --output /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/physical.json "
+          },
+          {
+            "pid": 1689084,
+            "ppid": 1686781,
+            "state": "S",
+            "cpu_ticks": 117,
+            "command": "docker run --rm -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f:/src:ro -v /srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689215,
+            "ppid": 1689130,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1689248,
+            "ppid": 1689215,
+            "state": "S",
+            "cpu_ticks": 3,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 1932902,
+            "ppid": 1689248,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt "
+          },
+          {
+            "pid": 1933079,
+            "ppid": 1932902,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1933081,
+            "ppid": 1933079,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route "
+          },
+          {
+            "pid": 1933114,
+            "ppid": 1933081,
+            "state": "S",
+            "cpu_ticks": 10,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json "
+          },
+          {
+            "pid": 1933116,
+            "ppid": 1933114,
+            "state": "R",
+            "cpu_ticks": 1450982,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.json "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/routes_c1r128_h30s50/work/orfs/logs/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c1r128_h30s50/base/5_1_grt.tmp.log",
+          "bytes": 109092,
+          "mtime_ns": 1791227622773494287,
+          "tail": "    579 |            0 |    +0.1% |   4.538 |   0.000 | u_sp.w_addr[606]$_DFF_P_/D\n      180 |       0 |     609 |            0 |    +0.1% |   5.075 |   0.000 | o_w_addr[2173]$_DFF_P_/D\n      190 |       0 |     639 |            0 |    +0.1% |   5.592 |   0.000 | u_sp.q0_f32[3537]$_DFF_P_/D\n      200 |       0 |     668 |            0 |    +0.1% |   6.285 |   0.000 | u_sp.w_addr[252]$_DFF_P_/D\n      210 |       0 |     698 |            0 |    +0.1% |   6.695 |   0.000 | u_sp.q1_bf[382]$_DFF_P_/D\n      220 |       0 |     725 |            0 |    +0.1% |   7.014 |   0.000 | o_w_addr[278]$_DFF_P_/D\n      230 |       0 |     750 |            0 |    +0.1% |   7.688 |   0.000 | u_sp.q1_f32[3591]$_DFF_P_/D\n      240 |       0 |     772 |            0 |    +0.1% |   8.121 |   0.000 | u_sp.q0_bf[269]$_DFF_P_/D\n      250 |       0 |     795 |            0 |    +0.1% |   8.652 |   0.000 | u_sp.g_reg[23].q2_bf[10]$_DFF_P_/D\n      260 |       0 |     816 |            0 |    +0.1% |   9.091 |   0.000 | u_sp.w_data[3588]$_SDFF_PN0_/D\n      270 |       0 |     836 |            0 |    +0.1% |   9.545 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[2782]$_DFF_PN0_/D\n      280 |       0 |     856 |            0 |    +0.1% |   9.911 |   0.000 | u_sp.q1_f32[3602]$_DFF_P_/D\n      290 |       0 |     876 |            0 |    +0.1% |  10.247 |   0.000 | o_bus[1421]$_DFF_P_/D\n      300 |       0 |     896 |            0 |    +0.1% |  10.607 |   0.000 | u_sp.w_addr[145]$_DFF_P_/D\n      310 |       0 |     916 |            0 |    +0.1% |  10.929 |   0.000 | o_w_data[22]$_DFF_P_/D\n      320 |       0 |     936 |            0 |    +0.1% |  11.086 |   0.000 | o_w_addr[1973]$_DFF_P_/D\n      330 |       0 |     956 |            0 |    +0.1% |  11.447 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[808]$_DFF_PN0_/D\n      340 |       0 |     977 |            0 |    +0.1% |  11.637 |   0.000 | u_sp.g_reg[72].q2_bf[11]$_DFF_P_/D\n      350 |       0 |     997 |            0 |    +0.1% |  11.885 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[1009]$_DFF_PN0_/D\n      360 |       0 |    1017 |            0 |    +0.1% |  12.186 |   0.000 | o_w_addr[484]$_DFF_P_/D\n      370 |       0 |    1037 |            0 |    +0.1% |  12.389 |   0.000 | u_sp.q0_row[1377]$_DFF_P_/D\n      380 |       0 |    1057 |            0 |    +0.1% |  12.479 |   0.000 | u_sp.q1_bf[1330]$_DFF_P_/D\n      390 |       0 |    1077 |            0 |    +0.1% |  12.621 |   0.000 | o_bus[1220]$_DFF_P_/D\n      400 |       0 |    1097 |            0 |    +0.1% |  12.736 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[1317]$_DFF_PN0_/D\n      410 |       0 |    1117 |            0 |    +0.1% |  12.894 |   0.000 | u_sp.q1_f32[2695]$_DFF_P_/D\n      420 |       0 |    1137 |            0 |    +0.1% |  13.016 |   0.000 | o_bus[267]$_DFF_P_/D\n      430 |       0 |    1157 |            0 |    +0.1% |  13.139 |   0.000 | o_w_data[3591]$_DFF_P_/D\n      440 |       0 |    1177 |            0 |    +0.1% |  13.351 |   0.000 | o_w_data[2314]$_DFF_P_/D\n      450 |       0 |    1197 |            0 |    +0.1% |  13.468 |   0.000 | o_bus[1369]$_DFF_P_/D\n      460 |       0 |    1218 |            0 |    +0.1% |  13.612 |   0.000 | u_sp.q1_bf[70]$_DFF_P_/D\n      470 |       0 |    1238 |            0 |    +0.1% |  13.786 |   0.000 | u_sp.w_addr[2302]$_DFF_P_/D\n      480 |       0 |    1258 |            0 |    +0.1% |  13.896 |   0.000 | o_w_data[1102]$_DFF_P_/D\n      490 |       0 |    1278 |            0 |    +0.1% |  14.013 |   0.000 | u_sp.q0_f32[3923]$_DFF_P_/D\n      500 |       0 |    1298 |            0 |    +0.1% |  14.085 |   0.000 | o_w_data[3164]$_DFF_P_/D\n      510 |       0 |    1318 |            0 |    +0.1% |  14.206 |   0.000 | u_sp.g_reg[37].q2_bf[15]$_DFF_P_/D\n      520 |       0 |    1338 |            0 |    +0.1% |  14.274 |   0.000 | u_sp.w_addr[2255]$_DFF_P_/D\n      530 |       0 |    1358 |            0 |    +0.1% |  14.398 |   0.000 | u_sp.g_bst.u_bst.genblk1.g_line.line[3240]$_DFF_PN0_/D\n      540 |       0 |    1378 |            0 |    +0.1% |  14.504 |   0.000 | u_sp.q0_f32[227]$_DFF_P_/D\n"
+        },
+        "terminal_files": {},
+        "live": true
+      },
+      "WF_src_u50": {
+        "root": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1",
+        "launcher_pid": 937710,
+        "kind": "wf",
+        "containers": [
+          {
+            "id": "914fb6ff84e75b96ebbbf9228277aef9ac720a85949af33a48f07a8f9abd9542",
+            "init_pid": 2282403,
+            "running": true,
+            "mounts": [
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs",
+                "Destination": "/work",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+              },
+              {
+                "Type": "bind",
+                "Source": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0",
+                "Destination": "/src",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+              }
+            ]
+          }
+        ],
+        "processes": [
+          {
+            "pid": 937710,
+            "ppid": 937637,
+            "state": "S",
+            "cpu_ticks": 167,
+            "command": "python3 tools/dsrom_wf_close.py route --inst src --util 50 --run-dir /srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1 --orfs-var NUM_CORES=16 "
+          },
+          {
+            "pid": 1119603,
+            "ppid": 2283247,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_2_route "
+          },
+          {
+            "pid": 1119619,
+            "ppid": 1119603,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route "
+          },
+          {
+            "pid": 1119621,
+            "ppid": 1119619,
+            "state": "S",
+            "cpu_ticks": 0,
+            "command": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route "
+          },
+          {
+            "pid": 1119640,
+            "ppid": 1119621,
+            "state": "S",
+            "cpu_ticks": 8,
+            "command": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.json "
+          },
+          {
+            "pid": 1119641,
+            "ppid": 1119640,
+            "state": "S",
+            "cpu_ticks": 11352112,
+            "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.json "
+          },
+          {
+            "pid": 2280874,
+            "ppid": 937710,
+            "state": "S",
+            "cpu_ticks": 265,
+            "command": "docker run --rm -v /srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0:/src:ro -v /srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 2282403,
+            "ppid": 2282119,
+            "state": "S",
+            "cpu_ticks": 1,
+            "command": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          },
+          {
+            "pid": 2283247,
+            "ppid": 2282403,
+            "state": "S",
+            "cpu_ticks": 2,
+            "command": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate "
+          }
+        ],
+        "latest_log": {
+          "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.tmp.log",
+          "bytes": 131680,
+          "mtime_ns": 1791223716717965919,
+          "tail": "          M3\nMetal Spacing        1\n[INFO DRT-0267] cpu time = 00:00:25, elapsed time = 00:00:20, memory = 42940.66 (MB), peak = 52137.76 (MB)\nTotal wire length = 5622975 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 1380274 um.\nTotal wire length on LAYER M3 = 1672787 um.\nTotal wire length on LAYER M4 = 501344 um.\nTotal wire length on LAYER M5 = 184197 um.\nTotal wire length on LAYER M6 = 969068 um.\nTotal wire length on LAYER M7 = 915302 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 12798163.\nUp-via summary (total 12798163):\n\n-------------------\n Active           0\n     M1     4255064\n     M2     5570980\n     M3     1213776\n     M4      649710\n     M5      640058\n     M6      468575\n     M7           0\n     M8           0\n     M9           0\n-------------------\n       12798163\n\n\n[INFO DRT-0195] Start 58th guides tiles iteration.\n    Completing 50% with 1 violations.\n    elapsed time = 00:01:17, memory = 42940.66 (MB).\n    Completing 100% with 1 violations.\n    elapsed time = 00:02:36, memory = 42940.66 (MB).\n[INFO DRT-0199]   Number of violations = 1.\nViol/Layer          M3\nMetal Spacing        1\n[INFO DRT-0267] cpu time = 00:02:36, elapsed time = 00:02:36, memory = 42940.66 (MB), peak = 52137.76 (MB)\nTotal wire length = 5622975 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 1380274 um.\nTotal wire length on LAYER M3 = 1672787 um.\nTotal wire length on LAYER M4 = 501344 um.\nTotal wire length on LAYER M5 = 184197 um.\nTotal wire length on LAYER M6 = 969068 um.\nTotal wire length on LAYER M7 = 915302 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 12798163.\nUp-via summary (total 12798163):\n\n-------------------\n Active           0\n     M1     4255064\n     M2     5570980\n     M3     1213776\n     M4      649710\n     M5      640058\n     M6      468575\n     M7           0\n     M8           0\n     M9           0\n-------------------\n       12798163\n\n\n[INFO DRT-0195] Start 59th guides tiles iteration.\n    Completing 50% with 1 violations.\n    elapsed time = 00:00:01, memory = 42940.66 (MB).\n    Completing 100% with 1 violations.\n    elapsed time = 00:00:02, memory = 42940.66 (MB).\n[INFO DRT-0199]   Number of violations = 1.\nViol/Layer          M3\nMetal Spacing        1\n[INFO DRT-0267] cpu time = 00:00:03, elapsed time = 00:00:03, memory = 42940.66 (MB), peak = 52137.76 (MB)\nTotal wire length = 5622975 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 1380274 um.\nTotal wire length on LAYER M3 = 1672787 um.\nTotal wire length on LAYER M4 = 501344 um.\nTotal wire length on LAYER M5 = 184197 um.\nTotal wire length on LAYER M6 = 969068 um.\nTotal wire length on LAYER M7 = 915302 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 12798163.\nUp-via summary (total 12798163):\n\n-------------------\n Active           0\n     M1     4255064\n     M2     5570980\n     M3     1213776\n     M4      649710\n     M5      640058\n     M6      468575\n     M7           0\n     M8           0\n     M9           0\n-------------------\n       12798163\n\n\n[INFO DRT-0195] Start 60th stubborn tiles iteration.\n    Completing 10% with 1 violations.\n    elapsed time = 00:00:02, memory = 43741.79 (MB).\n    Completing 20% with 1 violations.\n    elapsed time = 00:00:03, memory = 43857.77 (MB).\n    Completing 30% with 1 violations.\n    elapsed time = 00:00:04, memory = 43989.02 (MB).\n    Completing 40% with 1 violations.\n    elapsed time = 00:00:05, memory = 43921.55 (MB).\n    Completing 50% with 1 violations.\n    elapsed time = 00:00:05, memory = 43816.32 (MB).\n    Completing 60% with 1 violations.\n    elapsed time = 00:00:08, memory = 43987.07 (MB).\n    Completing 70% with 1 violations.\n    elapsed time = 00:00:08, memory = 43775.02 (MB).\n    Completing 80% with 1 violations.\n    elapsed time = 00:00:08, memory = 43497.90 (MB).\n"
+        },
+        "terminal_files": {},
+        "live": true
+      }
+    }
+  }
+]

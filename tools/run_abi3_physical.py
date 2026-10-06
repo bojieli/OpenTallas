@@ -56,6 +56,16 @@ Pinned sources.  ``--source-root DIR`` reads the RTL from another checkout
 (a worktree pinned at the commit being characterised); the record's ``git``
 block then describes that tree and ``runner.driver`` names the commit this
 driver came from.
+
+Timeouts. ``--synth-timeout-seconds unlimited`` and
+``--flow-timeout-seconds unlimited`` disable synthesis/STA and route wall
+timeouts respectively. ``none`` is an alias. The corresponding environment
+variables are ``OT_SYNTH_TIMEOUT_SECONDS`` and ``OT_FLOW_TIMEOUT_SECONDS``.
+Python callers may use ``main(argv, synth_timeout=None, flow_timeout=None)``
+or ``run(command, timeout=None)``. CLI overrides take precedence over Python
+overrides; both are scoped to the invocation. Omitted options retain the
+existing numeric defaults. Tool identity and platform probes keep their own
+timeouts; this policy does not change inherited operating-system limits.
 """
 
 from __future__ import annotations
@@ -317,18 +327,15 @@ def synth_memory_max_bits() -> int:
     return value
 
 
-def flow_timeout_seconds() -> int:
-    """The place-and-route wall-clock ceiling, overridable for a large block.
-
-    Reads ``OT_FLOW_TIMEOUT_SECONDS`` when set, defaulting to the six hours that
-    every route so far has fitted inside.  See the call site for the block that
-    did not.
-    """
+def flow_timeout_seconds() -> int | None:
+    """Route wall timeout: legacy six-hour default, or explicit none/unlimited."""
     import os
 
     raw = os.environ.get("OT_FLOW_TIMEOUT_SECONDS")
     if not raw:
         return 21600
+    if raw.strip().lower() in {"none", "unlimited"}:
+        return None
     try:
         value = int(raw)
     except ValueError:
@@ -357,21 +364,15 @@ def tns_end_percent() -> int:
     return value
 
 
-def synth_timeout_seconds() -> int:
-    """The Yosys wall-clock ceiling, overridable for a genuinely large block.
-
-    The fixed two hours is right for every block characterised so far and wrong for
-    at least one: ``ot_a3_vector_sqrt_softplus`` at FRAC_BITS 224 carries 448-bit
-    products and a 455-iteration divider, and its synthesis was killed at 7,200 s
-    having produced nothing. A block that legitimately needs longer should be able
-    to ask rather than be reported as an error, so the ceiling reads
-    ``OT_SYNTH_TIMEOUT_SECONDS`` when it is set.
-    """
+def synth_timeout_seconds() -> int | None:
+    """Synthesis/STA wall timeout: legacy two-hour default, or none/unlimited."""
     import os
 
     raw = os.environ.get("OT_SYNTH_TIMEOUT_SECONDS")
     if not raw:
         return 7200
+    if raw.strip().lower() in {"none", "unlimited"}:
+        return None
     try:
         value = int(raw)
     except ValueError as exc:
@@ -401,7 +402,7 @@ def orfs_num_cores() -> int | None:
     return value
 
 
-def run(cmd: list[str], *, cwd: Path | None = None, timeout: int = 7200) -> subprocess.CompletedProcess:
+def run(cmd: list[str], *, cwd: Path | None = None, timeout: int | None = 7200) -> subprocess.CompletedProcess:
     proc = subprocess.run(
         cmd,
         cwd=str(cwd or ROOT),
@@ -1110,7 +1111,7 @@ def run_sta(
         encoding="utf-8",
     )
 
-    proc = run([str(STA), "-no_init", "-exit", str(script)], timeout=7200)
+    proc = run([str(STA), "-no_init", "-exit", str(script)], timeout=synth_timeout_seconds())
     require_success(proc, "OpenSTA")
     text = (proc.stdout or "") + (proc.stderr or "")
     (work / "sta.log").write_text(text, encoding="utf-8")
@@ -2297,7 +2298,7 @@ def run_pnr(
         for hook in floorplan["step_tcl"]:
             shutil.copy2(hook["source"], case / "hooks" / hook["name"])
 
-    def orfs_make(goal: str, log_name: str, timeout: int) -> subprocess.CompletedProcess:
+    def orfs_make(goal: str, log_name: str, timeout: int | None) -> subprocess.CompletedProcess:
         cmd = [
             "docker", "run", "--rm",
             "-v", f"{ROOT}:/src:ro",
@@ -2306,6 +2307,8 @@ def run_pnr(
             ORFS_IMAGE, "bash", "-lc",
             "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; "
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+            "python3 /src/tools/orfs_allcorner_spef.py "
+            "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && "
             "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
             + (f"NUM_CORES={orfs_num_cores()} " if orfs_num_cores() else "")
             + goal,
@@ -2489,6 +2492,11 @@ def run_pnr(
 
     return {
         "platform": platform_name,
+        "extracted_spef_annotation": {
+            "policy": "explicit read_spef -corner for every configured CORNERS scene before finish metrics",
+            "helper": "tools/orfs_allcorner_spef.py",
+            "helper_sha256": sha256_file(ROOT / "tools/orfs_allcorner_spef.py"),
+        },
         **({"w11_endpoint_netlist": endpoint_netlist} if endpoint_netlist else {}),
         "design_nickname": nickname,
         "netlist_normalization": {
@@ -2893,6 +2901,10 @@ def _max_fanout_arg(text: str) -> int | str:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--synth-timeout-seconds", default=argparse.SUPPRESS,
+                        help="synthesis/STA seconds or unlimited (alias: none); otherwise env/default 7200")
+    parser.add_argument("--flow-timeout-seconds", default=argparse.SUPPRESS,
+                        help="route seconds or unlimited (alias: none); otherwise env/default 21600")
     parser.add_argument("--view", required=True, choices=sorted(VIEWS))
     parser.add_argument("--block", choices=sorted(BLOCKS), help="named block from the built-in registry")
     parser.add_argument("--top", help="RTL top module (with --source, overrides --block)")
@@ -3246,9 +3258,38 @@ def with_cts_cluster_size(view: dict[str, Any], size: int | None) -> dict[str, A
     return result
 
 
-def main(argv: list[str] | None = None) -> int:
-    global ROOT
+_TIMEOUT_UNSET = object()
+
+
+def main(argv: list[str] | None = None, *,
+         synth_timeout: int | None | object = _TIMEOUT_UNSET,
+         flow_timeout: int | None | object = _TIMEOUT_UNSET) -> int:
+    """Run with optional, invocation-scoped timeout overrides; None is unlimited."""
     args = build_parser().parse_args(argv)
+    previous = {}
+    try:
+        for option, override, env, callback in (
+            ("synth_timeout_seconds", synth_timeout, "OT_SYNTH_TIMEOUT_SECONDS", synth_timeout_seconds),
+            ("flow_timeout_seconds", flow_timeout, "OT_FLOW_TIMEOUT_SECONDS", flow_timeout_seconds),
+        ):
+            if hasattr(args, option):
+                override = getattr(args, option)
+            if override is _TIMEOUT_UNSET:
+                continue
+            previous[env] = os.environ.get(env)
+            os.environ[env] = "unlimited" if override is None else str(override)
+            callback()  # Validate before starting any tools.
+        return _main(args, argv=argv)
+    finally:
+        for env, value in previous.items():
+            if value is None:
+                os.environ.pop(env, None)
+            else:
+                os.environ[env] = value
+
+
+def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
+    global ROOT
 
     if args.source_root:
         source_root = Path(args.source_root).resolve()

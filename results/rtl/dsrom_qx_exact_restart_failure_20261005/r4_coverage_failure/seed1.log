@@ -1,0 +1,30 @@
+SEQ matched=7033 dropped_at_reset=0 extra_delay_cycles min=-1 max=8 mean_x1000=3986
+SEQ extra_delay_hist 30 348 983 1039 1626 2066 827 95 19 0 0 0 0 0 0 0
+SEQ serviced_wait_beats=67927
+[2546130000] %Fatal: tb_dsrom_qx_exact.sv:349: Assertion failed in tb_dsrom_qx_exact: coverage incomplete h=193721 i=268609 r=7033 w=5232 q=649 rst=382 rej=12557 gc=410 gd=10 go=19 cc=34661 rs=15
+%Error: /srv/opentallas-scratch/codex/noether-qx-exact-restart-r4-20261005/src/rtl/test/tb_dsrom_qx_exact.sv:349: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas-scratch/codex/noether-qx-exact-restart-r4-20261005/work/pos/Vtb_dsrom_qx_exact +seed=1"
+	User time (seconds): 36.87
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:36.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5392
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 262
+	Voluntary context switches: 1
+	Involuntary context switches: 108
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

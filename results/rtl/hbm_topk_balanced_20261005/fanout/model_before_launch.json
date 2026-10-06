@@ -1,0 +1,90 @@
+{
+  "source_commit": "5ee4cde5b11b31b7f45964f24165a46b9eb3f90d",
+  "source_and_common_helper_unchanged": true,
+  "retained_live_context": "peirce-topk-balanced-route-r1",
+  "retained_supervisor": 3271408,
+  "contexts": [
+    {
+      "utilization_percent": 25,
+      "core_area_um": [
+        2.052,
+        2.16,
+        315.864162,
+        315.676392
+      ],
+      "die_area_um": [
+        0,
+        0,
+        317.882162,
+        317.856392
+      ],
+      "core_area_um2": 98385.25679999997,
+      "extra_core_area_vs_retained_um2": 16397.542799999967,
+      "local_wire_length_scale": 1.0954451150103321,
+      "routing_buffer_reserve_um2": 2721.085665685665,
+      "independent_hold_reserve_um2": 1344.0,
+      "gross_cell_area_screen_um2": 45032.58566568566,
+      "cell_occupancy": 0.45771680768419437,
+      "place_density": 0.55,
+      "component_screen_fit": true,
+      "parent_named_slot_fit": false,
+      "parent_routing_tracks_available": null,
+      "clock_period_ps": 833,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "hold_repair_margin_ps": 20,
+      "io_delay_fraction": 0.2,
+      "replicas": 1,
+      "MACs_per_cycle": 0,
+      "added_memory_ports": 0,
+      "input_bits_per_cycle": 512,
+      "output_bits_per_result": 54,
+      "added_latency_cycles": 0,
+      "latency_cycles": 23,
+      "initiation_interval_cycles": 1,
+      "adopted": false,
+      "SSFF_closed": false
+    },
+    {
+      "utilization_percent": 20,
+      "core_area_um": [
+        2.052,
+        2.16,
+        352.904663,
+        352.681982
+      ],
+      "die_area_um": [
+        0,
+        0,
+        354.922663,
+        354.861982
+      ],
+      "core_area_um2": 122981.57099999995,
+      "extra_core_area_vs_retained_um2": 40993.856999999945,
+      "local_wire_length_scale": 1.224744871391589,
+      "routing_buffer_reserve_um2": 3042.266260536707,
+      "independent_hold_reserve_um2": 1344.0,
+      "gross_cell_area_screen_um2": 45353.76626053671,
+      "cell_occupancy": 0.3687850617921991,
+      "place_density": 0.55,
+      "component_screen_fit": true,
+      "parent_named_slot_fit": false,
+      "parent_routing_tracks_available": null,
+      "clock_period_ps": 833,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "hold_repair_margin_ps": 20,
+      "io_delay_fraction": 0.2,
+      "replicas": 1,
+      "MACs_per_cycle": 0,
+      "added_memory_ports": 0,
+      "input_bits_per_cycle": 512,
+      "output_bits_per_result": 54,
+      "added_latency_cycles": 0,
+      "latency_cycles": 23,
+      "initiation_interval_cycles": 1,
+      "adopted": false,
+      "SSFF_closed": false
+    }
+  ]
+}

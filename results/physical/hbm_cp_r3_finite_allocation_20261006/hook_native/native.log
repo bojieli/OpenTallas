@@ -1,0 +1,35 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+OT_CP_R3_FINITE_BODY outline_um2=1843.84512 cell_cap_at50pct=921.92256
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=42 shared=0
+[INFO DPL-0006] Core area: 1866.24 um^2
+[INFO DPL-0007] Movable instances area: 872.98 um^2
+[INFO DPL-0008] Fixed instances area within core: 11.69 um^2
+[INFO DPL-0009] Utilization: 47.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 7377 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.03s
+Placement Analysis
+---------------------------------
+total displacement          0.8 u
+average displacement        0.0 u
+max displacement            0.5 u
+original HPWL           41399.1 u
+legalized HPWL          41400.6 u
+delta HPWL                    0 %
+
+OT_CP_R3_FINITE_REALLOCATION_PLACEMENT_PASS

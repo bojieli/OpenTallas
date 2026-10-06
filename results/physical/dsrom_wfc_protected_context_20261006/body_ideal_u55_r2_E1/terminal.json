@@ -1,0 +1,41 @@
+{
+  "verdict": "INCOMPLETE_ROUTE_MACRO_NAME_PARSER_ERROR",
+  "terminal_exit": 2,
+  "container_finished_utc": "2026-10-06T08:43:28.147461289Z",
+  "OOMKilled": false,
+  "live_children": false,
+  "last_completed_stage": "2_1_floorplan",
+  "failed_stage": "2_2_floorplan_macro",
+  "cause": "OpenDB generated bracket names escaped; logical hierarchy regex expected unescaped indices",
+  "actual_error": "Unrecognized actual hardmacro u_r4.u_cfg.g_live.g_bank\\[0\\].u_prompt",
+  "recipe": "581beef92 SYNTH_MEMORY_MAX_BITS6480; full mapping succeeded",
+  "routed_signoff": null,
+  "final_DRC": null,
+  "unconstrained_ports_final": null,
+  "floorplan_only": {
+    "corner": "WC/SS60",
+    "clock_network": "ideal preCTS",
+    "parasitics": "pre-placement estimate, not extracted SPEF",
+    "setup_WNS_ps": -1743.27,
+    "critical_start": "u_r4.u_memory.g_live.u_backend.writer[1]",
+    "critical_end": "u_r4.u_memory.g_live.u_backend.g_checks[0].u_check/w_addr_in[5]",
+    "path_kind": "protected VM internal writer/address-selection logic to actual mutable check-SRAM write-address setup",
+    "arrival_ps": 2167.28,
+    "required_ps": 424.01,
+    "macro_setup_ps": 627.1,
+    "address_last_stages": "address[5] fanout289/cap167.21fF/slew1190.97ps; AO21 output fanout288/cap166.69fF/slew2352.20ps",
+    "other_setup_classes": {
+      "canonical_prompt_write_data_ps": -1437.18,
+      "controller_internal_reset_recovery_ps": -897.53
+    }
+  },
+  "retained_objects": [
+    "1_1_yosys_canonicalize.rtlil",
+    "mem.json",
+    "1_2_yosys.v",
+    "1_synth.odb",
+    "2_1_floorplan.odb",
+    "2_1_floorplan.sdc"
+  ],
+  "scope": "COND_BODY_DIAGNOSTIC only, external source/fault/reset/engineIO unqualified; no safe-reset/fullparent/headline"
+}

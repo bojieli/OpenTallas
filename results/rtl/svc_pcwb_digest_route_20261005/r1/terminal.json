@@ -1,0 +1,59 @@
+{
+  "status": "FAIL_SS_SETUP_NO_ADOPTION",
+  "route_completed": true,
+  "corner_STA_completed": true,
+  "source_commit": "ec4f51aefe46ad175d69a19753feb1cdf3cc4081",
+  "source_pins": {
+    "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_digest.sv": "59746a2ffc9171fbba702f35ce002f08d1b4845c2cb66698012c4816f4df0d55",
+    "tools/run_abi3_physical.py": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+    "rtl/test/hbm_accel/tb_pcwb_digest_lockstep.sv": "6d8bbad2dbf0f6f1a22b267ec7e4ab58805549e8c55a859fc63938dab456b3c6",
+    "results/rtl/pcwb_digest_cut_20261005/preedit_model.json": "fd4e7029c127c0a7124891e18cdc15b4e7c3a50cb6de8fe093148be4daf11b3d"
+  },
+  "exactness": "retained 6case 1.2Mcycle zero-mismatch source gate; not rerun",
+  "SS_setup_ps": -111.51,
+  "SS_reg_to_reg_ps": -111.51,
+  "SS_input_to_reg_ps": -33.2,
+  "FF_hold_ps": 10.53,
+  "closes_signoff": false,
+  "worst_SS_path": {
+    "from": "on.hbg_oh[0]",
+    "to": "on.wbr_q"
+  },
+  "DRC": 0,
+  "antenna_violating_nets": 0,
+  "DRV": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0
+  },
+  "area_um2": 5436.07,
+  "baseline_SS_ps": -34.28,
+  "baseline_worst_path": "c_oh[26] -> wnro_q[10]",
+  "baseline_area_um2": 5322.33,
+  "measured_area_delta_um2": 113.74,
+  "model_added_FF_per_PC": 8,
+  "model_added_command_ACK_cycles": 0,
+  "constraints": {
+    "period_ns": 0.833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_delay_fraction": 0,
+    "core_utilization": 40,
+    "place_density": 0.6,
+    "hold_margin_ns": 0.01
+  },
+  "scope": "IO0 singlePC boundary-only; DSwb/DRAM admission open; no fullparent clock or rate qualification",
+  "continuation": "Failed candidate preserved as built; no automatic retry/tuning; mandatory service closure needs separately source/model-qualified remedy",
+  "remote_evidence": "/srv/opentallas-scratch/jobs/euclid-svc-pcwb-digest-route-r1",
+  "raw_artifacts": {
+    "corner.log": "0d26bd4dc9b392c88d1a675e3429d647d3dcb2d1102b676f082171e5165a49e2",
+    "corner_sta.json": "a4aba09d0c74920b85d90c19553818f582ab0044fa3249087066d95396b1b098",
+    "exit": "9c2eda766e635ce14d27fe9f20e6279edf15e3eb94c8d9d93b5c48a9cef61456",
+    "launch.json": "c5aaca5f49e1b71973dfc810383aa78abe3c499a8ff3b707463240a71b430154",
+    "physical.json": "96087596d3f8e1873e2036b3cbafb4c2b7702c9d5f08b7786be66d848e124a23",
+    "route.log": "11466ae09aa0b58208f7dfd2d8ca7b561e7c1b248b90a1c4f8ba72e1e7c22cdb",
+    "run.sh": "dd3f01bba02475025919398781d3b1ec71fc9aa69edbe97b7dbb7656d2dd8a69",
+    "w18_sta_ff.log": "69eba26f17193dc6d7b9f4d16e9ca4814885dd1b902e52166e25f45ed92907e9",
+    "w18_sta_ss.log": "70b0384243eefc4d812b69ba7f239ff32860e1171be0807ea1d55a9037264d79"
+  }
+}

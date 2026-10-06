@@ -16,7 +16,7 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
         for (c = 0; c < 4; c = c + 1)
             for (b = 0; b < 4; b = b + 1)
                 if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
-        if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $finish; end
+        if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
     end
     function automatic [265:0] word(input integer bank, input [11:0] a);
         integer l;
@@ -35,6 +35,7 @@ endmodule
 
 module tb_qwen_slab_port_group;
     parameter integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 6, LEAD = 8;
+    parameter integer IN_STAGE = 0, AM_SPLIT = 0, S5_CTL = 0, COVER_DPOS = 0, SCALE_PAIR = 0;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = !clk;
 
@@ -62,7 +63,8 @@ module tb_qwen_slab_port_group;
     wire [W-1:0] o_mask;
     wire [W*32-1:0] o_data, tw_d;
     wire [1+32+NW-1:0] am_top;
-    ot_qwen_slab_port_group #(.GID(GID), .MUL_LAT(MUL_LAT), .BW_FIFO(0)) dut (
+    ot_qwen_slab_port_group #(.GID(GID), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
+        .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR)) dut (
         .clk(clk), .rst_n(rst_n), .bw_clk(clk), .bw_rst_n(rst_n), .bw_v(1'b0), .bw_rdy(bw_rdy), .bw_d({W*32{1'b0}}),
         .tw_v(tw_v), .tw_rdy(1'b1), .tw_d(tw_d),
         .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc),
@@ -131,7 +133,10 @@ module tb_qwen_slab_port_group;
             p_oen <= 1; p_amax <= (rnd32(seed + 4) % 2); p_rmax <= 0;
             p_nb <= (rnd32(seed + 5) % 64) * 16;
             p_lb <= rnd32(seed + 6) % 32;
-            p_nout <= 15000 + (rnd32(seed + 7) % 3000);      // partial masks near GID*W*IL = 12160 .. and lb + GID*W
+            // partial masks near GID*W*IL = 12160 .. and lb + GID*W; with COVER_DPOS, one op in 8 has a small nout
+            // (row-count difference d <= 0 and near 0 in both modes: no active request, all-zero masks)
+            p_nout <= (COVER_DPOS != 0 && (rnd32(seed + 11) % 8) == 0) ? 1400 + (rnd32(seed + 7) % 12000)
+                                                                    : 15000 + (rnd32(seed + 7) % 3000);
             p_sbase <= rnd32(seed + 8) % 60000;
             p_oa <= rnd32(seed + 9) % (1 << 20);
             p_ots <= rnd32(seed + 10) % 4096;
@@ -166,6 +171,7 @@ module tb_qwen_slab_port_group;
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
         if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
         else $display("FAIL: %0d errors", errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 

@@ -1,0 +1,11 @@
+%Error: /srv/opentallas-scratch2/jobs/rawls-w2-parent-on-elaboration-r2/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:42:15: syntax error, unexpected matches
+   42 |   wire [31:0] matches;
+      |               ^~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch2/jobs/rawls-w2-parent-on-elaboration-r2/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:45:11: syntax error, unexpected matches
+   45 |    assign matches[aslot]=raw[ac*576+aslot*18+17]&&
+      |           ^~~~~~~
+%Error: /srv/opentallas-scratch2/jobs/rawls-w2-parent-on-elaboration-r2/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv:49:27: syntax error, unexpected matches, expecting IDENTIFIER-for-type
+   49 |   assign authorized[ac]=(|matches)&&frame_match;
+      |                           ^~~~~~~
+%Error: Exiting due to 3 error(s)

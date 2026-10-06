@@ -1,0 +1,47 @@
+{
+  "observed_utc": "2026-10-06T03:45:41Z",
+  "terminal_rc": null,
+  "source": "0477bd6d9",
+  "containers": [
+    {
+      "id": "5aae3d500ff1254c4487afb4719d7b582481ec8507e23be24a1148255fec383c",
+      "host_init_pid": 79903,
+      "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "status": "running"
+    }
+  ],
+  "final_odb_exists": false,
+  "checkpoint_hashes": {
+    "4_cts.odb": "8b9ef3b15fdb65d4da23c02244c1df7849d7eb6be554472cd5df012538e88f40",
+    "4_cts.sdc": "48924da0a65a280608017fa6cddf6a3c7578ae9fbe7ea44ad1ce560e0b549b5b"
+  },
+  "latest_GRT_log": {
+    "mtime": 1791258050.7210863,
+    "bytes": 97615,
+    "tail": [
+      "     1200 |       0 |    2682 |            0 |    +0.3% | -808.509 | -1003313.625 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1210 |       0 |    2738 |            0 |    +0.3% | -808.509 | -1001174.188 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1220 |       0 |    2810 |            0 |    +0.3% | -808.509 | -998381.188 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1230 |       0 |    2894 |            0 |    +0.3% | -808.509 | -994958.000 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1240 |       0 |    2976 |            0 |    +0.3% | -808.509 | -991735.625 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1250 |       0 |    3072 |            0 |    +0.3% | -808.509 | -987807.750 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1260 |       0 |    3168 |            0 |    +0.3% | -808.509 | -983992.125 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1270 |       0 |    3264 |            0 |    +0.4% | -808.509 | -980005.312 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1280 |       0 |    3340 |            0 |    +0.4% | -808.509 | -976823.250 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1290 |       0 |    3436 |            0 |    +0.4% | -808.509 | -972932.500 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1300 |       0 |    3528 |            0 |    +0.4% | -808.509 | -969292.938 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1310 |       0 |    3636 |            0 |    +0.4% | -808.509 | -964871.688 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1320 |       0 |    3728 |            0 |    +0.4% | -808.509 | -960969.812 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D",
+      "     1330 |       0 |    3836 |            0 |    +0.4% | -808.509 | -956577.438 | u_stage.g_el[0].u_elem.g_ir.r_go$_DFF_PN0_/D"
+    ]
+  },
+  "own_route_processes": [
+    "  21759       1    04:20:24 00:00:00  0.0  3828 bash /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5-supervisor.sh",
+    "  21958   21759    04:20:23 00:00:00  0.0 70776 python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track-gate-record /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5/macro_gate.json --persistent-workdir /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5/work --launch-receipt /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5/receipt.json --view asap7 --top ot_w5_context --source rtl/v41rom/ot_v41_rom_elem_w10.sv --source rtl/v41rom/ot_v41_bterm.sv --source rtl/v41rom/ot_v41_chain.sv --source rtl/v41rom/ot_v41_segtree.sv --source rtl/v41rom/ot_v41_bf16_lanes.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_cg.sv --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_v41_bterm2_w10.sv --source rtl/v41rom/ot_v41_chain2.sv --source rtl/v41rom/ot_v41_segtree2.sv --source rtl/v41rom/ot_v41_bf16_lanes2.sv --source rtl/experimental/w5_context/ot_w5_fault_low.sv --source rtl/experimental/w5_context/ot_w5_stage.sv --source rtl/experimental/w5_context/ot_w5_context.sv --source rtl/experimental/w5_context/ot_w5_loader.sv --source rtl/hdc/kv/ot_qwen_s4_checked_state.sv --source rtl/experimental/w5_context/ot_w5_return.sv --source physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v --source physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v --param ENABLE=1 --clock-period-ns 0.8333333333333333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --io-delay-fraction 0.2 --stages pnr --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --die-area 0 0 1040.256 239.76 --core-area 0 0.27 1040.256 239.49 --place-density 0.55 --macro-place-halo 2 2 --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns 0.01 --hold-corners WC,BC --orfs-corner WC --step-tcl POST_MACRO_PLACE=physical/w5_context/place.tcl --step-tcl POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --orfs-var ROUTING_LAYER_ADJUSTMENT=0.22 --sdc-append physical/w5_context/context_clocks.sdc --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 --nickname-tag w5_context_r1_20261005 --output /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5/out --pnr-stop-after finish",
+    "  29892       1    04:19:54 00:00:00  0.0  3860 bash /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5-post.sh",
+    "  79856   21958    04:16:30 00:00:00  0.0 33616 docker run --rm -v /srv/opentallas-scratch2/codex/w5-context-20261005/wt-0477bd6d9:/src:ro -v /srv/opentallas-scratch2/codex/w5-context-20261005/route-r5/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate"
+  ],
+  "container_top": [
+    "PID                 PPID                ELAPSED             TIME                %CPU                RSS                 COMMAND\n79903               79881               04:16:30            00:00:00            0.0                 3348                bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate\n80027               79903               04:16:30            00:00:00            0.0                 2732                make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate\n1712192             80027               03:33:21            00:00:00            0.0                 2820                make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=20 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_1_grt\n1712208             1712192             03:33:21            00:00:00            0.0                 3500                bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1712210             1712208             03:33:21            00:00:00            0.0                 2348                bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\n1712233             1712210             03:33:21            00:00:00            0.0                 11688               /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 20 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/5_1_grt.json\n1712234             1712233             03:33:21            04:48:12            135                 13365244            /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 20 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/5_1_grt.json\n"
+  ]
+}

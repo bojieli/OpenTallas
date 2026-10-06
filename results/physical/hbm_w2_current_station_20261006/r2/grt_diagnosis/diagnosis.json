@@ -1,0 +1,1706 @@
+{
+  "basis": "Read-only failed global-route OpenDB; no reroute, placement or functional gate",
+  "odb_sha256": "d766d234c55786e48e7acd13f45bc2d05cd4b4de54f288fc8c8284a5afc2409a",
+  "report_sha256": "b65a600e83b9437e28a786b54796cf75900e1f4ff55ca74ef52f57f36d317ef6",
+  "cell_classes": {
+    "mapped_buffer_or_inverter": 8069,
+    "tie": 8870,
+    "mapped_logic": 83829,
+    "DFF": 8870,
+    "input": 2676,
+    "place": 37754,
+    "output": 4929,
+    "clkbuf": 463,
+    "wire": 197,
+    "hold": 8750
+  },
+  "cell_class_area_um2": {
+    "mapped_buffer_or_inverter": 394.5785400000604,
+    "tie": 387.97380000008155,
+    "mapped_logic": 10333.64790000495,
+    "DFF": 3362.4396000004094,
+    "input": 195.1241400000064,
+    "place": 3363.0082199998806,
+    "output": 359.32410000001585,
+    "clkbuf": 202.51619999999872,
+    "wire": 51.933959999999935,
+    "hold": 637.8750000000318
+  },
+  "core_bbox_um": [
+    2.052,
+    2.16,
+    384.696,
+    97.47
+  ],
+  "die_bbox_um": [
+    0.0,
+    0.0,
+    386.709,
+    99.677
+  ],
+  "boundary_terminal_count": 7797,
+  "root_class_totals": {
+    "ACK_": {
+      "trees": 532,
+      "buffer_nets": 1863,
+      "terminal_sinks": 2303,
+      "buffers_by_class": {
+        "input": 343,
+        "place": 489,
+        "mapped_buffer_or_inverter": 134,
+        "wire": 189,
+        "hold": 708
+      }
+    },
+    "cold_POR": {
+      "trees": 1,
+      "buffer_nets": 541,
+      "terminal_sinks": 8870,
+      "buffers_by_class": {
+        "place": 508,
+        "input": 1,
+        "wire": 1,
+        "mapped_buffer_or_inverter": 2,
+        "hold": 29
+      }
+    },
+    "in_data": {
+      "trees": 2063,
+      "buffer_nets": 11869,
+      "terminal_sinks": 8322,
+      "buffers_by_class": {
+        "place": 2371,
+        "input": 2063,
+        "hold": 6986,
+        "mapped_buffer_or_inverter": 449
+      }
+    },
+    "register_output": {
+      "trees": 8870,
+      "buffer_nets": 32591,
+      "terminal_sinks": 66892,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 6770,
+        "place": 20895,
+        "output": 4921,
+        "wire": 5
+      }
+    },
+    "internal_logic": {
+      "trees": 80418,
+      "buffer_nets": 13650,
+      "terminal_sinks": 145401,
+      "buffers_by_class": {
+        "place": 13196,
+        "mapped_buffer_or_inverter": 337,
+        "hold": 109,
+        "wire": 1,
+        "output": 7
+      }
+    },
+    "release_": {
+      "trees": 1,
+      "buffer_nets": 2,
+      "terminal_sinks": 2,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "input": 1
+      }
+    },
+    "other_boundary": {
+      "trees": 3,
+      "buffer_nets": 2,
+      "terminal_sinks": 2,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "input": 1
+      }
+    },
+    "in_frame": {
+      "trees": 73,
+      "buffer_nets": 433,
+      "terminal_sinks": 288,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 10,
+        "input": 73,
+        "place": 95,
+        "hold": 255
+      }
+    },
+    "in_owner": {
+      "trees": 192,
+      "buffer_nets": 1056,
+      "terminal_sinks": 699,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 13,
+        "input": 192,
+        "place": 200,
+        "hold": 651
+      }
+    },
+    "clock": {
+      "trees": 1,
+      "buffer_nets": 469,
+      "terminal_sinks": 8914,
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 4,
+        "output": 1,
+        "clkbuf": 463,
+        "wire": 1
+      }
+    },
+    "tie": {
+      "trees": 8870,
+      "buffer_nets": 0,
+      "terminal_sinks": 8870,
+      "buffers_by_class": {}
+    },
+    "out_": {
+      "trees": 2,
+      "buffer_nets": 14,
+      "terminal_sinks": 2,
+      "buffers_by_class": {
+        "input": 2,
+        "hold": 12
+      }
+    }
+  },
+  "post_buffer_direct_fanout_histogram": {
+    "0": 4931,
+    "1": 97916,
+    "2": 36402,
+    "3": 10616,
+    "4": 5973,
+    "5": 2441,
+    "6": 1283,
+    "7": 525,
+    "8": 328,
+    "9": 268,
+    "10": 244,
+    "11": 197,
+    "12": 199,
+    "13": 171,
+    "14": 128,
+    "15": 150,
+    "16": 125,
+    "17": 118,
+    "18": 116,
+    "19": 104,
+    "20": 119,
+    "21": 137,
+    "22": 143,
+    "23": 134,
+    "24": 110,
+    "25": 122,
+    "26": 90,
+    "27": 71,
+    "28": 80,
+    "29": 58,
+    "30": 74,
+    "31": 80,
+    "32": 63
+  },
+  "root_buffer_tree_top_by_terminal_sinks": [
+    {
+      "root": "clk_sm",
+      "class": "clock",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 469,
+      "terminal_sinks": 8914,
+      "bbox_um": [
+        2.16,
+        0.0,
+        384.588,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 4,
+        "output": 1,
+        "clkbuf": 463,
+        "wire": 1
+      },
+      "overflow_region_memberships": 1111
+    },
+    {
+      "root": "por_n",
+      "class": "cold_POR",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 541,
+      "terminal_sinks": 8870,
+      "bbox_um": [
+        2.16,
+        0.0,
+        384.588,
+        97.47
+      ],
+      "buffers_by_class": {
+        "place": 508,
+        "input": 1,
+        "wire": 1,
+        "mapped_buffer_or_inverter": 2,
+        "hold": 29
+      },
+      "overflow_region_memberships": 986
+    },
+    {
+      "root": "_059064_",
+      "class": "internal_logic",
+      "root_driver": "_129617_",
+      "root_master": "OR3x4_ASAP7_75t_R",
+      "buffer_nets": 523,
+      "terminal_sinks": 6963,
+      "bbox_um": [
+        2.376,
+        8.1,
+        315.684,
+        97.2
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 522
+      },
+      "overflow_region_memberships": 1085
+    },
+    {
+      "root": "_052483_",
+      "class": "internal_logic",
+      "root_driver": "_122173_",
+      "root_master": "AND5x2_ASAP7_75t_R",
+      "buffer_nets": 237,
+      "terminal_sinks": 3785,
+      "bbox_um": [
+        2.592,
+        2.16,
+        326.214,
+        95.31
+      ],
+      "buffers_by_class": {
+        "place": 219,
+        "mapped_buffer_or_inverter": 18
+      },
+      "overflow_region_memberships": 278
+    },
+    {
+      "root": "_039956_",
+      "class": "internal_logic",
+      "root_driver": "_109629_",
+      "root_master": "NAND2x1_ASAP7_75t_R",
+      "buffer_nets": 145,
+      "terminal_sinks": 2654,
+      "bbox_um": [
+        3.024,
+        3.24,
+        309.528,
+        95.31
+      ],
+      "buffers_by_class": {
+        "place": 145
+      },
+      "overflow_region_memberships": 225
+    },
+    {
+      "root": "_039955_",
+      "class": "internal_logic",
+      "root_driver": "_109628_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 102,
+      "terminal_sinks": 2306,
+      "bbox_um": [
+        3.294,
+        5.67,
+        310.122,
+        93.42
+      ],
+      "buffers_by_class": {
+        "place": 99,
+        "mapped_buffer_or_inverter": 2,
+        "wire": 1
+      },
+      "overflow_region_memberships": 208
+    },
+    {
+      "root": "_059046_",
+      "class": "internal_logic",
+      "root_driver": "_129591_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 44,
+      "terminal_sinks": 613,
+      "bbox_um": [
+        308.826,
+        2.43,
+        383.832,
+        34.02
+      ],
+      "buffers_by_class": {
+        "place": 44
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_068823_",
+      "class": "internal_logic",
+      "root_driver": "_140929_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 52,
+      "terminal_sinks": 538,
+      "bbox_um": [
+        342.414,
+        39.96,
+        383.886,
+        96.66
+      ],
+      "buffers_by_class": {
+        "place": 52
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_052484_",
+      "class": "internal_logic",
+      "root_driver": "_122174_",
+      "root_master": "OR5x2_ASAP7_75t_R",
+      "buffer_nets": 48,
+      "terminal_sinks": 534,
+      "bbox_um": [
+        2.7,
+        2.43,
+        326.97,
+        46.17
+      ],
+      "buffers_by_class": {
+        "place": 40,
+        "mapped_buffer_or_inverter": 8
+      },
+      "overflow_region_memberships": 107
+    },
+    {
+      "root": "_072169_",
+      "class": "internal_logic",
+      "root_driver": "_144563_",
+      "root_master": "OR3x1_ASAP7_75t_R",
+      "buffer_nets": 33,
+      "terminal_sinks": 447,
+      "bbox_um": [
+        305.856,
+        50.49,
+        353.268,
+        96.93
+      ],
+      "buffers_by_class": {
+        "place": 33
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_052442_",
+      "class": "internal_logic",
+      "root_driver": "_122126_",
+      "root_master": "OR5x1_ASAP7_75t_R",
+      "buffer_nets": 15,
+      "terminal_sinks": 332,
+      "bbox_um": [
+        308.448,
+        4.59,
+        377.514,
+        49.95
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 14
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_052503_",
+      "class": "internal_logic",
+      "root_driver": "_122193_",
+      "root_master": "AND2x6_ASAP7_75t_R",
+      "buffer_nets": 54,
+      "terminal_sinks": 319,
+      "bbox_um": [
+        3.294,
+        11.61,
+        307.368,
+        92.61
+      ],
+      "buffers_by_class": {
+        "place": 35,
+        "mapped_buffer_or_inverter": 19
+      },
+      "overflow_region_memberships": 185
+    },
+    {
+      "root": "_080208_",
+      "class": "internal_logic",
+      "root_driver": "_154060_",
+      "root_master": "AND3x1_ASAP7_75t_R",
+      "buffer_nets": 40,
+      "terminal_sinks": 316,
+      "bbox_um": [
+        325.512,
+        45.09,
+        383.616,
+        97.47
+      ],
+      "buffers_by_class": {
+        "place": 40
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_080226_",
+      "class": "internal_logic",
+      "root_driver": "_154083_",
+      "root_master": "AND3x1_ASAP7_75t_R",
+      "buffer_nets": 29,
+      "terminal_sinks": 307,
+      "bbox_um": [
+        297.216,
+        49.41,
+        343.386,
+        93.96
+      ],
+      "buffers_by_class": {
+        "place": 29
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_059047_",
+      "class": "internal_logic",
+      "root_driver": "_129592_",
+      "root_master": "NAND2x1_ASAP7_75t_R",
+      "buffer_nets": 31,
+      "terminal_sinks": 294,
+      "bbox_um": [
+        309.312,
+        2.16,
+        384.048,
+        32.4
+      ],
+      "buffers_by_class": {
+        "place": 31
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_039958_",
+      "class": "internal_logic",
+      "root_driver": "_109631_",
+      "root_master": "AND2x6_ASAP7_75t_R",
+      "buffer_nets": 19,
+      "terminal_sinks": 291,
+      "bbox_um": [
+        2.376,
+        10.26,
+        311.256,
+        94.77
+      ],
+      "buffers_by_class": {
+        "place": 19
+      },
+      "overflow_region_memberships": 132
+    },
+    {
+      "root": "_049576_",
+      "class": "internal_logic",
+      "root_driver": "_119249_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 31,
+      "terminal_sinks": 291,
+      "bbox_um": [
+        2.376,
+        10.26,
+        311.256,
+        94.77
+      ],
+      "buffers_by_class": {
+        "place": 31
+      },
+      "overflow_region_memberships": 183
+    },
+    {
+      "root": "_033223_",
+      "class": "internal_logic",
+      "root_driver": "_102892_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 11,
+      "terminal_sinks": 282,
+      "bbox_um": [
+        308.772,
+        4.59,
+        377.46,
+        32.4
+      ],
+      "buffers_by_class": {
+        "place": 11
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_034549_",
+      "class": "internal_logic",
+      "root_driver": "_104222_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 13,
+      "terminal_sinks": 273,
+      "bbox_um": [
+        342.738,
+        44.01,
+        382.536,
+        95.31
+      ],
+      "buffers_by_class": {
+        "place": 13
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_051652_",
+      "class": "internal_logic",
+      "root_driver": "_121325_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 14,
+      "terminal_sinks": 223,
+      "bbox_um": [
+        306.666,
+        54.54,
+        345.816,
+        95.04
+      ],
+      "buffers_by_class": {
+        "place": 14
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_068824_",
+      "class": "internal_logic",
+      "root_driver": "_140930_",
+      "root_master": "NAND2x1_ASAP7_75t_R",
+      "buffer_nets": 22,
+      "terminal_sinks": 215,
+      "bbox_um": [
+        344.358,
+        42.66,
+        383.94,
+        96.66
+      ],
+      "buffers_by_class": {
+        "place": 22
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_075181_",
+      "class": "internal_logic",
+      "root_driver": "_147851_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 23,
+      "terminal_sinks": 197,
+      "bbox_um": [
+        360.234,
+        24.57,
+        383.67,
+        42.39
+      ],
+      "buffers_by_class": {
+        "place": 23
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_075647_",
+      "class": "internal_logic",
+      "root_driver": "_148365_",
+      "root_master": "NOR2x1_ASAP7_75t_R",
+      "buffer_nets": 24,
+      "terminal_sinks": 197,
+      "bbox_um": [
+        326.484,
+        33.21,
+        357.426,
+        52.92
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 23
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_050841_",
+      "class": "internal_logic",
+      "root_driver": "_120514_",
+      "root_master": "NAND2x1_ASAP7_75t_R",
+      "buffer_nets": 11,
+      "terminal_sinks": 180,
+      "bbox_um": [
+        306.99,
+        51.84,
+        352.89,
+        95.85
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 10
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_051712_",
+      "class": "internal_logic",
+      "root_driver": "_121385_",
+      "root_master": "NOR2x1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 180,
+      "bbox_um": [
+        306.99,
+        49.68,
+        352.89,
+        95.85
+      ],
+      "buffers_by_class": {
+        "place": 8
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_072231_",
+      "class": "internal_logic",
+      "root_driver": "_144625_",
+      "root_master": "NOR2x1_ASAP7_75t_R",
+      "buffer_nets": 17,
+      "terminal_sinks": 162,
+      "bbox_um": [
+        315.36,
+        48.87,
+        353.484,
+        97.47
+      ],
+      "buffers_by_class": {
+        "place": 17
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_017832_",
+      "class": "internal_logic",
+      "root_driver": "_171232_",
+      "root_master": "AOI21x1_ASAP7_75t_R",
+      "buffer_nets": 15,
+      "terminal_sinks": 144,
+      "bbox_um": [
+        364.5,
+        43.2,
+        384.048,
+        67.77
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 14
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_018151_",
+      "class": "internal_logic",
+      "root_driver": "_171589_",
+      "root_master": "NOR3x1_ASAP7_75t_R",
+      "buffer_nets": 25,
+      "terminal_sinks": 144,
+      "bbox_um": [
+        50.706,
+        41.04,
+        73.98,
+        95.85
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 24
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_018938_",
+      "class": "internal_logic",
+      "root_driver": "_172446_",
+      "root_master": "AOI21x1_ASAP7_75t_R",
+      "buffer_nets": 18,
+      "terminal_sinks": 144,
+      "bbox_um": [
+        363.312,
+        67.23,
+        381.51,
+        96.39
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 17
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_019339_",
+      "class": "internal_logic",
+      "root_driver": "_172896_",
+      "root_master": "AOI21x1_ASAP7_75t_R",
+      "buffer_nets": 23,
+      "terminal_sinks": 144,
+      "bbox_um": [
+        354.132,
+        50.49,
+        372.222,
+        80.73
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 22
+      },
+      "overflow_region_memberships": 0
+    }
+  ],
+  "root_buffer_tree_top_by_overflow_membership": [
+    {
+      "root": "clk_sm",
+      "class": "clock",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 469,
+      "terminal_sinks": 8914,
+      "bbox_um": [
+        2.16,
+        0.0,
+        384.588,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 4,
+        "output": 1,
+        "clkbuf": 463,
+        "wire": 1
+      },
+      "overflow_region_memberships": 1111
+    },
+    {
+      "root": "_059064_",
+      "class": "internal_logic",
+      "root_driver": "_129617_",
+      "root_master": "OR3x4_ASAP7_75t_R",
+      "buffer_nets": 523,
+      "terminal_sinks": 6963,
+      "bbox_um": [
+        2.376,
+        8.1,
+        315.684,
+        97.2
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 522
+      },
+      "overflow_region_memberships": 1085
+    },
+    {
+      "root": "por_n",
+      "class": "cold_POR",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 541,
+      "terminal_sinks": 8870,
+      "bbox_um": [
+        2.16,
+        0.0,
+        384.588,
+        97.47
+      ],
+      "buffers_by_class": {
+        "place": 508,
+        "input": 1,
+        "wire": 1,
+        "mapped_buffer_or_inverter": 2,
+        "hold": 29
+      },
+      "overflow_region_memberships": 986
+    },
+    {
+      "root": "_052483_",
+      "class": "internal_logic",
+      "root_driver": "_122173_",
+      "root_master": "AND5x2_ASAP7_75t_R",
+      "buffer_nets": 237,
+      "terminal_sinks": 3785,
+      "bbox_um": [
+        2.592,
+        2.16,
+        326.214,
+        95.31
+      ],
+      "buffers_by_class": {
+        "place": 219,
+        "mapped_buffer_or_inverter": 18
+      },
+      "overflow_region_memberships": 278
+    },
+    {
+      "root": "_039956_",
+      "class": "internal_logic",
+      "root_driver": "_109629_",
+      "root_master": "NAND2x1_ASAP7_75t_R",
+      "buffer_nets": 145,
+      "terminal_sinks": 2654,
+      "bbox_um": [
+        3.024,
+        3.24,
+        309.528,
+        95.31
+      ],
+      "buffers_by_class": {
+        "place": 145
+      },
+      "overflow_region_memberships": 225
+    },
+    {
+      "root": "_039955_",
+      "class": "internal_logic",
+      "root_driver": "_109628_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 102,
+      "terminal_sinks": 2306,
+      "bbox_um": [
+        3.294,
+        5.67,
+        310.122,
+        93.42
+      ],
+      "buffers_by_class": {
+        "place": 99,
+        "mapped_buffer_or_inverter": 2,
+        "wire": 1
+      },
+      "overflow_region_memberships": 208
+    },
+    {
+      "root": "_052503_",
+      "class": "internal_logic",
+      "root_driver": "_122193_",
+      "root_master": "AND2x6_ASAP7_75t_R",
+      "buffer_nets": 54,
+      "terminal_sinks": 319,
+      "bbox_um": [
+        3.294,
+        11.61,
+        307.368,
+        92.61
+      ],
+      "buffers_by_class": {
+        "place": 35,
+        "mapped_buffer_or_inverter": 19
+      },
+      "overflow_region_memberships": 185
+    },
+    {
+      "root": "_049576_",
+      "class": "internal_logic",
+      "root_driver": "_119249_",
+      "root_master": "AND2x2_ASAP7_75t_R",
+      "buffer_nets": 31,
+      "terminal_sinks": 291,
+      "bbox_um": [
+        2.376,
+        10.26,
+        311.256,
+        94.77
+      ],
+      "buffers_by_class": {
+        "place": 31
+      },
+      "overflow_region_memberships": 183
+    },
+    {
+      "root": "_039958_",
+      "class": "internal_logic",
+      "root_driver": "_109631_",
+      "root_master": "AND2x6_ASAP7_75t_R",
+      "buffer_nets": 19,
+      "terminal_sinks": 291,
+      "bbox_um": [
+        2.376,
+        10.26,
+        311.256,
+        94.77
+      ],
+      "buffers_by_class": {
+        "place": 19
+      },
+      "overflow_region_memberships": 132
+    },
+    {
+      "root": "_091288_",
+      "class": "internal_logic",
+      "root_driver": "_167754_",
+      "root_master": "NOR3x1_ASAP7_75t_R",
+      "buffer_nets": 27,
+      "terminal_sinks": 144,
+      "bbox_um": [
+        107.19,
+        7.83,
+        164.16,
+        84.51
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 26
+      },
+      "overflow_region_memberships": 129
+    },
+    {
+      "root": "_000124_",
+      "class": "register_output",
+      "root_driver": "_185754_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 6,
+      "terminal_sinks": 9,
+      "bbox_um": [
+        20.682,
+        31.05,
+        192.132,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 3
+      },
+      "overflow_region_memberships": 128
+    },
+    {
+      "root": "_001141_",
+      "class": "register_output",
+      "root_driver": "_186636_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        59.67,
+        61.56,
+        188.904,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 5
+      },
+      "overflow_region_memberships": 124
+    },
+    {
+      "root": "_001174_",
+      "class": "register_output",
+      "root_driver": "_186665_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        67.392,
+        40.77,
+        259.362,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 5
+      },
+      "overflow_region_memberships": 123
+    },
+    {
+      "root": "_007271_",
+      "class": "register_output",
+      "root_driver": "_184169_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 11,
+      "bbox_um": [
+        59.994,
+        31.86,
+        203.472,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 5
+      },
+      "overflow_region_memberships": 120
+    },
+    {
+      "root": "_002682_",
+      "class": "register_output",
+      "root_driver": "_188034_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 10,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        31.914,
+        48.87,
+        190.674,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 7
+      },
+      "overflow_region_memberships": 117
+    },
+    {
+      "root": "_003260_",
+      "class": "register_output",
+      "root_driver": "_188603_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 9,
+      "terminal_sinks": 9,
+      "bbox_um": [
+        36.882,
+        53.19,
+        183.432,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 6
+      },
+      "overflow_region_memberships": 117
+    },
+    {
+      "root": "_000730_",
+      "class": "register_output",
+      "root_driver": "_186288_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 7,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        31.104,
+        54.81,
+        164.862,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 4
+      },
+      "overflow_region_memberships": 116
+    },
+    {
+      "root": "_000733_",
+      "class": "register_output",
+      "root_driver": "_186291_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 7,
+      "terminal_sinks": 10,
+      "bbox_um": [
+        29.7,
+        73.98,
+        174.36,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 4
+      },
+      "overflow_region_memberships": 116
+    },
+    {
+      "root": "_006823_",
+      "class": "register_output",
+      "root_driver": "_183716_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 5,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        24.57,
+        52.65,
+        207.252,
+        59.13
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 4
+      },
+      "overflow_region_memberships": 116
+    },
+    {
+      "root": "ACK_owner[0]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 8,
+      "terminal_sinks": 4,
+      "bbox_um": [
+        55.152,
+        76.41,
+        309.528,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "place": 1,
+        "wire": 1,
+        "hold": 5
+      },
+      "overflow_region_memberships": 116
+    },
+    {
+      "root": "ACK_owner[105]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 4,
+      "terminal_sinks": 6,
+      "bbox_um": [
+        57.072,
+        58.86,
+        316.44,
+        99.677
+      ],
+      "buffers_by_class": {
+        "place": 1,
+        "wire": 1,
+        "hold": 2
+      },
+      "overflow_region_memberships": 116
+    },
+    {
+      "root": "_002501_",
+      "class": "register_output",
+      "root_driver": "_187862_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 9,
+      "terminal_sinks": 8,
+      "bbox_um": [
+        4.374,
+        35.1,
+        169.722,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 6
+      },
+      "overflow_region_memberships": 115
+    },
+    {
+      "root": "ACK_owner[163]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 3,
+      "terminal_sinks": 4,
+      "bbox_um": [
+        54.336,
+        79.65,
+        304.02,
+        99.677
+      ],
+      "buffers_by_class": {
+        "place": 1,
+        "wire": 1,
+        "hold": 1
+      },
+      "overflow_region_memberships": 115
+    },
+    {
+      "root": "_007384_",
+      "class": "register_output",
+      "root_driver": "_184277_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 9,
+      "bbox_um": [
+        24.462,
+        55.89,
+        170.376,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 5
+      },
+      "overflow_region_memberships": 113
+    },
+    {
+      "root": "_003244_",
+      "class": "register_output",
+      "root_driver": "_188587_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 8,
+      "terminal_sinks": 10,
+      "bbox_um": [
+        45.36,
+        70.2,
+        233.172,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 5
+      },
+      "overflow_region_memberships": 112
+    },
+    {
+      "root": "ACK_owner[112]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 4,
+      "terminal_sinks": 7,
+      "bbox_um": [
+        55.056,
+        63.99,
+        314.334,
+        99.677
+      ],
+      "buffers_by_class": {
+        "place": 1,
+        "wire": 1,
+        "hold": 2
+      },
+      "overflow_region_memberships": 111
+    },
+    {
+      "root": "ACK_owner[118]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 5,
+      "terminal_sinks": 7,
+      "bbox_um": [
+        55.392,
+        67.5,
+        312.984,
+        99.677
+      ],
+      "buffers_by_class": {
+        "place": 2,
+        "wire": 1,
+        "hold": 2
+      },
+      "overflow_region_memberships": 111
+    },
+    {
+      "root": "_002433_",
+      "class": "register_output",
+      "root_driver": "_187805_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 6,
+      "terminal_sinks": 9,
+      "bbox_um": [
+        91.26,
+        37.8,
+        215.892,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 3
+      },
+      "overflow_region_memberships": 110
+    },
+    {
+      "root": "ACK_owner[20]",
+      "class": "ACK_",
+      "root_driver": null,
+      "root_master": null,
+      "buffer_nets": 3,
+      "terminal_sinks": 5,
+      "bbox_um": [
+        50.56,
+        85.32,
+        303.48,
+        99.677
+      ],
+      "buffers_by_class": {
+        "place": 1,
+        "wire": 1,
+        "hold": 1
+      },
+      "overflow_region_memberships": 110
+    },
+    {
+      "root": "_001117_",
+      "class": "register_output",
+      "root_driver": "_186615_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 6,
+      "terminal_sinks": 9,
+      "bbox_um": [
+        56.322,
+        62.91,
+        174.312,
+        99.677
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 1,
+        "output": 2,
+        "place": 3
+      },
+      "overflow_region_memberships": 109
+    }
+  ],
+  "critical_path_root_trees": [
+    {
+      "root": "_002818_",
+      "class": "register_output",
+      "root_driver": "_188171_",
+      "root_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "buffer_nets": 5,
+      "terminal_sinks": 7,
+      "bbox_um": [
+        23.058,
+        41.31,
+        176.202,
+        63.45
+      ],
+      "buffers_by_class": {
+        "mapped_buffer_or_inverter": 2,
+        "place": 3
+      },
+      "overflow_region_memberships": 48
+    },
+    {
+      "root": "_036106_",
+      "class": "internal_logic",
+      "root_driver": "_105779_",
+      "root_master": "XOR2x2_ASAP7_75t_R",
+      "buffer_nets": 1,
+      "terminal_sinks": 3,
+      "bbox_um": [
+        28.35,
+        43.74,
+        30.888,
+        44.82
+      ],
+      "buffers_by_class": {
+        "place": 1
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_043426_",
+      "class": "internal_logic",
+      "root_driver": "_113099_",
+      "root_master": "OR5x2_ASAP7_75t_R",
+      "buffer_nets": 1,
+      "terminal_sinks": 2,
+      "bbox_um": [
+        99.306,
+        49.14,
+        233.118,
+        50.22
+      ],
+      "buffers_by_class": {
+        "place": 1
+      },
+      "overflow_region_memberships": 49
+    },
+    {
+      "root": "_049997_",
+      "class": "internal_logic",
+      "root_driver": "_119670_",
+      "root_master": "OR5x1_ASAP7_75t_R",
+      "buffer_nets": 2,
+      "terminal_sinks": 3,
+      "bbox_um": [
+        232.686,
+        46.98,
+        327.024,
+        49.95
+      ],
+      "buffers_by_class": {
+        "place": 2
+      },
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_052484_",
+      "class": "internal_logic",
+      "root_driver": "_122174_",
+      "root_master": "OR5x2_ASAP7_75t_R",
+      "buffer_nets": 48,
+      "terminal_sinks": 534,
+      "bbox_um": [
+        2.7,
+        2.43,
+        326.97,
+        46.17
+      ],
+      "buffers_by_class": {
+        "place": 40,
+        "mapped_buffer_or_inverter": 8
+      },
+      "overflow_region_memberships": 107
+    },
+    {
+      "root": "_021358_",
+      "class": "internal_logic",
+      "root_driver": "_175355_",
+      "root_master": "AND3x1_ASAP7_75t_R",
+      "buffer_nets": 0,
+      "terminal_sinks": 1,
+      "bbox_um": [
+        15.066,
+        18.63,
+        15.606,
+        27.54
+      ],
+      "buffers_by_class": {},
+      "overflow_region_memberships": 0
+    },
+    {
+      "root": "_016590_",
+      "class": "internal_logic",
+      "root_driver": "_175360_",
+      "root_master": "OAI22x1_ASAP7_75t_R",
+      "buffer_nets": 0,
+      "terminal_sinks": 1,
+      "bbox_um": [
+        15.066,
+        27.27,
+        16.524,
+        27.81
+      ],
+      "buffers_by_class": {},
+      "overflow_region_memberships": 0
+    }
+  ],
+  "congestion_report_region_count": 7959,
+  "congestion_report_overflow_sum": 11199,
+  "congestion_report_direction_overflow": {
+    "Horizontal": 11194,
+    "Vertical": 5
+  },
+  "congestion_report_net_membership_classes": {
+    "internal_logic": 61784,
+    "ACK_": 13066,
+    "register_output": 105431,
+    "cold_POR": 1064,
+    "clock": 1185,
+    "in_data": 12773,
+    "tie": 80
+  },
+  "congestion_report_edge_overflow": {
+    "interior": 9513,
+    "within_5um_of_core_edge": 1686
+  },
+  "ODB_layer_overflow": {
+    "M2": {
+      "overflow": 5165.0,
+      "overflow_bins": 4138,
+      "max_overflow": 5.0
+    },
+    "M3": {
+      "overflow": 13.0,
+      "overflow_bins": 13,
+      "max_overflow": 1.0
+    },
+    "M4": {
+      "overflow": 4680.0,
+      "overflow_bins": 3953,
+      "max_overflow": 5.0
+    },
+    "M5": {
+      "overflow": 5.0,
+      "overflow_bins": 5,
+      "max_overflow": 1.0
+    },
+    "M6": {
+      "overflow": 1299.0,
+      "overflow_bins": 1211,
+      "max_overflow": 3.0
+    },
+    "M7": {
+      "overflow": 1.0,
+      "overflow_bins": 1,
+      "max_overflow": 1.0
+    }
+  },
+  "ODB_reader_overflow_sum": 11163.0,
+  "ODB_reader_limit": "getUsage/getCapacity layer scan totals 11163 versus original GRT/report 11199. Preserve this discrepancy; original GRT layer totals are authoritative. Do not infer missing per-direction capacity from these getters.",
+  "highest_overflow_25um_tiles": [
+    {
+      "bbox_um": [
+        125,
+        75,
+        150,
+        100
+      ],
+      "overflow": 1124
+    },
+    {
+      "bbox_um": [
+        125,
+        25,
+        150,
+        50
+      ],
+      "overflow": 1101
+    },
+    {
+      "bbox_um": [
+        125,
+        50,
+        150,
+        75
+      ],
+      "overflow": 1064
+    },
+    {
+      "bbox_um": [
+        125,
+        0,
+        150,
+        25
+      ],
+      "overflow": 1054
+    },
+    {
+      "bbox_um": [
+        100,
+        0,
+        125,
+        25
+      ],
+      "overflow": 791
+    },
+    {
+      "bbox_um": [
+        100,
+        75,
+        125,
+        100
+      ],
+      "overflow": 765
+    },
+    {
+      "bbox_um": [
+        100,
+        25,
+        125,
+        50
+      ],
+      "overflow": 763
+    },
+    {
+      "bbox_um": [
+        100,
+        50,
+        125,
+        75
+      ],
+      "overflow": 684
+    },
+    {
+      "bbox_um": [
+        75,
+        0,
+        100,
+        25
+      ],
+      "overflow": 582
+    },
+    {
+      "bbox_um": [
+        75,
+        75,
+        100,
+        100
+      ],
+      "overflow": 529
+    },
+    {
+      "bbox_um": [
+        75,
+        25,
+        100,
+        50
+      ],
+      "overflow": 519
+    },
+    {
+      "bbox_um": [
+        75,
+        50,
+        100,
+        75
+      ],
+      "overflow": 491
+    }
+  ],
+  "boundary_pin_shape_counts": {
+    "top:M6:INOUT": 18,
+    "bottom:M6:INOUT": 18,
+    "bottom:M5:INPUT": 1563,
+    "top:M5:INPUT": 449,
+    "top:M7:INPUT": 85,
+    "bottom:M7:INPUT": 769,
+    "top:M5:OUTPUT": 3784,
+    "top:M7:OUTPUT": 878,
+    "bottom:M5:OUTPUT": 175,
+    "bottom:M7:OUTPUT": 92
+  },
+  "boundary_pin_center_spacing": {
+    "top:M6": {
+      "shape_count": 18,
+      "coordinate_min_um": 193.37400000000002,
+      "coordinate_max_um": 193.37400000000002,
+      "min_center_spacing_um": 0.0,
+      "median_center_spacing_um": 0.0
+    },
+    "bottom:M6": {
+      "shape_count": 18,
+      "coordinate_min_um": 193.37400000000002,
+      "coordinate_max_um": 193.37400000000002,
+      "min_center_spacing_um": 0.0,
+      "median_center_spacing_um": 0.0
+    },
+    "bottom:M5": {
+      "shape_count": 1738,
+      "coordinate_min_um": 4.0920000000000005,
+      "coordinate_max_um": 381.564,
+      "min_center_spacing_um": 0.047999999999944976,
+      "median_center_spacing_um": 0.04800000000000182
+    },
+    "top:M5": {
+      "shape_count": 4233,
+      "coordinate_min_um": 39.564,
+      "coordinate_max_um": 374.556,
+      "min_center_spacing_um": 0.047999999999944976,
+      "median_center_spacing_um": 0.04800000000000182
+    },
+    "top:M7": {
+      "shape_count": 963,
+      "coordinate_min_um": 19.024,
+      "coordinate_max_um": 368.91200000000003,
+      "min_center_spacing_um": 0.06399999999996453,
+      "median_center_spacing_um": 0.06400000000002137
+    },
+    "bottom:M7": {
+      "shape_count": 861,
+      "coordinate_min_um": 53.519999999999996,
+      "coordinate_max_um": 385.296,
+      "min_center_spacing_um": 0.06399999999996453,
+      "median_center_spacing_um": 0.06400000000002137
+    }
+  },
+  "attribution_limit": "Membership is participation in an overflowing channel, not causal allocation of overflow. BUF/INV trees are traced to their original driver; no traversal through multi-input logic. CTS hold/setup remains checkpoint-only."
+}

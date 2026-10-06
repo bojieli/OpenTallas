@@ -1,0 +1,1 @@
+FAIL bench drove l_pop while l_v=0 after consuming sole held landing. Actual c_fault quarantined subsequent ACK correctly. H12 C12 L1 A0 credit1 D1 G1 at161792000fs. Fix bench to present pop only on valid, preserving protocol violation checks.

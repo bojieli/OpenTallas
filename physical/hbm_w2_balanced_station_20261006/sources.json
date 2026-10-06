@@ -1,0 +1,18 @@
+{
+  "schema": "w2-check-station-physical-v1",
+  "generated_pins": {
+    "bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+    "bank_current_static.sv": "1ae03d1b14f9f8a8a9560174c776ea4356d5810ca4c7f7a5b3f1be477c2ecb73",
+    "bank_check_static.sv": "9599ffd7e47f33fe7eea1412b53ce5ce404546670c87e7b9b8bcd2a7122fbb72",
+    "ot_hbm_native_station.sv": "a43e8662555e0e84b556aacae6dc750f501d2e92e9f2d275b3d8dd42ba57a7dc",
+    "ot_hbm_native_frame_station.sv": "31c5bc2ced55002b47575777e8a7c0ab335f28a8bc730a29179a44b08c87834d"
+  },
+  "parameters": {
+    "ENABLE": 1,
+    "NO": 2,
+    "REGISTERED_CURRENT": 1,
+    "REGISTERED_CHECK": 1
+  },
+  "enrolled_source": "b0ea85b84",
+  "codec_scope": "Preencode before acceptance mux; retained four-word checker reductions; zero latency change."
+}

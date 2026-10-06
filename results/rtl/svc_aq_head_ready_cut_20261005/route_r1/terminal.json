@@ -1,0 +1,44 @@
+{
+  "status": "FAIL_SS_SETUP_NO_ADOPTION",
+  "source_commit": "973696daea77f546dc8030a08afff379ace950d1",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_pc_aq_head_ready_cut.sv": "7be5be3f78d7081430544ab22a6cef71c03091364b14e267ab7ae034e3f68819",
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_stack_aq_head_ready_cut.sv": "a70b662c8c9497cb2f658c718f8745c9b4dd7355a6f275ec5f808143ceafa680",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_head_ready_lockstep.sv": "31c1e65e8550db078d29901435068f0a6d8048699b7fe5d04378411104c3fb96",
+    "tools/svc_aq_head_ready_lockstep.sh": "615d851668c32f9fb7ef0030b5e8dec8729d4116719ba13a889188aae19b8ce1",
+    "results/uarch/hbm_stream_aq_head_ready_cut_20261005/model.json": "1c0dabb0d018a41bf9395f344675a0ee0acbb99c2ab98eac394de4d6d72e32f1",
+    "tools/uarch_model.py": "69eb394160a7247c4ba0582847ec7a7e13004d200dc9770f94f2f17251dac734"
+  },
+  "SS_setup_ps": -25.83,
+  "FF_hold_ps": 10.23,
+  "physical_flow_hold_ns": 0.00915089,
+  "SS_output_ps": 22.621071,
+  "SS_R2R_ps": -25.83,
+  "path": {
+    "from": "PC1 blk[25]",
+    "via": "rdyr_n[29] refresh/block next-state then next-head reduction/mux",
+    "to": "head_bank_ready_q"
+  },
+  "closes_signoff": false,
+  "area_um2": 3959.18,
+  "DRC": 0,
+  "DRV": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0
+  },
+  "scope": "IO0 NCH1 allbodyoutputs; TT header not signoff credit",
+  "known_old_path_not_current_limiting": "last1->c_oh28 sixpredicate model remainsconditional notselected",
+  "remote": "/srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-route-r1",
+  "artifacts": {
+    "physical.json": "b97f796f5707f2ca409f967c2145444ef4763f40ae61b00493c9f9aeb41e7dc1",
+    "route.log": "04c4620406d44c3778f78b410b20fde63b0ebdf10fa3cf76193a9bd15bb6d63b",
+    "launch.json": "af2d9cd90bb71de01877bc24c2022dac5bde6cd4ce24a0187a2cb312a7e265e4",
+    "corner.log": "492a8803af0837d1425e6645b1bc0e5640c0c9c9a424bb6c3b8ee81c4cc2d645",
+    "w18_sta_ff.log": "166b0b661dfc9c117ed787b3f5c847810472df02573cea6cbad6e4ea63c32f66",
+    "exit": "9c2eda766e635ce14d27fe9f20e6279edf15e3eb94c8d9d93b5c48a9cef61456",
+    "corner_sta.json": "47bbb4071f1b6b4d08d80b2558587c1556c932cd76a398e3a620dc78cd0218e1",
+    "w18_sta_ss.log": "b090307359d92eb6047f887c176f156ee67f6bd2add38fc2b41e39d955fc9d78",
+    "run.sh": "f36e14da7757585896414661eb9444ef6ca1b21921bf3e77d32b58c21add5b68"
+  }
+}

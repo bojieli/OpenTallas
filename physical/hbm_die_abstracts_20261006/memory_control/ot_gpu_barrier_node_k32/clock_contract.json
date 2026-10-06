@@ -1,0 +1,52 @@
+{
+  "master": "ot_gpu_barrier_node",
+  "parameters": {
+    "K": 32
+  },
+  "input_clock": "clk",
+  "cold_or_source_reset": "rst_n (source behavior retained; enclosing reset qualification open)",
+  "corners": {
+    "ss": {
+      "pin": "clk",
+      "capacitance_fF": 0.9247,
+      "internal_CTS_paths": {
+        "min_clock_tree_path": {
+          "rise_ps": 44.23618,
+          "fall_ps": 51.1759
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 46.75456,
+          "fall_ps": 53.3395
+        }
+      },
+      "time_unit": "1ps",
+      "capacitance_unit": "1fF",
+      "output_clock_arcs": 33
+    },
+    "ff": {
+      "pin": "clk",
+      "capacitance_fF": 0.9952,
+      "internal_CTS_paths": {
+        "min_clock_tree_path": {
+          "rise_ps": 22.65489,
+          "fall_ps": 23.63301
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 23.62895,
+          "fall_ps": 24.58861
+        }
+      },
+      "time_unit": "1ps",
+      "capacitance_unit": "1fF",
+      "output_clock_arcs": 33
+    }
+  },
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "fixture_output_load_fF": 3.898,
+  "actual_parent_receiver_loads": null,
+  "parent_clock_skew": null,
+  "parent_qualified": false,
+  "source_signoff_reused": true
+}

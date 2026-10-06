@@ -1,0 +1,41 @@
+kc6 actual terminal outcome: FAIL, not adopted and not physically closed.
+Source230d83aa2, selectedOPT_KC6=1, candidateRTL8db9e624bfb3155205b55a7c08b0a600f8c8dac0489b33d4643fa3663d573483.
+Original component20cases PASS retained separately; 738cycles not attributed
+as a gain relative to older758 because HBM source changed.
+
+RouteRC0 and extractedSTAR C0 (see route.rc/sta.rc), actual final ODB/SPEF.
+SS setup+0.20ps, FF hold+3.70ps, zero failing register endpoints.
+53051 register endpoints, same count as kc5: no added registered state/edges.
+Cellarea34279.5um2 vs kc5 34438.8 (delta-159.3um2, measured in this context only).
+Same core93630.5um2; cap37452.2um2 met with3172.7um2 remaining.
+DRC/antenna/cap/fanout violations0; MAX-SLEW447, worst433.61ps vs320ps limit.
+This FAIL is immutable; no clock/uncertainty/DRV threshold waiver.
+
+Original post-route group-launch failure groups.rc2/groups.log retained:
+tools/dsrom_reindex_close.py was absent from main230d snapshot.
+The exact original2d checkerSHA6c88ebfe9af7362c9394dd9106412415c56438be3cac4024abeea63a7eac2479
+was restored and executed ONCE against the SAME completed ODB/SPEF, no reroute.
+groups_completed.rc0; SS boundary:
+dr_ready_in147.64ps <166.6ps FAIL (new endpoint d_seq[6]);
+req_rdy_in111.75ps <166.6ps FAIL (new endpoint req_addr[860]);
+lr_data_in551.92ps PASS; lr_port_out243.52ps PASS.
+No slew-only reroute: prerequisite ALL boundary groups PASS did not hold.
+
+Actual source-critical next action:
+1. dr_ready now enters d_seq/d_left/inuse arithmetic through can0/can1.
+   Precompute same-edge one/two drain arithmetic alternatives, select late;
+   include rob_ok from the corresponding inuse alternative, not a delayed
+   credit predicate. Preserve cmd/reset precedence and all exact handshakes.
+2. req_rdy now reaches the address output hold mux through iss/use_s and shared
+   enables. Precompute code/scale payload independent of availability; use
+   actual !req_v||req_rdy only at the final local output hold selection.
+   Preserve scale priority, full address/length/tag and FIFO-pop alignment.
+3. Price these further combinational cuts (state0/edges0 prospective), retained
+   slot/repair budget and all final DRVs before any RTL/route successor.
+   Current passing cpart/resetmask, count and head cuts are retained; no GS16.
+
+Escalation: first changed-source physical variant after kc5 failed closure.
+Parent/Claude notified of both remaining boundary deficits and447slew.
+No compiler or route remains live; all source/log/ODB/SPEF retained remotely.
+Do not retire route WT/outputs before source-critical-cone consumers release.
+No new proof campaign, gather replay or route has been started.

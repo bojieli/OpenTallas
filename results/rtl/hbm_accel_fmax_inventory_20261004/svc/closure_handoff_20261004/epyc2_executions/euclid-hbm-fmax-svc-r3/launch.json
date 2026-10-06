@@ -1,0 +1,14 @@
+{
+  "pid": 1532619,
+  "host": "ot-epyc2",
+  "source_commit": "47ecf2d2cb19960af0d13e2722ab34d27c771cb2",
+  "worktree": "/srv/opentallas/repos/euclid-hbm-fmax-svc-flat-20261004",
+  "output": "/srv/opentallas-scratch/jobs/euclid-hbm-fmax-svc-r3",
+  "script": "/srv/opentallas-scratch/jobs/euclid-hbm-fmax-svc-r3/run.sh",
+  "extra_variant": 3,
+  "route_requires_exactness": true,
+  "source_sha256": "08ce5514a19215974fe942e617d706df2c563f84e2585116e480a908b167e158",
+  "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+  "make_jobs": 16,
+  "running_caps": null
+}

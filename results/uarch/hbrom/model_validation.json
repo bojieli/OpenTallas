@@ -1,0 +1,29 @@
+{
+  "scope": "software analytical model, allocation, rectangular screening and checkpoint codec; no RTL or physical qualification",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_hbrom_model.py",
+    "tests/test_hbrom_inputs.py",
+    "tests/test_hbrom_allocator.py",
+    "tests/test_hbrom_floorplan.py",
+    "tests/test_hbrom_vectors.py"
+  ],
+  "observed_exit_code": 0,
+  "observed_pytest_progress": "34 passing test dots at 100 percent",
+  "source_sha256": {
+    "tools/hbrom_model.py": "b39739254877305baef982934da564a3a5e69ffd2ff6ea336ecbf79ac8146ab2",
+    "tools/hbrom_inputs.py": "0ce2f0830363b2cff4c72139c58c5ab83361d472973b398a36a40770d74cbb61",
+    "tools/hbrom_allocator.py": "c1ca1878a1f3464d9fe64c248fa366adc0dcddcbb0d46cf245dd9b658b199ffd",
+    "tools/hbrom_floorplan.py": "4e85d7cd9b54d2bbf318509f3af7e611aa5d1101047c8eaded59cd326559d7a8",
+    "tools/hbrom_vectors.py": "e78dbfc674258fdee266411ab01b768260881e722b208106e3e448e9d8100d12",
+    "tools/uarch_model.py": "8152aff4d4ac0e86f58c7ba7e3c6a833bd57e0eaedaaf13fed79294911d2e830",
+    "tests/test_hbrom_model.py": "147ae63cb3425c85df78507e044d9c52a192f962faa06969c1c064351fbad6dd",
+    "tests/test_hbrom_inputs.py": "b4e32e0da7e871b073955ca80226358316264bd0315161a941efd2d3da497db7",
+    "tests/test_hbrom_allocator.py": "e7e3b765544d1e3f2c067aa76a2236a42026944c1df1d107997f88cab3c94446",
+    "tests/test_hbrom_floorplan.py": "fd805c981671810c63237a3151c6329a363b1845bffa399e3b357dd3315bf910",
+    "tests/test_hbrom_vectors.py": "fd34b7482fbffea2c679271307fc6f146bd480d46f0a85d7b3e56ca155cca5f4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.qwen-stream4-cdc.verdict.v1",
+ "adopted_for_die": "r11a_4face_m30",
+ "rtl": "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv RSEL=1 RNG=10 (c8ba43664; on main a06a7f7f5)",
+ "pins": "HCLK outputs (h_cred h_wv h_wsec h_cv h_csec h_cdata h_ctag h_fault) E, HCLK inputs + hclk N, landing l_* W, write side (w_* wd_* c_* clk) S",
+ "flow": "u50, cdc_pc_slew.sdc (explicit set_max_transition 280), SLEW_MARGIN 30",
+ "signoff": {"SS60_ps": 25.4, "FF25_ps": 10.17, "pins_over_320ps": 0, "max_cap": 0, "drc": 0, "frame_um": [179.156, 179.156]},
+ "also_closed": {"r9a_u50 (free pins)": "SS +79.15 / FF +10.01, 0 slew", "r11b (margin 40)": "SS +17.14 / FF +8.73, 0 slew"},
+ "not_closed": {"two-face pins (hbm E / core W), r9b/r9c/r10a-c": "timing closes, 2-24 output-port slews (l_data, h_cdata) from 585-613 pins on one 179 um face"},
+ "exactness": "unit scoreboard 0/23,867; P8191 bench ALL ph0 15/15 (with NEG) + CHAIN ph137000 PASS (r9 logs)"
+}

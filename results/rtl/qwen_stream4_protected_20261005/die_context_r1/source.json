@@ -1,0 +1,14 @@
+{
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_interface_context.sv": "8c767a22273c0b8646ef8886f50bc907e42e191b1a25c17a0ff06a7078718bf6",
+    "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "1f2f5eaac4c18c8e4c6a4d235acc989a974b464e613159e818fed70aedaf9309",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5d77bb9aeac2bbec8784d92798e30bee7f2a5a91752199abf06a11b12c79a098",
+    "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "33c1eb1b3b5dd65cc5b5f3e16c91ab3285119bf6377527b06dbd5173a55242df",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf"
+  },
+  "check": "all128 allocated; pairwise positive-home nonoverlap; original3225 retained; literal controller parameters and protected modules; no behavioral substitute",
+  "verdict": "STRUCTURAL_PASS",
+  "physical_verdict": "NOT_QUALIFIED"
+}

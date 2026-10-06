@@ -1,0 +1,52 @@
+{
+  "verdict": "FAIL_HISTORICAL_SOURCE",
+  "observed_utc": "2026-10-05T04:01:59.158505+00:00",
+  "owner": "Codex:dsrom-wf-ctrl",
+  "host": "ot-epyc1tb",
+  "source_commit": "9f4dfd7be6842611a6f58662d7ec4c4b98a6adcc",
+  "controller_sha256": "0fe0843069fca93b80490847dc5804afce4628c2e84de894f2f7b947124af717",
+  "instance": "stg",
+  "source_worktree": "/srv/opentallas-scratch/claude/dsrom-wf-close/wt-9f4dfd7be",
+  "remote_output": "/srv/opentallas-scratch/claude/dsrom-wf-close/R11_stg/",
+  "ss_setup_incontext_ps": -198.5,
+  "ss_setup_reg2reg_ps": -42.7,
+  "ff_hold_all_modes_ps": 11.0,
+  "acceptance": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "setup_nonnegative_required": true,
+    "hold_nonnegative_required": true
+  },
+  "escalation": "-> CLAUDE: actual raw report core_clk setup paths differ from first asynchronous max path in wf_sta.json; user-authorized source-bound control/load pricing, no route until relevant recipe ready.",
+  "corrected_source_credit": false,
+  "corrected_source_jobs": [
+    "R12_reset_stg",
+    "R12_reset_src"
+  ],
+  "artifacts_retained": true,
+  "raw_sha256": {
+    "done.json": "5075b3b98b45ccfbf72ec2b974e7b5f4c7c5d28737ee3e7ed772fe54a1b19a27",
+    "wf_sta.json": "0ebbd3d212539ff0cd50ade65f9c7c68c11fa806361cb8456078247ad1e610f0",
+    "physical.json": "273f2c413fb7d3bc806450c3a7b3213ae8ba219cd6f854e36e67c46ceb4db354",
+    "wf_sta_SS.log": "6e14e675e4c8be66844f7ddd2ed9f98a38f2707b504412282a3cc79c71c1f54c",
+    "wf_sta_FF.log": "9a6fb5c51553214ba9202ecca5cbb90ed6ca1a4df5adf2443d5b277d0cc2ccb7",
+    "route_args.json": "3953bd3b653b23d71e9b0be47673c592d14fef918536eb915e3aea4c34c8a41a"
+  },
+  "reported_first_max_path": [
+    "rst_q$_DFF_PN0_",
+    "txs[4]$_DFFE_PN0P_"
+  ],
+  "reported_first_max_path_group": "asynchronous recovery, PASS",
+  "reported_first_max_path_slack_ps": 164.9,
+  "failing_setup_paths": {
+    "incontext": [
+      "in_data[33]",
+      "proto_fault$_DFF_PN0_"
+    ],
+    "reg2reg": [
+      "uchk4$_DFF_PN0_",
+      "g_upos[21].ug/upos[28][20]$_DFFE_PP_"
+    ]
+  }
+}

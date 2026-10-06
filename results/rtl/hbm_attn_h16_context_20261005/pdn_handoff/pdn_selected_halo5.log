@@ -1,0 +1,67 @@
+{"utc": "2026-10-05T22:14:04Z", "idle_cores": 92.26126724778173, "workers": 1, "load": [39.10107421875, 42.02587890625, 42.3681640625], "MemAvailable_GiB": 709.1682891845703, "disk_free_GiB": 2240.0830688476562, "declared_peak_GiB": 8}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0303] The initial 4999 rows (124890017 sites) were cut with 16 shapes for a total of 18565 rows (22783257 sites).
+[INFO TAP-0004] Inserted 23570 endcaps.
+[INFO TAP-0005] Inserted 19827 tapcells.
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[0\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[0\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[10\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[10\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[11\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[11\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[12\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[12\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[13\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[13\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[14\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[14\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[15\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[15\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[1\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[1\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[2\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[2\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[3\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[3\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[4\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[4\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[5\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[5\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[6\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[6\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[7\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[7\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[8\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[8\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[9\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[9\].u_g
+[INFO PDN-0001] Inserting grid: top
+[WARNING PDN-0178] Remaining channel (0.0000, 0.3690) - (1.9800, 87.0570) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 135.3690) - (1.9800, 146.8410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 227.1690) - (1.9800, 249.4410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 254.1690) - (1.9800, 265.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 270.3690) - (1.9800, 292.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 345.9690) - (1.9800, 433.0410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 573.1530) - (1.9800, 595.0410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 599.7690) - (1.9800, 616.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 621.3690) - (1.9800, 643.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 696.9690) - (1.9800, 778.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 831.9690) - (1.9800, 843.4410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 923.7690) - (1.9800, 940.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 950.7690) - (1.9800, 962.2410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 966.9690) - (1.9800, 989.2410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 1042.5690) - (1.9800, 1129.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 1269.3690) - (1.9800, 1291.6410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 1296.3690) - (1.9800, 1313.2410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (0.0000, 1317.9690) - (1.9800, 1340.2410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1308.4760, 642.9690) - (1349.0820, 654.4410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1308.4760, 1339.5690) - (1349.0820, 1349.7390) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1346.7520, 0.3690) - (1349.0820, 303.4410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1346.7520, 345.9690) - (1349.0820, 642.9690) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1346.7520, 696.9690) - (1349.0820, 1000.0410) on M6 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1346.7520, 1042.5690) - (1349.0820, 1339.5690) on M6 for nets: VDD, VSS
+[ERROR PDN-0179] Unable to repair all channels.
+Error: pdn_selected_halo5.tcl, 4 PDN-0179

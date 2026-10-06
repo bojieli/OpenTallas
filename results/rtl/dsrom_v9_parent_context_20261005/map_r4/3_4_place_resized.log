@@ -1,0 +1,128 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_3_place_gp.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     82489
+     1000 |     +1.1% |      86 |     408 |           163 |     81489
+     2000 |     +3.3% |     238 |    1203 |           417 |     80489
+     3000 |     +6.9% |     496 |    2495 |           850 |     79489
+     4000 |     +7.1% |     506 |    2554 |           866 |     78489
+     5000 |     +8.4% |     567 |    3027 |          1007 |     77489
+     6000 |     +8.4% |     567 |    3027 |          1007 |     76489
+     7000 |    +10.1% |     641 |    3627 |          1173 |     75489
+     8000 |    +11.4% |     700 |    4065 |          1302 |     74489
+     9000 |    +11.4% |     700 |    4065 |          1302 |     73489
+    10000 |    +11.4% |     701 |    4068 |          1303 |     72489
+    11000 |    +11.6% |     715 |    4145 |          1328 |     71489
+    12000 |    +15.4% |     907 |    5483 |          1723 |     70489
+    13000 |    +15.4% |     907 |    5483 |          1723 |     69489
+    14000 |    +15.4% |     907 |    5483 |          1723 |     68489
+    15000 |    +15.4% |     907 |    5483 |          1723 |     67489
+    16000 |    +15.5% |     912 |    5520 |          1736 |     66489
+    17000 |    +20.6% |    1156 |    7316 |          2251 |     65489
+    18000 |    +20.6% |    1156 |    7316 |          2251 |     64489
+    19000 |    +20.6% |    1156 |    7320 |          2252 |     63489
+    20000 |    +20.6% |    1156 |    7334 |          2255 |     62489
+    21000 |    +20.7% |    1161 |    7377 |          2272 |     61489
+    22000 |    +25.6% |    1415 |    9089 |          2775 |     60489
+    23000 |    +25.6% |    1415 |    9104 |          2778 |     59489
+    24000 |    +25.8% |    1415 |    9154 |          2790 |     58489
+    25000 |    +26.0% |    1426 |    9220 |          2809 |     57489
+    26000 |    +29.7% |    1651 |   10514 |          3192 |     56489
+    27000 |    +30.4% |    1669 |   10772 |          3252 |     55489
+    28000 |    +30.6% |    1681 |   10830 |          3270 |     54489
+    29000 |    +32.5% |    1826 |   11469 |          3472 |     53489
+    30000 |    +33.6% |    1855 |   11875 |          3564 |     52489
+    31000 |    +33.6% |    1855 |   11875 |          3564 |     51489
+    32000 |    +37.0% |    2099 |   13048 |          3915 |     50489
+    33000 |    +37.1% |    2105 |   13083 |          3926 |     49489
+    34000 |    +41.6% |    2460 |   14613 |          4417 |     48489
+    35000 |    +42.9% |    2572 |   15051 |          4555 |     47489
+    36000 |    +45.0% |    2747 |   15778 |          4795 |     46489
+    37000 |    +45.6% |    2785 |   15971 |          4863 |     45489
+    38000 |    +47.9% |    3091 |   16749 |          5133 |     44489
+    39000 |    +48.5% |    3149 |   16960 |          5196 |     43489
+    40000 |    +55.3% |    4081 |   19331 |          6196 |     42489
+    41000 |    +61.3% |    4932 |   21450 |          7191 |     41489
+    42000 |    +66.8% |    5777 |   23402 |          8069 |     40489
+    43000 |    +68.8% |    5949 |   24079 |          8320 |     39489
+    44000 |    +74.5% |    6730 |   26058 |          9168 |     38489
+    45000 |    +81.8% |    7274 |   28580 |          9837 |     37489
+    46000 |    +89.4% |    8060 |   31267 |         10831 |     36489
+    47000 |    +95.8% |    8991 |   33527 |         11829 |     35489
+    48000 |   +101.5% |    9913 |   35520 |         12828 |     34489
+    49000 |   +105.4% |   10433 |   36900 |         13435 |     33489
+    50000 |   +110.1% |   10952 |   38567 |         14128 |     32489
+    51000 |   +111.6% |   11085 |   39090 |         14281 |     31489
+    52000 |   +111.6% |   11085 |   39090 |         14281 |     30489
+    53000 |   +111.6% |   11085 |   39090 |         14281 |     29489
+    54000 |   +115.6% |   11320 |   40489 |         14650 |     28489
+    55000 |   +126.4% |   11968 |   44292 |         15649 |     27489
+    56000 |   +130.7% |   12262 |   45815 |         16079 |     26489
+    57000 |   +136.1% |   13047 |   47673 |         16924 |     25489
+    58000 |   +141.1% |   13792 |   49422 |         17766 |     24489
+    59000 |   +146.6% |   14580 |   51343 |         18610 |     23489
+    60000 |   +154.9% |   14625 |   54343 |         19598 |     22489
+    61000 |   +156.1% |   14625 |   54759 |         19743 |     21489
+    62000 |   +156.3% |   14625 |   54879 |         19759 |     20489
+    63000 |   +156.4% |   14625 |   54934 |         19766 |     19489
+    64000 |   +156.4% |   14625 |   54934 |         19766 |     18489
+    65000 |   +156.4% |   14625 |   54934 |         19766 |     17489
+    66000 |   +158.2% |   14679 |   55744 |         19941 |     16489
+    67000 |   +160.6% |   15052 |   56587 |         20314 |     15489
+    68000 |   +163.5% |   15497 |   57625 |         20765 |     14489
+    69000 |   +165.2% |   15803 |   58238 |         21071 |     13489
+    70000 |   +167.9% |   16243 |   59197 |         21520 |     12489
+    71000 |   +170.6% |   16547 |   60144 |         21902 |     11489
+    72000 |   +173.3% |   16865 |   61134 |         22309 |     10489
+    73000 |   +176.1% |   17083 |   62111 |         22672 |      9489
+    74000 |   +178.8% |   17315 |   63088 |         23039 |      8489
+    75000 |   +183.7% |   17815 |   64786 |         23571 |      7489
+    76000 |   +184.8% |   17934 |   65151 |         23693 |      6489
+    77000 |   +184.8% |   17934 |   65151 |         23693 |      5489
+    78000 |   +184.8% |   17934 |   65151 |         23693 |      4489
+    79000 |   +184.8% |   17934 |   65151 |         23693 |      3489
+    80000 |   +184.8% |   17934 |   65151 |         23693 |      2489
+    81000 |   +188.1% |   17934 |   66352 |         24084 |      1489
+    82000 |   +196.6% |   17934 |   69395 |         25083 |       489
+    final |   +200.7% |   17934 |   70880 |         25567 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 25891 slew violations.
+[INFO RSZ-0036] Found 611 capacitance violations.
+[INFO RSZ-0039] Resized 17934 instances.
+[INFO RSZ-0038] Inserted 70880 buffers in 25567 nets.
+[INFO RSZ-0504] Runtime: 19.28s
+Took 19 seconds: repair_design -verbose
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 34756 um^2 14% utilization.
+Instance count before 100265, after 171145
+Pin count before 238967, after 380727
+write_db /work/results/asap7/opentallas_ot_v41_v9_parent_clock_context_asap7/base/3_4_place_resized.odb
+Elapsed time: 1:28.62[h:]min:sec. CPU time: user 103.07 sys 3.01 (119%). Peak memory: 1132868KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           88           1106 43cc59b855c689c9dd08

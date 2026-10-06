@@ -26,7 +26,7 @@ def main(argv=None):
     ap.add_argument("--work", required=True, type=Path)
     ap.add_argument("--synth-timeout-s", type=int, default=7200)
     ap.add_argument("--orfs-var", action="append", default=[],
-                    help="extra ORFS variable K=V (e.g. SYNTH_KEEP_MODULES=<tops> to keep the f12 FP units as hierarchy)")
+                    help="extra ORFS config.mk variable K=V (default none), e.g. SYNTH_KEEP_MODULES=<module list>")
     a = ap.parse_args(argv)
     params = dict(p.split("=", 1) for p in a.param)
     work = a.work.resolve()
@@ -34,7 +34,7 @@ def main(argv=None):
     sdc = f"create_clock -name clk -period {a.period_ps:g} [get_ports clk]\nset_false_path -from [all_inputs]\nset_false_path -to [all_outputs]\n"
     spec = cs.CaseSpec(nickname=f"scr_{a.top}", top=a.top, sources=a.source, die_um=(400.0, 400.0), sdc=sdc,
                        params=params, extra={"CORNER": "WC", "ABC_AREA": 0, "ADDER_MAP_FILE": "",
-                                         **dict(v.split("=", 1) for v in a.orfs_var)})
+                                                         **dict(v.split("=", 1) for v in a.orfs_var)})
     cs.write_case(work, spec)
     net = orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"
     if not net.is_file():
@@ -86,7 +86,7 @@ def main(argv=None):
     if stat:
         m = re.findall(r"Chip area for module '\\(\S+)': ([0-9.]+)", stat[0].read_text())
         area = float(m[-1][1]) if m else None
-    out = dict(top=a.top, params=params, period_ps=a.period_ps, ss_setup_wns_ps=None if wns is None else round(wns, 1),
+    out = dict(top=a.top, params=params, orfs_vars=dict(v.split("=", 1) for v in a.orfs_var), period_ps=a.period_ps, ss_setup_wns_ps=None if wns is None else round(wns, 1),
                ff_hold_wns_ps=None if hold is None else round(hold, 1), cell_area_um2=area,
                ss_fmax_prelayout_hz=None if wns is None else round(1e12 / (a.period_ps - wns)),
                worst_start=sp and sp.group(1), worst_end=ep and ep.group(1),

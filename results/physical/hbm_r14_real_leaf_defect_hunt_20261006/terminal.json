@@ -1,0 +1,25 @@
+{
+ "scope": "OWNER_AUTHORIZED_SELECTED_R14_PLACEMENT_DEFECT_HUNT_ONLY",
+ "original_pins_without_track": 532480,
+ "repaired_pins_without_track": 0,
+ "actual_signal_pins": 1760256,
+ "real_macro_counts": {
+  "ot_hbm_accel_bd_col": 1024,
+  "ot_hbm_accel_tc16": 1024
+ },
+ "native_instances": 2364,
+ "native_overlaps": 0,
+ "native_outside": 0,
+ "max_leaf_shift_DBU": 24,
+ "DBU_per_um": 1000,
+ "extra_wire_Manhattan_upper_um": 0.048,
+ "new_clock_phase_or_pin_semantics": false,
+ "new_die_area": false,
+ "remaining_blocks": "OPEN labelled placeholders, not functional abstracts",
+ "pin_access_qualified": false,
+ "GRT_qualified": false,
+ "SSFF_qualified": false,
+ "IR_qualified": false,
+ "source_placement_parent_containment_pending": false,
+ "all2048_leafs_in_original_SM_envelopes": true
+}

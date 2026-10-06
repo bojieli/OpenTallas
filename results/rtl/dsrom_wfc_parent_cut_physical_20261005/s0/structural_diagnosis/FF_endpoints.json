@@ -1,0 +1,16 @@
+{
+  "endpoints": [
+    {
+      "endpoint": "core_start (output)",
+      "required_ps": 606.399963,
+      "arrival_ps": 632.522034,
+      "slack_ps": -26.122049
+    }
+  ],
+  "families": {
+    "core_start": {
+      "count": 1,
+      "worst_ps": -26.122049
+    }
+  }
+}

@@ -1,0 +1,133 @@
+view=asap7 corner=TT block=ot_hbm_integrated_su_cp_context top=ot_hbm_integrated_su_cp_context purpose=characterization
+  pnr:   wirelength=23426 um vias=52401 DRC=4284 antenna_nets=0 Fmax=1073.75 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/jobs/harvey-cp-fast-frontier-parent-context-v1/runtime_r4/physical.json
+{
+  "schema": "hbm.cp.parent-context.corners.v1",
+  "ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -97.98,
+    "tns_ps": -797.8,
+    "worst_register_d_slack_ps": 26.533165,
+    "worst_reg_to_reg_slack_ps": 26.53,
+    "worst_input_to_reg_slack_ps": 306.3,
+    "worst_output_port_slack_ps": -97.979073,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "72022de7f63c6da6402d35fe7693f827cc58b90ae483ec7f8c980516366cf438",
+    "spef_sha256": "94ca9ea4e56ef2594cea5ff87e042f1740ce55790a082e4878f1ba99240cd635",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": 6.4,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 6.398424,
+    "worst_reg_to_reg_slack_ps": 11.45,
+    "worst_input_to_reg_slack_ps": 6.4,
+    "worst_output_port_slack_ps": 52.387608,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "72022de7f63c6da6402d35fe7693f827cc58b90ae483ec7f8c980516366cf438",
+    "spef_sha256": "94ca9ea4e56ef2594cea5ff87e042f1740ce55790a082e4878f1ba99240cd635",
+    "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+  "uses_extracted_interconnect_and_propagated_clock": true,
+  "external_loads_analytical": true,
+  "parent_budget_adoption": false
+}
+{
+  "schema": "hbm.cp.context.loaded-ir.v1",
+  "inputs": {
+    "6_final.odb": "72022de7f63c6da6402d35fe7693f827cc58b90ae483ec7f8c980516366cf438",
+    "6_final.sdc": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7",
+    "6_final.spef": "94ca9ea4e56ef2594cea5ff87e042f1740ce55790a082e4878f1ba99240cd635"
+  },
+  "activity": "OpenSTA vectorless input activity 0.1, propagated; clocks from actual retained SDC",
+  "source": "Ideal supply at existing child PG boundary pins; parent-grid drop excluded",
+  "grid_rebuilt": false,
+  "source_phase_ps": 0,
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "workload_peak_qualified": false,
+  "adopted": false,
+  "corners": {
+    "SS": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0016667071031406522,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00167,
+          "supply_v": 0.63,
+          "worst_voltage_v": 0.628,
+          "average_voltage_v": 0.629,
+          "average_ir_drop_v": 0.000728,
+          "worst_ir_drop_v": 0.00216,
+          "worst_drop_percent": 0.34,
+          "em_max_current_a": 4.96e-05,
+          "em_average_current_a": 8.85e-07,
+          "resistors": 78443
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00167,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00162,
+          "average_voltage_v": 0.000644,
+          "average_ir_drop_v": 0.000644,
+          "worst_ir_drop_v": 0.00162,
+          "worst_drop_percent": 0.26,
+          "em_max_current_a": 3.99e-05,
+          "em_average_current_a": 7.85e-07,
+          "resistors": 78975
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-fast-frontier-parent-context-v1/runtime_r4/loaded_ir/SS.log"
+    },
+    "FF": {
+      "exit": 0,
+      "nonzero_loaded_analysis_complete": true,
+      "total_power_w": 0.0028129960410296917,
+      "rails": [
+        {
+          "source_type": "PINS",
+          "net": "VDD",
+          "total_power_w": 0.00281,
+          "supply_v": 0.77,
+          "worst_voltage_v": 0.767,
+          "average_voltage_v": 0.769,
+          "average_ir_drop_v": 0.00101,
+          "worst_ir_drop_v": 0.00296,
+          "worst_drop_percent": 0.38,
+          "em_max_current_a": 7.05e-05,
+          "em_average_current_a": 1.23e-06,
+          "resistors": 78443
+        },
+        {
+          "source_type": "PINS",
+          "net": "VSS",
+          "total_power_w": 0.00281,
+          "supply_v": 0.0,
+          "worst_voltage_v": 0.00225,
+          "average_voltage_v": 0.00089,
+          "average_ir_drop_v": 0.00089,
+          "worst_ir_drop_v": 0.00225,
+          "worst_drop_percent": 0.29,
+          "em_max_current_a": 5.7e-05,
+          "em_average_current_a": 1.09e-06,
+          "resistors": 78975
+        }
+      ],
+      "raw_log": "/srv/opentallas-scratch2/jobs/harvey-cp-fast-frontier-parent-context-v1/runtime_r4/loaded_ir/FF.log"
+    }
+  }
+}

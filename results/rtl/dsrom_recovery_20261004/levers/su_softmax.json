@@ -190,8 +190,12 @@
    "DOUT": 23,
    "RWU": 9,
    "RWD": 9
-  }
+  },
+  "round2_records": [
+   "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16e54.json",
+   "results/rtl/dsrom_recovery_20261004/su_softmax/r2/run_lph16m65.json"
+  ]
  },
  "default": "opt-in: applied only in the recovery baseline; the stream unit's softmax lowering is unchanged",
- "note": "awaiting routed SS60/FF25 closure of the softmax slice (variants running); ot_dsrom_su_fdiv_f12 routed SS +150.3 / FF +7.19 ps"
+ "note": "round 5 MARGIN (2023def4e) exact (run_lph16_m5.json); route m5c (0.770 ns, die IO on vclk) running; adoption on routed sign-off SS >= +40 / FF >= +15 ps at 0.833 ns (owner 2026-10-06)"
 }

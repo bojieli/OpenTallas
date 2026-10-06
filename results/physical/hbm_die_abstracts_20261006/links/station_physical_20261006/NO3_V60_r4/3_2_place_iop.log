@@ -1,0 +1,43 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.sdc
+Took 15 seconds: read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_io_placement_pin_faces.tcl
+ACTUAL_STATION_PIN_FACES_REBOUND
+place_pins -hor_layers "M4 M6" -ver_layers "M5 M7" -min_distance 1 -min_distance_in_tracks
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ clk_sm por_n in_data\[0\] in_data\[1000\] in_data\[1001\] ... ]
+[INFO PPL-0044] Pin group: [ fclk_o out_data\[0\] out_data\[2063\] out_data\[4126\] out_data\[1000\] ... ]
+[INFO PPL-0067] Restrict pins [ clk_sm in_data\[0\] in_data\[1000\] in_data\[1001\] in_data\[1002\] ... ] to region 0.00u-266.38u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ ACK_frame\[0\] ACK_frame\[100\] ACK_frame\[101\] ACK_frame\[102\] ACK_frame\[103\] ... ] to region 0.00u-266.38u at the RIGHT edge.
+[INFO PPL-0001] Number of available slots 24258
+[INFO PPL-0002] Number of I/O             10391
+[INFO PPL-0003] Number of I/O w/sink      10391
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0006] Number of I/O Groups    2
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0100] Group of size 2599 placed during fallback mode.
+[INFO PPL-0100] Group of size 7789 placed during fallback mode.
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 1199131.38 um.
+Design area 10412 um^2 61% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/3_2_place_iop.odb
+Elapsed time: 0:18.47[h:]min:sec. CPU time: user 18.14 sys 0.33 (100%). Peak memory: 438156KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb           18            427 2cd7bf9a6ecf6ee66033

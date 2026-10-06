@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.dsrom-reindex.kc8-model.v1",
+  "selected": false,
+  "default_enabled": false,
+  "source_commit": "0b598c6dbf8136463dc11b65373b5f84039fe4c0",
+  "parent": "kc7 terminal FAIL; measured same-context cells, not a die net debit",
+  "dimensions": {
+    "NPC": 32,
+    "WB": 128,
+    "DF": 8,
+    "AW": 28,
+    "TAGW": 16,
+    "LENW": 4,
+    "QW": 12,
+    "GS": 8
+  },
+  "mechanism": [
+    "8 registered local AND8 room groups; AND8 dispatch join at same edge",
+    "3 kept write-enable copies per lane: metadata31/code32/scale32 loads"
+  ],
+  "compute": {
+    "new_macs_per_cycle": 0,
+    "new_rounding_points": 0
+  },
+  "state": {
+    "gross_added_ff": 776,
+    "kept_copy_ff": 768,
+    "grouped_room_ff": 8,
+    "gross_added_clock_sinks": 776,
+    "removed_room_all_credit": 0,
+    "room_reset_set_loads": 8,
+    "copied_enable_reset": "rst_n in synchronous D predicate",
+    "accepted_debt_reset_semantics": "unchanged"
+  },
+  "timing": {
+    "new_edges": 0,
+    "new_cdc": 0,
+    "per_user_latency_delta_cycles": 0,
+    "actual_existing_gate_cases": 20,
+    "actual_worst_cycles": 738,
+    "conditional_833ps_us": 0.614754,
+    "period_ps": 833,
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25,
+    "ready_external_budget_ps": 166.6,
+    "original_max_and_min_groups_required": true,
+    "dispatch_added_combinational_AND_inputs": 8,
+    "SS_FF_closed": false,
+    "slew_margin_percent": 20,
+    "acceptance_slew_limit_ps": 320,
+    "hold_margin_ps": 8
+  },
+  "ports": {
+    "new_bits_per_cycle": 0,
+    "new_bytes_per_cycle": 0,
+    "request_per_pc_bits": 49,
+    "request_ready_per_pc_bits": 1,
+    "response_control_per_pc_bits": 21,
+    "response_ready_per_pc_bits": 1,
+    "response_payload_bytes_per_pc": 32,
+    "drain_bits": 71,
+    "drain_ready_bits": 1,
+    "list_data_bits": 28,
+    "list_address_bits": 10,
+    "list_enable_bits": 1
+  },
+  "replicas": {
+    "controls_per_stack": 1,
+    "stacks_per_rank": 4,
+    "ranks": 4,
+    "kept_enable_copies_per_lane": 3,
+    "lanes": 2,
+    "room_groups": 8,
+    "FIFOs_per_room_group": 8,
+    "no_new_memory_ports": true
+  },
+  "construction": {
+    "gross_ff_um2": 294.16608,
+    "decode_D_reset_allowance_nand2": 3168,
+    "local_AND_and_join_nand2": 126,
+    "gross_nand2_equivalents": 3294,
+    "gross_extra_um2": 582.3252,
+    "footprint_basis": "0.37908um2 FF and 0.08748um2 NAND2; footprint only, no TT delay transfer",
+    "conservative_decode_allowance": "4 NAND2 per copied bit, no shared-decode or removed-logic credit",
+    "mapped_buffers_clock_tree_and_net_delta_um2": null
+  },
+  "slot": {
+    "core_um2": 93630.5,
+    "max_cell_fraction": 0.4,
+    "max_cells_um2": 37452.2,
+    "measured_kc7_cells_um2": 35166.3,
+    "construction_total_um2": 35748.6252,
+    "remaining_mapping_CTS_repair_budget_um2": 1703.5748,
+    "fit_verified": false,
+    "parent_die_reservation": false
+  },
+  "routing": {
+    "new_internal_copy_Q_nets": 768,
+    "new_room_Q_nets": 8,
+    "copy_Q_select_loads": [
+      31,
+      32,
+      32
+    ],
+    "same_D_copy_loads": 3,
+    "clock_reset_wire_sites_and_loaded_delay_unknown": true,
+    "additional_tracks": null,
+    "available_tracks": null,
+    "acceptance": "same fixed core; mapped occupancy within cap and zero DRC/antenna/slew/cap/fanout"
+  },
+  "admission": "consume completed20case gate; one OPT_KC8=1 route with slew margin20; new failing cone escalates to Claude, no blind rescue"
+}

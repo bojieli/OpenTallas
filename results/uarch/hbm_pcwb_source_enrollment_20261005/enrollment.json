@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.pcwb.actual-source-enrollment.v1",
+  "scope": "DS-only component compilation source enrollment; no whole-token or physical qualification",
+  "source_commit": "5186a06d84fd3cd46d1ab2a7d0168d0cdc77cd1b",
+  "implementation_milestone_commit": "05f10091a7a79e42894f0d6a68a38c12337b492c",
+  "selection": {
+    "top": "ot_hbm_accel_pcwb_service_stack",
+    "sources": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv",
+      "rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv",
+      "rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv",
+      "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv"
+    ],
+    "source_sha256": {
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+      "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb.sv": "8189205b557273359d494350209a868b987232763b17f8f3712ab93c28c3a4a2",
+      "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+      "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv": "baeca01c84a454ab5c819d2c5612877a3bf257cb38c398a54059243059733009",
+      "rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv": "fba1bf191a8c5c056f1384f2252ca9ff630a7ceaad91fe756d264d3af357f4ad",
+      "rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv": "002f06d542dc9d3df0b02fb8a5d9ecc370d445f569de429ad27571110762d66e",
+      "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv": "f57291bf99101e430274d8a4bb9885880fa2b76e1745fe1f1db24d939be4f8ed"
+    },
+    "parameters": {
+      "ENABLE": 1,
+      "CMD_MATCH_CUT": 1
+    },
+    "controller_module": "ot_hbm_accel_stream_pc_wb_command_match",
+    "sourcebook": "results/uarch/hbm_pcwb_actual_parent_20261005/model.json",
+    "sourcebook_sha256": "ff0eebb077c492e14113af345e9540c0f57ea4a123d47fcb256ddbad063bdc60"
+  },
+  "default_parameters": {
+    "ENABLE": 0,
+    "CMD_MATCH_CUT": 0
+  },
+  "helper": "tools/hbm_pcwb_parent_sources.py",
+  "helper_sha256": "674f88a5589d03eeb5c320d01678cd62f2a6d4f05b9000d6ed40f66e693f6a5f",
+  "implementation_receipt": {
+    "path": "results/rtl/hbm_pcwb_parent_implementation_20261005/result.json",
+    "sha256": "681e7ef97bd1a8f73c68e180e76b652fad278df859c66e23bd4242542677a7f3"
+  },
+  "existing_evidence_scope": {
+    "functional": {
+      "pinned_commit": "454ad0750217eb4da6e110c6db57e2d6736b21d7",
+      "exit": 0,
+      "marker": "PASS_PREPAID_ACTUAL_PC_JOIN",
+      "mechanism": "actual CMD1+CA finite grants -> four reserved writes -> stalled PHY queue -> four PHY accepted -> held out-of-order matched visibility -> writer consume; duplicate refused; missing context refused",
+      "stage_scope": "one PC new prepaid mechanism; no read-return or complete DS writer-to-token numerical claim"
+    },
+    "parent_lint": {
+      "pinned_commit": "f3cc4eb6ad42447fde26af6605df453e263ef8fe",
+      "exit": 0,
+      "parameters": {
+        "ENABLE": 1,
+        "CMD_MATCH_CUT": 1
+      },
+      "new_parent_UNOPTFLAT": false,
+      "new_parent_or_adapter_LATCH": false,
+      "inherited_warnings": "retained original/controller/CDC width and limited-range comparisons; no changes to pinned sources"
+    }
+  },
+  "source_enrollment_complete": true,
+  "whole_token_admission": false,
+  "installed_HA_owner_and_IRS_producer": false,
+  "physical_adopted": false,
+  "remaining": "HA issuer producer/IRS lineage absent (Claude scope); actual physical frame source and PHY visibility provider must bind, no constants; read returns require ordered per-PC current-frame contract; physical clocks/reset/ports/queue protection and full composed latency unqualified",
+  "method": "One resolve_sources call reads the eight actual sources and priced sourcebook. Hashes match Euclid committed receipt. Existing fixture and lint receipts referenced; no compile, simulation, lint, model regeneration or gate replay."
+}

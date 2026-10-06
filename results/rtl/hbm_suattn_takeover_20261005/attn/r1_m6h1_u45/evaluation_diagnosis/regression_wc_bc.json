@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.allcorner_spef.regression.v1",
+  "same_artifact": true,
+  "WC_setup_before_ps": 18.93,
+  "WC_setup_after_ps": 18.93,
+  "WC_full_path_reports_byte_identical": true,
+  "WC_report_sha256": "7189135550312a6acac1d7c9bf3556c6e97b068f3a036325425e1413abacfbe5",
+  "BC_hold_before_ps": -0.67,
+  "BC_hold_after_ps": 1.49,
+  "SPEF_and_SDC_unchanged": true,
+  "uncertainty_setup_ps": 60,
+  "uncertainty_hold_ps": 25,
+  "guard_GiB": 8,
+  "worker_threads": 1,
+  "P_and_R": false,
+  "toolfix_main": "dc3085b40",
+  "original_failure_retained": true
+}

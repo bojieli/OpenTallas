@@ -1,0 +1,1497 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "s81_layer",
+ "top_fix": false,
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "generator_sha256": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
+ "lint_tool_sha256": "cf25754e0f6e491b39800b64e0fff6b6e01ad3a3de50000a5eccd614977b26e6",
+ "variant": {
+  "die": "layer",
+  "pairs": 2417,
+  "bf": 519,
+  "nv": 0
+ },
+ "census": {
+  "instances": 24355,
+  "buses": 17943,
+  "net_bits": 2036241,
+  "masters": 23,
+  "real_instances": 23535,
+  "placeholder_instances": 820
+ },
+ "real_blocks": {
+  "ot_v41_rom_elem_q_qp_w10": {
+   "module": "ot_v41_rom_elem_q_qp_w10",
+   "file": "rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv",
+   "kind": "routed RTL (NB=2 receipt params)",
+   "params": {
+    "NB": 2,
+    "MTP": 1,
+    "EARLY": 1,
+    "FAST": 1,
+    "PP": 1,
+    "QTIMING_FIX": 1,
+    "QPIPE": 1,
+    "QP_XS": 1,
+    "QP_CAP": 0,
+    "QP_P1": 1,
+    "QP_CSAM": 10
+   },
+   "instances": 1898
+  },
+  "ot_rom_4096x72_m8": {
+   "module": "ot_rom_4096x72_m8",
+   "file": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 16919
+  },
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "file": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 4
+  },
+  "ot_pdie_serdes": {
+   "module": "ot_pdie_serdes",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 6
+  },
+  "ot_pdie_ucie": {
+   "module": "ot_pdie_ucie",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 2
+  },
+  "dsfd_node": {
+   "module": "ot_v41_retn_w17w10",
+   "file": "rtl/v41die/ot_v41_retn_w17w10.sv",
+   "kind": "RTL (the slot is sized for this node; the die master dsfd_node is its placeholder)",
+   "params": {},
+   "instances": 4706
+  }
+ },
+ "connectivity": [
+  {
+   "check": "duplicate_port_binding",
+   "cls": "any",
+   "signature": "dsfd_sp_collective.pll x53",
+   "nets": 1,
+   "bits": 53,
+   "examples": [
+    "sp_collective.pll"
+   ]
+  },
+  {
+   "check": "multi_driven",
+   "cls": "cfg",
+   "signature": "dsfd_bf.cfg + ot_rom_4096x72_m8.rd",
+   "nets": 519,
+   "bits": 28026,
+   "examples": [
+    "cf_0",
+    "cf_5",
+    "cf_9"
+   ]
+  },
+  {
+   "check": "multi_driven",
+   "cls": "cfg",
+   "signature": "ot_rom_4096x72_m8.rd + ot_v41_rom_elem_q_qp_w10.cfg",
+   "nets": 1898,
+   "bits": 102492,
+   "examples": [
+    "cf_1",
+    "cf_2",
+    "cf_3"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "cfg_ctl",
+   "signature": "ot_rom_4096x72_m8.ctl",
+   "nets": 2417,
+   "bits": 33838,
+   "examples": [
+    "ck_0",
+    "ck_1",
+    "ck_2"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "x_chain",
+   "signature": "dsfd_bf.xai + ot_v41_rom_elem_q_qp_w10.xo",
+   "nets": 490,
+   "bits": 130340,
+   "examples": [
+    "xc_5a",
+    "xc_9a",
+    "xc_14a"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "x_chain",
+   "signature": "dsfd_bf.xbi + ot_v41_rom_elem_q_qp_w10.xo",
+   "nets": 462,
+   "bits": 122892,
+   "examples": [
+    "xc_5b",
+    "xc_9b",
+    "xc_14b"
+   ]
+  },
+  {
+   "check": "undriven",
+   "cls": "x_chain",
+   "signature": "ot_v41_rom_elem_q_qp_w10.xi + ot_v41_rom_elem_q_qp_w10.xo",
+   "nets": 771,
+   "bits": 205086,
+   "examples": [
+    "xc_3",
+    "xc_8",
+    "xc_13"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "link",
+   "signature": "dsfd_mfifo.f (1536 > 1024)",
+   "nets": 8,
+   "bits": 4096,
+   "examples": [
+    "lk_KW0_0",
+    "lk_KW1_0",
+    "lk_KW2_0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "link",
+   "signature": "dsfd_mfifo.h (1536 > 1024)",
+   "nets": 8,
+   "bits": 4096,
+   "examples": [
+    "lk_KW0_c",
+    "lk_KW1_c",
+    "lk_KW2_c"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_mfifo.f (1536 > 1100)",
+   "nets": 4,
+   "bits": 1744,
+   "examples": [
+    "tk_TW0_v0",
+    "tk_TW5_v0",
+    "tk_TE0_v0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_mfifo.f (1536 > 1298)",
+   "nets": 4,
+   "bits": 952,
+   "examples": [
+    "tk_TW1_v0",
+    "tk_TW4_v0",
+    "tk_TE1_v0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_mfifo.f (1536 > 1430)",
+   "nets": 4,
+   "bits": 424,
+   "examples": [
+    "tk_TW2_v0",
+    "tk_TW3_h0",
+    "tk_TE2_v0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_mfifo.hr (858 > 528)",
+   "nets": 4,
+   "bits": 1320,
+   "examples": [
+    "tk_TW0_r",
+    "tk_TW5_r",
+    "tk_TE0_r"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_mfifo.hr (858 > 726)",
+   "nets": 4,
+   "bits": 528,
+   "examples": [
+    "tk_TW1_r",
+    "tk_TW4_r",
+    "tk_TE1_r"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.e (1536 > 1100)",
+   "nets": 22,
+   "bits": 9592,
+   "examples": [
+    "tk_TW0_h0",
+    "tk_TW0_h1",
+    "tk_TW0_h2"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.e (1536 > 1298)",
+   "nets": 30,
+   "bits": 7140,
+   "examples": [
+    "tk_TW1_h0",
+    "tk_TW1_h1",
+    "tk_TW1_h2"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.e (1536 > 1430)",
+   "nets": 34,
+   "bits": 3604,
+   "examples": [
+    "tk_TW2_h0",
+    "tk_TW2_h1",
+    "tk_TW2_h2"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.w (1536 > 1100)",
+   "nets": 22,
+   "bits": 9592,
+   "examples": [
+    "tk_TW0_h1",
+    "tk_TW0_h2",
+    "tk_TW0_h3"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.w (1536 > 1298)",
+   "nets": 30,
+   "bits": 7140,
+   "examples": [
+    "tk_TW1_h1",
+    "tk_TW1_h2",
+    "tk_TW1_h3"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_h.w (1536 > 1430)",
+   "nets": 34,
+   "bits": 3604,
+   "examples": [
+    "tk_TW2_h1",
+    "tk_TW2_h2",
+    "tk_TW2_h3"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.a (1536 > 1100)",
+   "nets": 16,
+   "bits": 6976,
+   "examples": [
+    "tk_TW0_v0",
+    "tk_TW0_v1",
+    "tk_TW0_v2"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.a (1536 > 1298)",
+   "nets": 10,
+   "bits": 2380,
+   "examples": [
+    "tk_TW1_v0",
+    "tk_TW1_v1",
+    "tk_TW1_v2"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.a (1536 > 1430)",
+   "nets": 2,
+   "bits": 212,
+   "examples": [
+    "tk_TW2_v0",
+    "tk_TE2_v0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.b (1536 > 1100)",
+   "nets": 16,
+   "bits": 6976,
+   "examples": [
+    "tk_TW0_v1",
+    "tk_TW0_v2",
+    "tk_TW0_v3"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.b (1536 > 1298)",
+   "nets": 10,
+   "bits": 2380,
+   "examples": [
+    "tk_TW1_v1",
+    "tk_TW1_v2",
+    "tk_TW1_h0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk",
+   "signature": "dsfd_stn_v.b (1536 > 1430)",
+   "nets": 2,
+   "bits": 212,
+   "examples": [
+    "tk_TW2_h0",
+    "tk_TE2_h0"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk_tap",
+   "signature": "dsfd_fifo.x (836 > 704)",
+   "nets": 8,
+   "bits": 1056,
+   "examples": [
+    "tp_cr_W02",
+    "tp_cr_W13",
+    "tp_cr_W43"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk_tap",
+   "signature": "dsfd_fifo.x (836 > 770)",
+   "nets": 32,
+   "bits": 2112,
+   "examples": [
+    "tp_cr_W00",
+    "tp_cr_W01",
+    "tp_cr_W10"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk_tap",
+   "signature": "dsfd_stn_h.t (836 > 704)",
+   "nets": 8,
+   "bits": 1056,
+   "examples": [
+    "tp_cr_W02",
+    "tp_cr_W13",
+    "tp_cr_W43"
+   ]
+  },
+  {
+   "check": "width_port_wider_than_net",
+   "cls": "trunk_tap",
+   "signature": "dsfd_stn_h.t (836 > 770)",
+   "nets": 32,
+   "bits": 2112,
+   "examples": [
+    "tp_cr_W00",
+    "tp_cr_W01",
+    "tp_cr_W10"
+   ]
+  }
+ ],
+ "unbound_real_pins": [
+  {
+   "master": "dsfd_node",
+   "port": "a_d",
+   "insts": 2417,
+   "bits": 4834,
+   "dir": "input",
+   "width": 32
+  },
+  {
+   "master": "dsfd_node",
+   "port": "a_e",
+   "insts": 2417,
+   "bits": 2417,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "dsfd_node",
+   "port": "b_d",
+   "insts": 2417,
+   "bits": 4834,
+   "dir": "input",
+   "width": 32
+  },
+  {
+   "master": "dsfd_node",
+   "port": "b_e",
+   "insts": 2417,
+   "bits": 2417,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "dsfd_node",
+   "port": "clk",
+   "insts": 4706,
+   "bits": 4706,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "dsfd_node",
+   "port": "fault",
+   "insts": 4706,
+   "bits": 4706,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "dsfd_node",
+   "port": "quiet",
+   "insts": 4706,
+   "bits": 4706,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "dsfd_node",
+   "port": "rst_n",
+   "insts": 4706,
+   "bits": 4706,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "clk",
+   "insts": 6,
+   "bits": 6,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "port": "clk",
+   "insts": 2,
+   "bits": 2,
+   "dir": "input",
+   "width": 1
+  },
+  {
+   "master": "ot_rom_4096x72_m8",
+   "port": "rd_out",
+   "insts": 16919,
+   "bits": 304542,
+   "dir": "output",
+   "width": 72
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qp_w10",
+   "port": "busy",
+   "insts": 1898,
+   "bits": 1898,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qp_w10",
+   "port": "fault",
+   "insts": 1898,
+   "bits": 1898,
+   "dir": "output",
+   "width": 1
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qp_w10",
+   "port": "xs_e1",
+   "insts": 175,
+   "bits": 1750,
+   "dir": "input",
+   "width": 10
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qp_w10",
+   "port": "xs_q1",
+   "insts": 175,
+   "bits": 44800,
+   "dir": "input",
+   "width": 256
+  }
+ ],
+ "placeholder_port_direction_conflicts": {
+  "dsfd_fifo.x": 3,
+  "dsfd_mfifo.hr": 3,
+  "dsfd_mfifo.f": 5,
+  "dsfd_mfifo.h": 2,
+  "dsfd_stn_v.a": 4,
+  "dsfd_stn_v.b": 4,
+  "dsfd_stn_h.e": 7,
+  "dsfd_stn_h.w": 7,
+  "dsfd_stn_h.t": 3,
+  "dsfd_stn_l.e": 2,
+  "dsfd_stn_l.w": 2
+ },
+ "clocking": [
+  {
+   "master": "dsfd_bf",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 519
+  },
+  {
+   "master": "dsfd_bk_collector",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_bk_selector",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_ctrl",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 4
+  },
+  {
+   "master": "dsfd_fifo",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 44
+  },
+  {
+   "master": "dsfd_mfifo",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 24
+  },
+  {
+   "master": "dsfd_node",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 4706
+  },
+  {
+   "master": "dsfd_sp_capture",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_collective",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_gather",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_hc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_n",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_su_s",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_sp_vm",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 1
+  },
+  {
+   "master": "dsfd_stn_h",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 100
+  },
+  {
+   "master": "dsfd_stn_l",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 72
+  },
+  {
+   "master": "dsfd_stn_v",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 44
+  },
+  {
+   "master": "dsfd_svc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 4
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 6
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 2
+  },
+  {
+   "master": "ot_rom_4096x72_m8",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 16919
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qp_w10",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 1898
+  }
+ ],
+ "clock_sources": {
+  "sp_collective": [
+   "pll"
+  ]
+ },
+ "top_ports": 0,
+ "physical": {
+  "missing_pins": [],
+  "face_away": [
+   {
+    "master": "dsfd_bf",
+    "port": "ka",
+    "orient": "R0",
+    "endpoints": 483,
+    "bits": 9660,
+    "examples": [
+     "e0.ka face S peer 240 um behind (xk_0L)",
+     "e5.ka face S peer 240 um behind (xk_0L)",
+     "e9.ka face S peer 240 um behind (xk_0L)"
+    ]
+   },
+   {
+    "master": "dsfd_bf",
+    "port": "kb",
+    "orient": "R0",
+    "endpoints": 437,
+    "bits": 8740,
+    "examples": [
+     "e5.kb face S peer 240 um behind (xk_0R)",
+     "e9.kb face S peer 240 um behind (xk_0R)",
+     "e14.kb face S peer 240 um behind (xk_0R)"
+    ]
+   },
+   {
+    "master": "dsfd_bf",
+    "port": "r*",
+    "orient": "R0",
+    "endpoints": 733,
+    "bits": 46179,
+    "examples": [
+     "e0.r0 face N peer 217 um behind (rt_0_0a)",
+     "e0.r1 face N peer 195 um behind (rt_0_0b)",
+     "e5.r0 face N peer 159 um behind (rt_0_10a)"
+    ]
+   },
+   {
+    "master": "dsfd_bf",
+    "port": "xbo",
+    "orient": "R0",
+    "endpoints": 246,
+    "bits": 65436,
+    "examples": [
+     "e9.xbo face N peer 397 um behind (xc_10)",
+     "e14.xbo face N peer 397 um behind (xc_15)",
+     "e19.xbo face N peer 397 um behind (xc_20)"
+    ]
+   },
+   {
+    "master": "dsfd_mfifo",
+    "port": "f",
+    "orient": "R0",
+    "endpoints": 15,
+    "bits": 17978,
+    "examples": [
+     "mf_TW0.f face W peer 534 um behind (tk_TW0_v0)",
+     "mf_TW1.f face W peer 405 um behind (tk_TW1_v0)",
+     "mf_TW2.f face W peer 274 um behind (tk_TW2_v0)"
+    ]
+   },
+   {
+    "master": "dsfd_mfifo",
+    "port": "h",
+    "orient": "R0",
+    "endpoints": 12,
+    "bits": 14336,
+    "examples": [
+     "mf_SSW.h face E peer 73 um behind (sv_SSW_f)",
+     "mf_SSE.h face E peer 112 um behind (sv_SSE_f)",
+     "mf_SNW.h face E peer 341 um behind (sv_SNW_f)"
+    ]
+   },
+   {
+    "master": "dsfd_node",
+    "port": "o",
+    "orient": "R0",
+    "endpoints": 2417,
+    "bits": 159522,
+    "examples": [
+     "n0_2.o face N peer 115 um behind (rt_0_1b)",
+     "n0_4.o face N peer 115 um behind (rt_0_3b)",
+     "n0_7.o face N peer 193 um behind (rt_0_5b)"
+    ]
+   },
+   {
+    "master": "dsfd_sp_collective",
+    "port": "lW*",
+    "orient": "R0",
+    "endpoints": 4,
+    "bits": 4096,
+    "examples": [
+     "sp_collective.lW0 face W peer 1149 um behind (lk_KW0_c)",
+     "sp_collective.lW1 face W peer 1283 um behind (lk_KW1_c)",
+     "sp_collective.lW2 face W peer 1417 um behind (lk_KW2_c)"
+    ]
+   },
+   {
+    "master": "dsfd_svc",
+    "port": "co",
+    "orient": "MX",
+    "endpoints": 2,
+    "bits": 1024,
+    "examples": [
+     "svc_NW.co face S peer 1312 um behind (co_NW)",
+     "svc_NE.co face S peer 1312 um behind (co_NE)"
+    ]
+   },
+   {
+    "master": "dsfd_svc",
+    "port": "ix",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 1024,
+    "examples": [
+     "svc_SW.ix face N peer 1480 um behind (ix_SW)",
+     "svc_SE.ix face N peer 1480 um behind (ix_SE)"
+    ]
+   },
+   {
+    "master": "ot_rom_4096x72_m8",
+    "port": "ctl",
+    "orient": "R0",
+    "endpoints": 7462,
+    "bits": 104468,
+    "examples": [
+     "c0_0.ctl face W peer 93 um behind (ck_0)",
+     "c0_1.ctl face W peer 93 um behind (ck_0)",
+     "c0_5.ctl face W peer 93 um behind (ck_0)"
+    ]
+   },
+   {
+    "master": "ot_rom_4096x72_m8",
+    "port": "rd",
+    "orient": "R0",
+    "endpoints": 8238,
+    "bits": 444852,
+    "examples": [
+     "c0_0.rd face W peer 93 um behind (cf_0)",
+     "c0_1.rd face W peer 93 um behind (cf_0)",
+     "c0_3.rd face W peer 93 um behind (cf_0)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qp_w10",
+    "port": "k",
+    "orient": "R0",
+    "endpoints": 872,
+    "bits": 17440,
+    "examples": [
+     "e1.k face S peer 240 um behind (xk_0L)",
+     "e6.k face S peer 240 um behind (xk_0L)",
+     "e11.k face S peer 240 um behind (xk_0L)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qp_w10",
+    "port": "r*",
+    "orient": "R0",
+    "endpoints": 1407,
+    "bits": 88641,
+    "examples": [
+     "e1.r0 face N peer 271 um behind (rt_0_2a)",
+     "e1.r1 face N peer 249 um behind (rt_0_2b)",
+     "e2.r0 face N peer 116 um behind (rt_0_4a)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qp_w10",
+    "port": "xi",
+    "orient": "R0",
+    "endpoints": 246,
+    "bits": 65436,
+    "examples": [
+     "e10.xi face S peer 397 um behind (xc_10)",
+     "e15.xi face S peer 397 um behind (xc_15)",
+     "e20.xi face S peer 397 um behind (xc_20)"
+    ]
+   }
+  ],
+  "pin_spread": [
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "phy_SW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "ctrl_SW",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "phy_SE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "ctrl_SE",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "phy_NW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "ctrl_NW",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "phy_NE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "ctrl_NE",
+    "master": "dsfd_ctrl",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "lk_KW1_m",
+    "cls": "link",
+    "inst": "lk_W1",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "E",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 2257.9,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KW2_m",
+    "cls": "link",
+    "inst": "lk_W2",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "E",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 1480.3,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KW3_m",
+    "cls": "link",
+    "inst": "lk_W3",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "E",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 3709.4,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KE1_m",
+    "cls": "link",
+    "inst": "lk_E1",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "W",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 2258.2,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KE2_m",
+    "cls": "link",
+    "inst": "lk_E2",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "W",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 1480.6,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KE3_m",
+    "cls": "link",
+    "inst": "lk_E3",
+    "master": "ot_pdie_serdes",
+    "port": "io",
+    "face": "W",
+    "span_um": 2247.0,
+    "peer_manhattan_um": 3709.8,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KW0_m",
+    "cls": "link",
+    "inst": "lk_W0",
+    "master": "ot_pdie_ucie",
+    "port": "io",
+    "face": "E",
+    "span_um": 1648.2,
+    "peer_manhattan_um": 1026.9,
+    "bits": 1024
+   },
+   {
+    "bus": "lk_KE0_m",
+    "cls": "link",
+    "inst": "lk_E0",
+    "master": "ot_pdie_ucie",
+    "port": "io",
+    "face": "W",
+    "span_um": 1648.2,
+    "peer_manhattan_um": 1027.3,
+    "bits": 1024
+   },
+   {
+    "bus": "rd_SW",
+    "cls": "hbm_read",
+    "inst": "ctrl_SW",
+    "master": "dsfd_ctrl",
+    "port": "rd",
+    "face": "N",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_SW",
+    "cls": "hbm_read",
+    "inst": "svc_SW",
+    "master": "dsfd_svc",
+    "port": "rd",
+    "face": "S",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_SE",
+    "cls": "hbm_read",
+    "inst": "ctrl_SE",
+    "master": "dsfd_ctrl",
+    "port": "rd",
+    "face": "N",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_SE",
+    "cls": "hbm_read",
+    "inst": "svc_SE",
+    "master": "dsfd_svc",
+    "port": "rd",
+    "face": "S",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_NW",
+    "cls": "hbm_read",
+    "inst": "ctrl_NW",
+    "master": "dsfd_ctrl",
+    "port": "rd",
+    "face": "S",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_NW",
+    "cls": "hbm_read",
+    "inst": "svc_NW",
+    "master": "dsfd_svc",
+    "port": "rd",
+    "face": "N",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_NE",
+    "cls": "hbm_read",
+    "inst": "ctrl_NE",
+    "master": "dsfd_ctrl",
+    "port": "rd",
+    "face": "S",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   },
+   {
+    "bus": "rd_NE",
+    "cls": "hbm_read",
+    "inst": "svc_NE",
+    "master": "dsfd_svc",
+    "port": "rd",
+    "face": "N",
+    "span_um": 425.4,
+    "peer_manhattan_um": 8.9,
+    "bits": 8864
+   }
+  ],
+  "pin_spread_count": 24,
+  "abut_without_channel": [
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_collective",
+    "pairs": 2,
+    "min_gap_um": 128.088,
+    "examples": [
+     "e615 / sp_collective gap 128.09 um",
+     "e619 / sp_collective gap 128.09 um"
+    ]
+   },
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_gather",
+    "pairs": 2,
+    "min_gap_um": 128.088,
+    "examples": [
+     "e359 / sp_gather gap 128.09 um",
+     "e363 / sp_gather gap 128.09 um"
+    ]
+   },
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_hc",
+    "pairs": 25,
+    "min_gap_um": 4.344,
+    "examples": [
+     "e1211 / sp_hc gap 4.34 um",
+     "e1215 / sp_hc gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_su_n",
+    "pairs": 8,
+    "min_gap_um": 128.088,
+    "examples": [
+     "e852 / sp_su_n gap 128.09 um",
+     "e857 / sp_su_n gap 128.09 um"
+    ]
+   },
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_su_s",
+    "pairs": 8,
+    "min_gap_um": 128.088,
+    "examples": [
+     "e0 / sp_su_s gap 128.09 um",
+     "e5 / sp_su_s gap 128.09 um"
+    ]
+   },
+   {
+    "compute": "bf",
+    "hub_kind": "hub",
+    "hub": "sp_vm",
+    "pairs": 3,
+    "min_gap_um": 128.088,
+    "examples": [
+     "e368 / sp_vm gap 128.09 um",
+     "e373 / sp_vm gap 128.09 um"
+    ]
+   },
+   {
+    "compute": "cfg",
+    "hub_kind": "hub",
+    "hub": "sp_hc",
+    "pairs": 345,
+    "min_gap_um": 4.344,
+    "examples": [
+     "c1210_0 / sp_hc gap 4.34 um",
+     "c1210_1 / sp_hc gap 51.00 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_capture",
+    "pairs": 2,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n32_19 / sp_capture gap 4.34 um",
+     "n32_20 / sp_capture gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_collective",
+    "pairs": 15,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n32_23 / sp_collective gap 4.34 um",
+     "n32_24 / sp_collective gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_gather",
+    "pairs": 14,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n19_0 / sp_gather gap 4.34 um",
+     "n19_1 / sp_gather gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_su_n",
+    "pairs": 72,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n45_2 / sp_su_n gap 4.34 um",
+     "n45_3 / sp_su_n gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_su_s",
+    "pairs": 70,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n0_0 / sp_su_s gap 4.34 um",
+     "n0_1 / sp_su_s gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "node",
+    "hub_kind": "hub",
+    "hub": "sp_vm",
+    "pairs": 31,
+    "min_gap_um": 4.344,
+    "examples": [
+     "n19_16 / sp_vm gap 4.34 um",
+     "n19_17 / sp_vm gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_capture",
+    "pairs": 1,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e616 / sp_capture gap 100.01 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_collective",
+    "pairs": 2,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e618 / sp_collective gap 100.01 um",
+     "e621 / sp_collective gap 100.01 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_gather",
+    "pairs": 3,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e360 / sp_gather gap 100.01 um",
+     "e362 / sp_gather gap 100.01 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_hc",
+    "pairs": 45,
+    "min_gap_um": 4.344,
+    "examples": [
+     "e1210 / sp_hc gap 4.34 um",
+     "e1213 / sp_hc gap 4.34 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_su_n",
+    "pairs": 13,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e853 / sp_su_n gap 100.01 um",
+     "e855 / sp_su_n gap 100.01 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_su_s",
+    "pairs": 14,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e2 / sp_su_s gap 100.01 um",
+     "e4 / sp_su_s gap 100.01 um"
+    ]
+   },
+   {
+    "compute": "q",
+    "hub_kind": "hub",
+    "hub": "sp_vm",
+    "pairs": 6,
+    "min_gap_um": 100.008,
+    "examples": [
+     "e367 / sp_vm gap 100.01 um",
+     "e370 / sp_vm gap 100.01 um"
+    ]
+   }
+  ]
+ },
+ "meso_forwarded_gap": {
+  "waypoint_masters": {
+   "dsfd_stn_v": 44,
+   "dsfd_stn_h": 100,
+   "dsfd_stn_l": 72
+  },
+  "waypoints": 216,
+  "forwarded_stage_bits": 1053792,
+  "ot_fwd_link_stage_W512_needed": 2304,
+  "fifo_placeholders": {
+   "dsfd_fifo": 44,
+   "dsfd_mfifo": 24
+  },
+  "clock_region_crossings": {
+   "trunk|region": {
+    "buses": 66,
+    "bits": 77748
+   },
+   "x_root|domain": {
+    "buses": 1,
+    "bits": 572
+   },
+   "phy_dfi|region": {
+    "buses": 4,
+    "bits": 88952
+   },
+   "hbm_read|domain": {
+    "buses": 4,
+    "bits": 35456
+   },
+   "svc_hub|region": {
+    "buses": 8,
+    "bits": 12288
+   },
+   "svc_hub|domain": {
+    "buses": 6,
+    "bits": 7168
+   },
+   "band|region": {
+    "buses": 8,
+    "bits": 4096
+   },
+   "link|region": {
+    "buses": 40,
+    "bits": 40960
+   },
+   "link|domain": {
+    "buses": 8,
+    "bits": 8192
+   }
+  }
+ },
+ "block_shape": {
+  "dsfd_sp_hc": {
+   "in_bits": 2048,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  }
+ },
+ "counterparts": {
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "top_fixes": {},
+ "verilog": {
+  "top": "s81_layer_lint_top",
+  "stubs": 17,
+  "nc_wires": 314210,
+  "filelist": "s81_layer_lint_top.f",
+  "rtl_files": 25,
+  "unresolved_modules": []
+ }
+}

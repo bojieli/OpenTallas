@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.hbrom.synthesis-flow-preparation.v1",
+  "status": "PREPARATION_ONLY_MODEL_AND_FLEET_ADMISSION_REQUIRED",
+  "source_commit": "55ba24fdc32cda16de602f5ec5d758d176e96d1a",
+  "files": {
+    "tools/run_abi3_physical.py": {
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "bytes": 172128
+    },
+    "tools/chip_assembly/orfs.py": {
+      "sha256": "88aa79c998509ca444197e271c104ca4ff361f38d8b4ea48d11b774098f6559d",
+      "bytes": 7139
+    },
+    "tools/dsrom_noECC_liberty.py": {
+      "sha256": "d4e478d2ca4217dee1394225576245364509b23ba5265cc955eccc170e865595",
+      "bytes": 1457
+    },
+    "tools/dsrom_noECC_capture_intrinsic_sta.py": {
+      "sha256": "0b43528159d58d2cdf01cbb84245d60fb3eafe4a774d86ed1cbf52ecf5995a76",
+      "bytes": 8344
+    },
+    "configs/pdk/asap7_physical_lock.json": {
+      "sha256": "8cc15850ff9537d79d9702af638133140e97b2a962af54f48719feabaff52f50",
+      "bytes": 10777
+    },
+    "configs/pdk/asap7_local_liberty_lock.json": {
+      "sha256": "7e2aca50cf13b8b2bc5af29eb54daaa6c18fde4216c6392fdedaeb68f64f64c1",
+      "bytes": 4796
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v": {
+      "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+      "bytes": 409
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": {
+      "sha256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+      "bytes": 9861
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": {
+      "sha256": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+      "bytes": 9844
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": {
+      "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+      "bytes": 56346
+    },
+    "results/uarch/dsrom_noECC_capture_intrinsic_20261002/terminal_hashes.json": {
+      "sha256": "6f0b9c1193c04cf00f4c538a8479a475c6bfa2301ce033cd8059695898440105",
+      "bytes": 2295
+    }
+  },
+  "tools": {
+    "yosys": "~/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "abc": "~/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+    "container": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "ORFS_platform": "/OpenROAD-flow-scripts/flow/platforms/asap7",
+    "source_lock": "configs/pdk/asap7_physical_lock.json"
+  },
+  "flow": {
+    "driver": "tools/run_abi3_physical.py",
+    "host_synthesis_corner": "TT ONLY in existing driver; ABC target is not SS closure",
+    "physical_setup_corner": "WC maps to SS",
+    "physical_hold_corner": "BC maps to FF",
+    "stream_clock_ns": 0.8333333333333334,
+    "serial_clock_ns": 1.1111111111111112,
+    "setup_uncertainty_ns": 0.06,
+    "hold_uncertainty_ns": 0.025,
+    "timeouts": "--synth-timeout-seconds unlimited --flow-timeout-seconds unlimited",
+    "required_args": [
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--stages",
+      "synth,sta,pnr",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC"
+    ],
+    "qualification": "Prelayout pin-only SS/FF is screening only; extracted setup SS + hold FF in selected geometry required."
+  },
+  "memory": {
+    "source": "Use *_bb.v in synthesis; behavioral .v exclusively in exactness simulation. Never include initialized zero or sparse fixture ROM in synthesis.",
+    "timing": "Own macro SS/FF liberty, actual CLK and data arcs; never generic blackbox timing or TT macro at SS.",
+    "capture": "Two-cycle pin-local capture; narrowly scoped setup 2 / hold 1 only on actual ROM-output-to-capture-D paths; generated clocks required on actual ICG outputs. Never broad multicycle on compute/mux.",
+    "inventory": "Assert physical macro count, capture-flop count, all expected output bits consumed, mux input count and mapped arithmetic count. Preserve data as unconstrained blackbox outputs with functional dependence through result ports. Never hide synthesis removal with tied outputs.",
+    "buffers": "SRAM/queues need real macro views or mapped flops priced in model. No FakeRAM. No ROM ECC sidecars."
+  },
+  "build_inventory": {
+    "selected_top_parameters_sources": "PENDING model/rtl_vehicle; cannot claim resource estimate or start build before full selected geometry",
+    "deliverables": [
+      "source SHA manifest and git commit",
+      "elaborated and mapped netlist",
+      "Yosys log and stat",
+      "per-kind cell count and area",
+      "ROM/SRAM instance inventory",
+      "generated SDC/Tcl/config.mk",
+      "SS setup and FF hold reports",
+      "tool/container digests",
+      "peak RSS elapsed CPU and disk samples",
+      "immutable terminal verdict"
+    ],
+    "resource_evidence": {
+      "capture_intrinsic_SSFF_peak_KiB": 1308412,
+      "capture_resource_source": "results/uarch/dsrom_noECC_capture_intrinsic_20261002/terminal_r4/record.json",
+      "warning": "Capture-only peak does not size new full compute synthesis. Hierarchical-die blackbox physical RSS also does not size full compute."
+    },
+    "admission": "EPYC2 preferred; /srv/opentallas-scratch/admit.sh PEAK_GIB -- COMMAND; obtain selected inventory then measured analogue to declare peak, check disk separately. No guessed address-space/file/runtime limits. No heavy local builds.",
+    "parallelism": "OT_ORFS_NUM_CORES=16 starting preference subject fleet headroom; independent capture and compute campaigns only once model selects both."
+  },
+  "pitfalls": [
+    "tools/v41_w10_elem_pnr.py hardcodes 0.92ns, 8192 macros; do not invoke unmodified for new selected design.",
+    "tools/run_rom_service_physical.py has legacy 0.25ns uncertainty; not selected flow.",
+    "tools/chip_assembly/orfs.py defaults mutable latest image and timeout; override pinned image and no timeout in launch path.",
+    "run_abi3_physical.py setundef -zero requires preceding validation that no operational arithmetic/data path is undriven.",
+    "Existing intrinsic capture script restricts counts to 1088 flops/1096 outputs; adapt inventory to selected shape instead of treating its PASS as new mux evidence."
+  ],
+  "candidate_rtl": {
+    "manifest": "/tmp/hbrom-rtl-vehicle.json",
+    "manifest_sha256": "2e1e45680fc0fdcaa6609c55f7cd32d9e251e5ebcc2ad3734f313d70c75a18c7",
+    "top": "ot_hbm_accel_sm_v",
+    "parameters": {
+      "ENABLE": 1,
+      "NC": 1,
+      "SUB": 4,
+      "LBS": 2,
+      "LSB": 16,
+      "IL": 8,
+      "RMAX": 4096,
+      "LEV": 4,
+      "XD": 128,
+      "MAX_OUT": 512,
+      "DS": 2,
+      "DW": 4,
+      "DG": 3,
+      "PIO": 2,
+      "STK": 1,
+      "TCK": 1
+    },
+    "status": "PROPOSED_NOT_MODEL_ADMITTED",
+    "source_rule": "Omit final bench source from synthesis closure; require new protected mutable SRAM wrapper before physical acceptance."
+  }
+}

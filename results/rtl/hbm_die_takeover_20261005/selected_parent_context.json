@@ -1,0 +1,808 @@
+{
+  "schema": "opentallas.hbm-selected-die-parent-context.v1",
+  "selected_die": "DS r14b; existing floorplan only",
+  "sources_sha256": {
+    "tools/hbm_accel_die_fp.py": "34f537a6ff8a02f93a09fb5454cea99ee50839161ff0a2d88d8446ea5886689b",
+    "tools/chip_assembly/v41_die.py": "c2e45b6502db022904dd1db0e270f1da72ca56cd5ec1f3acca945d538a34339b",
+    "results/rtl/hbm_accel_die_floorplan_20261005/floorplan.json": "973390b55b8074229249798242fa281bc4e2980f7cb4a03b0ca7f3c438630fa3",
+    "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json": "9b8826ad2d79fbe79be8911c5d17cdb1322dcad88608f7e9a851d6e005c39c16",
+    "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc": "65ab644e483c33b09d21f0e05d816273caa5c30801ce9a9eeb30f41576b7cc19",
+    "results/uarch/hbm_cp_balanced_veto_20261005/protected_clock_context_r1.json": "08470650cb9cc16969c28730eef9b2501826f6b41e2fb48bca53b4eea9b0d312",
+    "results/uarch/hbm_w2_publication_20261005/model.json": "f772f2cee66b0cb6761d0172c910dad9358ed4567c609b403535dfa9f0f975ee",
+    "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e"
+  },
+  "die": {
+    "w_um": 24401.52,
+    "h_um": 19722.96,
+    "mm2": 481.27,
+    "reticle_mm2": 858.0,
+    "reticle_margin_mm2": 376.7
+  },
+  "containers": {
+    "hb_cmdproc": {
+      "master": "hfd_cmdproc",
+      "bbox_um": [
+        10861.776,
+        7611.84,
+        12676.152,
+        9015.816
+      ],
+      "dimensions_um": [
+        1814.3760000000002,
+        1403.976
+      ],
+      "outline_area_um2": 2547340.3589760005,
+      "source_grade": "estimate",
+      "connected_buses": [
+        {
+          "id": "ct_SW_0",
+          "kind": "control",
+          "bits": 360,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "cSW"
+            ],
+            [
+              "w24_ct_SW",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "ct_SE_0",
+          "kind": "control",
+          "bits": 360,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "cSE"
+            ],
+            [
+              "w67_ct_SE",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "ct_NW_0",
+          "kind": "control",
+          "bits": 360,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "cNW"
+            ],
+            [
+              "w106_ct_NW",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "ct_NE_0",
+          "kind": "control",
+          "bits": 360,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "cNE"
+            ],
+            [
+              "w152_ct_NE",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "hb_cmdproc_coll",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "t_coll"
+            ],
+            [
+              "hb_coll",
+              "f_cmdproc"
+            ]
+          ]
+        },
+        {
+          "id": "hb_loader_cmdproc",
+          "kind": "hub",
+          "bits": 341,
+          "endpoints": [
+            [
+              "hb_loader",
+              "t_cmdproc"
+            ],
+            [
+              "hb_cmdproc",
+              "f_loader"
+            ]
+          ]
+        },
+        {
+          "id": "hb_barrier_cmdproc",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_barrier",
+              "t_cmdproc"
+            ],
+            [
+              "hb_cmdproc",
+              "f_barrier"
+            ]
+          ]
+        },
+        {
+          "id": "hb_router_cmdproc",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_router",
+              "t_cmdproc"
+            ],
+            [
+              "hb_cmdproc",
+              "f_router"
+            ]
+          ]
+        },
+        {
+          "id": "hb_cmdproc_su_SW",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "t_su_SW"
+            ],
+            [
+              "hb_su_SW",
+              "f_cmdproc"
+            ]
+          ]
+        },
+        {
+          "id": "hb_cmdproc_su_SE",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "t_su_SE"
+            ],
+            [
+              "hb_su_SE",
+              "f_cmdproc"
+            ]
+          ]
+        },
+        {
+          "id": "hb_cmdproc_su_NW",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "t_su_NW"
+            ],
+            [
+              "hb_su_NW",
+              "f_cmdproc"
+            ]
+          ]
+        },
+        {
+          "id": "hb_cmdproc_su_NE",
+          "kind": "hub",
+          "bits": 64,
+          "endpoints": [
+            [
+              "hb_cmdproc",
+              "t_su_NE"
+            ],
+            [
+              "hb_su_NE",
+              "f_cmdproc"
+            ]
+          ]
+        },
+        {
+          "id": "clk_hb_cmdproc",
+          "kind": "clock_trunk",
+          "bits": 3,
+          "endpoints": [
+            [
+              "hb_coll",
+              "pll"
+            ],
+            [
+              "hb_cmdproc",
+              "ck"
+            ]
+          ]
+        }
+      ],
+      "internal_child_placement": null,
+      "usable_child_area_um2": null,
+      "CTS_internal_area_reservation_um2": null,
+      "internal_PG_and_route_area_reservation_um2": null
+    },
+    "hb_vm": {
+      "master": "hfd_vm",
+      "bbox_um": [
+        10861.776,
+        10704.96,
+        12676.152,
+        12108.936
+      ],
+      "dimensions_um": [
+        1814.3760000000002,
+        1403.976
+      ],
+      "outline_area_um2": 2547340.3589760005,
+      "source_grade": "estimate",
+      "connected_buses": [
+        {
+          "id": "xt_SW_0",
+          "kind": "x_trunk",
+          "bits": 2063,
+          "endpoints": [
+            [
+              "hb_vm",
+              "xSW"
+            ],
+            [
+              "w9_xt_SW",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "iv_SW",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_index_SW",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "iSW"
+            ]
+          ]
+        },
+        {
+          "id": "xt_SE_0",
+          "kind": "x_trunk",
+          "bits": 2063,
+          "endpoints": [
+            [
+              "hb_vm",
+              "xSE"
+            ],
+            [
+              "w51_xt_SE",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "iv_SE",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_index_SE",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "iSE"
+            ]
+          ]
+        },
+        {
+          "id": "xt_NW_0",
+          "kind": "x_trunk",
+          "bits": 2063,
+          "endpoints": [
+            [
+              "hb_vm",
+              "xNW"
+            ],
+            [
+              "w93_xt_NW",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "iv_NW",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_index_NW",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "iNW"
+            ]
+          ]
+        },
+        {
+          "id": "xt_NE_0",
+          "kind": "x_trunk",
+          "bits": 2063,
+          "endpoints": [
+            [
+              "hb_vm",
+              "xNE"
+            ],
+            [
+              "w138_xt_NE",
+              "a"
+            ]
+          ]
+        },
+        {
+          "id": "iv_NE",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_index_NE",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "iNE"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_quant",
+          "kind": "hub",
+          "bits": 1024,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_quant"
+            ],
+            [
+              "hb_quant",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_router",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_router"
+            ],
+            [
+              "hb_router",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_coll",
+          "kind": "hub",
+          "bits": 512,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_coll"
+            ],
+            [
+              "hb_coll",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_su_SW",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_su_SW"
+            ],
+            [
+              "hb_su_SW",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_su_SW_vm",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_su_SW",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "f_su_SW"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_su_SE",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_su_SE"
+            ],
+            [
+              "hb_su_SE",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_su_SE_vm",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_su_SE",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "f_su_SE"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_su_NW",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_su_NW"
+            ],
+            [
+              "hb_su_NW",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_su_NW_vm",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_su_NW",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "f_su_NW"
+            ]
+          ]
+        },
+        {
+          "id": "hb_vm_su_NE",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_vm",
+              "t_su_NE"
+            ],
+            [
+              "hb_su_NE",
+              "f_vm"
+            ]
+          ]
+        },
+        {
+          "id": "hb_su_NE_vm",
+          "kind": "hub",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "hb_su_NE",
+              "t_vm"
+            ],
+            [
+              "hb_vm",
+              "f_su_NE"
+            ]
+          ]
+        },
+        {
+          "id": "clk_hb_vm",
+          "kind": "clock_trunk",
+          "bits": 3,
+          "endpoints": [
+            [
+              "hb_coll",
+              "pll"
+            ],
+            [
+              "hb_vm",
+              "ck"
+            ]
+          ]
+        }
+      ],
+      "internal_child_placement": null,
+      "usable_child_area_um2": null,
+      "CTS_internal_area_reservation_um2": null,
+      "internal_PG_and_route_area_reservation_um2": null
+    }
+  },
+  "channels": {
+    "spine_side_width_um": 1036.8,
+    "west_x_interval_um": [
+      9824.976,
+      10861.776
+    ],
+    "east_x_interval_um": [
+      12676.152,
+      13712.952
+    ],
+    "hub_edge_width_um": 345.6,
+    "layers": [
+      {
+        "layer": "M2",
+        "direction": "HORIZONTAL",
+        "native_pitch_um": 0.038571428571428576,
+        "k16_GRT_pitch_um": 0.6171428571428572,
+        "GRT_removed_fraction": 1.0
+      },
+      {
+        "layer": "M3",
+        "direction": "VERTICAL",
+        "native_pitch_um": 0.036,
+        "k16_GRT_pitch_um": 0.576,
+        "GRT_removed_fraction": 1.0
+      },
+      {
+        "layer": "M4",
+        "direction": "HORIZONTAL",
+        "native_pitch_um": 0.048,
+        "k16_GRT_pitch_um": 0.768,
+        "GRT_removed_fraction": 1.0
+      },
+      {
+        "layer": "M5",
+        "direction": "VERTICAL",
+        "native_pitch_um": 0.048,
+        "k16_GRT_pitch_um": 0.768,
+        "GRT_removed_fraction": 1.0
+      },
+      {
+        "layer": "M6",
+        "direction": "HORIZONTAL",
+        "native_pitch_um": 0.064,
+        "k16_GRT_pitch_um": 1.024,
+        "GRT_removed_fraction": 0.05
+      },
+      {
+        "layer": "M7",
+        "direction": "VERTICAL",
+        "native_pitch_um": 0.064,
+        "k16_GRT_pitch_um": 1.024,
+        "GRT_removed_fraction": 0.05
+      },
+      {
+        "layer": "M8",
+        "direction": "HORIZONTAL",
+        "native_pitch_um": 0.08,
+        "k16_GRT_pitch_um": 1.28,
+        "GRT_removed_fraction": 0.22560000000000002
+      },
+      {
+        "layer": "M9",
+        "direction": "VERTICAL",
+        "native_pitch_um": 0.08,
+        "k16_GRT_pitch_um": 1.28,
+        "GRT_removed_fraction": 0.22560000000000002
+      }
+    ],
+    "PDN": {
+      "layers": "M8 (horizontal) / M9 (vertical) straps, 0.48 um, VDD/VSS interleaved half a pitch, aligned to the bump columns; via89 at every same-net crossing; macro M7 grids (element sign-off) join the die grid",
+      "coverage_per_net": {
+        "field": 0.0878,
+        "hub": 0.0878,
+        "spine": 0.0878,
+        "svc": 0.1639,
+        "channel": 0.0878
+      },
+      "strap_pitch_um": {
+        "field": 4.8954,
+        "hub": 4.8954,
+        "spine": 4.8954,
+        "svc": 2.7669,
+        "channel": 4.8954
+      },
+      "bumps": {
+        "array_pitch_um": 45.0,
+        "vdd_vss_pitch_um": 63.64,
+        "size_um": 20.0,
+        "scheme": "every core bump a power bump (VDD/VSS interleaved); PHY and link strips carry signal bumps"
+      },
+      "supply_v": 0.7,
+      "budget_mv_rail_to_rail": 35.0,
+      "grt_reservation": "M8/M9 GRT layer adjustment 0.05 + 2 x coverage per region (the routing the straps take)",
+      "ir_method": "PSM on every 2.6 x 2.6 mm window of the die (88 windows, overlapping by two bump pitches so the window interiors tile the die), 20 um load cells at the peak in-phase densities"
+    },
+    "available_CP_tracks": null,
+    "available_W2_tracks": null,
+    "selected_child_channel_length_um": null,
+    "residual_capacity_policy": "Aggregate GRT resources and overflow do not allocate a child channel; competing trunks already occupy these corridors."
+  },
+  "existing_measurements": {
+    "grt": {
+      "elapsed_s": null,
+      "errors": [],
+      "grt_runtime": "00:13:21",
+      "layers": {
+        "M1": {
+          "demand": 0,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 0,
+          "usage_pct": 0.0
+        },
+        "M2": {
+          "demand": 0,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 0,
+          "usage_pct": 0.0
+        },
+        "M3": {
+          "demand": 0,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 0,
+          "usage_pct": 0.0
+        },
+        "M4": {
+          "demand": 2642,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 28249,
+          "usage_pct": 9.35
+        },
+        "M5": {
+          "demand": 4547,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 42444,
+          "usage_pct": 10.71
+        },
+        "M6": {
+          "demand": 1745953,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 19316498,
+          "usage_pct": 9.04
+        },
+        "M7": {
+          "demand": 2214186,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 19318371,
+          "usage_pct": 11.46
+        },
+        "M8": {
+          "demand": 748495,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 23770183,
+          "usage_pct": 3.15
+        },
+        "M9": {
+          "demand": 633396,
+          "overflow_h": 0,
+          "overflow_total": 0,
+          "overflow_v": 0,
+          "resource": 23782074,
+          "usage_pct": 2.66
+        }
+      },
+      "total": {
+        "demand": 5349219,
+        "overflow_h": 0,
+        "overflow_total": 0,
+        "overflow_v": 0,
+        "resource": 86257819,
+        "usage_pct": 6.2
+      },
+      "total_wirelength_bundle_um": 50809568.0
+    },
+    "IR": {
+      "all_pass": true,
+      "completed": 88,
+      "failing": [],
+      "incomplete": [],
+      "no_core_load_windows": [
+        "ir14/c_w01_08",
+        "ir14/c_w02_08",
+        "ir14/c_w06_08",
+        "ir14/c_w07_08",
+        "ir14/c_w08_08",
+        "ir14/c_w10_01",
+        "ir14/c_w10_02",
+        "ir14/c_w10_03",
+        "ir14/c_w10_04",
+        "ir14/c_w10_05",
+        "ir14/c_w10_06"
+      ],
+      "windows": 88,
+      "worst_interior_rail_to_rail_mv": 25.41,
+      "worst_window": "ir14/c_w08_07"
+    },
+    "limits": "Bundled abstract GRT and density-based IR; no selected CP/W2 child netlist or parent STA/CTS."
+  },
+  "clock": {
+    "floorplan_target_stream_period_ns": 0.833,
+    "floorplan_target_serial_period_ns": 1.111,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "logical_parent_CP_port": "g_die[d].u_su_cp.clk(clk_sm)",
+    "logical_parent_W2_port": "clk_sm (immutable_parent.sv u_w2_sink .clk)",
+    "logical_W2_reset": "rst_sm_n",
+    "actual_parent_clock_constraint": null,
+    "phase_and_insertion": null,
+    "actual_boundary_IO_loads_and_delays": null,
+    "characterization": "domains.sdc is a target declaration; case_grt does not read SDC, create CTS, or characterize boundary loads."
+  },
+  "CP": {
+    "boundary_tracks_lower_bound": 231,
+    "intended_container": "hb_cmdproc",
+    "installed_physical_instance": null,
+    "usable_slot_bbox_um": null,
+    "slot_fit": null,
+    "channel_fit": null
+  },
+  "W2": {
+    "boundary_tracks_lower_bound": 610,
+    "planned_placement_um2": 48589.918818000006,
+    "logical_instance": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink",
+    "container_association": "VM ledger mentions result publication buffers, but no selected W2 sink is bound to hb_vm or an index quarter.",
+    "installed_physical_instance": null,
+    "usable_slot_bbox_um": null,
+    "slot_fit": null,
+    "channel_fit": null
+  },
+  "physical_launch_admitted": false,
+  "blocker": "Existing die lacks selected CP/W2 child macro abstracts, internal allocations/competing occupancy and loaded parent clock/IO constraints. No spare index allowance or component IO20 context can supply them.",
+  "next_action": "Integrate the selected child abstracts and actual parent boundary constraint export into the existing cmdproc/publication containers once their enclosing inventory is available; preserve the r14b evidence and all live jobs."
+}

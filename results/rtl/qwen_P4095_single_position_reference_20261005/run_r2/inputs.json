@@ -1,0 +1,1062 @@
+{
+  "position": 4095,
+  "token": 1165,
+  "layers": 36,
+  "source_oracle": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/oracle.json",
+  "source_sha256": "cc80fee4a6559b96a982a59a34133a6c480fdb53c2dbe060cdda1d84907088e1",
+  "source_position": 8191,
+  "reference_oracle": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/oracle.json",
+  "reference_sha256": "ef9c60f2a0b2e5008d3cd1595ac290a553875700ebfc2e5e71ad77206d8a5e69",
+  "reference_layers": 3,
+  "history": {
+    "L0_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L0_die0.npy",
+      "source_sha256": "14ba2f92c1bd0fdcf2d80a62c5fe754ecf99f90b0929ec53ebd1c7cce6aee87a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L0_die0.bin",
+      "raw_sha256": "7eae720d42ecee66b458d8f4f80d87a5cb3603d166ad44324172ab85e0868ee5",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L0_die0.npy",
+        "sha256": "9e35f541ede5fc699f427ccb07506c29c34f3f773e98795a29c48ed6fa925e7c"
+      }
+    },
+    "L0_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L0_die1.npy",
+      "source_sha256": "5a0a8ad11db9647391f1d251693d1ed40a112fcd0bece9aa0725c000184d93a4",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L0_die1.bin",
+      "raw_sha256": "d5259de6b628b3b37ac7d00ac2c5ea17c289c159a94e9f76c251fe1d810a9ac2",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L0_die1.npy",
+        "sha256": "98b843443c941eb0bfc8c3edf7e025584e1b9e81239e47c40162a41ca415e8b2"
+      }
+    },
+    "L0_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L0_die2.npy",
+      "source_sha256": "ff8c2cc2995f226b84a752a427c05548e38c011c196c53193940d703f82a4f9e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L0_die2.bin",
+      "raw_sha256": "4d9b5ec2d568644a69137b9aa8dd1654528a5954cba2448cc79bcd1b7dbebd72",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L0_die2.npy",
+        "sha256": "8e8a43937f19fb3cbc353f68d4f3bfd40dc2c5489d6c996e0be0a31eae734715"
+      }
+    },
+    "L0_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L0_die3.npy",
+      "source_sha256": "a7d7211c76dcf919d727638224732a5f00df4cdfa1f47708ca8d7d5e5bb98f82",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L0_die3.bin",
+      "raw_sha256": "1c46108cfe1ca3cf23787c6404459ff4d24b92c2993096f098e95fc82d76e51c",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L0_die3.npy",
+        "sha256": "0d33d11abc162e47ee76ac89af6ffa6d29231397c9e57992f826c82fa12a32f5"
+      }
+    },
+    "L1_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L1_die0.npy",
+      "source_sha256": "95c2fdd40110fcef29465dacc3237ae1535e9dc568ee68a6bd4c760730bb129c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L1_die0.bin",
+      "raw_sha256": "22be97c3c6eedfdfd7a8196fa1e0d7b32f01cb148ba83115769b54acab2b4d13",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L1_die0.npy",
+        "sha256": "185d6c8be9d0ca6f78c26e34fe48aeddc27565c181b41d5430f35f02fad7f14f"
+      }
+    },
+    "L1_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L1_die1.npy",
+      "source_sha256": "f2f09b4ded6a36476d5e35e4d2d1ad0709360429b9cb583b7e898473d2085261",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L1_die1.bin",
+      "raw_sha256": "1400343fe837b0ed7cb15eacf59732a90dbef2169bc21fd7627b941bce6538ac",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L1_die1.npy",
+        "sha256": "0d5333c8d53135c3f1d5340cc5ebdc889b7f9876ac255e1c882b76beaf940e71"
+      }
+    },
+    "L1_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L1_die2.npy",
+      "source_sha256": "fe12e9b9231eaefed5ac9ff7b06ef6c4a58f8dbf1c4c2ad0f2acab32ec75244d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L1_die2.bin",
+      "raw_sha256": "af91f7983660918dc9b23f6dc7a82798e7fed1aff1e165f6f2ef91064fd39ddc",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L1_die2.npy",
+        "sha256": "4420d49af731933333dc41911f6fbaeb5889a54ca4aae584862084e1da9f6c71"
+      }
+    },
+    "L1_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L1_die3.npy",
+      "source_sha256": "bca888294fc4e95133fddc3bd7957fda5b7307c659ab8cbea0d6850f7efa3f01",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L1_die3.bin",
+      "raw_sha256": "7c386cd84bbb84cf54e91a0ddb1500bc27198d60651a128b476b8cfcdee21bea",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L1_die3.npy",
+        "sha256": "72d39517fc2c1a467b8d62fd62fde4e5ad63a60acae50153e3febff0c41135d0"
+      }
+    },
+    "L2_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L2_die0.npy",
+      "source_sha256": "e96bf7953ec15608aa71cd90a0eb832303444889524783f6e76b3e7db27a45b3",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L2_die0.bin",
+      "raw_sha256": "9c6d36fa9e38b606b38e15276a3f1f2229c1d538b4d37381c5c1d63a0f4c4d22",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L2_die0.npy",
+        "sha256": "964b816dc1a08e43c7c16db7c6eed5e65f9d041e555142ed178df2aadab612d5"
+      }
+    },
+    "L2_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L2_die1.npy",
+      "source_sha256": "5fea20e37ae6227244a4985024720c98e565432b5b3e3887b1ca0ce6f33a620d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L2_die1.bin",
+      "raw_sha256": "a9d241b9f5fc0a76f107f7d9ea75b2200737a19d82fb1311bb0c90c602575c6d",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L2_die1.npy",
+        "sha256": "2f5497e3861ab25b9ae269af3e1b43504d270d606b6d494120a1e41a67aa1246"
+      }
+    },
+    "L2_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L2_die2.npy",
+      "source_sha256": "c5c8bd9de1f3aace76bc4708db93583534e75adff6ea5aa596c476a4e0df74d1",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L2_die2.bin",
+      "raw_sha256": "eaa8fcb8d4d411df7ee3d5177f06f7e63325639b1ba43f40d05c98ba637e5e5d",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L2_die2.npy",
+        "sha256": "b367fbde49713b931983e7f9888f9a9ce009af81cda08bfffbbfa39ae74a52e7"
+      }
+    },
+    "L2_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L2_die3.npy",
+      "source_sha256": "a49b52a50cd3e50a1417084cd7b9000bff4d77f0ad4d1fe1281b12ef73a2771e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L2_die3.bin",
+      "raw_sha256": "1b3a8a5e036abc67a51f015e6ee19fdb093517664e97cd28cfc2914f4926eeea",
+      "reference": {
+        "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/kv_pre/L2_die3.npy",
+        "sha256": "84250f1e71adb2490cf61e0f39a4fef45594be14b3894ec8fd3d7638b6af87d2"
+      }
+    },
+    "L3_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L3_die0.npy",
+      "source_sha256": "7ba090e1a146819e3eba7022ec2898bd3e206b4c5bfe47e584f08aac5344a617",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L3_die0.bin",
+      "raw_sha256": "b6b48240db438888f81470abc76b12655400c61f5c795cd8ecaa3d39c79566c2",
+      "reference": null
+    },
+    "L3_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L3_die1.npy",
+      "source_sha256": "c6ca7a204802e16ae8d1f5c9fe2a22c77bd2f8cd4ae4073990aaa872a4d0f97f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L3_die1.bin",
+      "raw_sha256": "f2821c49334416d1af57cca8abb08bf935db86f907e68410a69e85445ec32c60",
+      "reference": null
+    },
+    "L3_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L3_die2.npy",
+      "source_sha256": "feea4c4fc75508067c2b1ac99829f24f1f65f29ce19683bb7a6467baa7126499",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L3_die2.bin",
+      "raw_sha256": "efb5ba7b52d8f251dd2e58cf3fcd010e037e7b7b7c142b77a1efd17e2db2a720",
+      "reference": null
+    },
+    "L3_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L3_die3.npy",
+      "source_sha256": "fe01871773ba11cb5797417e89ffc105c5970cd07b8a5ee5ab3b901067938f78",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L3_die3.bin",
+      "raw_sha256": "0bc64564cea6763639a0a5db0cf4fdbdbfd928f6b81e823ba874263ca226ec55",
+      "reference": null
+    },
+    "L4_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L4_die0.npy",
+      "source_sha256": "2cb2df313532dc64382e3fa10daf7f0decf7429a71ac9868c6c6884ff89e6824",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L4_die0.bin",
+      "raw_sha256": "83bd05ff9c838bc1569aa7c48f3af3aeebf4d8c5e6b0dff4a348972215a1944a",
+      "reference": null
+    },
+    "L4_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L4_die1.npy",
+      "source_sha256": "51b591b4668f045d96e96635e9054df4190c6f266a3e0b252d726688a163f365",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L4_die1.bin",
+      "raw_sha256": "d99859c52867591ece1fb66e5985ba4904cc0ce822df162efb776a9de5053161",
+      "reference": null
+    },
+    "L4_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L4_die2.npy",
+      "source_sha256": "bacb0133239365a33a3e3de4a7706855428b9558b88629b842dc58fe99e3c3b6",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L4_die2.bin",
+      "raw_sha256": "2e7442d7c1d9307d4c6fd660ae294d08cdc824e46125dafe2ce4fb82001d45f3",
+      "reference": null
+    },
+    "L4_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L4_die3.npy",
+      "source_sha256": "d39dea1167f22fe36388622ceb347ad704b27f062d636630ecfbbabef201f7ed",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L4_die3.bin",
+      "raw_sha256": "54828b6f04be09bf894d78873dc32ad26f2bc2b9026146f45445c4cabfb96af9",
+      "reference": null
+    },
+    "L5_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L5_die0.npy",
+      "source_sha256": "1fe95f5600d83f103f5a0e8920a659872b07e0b86a1516bd4f531ebfa318d536",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L5_die0.bin",
+      "raw_sha256": "2c6f881b5ca7cc186b194a8f5a78850c9dfa4bbed800b449d6c0e28e76aa7e03",
+      "reference": null
+    },
+    "L5_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L5_die1.npy",
+      "source_sha256": "aa65f47d4b0812daf4d2b6fccf3f3d202be1dc017f148c0e504a7bb8dbe3ea54",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L5_die1.bin",
+      "raw_sha256": "0464ef6cc497941612da1b4940454e4f7e6d3b631ba5881caa7b36f2d8ab377c",
+      "reference": null
+    },
+    "L5_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L5_die2.npy",
+      "source_sha256": "001a1ee3581dab481938838ebca5ab691387c810b895a211c9ba5c057e86fb53",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L5_die2.bin",
+      "raw_sha256": "cd1e0f32ccf224e7ecb3d16b9fe2097a5327721bfa0bb05f1b7ba927a88d60e5",
+      "reference": null
+    },
+    "L5_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L5_die3.npy",
+      "source_sha256": "df5c53ca8aeea922bd868229f2e0d47d71d265d409d74c46df3308ba110cb348",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L5_die3.bin",
+      "raw_sha256": "ccfdb1845ad749797207e3ff8f8e9cef07ffc8aaed8e8e897ca099c9a7a8dfa8",
+      "reference": null
+    },
+    "L6_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L6_die0.npy",
+      "source_sha256": "445df2f2b10aa5c7fe5c69116a2c16a2ff88af67fc7a131260f11e9bc814f2dd",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L6_die0.bin",
+      "raw_sha256": "514a63e420168ace513db2176598ee61abca467dae4f39a05b3454c1b0afdecb",
+      "reference": null
+    },
+    "L6_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L6_die1.npy",
+      "source_sha256": "baf542f4a5dab5eb0292a43f11a59d10ca6167ea7a6cdc5b2d1930bcc7ca1e00",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L6_die1.bin",
+      "raw_sha256": "0ecb102e3e46751b47b49898a15f0dc97a90e7fd553e83361b65d47d0e03f142",
+      "reference": null
+    },
+    "L6_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L6_die2.npy",
+      "source_sha256": "3d9e28fddc7ab8f5a82b9bef3d559f57d16549d99d0955bbcd2fecb9a301e635",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L6_die2.bin",
+      "raw_sha256": "bc3922a7a29d3ae67ce4d962fd5b9f2962c27d12ca726185e3bfd1e99a8ef550",
+      "reference": null
+    },
+    "L6_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L6_die3.npy",
+      "source_sha256": "46687588d293bb07a6b31fa4d12bf8d2f8262d33ea183be17b09ccb48fa5bb61",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L6_die3.bin",
+      "raw_sha256": "fb3f1b3dc40ba03b6a54262534f01e3b46526f5d1a450656e2ba98bf3e1a7875",
+      "reference": null
+    },
+    "L7_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L7_die0.npy",
+      "source_sha256": "be5f65c81da48aa942aa0d0332a9fbb612759a8f6b44ef9531eccc193f52b4f2",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L7_die0.bin",
+      "raw_sha256": "92d0fd2ef1b16b6b84522f78c9a451e2d230ebe0a12988904bd0c0c9332f49e5",
+      "reference": null
+    },
+    "L7_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L7_die1.npy",
+      "source_sha256": "b7606c1238b8ffaeb998f24f8d18ce0e81a73dc1be8cf430afea42ae4cbb0abc",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L7_die1.bin",
+      "raw_sha256": "846a6ad91bdcebb50cfe2ec4e5bdc1d32c35432a6ac6fac895a702af0ecd221b",
+      "reference": null
+    },
+    "L7_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L7_die2.npy",
+      "source_sha256": "cf5a17c8fdbd36ee605c3321abb3329a730f4f8d38108e8a3eb6032dc4285f0e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L7_die2.bin",
+      "raw_sha256": "163cabbb8d1908c68de7a4dfe82ef4c6bacd83b12306ab2db2622148d616bd69",
+      "reference": null
+    },
+    "L7_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L7_die3.npy",
+      "source_sha256": "b8f4193a6358a5f2661e68426921a46b3be305570a3e2540662999f146214586",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L7_die3.bin",
+      "raw_sha256": "d559edd979e2cd4db51eebf6ecabd1daeacf011bffbe56ce6b982cc9fd9d7408",
+      "reference": null
+    },
+    "L8_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L8_die0.npy",
+      "source_sha256": "86b6242e910b3682a705fd9dafe43c4bbb9f275ad3cb83b4d67ccc97bf5d2bba",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L8_die0.bin",
+      "raw_sha256": "d6689406610ac3a8c27d344a42d363798415792e20b6f95cbc09f0b393bcd88f",
+      "reference": null
+    },
+    "L8_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L8_die1.npy",
+      "source_sha256": "7d8a99346cf4d52bd4a1e854b1ff0a929facd5017c46016e175fadc8b6088f0f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L8_die1.bin",
+      "raw_sha256": "ed0442745d85fd7fc83ae986bf6d3fdc18b9f2b6b31b277f4aef7e89a4cbccb1",
+      "reference": null
+    },
+    "L8_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L8_die2.npy",
+      "source_sha256": "d5c94e121bbc8aaa325f9060493bd0c8996767d34d99fa14e7e598d0d819798b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L8_die2.bin",
+      "raw_sha256": "bc793f4ff5e44297172053f0c5dfc350ee3d1b29150aac9639f34370f22706ec",
+      "reference": null
+    },
+    "L8_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L8_die3.npy",
+      "source_sha256": "2c2d8b42eb157dbaa9fde72534d8586ea2342dc805657684ccd79270662f346a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L8_die3.bin",
+      "raw_sha256": "9a23a80200febab36603f6790bb2b42d7aff9768b172ec5ea71a682c3ce27929",
+      "reference": null
+    },
+    "L9_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L9_die0.npy",
+      "source_sha256": "8857c6ea7866517fe0def4244b84e9f8b57594fb9a1b1ff18965eb57c366a310",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L9_die0.bin",
+      "raw_sha256": "61c8e9c8605fd56c13cd66e463c607c04f0e520aac57c7632a32d0cc62808d7a",
+      "reference": null
+    },
+    "L9_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L9_die1.npy",
+      "source_sha256": "00dbd6162d0d65a40be38bde35ce70843ca3bc458d1bff9d2c2f3c64cf6b410b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L9_die1.bin",
+      "raw_sha256": "b3382df1d4f7c694b8fb63200bf5f4cf98cb5af57acdc966ee069c0d01921d0c",
+      "reference": null
+    },
+    "L9_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L9_die2.npy",
+      "source_sha256": "d2775d19b734f604de6cae90219b198f8edb893078865397e3d6e9bc52633e7c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L9_die2.bin",
+      "raw_sha256": "a5924302b11feb0d9e21f3b6d03a823a81c77cb2b0d45fa22ef997e399264a89",
+      "reference": null
+    },
+    "L9_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L9_die3.npy",
+      "source_sha256": "3f4c47c19f07139128a6496a4ad8a1db29c579d9b58a534d3e6101f9f6c8b58b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L9_die3.bin",
+      "raw_sha256": "2b78c4479c9caede4d7533677a112a62a7e3aee50e9e60383c9a3a58b4283285",
+      "reference": null
+    },
+    "L10_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L10_die0.npy",
+      "source_sha256": "8aaf5fe0d524f9efce0fcd309c37ecf146a65fb3fd4ff92dcb52be0963ba8797",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L10_die0.bin",
+      "raw_sha256": "8f7369b9b9fe29a1f68a23dd418b709316e2d62640bc6dcf5a5ceae149c5392a",
+      "reference": null
+    },
+    "L10_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L10_die1.npy",
+      "source_sha256": "ca466d44195bb1d7f606555a2dbe5227c82ed18bd8b6952b60e9f63ea6e59eb4",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L10_die1.bin",
+      "raw_sha256": "4420d02a69a0e5b7f6e6a68bdf4dfdda3a2f97887c0e242041b3b04e65423f8c",
+      "reference": null
+    },
+    "L10_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L10_die2.npy",
+      "source_sha256": "b9e1fbf6b70b8021d3196f0a6a70f54eabd39a0c8c4b29f62143810e5883f883",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L10_die2.bin",
+      "raw_sha256": "e58a6d37a8d79741409d6921b21bb188fd886bb6974a2d4bdc63ac90c4a0d139",
+      "reference": null
+    },
+    "L10_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L10_die3.npy",
+      "source_sha256": "4170c5bafca82cc48d66f23a03abba786d5927f06e3af91a9540ed6f1f9a61ad",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L10_die3.bin",
+      "raw_sha256": "8ca5dd72ec0ba321c318702e8522fedf1dad33271c3c2468e875c5e88b48ac56",
+      "reference": null
+    },
+    "L11_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L11_die0.npy",
+      "source_sha256": "34c3f8cd8720c5789741a0809cafa12022bff212f3f8b5bb9ffb493377068679",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L11_die0.bin",
+      "raw_sha256": "5dac0a443ff4fbb3a1a6ad84e3c41c46de20d09404d7a5b73cc6e0b8e318bb86",
+      "reference": null
+    },
+    "L11_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L11_die1.npy",
+      "source_sha256": "8c5641fe3755a42047755c4e35937f371b9b1a13eeb7e708848b1e7a87e62921",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L11_die1.bin",
+      "raw_sha256": "6ff88a864661da339be76197d3141490fad8fbb3b81415907f66b07b5ce13ce2",
+      "reference": null
+    },
+    "L11_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L11_die2.npy",
+      "source_sha256": "33cc746e22a64543607a75147948b4685979fa46a39e4803d2d94edbb085d105",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L11_die2.bin",
+      "raw_sha256": "3ed78f648269a653b42778906292691ba1133a3be032fa9e90a827b48068278b",
+      "reference": null
+    },
+    "L11_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L11_die3.npy",
+      "source_sha256": "ace51fefebb2e48fdd00ab7089b130d9b08a75f32966144d0f320890261a39d3",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L11_die3.bin",
+      "raw_sha256": "39a8f2d73a7440651dbb254de9df6ce4eb441ded1fc1371ff7c4e4f2adab6696",
+      "reference": null
+    },
+    "L12_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L12_die0.npy",
+      "source_sha256": "d1b760e841f1e68add42a11a83c0146871e4741cd41180b929a631b839b3681b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L12_die0.bin",
+      "raw_sha256": "786f09528d275abf60e2a8df43f6abfdf2f233cf53fbd84f18f7caf71687d152",
+      "reference": null
+    },
+    "L12_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L12_die1.npy",
+      "source_sha256": "d5f3228909319afd6b6a11a06c070240ca8190f5c088b8d0075bef0830ced6d1",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L12_die1.bin",
+      "raw_sha256": "aa47817d3e10534bad3ac4602ff96e86e76896566954aac09f40a579e58e727b",
+      "reference": null
+    },
+    "L12_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L12_die2.npy",
+      "source_sha256": "273132ab33dbff5b012d3f3dc1f3b3fd5824cfdf328663d2f5d7584935c30b4e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L12_die2.bin",
+      "raw_sha256": "5877b1a374565458c38a512129a63ef71b13845860c0b7ea5b74ddc58a76bf4b",
+      "reference": null
+    },
+    "L12_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L12_die3.npy",
+      "source_sha256": "f60c4a66ff5c6eee2fd64a920b91a59a7f233ec3f96692638b0979873995e13f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L12_die3.bin",
+      "raw_sha256": "8e76bbade691a62fd6d4b00ed8dbd9acfa64dfc9dbf07d11e2306a28a425a34b",
+      "reference": null
+    },
+    "L13_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L13_die0.npy",
+      "source_sha256": "e681e6066748278b9c65508a3133da956a0e55d20c76b238fdbc5697615a4729",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L13_die0.bin",
+      "raw_sha256": "83762288cbb560436df50680381eeeb981ea0163cd56481afbd06dd57aba92e6",
+      "reference": null
+    },
+    "L13_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L13_die1.npy",
+      "source_sha256": "23c413dc2192d566650aa6ccdec54206fcd76c4ff959e47e6bddf728b05509a3",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L13_die1.bin",
+      "raw_sha256": "1b95d94a25482bfdd0fe7bf5d8ee5c7d65a06ba6d0481d35d3f81e19255c3818",
+      "reference": null
+    },
+    "L13_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L13_die2.npy",
+      "source_sha256": "8fbe95374c604221a092079ad9e380f7cd1c2ab43cf226d9f6f9a07e6c842538",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L13_die2.bin",
+      "raw_sha256": "fa43ddebdc35fb35702b33191525784e04ee71a8d85192d6cce9c1c4191325d7",
+      "reference": null
+    },
+    "L13_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L13_die3.npy",
+      "source_sha256": "eed92f22d91358b39bf2b97cbf6fd7c6896d059a832eb589493cad60dc8f95fa",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L13_die3.bin",
+      "raw_sha256": "54fc8685274510540c987be5b5abf74104be2d7b428605e823222d00c7f4512a",
+      "reference": null
+    },
+    "L14_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L14_die0.npy",
+      "source_sha256": "5f6ec326d2e100640414637ca63d8d9f7f12d30774c41f7e727ae9603d2c9ac0",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L14_die0.bin",
+      "raw_sha256": "a157136a04755a103d6bfe14d972e2b5eb388b45eb38f1890573929421db8b32",
+      "reference": null
+    },
+    "L14_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L14_die1.npy",
+      "source_sha256": "0071838b10810293466c9280c1b6fa88e69a7dd54cba983a824e08f6f10f33e8",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L14_die1.bin",
+      "raw_sha256": "ad2569ca201730fccdfef2b81831a3957969d5544c173b8bcd9e528588804249",
+      "reference": null
+    },
+    "L14_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L14_die2.npy",
+      "source_sha256": "24feb4b69be5b94037b6f4fe6b0cac52d2047df7284285eaa088be3e15d2f0a2",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L14_die2.bin",
+      "raw_sha256": "9fd6dc94185082d1a86c8a72bcbfd12156666bdce0bcfdd6bbe756b40397704a",
+      "reference": null
+    },
+    "L14_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L14_die3.npy",
+      "source_sha256": "328814131a6fb4a7c25ddea060a76bdc764d3fd00cbd5f0c2233f35f7227803d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L14_die3.bin",
+      "raw_sha256": "e6463549c3285edc06ab10c99bf70579f7985e1186af02ff9311bbef0e26bf6f",
+      "reference": null
+    },
+    "L15_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L15_die0.npy",
+      "source_sha256": "e2ae0ed9cf9fd51cf6e843394e29200e83d81058295bbbc397040a243808dabb",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L15_die0.bin",
+      "raw_sha256": "7eb992571757d75ec3e23b87e42022849ecfb7207198f17f318d2f6c7207f0a0",
+      "reference": null
+    },
+    "L15_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L15_die1.npy",
+      "source_sha256": "6bf90089387d14c0ddeb64c5a349914348851961e23627aba0d8ab7ec3eb07f7",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L15_die1.bin",
+      "raw_sha256": "ea070588388f7c4aa6a901557e0f52a93a8f03fa3bf462c060c30be5ffe0c678",
+      "reference": null
+    },
+    "L15_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L15_die2.npy",
+      "source_sha256": "b4f52d7463cdedb48ccfcc0fae0998779e2f5af5b1bfc8abc76b2885e0b15323",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L15_die2.bin",
+      "raw_sha256": "e63ebfd4f22292497f5fb56f8ed08b42d60c8b2c48e4d1a0bb8e4fb13f0d0a6c",
+      "reference": null
+    },
+    "L15_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L15_die3.npy",
+      "source_sha256": "5b3149d7c657e9817222c3167aa14279fdcb407493b76b2f2c64c67e6cc472b7",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L15_die3.bin",
+      "raw_sha256": "92a51fcf797fd334e246e7a0a250d02f4e442dad72edadae9b594d2a1feb2d4f",
+      "reference": null
+    },
+    "L16_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L16_die0.npy",
+      "source_sha256": "5a04e989eee00d79e4f9a5d86b51146737a71b973fffd58f59c65e1666ce147a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L16_die0.bin",
+      "raw_sha256": "0ce938079a08cdbe40ba93c6d8ece0d2e043c5d39f754bbe35078fa3a0bf8641",
+      "reference": null
+    },
+    "L16_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L16_die1.npy",
+      "source_sha256": "f1d03627dcd6930c9b86cf61f5d4a235738b7de0b310da3cb648da4cf59bb1a5",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L16_die1.bin",
+      "raw_sha256": "fedb1c7fc34f52345679d38210c10afd03210cdf069c4e7db75dc025f1d2d73e",
+      "reference": null
+    },
+    "L16_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L16_die2.npy",
+      "source_sha256": "153f5579945f62ff5a6d792ff3e0caefb136cbf50668fa819959453eaa9a59cb",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L16_die2.bin",
+      "raw_sha256": "b604baa59c96801fefb956ad0967f22dca5e3b533871c11fc19fe4d82eff2e26",
+      "reference": null
+    },
+    "L16_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L16_die3.npy",
+      "source_sha256": "da29ab105a26366efe394610c0b3a9d6930ed9f6aa2755cc80b9669224f4500c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L16_die3.bin",
+      "raw_sha256": "eb2de3c78d18d63a6c61b83d6544cc302e7f93afeec5ac2f25456a830faab84e",
+      "reference": null
+    },
+    "L17_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L17_die0.npy",
+      "source_sha256": "3cad7b05a911de6566dd8b6d81517f4479e9150ae02d767e3645f698da144fa3",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L17_die0.bin",
+      "raw_sha256": "367915c1afb4a0eec082420d0d67f17ce56dbeb2eebe0383fe9d625b1d6d5f2c",
+      "reference": null
+    },
+    "L17_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L17_die1.npy",
+      "source_sha256": "a21136ad8f6d17be7660a9b4635cf1d90501a57aaef902d613adb78ffd046b2c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L17_die1.bin",
+      "raw_sha256": "710ad40e24adaae9c6ec6100928bec1f74333f4166d97e794a9358c8e0010baf",
+      "reference": null
+    },
+    "L17_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L17_die2.npy",
+      "source_sha256": "5f07d9391d379c03e13f4066ed28fd344e096725b4cbbad8d933b96d4fc276a4",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L17_die2.bin",
+      "raw_sha256": "a59449b7bfe2aa34b902e4935917c9138b9b1451971e7754ebe2a42ce058f6ea",
+      "reference": null
+    },
+    "L17_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L17_die3.npy",
+      "source_sha256": "701dbb817a32175ded98b701599d67c71d267ab5bfb5547d11dfee029cf13e0c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L17_die3.bin",
+      "raw_sha256": "d1ea64234575f4a7daf20078b0f63312e5fa0f7ef3aaee69e1fafd4efaa8a3ce",
+      "reference": null
+    },
+    "L18_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L18_die0.npy",
+      "source_sha256": "7da7ad05b8459a36967bad1960e9198495edb517cb81adc228cd19a8a53b234b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L18_die0.bin",
+      "raw_sha256": "9111a4d47e1a2a65e005bdd5e617277d0b03dc5c03a43635189b029c4bcf5e8d",
+      "reference": null
+    },
+    "L18_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L18_die1.npy",
+      "source_sha256": "30367fb38374b5fa5941840288d87db764bdccc5f7a4e3e645c603cc1e7e702f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L18_die1.bin",
+      "raw_sha256": "f0c8c93416140a1e154e4b19c802b01983c5b45cfec3495f5939831e89974479",
+      "reference": null
+    },
+    "L18_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L18_die2.npy",
+      "source_sha256": "3dadbec747ed652375d860e403b4e5057dffdd1c50292389262389354fdeffdc",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L18_die2.bin",
+      "raw_sha256": "f9f797e8639fd392b6c92bf130d6ed01ebe8f4a7e5bc495d5433ecc66a784aa2",
+      "reference": null
+    },
+    "L18_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L18_die3.npy",
+      "source_sha256": "7beac8de956716eb1a0647903e67b3dd89877ec52de2e714762ab71237bb5416",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L18_die3.bin",
+      "raw_sha256": "f72bf3265d969e6f0c3bc4afe1f1b4846a6b1d775f76f1f054414dbc9b3b4b74",
+      "reference": null
+    },
+    "L19_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L19_die0.npy",
+      "source_sha256": "951245f35efda4c7972895c1a882a387739fbefdc71f67dd86a11fc6c4ce4c52",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L19_die0.bin",
+      "raw_sha256": "abef390d77d1fdea319a07274b0a324bd8b1477655a8360ca1b8a04570ae2597",
+      "reference": null
+    },
+    "L19_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L19_die1.npy",
+      "source_sha256": "14b07b563d3c4cd70a0bb13dba9eda049fb6870d423d7875f4c84f8f6e3e2895",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L19_die1.bin",
+      "raw_sha256": "a486528d59a9fae360b0da44e66ec78183347e674e1c3aa2eb813cd7fc21daab",
+      "reference": null
+    },
+    "L19_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L19_die2.npy",
+      "source_sha256": "d131267200218d98efda04e0002a123fd494d18e1cd748465ab04cbd11100218",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L19_die2.bin",
+      "raw_sha256": "6c55977bff78a6d60b16176b9250560607f018ef5e08fe836a2167d6eaf0024b",
+      "reference": null
+    },
+    "L19_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L19_die3.npy",
+      "source_sha256": "3b0f04debdc3541c7daa401ff3aeb369d25eb5fd34a8a63b9a4ae5296f2a5e0a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L19_die3.bin",
+      "raw_sha256": "288a84c03b7b5d20dfc783a7fab58ba3f4dbb3e9875a0c56fc482f4a4bd19d69",
+      "reference": null
+    },
+    "L20_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L20_die0.npy",
+      "source_sha256": "6769d79ac9542578da60b8c87530ba51e20a7004cf3956b5445905a4142421a8",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L20_die0.bin",
+      "raw_sha256": "20a657dd4a0a2a8a0215b1da48a34a3cb33a50c469d20d171f80f581e8305d2b",
+      "reference": null
+    },
+    "L20_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L20_die1.npy",
+      "source_sha256": "8ab980470a9f4e2af87e48c5dec2acfa48ac34c64fc356f8fa390470fe3ec6ba",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L20_die1.bin",
+      "raw_sha256": "20ac5734ad333a4e0aa20a82b5133a44c7838eb98e9eddeb442460ffb1040507",
+      "reference": null
+    },
+    "L20_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L20_die2.npy",
+      "source_sha256": "f10af9e3611504302706449d065ce41cf07d3faf838b1d841c72755c79fae464",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L20_die2.bin",
+      "raw_sha256": "6a89b26adebf66a408e5fcaa819413e9fdca834ec3a32322793e31140dac4607",
+      "reference": null
+    },
+    "L20_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L20_die3.npy",
+      "source_sha256": "b23acf655288c824b24a169de133a02020fbce1120111f57b55cb10bb212896a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L20_die3.bin",
+      "raw_sha256": "787a91acbd0bff3223095295ba15b490d84222118157c366114265fe29193dd0",
+      "reference": null
+    },
+    "L21_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L21_die0.npy",
+      "source_sha256": "27087a92b0e88af88a451e2a4c9a1ae0bfb70d791612bd4e79d66a148bf9ee56",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L21_die0.bin",
+      "raw_sha256": "cf3a4fd78bae9aad2b9d3c8567e1b628e8ca13b7d2ee758d31f278f580dc0504",
+      "reference": null
+    },
+    "L21_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L21_die1.npy",
+      "source_sha256": "09521971db53d22baf5ba04727ca25031f41763b716ced5a8d7dcec88c6a8f1e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L21_die1.bin",
+      "raw_sha256": "35c9f0d9e6b4430afc2ccea58812b34e2c465c87a00e2575f044aa2f81e5b795",
+      "reference": null
+    },
+    "L21_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L21_die2.npy",
+      "source_sha256": "a4a0b043ae493c98338151fdd12c1d861873341597d4bcdc1f62006c868a5005",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L21_die2.bin",
+      "raw_sha256": "463409fd198604143e1e7f9ed6c19b847d63543873ebaf1d52a332c5d5fadffd",
+      "reference": null
+    },
+    "L21_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L21_die3.npy",
+      "source_sha256": "e3de949a8d648c64dc68e62ae757f575f11c310f1b8dd7bec12c9165f98bceb1",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L21_die3.bin",
+      "raw_sha256": "50cbdb4c4db9af773d92fdd771201485381dd3cd1ece8d6baa31e013d4a0fb6b",
+      "reference": null
+    },
+    "L22_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L22_die0.npy",
+      "source_sha256": "d98e2f834d226d37ab8655cdcd4234c0bdfabdef9ed9928c904297d8d4c5872e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L22_die0.bin",
+      "raw_sha256": "381e47a039487826183cb88785f6811e351c324b2fa8d9f4f706cd07a71591c0",
+      "reference": null
+    },
+    "L22_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L22_die1.npy",
+      "source_sha256": "e82a14fb956fd89d9ff95be97d19e95831153cb369f53edf7e43a49959f9e16b",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L22_die1.bin",
+      "raw_sha256": "3a6086b5f3e9e972fea4b32876855f24dd898a42592d89baaaa08ad011b4c751",
+      "reference": null
+    },
+    "L22_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L22_die2.npy",
+      "source_sha256": "e5ac3953922b00d7f18ee3199ae31c44fbef56e65f1fc30d5c74a220acc2a0ba",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L22_die2.bin",
+      "raw_sha256": "c5bb6e0de266f25c5ade3ffd39bddcb268ebb5ccd9281edeb9b8c3ce7b7b9d5e",
+      "reference": null
+    },
+    "L22_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L22_die3.npy",
+      "source_sha256": "5d948cb48e874b8e6a6f6bf5a697eeb917eab1ceafa47c2fefc8ca4d0957d937",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L22_die3.bin",
+      "raw_sha256": "07bbc2ceec9e54476d0d682f5718fba48bb6fca398896e273af0e850e5406581",
+      "reference": null
+    },
+    "L23_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L23_die0.npy",
+      "source_sha256": "fed034425e3acf978f706ab8f574f7a258a9203c6def468ffb9b2a6546addd43",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L23_die0.bin",
+      "raw_sha256": "94fdf1710aaccd7ffbcd1dc33dddc6f73a94cd150cbef2818fc00a2c26bbbda1",
+      "reference": null
+    },
+    "L23_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L23_die1.npy",
+      "source_sha256": "d044507067cf151de37d4a5b17825ae6e85b8f0d9679c7aa997bd9e941d26516",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L23_die1.bin",
+      "raw_sha256": "b49f117ab5727d0ffa68b24788ee5ec3139473f48c079f00638854f95637737f",
+      "reference": null
+    },
+    "L23_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L23_die2.npy",
+      "source_sha256": "1b4da4f3379585599fcee046fdc7dc1d08e7253128212fb866f61856173e123f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L23_die2.bin",
+      "raw_sha256": "6bc82674b6eb659c97b76d67373506587ef243f3b9563e0ea16f49696249632f",
+      "reference": null
+    },
+    "L23_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L23_die3.npy",
+      "source_sha256": "9dc3ef6f1c1222344f33c9930b57a2f6a29cb8004460aaa221d23adad77a168d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L23_die3.bin",
+      "raw_sha256": "ea2cfa89f439e7081dffe9563ddc096c19f2c159d107f97989c99d05327a1c3c",
+      "reference": null
+    },
+    "L24_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L24_die0.npy",
+      "source_sha256": "f87691189340348373a157d8a106cfee525c78caaf01b5fc3663c3a46d332187",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L24_die0.bin",
+      "raw_sha256": "2cd17a81aebb8488d376306a28bb71768837cf40651a0ee3de627d8062cb61d9",
+      "reference": null
+    },
+    "L24_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L24_die1.npy",
+      "source_sha256": "5e1b7c253720d5847097845acfe272ffccbdb553ca4f439e534b6b98832a8c44",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L24_die1.bin",
+      "raw_sha256": "e75e2bcb7f2637a3fa43c2416c5414c6952839e91091a24faed7c4f73baaa4ea",
+      "reference": null
+    },
+    "L24_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L24_die2.npy",
+      "source_sha256": "804e474ff211849147ff9e52119eb3677e7e0c9ac6e016cfee3dff4052eba712",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L24_die2.bin",
+      "raw_sha256": "d4fc36cbceffdd8ce3acbf6a84c2af18f15633cb0deedf0963f32dd93453a4f7",
+      "reference": null
+    },
+    "L24_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L24_die3.npy",
+      "source_sha256": "325b78cc539f9ade4a047ad26e0accb9507fb4f99ac70bc1d4c96826a89b01ea",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L24_die3.bin",
+      "raw_sha256": "091e7174eced99bc21cea249da5adcefa9e5566977b735c417dfd40a84934ced",
+      "reference": null
+    },
+    "L25_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L25_die0.npy",
+      "source_sha256": "441f9101e82efc1ab2d21387628cafb45a3edcac172059e875a2788faec9dd1e",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L25_die0.bin",
+      "raw_sha256": "e72fb7050c9b3a600b46ca99d05c909a3d8b93e92f6baa2b33459105831b51ec",
+      "reference": null
+    },
+    "L25_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L25_die1.npy",
+      "source_sha256": "42360aa56a0a4d1818d4209276722873146154e9f18550c250c9d3e0647925f9",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L25_die1.bin",
+      "raw_sha256": "bab100d94aa1680715e1bd2ca9a336fe87b8af0687764167279358681dbf3b51",
+      "reference": null
+    },
+    "L25_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L25_die2.npy",
+      "source_sha256": "1cc5f289752e63058582e23daa735c2092bf440375e255c20f340fd07cfc076c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L25_die2.bin",
+      "raw_sha256": "0a21373ee97f3e56ebc762d0aaf6b901dbcf0beca4172bd8f0d118683caf7fdc",
+      "reference": null
+    },
+    "L25_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L25_die3.npy",
+      "source_sha256": "85a88f8ecd1c60f8d30de04ae1b03d80862a36071a894bb061f73cefd902ebab",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L25_die3.bin",
+      "raw_sha256": "13439b8d20470120a3c85df2de10047c33c6695d189d50b188b33a3903b06900",
+      "reference": null
+    },
+    "L26_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L26_die0.npy",
+      "source_sha256": "b1545f5d12143e5b0b3c32d248caa5478813f3fad4a92e0d4c4e613e5085c80d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L26_die0.bin",
+      "raw_sha256": "5ac96d989e6e6385e8a468e70e592f177ad050c0555b68d026c61126c03feae7",
+      "reference": null
+    },
+    "L26_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L26_die1.npy",
+      "source_sha256": "7d3303c11f876e5d7b68b15149f4e980f05e026a578f0bfb6e1d4985e7a074df",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L26_die1.bin",
+      "raw_sha256": "8b86dfdac7cc28d4460e897454175b537fec9df39a9a071c889bd52be2836f14",
+      "reference": null
+    },
+    "L26_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L26_die2.npy",
+      "source_sha256": "d0d94c7d6c0edfb45532ff91feefd75ce91286c0db53de67b34b4664b231c486",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L26_die2.bin",
+      "raw_sha256": "e3655738e69cc40c1647864df0e218605f7edc729477ded46f8df15c8d66b9b0",
+      "reference": null
+    },
+    "L26_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L26_die3.npy",
+      "source_sha256": "bf208b0d6b3655bede13a228712a6f8ad39a02125ca9ed7960d54e121c7e06d0",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L26_die3.bin",
+      "raw_sha256": "7cea5d9fbeea768570a381129c87653caddabcccc381c664df224b79e761d4e9",
+      "reference": null
+    },
+    "L27_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L27_die0.npy",
+      "source_sha256": "e942d48d385e740ccf78d6486af2297bbeed3c263af268d9f145795cb8d4fdbf",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L27_die0.bin",
+      "raw_sha256": "44646b15a1fd724a9d6112375242256385fe3c0246807388421c123c9b991e9e",
+      "reference": null
+    },
+    "L27_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L27_die1.npy",
+      "source_sha256": "3ebf49ed242b9cb51e700f0f240d933bd56fedf7348b8bae44e1c223b37d5168",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L27_die1.bin",
+      "raw_sha256": "241126b216ee6830d45beb30e193ee0f51e9f9feae4e070cb262466a5db18097",
+      "reference": null
+    },
+    "L27_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L27_die2.npy",
+      "source_sha256": "b8aaee66183f73cec308065f2d7f5ca6754e2ce146dfabd5a6c5f9dbb2e608c5",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L27_die2.bin",
+      "raw_sha256": "44b63bb25da7b0d4ce42e2f6688099b9ae80e4b70775b0fcdf1f57c1696e05a3",
+      "reference": null
+    },
+    "L27_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L27_die3.npy",
+      "source_sha256": "a333b0fda333bf0b1303acb454820e2e4016c932b3b5937b5fee4de2eb8e579c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L27_die3.bin",
+      "raw_sha256": "5257f6661f0d3c68bd95f7440d3f83601b3222ded1d88cb73e51272786434648",
+      "reference": null
+    },
+    "L28_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L28_die0.npy",
+      "source_sha256": "991720e11ba0dcf9e2c7f33f0c19ee4d5f6dda3c6bf7f8dbeba0700d1ac87c26",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L28_die0.bin",
+      "raw_sha256": "900185b89d6daaf0f4ae8e572654d80f4a23cdbae01ef9b342cd2c13c4598260",
+      "reference": null
+    },
+    "L28_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L28_die1.npy",
+      "source_sha256": "fd5ef9f8585f0e8f90bf2eb7c4b93547e52d9afbc178e831a45723f19a44e75f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L28_die1.bin",
+      "raw_sha256": "7981135afa600710889d68928037b8954b559cbdb107ac1e6179a1407f83cd83",
+      "reference": null
+    },
+    "L28_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L28_die2.npy",
+      "source_sha256": "3fda9f7e283e3ea1b8da013512d1ae55c4b11e1d91c96597851266f66a8a02d1",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L28_die2.bin",
+      "raw_sha256": "044828e998d5e76e1157754104725495636e831754962de316dd52b4dff259b0",
+      "reference": null
+    },
+    "L28_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L28_die3.npy",
+      "source_sha256": "4237226fa5933ad7e285a573e863110ed676e4db6bbbcab0c25fde780e0cee9a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L28_die3.bin",
+      "raw_sha256": "b3bee2e95cd2ea0c41db388e3af04e35a6e56599f6f5bfc281f45f8ca0324a91",
+      "reference": null
+    },
+    "L29_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L29_die0.npy",
+      "source_sha256": "f2f9cb8ea921a45192eb3ce78ac094863b0c61d74e5975aa68073b7a02947c64",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L29_die0.bin",
+      "raw_sha256": "4c98dd75ff0a98bdb91cf7f4dd6ecfd6045448ab6b456939458f5914c103551b",
+      "reference": null
+    },
+    "L29_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L29_die1.npy",
+      "source_sha256": "8fc95f278caab46fe8135aa5f8a4aeda6de27e208c04c18ca3472ff1b3f1d740",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L29_die1.bin",
+      "raw_sha256": "8ed897788ea574b75a6cb997eaf913d37c7ac9ac2992e21eb81dd1848841c737",
+      "reference": null
+    },
+    "L29_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L29_die2.npy",
+      "source_sha256": "e90407918d1da935c8da8c9e2b6ae4e815cf2b5e79299ca054992a87b4739e50",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L29_die2.bin",
+      "raw_sha256": "7ad2f81234a326d03d31ad60f86ee82ca48c8410d2eb0eb6bedd1a334a23511d",
+      "reference": null
+    },
+    "L29_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L29_die3.npy",
+      "source_sha256": "4daff2700deb51ad61aa1c17bd9defff9c4f87b6dbc3aa784d818921a655daad",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L29_die3.bin",
+      "raw_sha256": "0415fdb02fdb6de40600cc5f308cc9a3c1c902d6da5d9ed3abd189612d73eabc",
+      "reference": null
+    },
+    "L30_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L30_die0.npy",
+      "source_sha256": "c793ed347a1cbf1c97e8d05b6b81c84fbb374d625c5b1281a4813373668733f9",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L30_die0.bin",
+      "raw_sha256": "0f29e4d3cef336129400dc5b8529c2b092c3e9b7a2d7fea72e8d1671ef5a2f75",
+      "reference": null
+    },
+    "L30_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L30_die1.npy",
+      "source_sha256": "c319873c010ed14e75b9c34d37e859178458ffa7b90d004882d52e3dc210a6f4",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L30_die1.bin",
+      "raw_sha256": "4cdc1dba296cb520b63943a5196425c65c607b0c3e852d46aaca0631aacee879",
+      "reference": null
+    },
+    "L30_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L30_die2.npy",
+      "source_sha256": "979175e3de27ffafa5a9c7f8dd603f9484fd35bdf4a932987e3a56a1d4afe590",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L30_die2.bin",
+      "raw_sha256": "b35668433adfcfa899b32ff6a953fdde0356292056ad3ce9bc52831559b001a2",
+      "reference": null
+    },
+    "L30_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L30_die3.npy",
+      "source_sha256": "c8fbd25ec08022d6fc420fe540bafc07546e883dae705e08b0a794a3c64ad24a",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L30_die3.bin",
+      "raw_sha256": "6c51bbda8c50aeaaa6c2d6f121fb8937b16b8b762d28e1a77036729bb9a674ef",
+      "reference": null
+    },
+    "L31_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L31_die0.npy",
+      "source_sha256": "0ae1616c160177ef8678a0d30ee6db96b8024e6bb312cf192fe589d9bbced11f",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L31_die0.bin",
+      "raw_sha256": "023cbb25be95d9c89e07cd72105ff09c7df3690437bd515d9dd8191f836703ba",
+      "reference": null
+    },
+    "L31_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L31_die1.npy",
+      "source_sha256": "a66d1e26b401256847b3e4a7ce17aabcb3b6b2991888c87ab738aa34a3a18889",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L31_die1.bin",
+      "raw_sha256": "7c45f4f3c446ddc9c9f3a24658d8d284006c12aa1789e9bd332437350465bbb5",
+      "reference": null
+    },
+    "L31_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L31_die2.npy",
+      "source_sha256": "9e9ca03e2b97189ff7c4d3ecd1b754270d07b2b08e502ee1b3e4d56a493aa2cd",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L31_die2.bin",
+      "raw_sha256": "25aec78b7eafe66c198d228fd037baf04a7d958d544e7d99546ce42a7dafbfa1",
+      "reference": null
+    },
+    "L31_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L31_die3.npy",
+      "source_sha256": "3f8b8cad7a98d8d52d7f9e838d790af0acb82ab3a937dc20d0a5417ee6ef4ac1",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L31_die3.bin",
+      "raw_sha256": "ff7ebb3bf6bd41a11e96d33cad9f2157609ca51dade0cbdbfc68519ee825549c",
+      "reference": null
+    },
+    "L32_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L32_die0.npy",
+      "source_sha256": "2bb63049ce240834d18df939602f3572aab8d2feb027bd8b0c28acabd2c191cf",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L32_die0.bin",
+      "raw_sha256": "f3b9f9a4ddbd0f37d9dbcbc47a5710e0b76b3d0e32e75a8a1be5ee186b5399fc",
+      "reference": null
+    },
+    "L32_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L32_die1.npy",
+      "source_sha256": "b19b2f9a884e13dfe42fd39320935d3d840e257ce7c3982242d2fbb78b826e4d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L32_die1.bin",
+      "raw_sha256": "c8df3aef2a3edaa8fb6988e1955dd14d02c08e260bf1bb3e2e6dbcd333175712",
+      "reference": null
+    },
+    "L32_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L32_die2.npy",
+      "source_sha256": "2e7dcc4e0d447f9a319245bb7f2c6ab3daaf391cece18f4a0c069fe73cafbde4",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L32_die2.bin",
+      "raw_sha256": "f3bba1b68bffb7d2a0fcf83776f2cfb59b9c846c35af6a90731b92cf59eb8f5e",
+      "reference": null
+    },
+    "L32_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L32_die3.npy",
+      "source_sha256": "ac0a2435bbc1601e6a9f072b4dfb9509895b2ae68875ebe993d032c88c85b594",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L32_die3.bin",
+      "raw_sha256": "7e218dfcaaba201aa6c8d0bf6ebcb2feaddc7e10a584d7bb2480b691d2538d7d",
+      "reference": null
+    },
+    "L33_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L33_die0.npy",
+      "source_sha256": "668dbf9f458f900d6609a31415c0a4c7beccd0904f46655cb52bc1603c629055",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L33_die0.bin",
+      "raw_sha256": "e16cdcfa0ee5a17b2c43cd4492548f3d0a8bad2eaad63d0387e7492ca3d0a4ff",
+      "reference": null
+    },
+    "L33_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L33_die1.npy",
+      "source_sha256": "0040bbc39e2b7887e84270c5df95c317986466d08afa5ade734f58b15b8430d8",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L33_die1.bin",
+      "raw_sha256": "2c28501582da6ee833e3a7f9832424b268ba9542564b7e215948f5b194e589a5",
+      "reference": null
+    },
+    "L33_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L33_die2.npy",
+      "source_sha256": "7729f53dc860db22b5012350ece0d459ac2339079531482bed24698e3f045d25",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L33_die2.bin",
+      "raw_sha256": "b7cf82e278843967cc9ce55af0eb4a5c921a01af9707214d84a77b9f8874d842",
+      "reference": null
+    },
+    "L33_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L33_die3.npy",
+      "source_sha256": "f3094f4277074382d47c166213462d563f25a57053bc7d87ec2099321eaf186d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L33_die3.bin",
+      "raw_sha256": "78535c0f465bf329ad406925047dd6873b3eadb6f46478d479b8cbc4339a2587",
+      "reference": null
+    },
+    "L34_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L34_die0.npy",
+      "source_sha256": "18fc5b5ac0677a486fee469432509ac31911b238f60ea9afde6b052f56fd9e72",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L34_die0.bin",
+      "raw_sha256": "336fd069df27c21ee392d71aa6fdc8765d55469b1a936a82f5f430105c75e12f",
+      "reference": null
+    },
+    "L34_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L34_die1.npy",
+      "source_sha256": "29d8325c4e5eb8fc9b670883923e018388425de9803bf486627111115cd515fa",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L34_die1.bin",
+      "raw_sha256": "86365054a44309df79ef321bebd311997e7ef1d2633ffafd012da96a3dd8d818",
+      "reference": null
+    },
+    "L34_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L34_die2.npy",
+      "source_sha256": "09379098be02386ad6de0c08fd7ce9ce2ac418a747a0f4ce7b1ebb651fc1fe60",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L34_die2.bin",
+      "raw_sha256": "eb9eb66e4de7a812df1acffd96c78be2573be8beb321f5476d34ae13d6b31c82",
+      "reference": null
+    },
+    "L34_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L34_die3.npy",
+      "source_sha256": "0baa710796468326bdd738be62f6b472ba8465d7271fd4b2ca1730f4f8fed306",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L34_die3.bin",
+      "raw_sha256": "f84ee527881c2fe69e5ff832fbbe0c77238979d11dfbf6248d0e8cd054328b66",
+      "reference": null
+    },
+    "L35_die0": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L35_die0.npy",
+      "source_sha256": "6bcdf4227ca977443b9118d96f9b4d72971abbde09602b0ff997918427e722fb",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L35_die0.bin",
+      "raw_sha256": "e83128324413f933e20a2321b3113a61efcb3fb460327030a3c6ce6010177257",
+      "reference": null
+    },
+    "L35_die1": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L35_die1.npy",
+      "source_sha256": "3f0ddf5d11ec0f2624f51141228e9da9f8597de33cf8068158fc7597d1f3fe9c",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L35_die1.bin",
+      "raw_sha256": "35b6f33477cba3cafd54858442467fc646aa38bb70f3f186ef4e907f59c2fd1a",
+      "reference": null
+    },
+    "L35_die2": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L35_die2.npy",
+      "source_sha256": "6e55b2fe8be8495a121c59d008bd0779ec7e847b9ab69293660d713ea1169eb9",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L35_die2.bin",
+      "raw_sha256": "8ed43c356f24d9ec4b93e5fd270827308f2d4f4168b91ffda03c2be03cb196e2",
+      "reference": null
+    },
+    "L35_die3": {
+      "source": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191/kv_pre/L35_die3.npy",
+      "source_sha256": "82bfe636c34395ede42bc0a0844e65f4966a5486e52c8c022cc22b80a26c8c8d",
+      "raw": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/inputs/history/L35_die3.bin",
+      "raw_sha256": "92544041780cbabf7fde37a8d51572f1d8a186176b470875d708ddd04ae8a6d1",
+      "reference": null
+    }
+  },
+  "preload": {
+    "path": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095/x_preload.hex",
+    "sha256": "c2c71eed13600a2dbb50c1639dee6f4eebf8019470cd1e8b66b142ed56dabc48"
+  },
+  "scope": "prior KV prefix only; no current-layer or HEAD reference generated"
+}

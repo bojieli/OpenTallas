@@ -1,0 +1,36 @@
+{
+  "status": "SOURCE_LOCKSTEP_PASS_PHYSICAL_PENDING",
+  "adopted": false,
+  "source_sha256": "59746a2ffc9171fbba702f35ce002f08d1b4845c2cb66698012c4816f4df0d55",
+  "bench_sha256": "6d8bbad2dbf0f6f1a22b267ec7e4ab58805549e8c55a859fc63938dab456b3c6",
+  "reference_sha256": "9b1d561d10fd6feee452df10dc87d173b90f17f5d6284af823240f6418935f20",
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch/jobs/bacon-pcwb-digest-cut-r1",
+  "compile_jobs": 16,
+  "admission_need_GiB": 16,
+  "wall_timeout": null,
+  "cycles_per_case": 200000,
+  "cases": 6,
+  "total_cycles": 1200000,
+  "mismatches": 0,
+  "checks": [
+    "all interface outputs bit/cycle exact for DIGEST_CUT0 and1 vs retained r9d",
+    "nextdigest equality every stimulated cycle",
+    "simultaneous push/pop, backpressured row commands, rowACT/PRE, REFpb/REFab, queue wrap, alternating rows"
+  ],
+  "measured_extra_command_cycles": 0,
+  "measured_extra_ACK_cycles": 0,
+  "area_delta_measured": null,
+  "SS_delta_measured": null,
+  "FF_delta_measured": null,
+  "physical_owner": "Euclid svc family, Sagan inventory",
+  "scope": "same source lockstep; retained WA_LATE1 is not cycle-exact vs WA_LATE0; no new full-token/calendar/DRAM byte-golden/rate proof",
+  "logs": {
+    "lockstep_exact_ab_seed1.log": "PASS seed=1 cycles=200000 WA_LATE=0 REF_MODE=0 PC=1 WQ=4 pushes=4033 acks=4029 acts=6985 pres=6532 refs=52 overlap=1015 stalled=878 mismatches=0",
+    "lockstep_exact_ab_seed2.log": "PASS seed=2 cycles=200000 WA_LATE=0 REF_MODE=0 PC=1 WQ=4 pushes=3770 acks=3766 acts=6815 pres=6343 refs=52 overlap=930 stalled=875 mismatches=0",
+    "lockstep_exact_ab_seed26.log": "PASS seed=26 cycles=200000 WA_LATE=0 REF_MODE=0 PC=1 WQ=4 pushes=4240 acks=4236 acts=7389 pres=6917 refs=52 overlap=1081 stalled=938 mismatches=0",
+    "lockstep_late_pb_seed1.log": "PASS seed=1 cycles=200000 WA_LATE=1 REF_MODE=1 PC=0 WQ=8 pushes=1704 acks=1696 acts=2884 pres=2875 refs=1694 overlap=624 stalled=385 mismatches=0",
+    "lockstep_late_pb_seed2.log": "PASS seed=2 cycles=200000 WA_LATE=1 REF_MODE=1 PC=0 WQ=8 pushes=2194 acks=2186 acts=3555 pres=3546 refs=1694 overlap=820 stalled=452 mismatches=0",
+    "lockstep_late_pb_seed26.log": "PASS seed=26 cycles=200000 WA_LATE=1 REF_MODE=1 PC=0 WQ=8 pushes=2959 acks=2951 acts=4696 pres=4687 refs=1694 overlap=1137 stalled=561 mismatches=0"
+  }
+}

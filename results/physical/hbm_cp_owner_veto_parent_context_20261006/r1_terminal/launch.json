@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-06T11:06:31Z",
+  "host": "ot-epyc2",
+  "pid": 2308339,
+  "startticks": "11942757",
+  "source": "270d0a6f9",
+  "source_main": "7b8012a2d",
+  "export": "6515a2e9c784762a224228fb5f6f8540878d3398",
+  "NUM_CORES": 16,
+  "expected_memory_GiB": 8,
+  "projected_load_limit": 110,
+  "priority": "AFTER_QWEN_KV_DS_PQ19224_R128_WFC",
+  "same_existing_pin_PG_SDC": true,
+  "sole_changed_source_job": true
+}

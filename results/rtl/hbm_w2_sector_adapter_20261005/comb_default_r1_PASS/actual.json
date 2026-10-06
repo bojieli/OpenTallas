@@ -1,0 +1,20 @@
+{
+  "source_commit": "e983796c75a184f0ba7705f082172d1d17fb2edc",
+  "verdict": "PASS_FOCUSED_COMB_DEFAULT_AND_TWO_SOURCE_FRAMES",
+  "rtl_delta": "expected_local=0 before active map loop; active iterations overwrite before every use",
+  "old_source_latch_exit": 1,
+  "new_source_lint_exit": 0,
+  "compile_exit": 0,
+  "runtime_exit": 0,
+  "actual_counts": {
+    "native_frames": 2,
+    "sector_reads": 6,
+    "matched_returns": 6,
+    "held_request_edges": 12,
+    "rejected_foreign_response_edges": 4,
+    "reserved_seats_retained": true
+  },
+  "source_inputs": "Erdos e52e692aa actual L20 NS2 overlays119160832..119265280; original cfg10/10/0/0/29/29/29/29",
+  "permits": "Rawls f835c8641 shared owner real grant and accepted protected four-seat reservation",
+  "scope": "Adapter-only narrow default regression/full136B+tail17B bytes, stalls, foreign tag/write-kind, invalid map before mutation. No production publication/release, ND2 parent, exhaustive1344, arithmetic, timing or rate qualification. Original r2 source/runtime left untouched."
+}

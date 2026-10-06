@@ -1,0 +1,32 @@
+{
+  "name": "ot_dsrom_window_column_128",
+  "orfs_dir": "/srv/opentallas-scratch/codex/item7-column-20261006/w128_slew30/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_window_column_128.lef": "47580d0f8840dee9e1bedb188af018b78139adeaefbfef9f55874947a8f77058",
+    "ot_dsrom_window_column_128_ff.lib": "bae64754781b3be9e22d6cd382546b2e6cd13ba4c3289f270101e0da7ca1dbae",
+    "ot_dsrom_window_column_128_ss.lib": "3089128daa9f3501487710e0604640a8413d834f1d1d76dcf072693d3c68a52e"
+  },
+  "ok": true,
+  "physical_top": "ot_dsrom_window_column",
+  "physical_parameter": {
+    "WIDTH": 128
+  },
+  "parent_cell": "ot_dsrom_window_column_128",
+  "rename": "Only LEF MACRO/END and Liberty cell names; all pins/arcs/geometry unchanged.",
+  "before_rename_sha256": {
+    "ot_dsrom_window_column_128.lef": "b9f5977838c4d9ead97d6f90cfb9a5a5c3773e552e7d1bbc77d25465d10b00fc",
+    "ot_dsrom_window_column_128_ff.lib": "ab6ac8fa95ecfbbc9c2d4947378a6b3d31c021b36b30ee8185744c267fc47fa5",
+    "ot_dsrom_window_column_128_ss.lib": "64d3de2a0665e3c604f6c1d74820c17d8f9d1331bc5b53567a3907594a076162"
+  }
+}

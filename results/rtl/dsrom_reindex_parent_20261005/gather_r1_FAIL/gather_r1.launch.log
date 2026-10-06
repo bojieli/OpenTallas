@@ -1,0 +1,30 @@
+{"load1": 40.20068359375, "idle_cpu": 85.04697986577182, "available_RAM_GiB": 707.2203407287598, "available_disk_GiB": 2240.0282859802246, "workers": 4, "expected_peak_GiB": 16}
+{"load1": 40.20068359375, "idle_cpu": 88.47323240206025, "available_RAM_GiB": 707.1833992004395, "available_disk_GiB": 2240.028251647949, "workers": 4, "expected_peak_GiB": 16}
+real_rank0_p1 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank1_p1 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank2_p1 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank3_p1 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+func_edges_p1 False None
+func_full_list_2048_p1 False None
+func_dense_run_2048_p1 False None
+func_random0_p1 False None
+func_random1_p1 False None
+func_random2_p1 False None
+real_rank0_p2 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank1_p2 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank2_p2 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+real_rank3_p2 {"pass_": false, "blocks": null, "cycles": null, "achieved_TBps": null, "fraction_of_peak": null}
+func_edges_p2 False None
+func_full_list_2048_p2 False None
+func_dense_run_2048_p2 False None
+func_random0_p2 False None
+func_random1_p2 False None
+func_random2_p2 False None
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/gather_src/tools/dsrom_reindex_production_gate.py", line 34, in <module>
+    if __name__=='__main__':main()
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/gather_src/tools/dsrom_reindex_production_gate.py", line 25, in main
+    try:gate.cmd_gather(a)
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/gather_src/tools/dsrom_reindex_candidates.py", line 193, in cmd_gather
+    worst_rank=dict(name=[k for k, v in runs.items() if v is worst][0], cycles=worst["cycles"],
+KeyError: 'cycles'

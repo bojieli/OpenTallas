@@ -1,0 +1,77 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+stances area: 586.23 um^2
+[INFO DPL-0008] Fixed instances area within core: 11.69 um^2
+[INFO DPL-0009] Utilization: 32.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 5033 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        460 |       228 |       227
+        1 |        382 |       206 |       171
+        2 |        382 |       206 |       171
+        3 |        382 |       206 |       171
+        4 |        382 |       206 |       171
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 382 for 3 consecutive iterations.
+Using old diamond search for 206 remaining illegal cells.
+diamond recovery: recovered 174/206 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |        180 |        32 |       148
+      403 |        180 |        32 |       148
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 180 for 3 consecutive iterations. Using diamond search for 32 remaining illegal cells.
+diamond recovery: recovered 0/32 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 32
+[INFO DPL-0500] Runtime: 1.68s
+Placement Analysis
+---------------------------------
+total displacement       2082.9 u
+average displacement        0.4 u
+max displacement           40.5 u
+original HPWL           51325.2 u
+legalized HPWL          52709.4 u
+delta HPWL                    3 %
+
+[WARNING DPL-0005] Overlap check failed (9).
+ clkload0 (BUFx16f_ASAP7_75t_R) overlaps clkbuf_2_2__f_clk (BUFx8_ASAP7_75t_R)
+ clkload16 (BUFx2_ASAP7_75t_R) overlaps clkbuf_leaf_20_clk (BUFx16f_ASAP7_75t_R)
+ clkload17 (BUFx8_ASAP7_75t_R) overlaps clkbuf_leaf_21_clk (BUFx16f_ASAP7_75t_R)
+ clkload18 (BUFx2_ASAP7_75t_R) overlaps clkbuf_leaf_22_clk (BUFx16f_ASAP7_75t_R)
+ clkload19 (BUFx8_ASAP7_75t_R) overlaps clkbuf_leaf_23_clk (BUFx16f_ASAP7_75t_R)
+ clkload4 (INVx4_ASAP7_75t_R) overlaps clkbuf_leaf_26_clk (BUFx16f_ASAP7_75t_R)
+ clkload5 (INVx2_ASAP7_75t_R) overlaps clkbuf_leaf_27_clk (BUFx16f_ASAP7_75t_R)
+ clkload6 (INVx4_ASAP7_75t_R) overlaps clkbuf_leaf_28_clk (BUFx16f_ASAP7_75t_R)
+ clkload7 (BUFx8_ASAP7_75t_R) overlaps clkbuf_leaf_29_clk (BUFx16f_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (9).
+ clkload0
+ clkload16
+ clkload17
+ clkload18
+ clkload19
+ clkload4
+ clkload5
+ clkload6
+ clkload7
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: cts.tcl, 83 DPL-0033
+
+Elapsed time: 0:01.80[h:]min:sec. CPU time: user 1.71 sys 0.09 (99%). Peak memory: 303268KB.
+Elapsed time: 0:02.68[h:]min:sec. CPU time: user 2.84 sys 0.51 (124%). Peak memory: 329004KB.
+Elapsed time: 0:01.82[h:]min:sec. CPU time: user 1.71 sys 0.10 (99%). Peak memory: 299632KB.
+Elapsed time: 0:01.79[h:]min:sec. CPU time: user 1.70 sys 0.09 (100%). Peak memory: 301776KB.
+Elapsed time: 0:01.86[h:]min:sec. CPU time: user 1.77 sys 0.08 (99%). Peak memory: 302120KB.
+Elapsed time: 0:02.27[h:]min:sec. CPU time: user 9.43 sys 0.08 (419%). Peak memory: 308852KB.
+Elapsed time: 0:01.92[h:]min:sec. CPU time: user 1.82 sys 0.10 (100%). Peak memory: 313320KB.
+Elapsed time: 0:05.91[h:]min:sec. CPU time: user 24.80 sys 1.52 (445%). Peak memory: 476844KB.
+Elapsed time: 0:03.35[h:]min:sec. CPU time: user 3.83 sys 0.72 (135%). Peak memory: 334160KB.
+Elapsed time: 0:03.98[h:]min:sec. CPU time: user 4.46 sys 0.67 (128%). Peak memory: 330148KB.
+Elapsed time: 0:11.09[h:]min:sec. CPU time: user 14.91 sys 2.52 (157%). Peak memory: 353684KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/region_retry_r5/physical.json

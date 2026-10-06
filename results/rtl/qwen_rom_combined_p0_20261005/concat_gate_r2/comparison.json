@@ -1,0 +1,28 @@
+{
+  "status": "PASS_NATIVE_SOURCE_EQUIVALENCE",
+  "baseline_reused_not_replayed": true,
+  "source_identical": false,
+  "source_sha256": "8babfc0dedf3cf1cf997827decb75f1ea38a811b912f46a941226f3c5be88208",
+  "old_archive_sha256": "e283a35f7afa2ff874b66094417f4873ce8274c4084866b2acc64952ccc16e2f",
+  "new_archive_sha256": "3deafa9e800d0ff21cb6a1dd1b1160eca3d34744c3771c0973c95eeb7e36a0a9",
+  "traces_sha256": [
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100",
+    "869be8e69d2c3510a4ba18137af8635e76d55762dd1dd33b9f74976306f1d100"
+  ],
+  "kv_hash": [
+    "c765d8517e5fc4b6",
+    "c765d8517e5fc4b6"
+  ],
+  "terminal": [
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=99.361458130 wall_per_core=0.193687053 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=78798725343 coll_ns=154618390 fabric_comb_ns=109203865 fabric_edge_ns=7069339965 propagate_ns=1186821353 full_token=0",
+    "P0_NATIVE_GATE terminal core=513 events=1860 dirty_captures=19650 fault_events=52 kv_hash=c765d8517e5fc4b6 wall=82.512905596 wall_per_core=0.160843871 full_tile_evals=6162432 changed_tile_evals=2545736 invalidations=156 die_evals=11240 coll_evals=2810 reentry_skip=513 die_ns=54154286714 coll_ns=193812914 fabric_comb_ns=218798930 fabric_edge_ns=12184562655 propagate_ns=2278976974 full_token=0"
+  ],
+  "wall_seconds": [
+    99.36145813,
+    82.512905596
+  ],
+  "measured_speedup": 1.2041929369993822,
+  "adopted": true,
+  "full_token_pass": false,
+  "physical_qualified": false
+}

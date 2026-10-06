@@ -1,0 +1,55 @@
+{
+  "schema": "dsrom.v9.parent.terminal-load-envelopes.v1",
+  "source_QX10": "0032b7355",
+  "ODB_stage": "existing Z18a 4_cts",
+  "profiles": {
+    "engine_cfg*": {
+      "corner": "FF",
+      "source": "u_e.g_qb.b_cfg_d[26]$_DFF_P_/QN",
+      "cap": 8.811979999999998,
+      "raw": "cut\tu_e.g_qb.b_cfg_d[26]$_DFF_P_\tQN\tDFFHQNx2_ASAP7_75t_R\t_017165_\t8.811979999999998\t{_298180_ B2 AOI22x1_ASAP7_75t_R 1.233950} {_298181_ A AND3x1_ASAP7_75t_R 0.652422} {_301890_ A AND3x1_ASAP7_75t_R 0.652422} {_301892_ A AND3x1_ASAP7_75t_R 0.652422} {_301894_ A NAND2x1_ASAP7_75t_R 1.078980} {_301896_ A NAND2x1_ASAP7_75t_R 1.078980} {_302003_ A AND3x1_ASAP7_75t_R 0.652422} {_302006_ A AND3x1_ASAP7_75t_R 0.652422} {_302008_ A NAND2x1_ASAP7_75t_R 1.078980} {_302010_ A NAND2x1_ASAP7_75t_R 1.078980}"
+    },
+    "engine_cdec*": {
+      "corner": "FF",
+      "source": "u_e.g_qb.b_cdec[0]$_DFF_PN0_/QN",
+      "cap": 0.577042,
+      "raw": "cut\tu_e.g_qb.b_cdec[0]$_DFF_PN0_\tQN\tDFFASRHQNx1_ASAP7_75t_R\t_017190_\t0.577042\t{hold33225 A BUFx2_ASAP7_75t_R 0.577042}"
+    },
+    "engine_xs*": {
+      "corner": "FF",
+      "source": "u_e.g_qb.g_bx.b_xs_p[0]$_DFF_P_/QN",
+      "cap": 2.3397,
+      "raw": "cut\tu_e.g_qb.g_bx.b_xs_p[0]$_DFF_P_\tQN\tDFFHQNx1_ASAP7_75t_R\t_016630_\t2.3397\t{_163344_ A INVx1_ASAP7_75t_R 0.683678} {place14212 A BUFx2_ASAP7_75t_R 0.577042} {_163385_ A NAND2x1_ASAP7_75t_R 1.078980}"
+    },
+    "engine_go*": {
+      "corner": "FF",
+      "source": "u_e.g_ir.g_gok.u_gm/_2_/Y",
+      "cap": 5.123972,
+      "raw": "cut\tu_e.g_ir.g_gok.u_gm/_2_\tY\tINVx3_ASAP7_75t_R\tu_e.go_em\t5.123972\t{hold19382 A BUFx2_ASAP7_75t_R 0.577042} {_297831_ B AOI211x1_ASAP7_75t_R 0.958762} {_167219_ A INVx1_ASAP7_75t_R 0.683678} {_260307_ A NOR2x1_ASAP7_75t_R 1.052750} {_282263_ A1 OA21x2_ASAP7_75t_R 0.610120} {_298831_ B AOI21x1_ASAP7_75t_R 1.241620}"
+    },
+    "engine_reset_n*": {
+      "corner": "FF",
+      "source": "u_e.g_mac[1].g_mz.u_rsp/_2_/Y",
+      "cap": 11.708224999999999,
+      "raw": "cut\tu_e.g_mac[1].g_mz.u_rsp/_2_\tY\tINVx3_ASAP7_75t_R\tu_e.g_mac\\[1\\].g_pa2.u_pair.rst_n\t11.708224999999999\t{hold40357 A BUFx2_ASAP7_75t_R 0.577042} {{u_e.g_mac\\[1\\].g_pa2.u_pair.y\\[26\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].g_pa2.u_pair.y\\[27\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].g_pa2.u_pair.y\\[28\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].g_pa2.u_pair.y\\[29\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].g_pa2.u_pair.y\\[30\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {place14518 A BUFx3_ASAP7_75t_R 0.693366} {{u_e.g_mac\\[1\\].g_pa2.u_pair.err\\[1\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[7\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[6\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[5\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[4\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[3\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].pr_vp\\[2\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909} {{u_e.g_mac\\[1\\].g_pa2.u_pair.err\\[0\\]$_DFF_PN0_} RESETN DFFASRHQNx1_ASAP7_75t_R 0.802909}"
+    },
+    "engine_clk": {
+      "corner": "FF",
+      "source": "u_e.g_cg.u_cg.u_icg/GCLK",
+      "cap": 5.2147,
+      "raw": "cut\tu_e.g_cg.u_cg.u_icg\tGCLK\tICGx1_ASAP7_75t_R\tu_e.g_cg.u_cg.gclk\t5.2147\t{delaybuf_0_core_clk A BUFx24_ASAP7_75t_R 2.607350} {clkbuf_regs_1_core_clk A BUFx24_ASAP7_75t_R 2.607350}"
+    },
+    "f_bus* node_v node_e node_t* node_d* busy fault captured_root*": {
+      "corner": "FF",
+      "source": "port/cfg_a[0]",
+      "cap": 0.577042,
+      "raw": "port\tcfg_a[0]\tINPUT\t0.577042\t{hold19220 A BUFx2_ASAP7_75t_R 0.577042}"
+    }
+  },
+  "exact_per_bit_child_loading": false,
+  "note": "Worst measured family load across SS/FF, including positive net after first QN inverter where uniquely traceable. Conservative one-element mapping envelopes. Observation terminals use measured QX input-pin envelope, not qualified downstream return-network loads. No full-field or child closure.",
+  "hashes": {
+    "SS_terminal_loads.tsv": "01aa172df0ce471fabe27d4b556696dcca9c3217aabe82ebceb4dff57dcba942",
+    "FF_terminal_loads.tsv": "b610af69d4d0fddbede0f78152dbaa39163f84c3998eeda03f37c1daafd7cc47"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "source_commit": "7964b7ebd",
+  "source_sha256": {
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "374d8dcf913293e93ad0269b63ee75a7aca2c06ff06bd19f7227a22200b5f356",
+    "rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_counter_split.sv": "a12c53095b6f27ab13cd5523915c4f38e9983a4ce863285bd8bdfce3a67e3387"
+  },
+  "scope": "Complete128slot512counter update mechanism vs original PC-major global array; random aliased responses, unknown accept, reset; production gather and physical closure pending",
+  "comparisons": 514048,
+  "alias_cases": 127431,
+  "seed": "194aa70b",
+  "added_cycles": 0,
+  "added_state_bits": 0,
+  "negative_control": {
+    "mutation": "flip oracle bit after1000 comparisons",
+    "exit": 1
+  }
+}

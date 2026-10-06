@@ -1,0 +1,7 @@
+{
+  "status": "ATTRIBUTION_REFUSED_RAW_HASH_DIFFERENCE",
+  "error": "Diagnostic map differs from frozen map: no exact attribution permitted",
+  "frozen_raw_sha256": "1500f9ead64c8c390d68ce52df40e957687da4f7a2d983ef05597822f494f6b7",
+  "diagnostic_raw_sha256": "53ef6a4040976ebc47164c57a9b81b283b2edbf3cd5f3d382f4fb5e8278263ac",
+  "followup": "New read-only analysis proved ALL nonassign bytes equal and ALL2328assigns equal as a multiset; JSON writing reordered assigns only. Original raw-byte refusal retained, source/clock/protection not changed."
+}

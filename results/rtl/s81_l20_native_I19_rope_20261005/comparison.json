@@ -1,0 +1,51 @@
+{
+  "scope": "Native I19 allfourranks on actual produced carry; I18 coefficients/initialprefix SIM_ONLY, no fulltoken or physical clock claim",
+  "position": 1048575,
+  "token": 16754,
+  "producer": 2490,
+  "source_cpp_sha256": "a5d729f353b7bdd1ff05d41f7838f51c9ac80582b38b7c2c74b809dbd62ba27c",
+  "literal_sha256": "fbb809f39f7e40aa80554ef7e8e7ff9a2768c403d772d06bf00e78eae37da28e",
+  "coefficient_file_sha256": "e64d051959c7fb8243bf09e66207f5c26a2b497d48a5e370c9f852255e1aaf65",
+  "coefficient_staging": "SIM_ONLY I18 kind1/position1048575, same actual coefficients supplied to native and post-run reference",
+  "source_arithmetic_sha256": "5d3e4dae0100b400a4ab7972b9090f5472a4d19237863c235b96187ffe633b09",
+  "expected_outputs_used_by_native": false,
+  "exact": true,
+  "results": [
+    {
+      "rank": 0,
+      "node": "L20.I19",
+      "compared": 512,
+      "bit_mismatches": 0,
+      "input_sha256": "2300ffc8453314ead5a827677940ebbb1f057f60d58b37eee0649042c40c59cd",
+      "output_sha256": "69433bf75164a23d6548b981cd5d73b274b0a70231b43f10f048115160eca39c",
+      "first": []
+    },
+    {
+      "rank": 1,
+      "node": "L20.I19",
+      "compared": 512,
+      "bit_mismatches": 0,
+      "input_sha256": "2300ffc8453314ead5a827677940ebbb1f057f60d58b37eee0649042c40c59cd",
+      "output_sha256": "69433bf75164a23d6548b981cd5d73b274b0a70231b43f10f048115160eca39c",
+      "first": []
+    },
+    {
+      "rank": 2,
+      "node": "L20.I19",
+      "compared": 512,
+      "bit_mismatches": 0,
+      "input_sha256": "2300ffc8453314ead5a827677940ebbb1f057f60d58b37eee0649042c40c59cd",
+      "output_sha256": "69433bf75164a23d6548b981cd5d73b274b0a70231b43f10f048115160eca39c",
+      "first": []
+    },
+    {
+      "rank": 3,
+      "node": "L20.I19",
+      "compared": 512,
+      "bit_mismatches": 0,
+      "input_sha256": "2300ffc8453314ead5a827677940ebbb1f057f60d58b37eee0649042c40c59cd",
+      "output_sha256": "69433bf75164a23d6548b981cd5d73b274b0a70231b43f10f048115160eca39c",
+      "first": []
+    }
+  ]
+}

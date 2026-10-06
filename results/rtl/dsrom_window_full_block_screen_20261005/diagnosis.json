@@ -1,0 +1,66 @@
+{
+  "from": "Codex Chandra",
+  "to": "CLAUDE",
+  "item": 4,
+  "status": "TERMINAL_FULL_BLOCK_SS_FAIL_STRUCTURAL_REVIEW",
+  "source": "42cf43125",
+  "work": "/srv/opentallas-scratch/claude/dsrom-s81-window-bind/screen/wl_full4",
+  "SS_ps": -1175.2,
+  "FF_ps": 3.2,
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "mapped_context_area_um2": 568089.142192,
+  "worst_path": {
+    "start": "ir[395]$_DFF_P_ = start_user[0]",
+    "end": "u_src.g_la.u_stage.sectors_landed[10]$_DFF_PN0_",
+    "arrival_ps": 1914.0,
+    "required_ps": 738.8,
+    "source_chain": [
+      "source_la user/region admission (start_bad)",
+      "accept && !start_bad -> u_stage.job_v",
+      "nl = job_v ? 0 : sectors_landed",
+      "32 conditional accepted-beat increments -> sectors_landed"
+    ],
+    "source_lines": {
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv": [
+        179,
+        181,
+        182,
+        185,
+        206
+      ],
+      "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv": [
+        184,
+        185,
+        190,
+        196,
+        209
+      ]
+    },
+    "not_ROM_ECC_or_RF_cone": true,
+    "inference_limit": "Netlist flattens internal wires; gate-boundary split is diagnostic, not a resynthesis timing prediction"
+  },
+  "other_failed_cones": {
+    "writer_blocks_ps": -1168.57,
+    "writer_rowuser_ps": -1165.03,
+    "stage_mem_ps": -1011.12
+  },
+  "recipe_assessment": "Recipe3 permits admission registers but does not permit redesign of sequential-in-source32increment count tree or inherited writer; recipe1 landing winner and recipe2read mux do not address measured dominant cone. No blind retry.",
+  "cost_inputs": {
+    "current_stage_payload_bits": 540672,
+    "current_response_ports": 32,
+    "integer_accumulations_per_edge": 32,
+    "candidate_admission_edge_increment": 1,
+    "candidate_admission_latency_ns": 0.833,
+    "optional_complete_frozen_job_envelope_bits": 99,
+    "optional_computed_userbase_overflow_bits": 31,
+    "optional_start_bad_pending_bits": 2,
+    "optional_full_envelope_register_bits": 132,
+    "note": "132 is standalone envelope field sizing, not net added FF count; existing39job fields/30base may be reused. No mapped delta area/clock/route or closure credit. Claude must bind chosen cuts, writer treatment and cost before build."
+  },
+  "more_variants_launched": 0,
+  "next_action": "CLAUDE supplies coherent source/model correction; no new build/screen until then",
+  "native_archives_preserved": true,
+  "timestamp": "2026-10-05T06:34:15.326749+00:00"
+}

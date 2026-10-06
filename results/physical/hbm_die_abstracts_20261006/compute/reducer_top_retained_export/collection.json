@@ -1,0 +1,28 @@
+{
+  "status": "COLLECTED_HASH_AND_PIN_CHECKED",
+  "source_host": "ot-epyc1tb",
+  "source_path": "/srv/opentallas-scratch/codex/carson-reducer-top-retained-export-20261006/export/ot_hdc_v41x_vred_top1024_c12_g2",
+  "physical_path": "physical/hbm_die_abstracts_20261006/compute/ot_hdc_v41x_vred_top1024_c12_g2",
+  "export_hashes_verified": 6,
+  "pin_bits": 15066,
+  "ports": 24,
+  "clock_and_ports_match_both_LIB_and_LEF": true,
+  "no_build_or_proof_replay": true,
+  "parent_qualified": false,
+  "terminal": {
+    "observed_utc": "2026-10-06T05:38:15.450886+00:00",
+    "supervisor_pid": 2841862,
+    "admitted_pid": 2841867,
+    "ss_container": "492589180d5f",
+    "ff_container": "79b2f4468074",
+    "both_processes_absent": true,
+    "both_auto_removed_containers_absent": true,
+    "SS_returncode": 0,
+    "FF_returncode": 0,
+    "export_done_both": true,
+    "declared_ram_gib": 12,
+    "threads": 1,
+    "unchanged_admission_guard": true,
+    "retained_source_objects_preserved": true
+  }
+}

@@ -108,3 +108,12 @@ DSpark KV closure: ot_qwen_kv_mp_commit (lane path registered at the boundary, d
 mismatches with the 2-edge lane latency) routed at 0.833 ns (1.2 GHz) WC setup with 60 ps uncertainty / WC+BC hold
 with 25 ps: PASS, setup +24.9 ps, hold +4.9 ps, 0 DRC, 3,043 um2 (physical/mp_commit_180_ss_ff.json; every IO
 registered, IO paths false-pathed so the screen is the element's register-to-register timing).
+
+## DSpark verdict at 8K on STREAM4: AR_MODE (dspark_verdict.json)
+
+Verify levers, measured exact at P8187: MERGE_SU (one stream op for the positions where there is no DYN term) cuts
+the np4 verify layer 17,197 -> 15,971 (-7.1%); np3 13,104; np2 9,942. Shared K/V passes give no gain (the KV op's time is
+query slots x K steps; each position already fills the 8 slots; the attention time is the 1,023-cycle-per-position
+softmax on the 64-lane stream unit). With the measured ingest/Markov (75,000) and third-party tau (1.84/2.54/3.14/3.66
+for 1-4 drafts), the best DSpark configuration reaches 0.742x AR (np4, MERGE_SU); break-even verify layer 10,069
+(np4) / 8,372 (np3). A true single-pass 4-position verify needs +103..165 mm2 vs the 46 mm2 margin.

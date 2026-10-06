@@ -1,0 +1,37 @@
+{
+  "status": "PASS_MINIMUM_CONNECTED_SLOT_READINESS",
+  "source_commit": "1e646051941a907b6c991c2451d873630a5483c0",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_pc_aq_slot_ready_cut.sv": "4b1fc50a599072467a26cfe4e1e26d89b98f230b79ec643b13c9eb1ceb609bc2",
+    "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_stack_aq_slot_ready_cut.sv": "b80638055afdd559d9ce956c740827b7d8fe87d95d06096e67f70d83e70a06d5",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_slot_ready_lockstep.sv": "3590cc5854e3ec426be8a331eda4c70033033e0f15e064a068112786df478229",
+    "tools/svc_aq_slot_ready_lockstep.sh": "98f2311c0fd600ff1f417cf5771bf5381952caf231e4b763fa4e27118e99593f",
+    "results/uarch/hbm_stream_aq_slot_ready_cut_20261005/model.json": "9e387cf7736698aae91324c58a9e8d041bb650d49ac80da5d80c1848f100b63c",
+    "tools/uarch_model.py": "20697a0185d9cb66232e9f84f3a75d95bc64bf28b1d7dc6fdff8b305bce6e2f3"
+  },
+  "cycles": 200000,
+  "mismatches": 0,
+  "fault_cycles": 0,
+  "checks": [
+    "alloutputs original49fa vs default0 and enabled1",
+    "each valid-slot ready equals actual slot bank and current registered readiness",
+    "current-head flag select equals original head-bank readiness",
+    "actual queue occupancy and accepted row-grant debt",
+    "same real grant stalls credit return refresh queued reads writes and warm resets"
+  ],
+  "scope": "twoPC minimal semantic component only; no whole-token PHY or current fullservice SSFF qualification",
+  "model_before_RTL": "41890262a",
+  "physical_status": "ONE route supervisor1067700 pinned1e646 running no adoption",
+  "prior_failed_source": "headready973696 finalSS-25.83 preserved; actualblk->headflag input cone motivated narrower slot remedy, sixdescriptorpredicates notselected",
+  "raw_artifacts": {
+    "compile_pc0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile_pc1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate.log": "df476c11e99a7b091f3d69fd3ea6d4d420165c1a6cb53fd84d6af7c793644983",
+    "launch.json": "751779812b390c375ee58972addbc7608e10f629f8b31f1adc2d8b020147446d",
+    "pc0_seed1.log": "32a52ffaa0d91cc7b6bbe9edf1e03b5c566bcb90304442c937fb681cc5fcfe83",
+    "pc1_seed2.log": "3115d59a22b030967cbba31f99a2407b12ba835eee2158910b6b3b8c93c14c71",
+    "result.txt": "c3b89876cc66618596d89286e9eb6a53bed8c6fb7f97d22860c3b80ca69bb3af",
+    "run.sh": "f73d1d5174457acd3035a297744eca70021471f1eb7f175d3fc26b0476258052"
+  }
+}

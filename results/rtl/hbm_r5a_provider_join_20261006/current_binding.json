@@ -1,0 +1,94 @@
+{
+  "item": 6,
+  "default_OFF": true,
+  "PCs": 32,
+  "MACs_per_cycle": 0,
+  "source": "rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv",
+  "caller": "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv",
+  "provider_source": "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv",
+  "provider_source_step": "56d07d0e8",
+  "provider_mode": "P2_READ_RETURN=1",
+  "calendar_instances_added": 0,
+  "owner_copies_added": 0,
+  "payload_storage_added": 0,
+  "sticky_fault_complement_FF": 2,
+  "minimum_added_FF_area_um2": 0.5832,
+  "compare_bits": {
+    "issue_ordinal": 512,
+    "return_frame": 2336
+  },
+  "additional_input_bits": 2922,
+  "bytes_per_service_edge": 1024,
+  "SM_bits_per_stream_edge": 8192,
+  "added_memory_ports": 0,
+  "added_codec_instances": 0,
+  "added_pipeline_edges": 0,
+  "replica_count": 1,
+  "mux_demux_added": 0,
+  "full73_fanout": 32,
+  "routing_tracks_added": 2922,
+  "channel_capacity": null,
+  "parent_slot_fit": false,
+  "physical_comparator_buffer_area_pending": true,
+  "provider_coded_FF_already_priced": 2448,
+  "provider_area_double_counted": false,
+  "clock_ps": {
+    "service": 1024,
+    "stream": 833.3333333333334
+  },
+  "composed_latency": {
+    "existing_context_ns": 3.334,
+    "additional_join_edges": 0,
+    "loaded_comparator_timing_pending": true,
+    "first_access_FAIL_ns": 153.757,
+    "target_ns": 140,
+    "full_off_package_FEC": "consume actual DS-RACK fullFEC handoff"
+  },
+  "held_frame": "actual protected accepted CP/source full73, service-stable through consumer drain; no producer/IRS alias",
+  "warm": "blocks new enrollment upstream; existing issue/return/freed debt drains, no warm POR",
+  "measured_join": {
+    "record": "results/rtl/hbm_r5a_provider_join_20261006/r1_PASS/result.json",
+    "READs": 64,
+    "PCs": 32,
+    "scope": "actual Gibbs coded return hook plus new consumer checker only; full expert numerical gate not inferred"
+  },
+  "gates": {
+    "changed_join": true,
+    "physical": false,
+    "performance": false,
+    "adopted": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv": "148a8a0d179be503ba98dbbb36ff3e9406bdb0e4e2887ea39b2e2feba49ccf0b",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv": "f29656c79812f4ae1e3281d2199db23004f6e15e34d7ce575fddf23168ed0610",
+    "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv": "fde6b79760522569e84be39ed23adb30c05dc2144e1ab419cddc583ef3e0eb6b"
+  },
+  "required_flags": {
+    "caller_ENABLE": 1,
+    "caller_PROVIDER_FRAME_CHECK": 1,
+    "provider_ENABLE": 1,
+    "provider_P2_READ_RETURN": 1,
+    "provider_CMD_MATCH_CUT": 0
+  },
+  "literal_pin_binding": {
+    "provider_issue_v": "root.p2_issue_v",
+    "provider_issue_ordinal": "root.p2_next_ordinal; independent from caller.provider_next_ordinal; checker compares on issue",
+    "rsp_v": "root.p2_return_v",
+    "rsp_data": "root.p2_return_data",
+    "rsp_ordinal": "root.p2_return_ordinal",
+    "rsp_frame": "root.p2_return_frame",
+    "provider_frame_valid": "actual protected held caller frame validity, also root.p2_owner_frame_valid; retained during warm drain",
+    "provider_frame": "actual accepted held CP/source full73, also root.p2_owner_frame73; no partial tuple alias",
+    "provider_busy": "root.pc_busy",
+    "provider_fault": "root.fault replicated32, preserving native fault",
+    "credit_return": "caller.credit_return -> root.p2_credit_return; sole actual coded landing freed seats",
+    "desc_v_r_row_n": "caller descriptors -> memory_control source-window request adapter -> existing root descriptors; actual desc_r handshake, no go1",
+    "calendar_notice": "caller.calendar_notice -> owner request adapter/calendar.notice"
+  },
+  "remaining_scope": [
+    "memory_control sole wrapper forwarding/request adapter consumes these literal pins",
+    "actual parent held frame through native and consumer drain",
+    "full expert numerical and actual loaded SS60/FF25 context still open",
+    "existing retained map/collector remain unchanged"
+  ]
+}

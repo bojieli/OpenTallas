@@ -1,0 +1,5 @@
+PHASE PASS pf=64 results=4 first_issue=10 first_result=33 last_result=39 first_latency_cycles=23 period_ps=833.333334
+PHASE PASS pf=384 results=24 first_issue=62 first_result=85 last_result=131 first_latency_cycles=23 period_ps=833.333334
+DESTINATION PASS no slot write
+PASS changed adapter 28 packed words exact; runtime rearm and header validation
+rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_adapter.sv:76: $finish called at 127500102 (1fs)

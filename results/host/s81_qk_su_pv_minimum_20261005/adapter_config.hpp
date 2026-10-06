@@ -1,0 +1,45 @@
+inline void configure(VDsromAttention& a,bool pv) {
+ if(pv) {
+ a.i_nout=512;
+ a.i_tiles=16;
+ a.i_k=640;
+ a.i_wbase=0;
+ a.i_ts=1;
+ a.i_ks=32;
+ a.i_js=0;
+ a.i_xbase=63936;
+ a.i_xks=1;
+ a.i_xjs=640;
+ a.i_xcs=5120;
+ a.i_hg=1;
+ a.i_ogs=256;
+ a.i_round=1;
+ a.i_obase=4642;
+ a.i_ots=1;
+ a.i_ojs=32;
+ a.i_mmode=1;
+ a.i_oen=1;
+ a.i_m=0;
+ } else {
+ a.i_nout=640;
+ a.i_tiles=40;
+ a.i_k=512;
+ a.i_wbase=0;
+ a.i_ts=512;
+ a.i_ks=1;
+ a.i_js=0;
+ a.i_xbase=55744;
+ a.i_xks=1;
+ a.i_xjs=512;
+ a.i_xcs=4096;
+ a.i_hg=1;
+ a.i_ogs=320;
+ a.i_round=1;
+ a.i_obase=3996;
+ a.i_ots=1;
+ a.i_ojs=40;
+ a.i_mmode=1;
+ a.i_oen=1;
+ a.i_m=0;
+ }
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Causal native I14 PP source packing repair; one pair only numerical measurement",
+  "root_cause": "Canonical payload inverse is word-major/row-minor; native PP issues FP8 halves within each row. Logical address161 paired X row0/k256 with weight row256/k0.",
+  "correction": "Opt-in released word binding uses existing segment_order/element_order image compiler. I14 launcher opts in explicitly. Address permutation is a bijection within each existing allocated pair/macro phase range; tensor/rank/fragment/scale/row/K retained.",
+  "result": "120 associations and 6 native FP32 row partials exact with same native archive and actual QR; full I14 comparison pending Cicero sole execution",
+  "analytical_cost": {
+    "added_MACs": 0,
+    "added_bytes": 0,
+    "added_boundary_bits": 0,
+    "added_routing_tracks": 0,
+    "added_replicas": 0,
+    "added_FF": 0,
+    "added_area_mm2": 0,
+    "added_hardware_edges": 0,
+    "physical_clock_qualification": false,
+    "host_mapping_overhead_not_hardware_timing": true
+  },
+  "next_consumer": "Cicero I14 only, same actual native I13 QR and released checkpoint; repaired existing be155 PQ/PB enrollment required, no model generation",
+  "preserved_failures": [
+    "R4 full I14 all ranks numerical failures",
+    "comparison-r1-exponent-width-parser.json (comparator used16 rather than actual10 exponent bits; trace unchanged, not arithmetic failure)"
+  ],
+  "source_sha256": {
+    "tools/dsrom_s81_qe_native_word_bridge.py": "0795fed806cfc15230650e54ef33eccf2995453670e67cdb1a3af2e33c28490d",
+    "tools/dsrom_s81_l20_source_words.py": "62eda422a2210c77dfb81a23af221b79c2d2303ae3d7bf56cdcfe038c8a7f516",
+    "tools/dsrom_s81_l20_qfield_run.py": "75c589936bfe4b5048df68aedc96c8db0d709b9218f4542af70fca367989aaf3",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+    "tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780"
+  }
+}

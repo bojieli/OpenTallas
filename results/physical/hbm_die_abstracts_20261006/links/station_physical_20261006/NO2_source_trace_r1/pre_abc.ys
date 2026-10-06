@@ -1,0 +1,9 @@
+read_verilog -sv /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv
+read_verilog -sv /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/rtl/common/ot_fwd_link_stage.sv
+read_verilog -sv /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv
+read_verilog -sv /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv
+read_verilog -sv /srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv
+hierarchy -check -top ot_hbm_native_frame_station -chparam ENABLE 1 -chparam NO 2
+synth -top ot_hbm_native_frame_station -flatten -noabc
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+write_json /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_source_trace_r1/pre_abc.json

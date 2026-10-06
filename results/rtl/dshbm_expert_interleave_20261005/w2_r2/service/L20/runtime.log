@@ -1,0 +1,12 @@
+SLOT k=0 first_line_ps=76352 gu_complete_ps=662784 native_first_ps=78018 native_last_ps=663617
+SLOT k=1 first_line_ps=132163 gu_complete_ps=684442 native_first_ps=136328 native_last_ps=685275
+SLOT k=2 first_line_ps=158819 gu_complete_ps=691106 native_first_ps=162984 native_last_ps=691939
+SLOT k=3 first_line_ps=185475 gu_complete_ps=696937 native_first_ps=189640 native_last_ps=697770
+SLOT k=4 first_line_ps=212964 gu_complete_ps=526172 native_first_ps=241286 native_last_ps=527005
+SLOT k=5 first_line_ps=387061 gu_complete_ps=708599 native_first_ps=394558 native_last_ps=709432
+BW rd_first_ps=37888 rd_last_ps=809984 ret_first_ps=71680 ret_last_ps=843776 n_ret=9408
+FIRST verdict=PASS
+- /srv/opentallas/repos/hubble-wg-service-09944fc4a/rtl/test/hbm_accel/tb_hbm_accel_wg_service.sv:301: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 9us; walltime 0.309 s; speed 29.034 us/s
+- Verilator: cpu 0.309 s on 1 threads; alloced 1022 MB

@@ -1,0 +1,362 @@
+{
+ "schema": "opentallas.dsrom-recovery.su-norm.measure.v1",
+ "generated_utc": "2026-10-06T05:43:29Z",
+ "clock_hz": 1200000000.0,
+ "add_latency": 6,
+ "rxs": 1,
+ "sxc": 1,
+ "freg": 1,
+ "wire": {
+  "HUB_IN": 33,
+  "HUB_OUT": 23,
+  "RW": 9,
+  "BW": 9,
+  "basis": "hub traverse once a chain: 22 / 15 slow stages x 748/504 um reach; RW / BW: the reducer's 6 slow cross-lane result stages x 1.5, each way"
+ },
+ "variants": {
+  "hc": {
+   "params": {
+    "N": 1024,
+    "D": 5120,
+    "HC": 1,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "exact": true,
+   "cases_full_shape": 15,
+   "golden_cases": 9,
+   "golden_layers": [
+    "L0",
+    "L20",
+    "L24",
+    "L3",
+    "head"
+   ],
+   "cases_rtl_N64": 15,
+   "checked_elements_full": 76800,
+   "checked_quant_blocks_full": 2400,
+   "cycles": {
+    "y_last": 305,
+    "q_last": 323,
+    "ro_last": -1,
+    "r": 256,
+    "q_after_y": 18
+   },
+   "us": {
+    "y_last": 0.25417,
+    "q_last": 0.26917,
+    "ro_last": -0.00083,
+    "r": 0.21333,
+    "q_after_y": 0.015
+   },
+   "floor_cycles": 323,
+   "floor_terms": {
+    "vm_read": 1,
+    "hub_in": 33,
+    "mix_4mul_3add_rnd": 24,
+    "square": 5,
+    "chunk_chain_7add": 42,
+    "tree_in_vector": 42,
+    "stream_and_vector_levels": 21,
+    "result_wire": 9,
+    "divide_by_D_divc": 9,
+    "add_eps": 6,
+    "rsqrt": 64,
+    "broadcast_wire": 9,
+    "scale_stream": 4,
+    "scale_mul_mul_rnd": 13,
+    "actquant_aq12": 18,
+    "hub_out": 23
+   },
+   "residual_over_floor": 0
+  },
+  "q": {
+   "params": {
+    "N": 256,
+    "D": 1280,
+    "HC": 0,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "exact": true,
+   "cases_full_shape": 10,
+   "golden_cases": 4,
+   "golden_layers": [
+    "L0",
+    "L20",
+    "L24",
+    "L3"
+   ],
+   "cases_rtl_N64": 10,
+   "checked_elements_full": 12800,
+   "checked_quant_blocks_full": 400,
+   "cycles": {
+    "y_last": 269,
+    "q_last": 287,
+    "ro_last": -1,
+    "r": 220,
+    "q_after_y": 18
+   },
+   "us": {
+    "y_last": 0.22417,
+    "q_last": 0.23917,
+    "ro_last": -0.00083,
+    "r": 0.18333,
+    "q_after_y": 0.015
+   },
+   "floor_cycles": 287,
+   "floor_terms": {
+    "vm_read": 1,
+    "hub_in": 33,
+    "square": 5,
+    "chunk_chain_7add": 42,
+    "tree_in_vector": 30,
+    "stream_and_vector_levels": 21,
+    "result_wire": 9,
+    "divide_by_D_divc": 9,
+    "add_eps": 6,
+    "rsqrt": 64,
+    "broadcast_wire": 9,
+    "scale_stream": 4,
+    "scale_mul_mul_rnd": 13,
+    "actquant_aq12": 18,
+    "hub_out": 23
+   },
+   "residual_over_floor": 0
+  },
+  "kv": {
+   "params": {
+    "N": 512,
+    "D": 512,
+    "HC": 0,
+    "RD": 64,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "exact": true,
+   "cases_full_shape": 10,
+   "golden_cases": 4,
+   "golden_layers": [
+    "L0",
+    "L20",
+    "L24",
+    "L3"
+   ],
+   "cases_rtl_N64": 10,
+   "checked_elements_full": 5120,
+   "checked_quant_blocks_full": 160,
+   "cycles": {
+    "y_last": 250,
+    "q_last": 282,
+    "ro_last": 264,
+    "r": 205,
+    "q_after_y": 32
+   },
+   "us": {
+    "y_last": 0.20833,
+    "q_last": 0.235,
+    "ro_last": 0.22,
+    "r": 0.17083,
+    "q_after_y": 0.02667
+   },
+   "floor_cycles": 282,
+   "floor_terms": {
+    "vm_read": 1,
+    "hub_in": 33,
+    "square": 5,
+    "chunk_chain_7add": 42,
+    "tree_in_vector": 36,
+    "stream_and_vector_levels": 0,
+    "result_wire": 9,
+    "divide_by_D_divc": 9,
+    "add_eps": 6,
+    "rsqrt": 64,
+    "broadcast_wire": 9,
+    "scale_stream": 0,
+    "scale_mul_mul_rnd": 13,
+    "rope_mul6_add5_rnd": 14,
+    "actquant_aq12": 18,
+    "hub_out": 23
+   },
+   "residual_over_floor": 0
+  }
+ },
+ "runs": {
+  "hc_dpi_N1024": {
+   "status": "pass",
+   "params": {
+    "N": 1024,
+    "D": 5120,
+    "HC": 1,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "dpi",
+   "rows": 15,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "hc_rtl_N64": {
+   "status": "pass",
+   "params": {
+    "N": 64,
+    "D": 5120,
+    "HC": 1,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "rtl",
+   "rows": 15,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "kv_dpi_N512": {
+   "status": "pass",
+   "params": {
+    "N": 512,
+    "D": 512,
+    "HC": 0,
+    "RD": 64,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "dpi",
+   "rows": 10,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "kv_rtl_N64": {
+   "status": "pass",
+   "params": {
+    "N": 64,
+    "D": 512,
+    "HC": 0,
+    "RD": 64,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "rtl",
+   "rows": 10,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "q_dpi_N256": {
+   "status": "pass",
+   "params": {
+    "N": 256,
+    "D": 1280,
+    "HC": 0,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "dpi",
+   "rows": 10,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "q_rtl_N64": {
+   "status": "pass",
+   "params": {
+    "N": 64,
+    "D": 1280,
+    "HC": 0,
+    "RD": 0,
+    "QUANT": 1,
+    "RXS": 1,
+    "LA": 6,
+    "SXC": 1,
+    "FREG": 1,
+    "RW": 9,
+    "BW": 9,
+    "HUB_IN": 33,
+    "HUB_OUT": 23
+   },
+   "fp": "rtl",
+   "rows": 10,
+   "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  }
+ },
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+  "rtl/test/sim_hdc_v41x_fastfp_wrap.sv": "c75679080901259e29aa150a804927d6f5e0934ebf2dcc2cf7be09644f2f8459",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+  "rtl/test/sim_hdc_fp32_f12_dpi_tops.sv": "863a6af4522f3677fc8e196e1a60c3082ff21d35e0539344e6b87461e521184b",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv": "6ec0843db11721a81d6049047f04e9d8552157d32b8d0344dcaaef7b34386cc9",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp": "c00bcabe9e0cfdbb1f01ea410819996c85acdfc1daf1edd8c50e85c8a486f974",
+  "rtl/test/sim_hdc_fp32_lat_tops.sv": "4f8fbce86ce9adb2b90aee5fd08640026d4bcce5546908eddb7813d2000dc23e",
+  "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
+  "rtl/test/sim_dsrom_fp32_add_l6_dpi.sv": "11fae84900616ad993513b319366beb0f44637b3be420caaa9c98ddd652b7fc2",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "da8017e7d28af8846ab5fc01eb70cc412b12c7ac024586d0838d206caf9057fb",
+  "rtl/test/tb_dsrom_su_norm.sv": "b895d59530a5c00c5ee33884e732ada3e6399cc2bfa0e836cf58144060677ae8"
+ },
+ "tool_sha256": "8af4ca463cb0ef4aba7b11b0fe0d7207b27cd5f283f34c493ac741116b5d28f3"
+}

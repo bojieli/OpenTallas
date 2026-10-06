@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.wfc.canonical_active_gate.prepared.v1",
+  "top": "tb_wfc_canonical_stage",
+  "ENABLE": 1,
+  "STRUCTURAL": 1,
+  "SOURCE": 0,
+  "MAXU": 866,
+  "seed_configs": 1,
+  "nominal": "independent 41word write/47flit output gold; canonical admission,668 literal command takes,192 retirements, actual ACK",
+  "negative": "second real accepted owner, early final fence refusal; warm owner/config quarantine and fullVMhighword preservation",
+  "prior_component_gates_reused": [
+    "d1a5fbefc",
+    "0d27741b0",
+    "baed7ff2a"
+  ],
+  "bench_parser_only_exit": 0,
+  "bench_parser_scope": "temporary stub declarations, no active controller/producers/memory elaboration or execution",
+  "bash_syntax_exit": 0,
+  "active_compile_launched": false,
+  "active_runtime_launched": false,
+  "physical_qualified": false,
+  "source_sha256": {
+    "rtl/test/dsrom_wavefront/tb_wfc_canonical_stage.sv": "2fbc9829fb5eb6e05b79d9d2c8f528dafe9ccdae91a57d43084c6161923d702c",
+    "tools/dsrom_wfc_canonical_exact.sh": "34a580e1e753b4627883631a2553f0e6ad57d1518e6c83b20554feb3d422bf90"
+  },
+  "hold_lifetime_checks": "canonical result tuple plus output valid/data/last; nominal faults fail at first cycle"
+}

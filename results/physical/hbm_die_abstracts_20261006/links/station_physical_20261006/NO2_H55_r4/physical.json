@@ -1,0 +1,256 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T05:48:55.268001+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 18776.385,
+    "block": "ot_hbm_station_NO2_H55",
+    "cells": 124818,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk_sm",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1,
+      "NO": 2
+    },
+    "sources": [
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv",
+        "sha256": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+        "size_bytes": 11253
+      },
+      {
+        "path": "rtl/common/ot_fwd_link_stage.sv",
+        "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+        "size_bytes": 1611
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+        "sha256": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+        "size_bytes": 1973
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv",
+        "sha256": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+        "size_bytes": 7364
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv",
+        "sha256": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+        "size_bytes": 3472
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_station_NO2_H55.sv",
+        "sha256": "d2a9f42148e17dc8b2767577b1ce0ce1096919cd2b70a4d6b6b81751398ca8ae",
+        "size_bytes": 1374
+      }
+    ],
+    "top": "ot_hbm_station_NO2_H55"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nPL-1002] Placed Cell Area            10113.4617\n[INFO GPL-1003] Available Free Area         16953.6969\n[INFO GPL-1004] Minimum Feasible Density        0.6000 (cell_area / free_area)\n[INFO GPL-1006]   Suggested Target Densities:\n[INFO GPL-1007]     - For 90% usage of free space: 0.6628\n[INFO GPL-1008]     - For 80% usage of free space: 0.7457\n[INFO GPL-1014] Final placement area: 10113.46 (+0.00%)\nTook 13 seconds: global_placement -skip_io -density 0.6300000226497651 -pad_left 0 -pad_right 0\nDesign area 9443 um^2 56% utilization.\nwrite_db /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_1_place_gp_skip_io.odb\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n3_1_place_gp_skip_io      .odb           23            500 8caae87572ba124c5d38\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement\nRunning io_placement.tcl, stage 3_2_place_iop\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_1_place_gp_skip_io.odb\nread_sdc /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/2_floorplan.sdc\nTook 7 seconds: read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/2_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nplace_pins -hor_layers M4 -ver_layers M5\nFound 0 macro blocks.\nUsing 2 tracks default min distance between IO pins.\n[INFO PPL-0044] Pin group: [ clk_sm in_r in_v por_n release_r ... ]\n[INFO PPL-0044] Pin group: [ fclk_o ]\n[ERROR PPL-0024] Number of IO pins (7795) exceeds maximum number of available positions (6912). Increase the die perimeter from 669.42um to 748.32um.\nError: io_placement.tcl, 21 PPL-0024\n\nElapsed time: 0:00.06[h:]min:sec. CPU time: user 0.03 sys 0.02 (99%). Peak memory: 24336KB.\nElapsed time: 0:00.05[h:]min:sec. CPU time: user 0.03 sys 0.02 (99%). Peak memory: 24824KB.\nElapsed time: 0:09.07[h:]min:sec. CPU time: user 8.64 sys 0.43 (99%). Peak memory: 581556KB.\nElapsed time: 4:36.62[h:]min:sec. CPU time: user 908.84 sys 803.43 (618%). Peak memory: 667412KB.\nElapsed time: 0:11.19[h:]min:sec. CPU time: user 10.91 sys 0.28 (100%). Peak memory: 405836KB.\nElapsed time: 0:10.87[h:]min:sec. CPU time: user 10.60 sys 0.27 (100%). Peak memory: 369632KB.\nElapsed time: 0:11.51[h:]min:sec. CPU time: user 11.17 sys 0.33 (99%). Peak memory: 415704KB.\nElapsed time: 0:23.67[h:]min:sec. CPU time: user 150.61 sys 0.55 (638%). Peak memory: 512260KB.\nElapsed time: 0:11.08[h:]min:sec. CPU time: user 10.80 sys 0.28 (99%). Peak memory: 416704KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_hbm_station_NO2_H55_asap7_Gauss_NO2_H55/base/3_2_place_iop.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T05:42:52.827504+00:00",
+  "git": {
+    "commit": "b49aac2ebaeb1638867c158ef04e18dde60198c7",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? tools/__pycache__/"
+    ]
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_station_NO2_H55",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv",
+      "--source",
+      "rtl/common/ot_fwd_link_stage.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_station_NO2_H55.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "NO=2",
+      "--clock-port",
+      "clk_sm",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--hold-margin-ns",
+      "0.01",
+      "--core-utilization",
+      "55",
+      "--place-density",
+      "0.6",
+      "--stages",
+      "synth,pnr",
+      "--keep-heavy-artifacts",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "CORE_ASPECT_RATIO=0.25",
+      "--orfs-var",
+      "SDC_FILE=/work/source_local.sdc",
+      "--step-tcl",
+      "PRE_CTS=physical/rom_clock/fwd_forwarded_subtree.tcl",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "Gauss_NO2_H55",
+      "--output",
+      "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r4/physical.json",
+      "--pin-region",
+      "^(clk_sm|por_n|in_.*|release_.*)$=left",
+      "--pin-region",
+      "^(fclk_o|out_.*|ACK_.*)$=right",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r4/work"
+    ],
+    "driver": {
+      "commit": "b49aac2ebaeb1638867c158ef04e18dde60198c7",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.333333,
+    "cell_area_um2": 18776.385,
+    "cell_count": 124818,
+    "cell_types_used": 38,
+    "chip_area_um2": 9393.17958,
+    "combinational_cell_count": 56489,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 62413,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "0bbf1a5b873256d635fd1bbe23450442c8d73382b2f4aeafb356a05d039e7b5a",
+      "raw_netlist_sha256": "0bbf1a5b873256d635fd1bbe23450442c8d73382b2f4aeafb356a05d039e7b5a",
+      "signed_declarations_stripped": 0
+    },
+    "reused_actual_synthesis": {
+      "directory": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_synth_r1/work",
+      "original_mapped_sha256": "1500f9ead64c8c390d68ce52df40e957687da4f7a2d983ef05597822f494f6b7",
+      "selected_mapped_sha256": "0bbf1a5b873256d635fd1bbe23450442c8d73382b2f4aeafb356a05d039e7b5a",
+      "source_record_sha256": "aa88d3d296157af069dafc8a6f222911e3b989171e3087bf352331e89ca178a3",
+      "variant_transform": "unique top module name only; all cells/nets/ports/connectivity and attributes retained"
+    },
+    "sequential_area_um2": 2240.0,
+    "sequential_cell_count": 5916,
+    "unmapped_cell_types": [
+      "ot_fwd_clk_inv",
+      "ot_hbm_native_frame_station",
+      "submodules"
+    ]
+  },
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

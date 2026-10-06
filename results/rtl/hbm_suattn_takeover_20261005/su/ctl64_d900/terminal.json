@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.hbm.su.c12.clock_candidate_terminal.v1",
+  "route": "ctl64_d900",
+  "host": "ot-epyc1tb",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch/claude/hbm-su-c12/src",
+  "original_physical_status": "error",
+  "signoff_ss_ff": false,
+  "final_extracted_route_available": false,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "adopted": false,
+  "note": "Remaining existing controller route also ended at CTS. Original error/source/logs/partialcheckpoint hashes retained. No new density recipe; successor depends on actual hold classes/clock relations plus composed exact latency and area."
+}

@@ -1,0 +1,57 @@
+{
+  "status": "ACTUAL_NUMERIC_CONSUMER_BOUND_IN_PARENT_WRAPPER_SOURCE",
+  "source_paths": {
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_integrated_minimum_parent.sv": "d8d46f5f8c386aa7524ae6408c834d2b3d3758c42629213bf2ef2728ddd42239",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp": "f9ab2a848d8397af84961cf5968e27c5192f28a48380b0d6f34cfb21306d5753",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_inputs.inc": "e2ad92cd588cc3523a74c238b4b661e15b9d976cd12e15de221887886fd41992",
+    "physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_formatter_continuation.inc": "c23eaaa78f0eb21195d128f895c916e3b23e89b67a04323022c81b9cc9bc3e20",
+    "physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_formatter_fixture.py": "0ca80f05c7371cb9e5572488d3d0f26639aa457bfef8c487d678621148b2bd08",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv": "f12d4769cf3c72542053fb8bb9863a113a74f926cf79b5ce5bcdc7ebd14a26a1"
+  },
+  "parent_path": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+  "parent_sha256": "5523f42902d0f762883a210b0102a21344bf40f833ed91932e5b99358e6d557c",
+  "parent_owner_source": "50f8356dd",
+  "consumer_owner_source": "28aa702c8",
+  "source_checks": {
+    "literal_consumer_ports_bound_once": 42,
+    "CPP_wrapper_members": 288,
+    "production_geometry_parameters_forwarded": [
+      "FORMATTER_ENTRY_PC",
+      "FORMATTER_SCORE_SOURCE",
+      "FORMATTER_ID_SOURCE",
+      "FORMATTER_ARENA_BASE",
+      "FORMATTER_ARENA_LIMIT",
+      "FORMATTER_SINK_BASE",
+      "FORMATTER_SINK_LIMIT",
+      "FORMATTER_CAPACITY_BYTES"
+    ],
+    "actual_live_writer_inputs_forwarded_unchanged": false,
+    "Python_AST_syntax": true,
+    "independent_final_reference_SHA": true,
+    "compile": false,
+    "runtime": false,
+    "actual_live_writer_inputs_preserved_union_actual_actor_intervals": true,
+    "both_source_reverse_handshake_sides_gated_actual_adapter_drain": true,
+    "diff_whitespace": true
+  },
+  "numeric_enable_default": 0,
+  "actual_routes": {
+    "query": "consumer85/TOKEN17 -> helper; ready fixture_formatter_pair_r",
+    "reply": "helper599/full73 -> consumer; actual child ready -> helper",
+    "sink": "child649 -> parent gather; actual parent637 -> child",
+    "reverse": "child full73/reverse/ACKdrained -> actual parent",
+    "capacity": "helper accepted checked/exclusive book and same-frame lease",
+    "numeric_start": "real book/arena/formatter lease plus actual6144 accepted arena returns"
+  },
+  "sink_observer": "actual parent rsp_v/payload plus actual selected child sink_rsp_r",
+  "independent_reference_sha256": "fa5fd356d42ffeb6aae1d8eea2fd43f65192b27ba7bbffe054461fce034df19d",
+  "jobs_launched": 0,
+  "passing_gates_replayed": 0,
+  "full_token_qualified": false,
+  "physical_qualified": false,
+  "execution_pending": [
+    "Noether all96 native publications",
+    "Lorentz matching committed graph compile/link/runtime"
+  ],
+  "actual_internal_writer_hook_review_owner": "Gibbs provided actual lifetime hooks: nonreplay normal W15, nonnative HBM SFU; native norm CP read-only/SRAM result; external writer intervals conservatively unioned"
+}

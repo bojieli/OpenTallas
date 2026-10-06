@@ -6,6 +6,8 @@ Canonical list of every third-party figure the repository uses (121 entries, 13 
 
 Topical views: [acceptance](../speculative/third_party_acceptance_20261004/README.md), [GPU baselines](../measured/gpu_third_party_20261004/README.md), [vendor assumption check](../arch/vendor_assumption_check_20261004/README.md).
 
+**Owner decision 2026-10-05:** DeepSeek-V4.1 composition default tau = 4.159, the owner 6-class workload blend (harmonic, greedy, gamma 5) in results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; the published V4.1 value 3.8879 and the published V4.1 gamma-5 range 3.43-4.32 are kept as a SENSITIVITY (OT_TAU_SOURCE=third_party). Qwen3-8B keeps the third-party derived 3.1445. Reason: OWNER: a single GSM8K dataset (the 3.8879 primary) makes no sense as the headline workload, and several published sources are V4-Flash, not V4.1.
+
 | id | new | class | title | used by |
 |---|---|---|---|---|
 | `sct:r-sue` |  | production spec | [Broadcom, Scale-Up Ethernet Framework Specification, Scale-Ethernet-RM104, 26 Sep 2025, Appendix A, Figure 22](https://docs.broadcom.com/doc/scale-up-ethernet-framework) | 3 |

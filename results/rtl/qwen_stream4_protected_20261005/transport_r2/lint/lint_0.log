@@ -1,0 +1,233 @@
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:188:43: Cell has missing pin: 'qi'
+  188 |         ot_qwen_s4_checked_state #(.W(4)) u_ptr(.clk(clk),.por_n(cold_por_n),.en(!c_fault),
+      |                                           ^~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:192:49: Cell has missing pin: 'qi'
+  192 |             ot_qwen_s4_checked_state #(.W(290)) u_cache(.clk(clk),.por_n(cold_por_n),.en((put||clear)&&!c_fault),
+      |                                                 ^~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:234:40: Cell has missing pin: 'qi'
+  234 |     ot_qwen_s4_checked_state #(.W(20)) u_cs(.clk(clk),.por_n(cold_por_n),.en(!cs_bad),.d(cs_next),.q(cs),.bad(cs_bad));
+      |                                        ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:235:40: Cell has missing pin: 'qi'
+  235 |     ot_qwen_s4_checked_state #(.W(42)) u_root(.clk(clk),.por_n(cold_por_n),.en(!c_fault),.d(root_next),.q(root),.bad(root_bad));
+      |                                        ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:236:40: Cell has missing pin: 'qi'
+  236 |     ot_qwen_s4_checked_state #(.W(20)) u_bs(.clk(clk),.por_n(cold_por_n),.en(!bs_bad),.d(bs_next),.q(bs),.bad(bs_bad));
+      |                                        ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:240:44: Cell has missing pin: 'qi'
+  240 |         ot_qwen_s4_checked_state #(.W(15)) u_ticket(.clk(clk),.por_n(cold_por_n),.en((fill||clear)&&!c_fault),
+      |                                            ^~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:250:44: Cell has missing pin: 'qi'
+  250 |         ot_qwen_s4_checked_state #(.W(29)) u_forward_meta(.clk(clk),.por_n(cold_por_n),.en((ff||fc||fdone)&&!b_fault),
+      |                                            ^~~~~~~~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_stack_transport.sv:261:44: Cell has missing pin: 'qi'
+  261 |         ot_qwen_s4_checked_state #(.W(10)) u_return_meta(.clk(clk),.por_n(cold_por_n),.en((rf||rc||rdone)&&!c_fault),
+      |                                            ^~~~~~~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:196:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:44:39: Cell has missing pin: 'qi'
+   44 |     ot_qwen_s4_checked_state #(.W(7)) u_cs(.clk(clk),.por_n(por_n),.en(!cb),
+      |                                       ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:210:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:48:64: Cell has missing pin: 'retired_source'
+   48 |     ot_qwen_s4_protected_ring #(.WIDTH(30),.DEPTH(4),.KIND(3)) u_desc(
+      |                                                                ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:210:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:25: ... Location of port declaration
+   19 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:48:64: Cell has missing pin: 'retired_source_valid'
+   48 |     ot_qwen_s4_protected_ring #(.WIDTH(30),.DEPTH(4),.KIND(3)) u_desc(
+      |                                                                ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:210:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:20:17: ... Location of port declaration
+   20 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:53:63: Cell has missing pin: 'retired_source'
+   53 |     ot_qwen_s4_protected_ring #(.WIDTH(3),.DEPTH(4),.KIND(4)) u_go(
+      |                                                               ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:210:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:25: ... Location of port declaration
+   19 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_control.sv:53:63: Cell has missing pin: 'retired_source_valid'
+   53 |     ot_qwen_s4_protected_ring #(.WIDTH(3),.DEPTH(4),.KIND(4)) u_go(
+      |                                                               ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:210:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:20:17: ... Location of port declaration
+   20 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:117:41: Cell has missing pin: 'qi'
+  117 |     ot_qwen_s4_checked_state #(.W(E1W)) u_e1(.clk(wr_clk),.por_n(por_n),.en(wr_online&&!wr_fault),.d(e1_next),.q(e1),.bad(e1_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:150:47: Cell has missing pin: 'qi'
+  150 |             ot_qwen_s4_checked_state #(.W(2)) u_control(.clk(wr_clk),.por_n(por_n),.en(1'b1),
+      |                                               ^~~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:188:51: Cell has missing pin: 'qi'
+  188 |             ot_qwen_s4_checked_state #(.W(2*P+2)) u_credit(.clk(wr_clk),.por_n(por_n),.en(1'b1),
+      |                                                   ^~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:216:41: Cell has missing pin: 'qi'
+  216 |     ot_qwen_s4_checked_state #(.W(D0W)) u_d0(.clk(rd_clk),.por_n(por_n),.en(advance),
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:223:41: Cell has missing pin: 'qi'
+  223 |     ot_qwen_s4_checked_state #(.W(D1W)) u_d1(.clk(rd_clk),.por_n(por_n),.en(advance),.d(d1_next),.q(d1),.bad(d1_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:229:41: Cell has missing pin: 'qi'
+  229 |     ot_qwen_s4_checked_state #(.W(D2W)) u_d2(.clk(rd_clk),.por_n(por_n),.en(advance),.d(d2_next),.q(d2),.bad(d2_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:257:41: Cell has missing pin: 'qi'
+  257 |     ot_qwen_s4_checked_state #(.W(D3W)) u_d3(.clk(rd_clk),.por_n(por_n),.en(advance&&!due_bad),.d(d3_next),.q(d3),.bad(d3_bad));
+      |                                         ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:216:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:49:124: Cell has missing pin: 'retired_source'
+   49 |     ot_qwen_s4_protected_ring #(.WIDTH(TAGW),.DEPTH(AD),.PC_ID(PC_ID),.KIND(2),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS)) u_a(
+      |                                                                                                                            ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:25: ... Location of port declaration
+   19 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:49:124: Cell has missing pin: 'retired_source_valid'
+   49 |     ot_qwen_s4_protected_ring #(.WIDTH(TAGW),.DEPTH(AD),.PC_ID(PC_ID),.KIND(2),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS)) u_a(
+      |                                                                                                                            ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:20:17: ... Location of port declaration
+   20 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:62:42: Cell has missing pin: 'qi'
+   62 |     ot_qwen_s4_checked_state #(.W(LP+3)) u_credit(.clk(hclk),.por_n(por_n),
+      |                                          ^~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:67:30: Cell has missing pin: 'qi'
+   67 |     ot_qwen_s4_checked_state u_room(.clk(clk),.por_n(por_n),.en(!c_fault),
+      |                              ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:70:122: Cell has missing pin: 'retired_source'
+   70 |     ot_qwen_s4_protected_ring #(.WIDTH(WW),.DEPTH(WB),.PC_ID(PC_ID),.KIND(1),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS)) u_w(
+      |                                                                                                                          ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:19:25: ... Location of port declaration
+   19 |     output wire [P-1:0] retired_source,
+      |                         ^~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:70:122: Cell has missing pin: 'retired_source_valid'
+   70 |     ot_qwen_s4_protected_ring #(.WIDTH(WW),.DEPTH(WB),.PC_ID(PC_ID),.KIND(1),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS)) u_w(
+      |                                                                                                                          ^~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_ring.sv:20:17: ... Location of port declaration
+   20 |     output wire retired_source_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:88:44: Cell has missing pin: 'qi'
+   88 |         ot_qwen_s4_checked_state #(.W(CW)) u_cache(.clk(hclk),.por_n(por_n),
+      |                                            ^~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:92:42: Cell has missing pin: 'qi'
+   92 |     ot_qwen_s4_checked_state #(.W(2*WP)) u_ptr(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                          ^~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:98:40: Cell has missing pin: 'qi'
+   98 |     ot_qwen_s4_checked_state #(.W(25)) u_head(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                        ^~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:104:42: Cell has missing pin: 'qi'
+  104 |     ot_qwen_s4_checked_state #(.W(WW+1)) u_completion(.clk(hclk),.por_n(por_n),.en(!h_fault),
+      |                                          ^~~~~~~~~~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:109:30: Cell has missing pin: 'qi'
+  109 |     ot_qwen_s4_checked_state u_cs(.clk(clk),.por_n(por_n),.en(!cb),
+      |                              ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_protected_pc.sv:111:30: Cell has missing pin: 'qi'
+  111 |     ot_qwen_s4_checked_state u_hs(.clk(hclk),.por_n(por_n),.en(!hb),
+      |                              ^~~~
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:228:1: ... note: In file included from 'ot_qwen_s4_transport_context.sv'
+                     /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_checked_state.sv:13:25: ... Location of port declaration
+   13 |     output wire [W-1:0] qi,
+      |                         ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647/src/rtl/hdc/kv/ot_qwen_s4_transport_context.sv:244:41: More than a 8k bit replication is probably wrong: 79875
+                                                                                                                                                : ... note: In instance 'ot_qwen_s4_transport_context'
+  244 |             h_cv,h_csec,h_cdata,h_ctag}='0;
+      |                                         ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.108 MB sources in 12 modules, into 0.013 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.021 s (elab=0.007, cvt=0.004, bld=0.000); cpu 0.021 s on 1 threads; alloced 13.648 MB

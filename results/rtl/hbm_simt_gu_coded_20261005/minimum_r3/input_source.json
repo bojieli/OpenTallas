@@ -1,0 +1,17 @@
+{
+  "scope": "retained real native GU FP32, cold op0; golden BF16 comparator only",
+  "live_full_chain": false,
+  "source_record_sha256": "3c54fa39cb6d4566447f05bc55f0e329dfe28b98d47524597a02b1e3640cb80a",
+  "archive_sha256": "0faf7c41dc99a98203de44099439013b7e31033d822420a5c3239d9a88543b6c",
+  "rows": 9216,
+  "spans": 768,
+  "experts": [
+    41,
+    65
+  ],
+  "files": {
+    "expected.hex": "490f64f85ee913dab9c66d93cd9c320ce594cb103d76014311f1be48acf8ebd9",
+    "actual.hex": "931195fc8b10bbeb1fdaabf72fb3a11cf6b47f182f331611b7ee2cfa10f355d4",
+    "descriptors.hex": "183b0078ef8494351245af19a4dd53386859bebea3721cb1f81700d76b7b13b7"
+  }
+}

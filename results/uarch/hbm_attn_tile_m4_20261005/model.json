@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.hbm-attn-tile-m4-model.v1",
+  "selected": false,
+  "selection": "Explicit physical top ot_attn_tile_m4 only; original ot_attn_tile_m remains unchanged",
+  "unified_model": "tools/uarch_model.py DEDICATED.attention",
+  "source_configuration": "96ed22b21 ot_attn_hgrp_m4 H16/HG4/TD32/NBANK5/PWORDS2/FPL4/FML6/F121",
+  "replicas": {
+    "head_groups_per_tile": 4,
+    "heads_per_group": 4,
+    "products_per_cycle_per_group": 128,
+    "products_per_cycle_per_tile": 512,
+    "engine_tiles": 64,
+    "engine_groups": 256
+  },
+  "wrapper": {
+    "new_ff_bits": 0,
+    "new_registered_edges": 0,
+    "new_mux_bits": 0,
+    "output_valid": "gov[0], same selected source ordering; no synthetic AND/ready",
+    "input_bits_excluding_clock_reset": 1618,
+    "input_replica_fanout": 4,
+    "static_gid_bits_per_group": 8,
+    "output_bits": 529,
+    "load_word_bytes_per_cycle": 128,
+    "packed_ib_bytes_per_cycle": 72,
+    "storage_bits_added": 0,
+    "logical_cell_area_added_um2": 0,
+    "physical_buffer_area_added_um2": null
+  },
+  "model_terms": {
+    "products_per_element": 512,
+    "latency_delta_vs_same_m4_leaf_cycles": 0,
+    "priced_cycles_record": "results/rtl/hbm_accel_fmax_inventory_20261004/attn/closure.json",
+    "added_cycles_per_attention_job_vs_same_configuration_as_built": 43,
+    "full640_job_cycles": {
+      "ilv0_pw1": 652,
+      "ilv1_repl2_ns2_pw2": 496
+    },
+    "probability_supply_pw2_validated": false
+  },
+  "boundaries": {
+    "shared_input_tracks_before_replication": 1618,
+    "leaf_input_branches": 6472,
+    "output_tracks": 529,
+    "routing_channel_capacity_tracks": null,
+    "physical_track_fit": false,
+    "parent_io_delay_fraction": 0.2,
+    "parent_input_output_budget_ps": 166.6,
+    "parent_false_path_io": false,
+    "leaf_macro_name": "ot_attn_hgrp_m4",
+    "macro_halo_um": [
+      5,
+      5
+    ]
+  },
+  "floorplan": {
+    "tile_footprint_um2": null,
+    "parent_slot_fit": false,
+    "area_basis": "Four actual routed m4 LEF footprints plus priced 5um halo and routed wiring; pending leaf terminal/abstract, no legacy area substitution",
+    "engine_distribution_wire_cycles": null,
+    "lane_tree_wire_cycles": null,
+    "staging_macro_inventory": null
+  },
+  "acceptance": {
+    "leaf_ss60_ff25_drv_required": true,
+    "tile_ss60_ff25_drv_required": true,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "gain_claim": null,
+    "physical_closed": false,
+    "full_engine_closed": false
+  },
+  "scope": "Source wiring correction only. No new arithmetic or rounding/reduction order. No tile/engine rate or area credit before actual closure and composition."
+}

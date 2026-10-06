@@ -1,0 +1,8 @@
+max_delay/setup group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_e.g_mac[0].g_l3.u_l0.g_p1s.pa_sh[14][3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1295.86 1300.60   -4.75 (VIOLATED)
+u_e.g_mac[0].g_l3.u_l0.g_p1s.pa_sh[0][3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1294.50 1295.09   -0.59 (VIOLATED)
+

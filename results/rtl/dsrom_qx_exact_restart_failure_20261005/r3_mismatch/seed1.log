@@ -1,0 +1,27 @@
+[947291000] %Fatal: tb_dsrom_qx_exact.sv:134: Assertion failed in tb_dsrom_qx_exact.seq_push: sequence mismatch key=8 cycle=947291 dut 3fcdda09400083 ref 3f73e432c00043
+%Error: /srv/opentallas-scratch/codex/noether-qx-exact-restart-r3-20261005/src/rtl/test/tb_dsrom_qx_exact.sv:134: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas-scratch/codex/noether-qx-exact-restart-r3-20261005/work/pos/Vtb_dsrom_qx_exact +seed=1"
+	User time (seconds): 18.36
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:18.36
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6264
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 536
+	Voluntary context switches: 1
+	Involuntary context switches: 25
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

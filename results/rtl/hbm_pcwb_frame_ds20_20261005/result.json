@@ -1,0 +1,40 @@
+{
+  "scope": "FRAME_DS20 parent component only; actualCP+thinjoin composition follows separately",
+  "source_commit": "4c210291d2d6755fa137e5939d4d7721f6904b0e",
+  "terminal_exit": 0,
+  "marker": "PASS_FRAME_DS20_ASSOCIATION",
+  "new_source_sha256": {
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_pcwb_owner_frame_ds20.sv": "271c0275eb777b379afcebf55c2b1406d796ee8bee6c8f6b4a438aab29393842",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_accel_pcwb_service_stack_frame_ds20.sv": "3a05c9b3414ae7c77cbae56f93f4f097d82213322500e798b76f43f534992c0f",
+    "rtl/hbm_accel/integration/frame_ds20_20261005/ot_hbm_pcwb_prepaid_column_frame_ds20.sv": "50973f56008ac5d14f112b116bcaca8b3f47afe82e8071fce5e64145468ee5e5"
+  },
+  "original_sha256_unchanged": {
+    "rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv": "f57291bf99101e430274d8a4bb9885880fa2b76e1745fe1f1db24d939be4f8ed",
+    "rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv": "002f06d542dc9d3df0b02fb8a5d9ecc370d445f569de429ad27571110762d66e",
+    "results/uarch/hbm_pcwb_actual_parent_20261005/model.json": "ff0eebb077c492e14113af345e9540c0f57ea4a123d47fcb256ddbad063bdc60",
+    "results/uarch/hbm_pcwb_parent_implementation_20261005/model_delta.json": "089930053b7c619a75a50bbfb5093683b46614d1f8477779dbfd3d0cce42996a"
+  },
+  "default_ENABLE": 0,
+  "default_FRAME_DS20": 0,
+  "default_CMD_MATCH_CUT": 0,
+  "DS20_owner": "job32/gen4/pos20/rank7/stack2, source CP fields, no legacyproducer/transport/IRS upcast",
+  "receipt_bits": 136,
+  "gate_scope": "one actual CMD1 PC+CA+native ownerframe+prepaid adapter; four WR, real heldtuple, debt release, wrongpos/wrongdie, wronggen receipt refusal, coldPOR, drainedgenwrap",
+  "not_tested": "wholeHA/token, complete32PC runtime, illegal rawdoorbell outsideCP20 input representability, independentwarm reset, extractedclock/PHY",
+  "lint": "default0/0 and ENABLE1/FRAME1/CMD1 exit0; no ownedlatches/combinationalcycles; inheritedwarnings retained",
+  "base_plus_delta_once_FF": 900566,
+  "legacy_model_immutable": true,
+  "whole_token_adopted": false,
+  "source_window": "actualjoin bound export requested Sagan to prevent oldframe use acrossnextdoorbell CDC; no fakepositive binding",
+  "artifact_sha256": {
+    "functional_r1/build.log": "64fda3e1058516d453e4db85f0f9bf9e0139c9dec6690e3f3b7a3c0d74c38a2b",
+    "functional_r1/default-lint.log": "e5cc58d824e5141582ae85712878f783f18cf4091eb79f671a37a676d3f1f80f",
+    "functional_r1/enabled-lint.log": "24b6791f7b59d5f80f2af59b46e54d96a0da7c0bdd16ed2c2d52cedf90433492",
+    "functional_r1/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "functional_r1/original_selection.json": "acc0536efb2e5bda1ec298cedbf84aa384e09431c1efcc640baa98f237e7a935",
+    "functional_r1/run.sh": "52d0eff9f136d538d14869b1829ad4217ff70a192897feca47cddc3a783432fe",
+    "functional_r1/runtime.log": "ca603bff0476c0a9ee2296028c431596e416e9d7514aab804255b6fdbd41d6ff",
+    "functional_r1/source.commit": "b636d50cfadf16e946b5a3466b532b188c2c30cdb8584ff9891658b713e686da",
+    "functional_r1/sources.f": "1b5d4e72db277010fc5ad318ce83103c5b53a03b468a4c3c200352b7fca0d421"
+  }
+}

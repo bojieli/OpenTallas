@@ -1,0 +1,22 @@
+[
+  {
+    "returncode": 2,
+    "finished": 1791281726.7267087,
+    "source_commit": "d0488d023 + unchanged mapped C21 objects with four existing capture outputs exposed",
+    "no_synthesis_or_golden_replay": true,
+    "scope": "reporting hook failure before physical placement; NOT SSFF/DRC",
+    "archive": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C22_checked_receivers/report_hook_failure_first",
+    "first_error": "[ERROR STA-0562] report_net -connections is not a known keyword or flag.",
+    "failed_hook_sha256": "ef738778c52d3c63ea04864d1c28178e11cbfbabc6219246292fc50e4d215d24"
+  },
+  {
+    "returncode": 2,
+    "finished": 1791281781.1687574,
+    "source_commit": "d0488d023 + unchanged mapped C21 objects with four existing capture outputs exposed",
+    "no_synthesis_or_golden_replay": true,
+    "scope": "reporting hook failure before physical placement; NOT SSFF/DRC",
+    "archive": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C22_checked_receivers/report_hook_failure_supply_prePDN",
+    "first_error": "Error: floorplan.tcl, 5 Unconnected receiver pin g_native_grant_receiver.reply_check$_SDFF_PN1_/VDD",
+    "failed_hook_sha256": "c027f85d8feb6ce0db24b4846b12d0df50ef469d07f1593da36f2b1c45a36a1a"
+  }
+]

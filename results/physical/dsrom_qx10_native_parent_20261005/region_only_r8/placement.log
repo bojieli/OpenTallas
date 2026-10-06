@@ -1,0 +1,221 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/region_only.tcl
+OT_QX10_REGION_ONLY_INVENTORY groups=2 parent=211245 engine=37202 movable=248447 unassigned=0 macros=4 density=0.6 all_fences_unchanged=1
+global_placement -skip_io -density 0.6 -pad_left 0 -pad_right 0
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 1038.096 237.600 ) um
+[INFO GPL-0016] Core area:                  243900.772 um^2
+[INFO GPL-0036] Movable instances area:      32955.218 um^2
+[INFO GPL-0037] Total instances area:        65034.017 um^2
+[INFO GPL-0035] Pin density area adjust:      3448.643 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             35528
+[INFO GPL-0007] Movable instances:                   0
+[INFO GPL-0008] Fixed instances:                 18980
+[INFO GPL-0009] Dummy instances:                 16548
+[INFO GPL-0010] Number of nets:                 251292
+[INFO GPL-0011] Number of pins:                 801229
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1040.260 239.760 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 1038.096 237.600 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                243900.772 um^2
+[INFO GPL-0017] Fixed instances area:       205663.483 um^2
+[INFO GPL-0018] Movable instances area:          0.000 um^2
+[INFO GPL-0019] Utilization:                     0.000 %
+[INFO GPL-0020] Standard cells area:             0.000 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qx10_parent
+[INFO GPL-0006] Number of instances:            221345
+[INFO GPL-0007] Movable instances:              211245
+[INFO GPL-0008] Fixed instances:                  9632
+[INFO GPL-0009] Dummy instances:                   468
+[INFO GPL-0010] Number of nets:                 251292
+[INFO GPL-0011] Number of pins:                 801229
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1040.260 239.760 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 525.096 237.600 ) um
+[INFO GPL-0014] Region name: qx10_parent.
+[INFO GPL-0015] Region area:                123120.052 um^2
+[INFO GPL-0017] Fixed instances area:        24790.666 um^2
+[INFO GPL-0018] Movable instances area:      27095.923 um^2
+[INFO GPL-0019] Utilization:                    27.556 %
+[INFO GPL-0020] Standard cells area:         27095.923 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qx10_engine
+[INFO GPL-0006] Number of instances:             42715
+[INFO GPL-0007] Movable instances:               37202
+[INFO GPL-0008] Fixed instances:                  5436
+[INFO GPL-0009] Dummy instances:                    77
+[INFO GPL-0010] Number of nets:                 251292
+[INFO GPL-0011] Number of pins:                 801229
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1040.260 239.760 ) um
+[INFO GPL-0013] Placement BBox: ( 527.256 44.550 ) ( 1038.096 195.210 ) um
+[INFO GPL-0014] Region name: qx10_engine.
+[INFO GPL-0015] Region area:                 76963.154 um^2
+[INFO GPL-0017] Fixed instances area:        34372.627 um^2
+[INFO GPL-0018] Movable instances area:       9307.938 um^2
+[INFO GPL-0019] Utilization:                    21.854 %
+[INFO GPL-0020] Standard cells area:          9307.938 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[WARNING GPL-0123] No placeable instances in the top-level region. Removing it.
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 0	Region center = 248447
+[INFO GPL-0033] ---- Initialize Nesterov Region: qx10_parent
+[INFO GPL-0023] Placement target density:       0.6000
+[INFO GPL-0024] Movable insts average area:      0.128 um^2
+[INFO GPL-0025] Ideal bin area:                  0.214 um^2
+[INFO GPL-0026] Ideal bin count:                575924
+[INFO GPL-0027] Total bin area:             123120.052 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,    512
+[INFO GPL-0029] Bin size (W * H):       0.511 *  0.460 um
+[INFO GPL-0030] Number of bins:                 524288
+[INFO GPL-0033] ---- Initialize Nesterov Region: qx10_engine
+[INFO GPL-0023] Placement target density:       0.6000
+[INFO GPL-0024] Movable insts average area:      0.250 um^2
+[INFO GPL-0025] Ideal bin area:                  0.417 um^2
+[INFO GPL-0026] Ideal bin count:                184564
+[INFO GPL-0027] Total bin area:              76963.154 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.998 *  0.589 um
+[INFO GPL-0030] Number of bins:                 131072
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+        0 |   0.9965 |  2.697428e+07 |   +0.00% |  3.43e-14 |  (qx10_parent)
+        0 |   0.9923 |  2.697428e+07 |   +0.00% |  7.55e-13 |  (qx10_engine)
+       10 |   0.9055 |  1.042932e+07 |  -61.34% |  5.59e-14 |  (qx10_parent)
+       10 |   0.9909 |  1.042932e+07 |  -61.34% |  1.23e-12 |  (qx10_engine)
+       20 |   0.9245 |  4.326617e+06 |  -58.51% |  9.11e-14 |  (qx10_parent)
+       20 |   0.9926 |  4.326617e+06 |  -58.51% |  2.00e-12 |  (qx10_engine)
+       30 |   0.9536 |  2.528400e+06 |  -41.56% |  1.48e-13 |  (qx10_parent)
+       30 |   0.9936 |  2.528400e+06 |  -41.56% |  3.26e-12 |  (qx10_engine)
+       40 |   0.9758 |  1.520308e+06 |  -39.87% |  2.42e-13 |  (qx10_parent)
+       40 |   0.9934 |  1.520308e+06 |  -39.87% |  5.32e-12 |  (qx10_engine)
+       50 |   0.9951 |  6.763952e+05 |  -55.51% |  3.94e-13 |  (qx10_parent)
+       50 |   0.9933 |  6.763952e+05 |  -55.51% |  8.66e-12 |  (qx10_engine)
+       60 |   0.9954 |  6.776516e+05 |   +0.19% |  6.41e-13 |  (qx10_parent)
+       60 |   0.9928 |  6.776516e+05 |   +0.19% |  1.41e-11 |  (qx10_engine)
+       70 |   0.9950 |  6.860729e+05 |   +1.24% |  1.04e-12 |  (qx10_parent)
+       70 |   0.9928 |  6.860729e+05 |   +1.24% |  2.29e-11 |  (qx10_engine)
+       80 |   0.9946 |  6.927367e+05 |   +0.97% |  1.70e-12 |  (qx10_parent)
+       80 |   0.9922 |  6.927367e+05 |   +0.97% |  3.73e-11 |  (qx10_engine)
+       90 |   0.9941 |  6.994302e+05 |   +0.97% |  2.76e-12 |  (qx10_parent)
+       90 |   0.9911 |  6.994302e+05 |   +0.97% |  6.08e-11 |  (qx10_engine)
+      100 |   0.9935 |  7.070347e+05 |   +1.09% |  4.50e-12 |  (qx10_parent)
+      100 |   0.9900 |  7.070347e+05 |   +1.09% |  9.89e-11 |  (qx10_engine)
+      110 |   0.9921 |  7.174659e+05 |   +1.48% |  7.32e-12 |  (qx10_parent)
+      110 |   0.9891 |  7.174659e+05 |   +1.48% |  1.61e-10 |  (qx10_engine)
+      120 |   0.9903 |  7.325783e+05 |   +2.11% |  1.19e-11 |  (qx10_parent)
+      120 |   0.9885 |  7.325783e+05 |   +2.11% |  2.62e-10 |  (qx10_engine)
+      130 |   0.9884 |  7.538009e+05 |   +2.90% |  1.93e-11 |  (qx10_parent)
+      130 |   0.9866 |  7.538009e+05 |   +2.90% |  4.25e-10 |  (qx10_engine)
+      140 |   0.9863 |  7.894120e+05 |   +4.72% |  3.14e-11 |  (qx10_parent)
+      140 |   0.9840 |  7.894120e+05 |   +4.72% |  6.90e-10 |  (qx10_engine)
+      150 |   0.9831 |  8.282273e+05 |   +4.92% |  5.09e-11 |  (qx10_parent)
+      150 |   0.9803 |  8.282273e+05 |   +4.92% |  1.12e-09 |  (qx10_engine)
+      160 |   0.9793 |  8.678195e+05 |   +4.78% |  8.26e-11 |  (qx10_parent)
+      160 |   0.9784 |  8.678195e+05 |   +4.78% |  1.82e-09 |  (qx10_engine)
+      170 |   0.9737 |  9.284047e+05 |   +6.98% |  1.34e-10 |  (qx10_parent)
+      170 |   0.9764 |  9.284047e+05 |   +6.98% |  2.94e-09 |  (qx10_engine)
+      180 |   0.9657 |  9.810730e+05 |   +5.67% |  2.16e-10 |  (qx10_parent)
+      180 |   0.9733 |  9.810730e+05 |   +5.67% |  4.76e-09 |  (qx10_engine)
+      190 |   0.9545 |  1.040876e+06 |   +6.10% |  3.50e-10 |  (qx10_parent)
+      190 |   0.9624 |  1.040876e+06 |   +6.10% |  7.70e-09 |  (qx10_engine)
+      200 |   0.9371 |  1.133147e+06 |   +8.86% |  5.65e-10 |  (qx10_parent)
+      200 |   0.9607 |  1.133147e+06 |   +8.86% |  1.24e-08 |  (qx10_engine)
+      210 |   0.9092 |  1.273477e+06 |  +12.38% |  9.06e-10 |  (qx10_parent)
+      210 |   0.9511 |  1.273477e+06 |  +12.38% |  1.99e-08 |  (qx10_engine)
+      220 |   0.8775 |  1.448806e+06 |  +13.77% |  1.45e-09 |  (qx10_parent)
+      220 |   0.9300 |  1.448806e+06 |  +13.77% |  3.19e-08 |  (qx10_engine)
+      230 |   0.8528 |  1.720593e+06 |  +18.76% |  2.29e-09 |  (qx10_parent)
+      230 |   0.9021 |  1.720593e+06 |  +18.76% |  5.04e-08 |  (qx10_engine)
+      240 |   0.8271 |  2.317303e+06 |  +34.68% |  3.49e-09 |  (qx10_parent)
+      240 |   0.8370 |  2.317303e+06 |  +34.68% |  7.67e-08 |  (qx10_engine)
+      250 |   0.8049 |  3.106032e+06 |  +34.04% |  5.23e-09 |  (qx10_parent)
+      250 |   0.7679 |  3.106032e+06 |  +34.04% |  1.15e-07 |  (qx10_engine)
+      260 |   0.7862 |  4.937793e+06 |  +58.97% |  7.03e-09 |  (qx10_parent)
+      260 |   0.6902 |  4.937793e+06 |  +58.97% |  1.55e-07 |  (qx10_engine)
+      270 |   0.7822 |  6.329508e+06 |  +28.18% |  9.79e-09 |  (qx10_parent)
+      270 |   0.5769 |  6.329508e+06 |  +28.18% |  2.15e-07 |  (qx10_engine)
+      280 |   0.7691 |  7.524227e+06 |  +18.88% |  1.40e-08 |  (qx10_parent)
+      280 |   0.4972 |  7.524227e+06 |  +18.88% |  3.08e-07 |  (qx10_engine)
+      290 |   0.7439 |  8.631169e+06 |  +14.71% |  2.02e-08 |  (qx10_parent)
+      290 |   0.4094 |  8.631169e+06 |  +14.71% |  4.43e-07 |  (qx10_engine)
+      300 |   0.7117 |  9.659731e+06 |  +11.92% |  2.94e-08 |  (qx10_parent)
+      300 |   0.3645 |  9.659731e+06 |  +11.92% |  6.46e-07 |  (qx10_engine)
+      310 |   0.6659 |  1.055969e+07 |   +9.32% |  4.33e-08 |  (qx10_parent)
+      310 |   0.3368 |  1.055969e+07 |   +9.32% |  9.15e-07 |  (qx10_engine)
+      320 |   0.6137 |  1.170785e+07 |  +10.87% |  6.26e-08 |  (qx10_parent)
+      320 |   0.2657 |  1.170785e+07 |  +10.87% |  1.23e-06 |  (qx10_engine)
+      330 |   0.6009 |  1.485910e+07 |  +26.92% |  7.30e-08 |  (qx10_parent)
+      330 |   0.1619 |  1.485910e+07 |  +26.92% |  1.38e-06 |  (qx10_engine)
+      340 |   0.6111 |  1.693390e+07 |  +13.96% |  8.98e-08 |  (qx10_parent)
+      340 |   0.1385 |  1.693390e+07 |  +13.96% |  1.63e-06 |  (qx10_engine)
+      350 |   0.5803 |  1.671404e+07 |   -1.30% |  1.36e-07 |  (qx10_parent)
+      350 |   0.1224 |  1.671404e+07 |   -1.30% |  2.28e-06 |  (qx10_engine)
+      360 |   0.4948 |  1.797651e+07 |   +7.55% |  1.95e-07 |  (qx10_parent)
+      360 |   0.1471 |  1.797651e+07 |   +7.55% |  3.02e-06 |  (qx10_engine)
+      370 |   0.4800 |  1.983052e+07 |  +10.31% |  2.50e-07 |  (qx10_parent)
+      370 |   0.1629 |  1.983052e+07 |  +10.31% |  3.68e-06 |  (qx10_engine)
+      373 |   0.0975 |  2.048386e+07 |          |  4.04e-06 | qx10_engine
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qx10_engine' placement finished at iteration 373
+[INFO GPL-1002] Placed Cell Area             9307.9378
+[INFO GPL-1003] Available Free Area         42590.5274
+[INFO GPL-1004] Minimum Feasible Density        0.2200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.2428
+[INFO GPL-1008]     - For 80% usage of free space: 0.2732
+[INFO GPL-1009]     - For 50% usage of free space: 0.4371
+      380 |   0.4215 |  2.029474e+07 |   +2.34% |  3.76e-07 |  (qx10_parent)
+      390 |   0.3791 |  2.039298e+07 |   +0.48% |  6.04e-07 |  (qx10_parent)
+      400 |   0.3435 |  2.046516e+07 |   +0.35% |  9.72e-07 |  (qx10_parent)
+      410 |   0.3166 |  2.044463e+07 |   -0.10% |  1.43e-06 |  (qx10_parent)
+      420 |   0.2921 |  2.045956e+07 |   +0.07% |  2.10e-06 |  (qx10_parent)
+      430 |   0.2666 |  2.045143e+07 |   -0.04% |  3.10e-06 |  (qx10_parent)
+      440 |   0.2420 |  2.044232e+07 |   -0.04% |  4.56e-06 |  (qx10_parent)
+      450 |   0.2182 |  2.043407e+07 |   -0.04% |  6.72e-06 |  (qx10_parent)
+      460 |   0.1996 |  2.041384e+07 |   -0.10% |  9.91e-06 |  (qx10_parent)
+      470 |   0.1743 |  2.041067e+07 |   -0.02% |  1.46e-05 |  (qx10_parent)
+      480 |   0.1504 |  2.041105e+07 |   +0.00% |  2.15e-05 |  (qx10_parent)
+      490 |   0.1303 |  2.041151e+07 |   +0.00% |  3.17e-05 |  (qx10_parent)
+      500 |   0.1125 |  2.041181e+07 |   +0.00% |  4.66e-05 |  (qx10_parent)
+      509 |   0.0997 |  2.041359e+07 |          |  6.87e-05 | qx10_parent
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qx10_parent' placement finished at iteration 509
+[INFO GPL-1002] Placed Cell Area            27095.9231
+[INFO GPL-1003] Available Free Area         98329.3862
+[INFO GPL-1004] Minimum Feasible Density        0.2800 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.3062
+[INFO GPL-1008]     - For 80% usage of free space: 0.3445
+[INFO GPL-1009]     - For 50% usage of free space: 0.5511
+[INFO GPL-1014] Final placement area: 36403.86 (+0.00%)
+Took 82 seconds: global_placement -skip_io -density 0.6 -pad_left 0 -pad_right 0
+source /work/hooks/region_only.tcl
+OT_QX10_REGION_ONLY_INVENTORY groups=2 parent=211245 engine=37202 movable=248447 unassigned=0 macros=4 density=0.6 all_fences_unchanged=1
+Design area 65034 um^2 27% utilization.
+write_db /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/3_1_place_gp_skip_io.odb
+Elapsed time: 1:25.44[h:]min:sec. CPU time: user 174.90 sys 0.53 (205%). Peak memory: 1385548KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb           85           1353 89c2f4d7b08eebdb49e9

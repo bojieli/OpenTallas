@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "su_norm",
+ "verdict": "PENDING",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 833.0,
+  "routed": {
+   "divc": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_norm/route/corner_sta_divc.json",
+    "ss_setup_ps": 21.99,
+    "ff_hold_ps": 7.7
+   }
+  },
+  "prelayout_screen": {},
+  "closes": true,
+  "basis": "routed minimum components (run_abi3_physical asap7, 0.833 ns, SS setup 60 ps / FF hold 25 ps, FP unit tops kept as hierarchy) + tools/w18/corner_sta.py; pre-layout screens listed for reference"
+ },
+ "nodes": {
+  "*.attn.hc_pre": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.quant": {
+   "us": 0.23,
+   "source": "ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm -> FP8 act-quant 276 cycles at 1.2 GHz from the vector-memory read to the last quantised block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilator, full shape with DPI FP stand-ins and N 64 with the bit-level FP RTL); equals its floor",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.hc_pre": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.norm.scale": {
+   "us": 0.215,
+   "source": "ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm 258 cycles at 1.2 GHz from the vector-memory read to the last normalised vector landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilator, full shape with DPI FP stand-ins and N 64 with the bit-level FP RTL); equals its floor",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.ffn.quant": {
+   "us": 0.015,
+   "source": "ot_dsrom_su_norm hc: the FP8 act-quant behind the normalised vector (ffn.norm.scale): 18 cycles at 1.2 GHz (ot_dsrom_aq12, 32 instances), exact",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.hc_pre": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "head.norm.scale": {
+   "us": 0.215,
+   "source": "ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm 258 cycles at 1.2 GHz from the vector-memory read to the last normalised vector landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 + head golden 1M operands + 6 stress rows (Verilator, full shape with DPI FP stand-ins and N 64 with the bit-level FP RTL); equals its floor",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.q_quant": {
+   "us": 0.20833,
+   "source": "ot_dsrom_su_norm q (N 256, D 1280): q RMSNorm -> FP8 act-quant 250 cycles at 1.2 GHz from the vector-memory read to the last quantised block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilator, full shape with DPI FP stand-ins and N 64 with the bit-level FP RTL); equals its floor",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.sumsq": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.rsqrt": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_norm.scale": {
+   "us": 0.0,
+   "source": "covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)",
+   "cls": "measured",
+   "kind": "fused_fast"
+  },
+  "*.attn.kv_rope_qdq": {
+   "us": 0.20167,
+   "source": "ot_dsrom_su_norm kv (N 512, D 512): kv RMSNorm -> RoPE tail -> FP8 QDQ 242 cycles at 1.2 GHz from the vector-memory read to the last QDQ block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilator, full shape with DPI FP stand-ins and N 64 with the bit-level FP RTL); equals its floor",
+   "cls": "measured",
+   "kind": "fused_fast"
+  }
+ },
+ "measurement": {
+  "record": "results/rtl/dsrom_recovery_20261004/su_norm/measure.json",
+  "old_us_per_occurrence": {
+   "attn hc_pre+norm.*+quant": 0.7554,
+   "ffn hc_pre+norm.*": 0.5221,
+   "q_norm.*+q_quant": 0.4888,
+   "kv_norm.*+kv_rope_qdq": 0.5099
+  },
+  "measured_cycles": {
+   "hc": {
+    "y_last": 258,
+    "q_last": 276,
+    "ro_last": -1,
+    "r": 211,
+    "q_after_y": 18
+   },
+   "q": {
+    "y_last": 232,
+    "q_last": 250,
+    "ro_last": -1,
+    "r": 185,
+    "q_after_y": 18
+   },
+   "kv": {
+    "y_last": 214,
+    "q_last": 242,
+    "ro_last": 224,
+    "r": 171,
+    "q_after_y": 28
+   }
+  },
+  "floor_cycles": {
+   "hc": 276,
+   "q": 250,
+   "kv": 242
+  }
+ },
+ "default": "opt-in: applied only in the recovery baseline; the SU (ot_hdc_v41x_vec) and its lowering are unchanged",
+ "note": ""
+}

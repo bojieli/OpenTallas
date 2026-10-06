@@ -1,0 +1,33 @@
+actual receiver cap extraction failed ss
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/route_worker.py", line 12, in <module>
+    subprocess.run(['python3',f'{rel}/measure_receiver.py','--mapped',str(a.cache/'mapped.v'),'--out',str(load_dir),'--src',str(root)],cwd=root,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['python3', 'physical/hbm_die_abstracts_20261006/links/station_physical_20261006/measure_receiver.py', '--mapped', '/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_synth_r1/work/mapped.v', '--out', '/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_synth_r1/measured_receiver_sta_r2', '--src', '/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_physical_r3']' returned non-zero exit status 1.
+Command exited with non-zero status 1
+	Command being timed: "python3 physical/hbm_die_abstracts_20261006/links/station_physical_20261006/route_worker.py --NO 2 --orientation H --util 55 --cache /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_synth_r1/work --run /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO2_H55_r2"
+	User time (seconds): 0.14
+	System time (seconds): 0.05
+	Percent of CPU this job got: 7%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.53
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 32972
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 10490
+	Voluntary context switches: 693
+	Involuntary context switches: 4
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

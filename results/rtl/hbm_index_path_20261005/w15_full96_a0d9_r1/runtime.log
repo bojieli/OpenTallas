@@ -1,0 +1,11 @@
+PASS_FULL96_INPUT reads=12288 loads=6144 IDs=49152 rank95reads=128 cycle=519167
+PASS_FULL96_SELECT512 first=999424 last=999935 W15cycles=9278 cycle=528446
+PASS_FULL96_PUBLICATION_REVERSE_HELD stalls=2432
+PASS_FULL96_FOREIGN_NOACK kind=1
+PASS_FULL96_FOREIGN_NOACK kind=2
+PASS_FULL96_FOREIGN_NOACK kind=3
+PASS_W15_FULL96_512_COMPONENT_ONLY
+- rtl/test/hbm_accel/tb_hbm_index_w15_full96.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 547.660 s; speed 9.650 us/s
+- Verilator: cpu 547.596 s on 1 threads; allocated 11 MB
