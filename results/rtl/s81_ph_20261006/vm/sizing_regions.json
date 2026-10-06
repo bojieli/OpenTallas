@@ -1,0 +1,63 @@
+{
+ "head": [
+  "H",
+  "PF",
+  "RS",
+  "SS",
+  "T",
+  "X",
+  "XN"
+ ],
+ "head_el": 51296,
+ "layers": {
+  "swa (0)": {
+   "layer": 0,
+   "el": 138848,
+   "el_noIS": 138848,
+   "IS": false
+  },
+  "swa+engram (1)": {
+   "layer": 1,
+   "el": 170752,
+   "el_noIS": 170752,
+   "IS": false
+  },
+  "csa2 r2 source+index (2)": {
+   "layer": 2,
+   "el": 416288,
+   "el_noIS": 154144,
+   "IS": true
+  },
+  "r2 reuse (3)": {
+   "layer": 3,
+   "el": 139360,
+   "el_noIS": 139360,
+   "IS": false
+  },
+  "r2 source+index+engram (14)": {
+   "layer": 14,
+   "el": 448192,
+   "el_noIS": 186048,
+   "IS": true
+  },
+  "r1 source+index+cand (20)": {
+   "layer": 20,
+   "el": 411168,
+   "el_noIS": 149024,
+   "IS": true
+  },
+  "r1 reuse (21)": {
+   "layer": 21,
+   "el": 139360,
+   "el_noIS": 139360,
+   "IS": false
+  },
+  "r1 reindex (24)": {
+   "layer": 24,
+   "el": 409760,
+   "el_noIS": 147616,
+   "IS": true
+  }
+ },
+ "resident_all_excl_ckv": 454848
+}

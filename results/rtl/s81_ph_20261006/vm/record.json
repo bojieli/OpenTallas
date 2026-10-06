@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.s81_ph.vm.v1",
+ "owner": "Claude:s81-ph (fork E)",
+ "date": "2026-10-06",
+ "sizing": {
+  "method": "tools/hdc_replay_v41.py SHIPPED full shape (dim 5120, hd 512, tp 4, window 128): VM regions (ShapeLayout.vm.map, CKV excluded: KV lives in HBM) touched (_reads|_writes) by R.build of each layer type / of the head program",
+  "layer_types": {
+   "swa (0)": {
+    "layer": 0,
+    "elements": 138848,
+    "elements_without_IS": 138848
+   },
+   "swa+engram (1)": {
+    "layer": 1,
+    "elements": 170752,
+    "elements_without_IS": 170752
+   },
+   "csa2 r2 source+index (2)": {
+    "layer": 2,
+    "elements": 416288,
+    "elements_without_IS": 154144
+   },
+   "r2 reuse (3)": {
+    "layer": 3,
+    "elements": 139360,
+    "elements_without_IS": 139360
+   },
+   "r2 source+index+engram (14)": {
+    "layer": 14,
+    "elements": 448192,
+    "elements_without_IS": 186048
+   },
+   "r1 source+index+cand (20)": {
+    "layer": 20,
+    "elements": 411168,
+    "elements_without_IS": 149024
+   },
+   "r1 reuse (21)": {
+    "layer": 21,
+    "elements": 139360,
+    "elements_without_IS": 139360
+   },
+   "r1 reindex (24)": {
+    "layer": 24,
+    "elements": 409760,
+    "elements_without_IS": 147616
+   }
+  },
+  "head_elements": 51296,
+  "head_regions": [
+   "H",
+   "PF",
+   "RS",
+   "SS",
+   "T",
+   "X",
+   "XN"
+  ],
+  "all_regions_resident": 454848,
+  "IS_note": "IS (index scores, 262,144 elements) is resident in the core because the XU select reads scores from the VM; on the S81 die the scan services stream scores straight to dsfd_bk_selector (generator bus ix -> selector), so IS is not a VM region there",
+  "layer_die": {
+   "max_elements_without_IS": 186048,
+   "chosen_elements": 262144,
+   "rows_512b": 16384,
+   "banks": 32,
+   "macros": 128,
+   "macro": "ot_sram_1r1w_512x128_m4_r2c2 (174.12 x 29.736 um, 5,178 um2, 64 Kb)",
+   "macro_mm2": 0.6627,
+   "slab_mm2": 2.6598,
+   "conservative_with_IS": {
+    "elements": 524288,
+    "macros": 256,
+    "macro_mm2": 1.3255
+   }
+  },
+  "head_die": {
+   "elements_needed": 51296,
+   "chosen_elements": 65536,
+   "banks": 8,
+   "macros": 32,
+   "macro_mm2": 0.1657,
+   "slab_mm2": 0.8924
+  },
+  "caveat": "NSLOT = 1 (the S81 parent core default; ot_v41_rt_die_l20_c8 does not set NSLOT): if MTP position slots run on these dies, every per-position region multiplies by the slot count"
+ },
+ "port_demand": {
+  "core_behavioural_vm_per_cycle": "reads: vx G x 32 b, vs 4*SW, vi SW, vq, vr, wqr 32 el, wxr 32 el, vh HS, vsl XSQ*XSW = 64 el, xs_vi SUN = 256, xs_rd 4*SUN = 1024 el, rom_x 64 el; writes: rom_we 128 scalar ports, xs_vm SUN = 256 el, xs_res SUN/8, vw_me G x 16, ww_q/h/x 32 el, xa/xb FLIT 16 el (ot_hdc_core_v41x.sv:196-325, ot_chip_v41x_tile.sv:551-625)",
+  "die_bus_rows_per_cycle": {
+   "reads": {
+    "t_su_s": 2,
+    "t_su_n": 2,
+    "t_hc": 2,
+    "q": 1,
+    "x_loader_VRD64": 4,
+    "collective_gap": 1,
+    "total": 12
+   },
+   "writes": {
+    "f_hc": 2,
+    "a_4svc": 8,
+    "f_capture_scalar": 8,
+    "sel": 1,
+    "col": 1,
+    "f_collective": 1,
+    "total": 21
+   }
+  },
+  "finding": "the core's SU alone reads 1,280 elements (80 rows) a cycle; the die buses carry 4 rows a cycle to the SU halves (contracts_hub G2). All die buses fully concurrent = 33 row ports; a 33-port crossbar over 32 banks at 512 b is not buildable in the slab. The memory subsystem built here has NP = 8 row ports (parameter); the VM sequencer must assign hub buses to ports per op (static schedule) and its cycle cost is a program-level number (next step)"
+ },
+ "rtl": {
+  "module": "rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv",
+  "params": {
+   "NP": 8,
+   "NB": 32,
+   "QD": 4,
+   "RQ": 8
+  },
+  "ports": "NP row ports {v, we, row[14], mask[16] element mask, d[512]}; reads return on the same port at fixed L = QD + 6 = 10 cycles, in order, never stall",
+  "semantics": "exact behavioural-array order: ops take effect in (issue cycle, port) order; per-bank in-order queue, 1 op/bank/cycle on 1R1W macros; stall-free contract <= QD outstanding per bank else sticky fault (fail closed)",
+  "boundary": "pin-registered requests (4 kept copies, <= 32 loads/bit), 2-flop reset sync, macro pins driven from the serve register, macro read data captured before any mux, outputs from flops, kept 128-b-slice select copies"
+ },
+ "bench": {
+  "tb": "rtl/dsrom_sys/s81_ph/test/tb_ot_s81ph_vm_mem.sv",
+  "runner": "rtl/dsrom_sys/s81_ph/test/run_vm_bench.sh",
+  "host": "ot-epyc2 /srv/opentallas-scratch2/scratch/claude/s81-ph/vm_bench",
+  "sim": "Verilator 5.032",
+  "gold": "PASS: NB32/QD4, NB8/QD4, NB8/QD2 x seeds 1-3 x 100k cycles (~0.47-0.56 M ops each, every read checked, 0 mismatches, max_occ = QD reached) + directed W->R/R->W same cycle, RAW chains, all ports busy, saturated bank, masked writes; +OVF floods a bank -> fault code 001 (PASS_OVF)",
+  "negative_controls": {
+   "MUT_ORDER": "FAIL (8,206 mismatches, self-check fault 010)",
+   "MUT_J0": "FAIL (2,855 mismatches, fault 010)",
+   "MUT_MASK": "FAIL (31,771 mismatches)"
+  },
+  "log": "results/rtl/s81_ph_20261006/vm/bench_r1.log"
+ },
+ "cycle_cost": {
+  "core_vm_read_latency_cycles": 1,
+  "s81ph_vm_read_latency_cycles": 10,
+  "added_per_read_dependent_op_cycles": 9,
+  "note": "every unit's VM read gains 9 cycles of pipeline fill (fixed latency, once per op pipeline, not per element); writes are posted (no latency visible to the issuer, RAW order preserved). QD = 2 gives L = 8 (+7) at a tighter per-bank burst bound. Bank-conflict cost: unit-stride row streams spread over 32 interleaved banks conflict-free; scattered element writes (capture) and gathers (vi) may exceed QD per bank -> the sequencer must pace them (program-level)"
+ },
+ "route": null,
+ "state": "RTL + exact bench PASS; margin route launched (see route)"
+}
