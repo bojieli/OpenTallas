@@ -194,6 +194,11 @@ def emit(a):
         PX.append("\n".join(body))
     V.append("endmodule\n")
     (out / "frame.v").write_text("\n".join(V + PX) + "\n")
+    # the glue masters of THIS die build (port sets follow the q abstract's pin faces, e.g. Z22's x1 on the S face):
+    # emitted beside the frame instead of reusing the plan's dsfd_glue.sv
+    used = {it.master for it in insts}
+    (out / "dsfd_glue.sv").write_text(S.glue_rtl(dict(pdir={k_: v_ for k_, v_ in m["pdir"].items() if k_ in used},
+                                                      glue=m["glue"])))
     # ---- BF placeholder: registered IO (the BF owner block is not built); every input reaches an output
     masters = sorted({it.master for it in insts})
     ph = ["// GENERATED (CLAUDE S81-RERUN): BF-element PLACEHOLDER with registered IO (owner block not built).",
@@ -331,7 +336,7 @@ def emit(a):
     px, pr = rec["pin_x_um"]["x"], rec["pin_x_um"]["ret"]
     rom = S.real_lef(S.CFG_LEF)["name"]
     srcs = [f"{rel}/frame.v", f"{rel}/bf_placeholder.sv", f"{rel}/q_bb.v",
-            S.GLUE_RTL.replace("/r8/", f"/{S.out_rev()}/"), S.CFG7_RTL, "rtl/common/ot_meso_fifo.sv",
+            f"{rel}/dsfd_glue.sv", S.CFG7_RTL, "rtl/common/ot_meso_fifo.sv",
             "rtl/v41die/ot_v41_retn_w17w10.sv", "rtl/v41rom/ot_v41_ret.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
             "rtl/hdc/ot_hdc_delay.sv", "rtl/common/ot_fwd_link_stage.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
             str(Path(S.CFG_LEF).parent / f"{rom}_bb.v")]
