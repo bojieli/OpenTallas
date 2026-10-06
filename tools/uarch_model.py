@@ -11798,3 +11798,54 @@ def dsrom_protected_vm_model():
     """Finite protected xa/xb native VM, actual data/check ports and 3:4 receipts."""
     from dsrom_protected_vm import model
     return model()
+
+
+def hbm_vm_publication_parent_model():
+    """Compose existing activation and index providers; price missing caller seats."""
+    ff = 216 + 288 + 72 + 4 * 722 + 360
+    return dict(schema='opentallas.hbm.vm_publication_parent.v1',
+        composition=['memory_control/vm_root_composed_component.json',
+                     'memory_control/index_fp32_adapter_prebuild.json'],
+        default_enabled=False, replicas=1, MACs_per_cycle_delta=0,
+        activation=dict(banks=2, rows=128, payload_bits=2063, owner_bits=192,
+                        real_SRAM_count=22, macro_read_bits=5632,
+                        macro_write_bits=2816, multicast_bits=4*2063),
+        index=dict(real_SRAM_count=10, rows=512, FP32_words=16384,
+                   macro_read_bits=1280, macro_write_bits=1280,
+                   client_bytes_per_accept=128, outstanding=1),
+        added_registers=dict(descriptor_useful=156, descriptor_W6_FF=216,
+            current_context_row_validity_useful=256, row_validity_W6_FF=288,
+            pending_publisher_useful=2, pending_publisher_W6_FF=72,
+            reverse_receipt_seats=4, reverse_receipt_payload=265,
+            reverse_receipt_FF_each=722, release_receipt_FF=360, total_FF=ff),
+        FF_area_floor_um2=ff*.2916,
+        minimum_FF_footprint_at55_um2=ff*.2916/.55,
+        combinational_area='actual mapping required; 2:1 1056-bit publication mux, '
+            'full73-frame comparators, protected validity address selector and codecs; not free',
+        replica_cost=dict(activation_read_taps=4, reverse_ACK_banks=4,
+                          publication_arbiter_inputs=2, index_read_clients=1),
+        boundaries_bits_per_accept=dict(publisher_each=1024+32+73+2,
+            index_request=32+6+8+73+7+2, index_response=1024+8+73+7+2,
+            activation_write=2063+192+8+73+2,
+            activation_tap_each=2063+192+73+2,
+            reverse_ACK_each=192+73+2),
+        routing=dict(new_reverse_ACK_payload_tracks=4*(192+73+1),
+            new_reverse_ACK_root_clock_pins=4,
+            finite_parent_channels_bound=False, route_launch_allowed=False),
+        area_and_slot='existing VM reservation, positive added FF cost above; '
+            'full caller/result channel allocation and actual mapped cell cost remain open',
+        clocks='real clk_sm833.333ps and cold por_n; output clocks directly inherit '
+            'that root, no new oscillator or borrowed propagated latency',
+        latency=dict(provider_write_verified_ACK_edges=4,
+            provider_read_publication_edges=3, reverse_receipt_capture_edges=1,
+            added_publication_arbitration_edges=0,
+            root_release='after all actual branch ACKs; incoming ACK seat adds one '
+                         'capture edge and held release receipt adds one capture edge '
+                         'before actual parent retirement',
+            single_user_composition='existing producer -> verified provider ACK -> '
+                'actual index/activation consumer -> matching receipt -> parent retire; '
+                'CE repair and backpressure extend the same retained transaction'),
+        source_SM_visibility_owner='Claude HBM-SM; no delay-derived ACK',
+        service_CA_calendar_owner='Gibbs/Bacon; this provider join does not duplicate controllers',
+        SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        parent_physical_closed=False, adopted=False)
