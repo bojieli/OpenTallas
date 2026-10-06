@@ -54,10 +54,12 @@ def main():
  with (a.out/'compile.log').open('w') as log:ret=subprocess.call(cmd,env=env,stdout=log,stderr=subprocess.STDOUT)
  rec={'source_sha256':pins,'compile_command':cmd,'compile_exit':ret,'cases':[],'physical_closed':False,'actual_parent_bindings_qualified':False,'verilator_script_sha256':sha(executable),'verilator_binary_sha256':sha(executable.with_name('verilator_bin'))}
  if ret:dump(a.out/'terminal.json',rec);return ret
- cmd=[str(a.out/'build/Vtb_hbm_formatter_provider_join')]
- with (a.out/'exact_and_token_negative.log').open('w') as log:ret=subprocess.call(cmd,stdout=log,stderr=subprocess.STDOUT)
- output=(a.out/'exact_and_token_negative.log').read_text()
- passed=ret==0 and 'PASS_FORMATTER_PROVIDER_JOIN ' in output
- rec['cases'].append(dict(name='causal_arena_exact_and_TOKEN17_negative',command=cmd,exit=ret,passed=passed));rec['verdict']='PASS' if passed else 'FAIL';dump(a.out/'terminal.json',rec)
- return 0 if passed else ret or 1
+ for name,args,marker in [('exact_and_token_negative',[],'PASS_FORMATTER_PROVIDER_JOIN '),('actual_control_UE',['+CONTROL_UE'],'PASS_GATHER_CONTROL_UE ')]:
+  cmd=[str(a.out/'build/Vtb_hbm_formatter_provider_join'),*args]
+  with (a.out/(name+'.log')).open('w') as log:ret=subprocess.call(cmd,stdout=log,stderr=subprocess.STDOUT)
+  output=(a.out/(name+'.log')).read_text()
+  passed=ret==0 and marker in output
+  rec['cases'].append(dict(name=name,command=cmd,exit=ret,passed=passed));rec['verdict']='PASS' if passed else 'FAIL';dump(a.out/'terminal.json',rec)
+  if not passed:return ret or 1
+ return 0
 if __name__=='__main__':raise SystemExit(main())

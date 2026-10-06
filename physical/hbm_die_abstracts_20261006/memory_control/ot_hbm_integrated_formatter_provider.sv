@@ -4,23 +4,23 @@
 // the exclusive arena, provider, write/readback publication and two sectors.
 // No backing RAM, invented ECC receipt, or independent provider/calendar.
 // model-before-build: formatter_join_prebuild.json + existing plane-major model.
-// Full73 ownership arrives on the actual grant/frame export. The inherited
-// pair85 has no token field: its request is authorized inside that lease.
-// Release carries the actual explicit release_token17 from the caller.
+// Full73 ownership arrives on the real shared grant/frame export. The
+// inherited pair85 has an explicit pair_token17 sideband from its real source;
+// release_token17 and pairs_frame7373 match the selected parent ABI.
 module ot_hbm_integrated_formatter_provider #(
  parameter integer ENABLE=0,VM_AW=0
 )(
  input wire clk,por_n,start,output wire start_ready,
  input wire [31:0] job,input wire [3:0] gen,input wire [16:0] token,input wire [19:0] pos,
  input wire [31:0] arena_base,arena_limit,input wire gather_retained,arena_visible,
- input wire owner_valid,input wire [72:0] owner_frame,
+ input wire gather_granted,input wire [72:0] gather_frame73,
  input wire pair_v,output wire pair_r,
- input wire [31:0] pair_job,input wire [3:0] pair_gen,
+ input wire [31:0] pair_job,input wire [3:0] pair_gen,input wire [16:0] pair_token17,
  input wire [19:0] pair_pos,input wire [6:0] pair_rank,input wire [5:0] pair_word,input wire [15:0] pair_tag,
  output wire pairs_v,input wire pairs_r,output wire [511:0] pairs,
  output wire [31:0] pairs_job,output wire [3:0] pairs_gen,output wire [19:0] pairs_pos,
  output wire [6:0] pairs_rank,output wire [5:0] pairs_word,output wire [15:0] pairs_tag,
- output wire [72:0] pairs_frame,
+ output wire [72:0] pairs_frame73,
  output wire pairs_checked,pairs_uncorrectable,retained,fault,
  output wire bridge_req_v,input wire bridge_req_r,output wire [648:0] bridge_req,
  input wire bridge_rsp_v,output wire bridge_rsp_r,input wire [636:0] bridge_rsp,
@@ -32,7 +32,7 @@ module ot_hbm_integrated_formatter_provider #(
  generate if(!ENABLE)begin:disabled
  assign start_ready=0;assign pair_r=0;assign pairs_v=0;assign pairs=0;
  assign pairs_job=0;assign pairs_gen=0;assign pairs_pos=0;assign pairs_rank=0;
- assign pairs_word=0;assign pairs_tag=0;assign pairs_frame=0;
+ assign pairs_word=0;assign pairs_tag=0;assign pairs_frame73=0;
  assign pairs_checked=0;assign pairs_uncorrectable=0;assign retained=0;assign fault=0;
  assign bridge_req_v=0;assign bridge_req=0;assign bridge_rsp_r=0;assign release_r=0;
  end else begin:enabled
@@ -51,9 +51,9 @@ module ot_hbm_integrated_formatter_provider #(
  wire [32:0] end_byte={1'b0,arena_base}+33'd393216;
  wire bounds=arena_base[5:0]==0&&arena_limit[5:0]==0&&end_byte=={1'b0,arena_limit}&&
    end_byte<=(33'd1<<(VM_AW+6));
- wire lease_match=owner_valid&&owner_frame==frame;
- wire start_owner=owner_valid&&owner_frame=={pos,token,gen,job};
- wire pair_match=pair_job==frame[31:0]&&pair_gen==frame[35:32]&&pair_pos==frame[72:53];
+ wire lease_match=gather_granted&&gather_frame73==frame;
+ wire start_owner=gather_granted&&gather_frame73=={pos,token,gen,job};
+ wire pair_match={pair_pos,pair_token17,pair_gen,pair_job}==frame;
  wire release_match={release_pos,release_token17,release_gen,release_job}==frame;
  wire response_match=bridge_rsp[636:564]==frame&&bridge_rsp[51:20]==32'(read_byte)&&
    bridge_rsp[19:4]==read_tag&&bridge_rsp[3:1]==3'd3;
@@ -63,7 +63,7 @@ module ot_hbm_integrated_formatter_provider #(
  assign start_ready=child_start_ready&&!active&&!fault&&bounds&&start_owner;
  assign pair_r=child_pair_r&&active&&!fault&&lease_match&&pair_match;
  assign pairs_v=child_pairs_v&&active&&!fault&&lease_match;
- assign pairs_frame=frame;
+ assign pairs_frame73=frame;
  assign release_r=child_release_r&&active&&!fault&&lease_match&&release_match;
  // Existing ABI: {frame73, payload512, word6, rank7, tag16, BYTEaddr32, kind3}.
  assign bridge_req={frame,512'b0,pairs_word,read_rank,read_tag,32'(read_byte),3'd3};
@@ -77,7 +77,7 @@ module ot_hbm_integrated_formatter_provider #(
   .clk(clk),.por_n(por_n),.start(start&&start_ready),.start_ready(child_start_ready),
   .source_job(job),.source_gen(gen),.source_pos(pos),
   .gather_base(VM_AW'(arena_base>>6)),.gather_limit((VM_AW+1)'({1'b0,arena_limit}>>6)),
-  .gather_exclusive(gather_retained&&owner_valid),.gather_writers_drained(arena_visible&&bounds),
+  .gather_exclusive(gather_retained&&gather_granted),.gather_writers_drained(arena_visible&&bounds),
   .retained(child_retained),.fault(child_fault),
   .pair_v(pair_v&&active&&!fault&&pair_match),.pair_r(child_pair_r),
   .pair_job(pair_job),.pair_gen(pair_gen),.pair_pos(pair_pos),.pair_rank(pair_rank),.pair_word(pair_word),.pair_tag(pair_tag),

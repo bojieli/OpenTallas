@@ -113,7 +113,7 @@ module tb_hbm_formatter_provider_join;
  wire [6:0] fmt_out_rank;wire [5:0] fmt_out_word;wire [15:0] fmt_out_tag;
  wire fmt_checked,fmt_ue,fmt_req_v,fmt_req_r,fmt_rsp_r;wire [648:0] fmt_req;
  wire [636:0] fmt_rsp_raw={held_pos,held_token,held_gen,held_job,rsp_data,rsp_addr,rsp_tag,rsp_kind,rsp_checked};
- wire [636:0] fmt_rsp=fmt_rsp_raw^(inject_token?(637'd1<<600):637'd0);
+ wire [636:0] fmt_rsp=fmt_rsp_raw^(inject_token?(637'd1<<616):637'd0);
  wire formatter_lease_valid;wire [72:0] formatter_lease_frame;
  wire req_v=fmt_mode?fmt_req_v:prep_req_v;
  wire [2:0] req_kind=fmt_mode?fmt_req[2:0]:prep_req_kind;
@@ -132,11 +132,11 @@ module tb_hbm_formatter_provider_join;
  .clk(clk),.por_n(por_n),.start(fmt_start),.start_ready(fmt_start_r),
  .job(job),.gen(gen),.token(token),.pos(pos),.arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
  .gather_retained(retained),.arena_visible(arena_visible),
- .owner_valid(formatter_lease_valid),.owner_frame(formatter_lease_frame),
- .pair_v(fmt_pair_v),.pair_r(fmt_pair_r),.pair_job(job),.pair_gen(gen),.pair_pos(pos),
+ .gather_granted(formatter_lease_valid),.gather_frame73(formatter_lease_frame),
+ .pair_v(fmt_pair_v),.pair_r(fmt_pair_r),.pair_job(job),.pair_gen(gen),.pair_token17(token),.pair_pos(pos),
  .pair_rank(fmt_rank),.pair_word(fmt_word),.pair_tag(fmt_tag),
  .pairs_v(fmt_pairs_v),.pairs_r(fmt_pairs_r),.pairs(fmt_pairs),.pairs_job(fmt_job),.pairs_gen(fmt_gen),.pairs_pos(fmt_pos),
- .pairs_rank(fmt_out_rank),.pairs_word(fmt_out_word),.pairs_tag(fmt_out_tag),.pairs_frame(fmt_frame),
+ .pairs_rank(fmt_out_rank),.pairs_word(fmt_out_word),.pairs_tag(fmt_out_tag),.pairs_frame73(fmt_frame),
  .pairs_checked(fmt_checked),.pairs_uncorrectable(fmt_ue),.retained(fmt_retained),.fault(fmt_fault),
  .bridge_req_v(fmt_req_v),.bridge_req_r(fmt_req_r),.bridge_req(fmt_req),
  .bridge_rsp_v(rsp_v&&fmt_mode),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(fmt_rsp),
@@ -289,6 +289,19 @@ module tb_hbm_formatter_provider_join;
    memory[(SCORE_SOURCE>>5)+2*k+1]=expected[511:256];
   end
   configure();
+  if($test$plusargs("CONTROL_UE"))begin
+   if(fault||!retained||!dut.borrow_granted||dut.u_bridge.on.dec[11][65])
+    $fatal(1,"control UE fixture lacks healthy actual lease/control");
+   // Actual mutable protected row, not a fabricated provider callback.
+   dut.u_bridge.on.code[11]=dut.u_bridge.on.code[11]^72'd3;
+   #0.01;if(!dut.u_bridge.on.dec[11][65]||!fault||req_r||m_req_v)
+    $fatal(1,"actual two-bit control DUE did not refuse traffic");
+   repeat(4)edge_tick();
+   if(!fault||!retained||shared_idle||fmt_start_r||m_req_v||transactions!=0)
+    $fatal(1,"DUE dropped retained lease or issued normal traffic");
+   $display("PASS_GATHER_CONTROL_UE actual_row11_two_bit_DUE retained_real_grant no_publication no_backend_request");
+   $finish;
+  end
   for(w=0;w<32;w++)for(r=0;r<96;r++)begin
    expected=page(1,r,w);request_page(1,r,w,ARENA+32'(2048*r+64*w),expected,expected);
    if(arena_visible)$fatal(1,"score-only arena published before full ID plane");
