@@ -1,0 +1,8 @@
+{
+  "verdict": "DIAGNOSTIC_TOOL_SIGABRT",
+  "runtime_rc": 134,
+  "signal": "SIGABRT",
+  "cause": "Live vpi_handle_by_name call from debugger outside a VPI callback asserted vpi_mode_flag; not an RTL verdict",
+  "fixture_fix": "Observe actual posedge native_req_v&&native_req_r counter; post-edge ready wait can miss its acceptance",
+  "scope": "Finite actual source-byte sector gate"
+}

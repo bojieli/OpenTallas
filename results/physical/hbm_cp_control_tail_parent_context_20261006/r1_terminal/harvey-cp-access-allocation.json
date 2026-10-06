@@ -1,0 +1,123 @@
+{
+  "evidence_class": "CANONICAL_ACCESS_ALLOCATION_ACCEPTED_FOR_CHANGED_SOURCE_DEFECT_HUNT",
+  "source": "8175af927",
+  "source_main": "8002de0c8",
+  "helper_main": "b558d00af",
+  "canonical_owner": "Turing",
+  "sole_source_launcher": "Harvey",
+  "allocation_accepted": true,
+  "conditional_defect_hunt_ready": true,
+  "post_io_hook": "physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl",
+  "pin_hook": "results/physical/hbm_cp_pin_access_20261006/pins_only.tcl",
+  "candidate_core_um": [
+    17.28,
+    17.28,
+    64.8,
+    64.8
+  ],
+  "parent_gross_um": [
+    583.2,
+    25.92,
+    665.28,
+    108.0
+  ],
+  "body_boxes_um": [
+    [
+      17.28,
+      17.28,
+      60.48,
+      56.16
+    ],
+    [
+      22.464,
+      56.16,
+      60.48,
+      60.48
+    ],
+    [
+      60.48,
+      17.28,
+      64.8,
+      64.8
+    ],
+    [
+      17.28,
+      60.48,
+      60.48,
+      64.8
+    ]
+  ],
+  "association_box_um": [
+    17.28,
+    56.16,
+    22.464,
+    60.48
+  ],
+  "exact236_names_and_native_readback_match": true,
+  "face": "west M6 below association notch",
+  "minimum_step_um": 0.128,
+  "separated_sites": 303,
+  "used": 236,
+  "spare": 67,
+  "first_last_y_um": [
+    17.36,
+    47.44
+  ],
+  "association_M7_factor_tracks_DBU": [
+    19664,
+    19728,
+    19792,
+    19856,
+    19920,
+    19984,
+    20048,
+    20112,
+    20176,
+    20240,
+    20304,
+    20368
+  ],
+  "private_factor_bits": 12,
+  "PG_hook": "physical/hbm_cp_parent_context_20261005/pdn.tcl",
+  "PG_preserved_by_native_check": true,
+  "body_cell_CTS_repair_cap_um2": 1117.87776,
+  "charged_old_route_plus_tail_plus_repair_um2": 955.4198,
+  "remaining_body_allowance_um2": 162.45796000000007,
+  "association_cell_cap_um2": 11.19744,
+  "pin_displacement_max_um": 8.8,
+  "pin_displacement_sum_um": 909.76,
+  "pin_displacement_is_not_routed_wirelength": true,
+  "additional_wire_RC_and_STA": "Must consume changed-source actual route/SPEF; no delay/load credit assigned",
+  "clock_SDC_load_changes": false,
+  "new_FF": 0,
+  "added_cycles": 0,
+  "source_phase_ps": 0,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "parent_rail_budget": {
+    "total_policy_mV": 35.0,
+    "child_residual_mV": null,
+    "parent_feed_drop_measured": false,
+    "required_rule": "35mV minus actual parent VDDdrop+VSSrise at child feeds, per corner and loadedwindow; cannot treat ideal child feed as entire budget",
+    "activity": "Retain original vectorless0.1 as diagnostic only; actual loaded workload required for IR qualification"
+  },
+  "physical_qualified": false,
+  "SS_FF_qualified": false,
+  "IR_qualified": false,
+  "remaining_route_requirements": [
+    "VIA45 must avoid48/48nm diagonal cut pair; native same-column landing separation96nm",
+    "All downstream M5/M6/M7 metal/EOL/short/rect and PG connectivity classes remain measured route requirements",
+    "Final body and association containment/CTS/repair must stay within separate finite caps"
+  ],
+  "retained_failure_ODB_sha256": "44f236f3de07ed2c38e140abed1a9bb3b47b405ae61bbd56879fdaf8fcb6ed2a",
+  "hashes": {
+    "physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl": "cc80ea7fbe48395d33be9f9abac914ddf71f9c0ac423af64dd1d508d734fa4fe",
+    "results/physical/hbm_cp_pin_access_20261006/pins_only.tcl": "5d8fe74c1cda6f37224eb5165a32daa9f354acb70c31b06d5de61cf65ad05bf2",
+    "results/physical/hbm_cp_pin_access_20261006/plan.json": "e852aebd0ea9ca9e7df5502bd6d840de2143b7f02bc2324bb1e750a0da130e31",
+    "results/physical/hbm_cp_pin_access_20261006/native_pin_check.tsv": "d1e63a109bf3ca2c367da216cad821f27a3c49407c7ab5fdf01366d688a31180",
+    "results/physical/hbm_cp_pin_access_20261006/native_check.log": "9c01fa7e2413e0652f3b52504c12e6a6f82236bf848737cd210e37d07d80c419",
+    "physical/hbm_cp_parent_context_20261005/pdn.tcl": "1b77ab0497b279c05db4116971cf55efa6053ff7ee96ccaf1605b372f784488d",
+    "results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json": "4fbe0f675159d57c736297a1ae5e2709b613ee90259b52c6ca05b931006ae413",
+    "results/uarch/hbm_cp_control_tail_20261006/model.json": "40b39fda3c674d3e44c1d4c755c97c8f6c49d00d7b40b62fd6ebd9699b5914fc"
+  }
+}

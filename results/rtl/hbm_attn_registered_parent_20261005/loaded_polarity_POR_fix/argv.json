@@ -1,0 +1,16 @@
+[
+  [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_h16_registered_parent",
+    "-o",
+    "/tmp/h16-parent-polarity-por.vvp",
+    "rtl/test/tb_h16_registered_parent.sv",
+    "rtl/hbm_accel/ot_attn_tile_registered_parent.sv"
+  ],
+  [
+    "vvp",
+    "/tmp/h16-parent-polarity-por.vvp"
+  ]
+]

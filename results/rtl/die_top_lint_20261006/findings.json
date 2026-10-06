@@ -1,0 +1,781 @@
+{
+ "schema": "opentallas.die_top_lint.findings.v1",
+ "prefix": "CLAUDE DIE-LINT",
+ "date": "2026-10-06",
+ "scope": {
+  "s81": "DS ROM S81 layer + head die tops from tools/dsrom_s81_fulldie.py (unchanged main 8045d16e0..7c5409640). The S81 die PASSED at 21fcf6469 BEFORE the recovery levers; plan item 10 is the full-die RE-RUN with the adopted recovery levers; this lint is that re-run's interface pre-check.",
+  "hbm": "HBM accelerator die r14b (481.3 mm2, main 77ef36ea3, tools/hbm_accel_die_fp.py ADOPTED)."
+ },
+ "method": {
+  "real": [
+   "ot_v41_rom_elem_q_qp_w10 (RTL, routed-receipt params)",
+   "ot_v41_retn_w17w10 (RTL, for dsfd_node)",
+   "ot_hbm_accel_sm_v (RTL, sm_r2 params; tc16/bd_col hardened bb views inside)",
+   "ot_rom_4096x72_m8 / ot_hbm3e_phy_v41x_aw30_e8p5 / ot_pdie_serdes / ot_pdie_ucie (bb)"
+  ],
+  "stubs": "every other master: port-identical registered stub (generated abstract ports + widths, outputs from flops on its ck pin; NO-CLOCK stubs marked), directions from the per-bus-class DIRECTION MODEL in tools/die_top_lint.py",
+  "tools": "python graph + physical lint (ot-epyc2) and Verilator --lint-only -Wall elaboration"
+ },
+ "top_fixes_applied_in_lint_tops": "see *_fix_lint.json top_fixes (TF1-TF7); generators untouched, adopted records byte-identical",
+ "findings": [
+  {
+   "id": "S1",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "sp_collective (stub)",
+   "port_or_net": "pll -> 53 clk_* nets",
+   "cls": "duplicate port binding: generated top does not elaborate",
+   "evidence": "Verilator %Error x47 \"Duplicate pin connection: pll\"",
+   "fix": "TF1: one 1-b PLL port + one multi-load net per domain (pll_stream: 44 FIFO blocks, 4 svc, selector, collector, 8 link macros; pll_serial: su_s, su_n, hc)",
+   "owner": "S81 generator (item-10 re-run)",
+   "fixed_in_lint_top": true,
+   "severity": "blocker"
+  },
+  {
+   "id": "S2",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_v41_rom_elem_q_qp_w10 (REAL RTL)",
+   "port_or_net": "xo = xs_q1/xs_e1 -> next pair xs_q0 (nets xc_*)",
+   "cls": "port list vs definition; undriven",
+   "evidence": "xs_q1 is an RTL INPUT (second x lane), not a forward output: 1,723 x_chain nets / 458,318 b undriven [head 1,014 nets]; only the 256 lane heads get x, 2,161 of 2,417 pairs (89%) never do; xs_q1/xs_e1 floating on 175 lane tails; contract needs 549 forwarded b per q pair",
+   "fix": "element: registered x-forward output, OR die: forward both x lanes to every pair from the region FIFO through stations",
+   "owner": "q element (S82/W4) + S81 floorplan",
+   "fixed_in_lint_top": false,
+   "severity": "blocker"
+  },
+  {
+   "id": "S3a",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_rom_4096x72_m8 x7 per pair (REAL bb)",
+   "port_or_net": "rd_out[53:0] -> cf_* (element cfg)",
+   "cls": "multi-driven x7",
+   "evidence": "2,417 nets / 130,518 b multi-driven [head 1,682]; rd_out[71:54] unloaded on 16,919 ROMs (304,542 b)",
+   "fix": "per-pair cfg sequencer (address / ce / 7->1 word select) or element takes the 7x72 b row; no RTL block exists",
+   "owner": "S81 generator + q element",
+   "fixed_in_lint_top": false,
+   "severity": "blocker"
+  },
+  {
+   "id": "S3b",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_rom_4096x72_m8 (REAL bb)",
+   "port_or_net": "clk / ce_in / addr_in[11:0] (nets ck_*)",
+   "cls": "undriven (incl. clock)",
+   "evidence": "2,417 nets / 33,838 b with no driver endpoint on 16,919 ROMs [head 1,682 nets]",
+   "fix": "same sequencer + clock pin from the region root",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "blocker"
+  },
+  {
+   "id": "S4a",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "q pair r0/r1 -> dsfd_node a/b",
+   "port_or_net": "ret_leaf nets",
+   "cls": "width truncation 63 -> 66 b; lanes mixed",
+   "evidence": "a_d[31:30], b_d[31:30], a_e, b_e undriven on 2,417 leaf nodes; r0 carries pseg[9:0] (both lanes), r1 pnseg[9:0]",
+   "fix": "define per-lane leaf packing {v, t[32], d[32], e} (adapter) or RET = 132",
+   "owner": "S81 generator + q element",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S4b",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_node (-> REAL ot_v41_retn_w17w10)",
+   "port_or_net": "clk, rst_n, fault, quiet",
+   "cls": "port list vs definition; unclocked",
+   "evidence": "abstract has no clock / reset pin; 4,706 nodes [head 3,236] unclocked; fault + quiet unconnected",
+   "fix": "add ck/rst pins to the node abstract from the frame region root; OR-collect fault/quiet",
+   "owner": "S81 generator (node abstract)",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S5",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_v41_rom_elem_q_qp_w10",
+   "port_or_net": "busy, fault",
+   "cls": "unloaded output",
+   "evidence": "1,898 x 2 outputs unconnected; no die fault/busy aggregation",
+   "fix": "per-frame OR tree into the FIFO block (1 b along the return tree)",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S6",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "q / BF pair",
+   "port_or_net": "clk, go, rst_n inside the 20-b lane_ctl bundle",
+   "cls": "clock carried as a data net",
+   "evidence": "clk driven by the region FIFO block k stub output, multi-drop through up to 12 pairs; no CTS clock pin on any pair",
+   "fix": "separate clock pin per pair from the option-C region CTS root",
+   "owner": "S81 generator + q element",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S7",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_ctrl (4), dsfd_mfifo (24), stations (216), sp_vm, sp_gather, sp_capture",
+   "port_or_net": "clock",
+   "cls": "no clock port on the abstract",
+   "evidence": "stubs tied to 1'b0 clock; ot_meso_fifo needs wclk+rclk, ot_fwd_link_stage fclk_i/o",
+   "fix": "add clock pins to these abstracts",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S8",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "die",
+   "port_or_net": "reset",
+   "cls": "no reset network",
+   "evidence": "only q/BF pairs see rst_n (via lane_ctl); no die reset input",
+   "fix": "reset controller + per-region synchronised reset tree",
+   "owner": "S81 generator / tape-out",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S9",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "sp_hc (stub)",
+   "port_or_net": "f_vm 1,024 + f_su_s/n 512",
+   "cls": "sink: no output net",
+   "evidence": "HC/mHC results have no die path back to VM/SU",
+   "fix": "add t_vm (and t_su) hub nets",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S10",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "[head] dsfd_nvx (211)",
+   "port_or_net": "nv",
+   "cls": "sink: no output net",
+   "evidence": "NV5 draft head receives 224,504 b, drives nothing",
+   "fix": "add the draft-result net (return tree / collector)",
+   "owner": "S81 generator (head die)",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S11",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "die top",
+   "port_or_net": "-",
+   "cls": "top I/O",
+   "evidence": "0 top ports: no refclk into the PLL, no POR, no test; off-die HBM/SerDes/UCIe pins are not in the controller-side macro views",
+   "fix": "top ports refclk / por_n / test; package pins with real PHY views (tape-out workstream)",
+   "owner": "tape-out",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S12a",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_fifo (44) + dsfd_mfifo (24)",
+   "port_or_net": "meso FIFOs",
+   "cls": "not instantiated (known gap)",
+   "evidence": "44 x 3 W512 D4 = 132 region slots + 24 hub slots are placeholders; ot_meso_fifo instances: 0; no wclk/rclk pins",
+   "fix": "bind ot_meso_fifo (ENABLE=1) into the FIFO masters with two clock pins",
+   "owner": "S81 generator (item-10 re-run)",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S12b",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_stn_h / v / l (100 / 44 / 72)",
+   "port_or_net": "forwarded links",
+   "cls": "not instantiated (known gap)",
+   "evidence": "216 waypoints = 864 stages, 1,053,792 stage-bits = 2,304 ot_fwd_link_stage W512 slices, 0 instantiated, no fclk pin; tier trunks mix directions (x 572 b out + roots 66 b x n back) in one bundle",
+   "fix": "waypoint masters from ot_fwd_link_stage with fclk_i/o; split every bidirectional trunk into two chains",
+   "owner": "S81 generator (item-10 re-run)",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S13",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_mfifo, dsfd_stn_h/v/l, dsfd_fifo.x",
+   "port_or_net": "role ports",
+   "cls": "one master, several roles (width/direction differ by instance)",
+   "evidence": "2-7 direction/width signatures per port (stn_h.e/w 7, mfifo.f 5); ports 1,536 b on 1,100-1,430 b trunks",
+   "fix": "one master per (role, width): tier / svc / link trunk",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S14",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "field column 0 vs spine slabs",
+   "port_or_net": "placement",
+   "cls": "compute abutting the hub band without a channel (DS-die class)",
+   "evidence": "E column 0: 45 q + 25 BF + 345 cfg ROM edges 4.34 um from sp_hc; W column-0 node strips 4.34 um from su_s/su_n/vm/gather/collective/capture (204 nodes); HC ck pin faces the abutment; other column-0 lanes 100-128 um (< 259.2)",
+   "fix": ">= 259.2 um channel between spine and field column 0 on both sides (as between tiers); GRT i50 clean today but keep the class out of the item-10 re-run",
+   "owner": "S81 generator (item-10 re-run)",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "S15a",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "q / BF x chain",
+   "port_or_net": "xi (S face) <- previous xo",
+   "cls": "faces away (lane backfill)",
+   "evidence": "246 hops where the R lane fills an earlier slot after a BF: peer 397 um above the S-face pins, 65,436 b",
+   "fix": "keep lane order monotone in y (no backfill past a BF)",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S15b",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_rom_4096x72_m8",
+   "port_or_net": "rd / ctl (W face)",
+   "cls": "faces away",
+   "evidence": "6,567 ROM endpoints: element cfg pins lie east of the ROM W-face pins",
+   "fix": "mirror the cfg row (MY) or put element cfg pins at its W end",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S15c",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "q / BF r0, r1; dsfd_node o",
+   "port_or_net": "N-face pins",
+   "cls": "faces away",
+   "evidence": "1,407 q + 724 BF return endpoints and 2,417 node outputs have their peer below",
+   "fix": "order the strip so a node sits above its children, or move r/o pins to the strip-facing E face",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S15d",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "sp_collective",
+   "port_or_net": "lW0..3 (W face)",
+   "cls": "faces away from the spine-side first hop",
+   "evidence": "first hop (hub FIFO in the VCH) is east: 4 x 1,024 b",
+   "fix": "W-link ports on the E face toward the VCH",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S15e",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "dsfd_svc",
+   "port_or_net": "ix / co (N / S face)",
+   "cls": "faces away",
+   "evidence": "selector/collector sit beside the service: 2 x 512 b each",
+   "fix": "pins on the E/W face toward the band block",
+   "owner": "S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S16",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "ot_pdie_serdes / ot_pdie_ucie",
+   "port_or_net": "io",
+   "cls": "pin spread vs macro face",
+   "evidence": "1,024 pins over 2,247 um (UCIe 1,648 um) against 1.0-3.7 mm to the last waypoint",
+   "fix": "bundle io into <= 500 um of the face nearest the chain; last station at the pin centroid",
+   "owner": "macro owner + S81 generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "S17",
+   "die": "DS ROM S81 layer die (head die in [])",
+   "block": "all replicated copies",
+   "port_or_net": "-",
+   "cls": "replicated copies missing their own pins",
+   "evidence": "PASS: 0 of 17,943 endpoints [head 0 of 13,017]",
+   "fix": "-",
+   "owner": "-",
+   "fixed_in_lint_top": false,
+   "severity": "pass"
+  },
+  {
+   "id": "H1",
+   "die": "HBM accelerator die r14b",
+   "block": "hb_coll (stub)",
+   "port_or_net": "pll -> 30 nets",
+   "cls": "duplicate port binding: generated top does not elaborate",
+   "evidence": "Verilator %Error x29",
+   "fix": "TF1: pll_stream / pll_serial / pll_hbm, one net each",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": true,
+   "severity": "blocker"
+  },
+  {
+   "id": "H2",
+   "die": "HBM accelerator die r14b",
+   "block": "sm0-sm15 (S groups)",
+   "port_or_net": "d 1,100 b, q 48 b, c 45 b",
+   "cls": "faces away: generator orientation bug",
+   "evidence": "flip = (side == 'N') != (variant.get('row1_flip') and row == 1) is False != None = True on the S side: all 16 S SMs R180/MX (DEF S/FS); d/q face N with the stream service 2,203 um south, c faces S with the hub north (16 x 1,193 b)",
+   "fix": "TF6 (row1_flip=False) or bool(...) in the generator; re-run GRT + wire-stage pricing (r14b figures measured with this orientation)",
+   "owner": "HBM-DS-DIE (wt-hbm-ds-grt)",
+   "fixed_in_lint_top": true,
+   "severity": "blocker"
+  },
+  {
+   "id": "H3",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_sm -> REAL ot_hbm_accel_sm_v",
+   "port_or_net": "clk (28 SMs), rst_n (32)",
+   "cls": "unclocked; no reset",
+   "evidence": "clk_grp_* connects sms[0] of each group only",
+   "fix": "TF2 clocks all 32 (fixed in lint top); reset needs a network",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": true,
+   "severity": "blocker"
+  },
+  {
+   "id": "H4",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_sm -> REAL ot_hbm_accel_sm_v",
+   "port_or_net": "d_valid, d_ready, d_base[31:0], d_lines[23:0] (58 b)",
+   "cls": "RTL port with no die net",
+   "evidence": "unbound on all 32 SMs (Verilator PINMISSING); sm_r2 context puts d_* on the S pin region",
+   "fix": "58-b descriptor leaf from the cmdproc control tree (control leaf 45 -> 103 b) or from the stream service",
+   "owner": "HBM die + SM element",
+   "fixed_in_lint_top": false,
+   "severity": "blocker"
+  },
+  {
+   "id": "H5",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_sm",
+   "port_or_net": "d 1,100 / q 48",
+   "cls": "width vs RTL",
+   "evidence": "RTL 1,099 (no rsp_ready: 32 undriven bits) / 44 (4 floating x 32)",
+   "fix": "TF7 (fixed in lint top)",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": true,
+   "severity": "defect"
+  },
+  {
+   "id": "H6",
+   "die": "HBM accelerator die r14b",
+   "block": "ot_pdie_serdes x9 / ot_pdie_ucie",
+   "port_or_net": "io (link / host chains)",
+   "cls": "width and direction deficit",
+   "evidence": "link 971 b binds tx[511:0]+rx[458:0]: RX 9 x 459 = 4,131 b < 4,376 b (8 TU ports x (545 flit + valid + credit), tu_endpoint ph_rx); host 512 b binds tx only: no receive pins, loader has no input net",
+   "fix": "TF5: link 974 b = tx[486:0]+rx[486:0]; host tx[255:0]+rx[255:0] (fixed in lint top)",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": true,
+   "severity": "blocker"
+  },
+  {
+   "id": "H7",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_attn_tile vs ot_attn_tile_registered_parent",
+   "port_or_net": "k / i / o / ku / kd",
+   "cls": "port list vs definition",
+   "evidence": "RTL: ld_w 1,024 + ib 576 (query) + controls in, oy 512 + oflt 16 out; die r14b: k 1,024 (row-0 tile only), i 512, o 512, ku/kd 1,024; no query-operand net (VM -> tiles), no RTL for the i row chain or the ku KV forward",
+   "fix": "adopt the measured-macro variant nets (qi 594 / ti 1,618, attn_tile_w_um) and define the tile parent's forward ports",
+   "owner": "HBM-ATTN + HBM die",
+   "fixed_in_lint_top": false,
+   "severity": "blocker"
+  },
+  {
+   "id": "H8",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_attn_tile (64)",
+   "port_or_net": "clock",
+   "cls": "unclocked",
+   "evidence": "not on any clock net",
+   "fix": "TF3 (fixed in lint top)",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": true,
+   "severity": "defect"
+  },
+  {
+   "id": "H9",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_coll vs ot_hbm_accel_tu_endpoint",
+   "port_or_net": "SU side, link clock, config",
+   "cls": "port list vs definition",
+   "evidence": "RTL: inj_data 1,024 in, inj_idx+inj_rd 34 out, del_flit 2,180 + del_valid 4 out, pclk/prst_n, rank[7:0], pf[15:0], go; die: f_su x4 1,024 + t_su x4 1,024 + f_vm 512 + f_cmdproc 64, no pclk/config",
+   "fix": "regenerate the coll abstract from the RTL ports (+ a 4-quarter SU fan-in/out block)",
+   "owner": "HBM die + TU owner",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "H10",
+   "die": "HBM accelerator die r14b",
+   "block": "hfd_hc (4) / hfd_barrier / hfd_loader",
+   "port_or_net": "-",
+   "cls": "sink / source-only blocks",
+   "evidence": "HC: 4 x 1,024 in, 0 out; barrier: 64 out, 0 in (no SM arrive path); loader: no input before TF5",
+   "fix": "HC -> SU/VM result nets; SM arrive -> barrier input",
+   "owner": "HBM die",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "H11",
+   "die": "HBM accelerator die r14b",
+   "block": "die",
+   "port_or_net": "-",
+   "cls": "top I/O, reset",
+   "evidence": "0 top ports, no reset network, one PLL source",
+   "fix": "as S8/S11",
+   "owner": "tape-out",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "H12a",
+   "die": "HBM accelerator die r14b",
+   "block": "hub <-> group trunks",
+   "port_or_net": "meso FIFOs",
+   "cls": "not instantiated (known gap)",
+   "evidence": "domains.sdc M* requires a mesochronous FIFO on every hub<->group-half trunk; die has 0 FIFO instances or placeholders; minimum 4 stacks x (x 2,063 b: 5 + result 2,160 b: 5 + control 360 b: 1 + expert 128 b: 1) = 48 W512 ot_meso_fifo (more where trunks cross group halves)",
+   "fix": "FIFO placeholder abstracts at the 8 group-half boundaries, from ot_meso_fifo",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "H12b",
+   "die": "HBM accelerator die r14b",
+   "block": "208 stations",
+   "port_or_net": "forwarded links",
+   "cls": "not instantiated (known gap)",
+   "evidence": "832 stages, 838,600 stage-bits = 2,096 ot_fwd_link_stage W512 slices, 0 instantiated; stations (168) / mcast (16) / gath (16) / cdist (8) have no clock pin",
+   "fix": "station masters from ot_fwd_link_stage with fclk_i/o",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  },
+  {
+   "id": "H13",
+   "die": "HBM accelerator die r14b",
+   "block": "stations",
+   "port_or_net": "masters",
+   "cls": "one master per instance",
+   "evidence": "208 unique masters (hfd_stn_N, hfd_mcast_N, ...) for 11 (class, width) roles",
+   "fix": "11 parameterised station abstracts (x H/V)",
+   "owner": "HBM-DS-DIE generator",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "H14",
+   "die": "HBM accelerator die r14b",
+   "block": "ot_pdie_serdes",
+   "port_or_net": "io",
+   "cls": "pin spread vs macro face",
+   "evidence": "971 pins over 2,130 um vs 505-1,590 um to the peer",
+   "fix": "as S16",
+   "owner": "macro owner + HBM die",
+   "fixed_in_lint_top": false,
+   "severity": "physical"
+  },
+  {
+   "id": "H15",
+   "die": "HBM accelerator die r14b",
+   "block": "SM row 0 vs stream service",
+   "port_or_net": "placement",
+   "cls": "narrow channel (informational)",
+   "evidence": "129.6 um (SVC_GAP r8) < 259.2 um grid channel; compute vs hub band >= 259.2 um everywhere (n_mirror_fix holds): PASS",
+   "fix": "-",
+   "owner": "-",
+   "fixed_in_lint_top": false,
+   "severity": "info"
+  },
+  {
+   "id": "H16",
+   "die": "HBM accelerator die r14b",
+   "block": "all replicated copies",
+   "port_or_net": "-",
+   "cls": "replicated copies missing their own pins",
+   "evidence": "PASS: 0 of 595 endpoints (port_fix holds)",
+   "fix": "-",
+   "owner": "-",
+   "fixed_in_lint_top": false,
+   "severity": "pass"
+  },
+  {
+   "id": "H17",
+   "die": "HBM accelerator die r14b",
+   "block": "ot_hbm_accel_tc16 / ot_hbm_accel_bd_col hardened _bb.v views",
+   "port_or_net": "#(.LB, .IL, .TAGW)",
+   "cls": "real view vs RTL instantiation",
+   "evidence": "ot_hbm_accel_sm_v instantiates the sub-macros with parameters the black-box views do not declare: Verilator PINNOTFOUND x3 when the SM elaborates against its hardened views",
+   "fix": "declare the parameters in the _bb.v views (or a parameter-free wrapper in the SM)",
+   "owner": "HBM-SM element",
+   "fixed_in_lint_top": false,
+   "severity": "defect"
+  }
+ ],
+ "verilator": {
+  "host": "ot-pve1 (Verilator 5.050, --lint-only -Wall); the python lint ran on ot-epyc2 and was repeated on ot-pve1 from the same source; Verilator moved to ot-pve1 because the epyc2 admission CPU gate (load 225 > 1.5 x 128) held every >= 16 GB job",
+  "binding": "real RTL blocks bound through exact interface shells (<top>_real_shells.sv: the RTL port list at the instantiated parameters); hard macros through their _bb.v; placeholders through the registered stubs",
+  "full_rtl_attempt": "full-RTL elaboration of the element interiors (<top>_fullrtl.f) was started and stopped after ~11 min at 24.7 GB (S81 layer fix), 65.1 GB (S81 head fix) and 45.6 GB (HBM fix) to protect ot-pve1 headroom; element-interior lint is the element owners' scope",
+  "as_generated": {
+   "hbm": {
+    "rc": 1,
+    "time_s": 0.44,
+    "peak_GB": 0.04,
+    "counts": {
+     "Error-ERR": {
+      "top": 29
+     },
+     "Warning-PINMISSING": {
+      "top": 303
+     }
+    },
+    "examples": {
+     "Warning-PINMISSING": [
+      "Instance has missing pin: 'd_valid'",
+      "Instance has missing pin: 'd_ready'",
+      "Instance has missing pin: 'd_base'",
+      "Instance has missing pin: 'd_lines'"
+     ],
+     "Error-ERR": [
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'"
+     ]
+    }
+   },
+   "s81_layer": {
+    "rc": 1,
+    "time_s": 17.8,
+    "peak_GB": 1.26,
+    "counts": {
+     "Error-ERR": {
+      "top": 50
+     },
+     "Warning-PINMISSING": {
+      "top": 28237
+     }
+    },
+    "examples": {
+     "Warning-PINMISSING": [
+      "Instance has missing pin: 'busy'",
+      "Instance has missing pin: 'fault'",
+      "Instance has missing pin: 'busy'",
+      "Instance has missing pin: 'fault'"
+     ],
+     "Error-ERR": [
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'",
+      "Duplicate pin connection: 'pll'"
+     ]
+    }
+   }
+  },
+  "top_fix": {
+   "hbm": {
+    "rc": 0,
+    "time_s": 6.6,
+    "peak_GB": 0.11,
+    "counts": {
+     "Warning-PINMISSING": {
+      "top": 268
+     },
+     "Warning-UNDRIVEN": {
+      "top": 481,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+      "rtl:ot_pdie_serdes_bb.v": 1,
+      "rtl:ot_pdie_ucie_bb.v": 1
+     },
+     "Warning-UNUSEDPARAM": {
+      "rtl:hbm_lint_top_fix_real_shells.sv": 12
+     },
+     "Warning-UNUSEDSIGNAL": {
+      "top": 481,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+      "rtl:ot_pdie_serdes_bb.v": 2,
+      "rtl:ot_pdie_ucie_bb.v": 2,
+      "stubs": 6
+     }
+    },
+    "examples": {
+     "Warning-PINMISSING": [
+      "Instance has missing pin: 'rst_n'",
+      "Instance has missing pin: 'd_valid'",
+      "Instance has missing pin: 'd_ready'",
+      "Instance has missing pin: 'd_base'"
+     ],
+     "Warning-UNDRIVEN": [
+      "Signal is not driven: 'lint_nc_0'",
+      "Signal is not driven: 'lint_nc_1'",
+      "Signal is not driven: 'lint_nc_2'",
+      "Signal is not driven: 'lint_nc_3'"
+     ],
+     "Warning-UNUSEDSIGNAL": [
+      "Signal is not used: 'lint_nc_25'",
+      "Signal is not used: 'lint_nc_26'",
+      "Signal is not used: 'lint_nc_27'",
+      "Signal is not used: 'lint_nc_28'"
+     ],
+     "Warning-UNUSEDPARAM": []
+    }
+   },
+   "s81_layer": {
+    "rc": 0,
+    "time_s": 255.55,
+    "peak_GB": 3.02,
+    "counts": {
+     "Warning-MULTIDRIVEN": {
+      "top": 2417
+     },
+     "Warning-PINMISSING": {
+      "top": 28229
+     },
+     "Warning-UNDRIVEN": {
+      "top": 13996,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+      "rtl:ot_rom_4096x72_m8_bb.v": 1,
+      "rtl:ot_pdie_serdes_bb.v": 1,
+      "rtl:ot_pdie_ucie_bb.v": 1
+     },
+     "Warning-UNUSEDPARAM": {
+      "rtl:s81_layer_lint_top_fix_real_shells.sv": 11
+     },
+     "Warning-UNUSEDSIGNAL": {
+      "top": 304542,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+      "rtl:ot_rom_4096x72_m8_bb.v": 3,
+      "rtl:ot_pdie_serdes_bb.v": 2,
+      "rtl:ot_pdie_ucie_bb.v": 2,
+      "stubs": 8
+     },
+     "Warning-WIDTHEXPAND": {
+      "top": 344
+     }
+    },
+    "examples": {
+     "Warning-PINMISSING": [
+      "Instance has missing pin: 'busy'",
+      "Instance has missing pin: 'fault'",
+      "Instance has missing pin: 'busy'",
+      "Instance has missing pin: 'fault'"
+     ],
+     "Warning-WIDTHEXPAND": [
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W00' generates 770 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W01' generates 770 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W02' generates 704 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W10' generates 770 bits."
+     ],
+     "Warning-UNDRIVEN": [
+      "Signal is not driven: 'n_xc_3'",
+      "Signal is not driven: 'n_xc_5a'",
+      "Signal is not driven: 'n_xc_8'",
+      "Signal is not driven: 'n_xc_9a'"
+     ],
+     "Warning-UNUSEDSIGNAL": [
+      "Signal is not used: 'lint_nc_0'",
+      "Signal is not used: 'lint_nc_1'",
+      "Signal is not used: 'lint_nc_2'",
+      "Signal is not used: 'lint_nc_3'"
+     ],
+     "Warning-UNUSEDPARAM": [],
+     "Warning-MULTIDRIVEN": [
+      "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2412' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2408' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2403' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2398' have multiple combinational drivers. This can cause performance degradation."
+     ]
+    }
+   },
+   "s81_head": {
+    "rc": 0,
+    "time_s": 191.89,
+    "peak_GB": 2.1,
+    "counts": {
+     "Warning-MULTIDRIVEN": {
+      "top": 1682
+     },
+     "Warning-PINMISSING": {
+      "top": 19675
+     },
+     "Warning-UNDRIVEN": {
+      "top": 9612,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+      "rtl:ot_rom_4096x72_m8_bb.v": 1,
+      "rtl:ot_pdie_serdes_bb.v": 1,
+      "rtl:ot_pdie_ucie_bb.v": 1
+     },
+     "Warning-UNUSEDPARAM": {
+      "rtl:s81_head_lint_top_fix_real_shells.sv": 11
+     },
+     "Warning-UNUSEDSIGNAL": {
+      "top": 211932,
+      "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+      "rtl:ot_rom_4096x72_m8_bb.v": 3,
+      "rtl:ot_pdie_serdes_bb.v": 2,
+      "rtl:ot_pdie_ucie_bb.v": 2,
+      "stubs": 10
+     },
+     "Warning-WIDTHEXPAND": {
+      "top": 340
+     }
+    },
+    "examples": {
+     "Warning-PINMISSING": [
+      "Instance has missing pin: 'nv'",
+      "Instance has missing pin: 'busy'",
+      "Instance has missing pin: 'fault'",
+      "Instance has missing pin: 'busy'"
+     ],
+     "Warning-WIDTHEXPAND": [
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W00' generates 770 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W01' generates 770 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W02' generates 704 bits.",
+      "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W10' generates 770 bits."
+     ],
+     "Warning-UNDRIVEN": [
+      "Signal is not driven: 'n_xc_3'",
+      "Signal is not driven: 'n_xc_4a'",
+      "Signal is not driven: 'n_xc_9'",
+      "Signal is not driven: 'n_xc_10a'"
+     ],
+     "Warning-UNUSEDSIGNAL": [
+      "Signal is not used: 'lint_nc_0'",
+      "Signal is not used: 'lint_nc_1'",
+      "Signal is not used: 'lint_nc_2'",
+      "Signal is not used: 'lint_nc_3'"
+     ],
+     "Warning-UNUSEDPARAM": [],
+     "Warning-MULTIDRIVEN": [
+      "Bits [53:0] of signal 's81_head_lint_top_fix.n_cf_1678' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_head_lint_top_fix.n_cf_1676' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_head_lint_top_fix.n_cf_1672' have multiple combinational drivers. This can cause performance degradation.",
+      "Bits [53:0] of signal 's81_head_lint_top_fix.n_cf_1670' have multiple combinational drivers. This can cause performance degradation."
+     ]
+    }
+   }
+  },
+  "reading": [
+   "as generated: both tops FAIL elaboration (rc=1): Duplicate pin connection pll (HBM 29, S81 50 = error limit)",
+   "top-fix: all three elaborate (rc=0). S81 layer: MULTIDRIVEN 2,417 (n_cf_*, S3a); UNDRIVEN n_ck_* 2,417 (S3b) + n_xc_* 1,723 (S2) + 9,668 partially-bound real inputs (node a_d/b_d/a_e/b_e S4a, xs_q1 S2); PINMISSING node clk/rst_n/quiet 4,706 each (S4b), fault 6,604 (node + q, S4b/S5), busy 1,898 (S5), xs_q1/xs_e1 175 (S2)",
+   "S81 UNDRIVEN n_tk_* 120 / n_tp_* 44 are an artefact of S13: role-dependent station ports bound to narrower nets are declared input in the stubs (Verilator cannot connect a narrower net to an inout); the python lint carries their real directions",
+   "HBM top-fix: PINMISSING d_valid/d_ready/d_base/d_lines x32 (H4), rst_n x32 (H3); tile k/ku/kd/i on edge tiles are topology (unused stub ports); UNDRIVEN only lint_nc (unused SerDes/UCIe tx bits and partially-bound real ports)"
+  ]
+ },
+ "hosts": {
+  "python_lint": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/die-lint (repeated on ot-pve1)",
+  "verilator": "ot-pve1:/srv/opentallas-scratch/claude/die-lint",
+  "source_commit": "8045d16e020f3b1847cb045e43936f2d4a131c47"
+ }
+}

@@ -1,0 +1,82 @@
+{
+  "status": "PASS_BUILD_CPU_ADMISSION_FAILED_BEFORE_RUNTIME",
+  "source": "b04e893e7",
+  "owner_protected_source": "3f3c2b790",
+  "old_dispatch_supervisor": 4020932,
+  "old_build_supervisor": 4021288,
+  "old_cohort_live": false,
+  "stage_exits": {
+    "frontend": 0,
+    "access": 0,
+    "archive_bind": 0,
+    "compile": 0,
+    "link": 0
+  },
+  "runtime_admission_exit": 1,
+  "failed_post_guard": {
+    "load": 128.365234375,
+    "idle_CPUs": 10.553191489361701,
+    "required_CPUs": 16,
+    "MemAvailable_bytes": 231106007040,
+    "available_disk_bytes": 1903616831488
+  },
+  "build_peak": {
+    "sampled_aggregate_RSS_bytes": 34933096448,
+    "interval_seconds": 5,
+    "scope": "Observed runner and actual descendant RSS; estimate is not an address-space cap"
+  },
+  "top_archive": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/die/Vdie__ALL.a",
+  "top_archive_bytes": 185274882,
+  "minimum_runtime_started_in_original": false,
+  "minimum_layer_pass": false,
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "old_reference_preserved": 1959093,
+  "successor": {
+    "supervisor": 135123,
+    "source": "b04e893e7",
+    "stage": "layer-runtime",
+    "output": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/minimum_runtime_r2",
+    "command": [
+      "/srv/opentallas-scratch/admit.sh",
+      "16",
+      "--",
+      "python3",
+      "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/src/tools/qwen_rom_combined_p0_20261005/run_full.py",
+      "--output",
+      "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/minimum_runtime_r2",
+      "--source",
+      "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/src",
+      "--stage",
+      "layer-runtime",
+      "--workers",
+      "16"
+    ],
+    "RT_THREADS": 16,
+    "compiled_DUT_threads": 1,
+    "top_rebuilt": false,
+    "automatic_replay": false,
+    "physical_qualified": false,
+    "full_token_pass": false
+  },
+  "successor_pre_guard": {
+    "time": 1791266654.271989,
+    "load": 93.82373046875,
+    "idle_CPUs": 20.609660778489918,
+    "required_CPUs": 16,
+    "requested_guard_GiB": 16,
+    "MemAvailable_bytes": 76557082624,
+    "available_disk_bytes": 1898797252608
+  },
+  "archive_sha256": "dca4fc6d5b12f3c80f7def3e0320dc5b0bf8dbad079df0dfc7c366d6ac66d4d6",
+  "thread_inventory": {
+    "compiled_Vdie_threads": 1,
+    "tile_context_threads": 1,
+    "RtPool_workers": 16,
+    "old_reference_tasks": 17,
+    "old_RT_THREADS_override": false,
+    "successor_RT_THREADS": 16
+  },
+  "source_binding": "Descartes direct actual4module hashes matched3f3; protected full504 READ_RSEL1, not rawot_qwen_stream4_cdc_pc.RSEL1",
+  "successor_scope": "Standalone controlled layer-runtime only; necessary minimum driverTU link; no top/frontend/engine rebuild; unchangedguard; no automatic replay"
+}

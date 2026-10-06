@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS_INTEGRATED_STAGE_JOIN_CONTROL",
+  "compile_rc": 0,
+  "runtime_rc": 0,
+  "local_lightweight": true,
+  "coded_bits": 216,
+  "full_frame_bits": 73,
+  "checks": [
+    "start backpressure",
+    "completion backpressure",
+    "CE masks+scrub",
+    "DUE freeze",
+    "warm active drain+quarantine",
+    "position bit19 mismatch",
+    "token bit16 mismatch"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+    "rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_stage_join.sv": "0a2b6de696f7fb22e91d57bc5a78bb6e7e7015c1ad8227018410dfa37e860cd9"
+  },
+  "commands": [
+    [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb_hbm_integrated_stage_join",
+      "-o",
+      "/tmp/hbm-integrated-stage-join.vvp",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv",
+      "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv",
+      "rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_stage_join.sv"
+    ],
+    [
+      "vvp",
+      "/tmp/hbm-integrated-stage-join.vvp"
+    ]
+  ],
+  "numerical_gate": false,
+  "all_levers_whole_token": false,
+  "physical_qualified": false
+}

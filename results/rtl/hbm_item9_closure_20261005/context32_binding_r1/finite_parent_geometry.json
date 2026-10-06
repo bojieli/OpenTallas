@@ -1,0 +1,595 @@
+{
+  "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
+  "source": "actual existing accepted outer retained_claims; no existing outer edit",
+  "NSM": 32,
+  "fullwidth_request_bits_per_caller": 4096,
+  "response_bits_per_caller": 4096,
+  "analytical_shared_upper_layer_capacity_before_other_claims": 9972,
+  "aggregate_requests_are_not_free_shared_spine_tracks": true,
+  "pins_at_corners_are_bounds_not_installed_macro_terminals": true,
+  "rows": [
+    {
+      "caller": "sm0",
+      "source_allocation": [
+        625.104,
+        1596.24,
+        2827.848,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 23594.064000000002,
+      "analytical_430p56um_cuts": 55,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm1",
+      "source_allocation": [
+        3087.072,
+        1596.24,
+        5289.816000000001,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21132.096,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm2",
+      "source_allocation": [
+        5549.04,
+        1596.24,
+        7751.784,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18670.128,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm3",
+      "source_allocation": [
+        8011.008,
+        1596.24,
+        10213.752,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16208.160000000002,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm4",
+      "source_allocation": [
+        625.104,
+        4188.24,
+        2827.848,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21002.064000000002,
+      "analytical_430p56um_cuts": 49,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm5",
+      "source_allocation": [
+        3087.072,
+        4188.24,
+        5289.816000000001,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18540.096,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm6",
+      "source_allocation": [
+        5549.04,
+        4188.24,
+        7751.784,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16078.128,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm7",
+      "source_allocation": [
+        8011.008,
+        4188.24,
+        10213.752,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 13616.160000000002,
+      "analytical_430p56um_cuts": 32,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm8",
+      "source_allocation": [
+        13324.176,
+        1596.24,
+        15526.92,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16208.160000000002,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm9",
+      "source_allocation": [
+        15786.144,
+        1596.24,
+        17988.888,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18670.128,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm10",
+      "source_allocation": [
+        18248.112,
+        1596.24,
+        20450.856,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21132.096,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm11",
+      "source_allocation": [
+        20710.08,
+        1596.24,
+        22912.824,
+        3669.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 23594.064000000002,
+      "analytical_430p56um_cuts": 55,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm12",
+      "source_allocation": [
+        13324.176,
+        4188.24,
+        15526.92,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 13616.160000000002,
+      "analytical_430p56um_cuts": 32,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm13",
+      "source_allocation": [
+        15786.144,
+        4188.24,
+        17988.888,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16078.128,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm14",
+      "source_allocation": [
+        18248.112,
+        4188.24,
+        20450.856,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18540.096,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm15",
+      "source_allocation": [
+        20710.08,
+        4188.24,
+        22912.824,
+        6261.816
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21002.064000000002,
+      "analytical_430p56um_cuts": 49,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm16",
+      "source_allocation": [
+        625.104,
+        21206.88,
+        2827.848,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 23596.224000000002,
+      "analytical_430p56um_cuts": 55,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm17",
+      "source_allocation": [
+        3087.072,
+        21206.88,
+        5289.816000000001,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21134.256,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm18",
+      "source_allocation": [
+        5549.04,
+        21206.88,
+        7751.784,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18672.288,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm19",
+      "source_allocation": [
+        8011.008,
+        21206.88,
+        10213.752,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16210.320000000002,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm20",
+      "source_allocation": [
+        625.104,
+        18874.08,
+        2827.848,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21263.424000000003,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm21",
+      "source_allocation": [
+        3087.072,
+        18874.08,
+        5289.816000000001,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18801.456000000002,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm22",
+      "source_allocation": [
+        5549.04,
+        18874.08,
+        7751.784,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16339.488000000001,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm23",
+      "source_allocation": [
+        8011.008,
+        18874.08,
+        10213.752,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 13877.520000000002,
+      "analytical_430p56um_cuts": 33,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm24",
+      "source_allocation": [
+        13324.176,
+        21206.88,
+        15526.92,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16210.320000000002,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm25",
+      "source_allocation": [
+        15786.144,
+        21206.88,
+        17988.888,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18672.288,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm26",
+      "source_allocation": [
+        18248.112,
+        21206.88,
+        20450.856,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21134.256,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm27",
+      "source_allocation": [
+        20710.08,
+        21206.88,
+        22912.824,
+        23280.456000000002
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 23596.224000000002,
+      "analytical_430p56um_cuts": 55,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm28",
+      "source_allocation": [
+        13324.176,
+        18874.08,
+        15526.92,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 13877.520000000002,
+      "analytical_430p56um_cuts": 33,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm29",
+      "source_allocation": [
+        15786.144,
+        18874.08,
+        17988.888,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 16339.488000000001,
+      "analytical_430p56um_cuts": 38,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm30",
+      "source_allocation": [
+        18248.112,
+        18874.08,
+        20450.856,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 18801.456000000002,
+      "analytical_430p56um_cuts": 44,
+      "installed_pipeline_cycles": 0
+    },
+    {
+      "caller": "sm31",
+      "source_allocation": [
+        20710.08,
+        18874.08,
+        22912.824,
+        20947.656000000003
+      ],
+      "endpoint_allocation": [
+        10861.776,
+        11735.28,
+        12676.152,
+        13139.256000000001
+      ],
+      "any_bbox_pin_Manhattan_upper_um": 21263.424000000003,
+      "analytical_430p56um_cuts": 50,
+      "installed_pipeline_cycles": 0
+    }
+  ],
+  "max_span_um": 23596.224000000002,
+  "installed_new_cycles": 0,
+  "actual_source_load_binding": "context32_binding_r1/binding.json",
+  "physical_clock_binding": "owned next: map true retained caller clock terminals to own mapped cells/CTS before contextual qualification",
+  "physical_channel_binding": "owned next: source-local caller and finite hb_coll endpoint/mux; actual cuts must be modeled before installation",
+  "contextual_SS_FF": false,
+  "adopted": false
+}

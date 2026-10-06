@@ -30,7 +30,8 @@ module ot_dsrom_window_stage_pipeline #(
     parameter integer NPC = 32,
     parameter integer WTAGW = 13,
     parameter integer BEATW = 4,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter integer SPLIT_COLUMNS = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -185,7 +186,17 @@ module ot_dsrom_window_stage_pipeline #(
     reg  [3:0] bank_qv;
     reg  v1, bad1, v0, bad0;
     reg [USER_W-1:0] user0; reg [POS_W-1:0] first0; reg [3:0] mask0;
-    reg [3:0] bank_ok0;
+    reg [POS_W-1:0] owner_first0;
+    reg [POS_W:0] owner_end0;
+    reg [USER_W-1:0] owner_user0;
+    // Accepted-request witnesses share the payload's two read edges. Capture
+    // the preedge owner/completion state; a later job or landing cannot change
+    // this request's validity. No permission is reused for another request.
+    always @(posedge clk) if (req_v) begin
+        owner_first0 <= j_first;
+        owner_end0 <= {1'b0, j_first} + (POS_W+1)'(j_count);
+        owner_user0 <= j_user;
+    end
     reg  [USER_W-1:0] user1;
     reg  [POS_W-1:0] first1;
     reg  [3:0] mask1;
@@ -195,13 +206,20 @@ module ot_dsrom_window_stage_pipeline #(
         wire [1:0] lane = 2'(b) - req_first_row[1:0];
         wire [POS_W:0] wanted = {1'b0, req_first_row} + (POS_W+1)'(lane);
         wire [4:0] raddr = wanted[6:2];
-        wire [POS_W:0] rel = wanted - {1'b0, j_first};
-        wire ok = wanted < (POS_W+1)'(MAX_CONTEXT) && wanted >= {1'b0, j_first} &&
-                  rel < (POS_W+1)'(j_count) && req_user == j_user && slot_done[wanted[6:0]];
+        reg [POS_W:0] wanted0;
+        reg [3:0] complete_group0;
+        always @(posedge clk) if (req_v) wanted0 <= wanted;
+        for (genvar group=0; group<4; group=group+1) begin : g_read_complete
+            wire [4:0] slot_row = 5'(8*group) + 5'(raddr[2:0]);
+            always @(posedge clk) if (req_v)
+                complete_group0[group] <= slot_done[{slot_row, 2'(b)}];
+        end
+        wire ok0 = wanted0 < (POS_W+1)'(MAX_CONTEXT) &&
+                   wanted0 >= {1'b0, owner_first0} && wanted0 < owner_end0 &&
+                   user0 == owner_user0 && complete_group0[wanted0[6:5]];
         for (genvar k = 0; k < PITCH; k = k + 1) begin : g_col
             localparam integer CWID = (k < 16) ? 256 : 128;
-            reg [CWID-1:0] mem [0:31];
-            reg [CWID-1:0] q;
+            wire [CWID-1:0] q;
             wire [NPC-1:0] chosen;
             wire [CWID-1:0] data_tree [0:2*NPC-2];
             reg [CWID-1:0] wd;
@@ -221,23 +239,39 @@ module ot_dsrom_window_stage_pipeline #(
                 end
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) row_we[r]<=0; else row_we[r]<=|matching;
-                always @(posedge clk) if (row_we[r]) mem[r]<=wd;
                 assign write_sector[(4*r+b)*PITCH+k]=row_we[r];
             end
-            // Four independent eight-entry reads, registered before final mux.
-            reg [CWID-1:0] rq [0:3];
-            reg [1:0] rh;
-            reg read_v;
-            for (genvar group=0;group<4;group=group+1) begin : g_read
-                always @(posedge clk) if (req_v) rq[group]<=mem[8*group+raddr[2:0]];
-            end
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) read_v<=0;
-                else begin
-                    read_v<=req_v;
-                    if(req_v) rh<=raddr[4:3];
-                    if(read_v) q<=rq[rh];
+            if (SPLIT_COLUMNS) begin : g_split
+                if(CWID==256) begin : g_payload
+                    (* keep_hierarchy = "yes" *) ot_dsrom_window_column_256 u_column (
+                        .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                        .read_v(req_v), .read_addr(raddr), .read_data(q));
+                end else begin : g_scale
+                    (* keep_hierarchy = "yes" *) ot_dsrom_window_column_128 u_column (
+                        .clk(clk), .rst_n(rst_n), .row_we(row_we), .write_data(wd),
+                        .read_v(req_v), .read_addr(raddr), .read_data(q));
                 end
+            end else begin : g_flat
+                reg [CWID-1:0] mem [0:31];
+                for (genvar r=0;r<32;r=r+1) begin : g_write
+                    always @(posedge clk) if (row_we[r]) mem[r]<=wd;
+                end
+                reg [CWID-1:0] rq [0:3];
+                reg [CWID-1:0] q_flat;
+                reg [1:0] rh;
+                reg read_v;
+                for (genvar group=0;group<4;group=group+1) begin : g_read
+                    always @(posedge clk) if (req_v) rq[group]<=mem[8*group+raddr[2:0]];
+                end
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) read_v<=0;
+                    else begin
+                        read_v<=req_v;
+                        if(req_v) rh<=raddr[4:3];
+                        if(read_v) q_flat<=rq[rh];
+                    end
+                assign q=q_flat;
+            end
             if (k < 16) begin : g_c
                 assign bank_q[b][256*k +: 256] = q;
             end else begin : g_s
@@ -245,8 +279,8 @@ module ot_dsrom_window_stage_pipeline #(
             end
         end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin bank_ok0[b]<=0; bank_qv[b]<=0; end
-            else begin if(req_v) bank_ok0[b]<=ok; if(v0) bank_qv[b]<=bank_ok0[b]; end
+            if (!rst_n) bank_qv[b]<=0;
+            else if(v0) bank_qv[b]<=ok0;
     end endgenerate
     // lanes (stage4's second register: bank order -> chronological lanes)
     wire [3:0] lane_ok;
@@ -297,4 +331,62 @@ module ot_dsrom_window_stage_pipeline #(
     initial if (POS_W < 21 || USER_W < 10 || MAX_CONTEXT != 1048576 || WTAGW < 10)
         $fatal(1, "ot_dsrom_window_stage_pipeline parameter contract failed");
 `endif
+endmodule
+
+// One complete full-depth sector column. This hierarchy cut preserves both
+// existing read edges and read-before-write behavior, including payload state
+// across reset. The parent owns the write-data/enable registers and validity.
+module ot_dsrom_window_column #(
+    parameter integer WIDTH=256
+) (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [WIDTH-1:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output reg [WIDTH-1:0] read_data
+);
+    reg [WIDTH-1:0] mem [0:31];
+    reg [WIDTH-1:0] rq [0:3];
+    reg [1:0] rh;
+    reg pending;
+    generate
+        for(genvar row=0;row<32;row=row+1) begin : g_write
+            always @(posedge clk) if(row_we[row]) mem[row]<=write_data;
+        end
+        for(genvar group=0;group<4;group=group+1) begin : g_read
+            always @(posedge clk) if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];
+        end
+    endgenerate
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) pending<=0;
+        else begin
+            pending<=read_v;
+            if(read_v) rh<=read_addr[4:3];
+            if(pending) read_data<=rq[rh];
+        end
+endmodule
+
+// Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
+module ot_dsrom_window_column_128 (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [127:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [127:0] read_data
+);
+    ot_dsrom_window_column #(.WIDTH(128)) u_logic (.*);
+endmodule
+
+// Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
+module ot_dsrom_window_column_256 (
+    input wire clk, rst_n,
+    input wire [31:0] row_we,
+    input wire [255:0] write_data,
+    input wire read_v,
+    input wire [4:0] read_addr,
+    output wire [255:0] read_data
+);
+    ot_dsrom_window_column #(.WIDTH(256)) u_logic (.*);
 endmodule

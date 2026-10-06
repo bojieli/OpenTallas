@@ -1,0 +1,13 @@
+{
+  "source": "d0f86a65e CHECK_PIPE measured63028",
+  "scope": "Conditional native fast-clock checked-grant receiver copies; actual golden commit_valid[0] edge, not extra production pipeline",
+  "receiver_FF_bits": 4,
+  "paired_request_reply_grants": 2,
+  "architectural_added_cycles": 0,
+  "real_clock": "same actual native fast_clk=clk",
+  "clock_period_ps": 833.333333,
+  "SS_uncertainty_ps": 60,
+  "FF_uncertainty_ps": 25,
+  "why": "CHECK_PIPE grants must terminate at real clocked receiver loads internally rather than unloaded falsepathed observation outputs",
+  "parent_backend_qualification": false
+}

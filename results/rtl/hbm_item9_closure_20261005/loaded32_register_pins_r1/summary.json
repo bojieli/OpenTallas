@@ -1,0 +1,926 @@
+{
+  "source_commit": "72d58593a9322bb70a0922971cbaada72543a60a",
+  "mapped_sha256": "fc0035eee0e4a078ffd141beb244c44d7d8a278466876aec9f64f7a313b41c24",
+  "layout_sha256": "6e08f177b83d4071641ba9bf0388adf8b1be284f90873202ba4b36a1c8754743",
+  "callers": [
+    {
+      "caller": 0,
+      "actual_allocation": {
+        "name": "sm0",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          625.104,
+          1596.24,
+          2827.848,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 1,
+      "actual_allocation": {
+        "name": "sm1",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          3087.072,
+          1596.24,
+          5289.816000000001,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 2,
+      "actual_allocation": {
+        "name": "sm2",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          5549.04,
+          1596.24,
+          7751.784,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 3,
+      "actual_allocation": {
+        "name": "sm3",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          8011.008,
+          1596.24,
+          10213.752,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 4,
+      "actual_allocation": {
+        "name": "sm4",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          625.104,
+          4188.24,
+          2827.848,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 5,
+      "actual_allocation": {
+        "name": "sm5",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          3087.072,
+          4188.24,
+          5289.816000000001,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 6,
+      "actual_allocation": {
+        "name": "sm6",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          5549.04,
+          4188.24,
+          7751.784,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 7,
+      "actual_allocation": {
+        "name": "sm7",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          8011.008,
+          4188.24,
+          10213.752,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 8,
+      "actual_allocation": {
+        "name": "sm8",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          13324.176,
+          1596.24,
+          15526.92,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 9,
+      "actual_allocation": {
+        "name": "sm9",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          15786.144,
+          1596.24,
+          17988.888,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 10,
+      "actual_allocation": {
+        "name": "sm10",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          18248.112,
+          1596.24,
+          20450.856,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 11,
+      "actual_allocation": {
+        "name": "sm11",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          20710.08,
+          1596.24,
+          22912.824,
+          3669.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 12,
+      "actual_allocation": {
+        "name": "sm12",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          13324.176,
+          4188.24,
+          15526.92,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 13,
+      "actual_allocation": {
+        "name": "sm13",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          15786.144,
+          4188.24,
+          17988.888,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 14,
+      "actual_allocation": {
+        "name": "sm14",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          18248.112,
+          4188.24,
+          20450.856,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 15,
+      "actual_allocation": {
+        "name": "sm15",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          20710.08,
+          4188.24,
+          22912.824,
+          6261.816
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 16,
+      "actual_allocation": {
+        "name": "sm16",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          625.104,
+          21206.88,
+          2827.848,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 17,
+      "actual_allocation": {
+        "name": "sm17",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          3087.072,
+          21206.88,
+          5289.816000000001,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 18,
+      "actual_allocation": {
+        "name": "sm18",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          5549.04,
+          21206.88,
+          7751.784,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 19,
+      "actual_allocation": {
+        "name": "sm19",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          8011.008,
+          21206.88,
+          10213.752,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 20,
+      "actual_allocation": {
+        "name": "sm20",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          625.104,
+          18874.08,
+          2827.848,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 21,
+      "actual_allocation": {
+        "name": "sm21",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          3087.072,
+          18874.08,
+          5289.816000000001,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 22,
+      "actual_allocation": {
+        "name": "sm22",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          5549.04,
+          18874.08,
+          7751.784,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 23,
+      "actual_allocation": {
+        "name": "sm23",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          8011.008,
+          18874.08,
+          10213.752,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 24,
+      "actual_allocation": {
+        "name": "sm24",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          13324.176,
+          21206.88,
+          15526.92,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 25,
+      "actual_allocation": {
+        "name": "sm25",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          15786.144,
+          21206.88,
+          17988.888,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 26,
+      "actual_allocation": {
+        "name": "sm26",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          18248.112,
+          21206.88,
+          20450.856,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 27,
+      "actual_allocation": {
+        "name": "sm27",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          20710.08,
+          21206.88,
+          22912.824,
+          23280.456000000002
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 28,
+      "actual_allocation": {
+        "name": "sm28",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          13324.176,
+          18874.08,
+          15526.92,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 29,
+      "actual_allocation": {
+        "name": "sm29",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          15786.144,
+          18874.08,
+          17988.888,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 30,
+      "actual_allocation": {
+        "name": "sm30",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          18248.112,
+          18874.08,
+          20450.856,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    },
+    {
+      "caller": 31,
+      "actual_allocation": {
+        "name": "sm31",
+        "master": "hfd_sm",
+        "kind": "sm",
+        "bbox_um": [
+          20710.08,
+          18874.08,
+          22912.824,
+          20947.656000000003
+        ]
+      },
+      "register_kinds": {
+        "bst": 3,
+        "c_count": 8,
+        "c_data": 4096,
+        "c_mode": 1,
+        "vr": 4096
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 3,
+        "DFFHQNx1_ASAP7_75t_R": 8201
+      },
+      "clock_connections": {
+        "clk_sm": 8204
+      }
+    }
+  ],
+  "request_register_bits": 131072,
+  "response_register_bits": 131072,
+  "distributed_vector_bits": 262144,
+  "root_clock": "clk_sm",
+  "actual_register_CLK_connections": true,
+  "propagated_root_insertion_measured": false,
+  "finite_endpoint_mux_allocation": {
+    "name": "hb_coll",
+    "master": "hfd_coll",
+    "kind": "spine",
+    "bbox_um": [
+      10861.776,
+      11735.28,
+      12676.152,
+      13139.256000000001
+    ]
+  },
+  "bulk_actual_pin_map": "/srv/opentallas-scratch2/codex/item9-closure-20261005/loaded32-register-pins-r1/actual_register_pins.jsonl",
+  "bulk_pin_map_sha256": "836474f0c11f83df8ee2a71343e206e87894654f65e8b208e7d2106e384682a8",
+  "shared_spine_tracks_assumed_free": 0,
+  "external_perimeter_equivalent": false,
+  "physical_qualified": false,
+  "adopted": false
+}

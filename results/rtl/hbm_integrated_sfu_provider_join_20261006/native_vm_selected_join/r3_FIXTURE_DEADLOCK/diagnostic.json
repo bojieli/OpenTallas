@@ -1,0 +1,57 @@
+{
+  "scope": "READONLY existing E2 PID241241 diagnostic; no job/source edits/build/gate",
+  "pinned_source": "5cf293aa6",
+  "root": "/srv/opentallas-scratch2/codex/hbm-native-sfu-selected-5cf293aa6/r3",
+  "wait": "tb_hbm_integrated_sfu_native_vm_join.sv:120 while(!ir_r)tick()",
+  "state": {
+    "por_n": 1,
+    "warm_req": 0,
+    "bind_v": 0,
+    "retire_v": 0,
+    "publication_r": 0,
+    "ir_v": 1,
+    "ir_rsp_r": 0,
+    "ir_addr_WORD": 64,
+    "ir_tag": 0,
+    "index_state": 7,
+    "index_state_name": "RESP",
+    "index_is_write": 0,
+    "index_row": 0,
+    "index_read_ready": 0,
+    "index_drained": 0,
+    "permission": 1,
+    "admission": 1,
+    "publisher_phase": 8,
+    "publisher_phase_name": "DONE",
+    "publisher_base_WORD": 64,
+    "publisher_tag": 3305111552,
+    "frame73_hex": "1fffff00019ca001234",
+    "stage_complete": 1,
+    "stage_retained": 1,
+    "stage_issued": 1,
+    "result_verified": 1,
+    "CP_reads": 8,
+    "CP_writes": 0,
+    "caller_release_ACKs": 0,
+    "fault": 0,
+    "VM_fault": 0,
+    "bridge_fault": 0,
+    "credit_empty": 1
+  },
+  "snapshots": [
+    {
+      "simulation_time_fs": 7495963913433,
+      "clock_periods_derived": 8995149
+    },
+    {
+      "simulation_time_fs": 7543458118095,
+      "clock_periods_derived": 9052142
+    }
+  ],
+  "clock_count_note": "Unused bench cycles integer optimized away; counts above explicitly derived from context time/833334fs period, not read from absent storage. Other counters literal decoded generated field values.",
+  "consumer_payload": "Held first32 FP32 corrected SRAM response matches retained sfu_exp.mem case0 exactly; firstword406c0000. This is readonly observation, not gate PASS.",
+  "cause": "Ready polling after posedge+#1 misses prior acceptance. Accepted query reaches RESP and holds good data, but requester continues polling request-ready while response-ready remains0. Generated coroutine cpp __0.cpp lines897-903 keeps ir_v1 in same loop; deassert ir_v at938 unreachable.",
+  "recommendation": "Bench-only: settle address/frame/valid changes; qualify request ready before accepting edge, perform exactly one accepted posedge, then deassert valid next negedge. Audit bind/retire waits similarly. Never force response-ready or modify running state.",
+  "process_after": "PID running, TracerPid0; brief sudo gdb read/detach completed, subsequent proc mem O_RDONLY reads only.",
+  "production_norm": "Transferred literal ABI/golden paths/SHA/recipe to Gauss; no competing fixture RTL/job."
+}

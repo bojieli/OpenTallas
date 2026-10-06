@@ -1,0 +1,38 @@
+{
+  "mapped": false,
+  "source_sha256": {
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+    "rtl/experimental/w5_context/ot_w5_fault_low.sv": "a799e019d88635136c8786cc29864edd233c5e1bbce2cce7bd7b0756cc25a290",
+    "rtl/experimental/w5_context/ot_w5_stage.sv": "9b7e181c9b5a10aa7daef7f8ab54171bfaf7a2bb218d45484e04d011501c617f",
+    "rtl/experimental/w5_context/ot_w5_context.sv": "13d1b3e01a40ecf2eb7e87c6c5012cd574d8520c281b2f4499816afb04b4c730",
+    "rtl/experimental/w5_context/ot_w5_loader.sv": "c16812c85149c7240f4dff809de8e22bc300334d1e285fef305da29d8999038e",
+    "rtl/hdc/kv/ot_qwen_s4_checked_state.sv": "45e3c928f992e277d7e8dbcc2b211316ee7a803883707ad4cc20ec344dbd612e",
+    "rtl/experimental/w5_context/ot_w5_return.sv": "821f1b7979d74405f73e29117a567344523f5c9cb6e29efa889341c9f7ae917f"
+  },
+  "bench_sha256": "bd61c427c7d6a42627b47b06c28cd982a99c30fa2ad4b2adcb12855b61565036",
+  "sim_period_ns": 0.833334,
+  "physical_period_ns": 0.8333333333333333,
+  "cell_models": {
+    "models": 2,
+    "skipped": [],
+    "missing": []
+  },
+  "removed_statements": [],
+  "compile_rc": 0
+}

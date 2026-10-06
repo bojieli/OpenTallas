@@ -1,0 +1,100 @@
+Bacon bench-only / Lorentz sole frontend, compile, link and runtime.
+
+Actual top tb_hbm_integrated_minimum_parent wraps the existing selected
+ ot_ds_hbm_cluster20_integrated, retaining ND2/NSM2/NS2/NPC2/MEM_WORDS2097152
+ and all Lorentz published selected parameters including native norm input,
+ native SFUc12 and formatter. Driver Vtb_hbm_integrated_minimum_parent uses
+ the generated eval/final/timing API; clear-input include names come from the
+ actual parent ANSI header, not a guessed generated narrow alias.
+
+One released L20.attn.hc_pre_norm KIND0/N64/D5120/PUBLISH_QUANT1 stage runs on
+ die0. Die1 has no offered work. Real CP provider x20480/gain5120 words, root
+ accepted output extent3584+12800, all400 unique accepted full73 SRAM ACKs,
+ actual samebank400 protected1024b read responses, all12800 words compared
+ against retained FP32/codes/signed10 scales/BF16 golden through WORD16383.
+ Expected output is never a DUT payload driver. The SV wrapper only observes
+ parent internal CP and ACK handshakes; it drives no internal state or ports.
+
+Real END-only session is Gibbs's literal minimum native caller recipe:
+ cmd0=2000000000000000, actual db accepted TOKEN10001/POSfffff/GEN9/JOB9234abcd.
+ No launch is invented. Status2/no RESULT is mandatory after actual stage/root
+ drains. This establishes numerical one-stage integration, not numerical token
+ qualification. No claims of SFU/formatter execution from merely enabled flags;
+ their missing released combined recipe remains a separate source-owner hook.
+ The local-VM SU704-bit programs do not silently become SM64 instructions.
+
+Negative: offered norm frame flips TOKEN bit16 while actual root allocation
+ holds correctfull73, require zero acceptance over7 real edges; correct call
+ must then execute without normal drop. All400 SRAM replies stall3edges and
+ must hold both metadata anddata. Warm request holds lease7edges before real
+ publicationaccept, rootretire, actual CPL acceptance and all3 reset ACKs.
+ Optional +WRONG_RELEASE instead tries foreignTOKEN only AFTER real numeric
+ readback, requiring stickyfault/retainedstage/root/noCPL/noresetACK. No force,
+ injected ACK, output replay or hardwired shared grant.
+
+Concrete blocker in original parent pin2b12e330d / SHA0fb653b55d7388ba9696f05212ab776c5b28933afb01b2615d1b8a166d81a366:
+ rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv:855 compares
+ input norm_allocation_frame with protected norm_held_frame before enrollment.
+ Norm stage admit requires allocation_valid before stage_join captures held
+ frame. Nonzero actualCP context/root bind cannot get firstnorm_offer_r. Gibbs
+ owns offered-vs-retained frame source repair; harness does not forge frame0 or
+ relax authorization. The source-derived mechanism-progress diagnostic reports
+ the actual stuck phase/counters and returnsFAIL, never a closed-parent verdict.
+
+Preparation on compute host only (no build/runtime performed by Bacon):
+ python3 physical/hbm_die_abstracts_20261006/memory_control/prepare_integrated_minimum_parent_fixture.py --retained-stage /srv/opentallas-scratch/claude/dsrom-suchains/norm/out/cases/L20.attn.hc_pre_norm --output OWN_NEW_NVME_ATTEMPT
+ Run linked Lorentz executable from OWN_NEW_NVME_ATTEMPT with +DIR=gold.
+ Sparse separate die0_p0/p1,die1_p0/p1 readmemh files preserve actual provider
+ zero initializer and full selected capacity. No common gpu_sys_mem_prefix:
+ current memsys_adapter defaults separate die prefixes, DIE_IDX=-1.
+ Exact retained hashes verified in preparation; original files copied verbatim.
+ Clock periods host4000ps/SM833.334ps/mem1000ps/link900ps are functional fixture
+ clocks, not an SS/FF contextual clock or closure claim.
+
+Lorentz adds this wrapper to actual files.f and chooses wrapper top BEFORE new
+ current graph generation; old frontend287532 remains untouched. Exposed wrapper
+ parameters match parent source and passed selected flags. Compile/link driver
+ physical/hbm_die_abstracts_20261006/memory_control/hbm_integrated_minimum_parent_main.cpp
+ alongside same-directory hbm_integrated_minimum_parent_inputs.inc. Lorentz must
+ verify emitted generated wide-port layout and any API compilation diagnostics.
+ No Bacon frontend, C++ compiler, math gate, primitive gate or runtime was run.
+
+CONTINUATION SOURCE (opt-in, first norm source snapshot remains immutable):
+Gibbs actual recipe GIBBS_TO_BACON_PARENT_SFU_FORMATTER_CONTINUATION_20261006.txt
+selects CASE1/fn1/tagc5000001, all64 golden results DIFFER from inputs. Provider
+BYTEa0000..a00ff preserves all norm input bytes. Native output WORD64..127 is
+an independent32SRAM extent. New session full73 uses JOB9234abce/GENa/TOKEN10002/
+POSfffff after actual prior warm/reset release. Same parent, no leaf replacement.
+
+prepare helper optional --sfu-vectors results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors
+verifies both immutable vector hashes and emits CASE1 into actual provider.
+Lorentz schedules +SFU_NEXT after first norm terminal, which runs ONLY the new
+actual SFU mechanism in the same parent/harness and avoids norm passing replay.
+Optional +CONTINUE_SFU instead runs norm thenSFU within the same model instance
+ONLY when the norm portion has not been run before. Do not run both. No new
+frontend/runtime by Bacon; Lorentz owns source-pin/header/compile diagnostics.
+Readonly SFU monitors count8CP reads/returns,3orderedfull73TX,2uniquecheckedSRAM
+ACKs,1realsharedreverseACK. Two held root responses compare all64 exact golden.
+Wrong highTOKEN offered enrollment refuses before matching positive; actual
+warm/publication/rootretire/CPLcontext/warm ACK drains. ENDstatus2 remains a real
+context terminal, NEVER a numerical RESULT or all-levers completion claim.
+
+FORMATTER CONTINUATION SOURCE BLOCKERS, confirmed directly by Gibbs:
+- selected parent external gather_book_valid -> u_shared.installed_book_valid
+  has no installed allocation/book-receipt producer inside current graph;
+- no released numerical96x512 score/ID producer/vector fixture supplied;
+- gather_result_published and gather_reverse_done are external callbacks with
+  no installed selected-ID consumer/publication/reverse receipt producer;
+- SM RESULT readsUR[fa], with launchUR0=inputTOKEN. No native SRAM/formatter
+  result-to-SMRESULT program/producer exists in supplied current locators.
+Actual hooks are rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv
+u_shared (.installed_book_valid/.result_published/.source_reverse_done),
+u_normal_store exposed normal_* source/consumer ports and u_formatter_provider
+publication_done/source_reverse_done; actualRESULT source
+rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv O_RESULT.
+The retained formatter benchmark's page() protocol pattern is NOT a released
+numerical producer. Do not use it or constantbookvalid/reverse_done/UR0echo to
+qualify this chain. Formatter flags remain1, execution0 until literal receipts
+and real payload producer arrive. Runtime emits explicit PARENT_FORMATTER_OPEN;
+only real SFU stage exactness can receive PASS, all_levers_qualified stays0.
+No formatter request is sent while these actual source bindings are missing.

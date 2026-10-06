@@ -44,7 +44,10 @@ def build(work, netlist=None):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['rtl-precheck','activity','timing','power'])
     p.add_argument('--work',type=Path,required=True);p.add_argument('--routed',type=Path)
+    p.add_argument('--hard-cfg',action='store_true')
     a=p.parse_args();a.work=a.work.resolve()
+    global BENCH
+    if a.hard_cfg: BENCH=ROOT/'rtl/experimental/w5_context/tb_w5_cfg_context.sv'
     if a.command=='rtl-precheck':
         exe,meta=build(a.work);r=subprocess.run(['vvp','-n',str(exe)],capture_output=True,text=True,cwd=a.work)
         log=r.stdout+r.stderr;(a.work/'sim.log').write_text(log)

@@ -1,0 +1,61 @@
+{
+  "source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "source_report_sha256": "a99f6c270cff5629e01a2e09ba3e4aaecc1a5ffeca0d7789f322edce5030e6d9",
+  "mandatory_baseline_hold_failure": true,
+  "paths": [
+    {
+      "startpoint": "u_e.i2x_q0[174]$_DFF_P_",
+      "endpoint": "u_e.g_mac[0].g_mz.u_x/q[450]$_DFF_P_",
+      "launch_clock_ps": 293.0,
+      "capture_clock_ps": 354.4,
+      "capture_minus_launch_skew_ps": 61.4,
+      "clock_to_D_min_delay_ps": 74.7,
+      "data_arrival_ps": 367.7,
+      "data_required_ps": 378.5,
+      "rounded_slack_ps": -10.8,
+      "current_clock_hold_uncertainty_ps": 25,
+      "proposed_positive_buffers": 1,
+      "latency_delta_cycles": 0
+    },
+    {
+      "startpoint": "u_e.i1_q1[133]$_DFF_P_",
+      "endpoint": "u_e.i2x_q0[133]$_DFF_P_",
+      "launch_clock_ps": 288.4,
+      "capture_clock_ps": 351.5,
+      "capture_minus_launch_skew_ps": 63.1,
+      "clock_to_D_min_delay_ps": 91.5,
+      "data_arrival_ps": 379.9,
+      "data_required_ps": 382.8,
+      "rounded_slack_ps": -2.9,
+      "current_clock_hold_uncertainty_ps": 25,
+      "proposed_positive_buffers": 1,
+      "latency_delta_cycles": 0
+    },
+    {
+      "startpoint": "u_e.g_ir.r_xs_q0[199]$_DFF_P_",
+      "endpoint": "u_e.fw_q0[199]$_DFF_P_",
+      "launch_clock_ps": 307.0,
+      "capture_clock_ps": 347.3,
+      "capture_minus_launch_skew_ps": 40.3,
+      "clock_to_D_min_delay_ps": 63.8,
+      "data_arrival_ps": 370.8,
+      "data_required_ps": 371.8,
+      "rounded_slack_ps": -0.9,
+      "current_clock_hold_uncertainty_ps": 25,
+      "proposed_positive_buffers": 1,
+      "latency_delta_cycles": 0
+    }
+  ],
+  "buffer_area_um2": 0.0729,
+  "three_buffers_area_um2": 0.2187,
+  "additional_local_tracks": 3,
+  "extra_registers": 0,
+  "extra_clock_load_fF": 0,
+  "extra_latency_cycles": 0,
+  "model": "results/uarch/dsrom_qx10_parent_context_20261005/boundary_hold_model.json",
+  "implementation": "physical/dsrom_qx10_parent_context/hold_boundary.tcl",
+  "default_OFF": true,
+  "currently_applied_to_R4_or_R5": false,
+  "remaining_gate": "Use actual loaded parent STA for all SS60 setup/FF25 hold and ICG/async/IO classes; do not credit Z18d slack to a different variant",
+  "whole_field_missing_input_clocks": true
+}

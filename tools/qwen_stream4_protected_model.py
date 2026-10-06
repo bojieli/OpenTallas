@@ -170,6 +170,35 @@ def model(root=ROOT):
     result['actual_parent_clock_relation'].update(die['source_clocks'])
     result['actual_parent_clock_relation']['service_clock']='selected top free-running clk -> u_kv.clk'
     result['physical_gates'].append('full-width protected service transport and real PHY adapter/clock endpoint budgets')
+    # Owner-approved functional r9 reuse: substitute only the landing read
+    # mux, retaining the existing protected D0 capture and all four cuts.
+    # Each owner r9 column selects at most29 coded bits, not51 unpriced bits.
+    groups=math.ceil(504/29)
+    selector_ff=2*64*groups*128
+    selector_checks=3*64*groups*128*2
+    selector_buffers=math.ceil(selector_ff/7)
+    selector_cell=(selector_ff*.2916+selector_checks*.08748+selector_buffers*.10206)/1e6
+    result['r9_protected_landing_read_candidate']=dict(
+        parameter='LANDING_RSEL=1',default=0,owner_source='c8ba43664 RSEL1',
+        functional_runtime_owner_authorized=True,physical_admission=False,adopted=False,
+        protected_code_bits=504,depth=64,groups=groups,max_group_bits=29,replicas=128,
+        selector_DMR_FF=selector_ff,selector_check_NAND2=selector_checks,
+        buffer_estimate=selector_buffers,added_cell_mm2=selector_cell,
+        added_core_mm2=selector_cell/util,
+        composed_die_mm2=link['conservative_area_charge_die_mm2']+selector_cell/util,
+        scalar_fit_is_not_slot_or_clock_qualification=True,
+        group_valid_FF_added=0,
+        held_capture='reuse existing checked u_d0 1024FF and valid/owner; en=advance for every group, never unconditional raw reload',
+        mechanism='same owner r9 kept per-group onehot and continuous AND/OR column mux; checked-state primary/inverse adds selector protection',
+        ports='existing sealed landing mem -> existing u_d0; no new external ABI or pop authority',
+        MACs_per_edge=0,read_bytes_per_edge=63,boundary_coded_bits_per_edge=504,
+        extra_global_tracks=0,local_selector_input_pins_per_group_max=64*29,
+        existing_decoder_cuts=4,added_latency_edges=None,
+        latency_gate='changed-source golden held/refill comparison required; do not assume zero added cycles',
+        warm='no warm reset on selector or D0; existing reservation/retirement debt unchanged',
+        bandwidth='four global return frames/core/rank unchanged')
+    from qwen_stream4_parallel_pc_model import model as parallel_pc_model
+    result['parallel_protected_PC_candidate']=parallel_pc_model(root)
     return result
 
 

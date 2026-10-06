@@ -1,0 +1,172 @@
+{
+ "ss": {
+  "endpoints": 42,
+  "groups": [
+   {
+    "cls": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 5,
+    "worst_ps": -40.1
+   },
+   {
+    "cls": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 22,
+    "worst_ps": -32.0
+   },
+   {
+    "cls": "_*_/D",
+    "n": 12,
+    "worst_ps": -29.8
+   },
+   {
+    "cls": "g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -13.1
+   },
+   {
+    "cls": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -9.2
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 4,
+    "worst_ps": -40.1,
+    "example": "g_col[3].g_bank[0].cap4[100]$_DFF_P_/QN -> g_col[3].m5[100]$_DFF_P_/D"
+   },
+   {
+    "start": "g_col[*].g_bank[*].sel5c[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -35.0,
+    "example": "g_col[3].g_bank[0].sel5c[0]$_DFF_P_/QN -> g_col[3].m5[98]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].g_in.a_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c1.g_r.r[*]$_DFF_PN0_/D",
+    "n": 22,
+    "worst_ps": -32.0,
+    "example": "g_mul[11].g_in.a_q[14]$_DFF_P_/QN -> g_mul[11].u_mul.u_c1.g_r.r[66]$_DFF_PN0_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.s2_prod[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c3.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -13.1,
+    "example": "g_mul[13].u_mul.s2_prod[47]$_DFF_P_/QN -> g_mul[13].u_mul.u_c3.g_r.r[3]$_DFF_PN0_/D"
+   },
+   {
+    "start": "res_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -9.2,
+    "example": "res_q[210]$_DFF_P_/QN -> g_mul[6].g_in.a_q[18]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 56,
+  "groups": [
+   {
+    "cls": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -12.0
+   },
+   {
+    "cls": "od2[*]$_DFF_P_/D",
+    "n": 3,
+    "worst_ps": -9.2
+   },
+   {
+    "cls": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -8.7
+   },
+   {
+    "cls": "g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -7.1
+   },
+   {
+    "cls": "res_q[*]$_DFF_P_/D",
+    "n": 43,
+    "worst_ps": -6.0
+   },
+   {
+    "cls": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 3,
+    "worst_ps": -5.0
+   },
+   {
+    "cls": "g_mul[*].g_in.b_q[*]$_SDFF_PP0_/D",
+    "n": 2,
+    "worst_ps": -3.1
+   },
+   {
+    "cls": "ov2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -1.5
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/QN",
+    "end": "g_col[*].m5[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -12.0,
+    "example": "g_col[1].g_bank[2].cap4[118]$_DFF_P_/QN -> g_col[1].m5[118]$_DFF_P_/D"
+   },
+   {
+    "start": "od1[*]$_DFF_P_/QN",
+    "end": "od2[*]$_DFF_P_/D",
+    "n": 3,
+    "worst_ps": -9.2,
+    "example": "od1[454]$_DFF_P_/QN -> od2[454]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.s1_rows[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -8.7,
+    "example": "g_mul[8].u_mul.s1_rows[369]$_DFF_P_/QN -> g_mul[8].u_mul.u_c2.g_r.r[211]$_DFF_PN0_/D"
+   },
+   {
+    "start": "g_col[*].u_r2/addr_q[*]$_DFF_P_/QN",
+    "end": "g_col[*].g_bank[*].u_r3/a_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -7.1,
+    "example": "g_col[0].u_r2/addr_q[2]$_DFF_P_/QN -> g_col[0].g_bank[1].u_r3/a_q[2]$_DFF_P_/D"
+   },
+   {
+    "start": "res_in[*]",
+    "end": "res_q[*]$_DFF_P_/D",
+    "n": 43,
+    "worst_ps": -6.0,
+    "example": "res_in[31] -> res_q[31]$_DFF_P_/D"
+   },
+   {
+    "start": "res_q[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.a_q[*]$_DFF_P_/D",
+    "n": 3,
+    "worst_ps": -5.0,
+    "example": "res_q[354]$_DFF_P_/QN -> g_mul[11].g_in.a_q[2]$_DFF_P_/D"
+   },
+   {
+    "start": "m6[*]$_DFF_P_/QN",
+    "end": "g_mul[*].g_in.b_q[*]$_SDFF_PP0_/D",
+    "n": 2,
+    "worst_ps": -3.1,
+    "example": "m6[241]$_DFF_P_/QN -> g_mul[15].g_in.b_q[1]$_SDFF_PP0_/D"
+   },
+   {
+    "start": "ov1$_DFF_P_/QN",
+    "end": "ov2$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -1.5,
+    "example": "ov1$_DFF_P_/QN -> ov2$_DFF_P_/D"
+   }
+  ]
+ }
+}

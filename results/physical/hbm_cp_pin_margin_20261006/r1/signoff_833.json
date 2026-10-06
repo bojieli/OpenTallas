@@ -1,0 +1,57 @@
+{
+ "schema": "hbm.cp.pin-margin.signoff.v1",
+ "clock_ps": 833.333,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "io": "0.2T+150 ps vs vclk at measured mean insertion; -min 0",
+ "post_sdc": {
+  "physical/hbm_cp_pin_margin_20261006/signoff_post.sdc": "56b2388e953d0f26d615a93ec1a0320f98bdc40e349296430a632359f4de900d"
+ },
+ "ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 76.14,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 91.683548,
+  "worst_reg_to_reg_slack_ps": 91.68,
+  "worst_input_to_reg_slack_ps": 76.14,
+  "worst_output_port_slack_ps": 175.443466,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "0b26bf01a3512c928df5941d519158e453f59556d96540e6a1f6d54725a204bd",
+  "spef_sha256": "c6bc23a6b7c39bf99040038d2f3ba574e3abbf7852a14d4c7da64c8b6dd866cc",
+  "sdc_sha256": "039323c3a5277ef0a78ba59d61b0e73511b2d2d9bb8636766f0f1478465d7e6f",
+  "vclk_insertion_ps": [
+   118.86,
+   145.04,
+   131.95
+  ],
+  "worst_endpoint_slack_ps": 76.141869
+ },
+ "ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 15.97,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 15.972612,
+  "worst_reg_to_reg_slack_ps": 15.97,
+  "worst_input_to_reg_slack_ps": 43.24,
+  "worst_output_port_slack_ps": 66.181808,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "0b26bf01a3512c928df5941d519158e453f59556d96540e6a1f6d54725a204bd",
+  "spef_sha256": "c6bc23a6b7c39bf99040038d2f3ba574e3abbf7852a14d4c7da64c8b6dd866cc",
+  "sdc_sha256": "039323c3a5277ef0a78ba59d61b0e73511b2d2d9bb8636766f0f1478465d7e6f",
+  "vclk_insertion_ps": [
+   68.37,
+   85.43,
+   76.9
+  ],
+  "worst_endpoint_slack_ps": 15.972612
+ },
+ "accept": {
+  "rule": "SS >= +40 ps, FF >= +15 ps, DRC 0 (owner UPDATE 2)",
+  "ss_ok": true,
+  "ff_ok": true
+ }
+}

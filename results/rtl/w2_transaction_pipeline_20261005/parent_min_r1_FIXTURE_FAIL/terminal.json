@@ -1,0 +1,31 @@
+{
+  "verdict": "INVALID_FIXTURE_UNBOUND_PORTS",
+  "omitted_actual_ports": [
+    "caller_op_a",
+    "caller_op_b",
+    "frame",
+    "m_req_rdy",
+    "m_req_wdata",
+    "m_req_we",
+    "m_rsp_data",
+    "m_rsp_rdy",
+    "m_rsp_we",
+    "map_byte_addresses",
+    "map_frame",
+    "map_lanes",
+    "map_sm",
+    "native_delivery_permit",
+    "native_gen",
+    "native_pos",
+    "native_req_r",
+    "native_req_tag",
+    "native_rsp_data",
+    "other_req_tag",
+    "other_rsp_data",
+    "producer_cy",
+    "release_frame",
+    "rows_a",
+    "rows_b"
+  ],
+  "termination": "SIGTERM of own simulator after proving incomplete port binding, no RTL verdict/no timeout"
+}

@@ -15,10 +15,19 @@ module tb_hbm_accel_sm_capture_lsu;
     reg req_rdy=0, rsp_v=0, rsp_we=0;
     reg [15:0] rsp_tag=0;
     reg [255:0] rsp_data=0;
+`ifdef OT_CAPTURE_DS20
+    ot_ds_hbm_simt_sm20 #(.ENABLE(1),.TW(17),.PW(20),.NL(128),.HAS_BD(1)) dut (
+`else
     ot_hbm_accel_simt_sm #(.ENABLE(1),.HA3(0),.NL(128),.HAS_BD(1)) dut (
+`endif
         .clk(clk),.rst_n(rst_n),.sm_id(8'd0),.die_id(8'd0),
         .im_we(im_we),.im_addr(im_addr),.im_data(im_data),
-        .launch_v(launch_v),.launch_pc(32'd0),.launch_token(16'd0),.launch_pos(16'd0),
+        .launch_v(launch_v),.launch_pc(32'd0),
+`ifdef OT_CAPTURE_DS20
+        .launch_token(17'h1ffff),.launch_pos(20'habcd0),
+`else
+        .launch_token(16'd0),.launch_pos(16'd0),
+`endif
         .sm_done(done),.sm_fault(fault),.busy(busy),.res_v(),.res_data(),
         .bar_arrive(),.bar_release(1'b0),
         .lreq_v(req_v),.lreq_rdy(req_rdy),.lreq_we(req_we),.lreq_addr(req_addr),
@@ -28,8 +37,10 @@ module tb_hbm_accel_sm_capture_lsu;
         .trsp_v(1'b0),.trsp_rdy(),.trsp_tag(16'd0),.trsp_data(256'd0),
         .coll_req_v(),.coll_req_rdy(1'b0),.coll_mode(),.coll_count(),.coll_data(),
         .coll_rsp_v(1'b0),.coll_rsp_rdy(),.coll_rsp_data(4096'd0),
+`ifndef OT_CAPTURE_DS20
         .coll_x(),.coll_off(),.coll_nown(),.coll_fuse(),.coll_resid(),
         .coll_rsp_ss(32'd0),.coll_rsp_err(1'b0),
+`endif
         .st_instr(),.st_cycles(),.st_stall_mem(),.st_tc_rows());
 
     function automatic [31:0] word(input integer r, input integer lane);
@@ -176,6 +187,10 @@ module tb_hbm_accel_sm_capture_lsu;
         @(negedge clk); im_we=0; launch_v=1;
         @(negedge clk); launch_v=0;
         wait(done); @(negedge clk);
+`ifdef OT_CAPTURE_DS20
+        if(dut.g_on.ur[0]!==32'h1ffff || dut.g_on.ur[1]!==32'habcd0)
+            $fatal(1,"DS20 full token17/position20 identity lost");
+`endif
         if(fault || issued_x!=8 || checked_x!=8 || adjacent_x!=7 ||
            reads!=102 || writes!=102 || acknowledgments!=204 || written_bytes!=3072)
             $fatal(1,"coverage/debt fault=%b X=%0d/%0d adjacent=%0d LSU=%0d/%0d ACK=%0d bytes=%0d",

@@ -1,0 +1,9 @@
+STRUCTURAL_STATS source=1 inst=0 MAXU=866 USERS=866 cycles=1921116 fin=1732595 issues=29192 committed=27712 errors=0 rejects=2846 squash=1480 fault_cycle=0 fault_header=0
+STRUCTURAL_STATS source=1 inst=1 MAXU=866 USERS=866 cycles=1921116 fin=1863467 issues=29224 committed=27712 errors=0 rejects=2846 squash=1512 fault_cycle=0 fault_header=0
+STRUCTURAL_STATS source=1 inst=2 MAXU=866 USERS=866 cycles=1921116 fin=1921065 issues=29222 committed=27712 errors=0 rejects=2846 squash=1510 fault_cycle=0 fault_header=0
+STRUCTURAL_CALENDAR source=1 launch_checks=29222 completion_checks=29222 received_plus2=0 received_wait_max=0 reset_release_delta=1 VM_exact=0 flit_exact=0 launch_exact=0 default_off_cycle_mism=0
+STRUCTURAL_FULL PASS
+- /srv/opentallas-scratch2/jobs/zeno-wfc-structural-source-r2/rtl/test/dsrom_wavefront/tb_wfc_structural_full.sv:381: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2ms; walltime 128.558 s; speed 14.945 us/s
+- Verilator: cpu 128.544 s on 1 threads; alloced 1019 MB

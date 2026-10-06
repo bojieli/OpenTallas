@@ -1,0 +1,194 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/clock_period.txt
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.26. Executing OPT_MERGE pass (detect identical cells).
+3.10.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.29. Executing OPT_EXPR pass (perform const folding).
+3.10.30. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+ERROR: TCL interpreter returned an error: Source files actually used in the design:
+ 
+Memories found in the design:
+ Rows | Width |   Bits | Module               | Instances                                                                       
+---------------------------------------------------------------------------------------------------------------------------------
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[0].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[0].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[10].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[10].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[11].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[11].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[12].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[12].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[13].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[13].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[14].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[14].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[15].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[15].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[16].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[16].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[17].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[17].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[18].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[18].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[19].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[19].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[1].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[1].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[20].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[20].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[21].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[21].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[22].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[22].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[23].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[23].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[24].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[24].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[25].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[25].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[26].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[26].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[2].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[2].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[3].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[3].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[4].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[4].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[5].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[5].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[6].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[6].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[7].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[7].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[8].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[8].ug
+   32 |    21 |    672 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[9].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[9].ug
+    2 |    21 |     42 | ot_rom_pkg_ctrl_wfc_upos_vm$ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug | ot_dsrom_wfc_protected_inputclock_stage.u_r4.u_stage.g_stage.u_boundary.u_ctrl.g_upos[27].ug
+    2 |    94 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |   144 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |  1426 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |  1440 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |  3189 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |  3240 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |   512 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     1 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     3 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |   512 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     1 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     3 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |   512 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     1 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     3 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    1 |  2048 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |   512 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     1 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    2 |    82 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |    14 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     7 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |    12 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |    12 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     8 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+    4 |     8 |      0 | ot_dsrom_wfc_protected_inputclock_stage |                                                                                 
+
+Summary:
+- Total inferred memories: 53
+- Largest single memory instance: 6480 bits (module ot_dsrom_wfc_protected_inputclock_stage)
+- Total inferred memory bits (all instances): 18186
+- SYNTH_MEMORY_MAX_BITS: 4096
+- Status: FAIL
+Error: Synthesized memory size 4096 exceeds SYNTH_MEMORY_MAX_BITS
+Elapsed time: 0:33.64[h:]min:sec. CPU time: user 39.71 sys 1.18 (121%). Peak memory: 1529948KB.

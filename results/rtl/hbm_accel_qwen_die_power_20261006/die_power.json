@@ -1,0 +1,3335 @@
+{
+ "schema": "opentallas.hbm-accel-qwen-die-power.v1",
+ "clock_hz": 1200000000.0,
+ "cooling_limit_w": 474.56,
+ "token": {
+  "cycles": 588031,
+  "seconds": 0.0004900258333333334,
+  "basis": "floorplan-priced TP4 AR token at P8191 (wire_stages.json qwen_8k.b_TP4_iso_silicon.priced_cycles, routed-bound wire stages)",
+  "stages": {
+   "L0": [
+    5,
+    "L0"
+   ],
+   "L5": [
+    1,
+    "L20"
+   ],
+   "L6": [
+    1,
+    "L20"
+   ],
+   "L20": [
+    29,
+    "L20"
+   ],
+   "head": [
+    1,
+    "head"
+   ]
+  },
+  "ar_tok_s": 2040.7
+ },
+ "corners": {
+  "TT": {
+   "vectorless_tile_w": 0.832096517086029,
+   "stages": {
+    "L0": {
+     "cycles": 6227,
+     "fabric_clocked_cycles": 3591,
+     "duty": 0.5766821904608961,
+     "tiles": {
+      "L0_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4467580318450928,
+       "p_leak_w": 6.609772390220314e-05,
+       "groups_w": {
+        "sequential": 0.17598648369312286,
+        "combinational": 0.12515611946582794,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5099762678146362,
+       "window_max": "w002560",
+       "e_logic_j": 1.3370686049632786e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.3447665262624815e-06
+      },
+      "L0_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4424292743206024,
+       "p_leak_w": 6.594392471015453e-05,
+       "groups_w": {
+        "sequential": 0.17571817338466644,
+        "combinational": 0.12110350281000137,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5137525200843811,
+       "window_max": "w002560",
+       "e_logic_j": 1.3241144602256827e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.3318123815248856e-06
+      },
+      "L0_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4454585611820221,
+       "p_leak_w": 6.578617467312142e-05,
+       "groups_w": {
+        "sequential": 0.17637382447719574,
+        "combinational": 0.12347902357578278,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5199971199035645,
+       "window_max": "w002560",
+       "e_logic_j": 1.3331792546342332e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.340877175933436e-06
+      },
+      "L0_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4394645094871521,
+       "p_leak_w": 6.613112054765224e-05,
+       "groups_w": {
+        "sequential": 0.1745685487985611,
+        "combinational": 0.11928422003984451,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5100961327552795,
+       "window_max": "w002560",
+       "e_logic_j": 1.3152428126684392e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.322940733967642e-06
+      },
+      "L0_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4443453848361969,
+       "p_leak_w": 6.606629176530987e-05,
+       "groups_w": {
+        "sequential": 0.17602001130580902,
+        "combinational": 0.12271726131439209,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5093361735343933,
+       "window_max": "w002560",
+       "e_logic_j": 1.3298486897432304e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.3375466110424333e-06
+      },
+      "L0_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4469129145145416,
+       "p_leak_w": 6.596338789677247e-05,
+       "groups_w": {
+        "sequential": 0.1767469197511673,
+        "combinational": 0.12455463409423828,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.5187762379646301,
+       "window_max": "w002560",
+       "e_logic_j": 1.3375317962601791e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.345229717559382e-06
+      },
+      "L0_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.4233359098434448,
+       "p_leak_w": 6.77606076351367e-05,
+       "groups_w": {
+        "sequential": 0.16747888922691345,
+        "combinational": 0.1101519837975502,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.481584370136261,
+       "window_max": "w002560",
+       "e_logic_j": 1.2669815576746137e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 4.148172607568658e-10,
+        "dynamic_j": 5.441044694024855e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.693943410564671e-08
+       },
+       "e_tile_j": 1.2746794789738166e-06
+      }
+     },
+     "die_tiles_clocked_w": 681.3102993965149,
+     "die_tiles_window_peak_w": 787.6427879333496,
+     "die_tiles_leak_w": 0.7694625496865749,
+     "die_macro_dynamic_j": 8.357444650022175e-06,
+     "die_macro_every_edge_bound_j": 7.209897078627335e-05,
+     "die_tiles_energy_j": 0.0020508678731642432,
+     "die_tiles_stage_avg_w": 395.22104509347866,
+     "groups_clocked_w": {
+      "sequential": 269.72005820274353,
+      "combinational": 187.92898499965668,
+      "clock": 223.9281005859375
+     }
+    },
+    "L20": {
+     "cycles": 17293,
+     "fabric_clocked_cycles": 4408,
+     "duty": 0.254900826924189,
+     "tiles": {
+      "L20_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.43979570269584656,
+       "p_leak_w": 6.602842768188566e-05,
+       "groups_w": {
+        "sequential": 0.17499014735221863,
+        "combinational": 0.1191878467798233,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.49187153577804565,
+       "window_max": "w003584",
+       "e_logic_j": 1.616225194811644e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6328730303866899e-06
+      },
+      "L20_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.4375905990600586,
+       "p_leak_w": 6.603681686101481e-05,
+       "groups_w": {
+        "sequential": 0.17384803295135498,
+        "combinational": 0.11812805384397507,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.49520033597946167,
+       "window_max": "w002560",
+       "e_logic_j": 1.6081252042016604e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6247730397767064e-06
+      },
+      "L20_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.4393956661224365,
+       "p_leak_w": 6.614685844397172e-05,
+       "groups_w": {
+        "sequential": 0.174198180437088,
+        "combinational": 0.119588702917099,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.48910653591156006,
+       "window_max": "w003584",
+       "e_logic_j": 1.6147569987822924e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6314048343573383e-06
+      },
+      "L20_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.44403329491615295,
+       "p_leak_w": 6.621884676860645e-05,
+       "groups_w": {
+        "sequential": 0.17462760210037231,
+        "combinational": 0.12378958612680435,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.489745169878006,
+       "window_max": "w002560",
+       "e_logic_j": 1.6317933281925131e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6484411637675591e-06
+      },
+      "L20_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.4409223198890686,
+       "p_leak_w": 6.607103568967432e-05,
+       "groups_w": {
+        "sequential": 0.17528393864631653,
+        "combinational": 0.1200253963470459,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.49199578166007996,
+       "window_max": "w003584",
+       "e_logic_j": 1.6203640928048964e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6370119283799424e-06
+      },
+      "L20_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.4364958107471466,
+       "p_leak_w": 6.606926763197407e-05,
+       "groups_w": {
+        "sequential": 0.17441417276859283,
+        "combinational": 0.11647960543632507,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4958325922489166,
+       "window_max": "w003584",
+       "e_logic_j": 1.6041040302390503e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.6207518658140963e-06
+      },
+      "L20_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.406310498714447,
+       "p_leak_w": 6.796836532885209e-05,
+       "groups_w": {
+        "sequential": 0.16223663091659546,
+        "combinational": 0.09836490452289581,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.458335280418396,
+       "window_max": "w002560",
+       "e_logic_j": 1.4932437089337872e-06,
+       "macro": {
+        "code_resident_j": 2.638935157122444e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.3872922761455453e-09,
+        "fill_j": 5.354036737675826e-09,
+        "dynamic_j": 1.0380264170943814e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.761877625666686e-08
+       },
+       "e_tile_j": 1.5098915445088332e-06
+      }
+     },
+     "die_tiles_clocked_w": 673.6819138526917,
+     "die_tiles_window_peak_w": 753.9152340888977,
+     "die_tiles_leak_w": 0.7696424665396601,
+     "die_macro_dynamic_j": 1.5944085766569697e-05,
+     "die_macro_every_edge_bound_j": 8.85024403302403e-05,
+     "die_tiles_energy_j": 0.0025013202795993086,
+     "die_tiles_stage_avg_w": 173.5722162446753,
+     "groups_clocked_w": {
+      "sequential": 267.360958814621,
+      "combinational": 182.65394282341003,
+      "clock": 223.9281005859375
+     }
+    },
+    "head": {
+     "cycles": 3223,
+     "fabric_clocked_cycles": 2658,
+     "duty": 0.8246974868135277,
+     "tiles": {
+      "head_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.44573479890823364,
+       "p_leak_w": 6.735497299814597e-05,
+       "groups_w": {
+        "sequential": 0.16844913363456726,
+        "combinational": 0.1314607858657837,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4708234667778015,
+       "window_max": "w001024",
+       "e_logic_j": 9.87334292548191e-07,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 9.966666230176605e-07
+      },
+      "head_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.4504448175430298,
+       "p_leak_w": 6.749179010512307e-05,
+       "groups_w": {
+        "sequential": 0.16910812258720398,
+        "combinational": 0.13552559912204742,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4749850332736969,
+       "window_max": "w001024",
+       "e_logic_j": 9.977670482423189e-07,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 1.0070993787117884e-06
+      },
+      "head_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.4501216411590576,
+       "p_leak_w": 6.766075966879725e-05,
+       "groups_w": {
+        "sequential": 0.16902196407318115,
+        "combinational": 0.13528333604335785,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4748559892177582,
+       "window_max": "w001024",
+       "e_logic_j": 9.970512921083235e-07,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 1.006383622577793e-06
+      },
+      "head_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.45022398233413696,
+       "p_leak_w": 6.78125798003748e-05,
+       "groups_w": {
+        "sequential": 0.16843870282173157,
+        "combinational": 0.13597391545772552,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4736524522304535,
+       "window_max": "w001024",
+       "e_logic_j": 9.972780492931027e-07,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 1.0066103797625722e-06
+      },
+      "head_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.4546542465686798,
+       "p_leak_w": 6.769073661416769e-05,
+       "groups_w": {
+        "sequential": 0.17059679329395294,
+        "combinational": 0.1382349282503128,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.48082658648490906,
+       "window_max": "w001024",
+       "e_logic_j": 1.0070910272047817e-06,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 1.0164233576742512e-06
+      },
+      "head_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.4587737023830414,
+       "p_leak_w": 6.713970651617274e-05,
+       "groups_w": {
+        "sequential": 0.17277829349040985,
+        "combinational": 0.14019447565078735,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.4845401644706726,
+       "window_max": "w001024",
+       "e_logic_j": 1.0162153623902547e-06,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 1.0255476928597242e-06
+      },
+      "head_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.4269091784954071,
+       "p_leak_w": 6.905812188051641e-05,
+       "groups_w": {
+        "sequential": 0.16215848922729492,
+        "combinational": 0.11901897937059402,
+        "clock": 0.14578652381896973
+       },
+       "p_window_max_w": 0.44749757647514343,
+       "window_max": "w001024",
+       "e_logic_j": 9.456363452330455e-07,
+       "macro": {
+        "code_resident_j": 8.164205642347562e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 8.164205642347562e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.47438083689248e-08
+       },
+       "e_tile_j": 9.54968675702515e-07
+      }
+     },
+     "die_tiles_clocked_w": 689.5822734832764,
+     "die_tiles_window_peak_w": 727.373598575592,
+     "die_tiles_leak_w": 0.7718570851489469,
+     "die_macro_dynamic_j": 1.2540219866645852e-05,
+     "die_macro_every_edge_bound_j": 5.3366489654668487e-05,
+     "die_tiles_energy_j": 0.0015418080766761103,
+     "die_tiles_stage_avg_w": 574.0520297894298,
+     "groups_clocked_w": {
+      "sequential": 259.3209092617035,
+      "combinational": 206.2913635969162,
+      "clock": 223.9281005859375
+     }
+    }
+   },
+   "token": {
+    "fabric_duty": 0.2674365807244856,
+    "tiles_energy_j": 0.0893370761100759,
+    "tiles_avg_w": 182.31095185813513,
+    "die_wire_avg_w": 19.882454719642066,
+    "die_wire_peak_w": 65.92702837955451,
+    "wires": {
+     "clock_trunk": {
+      "wire_m": 0.38,
+      "kind": "clock",
+      "cap_f": 1.216e-10,
+      "stage_registers": 0.0,
+      "transitions_per_cycle": 0.5348731614489712,
+      "avg_w": 0.0191219294710653,
+      "peak_w": 0.0715008
+     },
+     "collective": {
+      "wire_m": 11.63,
+      "kind": "small",
+      "cap_f": 3.7216e-09,
+      "stage_registers": 27011.33407655147,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.13956977371656837,
+      "peak_w": 0.13956977371656837
+     },
+     "corridor": {
+      "wire_m": 20.82,
+      "kind": "bcast",
+      "cap_f": 6.6624000000000005e-09,
+      "stage_registers": 48355.62987736901,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.0444675939178922,
+      "peak_w": 0.16900068101233703
+     },
+     "corridor_hop": {
+      "wire_m": 2.27,
+      "kind": "bcast",
+      "cap_f": 7.264e-10,
+      "stage_registers": 5272.203641768859,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.00484829194013522,
+      "peak_w": 0.01842610691152762
+     },
+     "fill": {
+      "wire_m": 9.78,
+      "kind": "fill",
+      "cap_f": 3.1296e-09,
+      "stage_registers": 22714.604236343366,
+      "transitions_per_cycle": 0.22981266242250784,
+      "avg_w": 0.2828142812434509,
+      "peak_w": 0.3004418626807368
+     },
+     "fill_hop": {
+      "wire_m": 20.06,
+      "kind": "fill",
+      "cap_f": 6.4192e-09,
+      "stage_registers": 46590.486807878115,
+      "transitions_per_cycle": 0.007660422080750262,
+      "avg_w": 0.16083170992810195,
+      "peak_w": 0.16203692221041946
+     },
+     "head_chain": {
+      "wire_m": 17.72,
+      "kind": "bcast",
+      "cap_f": 5.6704e-09,
+      "stage_registers": 41155.70419918246,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.037846578493037936,
+      "peak_w": 0.14383727509791605
+     },
+     "host": {
+      "wire_m": 1.74,
+      "kind": "small",
+      "cap_f": 5.568e-10,
+      "stage_registers": 4041.248606465998,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.02088146227573766,
+      "peak_w": 0.02088146227573766
+     },
+     "hub": {
+      "wire_m": 2.96,
+      "kind": "small",
+      "cap_f": 9.472e-10,
+      "stage_registers": 6874.767744332962,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.03552248754953073,
+      "peak_w": 0.03552248754953073
+     },
+     "link": {
+      "wire_m": 7.1,
+      "kind": "small",
+      "cap_f": 2.2720000000000004e-09,
+      "stage_registers": 16490.152359717576,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.08520596675732034,
+      "peak_w": 0.08520596675732034
+     },
+     "load": {
+      "wire_m": 42.27,
+      "kind": "small",
+      "cap_f": 1.35264e-08,
+      "stage_registers": 98174.47045707915,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.5072755232157649,
+      "peak_w": 0.5072755232157649
+     },
+     "phy_dfi": {
+      "wire_m": 97.62,
+      "kind": "fill",
+      "cap_f": 3.12384e-08,
+      "stage_registers": 226727.98216276476,
+      "transitions_per_cycle": 0.13095539428986505,
+      "avg_w": 1.9150236334726616,
+      "peak_w": 2.01528696164539
+     },
+     "spine_port": {
+      "wire_m": 137.76,
+      "kind": "tree",
+      "cap_f": 4.40832e-08,
+      "stage_registers": 319955.4069119287,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 1.335685944185496,
+      "peak_w": 5.010611921373466
+     },
+     "stream_status": {
+      "wire_m": 3.73,
+      "kind": "small",
+      "cap_f": 1.1936e-09,
+      "stage_registers": 8663.136380527685,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.04476313464856406,
+      "peak_w": 0.04476313464856406
+     },
+     "tree_block": {
+      "wire_m": 1079.63,
+      "kind": "tree",
+      "cap_f": 3.4548160000000003e-07,
+      "stage_registers": 2507501.8580453363,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 10.467818059821335,
+      "peak_w": 39.2683431233481
+     },
+     "tree_spine": {
+      "wire_m": 493.08,
+      "kind": "tree",
+      "cap_f": 1.577856e-07,
+      "stage_registers": 1145206.24303233,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 4.780778349005404,
+      "peak_w": 17.934324377111125
+     }
+    },
+    "e_register_clocked_j": 2.6181063313417658e-15,
+    "port_density": {
+     "L0": {
+      "bcast": 0.008720103379829619,
+      "tree": 0.30904759107590407
+     },
+     "L20": {
+      "bcast": 0.007134560027900806,
+      "tree": 0.30820085892938165
+     },
+     "head": {
+      "bcast": 0.00785424565594734,
+      "tree": 0.2785816161873186
+     }
+    },
+    "hbm_avg_Bps": 3494623269861.6226,
+    "hbm_peak_Bps": 3785951772393.4536,
+    "phy": {
+     "oconnor_micro2017_io_both_ends": {
+      "avg_w": 33.56558892711439,
+      "peak_w": 35.430091343318104
+     },
+     "chae_jssc2024_4nm_hbm3": {
+      "avg_w": 19.307525986078964,
+      "peak_w": 19.983408111952812
+     }
+    },
+    "assumed_floorplan_w": {
+     "svc": 34.58,
+     "spine": 34.52,
+     "hub": 3.78,
+     "head": 0.21,
+     "waypoint": 0.13
+    },
+    "die_avg_w": 308.97899550489154,
+    "die_avg_w_per_mm2": 0.3730864381768134,
+    "tiles_avg_w_per_mm2": 0.27248127174919345,
+    "die_peak_window_w": 967.8814064673489,
+    "die_in_phase_clocked_w": 869.8208920172757,
+    "tiles_in_phase_clocked_w": 689.5822734832764,
+    "tiles_window_peak_w": 787.6427879333496,
+    "tiles_clocked_w_per_mm2": 1.0306471056145652,
+    "tiles_static_w": 0.7696424665396601,
+    "margin_avg_w": 165.58100449510846,
+    "verdict_avg": "PASS",
+    "verdict_peak": "EXCEEDS (sub-microsecond; thermal budget is time-averaged)",
+    "die_J_per_token": 0.15140768975478075,
+    "tiles_J_per_token": 0.0893370761100759,
+    "tiles_clocked_combinational_w": 206.2913635969162,
+    "tiles_avg_w_if_comb_halved": 157.75282197293964,
+    "ir_worst_mv_scaled_to_window_peak": 26.391913837061832,
+    "max_fabric_duty_at_budget": 0.5039430147706881
+   }
+  },
+  "SS": {
+   "vectorless_tile_w": 0.6536653637886047,
+   "stages": {
+    "L0": {
+     "cycles": 6227,
+     "fabric_clocked_cycles": 3591,
+     "duty": 0.5766821904608961,
+     "tiles": {
+      "L0_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.35125935077667236,
+       "p_leak_w": 0.0009176016319543123,
+       "groups_w": {
+        "sequential": 0.13888870179653168,
+        "combinational": 0.09847071766853333,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.40089038014411926,
+       "window_max": "w002560",
+       "e_logic_j": 1.053159272117385e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0602183763943838e-06
+      },
+      "L0_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.34787729382514954,
+       "p_leak_w": 0.0009157386957667768,
+       "groups_w": {
+        "sequential": 0.1386788934469223,
+        "combinational": 0.09530089795589447,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.40386050939559937,
+       "window_max": "w002560",
+       "e_logic_j": 1.0430343744401276e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0500934787171264e-06
+      },
+      "L0_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.3502446711063385,
+       "p_leak_w": 0.0009132875129580498,
+       "groups_w": {
+        "sequential": 0.1391938328742981,
+        "combinational": 0.0971551388502121,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.40876874327659607,
+       "window_max": "w002560",
+       "e_logic_j": 1.0501133665225159e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0571724707995147e-06
+      },
+      "L0_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.3455458879470825,
+       "p_leak_w": 0.0009181413915939629,
+       "groups_w": {
+        "sequential": 0.13776957988739014,
+        "combinational": 0.09387768805027008,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.4009665250778198,
+       "window_max": "w002560",
+       "e_logic_j": 1.0360629202718458e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0431220245488446e-06
+      },
+      "L0_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.34937646985054016,
+       "p_leak_w": 0.0009172219433821738,
+       "groups_w": {
+        "sequential": 0.13891707360744476,
+        "combinational": 0.09655848890542984,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.4003906846046448,
+       "window_max": "w002560",
+       "e_logic_j": 1.0475239168967043e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0545830211737031e-06
+      },
+      "L0_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.35138580203056335,
+       "p_leak_w": 0.0009157230379059911,
+       "groups_w": {
+        "sequential": 0.13949084281921387,
+        "combinational": 0.09800008684396744,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.4078127443790436,
+       "window_max": "w002560",
+       "e_logic_j": 1.0535335508497277e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.0605926551267265e-06
+      },
+      "L0_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.33278125524520874,
+       "p_leak_w": 0.000940020487178117,
+       "groups_w": {
+        "sequential": 0.1321524977684021,
+        "combinational": 0.08674907684326172,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.37856820225715637,
+       "window_max": "w002560",
+       "e_logic_j": 9.979128179914553e-07,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 3.4051143635962134e-10,
+        "dynamic_j": 4.802227671820869e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 4.172317517179623e-08
+       },
+       "e_tile_j": 1.004971922268454e-06
+      }
+     },
+     "die_tiles_clocked_w": 535.6873955726624,
+     "die_tiles_window_peak_w": 619.1609029769897,
+     "die_tiles_leak_w": 2.0761556083803567,
+     "die_macro_dynamic_j": 7.376221703916856e-06,
+     "die_macro_every_edge_bound_j": 6.4086797063879e-05,
+     "die_tiles_energy_j": 0.0016169804796108559,
+     "die_tiles_stage_avg_w": 311.6069657191307,
+     "groups_clocked_w": {
+      "sequential": 212.86306715011597,
+      "combinational": 147.87796461582184,
+      "clock": 175.27086639404297
+     }
+    },
+    "L20": {
+     "cycles": 17293,
+     "fabric_clocked_cycles": 4408,
+     "duty": 0.254900826924189,
+     "tiles": {
+      "L20_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.3457942306995392,
+       "p_leak_w": 0.0009159896872006357,
+       "groups_w": {
+        "sequential": 0.1380966603755951,
+        "combinational": 0.0938020870089531,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.38669461011886597,
+       "window_max": "w003584",
+       "e_logic_j": 1.2800529133692907e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.295177174199077e-06
+      },
+      "L20_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.3440645933151245,
+       "p_leak_w": 0.0009157804306596518,
+       "groups_w": {
+        "sequential": 0.1371956318616867,
+        "combinational": 0.09297075867652893,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3893127739429474,
+       "window_max": "w002560",
+       "e_logic_j": 1.273697131818432e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.2888213926482184e-06
+      },
+      "L20_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.34548965096473694,
+       "p_leak_w": 0.0009177166502922773,
+       "groups_w": {
+        "sequential": 0.13747182488441467,
+        "combinational": 0.0941138043999672,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3845229148864746,
+       "window_max": "w003584",
+       "e_logic_j": 1.2789526337429804e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.2940768945727667e-06
+      },
+      "L20_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.3491080701351166,
+       "p_leak_w": 0.0009185504168272018,
+       "groups_w": {
+        "sequential": 0.13781189918518066,
+        "combinational": 0.09739945828914642,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3850383460521698,
+       "window_max": "w002560",
+       "e_logic_j": 1.292253246063677e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.3073775068934634e-06
+      },
+      "L20_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.34667643904685974,
+       "p_leak_w": 0.0009166140225715935,
+       "groups_w": {
+        "sequential": 0.1383305937051773,
+        "combinational": 0.09445390850305557,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3867986798286438,
+       "window_max": "w003584",
+       "e_logic_j": 1.283300262499494e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.2984245233292803e-06
+      },
+      "L20_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.3432256579399109,
+       "p_leak_w": 0.0009161073248833418,
+       "groups_w": {
+        "sequential": 0.1376446634531021,
+        "combinational": 0.09168236702680588,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.38980555534362793,
+       "window_max": "w003584",
+       "e_logic_j": 1.2706189525668744e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.2857432133966606e-06
+      },
+      "L20_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.3194160759449005,
+       "p_leak_w": 0.0009414729429408908,
+       "groups_w": {
+        "sequential": 0.12800617516040802,
+        "combinational": 0.07753098756074905,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3602770268917084,
+       "window_max": "w002560",
+       "e_logic_j": 1.1834307846957624e-06,
+       "macro": {
+        "code_resident_j": 2.348186295785148e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.1135299396761e-09,
+        "fill_j": 4.39497319022302e-09,
+        "dynamic_j": 8.856689425684267e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 5.121574941723135e-08
+       },
+       "e_tile_j": 1.1985550455255487e-06
+      }
+     },
+     "die_tiles_clocked_w": 529.6903052330017,
+     "die_tiles_window_peak_w": 592.7076344490051,
+     "die_tiles_leak_w": 2.0773617726286444,
+     "die_macro_dynamic_j": 1.3603874957851033e-05,
+     "die_macro_every_edge_bound_j": 7.866739110486736e-05,
+     "die_tiles_energy_j": 0.001984092529176726,
+     "die_tiles_stage_avg_w": 137.6806242417204,
+     "groups_clocked_w": {
+      "sequential": 210.99228286743164,
+      "combinational": 143.75098586082458,
+      "clock": 175.27086639404297
+     }
+    },
+    "head": {
+     "cycles": 3223,
+     "fabric_clocked_cycles": 2658,
+     "duty": 0.8246974868135277,
+     "tiles": {
+      "head_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.3503781259059906,
+       "p_leak_w": 0.0009316053474321961,
+       "groups_w": {
+        "sequential": 0.13292427361011505,
+        "combinational": 0.10357587784528732,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3700544536113739,
+       "window_max": "w001024",
+       "e_logic_j": 7.765261797328518e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 7.849590059125592e-07
+      },
+      "head_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.35405874252319336,
+       "p_leak_w": 0.0009335221839137375,
+       "groups_w": {
+        "sequential": 0.13344278931617737,
+        "combinational": 0.10673841834068298,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3733196258544922,
+       "window_max": "w001024",
+       "e_logic_j": 7.846796480504661e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 7.931124742301734e-07
+      },
+      "head_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.3538169860839844,
+       "p_leak_w": 0.0009358151000924408,
+       "groups_w": {
+        "sequential": 0.13337701559066772,
+        "combinational": 0.10656335204839706,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3732243478298187,
+       "window_max": "w001024",
+       "e_logic_j": 7.841452371189856e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 7.925780632986929e-07
+      },
+      "head_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.35388997197151184,
+       "p_leak_w": 0.0009377629030495882,
+       "groups_w": {
+        "sequential": 0.13291457295417786,
+        "combinational": 0.10710864514112473,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3722721338272095,
+       "window_max": "w001024",
+       "e_logic_j": 7.843078179504179e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 7.927406441301252e-07
+      },
+      "head_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.3573627471923828,
+       "p_leak_w": 0.0009365148725919425,
+       "groups_w": {
+        "sequential": 0.13462236523628235,
+        "combinational": 0.10887441039085388,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.3779039680957794,
+       "window_max": "w001024",
+       "e_logic_j": 7.919994274503066e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 8.004322536300139e-07
+      },
+      "head_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.3606185019016266,
+       "p_leak_w": 0.0009289024164900184,
+       "groups_w": {
+        "sequential": 0.1363392174243927,
+        "combinational": 0.1103978306055069,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.380831241607666,
+       "window_max": "w001024",
+       "e_logic_j": 7.992073399332003e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 8.076401661129076e-07
+      },
+      "head_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.3355351388454437,
+       "p_leak_w": 0.0009549583774060011,
+       "groups_w": {
+        "sequential": 0.12793736159801483,
+        "combinational": 0.0937248095870018,
+        "clock": 0.11410863697528839
+       },
+       "p_window_max_w": 0.35164570808410645,
+       "window_max": "w001024",
+       "e_logic_j": 7.436599587786866e-07,
+       "macro": {
+        "code_resident_j": 7.264701352585302e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 7.264701352585302e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.088281804696029e-08
+       },
+       "e_tile_j": 7.520927849583939e-07
+      }
+     },
+     "die_tiles_clocked_w": 542.038553237915,
+     "die_tiles_window_peak_w": 571.6877202987671,
+     "die_tiles_leak_w": 2.103981568338493,
+     "die_macro_dynamic_j": 1.1158581277571025e-05,
+     "die_macro_every_edge_bound_j": 4.7436008520131e-05,
+     "die_tiles_energy_j": 0.0012142443063543954,
+     "die_tiles_stage_avg_w": 452.0922021797314,
+     "groups_clocked_w": {
+      "sequential": 204.6303470134735,
+      "combinational": 162.4957069158554,
+      "clock": 175.27086639404297
+     }
+    }
+   },
+   "token": {
+    "fabric_duty": 0.2674365807244856,
+    "tiles_energy_j": 0.07080601510888718,
+    "tiles_avg_w": 144.4944537459158,
+    "die_wire_avg_w": 15.989420043831528,
+    "die_wire_peak_w": 53.063037657170185,
+    "wires": {
+     "clock_trunk": {
+      "wire_m": 0.38,
+      "kind": "clock",
+      "cap_f": 1.216e-10,
+      "stage_registers": 0.0,
+      "transitions_per_cycle": 0.5348731614489712,
+      "avg_w": 0.015488762871562894,
+      "peak_w": 0.057915648
+     },
+     "collective": {
+      "wire_m": 11.63,
+      "kind": "small",
+      "cap_f": 3.7216e-09,
+      "stage_registers": 27011.33407655147,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.1110346200889612,
+      "peak_w": 0.1110346200889612
+     },
+     "corridor": {
+      "wire_m": 20.82,
+      "kind": "bcast",
+      "cap_f": 6.6624000000000005e-09,
+      "stage_registers": 48355.62987736901,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.03505313283531788,
+      "peak_w": 0.13327990779722593
+     },
+     "corridor_hop": {
+      "wire_m": 2.27,
+      "kind": "bcast",
+      "cap_f": 7.264e-10,
+      "stage_registers": 5272.203641768859,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.0038218353283463774,
+      "peak_w": 0.01453147890008179
+     },
+     "fill": {
+      "wire_m": 9.78,
+      "kind": "fill",
+      "cap_f": 3.1296e-09,
+      "stage_registers": 22714.604236343366,
+      "transitions_per_cycle": 0.22981266242250784,
+      "avg_w": 0.22738350168871968,
+      "peak_w": 0.2416618426529212
+     },
+     "fill_hop": {
+      "wire_m": 20.06,
+      "kind": "fill",
+      "cap_f": 6.4192e-09,
+      "stage_registers": 46590.486807878115,
+      "transitions_per_cycle": 0.007660422080750262,
+      "avg_w": 0.1267948418580591,
+      "peak_w": 0.12777106380673625
+     },
+     "head_chain": {
+      "wire_m": 17.72,
+      "kind": "bcast",
+      "cap_f": 5.6704e-09,
+      "stage_registers": 41155.70419918246,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.02983388635167304,
+      "peak_w": 0.11343515687640938
+     },
+     "host": {
+      "wire_m": 1.74,
+      "kind": "small",
+      "cap_f": 5.568e-10,
+      "stage_registers": 4041.248606465998,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.016612230348649393,
+      "peak_w": 0.016612230348649393
+     },
+     "hub": {
+      "wire_m": 2.96,
+      "kind": "small",
+      "cap_f": 9.472e-10,
+      "stage_registers": 6874.767744332962,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.028259886110346098,
+      "peak_w": 0.028259886110346098
+     },
+     "link": {
+      "wire_m": 7.1,
+      "kind": "small",
+      "cap_f": 2.2720000000000004e-09,
+      "stage_registers": 16490.152359717576,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.0677855376295464,
+      "peak_w": 0.0677855376295464
+     },
+     "load": {
+      "wire_m": 42.27,
+      "kind": "small",
+      "cap_f": 1.35264e-08,
+      "stage_registers": 98174.47045707915,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.40356263036632756,
+      "peak_w": 0.40356263036632756
+     },
+     "phy_dfi": {
+      "wire_m": 97.62,
+      "kind": "fill",
+      "cap_f": 3.12384e-08,
+      "stage_registers": 226727.98216276476,
+      "transitions_per_cycle": 0.13095539428986505,
+      "avg_w": 1.534239697868931,
+      "peak_w": 1.6154529936888409
+     },
+     "spine_port": {
+      "wire_m": 137.76,
+      "kind": "tree",
+      "cap_f": 4.40832e-08,
+      "stage_registers": 319955.4069119287,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 1.0755163944016373,
+      "peak_w": 4.034705056263306
+     },
+     "stream_status": {
+      "wire_m": 3.73,
+      "kind": "small",
+      "cap_f": 1.1936e-09,
+      "stage_registers": 8663.136380527685,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.03561127540256451,
+      "peak_w": 0.03561127540256451
+     },
+     "tree_block": {
+      "wire_m": 1079.63,
+      "kind": "tree",
+      "cap_f": 3.4548160000000003e-07,
+      "stage_registers": 2507501.8580453363,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 8.42886008193844,
+      "peak_w": 31.62012645102753
+     },
+     "tree_spine": {
+      "wire_m": 493.08,
+      "kind": "tree",
+      "cap_f": 1.577856e-07,
+      "stage_registers": 1145206.24303233,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 3.849561728742445,
+      "peak_w": 14.441291878210734
+     }
+    },
+    "e_register_clocked_j": 2.058442352997358e-15,
+    "port_density": {
+     "L0": {
+      "bcast": 0.008720103379829619,
+      "tree": 0.30904759107590407
+     },
+     "L20": {
+      "bcast": 0.007134560027900806,
+      "tree": 0.30820085892938165
+     },
+     "head": {
+      "bcast": 0.00785424565594734,
+      "tree": 0.2785816161873186
+     }
+    },
+    "hbm_avg_Bps": 3494623269861.6226,
+    "hbm_peak_Bps": 3785951772393.4536,
+    "phy": {
+     "oconnor_micro2017_io_both_ends": {
+      "avg_w": 33.56558892711439,
+      "peak_w": 35.430091343318104
+     },
+     "chae_jssc2024_4nm_hbm3": {
+      "avg_w": 19.307525986078964,
+      "peak_w": 19.983408111952812
+     }
+    },
+    "assumed_floorplan_w": {
+     "svc": 34.58,
+     "spine": 34.52,
+     "hub": 3.78,
+     "head": 0.21,
+     "waypoint": 0.13
+    },
+    "die_avg_w": 267.2694627168617,
+    "die_avg_w_per_mm2": 0.32272294663760065,
+    "tiles_avg_w_per_mm2": 0.21596087407864237,
+    "die_peak_window_w": 785.911766188571,
+    "die_in_phase_clocked_w": 708.7894164494963,
+    "tiles_in_phase_clocked_w": 542.038553237915,
+    "tiles_window_peak_w": 619.1609029769897,
+    "tiles_clocked_w_per_mm2": 0.8101288091474002,
+    "tiles_static_w": 2.0773617726286444,
+    "margin_avg_w": 207.2905372831383,
+    "verdict_avg": "PASS",
+    "verdict_peak": "EXCEEDS (sub-microsecond; thermal budget is time-averaged)",
+    "die_J_per_token": 0.13096894119238245,
+    "tiles_J_per_token": 0.07080601510888718,
+    "tiles_clocked_combinational_w": 162.4957069158554,
+    "tiles_avg_w_if_comb_halved": 125.166946216917,
+    "ir_worst_mv_scaled_to_window_peak": 20.746512826610022,
+    "max_fabric_duty_at_budget": 0.6476532661679405
+   }
+  },
+  "FF": {
+   "vectorless_tile_w": 1.0900450944900513,
+   "stages": {
+    "L0": {
+     "cycles": 6227,
+     "fabric_clocked_cycles": 3591,
+     "duty": 0.5766821904608961,
+     "tiles": {
+      "L0_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5835246443748474,
+       "p_leak_w": 4.858063766732812e-05,
+       "groups_w": {
+        "sequential": 0.22469903528690338,
+        "combinational": 0.16563914716243744,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6666409969329834,
+       "window_max": "w002560",
+       "e_logic_j": 1.7463042137591402e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.754661999314503e-06
+      },
+      "L0_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5777938961982727,
+       "p_leak_w": 4.85710334032774e-05,
+       "groups_w": {
+        "sequential": 0.22434180974960327,
+        "combinational": 0.16027644276618958,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6715837121009827,
+       "window_max": "w002560",
+       "e_logic_j": 1.7291549287433736e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.7375127142987363e-06
+      },
+      "L0_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5818055868148804,
+       "p_leak_w": 4.849286415264942e-05,
+       "groups_w": {
+        "sequential": 0.22519053518772125,
+        "combinational": 0.16342197358608246,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6797084808349609,
+       "window_max": "w002560",
+       "e_logic_j": 1.7411597412017848e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.7495175267571475e-06
+      },
+      "L0_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5739264488220215,
+       "p_leak_w": 4.861947672907263e-05,
+       "groups_w": {
+        "sequential": 0.2228669822216034,
+        "combinational": 0.1578730195760727,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6668538451194763,
+       "window_max": "w002560",
+       "e_logic_j": 1.717581698883781e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.7259394844391437e-06
+      },
+      "L0_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5803497433662415,
+       "p_leak_w": 4.8603811592329293e-05,
+       "groups_w": {
+        "sequential": 0.22473172843456268,
+        "combinational": 0.1624220907688141,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6657552719116211,
+       "window_max": "w002560",
+       "e_logic_j": 1.7368033733962754e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.745161158951638e-06
+      },
+      "L0_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5837146639823914,
+       "p_leak_w": 4.8543755838181823e-05,
+       "groups_w": {
+        "sequential": 0.2256721556186676,
+        "combinational": 0.16484151780605316,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6781522631645203,
+       "window_max": "w002560",
+       "e_logic_j": 1.7468727664176307e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.7552305519729934e-06
+      },
+      "L0_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 3591,
+       "p_clocked_w": 0.5528596639633179,
+       "p_leak_w": 4.922578591504134e-05,
+       "groups_w": {
+        "sequential": 0.21374672651290894,
+        "combinational": 0.1458079218864441,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6294548511505127,
+       "window_max": "w002560",
+       "e_logic_j": 1.6545406770532888e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 4.964173292255678e-10,
+        "dynamic_j": 6.100908950184731e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 2.2568766051780004e-09,
+        "every_edge_bound_j": 5.227176315578292e-08
+       },
+       "e_tile_j": 1.6628984626086515e-06
+      }
+     },
+     "die_tiles_clocked_w": 889.8226861953735,
+     "die_tiles_window_peak_w": 1029.5999307632446,
+     "die_tiles_leak_w": 0.7426597195795303,
+     "die_macro_dynamic_j": 9.370996147483747e-06,
+     "die_macro_every_edge_bound_j": 8.028942820728256e-05,
+     "die_tiles_energy_j": 0.0026757958652738204,
+     "die_tiles_stage_avg_w": 515.650399603113,
+     "groups_clocked_w": {
+      "sequential": 344.36166286468506,
+      "combinational": 248.72093796730042,
+      "clock": 296.74855041503906
+     }
+    },
+    "L20": {
+     "cycles": 17293,
+     "fabric_clocked_cycles": 4408,
+     "duty": 0.254900826924189,
+     "tiles": {
+      "L20_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5743558406829834,
+       "p_leak_w": 4.8614554543746635e-05,
+       "groups_w": {
+        "sequential": 0.2234126180410385,
+        "combinational": 0.15774300694465637,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.642776370048523,
+       "window_max": "w003584",
+       "e_logic_j": 2.110322453554906e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.1286017635036928e-06
+      },
+      "L20_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5714874267578125,
+       "p_leak_w": 4.863046342507005e-05,
+       "groups_w": {
+        "sequential": 0.2219519466161728,
+        "combinational": 0.15634573996067047,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6471893191337585,
+       "window_max": "w002560",
+       "e_logic_j": 2.099785983891391e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.118065293840178e-06
+      },
+      "L20_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5738837718963623,
+       "p_leak_w": 4.864002039539628e-05,
+       "groups_w": {
+        "sequential": 0.2224016785621643,
+        "combinational": 0.1582786738872528,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6391575932502747,
+       "window_max": "w003584",
+       "e_logic_j": 2.1085886609849663e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.126867970933753e-06
+      },
+      "L20_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5800139904022217,
+       "p_leak_w": 4.8669444367988035e-05,
+       "groups_w": {
+        "sequential": 0.2229624092578888,
+        "combinational": 0.16383470594882965,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6400232315063477,
+       "window_max": "w003584",
+       "e_logic_j": 2.131107312903062e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.149386622851849e-06
+      },
+      "L20_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5758464932441711,
+       "p_leak_w": 4.8628182412358e-05,
+       "groups_w": {
+        "sequential": 0.22379490733146667,
+        "combinational": 0.1588524580001831,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6429367661476135,
+       "window_max": "w003584",
+       "e_logic_j": 2.1157982636255748e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.1340775735743615e-06
+      },
+      "L20_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5700413584709167,
+       "p_leak_w": 4.8655670980224386e-05,
+       "groups_w": {
+        "sequential": 0.22267486155033112,
+        "combinational": 0.1541571170091629,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6480041146278381,
+       "window_max": "w003584",
+       "e_logic_j": 2.0944743637169845e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 2.112753673665771e-06
+      },
+      "L20_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 4408,
+       "p_clocked_w": 0.5305073261260986,
+       "p_leak_w": 4.93630395794753e-05,
+       "groups_w": {
+        "sequential": 0.20700761675834656,
+        "combinational": 0.13006055355072021,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.5987903475761414,
+       "window_max": "w002560",
+       "e_logic_j": 1.9492602802740203e-06,
+       "macro": {
+        "code_resident_j": 2.9356518730430855e-09,
+        "code_window_j": 0.0,
+        "kv_j": 2.668839747916078e-09,
+        "fill_j": 6.407246923725352e-09,
+        "dynamic_j": 1.2011738544684515e-08,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 6.267571404102001e-09,
+        "every_edge_bound_j": 6.41642806991621e-08
+       },
+       "e_tile_j": 1.967539590222807e-06
+      }
+     },
+     "die_tiles_clocked_w": 879.8454694747925,
+     "die_tiles_window_peak_w": 985.2358646392822,
+     "die_tiles_leak_w": 0.7427759662737635,
+     "die_macro_dynamic_j": 1.8450030404635415e-05,
+     "die_macro_every_edge_bound_j": 9.8556335153913e-05,
+     "die_tiles_energy_j": 0.003260845206175953,
+     "die_tiles_stage_avg_w": 226.2773519580838,
+     "groups_clocked_w": {
+      "sequential": 341.3400900363922,
+      "combinational": 241.73763728141785,
+      "clock": 296.74855041503906
+     }
+    },
+    "head": {
+     "cycles": 3223,
+     "fabric_clocked_cycles": 2658,
+     "duty": 0.8246974868135277,
+     "tiles": {
+      "head_t0000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5824231505393982,
+       "p_leak_w": 4.9073270929511636e-05,
+       "groups_w": {
+        "sequential": 0.21500590443611145,
+        "combinational": 0.17413091659545898,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6154534816741943,
+       "window_max": "w001024",
+       "e_logic_j": 1.2900903837764964e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.3003406815858454e-06
+      },
+      "head_t1000": {
+       "cls": "k1",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5887213349342346,
+       "p_leak_w": 4.9148562538903207e-05,
+       "groups_w": {
+        "sequential": 0.21585123240947723,
+        "combinational": 0.17960210144519806,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.621097981929779,
+       "window_max": "w001024",
+       "e_logic_j": 1.3040408976608584e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.3142911954702075e-06
+      },
+      "head_t0001": {
+       "cls": "k2",
+       "n": 384,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5882450938224792,
+       "p_leak_w": 4.9181675422005355e-05,
+       "groups_w": {
+        "sequential": 0.21574342250823975,
+        "combinational": 0.17922243475914001,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.620865523815155,
+       "window_max": "w001024",
+       "e_logic_j": 1.3029860391889696e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.3132363369983186e-06
+      },
+      "head_t0003": {
+       "cls": "k3",
+       "n": 192,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5884233713150024,
+       "p_leak_w": 4.924665336147882e-05,
+       "groups_w": {
+        "sequential": 0.21500033140182495,
+        "combinational": 0.18013586103916168,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.619293749332428,
+       "window_max": "w001024",
+       "e_logic_j": 1.3033809544286883e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.3136312522380373e-06
+      },
+      "head_t0007": {
+       "cls": "k4",
+       "n": 96,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.594184160232544,
+       "p_leak_w": 4.918157355859876e-05,
+       "groups_w": {
+        "sequential": 0.2177698016166687,
+        "combinational": 0.18311727046966553,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6286603808403015,
+       "window_max": "w001024",
+       "e_logic_j": 1.316141071239302e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.326391369048651e-06
+      },
+      "head_t0015": {
+       "cls": "k5",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5995907783508301,
+       "p_leak_w": 4.901517604594119e-05,
+       "groups_w": {
+        "sequential": 0.22057069838047028,
+        "combinational": 0.1857444792985916,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.6335258483886719,
+       "window_max": "w001024",
+       "e_logic_j": 1.3281166520258102e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.3383669498351593e-06
+      },
+      "head_t0031": {
+       "cls": "none",
+       "n": 48,
+       "clocked_cycles": 2658,
+       "p_clocked_w": 0.5577758550643921,
+       "p_leak_w": 4.972314491169527e-05,
+       "groups_w": {
+        "sequential": 0.2068953812122345,
+        "combinational": 0.157506063580513,
+        "clock": 0.1931956708431244
+       },
+       "p_window_max_w": 0.5848487019538879,
+       "window_max": "w001024",
+       "e_logic_j": 1.2354969302816911e-06,
+       "macro": {
+        "code_resident_j": 9.082172982227046e-09,
+        "code_window_j": 0.0,
+        "kv_j": 0.0,
+        "fill_j": 0.0,
+        "dynamic_j": 9.082172982227046e-09,
+        "leak_w": 0.0004349208168000001,
+        "leak_j": 1.1681248271220001e-09,
+        "every_edge_bound_j": 3.869071190979421e-08
+       },
+       "e_tile_j": 1.2457472280910402e-06
+      }
+     },
+     "die_tiles_clocked_w": 901.1781635284424,
+     "die_tiles_window_peak_w": 950.9858980178833,
+     "die_tiles_leak_w": 0.7435575499317174,
+     "die_macro_dynamic_j": 1.3950217700700742e-05,
+     "die_macro_every_edge_bound_j": 5.9428933493443895e-05,
+     "die_tiles_energy_j": 0.00201188964659571,
+     "die_tiles_stage_avg_w": 749.0746434734259,
+     "groups_clocked_w": {
+      "sequential": 330.99895119667053,
+      "combinational": 273.296263217926,
+      "clock": 296.74855041503906
+     }
+    }
+   },
+   "token": {
+    "fabric_duty": 0.2674365807244856,
+    "tiles_energy_j": 0.11647707036441936,
+    "tiles_avg_w": 237.69577528617236,
+    "die_wire_avg_w": 24.488573887965167,
+    "die_wire_peak_w": 81.03331038733083,
+    "wires": {
+     "clock_trunk": {
+      "wire_m": 0.38,
+      "kind": "clock",
+      "cap_f": 1.216e-10,
+      "stage_registers": 0.0,
+      "transitions_per_cycle": 0.5348731614489712,
+      "avg_w": 0.023137534659989016,
+      "peak_w": 0.086515968
+     },
+     "collective": {
+      "wire_m": 11.63,
+      "kind": "small",
+      "cap_f": 3.7216e-09,
+      "stage_registers": 27011.33407655147,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.1764108420072965,
+      "peak_w": 0.1764108420072965
+     },
+     "corridor": {
+      "wire_m": 20.82,
+      "kind": "bcast",
+      "cap_f": 6.6624000000000005e-09,
+      "stage_registers": 48355.62987736901,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.05741156217821079,
+      "peak_w": 0.21797354777122008
+     },
+     "corridor_hop": {
+      "wire_m": 2.27,
+      "kind": "bcast",
+      "cap_f": 7.264e-10,
+      "stage_registers": 5272.203641768859,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.006259569939699255,
+      "peak_w": 0.023765607754114768
+     },
+     "fill": {
+      "wire_m": 9.78,
+      "kind": "fill",
+      "cap_f": 3.1296e-09,
+      "stage_registers": 22714.604236343366,
+      "transitions_per_cycle": 0.22981266242250784,
+      "avg_w": 0.3485386635052836,
+      "peak_w": 0.3698680370443994
+     },
+     "fill_hop": {
+      "wire_m": 20.06,
+      "kind": "fill",
+      "cap_f": 6.4192e-09,
+      "stage_registers": 46590.486807878115,
+      "transitions_per_cycle": 0.007660422080750262,
+      "avg_w": 0.20759692801159238,
+      "peak_w": 0.20905523487319655
+     },
+     "head_chain": {
+      "wire_m": 17.72,
+      "kind": "bcast",
+      "cap_f": 5.6704e-09,
+      "stage_registers": 41155.70419918246,
+      "transitions_per_cycle": 0.001959708586504688,
+      "avg_w": 0.048863250806815334,
+      "peak_w": 0.1855183125122968
+     },
+     "host": {
+      "wire_m": 1.74,
+      "kind": "small",
+      "cap_f": 5.568e-10,
+      "stage_registers": 4041.248606465998,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.026393367591805324,
+      "peak_w": 0.026393367591805324
+     },
+     "hub": {
+      "wire_m": 2.96,
+      "kind": "small",
+      "cap_f": 9.472e-10,
+      "stage_registers": 6874.767744332962,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.04489906211019756,
+      "peak_w": 0.04489906211019756
+     },
+     "link": {
+      "wire_m": 7.1,
+      "kind": "small",
+      "cap_f": 2.2720000000000004e-09,
+      "stage_registers": 16490.152359717576,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.10769707465621714,
+      "peak_w": 0.10769707465621714
+     },
+     "load": {
+      "wire_m": 42.27,
+      "kind": "small",
+      "cap_f": 1.35264e-08,
+      "stage_registers": 98174.47045707915,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.6411768092560983,
+      "peak_w": 0.6411768092560983
+     },
+     "phy_dfi": {
+      "wire_m": 97.62,
+      "kind": "fill",
+      "cap_f": 3.12384e-08,
+      "stage_registers": 226727.98216276476,
+      "transitions_per_cycle": 0.13095539428986505,
+      "avg_w": 2.3803958631740176,
+      "peak_w": 2.5017144902630193
+     },
+     "spine_port": {
+      "wire_m": 137.76,
+      "kind": "tree",
+      "cap_f": 4.40832e-08,
+      "stage_registers": 319955.4069119287,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 1.640038367225951,
+      "peak_w": 6.1520517612350565
+     },
+     "stream_status": {
+      "wire_m": 3.73,
+      "kind": "small",
+      "cap_f": 1.1936e-09,
+      "stage_registers": 8663.136380527685,
+      "transitions_per_cycle": 0.05,
+      "avg_w": 0.05657888569967464,
+      "peak_w": 0.05657888569967464
+     },
+     "tree_block": {
+      "wire_m": 1079.63,
+      "kind": "tree",
+      "cap_f": 3.4548160000000003e-07,
+      "stage_registers": 2507501.8580453363,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 12.85303878054699,
+      "peak_w": 48.21384758262343
+     },
+     "tree_spine": {
+      "wire_m": 493.08,
+      "kind": "tree",
+      "cap_f": 1.577856e-07,
+      "stage_registers": 1145206.24303233,
+      "transitions_per_cycle": 0.08231615408809381,
+      "avg_w": 5.870137326595325,
+      "peak_w": 22.019843803932794
+     }
+    },
+    "e_register_clocked_j": 3.400262228655029e-15,
+    "port_density": {
+     "L0": {
+      "bcast": 0.008720103379829619,
+      "tree": 0.30904759107590407
+     },
+     "L20": {
+      "bcast": 0.007134560027900806,
+      "tree": 0.30820085892938165
+     },
+     "head": {
+      "bcast": 0.00785424565594734,
+      "tree": 0.2785816161873186
+     }
+    },
+    "hbm_avg_Bps": 3494623269861.6226,
+    "hbm_peak_Bps": 3785951772393.4536,
+    "phy": {
+     "oconnor_micro2017_io_both_ends": {
+      "avg_w": 33.56558892711439,
+      "peak_w": 35.430091343318104
+     },
+     "chae_jssc2024_4nm_hbm3": {
+      "avg_w": 19.307525986078964,
+      "peak_w": 19.983408111952812
+     }
+    },
+    "assumed_floorplan_w": {
+     "svc": 34.58,
+     "spine": 34.52,
+     "hub": 3.78,
+     "head": 0.21,
+     "waypoint": 0.13
+    },
+    "die_avg_w": 368.9699381012519,
+    "die_avg_w_per_mm2": 0.44552439487213,
+    "tiles_avg_w_per_mm2": 0.35525922320775094,
+    "die_peak_window_w": 1225.5813991759255,
+    "die_in_phase_clocked_w": 1097.1596319411233,
+    "tiles_in_phase_clocked_w": 901.1781635284424,
+    "tiles_window_peak_w": 1029.5999307632446,
+    "tiles_clocked_w_per_mm2": 1.346897537246748,
+    "tiles_static_w": 0.7427759662737635,
+    "margin_avg_w": 105.5900618987481,
+    "verdict_avg": "PASS",
+    "verdict_peak": "EXCEEDS (sub-microsecond; thermal budget is time-averaged)",
+    "die_J_per_token": 0.18080480139301439,
+    "tiles_J_per_token": 0.11647707036441936,
+    "tiles_clocked_combinational_w": 273.296263217926,
+    "tiles_avg_w_if_comb_halved": 205.19309212145205,
+    "ir_worst_mv_scaled_to_window_peak": 34.49928454324623,
+    "max_fabric_duty_at_budget": 0.38041936817481703
+   }
+  }
+ },
+ "inputs": {
+  "stages": {
+   "L0": {
+    "cycles": 6227,
+    "edges": 3591,
+    "stream_words": 43,
+    "status": "pass",
+    "layer_x_mismatches": {
+     "L0_die0_x": 0,
+     "L0_die1_x": 0,
+     "L0_die2_x": 0,
+     "L0_die3_x": 0
+    },
+    "rtl_token": 0,
+    "oracle_token": 18,
+    "design_point": {
+     "ar256": false,
+     "arith_target": true,
+     "bd": 41,
+     "code_banks": 5,
+     "coll_depth": 1024,
+     "coll_lat": 339,
+     "groups_per_die": 6144,
+     "lv": 7,
+     "mem_extra": 1,
+     "nws": 5,
+     "ord": 7,
+     "scale_lat": 6,
+     "smax": 11,
+     "smin": 7,
+     "spine_h": true,
+     "su_width": 64,
+     "tcut": 7,
+     "tp": 4,
+     "tws": 38,
+     "xvm": 1
+    },
+    "window_words": 224
+   },
+   "L20": {
+    "cycles": 17293,
+    "edges": 4408,
+    "stream_words": 555,
+    "status": "pass",
+    "layer_x_mismatches": {
+     "L20_die0_x": 0,
+     "L20_die1_x": 0,
+     "L20_die2_x": 0,
+     "L20_die3_x": 0
+    },
+    "rtl_token": 0,
+    "oracle_token": 18,
+    "design_point": {
+     "ar256": false,
+     "arith_target": true,
+     "bd": 41,
+     "code_banks": 5,
+     "coll_depth": 1024,
+     "coll_lat": 339,
+     "groups_per_die": 6144,
+     "lv": 7,
+     "mem_extra": 1,
+     "nws": 5,
+     "ord": 7,
+     "scale_lat": 6,
+     "smax": 11,
+     "smin": 7,
+     "spine_h": true,
+     "su_width": 64,
+     "tcut": 7,
+     "tp": 4,
+     "tws": 38,
+     "xvm": 1
+    },
+    "window_words": 224
+   },
+   "head": {
+    "cycles": 3223,
+    "edges": 2658,
+    "stream_words": 0,
+    "status": "pass",
+    "layer_x_mismatches": {},
+    "rtl_token": 18,
+    "oracle_token": 18,
+    "design_point": {
+     "ar256": false,
+     "arith_target": true,
+     "bd": 41,
+     "code_banks": 5,
+     "coll_depth": 1024,
+     "coll_lat": 339,
+     "groups_per_die": 6144,
+     "lv": 7,
+     "mem_extra": 1,
+     "nws": 5,
+     "ord": 7,
+     "scale_lat": 6,
+     "smax": 11,
+     "smin": 7,
+     "spine_h": true,
+     "su_width": 64,
+     "tcut": 7,
+     "tp": 4,
+     "tws": 38,
+     "xvm": 1
+    },
+    "window_words": 224
+   }
+  },
+  "ports": {
+   "L0_t0000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.03484840573656363
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33793032929546085
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3447311856028961
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3384236415692008
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3567414630325815
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.013667837094825618
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.002292787089250905
+    }
+   },
+   "L0_t0001": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.03356481481481482
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3561573203842941
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33676258789334446
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3453561203355611
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35441957758980785
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.0136342317782761
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0020145850737956
+    }
+   },
+   "L0_t0003": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.03326676065162907
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35387513923698133
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34382233796296297
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3220284870161515
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3569514062935116
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.013727405397369781
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0018866339024644946
+    }
+   },
+   "L0_t0007": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.0325031328320802
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3563569296505152
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3475741219367864
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3321188170077973
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3501505499860763
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.013469974016076114
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0019909256648565857
+    }
+   },
+   "L0_t0015": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.0342479462545252
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3495457393483709
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34335458872876634
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.344733905075188
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3458940319548872
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.01372573036601529
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.002086515115914787
+    }
+   },
+   "L0_t0031": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.03468523739905319
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3554230628654971
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.013616539259594265
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.002121596308479532
+    }
+   },
+   "L0_t1000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.0002777392028884877
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.032905614731272625
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3407591243734336
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3478732638888889
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3412981237816764
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3510506953146756
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.013733791454408787
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0019440147678223337
+    }
+   },
+   "L20_t0000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.027457180127041743
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34487721188747733
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33071262477313973
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34532295683983666
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.350912049115245
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.01113500061405783
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0014352677305467332
+    }
+   },
+   "L20_t0001": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.02787545372050817
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35046010095281305
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.349429038821461
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33112070737862975
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3591237699920599
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.01114071476331482
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0013970515256352088
+    }
+   },
+   "L20_t0003": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.027634414700544466
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3586394765199637
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35099845096982757
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3333219607815336
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.36192983637704174
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.011152228347638607
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0014588620831442831
+    }
+   },
+   "L20_t0007": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.027168287772232305
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.36147877438747733
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35715690931261346
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3269694305807623
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35610324977313973
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.011198026827504332
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0014797979171392922
+    }
+   },
+   "L20_t0015": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.027450090744101634
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3556871916118421
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34634560032894735
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3372822673264519
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.34944366067377497
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.01115708963879754
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.001753514561592559
+    }
+   },
+   "L20_t0031": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.02768758507259528
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3218260832577132
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.011167153364354624
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0017296986657781308
+    }
+   },
+   "L20_t1000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 0.00022626167821519042
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.02785418557168784
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33291786595394735
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3382557282214156
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33336316781987296
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3459459363656987
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.011158368925944625
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.001455428163282668
+    }
+   },
+   "head_t0000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.0320553517682468
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2744669688205418
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2837799508559067
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2749975016459744
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2911618521914974
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.0572589770136402
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t0001": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.028022714446952597
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.290549020645222
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2954722476956358
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2843538374717833
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.29905518129232506
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.057198159054521185
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t0003": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.036102685289691495
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.298452637086155
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33484998118886383
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.28252636498307
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33929117287434163
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.05731526898510384
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t0007": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.029166078818660648
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33860118627727614
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3638676283860045
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2708171675131678
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.37295134969902183
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.057427287179574224
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t0015": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.035541290443942816
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3722422580417607
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.35923538609857036
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.33456487490594433
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3736053306057186
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.05717199318838858
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t0031": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.0262679881489842
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3162886803987961
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.05722050611856956
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   },
+   "head_t1000": {
+    "ib": {
+     "bits": 379,
+     "toggles_per_bit_per_clocked_cycle": 6.94870466218376e-05
+    },
+    "xl": {
+     "bits": 128,
+     "toggles_per_bit_per_clocked_cycle": 0.029174896538750942
+    },
+    "n_a": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.27645095584085777
+    },
+    "n_b": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.294921875
+    },
+    "t_out": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.2770373342268623
+    },
+    "n_y": {
+     "bits": 512,
+     "toggles_per_bit_per_clocked_cycle": 0.3007445094996238
+    },
+    "rom_rd": {
+     "bits": 2660,
+     "toggles_per_bit_per_clocked_cycle": 0.05718203522349893
+    },
+    "kv_q": {
+     "bits": 2048,
+     "toggles_per_bit_per_clocked_cycle": 0.0
+    }
+   }
+  },
+  "wire_by_class": {
+   "clock_trunk": 0.38,
+   "collective": 11.63,
+   "corridor": 20.82,
+   "corridor_hop": 2.27,
+   "fill": 9.78,
+   "fill_hop": 20.06,
+   "head_chain": 17.72,
+   "host": 1.74,
+   "hub": 2.96,
+   "link": 7.1,
+   "load": 42.27,
+   "phy_dfi": 97.62,
+   "spine_port": 137.76,
+   "stream_status": 3.73,
+   "tree_block": 1079.63,
+   "tree_spine": 493.08
+  },
+  "floorplan_power_assumed": {
+   "peak_in_phase_w": 775.7,
+   "by_kind": {
+    "tile": 702.53,
+    "head": 0.21,
+    "phy": 0.0,
+    "svc": 34.58,
+    "link": 0.0,
+    "hub": 3.78,
+    "serdes_slab": 0.0,
+    "host_slab": 0.0,
+    "spine": 34.52,
+    "waypoint": 0.13
+   },
+   "cooling_limit_w": 474.56,
+   "basis": "W/mm2 at the peak in-phase point, ASSUMED: SM 1.20 (above the H100 die average 0.86 W/mm2 = 700 W / 814 mm2, all 32 SMs streaming in phase); stream service 3.924 (Qwen strip/controller class); hub logic 1.05 (Qwen full-die hub class, as S81); waypoints 0.6; PHY, SerDes and host on their own supplies (no core-grid load)"
+  }
+ }
+}

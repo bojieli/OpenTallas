@@ -1,0 +1,36 @@
+violation type: Metal Spacing
+	srcs: inst:g_on.g_lane\[5\].u_lane/x_q\[31\]$_DFFE_PP_ net:clknet_leaf_41_clk
+	bbox = (16.0020, 63.5530) - (16.0180, 63.5540) on Layer M1
+violation type: Metal Spacing
+	srcs: inst:g_on.g_node\[9\].m/c1.pair\[0\].active.cut.a_q\[23\]$_DFF_P_ net:clknet_leaf_4034_clk
+	bbox = (139.6620, 95.4130) - (139.6780, 95.4140) on Layer M1
+violation type: Metal Spacing
+	srcs: inst:g_on.g_node\[10\].m/pick\[1\].bypass.d1\[28\]$_DFF_P_ net:clknet_leaf_1404_clk
+	bbox = (147.6540, 251.4730) - (147.6700, 251.4740) on Layer M1
+violation type: Metal Spacing
+	srcs: inst:g_on.g_node\[3\].m/pick\[5\].compare.cut.a_q\[8\]$_DFF_P_ net:clknet_leaf_2861_clk
+	bbox = (219.4740, 152.1130) - (219.4900, 152.1140) on Layer M1
+violation type: Metal Spacing
+	srcs: inst:g_on.g_node\[15\].m/pick\[2\].compare.cut.a_q\[30\]$_DFF_P_ net:clknet_leaf_3574_clk
+	bbox = (223.4700, 16.3060) - (223.4860, 16.3060) on Layer M1
+violation type: Metal Spacing
+	srcs: inst:g_on.g_node\[15\].m/pick\[2\].compare.cut.a_q\[30\]$_DFF_P_ net:clknet_leaf_3574_clk
+	bbox = (223.4700, 16.3060) - (223.4860, 16.3070) on Layer M1
+violation type: Lef58EolKeepOut
+	srcs: net:g_on.g_lane\[27\].u_lane/_1681_ net:g_on.g_lane\[27\].u_lane/_1682_
+	bbox = (35.1950, 171.5940) - (35.2210, 171.5940) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:g_on.g_lane\[27\].u_lane/_1681_ net:g_on.g_lane\[27\].u_lane/_1682_
+	bbox = (35.1950, 171.5940) - (35.2210, 171.6120) on Layer M2
+violation type: Lef58EolKeepOut
+	srcs: net:g_on.g_lane\[27\].u_lane/_1681_ net:g_on.g_lane\[27\].u_lane/_1682_
+	bbox = (35.1950, 171.6120) - (35.2210, 171.6120) on Layer M2
+violation type: Lef58SpacingEndOfLine
+	srcs: net:g_on.g_lane\[27\].u_lane/_1681_ net:g_on.g_lane\[27\].u_lane/_1682_
+	bbox = (35.1950, 171.5940) - (35.2210, 171.6120) on Layer M2
+violation type: Short
+	srcs: net:g_on.g_node\[24\].m/_06499_ net:g_on.g_node\[24\].m/_06507_
+	bbox = (238.3690, 63.8280) - (238.3790, 63.8460) on Layer M2
+violation type: Short
+	srcs: net:VDD net:g_on.g_node\[16\].m/_05211_
+	bbox = (299.4990, 87.7330) - (299.5020, 87.7670) on Layer M3

@@ -269,7 +269,7 @@
     "FF_added": 0,
     "cycles_added": 0
   },
-  "pricing_revision": "Charge seventh final AND12 quiet gate and all117 XOR2 graphnodes including constant operands; no pruning/removal credit",
+  "pricing_revision": "Charge seventh final AND12 quiet gate and all117 XOR2 graphnodes including constant operands; no pruning/removal credit; actualmapping retains182more FF afterconstantpruning than prior, charged53.0712um2 existingDFFproxy andcontainedwithinalreadypriced696sourceFF. Actual body806.5656supersedes693.35064estimate for subsequent physical continuation.",
   "exact_measurement": "results/rtl/hbm_cp_fourcut_20261005/exact_r1/terminal.json",
   "measured_exact": true,
   "measured_added_cycles": 0,
@@ -288,5 +288,30 @@
     "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv": "2e0c22045db63a02c052cbb67264ff448ed0d1c61d472af305af75bf05e13efe"
   },
   "parent_reference_commit": "f20f6850d3c262eaa6cd132b3eb2ba9af7ef7a08",
-  "parent_reference_sha256": "b21bb712d3f6a4f89103ffde2977f02ace02dc70b6fcb92d244cbb36176bfb18"
+  "parent_reference_sha256": "b21bb712d3f6a4f89103ffde2977f02ace02dc70b6fcb92d244cbb36176bfb18",
+  "context_checkpoint_measurement": {
+    "evidence": "results/physical/hbm_cp_fourcut_parent_context_20261005/dpl_membership_qualification",
+    "mapped_FF_cells": 673,
+    "prior_mapped_FF_cells": 491,
+    "mapped_FF_delta": 182,
+    "mapped_FF_delta_area_proxy_um2": 53.071200000000005,
+    "reserved_source_FF_bits": 696,
+    "new_RTL_registers": 0,
+    "new_RTL_cycles": 0,
+    "CP_body_cell_area_um2": 806.5656,
+    "association_cell_area_um2": 0.52488,
+    "CP_body_half_utilization_budget_um2": 839.808,
+    "clock_cells_inserted": 0,
+    "clock_area_estimate_from_prior_um2": 19.025148024439922,
+    "clock_area_estimate_basis": "Analytical scaling of retained61clock/dummy area13.88016 by673/491 mappedclockloads; not measured, actualCTS+repair allocation remains qualification",
+    "DPL_PASS": true,
+    "containment_violations": 0,
+    "ungrouped_movable_cells": 0,
+    "ancestry_repair_bindings": 858,
+    "shared_branches": 2,
+    "pre_DPL_hook": "PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl",
+    "hook_sha256": "8d870f5ed39c200a8eb30ac52354d054d8569783e651179a090c295e7413ca75",
+    "source_gate_replayed": false,
+    "all_regions_preserved": true
+  }
 }

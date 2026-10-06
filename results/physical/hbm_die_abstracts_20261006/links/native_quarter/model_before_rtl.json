@@ -1,0 +1,63 @@
+{
+  "source_base": "77800dc91",
+  "owner_binding": "TURING_TO_GAUSS_GIBBS_FINITE_NATIVE_CAPTURE_BINDING_20261006.txt",
+  "implementation": "existing shared native MODE1 station; actual full73 frame travels in protected payload",
+  "quarter_stations": 4,
+  "fanouts": [
+    3,
+    3,
+    3,
+    2
+  ],
+  "SM_taps": 8,
+  "quarter_copies": 4,
+  "payload_bits": 2063,
+  "frame_bits": 73,
+  "owner_bits": 192,
+  "forward_boundary_bits": 2329,
+  "reverse_boundary_bits": 266,
+  "station_payload_bits": 2136,
+  "protected_native_ff_no3": 5410,
+  "protected_native_ff_no2": 4760,
+  "protected_full_receipt_ff_each": 722,
+  "total_quarter_ff": 25614,
+  "MAC_per_cycle": 0,
+  "holding_latency": "one arm edge per station, actual reverse receipt after all matching downstream ACKs; extra full73 receipt capture edge per hop; no ACK from delay",
+  "clock": "actual clk_sm/por_n; forwarded inverter roots exported, insertion/receiver timing OPEN",
+  "physical": {
+    "target_GHz": 1.2,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "utilization": [
+      0.55,
+      0.6
+    ],
+    "placed": false,
+    "routing_capacity": "OPEN actual channels pending; 2257 forward +266 reverse signals/hop"
+  },
+  "capture": {
+    "required_rows": 4096,
+    "single_seat_deficit": 4095,
+    "logical_bytes": 131072,
+    "W6_coded_bits": 1474560,
+    "actual_512x128_macros_required": 24,
+    "physical_bytes": 196608,
+    "bare_macro_area_um2": 124095.6288,
+    "built": false,
+    "qualification": false
+  },
+  "publication": {
+    "provider_once": "owner parent 22 activation+10 index macros; this chain adds ZERO SRAM",
+    "maximum_bind_span_words": 16384,
+    "full4096_result_words": 32768,
+    "capacity_gap": "requires explicit source-owned segmentation/retirement contract; do not alias windows"
+  },
+  "issuer_192": "external source-owner required; no installed production issuer",
+  "off_package_FEC": "FULL; pending Claude handoff, no inherited130ns",
+  "forward_boundary_definition": "data2063+frame73+owner192+valid1; ready/clk/reset accounted separately",
+  "reverse_boundary_definition": "owner192+frame73+valid1; source ready additional1",
+  "retirement": "opt-in RELEASE_BACKPRESSURE1 uses actual protected full73 receipt capacity; default0 unchanged ABI, zero extra state",
+  "protected_guard_ff_each": 434,
+  "single_NO3_ff": 6566,
+  "single_NO2_ff": 5916
+}

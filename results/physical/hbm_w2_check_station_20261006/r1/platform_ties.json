@@ -1,0 +1,26 @@
+{
+  "TIEHI_CELL_AND_PORT": [
+    "TIEHIx1_ASAP7_75t_R",
+    "H"
+  ],
+  "TIELO_CELL_AND_PORT": [
+    "TIELOx1_ASAP7_75t_R",
+    "L"
+  ],
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--entrypoint",
+    "make",
+    "openroad/orfs:asap7lock",
+    "--no-print-directory",
+    "-s",
+    "-f",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/config.mk",
+    "PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7",
+    "--eval=print-ties:;@printf \"%s\\n\" \"$(TIEHI_CELL_AND_PORT)\" \"$(TIELO_CELL_AND_PORT)\"",
+    "print-ties"
+  ],
+  "installed_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+}

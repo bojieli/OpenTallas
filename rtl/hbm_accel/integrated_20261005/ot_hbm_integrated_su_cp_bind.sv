@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // Existing CP LAUNCH -> actual shared SU lease. No second borrower/GO authority.
 // Original W6 header/control rows; opt-in boundary control uses protected phase rails.
-module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0,FOUR_COMBINATIONAL_CUTS=0)(
+module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0,FOUR_COMBINATIONAL_CUTS=0,FAST_OWNER_FRONTIER=0,PARALLEL_PHASE_VALIDATION=0,CONTROL_TAIL_CUT=0,OWNER_VETO_POLARITY=0,
+ PIN_MARGIN=0,RELEASE_REPLAY=0)(
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -12,8 +13,31 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  input wire shared_fault,
  output wire owned,pending,quiet,selected,done,fault,
  output wire [31:0] selected_pc,held_job,output wire [3:0] held_gen,
- output wire [16:0] held_token,output wire [19:0] held_pos
+ output wire [16:0] held_token,output wire [19:0] held_pos,output wire [11:0] owned_frontier_terms,
+ // PIN_MARGIN only: the live header one register stage ahead of the live
+ // inputs above (the caller's pin stage), for the registered owner compare.
+ input wire [191:0] owner_live_next
 );
+ // PIN_MARGIN (default off, margin-first 2026-10-06): exact restructure for a
+ // caller that registers every input twice and every output once.
+ //  (1) Phase validity is applied only as the final, dominating term of each
+ //      D input and output (Shannon on the one-bit validity); inner cones use 1.
+ //  (2) The full 192-bit live-owner compare is registered one edge ahead from
+ //      owner_live_next (held header is immutable while checked_valid_q).
+ //  (3) Header/frame capture enable is split into four kept copies.
+ // RELEASE_REPLAY=N: the accepted release edge is the caller's actual fire,
+ // release_v delayed N edges AND the (registered) release_r.
+ initial if(PIN_MARGIN&&!(OWNER_VETO_POLARITY&&FAST_OWNER_FRONTIER&&PARALLEL_PHASE_VALIDATION&&BALANCED_OWNER_BOUNDARY&&FOUR_COMBINATIONAL_CUTS))
+  $fatal(1,"PIN_MARGIN is defined on the canonical owner-veto CP only");
+ initial if(RELEASE_REPLAY&&!PIN_MARGIN)$fatal(1,"RELEASE_REPLAY requires PIN_MARGIN");
+ initial if(OWNER_VETO_POLARITY&&!PARALLEL_PHASE_VALIDATION)
+  $fatal(1,"negative owner veto requires exact fast parallel-phase boundary");
+ initial if(CONTROL_TAIL_CUT&&!PARALLEL_PHASE_VALIDATION)
+  $fatal(1,"control tail requires exact parallel phase and fast frontier");
+ initial if(PARALLEL_PHASE_VALIDATION&&!FAST_OWNER_FRONTIER)
+  $fatal(1,"parallel phase requires measured fast frontier parent");
+ if(ENABLE==0||!FAST_OWNER_FRONTIER)assign owned_frontier_terms=0;
+ initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires four cuts");
  generate if(ENABLE==0)begin:off
  assign native_launch=launch_v;assign lease_v=0;assign release_v=0;
  assign owned=0;assign pending=0;assign quiet=1;assign selected=0;
@@ -36,12 +60,23 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   (phase[6]&&phase[7])||(phase[6]&&phase[8])||(phase[7]&&phase[8])||
   (phase_groups[0]&&phase_groups[1])||(phase_groups[0]&&phase_groups[2])||(phase_groups[1]&&phase_groups[2]);
  wire four_phase_valid,four_entry;
+ wire v_inner=PIN_MARGIN?1'b1:four_phase_valid;
+ wire v_final=PIN_MARGIN?four_phase_valid:1'b1;
  wire [127:0] capture_frame={55'd0,launch_pos,launch_token,cp_gen,cp_job};
  wire [71:0] four_pc_code,four_frame_lo,four_frame_hi;
  if(FOUR_COMBINATIONAL_CUTS)begin:four_combinational_cuts
+  initial if(FAST_OWNER_FRONTIER&&!FOUR_COMBINATIONAL_CUTS)$fatal(1,"fast frontier requires exact four cuts");
   initial if(!BALANCED_OWNER_BOUNDARY)$fatal(1,"four cuts require balanced registered boundary");
-  ot_hbm_cp_four_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
-  ot_hbm_cp_four_entry entry_check(.pc(launch_pc),.entry(four_entry));
+  if(PARALLEL_PHASE_VALIDATION)begin:parallel_phase
+   ot_hbm_cp_parallel_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  end else begin:retained_phase
+   ot_hbm_cp_four_phase phase_check(.q(phase_q),.n(phase_n),.valid(four_phase_valid));
+  end
+  if(FAST_OWNER_FRONTIER)begin:fast_entry
+   ot_hbm_cp_frontier_entry entry_check(.pc(launch_pc),.entry(four_entry));
+  end else begin:prior_entry
+   ot_hbm_cp_four_entry entry_check(.pc(launch_pc),.entry(four_entry));
+  end
   ot_hbm_cp_four_encode pc_encoder(.data({32'd0,launch_pc}),.code(four_pc_code));
   ot_hbm_cp_four_encode lo_encoder(.data(capture_frame[63:0]),.code(four_frame_lo));
   ot_hbm_cp_four_encode hi_encoder(.data(capture_frame[127:64]),.code(four_frame_hi));
@@ -130,7 +165,16 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire checked_fault=REGISTERED_OUTPUTS&&checked_phase&&(!checked_valid_q||!checked_frame_match);
  wire qualified_fault,recurrence_fault;
  wire balanced_release_accept;
- wire release_accept=BALANCED_OWNER_BOUNDARY?balanced_release_accept:(release_v&&release_r);
+ wire replay_accept;
+ wire release_accept=RELEASE_REPLAY?replay_accept:(BALANCED_OWNER_BOUNDARY?balanced_release_accept:(release_v&&release_r));
+ if(RELEASE_REPLAY)begin:release_replay
+  // The caller saw release_v RELEASE_REPLAY-1 edges after it left here and
+  // its release_r arrives one more edge later: replay exactly that fire.
+  reg [RELEASE_REPLAY-1:0] release_seen;
+  always @(posedge clk or negedge por_n)
+   if(!por_n)release_seen<=0;else release_seen<={release_seen,release_v};
+  assign replay_accept=release_seen[RELEASE_REPLAY-1]&&release_r;
+ end else assign replay_accept=1'b0;
  if(!BALANCED_OWNER_BOUNDARY)assign balanced_release_accept=0;
  if(REGISTERED_STATUS)begin:registered_status
  // Owner checks are independently registered before protected-state update.
@@ -144,7 +188,9 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  reg [6:0] status_q,status_n;
  wire rails_bad=status_q!=~status_n;
  wire [6:0] checked_status=status_q&~status_n;
- wire live_veto=!is_idle&&checked_valid_q&&(!checked_frame_match||!checked_shape);
+ wire [2:0] frontier_equal64;
+ if(!FAST_OWNER_FRONTIER)assign frontier_equal64=0;
+ wire live_veto=!is_idle&&checked_valid_q&&(FAST_OWNER_FRONTIER?!(&frontier_equal64):(!checked_frame_match||!checked_shape));
  wire instant_fault=exec_fault||shared_fault||ecc_fault_q||control_bad||rails_bad||live_veto;
  assign qualified_fault=qualified_sticky||instant_fault;
  assign recurrence_fault=qualified_sticky||exec_fault||shared_fault||ecc_fault_q;
@@ -165,6 +211,29 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   wire [47:0] match4;
   wire [11:0] mismatch16;
   wire [2:0] equal64;
+  wire all_owner_ok;
+  if(OWNER_VETO_POLARITY)begin:shared_full_owner_veto
+   ot_hbm_cp_frontier_nor3 root(.bits(~equal64),.result(all_owner_ok));
+  end else assign all_owner_ok=1'b0;
+  if(FAST_OWNER_FRONTIER)begin:fast_owner
+   for(genvar k=0;k<3;k=k+1)begin:g
+    if(OWNER_VETO_POLARITY)begin:negative_compare
+     wire mismatch;
+     if(PIN_MARGIN)begin:registered_compare
+      wire mismatch_next;reg equal_q;
+      ot_hbm_cp_owner_veto64 compare(.held_n(~decoded_header[k*64+:64]),.live(owner_live_next[k*64+:64]),.mismatch(mismatch_next));
+      always @(posedge clk or negedge por_n)if(!por_n)equal_q<=0;else equal_q<=!mismatch_next;
+      assign mismatch=!equal_q;
+     end else begin:live_compare
+     ot_hbm_cp_owner_veto64 compare(.held_n(~decoded_header[k*64+:64]),.live(live_header[k*64+:64]),.mismatch(mismatch));
+     end
+     assign equal64[k]=~mismatch;
+    end else begin:positive_compare
+    ot_hbm_cp_frontier_equal64 compare(.held_n(~decoded_header[k*64+:64]),.live(live_header[k*64+:64]),.equal(equal64[k]));
+    end
+   end
+   assign frontier_equal64=equal64;
+  end else begin:prior_owner
   for(genvar k=0;k<48;k=k+1)begin:owner_leaves
    ot_hbm_integrated_cp_match4 leaf(
     .held(decoded_header[k*4+:4]),.live(live_header[k*4+:4]),.equal(match4[k]));
@@ -175,6 +244,7 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   for(genvar k=0;k<3;k=k+1)begin:owner_roots
    ot_hbm_integrated_cp_nor4 root(.bits(mismatch16[k*4+:4]),.result(equal64[k]));
   end
+  end
   wire [4:0] local_ok;
   assign local_ok[0]=boundary_ok&&checked_valid_q&&checked_status[0]&&!lease_granted;
   assign local_ok[1]=boundary_ok&&checked_valid_q&&checked_status[1]&&!lease_granted;
@@ -182,19 +252,55 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   assign local_ok[3]=boundary_ok&&checked_valid_q&&checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4;
   assign local_ok[4]=boundary_ok&&checked_valid_q&&checked_status[5]&&!lease_granted&&!exec_done;
   wire live_owner_bad=!(&equal64);
-  if(FOUR_COMBINATIONAL_CUTS)begin:four_output_frontiers
+  if(OWNER_VETO_POLARITY)begin:negative_owner_frontiers
+   // All current192 identity bits participate on this edge. Local controls
+   // settle independently; no output permit feeds the protected next phase.
+   wire [2:0] owner_bad=~equal64;
+   wire errors_ok=~|{qualified_sticky,exec_fault,shared_fault,ecc_fault_q};
+   wire base_ok=v_inner&&errors_ok&&!rails_bad;
+   wire valid_ok=base_ok&&checked_valid_q;
+   wire pending_ok=valid_ok&&checked_status[0]&&!lease_granted;
+   wire lease_ok=valid_ok&&checked_status[1]&&!lease_granted;
+   wire owned_ok=valid_ok&&checked_status[2]&&lease_granted;
+   wire release_ok=valid_ok&&checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4;
+   wire done_ok=valid_ok&&checked_status[5]&&!lease_granted&&!exec_done;
+   assign owned_frontier_terms={2'b11,v_final,equal64,v_inner,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted};
+   wire pending_g,lease_g,owned_g,release_g,done_g,quiet_g;
+   ot_hbm_cp_veto_nor4 pending_gate(.bad({owner_bad,!pending_ok}),.permit(pending_g));
+   ot_hbm_cp_veto_nor4 lease_gate(.bad({owner_bad,!lease_ok}),.permit(lease_g));
+   ot_hbm_cp_veto_nor4 owned_gate(.bad({owner_bad,!owned_ok}),.permit(owned_g));
+   ot_hbm_cp_veto_nor4 release_gate(.bad({owner_bad,!release_ok}),.permit(release_g));
+   // Accept feeds only phase/status D inputs, where invalid phase dominates.
+   ot_hbm_cp_veto_nor4 accept_gate(.bad({owner_bad,!(release_ok&&release_r)}),.permit(balanced_release_accept));
+   ot_hbm_cp_veto_nor4 done_gate(.bad({owner_bad,!done_ok}),.permit(done_g));
+   ot_hbm_cp_veto_conditional #(.NEGATIVE(0)) quiet_gate(
+    .local_ok(base_ok&&checked_status[3]&&!lease_granted),.owner_ok(all_owner_ok),
+    .bypass(is_idle||!checked_valid_q),.result(quiet_g));
+   // Every permit is 0 at invalid phase in the original (base_ok factor).
+   assign pending=pending_g&&v_final;assign lease_v=lease_g&&v_final;assign owned=owned_g&&v_final;
+   assign release_v=release_g&&v_final;assign done=done_g&&v_final;assign quiet=quiet_g&&v_final;
+  end else if(FOUR_COMBINATIONAL_CUTS)begin:four_output_frontiers
    // Independent positive factors join only at the final balanced boundary.
    // Full current192-bit owner and current mutable phase/status veto remain.
    wire errors_ok=~|{qualified_sticky,exec_fault,shared_fault,ecc_fault_q};
-   ot_hbm_cp_four_and12 pending_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[0],!lease_granted}),.result(pending));
-   ot_hbm_cp_four_and12 lease_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[1],!lease_granted}),.result(lease_v));
-   ot_hbm_cp_four_and12 owned_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted}),.result(owned));
-   ot_hbm_cp_four_and12 release_gate(.bits({1'b1,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4}),.result(release_v));
-   ot_hbm_cp_four_and12 accept_gate(.bits({equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4,release_r}),.result(balanced_release_accept));
-   ot_hbm_cp_four_and12 done_gate(.bits({2'b11,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[5],!lease_granted,!exec_done}),.result(done));
+   if(FAST_OWNER_FRONTIER)assign owned_frontier_terms={3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted};
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) pending_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[0],!lease_granted}),.result(pending));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) lease_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[1],!lease_granted}),.result(lease_v));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) owned_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted}),.result(owned));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(8)) release_gate(.bits({1'b1,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4}),.result(release_v));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(9)) accept_gate(.bits({equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4,release_r}),.result(balanced_release_accept));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(7)) done_gate(.bits({2'b11,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[5],!lease_granted,!exec_done}),.result(done));
    wire bypass_owner=is_idle||!checked_valid_q;
    wire [2:0] quiet_owner=equal64|{3{bypass_owner}};
-   ot_hbm_cp_four_and12 quiet_gate(.bits({4'b1111,quiet_owner,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(quiet));
+   if(CONTROL_TAIL_CUT==2)begin:late_quiet
+    wire early_ok,owner_bad,owner_permit;
+    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) early_gate(.bits({7'b1111111,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(early_ok));
+    ot_hbm_cp_frontier_nand3 late_owner(.bits(equal64),.result(owner_bad));
+    ot_hbm_cp_phase_nand2 bypass(.bits({owner_bad,!bypass_owner}),.result(owner_permit));
+    ot_hbm_cp_control_tail_and2 tail(.bits({early_ok,owner_permit}),.result(quiet));
+   end else begin:prior_quiet
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(5)) quiet_gate(.bits({4'b1111,quiet_owner,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(quiet));
+   end
   end else begin:original_balanced_frontiers
   ot_hbm_integrated_cp_and4 pending_gate(.bits({equal64,local_ok[0]}),.result(pending));
   ot_hbm_integrated_cp_and4 lease_gate(.bits({equal64,local_ok[1]}),.result(lease_v));
@@ -208,7 +314,25 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   assign quiet=boundary_ok&&checked_status[3]&&!lease_granted&&
                (is_idle||!checked_valid_q||!live_owner_bad);
   end
+  if(OWNER_VETO_POLARITY)begin:negative_fault_tail
+   wire local_ok=v_inner&&!rails_bad&&!(qualified_sticky||exec_fault||shared_fault||ecc_fault_q);
+   wire fault_g;
+   ot_hbm_cp_veto_conditional #(.NEGATIVE(1)) fault_gate(
+    .local_ok(local_ok),.owner_ok(all_owner_ok),.bypass(is_idle||!checked_valid_q),.result(fault_g));
+   // Invalid phase forces fault in the original (local_ok factor).
+   assign fault=fault_g||!v_final;
+  end else if(CONTROL_TAIL_CUT)begin:retained_fault_tail
+   // Same current-owner scope as the original live veto. This reduction
+   // creates no permission or held authority and does not gate accepted debt.
+   wire [2:0] fault_owner=equal64|{3{is_idle||!checked_valid_q}};
+   wire fault_free;
+   wire errors_ok=~|{qualified_sticky,exec_fault,shared_fault,ecc_fault_q};
+   ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) fault_gate(
+    .bits({5'b11111,fault_owner,four_phase_valid,!rails_bad,errors_ok,1'b1}),.result(fault_free));
+   assign fault=!fault_free;
+  end else begin:original_fault_tail
   assign fault=!boundary_ok||(!is_idle&&checked_valid_q&&live_owner_bad);
+  end
  end else if(GROUPED_OWNER_BOUNDARY)begin:grouped_owner_boundary
   // Complete PC64/frame128 comparison includes every zero padding bit.
   // Byte groups are independent combinational frontiers, not registered
@@ -354,13 +478,23 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  always @(posedge clk or negedge por_n)begin phase_q<=9'b000000001;phase_n<=~9'b000000001;end
  end
  reg [127:0] captured;
+ // PIN_MARGIN: identical enable, four kept copies of 54 capture bits each.
+ wire [3:0] capture_en;
+ if(PIN_MARGIN)begin:capture_copies
+  wire capture_base=is_idle&&launch_v==2'b01&&entry&&!recurrence_fault;
+  for(genvar k=0;k<4;k=k+1)begin:g
+   (* keep *) ot_hbm_cp_capture_enable en(.base(capture_base),.control_ok(!control_bad),.enable(capture_en[k]));
+  end
+ end else assign capture_en=0;
+ wire [215:0] capture_next={four_pc_code,four_frame_hi,four_frame_lo};
+ wire [215:0] capture_mask={{54{capture_en[3]}},{54{capture_en[2]}},{54{capture_en[1]}},{54{capture_en[0]}}};
  // Header capture is separated from the W6 control recurrence. In the
  // successor its enable originates from the protected one-hot IDLE phase.
  always @(posedge clk or negedge por_n)begin
   if(!por_n)begin
    pc_code<=ot_gpu_w6_secded_pkg::encode64(0);
    frame_lo<=ot_gpu_w6_secded_pkg::encode64(0);frame_hi<=ot_gpu_w6_secded_pkg::encode64(0);
-  end else if(is_idle&&launch_v==2'b01&&entry&&!recurrence_fault&&(!REGISTERED_BOUNDARY||!control_bad))begin
+  end else if(!PIN_MARGIN&&is_idle&&launch_v==2'b01&&entry&&!recurrence_fault&&(!REGISTERED_BOUNDARY||!control_bad))begin
    captured={55'b0,launch_pos,launch_token,cp_gen,cp_job};
    if(FOUR_COMBINATIONAL_CUTS)begin
     frame_lo<=four_frame_lo;frame_hi<=four_frame_hi;pc_code<=four_pc_code;
@@ -368,6 +502,8 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
     frame_lo<=ot_gpu_w6_secded_pkg::encode64(captured[63:0]);frame_hi<=ot_gpu_w6_secded_pkg::encode64(captured[127:64]);
     pc_code<=ot_gpu_w6_secded_pkg::encode64({32'b0,launch_pc});
    end
+  end else if(PIN_MARGIN)begin
+   {pc_code,frame_hi,frame_lo}<=({pc_code,frame_hi,frame_lo}&~capture_mask)|(capture_next&capture_mask);
   end
  end
  always @(posedge clk or negedge por_n)begin
@@ -496,4 +632,154 @@ module ot_hbm_cp_four_encode(input wire [63:0] data,output wire [71:0] code);
  ot_hbm_cp_four_xor4 m1(.bits(leaf[7:4]),.result(middle[1]));
  ot_hbm_cp_four_xor4 m2(.bits({3'b0,leaf[8]}),.result(middle[2]));
  ot_hbm_cp_four_xor4 root(.bits({1'b0,middle}),.result(code[71]));
+endmodule
+
+// Alternating three-input reductions map to native NAND/NOR boundaries.
+// Complement-fed comparison lets the retained negative-Q bank drive a leaf
+// without rebuilding positive-Q before the complete current192-bit veto.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_frontier_nand3(input wire [2:0] bits,output wire result);
+ assign result=~&bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_frontier_nor3(input wire [2:0] bits,output wire result);
+ assign result=~|bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_frontier_equal64(input wire [63:0] held_n,live,output wire equal);
+ wire [65:0] bit_equal={2'b11,held_n^live};
+ wire [23:0] leaf;wire [8:0] middle;wire [2:0] upper;
+ assign leaf[23:22]=0;
+ for(genvar k=0;k<22;k=k+1)begin:g0
+  ot_hbm_cp_frontier_nand3 n(.bits(bit_equal[k*3+:3]),.result(leaf[k]));
+ end
+ for(genvar k=0;k<8;k=k+1)begin:g1
+  ot_hbm_cp_frontier_nor3 n(.bits(leaf[k*3+:3]),.result(middle[k]));
+ end
+ assign middle[8]=1;
+ for(genvar k=0;k<3;k=k+1)begin:g2
+  ot_hbm_cp_frontier_nand3 n(.bits(middle[k*3+:3]),.result(upper[k]));
+ end
+ ot_hbm_cp_frontier_nor3 root(.bits(upper),.result(equal));
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_frontier_entry(input wire [31:0] pc,output wire entry);
+ wire [31:0] bits=~(pc^32'h80000004)|32'h40000000;
+ wire [32:0] bit_equal={1'b1,bits};wire [11:0] leaf;wire [5:0] middle;wire [2:0] upper;
+ for(genvar k=0;k<11;k=k+1)begin:g0
+  ot_hbm_cp_frontier_nand3 n(.bits(bit_equal[k*3+:3]),.result(leaf[k]));
+ end
+ assign leaf[11]=0;
+ for(genvar k=0;k<4;k=k+1)begin:g1
+  ot_hbm_cp_frontier_nor3 n(.bits(leaf[k*3+:3]),.result(middle[k]));
+ end
+ assign middle[5:4]=2'b11;
+ for(genvar k=0;k<2;k=k+1)begin:g2
+  ot_hbm_cp_frontier_nand3 n(.bits(middle[k*3+:3]),.result(upper[k]));
+ end
+ assign upper[2]=0;
+ ot_hbm_cp_frontier_nor3 root(.bits(upper),.result(entry));
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_frontier_and12 #(parameter integer FAST=0,RETAINED_TAIL=0,OWNER_LSB=6)(input wire [11:0] bits,output wire result);
+ if(!FAST)begin:prior
+  ot_hbm_cp_four_and12 gate(.bits(bits),.result(result));
+ end else if(RETAINED_TAIL==2)begin:late_owner
+  wire [11:0] early_bits=bits | (12'h007 << OWNER_LSB);
+  wire early_ok;
+  ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) early_gate(.bits(early_bits),.result(early_ok));
+  ot_hbm_integrated_cp_and4 late_gate(.bits({bits[OWNER_LSB+:3],early_ok}),.result(result));
+ end else begin:fast
+  wire [3:0] no;wire [1:0] yes;
+  for(genvar k=0;k<4;k=k+1)begin:g
+   ot_hbm_cp_frontier_nand3 n(.bits(bits[k*3+:3]),.result(no[k]));
+  end
+  if(RETAINED_TAIL)begin:retained_tail
+   // Keep each two-input reduction across ABC; the former unretained tail
+   // mapped as OR4+INV in the terminal -19ps current-owner output path.
+   ot_hbm_cp_phase_nor2 l0(.bits(no[1:0]),.result(yes[0]));
+   ot_hbm_cp_phase_nor2 l1(.bits(no[3:2]),.result(yes[1]));
+   ot_hbm_cp_control_tail_and2 root(.bits(yes),.result(result));
+  end else begin:original_tail
+  assign yes[0]=~|no[1:0];assign yes[1]=~|no[3:2];
+  assign result=&yes;
+  end
+ end
+endmodule
+
+// All nine legal protected18-bit words, decomposed without a held mirror.
+// n drives only its XOR complement check; q drives eight pair exclusions.
+// No registers, added cycles, or delayed current-fault qualification.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_phase_nand2(input wire [1:0] bits,output wire result);
+ assign result=~&bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_phase_nor2(input wire [1:0] bits,output wire result);
+ assign result=~|bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_parallel_phase(input wire [8:0] q,n,output wire valid);
+ wire [8:0] complementary=q^n;
+ wire [2:0] rails_bad,empty;
+ wire rails_ok,present;
+ for(genvar k=0;k<3;k=k+1)begin:rails
+  ot_hbm_cp_frontier_nand3 r(.bits(complementary[k*3+:3]),.result(rails_bad[k]));
+  ot_hbm_cp_frontier_nor3 p(.bits(q[k*3+:3]),.result(empty[k]));
+ end
+ ot_hbm_cp_frontier_nor3 rroot(.bits(rails_bad),.result(rails_ok));
+ ot_hbm_cp_frontier_nand3 proot(.bits(empty),.result(present));
+ wire [35:0] pair_ok;
+ for(genvar a=0;a<8;a=a+1)begin:pair_a
+  for(genvar b=a+1;b<9;b=b+1)begin:pair_b
+   localparam integer INDEX=a*(17-a)/2+b-a-1;
+   ot_hbm_cp_phase_nand2 exclude_pair(.bits({q[a],q[b]}),.result(pair_ok[INDEX]));
+  end
+ end
+ wire [11:0] bad;wire [3:0] good;wire [1:0] upper_bad;
+ wire one_or_zero;
+ for(genvar k=0;k<12;k=k+1)begin:pair_leaf
+  ot_hbm_cp_frontier_nand3 g(.bits(pair_ok[k*3+:3]),.result(bad[k]));
+ end
+ for(genvar k=0;k<4;k=k+1)begin:pair_middle
+  ot_hbm_cp_frontier_nor3 g(.bits(bad[k*3+:3]),.result(good[k]));
+ end
+ ot_hbm_cp_frontier_nand3 u0(.bits(good[2:0]),.result(upper_bad[0]));
+ ot_hbm_cp_frontier_nand3 u1(.bits({2'b11,good[3]}),.result(upper_bad[1]));
+ ot_hbm_cp_phase_nor2 root(.bits(upper_bad),.result(one_or_zero));
+ assign valid=rails_ok&&present&&one_or_zero;
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_control_tail_and2(input wire [1:0] bits,output wire result);
+ assign result=&bits;
+endmodule
+
+// Additive exact mismatch polarity: no state or shortened identity.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_owner_veto64(input wire [63:0] held_n,live,output wire mismatch);
+ wire [63:0] equal_bits=held_n^live;
+ wire [15:0] bad4;wire [3:0] good16;
+ for(genvar k=0;k<16;k=k+1)begin:leaf
+  ot_hbm_integrated_cp_nand4 n(.bits(equal_bits[k*4+:4]),.result(bad4[k]));
+ end
+ for(genvar k=0;k<4;k=k+1)begin:middle
+  ot_hbm_integrated_cp_nor4 n(.bits(bad4[k*4+:4]),.result(good16[k]));
+ end
+ ot_hbm_integrated_cp_nand4 root(.bits(good16),.result(mismatch));
+endmodule
+// PIN_MARGIN capture-enable copy: one kept AND per 54 capture flops.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_capture_enable(input wire base,control_ok,output wire enable);
+ assign enable=base&&control_ok;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_veto_nor4(input wire [3:0] bad,output wire permit);
+ assign permit=~|bad;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_cp_veto_conditional #(parameter integer NEGATIVE=0)(
+ input wire local_ok,owner_ok,bypass,output wire result
+);
+ assign result=NEGATIVE?~(local_ok&&(owner_ok||bypass)):(local_ok&&(owner_ok||bypass));
 endmodule

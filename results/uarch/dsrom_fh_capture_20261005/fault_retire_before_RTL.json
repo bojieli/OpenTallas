@@ -1,0 +1,71 @@
+{
+  "parameter": "FAULT_RETIRE",
+  "default": 0,
+  "G": 4,
+  "W": 16,
+  "stages": 4,
+  "MACs_per_cycle": 0,
+  "FP32_adds_per_cycle": 0,
+  "new_memory_ports": 0,
+  "memory_payload_bytes_per_cycle": 256,
+  "boundary_bits_per_cycle": {
+    "transaction": 5510,
+    "valid": 1,
+    "poison": 64,
+    "address_fault": 4,
+    "arithmetic_fault": 1
+  },
+  "packet_fields": {
+    "leaf_valid_key_row": 3136,
+    "result_data_mask_addr_write_enable": 2212,
+    "result_tag": 160,
+    "result_valid": 1,
+    "warm_index_marker": 1
+  },
+  "FF_bits": {
+    "transaction_packet": 22040,
+    "packet_valid": 4,
+    "local_eight_bank_fault": 8,
+    "two_row_fault": 4,
+    "kept_global_relays": 16,
+    "lane_veto_copies": 64,
+    "write_veto_copies": 4,
+    "status_copy": 1
+  },
+  "FF_total": 22141,
+  "FF_area_proxy_um2": 6456.315600000001,
+  "fault_tree": {
+    "local_banks_per_row": 8,
+    "rows_per_quadrant": 2,
+    "quadrant_sources_per_relay": 4,
+    "relay_replicas": 16,
+    "max_quadrant_logical_fanout": 16,
+    "max_relay_logical_fanout": 6,
+    "max_lane_veto_external_loads": 2,
+    "retention": "kept hierarchy on each OR4/register relay and final register copy"
+  },
+  "latency": {
+    "output_retirement_extra_cycles": 4,
+    "index_write_retirement_extra_cycles": 4,
+    "conservative_added_cycles_per_fused_chain": 8,
+    "five_chain_added_cycles": 40,
+    "predicted_five_chain_cycles": 62918,
+    "predicted_five_chain_added_ns": 33.33332,
+    "measured_cycles": null,
+    "requirement": "Price actual producer drain/commit handshake before adoption; this bound is not a core measurement"
+  },
+  "protection": "Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet",
+  "flow_control": "4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains",
+  "floorplan": {
+    "existing_width_um": 2000,
+    "existing_height_um": 660,
+    "macro_count": 64,
+    "macro_moves": 0,
+    "actual_new_cell_area_um2": null,
+    "routing_tracks_and_loaded_clock_PG_repair_margin": null,
+    "ready_for_route": false
+  },
+  "scope": "Own head component. Requires real parent retirement/debt integration; no standalone cut qualifies parent hold or whole-die timing.",
+  "adoption": false,
+  "physical_closed": false
+}

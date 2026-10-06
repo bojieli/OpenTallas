@@ -1,0 +1,51 @@
+{
+  "terminal_source": "6dc352dbd",
+  "terminal_main": "8a47e2d21",
+  "negative_actual_outputs": [
+    {
+      "endpoint": "done",
+      "slack_ps": -16.27598
+    },
+    {
+      "endpoint": "exec_owned",
+      "slack_ps": -14.798717
+    },
+    {
+      "endpoint": "fault",
+      "slack_ps": -11.497803
+    },
+    {
+      "endpoint": "lease_v",
+      "slack_ps": -15.841661
+    },
+    {
+      "endpoint": "new_request_permit",
+      "slack_ps": -14.461654
+    },
+    {
+      "endpoint": "owned",
+      "slack_ps": -19.214685
+    },
+    {
+      "endpoint": "pending",
+      "slack_ps": -15.141722
+    },
+    {
+      "endpoint": "quiet",
+      "slack_ps": -19.041769
+    },
+    {
+      "endpoint": "release_v",
+      "slack_ps": -16.754044
+    }
+  ],
+  "negative_actual_FF": 0,
+  "worst_full_path_launch": "u_su_cp.on.registered_header.decoder.data_q[115]$_DFFE_PN0P_",
+  "worst_full_path_endpoint": "owned",
+  "actual_tail_gate_delays_ps": {
+    "OR4": 62.05,
+    "INV": 17.14
+  },
+  "corners": "SS60/FF25 extractedSPEF andpropagatedCTS; externalloadsanalytical",
+  "raw_ss_sha256": "c759ad4a3fba8624019eb2849f144712d8a7ffe8f5692fc9cf9052a3b01df60b"
+}

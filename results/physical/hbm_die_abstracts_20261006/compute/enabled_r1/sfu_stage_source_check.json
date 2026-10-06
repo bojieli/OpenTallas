@@ -1,0 +1,13 @@
+{
+  "status": "SOURCE_PREPARED_NOT_ELABORATED_OR_RUN",
+  "actual_stage_source": "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_c12_stage.sv",
+  "actual_stage_sha256": "40f6236d53401d3b2df126ab6b255e05fea9db61b7e2050e15793f3bd2e2275b",
+  "named_ports_checked": 47,
+  "one_canonical_pending_SFU_vehicle": true,
+  "source_manifest": "physical/hbm_die_abstracts_20261006/compute/enabled_sources.json",
+  "bench": "physical/hbm_die_abstracts_20261006/compute/tb_enabled_sfu_stage.sv",
+  "local_validation": "actual namedports+runner Python syntax+sourcepins only; no fake functional PASS",
+  "warm_reset": "actual stage quarantine + actualchilddrain; owner/producer/consumer not tied",
+  "physical": "OPEN parent SSFF/833vs1111/native1024production providerconsumer/load/root",
+  "HC": "BLOCKED old16132 arithmetic source; no owner correction pin yet"
+}

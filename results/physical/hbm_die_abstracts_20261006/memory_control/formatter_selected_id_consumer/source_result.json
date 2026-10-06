@@ -1,0 +1,32 @@
+{
+  "status": "ENABLED_CONSUMER_SOURCE_ELABORATES_RUNTIME_PENDING",
+  "iverilog_enabled_elaboration_exit": 0,
+  "elaboration_peak_RAM_KiB": 28880,
+  "verilator_old_tool_failure": "BLKLOOPINIT original source loops and own reset loops; retained lint_r1.log. Used supported Icarus enabled frontend, no original body edits.",
+  "new_source": "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_selected_id_consumer.sv",
+  "child_parameters": {
+    "N": 96,
+    "NMAX": 512,
+    "LW": 16,
+    "P": 64,
+    "PF": 16,
+    "LDW": 1,
+    "DIG": 4,
+    "n": 512,
+    "k": 512,
+    "stride": 0
+  },
+  "positive_reverse": "only captured32words +32accepted matched checked637readbacks including OBSERVED actualRTLpayload comparison + no pendingresponse + actual merger drained; no done shortcut",
+  "geometry": {
+    "capacity": 134217728,
+    "sink_base": 119156736,
+    "sink_limit": 119158784,
+    "last_row": 119158720,
+    "last_word": 119158780
+  },
+  "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+  "numerical_pass": false,
+  "parent_connected": false,
+  "physical_closed": false,
+  "independent_math_runtime_launched": false
+}

@@ -1,0 +1,42 @@
+mkdir -p /work/results/asap7/opentallas_item9_ha2cuts_full16_synth_r1/base/
+echo 833 > /work/results/asap7/opentallas_item9_ha2cuts_full16_synth_r1/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_item9_ha2cuts_full16_synth_r1/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_item9_ha2cuts_full16_synth_r1/base/clock_period.txt
+Setting clock period to 833
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_prefix.sv
+12. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fastfp.sv
+13. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+14. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv
+15. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv
+16. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv
+17. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter_item9_cuts.sv
+18. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+28. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+29. Executing HIERARCHY pass (managing design hierarchy).
+30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_tu_owner_adapter_item9_cuts'.
+30.1. Analyzing design hierarchy..
+30.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_ha2_owner_reduce_item9_cuts'.
+/src/rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:56: ERROR: Failed to detect width of signal access `\g_cuts.rptr'!
+Elapsed time: 0:00.61[h:]min:sec. CPU time: user 0.60 sys 0.02 (99%). Peak memory: 83352KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_item9_ha2cuts_full16_synth_r1/base/1_1_yosys_canonicalize.rtlil] Error 2

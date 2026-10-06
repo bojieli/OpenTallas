@@ -1,0 +1,20 @@
+[
+  "verilator",
+  "--binary",
+  "--timing",
+  "--assert",
+  "-Wno-fatal",
+  "--top-module",
+  "tb_cfgrom_context",
+  "-j",
+  "1",
+  "--Mdir",
+  "/srv/opentallas-scratch2/codex/fspine-v9-cfg-provider-20261005/objects",
+  "-o",
+  "cfg_gate",
+  "physical/dsrom_v9_cfg_context/tb_cfgrom_context.sv",
+  "physical/dsrom_v9_cfg_context/ot_v41_pair_cfgrom_context.sv",
+  "physical/dsrom_v9_cfg_context/ot_v41_pair_pq_ld_cfgrom.sv",
+  "physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
+]
