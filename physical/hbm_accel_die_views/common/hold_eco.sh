@@ -4,17 +4,17 @@
 #   (<route dir>/work/orfs); writes <route dir>/eco as a self-contained route dir (work/orfs results, exit,
 #   corner_sta.json at the route SDC, corner_sta_833.json at the sign-off post-SDC, outcheck, view/, physical.json with
 #   the ECO's own detailed-route DRC count) so su/collect.py collects it like any other route.
-#   env: HM (hold margin ps, 22), SM (setup margin ps, 45), THREADS (8), MAXL (M5), BUF (max buffer %, 10)
+#   env: KEEPCLK (1: clock nets keep their wires), HM (hold margin ps, 22), SM (setup margin ps, 45), THREADS (8), MAXL (M5), BUF (max buffer %, 10)
 set -o pipefail
 S=$1; W=$2; PS=$3; IF=$4; NAME=$5
 O=$W/work/orfs; B=$(ls -d $O/results/asap7/*/base); rel=${B#$O/}
-E=$W/eco; EO=$E/work/orfs; EB=$EO/$rel
+E=$W/${ECODIR:-eco}; EO=$E/work/orfs; EB=$EO/$rel
 rm -rf $E; mkdir -p $EB $EO/logs
 cp $B/6_final.sdc $EB/; cp $W/args $W/SOURCE_COMMIT $E/ 2>/dev/null
 cat $S/SOURCE_COMMIT > $E/ECO_SOURCE_COMMIT
 docker run --rm -v $B:/in:ro -v $EB:/out -v $S:/src:ro \
   -e OT_IN=/in -e OT_OUT=/out -e OT_POST_SDC="/src/$PS" -e OT_HOLD_MARGIN=${HM:-22} -e OT_SETUP_MARGIN=${SM:-45} \
-  -e OT_THREADS=${THREADS:-8} -e OT_MAXL=${MAXL:-M5} -e OT_MAX_BUF_PCT=${BUF:-10} openroad/orfs:latest bash -lc \
+  -e OT_KEEP_CLOCK=${KEEPCLK:-0} -e OT_THREADS=${THREADS:-8} -e OT_MAXL=${MAXL:-M5} -e OT_MAX_BUF_PCT=${BUF:-10} openroad/orfs:latest bash -lc \
   "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/physical/hbm_accel_die_views/common/post_route_hold_eco.tcl" \
   > $E/eco.log 2>&1
 rc=$?; grep -q "OT_ECO done" $E/eco.log || rc=9
