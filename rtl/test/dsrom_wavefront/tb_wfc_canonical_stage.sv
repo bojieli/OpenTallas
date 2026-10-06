@@ -34,8 +34,12 @@ module tb_wfc_canonical_stage;
  integer cycles=0,requests=0,starts=0,acks=0,c8_retires=0,flits=0,writes=0,commands=0,retirements=0;
  integer exposed_edge=-1,capture_edges=-1;
  reg[46:0]owner=0;reg holding=0;reg[100:0]held_result;
+ reg negative_phase=0,output_held=0;reg[512:0]held_flit;
  always @(posedge clk)begin
   cycles=cycles+1;
+  if(rst_n&&!negative_phase&&(cfg_fault||whole_fault||wfc_fault))$fatal(1,"first nominal fault cycle%0d cfg%0b whole%0b wfc%0b",cycles,cfg_fault,whole_fault,wfc_fault);
+  if(output_held&&(!out_valid||{out_last,out_data}!==held_flit))$fatal(1,"held output valid/data/last lifetime violated");
+  output_held=out_valid&&!out_ready;if(output_held)held_flit={out_last,out_data};
   // Deterministic genuine consumer backpressure; no seed repetitions.
   out_ready<=cycles%7!=0;
   if(dut.u_stage.g_stage.core_start)exposed_edge=cycles;
@@ -138,7 +142,7 @@ module tb_wfc_canonical_stage;
   // Meaningful new joint negative: an early owner-matched final fence cannot
   // release the second admitted WFC owner. No second full-book replay.
   native_fragment_done=0;send_job(1,5);wait(requests==2);wait(starts==2);@(negedge clk);
-  fence_v=15;fence_identity={4{owner}};fence_visibility={20{1'b1}};
+  negative_phase=1;fence_v=15;fence_identity={4{owner}};fence_visibility={20{1'b1}};
   @(posedge clk);@(negedge clk);fence_v=0;repeat(3)@(negedge clk);
   if(!whole_fault||!producer_pending||!busy||acks!=1||dut.whole_stage_v||dut.whole_stage_accepted)$fatal(1,"early final fence erased joint owner or authorized ACK");
   rst_n=0;repeat(3)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);

@@ -20,7 +20,8 @@
   "active_runtime_launched": false,
   "physical_qualified": false,
   "source_sha256": {
-    "rtl/test/dsrom_wavefront/tb_wfc_canonical_stage.sv": "aca446302dbf2c7bbaf99b4faaa99e1fcf35b25f8bcf7ca4959f886d8770c10a",
+    "rtl/test/dsrom_wavefront/tb_wfc_canonical_stage.sv": "2fbc9829fb5eb6e05b79d9d2c8f528dafe9ccdae91a57d43084c6161923d702c",
     "tools/dsrom_wfc_canonical_exact.sh": "34a580e1e753b4627883631a2553f0e6ad57d1518e6c83b20554feb3d422bf90"
-  }
+  },
+  "hold_lifetime_checks": "canonical result tuple plus output valid/data/last; nominal faults fail at first cycle"
 }
