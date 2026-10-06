@@ -5,12 +5,12 @@
 // two macro PAIRS per row: in each pair the left leaf is mirrored (MY) so both leaves' input pins (left edge, M4)
 // face one shared register channel.  The 1,618-bit input packet {ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv,
 // ibank, ib} plus rst_n is distributed by a positive-edge register tree whose every hop is a short wire:
-//   ROOT (1 copy, tile centre) -> COL (2 copies, one per pair channel) -> HC (4 copies, one per channel half;
+//   ROOT (1 copy) -> RV centre-chain registers -> COL (2 copies, one per pair channel) [-> MID] -> HC (4 copies, one per channel half;
 //   each drives the input pins of the 4 leaves of two rows of its pair, <= ~300 um)
 // and (ROC = 1) each leaf's 33/34 output bits are captured next to its output pins (OC, one per leaf); ROC = 0 takes the
 // outputs straight from the leaves, whose outputs are register-direct inside the hardened macro.
 // Every register bank is a kept-hierarchy instance (ot_attn_rp_reg), so synthesis keeps the copies.
-// Function: ot_attn_tile_m6h1 with every input (rst_n included) delayed by RIN = 3 + RMID cycles and every output by
+// Function: ot_attn_tile_m6h1 with every input (rst_n included) delayed by RIN = 3 + RV + RMID cycles and every output by
 // ROC cycles (+3 + ROC cycles on the tile's latency; tb_hdc_v41x_attn_tile_m6h1r_lockstep against tile_l).
 // rst_n is carried as data (the leaves' asynchronous reset is driven from the HC register).
 // Sources: this file, ot_hdc_v41x_attn_tile_m8_phys.sv (ot_attn_hgrp_m6h1) and its sources.
@@ -27,8 +27,9 @@ endmodule
 module ot_attn_tile_m6h1r #(
     parameter integer ROC = 1,              // 1: per-leaf output capture (+1 cycle); 0: outputs straight from the leaves
                                             //    (the leaf's outputs are register-direct inside the macro)
-    parameter integer RMID = 0              // 1: one more register (MID) between COL and each HC (+1 cycle), so the
-) (                                         //    tree reaches from tile inputs at the bottom edge centre
+    parameter integer RMID = 0,             // 1: one more register (MID) between COL and each HC (+1 cycle)
+    parameter integer RV = 0                // centre-chain registers between ROOT and the COLs (+RV cycles): the tree
+) (                                         //    climbs the centre gap from inputs at the bottom-edge centre
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -48,12 +49,18 @@ module ot_attn_tile_m6h1r #(
     wire [PW-1:0] pk = {rst_n, ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv, ibank, ib};
     wire [PW-1:0] root_q;
     (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_root (.clk(clk), .d(pk), .q(root_q));
+    wire [(RV+1)*PW-1:0] v_q;                   // v_q[k*PW +: PW]: centre-chain register k (0 = ROOT)
+    assign v_q[0 +: PW] = root_q;
+    genvar gv;
+    generate for (gv = 0; gv < RV; gv = gv + 1) begin : g_v
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_v (.clk(clk), .d(v_q[gv*PW +: PW]), .q(v_q[(gv+1)*PW +: PW]));
+    end endgenerate
     wire [15:0] gov;
     genvar p, h, s, r;
     generate
         for (p = 0; p < 2; p = p + 1) begin : g_p                   // macro pair p: physical columns 2p (MY), 2p+1 (R0)
             wire [PW-1:0] col_q;
-            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_col (.clk(clk), .d(root_q), .q(col_q));
+            (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_col (.clk(clk), .d(v_q[RV*PW +: PW]), .q(col_q));
             for (h = 0; h < 2; h = h + 1) begin : g_h               // channel half h: rows 2h, 2h+1
                 wire [PW-1:0] mid_q, hc_q;
                 if (RMID > 0) begin : g_mid
