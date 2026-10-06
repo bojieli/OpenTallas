@@ -133,6 +133,12 @@ module ot_hfd_actquant_m #(
 
     // ---- G1: Ev = exponent(x) - e, significand, sign
     reg               g1_v, g1_fp4, g1_nf;
+    wire [3:0] g1_fp4_r;
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : g_g1_fp4_r
+        for (gb = 0; gb < 1; gb = gb + 1) begin : g_b
+            ot_hfd_oreg1 u (.clk(clk), .d(g0_fp4), .q(g1_fp4_r[1*gr + gb]));
+        end
+    end endgenerate
     reg signed [9:0]  g1_e;
     reg signed [10:0] g1_ev [0:31];
     reg [23:0]        g1_sig [0:31];
@@ -159,6 +165,12 @@ module ot_hfd_actquant_m #(
     reg signed [10:0] dd, mine;
     // G2a: dd = min_exp - Ev registered (margin-first)
     reg              ga_v, ga_fp4, ga_nf;
+    wire [3:0] ga_fp4_r;
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : g_ga_fp4_r
+        for (gb = 0; gb < 1; gb = gb + 1) begin : g_b
+            ot_hfd_oreg1 u (.clk(clk), .d(g1_fp4), .q(ga_fp4_r[1*gr + gb]));
+        end
+    end endgenerate
     reg signed [9:0] ga_e;
     reg [23:0]       ga_sig [0:31];
     reg signed [10:0] ga_dd [0:31];
@@ -171,7 +183,7 @@ module ot_hfd_actquant_m #(
         ga_fp4 <= g1_fp4; ga_nf <= g1_nf; ga_e <= g1_e; ga_sgn <= g1_sgn;
         mine = g1_fp4 ? 11'sd0 : -11'sd6;
         for (i = 0; i < 32; i = i + 1) begin
-            ga_dd[i] <= mine - g1_ev[i];
+            ga_dd[i] <= (g1_fp4_r[i/8] ? 11'sd0 : -11'sd6) - g1_ev[i];
             ga_ev[i] <= g1_ev[i][4:0];
             ga_sig[i] <= g1_sig[i];
         end
@@ -187,11 +199,11 @@ module ot_hfd_actquant_m #(
         for (i = 0; i < 32; i = i + 1) begin
             g2_sig[i] <= ga_sig[i];
             if (ga_dd[i] > 11'sd0) begin
-                g2_g[i] <= mineb[4:0];
-                g2_rs[i] <= (ga_dd[i] > (ga_fp4 ? 11'sd4 : 11'sd6)) ? 5'd26 : ((ga_fp4 ? 5'd22 : 5'd20) + ga_dd[i][4:0]);
+                g2_g[i] <= ga_fp4_r[i/8] ? 5'd0 : 5'b11010;      // min_exp[4:0]: 0 (FP4) / -6 (FP8)
+                g2_rs[i] <= (ga_dd[i] > (ga_fp4_r[i/8] ? 11'sd4 : 11'sd6)) ? 5'd26 : ((ga_fp4_r[i/8] ? 5'd22 : 5'd20) + ga_dd[i][4:0]);
             end else begin
                 g2_g[i] <= ga_ev[i];
-                g2_rs[i] <= ga_fp4 ? 5'd22 : 5'd20;
+                g2_rs[i] <= ga_fp4_r[i/8] ? 5'd22 : 5'd20;
             end
         end
     end
@@ -199,6 +211,18 @@ module ot_hfd_actquant_m #(
     // ---- R1: shift to the grid: the count's low bits, guard, sticky
     reg              r1_v, r1_fp4, r1_nf;
     reg signed [9:0] r1_e;
+    wire [3:0] r1_fp4_r;
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : g_r1_fp4_r
+        for (gb = 0; gb < 1; gb = gb + 1) begin : g_b
+            ot_hfd_oreg1 u (.clk(clk), .d(g2_fp4), .q(r1_fp4_r[1*gr + gb]));
+        end
+    end endgenerate
+    wire [39:0] r1_e_r;
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : g_r1_e_r
+        for (gb = 0; gb < 10; gb = gb + 1) begin : g_b
+            ot_hfd_oreg1 u (.clk(clk), .d(g2_e[gb]), .q(r1_e_r[10*gr + gb]));
+        end
+    end endgenerate
     reg [4:0]        r1_t [0:31];
     reg [31:0]       r1_gd, r1_st, r1_sgn;
     reg signed [4:0] r1_g [0:31];
@@ -219,6 +243,12 @@ module ot_hfd_actquant_m #(
 
     // ---- R2: round to nearest even
     reg              r2_v, r2_fp4, r2_nf;
+    wire [3:0] r2_fp4_r;
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : g_r2_fp4_r
+        for (gb = 0; gb < 1; gb = gb + 1) begin : g_b
+            ot_hfd_oreg1 u (.clk(clk), .d(r1_fp4), .q(r2_fp4_r[1*gr + gb]));
+        end
+    end endgenerate
     reg signed [9:0] r2_e;
     reg [4:0]        r2_c [0:31];
     reg signed [4:0] r2_g [0:31];
@@ -232,7 +262,7 @@ module ot_hfd_actquant_m #(
         for (i = 0; i < 32; i = i + 1) begin
             r2_c[i] <= r1_t[i] + {4'd0, r1_gd[i] & (r1_st[i] | r1_t[i][0])};
             r2_g[i] <= r1_g[i];
-            r2_base[i] <= r1_g[i] - (r1_fp4 ? 12'sd1 : 12'sd3) + r1_e;
+            r2_base[i] <= r1_g[i] - (r1_fp4_r[i/8] ? 12'sd1 : 12'sd3) + $signed(r1_e_r[10*(i/8) +: 10]);
         end
     end
 
@@ -257,7 +287,7 @@ module ot_hfd_actquant_m #(
         for (i = 0; i < 32; i = i + 1) begin
             c = r2_c[i];
             g4 = r2_g[i][3:0];
-            if (!r2_fp4) begin
+            if (!r2_fp4_r[i/8]) begin
                 if (c[4])      c1_q[8*i +: 8] <= {r2_sgn[i], g4 + 4'd8, 3'd0};
                 else if (c[3]) c1_q[8*i +: 8] <= {r2_sgn[i], g4 + 4'd7, c[2:0]};
                 else           c1_q[8*i +: 8] <= {r2_sgn[i], 4'd0, c[2:0]};

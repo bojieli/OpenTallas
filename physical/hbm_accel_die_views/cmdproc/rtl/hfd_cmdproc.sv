@@ -24,28 +24,44 @@ module hfd_cmdproc (
     wire rst_n = ~rst_s[1];
     reg [826:0] i0_cNE; always @(posedge clk) i0_cNE <= cNE;
     reg [826:0] i1_cNE; always @(posedge clk) i1_cNE <= i0_cNE;
-    reg [826:0] i_cNE; always @(posedge clk) i_cNE <= i1_cNE;
+    reg [826:0] i2_cNE; always @(posedge clk) i2_cNE <= i1_cNE;
+    reg [826:0] i3_cNE; always @(posedge clk) i3_cNE <= i2_cNE;
+    reg [826:0] i_cNE; always @(posedge clk) i_cNE <= i3_cNE;
     reg [826:0] i0_cNW; always @(posedge clk) i0_cNW <= cNW;
     reg [826:0] i1_cNW; always @(posedge clk) i1_cNW <= i0_cNW;
-    reg [826:0] i_cNW; always @(posedge clk) i_cNW <= i1_cNW;
+    reg [826:0] i2_cNW; always @(posedge clk) i2_cNW <= i1_cNW;
+    reg [826:0] i3_cNW; always @(posedge clk) i3_cNW <= i2_cNW;
+    reg [826:0] i_cNW; always @(posedge clk) i_cNW <= i3_cNW;
     reg [826:0] i0_cSE; always @(posedge clk) i0_cSE <= cSE;
     reg [826:0] i1_cSE; always @(posedge clk) i1_cSE <= i0_cSE;
-    reg [826:0] i_cSE; always @(posedge clk) i_cSE <= i1_cSE;
+    reg [826:0] i2_cSE; always @(posedge clk) i2_cSE <= i1_cSE;
+    reg [826:0] i3_cSE; always @(posedge clk) i3_cSE <= i2_cSE;
+    reg [826:0] i_cSE; always @(posedge clk) i_cSE <= i3_cSE;
     reg [826:0] i0_cSW; always @(posedge clk) i0_cSW <= cSW;
     reg [826:0] i1_cSW; always @(posedge clk) i1_cSW <= i0_cSW;
-    reg [826:0] i_cSW; always @(posedge clk) i_cSW <= i1_cSW;
+    reg [826:0] i2_cSW; always @(posedge clk) i2_cSW <= i1_cSW;
+    reg [826:0] i3_cSW; always @(posedge clk) i3_cSW <= i2_cSW;
+    reg [826:0] i_cSW; always @(posedge clk) i_cSW <= i3_cSW;
     reg [63:0] i0_f_barrier; always @(posedge clk) i0_f_barrier <= f_barrier;
     reg [63:0] i1_f_barrier; always @(posedge clk) i1_f_barrier <= i0_f_barrier;
-    reg [63:0] i_f_barrier; always @(posedge clk) i_f_barrier <= i1_f_barrier;
+    reg [63:0] i2_f_barrier; always @(posedge clk) i2_f_barrier <= i1_f_barrier;
+    reg [63:0] i3_f_barrier; always @(posedge clk) i3_f_barrier <= i2_f_barrier;
+    reg [63:0] i_f_barrier; always @(posedge clk) i_f_barrier <= i3_f_barrier;
     reg [32:0] i0_f_coll; always @(posedge clk) i0_f_coll <= f_coll;
     reg [32:0] i1_f_coll; always @(posedge clk) i1_f_coll <= i0_f_coll;
-    reg [32:0] i_f_coll; always @(posedge clk) i_f_coll <= i1_f_coll;
+    reg [32:0] i2_f_coll; always @(posedge clk) i2_f_coll <= i1_f_coll;
+    reg [32:0] i3_f_coll; always @(posedge clk) i3_f_coll <= i2_f_coll;
+    reg [32:0] i_f_coll; always @(posedge clk) i_f_coll <= i3_f_coll;
     reg [340:0] i0_f_loader; always @(posedge clk) i0_f_loader <= f_loader;
     reg [340:0] i1_f_loader; always @(posedge clk) i1_f_loader <= i0_f_loader;
-    reg [340:0] i_f_loader; always @(posedge clk) i_f_loader <= i1_f_loader;
+    reg [340:0] i2_f_loader; always @(posedge clk) i2_f_loader <= i1_f_loader;
+    reg [340:0] i3_f_loader; always @(posedge clk) i3_f_loader <= i2_f_loader;
+    reg [340:0] i_f_loader; always @(posedge clk) i_f_loader <= i3_f_loader;
     reg [63:0] i0_f_router; always @(posedge clk) i0_f_router <= f_router;
     reg [63:0] i1_f_router; always @(posedge clk) i1_f_router <= i0_f_router;
-    reg [63:0] i_f_router; always @(posedge clk) i_f_router <= i1_f_router;
+    reg [63:0] i2_f_router; always @(posedge clk) i2_f_router <= i1_f_router;
+    reg [63:0] i3_f_router; always @(posedge clk) i3_f_router <= i2_f_router;
+    reg [63:0] i_f_router; always @(posedge clk) i_f_router <= i3_f_router;
     wire [0:0] w_cpS_clk;
     wire [0:0] w_cpS_rst_n;
     wire [0:0] w_cpS_cmd_we;
@@ -209,7 +225,7 @@ module hfd_cmdproc (
     wire [826:0] od_cNE = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 3'd0, i_f_barrier[31], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[15:15], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 3'd0, i_f_barrier[30], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[14:14], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 3'd0, i_f_barrier[29], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[13:13], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 3'd0, i_f_barrier[28], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[12:12], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 3'd0, i_f_barrier[27], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[11:11], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 3'd0, i_f_barrier[26], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[10:10], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 3'd0, i_f_barrier[25], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[9:9], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8], 3'd0, i_f_barrier[24], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[8:8]};
     wire [826:0] o_cNE;
     for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_cNE[k]), .q(o_cNE[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_cNE[k]), .q(o_cNE[k]));
     end
     assign cNE[41:0] = o_cNE[41:0];
     assign cNE[101:45] = o_cNE[101:45];
@@ -232,7 +248,7 @@ module hfd_cmdproc (
     wire [826:0] od_cNW = {8'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[7:7], 3'd0, i_f_barrier[23], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[7:7], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[6:6], 3'd0, i_f_barrier[22], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[6:6], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[5:5], 3'd0, i_f_barrier[21], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[5:5], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[4:4], 3'd0, i_f_barrier[20], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[4:4], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[3:3], 3'd0, i_f_barrier[19], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[3:3], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[2:2], 3'd0, i_f_barrier[18], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[2:2], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[1:1], 3'd0, i_f_barrier[17], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[1:1], 5'd0, w_cpN_launch_pos[19:0], w_cpN_launch_pc[31:0], w_cpN_launch_v[0:0], 3'd0, i_f_barrier[16], 8'd0, w_cpN_launch_pc[31:0], w_cpN_launch_v[0:0]};
     wire [826:0] o_cNW;
     for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_cNW[k]), .q(o_cNW[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_cNW[k]), .q(o_cNW[k]));
     end
     assign cNW[41:0] = o_cNW[41:0];
     assign cNW[101:45] = o_cNW[101:45];
@@ -255,7 +271,7 @@ module hfd_cmdproc (
     wire [826:0] od_cSE = {8'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[15:15], 3'd0, i_f_barrier[15], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[15:15], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[14:14], 3'd0, i_f_barrier[14], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[14:14], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[13:13], 3'd0, i_f_barrier[13], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[13:13], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[12:12], 3'd0, i_f_barrier[12], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[12:12], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[11:11], 3'd0, i_f_barrier[11], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[11:11], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[10:10], 3'd0, i_f_barrier[10], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[10:10], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[9:9], 3'd0, i_f_barrier[9], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[9:9], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[8:8], 3'd0, i_f_barrier[8], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[8:8]};
     wire [826:0] o_cSE;
     for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_cSE[k]), .q(o_cSE[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_cSE[k]), .q(o_cSE[k]));
     end
     assign cSE[41:0] = o_cSE[41:0];
     assign cSE[101:45] = o_cSE[101:45];
@@ -278,7 +294,7 @@ module hfd_cmdproc (
     wire [826:0] od_cSW = {8'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[7:7], 3'd0, i_f_barrier[7], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[7:7], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[6:6], 3'd0, i_f_barrier[6], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[6:6], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[5:5], 3'd0, i_f_barrier[5], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[5:5], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[4:4], 3'd0, i_f_barrier[4], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[4:4], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[3:3], 3'd0, i_f_barrier[3], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[3:3], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[2:2], 3'd0, i_f_barrier[2], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[2:2], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[1:1], 3'd0, i_f_barrier[1], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[1:1], 5'd0, w_cpS_launch_pos[19:0], w_cpS_launch_pc[31:0], w_cpS_launch_v[0:0], 3'd0, i_f_barrier[0], 8'd0, w_cpS_launch_pc[31:0], w_cpS_launch_v[0:0]};
     wire [826:0] o_cSW;
     for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_cSW[k]), .q(o_cSW[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_cSW[k]), .q(o_cSW[k]));
     end
     assign cSW[41:0] = o_cSW[41:0];
     assign cSW[101:45] = o_cSW[101:45];
@@ -301,37 +317,37 @@ module hfd_cmdproc (
     wire [63:0] od_t_barrier = {32'd0, i_cNE[764], i_cNE[661], i_cNE[558], i_cNE[455], i_cNE[352], i_cNE[249], i_cNE[146], i_cNE[43], i_cNW[764], i_cNW[661], i_cNW[558], i_cNW[455], i_cNW[352], i_cNW[249], i_cNW[146], i_cNW[43], i_cSE[764], i_cSE[661], i_cSE[558], i_cSE[455], i_cSE[352], i_cSE[249], i_cSE[146], i_cSE[43], i_cSW[764], i_cSW[661], i_cSW[558], i_cSW[455], i_cSW[352], i_cSW[249], i_cSW[146], i_cSW[43]};
     wire [63:0] o_t_barrier;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_barrier
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_barrier[k]), .q(o_t_barrier[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_barrier[k]), .q(o_t_barrier[k]));
     end
     assign t_barrier[63:0] = o_t_barrier[63:0];
     wire [24:0] od_t_coll = {25'd0};
     wire [24:0] o_t_coll;
     for (genvar k = 0; k < 25; k = k + 1) begin : g_o_t_coll
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_coll[k]), .q(o_t_coll[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_coll[k]), .q(o_t_coll[k]));
     end
     assign t_coll[24:0] = o_t_coll[24:0];
     wire [63:0] od_t_su_NE = {47'd0, w_cpN_launch_token[16:0]};
     wire [63:0] o_t_su_NE;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[63:0] = o_t_su_NE[63:0];
     wire [63:0] od_t_su_NW = {47'd0, w_cpN_launch_token[16:0]};
     wire [63:0] o_t_su_NW;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[63:0] = o_t_su_NW[63:0];
     wire [63:0] od_t_su_SE = {47'd0, w_cpS_launch_token[16:0]};
     wire [63:0] o_t_su_SE;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[63:0] = o_t_su_SE[63:0];
     wire [63:0] od_t_su_SW = {47'd0, w_cpS_launch_token[16:0]};
     wire [63:0] o_t_su_SW;
     for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[63:0] = o_t_su_SW[63:0];
 endmodule
