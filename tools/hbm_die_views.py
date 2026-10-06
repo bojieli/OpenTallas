@@ -352,14 +352,18 @@ def sta_tcl(m, work, index):
     head = head.replace('read_verilog /work/die.v', 'define_corners ss ff\n' + '\n'.join(lib_lines) + '\nread_verilog /work/die.v')
     tcl = head + 'source /work/place.tcl\n' + f"""
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+set_wire_rc -signal -layer M7
+set_wire_rc -clock -layer M7
 estimate_parasitics -placement
+set_cmd_units -time ns -capacitance fF
 set timed_insts {{{' '.join(it.name for it in timed)}}}
 foreach {{dom net}} {{{' '.join(f'{k} {v}' for k, v in clk_nets.items())}}} {{
   set ck {{}}
-  foreach p [get_pins -quiet -of_objects [get_nets -quiet $net]] {{
-    set i [get_name [get_property $p instance]]
+  foreach p [get_pins -quiet -of_objects [get_nets -quiet "$net $net\\[0\\]"]] {{
+    set i [lindex [split [get_full_name $p] /] 0]
     if {{[lsearch -exact $timed_insts $i] >= 0}} {{ lappend ck $p }}
   }}
+  puts "OT_STA_CLKNET $dom pins=[llength [get_pins -quiet -of_objects [get_nets -quiet \"$net $net\\[0\\]\"]]] timed=[llength $ck]"
   if {{[llength $ck]}} {{ create_clock -name clk_$dom -period 0.833333 $ck; puts "OT_STA_CLOCK $dom sinks=[llength $ck]" }}
 }}
 set_propagated_clock [all_clocks]
@@ -374,7 +378,14 @@ foreach u {{0.060 0.210}} {{
 puts "OT_STA_HOLD wns=[sta::format_time [sta::worst_slack -min] 3]"
 report_checks -path_delay min -corner ff -group_path_count 5 -format end -digits 3
 report_checks -path_delay max -corner ss -digits 3 -fields {{slew cap input_pins}}
-report_check_types -unconstrained -max_delay -verbose > /work/unconstrained.rpt
+set ti [get_pins -quiet at_*/*]
+if {{[llength $ti]}} {{
+  set_clock_uncertainty -setup 0.210 [all_clocks]
+  puts "OT_STA_ATTN_SETUP_U210 [sta::format_time [sta::worst_slack -max] 3]"
+  report_checks -path_delay max -corner ss -through $ti -group_path_count 10 -format end -digits 3
+  report_checks -path_delay max -corner ss -through $ti -digits 3 -fields {{slew cap input_pins}}
+  report_checks -path_delay min -corner ff -through $ti -group_path_count 10 -format end -digits 3
+}}
 puts "OT_STA_DONE timed_insts=[llength $timed_insts]"
 """
     (work / 'run.tcl').write_text(tcl)
