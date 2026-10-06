@@ -7,7 +7,7 @@
 # A + (k+1)/(N+1) * (B - A), A / B = centroids of the nearest terminals reached backwards from stage 0 / forwards
 # from stage N-1 (breadth-first over cells, sequential cells included, nets with more than OT_WS_FANOUT loads
 # skipped), so every hop carries 1/(N+1) of the distance.  Stage k's flops are packed into free legal sites around that
-# point (pitch = cell width / OT_WS_DENSITY, default 0.12) and fixed (FIRM + do-not-touch): see the placement section.
+# point (pitch = cell width / OT_WS_DENSITY, default 0.12) and fixed (FIRM): see the placement section.
 # Membership: flops named <chain>.gn.st[k].r[*] and <chain>.gn.rv[k] (synthesis keeps register names).
 # Terminal positions come from the IO constraint file (ORFS erases IO_CONSTRAINTS in the floorplan stage, so the
 # route passes the same file as OT_IO_FILE).
@@ -148,11 +148,12 @@ foreach c [lsort -dictionary [array names ws_n]] {
   }
 }
 if {[info exists ::env(OT_WS_REPORT)]} { return }
-# ---------------------------------------------------------------- explicit legal placement (FIRM + do-not-touch)
+# ---------------------------------------------------------------- explicit legal placement (FIRM)
 # Regions are NOT honoured by this OpenROAD's global or detailed placement (m1_idx: 0/514 and 7/514 stage cells inside
 # their boxes after GP / DP), so each stage is packed into free legal sites around its target point and fixed.
 # Cell pitch inside a stage block = cell width / OT_WS_DENSITY (snapped to sites): room for the resizer's buffers and
-# for the stage's bus to escape; the block is roughly square.  Runs at PRE_GLOBAL_PLACE (tapcells and pins placed).
+# for the stage's bus to escape and for the resizer to upsize a flop in place (no instance do-not-touch: it blocks
+# buffering the stage's input nets, RSZ-3006); the block is roughly square.  Runs at PRE_GLOBAL_PLACE (tapcells and pins placed).
 set rows {}
 foreach r [$ws_blk getRows] {
   set o [$r getOrigin]; set st [$r getSite]
@@ -202,7 +203,6 @@ foreach key [lsort -dictionary [array names ws_tgt]] {
         $i setOrient [lindex $row 5]
         $i setLocation $x $ry
         $i setPlacementStatus FIRM
-        $i setDoNotTouch 1
         lappend occ($ri) [list $x [expr {$x+$w}]]
         incr q; incr placed_row
       }
