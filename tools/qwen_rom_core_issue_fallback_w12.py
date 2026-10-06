@@ -308,3 +308,68 @@ def apply_meif(text: str) -> str:
     for _, n in fields:
         text = text.replace(f"(mq_{n[3:]})", f"(mqw_{n[3:]})")
     return text
+
+
+def apply_suif(text: str) -> str:
+    """DEC_LA_SUIF (default 0): the DEC_LA_MEIF treatment for the vector stream unit (SU_VEC: ot_hdc_vstream_rt u_su):
+    go and the issued fields from output-pin flops, ready / idle / progress / progress_rows registered at the input
+    pins and masked for the two stale cycles (the SU's clock is never gated, so go is taken on the next edge).
+    Measurement lever for the core re-cut (the cost of an SU kept outside the core block)."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_SUIF = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_SUIF = 0\n) (")
+    gi = text.index("generate if (SU_VEC != 0) begin : g_vsu")
+    i = text.index(" u_su (", gi)
+    j = text.index(");", i)
+    inst = text[i:j]
+    conns = re.findall(r"\.(i_\w+)\(((?:[^()]|\([^()]*\))*)\)", inst)
+    def width(expr):
+        if re.fullmatch(r"\w+", expr):
+            m = re.search(r"\n\s*(?:output\s+)?(?:wire|reg)\s*(\[[^\]]+\])?\s*[^;\n]*\b%s\b[^;]*;" % expr, text)
+            assert m, expr
+            return m.group(1) or ""
+        return ""                                                       # the 1-bit i_asrc expression
+    regs, caps, new = [], [], inst
+    for p, e in conns:
+        w = width(e.strip())
+        regs.append(f"    reg {w + ' ' if w else ''}sq_{p[2:]};\n    wire {w + ' ' if w else ''}sqw_{p[2:]} = (DEC_LA_SUIF != 0) ? sq_{p[2:]} : ({e});")
+        caps.append(f"            sq_{p[2:]} <= {e};")
+        new = new.replace(f".{p}({e})", f".{p}(sqw_{p[2:]})", 1)
+    new = new.replace(".go(su_go)", ".go(su_go_pin)").replace(".ready(su_ready)", ".ready(su_ready_pin)") \
+             .replace(".idle(su_idle)", ".idle(su_idle_pin)").replace(".progress(su_progress)", ".progress(su_progress_pin)") \
+             .replace(".progress_rows(su_rows)", ".progress_rows(su_rows_pin)")
+    text = text[:i] + new + text[j:]
+    block = (f"""    // ---- DEC_LA_SUIF (tools/qwen_rom_core_issue_fallback_w12.py apply_suif): registered SU interface ----
+    wire su_go_pin, su_ready_pin, su_idle_pin;
+    wire [15:0] su_progress_pin, su_rows_pin;
+""" + "\n".join(regs) + f"""
+    reg su_gop, su_rdy_q, su_idl_q; reg [15:0] su_prg_q, su_rws_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin su_gop <= 1'b0; su_rdy_q <= 1'b0; su_idl_q <= 1'b1; su_prg_q <= 16'd0; su_rws_q <= 16'd0; end
+        else begin su_gop <= su_go; su_rdy_q <= su_ready_pin; su_idl_q <= su_idle_pin; su_prg_q <= su_progress_pin; su_rws_q <= su_rows_pin; end
+    reg su_tk_d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) su_tk_d <= 1'b0; else su_tk_d <= su_gop;
+    always @(posedge clk) if (su_go) begin
+""" + "\n".join(caps) + f"""
+    end
+    wire su_ifhold = su_gop || su_tk_d;
+    if (DEC_LA_SUIF != 0) begin : g_suif
+        assign su_go_pin = su_gop;
+        assign su_ready = su_rdy_q && !su_ifhold;
+        assign su_idle = su_idl_q && !su_ifhold;
+        assign su_progress = su_ifhold ? 16'd0 : su_prg_q;
+        assign su_rows = su_ifhold ? 16'd0 : su_rws_q;
+    end else begin : g_nosuif
+        assign su_go_pin = su_go;
+        assign su_ready = su_ready_pin;
+        assign su_idle = su_idle_pin;
+        assign su_progress = su_progress_pin;
+        assign su_rows = su_rows_pin;
+    end
+""")
+    # inside the g_vsu generate block, right before the instance statement
+    k = text.rfind("\n", 0, text.rfind("ot_hdc_vstream_rt #", 0, i))
+    text = text[:k + 1] + block + text[k + 1:]
+    return text
