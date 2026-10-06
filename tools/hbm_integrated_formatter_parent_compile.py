@@ -43,10 +43,34 @@ def prepare(work,body_pin):
         if not body_pin:errors.append('Bacon published body SHA required')
         elif pins[BODY]!=body_pin:errors.append('Formatter body differs from owner pin')
     parent=(ROOT/PARENT).read_text()
-    if '.release_token17(gather_release_frame[d*73+36+:17])' not in parent:
+    if not re.search(r'\.release_token(?:17)?\(gather_release_frame\[d\*73\+36\+:17\]\)',parent):
         errors.append('Actual full TOKEN17 release connection missing')
-    if '.owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame)' not in parent:
+    if not (('.owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame)' in parent) or
+            ('.gather_granted(fmt_lease_valid),.gather_frame73(fmt_lease_frame)' in parent)):
         errors.append('Actual retained lease/full73 owner connection missing')
+    # Source-only check of the actual named instance against Bacon's real body.
+    # Report discrepancies to the respective writers; never synthesize a stub.
+    declarations={}
+    for path in paths:
+        if path in missing:continue
+        text=(ROOT/path).read_text()
+        for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
+            if name in declarations:errors.append('Duplicate module '+name+': '+declarations[name]+' / '+path)
+            declarations[name]=path
+    if BODY in pins:
+        text=(ROOT/BODY).read_text()
+        header=text[text.index(')(\n')+3:text.index('\n);')]
+        declared=set()
+        # ANSI declarations can share a direction/type across comma-separated
+        # names, or introduce a new direction on that same line.
+        for port in header.split(','):
+            name=re.search(r'(\w+)\s*$',port)
+            if name:declared.add(name.group(1))
+        start=parent.index(' u_formatter_provider(')
+        instance=parent[start:parent.index(');',start)]
+        connected=set(re.findall(r'\.(\w+)\s*\(',instance))
+        for name in sorted(connected-declared):errors.append('Parent formatter port absent in Bacon body: '+name)
+        for name in sorted(declared-connected):errors.append('Bacon formatter port unconnected by parent: '+name)
     for s in all_files:
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
@@ -83,7 +107,8 @@ def capacity(work):
         load=list(os.getloadavg()),idle_cores=os.cpu_count()*d[3]/sum(d),
         available_bytes=mem,disk_free=shutil.disk_usage(work).free)
 def fits(m,a):
-    return m['load'][0]<128 and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
+    load_limit=128 if a.host_kind=='epyc2' else os.cpu_count()
+    return m['load'][0]<load_limit and m['idle_cores']>=a.cpu_cores and m['available_bytes']>=a.memory_gib*2**30 and m['disk_free']>=a.disk_reserve_bytes
 
 def run(a):
     work=a.work.resolve();m=verified(work)
@@ -91,8 +116,11 @@ def run(a):
     # these are admission reservations, never AS/CPU/file/wall-time limits.
     if min(a.memory_gib,a.cpu_cores,a.disk_reserve_bytes)<=0:raise ValueError('Actual CPU/RAM/disk reservation required')
     guard=Path('/srv/opentallas-scratch/admit.sh')
-    if not guard.is_file() or not str(work).startswith('/srv/opentallas-scratch2/'):
-        raise ValueError('Heavy full-parent compile only on E2 NVMe through unchanged guard')
+    prefix='/srv/opentallas-scratch2/' if a.host_kind=='epyc2' else '/srv/opentallas-scratch/'
+    if a.host_kind=='agi' and a.memory_gib>16:
+        raise ValueError('AGI job exceeds binding 16 GiB maximum')
+    if not guard.is_file() or not str(work).startswith(prefix):
+        raise ValueError('Compile requires selected host scratch through unchanged guard')
     if socket.gethostname()!=a.epyc2_hostname:raise ValueError('Execution host differs from measured E2 identity')
     if not a.tool.is_file():raise FileNotFoundError('Actual Verilator tool missing')
     if (work/'frontend.exit').exists() or (work/'elaboration.log').exists():
@@ -106,7 +134,7 @@ def run(a):
         cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--run',
             '--work',str(work),'--tool',str(a.tool.resolve()),'--memory-gib',str(a.memory_gib),
             '--cpu-cores',str(a.cpu_cores),'--disk-reserve-bytes',str(a.disk_reserve_bytes),
-            '--epyc2-hostname',a.epyc2_hostname,'--admitted']
+            '--epyc2-hostname',a.epyc2_hostname,'--host-kind',a.host_kind,'--admitted']
         write(work/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
     tmp=work/'tmp';tmp.mkdir();obj=work/'obj'
@@ -133,6 +161,7 @@ def main():
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
+    p.add_argument('--host-kind',choices=['epyc2','agi'],default='epyc2')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
     return prepare(a.work.resolve(),a.body_sha256) if a.prepare else run(a)
