@@ -100,7 +100,7 @@ def main():
     (work/'config.mk').write_text('\n'.join(cfg)+'\n')
     (work/'preserve_attributes.py').write_text(B.BOOTSTRAP)
     record['config_sha256']=sha(work/'config.mk');record['SDC_sha256']=sha(work/'constraint.sdc')
-    command=docker(work,'python3 /work/preserve_attributes.py && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 synth','turing-ha2-native-caller-map-r1')
+    command=docker(work,'python3 /work/preserve_attributes.py && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 synth','turing-ha2-native-caller-'+out.name)
     record['command']=command;save(out/'launch.json',record)
     with (out/'map.log').open('w') as f:rc=subprocess.call(command,stdout=f,stderr=subprocess.STDOUT)
     record['map_exit']=rc

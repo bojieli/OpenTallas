@@ -55,7 +55,6 @@ module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0,CAL
    else if(context_bound&&!endpoint_rearm_ready&&
     (rank!=bound_rank||pf!=bound_pf||context_operation!=bound_operation||context_phase!=bound_phase))context_fault<=1;
   end
-  assign context_fault_o=context_fault|(|rb_ovf)|dq_own_ovf|(|qr_ovf)|dupe;
   integer k;reg started;reg [31:0] r_idx;reg [1:0] r_rd;
   always @*begin
    r_idx=0;r_rd=0;
@@ -107,6 +106,7 @@ module ot_hbm_item9_ha2_native_boundary_context #(parameter integer ENABLE=0,CAL
   wire [15:0] my_gi=16'((OG*NC+J)*ROF+{16'b0,r_m});
   wire [544:0] res_flit={1'b1,8'hFF,8'(OG),my_gi,r_d};
   wire dq_own_empty,dq_own_ovf;wire [544:0] dq_own_head;
+  assign context_fault_o=context_fault|(|rb_ovf)|dq_own_ovf|(|qr_ovf)|dupe;
   reg own_pop;wire [6:0] dc0;assign dq_own_pop=own_pop;
   ot_ha2_fifo #(.W(545),.AW(6)) u_dqo(.clk(clk),.rst_n(rst_n),
    .push(r_v),.din(res_flit),.pop(own_pop),.empty(dq_own_empty),
