@@ -22,6 +22,7 @@ def main():
  pins=src+['tools/run_abi3_physical.py','tools/orfs_allcorner_spef.py','tools/dsrom_reindex_parent_physical.py','physical/common/ot_macro_track_snap.tcl','physical/dsrom_reindex_parent/place.tcl','physical/dsrom_reindex_parent/regions.tcl','tools/dsrom_reindex_parent_model.py']
  reuse=None
  if a.mapped_route:
+  pins.append('tools/dsrom_reindex_parent_fanout.py')
   baseline=json.loads((a.mapped_route/'source.json').read_text())
   for f in src+['tools/run_abi3_physical.py','tools/orfs_allcorner_spef.py','physical/dsrom_reindex_parent/place.tcl','physical/dsrom_reindex_parent/regions.tcl']:
    if sha(ROOT/f)!=baseline['sha256'][f]:raise SystemExit('mapped source/flow mismatch: '+f)
