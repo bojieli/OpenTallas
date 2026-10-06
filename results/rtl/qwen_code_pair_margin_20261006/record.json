@@ -8,7 +8,8 @@
  "change": {
   "module": "ot_qwen_hbm_code_pair_margin (separate default-off top; original files byte-identical)",
   "stages": "E(t) pin request regs (DMR) -> E(t+1) kept per-bank request/write regs (keep_hierarchy) -> E(t+2) SRAM -> E(t+3) enable-free bank-local coded capture -> E(t+4) coded 5:1 mux (DMR one-hot) -> E(t+5) coded transport + registered UE/corrected -> E(t+6) decode/steer/gate into output flops",
-  "fault": "single SECDED tag word as original; duplicated sticky fault; acceptance inhibited one edge after detection; never delivers an uncorrectable or post-detection response valid"
+  "fault": "single SECDED tag word as original; duplicated sticky fault; acceptance inhibited one edge after detection; never delivers an uncorrectable or post-detection response valid",
+  "protection_netlist": "duplicate copies are instances of kept shadow modules (ot_qwen_hbm_code_shadow_r/_n); route synthesises with SYNTH_HIERARCHICAL=1 so the copies are not merged"
  },
  "price": {
   "status": "PRICED_BEFORE_ROUTE",
@@ -46,8 +47,8 @@
   "logs": "results/rtl/qwen_code_pair_margin_20261006/bench/"
  },
  "sources": {
-  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "e8c6432c6e00d78e06ebe29b5e5083d58e84c72d30ae2948179b0c9d2a63c979",
-  "rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv": "934a9c0f6576ab9b0d760c69c1a9292a02625fcd75c70195717a8ac52caa7629",
+  "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_pair_margin.sv": "eebb827f43dd16e283df4fbea8547662a950967e6a17fa6fe2774715254e49c5",
+  "rtl/test/qwen_hbm_code_payload_leaf/tb_code_pair_margin.sv": "fa441652f7112b5095dc342682cc04c72ea0aeab208dad88885e76d223c9172c",
   "tools/hbm_payload/run_code_pair_margin.sh": "9f73c25305301825990fda9d8b2f661a44d27bda70b415fa2b4541fc2de46f68",
   "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
   "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",

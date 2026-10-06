@@ -24,6 +24,17 @@
 // uncorrectable, or any response after a detection, is never delivered valid.
 // Difference against the original only under a fault: inhibition of NEW
 // rd_r/wr_r acceptance follows detection by one edge (fail-closed).
+// Duplicate ("b") copies live in their own kept hierarchy so synthesis cannot
+// merge them with the primary copies (ORFS SYNTH_HIERARCHICAL keeps modules).
+module ot_qwen_hbm_code_shadow_r #(parameter integer W=1)(
+  input wire clk, por_n, input wire [W-1:0] d, output reg [W-1:0] q);
+  always @(posedge clk or negedge por_n) if(!por_n) q<=0; else q<=d;
+endmodule
+module ot_qwen_hbm_code_shadow_n #(parameter integer W=1)(
+  input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+  always @(posedge clk) q<=d;
+endmodule
+
 module ot_qwen_hbm_code_bank_margin #(
   parameter integer BANK=0
 )(
@@ -48,32 +59,37 @@ module ot_qwen_hbm_code_bank_margin #(
       assemble[63]=check[6];assemble[71]=check[7];
     end
   endfunction
-  reg re_a, re_b, we_a, we_b, re2_a, re2_b;
-  reg [9:0] raddr_a, raddr_b, waddr_a, waddr_b;
-  reg [2:0] cs_a, cs_b, wsel_a, wsel_b, cs2_a, cs2_b;
+  reg re_a, we_a, re2_a;
+  reg [9:0] raddr_a, waddr_a;
+  reg [2:0] cs_a, wsel_a, cs2_a;
+  wire re_b, we_b, re2_b;
+  wire [9:0] raddr_b, waddr_b;
+  wire [2:0] cs_b, wsel_b, cs2_b;
+  ot_qwen_hbm_code_shadow_r #(.W(3)) u_tag_b(.clk(clk),.por_n(por_n),
+    .d({rq_v_b && rq_row_b[12:10]==3'(BANK), wq_v_b && wq_row_b[12:10]==3'(BANK), re_b}),
+    .q({re_b, we_b, re2_b}));
+  ot_qwen_hbm_code_shadow_n #(.W(29)) u_addr_b(.clk(clk),
+    .d({rq_row_b[9:0], rq_row_b[2:0], wq_row_b[9:0], wq_row_b[2:0], cs_b}),
+    .q({raddr_b, cs_b, waddr_b, wsel_b, cs2_b}));
   reg [255:0] wd;
   reg [31:0] wchk;
   wire [255:0] data_q, check_q;
   always @(posedge clk or negedge por_n)
-    if(!por_n) begin re_a<=0;re_b<=0;we_a<=0;we_b<=0;re2_a<=0;re2_b<=0;err<=0; end
+    if(!por_n) begin re_a<=0;we_a<=0;re2_a<=0;err<=0; end
     else begin
       re_a<=rq_v_a && rq_row_a[12:10]==3'(BANK);
-      re_b<=rq_v_b && rq_row_b[12:10]==3'(BANK);
       we_a<=wq_v_a && wq_row_a[12:10]==3'(BANK);
-      we_b<=wq_v_b && wq_row_b[12:10]==3'(BANK);
-      re2_a<=re_a; re2_b<=re_b;
+      re2_a<=re_a;
       err<=(re_a!=re_b) || (we_a!=we_b) || (re2_a!=re2_b) ||
            (re_a && (raddr_a!=raddr_b || cs_a!=cs_b)) ||
            (we_a && (waddr_a!=waddr_b || wsel_a!=wsel_b)) ||
            (re2_a && cs2_a!=cs2_b);
     end
   always @(posedge clk) begin
-    raddr_a<=rq_row_a[9:0]; raddr_b<=rq_row_b[9:0];
-    cs_a<=rq_row_a[2:0]; cs_b<=rq_row_b[2:0];
-    waddr_a<=wq_row_a[9:0]; waddr_b<=wq_row_b[9:0];
-    wsel_a<=wq_row_a[2:0]; wsel_b<=wq_row_b[2:0];
+    raddr_a<=rq_row_a[9:0]; cs_a<=rq_row_a[2:0];
+    waddr_a<=wq_row_a[9:0]; wsel_a<=wq_row_a[2:0];
     wd<=wq_data; wchk<=wq_checks;
-    cs2_a<=cs_a; cs2_b<=cs_b;
+    cs2_a<=cs_a;
   end
   wire w_ce=we_a && we_b;
   ot_sram_1r1w_1024x256_m2_r2c2 data_store(
@@ -151,7 +167,7 @@ module ot_qwen_hbm_code_pair_margin #(
     assign m=metadata_raw[$bits(metadata_t)-1:0];
     wire metadata_bad=c.visible && ((|metadata_ue) || (|metadata_raw[255:$bits(metadata_t)]));
     // Duplicated sticky fault: every use sees the OR of both copies.
-    reg fq_a, fq_b;
+    reg fq_a; wire fq_b;
     assign fault=fq_a || fq_b;
     // ---------------- request side (same-cycle handshakes) ----------------
     wire column_ok=(wr_column==12'(COLUMN_BASE)) || (wr_column==12'(COLUMN_BASE+1));
@@ -169,9 +185,13 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     wire format_bad=wr_v && wr_span_bound && !format_ok;
     // ---------------- E(t): central request registers at the pins ----------------
-    reg [1:0] rq_v_a, rq_v_b, wq_v_a, wq_v_b;
-    reg [12:0] rq_row_a [0:1], rq_row_b [0:1];
-    reg [12:0] wq_row_a, wq_row_b;
+    reg [1:0] rq_v_a, wq_v_a;
+    wire [1:0] rq_v_b, wq_v_b;
+    reg [12:0] rq_row_a [0:1];
+    wire [12:0] rq_row_b [0:1];
+    reg [12:0] wq_row_a;
+    wire [12:0] wq_row_b;
+    wire [1:0] wq_v_next;
     reg [255:0] wq_data;
     reg [31:0] wq_checks;
     wire [31:0] write_checks;
@@ -183,21 +203,24 @@ module ot_qwen_hbm_code_pair_margin #(
       assign write_checks[k*8+:8]=checks(encoded);
     end
     always @(posedge clk or negedge por_n)
-      if(!por_n) begin rq_v_a<=0; rq_v_b<=0; wq_v_a<=0; wq_v_b<=0; end
+      if(!por_n) begin rq_v_a<=0; wq_v_a<=0; end
       else begin
-        rq_v_a<=read_fire; rq_v_b<=read_fire;
-        for(integer p=0;p<2;p=p+1) begin
-          wq_v_a[p]<=write_fire && wr_column==12'(COLUMN_BASE+p);
-          wq_v_b[p]<=write_fire && wr_column==12'(COLUMN_BASE+p);
-        end
+        rq_v_a<=read_fire; wq_v_a<=wq_v_next;
       end
     always @(posedge clk) begin
       for(integer p=0;p<2;p=p+1) begin
-        rq_row_a[p]<=rd_row[p*13+:13]; rq_row_b[p]<=rd_row[p*13+:13];
+        rq_row_a[p]<=rd_row[p*13+:13];
       end
-      wq_row_a<=wr_row; wq_row_b<=wr_row;
+      wq_row_a<=wr_row;
       wq_data<=wr_owned.data; wq_checks<=write_checks;
     end
+    for(genvar p=0;p<2;p=p+1) begin : wcol
+      assign wq_v_next[p]=write_fire && wr_column==12'(COLUMN_BASE+p);
+    end
+    ot_qwen_hbm_code_shadow_r #(.W(4)) u_req_b(.clk(clk),.por_n(por_n),
+      .d({wq_v_next, read_fire}), .q({wq_v_b, rq_v_b}));
+    ot_qwen_hbm_code_shadow_n #(.W(39)) u_row_b(.clk(clk),
+      .d({wr_row, rd_row}), .q({wq_row_b, rq_row_b[1], rq_row_b[0]}));
     // ---------------- E(t+1..t+3): kept per-bank storage ----------------
     wire [287:0] cap [0:1][0:BANKS-1];
     wire [9:0] bank_err;
@@ -212,9 +235,11 @@ module ot_qwen_hbm_code_pair_margin #(
       end
     end
     // ---------------- E(t+3..t+6): coded mux, transport, decode/steer ----------------
-    reg [4:0] msel_a [0:1], msel_b [0:1];
-    reg [4:0] osel_a [0:1], osel_b [0:1];
-    reg [1:0] vld5_a, vld5_b, unc5, corr5;
+    reg [4:0] msel_a [0:1], osel_a [0:1];
+    wire [4:0] msel_b [0:1], osel_b [0:1];
+    wire [4:0] msel_next [0:1], osel_next [0:1];
+    reg [1:0] vld5_a, unc5, corr5;
+    wire [1:0] vld5_b;
     reg [287:0] sel_code [0:1], sel_code2 [0:1];
     reg [2659:0] rom_rd_q;
     reg [1:0] rsp_v_q, corr_q, unc_q;
@@ -235,6 +260,16 @@ module ot_qwen_hbm_code_pair_margin #(
         wire [65:0] d=decode64(sel_code2[p][k*72+:72]);
         assign out_data[p][k*64+:64]=d[63:0];
       end
+      for(genvar b=0;b<BANKS;b=b+1) begin : sel
+        assign msel_next[p][b]=c.v[2][p] && c.pb[2][p*3+:3]==3'(b);   // E(t+3)
+`ifdef CODE_PAIR_MARGIN_MUTANT_TAG_SKEW
+        assign osel_next[p][b]=c.v[4][p] && c.vb[3][p*3+:3]==3'(b);   // bench-only negative control
+`else
+        assign osel_next[p][b]=c.v[4][p] && c.vb[4][p*3+:3]==3'(b);   // E(t+5)
+`endif
+      end
+      ot_qwen_hbm_code_shadow_r #(.W(11)) u_sel_b(.clk(clk),.por_n(por_n),
+        .d({msel_next[p], osel_next[p], c.v[4][p]}), .q({msel_b[p], osel_b[p], vld5_b[p]}));
       assign unc_now[p]=c.v[4][p] && (|ue_w);
       assign corr_now[p]=c.v[4][p] && (|co_w);
       assign sel_err[p]=(msel_a[p]!=msel_b[p]) || (osel_a[p]!=osel_b[p]) || (vld5_a[p]!=vld5_b[p]);
@@ -244,21 +279,11 @@ module ot_qwen_hbm_code_pair_margin #(
       end
       always @(posedge clk or negedge por_n)
         if(!por_n) begin
-          msel_a[p]<=0; msel_b[p]<=0; osel_a[p]<=0; osel_b[p]<=0;
-          vld5_a[p]<=0; vld5_b[p]<=0; unc5[p]<=0; corr5[p]<=0;
+          msel_a[p]<=0; osel_a[p]<=0;
+          vld5_a[p]<=0; unc5[p]<=0; corr5[p]<=0;
         end else begin
-          for(integer b=0;b<BANKS;b=b+1) begin
-            msel_a[p][b]<=c.v[2][p] && c.pb[2][p*3+:3]==3'(b);   // E(t+3)
-            msel_b[p][b]<=c.v[2][p] && c.pb[2][p*3+:3]==3'(b);
-`ifdef CODE_PAIR_MARGIN_MUTANT_TAG_SKEW
-            osel_a[p][b]<=c.v[4][p] && c.vb[3][p*3+:3]==3'(b);   // bench-only negative control
-            osel_b[p][b]<=c.v[4][p] && c.vb[3][p*3+:3]==3'(b);
-`else
-            osel_a[p][b]<=c.v[4][p] && c.vb[4][p*3+:3]==3'(b);   // E(t+5)
-            osel_b[p][b]<=c.v[4][p] && c.vb[4][p*3+:3]==3'(b);
-`endif
-          end
-          vld5_a[p]<=c.v[4][p]; vld5_b[p]<=c.v[4][p];
+          msel_a[p]<=msel_next[p]; osel_a[p]<=osel_next[p];
+          vld5_a[p]<=c.v[4][p];
           unc5[p]<=unc_now[p]; corr5[p]<=corr_now[p];
         end
     end
@@ -296,10 +321,11 @@ module ot_qwen_hbm_code_pair_margin #(
     end
     wire detect=control_bad || metadata_bad || (|request_bad) || format_bad ||
                 (|bank_err) || (|sel_err) || (|unc5) || (fq_a!=fq_b);
+    ot_qwen_hbm_code_shadow_r #(.W(1)) u_fault_b(.clk(clk),.por_n(por_n),.d(fq_b || detect),.q(fq_b));
     always @(posedge clk or negedge por_n) begin
-      if(!por_n) begin control_code<=0; metadata_code<=0; fq_a<=0; fq_b<=0; end
+      if(!por_n) begin control_code<=0; metadata_code<=0; fq_a<=0; end
       else begin
-        fq_a<=fq_a || detect; fq_b<=fq_b || detect;
+        fq_a<=fq_a || detect;
         if(!control_bad) begin
           control_code<=encode64(64'(n));
           if(write_fire) begin : receipt

@@ -175,7 +175,7 @@ module tb_code_pair_margin;
         read_one(1,3*1024+9,2);
       end else begin
         @(negedge clk); wr_v=0; rd_v=2'b10; rd_row=0; rd_row[25:13]=3*1024+9; virtual_bank=6'(2<<3);
-        @(posedge clk); #1 dut_m.on.rq_v_b[1]=1'b0;   // upset ONE copy of the registered request
+        @(posedge clk); #1 dut_m.on.u_req_b.q[1]=1'b0;   // upset ONE copy (the kept shadow) of the registered request
         @(negedge clk); rd_v=0;
       end
       saw_valid=0; saw_unc=0;
