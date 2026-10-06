@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_view.v1",
  "master": "hfd_gath_r8",
  "kind": "stations",
- "status": "interim-not-closed",
+ "status": "closed",
  "lef": "hfd_gath_r8.lef",
  "lib": {
   "ss": "hfd_gath_r8_ss.lib",
@@ -48,10 +48,12 @@
    "export_rc=0",
    "check_rc=0",
    "signoff_corner_rc=0",
-   "signoff_export_rc=0"
+   "signoff_export_rc=0",
+   "resignoff_corner_rc=0",
+   "resignoff_export_rc=0"
   ],
   "ss_setup_ps": 194.29,
-  "ff_hold_ps": 11.03,
+  "ff_hold_ps": 160.33,
   "drc": 0,
   "closes_signoff": true,
   "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
@@ -60,7 +62,10 @@
    "ckins_ps": 137,
    "route_sdc": ".views/M3_hfd_gath_r8/route.sdc",
    "signoff_sdc": ".views/M3_hfd_gath_r8/signoff.sdc",
-   "recipe": "bench/stn_margin_sdc.py"
+   "recipe": "bench/stn_margin_sdc.py",
+   "ckins_ff_min_ps": 66,
+   "ckins_ff_max_ps": 79,
+   "resignoff": "corner-true vclk (stn_resignoff.sh)"
   },
   "route_sta": {
    "ss": 131.29,
@@ -69,6 +74,33 @@
   "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sdc",
   "generator": "tools/hbm_die_station_gen.py"
+ },
+ "io_min_delay": {
+  "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+  "ps_per_um": 0.1118,
+  "clkq_ff_ps": 32.2,
+  "view": {
+   "in": {
+    "min_wire_um": 953.712,
+    "min_delay_ps": 138.83,
+    "via": {
+     "inst": "w213_rgNE3",
+     "port": "t1",
+     "to": "sm31",
+     "to_port": "r"
+    }
+   },
+   "out": {
+    "min_wire_um": 2353.656,
+    "min_delay_ps": 263.14,
+    "via": {
+     "inst": "w90_rgSE3",
+     "port": "b",
+     "to": "w92_rgSE2",
+     "to_port": "a"
+    }
+   }
+  }
  },
  "bench": {
   "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench16/hfd_gath_r8",

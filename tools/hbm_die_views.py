@@ -39,7 +39,7 @@ S = L.S
 Q = L.Q
 VIEWS = 'physical/hbm_accel_die_views'
 KIND_OF = {      # master prefix -> view kind directory
-    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q',
+    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
@@ -119,9 +119,9 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
-    if d is not None:
-        return d
     m, pw, M, real = model()
+    if d is not None and name not in M:     # a split the generator does not place yet
+        return d
     mst = M[name]
     wmap = {p: pw.get((name, p), 0) for p in mst.order}
     rects = S.pin_rects(mst, 1, wmap)
@@ -141,6 +141,12 @@ def master_record(name):
         kinds = set(arr or ['?'])
         p['direction'] = ('input' if kinds <= {'in', '?'} or (len(kinds - {'?'}) > 1 and (name, base) in narrow)
                           else 'output' if kinds <= {'out'} else 'inout')
+    if d is not None:       # generator-placed band: directions / forwarded-clock bits from the split record
+        for p_, v_ in ports.items():
+            if p_ in d['ports']:
+                for k_ in ('direction', 'dir_segments'):
+                    if k_ in d['ports'][p_]:
+                        v_[k_] = d['ports'][p_][k_]
     return dict(master=name, kind=kind_of(name), w_um=round(mst.w, 4), h_um=round(mst.h, 4), obs_top=mst.obs_top,
                 note=mst.note, instances=len(insts), orients=sorted({it.orient for it in insts}),
                 inst_names=[it.name for it in insts], ports=ports,
