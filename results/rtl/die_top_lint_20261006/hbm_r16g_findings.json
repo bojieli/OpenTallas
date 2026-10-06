@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.die_top_lint.hbm_r16g_status.v1",
+ "prefix": "CLAUDE HBM-DIE-FIX",
+ "date": "2026-10-06",
+ "generator": "tools/hbm_accel_die_fp.py adopted r16g (the r15 FIX15 keys + measured attention tiles + face_fix; r14b / r8 replay byte-identical)",
+ "lint_record": "hbm_r16g_lint_top_lint.json",
+ "verilator": {
+  "rc": 0,
+  "time_s": 11.02,
+  "peak_GB": 0.12,
+  "counts": {
+   "Warning-PINMISSING": {
+    "top": 272
+   },
+   "Warning-UNDRIVEN": {
+    "top": 481,
+    "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+    "rtl:ot_pdie_serdes_bb.v": 1,
+    "rtl:ot_pdie_ucie_bb.v": 1
+   },
+   "Warning-UNUSEDPARAM": {
+    "rtl:hbm_r16g_lint_top_real_shells.sv": 12
+   },
+   "Warning-UNUSEDSIGNAL": {
+    "top": 481,
+    "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+    "rtl:ot_pdie_serdes_bb.v": 2,
+    "rtl:ot_pdie_ucie_bb.v": 2,
+    "stubs": 4
+   }
+  },
+  "examples": {
+   "Warning-PINMISSING": [
+    "Instance has missing pin: 'cf'",
+    "Instance has missing pin: 'ci'",
+    "Instance has missing pin: 'i'",
+    "Instance has missing pin: 'k'"
+   ],
+   "Warning-UNDRIVEN": [
+    "Signal is not driven: 'lint_nc_0'",
+    "Signal is not driven: 'lint_nc_1'",
+    "Signal is not driven: 'lint_nc_2'",
+    "Signal is not driven: 'lint_nc_3'"
+   ],
+   "Warning-UNUSEDSIGNAL": [
+    "Signal is not used: 'lint_nc_25'",
+    "Signal is not used: 'lint_nc_26'",
+    "Signal is not used: 'lint_nc_27'",
+    "Signal is not used: 'lint_nc_28'"
+   ],
+   "Warning-UNUSEDPARAM": []
+  }
+ },
+ "generator_side_open": [],
+ "verilator_pinmissing_note": "every PINMISSING is a role port of the shared hfd_attn_tile master (k / q on the 4 corner tiles, ci / cf / ri / rf / i by position) left open on the other copies",
+ "findings": [
+  {
+   "id": "H1",
+   "block": "hb_coll (stub)",
+   "cls": "duplicate port binding: generated top does not elaborate",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (clk_dom)",
+   "evidence_r16g": "clock sources {'hb_coll': ['pll_hbm', 'pll_link', 'pll_serial', 'pll_stream']}; Verilator rc=0, errors: 0"
+  },
+  {
+   "id": "H2",
+   "block": "sm0-sm15 (S groups)",
+   "cls": "faces away: generator orientation bug",
+   "owner_2026_10_06": "HBM-DS-DIE (wt-hbm-ds-grt)",
+   "status_r16g": "FIXED in generator (orient_fix)",
+   "evidence_r16g": "physical.face_away = 0 endpoints; S SMs R0 / MY (lint top r14b+TF6 equivalent)"
+  },
+  {
+   "id": "H3",
+   "block": "hfd_sm -> REAL ot_hbm_accel_sm_v",
+   "cls": "unclocked; no reset",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (clk_dom)",
+   "evidence_r16g": "hfd_sm real clock port bound on all 32 (unbound clk/rst_n: []); reset net rst_stream reaches 32 SMs"
+  },
+  {
+   "id": "H4",
+   "block": "hfd_sm -> REAL ot_hbm_accel_sm_v",
+   "cls": "RTL port with no die net",
+   "owner_2026_10_06": "HBM die + SM element",
+   "status_r16g": "FIXED in generator (sm_desc)",
+   "evidence_r16g": "control leaf 45 -> 103 b carries d_valid / d_base / d_lines / d_ready; unbound SM pins: []"
+  },
+  {
+   "id": "H5",
+   "block": "hfd_sm",
+   "cls": "width vs RTL",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (sm_rtl_w)",
+   "evidence_r16g": "weight 1,099 b, request 44 b; connectivity findings: 0"
+  },
+  {
+   "id": "H6",
+   "block": "ot_pdie_serdes x9 / ot_pdie_ucie",
+   "cls": "width and direction deficit",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (link_rtl)",
+   "evidence_r16g": "endpoint link tx/rx {'rtl': 4376, 'die': 4392, 'match': True} / {'rtl': 4376, 'die': 4392, 'match': True}; host tx[255:0] + rx[255:0]; spare macro lanes tied off: [('ot_pdie_serdes', 'rx', 225), ('ot_pdie_serdes', 'tx', 225), ('ot_pdie_ucie', 'rx', 256), ('ot_pdie_ucie', 'tx', 256)]"
+  },
+  {
+   "id": "H7",
+   "block": "hfd_attn_tile vs ot_attn_tile_registered_parent",
+   "cls": "port list vs definition",
+   "owner_2026_10_06": "HBM-ATTN + HBM die",
+   "status_r16g": "FIXED die side (attn_rtl); wrapper forward ports owned by HBM-ATTN",
+   "evidence_r16g": "{\"rtl\": \"ot_attn_tile_registered_parent\", \"checks\": {\"packet_ld\": {\"rtl\": 1038, \"die\": 1041, \"match\": true}, \"packet_query\": {\"rtl\": 580, \"die\": 582, \"match\": true}, \"result\": {\"rtl\": 529, \"die\": 529, \"match\": true}, \"wrapper_forward_ports\": {\"ci\": 1618, \"cf\": 1618, \"ri\": 1618, \"rf\": 1618, \"i\": 529}, \"clocks\": [\"ck\", \"rst\"], \"wrapper_note\": \"ci / cf / ri / rf carry the 1,618 b packet (the parent's `launch` register, one tile hop each) and i the upstream result: tile die-wrapper ports, not ot_attn_tile_registered_parent ports (owner HBM-ATTN)\"}, \"pass_\": true}"
+  },
+  {
+   "id": "H8",
+   "block": "hfd_attn_tile (64)",
+   "cls": "unclocked",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (clk_dom)",
+   "evidence_r16g": "hfd_attn_tile clock_trunk on 64 tiles"
+  },
+  {
+   "id": "H9",
+   "block": "hfd_coll vs ot_hbm_accel_tu_endpoint",
+   "cls": "port list vs definition",
+   "owner_2026_10_06": "HBM die + TU owner",
+   "status_r16g": "FIXED in generator (coll_rtl)",
+   "evidence_r16g": "pass=True; {\"su_delivery_and_inject_request\": {\"rtl\": 2218, \"die\": 2218, \"note\": \"4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd broadcast to every quarter\", \"match\": true}, \"su_inject_data\": {\"rtl\": 1024, \"die_per_quarter\": [1024], \"note\": \"each quarter drives inj_data; the fan-in inside the block selects one\", \"match\": true}, \"config_in\": {\"rtl\": 25, \"die\": 25, \"match\": true}, \"status_out\": {\"rtl\": 33, \"die\": 33, \"match\": true}, \"link_tx\": {\"rtl\": 4376, \"die\": 4392, \"match\": true}, \"link_rx\": {\"rtl\": 4376, \"die\": 4392, \"match\": true}, \"clocks\": {\"rtl\": \"clk / rst_n / pclk / prst_n\""
+  },
+  {
+   "id": "H10",
+   "block": "hfd_hc (4) / hfd_barrier / hfd_loader",
+   "cls": "sink / source-only blocks",
+   "owner_2026_10_06": "HBM die",
+   "status_r16g": "FIXED in generator (hub_io, link_rtl)",
+   "evidence_r16g": "block_shape = {'hfd_host_slab': {'in_bits': 0, 'out_bits': 0, 'shape': 'no die nets'}, 'hfd_serdes_slab': {'in_bits': 0, 'out_bits': 0, 'shape': 'no die nets'}} (reservation slabs only)"
+  },
+  {
+   "id": "H11",
+   "block": "die",
+   "cls": "top I/O, reset",
+   "owner_2026_10_06": "tape-out",
+   "status_r16g": "OPEN (tape-out)",
+   "evidence_r16g": "top I/O (refclk / POR / test pins) is a tape-out workstream; reset NETWORK added (rst_*)"
+  },
+  {
+   "id": "H12a",
+   "block": "hub <-> group trunks",
+   "cls": "not instantiated (known gap)",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "REPRESENTED in generator (fwd)",
+   "evidence_r16g": "{\"total\": 204, \"in_stations\": 162, \"in_receiving_blocks\": 42, \"station_instances\": 54}"
+  },
+  {
+   "id": "H12b",
+   "block": "208 stations",
+   "cls": "not instantiated (known gap)",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "REPRESENTED in generator (fwd)",
+   "evidence_r16g": "299 stations, 3008 ot_fwd_link_stage W512 slices, 307 segments carry 784 forwarded-clock wires; stations NO_CLOCK: []"
+  },
+  {
+   "id": "H13",
+   "block": "stations",
+   "cls": "one master per instance",
+   "owner_2026_10_06": "HBM-DS-DIE generator",
+   "status_r16g": "FIXED in generator (stn_share)",
+   "evidence_r16g": "33 station masters for 299 stations (role x size x faces up to a mirror; r14b: 208 masters)"
+  },
+  {
+   "id": "H14",
+   "block": "ot_pdie_serdes",
+   "cls": "pin spread vs macro face",
+   "owner_2026_10_06": "macro owner + HBM die",
+   "status_r16g": "OPEN (macro owner + HBM die)",
+   "evidence_r16g": "pin spread entries 138 (SerDes io face, DFI)"
+  },
+  {
+   "id": "H15",
+   "block": "SM row 0 vs stream service",
+   "cls": "narrow channel (informational)",
+   "owner_2026_10_06": "-",
+   "status_r16g": "INFO (unchanged)",
+   "evidence_r16g": "[{'compute': 'sm', 'hub_kind': 'svc', 'hub': 'svc_NE', 'pairs': 4, 'min_gap_um': 129.624, 'examples': ['sm24 / svc_NE gap 129.62 um', 'sm25 / svc_NE gap 129.62 um']}]"
+  },
+  {
+   "id": "H16",
+   "block": "all replicated copies",
+   "cls": "replicated copies missing their own pins",
+   "owner_2026_10_06": "-",
+   "status_r16g": "PASS",
+   "evidence_r16g": "missing pins: 0"
+  },
+  {
+   "id": "H17",
+   "block": "ot_hbm_accel_tc16 / ot_hbm_accel_bd_col hardened _bb.v views",
+   "cls": "real view vs RTL instantiation",
+   "owner_2026_10_06": "HBM-SM element",
+   "status_r16g": "OPEN (HBM-SM element owner)",
+   "evidence_r16g": "hardened _bb views declare no parameters"
+  }
+ ]
+}

@@ -1,0 +1,1533 @@
+{
+ "schema": "opentallas.die_top_lint.v1",
+ "die": "hbm",
+ "top_fix": false,
+ "generator": "tools/hbm_accel_die_fp.py",
+ "generator_sha256": "f7b5563620283f08abeccdce432a26c6925c299f81e55f7207c7d6c2e9591af9",
+ "lint_tool_sha256": "59e659f4d06ec984c400919b2666ccab7d7f67b43f43e54e539139373dc50a27",
+ "variant": {
+  "n_mirror_fix": true,
+  "x_chain": true,
+  "w_my": true,
+  "strip_d": 864.0,
+  "port_fix": true,
+  "ew_corridor": true,
+  "sm_xmid": true,
+  "lanes": true,
+  "spch": 1244.16,
+  "root_pins": true,
+  "serdes_mg": 250.56,
+  "orient_fix": true,
+  "clk_dom": true,
+  "sm_rtl_w": true,
+  "sm_desc": true,
+  "link_rtl": true,
+  "coll_rtl": true,
+  "attn_rtl": true,
+  "hub_io": true,
+  "fwd": true,
+  "rq_chain": true,
+  "stn_share": true,
+  "hub_h": 12100.0,
+  "spine_h": 7500.0,
+  "spine_w": 1399.68,
+  "face_vm": 2000.0,
+  "attn_tile_w_um": 1349.136,
+  "attn_tile_h_um": 1350.0,
+  "face_fix": true,
+  "W": 24401.52,
+  "H": 24621.84
+ },
+ "census": {
+  "instances": 439,
+  "buses": 689,
+  "net_bits": 687773,
+  "masters": 55,
+  "real_instances": 46,
+  "placeholder_instances": 393
+ },
+ "real_blocks": {
+  "ot_hbm3e_phy_v41x_aw30_e8p5": {
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "file": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+   "kind": "hard macro black box",
+   "params": {},
+   "instances": 4
+  },
+  "ot_pdie_serdes": {
+   "module": "ot_pdie_serdes",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 9
+  },
+  "ot_pdie_ucie": {
+   "module": "ot_pdie_ucie",
+   "file": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie_bb.v",
+   "kind": "placeholder hard macro black box",
+   "params": {},
+   "instances": 1
+  },
+  "hfd_sm": {
+   "module": "ot_hbm_accel_sm_v",
+   "file": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+   "kind": "RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)",
+   "params": {
+    "ENABLE": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "NC": 8,
+    "RMAX": 4096,
+    "XD": 128,
+    "MAX_OUT": 512,
+    "DS": 3,
+    "DG": 3,
+    "DW": 4,
+    "PIO": 2
+   },
+   "instances": 32
+  }
+ },
+ "connectivity": [],
+ "unbound_real_pins": [
+  {
+   "master": "ot_pdie_serdes",
+   "port": "rx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "output",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "port": "tx",
+   "insts": 9,
+   "bits": 225,
+   "dir": "input",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "port": "rx",
+   "insts": 1,
+   "bits": 256,
+   "dir": "output",
+   "width": 512
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "port": "tx",
+   "insts": 1,
+   "bits": 256,
+   "dir": "input",
+   "width": 512
+  }
+ ],
+ "placeholder_port_direction_conflicts": {},
+ "clocking": [
+  {
+   "master": "hfd_attn_tile",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 64
+  },
+  {
+   "master": "hfd_barrier",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cdist_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 8
+  },
+  {
+   "master": "hfd_cmdproc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_coll",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_gath_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 16
+  },
+  {
+   "master": "hfd_hc",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_host_slab",
+   "view": "placeholder",
+   "clock": "no_logic (reservation slab)",
+   "instances": 1
+  },
+  {
+   "master": "hfd_index_q",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_loader",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_mcast_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 16
+  },
+  {
+   "master": "hfd_meso_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 26
+  },
+  {
+   "master": "hfd_quant",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_router",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_serdes_slab",
+   "view": "placeholder",
+   "clock": "no_logic (reservation slab)",
+   "instances": 2
+  },
+  {
+   "master": "hfd_sfu",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_sm",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 32
+  },
+  {
+   "master": "hfd_stn_*",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 16
+  },
+  {
+   "master": "hfd_stn_*",
+   "view": "placeholder",
+   "clock": "forwarded_clock",
+   "instances": 217
+  },
+  {
+   "master": "hfd_su",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 4
+  },
+  {
+   "master": "hfd_svc_NE",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_NW",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SE",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SW",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 4
+  },
+  {
+   "master": "ot_pdie_serdes",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 9
+  },
+  {
+   "master": "ot_pdie_ucie",
+   "view": "real",
+   "clock": "has_clock_port",
+   "instances": 1
+  }
+ ],
+ "clock_sources": {
+  "hb_coll": [
+   "pll_hbm",
+   "pll_link",
+   "pll_serial",
+   "pll_stream"
+  ]
+ },
+ "reset": [
+  {
+   "master": "hfd_attn_tile",
+   "net": "reset_tree",
+   "instances": 64
+  },
+  {
+   "master": "hfd_barrier",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_cdist_*",
+   "net": "reset_tree",
+   "instances": 8
+  },
+  {
+   "master": "hfd_cmdproc",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_gath_*",
+   "net": "reset_tree",
+   "instances": 16
+  },
+  {
+   "master": "hfd_hc",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_index_q",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_loader",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_mcast_*",
+   "net": "reset_tree",
+   "instances": 16
+  },
+  {
+   "master": "hfd_meso_*",
+   "net": "reset_tree",
+   "instances": 26
+  },
+  {
+   "master": "hfd_quant",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_router",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_sfu",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_sm",
+   "net": "reset_tree",
+   "instances": 32
+  },
+  {
+   "master": "hfd_stn_*",
+   "net": "reset_tree",
+   "instances": 233
+  },
+  {
+   "master": "hfd_su",
+   "net": "reset_tree",
+   "instances": 4
+  },
+  {
+   "master": "hfd_svc_NE",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_NW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SE",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_svc_SW",
+   "net": "reset_tree",
+   "instances": 1
+  },
+  {
+   "master": "hfd_vm",
+   "net": "reset_tree",
+   "instances": 1
+  }
+ ],
+ "interfaces": {
+  "hfd_coll": {
+   "rtl": "ot_hbm_accel_tu_endpoint",
+   "links": 9,
+   "checks": {
+    "su_delivery_and_inject_request": {
+     "rtl": 2218,
+     "die": 2218,
+     "note": "4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd broadcast to every quarter",
+     "match": true
+    },
+    "su_inject_data": {
+     "rtl": 1024,
+     "die_per_quarter": [
+      1024
+     ],
+     "note": "each quarter drives inj_data; the fan-in inside the block selects one",
+     "match": true
+    },
+    "config_in": {
+     "rtl": 25,
+     "die": 25,
+     "match": true
+    },
+    "status_out": {
+     "rtl": 33,
+     "die": 33,
+     "match": true
+    },
+    "link_tx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "link_rx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "clocks": {
+     "rtl": "clk / rst_n / pclk / prst_n",
+     "die": [
+      "pll_hbm",
+      "pll_link",
+      "pll_serial",
+      "pll_stream",
+      "por_hbm",
+      "por_link",
+      "por_serial",
+      "por_stream"
+     ],
+     "match": true
+    },
+    "unmatched_die_ports": []
+   },
+   "pass_": true
+  },
+  "hfd_attn_tile": {
+   "rtl": "ot_attn_tile_registered_parent",
+   "checks": {
+    "packet_ld": {
+     "rtl": 1038,
+     "die": 1041,
+     "match": true
+    },
+    "packet_query": {
+     "rtl": 580,
+     "die": 582,
+     "match": true
+    },
+    "result": {
+     "rtl": 529,
+     "die": 529,
+     "match": true
+    },
+    "wrapper_forward_ports": {
+     "ci": 1618,
+     "cf": 1618,
+     "ri": 1618,
+     "rf": 1618,
+     "i": 529
+    },
+    "clocks": [
+     "ck",
+     "rst"
+    ],
+    "wrapper_note": "ci / cf / ri / rf carry the 1,618 b packet (the parent's `launch` register, one tile hop each) and i the upstream result: tile die-wrapper ports, not ot_attn_tile_registered_parent ports (owner HBM-ATTN)"
+   },
+   "pass_": true
+  }
+ },
+ "top_ports": 0,
+ "physical": {
+  "missing_pins": [],
+  "face_away": [],
+  "pin_spread": [
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "phy_SW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SW",
+    "cls": "phy_dfi",
+    "inst": "svc_SW",
+    "master": "hfd_svc_SW",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "phy_SE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_SE",
+    "cls": "phy_dfi",
+    "inst": "svc_SE",
+    "master": "hfd_svc_SE",
+    "port": "phy",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.8,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "phy_NW",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NW",
+    "cls": "phy_dfi",
+    "inst": "svc_NW",
+    "master": "hfd_svc_NW",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "phy_NE",
+    "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+    "port": "dfi",
+    "face": "S",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "dfi_NE",
+    "cls": "phy_dfi",
+    "inst": "svc_NE",
+    "master": "hfd_svc_NE",
+    "port": "phy",
+    "face": "N",
+    "span_um": 8352.3,
+    "peer_manhattan_um": 8.9,
+    "bits": 22238
+   },
+   {
+    "bus": "lk_lk_S0_e",
+    "cls": "link",
+    "inst": "lk_S0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 308.4,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S1_e",
+    "cls": "link",
+    "inst": "lk_S1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1083.8,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S2_e",
+    "cls": "link",
+    "inst": "lk_S2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 293.3,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S3_e",
+    "cls": "link",
+    "inst": "lk_S3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 993.1,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_S4_e",
+    "cls": "link",
+    "inst": "lk_S4",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1345.2,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N0_e",
+    "cls": "link",
+    "inst": "lk_N0",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1235.7,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N1_e",
+    "cls": "link",
+    "inst": "lk_N1",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 185.0,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N2_e",
+    "cls": "link",
+    "inst": "lk_N2",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 1091.0,
+    "bits": 974
+   },
+   {
+    "bus": "lk_lk_N3_e",
+    "cls": "link",
+    "inst": "lk_N3",
+    "master": "ot_pdie_serdes",
+    "port": "iox",
+    "face": "E",
+    "span_um": 2192.1,
+    "peer_manhattan_um": 628.8,
+    "bits": 974
+   },
+   {
+    "bus": "host_e",
+    "cls": "host",
+    "inst": "lk_host",
+    "master": "ot_pdie_ucie",
+    "port": "iox",
+    "face": "W",
+    "span_um": 1235.7,
+    "peer_manhattan_um": 364.9,
+    "bits": 512
+   },
+   {
+    "bus": "tc_at_SW_03",
+    "cls": "attn_packet",
+    "inst": "at_SW_03",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SW_03",
+    "cls": "attn_packet",
+    "inst": "at_SW_13",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SW_13",
+    "cls": "attn_packet",
+    "inst": "at_SW_13",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SW_13",
+    "cls": "attn_packet",
+    "inst": "at_SW_23",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SW_23",
+    "cls": "attn_packet",
+    "inst": "at_SW_23",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SW_23",
+    "cls": "attn_packet",
+    "inst": "at_SW_33",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_03",
+    "cls": "attn_packet",
+    "inst": "at_SW_03",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_03",
+    "cls": "attn_packet",
+    "inst": "at_SW_02",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_02",
+    "cls": "attn_packet",
+    "inst": "at_SW_02",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_02",
+    "cls": "attn_packet",
+    "inst": "at_SW_01",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_01",
+    "cls": "attn_packet",
+    "inst": "at_SW_01",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_01",
+    "cls": "attn_packet",
+    "inst": "at_SW_00",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_13",
+    "cls": "attn_packet",
+    "inst": "at_SW_13",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_13",
+    "cls": "attn_packet",
+    "inst": "at_SW_12",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_12",
+    "cls": "attn_packet",
+    "inst": "at_SW_12",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_12",
+    "cls": "attn_packet",
+    "inst": "at_SW_11",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_11",
+    "cls": "attn_packet",
+    "inst": "at_SW_11",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_11",
+    "cls": "attn_packet",
+    "inst": "at_SW_10",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_23",
+    "cls": "attn_packet",
+    "inst": "at_SW_23",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_23",
+    "cls": "attn_packet",
+    "inst": "at_SW_22",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_22",
+    "cls": "attn_packet",
+    "inst": "at_SW_22",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_22",
+    "cls": "attn_packet",
+    "inst": "at_SW_21",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_21",
+    "cls": "attn_packet",
+    "inst": "at_SW_21",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_21",
+    "cls": "attn_packet",
+    "inst": "at_SW_20",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_33",
+    "cls": "attn_packet",
+    "inst": "at_SW_33",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_33",
+    "cls": "attn_packet",
+    "inst": "at_SW_32",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_32",
+    "cls": "attn_packet",
+    "inst": "at_SW_32",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_32",
+    "cls": "attn_packet",
+    "inst": "at_SW_31",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_31",
+    "cls": "attn_packet",
+    "inst": "at_SW_31",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SW_31",
+    "cls": "attn_packet",
+    "inst": "at_SW_30",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_00",
+    "cls": "attn_packet",
+    "inst": "at_SE_00",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_00",
+    "cls": "attn_packet",
+    "inst": "at_SE_10",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_10",
+    "cls": "attn_packet",
+    "inst": "at_SE_10",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_10",
+    "cls": "attn_packet",
+    "inst": "at_SE_20",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_20",
+    "cls": "attn_packet",
+    "inst": "at_SE_20",
+    "master": "hfd_attn_tile",
+    "port": "cf",
+    "face": "N",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tc_at_SE_20",
+    "cls": "attn_packet",
+    "inst": "at_SE_30",
+    "master": "hfd_attn_tile",
+    "port": "ci",
+    "face": "S",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_00",
+    "cls": "attn_packet",
+    "inst": "at_SE_00",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_00",
+    "cls": "attn_packet",
+    "inst": "at_SE_01",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_01",
+    "cls": "attn_packet",
+    "inst": "at_SE_01",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_01",
+    "cls": "attn_packet",
+    "inst": "at_SE_02",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_02",
+    "cls": "attn_packet",
+    "inst": "at_SE_02",
+    "master": "hfd_attn_tile",
+    "port": "rf",
+    "face": "E",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   },
+   {
+    "bus": "tp_at_SE_02",
+    "cls": "attn_packet",
+    "inst": "at_SE_03",
+    "master": "hfd_attn_tile",
+    "port": "ri",
+    "face": "W",
+    "span_um": 310.5,
+    "peer_manhattan_um": 43.4,
+    "bits": 1618
+   }
+  ],
+  "pin_spread_count": 138,
+  "abut_without_channel": [
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NE",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm24 / svc_NE gap 129.62 um",
+     "sm25 / svc_NE gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_NW",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm16 / svc_NW gap 129.62 um",
+     "sm17 / svc_NW gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SE",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm8 / svc_SE gap 129.62 um",
+     "sm9 / svc_SE gap 129.62 um"
+    ]
+   },
+   {
+    "compute": "sm",
+    "hub_kind": "svc",
+    "hub": "svc_SW",
+    "pairs": 4,
+    "min_gap_um": 129.624,
+    "examples": [
+     "sm0 / svc_SW gap 129.62 um",
+     "sm1 / svc_SW gap 129.62 um"
+    ]
+   }
+  ]
+ },
+ "meso_forwarded_gap": {
+  "waypoint_masters": {
+   "hfd_stn_r0": 16,
+   "hfd_meso_r1": 16,
+   "hfd_stn_r2": 16,
+   "hfd_stn_r3": 16,
+   "hfd_stn_r4": 20,
+   "hfd_mcast_r5": 4,
+   "hfd_mcast_r6": 8,
+   "hfd_mcast_r7": 4,
+   "hfd_gath_r8": 8,
+   "hfd_gath_r9": 2,
+   "hfd_gath_r10": 2,
+   "hfd_stn_r11": 12,
+   "hfd_stn_r12": 12,
+   "hfd_stn_r13": 12,
+   "hfd_cdist_r14": 4,
+   "hfd_cdist_r15": 4,
+   "hfd_stn_r16": 24,
+   "hfd_stn_r17": 12,
+   "hfd_stn_r18": 8,
+   "hfd_stn_r19": 4,
+   "hfd_stn_r20": 8,
+   "hfd_stn_r21": 8,
+   "hfd_stn_r22": 16,
+   "hfd_stn_r23": 8,
+   "hfd_gath_r24": 2,
+   "hfd_gath_r25": 2,
+   "hfd_stn_r26": 2,
+   "hfd_stn_r27": 27,
+   "hfd_meso_r28": 9,
+   "hfd_stn_r29": 2,
+   "hfd_stn_r30": 4,
+   "hfd_stn_r31": 6,
+   "hfd_meso_r32": 1
+  },
+  "waypoints": 299,
+  "forwarded_stage_bits": 1095392,
+  "ot_fwd_link_stage_W512_needed": 3008,
+  "fifo_placeholders": {},
+  "station_masters": 33,
+  "forwarded_segments_with_fclk": 307,
+  "forwarded_clock_wires": 784,
+  "meso_fifo_W512_slices": {
+   "total": 204,
+   "in_stations": 162,
+   "in_receiving_blocks": 42,
+   "station_instances": 54
+  },
+  "clock_region_crossings": {
+   "phy_dfi|region": {
+    "buses": 4,
+    "bits": 88952
+   },
+   "weight|domain": {
+    "buses": 32,
+    "bits": 35216
+   },
+   "weight_req|domain": {
+    "buses": 32,
+    "bits": 1424
+   },
+   "weight|region": {
+    "buses": 8,
+    "bits": 8816
+   },
+   "weight_req|region": {
+    "buses": 16,
+    "bits": 712
+   },
+   "x_trunk|region": {
+    "buses": 16,
+    "bits": 33088
+   },
+   "x_leaf|region": {
+    "buses": 16,
+    "bits": 33008
+   },
+   "result_leaf|region": {
+    "buses": 16,
+    "bits": 4320
+   },
+   "result_trunk|region": {
+    "buses": 17,
+    "bits": 19477
+   },
+   "result_trunk|domain": {
+    "buses": 4,
+    "bits": 8660
+   },
+   "control|region": {
+    "buses": 4,
+    "bits": 3308
+   },
+   "control_leaf|region": {
+    "buses": 32,
+    "bits": 3296
+   },
+   "expert_req|region": {
+    "buses": 4,
+    "bits": 516
+   },
+   "expert_req|domain": {
+    "buses": 4,
+    "bits": 516
+   },
+   "kv_rows|domain": {
+    "buses": 8,
+    "bits": 8268
+   },
+   "kv_rows|region": {
+    "buses": 12,
+    "bits": 12402
+   },
+   "attn_query|region": {
+    "buses": 7,
+    "bits": 4074
+   },
+   "attn_out|domain": {
+    "buses": 4,
+    "bits": 4232
+   },
+   "hub|region": {
+    "buses": 4,
+    "bits": 2048
+   },
+   "link|region": {
+    "buses": 9,
+    "bits": 8784
+   },
+   "link|domain": {
+    "buses": 9,
+    "bits": 8766
+   },
+   "host|region": {
+    "buses": 1,
+    "bits": 514
+   },
+   "host|domain": {
+    "buses": 1,
+    "bits": 512
+   },
+   "reset_tree|region": {
+    "buses": 2,
+    "bits": 2
+   },
+   "reset_tree|domain": {
+    "buses": 1,
+    "bits": 1
+   }
+  }
+ },
+ "block_shape": {
+  "hfd_host_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  },
+  "hfd_serdes_slab": {
+   "in_bits": 0,
+   "out_bits": 0,
+   "shape": "no die nets"
+  }
+ },
+ "counterparts": {
+  "hfd_coll": {
+   "rtl": "ot_hbm_accel_tu_endpoint (rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv)",
+   "die_abstract_bits": 15266,
+   "rtl_in_bits": 5429,
+   "rtl_out_bits": 6627,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "pclk": "input 1",
+    "prst_n": "input 1",
+    "rank": "input 8",
+    "pf": "input 16",
+    "go": "input 1",
+    "inj_idx": "output 32",
+    "inj_rd": "output 2",
+    "inj_data": "input 1024",
+    "ph_tx_v": "output 8",
+    "ph_tx_flit": "output 4360",
+    "sw_cr_ret": "input 8",
+    "ph_rx_v": "input 8",
+    "ph_rx_flit": "input 4360",
+    "rx_credit": "output 8",
+    "del_valid": "output 4",
+    "del_flit": "output 2180",
+    "fault": "output 1",
+    "stat_credit_stall": "output 32"
+   },
+   "die_ports": {
+    "f_cmdproc": 25,
+    "f_su_NE": 1024,
+    "f_su_NW": 1024,
+    "f_su_SE": 1024,
+    "f_su_SW": 1024,
+    "llk_N0": 976,
+    "llk_N1": 976,
+    "llk_N2": 976,
+    "llk_N3": 976,
+    "llk_S0": 976,
+    "llk_S1": 976,
+    "llk_S2": 976,
+    "llk_S3": 976,
+    "llk_S4": 976,
+    "pll_hbm": 1,
+    "pll_link": 1,
+    "pll_serial": 1,
+    "pll_stream": 1,
+    "por_hbm": 1,
+    "por_link": 1,
+    "por_serial": 1,
+    "por_stream": 1,
+    "t_cmdproc": 33,
+    "t_su_NE": 580,
+    "t_su_NW": 580,
+    "t_su_SE": 580,
+    "t_su_SW": 580
+   }
+  },
+  "hfd_loader": {
+   "rtl": "ot_hbm_accel_loader_host (rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv)",
+   "die_abstract_bits": 856,
+   "error": "interface not parsed: name 'ND' is not defined"
+  },
+  "hfd_index_q": {
+   "rtl": "ot_hbm_accel_index_path (rtl/hbm_accel/index/ot_hbm_accel_index_path.sv)",
+   "die_abstract_bits": 4713,
+   "error": "interface not parsed: name 'NS' is not defined"
+  },
+  "hfd_attn_tile": {
+   "rtl": "ot_attn_tile_registered_parent (rtl/hbm_accel/ot_attn_tile_registered_parent.sv)",
+   "die_abstract_bits": 9154,
+   "rtl_in_bits": 1620,
+   "rtl_out_bits": 529,
+   "rtl_ports": {
+    "clk": "input 1",
+    "rst_n": "input 1",
+    "ld_v": "input 1",
+    "ld_mode": "input 1",
+    "ld_bank": "input 3",
+    "ld_grp": "input 8",
+    "ld_w": "input 1024",
+    "ld_w2v": "input 1",
+    "iv": "input 1",
+    "ibank": "input 3",
+    "ib": "input 576",
+    "ov": "output 1",
+    "oy": "output 512",
+    "oflt": "output 16"
+   },
+   "die_ports": {
+    "cf": 1618,
+    "ci": 1618,
+    "ck": 1,
+    "i": 529,
+    "k": 1041,
+    "o": 529,
+    "q": 582,
+    "rf": 1618,
+    "ri": 1618,
+    "rst": 1
+   }
+  },
+  "ot_fwd_link_stage": {
+   "rtl": "rtl/common/ot_fwd_link_stage.sv",
+   "rtl_ports": {
+    "fclk_i": "input 1",
+    "rst_n": "input 1",
+    "i_v": "input 1",
+    "i_d": "input 512",
+    "fclk_o": "output 1",
+    "o_v": "output 1",
+    "o_d": "output 512"
+   },
+   "instantiated_in_die_top": 0
+  },
+  "ot_meso_fifo": {
+   "rtl": "rtl/common/ot_meso_fifo.sv",
+   "rtl_ports": {
+    "wclk": "input 1",
+    "wrst_n": "input 1",
+    "w_v": "input 1",
+    "w_rdy": "output 1",
+    "w_d": "input 512",
+    "rclk": "input 1",
+    "rrst_n": "input 1",
+    "r_v": "output 1",
+    "r_rdy": "input 1",
+    "r_d": "output 512",
+    "w_live": "output 1",
+    "r_live": "output 1",
+    "w_fault": "output 1",
+    "r_fault": "output 1",
+    "dbg_wc": "output 3",
+    "dbg_rp": "output 3",
+    "dbg_cc": "output 3",
+    "dbg_cp": "output 3",
+    "dbg_ws": "output 2",
+    "dbg_rs": "output 2"
+   },
+   "instantiated_in_die_top": 0
+  }
+ },
+ "top_fixes": {},
+ "verilog": {
+  "top": "hbm_r16g_lint_top",
+  "stubs": 51,
+  "nc_wires": 962,
+  "filelist": "hbm_r16g_lint_top.f",
+  "rtl_files": 27,
+  "unresolved_modules": []
+ }
+}
