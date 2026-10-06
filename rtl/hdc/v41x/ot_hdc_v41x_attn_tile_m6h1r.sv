@@ -214,7 +214,8 @@ endmodule
 // above it, every leaf pin on the strip; one register bank (HC) in the strip registers the packet and drives the four
 // leaves; the outputs come straight from the leaves.  Leaf (r, s) is head GB + 4 r + s (r = 0 below, 1 above;
 // s = column), its outputs at local slot 2 r + s.  ot_attn_tile_m6h1 on those heads with every input, rst_n included,
-// delayed RIN = 1 cycle.  The H16 tile is four quads, GB = 0, 2, 8, 10, fed the same packet (ot_attn_tile_m6h1x).
+// delayed RIN = 1 cycle.  The H16 tile is four quads, qgid = GB = 0, 2, 8, 10 (one hardened macro, the first head a
+// static input), fed the same packet (ot_attn_tile_m6h1x / ot_attn_tile_m6h1p).
 // ---------------------------------------------------------------------------
 module ot_attn_tile_m6h1q #(
     parameter integer GB = 0,
@@ -222,6 +223,7 @@ module ot_attn_tile_m6h1q #(
 ) (
     input  wire          clk,
     input  wire          rst_n,
+    input  wire [7:0]    qgid,               // the quad's first head (a static tie: 0, 2, 8 or 10); leaf gid = qgid | (4 r + s)
     input  wire          ld_v,
     input  wire          ld_mode,
     input  wire [2:0]    ld_bank,
@@ -247,7 +249,7 @@ module ot_attn_tile_m6h1q #(
         for (r = 0; r < 2; r = r + 1) begin : g_r
             for (s = 0; s < 2; s = s + 1) begin : g_s
                 localparam integer L = 2 * r + s;
-                localparam integer G = GB + 4 * r + s;
+                localparam [7:0] LG = 4 * r + s;
                 wire [31:0] hy;
                 wire [0:0]  hf;
                 wire        hv;
@@ -259,7 +261,7 @@ module ot_attn_tile_m6h1q #(
                 assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} =
                     hc_q[((QH > 1) ? s : 0)*PW +: PW];
                 ot_attn_hgrp_m6h1 u_g (
-                    .clk(clk), .rst_n(l_rst_n), .gid(G[7:0]), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
+                    .clk(clk), .rst_n(l_rst_n), .gid(qgid | LG), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
                     .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
                     .ibank(l_ibank), .ib(l_ib), .ov(hv), .oy(hy), .oflt(hf));
                 assign {gov[L], oflt[L], oy[L*32 +: 32]} = {hv, hf, hy};
@@ -304,11 +306,64 @@ module ot_attn_tile_m6h1x (
         localparam integer GB = (q / 2) * 8 + (q % 2) * 2;     // 0, 2, 8, 10
         wire [3:0]   qv, qf;
         wire [127:0] qy;
-        ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(rst_n), .qgid(GB[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
             .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer G = GB + 4 * (l / 2) + (l % 2);
             assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
+        end
+    end endgenerate
+    assign ov = gov[0];
+endmodule
+
+// ---------------------------------------------------------------------------
+// The H16 tile as a parent of four hardened quads: the quads face one central register channel (left quads mirrored
+// so their input edge faces it); ROOT -> ROW bank (one per quad row, between its two quads) -> quads.  Quad (y, x) holds
+// heads GB = 8 y + 2 x .. (ot_attn_tile_m6h1q); the function of ot_attn_tile_m6h1 with every input, rst_n included,
+// delayed 3 cycles (ROOT, ROW, the quad's HC) and the outputs taken straight from the quads' leaves.
+// ---------------------------------------------------------------------------
+module ot_attn_tile_m6h1p (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [511:0]  oy,
+    output wire [15:0]   oflt
+);
+    localparam integer PW = 1 + 1618;
+    wire [PW-1:0] pk = {rst_n, ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv, ibank, ib};
+    wire [PW-1:0] root_q;
+    (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_root (.clk(clk), .d(pk), .q(root_q));
+    wire [15:0] gov;
+    genvar y, x, l;
+    generate for (y = 0; y < 2; y = y + 1) begin : g_y
+        wire [PW-1:0] row_q;
+        (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_row (.clk(clk), .d(root_q), .q(row_q));
+        wire          q_rst_n, q_ld_v, q_ld_mode, q_ld_w2v, q_iv;
+        wire [2:0]    q_ld_bank, q_ibank;
+        wire [7:0]    q_ld_grp;
+        wire [1023:0] q_ld_w;
+        wire [575:0]  q_ib;
+        assign {q_rst_n, q_ld_v, q_ld_mode, q_ld_bank, q_ld_grp, q_ld_w, q_ld_w2v, q_iv, q_ibank, q_ib} = row_q;
+        for (x = 0; x < 2; x = x + 1) begin : g_x
+            localparam integer GB = 8 * y + 2 * x;
+            wire [3:0]   qv, qf;
+            wire [127:0] qy;
+            ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(q_rst_n), .qgid(GB[7:0]), .ld_v(q_ld_v), .ld_mode(q_ld_mode),
+                .ld_bank(q_ld_bank), .ld_grp(q_ld_grp), .ld_w(q_ld_w), .ld_w2v(q_ld_w2v), .iv(q_iv), .ibank(q_ibank),
+                .ib(q_ib), .gov(qv), .oy(qy), .oflt(qf));
+            for (l = 0; l < 4; l = l + 1) begin : g_l
+                localparam integer G = GB + 4 * (l / 2) + (l % 2);
+                assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
+            end
         end
     end endgenerate
     assign ov = gov[0];
