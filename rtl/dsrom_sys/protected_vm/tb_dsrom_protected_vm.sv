@@ -34,14 +34,15 @@ module tb_dsrom_protected_vm;
   end
  endtask
  task automatic finish_transaction(input bit expect_ce);
-  reg [511:0] expected0,expected1;integer waited;
+  reg [511:0] expected0,expected1;reg [74:0] clean_wa;reg [79:0] clean_wm;integer waited;
   begin
-   expected0=golden[read_addr[14:0]];expected1=golden[read_addr[29:15]];
+   expected0=0;expected1=0;if(read_enable[0])expected0=golden[read_addr[14:0]];if(read_enable[1])expected1=golden[read_addr[29:15]];
+   clean_wa=0;clean_wm=0;for(integer w=0;w<5;w=w+1)if(write_enable[w])begin clean_wa[w*15+:15]=write_addr[w*15+:15];clean_wm[w*16+:16]=write_mask[w*16+:16];end
    waited=0;
    while(!reply_v&&!fault)begin @(negedge fast_clk);waited++;if(waited>WAIT_BOUND)$fatal(1,"no protected reply within source bound state%0d debt%b",dut.g_live.u_backend.state,pending);end
    if(fault)$fatal(1,"unexpected fault state%0d",dut.g_live.u_backend.state);
    reply_edge=cycles;
-   if(!pending||reply_owner!==request_owner||row_visible!==write_enable||visible_addr!==write_addr||visible_mask!==write_mask)$fatal(1,"identity/row visibility mismatch");
+   if(!pending||reply_owner!==request_owner||row_visible!==write_enable||visible_addr!==clean_wa||visible_mask!==clean_wm)$fatal(1,"identity/row visibility mismatch");
    if(read_enable[0]&&read_data[511:0]!==expected0)$fatal(1,"readA olddata/golden mismatch");
    if(read_enable[1]&&read_data[1023:512]!==expected1)$fatal(1,"readB olddata/golden mismatch");
    if(expect_ce&&!corrected)$fatal(1,"actual corrected receipt absent");
@@ -93,11 +94,11 @@ module tb_dsrom_protected_vm;
   // Both reads observe olddata; all five writes to one row use native lastwriter priority and masked lanes.
   read_enable=3;read_addr={15'd0,15'd0};write_enable=31;write_addr=0;
   for(integer w=0;w<5;w=w+1)begin write_data[w*512+:512]=payload(w+11);write_mask[w*16+:16]=16'hffff;end
-  write_mask[64+:16]=16'h5555;start();finish_transaction(0);
-  read_enable=3;read_addr={15'd0,15'd32767};write_enable=0;write_mask=0;start();finish_transaction(0);
+  write_mask[64+:16]=16'h5555;for(integer l=1;l<16;l=l+2)write_data[4*512+l*32+:32]=32'hx;start();finish_transaction(0);
+  read_enable=3;read_addr={15'd0,15'd32767};write_enable=0;write_mask=80'bx;write_addr=75'bx;write_data=2560'bx;start();finish_transaction(0);
   // Actual full-depth last row +check-half/group boundary, not reduced memory.
   read_enable=0;write_enable=1;write_addr=75'(32767);write_data=2560'(payload(33));write_mask=80'hffff;start();finish_transaction(0);
-  read_enable=3;read_addr={15'd32767,15'd0};write_enable=0;write_mask=0;start();finish_transaction(0);
+  read_enable=3;read_addr={15'd32767,15'd0};write_enable=0;write_mask=80'bx;write_addr=75'bx;write_data=2560'bx;start();finish_transaction(0);
   if(fault||pending)$fatal(1,"final protection/owner state");
   $display("PASS PROTECTED_DSVM full2MiB 256data+32check 3:4 transactions=%0d reads=%0d visiblewrites=%0d cycles=%0d",transactions,reads,visible_writes,cycles);$finish;
  end
