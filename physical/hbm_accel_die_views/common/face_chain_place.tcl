@@ -215,3 +215,12 @@ foreach port [lsort [array names fc_dist]] {
   puts [format "OT_FC_DIST %s n %d mean %.0f p90 %.0f max %.0f um" $port $n [expr {$sm/$n}] [lindex $l [expr {int(0.9*($n-1))}]] [lindex $l end]]
 }
 puts "OT_FC: face chains N=$fc_n: $n_in input, $n_out output, $n_thru pass-through; $n_moved cells moved ([array size fc_stage] output-chain flops)"
+# OT_FC_REBUF=1 (CLAUDE hbm-router dv5): timing-driven global placement (virtual: false) has already inserted
+# repair_design buffers along the PRE-move nets; a multi-fanout core -> stage-0 net keeps its buffer tree at the old,
+# pin-clumped positions (dv5_r16h 4_cts: out_ids -> eSW s0, s0 moved to 206 um from the core, still -533 ps through
+# 15 buffers parked near the W pin).  Drop every buffer now; the resize step's repair_design re-buffers on the moved
+# placement.
+if {[info exists ::env(OT_FC_REBUF)] && $::env(OT_FC_REBUF) eq "1"} {
+  remove_buffers
+  puts "OT_FC_REBUF: buffers removed after the chain move"
+}
