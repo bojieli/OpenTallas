@@ -12,7 +12,7 @@ python3 tools/hbm_accel_die_fp.py grt $F --work $RD/b_k16_i5 --k 16 --iters 5 > 
 python3 tools/hbm_accel_die_fp.py grt $F --work $RD/b_k16_i50 --k 16 --iters 50 > /dev/null
 cd $RD
 MEM=$(free -g | awk '/^Mem:/{print $2}')
-if [ "$MEM" -lt 1000 ]; then BIG=48; SMALL=24; else BIG=24; SMALL=12; fi     # AGIdock is 125 GB
+if [ "$MEM" -lt 200 ]; then BIG=14; SMALL=10; else BIG=24; SMALL=12; fi   # AGIdock rule: <=16 GB; EPYC: 24
 /srv/opentallas-scratch/admit.sh $BIG -- ./run_case.sh a_real run.tcl run.log 16 96 > a_real.nohup 2>&1 &
 for c in b_k16_i5_base b_k16_i5 b_k16_i50; do /srv/opentallas-scratch/admit.sh $SMALL -- ./run_case.sh $c run.tcl run.log 12 48 > $c.nohup 2>&1 & done
 wait

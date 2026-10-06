@@ -8,5 +8,5 @@ cd $R/src
 F="--die qwen ${VAR:+--var $VAR}"
 for w in $(python3 tools/hbm_accel_die_fp.py irwin $F); do echo $w; done | xargs -P 8 -I{} sh -c "python3 tools/hbm_accel_die_fp.py ir $F --work $RD/c_{} --window {} ${COV:+--cov $COV} > /dev/null"
 cd $RD
-ls -d c_* | xargs -P 16 -I{} sh -c '/srv/opentallas-scratch/admit.sh 8 -- ./run_case.sh {} run.tcl run.log 6 16 > {}.nohup 2>&1'
+ls -d c_* | xargs -P 16 -I{} sh -c '/srv/opentallas-scratch/admit.sh 12 -- ./run_case.sh {} run.tcl run.log 6 16 > {}.nohup 2>&1'
 echo ALLDONE > $RD/ALLDONE
