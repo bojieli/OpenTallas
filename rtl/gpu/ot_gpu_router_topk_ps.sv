@@ -11,39 +11,148 @@
 //              may present a beat at most every other cycle (+N / P cycles a vector).
 //
 // The reference keeps P per-lane sorted lists with a one-cycle compare-insert recurrence (the
-// timing wall at 1.2 GHz).  Here no value-dependent state is updated every cycle:
+// timing wall at 1.2 GHz).  Here no value-dependent state is updated every cycle, and every
+// magnitude compare is split over two registered stages: 8-bit chunk (gt, eq) pairs, then the
+// chunk combine (an explicit log-depth tree on plain gates: no relational operator on a key is
+// left to synthesis, which maps one through $alu to a ripple chain).
 //   S0  pin capture (in_valid, in_last, in_vals: flop-direct, no logic before the flop)
 //   S1  order-preserving integer key per value: okey(f) = f == -0 ? 0x8000_0000 :
 //       f[31] ? ~f : f | 1 << 31 (exactly the reference's key; no FP comparator anywhere)
-//   S2  all P (P-1) / 2 pairwise compares of the beat (lane j beats lane m > j iff key_j >= key_m:
-//       equal keys go to the lower index, as in the reference)
-//   S3  rank of every lane = how many lanes beat it (popcount of P - 1 compare bits)
-//   S4  local top-K of the beat, sorted: slot k = the lane whose rank is k (one-hot AND-OR mux)
-//   S5  two running top-K banks take alternate beats (a bank sees a beat at most every other
-//       cycle), so the merge with the running list is a 2-cycle recurrence split into two stages:
-//       S5 compares the bank's K entries with the beat's K (K x K 32-bit compares; the running
-//       entry wins a tie, it has the lower index) and registers the one-hot slot selects
-//       (merge-path: entry i of list A lands in slot i + |B ahead of it|);
-//   S6  the bank register takes the AND-OR mux of {bank, beat} (hold / fresh-vector are folded
-//       into the selects, so no enable fans out over the bank).
-//   S7  both banks are snapshotted two cycles after the vector's last beat left S4, the cycle in
-//       which both hold their final lists (the next vector's first beats overwrite them only one
-//       cycle later).
-//   S8  merge of the two bank lists on the full key {okey, ~index} (the banks interleave
-//       indices): K x K compares + the merge-path selects, registered;
-//   S9  the K selected ids;  S10 pairwise id compares;  S11 id ranks;  S12 ids by rank ->
-//       out_ids / out_valid flops at the output pins.
-// Latency: in_valid of the last beat at the pins -> out_valid 13 cycles (the reference: 24,
-// ot_gpu_router_topk_f: 25).  Throughput unchanged (PIPESEL = 1).
+//   S2  chunk compares of all P (P-1) / 2 lane pairs of the beat;  S3 their combine: lane j beats
+//       lane m > j iff key_j >= key_m (equal keys go to the lower index, as in the reference)
+//   S4  rank of every lane = how many lanes beat it (adder-tree popcount of P - 1 bits)
+//   S5  local top-K of the beat, sorted: slot k = the lane whose rank is k (one-hot AND-OR mux)
+//   S6..S8  NB = 4 running top-K banks take the beats round-robin, so a bank sees a beat at most
+//       every 4th cycle and its merge with the running list is a 3-stage recurrence:
+//       S6 chunk compares of the bank's K entries against the beat's K, S7 combine (the running
+//       entry wins a tie: it has the lower index) + merge-path one-hot slot selects (entry i of
+//       list A lands in slot i + |B ahead of it|; hold / fresh-vector folded into the selects),
+//       S8 the bank register takes the AND-OR mux of {bank, beat}: no enable over the bank.
+//   S9  all banks snapshotted 3 cycles after the vector's last beat left S5 (the one cycle in
+//       which every bank holds its final list).
+//   S10..S15  2-level merge tree of the 4 bank lists on the full key {okey, ~index} (the banks
+//       interleave indices), 3 stages a level (chunk compare | combine + selects | mux).
+//   S16..S18  ascending by id (compare | rank | select) -> out_ids / out_valid flops at the pins.
+// Latency: in_valid of the last beat at the pins -> out_valid 19 cycles (the reference: 23,
+// ot_gpu_router_topk_f: 24, by the bench's measure).  Throughput unchanged (PIPESEL = 1).
 // Reset: rst_n asserts asynchronously into a 2-flop synchroniser only; all control flops take a
 // registered synchronous reset; datapath flops have no reset and no enable.
 // NEG (test only, default 0) plants a known error for the bench's negative controls:
 //   1 bank merge gives ties to the arriving beat, 2 local sort gives ties to the higher lane,
 //   3 -0 is not canonicalised, 4 the final merge ignores the index on ties.
 // ---------------------------------------------------------------------------
+// two descending K-lists of {key, idx} (EW bits; order on {key, ~idx}) -> their top K, descending.
+// 3 registered stages; HA / HB: list present (an absent list loses every compare).
+module ot_gpu_router_ps_merge #(
+    parameter integer K   = 6,
+    parameter integer IW  = 9,
+    parameter integer NEG = 0
+) (
+    input  wire               clk,
+    input  wire [K*(32+IW)-1:0] a,
+    input  wire [K*(32+IW)-1:0] b,
+    input  wire               ha,
+    input  wire               hb,
+    output reg  [K*(32+IW)-1:0] q,
+    output reg                hq
+);
+    localparam integer EW = 32 + IW;
+    // Compare helpers (inlined in each module of this file).  Every magnitude compare is
+    // an explicit tree on plain gates: 8-bit chunk (gt, eq) pairs (registered by the caller), then a
+    // log-depth chunk combine.  A relational operator on a key would be mapped through $alu to a ripple
+    // carry chain (measured 750 ps WC pre-repair on the first route); none is used on a key.
+    function automatic [1:0] cmp8(input [7:0] a, input [7:0] b);   // {a > b, a == b}
+        reg [7:0] g, e;
+        integer s, t;
+        begin
+            g = a & ~b; e = ~(a ^ b);
+            for (s = 1; s < 8; s = s * 2)
+                for (t = 0; t < 8; t = t + 2 * s) begin
+                    g[t] = g[t+s] | (e[t+s] & g[t]);
+                    e[t] = e[t+s] & e[t];
+                end
+            cmp8 = {g[0], e[0]};
+        end
+    endfunction
+    // operands zero-extended to 64 bits: 8 chunks, chunk c at [2c+1:2c] = {gt, eq}
+    function automatic [15:0] chunks(input [63:0] a, input [63:0] b);
+        integer c;
+        begin
+            for (c = 0; c < 8; c = c + 1) chunks[2*c +: 2] = cmp8(a[8*c +: 8], b[8*c +: 8]);
+        end
+    endfunction
+    function automatic [1:0] comb(input [15:0] v);                // {gt, eq} of the whole operand
+        reg [7:0] g, e;
+        integer s, t;
+        begin
+            for (t = 0; t < 8; t = t + 1) begin g[t] = v[2*t+1]; e[t] = v[2*t]; end
+            for (s = 1; s < 8; s = s * 2)
+                for (t = 0; t < 8; t = t + 2 * s) begin
+                    g[t] = g[t+s] | (e[t+s] & g[t]);
+                    e[t] = e[t+s] & e[t];
+                end
+            comb = {g[0], e[0]};
+        end
+    endfunction
+    function automatic comb_gt(input [15:0] v);
+        reg [1:0] r; begin r = comb(v); comb_gt = r[1]; end
+    endfunction
+    function automatic comb_ge(input [15:0] v);
+        reg [1:0] r; begin r = comb(v); comb_ge = r[1] | r[0]; end
+    endfunction
+    function automatic gt_k(input [63:0] a, input [63:0] b);       // one-stage compare (short operands only)
+        begin gt_k = comb_gt(chunks(a, b)); end
+    endfunction
+    // population count of 16 bits as a balanced adder tree (2-, 3-, 4-, 5-bit adds)
+    function automatic [4:0] pop16(input [15:0] x);
+        reg [1:0] pa [0:7]; reg [2:0] pb [0:3]; reg [3:0] pc [0:1];
+        integer q;
+        begin
+            for (q = 0; q < 8; q = q + 1) pa[q] = {1'b0, x[2*q]} + {1'b0, x[2*q+1]};
+            for (q = 0; q < 4; q = q + 1) pb[q] = {1'b0, pa[2*q]} + {1'b0, pa[2*q+1]};
+            for (q = 0; q < 2; q = q + 1) pc[q] = {1'b0, pb[2*q]} + {1'b0, pb[2*q+1]};
+            pop16 = {1'b0, pc[0]} + {1'b0, pc[1]};
+        end
+    endfunction
+    integer i, j, k;
+    reg [K*(32+IW)-1:0] a1, b1, a2, b2;
+    reg [15:0] cc1 [0:K*K-1];
+    reg ha1, hb1, h2;
+    reg [2*K-1:0] sel2 [0:K-1];
+    reg [K*K-1:0] c;
+    reg [EW-1:0] acc;
+    always @(posedge clk) begin
+        for (i = 0; i < K; i = i + 1)
+            for (j = 0; j < K; j = j + 1)
+                cc1[i*K+j] <= (NEG == 4) ? chunks({a[i*EW+IW +: 32], {IW{1'b1}}}, {b[j*EW+IW +: 32], {IW{1'b0}}})
+                                         : chunks({a[i*EW+IW +: 32], ~a[i*EW +: IW]}, {b[j*EW+IW +: 32], ~b[j*EW +: IW]});
+        a1 <= a; b1 <= b; ha1 <= ha; hb1 <= hb;
+        // stage 2: combine + selects
+        for (i = 0; i < K; i = i + 1)
+            for (j = 0; j < K; j = j + 1)
+                c[i*K+j] = !hb1 ? 1'b1 : !ha1 ? 1'b0 : comb_gt(cc1[i*K+j]);
+        for (k = 0; k < K; k = k + 1) begin
+            sel2[k] <= {2*K{1'b0}};
+            for (i = 0; i <= k; i = i + 1)
+                sel2[k][i] <= ((k == i) ? 1'b1 : !c[i*K+((k>i)?(k-i-1):0)]) && c[i*K+k-i];
+            for (j = 0; j <= k; j = j + 1)
+                sel2[k][K+j] <= ((k == j) ? 1'b1 : c[((k>j)?(k-j-1):0)*K+j]) && !c[(k-j)*K+j];
+        end
+        a2 <= a1; b2 <= b1; h2 <= ha1 | hb1;
+        // stage 3: mux
+        for (k = 0; k < K; k = k + 1) begin
+            acc = {EW{1'b0}};
+            for (i = 0; i < K; i = i + 1) if (sel2[k][i]) acc = acc | a2[i*EW +: EW];
+            for (j = 0; j < K; j = j + 1) if (sel2[k][K+j]) acc = acc | b2[j*EW +: EW];
+            q[k*EW +: EW] <= acc;
+        end
+        hq <= h2;
+    end
+endmodule
+
 module ot_gpu_router_topk_ps_core #(
     parameter integer N   = 384,
-    parameter integer P   = 16,       // values a beat (power of two, >= K)
+    parameter integer P   = 16,       // values a beat (power of two, K <= P <= 16)
     parameter integer K   = 6,
     parameter integer IW  = 9,
     parameter integer NEG = 0
@@ -59,44 +168,69 @@ module ot_gpu_router_topk_ps_core #(
     localparam integer LP = (P > 1) ? $clog2(P) : 1;
     localparam integer EW = 32 + IW;                 // {key, idx}
     localparam integer KR = (K > 1) ? $clog2(K) : 1;  // id rank width
+    localparam integer NB = 4;                       // running banks
+    // Compare helpers (inlined in each module of this file).  Every magnitude compare is
+    // an explicit tree on plain gates: 8-bit chunk (gt, eq) pairs (registered by the caller), then a
+    // log-depth chunk combine.  A relational operator on a key would be mapped through $alu to a ripple
+    // carry chain (measured 750 ps WC pre-repair on the first route); none is used on a key.
+    function automatic [1:0] cmp8(input [7:0] a, input [7:0] b);   // {a > b, a == b}
+        reg [7:0] g, e;
+        integer s, t;
+        begin
+            g = a & ~b; e = ~(a ^ b);
+            for (s = 1; s < 8; s = s * 2)
+                for (t = 0; t < 8; t = t + 2 * s) begin
+                    g[t] = g[t+s] | (e[t+s] & g[t]);
+                    e[t] = e[t+s] & e[t];
+                end
+            cmp8 = {g[0], e[0]};
+        end
+    endfunction
+    // operands zero-extended to 64 bits: 8 chunks, chunk c at [2c+1:2c] = {gt, eq}
+    function automatic [15:0] chunks(input [63:0] a, input [63:0] b);
+        integer c;
+        begin
+            for (c = 0; c < 8; c = c + 1) chunks[2*c +: 2] = cmp8(a[8*c +: 8], b[8*c +: 8]);
+        end
+    endfunction
+    function automatic [1:0] comb(input [15:0] v);                // {gt, eq} of the whole operand
+        reg [7:0] g, e;
+        integer s, t;
+        begin
+            for (t = 0; t < 8; t = t + 1) begin g[t] = v[2*t+1]; e[t] = v[2*t]; end
+            for (s = 1; s < 8; s = s * 2)
+                for (t = 0; t < 8; t = t + 2 * s) begin
+                    g[t] = g[t+s] | (e[t+s] & g[t]);
+                    e[t] = e[t+s] & e[t];
+                end
+            comb = {g[0], e[0]};
+        end
+    endfunction
+    function automatic comb_gt(input [15:0] v);
+        reg [1:0] r; begin r = comb(v); comb_gt = r[1]; end
+    endfunction
+    function automatic comb_ge(input [15:0] v);
+        reg [1:0] r; begin r = comb(v); comb_ge = r[1] | r[0]; end
+    endfunction
+    function automatic gt_k(input [63:0] a, input [63:0] b);       // one-stage compare (short operands only)
+        begin gt_k = comb_gt(chunks(a, b)); end
+    endfunction
+    // population count of 16 bits as a balanced adder tree (2-, 3-, 4-, 5-bit adds)
+    function automatic [4:0] pop16(input [15:0] x);
+        reg [1:0] pa [0:7]; reg [2:0] pb [0:3]; reg [3:0] pc [0:1];
+        integer q;
+        begin
+            for (q = 0; q < 8; q = q + 1) pa[q] = {1'b0, x[2*q]} + {1'b0, x[2*q+1]};
+            for (q = 0; q < 4; q = q + 1) pb[q] = {1'b0, pa[2*q]} + {1'b0, pa[2*q+1]};
+            for (q = 0; q < 2; q = q + 1) pc[q] = {1'b0, pb[2*q]} + {1'b0, pb[2*q+1]};
+            pop16 = {1'b0, pc[0]} + {1'b0, pc[1]};
+        end
+    endfunction
     function automatic [31:0] okey(input [31:0] f);
         reg [31:0] c;
         begin
             c = (f == 32'h8000_0000 && NEG != 3) ? 32'h0 : f;
             okey = c[31] ? ~c : (c | 32'h8000_0000);
-        end
-    endfunction
-    // Magnitude compare as an explicit log-depth (gt, eq) prefix tree on plain gates: a `>=` operator is mapped
-    // through $alu to a ripple carry chain (measured: 32-bit compare 750 ps WC pre-repair, MAJ chain), so no
-    // relational operator on a key appears in this module.  Operands are zero-extended to 64 bits.
-    function automatic [1:0] cmp_tree(input [63:0] a, input [63:0] b);   // {a > b, a == b}
-        reg [63:0] g, e;
-        integer s, t;
-        begin
-            g = a & ~b; e = ~(a ^ b);
-            for (s = 1; s < 64; s = s * 2)
-                for (t = 0; t < 64; t = t + 2 * s) begin
-                    g[t] = g[t+s] | (e[t+s] & g[t]);
-                    e[t] = e[t+s] & e[t];
-                end
-            cmp_tree = {g[0], e[0]};
-        end
-    endfunction
-    function automatic ge_k(input [63:0] a, input [63:0] b);
-        reg [1:0] r; begin r = cmp_tree(a, b); ge_k = r[1] | r[0]; end
-    endfunction
-    function automatic gt_k(input [63:0] a, input [63:0] b);
-        reg [1:0] r; begin r = cmp_tree(a, b); gt_k = r[1]; end
-    endfunction
-    // population count of 16 bits as a balanced adder tree (2-, 3-, 4-, 5-bit adds)
-    function automatic [4:0] pop16(input [15:0] x);
-        reg [1:0] a [0:7]; reg [2:0] b [0:3]; reg [3:0] c [0:1];
-        integer q;
-        begin
-            for (q = 0; q < 8; q = q + 1) a[q] = {1'b0, x[2*q]} + {1'b0, x[2*q+1]};
-            for (q = 0; q < 4; q = q + 1) b[q] = {1'b0, a[2*q]} + {1'b0, a[2*q+1]};
-            for (q = 0; q < 2; q = q + 1) c[q] = {1'b0, b[2*q]} + {1'b0, b[2*q+1]};
-            pop16 = {1'b0, c[0]} + {1'b0, c[1]};
         end
     endfunction
     integer i, j, m, k, b;
@@ -107,195 +241,207 @@ module ot_gpu_router_topk_ps_core #(
         else begin rs0 <= 1'b1; rs1 <= rs0; end
     reg rst_c;
     always @(posedge clk) rst_c <= ~rs1;
+    // ---- tag pipeline: per stage {valid, last, bank (2), fresh, has (NB)} ----
+    localparam integer TW = 5 + NB;
     // ---- S0: pin capture ----
     reg v0, l0;
     reg [P*32-1:0] x0;
     always @(posedge clk) begin v0 <= in_valid; l0 <= in_last; x0 <= in_vals; end
     // ---- S1: keys + beat tags ----
     reg [IW-1:0] base_c;        // index of the next beat's lane 0
-    reg          par;           // bank of the next beat
-    reg [1:0]    bfresh;        // bank's next beat is its first of the vector
-    reg [1:0]    has;           // bank took a beat of the current vector
-    reg          v1, l1, bank1, fresh1;
-    reg [1:0]    hasf1;
+    reg [1:0]    par;           // bank of the next beat
+    reg [NB-1:0] bfresh;        // bank's next beat is its first of the vector
+    reg [NB-1:0] has;           // bank took a beat of the current vector
+    reg          v1, l1, fresh1;
+    reg [1:0]    bank1;
+    reg [NB-1:0] hasf1;
     reg [IW-1:0] base1;
     reg [31:0]   key1 [0:P-1];
     always @(posedge clk) begin
         if (rst_c) begin
-            base_c <= {IW{1'b0}}; par <= 1'b0; bfresh <= 2'b11; has <= 2'b00; v1 <= 1'b0;
+            base_c <= {IW{1'b0}}; par <= 2'd0; bfresh <= {NB{1'b1}}; has <= {NB{1'b0}}; v1 <= 1'b0;
         end else begin
             v1 <= v0;
             if (v0) begin
-                par <= ~par;
+                par <= par + 2'd1;
                 base_c <= l0 ? {IW{1'b0}} : base_c + P;
-                if (l0) begin bfresh <= 2'b11; has <= 2'b00; end
+                if (l0) begin bfresh <= {NB{1'b1}}; has <= {NB{1'b0}}; end
                 else begin bfresh[par] <= 1'b0; has[par] <= 1'b1; end
             end
         end
         l1 <= v0 & l0; bank1 <= par; fresh1 <= bfresh[par]; base1 <= base_c;
-        hasf1 <= has | (par ? 2'b10 : 2'b01);
+        hasf1 <= has | ({{NB-1{1'b0}}, 1'b1} << par);
         for (j = 0; j < P; j = j + 1) key1[j] <= okey(x0[32*j +: 32]);
     end
-    // ---- S2: pairwise compares ----
-    reg [P*P-1:0] gt2;          // gt2[j*P+m] (j < m): lane j beats lane m
+    // ---- S2: chunk compares of every lane pair ----
+    reg [15:0]    cc2 [0:P*P-1];   // [j*P+m], j < m
     reg [31:0]    key2 [0:P-1];
     reg [IW-1:0]  base2;
-    reg           v2, l2, bank2, fresh2;
-    reg [1:0]     hasf2;
+    reg           v2, l2, fresh2;
+    reg [1:0]     bank2;
+    reg [NB-1:0]  hasf2;
     always @(posedge clk) begin
-        gt2 <= {P*P{1'b0}};
         for (j = 0; j < P; j = j + 1)
             for (m = j + 1; m < P; m = m + 1)
-                gt2[j*P+m] <= (NEG == 2) ? gt_k(key1[j], key1[m]) : ge_k(key1[j], key1[m]);
+                cc2[j*P+m] <= chunks(key1[j], key1[m]);
         for (j = 0; j < P; j = j + 1) key2[j] <= key1[j];
         base2 <= base1; l2 <= l1; bank2 <= bank1; fresh2 <= fresh1; hasf2 <= hasf1;
         v2 <= rst_c ? 1'b0 : v1;
     end
-    // ---- S3: ranks ----
-    reg [LP:0]    rk3 [0:P-1];
+    // ---- S3: combine -> lane j beats lane m ----
+    reg [P*P-1:0] gt3;
     reg [31:0]    key3 [0:P-1];
     reg [IW-1:0]  base3;
-    reg           v3, l3, bank3, fresh3;
-    reg [1:0]     hasf3;
+    reg           v3, l3, fresh3;
+    reg [1:0]     bank3;
+    reg [NB-1:0]  hasf3;
+    always @(posedge clk) begin
+        gt3 <= {P*P{1'b0}};
+        for (j = 0; j < P; j = j + 1)
+            for (m = j + 1; m < P; m = m + 1)
+                gt3[j*P+m] <= (NEG == 2) ? comb_gt(cc2[j*P+m]) : comb_ge(cc2[j*P+m]);
+        for (j = 0; j < P; j = j + 1) key3[j] <= key2[j];
+        base3 <= base2; l3 <= l2; bank3 <= bank2; fresh3 <= fresh2; hasf3 <= hasf2;
+        v3 <= rst_c ? 1'b0 : v2;
+    end
+    // ---- S4: ranks ----
+    reg [4:0]     rk4 [0:P-1];
+    reg [31:0]    key4 [0:P-1];
+    reg [IW-1:0]  base4;
+    reg           v4, l4, fresh4;
+    reg [1:0]     bank4;
+    reg [NB-1:0]  hasf4;
     reg [15:0]    bv;
     always @(posedge clk) begin
         for (m = 0; m < P; m = m + 1) begin
             bv = 16'd0;
             for (j = 0; j < P; j = j + 1)
-                if (j < m) bv[j] = gt2[j*P+m];
-                else if (j > m) bv[j] = !gt2[m*P+j];
-            rk3[m] <= pop16(bv);
-            key3[m] <= key2[m];
+                if (j < m) bv[j] = gt3[j*P+m];
+                else if (j > m) bv[j] = !gt3[m*P+j];
+            rk4[m] <= pop16(bv);
+            key4[m] <= key3[m];
         end
-        base3 <= base2; l3 <= l2; bank3 <= bank2; fresh3 <= fresh2; hasf3 <= hasf2;
-        v3 <= rst_c ? 1'b0 : v2;
+        base4 <= base3; l4 <= l3; bank4 <= bank3; fresh4 <= fresh3; hasf4 <= hasf3;
+        v4 <= rst_c ? 1'b0 : v3;
     end
-    // ---- S4: local top-K, descending ----
-    reg [EW-1:0]  L4 [0:K-1];
-    reg           v4, l4, bank4, fresh4;
-    reg [1:0]     hasf4;
+    // ---- S5: local top-K, descending ----
+    reg [EW-1:0]  L5 [0:K-1];
+    reg           v5, l5, fresh5;
+    reg [1:0]     bank5;
+    reg [NB-1:0]  hasf5;
     reg [EW-1:0]  acc;
     always @(posedge clk) begin
         for (k = 0; k < K; k = k + 1) begin
             acc = {EW{1'b0}};
             for (m = 0; m < P; m = m + 1)
-                if (rk3[m] == k)
-                    acc = acc | {key3[m], base3[IW-1:LP], m[LP-1:0]};
-            L4[k] <= acc;
+                if (rk4[m] == k)
+                    acc = acc | {key4[m], base4[IW-1:LP], m[LP-1:0]};
+            L5[k] <= acc;
         end
-        l4 <= l3; bank4 <= bank3; fresh4 <= fresh3; hasf4 <= hasf3;
-        v4 <= rst_c ? 1'b0 : v3;
+        l5 <= l4; bank5 <= bank4; fresh5 <= fresh4; hasf5 <= hasf4;
+        v5 <= rst_c ? 1'b0 : v4;
     end
-    // ---- S5 / S6: two running banks ----
-    reg [EW-1:0]  R  [0:2*K-1];          // bank b entry i at R[b*K+i]
-    reg [EW-1:0]  Lc5 [0:K-1];
-    reg [2*K-1:0] sel5 [0:2*K-1];        // bank b slot k: one-hot over {R_0..R_K-1, L_0..L_K-1}
-    reg           l5, l6;
-    reg [1:0]     hasf5, hasf6;
-    reg [K*K-1:0] c5;
-    reg           mine;
+    // ---- S6 / S7 / S8: NB running banks, 3-stage merge recurrence ----
+    reg [EW-1:0]  R   [0:NB*K-1];          // bank b entry i at R[b*K+i]
+    reg [15:0]    cc6 [0:NB*K*K-1];        // bank b: [b*K*K + i*K + j] = chunks(R_i, L_j)
+    reg [EW-1:0]  Lc6 [0:K-1];
+    reg [EW-1:0]  Lc7 [0:K-1];
+    reg [NB-1:0]  mine6, fresh6;
+    reg [2*K-1:0] sel7 [0:NB*K-1];         // bank b slot k: one-hot over {R_0..R_K-1, L_0..L_K-1}
+    reg           l6, l7, l8;
+    reg [NB-1:0]  hasf6, hasf7, hasf8;
+    reg [K*K-1:0] c7;
     always @(posedge clk) begin
-        for (b = 0; b < 2; b = b + 1) begin
-            mine = v4 && (bank4 == b);
+        // S6
+        for (b = 0; b < NB; b = b + 1)
             for (i = 0; i < K; i = i + 1)
                 for (j = 0; j < K; j = j + 1)
-                    c5[i*K+j] = (NEG == 1) ? gt_k(R[b*K+i][EW-1:IW], L4[j][EW-1:IW])
-                                           : ge_k(R[b*K+i][EW-1:IW], L4[j][EW-1:IW]);
+                    cc6[b*K*K+i*K+j] <= chunks(R[b*K+i][EW-1:IW], L5[j][EW-1:IW]);
+        for (j = 0; j < K; j = j + 1) Lc6[j] <= L5[j];
+        for (b = 0; b < NB; b = b + 1) begin
+            mine6[b] <= !rst_c && v5 && (bank5 == b);
+            fresh6[b] <= fresh5;
+        end
+        l6 <= rst_c ? 1'b0 : (v5 & l5); hasf6 <= hasf5;
+        // S7
+        for (b = 0; b < NB; b = b + 1) begin
+            for (i = 0; i < K; i = i + 1)
+                for (j = 0; j < K; j = j + 1)
+                    c7[i*K+j] = (NEG == 1) ? comb_gt(cc6[b*K*K+i*K+j]) : comb_ge(cc6[b*K*K+i*K+j]);
             for (k = 0; k < K; k = k + 1) begin
-                sel5[b*K+k] <= {2*K{1'b0}};
-                if (!mine) sel5[b*K+k][k] <= 1'b1;               // hold
-                else if (fresh4) sel5[b*K+k][K+k] <= 1'b1;       // first beat of the vector
+                sel7[b*K+k] <= {2*K{1'b0}};
+                if (!mine6[b]) sel7[b*K+k][k] <= 1'b1;                // hold
+                else if (fresh6[b]) sel7[b*K+k][K+k] <= 1'b1;         // first beat of the vector
                 else begin
-                    for (i = 0; i <= k; i = i + 1)               // R_i lands in slot k
-                        sel5[b*K+k][i] <= ((k == i) ? 1'b1 : !c5[i*K+((k>i)?(k-i-1):0)]) && c5[i*K+k-i];
-                    for (j = 0; j <= k; j = j + 1)               // L_j lands in slot k
-                        sel5[b*K+k][K+j] <= ((k == j) ? 1'b1 : c5[((k>j)?(k-j-1):0)*K+j]) && !c5[(k-j)*K+j];
+                    for (i = 0; i <= k; i = i + 1)                    // R_i lands in slot k
+                        sel7[b*K+k][i] <= ((k == i) ? 1'b1 : !c7[i*K+((k>i)?(k-i-1):0)]) && c7[i*K+k-i];
+                    for (j = 0; j <= k; j = j + 1)                    // L_j lands in slot k
+                        sel7[b*K+k][K+j] <= ((k == j) ? 1'b1 : c7[((k>j)?(k-j-1):0)*K+j]) && !c7[(k-j)*K+j];
                 end
             end
         end
-        for (j = 0; j < K; j = j + 1) Lc5[j] <= L4[j];
-        l5 <= rst_c ? 1'b0 : (v4 & l4); hasf5 <= hasf4;
-        l6 <= rst_c ? 1'b0 : l5;        hasf6 <= hasf5;
+        for (j = 0; j < K; j = j + 1) Lc7[j] <= Lc6[j];
+        l7 <= rst_c ? 1'b0 : l6; hasf7 <= hasf6;
+        l8 <= rst_c ? 1'b0 : l7; hasf8 <= hasf7;
     end
-    always @(posedge clk)
-        for (b = 0; b < 2; b = b + 1)
+    always @(posedge clk)                  // S8
+        for (b = 0; b < NB; b = b + 1)
             for (k = 0; k < K; k = k + 1) begin
                 acc = {EW{1'b0}};
-                for (i = 0; i < K; i = i + 1) if (sel5[b*K+k][i]) acc = acc | R[b*K+i];
-                for (j = 0; j < K; j = j + 1) if (sel5[b*K+k][K+j]) acc = acc | Lc5[j];
+                for (i = 0; i < K; i = i + 1) if (sel7[b*K+k][i]) acc = acc | R[b*K+i];
+                for (j = 0; j < K; j = j + 1) if (sel7[b*K+k][K+j]) acc = acc | Lc7[j];
                 R[b*K+k] <= acc;
             end
-    // ---- S7: snapshot ----
-    reg [EW-1:0]  F [0:2*K-1];
-    reg           v7;
-    reg [1:0]     hasf7;
+    // ---- S9: snapshot ----
+    reg [NB*K*EW-1:0] F;
+    reg               v9;
+    reg [NB-1:0]      hasf9;
     always @(posedge clk) begin
-        for (i = 0; i < 2*K; i = i + 1) F[i] <= R[i];
-        v7 <= rst_c ? 1'b0 : l6; hasf7 <= hasf6;
+        for (i = 0; i < NB*K; i = i + 1) F[i*EW +: EW] <= R[i];
+        v9 <= rst_c ? 1'b0 : l8; hasf9 <= hasf8;
     end
-    // ---- S8: final merge selects (full key, banks interleave indices) ----
-    reg [K*K-1:0] c8;
-    reg [2*K-1:0] sel8 [0:K-1];
-    reg [IW-1:0]  Fi8 [0:2*K-1];
-    reg           v8;
-    always @(posedge clk) begin
-        for (i = 0; i < K; i = i + 1)
-            for (j = 0; j < K; j = j + 1)
-                c8[i*K+j] = !hasf7[1] ? 1'b1 : !hasf7[0] ? 1'b0 :
-                            (NEG == 4) ? ge_k(F[i][EW-1:IW], F[K+j][EW-1:IW])
-                                       : gt_k({F[i][EW-1:IW], ~F[i][IW-1:0]}, {F[K+j][EW-1:IW], ~F[K+j][IW-1:0]});
-        for (k = 0; k < K; k = k + 1) begin
-            sel8[k] <= {2*K{1'b0}};
-            for (i = 0; i <= k; i = i + 1)
-                sel8[k][i] <= ((k == i) ? 1'b1 : !c8[i*K+((k>i)?(k-i-1):0)]) && c8[i*K+k-i];
-            for (j = 0; j <= k; j = j + 1)
-                sel8[k][K+j] <= ((k == j) ? 1'b1 : c8[((k>j)?(k-j-1):0)*K+j]) && !c8[(k-j)*K+j];
-        end
-        for (i = 0; i < 2*K; i = i + 1) Fi8[i] <= F[i][IW-1:0];
-        v8 <= rst_c ? 1'b0 : v7;
-    end
-    // ---- S9: selected ids ----
-    reg [IW-1:0]  id9 [0:K-1];
-    reg [IW-1:0]  ia;
-    reg           v9;
-    always @(posedge clk) begin
-        for (k = 0; k < K; k = k + 1) begin
-            ia = {IW{1'b0}};
-            for (i = 0; i < 2*K; i = i + 1) if (sel8[k][i]) ia = ia | Fi8[i];
-            id9[k] <= ia;
-        end
-        v9 <= rst_c ? 1'b0 : v8;
-    end
-    // ---- S10..S12: ascending by id ----
-    reg [K*K-1:0] lt10;
-    reg [IW-1:0]  id10 [0:K-1];
-    reg [KR:0]    rk11 [0:K-1];
-    reg [IW-1:0]  id11 [0:K-1];
+    // ---- S10..S15: merge tree ----
+    wire [K*EW-1:0] m01, m23, mt;
+    wire h01, h23, ht;
+    ot_gpu_router_ps_merge #(.K(K), .IW(IW), .NEG(NEG)) u_m01 (.clk(clk), .a(F[0*K*EW +: K*EW]), .b(F[1*K*EW +: K*EW]),
+        .ha(hasf9[0]), .hb(hasf9[1]), .q(m01), .hq(h01));
+    ot_gpu_router_ps_merge #(.K(K), .IW(IW), .NEG(NEG)) u_m23 (.clk(clk), .a(F[2*K*EW +: K*EW]), .b(F[3*K*EW +: K*EW]),
+        .ha(hasf9[2]), .hb(hasf9[3]), .q(m23), .hq(h23));
+    ot_gpu_router_ps_merge #(.K(K), .IW(IW), .NEG(NEG)) u_mt (.clk(clk), .a(m01), .b(m23),
+        .ha(h01), .hb(h23), .q(mt), .hq(ht));
+    reg [5:0] vt;                          // v9 -> S15
+    always @(posedge clk) vt <= rst_c ? 6'd0 : {vt[4:0], v9};
+    // ---- S16..S18: ascending by id ----
+    reg [K*K-1:0] lt16;
+    reg [IW-1:0]  id16 [0:K-1];
+    reg [KR:0]    rk17 [0:K-1];
+    reg [IW-1:0]  id17 [0:K-1];
     reg [15:0]    rv;
     reg [4:0]     rp;
-    reg           v10, v11;
+    reg [IW-1:0]  ia;
+    reg           v16, v17;
     always @(posedge clk) begin
-        lt10 <= {K*K{1'b0}};
+        lt16 <= {K*K{1'b0}};
         for (j = 0; j < K; j = j + 1)
-            for (m = j + 1; m < K; m = m + 1) lt10[j*K+m] <= gt_k(id9[m], id9[j]);
-        for (j = 0; j < K; j = j + 1) id10[j] <= id9[j];
-        v10 <= rst_c ? 1'b0 : v9;
+            for (m = j + 1; m < K; m = m + 1) lt16[j*K+m] <= gt_k(mt[m*EW +: IW], mt[j*EW +: IW]);
+        for (j = 0; j < K; j = j + 1) id16[j] <= mt[j*EW +: IW];
+        v16 <= rst_c ? 1'b0 : vt[5];
         for (m = 0; m < K; m = m + 1) begin
             rv = 16'd0;
             for (j = 0; j < K; j = j + 1)
-                if (j < m) rv[j] = lt10[j*K+m];
-                else if (j > m) rv[j] = !lt10[m*K+j];
+                if (j < m) rv[j] = lt16[j*K+m];
+                else if (j > m) rv[j] = !lt16[m*K+j];
             rp = pop16(rv);
-            rk11[m] <= rp[KR:0];
-            id11[m] <= id10[m];
+            rk17[m] <= rp[KR:0];
+            id17[m] <= id16[m];
         end
-        v11 <= rst_c ? 1'b0 : v10;
+        v17 <= rst_c ? 1'b0 : v16;
         for (k = 0; k < K; k = k + 1) begin
             ia = {IW{1'b0}};
-            for (m = 0; m < K; m = m + 1) if (rk11[m] == k) ia = ia | id11[m];
+            for (m = 0; m < K; m = m + 1) if (rk17[m] == k) ia = ia | id17[m];
             out_ids[k*IW +: IW] <= ia;
         end
-        out_valid <= rst_c ? 1'b0 : v11;
+        out_valid <= rst_c ? 1'b0 : v17;
     end
 endmodule
 
