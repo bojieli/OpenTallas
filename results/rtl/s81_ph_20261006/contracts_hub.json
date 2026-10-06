@@ -73,7 +73,8 @@
     },
     "G2_choice": "WIDEN (die count / wires are not scarce; the narrow bus multiplies SU occupancy ~16x: v41x_replay SU busy 10,845 cycles/token at spec lanes, SU depth 28,178 is already the top critical-path item). Generator change for S81-RERUN: vm->su_s/su_n 16,384 b each, su->vm return 8,592 b each DIRECT to the VM (not through HC; HC pass-through dropped), both register-staged every <= 215 um (r9m215 common clock).",
     "latency_cost": "every SU op on the critical path gains D_f + D_r (the round trip of the 6.3 mm slab trunk, ~2 x 15 stages at 425 um, plus pin flops): must be priced by COMPOSE per SU dependency; expected well over the 2% pre-approval -> reported, run anyway (the partition is mandatory).",
-    "state": "DECIDED; RTL (pair wrapper + lockstep bench) next"
+    "state": "DECIDED; RTL = vec SPLIT=1 (controller/lane cut), next phase",
+    "chase_finding": "Unchanged-RTL twin is NOT enough when an op chases (su_chase > 0 or CLS_DRAIN): su_adapt chains SELF on the vec's own completion (cr_dseq), and the twin and the slab cannot both see completion at the right time by RET_STAGES alone (slab extra x, twin extra y: arrival needs y = D_f + x + D_r, mirrored release needs y = x -> D_f + D_r = 0). Required RTL change (default-off parameter of ot_hdc_v41x_vec, SPLIT=1): cut the vec at its existing broadcast (BCAST_STAGES) and return (RET_STAGES) pipes -- controller + emit/chain + address-only lanes in the VM slab, data lanes + reducer in the SU slab driven by the broadcast delayed D_f, write data returning D_r, completion (cr_*) counted at VM arrival. Chained ops then stall in the controller only, and both sides see one schedule. Bench: SPLIT=0 vs SPLIT=1 (D_f, D_r in 1..16) inside ot_hdc_core_v41x on the S81 parent programs, VM write stream and outputs word-exact; negatives D mismatch, dropped beat, completion counted at slab output."
    }
   },
   "hc": {
@@ -100,7 +101,7 @@
      "hc_to_vm": "o_we + o_mask 32 + o_data 1024 per write: t_vm 1024 + 33 sideband bits, or 2 beats when o_we rate <= 1/2"
     },
     "split": "hc_s/hc_n: one logical unit; the MAC lane groups split by group index, crossing t_n/f_s 1024 carries the partial rows register-staged; the tail reducer sits in hc_n next to t_vm",
-    "state": "DECIDED; RTL next (after SU pair wrapper, same pattern)"
+    "state": "DECIDED; RTL after the SU split (check he_adapt/hcp for the same chain-on-completion pattern first)"
    }
   },
   "svc": {
