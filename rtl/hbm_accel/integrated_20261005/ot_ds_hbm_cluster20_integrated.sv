@@ -461,6 +461,9 @@ end else begin:g_on
         wire [72:0] actual_cp_frame={launch_pos,launch_token,cpl_generation,cpl_job};
         wire sfu_admit=!su_pending&&!su_selected&&!su_owned&&!norm_retained[d]&&!cp_reset_wait&&
                        sfu_enroll_frame[d*73+:73]==actual_cp_frame;
+        // Admission checks the offered tuple; after acceptance the SAME coded
+        // stage owns the tuple. No preseeded or shadow descriptor.
+        wire [72:0] norm_allocation_target=norm_retained[d]?norm_held_frame[d*73+:73]:norm_enroll_frame[d*73+:73];
         wire norm_admit=!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==actual_cp_frame))));
         assign norm_enroll_r[d]=norm_offer_r&&norm_admit;
         assign sfu_enroll_r[d]=sfu_offer_r&&sfu_admit;
@@ -852,7 +855,7 @@ end else begin:g_on
          .enroll_matrix(norm_enroll_matrix[d*(1)+:(1)]),
          .enroll_row(norm_enroll_row[d*(11+1)+:(11+1)]),
          .enroll_count(norm_enroll_count[d*(8+1)+:(8+1)]),
-         .allocation_valid(NORM_NATIVE_VM_ENABLE?(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==norm_held_frame[d*73+:73]))):norm_allocation_valid[d]),
+         .allocation_valid(NORM_NATIVE_VM_ENABLE?(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&(!NORM_NATIVE_INPUT_CP||(norm_allocation_valid[d]&&norm_allocation_frame[d*73+:73]==norm_allocation_target))):norm_allocation_valid[d]),
          .allocation_frame(NORM_NATIVE_VM_ENABLE?sfu_vm_held_frame[d*73+:73]:norm_allocation_frame[d*73+:73]),
          .landing_reserved(NORM_NATIVE_VM_ENABLE?(sfu_vm_retained[d]&&!norm_backend_fault):norm_landing_reserved[d]),
          .landing_frame(NORM_NATIVE_VM_ENABLE?sfu_vm_held_frame[d*73+:73]:norm_landing_frame[d*73+:73]),
