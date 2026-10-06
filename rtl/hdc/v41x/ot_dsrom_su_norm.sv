@@ -38,6 +38,8 @@ module ot_dsrom_su_norm #(
     parameter integer RD = 0,           // RoPE tail length (0: none; the tail lies in the last vector)
     parameter integer QUANT = 1,        // FP8 act-quant of the output (N a multiple of 32)
     parameter integer RXS = 0,          // 1: one more register stage on the RoPE operands (cycles for margin)
+    parameter integer FREG = 0,         // 1: the sticky fault's reduction registered (per-lane, then per-group, +2 cycles on
+                                        //    the fault flag only): the rope adder's err -> flt OR spanned the block
     parameter integer SXC = 0,          // 1: the scale multipliers (x*r, w*(x*r)) on the operand-cut multiplier (LM+1):
                                         //    their first stage is fed from another unit (xo, the broadcast rh, u_xr)
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
@@ -397,11 +399,27 @@ module ot_dsrom_su_norm #(
     endgenerate
 
     // ---------------------------------------------------------------- faults (sticky)
+    wire f_any;
+    generate if (FREG) begin : g_freg
+        reg [N-1:0] lf_r, rf_r;
+        reg [8:0]   fg;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin lf_r <= {N{1'b0}}; rf_r <= {N{1'b0}}; fg <= 9'd0; end
+            else if (go) begin lf_r <= {N{1'b0}}; rf_r <= {N{1'b0}}; fg <= 9'd0; end
+            else begin
+                lf_r <= lf;
+                rf_r <= rf;
+                fg   <= {|lf_r, |cf, |tf_any, |nf, f_div, f_eps, f_rsq, |rf_r, |qf};
+            end
+        assign f_any = |fg;
+    end else begin : g_fcomb
+        assign f_any = (|lf) || (|cf) || (|tf_any) || (|nf) || f_div || f_eps || f_rsq || (|rf) || (|qf);
+    end endgenerate
     reg flt;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) flt <= 1'b0;
         else if (go) flt <= 1'b0;
-        else if ((|lf) || (|cf) || (|tf_any) || (|nf) || f_div || f_eps || f_rsq || (|rf) || (|qf)) flt <= 1'b1;
+        else if (f_any) flt <= 1'b1;
     assign fault = flt;
 endmodule
 

@@ -209,7 +209,7 @@ SUN = re.compile(r"SUN go=(-?\d+) y_last=(-?\d+) r=(-?\d+) ro_last=(-?\d+) q_las
                  r"checked_y=(\d+) checked_r=(\d+) checked_q=(\d+) fault=(\d+)")
 
 
-def build(out: Path, variant, fp, n, rxs=0, la=4, sxc=0):
+def build(out: Path, variant, fp, n, rxs=0, la=4, sxc=0, freg=0):
     p = dict(VARIANTS[variant], N=n or VARIANTS[variant]["N"])
     if rxs:
         p["RXS"] = rxs
@@ -217,8 +217,10 @@ def build(out: Path, variant, fp, n, rxs=0, la=4, sxc=0):
         p["LA"] = la
     if sxc:
         p["SXC"] = sxc
+    if freg:
+        p["FREG"] = freg
     tag = (f"{variant}_{fp}_N{p['N']}" + (f"_rxs{rxs}" if rxs else "") + (f"_la{la}" if la != 4 else "")
-           + (f"_sxc{sxc}" if sxc else ""))
+           + (f"_sxc{sxc}" if sxc else "") + (f"_freg{freg}" if freg else ""))
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_dsrom_su_norm"
     if not exe.exists():
@@ -236,7 +238,7 @@ def build(out: Path, variant, fp, n, rxs=0, la=4, sxc=0):
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, p, tag = build(out, a.variant, a.fp, a.n, a.rxs, a.la, a.sxc)
+    exe, p, tag = build(out, a.variant, a.fp, a.n, a.rxs, a.la, a.sxc, a.freg)
     cases = [c for c in json.loads((out / "cases.json").read_text())["cases"] if c["kind"] == a.variant]
     rows = []
     for c in cases:
@@ -316,7 +318,8 @@ def cmd_record(a):
     runs = {}
     for f in sorted(out.glob("run_*.json")):
         r = json.loads(f.read_text())
-        if (r["params"].get("LA", 4), r["params"].get("RXS", 0), r["params"].get("SXC", 0)) != (a.la, a.rxs, a.sxc):
+        if (r["params"].get("LA", 4), r["params"].get("RXS", 0), r["params"].get("SXC", 0),
+                r["params"].get("FREG", 0)) != (a.la, a.rxs, a.sxc, a.freg):
             continue
         runs[f"{r['variant']}_{r['fp']}_N{r['params']['N']}"] = r
     meas = {}
@@ -338,7 +341,7 @@ def cmd_record(a):
                        floor_cycles=sum(ft.values()), floor_terms=ft,
                        residual_over_floor=c["q_last"] - sum(ft.values()) if p["QUANT"] else None)
     res = dict(schema="opentallas.dsrom-recovery.su-norm.measure.v1", generated_utc=now(),
-               clock_hz=FAST, add_latency=a.la, rxs=a.rxs, sxc=a.sxc, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
+               clock_hz=FAST, add_latency=a.la, rxs=a.rxs, sxc=a.sxc, freg=a.freg, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
                                         basis="hub traverse once a chain: 22 / 15 slow stages x 748/504 um reach; "
                                               "RW / BW: the reducer's 6 slow cross-lane result stages x 1.5, each way"),
                variants=meas, runs={k: dict(status=r["status"], params=r["params"], fp=r["fp"], rows=len(r["rows"]),
@@ -498,6 +501,7 @@ def main():
     ap.add_argument("--fp", choices=("dpi", "rtl"), default="dpi")
     ap.add_argument("--n", type=int, default=None)
     ap.add_argument("--rxs", type=int, default=0, help="run: RoPE extra register stage (RTL RXS)")
+    ap.add_argument("--freg", type=int, default=0, help="run: registered fault reduction (RTL FREG)")
     ap.add_argument("--sxc", type=int, default=0, help="run: scale multipliers on the operand-cut LM+1 unit (RTL SXC)")
     ap.add_argument("--la", type=int, default=4, help="run: add latency of the unit (RTL LA: 4 = f12_l4, 5 = l5x)")
     ap.add_argument("--top", default="ot_dsrom_su_norm")
