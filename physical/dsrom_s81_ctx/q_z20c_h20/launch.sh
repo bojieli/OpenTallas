@@ -14,6 +14,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --pin-region "^ck$=bottom:285.64-325.64" --pin-region "^obs.*=top:61.13-550.15" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
  --step-tcl POST_MACRO_PLACE=physical/dsrom_s81_ctx/q_z20c_h20/place.tcl --sdc-append physical/dsrom_s81_ctx/q_z20c_h20/ctx.sdc \
- --orfs-var REMOVE_ABC_BUFFERS=1 --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var NUM_CORES=${CORES:-16} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \
+ --orfs-var REMOVE_ABC_BUFFERS=1 --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var MAX_ROUTING_LAYER=M9 --orfs-var NUM_CORES=${CORES:-16} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \
  --orfs-corner WC --pnr-stop-after ${STOP:-finish} --nickname-tag ctx_${V:-a}_20261006 \
  --output $J/out ${ARGS:-} > $J/launch.log 2>&1

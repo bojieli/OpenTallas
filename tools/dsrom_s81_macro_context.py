@@ -192,7 +192,8 @@ def emit(a):
     (out / "blk_bb.v").write_text("\n".join(bb))
     T = ["# GENERATED (CLAUDE S81-RERUN): POST_MACRO_PLACE hook of the die-context vehicle",
          "source /src/physical/common/ot_macro_track_snap.tcl",
-         "set _blk [ord::get_db_block]", "set _dbu [ot_mts::get_dbu]", "set _sg [ot_mts::site_grid]",
+         "set ::_blk [ord::get_db_block]; set ::_dbu [ot_mts::get_dbu]; set ::_sg [ot_mts::site_grid]",
+         "set _blk $::_blk; set _dbu $::_dbu; set _sg $::_sg",
          "set i [$_blk findInst u_blk]; set m [$i getMaster]", "lassign $_sg gx gw gy gh; set r [ot_mts::rule $m R0]",
          "lassign [dict get $r x] Px Sx; lassign [dict get $r y] Py Sy",
          f'set px [ot_mts::snap_axis [expr {{round({mx}*$_dbu)}}] $gx $gw $Px $Sx "u_blk x"]',

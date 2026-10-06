@@ -37,7 +37,7 @@ module ot_dsrom_su_swiglu_lane #(
     // IREG = 1 (CLAUDE S81-RERUN, owner MARGIN-FIRST, default off): every input (v, g, u, w, lim) is captured in a
     // flop AT THE PIN before the PRE compare / clip, so the lane boundary is register-to-register.  The IO-cut routes
     // r4 / r4_shared hid ~1.0 ns of port -> PRE -> p_g logic (results/rtl/dsrom_s81_fulldie_20261004/r9/deferred_hold);
-    // +1 cycle, values unchanged (a pure delay of the operand stream and its valid).
+    // +1 cycle, values unchanged (a pure delay of the operand stream and its valid); the fault OR leaves through a flop.
     parameter integer IREG = 0
 ) (
     input  wire        clk,
@@ -129,7 +129,16 @@ module ot_dsrom_su_swiglu_lane #(
         if (!rst_n) fl <= 0;
         else fl <= {fl[DEPTH-1:0], 1'b0} | {{(DEPTH){1'b0}}, f_e | f_den | f_div | f_m1 | f_m2};
     end
-    assign fault = |fl;
+    generate if (IREG != 0) begin : g_oreg
+        // the OR over the fault pipe leaves through a flop at the pin (registered output boundary)
+        reg f_o;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) f_o <= 1'b0; else f_o <= |fl;
+        end
+        assign fault = f_o;
+    end else begin : g_nooreg
+        assign fault = |fl;
+    end endgenerate
 endmodule
 
 // BF16 round-to-nearest-even of a binary32 word (the SU lane's OUT rnd), as a binary32 word

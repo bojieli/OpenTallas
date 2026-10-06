@@ -256,7 +256,8 @@ def emit(a):
     soft = [it for it in insts if it not in macros]
     T = ["# GENERATED (CLAUDE S81-RERUN): POST_MACRO_PLACE hook of the S81 frame block",
          "source /src/physical/common/ot_macro_track_snap.tcl",
-         "set _blk [ord::get_db_block]", "set _dbu [ot_mts::get_dbu]", "set _sg [ot_mts::site_grid]",
+         "set ::_blk [ord::get_db_block]; set ::_dbu [ot_mts::get_dbu]; set ::_sg [ot_mts::site_grid]",
+         "set _blk $::_blk; set _dbu $::_dbu; set _sg $::_sg",
          "proc ot_find {nm} { global _blk; set i [$_blk findInst $nm]; if {$i eq \"NULL\"} { error \"no inst $nm\" }; return $i }",
          "proc fplace {nm x y o} { global _blk _dbu _sg; set i [ot_find $nm]; set m [$i getMaster]",
          "  lassign $_sg gx gw gy gh; set r [ot_mts::rule $m $o]",
@@ -266,6 +267,7 @@ def emit(a):
          "  $i setPlacementStatus PLACED; $i setOrient $o; $i setLocation [expr {round($px*$_dbu)}] [expr {round($py*$_dbu)}]; $i setPlacementStatus FIRM }"]
     for it in macros:
         T.append(f"fplace {it.name} {it.x - x0:.3f} {it.y - yb:.3f} {it.orient}")
+    (out / "macros.tcl").write_text("\n".join(T) + "\n")
     T += ["set nb 0; foreach b [$_blk getBlockages] { odb::dbBlockage_destroy $b; incr nb }",
           'puts "OT_FRAME_PLACE macros=[llength [list ' + " ".join(i.name for i in macros[:1]) + ']] blockages_removed=$nb"',
           "set fence [dict create]"]
@@ -356,7 +358,7 @@ def emit(a):
          f' --pin-region "^(ck|rst).*=bottom:{px + 80:.2f}-{px + 120:.2f}"' + (f' --pin-region "^pqs.*=top:20-{W - 20:.0f}"' if pqx else "") + ' \\',
          " --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \\",
          f" --step-tcl POST_MACRO_PLACE={rel}/place.tcl --sdc-append {rel}/frame.sdc \\",
-         " --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var MAX_ROUTING_LAYER=M9 --orfs-var NUM_CORES=${CORES:-24} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --hold-corners WC,BC \\",
+         f" --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var MACRO_PLACEMENT_TCL=/src/{rel}/macros.tcl --orfs-var PDN_TCL=/src/physical/dsrom_s81_frame/pdn_vehicle.tcl --orfs-var MAX_ROUTING_LAYER=M9 --orfs-var NUM_CORES=${{CORES:-24}} --orfs-var SETUP_SLACK_MARGIN=${{SM:-15}} --hold-corners WC,BC \\",
          " --orfs-corner WC --pnr-stop-after ${STOP:-finish} --nickname-tag s81frame_${V:-a}_20261006 \\",
          ' --output $J/out ${ARGS:-} > $J/launch.log 2>&1']
     (out / "launch.sh").write_text("\n".join(L) + "\n")

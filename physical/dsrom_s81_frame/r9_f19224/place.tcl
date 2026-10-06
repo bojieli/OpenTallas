@@ -1,8 +1,7 @@
 # GENERATED (CLAUDE S81-RERUN): POST_MACRO_PLACE hook of the S81 frame block
 source /src/physical/common/ot_macro_track_snap.tcl
-set _blk [ord::get_db_block]
-set _dbu [ot_mts::get_dbu]
-set _sg [ot_mts::site_grid]
+set ::_blk [ord::get_db_block]; set ::_dbu [ot_mts::get_dbu]; set ::_sg [ot_mts::site_grid]
+set _blk $::_blk; set _dbu $::_dbu; set _sg $::_sg
 proc ot_find {nm} { global _blk; set i [$_blk findInst $nm]; if {$i eq "NULL"} { error "no inst $nm" }; return $i }
 proc fplace {nm x y o} { global _blk _dbu _sg; set i [ot_find $nm]; set m [$i getMaster]
   lassign $_sg gx gw gy gh; set r [ot_mts::rule $m $o]
