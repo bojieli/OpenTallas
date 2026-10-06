@@ -6,9 +6,9 @@
 // MARGIN (default 0; margin-first 1): cold_n reaches every register through kept copies (+1 on
 // assertion and release); the request/reply take reaches the banks through kept copies and each
 // bank loads a twice-registered copy of its data (banks hold the packet two cycles later, still
-// three cycles before the age-0 release); the release/quarantine decision uses the existing
-// registered reduce (checked_error) instead of the head-wide combinational OR of every bank's
-// mismatch. No release cycle changes.
+// three cycles before the age-0 release). The quarantine stays the same-cycle OR of every bank's
+// mismatch (fail closed at the grant); the two data registers carry each lane's payload to banks
+// beside the guard, so that OR is local. No release cycle changes.
 module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
  input wire fast_clk,cold_n_in,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
@@ -116,7 +116,7 @@ module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
   .clk(fast_clk),.cold_n(cold_n),
   .bad({metadata_bad,identity_bad,request_bad,reply_bad}),.fault(checked_error));
  assign endpoint_fault=protocol_fault||metadata_bad||bounds_fault||
-     (MARGIN?checked_error:((|request_bad)||(|reply_bad)))||identity_bad||
+     (|request_bad)||(|reply_bad)||identity_bad||
      (reply_active&&rep_age==0&&!matching_reply);
  assign request_checked_v=active&&req_age==0&&!endpoint_fault&&!checked_error;
  assign reply_checked_v=active&&reply_active&&rep_age==0&&matching_reply&&!endpoint_fault&&!checked_error;
