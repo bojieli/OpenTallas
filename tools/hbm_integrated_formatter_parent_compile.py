@@ -21,6 +21,19 @@ PARAMS=dict(ENABLE=1,COMBINED_ENABLE=1,W2_RESULT_ENABLE=1,W2_SECTOR_ENABLE=1,
     FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,TW=17,PW=20,IMW=14,
     SFU_C12_ENABLE=1,SFU_NATIVE_VM_ENABLE=1)
 INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
+# Compiler partitions only. Every block is the real selected module body;
+# Verilator derives each parameter variant and connects generated leaf wrappers.
+# Leave the HBM model inside its partition: init_mem accesses u_model.mem.
+HIER_BLOCKS=[
+    'ot_hdc_v41x_vec_lane','ot_hdc_v41x_vec','ot_hbm_accel_su_parent_exec',
+    'ot_hdc_v41x_exp','ot_hdc_v41x_rsqrt','ot_hdc_v41x_fdiv','ot_hdc_v41x_softplus',
+    'ot_dsrom_su_hcpost_lane','ot_dsrom_su_hcpost_group','ot_dsrom_su_hcpost',
+    'ot_gpu_simt_fplane','ot_ds_hbm_simt_sm20','ot_gpu_hbm_partition',
+    'ot_hbm_selected_c12__ot_hdc_v41x_exp',
+    'ot_hbm_selected_c12__ot_hdc_v41x_rsqrt',
+    'ot_hbm_selected_c12__ot_hdc_v41x_fdiv',
+    'ot_hbm_selected_c12__ot_hdc_v41x_softplus',
+    'ot_hbm_selected_c12__ot_hbm_sfu_result_c12']
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
@@ -63,6 +76,8 @@ def prepare(work,body_pin):
         for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
             if name in declarations:errors.append('Duplicate module '+name+': '+declarations[name]+' / '+path)
             declarations[name]=path
+    for name in HIER_BLOCKS:
+        if name not in declarations:errors.append('Real hierarchy block missing: '+name)
     if BODY in pins:
         text=(ROOT/BODY).read_text()
         header=re.sub(r'//[^\n]*|/\*.*?\*/','',text[text.index(')(\n')+3:text.index('\n);')],flags=re.S)
@@ -105,10 +120,14 @@ def prepare(work,body_pin):
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
     shutil.copyfile(ROOT/LIST,work/'src/files.f')
+    hier=work/'src/hierarchy.vlt'
+    hier.write_text('`verilator_config\n'+''.join(f'hier_block -module "{name}"\n' for name in HIER_BLOCKS))
     runner=work/'runner.py';shutil.copyfile(Path(__file__),runner)
     m=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         source_sha256=pins,files_f_sha256=sha(ROOT/LIST),runner_sha256=sha(runner),
         binding_sha256=sha(ROOT/'tools/hbm_opt_integrated_20261005_w2_on.py'),
+        hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in HIER_BLOCKS},
+        compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
         sources=paths,includes=INCLUDES,parameters=PARAMS,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
         prepared_bytes=sum((ROOT/s).stat().st_size for s in all_files if s not in missing),
@@ -124,6 +143,7 @@ def verified(work):
     if m['parameters']!=PARAMS:raise ValueError('Selected enabled parameters changed')
     if sha(work/'src/files.f')!=m['files_f_sha256']:raise ValueError('Source list changed')
     if sha(work/'runner.py')!=m['runner_sha256']:raise ValueError('Runner changed')
+    if sha(work/'src/hierarchy.vlt')!=m['hierarchy_sha256']:raise ValueError('Compiler hierarchy changed')
     for s,h in m['source_sha256'].items():
         if sha(work/'src'/s)!=h:raise ValueError('Pinned source changed '+s)
     if m['source_sha256'][BODY]!=m['body_owner_sha256']:raise ValueError('Owner body pin changed')
@@ -176,9 +196,13 @@ def run(a):
         write(work/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
     tmp=work/'tmp';tmp.mkdir();obj=work/'obj'
-    cmd=[str(a.tool.resolve()),'--lint-only','--timing','-Wno-fatal',
+    # --lint-only bypasses hierarchy planning in Verilator5.050. --cc creates
+    # and compiles all real leaf models into C++ source; no binary is built/run.
+    # One frontend at a time bounds concurrency without process memory caps.
+    cmd=[str(a.tool.resolve()),'--cc','--hierarchical','--timing','-Wno-fatal',
+         '-Werror-LATCH','--build-jobs','1','--verilate-jobs','1','--hierarchical-threads','1',
          '--top-module','ot_ds_hbm_cluster20_integrated','--Mdir',str(obj),
-         *[f'-G{k}={v}' for k,v in m['parameters'].items()],'-f','files.f']
+         *[f'-G{k}={v}' for k,v in m['parameters'].items()],'hierarchy.vlt','-f','files.f']
     write(work/'command.json',cmd)
     env=dict(os.environ,TMPDIR=str(tmp))
     with (work/'elaboration.log').open('w') as log:
@@ -187,11 +211,14 @@ def run(a):
     (work/'frontend.exit').write_text(str(rc)+'\n')
     log=(work/'elaboration.log').read_text()
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
+    leaves=list(obj.glob('*__hierMkArgs.f'))
+    hierarchy_complete=bool(leaves) and (obj/'Vot_ds_hbm_cluster20_integrated.h').is_file()
     write(work/'elaboration.json',dict(frontend_exit=rc,dangerous_diagnostics=dangerous,
-        full_parent_elaborated=(rc==0 and not dangerous),parameters=m['parameters'],
+        hierarchy_models=[p.name for p in leaves],hierarchy_complete=hierarchy_complete,
+        full_parent_elaborated=(rc==0 and not dangerous and hierarchy_complete),parameters=m['parameters'],
         source_sha256=m['source_sha256'],body_owner_sha256=m['body_owner_sha256'],
         numerical=False,physical_qualified=False,adopted=False))
-    return rc if rc else (2 if dangerous else 0)
+    return rc if rc else (2 if dangerous or not hierarchy_complete else 0)
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
