@@ -166,5 +166,22 @@
     "finite_IO_source_bound": false,
     "IO_blocker": "retained R4 external engine command/retirement/restore fixture and link/XB/C8 external source endpoints still need actual finite implementation hooks",
     "source_budget_interpretation": "reg2reg slack AFTER60/25 is available combinedsourcevariation budget; negative has no positive allowance"
+  },
+  "actual_synthesis_memory_inventory": {
+    "source": "body_ideal_u55_r1 retained mem.json",
+    "largest_instance_bits": 6480,
+    "request_mem": {
+      "width": 3189,
+      "depth": 2,
+      "bits": 6378
+    },
+    "request_read_shadow": {
+      "width": 3240,
+      "depth": 2,
+      "bits": 6480
+    },
+    "implementation": "existing protected control CDC registers, no new SRAM or RTL/cycles; actual mapped cost pending",
+    "recipe_instance_limit_bits": 6480,
+    "prior_ORFS_limit_bits": 4096
   }
 }
