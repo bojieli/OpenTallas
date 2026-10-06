@@ -34,7 +34,13 @@ module ot_s81ph_afifo #(
             for (i = PW - 2; i >= 0; i = i - 1) g2b[i] = g2b[i+1] ^ g[i];
         end
     endfunction
-    reg [W-1:0] mem [0:DEPTH-1];
+    // storage: one register row per entry, written through a REGISTERED one-hot enable (computed a cycle ahead from
+    // flops only), one enable flop per 64-bit slice (synthesis may merge identical copies; the placer's repair_design
+    // buffers what remains, with no logic in front of the tree).  A row is written every cycle the FIFO is not full, with or
+    // without w_v: a write without w_v lands in the free slot wbin, which the next real write overwrites before the
+    // write pointer publishes it, so the reader never sees it (same values, same cycles as a w_v-gated write).
+    localparam integer NCP = (W + 63) / 64;
+    wire [DEPTH*W-1:0] mrd;
     reg [PW-1:0] wbin, wgray, rbin, rgray, cbin;
     (* async_reg = "true" *) reg [PW-1:0] rg_w1, rg_w2;
     (* async_reg = "true" *) reg [PW-1:0] wg_r1, wg_r2;
@@ -44,12 +50,27 @@ module ot_s81ph_afifo #(
     wire          wfire = w_v && !full;
     wire [PW-1:0] wbin_n = wbin + {{(PW-1){1'b0}}, wfire};
     wire [PW-1:0] used_n = wbin_n - rbin_w;
+    wire [PW-1:0] used_nn = wbin_n - g2b(rg_w1);        // next cycle's `used` (rg_w2 <= rg_w1)
+    wire          full_n = used_nn[AW];
+    genvar ge, gc;
+    generate for (ge = 0; ge < DEPTH; ge = ge + 1) begin : g_e
+        for (gc = 0; gc < NCP; gc = gc + 1) begin : g_c
+            localparam integer LO = gc * 64;
+            localparam integer WD = (gc == NCP - 1) ? W - LO : 64;
+            reg [WD-1:0] q;
+            (* keep *) reg wen_q;
+            always @(posedge wclk or negedge wrst_n)
+                if (!wrst_n) wen_q <= (ge == 0);
+                else wen_q <= (wbin_n[AW-1:0] == ge) && !full_n;
+            always @(posedge wclk) if (wen_q) q <= w_d[LO +: WD];
+            assign mrd[ge*W + LO +: WD] = q;
+        end
+    end endgenerate
     always @(posedge wclk or negedge wrst_n)
         if (!wrst_n) begin
             wbin <= 0; wgray <= 0; rg_w1 <= 0; rg_w2 <= 0; cbin <= 0;
             w_rdy <= 1'b0; w_credit <= 1'b0; w_ovf <= 1'b0;
         end else begin
-            if (wfire) mem[wbin[AW-1:0]] <= w_d;
             wbin <= wbin_n;
             wgray <= (wbin_n >> 1) ^ wbin_n;
             rg_w1 <= rgray; rg_w2 <= rg_w1;
@@ -75,7 +96,7 @@ module ot_s81ph_afifo #(
             empty <= rgray_n == wg_r2;
         end
     assign r_v = !empty;
-    assign r_d = mem[rbin[AW-1:0]];
+    assign r_d = mrd[rbin[AW-1:0]*W +: W];
 endmodule
 
 // pulse crossing: one destination pulse (registered) per source pulse, by a Gray event counter (never lost while the
