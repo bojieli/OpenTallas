@@ -441,6 +441,203 @@ D['spec_table'] = V([
     ['DeepSeek-V4.1 ROM array, 1M', 'pipeline latency (wavefront)', '620.1 us/token', '748.9 us (6)', 1.21, 2.77],
 ], '', 'measured', ATLAS + ' Table 8-14a (section 8.6)', note='Atlas snapshot; DS row predates the current 592.9 us recovery composition.')
 
+# ---------------------------------------------------------------- links (array views) and racks (rack view)
+# Bandwidths set the drawn stroke width of each link; latencies feed the link-class tables.
+RACK = 'results/arch/v41_rack.json'
+rack = J(R / RACK)
+PCK = rack['physical_constants']
+LNK = 'results/rtl/dsrom_1m_allmeasured_20261004/links.json'
+lnk = J(R / LNK)
+TECH = 'configs/hardware/technology.json'
+tech = J(R / TECH)['links']
+ES = 'results/arch/energy_silicon_measured/energy_silicon.json'
+es = J(R / ES)
+S81FP = 'results/rtl/dsrom_s81_fulldie_20261004/floorplan.json'
+s81p = J(R / S81FP)['scan_die_power']
+HSL = 'results/uarch/hbm_switch_latency_authoritative_20261004/README.md'
+UM = 'tools/uarch_model.py TU dict (Tomahawk Ultra protocol: 8 x 800G ports per 2-die package, payload efficiency 0.9 ASSUMED)'
+HFPJ = J(R / HFP)
+D['links'] = dict(
+    ds_stage=V(round(lnk['hop']['phy_lane_rate_GBps'], 1), 'GB/s', 'analytical', LNK + ' hop.phy_lane_rate_GBps (13 lanes of 112G PAM4 net of FEC); the RTL endpoint measured ' + str(lnk['hop']['endpoint_rate_GBps']) + ' GB/s',
+               note='per stage hop, one direction'),
+    ds_tp=V(300.0, 'GB/s', 'analytical', TECH + ' links.rom_board_serdes: 0.30 TB/s per neighbour on a two-die package (lanes scale with sqrt(dies/4))'),
+    ds_ucie=V(round(tech['rom_package_ucie']['bytes_s']['value'] / 1e9), 'GB/s', 'analytical', TECH + ' links.rom_package_ucie.bytes_s (one die-to-die neighbour in a package)'),
+    ds_draft=V(round(lnk['hop']['phy_lane_rate_GBps'], 1), 'GB/s', 'analytical', DRAFT + ' placement.links (light-FEC board + UCIe class, the stage-hop endpoint) at the stage hop PHY rate'),
+    hbm_uplink=V(400.0, 'GB/s', 'estimate', UM + ': 8 x 800G = 800 GB/s per package per direction, so 400 GB/s a die'),
+    hbm_qwen=V(400.0, 'GB/s', 'placeholder', 'no record of the Qwen tile die link; drawn at the DS HBM die uplink (' + UM + ')'),
+    qwen_ar=V(300.0, 'GB/s', 'analytical', TECH + ' links.rom_board_serdes per neighbour (two-die package class); results/uarch/economics.json qwen_rom.product (2 two-die packages, board link)'),
+)
+D['hbm_system']['switch_chips'] = V(es['deepseek_1m']['hbm_accel']['silicon']['switch_chips'], 'chips', 'estimate', ES + ' deepseek_1m.hbm_accel.silicon.switch_chips (one Tomahawk Ultra tier, ASSUMED)')
+
+OU_MM = PCK['orv3_ou_mm']['value']; USABLE = PCK['orv3_usable_ou']['value']
+WALL = rack['power']['wall_factor']; MARGIN = rack['power']['provision_margin']
+SHELF_N1 = rack['power']['shelves']['n_plus_1_w']; STACK_W = PCK['hbm3e_stack_static_w']['value']
+PKG_MM = PCK['package_mm']['value']; TRAY_KG = PCK['tray_mass_kg']['value']
+src_rack = RACK + ' (legacy 28-stage rack study: ORv3 frame, 1 OU liquid stage tray of 4 two-die packages, power shelves, cable tiers)'
+
+
+def shelves_for(w_prov):
+    per_side = max(1, -(-int(w_prov) // int(SHELF_N1)))
+    return 2 * per_side
+
+
+def build_racks(trays, infra_top, die_w, label):
+    """Pack trays (list of dicts with 'ou','kind','w') into ORv3 racks of USABLE OU. Each rack takes 2N power shelves
+    sized to its provisioned wall power, a management switch, and (rack 0) the infra_top rows."""
+    racks, cur = [], None
+    def new_rack():
+        return dict(rows=[], trays=[], w_chips=0.0)
+    cur = new_rack(); racks.append(cur)
+    for t in trays:
+        extra = sum(r['h'] for r in infra_top) if len(racks) == 1 else 0
+        trial_w = cur['w_chips'] + t['w']
+        prov = trial_w * WALL * MARGIN + (sum(r.get('w', 0) for r in infra_top) if len(racks) == 1 else 100) * MARGIN
+        used = sum(x['ou'] for x in cur['trays']) + t['ou'] + shelves_for(prov) + 1 + extra
+        if used > USABLE:
+            cur = new_rack(); racks.append(cur)
+        cur['trays'].append(t); cur['w_chips'] += t['w']
+    out = []
+    for i, rk in enumerate(racks):
+        infra = infra_top if i == 0 else []
+        infra_w = sum(r.get('w', 0) for r in infra) + 100
+        prov = rk['w_chips'] * WALL * MARGIN + infra_w * MARGIN
+        ns = shelves_for(prov)
+        rows, ou = [], 1
+        for s in range(ns):
+            rows.append(dict(ou=ou, h=1, kind='power', label=f"power shelf {'AB'[s % 2]}{s // 2 + 1} (33 kW, 6 x 5.5 kW PSU)")); ou += 1
+        for t in rk['trays']:
+            rows.append(dict(ou=ou, h=t['ou'], kind=t['kind'], label=t['label'], pk=t['pk'], w=round(t['w'], 1))); ou += t['ou']
+        for r in infra:
+            rows.append(dict(ou=ou, h=r['h'], kind=r['kind'], label=r['label'])); ou += r['h']
+        rows.append(dict(ou=ou, h=1, kind='mgmt', label='management switch (1 GbE OOB) + leak detection')); ou += 1
+        dies = sum(len(p['d']) for t in rk['trays'] for p in t['pk'])
+        pk = sum(len(t['pk']) for t in rk['trays'])
+        n_tray = len(rk['trays'])
+        kg = 170 + 60 + n_tray * (TRAY_KG[0] + TRAY_KG[1]) / 2 + sum(r['h'] for r in infra) * 12 + ns * 8
+        out.append(dict(name=f'{label}{i + 1}', rows=rows, used_ou=ou - 1, dies=dies, packages=pk, trays=n_tray,
+                        chips_kw=round(rk['w_chips'] / 1e3, 2), wall_kw=round((rk['w_chips'] * WALL + infra_w) / 1e3, 2),
+                        prov_kw=round(prov / 1e3, 2), shelves=ns, kg=round(kg)))
+    return out
+
+
+# --- DeepSeek ROM S81: 81 stages x TP4 (2 two-die packages a stage), 12 head, 32 Engram table, +52 draft dies
+LAYER_W = s81p['total_saturated_w']                      # busiest (L20 scan) layer die, saturated: an upper bound for every layer die
+HT_W = (738.5 + 3324.4) / 44                             # tools/dsrom_c_recheck.py HEAD_W + TABLE_W over HEAD_TABLE_DIES
+S_STAGES = 81; HEAD = 12; TABLE = 44 - HEAD; DRAFT_ADD = draft['dies_added']
+pk_list, pid = [], 0
+def mkpk(role, dies, stage=None):
+    global pid
+    p = dict(id=pid, r=role, d=dies)
+    if stage is not None:
+        p['s'] = stage
+    pid += 1
+    return p
+stage_pk = [[mkpk('stage', [f's{s}r{2 * q}', f's{s}r{2 * q + 1}'], s) for q in range(2)] for s in range(S_STAGES)]
+head_pk = [mkpk('head', [f'h{2 * i}', f'h{2 * i + 1}']) for i in range(HEAD // 2)]
+table_pk = [mkpk('table', [f't{2 * i}', f't{2 * i + 1}']) for i in range(TABLE // 2)]
+draft_pk = [mkpk('draft', [f'd{2 * i}', f'd{2 * i + 1}']) for i in range(DRAFT_ADD // 2)]
+def tray(kind, pks, label, die_w, stacks_per_die):
+    n = sum(len(p['d']) for p in pks)
+    return dict(ou=1, kind=kind, pk=pks, label=label, w=n * die_w + n * stacks_per_die * STACK_W)
+ds_trays = []
+for i in range(0, len(head_pk), 4):
+    ds_trays.append(tray('head', head_pk[i:i + 4], f'head tray {i // 4}: embed, LM head, norm, drafter', HT_W, 4))
+for s in range(0, S_STAGES, 2):
+    pk = stage_pk[s] + (stage_pk[s + 1] if s + 1 < S_STAGES else [])
+    ds_trays.append(tray('stage', pk, f'stage tray: S{s}' + (f' + S{s + 1}' if s + 1 < S_STAGES else ''), LAYER_W, 4))
+for i in range(0, len(table_pk), 4):
+    ds_trays.append(tray('table', table_pk[i:i + 4], f'Engram table tray {i // 4}', HT_W, 4))
+for i in range(0, len(draft_pk), 4):
+    ds_trays.append(tray('draft', draft_pk[i:i + 4], f'draft tray {i // 4} (DP1-EP5 added dies)', LAYER_W, 4))
+ds_infra = [dict(h=1, kind='switch', label='Engram / host switch (51.2T class, 1 OU)', w=1500.0),
+            dict(h=2, kind='host', label='host: 2-socket CPU + 2 x 400G NIC (prefill KV ingest) + BMC', w=900.0)]
+ds_racks = build_racks(ds_trays, ds_infra, LAYER_W, 'R')
+# where each stage hop runs: same tray (board), adjacent tray (in-rack cable), other rack (rack-to-rack)
+loc = {}
+for ri, rk in enumerate(ds_racks):
+    for row in rk['rows']:
+        for p in row.get('pk', []):
+            if 's' in p:
+                loc[p['s']] = (ri, row['ou'])
+hops = dict(tray=0, rack=0, cross=0)
+for s in range(S_STAGES - 1):
+    a, b = loc[s], loc[s + 1]
+    hops['tray' if a == b else ('rack' if a[0] == b[0] else 'cross')] += 1
+ds_dies = S_STAGES * 4 + HEAD + TABLE + DRAFT_ADD
+kp4_extra = lnk['hop']['kp4_sensitivity']['us'] - lnk['hop']['per_hop_us'] if 'kp4_sensitivity' in lnk['hop'] else None
+RK_NOTE = 'Rack packing is derived by this build from the legacy rack study template, not a committed S81 rack design.'
+D['racks'] = dict(
+    frame=dict(
+        ou_mm=V(OU_MM, 'mm', 'measured', RACK + ' physical_constants.orv3_ou_mm (Open Rack OpenU, published)'),
+        usable_ou=V(USABLE, 'OU', 'measured', RACK + ' physical_constants.orv3_usable_ou (published)'),
+        width_mm=V(PCK['orv3_it_width_mm']['value'], 'mm', 'measured', RACK + ' physical_constants.orv3_it_width_mm (published)'),
+        depth_mm=V(PCK['orv3_tray_depth_mm']['value'], 'mm', 'estimate', RACK + ' physical_constants.orv3_tray_depth_mm'),
+        package_mm=V(PKG_MM, 'mm', 'estimate', RACK + ' physical_constants.package_mm (two ~815 mm2 dies + 8 HBM3E on a ~3.3-reticle CoWoS-L interposer)'),
+        die_mm=V(PCK['die_mm']['value'], 'mm', 'analytical', RACK + ' physical_constants.die_mm'),
+        hbm_mm=V(PCK['hbm3e_footprint_mm']['value'], 'mm', 'measured', RACK + ' physical_constants.hbm3e_footprint_mm (Micron, published)'),
+        wall_factor=V(round(WALL, 4), 'x', 'analytical', RACK + ' power.wall_factor (VR 0.87, PSU 0.96, fans 3%, CDU)'),
+        margin=V(MARGIN, 'x', 'analytical', RACK + ' power.provision_margin'),
+        shelf_kw=V(SHELF_N1 / 1e3, 'kW N+1', 'measured', RACK + ' power.shelves.n_plus_1_w (ORv3 HPR shelf, published)'),
+        cooling_limit_w=V(s81p['cooling_limit_w'], 'W/die', 'analytical', S81FP + ' scan_die_power.cooling_limit_w (liquid, 2-die package: GB200 class package rating less the stacks)'),
+    ),
+    ds=dict(
+        racks=V(ds_racks, 'racks', 'estimate', src_rack + '; S81 counts ' + DSM + ' system; draft ' + DRAFT, note=RK_NOTE),
+        counts=V(dict(stages=S_STAGES, layer=S_STAGES * 4, head=HEAD, table=TABLE, draft=DRAFT_ADD, dies=ds_dies, packages=ds_dies // 2), 'dies', 'analytical',
+                 DSM + ' system (324 layer + 44 head/table, of which 12 head per tools/dsrom_s81_fulldie.py) + ' + DRAFT + ' dies_added 52'),
+        die_w=V(dict(layer=LAYER_W, head_table=round(HT_W, 1), stack=STACK_W), 'W', 'analytical',
+                S81FP + ' scan_die_power.total_saturated_w (busiest layer die, used for every layer and draft die); tools/dsrom_c_recheck.py HEAD_W + TABLE_W over 44 dies; ' + RACK + ' hbm3e_stack_static_w'),
+        system_kw=V(dict(ar=round(es['deepseek_1m']['rom']['power']['ar_b1_icg']['system_w'] / 1e3, 2), mtp=round(es['deepseek_1m']['rom']['power']['mtp_b1_icg']['system_w'] / 1e3, 2)), 'kW', 'analytical',
+                    ES + ' deepseek_1m.rom.power.{ar_b1_icg,mtp_b1_icg}.system_w (368 dies; excludes the 52 added draft dies)'),
+        hops=V(hops, 'stage hops', 'estimate', 'this build: stage hops classified by the rack packing above', note=RK_NOTE),
+        kp4_extra_us=V(round(kp4_extra, 4) if kp4_extra else None, 'us/hop', 'analytical', LNK + ' hop.kp4_sensitivity.us - hop.per_hop_us (a cable hop on full RS(544,514) instead of the light FEC the composition prices)'),
+        sat_tok_s=V(80833.5, 'tok/s', 'analytical', 'tools/dsrom_c_recheck.py SAT_TOK_S (head-bound saturated AR rate, all users)'),
+        links=V([
+            dict(cls='in-package', what='die to die inside a 2-die package (TP4 pair)', medium='UCIe advanced package', ns=10.0, GBps=D['links']['ds_ucie']['v'], st='analytical', src=TECH + ' links.rom_package_ucie (hop_latency_s 10 ns)'),
+            dict(cls='in-tray', what='package to package on one tray board: TP4 cross-package collectives, stage hops between the two stages of a tray', medium='112G PAM4 board trace, light FEC', ns=130.0, GBps=D['links']['ds_stage']['v'], st='measured', src=LNK + ' hop.vendor_phy_ns.board_light_fec (vendor budget) inside the measured 0.7575 us stage hop'),
+            dict(cls='in-rack', what='tray to adjacent tray: stage hops', medium='rear-channel twinax DAC <= 2 m, full RS(544,514) FEC', ns=round(rack['paths']['ring_hop_s'] * 1e9, 1), GBps=D['links']['ds_stage']['v'], st='analytical', src=RACK + ' paths.ring_hop_s (209 ns KP4 + 0.8 m x 4.6 ns/m)'),
+            dict(cls='rack-to-rack', what='stage hop between racks, token return to the head dies, draft seed', medium='800G AEC <= 7 m, full FEC + retimer', ns=round(209 + 2.5 * 4.6 + 3, 1), ns_hi=round(209 + 2.5 * 4.6 + 90, 1), GBps=D['links']['ds_stage']['v'], st='estimate', src=RACK + ' physical_constants cable_hop_s 209 ns + twinax 4.6 ns/m x ~2.5 m + aec_added_latency_ns 3-90'),
+        ], 'ns per hop', 'analytical', RACK + ' links.tiers + ' + LNK),
+    ),
+)
+# --- HBM accelerator: 96 dies in 48 two-die packages, one Tomahawk-Ultra tier of 8 chips (2 a switch tray)
+H_DIES = 96; H_W = HFPJ['power']['peak_in_phase_w']
+h_pk = [mkpk('hbm', [f'a{2 * i}', f'a{2 * i + 1}']) for i in range(H_DIES // 2)]
+h_trays = [tray('compute', h_pk[i:i + 4], f'compute tray {i // 4}: dies {2 * i}-{2 * i + 7}', H_W, 4) for i in range(0, len(h_pk), 4)]
+n_sw = D['hbm_system']['switch_chips']['v']
+h_infra = [dict(h=1, kind='switch', label=f'Tomahawk Ultra switch tray {k} (2 x 51.2T chips)', w=1000.0) for k in range(-(-n_sw // 2))] + \
+          [dict(h=2, kind='host', label='host: 2-socket CPU + NICs + BMC', w=900.0)]
+h_racks = build_racks(h_trays, h_infra, H_W, 'H')
+D['racks']['hbm'] = dict(
+    racks=V(h_racks, 'racks', 'estimate', src_rack + '; 48 two-die packages and 8 TU chips per ' + UM, note='Tray density follows the ROM stage tray (4 packages a 1 OU liquid tray); 2 switch chips a 1 OU tray as in NVL72 switch trays.'),
+    counts=V(dict(dies=H_DIES, packages=H_DIES // 2, stacks=4 * H_DIES, switch_chips=n_sw, ports_per_package=8), 'dies', 'analytical', ES + ' deepseek_1m.hbm_accel.silicon; ' + UM),
+    die_w=V(dict(die=H_W, stack=STACK_W, switch_chip=500.0), 'W', 'estimate', HFP + ' power.peak_in_phase_w (assumed densities); switch 500 W ASSUMED (' + ES + ')'),
+    system_kw=V(dict(ar=round(es['deepseek_1m']['hbm_accel']['power']['ar_b1']['system_w'] / 1e3, 2)), 'kW', 'estimate', ES + ' deepseek_1m.hbm_accel.power.ar_b1.system_w (incl. 8 x 500 W switches, ASSUMED)'),
+    fabric_tbps=V(n_sw * 51.2, 'Tb/s', 'estimate', PCK['switch_capacity_tbps']['source'] + ' x ' + str(n_sw) + ' chips'),
+    links=V([
+        dict(cls='in-package', what='die to die inside a 2-die package', medium='package D2D (Blackwell class)', ns=None, GBps=round(tech['on_package']['bytes_s']['value'] / 1e9), st='placeholder', src=TECH + ' links.on_package (10 TB/s published); latency not in any record'),
+        dict(cls='in-tray', what='none: every collective leaves the package for the switch', medium='—', ns=None, GBps=None, st='analytical', src=UM),
+        dict(cls='in-rack', what='die to switch to die: one striped crossing (all-gather, reduce-scatter leg)', medium='SUE over twinax <= 3 m via Tomahawk Ultra', ns=477.6, GBps=720.0, st='estimate', src=HSL + ' (Broadcom SUE RM104 vendor budget: 100 bridge + 100 PHY + 250 switch + 2 x 3 m x 4.6 ns/m); 720 GB/s payload per package'),
+        dict(cls='in-rack', what='32 KB all-reduce: two crossings + measured golden-order reducer', medium='same', ns=1214.6, GBps=720.0, st='estimate', src=HSL + ' (vendor crossings + measured HA2 reducer 18.3 ns)'),
+        dict(cls='rack-to-rack', what='none: the 96-die machine fits one rack', medium='—', ns=None, GBps=None, st='estimate', src='this build'),
+    ], 'ns per hop', 'estimate', HSL),
+)
+# --- Qwen ROM: 4 dies in 2 two-die packages on one tray
+q_pk = [mkpk('qwen', [f'q{2 * i}', f'q{2 * i + 1}']) for i in range(2)]
+Q_W = es['qwen_8k']['rom']['power']['ar']['system_w'] / 4
+q_trays = [tray('qtray', q_pk, 'Qwen ROM tray: TP4 = 2 two-die packages', Q_W, 4)]
+q_racks = build_racks(q_trays, [dict(h=2, kind='host', label='host: CPU + NIC + BMC', w=900.0)], Q_W, 'Q')
+D['racks']['qwen'] = dict(
+    racks=V(q_racks, 'racks', 'estimate', src_rack + '; 2 two-die packages per results/uarch/economics.json qwen_rom.product', note='A Qwen TP4 group is one tray: a rack holds many independent groups; one is drawn.'),
+    counts=V(dict(dies=4, packages=2, stacks=16), 'dies', 'analytical', 'results/uarch/economics.json qwen_rom.product.packages'),
+    system_kw=V(dict(ar=round(es['qwen_8k']['rom']['power']['ar']['system_w'] / 1e3, 3)), 'kW', 'analytical', ES + ' qwen_8k.rom.power.ar.system_w (at 6,170 tok/s)'),
+    links=V([
+        dict(cls='in-package', what='die to die inside a 2-die package', medium='UCIe advanced package', ns=10.0, GBps=D['links']['ds_ucie']['v'], st='analytical', src=TECH + ' links.rom_package_ucie'),
+        dict(cls='in-tray', what='TP4 all-reduce across the two packages (72 a token)', medium='112G PAM4 board trace, light FEC', ns=406.6, GBps=300.0, st='measured', src='results/uarch/economics.json qwen_rom.product.exchange.per_allreduce_ns (measured on the DS TP4 board group, transferred)'),
+    ], 'ns per hop', 'analytical', 'results/uarch/economics.json'),
+)
+D['racks']['nvl72'] = V(dict(kw=132, gpus=72, racks=1, switch_trays=9, compute_trays=18, kg=1360), 'rack', 'measured', ATLAS + ' section 6.9 Figure 6-9 (GB200 NVL72 published figures)')
+
+BUILD.mkdir(parents=True, exist_ok=True)
 (BUILD / 'data.json').write_text(json.dumps(D, separators=(',', ':')))
 print('bytes', len(json.dumps(D, separators=(',', ':'))))
 print('ds segments', len(seg_out), 'sum', round(sum(sum(s['cats'].values()) + s['hop'] for s in seg_out), 3))
