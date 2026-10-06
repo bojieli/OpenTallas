@@ -1,0 +1,35 @@
+{
+  "status": "SS_MAPPED_INVENTORY_NOT_PHYSICAL_CLOSURE",
+  "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "host": "ot-epyc2",
+  "remote_work": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1/run/work/orfs",
+  "stat_sha256": "b4c6739eeece0485c35dff8a6838619fa40394741fb364d528a2f3f0eda4e370",
+  "synth_check_sha256": "fadcac75fe13a207fc72c63b5da72b00a46ad51c0b66df68c8b1ad78c3381559",
+  "corner": "SS",
+  "ORFS_corner": "WC",
+  "ORFS_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "cell_count": 3951349,
+  "FF_cells_by_type": {
+    "DFFASRHQNx1_ASAP7_75t_R": 42218,
+    "DFFHQNx1_ASAP7_75t_R": 749660
+  },
+  "whole_leaf_FF_cells": 791878,
+  "mapped_cell_area_um2": 548833.117491,
+  "mapped_sequential_area_um2": 234604.855438,
+  "scalar_port_bits": 70354,
+  "synth_structural_problems": 0,
+  "ABC_phase_seconds": 6842,
+  "nominal_component_core_dimensions_um": [
+    1540,
+    1540
+  ],
+  "PLACE_DENSITY_setting": 0.5,
+  "synthesis_area_fraction_of_nominal_core": 0.23141892287527407,
+  "actual_placed_utilization": null,
+  "embedded_memory": "fully priced actual FF payload, no memory macro body in this leaf",
+  "actual_parent_root_clock_capacitance_fF": null,
+  "routed_SS_FF_qualified": false,
+  "parent_slot_fit": false,
+  "adoption": false,
+  "note": "Actual SS stock ORFS mapping of the existing sole full-shape physical job. Synthesis area fraction is not final placement/utilization, routing/channel/clock/PG/loaded-repair or SS/FF credit. Map source includes unchanged WMUX and control; no delta versus folded original screen inferred. Original TT inventory retained. Bulk mapped objects stay on NVMe. 344 exact PASS and 140ns performance FAIL retained; no rerun or adoption."
+}
