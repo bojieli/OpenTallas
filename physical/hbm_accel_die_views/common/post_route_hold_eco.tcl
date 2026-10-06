@@ -31,9 +31,10 @@ set_dont_use {*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*}
 remove_fillers
 proc rep {tag} {
   puts "OT_ECO $tag"
-  report_worst_slack -max -corner ss -digits 2
-  report_worst_slack -min -corner ff -digits 2
-  report_worst_slack -min -corner ss -digits 2
+  report_worst_slack -max -digits 2
+  report_worst_slack -min -digits 2
+  catch {report_checks -path_delay min -scenes ff -format slack_only -digits 2}
+  catch {report_checks -path_delay max -scenes ss -format slack_only -digits 2}
 }
 # guides for the incremental router (the routed nets' detailed wires stay in the db); the route's layer range
 set lo [envd OT_MINL M2]; set hi [envd OT_MAXL M5]
