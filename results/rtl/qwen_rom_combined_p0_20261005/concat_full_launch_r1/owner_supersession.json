@@ -1,0 +1,15 @@
+{
+  "status": "OWNER_SUPERSEDED_BY_QUALIFIED_NATIVE_ARCHIVE",
+  "previous": {
+    "pid": 439595,
+    "binary": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_hot_12b9f6521/fulltoken",
+    "start_ticks": "10498010",
+    "reason": "Sameprefix/negative trace andKV identical; measured1.204193x faster nativeconcat archive; retireONLYafterlink andfreshactualadmission"
+  },
+  "successor_binary": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_concat_f7492a8b9/fulltoken",
+  "new_archive_sha256": "3deafa9e800d0ff21cb6a1dd1b1160eca3d34744c3771c0973c95eeb7e36a0a9",
+  "compiler_gate": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_concat_f7492a8b9/qualified_hot_gate.json",
+  "time": 1791273485.7773743,
+  "numerical_failure_claim": false,
+  "full_token_pass": false
+}

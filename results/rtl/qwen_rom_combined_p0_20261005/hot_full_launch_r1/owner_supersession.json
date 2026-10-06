@@ -1,0 +1,15 @@
+{
+  "status": "OWNER_SUPERSEDED_BY_QUALIFIED_COMPILER",
+  "previous": {
+    "pid": 349565,
+    "binary": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_c7a6265b8/fulltoken",
+    "start_ticks": "10374461",
+    "reason": "Identical RTL/generatedCXX/cyclepinnegativegate with measured1.578x faster hotCXX archive; sole useful finaltoken supersession only after link and fresh admission"
+  },
+  "successor_binary": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_hot_12b9f6521/fulltoken",
+  "new_archive_sha256": "e283a35f7afa2ff874b66094417f4873ce8274c4084866b2acc64952ccc16e2f",
+  "compiler_gate": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full/native_full_hot_12b9f6521/qualified_hot_gate.json",
+  "time": 1791270343.7191172,
+  "numerical_failure_claim": false,
+  "full_token_pass": false
+}

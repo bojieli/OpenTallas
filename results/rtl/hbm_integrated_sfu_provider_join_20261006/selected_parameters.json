@@ -76,5 +76,26 @@
     "NORM_NATIVE_VM_ENABLE": 1,
     "default_OFF": true,
     "production_config_adopted": false
+  },
+  "norm_native_production_candidate": {
+    "parameters": {
+      "NORM_C12_ENABLE": 1,
+      "NORM_NATIVE_VM_ENABLE": 1,
+      "NORM_NATIVE_INPUT_CP": 1,
+      "NORM_KIND": 0,
+      "NORM_N": 64,
+      "NORM_D": 5120,
+      "NORM_RD": 0,
+      "NORM_AW": 24,
+      "NORM_PUBLISH_QUANT": 1
+    },
+    "input_source": "existing norm_allocation_valid/frame accepted CP input lease +existing peer0 calendar, not SRAM input preload",
+    "result_words": 12800,
+    "FP32_ACKs": 160,
+    "quant_ACKs": 240,
+    "runtime_PASS": false,
+    "production_adopted": false,
+    "full_parent_qualified": false,
+    "SSFF_qualified": false
   }
 }

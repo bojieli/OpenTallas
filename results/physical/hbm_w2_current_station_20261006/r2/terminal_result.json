@@ -1,0 +1,125 @@
+{
+  "status": "REJECT_GLOBAL_ROUTE_CONGESTION",
+  "completed_at": "2026-10-06T09:43:00.592178+00:00",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2",
+  "source_snapshot": "8d2fee3eb",
+  "controller_pid": 3683955,
+  "controller_and_docker_child_absent": true,
+  "parameters": {
+    "ENABLE": 1,
+    "NO": 2,
+    "REGISTERED_CURRENT": 1
+  },
+  "source_pins": [
+    {
+      "path": "physical/hbm_w2_current_station_20261006/bank_legacy_static.sv",
+      "sha256": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+      "size_bytes": 11253
+    },
+    {
+      "path": "physical/hbm_w2_current_station_20261006/bank_current_static.sv",
+      "sha256": "1ae03d1b14f9f8a8a9560174c776ea4356d5810ca4c7f7a5b3f1be477c2ecb73",
+      "size_bytes": 11611
+    },
+    {
+      "path": "physical/hbm_w2_current_station_20261006/ot_hbm_native_station.sv",
+      "sha256": "8bff966d474a51e08bb72c5993ced88aba7b6583a15949dd1cdb3dcd33527cc0",
+      "size_bytes": 7556
+    },
+    {
+      "path": "physical/hbm_w2_current_station_20261006/ot_hbm_native_frame_station.sv",
+      "sha256": "80fa3a42d6c625b9cd18ff8d39a61b9ffea16a4b10222c305571ea8583761776",
+      "size_bytes": 3647
+    },
+    {
+      "path": "rtl/common/ot_fwd_link_stage.sv",
+      "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "size_bytes": 1611
+    },
+    {
+      "path": "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+      "sha256": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+      "size_bytes": 1973
+    }
+  ],
+  "native_tie_repair_passed_pin_access": true,
+  "old_DRT_0305_POWER_fatal_recurred": false,
+  "terminal_error": "GRT-0116 Global routing finished with congestion",
+  "congestion_total": 11199,
+  "congestion_by_layer": {
+    "M2": 5165,
+    "M3": 43,
+    "M4": 4680,
+    "M5": 11,
+    "M6": 1299,
+    "M7": 1
+  },
+  "global_route_capacity": 5791297,
+  "global_route_demand": 3687264,
+  "global_route_usage_percent": 63.67,
+  "failed_odb": {
+    "path": "work/orfs/results/asap7/opentallas_ot_hbm_native_frame_station_asap7_Descartes_CURRENT_NO2_H55/base/5_1_grt-failed.odb",
+    "sha256": "d766d234c55786e48e7acd13f45bc2d05cd4b4de54f288fc8c8284a5afc2409a"
+  },
+  "failed_checkpoint_geometry": {
+    "die_area_um2": 38545.992993,
+    "core_area_um2": 36469.79964,
+    "cell_area_um2": 19288.42145995861,
+    "core_width_um": 382.644,
+    "core_height_um": 95.31,
+    "cell_count": 164407.0,
+    "buffer_cell_count": 54918.0,
+    "tie_cell_count": 8870.0
+  },
+  "actual_failed_checkpoint_utilization_percent": 52.88875083043535,
+  "requested_buffered_utilization_percent": [
+    55,
+    60
+  ],
+  "buffered_utilization_target_met": false,
+  "timing_checkpoint": {
+    "basis": "4_cts_final.rpt; placement-estimated parasitics, not routed extraction",
+    "SS_WC_setup_WNS_ps": -1785.59,
+    "all_corner_hold_WNS_ps": -333.428,
+    "worst_hold_corner": "WC",
+    "FF_BC_reg_to_reg_hold_path_slack_ps": 14.92,
+    "FF_BC_reg_to_reg_is_not_all_IO_hold_verdict": true,
+    "worst_setup_startpoint": "_188171_",
+    "worst_setup_endpoint": "_188540_",
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "clock_period_ps": 833.333333
+  },
+  "final_routed_SS_setup_ps": null,
+  "final_routed_FF_hold_ps": null,
+  "detailed_route_DRC_count": null,
+  "missing_final_evidence_reason": "Global routing failed before detailed routing, extraction and final SS/FF signoff",
+  "source_local_receivers": "source_local_result.json",
+  "physical_qualified": false,
+  "installed_parent_qualified": false,
+  "installed_parent_owner": "Turing",
+  "completed_map_reused": true,
+  "functional_gates_replayed": false,
+  "new_synthesis_replayed": false,
+  "restart_or_second_route_launched": false,
+  "raw_record_inventory_warning": "physical.json/mapped_inventory.json preserve the shared parser double-counted hierarchy summaries. Correct expanded TT map is 96952 cells/8870 FF/13914.554220 um2/0 macros; failed ODB geometry is authoritative for post-buffering footprint.",
+  "artifacts_sha256": {
+    "4_1_cts.json": "5137d5d495e2afce6c73201a6f4604cc92402f58398f39fa63f4c20b95325459",
+    "4_1_cts.log": "d81312317e1681ccb88bd0690588ab9cd403a78d8fdc95c52eac652b4b98e188",
+    "4_cts_final.rpt": "ade8a8079e172c64f51c08a136d6ce7478b359be95449d811f34662d6e8b7d31",
+    "5_1_grt.json": "5acfed6c4b7c406988743d393b11731d44abaecb0cf8075309739a7213ca02dc",
+    "5_1_grt.log": "550b841e4c7b66dd9e1fefd0fc2ea5bbbb24a25724a712b198a19facaa1fc0ce",
+    "adapter.json": "884bcc31bb28d21c9a2b8bf76d47ce1a94699aec9e1010cebcee5e5165c1536f",
+    "failed_odb_geometry.tsv": "a4b280f1b231ebdbcf96eb8a78e8b3a915cc9ce1e0a7c20e4e3709bb822cf5f9",
+    "launch.json": "c1f44ef05273d2ac95377cc494aaa9287d307c9c58901f557ce1a841abfa6532",
+    "mapped_inventory.json": "abf95be89c019cabbcd9551e70b973aebae5166f913a20e475571ca1ed5dfb2e",
+    "physical.json": "35cd2e5af5820d6a9a79cfa79bb5f89d345f76b048a4cafe29e90b524637ac6e",
+    "platform_ties.json": "8cb5d1628335159a00d844b22a61d36846cb65fe82a1a645cd4b26ff1a2d64ad",
+    "source_local.json": "b697189c685f6a66f5c9b7664666d884dc5f287f818f238b21c58f7c84b5868b",
+    "source_local.sdc": "4510c74f524649cb465d2ccd57374f17d63f455ef5572f67e03bbb89813601a0",
+    "source_local_result.json": "cfc61a0f6d35881d137af25a37c664d8829eacc69d6723e0970934419fe662c8",
+    "terminal.json": "9b6761edae2740eac8d044a1f13ee8b470ff37a0b5209548c4a3a4c454228841",
+    "failed_odb_geometry.tcl": "d49223f6b97f5873a91b7d5a0124cea2290224085afa4b24e0fb7e4b6860d7eb"
+  }
+}

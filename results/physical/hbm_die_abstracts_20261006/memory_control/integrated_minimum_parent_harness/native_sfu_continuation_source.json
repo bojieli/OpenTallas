@@ -1,0 +1,45 @@
+{
+  "source_preparation_only": true,
+  "runtime_verdict": null,
+  "norm_input_words_preserved": 25600,
+  "SFU_input_words_decoded": 64,
+  "SFU_case": 1,
+  "SFU_fn": 1,
+  "SFU_tag": "c5000001",
+  "golden_lanes_different_from_inputs": 64,
+  "input_lane0": "408e0000",
+  "gold_lane0": "42a92064",
+  "literal_cpp_port_references_resolved": 228,
+  "CXX_compiled": false,
+  "RTL_compiled": false,
+  "runtime_started": false,
+  "norm_first_snapshot_unchanged": true,
+  "formatter_execution_covered": false,
+  "all_levers_qualified": false,
+  "source_files_sha256": {
+    "tb_hbm_integrated_minimum_parent.sv": "c2936767c22bfc222c11976840ebfb4924a6a3266feea2ff77f2127e62ac1e6b",
+    "hbm_integrated_minimum_parent_main.cpp": "507f8d7012c81404a6f42ef8ed4ab2b92b76cad8afde279823cdde68b7cc946f",
+    "hbm_integrated_sfu_continuation.inc": "7d756a799b730858e34f87ba81b512432efad7bf6ba6fd67d533abbc366fa63d",
+    "prepare_integrated_minimum_parent_fixture.py": "b68196e8e7a6797f87afffce972ca00c877f9bf3a8343b21bc8a8573c92ef5bc"
+  },
+  "missing_formatter_bindings": [
+    "installed allocation/book receipt producer",
+    "released numerical96x512 score/ID producer",
+    "actual selected-ID sink publication consumer",
+    "source reverse receipt producer",
+    "native result to SM RESULT program"
+  ],
+  "formatter_original_bench": "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv",
+  "formatter_pattern_is_numeric_producer": false,
+  "qualified_SFU_source": {
+    "commit": "16edbfae108d623aa4e80a0c61f7d1e625714ed1",
+    "path": "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_sfu_provider_join.sv",
+    "sha256": "7dc556c694e79511c2c4b930a113c02e19d7535c846b23a646f0962989f59c0d",
+    "actual_source_matches": true,
+    "R5_component_PASS_consumed": true,
+    "R5_replayed": false,
+    "R5_scope": "CASE0 identity-op 64FP32/CP8READ/checked2ACK/full73/warmjoint; CASE1 parent numerical integration remains unrun",
+    "evidence_owner": "Gibbs"
+  },
+  "formatter_book_receipt_owner": "Gauss, agreed source hook pending literal ABI from owner"
+}

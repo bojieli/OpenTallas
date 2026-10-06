@@ -1,0 +1,54 @@
+{
+  "status": "PASS_LAYER_X_BOUNDARY",
+  "stage": "L0",
+  "comparisons": [
+    {
+      "path": "L0_die0_x.hex",
+      "bytes": 36864,
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "gold_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die1_x.hex",
+      "bytes": 36864,
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "gold_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die2_x.hex",
+      "bytes": 36864,
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "gold_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    {
+      "path": "L0_die3_x.hex",
+      "bytes": 36864,
+      "exact": true,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "gold_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    }
+  ],
+  "stage_line": "STAGE L0 done cycles=37662 start_cyc=7 end_cyc=37669 me_busy=35638/35638 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=5379s",
+  "service_counters": [
+    "MEMSTAT L0 die0 fill_cycles=32981 fill_sectors=138796 wr_sectors=136 rsp_tile_stall=59 kvok_low_with_desc=32411 drain_low=0 wr_lat_max=204 stall_kv=32413 stall_drain=0 stall_bridge=425 stall_retire=0 stall_mem=0 tile_edges=36943 fill_exposed=32981",
+    "MEMSTAT L0 die1 fill_cycles=32981 fill_sectors=138796 wr_sectors=136 rsp_tile_stall=59 kvok_low_with_desc=32411 drain_low=0 wr_lat_max=204 stall_kv=32413 stall_drain=0 stall_bridge=425 stall_retire=0 stall_mem=0 tile_edges=36943 fill_exposed=32981",
+    "MEMSTAT L0 die2 fill_cycles=32981 fill_sectors=138796 wr_sectors=136 rsp_tile_stall=59 kvok_low_with_desc=32411 drain_low=0 wr_lat_max=204 stall_kv=32413 stall_drain=0 stall_bridge=425 stall_retire=0 stall_mem=0 tile_edges=36943 fill_exposed=32981",
+    "MEMSTAT L0 die3 fill_cycles=32981 fill_sectors=138796 wr_sectors=136 rsp_tile_stall=59 kvok_low_with_desc=32411 drain_low=0 wr_lat_max=204 stall_kv=32413 stall_drain=0 stall_bridge=425 stall_retire=0 stall_mem=0 tile_edges=36943 fill_exposed=32981"
+  ],
+  "cycles": {
+    "cycles": 37662,
+    "start_cyc": 7,
+    "end_cyc": 37669
+  },
+  "simulated_stage_elapsed_fs": 31384987446,
+  "scope": "Actual closed fourrank X boundary only; tokenKV readback/head/drain/fulltoken verdict deferred",
+  "job_untouched": true,
+  "runtime_pid": 2318397,
+  "runtime_start_ticks": 10812315,
+  "time": 1791278891.4589875,
+  "full_token_pass": false,
+  "physical_qualified": false
+}

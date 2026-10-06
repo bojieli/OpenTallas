@@ -1,0 +1,226 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T08:23:40.251811+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_native_frame_station",
+    "clock_port": "clk_sm",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1,
+      "NO": 2,
+      "REGISTERED_CURRENT": 1
+    },
+    "sources": [
+      {
+        "path": "physical/hbm_w2_current_station_20261006/bank_legacy_static.sv",
+        "sha256": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+        "size_bytes": 11253
+      },
+      {
+        "path": "physical/hbm_w2_current_station_20261006/bank_current_static.sv",
+        "sha256": "1ae03d1b14f9f8a8a9560174c776ea4356d5810ca4c7f7a5b3f1be477c2ecb73",
+        "size_bytes": 11611
+      },
+      {
+        "path": "physical/hbm_w2_current_station_20261006/ot_hbm_native_station.sv",
+        "sha256": "8bff966d474a51e08bb72c5993ced88aba7b6583a15949dd1cdb3dcd33527cc0",
+        "size_bytes": 7556
+      },
+      {
+        "path": "physical/hbm_w2_current_station_20261006/ot_hbm_native_frame_station.sv",
+        "sha256": "80fa3a42d6c625b9cd18ff8d39a61b9ffea16a4b10222c305571ea8583761776",
+        "size_bytes": 3647
+      },
+      {
+        "path": "rtl/common/ot_fwd_link_stage.sv",
+        "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+        "size_bytes": 1611
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+        "sha256": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+        "size_bytes": 1973
+      }
+    ],
+    "top": "ot_hbm_native_frame_station"
+  },
+  "error": "FlowError: actual platform tie mapping missing",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T08:18:24.345987+00:00",
+  "git": {
+    "commit": "523a86f2878ac7cb99017d010dc070ba451c2d99",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? tools/__pycache__/"
+    ]
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_native_frame_station",
+      "--source",
+      "physical/hbm_w2_current_station_20261006/bank_legacy_static.sv",
+      "--source",
+      "physical/hbm_w2_current_station_20261006/bank_current_static.sv",
+      "--source",
+      "physical/hbm_w2_current_station_20261006/ot_hbm_native_station.sv",
+      "--source",
+      "physical/hbm_w2_current_station_20261006/ot_hbm_native_frame_station.sv",
+      "--source",
+      "rtl/common/ot_fwd_link_stage.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "NO=2",
+      "--param",
+      "REGISTERED_CURRENT=1",
+      "--clock-port",
+      "clk_sm",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--hold-margin-ns",
+      "0.01",
+      "--core-utilization",
+      "38",
+      "--place-density",
+      "0.60",
+      "--stages",
+      "synth,pnr",
+      "--keep-heavy-artifacts",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks",
+      "--orfs-var",
+      "IO_PLACER_H=M4 M6",
+      "--orfs-var",
+      "IO_PLACER_V=M5 M7",
+      "--orfs-var",
+      "CORE_ASPECT_RATIO=0.25",
+      "--orfs-var",
+      "SDC_FILE=/work/source_local.sdc",
+      "--step-tcl",
+      "PRE_IO_PLACEMENT=physical/hbm_w2_current_station_20261006/pin_faces.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/hbm_w2_current_station_20261006/forwarded_subtree.tcl",
+      "--pin-region",
+      "^(clk_sm|por_n|in_.*|release_.*)$=bottom",
+      "--pin-region",
+      "^(fclk_o|out_.*|ACK_.*)$=top",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "Descartes_CURRENT_NO2_H55",
+      "--output",
+      "/srv/opentallas-scratch/codex/w2-current-station-2cbe31b99/route-r1/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/w2-current-station-2cbe31b99/route-r1/work"
+    ],
+    "driver": {
+      "commit": "523a86f2878ac7cb99017d010dc070ba451c2d99",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/repos/codex-w2-current-station-2cbe31b99/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas/repos/codex-w2-current-station-2cbe31b99"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas/repos/codex-w2-current-station-2cbe31b99"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

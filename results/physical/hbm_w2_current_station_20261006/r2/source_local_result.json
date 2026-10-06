@@ -1,0 +1,46 @@
+{
+  "status": "SOURCE_LOCAL_RECEIVER_CHARACTERIZED_PNR_LIVE",
+  "host": "ot-epyc1tb",
+  "controller_pid": 3683955,
+  "root": "/srv/opentallas-scratch/codex/w2-current-station-8d2fee3eb/route-r2",
+  "source": "8d2fee3eb",
+  "physical_source_pins_unchanged": true,
+  "completed_map_reused": true,
+  "Yosys_or_ABC_replayed": false,
+  "functional_gate_replayed": false,
+  "map_sha256": "078e0dc3c6bfabaefde9c32c7f9d856e583acdd03162d84eb28d300c714fc5cf",
+  "correct_map_cells": 96952,
+  "correct_map_FF": 8870,
+  "correct_TT_map_chip_area_um2": 13914.55422,
+  "mapped_macro_count": 0,
+  "real_forwarding_inverter_count": 4,
+  "mapped_tie_high_count": 1,
+  "mapped_tie_low_count": 0,
+  "inventory_correction": "Raw shared-parser mapped_inventory.json double-counted Yosys hierarchy summaries as cells/macros and selected module area instead of expanded top area. Preserved raw record; authoritative expanded table is committed r1/stat.txt. Scoped owned parser corrected for future use; no running source mutated.",
+  "SS_clock_receiver_load_fF": 3849.999106000116,
+  "FF_clock_receiver_load_fF": 4463.641918001092,
+  "measured_input_ports": 2866,
+  "SS_payload_receiver_cap_range_fF": [
+    0.447496,
+    5.020992
+  ],
+  "FF_payload_receiver_cap_range_fF": [
+    0.565527,
+    5.982387999999999
+  ],
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "root_period_ps": 833.333333,
+  "parent_IO_envelope_not_measurement": {
+    "min_ps": 0,
+    "max_ps": 166.666667
+  },
+  "installed_parent_qualified": false,
+  "physical_qualified": false,
+  "routed_utilization_percent": null,
+  "buffered_utilization_target_percent": [
+    55,
+    60
+  ],
+  "initial_core_utilization_percent": 38
+}

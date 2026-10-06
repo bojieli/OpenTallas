@@ -1,0 +1,24 @@
+{
+  "owner": "Codex:Fermat:head",
+  "host": "ot-epyc2",
+  "controller_pid": 1968857,
+  "status": "running floorplan",
+  "run_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C22_checked_receivers",
+  "source_fix": "d0488d023",
+  "receiver_report_hook_sha256": "d76a1e9dba7747a9279921d7c33e7101417bc1290ae78bec7a4624f816f9502d",
+  "receiver_count": 4,
+  "qualification": false,
+  "retained_numerical_cycles": 63028,
+  "report_hook_failures_preserved": [
+    "report_hook_failure_first",
+    "report_hook_failure_supply_prePDN"
+  ],
+  "notes": "Signal-only pin inventory corrected for canonical report_net syntax and prePDN supplies. No RTL/synth/golden changes; terminal attempts retained remote.",
+  "container": "4019575adaa7625fd5c6dc1af27c777eb51cb78b2e011581171917185a3bfa6d",
+  "openroad_pid": 1969583,
+  "stage": "2_1_floorplan repair timing",
+  "active_ideal_SS_setup_estimate_ps": -86.99,
+  "estimate_endpoint": "u_head.iw_issued",
+  "estimate_scope": "Unplaced ideal-clock repair estimate; not SSFF closure",
+  "receiver_corner_caps": "receiver_corner_pin_caps.json"
+}

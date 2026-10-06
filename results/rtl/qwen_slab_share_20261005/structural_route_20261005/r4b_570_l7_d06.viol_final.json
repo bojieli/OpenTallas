@@ -1,0 +1,64 @@
+{
+ "ss": {
+  "endpoints": 550,
+  "groups": [
+   {
+    "cls": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 550,
+    "worst_ps": -27.4
+   }
+  ],
+  "paths": [
+   {
+    "start": "g_col[*].g_bank[*].u_rom/rd_out[*]",
+    "end": "g_col[*].g_bank[*].cap4[*]$_DFF_P_/D",
+    "n": 550,
+    "worst_ps": -27.4,
+    "example": "g_col[0].g_bank[2].u_rom/rd_out[196] -> g_col[0].g_bank[2].cap4[196]$_DFF_P_/D"
+   }
+  ]
+ },
+ "ff": {
+  "endpoints": 4,
+  "groups": [
+   {
+    "cls": "res_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -3.5
+   },
+   {
+    "cls": "t_nout[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -0.4
+   },
+   {
+    "cls": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -0.3
+   }
+  ],
+  "paths": [
+   {
+    "start": "res_in[*]",
+    "end": "res_q[*]$_DFF_P_/D",
+    "n": 2,
+    "worst_ps": -3.5,
+    "example": "res_in[10] -> res_q[10]$_DFF_P_/D"
+   },
+   {
+    "start": "p_nout[*]",
+    "end": "t_nout[*]$_DFF_P_/D",
+    "n": 1,
+    "worst_ps": -0.4,
+    "example": "p_nout[2] -> t_nout[2]$_DFF_P_/D"
+   },
+   {
+    "start": "g_mul[*].u_mul.s1_rows[*]$_DFF_P_/QN",
+    "end": "g_mul[*].u_mul.u_c2.g_r.r[*]$_DFF_PN0_/D",
+    "n": 1,
+    "worst_ps": -0.3,
+    "example": "g_mul[2].u_mul.s1_rows[367]$_DFF_P_/QN -> g_mul[2].u_mul.u_c2.g_r.r[209]$_DFF_PN0_/D"
+   }
+  ]
+ }
+}

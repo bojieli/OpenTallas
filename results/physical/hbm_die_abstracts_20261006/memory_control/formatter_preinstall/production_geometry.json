@@ -1,0 +1,25 @@
+{
+  "source_book": "results/rtl/hbm_formatter_preinstall_parent_20261006/fullplane_install_recipe_r1/workspace.json",
+  "source_book_sha256": "c18419a44e9c4268e1beef5619b3ac345766b856b6d6d3d64fa4b55194944363",
+  "parameterization": {
+    "CAPACITY_BYTES": 134217728,
+    "ARENA_BASE": 118763520,
+    "ARENA_LIMIT": 119156736,
+    "SINK_BASE": 119156736,
+    "SINK_LIMIT": 119158784,
+    "SCORE_SOURCE": 119158848,
+    "ID_SOURCE": 119160896
+  },
+  "begin_fullplane_bases": {
+    "scores": 119162944,
+    "ids": 119359552
+  },
+  "occupied_prefix_end": 118763520,
+  "occupied_records": 4,
+  "added_FF": 0,
+  "checks": "Same protected descriptor/capacity/span overlap/actual writer/context checks now compare against explicit parameterized geometry. Default1MiB pilot preserved; Gibbs parent/Bacon helper must pass actual production parameters.",
+  "production_installation_complete": false,
+  "linked_entry_complete": false,
+  "production_physical_closed": false,
+  "positive_r2": "pilot only, running; does not qualify parent128MiB"
+}

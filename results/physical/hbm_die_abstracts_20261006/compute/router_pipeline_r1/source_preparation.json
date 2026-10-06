@@ -1,5 +1,5 @@
 {
-  "status": "REAL_ENABLED_MINIMUM_GOLD_PASS_PHYSICAL_TOOL_FAILURE_OPEN",
+  "status": "REAL_ENABLED_GOLD_PASS_ONE_NATIVE_FLOW_REPAIR_TOOL_SUCCEEDED_FINAL_SS_FAIL_FF_PASS",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv": "fc05d7df80af5d8f668261e2e087f80a1eb723d53ce746fae6668e48e743231d",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/retained_final.sdc": "1ce35f39423e56ccad763261f78817a51b4eb8571e28b25d3b4491454600c849",
@@ -28,5 +28,9 @@
   ],
   "measured_last_input_to_output_cycles": 28,
   "retained_last_input_to_output_cycles": 23,
-  "extra_cycles": 5
+  "extra_cycles": 5,
+  "physical_continuation": "flowrepair_r2_postCTS_actual/record.json",
+  "original_failed_flow_preserved": "route-r1_FAIL_RETAINED/collection.json",
+  "actual_terminal_record": "flowrepair_r2_terminal_SS_FAIL/record.json",
+  "physical_closed": false
 }

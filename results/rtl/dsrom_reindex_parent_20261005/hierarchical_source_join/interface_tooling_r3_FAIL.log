@@ -1,0 +1,17 @@
+
+-- Running command `read_verilog -lib -sv /tmp/codex-kc8-hierarchical-source-r3/interface_only.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+hierarchy -check -top ot_dsrom_reindex_hierarchical_parent -chparam ENABLE 1
+proc
+opt_clean
+check -assert
+write_json /tmp/codex-kc8-hierarchical-source-r3/interface.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/codex-kc8-hierarchical-source-r3/interface_only.sv
+Parsing SystemVerilog input from `/tmp/codex-kc8-hierarchical-source-r3/interface_only.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_reindex_native_quarter'.
+Generating RTLIL representation for module `\ot_dsrom_reindex_chain'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+/home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv:150: ERROR: syntax error, unexpected TOK_GENVAR, expecting TOK_ID or '{'

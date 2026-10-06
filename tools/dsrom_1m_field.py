@@ -43,7 +43,9 @@ WIRE.  The vehicle holds the spine's BST = 2 broadcast stages and a root writing
 die geometry adds, per phase: VM x root -> farthest cluster 30 stages (less the 2 in the vehicle) and cluster -> VM
 33 (tools/uarch_model.DIE_SHRUNK_INTERIM expert_wire = 30 + 33, the model graph's own wire term); labelled
 'routed die geometry wire stages'.  The S81 floorplan's own trunk (results/rtl/dsrom_s81_fulldie_20261004
-floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.
+floorplan.json trunk_stages, field_one_way 41 at 504 um) is reported as a sensitivity.  The COMPOSITION no longer
+uses either: since 2026-10-06 it takes each node's wire from the wired r8 die, per region (tools/dsrom_field_reprice_r8.py,
+results/rtl/dsrom_field_reprice_r8_20261006/reprice.json; adapter dsrom_1m_allmeasured_adapters.field_rows).
 """
 from __future__ import annotations
 

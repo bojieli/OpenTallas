@@ -33,9 +33,16 @@ foreach inst [$block getInsts] {
     if {$mn eq "ot_sram_1r1w_512x128_m4_r2c2"} {
         incr macros
         set class macro
+    } elseif {[string first "g_native_grant_receiver" $clean]>=0} {
+        set class native_permission_receiver
     } elseif {[string first "g_actual_native_load" $clean]>=0} {
         set class native_capture
         foreach tag {source_packet source_check held_reply held_check} {
+            if {[string first $tag $clean]>=0} {set class native_$tag;break}
+        }
+        # Distributed CHECK_PIPE classes are measured separately so a new
+        # permission miss cannot disappear behind the global worst path.
+        foreach tag {g_request_bank g_reply_bank g_identity_bank u_check_reduce} {
             if {[string first $tag $clean]>=0} {set class native_$tag;break}
         }
         # Slang may retain the output alias as the receiving register name.

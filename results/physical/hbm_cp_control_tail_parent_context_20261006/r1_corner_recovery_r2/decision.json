@@ -1,0 +1,56 @@
+{
+  "disposition": "REJECT_CONTROL_TAIL_R1_FOR_ADOPTION_CONTINUE_MANDATORY_BASELINE",
+  "checks": {
+    "SS_setup": false,
+    "FF_hold": true,
+    "DRC_zero": true
+  },
+  "corners": {
+    "schema": "hbm.cp.parent-context.corners.v1",
+    "ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -51.59,
+      "tns_ps": -288.3,
+      "worst_register_d_slack_ps": 60.781826,
+      "worst_reg_to_reg_slack_ps": 60.78,
+      "worst_input_to_reg_slack_ps": 313.29,
+      "worst_output_port_slack_ps": -51.593842,
+      "violating_d_pins": 0,
+      "errors": [],
+      "odb_sha256": "f23933a982a3c37fe43aaaad53cca5c53b62dddbe396c97f1dab33cd157ad055",
+      "spef_sha256": "7cd246b81fd9cfa86adad3e36b8186461088dd94d41b39d830b8624f9a5464a7",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": 7.05,
+      "tns_ps": 0.0,
+      "worst_register_d_slack_ps": 7.053851,
+      "worst_reg_to_reg_slack_ps": 14.87,
+      "worst_input_to_reg_slack_ps": 15.3,
+      "worst_output_port_slack_ps": 55.355618,
+      "violating_d_pins": 0,
+      "errors": [],
+      "odb_sha256": "f23933a982a3c37fe43aaaad53cca5c53b62dddbe396c97f1dab33cd157ad055",
+      "spef_sha256": "7cd246b81fd9cfa86adad3e36b8186461088dd94d41b39d830b8624f9a5464a7",
+      "sdc_sha256": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+    },
+    "FF_endpoint_basis": "all_registers -data_pins; literal combinational */D separately labelled",
+    "uses_extracted_interconnect_and_propagated_clock": true,
+    "external_loads_analytical": true,
+    "parent_budget_adoption": false
+  },
+  "DRC": 0,
+  "physical_route_repeated": false,
+  "RTL_changed": false,
+  "exact_gate_repeated": false,
+  "original_corner_error_preserved": "../r1_terminal/corner.error",
+  "old_null_corners_are_reporter_failure_not_measured_timing_failure": true,
+  "parent_rail_budget_mV": 35,
+  "parent_feed_drop_measured": false,
+  "remaining_child_budget_mV": null,
+  "loaded_IR_workload_qualified": false,
+  "adopted": false
+}
