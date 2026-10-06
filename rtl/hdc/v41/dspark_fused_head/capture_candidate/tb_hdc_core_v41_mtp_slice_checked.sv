@@ -144,7 +144,12 @@ module tb_hdc_core_v41_mtp_slice #(
       assign sink_me_addr[g*24+:24]=commit_valid[1]?{9'b0,commit_packet[1].wa[(g+1)*15+:15]}:ordinary_addr[1][g*24+:24];
     end
     wire fh_sink_busy=guard_busy||(|commit_valid)||(|ordinary_valid);
-    ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1)) u_permission (
+`ifdef OT_FH_MARGIN
+    localparam integer FH_MARGIN=`OT_FH_MARGIN;
+`else
+    localparam integer FH_MARGIN=0;
+`endif
+    ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(1),.MARGIN(FH_MARGIN)) u_permission (
       .fast_clk(clk),.cold_n(rst_n),.request_accept((|vw_me_we)&&fh_write_warm),.request_warm(fh_write_warm),
       .checked_reply_capture(checked_reply_capture),.published_reply_v(published_reply_v),
       .native_ordinal(native_ordinal),.request_owner(47'h123456789ab),.request_id(fh_write_id),

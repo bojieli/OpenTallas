@@ -10,6 +10,11 @@
 // SECDED applies to mutable SRAM only.
 module ot_hdc_v41_fh_sram_return_hardened #(
     parameter integer W=16,G=4,AW=24,ROWS=505,PROTECT_SPLIT=1,
+    // ADDR_PIPE (default 0; margin-first 2): request distribution registers between the group
+    // request decode and each lane's macro pins: one per-group stage, one kept per-lane stage at the
+    // lane. Reads and writes are delayed alike (order preserved); address faults keep their cycle.
+    // Read return latency grows by ADDR_PIPE (the head's RETURN_EXTRA = 2 + PROTECT_SPLIT + ADDR_PIPE).
+    parameter integer ADDR_PIPE=0,
     parameter [AW-1:0] LG_BASE_WORD=0
 )(
     input wire clk,rst_n,
@@ -42,12 +47,42 @@ module ot_hdc_v41_fh_sram_return_hardened #(
             if(!rst_n) address_fault[g]<=0;
             else if((rd_en[g]&&!read_ok[g])||(wr_en[g]&&!write_ok[g])) address_fault[g]<=1;
     end
+    // request seen by each lane (ADDR_PIPE=0: the group decode directly, as before)
+    wire [G*W-1:0] l_read_ok,l_write_ok;
+    wire [G*W*9-1:0] l_read_row,l_write_row;
+    wire [G*W*32-1:0] l_wr_data;
+    generate if(ADDR_PIPE==0) begin : g_direct
+        for(genvar b=0;b<G*W;b=b+1) begin : g_l
+            assign l_read_ok[b]=read_ok[b/W]; assign l_read_row[9*b+:9]=read_row[9*(b/W)+:9];
+            assign l_write_ok[b]=write_ok[b/W]&&wr_mask[b]; assign l_write_row[9*b+:9]=write_row[9*(b/W)+:9];
+            assign l_wr_data[32*b+:32]=wr_data[32*b+:32];
+        end
+    end else begin : g_pipe
+`ifndef SYNTHESIS
+        initial if(ADDR_PIPE!=2) $fatal(1,"ADDR_PIPE must be 0 or 2");
+`endif
+        // stage 1: group request registers (+ per-lane write mask/data)
+        reg [G-1:0] g_rok,g_wok; reg [G*9-1:0] g_rrow,g_wrow;
+        reg [G*W-1:0] s_wmask; reg [G*W*32-1:0] s_wdata;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) begin g_rok<=0; g_wok<=0; end
+            else begin g_rok<=read_ok; g_wok<=write_ok; end
+        always @(posedge clk) begin g_rrow<=read_row; g_wrow<=write_row; s_wmask<=wr_mask; s_wdata<=wr_data; end
+        // stage 2: one kept request register per lane, placed at the lane's macro pins
+        for(genvar b=0;b<G*W;b=b+1) begin : g_l
+            localparam integer GR=b/W;
+            ot_hdc_v41_fh_lane_req u_req (.clk(clk),.rst_n(rst_n),
+                .read_ok_d(g_rok[GR]),.read_row_d(g_rrow[9*GR+:9]),
+                .write_ok_d(g_wok[GR]&&s_wmask[b]),.write_row_d(g_wrow[9*GR+:9]),.wr_data_d(s_wdata[32*b+:32]),
+                .read_ok(l_read_ok[b]),.read_row(l_read_row[9*b+:9]),
+                .write_ok(l_write_ok[b]),.write_row(l_write_row[9*b+:9]),.wr_data(l_wr_data[32*b+:32]));
+        end
+    end endgenerate
     for(genvar b=0;b<G*W;b=b+1) begin : g_bank
-        localparam integer GROUP=b/W;
         ot_hdc_v41_fh_sram_lane_hardened u_lane (
             .bank_id(6'(b)),
-            .clk(clk),.rst_n(rst_n),.read_ok(read_ok[GROUP]),.read_row(read_row[9*GROUP+:9]),
-            .write_ok(write_ok[GROUP]&&wr_mask[b]),.write_row(write_row[9*GROUP+:9]),.wr_data(wr_data[32*b+:32]),
+            .clk(clk),.rst_n(rst_n),.read_ok(l_read_ok[b]),.read_row(l_read_row[9*b+:9]),
+            .write_ok(l_write_ok[b]),.write_row(l_write_row[9*b+:9]),.wr_data(l_wr_data[32*b+:32]),
             .rd_data(rd_data[32*b+:32]),.rd_valid(rd_valid[b]),.corrected(corrected[b]),
             .poisoned(poisoned[b]),.wr_committed(wr_committed[b]));
     end
@@ -146,4 +181,20 @@ module ot_hdc_v41_fh_sram_lane_hardened(
         assign rd_valid=valid_q&&!poison_q;
         assign corrected=corrected_q;
         assign poisoned=poison_q;
+endmodule
+
+// Kept per-lane request register (ADDR_PIPE stage 2): the lane macro's inputs leave a flop beside it.
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_lane_req(
+    input wire clk,rst_n,read_ok_d,write_ok_d,
+    input wire [8:0] read_row_d,write_row_d,
+    input wire [31:0] wr_data_d,
+    output reg read_ok,write_ok,
+    output reg [8:0] read_row,write_row,
+    output reg [31:0] wr_data
+);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin read_ok<=0; write_ok<=0; end
+        else begin read_ok<=read_ok_d; write_ok<=write_ok_d; end
+    always @(posedge clk) begin read_row<=read_row_d; write_row<=write_row_d; wr_data<=wr_data_d; end
 endmodule

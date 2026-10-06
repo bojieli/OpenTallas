@@ -3,8 +3,14 @@
 // full live fault only vetoes scalar publication, never a wide capture mux.
 // Parent must accept the request only on request_checked_v, and retain its
 // real checked reply until checked publication/consume. No backend fiction.
-module ot_hdc_v41_fh_checked_permission (
- input wire fast_clk,cold_n,
+// MARGIN (default 0; margin-first 1): cold_n reaches every register through kept copies (+1 on
+// assertion and release); the request/reply take reaches the banks through kept copies and each
+// bank loads a twice-registered copy of its data (banks hold the packet two cycles later, still
+// three cycles before the age-0 release); the release/quarantine decision uses the existing
+// registered reduce (checked_error) instead of the head-wide combinational OR of every bank's
+// mismatch. No release cycle changes.
+module ot_hdc_v41_fh_checked_permission #(parameter integer MARGIN=0) (
+ input wire fast_clk,cold_n_in,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
  input wire [31:0] native_ordinal,input wire [46:0] request_owner,
  input wire [7:0] request_id,input wire [3:0] head_we,
@@ -20,6 +26,18 @@ module ot_hdc_v41_fh_checked_permission (
 );
  import ot_dsrom_vm_pkg::*;
  localparam integer RB=(REQ_BITS+31)/32, PB=(REP_BITS+31)/32;
+ localparam integer NCOLD=16;
+ wire [NCOLD-1:0] cold_c;
+ wire cold_n=cold_c[0];
+ wire [15:0] take_rc;
+ wire [7:0] take_pc;
+ for(genvar c=0;c<NCOLD;c=c+1) begin : g_cold
+  if(MARGIN) begin : g_k
+   ot_hdc_v41_fh_cold_copy u_cold(.clk(fast_clk),.d(cold_n_in),.q(cold_c[c]));
+  end else begin : g_n
+   assign cold_c[c]=cold_n_in;
+  end
+ end
  request_t accepted_input,source_packet,source_check;
  reply_t held_reply,held_check;
  reg [74:0] wa;reg [79:0] wm;reg [2559:0] wd;
@@ -52,16 +70,30 @@ module ot_hdc_v41_fh_checked_permission (
  // is excluded from this path; it remains an immediate publication veto.
  wire request_take=request_accept&&!active&&!protocol_fault&&!metadata_bad&&!bounds_fault;
  wire reply_take=checked_reply_capture&&active&&!reply_active&&!protocol_fault&&!metadata_bad;
+ for(genvar c=0;c<16;c=c+1) begin : g_take_r
+  if(MARGIN) begin : g_k
+   ot_hdc_v41_fh_take_copy u_take(.clk(fast_clk),.cold_n(cold_c[c]),.d(request_take),.q(take_rc[c]));
+  end else begin : g_n
+   assign take_rc[c]=request_take;
+  end
+ end
+ for(genvar c=0;c<8;c=c+1) begin : g_take_p
+  if(MARGIN) begin : g_k
+   ot_hdc_v41_fh_take_copy u_take(.clk(fast_clk),.cold_n(cold_c[c]),.d(reply_take),.q(take_pc[c]));
+  end else begin : g_n
+   assign take_pc[c]=reply_take;
+  end
+ end
  for(genvar b=0;b<RB;b=b+1) begin : g_request_bank
   localparam integer N=(REQ_BITS-b*32>=32)?32:REQ_BITS-b*32;
-  ot_hdc_v41_fh_checked_bank #(.BITS(N)) u_bank (
-   .clk(fast_clk),.cold_n(cold_n),.load(request_take),.d(accepted_input[b*32+:N]),
+  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN)) u_bank (
+   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_rc[b%16]),.d(accepted_input[b*32+:N]),
    .q(source_packet[b*32+:N]),.check(source_check[b*32+:N]),.bad(request_bad[b]));
  end
  for(genvar b=0;b<PB;b=b+1) begin : g_reply_bank
   localparam integer N=(REP_BITS-b*32>=32)?32:REP_BITS-b*32;
-  ot_hdc_v41_fh_checked_bank #(.BITS(N)) u_bank (
-   .clk(fast_clk),.cold_n(cold_n),.load(reply_take),.d(checked_reply[b*32+:N]),
+  ot_hdc_v41_fh_checked_bank #(.BITS(N),.MARGIN(MARGIN)) u_bank (
+   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.load(take_pc[b%8]),.d(checked_reply[b*32+:N]),
    .q(held_reply[b*32+:N]),.check(held_check[b*32+:N]),.bad(reply_bad[b]));
  end
  // Full native identity, never the bounded head ID alone. Keep eight local
@@ -74,7 +106,7 @@ module ot_hdc_v41_fh_checked_permission (
  for(genvar b=0;b<8;b=b+1) begin : g_identity_bank
   localparam integer N=(239-b*32>=32)?32:239-b*32;
   ot_hdc_v41_fh_checked_match #(.BITS(N)) u_match (
-   .clk(fast_clk),.cold_n(cold_n),.a(expected_identity[b*32+:N]),
+   .clk(fast_clk),.cold_n(cold_c[b%NCOLD]),.a(expected_identity[b*32+:N]),
    .b(returned_identity[b*32+:N]),.match(match_q[b]),.check(match_check[b]));
  end
  wire identity_bad=match_q!=~match_check;
@@ -84,7 +116,7 @@ module ot_hdc_v41_fh_checked_permission (
   .clk(fast_clk),.cold_n(cold_n),
   .bad({metadata_bad,identity_bad,request_bad,reply_bad}),.fault(checked_error));
  assign endpoint_fault=protocol_fault||metadata_bad||bounds_fault||
-     (|request_bad)||(|reply_bad)||identity_bad||
+     (MARGIN?checked_error:((|request_bad)||(|reply_bad)))||identity_bad||
      (reply_active&&rep_age==0&&!matching_reply);
  assign request_checked_v=active&&req_age==0&&!endpoint_fault&&!checked_error;
  assign reply_checked_v=active&&reply_active&&rep_age==0&&matching_reply&&!endpoint_fault&&!checked_error;
@@ -128,20 +160,41 @@ module ot_hdc_v41_fh_checked_permission (
 endmodule
 
 (* keep_hierarchy *)
-module ot_hdc_v41_fh_checked_bank #(parameter integer BITS=32)(
+module ot_hdc_v41_fh_checked_bank #(parameter integer BITS=32, MARGIN=0)(
  input wire clk,cold_n,load,input wire [BITS-1:0] d,
  (* keep=1,dont_touch=1 *) output reg [BITS-1:0] q,check,output wire bad
 );
+ // MARGIN: data registered twice at the bank, load (already one kept copy late) once more
+ wire [BITS-1:0] dl;
+ wire ll;
+ generate if(MARGIN) begin : g_pipe
+  reg [BITS-1:0] d1,d2;
+  reg l2;
+  always @(posedge clk) begin d1<=d; d2<=d1; l2<=cold_n&&load; end
+  assign dl=d2; assign ll=l2;
+ end else begin : g_direct
+  assign dl=d; assign ll=load;
+ end endgenerate
  (* keep=1,dont_touch=1 *) reg fault,fault_check;
  wire mismatch=q!=~check;
  assign bad=mismatch||fault||fault!=~fault_check;
  always @(posedge clk) begin
   if(!cold_n) begin q<=0;check<={BITS{1'b1}};fault<=0;fault_check<=1;end
   else begin
-   if(load&&!bad) begin q<=d;check<=~d;end
+   if(ll&&!bad) begin q<=dl;check<=~dl;end
    if(bad) begin fault<=1;fault_check<=0;end
   end
  end
+endmodule
+
+// kept copies for the margin-first endpoint broadcast (cold_n, take)
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_cold_copy(input wire clk,d,output reg q);
+ always @(posedge clk) q<=d;
+endmodule
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_take_copy(input wire clk,cold_n,d,output reg q);
+ always @(posedge clk) if(!cold_n) q<=0; else q<=d;
 endmodule
 
 (* keep_hierarchy *)

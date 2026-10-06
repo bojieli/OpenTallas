@@ -24,7 +24,12 @@ module ot_hdc_v41_fh_ctx #(
     parameter integer ALAT = 0,
     parameter integer CAPTURE = 0,
     parameter integer RETURN_EXTRA = 0,
-    parameter integer RETIRE = 0
+    parameter integer RETIRE = 0,
+    // MARGIN (default 0; margin-first 1, needs CAPTURE): zero-cycle broadcast trees - fused-lane select,
+    // index-write go and the return valid reach the 64 lanes through one kept copy per group a cycle
+    // earlier; the leaf row register is kept once per group; group_fault carries the per-group OR of
+    // the lane adder faults (same cycle as fault) so retirement can fold it in locally.
+    parameter integer MARGIN = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -55,7 +60,8 @@ module ot_hdc_v41_fh_ctx #(
     output reg  [G*AW-1:0]   o_addr,
     output reg  [G*W-1:0]    o_mask,
     output reg  [G*W*32-1:0] o_data,
-    output reg               fault
+    output reg               fault,
+    output reg  [G-1:0]      group_fault
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
@@ -64,6 +70,9 @@ module ot_hdc_v41_fh_ctx #(
     localparam integer TW = 1 + 1 + 1 + 1 + 1 + 2 + AW + AW + 3 * (NW + 1) + 2 + AW + 3 + AW + 1;
     localparam integer MPI = 0;
     localparam integer DF = 2 + RETURN_EXTRA + CAPTURE + ((ALAT == 0) ? 5 : ALAT);
+`ifndef SYNTHESIS
+    initial if (MARGIN && !CAPTURE) $fatal(1, "MARGIN needs CAPTURE");
+`endif
     // -- engine registers the paths start at -------------------------------------------------------
     reg [TW-1:0]     a_tag_p;
     reg [G*W*32-1:0] res_u;
@@ -77,6 +86,10 @@ module ot_hdc_v41_fh_ctx #(
     reg              ov1, ov;
     assign leaf_valid=tv[0];
     assign result_valid=ov;
+    wire [NW-1:0] row_qg [0:G-1];
+    for (genvar rg = 0; rg < G; rg = rg + 1) begin : g_rowq
+        ot_hdc_v41_fh_kvec #(.N(NW)) u_rowq (.clk(clk), .d(leaf_row_in), .q(row_qg[rg]));
+    end
     always @(posedge clk) begin
         a_tag_p <= a_tag_p_in; res_u <= res_in; o_addr1 <= o_addr1_in; o_mask1 <= o_mask1_in;
         mask_q <= leaf_mask_in; row_q <= leaf_row_in; am_idx <= am_idx_in;
@@ -119,23 +132,35 @@ module ot_hdc_v41_fh_ctx #(
 
     wire [G*W*32-1:0] fsum;
     wire [G*W-1:0]    ffault;
-    ot_hdc_v41_fh_add #(.W(W), .G(G), .AW(AW), .MPI(MPI), .ALAT(ALAT),.CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA)) u_fh (
+    ot_hdc_v41_fh_add #(.W(W), .G(G), .AW(AW), .MPI(MPI), .ALAT(ALAT),.CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.TREE(MARGIN)) u_fh (
         .clk(clk), .rst_n(rst_n), .t_v_p(t_v_p), .p_fus(p_fus), .p_last(p_last), .p_ports(p_ports), .p_m(p_m),
         .p_tq(p_tq), .p_hg(p_hg), .p_oa(p_oa), .p_ots(p_ots), .p_ogs(p_ogs), .p_ops(p_ops), .res_u(res_u),
         .ra_re(ra_re), .ra_addr(ra_addr), .ra_q(ra_q), .fsum(fsum), .ffault(ffault));
     wire [G*W-1:0] fused_lane_v;
+    wire [G-1:0] fsel_g;
+    for (genvar fg=0; fg<G; fg=fg+1) begin : g_fsel_group
+        if (MARGIN) begin : g_k
+            ot_hdc_v41_fh_kreg u_selg (.clk(clk),.rst_n(rst_n),.d(fline[DF-2]),.q(fsel_g[fg]));
+        end else begin : g_n
+            assign fsel_g[fg]=fline[DF-2];
+        end
+    end
     for (genvar fl=0; fl<G*W; fl=fl+1) begin : g_fused_select
         if (CAPTURE) begin : g_local
-            ot_hdc_v41_fh_kreg u_sel (.clk(clk),.rst_n(rst_n),.d(fline[DF-1]),.q(fused_lane_v[fl]));
+            ot_hdc_v41_fh_kreg u_sel (.clk(clk),.rst_n(rst_n),.d(MARGIN?fsel_g[fl/W]:fline[DF-1]),.q(fused_lane_v[fl]));
         end else assign fused_lane_v[fl]=f_v;
     end
     wire [G*W*32-1:0] res;
     for (genvar rl=0; rl<G*W; rl=rl+1) begin : g_result_local
         assign res[32*rl+:32]=fused_lane_v[rl]?fsum[32*rl+:32]:res_u[32*rl+:32];
     end
+    integer fq;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) fault <= 1'b0;
-        else fault <= |ffault;
+        if (!rst_n) begin fault <= 1'b0; group_fault <= 0; end
+        else begin
+            fault <= |ffault;
+            for (fq = 0; fq < G; fq = fq + 1) group_fault[fq] <= |ffault[fq*W+:W];
+        end
     end
 
     // result port: the as-built o_*1 stage (o_data1 takes the selected result), then the argmax-index write
@@ -171,8 +196,16 @@ module ot_hdc_v41_fh_ctx #(
     localparam integer NIW=(G*W+IWG_LANES-1)/IWG_LANES;
     wire [NIW-1:0] iwg;
     genvar ic;
+    wire [G-1:0] iwg_g;
+    generate for (ic = 0; ic < G; ic = ic + 1) begin : g_iwg_group
+        if (MARGIN) begin : g_k   // kept replicas of iw_go, one per group
+            ot_hdc_v41_fh_kreg u_iwgg (.clk(clk), .rst_n(rst_n), .d(iw_go_n), .q(iwg_g[ic]));
+        end else begin : g_n
+            assign iwg_g[ic] = iw_go;
+        end
+    end endgenerate
     generate for (ic = 0; ic < NIW; ic = ic + 1) begin : g_iwg
-        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(CAPTURE?iw_go:iw_go_n), .q(iwg[ic]));
+        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(CAPTURE?(MARGIN?iwg_g[ic*IWG_LANES/W]:iw_go):iw_go_n), .q(iwg[ic]));
     end endgenerate
     wire [G*W*32-1:0] iw_data_old = {{(G*W-1){32'd0}}, {{(32-NW){1'b0}}, am_idx}} << (32 * iw_e[LW-1:0]);
     wire [G*W-1:0]    iw_mask_old = {{(G*W-1){1'b0}}, 1'b1} << iw_e[LW-1:0];
@@ -215,7 +248,13 @@ module ot_hdc_v41_fh_ctx #(
     genvar e;
     generate for (e = 0; e < G * W; e = e + 1) begin : g_leaf
         reg [CW-1:0] c;
-        always @(posedge clk) c <= {mask_q[e], okey(res[32*e +: 32]), row_q};
+        always @(posedge clk) c <= {mask_q[e], okey(res[32*e +: 32]), MARGIN ? row_qg[e / W] : row_q};
         assign leaf[CW*e +: CW] = c;
     end endgenerate
+endmodule
+
+// kept multi-bit register copy (no merge with equal copies): broadcast replicas
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_kvec #(parameter integer N=16)(input wire clk,input wire [N-1:0] d,output reg [N-1:0] q);
+    always @(posedge clk) q <= d;
 endmodule

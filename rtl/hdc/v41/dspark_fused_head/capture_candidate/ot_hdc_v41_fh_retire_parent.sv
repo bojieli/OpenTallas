@@ -3,7 +3,8 @@
 // memory write, carrying the emitted identity, word address and lane mask.
 // A wrong receipt quarantines debt until reset; emission never clears debt.
 module ot_hdc_v41_fh_retire_parent #(
-    parameter integer ENABLE=0, PAYLOAD_BITS=5512
+    parameter integer ENABLE=0, PAYLOAD_BITS=5512,
+    parameter integer MARGIN=0   // ot_hdc_v41_fh_fault_retire MARGIN (+1 retirement cycle)
 )(
     input wire clk,rst_n,
     input wire packet_v, warm,
@@ -13,6 +14,7 @@ module ot_hdc_v41_fh_retire_parent #(
     input wire [63:0] poison,
     input wire [3:0] address_fault,
     input wire arithmetic_fault,
+    input wire [3:0] group_fault,
     input wire sink_busy,ack_v,
     input wire [7:0] ack_id,
     input wire [23:0] ack_word,
@@ -27,7 +29,7 @@ module ot_hdc_v41_fh_retire_parent #(
     output wire warm_debt
 );
     generate if(!ENABLE) begin : g_original
-        wire f=(|poison)||(|address_fault)||arithmetic_fault;
+        wire f=(|poison)||(|address_fault)||arithmetic_fault||(|group_fault);
         assign retired_v=packet_v;
         assign retired_packet=packet;
         assign retired_warm=warm;
@@ -64,10 +66,10 @@ module ot_hdc_v41_fh_retire_parent #(
                 if(retired_warm&&!fault) sent<=1;
                 if(ack_v&&(!debt||!matching_ack)) protocol_fault<=1;
             end
-        ot_hdc_v41_fh_fault_retire #(.ENABLE(1),.PACKET_BITS(PAYLOAD_BITS+8)) u_cut (
+        ot_hdc_v41_fh_fault_retire #(.ENABLE(1),.PACKET_BITS(PAYLOAD_BITS+8),.MARGIN(MARGIN)) u_cut (
             .clk(clk),.rst_n(rst_n),.packet_v(packet_v),.packet({next_id,packet}),
             .poison(poison),.address_fault(address_fault),
-            .arithmetic_fault(arithmetic_fault||protocol_fault),
+            .arithmetic_fault(arithmetic_fault||protocol_fault),.group_fault(group_fault),
             .retired_v(retired_v),.retired_packet(retired),
             .lane_veto(lane_veto),.write_veto(write_veto),
             .fault(pipe_fault),.busy(pipe_busy));

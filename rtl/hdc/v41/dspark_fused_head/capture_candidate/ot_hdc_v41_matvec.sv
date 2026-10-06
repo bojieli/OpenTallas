@@ -365,6 +365,11 @@ module ot_hdc_v41_matvec #(
 `else
     localparam integer FH_CAPTURE = 0;
 `endif
+`ifdef OT_FH_MARGIN
+    localparam integer FH_MARGIN = `OT_FH_MARGIN;
+`else
+    localparam integer FH_MARGIN = 0;
+`endif
 `ifdef OT_FH_RETURN_EXTRA
     localparam integer FH_RETURN_EXTRA = `OT_FH_RETURN_EXTRA;
 `else
@@ -497,7 +502,7 @@ module ot_hdc_v41_matvec #(
     //: FUSED: the addend read and add (ot_hdc_v41_fh_add, below)
     wire [G*W*32-1:0] fsum;
     wire [G*W-1:0]    ffault;
-    ot_hdc_v41_fh_add #(.W(W), .G(G), .AW(AW), .MPI(mp), .ALAT(FH_ALAT), .CAPTURE(FH_CAPTURE), .RETURN_EXTRA(FH_RETURN_EXTRA)) u_fh (
+    ot_hdc_v41_fh_add #(.W(W), .G(G), .AW(AW), .MPI(mp), .ALAT(FH_ALAT), .CAPTURE(FH_CAPTURE), .RETURN_EXTRA(FH_RETURN_EXTRA), .TREE(FH_MARGIN)) u_fh (
         .clk(clk), .rst_n(rst_n), .t_v_p(t_v_p), .p_fus(p_fus), .p_last(p_last), .p_ports(p_ports), .p_m(p_m),
         .p_tq(p_tq), .p_hg(p_hg), .p_oa(p_oa), .p_ots(p_ots), .p_ogs(p_ogs), .p_ops(p_ops), .res_u(res_u),
         .ra_re(ra_re[mp*G +: G]), .ra_addr(ra_addr[mp*G*AW +: G*AW]), .ra_q(ra_q[mp*G*W*32 +: G*W*32]),
@@ -719,7 +724,10 @@ module ot_hdc_v41_fh_add #(
     parameter integer MPI = 0,
     parameter integer ALAT = 0,
     parameter integer CAPTURE = 0,
-    parameter integer RETURN_EXTRA = 0
+    parameter integer RETURN_EXTRA = 0,
+    // TREE (default 0; margin-first 1, needs CAPTURE and RETURN_EXTRA >= 1): the protected return valid
+    // reaches the 64 lane capture registers through one kept copy per group a cycle earlier. Same cycle.
+    parameter integer TREE = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -793,7 +801,25 @@ module ot_hdc_v41_fh_add #(
         else begin hv0 <= t_v_p && p_fus && p_last; hv1 <= hv0; ah_v <= hv1; end
     end
     wire protected_v;
-    ot_hdc_delay #(.W(1), .D(RETURN_EXTRA)) u_return_valid (.clk(clk), .rst_n(rst_n), .d(ah_v), .q(protected_v));
+    wire [G-1:0] protected_vg;
+    generate if (TREE) begin : g_rv_tree
+`ifndef SYNTHESIS
+        initial if (!CAPTURE || RETURN_EXTRA < 1) $fatal(1, "TREE needs CAPTURE and RETURN_EXTRA >= 1");
+`endif
+        wire rv_pre;
+        if (RETURN_EXTRA > 1) begin : g_d
+            ot_hdc_delay #(.W(1), .D(RETURN_EXTRA - 1)) u_return_valid (.clk(clk), .rst_n(rst_n), .d(ah_v), .q(rv_pre));
+        end else begin : g_n
+            assign rv_pre = ah_v;
+        end
+        for (genvar gq = 0; gq < G; gq = gq + 1) begin : g_rvg
+            ot_hdc_v41_fh_kreg u_rvg (.clk(clk), .rst_n(rst_n), .d(rv_pre), .q(protected_vg[gq]));
+        end
+        assign protected_v = protected_vg[0];
+    end else begin : g_rv_line
+        ot_hdc_delay #(.W(1), .D(RETURN_EXTRA)) u_return_valid (.clk(clk), .rst_n(rst_n), .d(ah_v), .q(protected_v));
+        assign protected_vg = {G{protected_v}};
+    end endgenerate
     genvar g;
     generate for (g = 0; g < G * W; g = g + 1) begin : g_fadd
         wire [31:0] addend_in, result_in;
@@ -804,7 +830,7 @@ module ot_hdc_v41_fh_add #(
                 addend_r <= ra_q[32*g+:32];
                 result_r <= res_h[32*g+:32];
             end
-            ot_hdc_v41_fh_kreg u_v (.clk(clk), .rst_n(rst_n), .d(protected_v), .q(valid_in));
+            ot_hdc_v41_fh_kreg u_v (.clk(clk), .rst_n(rst_n), .d(protected_vg[g / W]), .q(valid_in));
             assign addend_in=addend_r;
             assign result_in=result_r;
         end else begin

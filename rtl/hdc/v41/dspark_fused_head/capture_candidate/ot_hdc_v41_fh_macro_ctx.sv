@@ -11,7 +11,12 @@ module ot_hdc_v41_fh_macro_ctx #(
     parameter integer RETURN_EXTRA = 2,
     parameter integer PROTECT_SPLIT = 0,
     parameter integer RETIRE = 0,
-    parameter integer VM_ENDPOINT = 0, VM_GUARD = 0
+    parameter integer VM_ENDPOINT = 0, VM_GUARD = 0,
+    // MARGIN (default 0; margin-first 1): zero-cycle broadcast trees (ctx), per-group lane faults into
+    // retirement, five-deep retirement (+1), staged checked-permission endpoint; with HARD_LANE=1 the
+    // 64 SRAM lanes are the hardened lane macro and requests reach them through ADDR_PIPE=2
+    // distribution registers (RETURN_EXTRA = 2 + PROTECT_SPLIT + 2).
+    parameter integer MARGIN = 0, HARD_LANE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -72,13 +77,24 @@ module ot_hdc_v41_fh_macro_ctx #(
     wire [G*W*32-1:0] raw_data;
     wire [G-1:0] child_we;
     wire [(1+32+NW)*G*W-1:0] child_leaf;
+    localparam integer ADDR_PIPE = (HARD_LANE && MARGIN) ? 2 : 0;
+    generate if (HARD_LANE) begin : g_hard_memory
+    ot_hdc_v41_fh_sram_return_hardened #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT),.ADDR_PIPE(ADDR_PIPE)) u_memory (
+        .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),
+        .rd_valid(mem_valid),.corrected(mem_corrected),.poisoned(mem_poison),
+        .wr_en(wr_en),.wr_addr(wr_addr),.wr_mask(wr_mask),.wr_data(wr_data),
+        .wr_committed(mem_committed),.fault(memory_fault),.address_fault_bits(memory_address_fault));
+    end else begin : g_memory
     ot_hdc_v41_fh_sram_return #(.W(W),.G(G),.AW(AW),.PROTECT_SPLIT(PROTECT_SPLIT)) u_memory (
         .clk(clk),.rst_n(rst_n),.rd_en(ra_re),.rd_addr(ra_addr),.rd_data(ra_q),
         .rd_valid(mem_valid),.corrected(mem_corrected),.poisoned(mem_poison),
         .wr_en(wr_en),.wr_addr(wr_addr),.wr_mask(wr_mask),.wr_data(wr_data),
         .wr_committed(mem_committed),.fault(memory_fault),.address_fault_bits(memory_address_fault));
+    end endgenerate
+    wire [G-1:0] head_group_fault;
     ot_hdc_v41_fh_ctx #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.ALAT(ALAT),
-        .CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.RETIRE(RETIRE)) u_head (
+        .CAPTURE(CAPTURE),.RETURN_EXTRA(RETURN_EXTRA),.RETIRE(RETIRE),.MARGIN(MARGIN)) u_head (
+        .group_fault(head_group_fault),
         .retire_busy(retire_busy),.retire_warm_ack(retire_warm_ack),.warm_emit(child_warm),
         .leaf_valid(child_leaf_v),.result_valid(child_ov),
         .clk(clk),.rst_n(rst_n),.ra_re(ra_re),.ra_addr(ra_addr),.ra_q(ra_q),
@@ -111,7 +127,7 @@ module ot_hdc_v41_fh_macro_ctx #(
 `ifndef SYNTHESIS
         initial if(!RETIRE) $fatal(1,"Native endpoint context requires retirement enabled");
 `endif
-        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD)) u_native (
+        ot_hdc_v41_fh_vm_endpoint_ctx #(.ENABLE(1),.CHECK_PIPE(VM_GUARD),.MARGIN(MARGIN)) u_native (
             .fast_clk(clk),.cold_n(native_cold_n),
             .request_accept((|o_we)&&native_request_ready),.request_warm(commit_warm),
             .checked_reply_capture(native_reply_capture),.published_reply_v(native_reply_v),
@@ -148,7 +164,8 @@ module ot_hdc_v41_fh_macro_ctx #(
     end endgenerate
     assign fault=RETIRE?parent_fault:(child_fault||memory_fault);
 `ifndef SYNTHESIS
-    initial if(RETURN_EXTRA!=2+PROTECT_SPLIT) $fatal(1,"Protected SRAM return and head latency mismatch");
+    initial if(RETURN_EXTRA!=2+PROTECT_SPLIT+ADDR_PIPE) $fatal(1,"Protected SRAM return and head latency mismatch");
+    initial if(MARGIN && !(CAPTURE && RETIRE && (!VM_ENDPOINT || VM_GUARD))) $fatal(1,"MARGIN needs CAPTURE, RETIRE and the checked endpoint");
 `endif
     generate if(RETIRE) begin : g_retirement
         localparam integer PW=5512;
@@ -162,10 +179,10 @@ module ot_hdc_v41_fh_macro_ctx #(
         wire [63:0] veto;
         wire [3:0] write_veto,retired_we;
         wire [3135:0] retired_leaf;
-        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW)) u_parent (
+        ot_hdc_v41_fh_retire_parent #(.ENABLE(1),.PAYLOAD_BITS(PW),.MARGIN(MARGIN)) u_parent (
             .clk(clk),.rst_n(rst_n),.packet_v(raw_v||child_ov||(|child_we)||child_warm||child_leaf_v),
             .warm(child_warm),.packet(packet),.warm_word(raw_addr[23:0]),.warm_mask(raw_mask[15:0]),
-            .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(child_fault||native_fault),
+            .poison(mem_poison),.address_fault(memory_address_fault),.arithmetic_fault(MARGIN?native_fault:(child_fault||native_fault)),.group_fault(MARGIN?head_group_fault:4'b0),
             .sink_busy(commit_busy||native_guard_busy),.ack_v(VM_ENDPOINT?native_ack_v:commit_ack_v),.ack_id(VM_ENDPOINT?native_ack_id:commit_ack_id),
             .ack_word(VM_ENDPOINT?native_ack_word:commit_ack_word),.ack_mask(VM_ENDPOINT?native_ack_mask:commit_ack_mask),
             .retired_v(rv),.retired_warm(rw),.retired_packet(retired),.retired_id(commit_id),

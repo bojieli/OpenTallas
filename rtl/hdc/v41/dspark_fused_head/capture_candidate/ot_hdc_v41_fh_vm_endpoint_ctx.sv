@@ -5,7 +5,7 @@
 // Backend SRAM readback/transport and publication remain actual parent inputs.
 // Conditional child proof only; do not substitute this for the parent VM.
 (* keep_hierarchy *)
-module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0)(
+module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0, MARGIN=0)(
  input wire fast_clk,cold_n,
  input wire request_accept,request_warm,checked_reply_capture,published_reply_v,
  input wire [31:0] native_ordinal,
@@ -27,7 +27,7 @@ module ot_hdc_v41_fh_vm_endpoint_ctx # (parameter integer ENABLE=0, CHECK_PIPE=0
 );
  import ot_dsrom_vm_pkg::*;
  generate if(ENABLE && CHECK_PIPE) begin : g_distributed_check
-  ot_hdc_v41_fh_checked_permission u_guard(.*);
+  ot_hdc_v41_fh_checked_permission #(.MARGIN(MARGIN)) u_guard(.cold_n_in(cold_n),.*);
  end else if(ENABLE) begin : g_native_endpoints
   assign request_checked_v=request_accept&&!endpoint_fault;
   assign reply_checked_v=published_reply_v&&!endpoint_fault;
