@@ -12474,6 +12474,42 @@ def dsrom_protected_vm_model(distributed_cmd=False):
     return distributed_model() if distributed_cmd else model()
 
 
+def hbm_native_selected_result_model():
+    """One installed formatter sink scalar consumed by the existing native SM."""
+    return dict(schema='opentallas.hbm.native_selected_result.v1',default_enabled=False,
+        source='rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv',
+        program='tools/gpu_sys/hbm_selected_result_program.py',
+        producer_owner='Gauss global512 merge/protected landing/checked sink writer',
+        parent_owner='Gibbs selected parent/native shared route/CP admission',
+        actual_sink_byte_base=0x70000,actual_sink_byte_limit=0x70800,
+        selected_IDs=512,sink_U32_bytes=2048,checked_kind4_rows=32,
+        final_sink_row_byte_address=0x707c0,
+        operation='read stored selected-ID ordinal0, publish full U32 SM RESULT; not a full-token inference claim',
+        instructions=['UMOVI U4,0x70000','LDG V0,U4,F32bits,count1','UFROMV U5,V0,lane0','RESULT U5','EXIT'],
+        instruction_words=5,instruction_bytes=40,command_words=2,command_bytes=16,
+        uniform_registers_used=[4,5],vector_registers_used=[0],
+        input_TOKEN_UR0_used_as_payload=False,payload_immediates=0,
+        new_FF_bits=0,new_SRAM_bits=0,new_arithmetic=0,new_MACs_per_cycle=0,
+        additional_memory_ports=0,actual_memory_read_bytes=4,native_sector_read_bytes=32,
+        native_sector_requests=1,native_sector_returns=1,
+        native_boundary_fields=dict(req=['valid','ready','we','addr32','wdata256','wstrb32','tag16'],
+                                    rsp=['valid','ready','we','data256','tag16']),
+        native_request_bits_including_valid_ready=339,
+        native_response_bits_including_valid_ready=275,
+        transport='existing a_req/a_rsp native LSU -> shared SM0 route -> existing AW3 CDC -> same HBM bank; kind3 arena-only read forbidden',
+        register_mux_or_fanout_added=0,area_delta_um2=0,slot='existing instruction/command memories, caller must reserve five contiguous instruction words and two commands',
+        ideal_instruction_issue_edges=5,LSU_completion_edges=None,
+        actual_native_provider_RTT_edges=None,CP_launch_END_edges=None,
+        composed_latency='five actual instructions plus native LSU blocking request/return and B_DRAIN/CP launch-END overhead; RTT/context calendar must be measured in existing parent',
+        composed_latency_bound=False,clock='actual clk_sm, existing inherited boundary; no clock or uncertainty change',
+        required_launch_fence='all32 full73 checked kind4 responses accepted, sink ACK/debt drained, actual consumer/source reverse and shared borrower release, same-frame sink allocation remains retained until native LSU return and SM/CP completion',
+        real_postrelease_allocation_source=None,
+        parent_condition='current preinstall RELEASE and old install_consumer retirement clear book/frame; owner must bind an actual persistent allocation in current CP context, not cached readiness',
+        entry_PC_bound=False,production_book_bound=False,
+        CP_RESULT_contract='SM full32bits preserved; CP END checks (res_q>>TW)==0 with TW17, otherwise status3; no ID truncation or TOKEN echo waiver',
+        RTL_numerical_gate_passed=False,parent_joined=False,physical_qualified=False,headline_rate_credit=False)
+
+
 def hbm_vm_publication_parent_model():
     """Compose existing activation and index providers; price missing caller seats."""
     ff = 216 + 288 + 72 + 4 * 722 + 360
