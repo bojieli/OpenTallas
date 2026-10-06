@@ -571,3 +571,10 @@ place_pin -pin_name {out_ids[53]} -layer M7 -location {167.152 315.956}
 place_pin -pin_name {out_valid} -layer M7 -location {167.664 315.956}
 place_pin -pin_name {clk} -layer M7 -location {8.016 0.000}
 place_pin -pin_name {rst_n} -layer M7 -location {8.528 0.000}
+
+# Native ORFS POST_IO_PLACEMENT hook: the base script writes its ODB
+# before calling this hook, so persist the actual fixed pin geometry again.
+if {[info exists ::env(RESULTS_DIR)] && [llength [info commands orfs_write_db]]} {
+  orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb
+  write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl
+}
