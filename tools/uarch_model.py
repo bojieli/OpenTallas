@@ -10943,6 +10943,41 @@ def hbm_existing_cp_cts_allocation_model():
 
 
 
+def hbm_item9_ha2_native_boundary_context_model():
+    """Original hub/RX dispatch/result-load cones, not the full TU queue array."""
+    rx_bits=8*256*545
+    hub_bits=2*(35*544+35+32)
+    result_bits=(1+8)*64*545  # u_dqo and the eight actual qr destinations
+    # wp/rp/ovf per FIFO, dc/rcnt/drot and actual bound transaction tuple.
+    pointer_control_bits=8*(2*9+1)+9*(2*7+1)+32*3+122+1
+    ff=rx_bits+hub_bits+result_bits+pointer_control_bits
+    outer=[11069.136,11607.84,12468.792,13011.816]
+    return dict(evidence_class='CONDITIONAL_NATIVE_CALLER_CONTEXT',
+        top='ot_hbm_item9_ha2_native_boundary_context',default_ENABLE=0,
+        arithmetic_changed=False,reducer_copies=1,MACs_per_cycle=0,
+        hub=dict(copies=2,W=544,D=35,read_mux_entries=35),
+        peer=dict(copies=8,W=545,AW=8,read_mux_entries=256),
+        receiver=dict(dqo_copies=1,qr_copies=8,W=545,AW=6),
+        bytes_per_cycle=dict(hub=136,peer=545,result=64),
+        boundary_bits=dict(hub=1090,peer=4368,result=532),
+        routing_tracks_needed=1090+4368+532,
+        actual_unreserved_tracks=None,channel_fit=False,
+        storage_FF_bits=ff,storage_FF_floor_um2=ff*DFF_UM2,
+        producer_and_receiver_decode_mux_area_um2=None,
+        actual_current_adapter_area_um2=None,
+        retained_previous_adapter_area_um2=490159.0422,
+        retained_previous_adapter_is_current=False,
+        selected_outer_r16g_bbox_um=outer,
+        outer_area_um2=(outer[2]-outer[0])*(outer[3]-outer[1]),
+        maximum_final_utilization=.55,
+        full_TU_TX_partial_queues_and_CDC_included=False,
+        new_register_edges=0,new_token_ns=0,
+        clock=dict(root='clk',period_ps=833,SS_setup_ps=60,FF_hold_ps=25,
+                   source_characterized=False),
+        external_rearm_credit_release_and_upstream_IO_bound=False,
+        route_ready=False,contextual_SS_FF=False,adopted=False)
+
+
 def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
     """Mandatory baseline closure: local owner replication, priced before RTL.
 
@@ -11259,6 +11294,9 @@ def dsrom_window_parent_boundary_model():
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
+    pin_probe_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/pin_access_r2/record.json'
+    pin_probe = json.loads(pin_probe_path.read_text()) if pin_probe_path.is_file() else None
+    measured_pin_budget = (pin_probe['legal_positions']*.80*.60 if pin_probe else None)
     # Existing pinned SS/FF clock pin capacitances; these are sink loads,
     # never a substitute for the enclosing propagated CTS/root input load.
     ff_clk_caps = {'ss': {'DFFASRHQNx1_ASAP7_75t_R': .433982,
@@ -11398,7 +11436,22 @@ def dsrom_window_parent_boundary_model():
                 macro_bodies_and_halos_and_root_CTS_not_priced_free=True,
                 added_FF_bits=0, added_payload_bits=0, added_external_ports=0,
                 added_logical_cycles=0, full_route_ready=False,
-                measured_pin_access=False, parent_slot_fit=False, adoption=False),
+                measured_pin_access=bool(pin_probe and pin_probe['terminal_exit']==0),
+                retained_source_measured_capacity=(dict(
+                    evidence=str(pin_probe_path.relative_to(ROOT)),
+                    source_pin=pin_probe['source_pin'], die_um=pin_probe['die_um'],
+                    actual_PG_geometry_retained=pin_probe['real_PG_geometry_retained'],
+                    legal_positions=pin_probe['legal_positions'], signal_IO=pin_probe['signal_IO'],
+                    raw_signal_fraction=pin_probe['signal_IO']/pin_probe['legal_positions'],
+                    conservative_signal_budget=measured_pin_budget,
+                    conservative_budget_fraction=pin_probe['signal_IO']/measured_pin_budget,
+                    conservative_spare_positions=measured_pin_budget-pin_probe['signal_IO'],
+                    reserve_is_analytical_not_measured_clock_or_route_space=True,
+                    changed_source_physical_credit=False,
+                    parent_capacity_extrapolation_is_not_allocation=True,
+                    decision='Pin placement PASS only; low stdcell utilization does not establish channel, CTS/PG or loaded repair margin. Preserve the running changed-source map; coordinate any larger finite slot before full context routing.')
+                    if pin_probe else None),
+                parent_slot_fit=False, adoption=False),
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,

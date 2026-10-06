@@ -4,13 +4,15 @@
 Bacon owns formatter RTL; Gibbs owns parent/config. No source emission, numerical
 fixture, token simulation, implicit retry, synthesis or physical qualification.
 """
-import argparse, hashlib, json, os, re, shutil, socket, subprocess, sys, time
+import argparse, hashlib, json, os, re, shutil, socket, subprocess, sys, time, shlex
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 LIST='physical/hbm_die_abstracts_20261006/memory_control/formatter_provider.files.f'
 BODY='physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv'
 PARENT='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv'
+PARENT_TOP='ot_ds_hbm_cluster20_integrated'
+OBSERVER_TOP='tb_hbm_integrated_minimum_parent'
 SELECTED='results/rtl/hbm_integrated_sfu_provider_join_20261006/selected_parameters.json'
 # Literal selected Gibbs parameters; standalone snapshot runner has no imports
 # from another worktree. Original ALAT5 executor is not rewritten as c12ALAT6.
@@ -56,12 +58,46 @@ def files():
         if s not in paths:raise ValueError('Missing actual selected source '+s)
     return paths
 
-def prepare(work,body_pin,partition_reduction=False):
+def selected_parameters(document,native_norm_production=False):
+    parameters=dict(document['parameters'])
+    if native_norm_production:
+        candidate=document['norm_native_production_candidate']['parameters']
+        if candidate.get('NORM_NATIVE_VM_ENABLE')!=1 or candidate.get('NORM_NATIVE_INPUT_CP')!=1:
+            raise ValueError('Actual Gibbs native norm production flags unavailable')
+        parameters.update(candidate)
+    return parameters
+
+def observation_top(observation_wrapper,wrapper_pin,parameters):
+    top=PARENT_TOP
+    if observation_wrapper:
+        rel=str(observation_wrapper)
+        if observation_wrapper.is_absolute() or '..' in observation_wrapper.parts:
+            raise ValueError('Bacon wrapper must be a committed root-relative source')
+        if not wrapper_pin or sha(ROOT/rel)!=wrapper_pin:
+            raise ValueError('Actual Bacon wrapper source SHA required')
+        wrapper=(ROOT/rel).read_text()
+        if not re.search(r'\bmodule\s+'+OBSERVER_TOP+r'\b',wrapper) or not re.search(r'\b'+PARENT_TOP+r'\s*#\s*\(',wrapper):
+            raise ValueError('Observation wrapper must instantiate the actual full parent')
+        header=re.search(r'\bmodule\s+'+OBSERVER_TOP+r'\s*#\s*\((.*?)\)\s*\(',wrapper,re.S)
+        if not header or any(not re.search(r'\b'+k+r'\s*=',header[1]) for k in parameters):
+            raise ValueError('Wrapper must expose the actual selected parent parameters')
+        top=OBSERVER_TOP
+    elif wrapper_pin:raise ValueError('Wrapper pin without actual source')
+    return top
+
+def prepare(work,body_pin,partition_reduction=False,native_norm_production=False,
+            observation_wrapper=None,wrapper_pin=None):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
+    parameters=selected_parameters(json.loads((ROOT/SELECTED).read_text()),native_norm_production)
+    paths=files();top=PARENT_TOP
+    top=observation_top(observation_wrapper,wrapper_pin,parameters)
+    if observation_wrapper:
+        if str(observation_wrapper) in paths:raise ValueError('Duplicate observation wrapper source')
+        paths.append(str(observation_wrapper))
     work.mkdir(parents=True,exist_ok=False)
-    paths=files();all_files=paths+INCLUDES
+    all_files=paths+INCLUDES
     missing=[s for s in all_files if not (ROOT/s).is_file()]
     pins={s:sha(ROOT/s) for s in all_files if (ROOT/s).is_file()}
     errors=[]
@@ -127,16 +163,21 @@ def prepare(work,body_pin,partition_reduction=False):
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
     shutil.copyfile(ROOT/LIST,work/'src/files.f')
+    if observation_wrapper:
+        with (work/'src/files.f').open('a') as f:f.write('\n'+str(observation_wrapper)+'\n')
     hier=work/'src/hierarchy.vlt'
     hier.write_text('`verilator_config\n'+''.join(f'hier_block -module "{name}"\n' for name in blocks))
     runner=work/'runner.py';shutil.copyfile(Path(__file__),runner)
     m=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-        source_sha256=pins,files_f_sha256=sha(ROOT/LIST),runner_sha256=sha(runner),
+        source_sha256=pins,files_f_sha256=sha(work/'src/files.f'),runner_sha256=sha(runner),
         binding_sha256=sha(ROOT/'tools/hbm_opt_integrated_20261005_w2_on.py'),
         hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in blocks},
         partition_reduction=partition_reduction,
+        native_norm_production=native_norm_production,
+        top=top,observation_wrapper=str(observation_wrapper) if observation_wrapper else None,
+        observation_wrapper_sha256=wrapper_pin,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
-        sources=paths,includes=INCLUDES,parameters=PARAMS,body_owner_sha256=body_pin,
+        sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
         prepared_bytes=sum((ROOT/s).stat().st_size for s in all_files if s not in missing),
         full_parent_elaborated=False,numerical=False,physical_qualified=False,
@@ -148,7 +189,8 @@ def prepare(work,body_pin,partition_reduction=False):
 def verified(work):
     m=json.loads((work/'prepared.json').read_text())
     if not m['source_ready']:raise ValueError('Actual owner-pinned body/source closure not ready; no guard/compiler')
-    if m['parameters']!=PARAMS:raise ValueError('Selected enabled parameters changed')
+    if m['parameters']!=selected_parameters(json.loads((work/'src'/SELECTED).read_text()),m.get('native_norm_production',False)):
+        raise ValueError('Snapshot differs from its pinned selected parameters')
     if sha(work/'src/files.f')!=m['files_f_sha256']:raise ValueError('Source list changed')
     if sha(work/'runner.py')!=m['runner_sha256']:raise ValueError('Runner changed')
     if sha(work/'src/hierarchy.vlt')!=m['hierarchy_sha256']:raise ValueError('Compiler hierarchy changed')
@@ -210,7 +252,7 @@ def run(a):
     # One frontend at a time bounds concurrency without process memory caps.
     cmd=[str(a.tool.resolve()),'--cc','--hierarchical','--timing','-Wno-fatal',
          '-Werror-LATCH','--build-jobs','1','--verilate-jobs','1','--hierarchical-threads','1',
-         '--top-module','ot_ds_hbm_cluster20_integrated','--Mdir',str(obj),
+         '--top-module',m.get('top',PARENT_TOP),'--Mdir',str(obj),
          *[f'-G{k}={v}' for k,v in m['parameters'].items()],'hierarchy.vlt','-f','files.f']
     if a.plan:
         # --make json writes the real derived block/parameter/dependency graph
@@ -229,7 +271,7 @@ def run(a):
         return rc
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
     leaves=list(obj.glob('*__hierMkArgs.f'))
-    hierarchy_complete=bool(leaves) and (obj/'Vot_ds_hbm_cluster20_integrated.h').is_file()
+    hierarchy_complete=bool(leaves) and (obj/('V'+m.get('top',PARENT_TOP)+'.h')).is_file()
     write(work/'elaboration.json',dict(frontend_exit=rc,dangerous_diagnostics=dangerous,
         hierarchy_models=[p.name for p in leaves],hierarchy_complete=hierarchy_complete,
         full_parent_elaborated=(rc==0 and not dangerous and hierarchy_complete),parameters=m['parameters'],
@@ -237,11 +279,218 @@ def run(a):
         numerical=False,physical_qualified=False,adopted=False))
     return rc if rc else (2 if dangerous or not hierarchy_complete else 0)
 
+def digest(x):
+    return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+
+def source_index(work,m):
+    """Conservative transitive implementation closure, not parent-SHA exclusion.
+
+    Include every potential module reference in each implementation file (even
+    inactive generate branches), all compilation-unit declarations/packages,
+    and the ordered preprocessor context entering each source file. Unsupported
+    macro token construction refuses enrollment rather than guessing a module.
+    """
+    modules={};texts={};contexts={};globals_={};events=[];state={};macro_roots=set()
+    def clean(s):return re.sub(r'/\*.*?\*/|//[^\n]*','',s,flags=re.S)
+    def directives(text,stack=()):
+        for line in re.findall(r'^\s*`[^\n]*(?:\\\n[^\n]*)*',text,re.M):
+            line=line.strip()
+            if '``' in line:raise ValueError('Macro token construction needs compiler dependency export')
+            word=line.split(None,1)[0]
+            if word in ('`timescale','`default_nettype'):state[word]=line
+            else:events.append(line)
+            if word=='`include':
+                match=re.fullmatch(r'`include\s+"([^"]+)"',line)
+                if not match:raise ValueError('Nonliteral include cannot be enrolled')
+                name=match.group(1)
+                candidates=[p for p in m['source_sha256'] if p==name or p.endswith('/'+name)]
+                if len(candidates)!=1:raise ValueError('Ambiguous/unpinned include '+name)
+                rel=candidates[0]
+                if rel in stack:raise ValueError('Recursive include cannot be enrolled')
+                header=clean((work/'src'/rel).read_text())
+                events.append(('include',rel,m['source_sha256'][rel]))
+                macro_roots.update(re.findall(r'\b[A-Za-z_]\w*\b',header))
+                directives(header,stack+(rel,))
+            if word=='`define':macro_roots.update(re.findall(r'\b[A-Za-z_]\w*\b',line))
+    for rel in m['sources']:
+        text=clean((work/'src'/rel).read_text());texts[rel]=text
+        entering_context=digest([events,state])
+        for name in re.findall(r'^\s*module\s+(\w+)',text,re.M):
+            if name in modules:raise ValueError('Ambiguous module implementation '+name)
+            modules[name]=rel
+        outside=re.sub(r'\bmodule\b.*?\bendmodule\b','',text,flags=re.S)
+        outside=re.sub(r'^\s*`[^\n]*(?:\\\n[^\n]*)*','',outside,flags=re.M).strip()
+        if outside:globals_[rel]=digest(outside)
+        directives(text)
+        events.extend(re.findall(r'/\*\s*verilator[\s\S]*?\*/|//\s*verilator[^\n]*',
+                                 (work/'src'/rel).read_text()))
+        contexts[rel]=digest([entering_context,events,state])
+    return modules,texts,contexts,globals_,macro_roots
+
+def tool_identity(tool):
+    tool=tool.resolve();inc=tool.parent.parent/'share/verilator/include'
+    paths=[tool,tool.parent/'verilator_bin']+sorted(p for p in inc.rglob('*') if p.is_file())
+    if not inc.is_dir() or not all(p.is_file() for p in paths):raise ValueError('Incomplete compiler/tool runtime')
+    return {str(p.relative_to(tool.parent.parent)):sha(p) for p in paths}
+
+def component_contracts(work,m,jobs,tool_pins):
+    modules,texts,contexts,globals_,macro_roots=source_index(work,m)
+    by_prefix={j['prefix']:j for j in jobs};contracts={}
+    def contract(prefix):
+        if prefix in contracts:return contracts[prefix]
+        j=by_prefix[prefix];args=Path(j['verilator_args']).read_text()
+        original=j['top']
+        for line in args.splitlines():
+            if line.startswith('--hierarchical-block '):
+                pair=line.split(' ',1)[1].split(',',2)
+                if pair[1]==j['top']:original=pair[0];break
+        original=re.sub(r'__([0-9A-Fa-f]{3})',lambda x:chr(int(x[1],16)),original)
+        if original not in modules:raise ValueError('Actual module implementation missing '+original)
+        pending=[original]+sorted(macro_roots&modules.keys());closure=set()
+        while pending:
+            name=pending.pop();rel=modules[name]
+            if rel in closure:continue
+            closure.add(rel)
+            pending.extend(set(re.findall(r'\b[A-Za-z_]\w*\b',texts[rel]))&modules.keys())
+        # Absolute snapshot locations are incidental; every other option,
+        # define, parameter and derived hierarchy binding is compared exactly.
+        normalized=args.replace(str(work),'$SNAPSHOT')
+        deps={p:contract(p) for p in j.get('deps',[])}
+        config=[]
+        for line in (work/'src/hierarchy.vlt').read_text().splitlines():
+            match=re.fullmatch(r'hier_block -module "([^"]+)"',line)
+            if not match or modules.get(match[1]) in closure:config.append(line)
+        c=dict(original_module=original,top=j['top'],prefix=prefix,
+               arguments=normalized,implementation={p:m['source_sha256'][p] for p in sorted(closure)},
+               implementation_order=[p for p in m['sources'] if p in closure],
+               preprocessor_context={p:contexts[p] for p in sorted(closure)},
+               compilation_units=globals_,hierarchy_configuration=config,tool=tool_pins,
+               include_files={p:h for p,h in m['source_sha256'].items() if p.endswith(('.svh','.vh'))},
+               cflags=j.get('cflags',[]),dependencies={p:digest(v) for p,v in deps.items()})
+        contracts[prefix]=c;return c
+    for j in jobs:contract(j['prefix'])
+    return contracts
+
+def terminal_path(old,prefix):
+    p=old/prefix/'terminal.json'
+    if not p.exists():
+        ref=old/(prefix+'.retained.json')
+        if ref.exists():p=Path(json.loads(ref.read_text())['terminal'])
+    return p
+
+def recorded_dependencies(directory,prefix,source_root=None):
+    """Verify legacy generation-time dependency signatures before hashing them.
+
+    Verilator recorded inode, size and nanosecond mtime for inputs and outputs.
+    ctime is excluded because adding a hardlink changes it without editing the
+    file. New enrollment pins the actual bytes as well as these original rows.
+    Missing/replaced/modified compiler, source or child-interface inputs refuse
+    enrollment; the current tool version is never assumed to be the old tool.
+    """
+    p=directory/(prefix+'__verFiles.dat');rows={}
+    for line in p.read_text().splitlines():
+        if not line.startswith(('S ','T ')):continue
+        parts=shlex.split(line)
+        if len(parts)!=9:raise ValueError('Unsupported Verilator dependency signature')
+        path=Path(parts[8])
+        if not path.is_absolute():path=(source_root or directory)/path
+        # The signature file records itself before its own contents are written.
+        if parts[0]=='T' and path.resolve()==p.resolve():continue
+        stat=path.stat()
+        expected=[int(parts[1]),int(parts[2]),int(parts[5])*10**9+int(parts[6])]
+        if [stat.st_size,stat.st_ino,stat.st_mtime_ns]!=expected:
+            raise ValueError('File changed since model generation '+str(path))
+        rows[str(path)]=dict(kind=parts[0],signature=expected,sha256=sha(path))
+    if not any(Path(p).name=='verilator_bin' and v['kind']=='S' for p,v in rows.items()):
+        raise ValueError('No generation-time compiler signature')
+    return rows
+
+def dependency_interfaces(j,by_prefix):
+    """Check the actual generated dependency ABI, including protected DPI names."""
+    interfaces={}
+    for prefix in j.get('deps',[]):
+        directory=Path(by_prefix[prefix]['directory'])
+        pins={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*')
+              if p.is_file() and p.suffix in ('.sv','.h')}
+        if not all(any(p.endswith(ext) for p in pins) for ext in ('.sv','.h')):
+            raise ValueError('Missing real dependency interface '+prefix)
+        interfaces[prefix]=pins
+    return interfaces
+
+def enroll_models(a):
+    """Read completed models only; no compiler, admission or live-directory writes."""
+    work=a.work.resolve();m=verified(work);old=a.retained_models.resolve()
+    jobs=json.loads((work/'obj'/('V'+m.get('top',PARENT_TOP)+'.json')).read_text())['submodules']
+    old_inputs=json.loads((old/'inputs.json').read_text())
+    if old_inputs['source_sha256']!=m['source_sha256']:raise ValueError('Terminal/source snapshot mismatch')
+    tool_pins=tool_identity(a.tool);contracts=component_contracts(work,m,jobs,tool_pins)
+    out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);models={};rejected={}
+    for j in jobs:
+        prefix=j['prefix'];terminal=terminal_path(old,prefix)
+        if not terminal.is_file():continue  # Live/incomplete controller is never touched.
+        t=json.loads(terminal.read_text());directory=Path(j['directory'])
+        if t['exit'] or not t['real_model_header']:
+            rejected[prefix]='Compiler/model failure';continue
+        if j['top'] in (PARENT_TOP,OBSERVER_TOP):
+            rejected[prefix]='Parent always rebuilt against current source';continue
+        try:
+            dependency_signatures=recorded_dependencies(directory,prefix,work/'src')
+            dep_interfaces=dependency_interfaces(j,{j['prefix']:j for j in jobs})
+        except (OSError,ValueError) as e:
+            rejected[prefix]=str(e);continue
+        artifacts={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*') if p.is_file()}
+        if any(p.endswith(('.a','.o','.so')) for p in artifacts):
+            rejected[prefix]='Compiled archives require their C++ compiler/build envelope';continue
+        if not all(any(p.endswith(ext) for p in artifacts) for ext in ('.cpp','.h','.sv')):
+            rejected[prefix]='Incomplete real model/interface';continue
+        log=(terminal.parent/'frontend.log').read_text();scoped=[];parse_only=[]
+        for line in log.splitlines():
+            match=re.match(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR): (.*?):\d',line)
+            if not match:continue
+            try:rel=str(Path(match[2]).relative_to(work/'src'))
+            except ValueError:rel=None
+            if match[1]=='PINMISSING' and rel and rel not in contracts[prefix]['implementation'] and rel not in contracts[prefix]['compilation_units']:
+                parse_only.append(line)
+            else:scoped.append(line)
+        if scoped:rejected[prefix]=scoped;continue
+        models[prefix]=dict(contract=contracts[prefix],contract_sha256=digest(contracts[prefix]),
+            directory=str(directory),artifacts=artifacts,
+            interfaces={p:h for p,h in artifacts.items() if p.endswith(('.sv','.h'))},
+            generation_inputs=dependency_signatures,
+            dependency_interfaces=dep_interfaces,
+            terminal=str(terminal),terminal_sha256=sha(terminal),parse_only_diagnostics=parse_only)
+    write(out/'models.json',dict(work=str(work),tool=tool_pins,models=models,rejected=rejected))
+    print(json.dumps(dict(enrolled=list(models),rejected=rejected,compiler_invoked=False)))
+    return 0
+
+def reuse_component(j,contract,enrollment,out,current_interfaces=None):
+    old=enrollment['models'].get(j['prefix'])
+    if not old or old['contract_sha256']!=digest(contract):return False
+    if old.get('dependency_interfaces',{})!=(current_interfaces or {}):return False
+    if 'contract' in old and digest(old['contract'])!=old['contract_sha256']:
+        raise ValueError('Retained contract changed')
+    if sha(old['terminal'])!=old['terminal_sha256']:raise ValueError('Retained terminal changed')
+    directory=Path(old['directory'])
+    for rel,h in old['artifacts'].items():
+        if sha(directory/rel)!=h:raise ValueError('Retained generated model/interface changed '+rel)
+    target=Path(j['directory'])
+    if target.resolve()!=directory.resolve():
+        if target.exists() and any(target.iterdir()):raise FileExistsError('Do not overwrite existing generated component')
+        target.mkdir(parents=True,exist_ok=True)
+        for rel in old['artifacts']:
+            dst=target/rel;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(directory/rel,dst)
+    write(out/(j['prefix']+'.retained.json'),dict(terminal=old['terminal'],
+        contract_sha256=old['contract_sha256'],artifacts=old['artifacts'],interfaces=old['interfaces'],
+        parse_only_diagnostics=old['parse_only_diagnostics'],numerical=False))
+    return True
+
 def compile_plan(a):
     """Consume the completed real parameter graph; never flatten/replan it."""
     work=a.work.resolve();m=verified(work)
     out=a.output.resolve()
-    graph=work/'obj/Vot_ds_hbm_cluster20_integrated.json'
+    if a.enrollment and a.retained_models:
+        raise ValueError('Choose exact component enrollment or same-plan continuation')
+    graph=work/'obj'/('V'+m.get('top',PARENT_TOP)+'.json')
     jobs=json.loads(graph.read_text())['submodules']
     guard=Path('/srv/opentallas-scratch/admit.sh')
     if socket.gethostname()!=a.epyc2_hostname or not guard.is_file():
@@ -256,13 +505,18 @@ def compile_plan(a):
         pins={str(graph):sha(graph)}
         for j in jobs:pins[j['verilator_args']]=sha(j['verilator_args'])
         write(out/'inputs.json',dict(plan_sha256=pins,source_sha256=m['source_sha256'],
-            driver_sha256=sha(__file__),parameters=m['parameters'],jobs=len(jobs)))
+            driver_sha256=sha(__file__),parameters=m['parameters'],jobs=len(jobs),
+            enrollment_sha256=sha(a.enrollment) if a.enrollment else None))
         write(out/'supervisor.json',dict(pid=os.getpid(),host=socket.gethostname(),
               memory_gib=a.memory_gib,cpu_cores=a.cpu_cores))
     inputs=json.loads((out/'inputs.json').read_text())
+    if inputs['source_sha256']!=m['source_sha256'] or inputs['parameters']!=m['parameters']:
+        raise ValueError('Source/parameters changed across admission')
     for path,h in inputs['plan_sha256'].items():
         if sha(path)!=h:raise ValueError('Derived graph changed '+path)
     if sha(__file__)!=inputs['driver_sha256']:raise ValueError('Compile driver changed')
+    if a.enrollment and sha(a.enrollment)!=inputs['enrollment_sha256']:
+        raise ValueError('Component enrollment changed across admission')
     snap=capacity(out)
     write(out/('post_guard.json' if a.admitted else 'pre_guard.json'),snap)
     if not fits(snap,a):return 75
@@ -272,6 +526,7 @@ def compile_plan(a):
              '--memory-gib',str(a.memory_gib),'--cpu-cores',str(a.cpu_cores),
              '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--epyc2-hostname',a.epyc2_hostname,'--admitted']
         if a.retained_models:cmd+=['--retained-models',str(a.retained_models.resolve())]
+        if a.enrollment:cmd+=['--enrollment',str(a.enrollment.resolve())]
         write(out/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
     completed=[];remaining=list(jobs);rc=0;diagnostics=[]
@@ -289,11 +544,21 @@ def compile_plan(a):
                     completed.append(j['prefix']);remaining.remove(j)
                     diagnostics.extend(t['dangerous_diagnostics'])
                     write(out/(j['prefix']+'.retained.json'),dict(terminal=str(terminal),header_sha256=sha(header)))
+    enrollment=None;contracts={}
+    if a.enrollment:
+        enrollment=json.loads(a.enrollment.read_text())
+        tool_pins=tool_identity(a.tool)
+        if enrollment['tool']!=tool_pins:raise ValueError('Retained compiler/runtime differs')
+        contracts=component_contracts(work,m,jobs,tool_pins)
     while remaining:
         ready=[j for j in remaining if set(j.get('deps',[]))<=set(completed)
                and all(Path(s).is_file() for s in j['sources'])]
         if not ready:raise ValueError('Real dependency wrappers unavailable; no substitute')
         j=ready[0];remaining.remove(j)
+        if enrollment and j['top'] not in (PARENT_TOP,OBSERVER_TOP):
+            if reuse_component(j,contracts[j['prefix']],enrollment,out,
+                               dependency_interfaces(j,{n['prefix']:n for n in jobs})):
+                completed.append(j['prefix']);continue
         leaf=out/j['prefix'];leaf.mkdir(exist_ok=False)
         cmd=[str(a.tool.resolve()),'--Mdir',j['directory'],'-f',j['verilator_args'],*j['sources']]
         # JSON fragments carry the encoded child top, while the parent graph
@@ -322,14 +587,17 @@ def compile_plan(a):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true')
+    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true');g.add_argument('--enroll-models',action='store_true')
     p.add_argument('--partition-reduction',action='store_true',help='Opt-in future real reducer partitions after measured peak/convergence justifies them')
-    p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
+    p.add_argument('--native-norm-production',action='store_true',help='Consume literal Gibbs published norm production candidate flags')
+    p.add_argument('--observation-wrapper',type=Path,help='Actual Bacon additive full-parent observation wrapper')
+    p.add_argument('--wrapper-sha256',help='Published Bacon wrapper source SHA')
+    p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction) if a.prepare else (compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())
