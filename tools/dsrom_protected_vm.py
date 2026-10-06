@@ -7,7 +7,7 @@ def model():
     m=json.loads(p.read_text());parent=ROOT/'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json'
     # One native edge bundle: two reads and five ordered masked writers.
     request_bits=47+2+30+5+75+2560+80
-    response_bits=1+47+2+1024+5+75+80
+    response_bits=1+47+2+1024+5+75+80+1
     codec=lambda n:math.ceil(n/64)*72
     streams=[codec(request_bits),codec(response_bits),72]
     return dict(schema='opentallas.ds.protected-vm.v1',before_RTL=True,default_ENABLE=0,
