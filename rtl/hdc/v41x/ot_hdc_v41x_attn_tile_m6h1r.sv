@@ -261,6 +261,18 @@ module ot_attn_tile_m6h1q #(
             end
         end
     endgenerate
+    // the leaves' rst_n is a 3-cycle path (physical/hbm_attn_tile_r/leaf_reset_mcp.sdc): rst_n holds every value >= 3 cycles
+    // synthesis translate_off
+    reg rst_prev = 1'b0;
+    integer rst_age = 3;
+    always @(posedge clk) begin
+        if (rst_n !== rst_prev) begin
+            if (rst_age < 3) $fatal(1, "ot_attn_tile_m6h1q: rst_n held < 3 cycles");
+            rst_age = 1;
+        end else if (rst_age < 3) rst_age = rst_age + 1;
+        rst_prev <= rst_n;
+    end
+    // synthesis translate_on
 endmodule
 
 // The H16 tile as four quads (function; each quad is the hardened element, the packet's fan-out to the four quads
