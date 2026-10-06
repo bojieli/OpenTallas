@@ -15,6 +15,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--job-root', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
+    parser.add_argument('--resume-canonical', type=Path,
+                        help='Retained canonical RTLIL after an unsuccessful mapping invocation')
+    parser.add_argument('--canonical-sha256')
     args = parser.parse_args()
     job = args.job_root.resolve()
     import hbm_cp_parent_context as context
@@ -55,6 +58,15 @@ def main():
         return 0
     case = job/'work/orfs'
     case.mkdir(parents=True, exist_ok=True)
+    (case/'tmp').mkdir(exist_ok=True)  # ORFS TMPDIR=/work/tmp is container-local.
+    canonical = args.resume_canonical.resolve() if args.resume_canonical else None
+    if canonical:
+        assert canonical.is_relative_to(case)
+        assert canonical.name == '1_1_yosys_canonicalize.rtlil'
+        assert sha(canonical) == args.canonical_sha256
+        record['retained_canonical_sha256'] = sha(canonical)
+        record['canonical_frontend_reused'] = True
+        (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     shutil.copyfile(hook, case/'cts_membership.tcl')
     patch = '''from pathlib import Path
 import hashlib,json
@@ -71,10 +83,15 @@ p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
     def run(command, **kwargs):
         if command[:3] == ['docker', 'run', '--rm'] and 'make DESIGN_CONFIG=/work/config.mk' in command[-1]:
             command = list(command)
+            if canonical:
+                command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
+                    'make -o /work/'+str(canonical.relative_to(case))+' DESIGN_CONFIG=/work/config.mk',1)
             command[-1] = 'python3 /work/bind_cts_membership.py || exit $?; '+command[-1]
         return original_run(command, **kwargs)
     driver.run = run
     rc = driver.main(argv)
+    if canonical:
+        assert sha(canonical) == args.canonical_sha256, 'Retained canonical frontend changed'
     (job/'route.exit').write_text(str(rc)+'\n')
     if list(case.glob('results/**/6_final.odb')):
         # Separate corner sessions use actual propagated CTS and extracted RC;
