@@ -124,5 +124,9 @@
   ]
  ],
  "kept_out_regs": true,
- "face_stages": 5
+ "face_stages": 5,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ }
 }
