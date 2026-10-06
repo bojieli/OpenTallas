@@ -293,6 +293,10 @@ def _chk(c, i=0):
     return c["checks"][i][1], c["checks"][i][2]
 
 
+def _chk_named(c, name):
+    return [x for x in c["checks"] if x[0] == name][0][2]
+
+
 def bits32(x):
     import numpy as np
     return np.asarray(x).astype(np.float32).view(np.uint32) if np.asarray(x).dtype != np.uint32 else np.asarray(x)
@@ -313,42 +317,47 @@ def edge_list(cs):
     E.append(("su_hcpost(attn) h -> su_norm(ffn.hc_pre_norm) residual", bits32(h), bits32(_init(g("ffn.hc_pre_norm"))[64])))
     E.append(("su_hcpost(attn) h -> ffn.hc_mix residual", bits32(h), bits32(_init(g("ffn.hc_mix"))[64])))
     E.append(("su_hcpost(attn) h -> su_hcpost(ffn) residual", bits32(h), bits32(_init(g("ffn.hc_post"))[64])))
-    # hc_mix (Sinkhorn, baseline SU) -> pre weights of hc_pre_norm, comb / post of hc_post
+    # hc_mix (baseline SU + Sinkhorn) -> the hc_pre weights and the hc_post post / comb.  The golden's mix order
+    # (tools/hdc_golden_v41.Model.layer): a block's hc_mixes give (pre for the NEXT block, post and comb for this
+    # block), so ffn.hc_pre collapses with attn.hc_mix's pre and attn.hc_pre with the previous layer's ffn pre
+    # (L19, not in the case set).  comb: the hc_mix case stops at the Sinkhorn unit's input exp(comb - max); the
+    # golden's own row-softmax + eps + (iters) column/row normalisation (hc_eps 1e-6, 20 iterations, the released
+    # config) is applied here with its own arithmetic functions and compared to the hc_post operand.
+    import hdc_golden_v41 as G
+    F32 = np.float32
+    hc_eps, iters = F32(1e-6), 20
     for blk in ("attn", "ffn"):
         mix = g(f"{blk}.hc_mix")
-        names = [c[0] for c in mix["checks"]]
         ck = {c[0]: c for c in mix["checks"]}
-        pre_in = _init(g(f"{blk}.hc_pre_norm"))[20544]
         post_init = _init(g(f"{blk}.hc_post"))
-        found = dict(pre=None, post=None, comb=None)
-        for nm, c in ck.items():
-            v = bits32(c[2])
-            if len(v) == len(pre_in) and np.array_equal(v, bits32(pre_in)):
-                found["pre"] = nm
-            if len(v) == 4 and np.array_equal(v, bits32(post_init[25680])):
-                found["post"] = nm
-            if len(v) == 16 and np.array_equal(v, bits32(post_init[25664])):
-                found["comb"] = nm
-        for k in ("pre", "post", "comb"):
-            want = {"pre": bits32(pre_in), "post": bits32(post_init[25680]), "comb": bits32(post_init[25664])}[k]
-            src = bits32(ck[found[k]][2]) if found[k] else np.zeros(0, np.uint32)
-            E.append((f"{blk}.hc_mix {k} ({found[k] or 'NOT FOUND among ' + str(names)}) -> "
-                      f"{'su_norm hc_pre' if k == 'pre' else 'su_hcpost'}", src, want))
-    # router_act (su_routeract) -> ffn.route (bias + top-6 + weights, baseline SU / router lever)
+        E.append((f"{blk}.hc_mix post -> su_hcpost({blk}) post", bits32(ck["post"][2]), bits32(post_init[25680])))
+        e = np.asarray(ck["exp(comb - max): the Sinkhorn unit's input"][2]).view(F32).reshape(4, 4)
+        rs = G.seqsum([e[:, k] for k in range(4)])
+        cm = G.add(G.div(e, rs[:, None]), hc_eps)
+
+        def cols(c):
+            cs_ = G.seqsum([c[j, :] for j in range(4)])
+            return G.div(c, G.add(cs_, hc_eps)[None, :])
+
+        def rows(c):
+            r_ = G.seqsum([c[:, k] for k in range(4)])
+            return G.div(c, G.add(r_, hc_eps)[:, None])
+        cm = cols(cm)
+        for _ in range(iters - 1):
+            cm = cols(rows(cm))
+        E.append((f"{blk}.hc_mix exp(comb-max) -> golden Sinkhorn -> su_hcpost({blk}) comb",
+                  bits32(np.asarray(cm, F32).reshape(-1)), bits32(post_init[25664])))
+    E.append(("attn.hc_mix pre -> su_norm(ffn.hc_pre_norm) pre (golden mix order: next block)",
+              bits32(_chk_named(g("attn.hc_mix"), "pre")), bits32(_init(g("ffn.hc_pre_norm"))[20544])))
+    # router_act (su_routeract, the die's 96 rows) -> ffn.route input (all 4 dies' 384 rows, die 0 first)
     ra = g("ffn.router_act")
     _, sp = _chk(ra)
-    rt = g("ffn.route")
-    ri = list(_init(rt).values())
-    hit = [i for i, v in enumerate(ri) if len(v) == len(sp) and np.array_equal(bits32(v), bits32(sp))]
-    E.append(("su_routeract sqrt(softplus) -> ffn.route input", bits32(sp), bits32(ri[hit[0]]) if hit else
-              np.zeros(0, np.uint32)))
+    rin = bits32(_init(g("ffn.route"))[64])
+    E.append(("su_routeract sqrt(softplus) (die 0, 96 rows) -> ffn.route input rows 0..95", bits32(sp), rin[:len(sp)]))
     # ffn.route weights -> su_swiglu route_w (the 6 routed weights)
     sw = g("ffn.swiglu")
-    w_in = bits32(_init(sw)[sw["ops"][0]["bbase"]])
-    rck = [bits32(c[2]) for c in rt["checks"]]
-    hit = [v for v in rck if len(v) == len(w_in) and np.array_equal(v, w_in)]
-    E.append(("ffn.route weights -> su_swiglu route_w", hit[0] if hit else
-              (rck[-1] if rck else np.zeros(0, np.uint32)), w_in))
+    E.append(("ffn.route weights -> su_swiglu route_w", bits32(_chk_named(g("ffn.route"), "route weights")),
+              bits32(_init(sw)[sw["ops"][0]["bbase"]])))
     return E
 
 
