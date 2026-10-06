@@ -143,8 +143,103 @@
   },
   "hfd_sm": {
    "kind": "sm",
-   "status": "missing",
-   "instances": 32
+   "status": "interim-not-closed",
+   "instances": 32,
+   "dir": "physical/hbm_accel_die_views/sm",
+   "lef": "hfd_sm.lef",
+   "lib": {
+    "ss": "hfd_sm_ss.lib",
+    "ff": "hfd_sm_ff.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
+     "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer"
+    ],
+    "gen_pins": 3581,
+    "view_pins": 3581,
+    "missing": 0,
+    "extra": 0,
+    "wrong_face_pins": 231,
+    "wrong_layer": 162,
+    "positions": "3419 pins off the generator position (same face)",
+    "size_view": [
+     2202.77,
+     2072.79
+    ],
+    "size_gen": [
+     2202.744,
+     2073.576
+    ],
+    "per_port_faces": {
+     "c": {
+      "generator_face": "N",
+      "view_faces": {
+       "N": 45,
+       "S": 58
+      }
+     },
+     "ck": {
+      "generator_face": "N",
+      "view_faces": {
+       "N": 1
+      }
+     },
+     "r": {
+      "generator_face": "E",
+      "view_faces": {
+       "E": 98,
+       "S": 34,
+       "N": 128,
+       "W": 10
+      }
+     },
+     "q": {
+      "generator_face": "S",
+      "view_faces": {
+       "S": 44
+      }
+     },
+     "d": {
+      "generator_face": "S",
+      "view_faces": {
+       "S": 1099
+      }
+     },
+     "rst": {
+      "generator_face": "N",
+      "view_faces": {
+       "S": 1
+      }
+     },
+     "x": {
+      "generator_face": "W",
+      "view_faces": {
+       "W": 2063
+      }
+     }
+    }
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2/work/orfs (results .../base/4_cts.odb + 4_cts.sdc)",
+    "stage": "post-CTS placement (NOT routed): no whole-SM routed database exists; HBM-SM routes the element as pieces (back ends beE/beW r5 closed, tiles r5 routing, front r9 running; STATUS /srv/opentallas/scratch-overflow/claude/hbm-sm-struct/STATUS.md)",
+    "host": "ot-epyc1tb",
+    "rtl": "ot_hbm_accel_sm_v NC8 SUB4 LBS2 LSB16 XD128 RMAX4096 MAX_OUT512 DS3 DG3 DW4 PIO2 (sm_r2 provider, results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/capture.json source_sha256 3b4bd73f...)",
+    "parasitics": "estimate_parasitics -placement (setRC), propagated clock, sm_r2 4_cts.sdc",
+    "ss_worst_slack_ps": -4002.2,
+    "ff_worst_hold_slack_ps": -2356.6,
+    "drc": null,
+    "violators": "legacy-CTS STA (results/rtl/hbm_sm_structure_20261005/sta_legacy_cts/classes.json): setup 44,218 endpoints TNS -10,852 ns; hold 45,576 endpoints TNS -12,070 ns",
+    "sub_views": [
+     "physical/hbm_accel_sm_views/ot_hbm_accel_tc16",
+     "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col",
+     "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "owner": "Claude HBM-SM (structural redesign: macro->G1 SS -482 / FF -107 ps; src8 15/15 exact; AR +1.07% / MTP -0.52%; branch claude/hbm-sm-structure-20261005)",
+    "export_tcl": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/sm/export_{ss,ff}.tcl"
+   }
   },
   "hfd_stn_r0": {
    "kind": "stations",
@@ -278,7 +373,8 @@
   }
  },
  "counts": {
-  "missing": 50,
-  "reservation": 2
+  "missing": 49,
+  "reservation": 2,
+  "interim-not-closed": 1
  }
 }
