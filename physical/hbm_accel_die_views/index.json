@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r16h",
- "generator_sha256": "28f08d7ee29a24095562b9ed8e52fdaa6a40aa42ab3256036ac98706b0533813",
+ "generator_sha256": "0f08cea30f275bc58d2533e48bc346dc7c0553d591200469c9eee7fe1dcfdf02",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -488,9 +488,11 @@
     "ff": "hfd_meso_r1_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2201 pins off the generator position (same face)"
+    ],
+    "positions": "2201 pins off the generator position (same face)",
     "size_view": [
      398.28,
      71.256
@@ -868,9 +870,11 @@
     "ff": "hfd_stn_r11_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "2181 pins off the generator position (same face)"
+    ],
+    "positions": "2181 pins off the generator position (same face)",
     "size_view": [
      48.792,
      127.416
@@ -1240,9 +1244,11 @@
     "ff": "hfd_stn_r19_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "1057 pins off the generator position (same face)"
+    ],
+    "positions": "1057 pins off the generator position (same face)",
     "size_view": [
      60.024,
      66.936
@@ -1412,9 +1418,11 @@
     "ff": "hfd_stn_r21_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "1042 pins off the generator position (same face)"
+    ],
+    "positions": "1042 pins off the generator position (same face)",
     "size_view": [
      59.592,
      66.936
@@ -1536,9 +1544,11 @@
     "ff": "hfd_stn_r23_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "599 pins off the generator position (same face)"
+    ],
+    "positions": "599 pins off the generator position (same face)",
     "size_view": [
      72.552,
      43.176

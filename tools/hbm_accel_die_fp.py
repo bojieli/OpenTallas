@@ -209,7 +209,12 @@ FACE_FIX = {('hfd_attn_tile', 'k'): 'S', ('hfd_attn_tile', 'ci'): 'S', ('hfd_att
 # tall, [11069.136, 9338.688, 12468.792, 9664.968], taken from the loader / cmdproc gaps (each keeps 327.192 um);
 # loader and cmdproc do not move.  The die's pipelined router view (ot_gpu_router_topk_ps, ~7.4k um2 placed) fits either
 # envelope; the resize carries the alternative topk_f3 child frame (315.956 um square + 5 um halo).
-R16H = dict(R16G, router_env=(9338.688, 326.28), corner_rule={'hfd_stn_r26': dict(keep=1.0, tail=8)})
+R16H = dict(R16G, router_env=(9338.688, 326.28),
+            corner_rule={m_: dict(keep=1.0, tail=8) for m_ in ('hfd_stn_r26', 'hfd_stn_r11', 'hfd_stn_r19', 'hfd_stn_r21',
+                                                                'hfd_stn_r23', 'hfd_meso_r1')},
+            pin_centre={('hfd_stn_r23', 'rst'): 10.0})   # rst below the widened a run (a fills the face above it)
+# r8 real-abstract die pin access (DRT-0073, own-wire OBS over the corner pin): r11 a[2157], r19 a[246], r21 a[1024],
+# r23 a[580], meso_r1 a[1100] join r26 under the corner rule
 # corner_rule: fully packed 48 nm faces keep >= 1 um off the corner with the last 8 pins at 96 nm (only masters whose
 # routed view showed M5 spacing DRC at the corner: hfd_stn_r26; r4 / r11 have the same packing and routed DRC 0)
 # Generator decisions recorded in floorplan.json (generator owner CLAUDE HBM-ABSTRACTS, 2026-10-06)
@@ -230,6 +235,8 @@ def build(variant=None):
     variant = dict(variant if variant is not None else ADOPTED)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
+    Q.PIN_CENTRE.clear()
+    Q.PIN_CENTRE.update(variant.get('pin_centre', {}))
     smw, smh = sm_dims()
     strip_d = variant.get('strip_d', STRIP_D)
     grp_w = 4 * (smw + SHAVE) + 5 * CH

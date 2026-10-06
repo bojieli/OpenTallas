@@ -800,28 +800,25 @@ def masters(m, k=1, port_bits=None):
 # face run's corner-side end >= keep um from the corner, with the last `tail` pins at twice the pitch (the routed hfd_stn_r26
 # view showed 1-3 M5 spacing violations every time at 48 nm pitch within 0.65 um of the NE corner).  Empty = the old plan.
 CORNER_RULE = {}
+PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
 
 
 def _corner_keep(poss, along, step, cr, off, p, label):
+    """the run keeps its centre where it can, its first and last `tail` gaps at twice the pitch, and both ends >= keep
+    from the face corners (shifted inward when not)."""
     keep, tail = cr['keep'], cr['tail']
     n = len(poss)
-    near_hi = poss[-1] > along - keep - 1e-9
-    near_lo = poss[0] < keep - 1e-9
-    if not (near_hi or near_lo):
-        return poss
     gaps = [step] * (n - 1)
-    if near_hi:
-        gaps[-tail:] = [2 * step] * tail
-    if near_lo:
-        gaps[:tail] = [2 * step] * tail
+    gaps[:tail] = [2 * step] * tail
+    gaps[-tail:] = [2 * step] * tail
     span = sum(gaps)
-    lo, hi = max(keep, poss[0]) if near_lo else poss[0], along - keep
-    if near_hi:
-        lo = min(lo, hi - span) if not near_lo else lo
-    first = (off + math.floor((lo - off) / p + 1e-9) * p) if (near_hi and not near_lo) else \
-        (off + math.ceil((lo - off) / p - 1e-9) * p)
-    if first + span > hi + 1e-9 or first < (keep if near_lo else 0.0) - 1e-9:
+    if span > along - 2 * keep + 1e-9:
         raise ValueError(f'{label}: corner rule does not fit ({n} pins, span {span:.3f} um, face {along:.3f} um): widen')
+    centre = (poss[0] + poss[-1]) / 2
+    lo = min(max(centre - span / 2, keep), along - keep - span)
+    first = off + math.ceil((lo - off) / p - 1e-9) * p
+    if first + span > along - keep + 1e-9:
+        first -= p
     out = [first]
     for g in gaps:
         out.append(out[-1] + g)
@@ -853,6 +850,7 @@ def pin_rects(mst, k, wmap):
                 out.append((nm, 'M8', (x, yy - hw, x + 0.4 * k, yy + hw)))
             continue
         _, _, face, layer, centre, pitch = spec
+        centre = PIN_CENTRE.get((mst.name, port), centre)
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
