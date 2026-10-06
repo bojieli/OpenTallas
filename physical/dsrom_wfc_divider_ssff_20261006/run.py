@@ -23,7 +23,7 @@ def fit(out,stage):
     row['fit']=row['load1']+2<=n and row['load1']<128 and row['idle_cpus']>=2 and row['available_bytes']>=102*2**30 and row['nvme_free_bytes']>=2*2**30
     with (out/'headroom.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
     print(json.dumps(row),flush=True);return row['fit']
-def inside(root,out):
+def inside(root,out,reuse=None):
     p=Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM')
     libs={};pins={}
     for corner in ('SS','FF'):
@@ -53,8 +53,13 @@ write_verilog {out/'mapped.attributes.v'}
 write_verilog -noattr {out/'mapped.v'}
 write_json {out/'mapped.json'}
 '''
-    (out/'synth.ys').write_text(script)
-    run(['yosys','-s',str(out/'synth.ys')],out/'synth.log')
+    if reuse:
+        for name in ('mapped.json','mapped.v','mapped.attributes.v','mapped.stat'):
+            shutil.copyfile(reuse/name,out/name)
+        (out/'mapped_reuse.json').write_text(json.dumps({name:sha(reuse/name) for name in ('mapped.json','mapped.v')},indent=2)+'\n')
+    else:
+        (out/'synth.ys').write_text(script)
+        run(['yosys','-s',str(out/'synth.ys')],out/'synth.log')
     design=json.loads((out/'mapped.json').read_text())['modules'][TOP]
     ff=[(n,c) for n,c in design['cells'].items() if c['type'].startswith('DFF')]
     unmapped=[(n,c['type']) for n,c in design['cells'].items() if c['type'].startswith('$')]
@@ -64,7 +69,9 @@ write_json {out/'mapped.json'}
     # primary/shadow paths without relying on generated mapper cell names.
     groups={}
     for group in ['fq','fqn','fh','fhn','sq','sqn','f','fn','s','sn','failed','failed_n']:
-        bits=design['netnames']['on.'+group]['bits'];q=[];d=[]
+        key='on.'+group
+        bits=[b for n,row in design['netnames'].items() if n==key or n.startswith(key+'[') for b in row['bits']];q=[];d=[]
+        if not bits:raise RuntimeError('missing source state '+key)
         for name,c in ff:
             if any(b in bits for b in c['connections'].get('QN',c['connections'].get('Q',[]))):
                 q.append(name+'/QN' if 'QN' in c['connections'] else name+'/Q');d.append(name+'/D')
@@ -113,19 +120,22 @@ puts "DIVIDER_END"
     (out/'tools.json').write_text(json.dumps({name:sha(shutil.which(name)) for name in ('yosys','sta')},indent=2)+'\n')
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument('--source',type=Path,required=True);a.add_argument('--output',type=Path,required=True);a.add_argument('--admitted',action='store_true');a.add_argument('--inside',action='store_true');args=a.parse_args()
+    a=argparse.ArgumentParser();a.add_argument('--source',type=Path,required=True);a.add_argument('--output',type=Path,required=True);a.add_argument('--reuse-mapped',type=Path);a.add_argument('--admitted',action='store_true');a.add_argument('--inside',action='store_true');args=a.parse_args()
     root=args.source.resolve();out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
     assert sha(root/SOURCE)==PIN
     if args.inside:
-        try:inside(root,out)
+        try:inside(root,out,args.reuse_mapped)
         except Exception as e:
             (out/'fatal.json').write_text(json.dumps(dict(utc=now(),error=str(e),physical_qualified=False),indent=2)+'\n');raise
         return 0
     if not fit(out,'post-guard' if args.admitted else 'pre-guard'):return 75
     if not args.admitted:
-        return subprocess.run(['/srv/opentallas-scratch/admit.sh','2','--',sys.executable,str(Path(__file__).resolve()),'--source',str(root),'--output',str(out),'--admitted']).returncode
+        extra=['--reuse-mapped',str(args.reuse_mapped)] if args.reuse_mapped else []
+        return subprocess.run(['/srv/opentallas-scratch/admit.sh','2','--',sys.executable,str(Path(__file__).resolve()),'--source',str(root),'--output',str(out),'--admitted',*extra]).returncode
     if (out/'command.json').exists():raise RuntimeError('Existing admitted attempt: collect, never overwrite/relaunch')
-    cmd=['docker','run','--name','descartes-wfc-divider-'+out.name,'--cidfile',str(out/'container.id'),'-e','OMP_NUM_THREADS=2','-v',str(root)+':/src:ro','-v',str(out)+':/out',IMAGE,'bash','-lc','source /OpenROAD-flow-scripts/env.sh; python3 /src/physical/dsrom_wfc_divider_ssff_20261006/run.py --source /src --output /out --inside']
+    extra_mount=['-v',str(args.reuse_mapped.resolve())+':/mapped:ro'] if args.reuse_mapped else []
+    extra_arg=' --reuse-mapped /mapped' if args.reuse_mapped else ''
+    cmd=['docker','run','--name','descartes-wfc-divider-'+out.name,'--cidfile',str(out/'container.id'),'-e','OMP_NUM_THREADS=2','-v',str(root)+':/src:ro','-v',str(out)+':/out',*extra_mount,IMAGE,'bash','-lc','source /OpenROAD-flow-scripts/env.sh; python3 /src/physical/dsrom_wfc_divider_ssff_20261006/run.py --source /src --output /out --inside'+extra_arg]
     (out/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
     with (out/'run.log').open('w') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
     (out/'terminal.exit').write_text(str(rc)+'\n');return rc
