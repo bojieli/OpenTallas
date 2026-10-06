@@ -110,6 +110,8 @@ endmodule
 // ot_hbm_accel_bterm2: ot_v41_bterm2 (rtl/v41rom/ot_v41_bterm2.sv) with the FP4 weight decode (E2M1 -> E4M3) moved
 
 // ot_hbm_accel_bterm3: ot_hbm_accel_bterm2 cut into 18 stages:
+// (round 5: every add / increment is a kept ot_hdc_ksadd_k prefix adder; the tile's post-CTS classes showed ABC
+// re-rippling the plain forms: P4a -> P4b -132, P5 -> P6a -93, P3 -> P4a1 -57, P7 -> P8a -55 ps)
 //   P0 in | P1a decode | P1b products | P2a shift + CSA 32->22 | P2b CSA 22->7 | P3 CSA 7->2 | P4a1 low-half add |
 //   P4a2 high-half add | P4b1 negation prefix | P4b2 sign-magnitude | P5a normalise 32/16 | P5b 8/4 | P5c 2/1 |
 //   P6a round increment, exponent - lz | P6b carry into exponent | P7 scale / subnormal shift | P8a subnormal round |
@@ -232,30 +234,32 @@ module ot_hbm_accel_bterm3 (
     reg [W-HL-1:0]    h_a, h_b;
     reg               p4a1_nan;
     reg signed [10:0] p4a1_es;
+    // every add / increment below is ot_hdc_ksadd_k ((* keep *) Kogge-Stone: ABC cannot re-ripple it in the tile)
+    wire [HL-1:0] lo_s; wire lo_c;
+    ot_hdc_ksadd_k #(.W(HL)) u_lo (.a(p3_a[HL-1:0]), .b(p3_b[HL-1:0]), .cin(1'b0), .s(lo_s), .cout(lo_c));
     always @(posedge clk) begin
-        {s_c, s_lo} <= {1'b0, p3_a[HL-1:0]} + {1'b0, p3_b[HL-1:0]};
+        {s_c, s_lo} <= {lo_c, lo_s};
         h_a <= p3_a[W-1:HL]; h_b <= p3_b[W-1:HL];
         p4a1_nan <= p3_nan; p4a1_es <= p3_es;
     end
     reg [W-1:0]       p4a_s;
     reg               p4a_nan;
     reg signed [10:0] p4a_es;
+    wire [W-HL-1:0] hi_s;
+    ot_hdc_ksadd_k #(.W(W-HL)) u_hi (.a(h_a), .b(h_b), .cin(s_c), .s(hi_s), .cout());
     always @(posedge clk) begin
-        p4a_s <= {h_a + h_b + {{(W-HL-1){1'b0}}, s_c}, s_lo};
+        p4a_s <= {hi_s, s_lo};
         p4a_nan <= p4a1_nan; p4a_es <= p4a1_es;
     end
-    // -- P4b1: the negation's prefix (-(s) = ~s + 1: ones4[i] = s[i-1:0] all zero) ---------------------
-    reg  [W-1:0] ones4;
-    always @* begin
-        ones4[0] = 1'b1;
-        for (i = 1; i < W; i = i + 1) ones4[i] = &(~p4a_s | ~(({{(W-1){1'b0}}, 1'b1} << i) - {{(W-1){1'b0}}, 1'b1}));
-    end
-    reg [W-1:0]       p4b_s, p4b_o;
+    // -- P4b1: the negation -(s) = ~s + 1 (prefix adder), registered ---------------------------------------
+    wire [W-1:0] ngw;
+    ot_hdc_ksadd_k #(.W(W)) u_ng (.a(~p4a_s), .b({W{1'b0}}), .cin(1'b1), .s(ngw), .cout());
+    reg [W-1:0]       p4b_s, p4b_n;
     reg               p4b_nan;
     reg signed [10:0] p4b_es;
-    always @(posedge clk) begin p4b_s <= p4a_s; p4b_o <= ones4; p4b_nan <= p4a_nan; p4b_es <= p4a_es; end
+    always @(posedge clk) begin p4b_s <= p4a_s; p4b_n <= ngw; p4b_nan <= p4a_nan; p4b_es <= p4a_es; end
     // -- P4b2: sign-magnitude --------------------------------------------------------------------------
-    wire [W-1:0] ng = ~p4b_s ^ p4b_o;
+    wire [W-1:0] ng = p4b_n;
     reg               p4_nan, p4_s;
     reg signed [11:0] p4_eb;
     reg [W-2:0]       p4_m;
@@ -315,12 +319,9 @@ module ot_hbm_accel_bterm3 (
     // -- P6a: round to 24 bits (parallel-prefix increment), exponent minus the leading-zero count ----------
     wire [23:0] m24 = p5_nm[40:17];
     wire        inc = p5_nm[16] & ((p5_nm[15:0] != 16'd0) | m24[0]);
-    reg  [24:0] ones6;
-    always @* begin
-        ones6[0] = 1'b1;
-        for (i = 1; i < 25; i = i + 1) ones6[i] = &({1'b0, m24} | ~((25'd1 << i) - 25'd1));
-    end
-    wire [24:0] mr = {1'b0, m24} ^ ({25{inc}} & ones6);          // m24 + inc
+    wire [23:0] mr_s; wire mr_c;
+    ot_hdc_ksadd_k #(.W(24)) u_r6 (.a(m24), .b(24'd0), .cin(inc), .s(mr_s), .cout(mr_c));
+    wire [24:0] mr = {mr_c, mr_s};                                 // m24 + inc
     reg               p6a_nan, p6a_s, p6a_z;
     reg signed [11:0] p6a_el;
     reg [24:0]        p6a_mr;
@@ -360,17 +361,14 @@ module ot_hbm_accel_bterm3 (
     end
     // -- P8a: subnormal round (parallel-prefix increment) ------------------------------------------------------
     wire        inc8 = p7_g & (p7_st | p7_t[0]);
-    reg  [23:0] ones8;
-    always @* begin
-        ones8[0] = 1'b1;
-        for (i = 1; i < 24; i = i + 1) ones8[i] = &(p7_t | ~((24'd1 << i) - 24'd1));
-    end
+    wire [23:0] tr8;
+    ot_hdc_ksadd_k #(.W(24)) u_r8 (.a(p7_t), .b(24'd0), .cin(inc8), .s(tr8), .cout());
     reg        p8a_f, p8a_sub, p8a_s;
     reg [31:0] p8a_n;
     reg [23:0] p8a_tr;
     always @(posedge clk) begin
         p8a_f <= p7_nan | p7_ovf; p8a_sub <= p7_sub; p8a_s <= p7_s; p8a_n <= p7_n;
-        p8a_tr <= p7_t ^ ({24{inc8}} & ones8);
+        p8a_tr <= tr8;
     end
     // -- P8b: pack (a subnormal that rounds up to 2^-126 carries into the exponent field) ------------------------
     reg        p8_f;
