@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.ds.protected-vm.component-gate.v1",
+  "host": "ot-agidock128",
+  "root": "/srv/opentallas-scratch/codex/ds-protected-vm-20261006/gate_r3_ue_only",
+  "controller": 3504062,
+  "source": "c67105ac83e709f9b72a9c1b605e76ccc7945a29",
+  "engine_source": "554d7b0c9",
+  "verdict": "PASS_COMPOSED_MINIMUM_COMPONENT",
+  "changed_source_files": [
+    "rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv"
+  ],
+  "RTL_codec_macros_and_model_byteidentical": true,
+  "verification": {
+    "seed": 1,
+    "configuration_count": 1,
+    "rerun_modes": [
+      3
+    ],
+    "reused_pass_modes": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "retained_failed_r2": "results/rtl/dsrom_protected_vm_20261006/gate_r2_portable/record.json",
+    "r3_mode3_exit": 0,
+    "actual_SRAM_2bit_UE_pending_preserved": true,
+    "no_publication": true,
+    "build_exit": 0,
+    "terminal_exit": 0
+  },
+  "normal_r2": {
+    "transactions": 6,
+    "reads": 7,
+    "visible_writes": 7,
+    "fast_cycles": 948,
+    "full_payload_bytes": 2097152,
+    "data_macros": 256,
+    "check_macros": 32
+  },
+  "meaningful_negatives": [
+    "payload CE exact correction",
+    "payload two-bitUE refuses publication",
+    "early receipt/fence",
+    "wrong owner",
+    "fast warm debt",
+    "slow warm debt",
+    "ordinal inverse corruption",
+    "FIFOcontrol shadow corruption"
+  ],
+  "masked_undriven_covered": true,
+  "fast_period_ps_functional": 834,
+  "slow_period_ps_functional": 1112,
+  "related_ratio": "3:4",
+  "headline_clock_qualification": false,
+  "missing_input_clocks": true,
+  "qualified_physical_handoff": false,
+  "adopted": false,
+  "C8_retirement_credit": false,
+  "whole_native_VM_coverage": false,
+  "open": [
+    "Zeno actual caller and fullowner correlation",
+    "other core writers including fused-head not integrated in this xa/xb minimum",
+    "source-generated related parent clocks and actual phase topology",
+    "loaded producer/consumer caps and wires",
+    "independent mapped protective state retention",
+    "SS60/FF25 in loaded parent CTS/SPEF"
+  ],
+  "scope": "one full2MiB protected xa/xb minimum component; not whole DS VM/tile or WFC E2E",
+  "fix": "bench else prevents expected UE terminal from entering normal success checker; implementation unchanged",
+  "sha256": {
+    "build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "command.json": "8e80e63830902eac3f336bc100aa20c644de00635192bde4bd1078d57628de9f",
+    "headroom.jsonl": "6f40bef73c8ac17c1219912ed486bba84d5e301785a0539e49a6b181803a6bda",
+    "mode3.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "mode3.log": "a9eaa35699c55914aff44ea8212158a150946420e6c7fa90e6cdf90f5c6469a4",
+    "reuse.json": "de4c110d80a1903957e6bbac4b5b6bc3eac16f92adeef92bfc10cfa99537ca65",
+    "runner.py": "2614f90dcbd4655e6f1f3525890b42b63568f2a9f74b4536870cd93a684358ef",
+    "source_pins.json": "66b3a8e2d9aca6d5748516b8a0e89d878d24bd26e29e264365845740c1e6a8b3",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}
