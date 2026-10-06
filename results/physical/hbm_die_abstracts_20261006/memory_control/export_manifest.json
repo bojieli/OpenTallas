@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.hbm.memory_control.export.v1",
+  "owner": "Codex/Dirac",
+  "scope": "accepted family8 CP/TU endpoint exports only; full parent remains OPEN",
+  "accepted_exports": [],
+  "accepted_LEF": null,
+  "accepted_SS_LIB": null,
+  "accepted_FF_LIB": null,
+  "full_parent_qualified": false,
+  "adopted": false,
+  "structural_edits": false,
+  "new_tool_launches": false,
+  "TU": {
+    "top": "ot_hbm_accel_tu_endpoint_item9_owner",
+    "source_sha256": "3d17d115b2c250b768e4a8200413b21341552e9451e3d0f2d4924311749df16b",
+    "parent_source_binding": "results/rtl/hbm_item9_closure_20261005/HA2_parent_binding_r1/binding.json",
+    "source_binding_sha256": "35ff831f4670333f48f8ede496fa2640efd7f975d5e06e2c063da7f9628d0b7e",
+    "ODB": null,
+    "SPEF": null,
+    "SDC": null,
+    "SS_LIB": null,
+    "FF_LIB": null,
+    "LEF": null,
+    "reason": "Full TU endpoint has no accepted routed SS/FF terminal or functional LEF/LIB in recovered roots. Existing PF384 synthesis is a reducer adapter, not the TU parent."
+  },
+  "CP_historical_not_accepted": {
+    "top": "ot_hbm_integrated_su_cp_bind",
+    "source_commit": "581fd7bb88a32a8779b88536d6e36e3742a1cd2a",
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "results/rtl/hbm_su_cp_release_20261005/registered_boundary/source/ot_hbm_integrated_header_decode.sv",
+        "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+        "size_bytes": 2175
+      },
+      {
+        "path": "results/rtl/hbm_su_cp_release_20261005/registered_boundary/source/ot_hbm_integrated_su_cp_bind.sv",
+        "sha256": "9ea719a62dd2c9b258a6ecd38189a224036224ac2a06e21eae61da26f1891536",
+        "size_bytes": 15397
+      }
+    ],
+    "source_parameters": {
+      "ENABLE": 1,
+      "REGISTERED_BOUNDARY": 1,
+      "REGISTERED_OUTPUTS": 1,
+      "REGISTERED_STATUS": 1
+    },
+    "artifact_hashes": {
+      "6_final.odb": {
+        "host": "ot-epyc2",
+        "path": "/srv/opentallas-scratch2/jobs/maxwell-cp-registered-boundary-routes-r1/u25/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_bind_asap7_cp_boundary_u25/base/6_final.odb",
+        "bytes": 7772152,
+        "sha256": "045936b7807f78554bfa3e3e32b18314db2508ef651e73c92ddf294ea91ae895"
+      },
+      "6_final.spef": {
+        "host": "ot-epyc2",
+        "path": "/srv/opentallas-scratch2/jobs/maxwell-cp-registered-boundary-routes-r1/u25/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_bind_asap7_cp_boundary_u25/base/6_final.spef",
+        "bytes": 3424811,
+        "sha256": "eda1e8fe8dc6efdbce68916fb228800cb7f7a6580d9498d36eaf774957c19d2b"
+      },
+      "6_final.sdc": {
+        "host": "ot-epyc2",
+        "path": "/srv/opentallas-scratch2/jobs/maxwell-cp-registered-boundary-routes-r1/u25/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_bind_asap7_cp_boundary_u25/base/6_final.sdc",
+        "bytes": 29207,
+        "sha256": "ef1cfb830d4a4d6e855d598ef15006d462e4b08947c6c5c392f14661fae480d6"
+      },
+      "6_final.v": {
+        "host": "ot-epyc2",
+        "path": "/srv/opentallas-scratch2/jobs/maxwell-cp-registered-boundary-routes-r1/u25/work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_bind_asap7_cp_boundary_u25/base/6_final.v",
+        "bytes": 368945,
+        "sha256": "5cc2b421d79e2af2e34c09b9e8528d72c61044ce0156f575c2d3dca85585fc76"
+      }
+    },
+    "corner_record": "results/rtl/hbm_su_cp_release_20261005/registered_boundary/routed_r1/u25/corner_sta.json",
+    "corner_record_sha256": "5b3802ae190563f9a4949ff9abca9947d1e68fb2eb613bd4f531377007b92ddc",
+    "SS_setup_ps": -119.39,
+    "FF_hold_ps": 10.95,
+    "closes_signoff": false,
+    "reason": "SS FAIL; cannot export as accepted CP macro. This child is not full command processor or TU endpoint."
+  },
+  "searched_existing_roots": [
+    "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-noc",
+    "ot-epyc2:/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u25-r1",
+    "ot-epyc2:/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u30-r1",
+    "ot-epyc2:/srv/opentallas-scratch/jobs/einstein-ha2-tu-owner-pf384-u35-r1",
+    "ot-epyc2:/srv/opentallas-scratch2/codex/item9-closure-20261005"
+  ],
+  "literal_interfaces": "results/physical/hbm_die_abstracts_20261006/memory_control/literal_interfaces.json",
+  "next_export_condition": "Existing owned endpoint route completes and passes SS/FF with real source-bound ports; reuse same ODB/SPEF/SDC, export actual LEF and SS/FF timing libraries without a duplicate route."
+}

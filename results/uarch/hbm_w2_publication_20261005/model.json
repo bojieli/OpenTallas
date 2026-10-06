@@ -24,7 +24,10 @@
     "results/uarch/hbm_w2_publication_20261005/inputs/finite_child_d7f4a688e.json": "a48317a9e25bd5daccee99f87414d595c7b3373f0778cfc3d2f1377aef56b20b",
     "results/rtl/w2_transaction_pipeline_20261005/parent_min_r7_PASS/terminal.json": "d17a33a21eea03734828ac0b16e01d7fc099a5ff50e2447352826fc0fa21ff12",
     "results/rtl/w2_transaction_pipeline_20261005/parent_min_r7_PASS/source.json": "6dd2551db1d4023a2dcbd2ca1a04a532bb1e6b0d6e61ad01cdc95e86c3004cbd",
-    "results/uarch/hbm_w2_publication_20261005/inputs/turing_min_parent_20261005/source.json": "ba4e6422cefb36be5b1f47753643c298788606c91872fd6315624bb7b8d59246"
+    "results/uarch/hbm_w2_publication_20261005/inputs/turing_min_parent_20261005/source.json": "ba4e6422cefb36be5b1f47753643c298788606c91872fd6315624bb7b8d59246",
+    "results/uarch/hbm_w2_parent_physical_20261005/model.json": "8ad4142ba5674217488094185647ec6a9793be978d68c4ca120eebab3433e28f",
+    "results/physical/hbm_w2_parent_physical_20261006/mapped_r2/terminal.json": "5ed05d3c1d778a09d76fb9dfd121913aa9bb916c35737dd60e47ebbb3db97df8",
+    "results/rtl/hubble_live_swiglu_w2_20261005/runtime_r1_PASS/result.json": "9e8156cc1a004e1ce0d2f2314206cf14969e0ac8239ad06634b7af9bb77b19b4"
   },
   "source_commits": {
     "enrolled_sink": "73526d5e84129417914832e858dc78610e225800",
@@ -557,7 +560,7 @@
     "gateway_cell_body_budget_um2": 20000,
     "gateway_cell_body_upper_bound_um2": 13549.004920000003,
     "gateway_body_upper_bound_fits": true,
-    "finite_parent_allocation_condition": "Turing maps actual inherited/protected receiver cells into existing service/gateway; gateway cuts fit the reserved20k body budget; inherited caller/sector/CDC/owner cells require their own existing-service allocation, not free FF or gateway credit. No route or fit/rate claim until actual allocation bound.",
+    "finite_parent_allocation_condition": "Bound to Turing existing inherited/service rectangles and gateway; analytic area fit and1024ps selected. Retained mapped327725cells/27675DFF; region placement/propagated clocks/loads remain physical continuation obligations, no mapped protection-copy credit.",
     "joined_minimum_terminal": "results/rtl/w2_transaction_pipeline_20261005/parent_min_r7_PASS/terminal.json",
     "joined_minimum_release_cycle": 526,
     "joined_minimum_warm_ack_cycle": 545,
@@ -566,8 +569,8 @@
     "full_native_R2_replayed": false,
     "arithmetic_engine_replayed": false,
     "actual_owner_parent_source": "results/uarch/hbm_w2_publication_20261005/inputs/turing_min_parent_20261005/physical/hbm_w2_min_parent_20261005/ot_hbm_w2_min_parent.sv",
-    "owner_parent_clock_mem_period_ps": 1000,
-    "composed_mem_clock_period_agrees": false,
+    "owner_parent_clock_mem_period_ps": 1024,
+    "composed_mem_clock_period_agrees": true,
     "owner_gateway_outline_relative_um": [
       17.28,
       345.6,
@@ -577,13 +580,36 @@
     "owner_gateway_area_um2": 88086.528,
     "owner_gateway_cell_capacity_um2": 44043.264,
     "owner_triplicate_FF_claim_is_not_W6_allocation": true,
-    "inherited_protected_context_allocation_bound": false,
+    "inherited_protected_context_allocation_bound": true,
     "missing_owner_inputs": [
-      "Turing: bind actual W6 caller/sector/CDC/owner non-sink cell allowance to existing service rectangles; do not charge it free or to sink slot",
-      "Turing: reconcile actual clk_mem1000ps source contract with inherited clk_hbm1024ps and this tested crossing before mapping",
-      "Turing: map the composed actual source once, then supply real SS/FF registered receiver pins/ODB/SPEF/propagated clock loading"
+      "Claude SM/Franklin/Gibbs: actual pre-capture NC8/PIO2 caller port export/replacement hook, with the protected result stages and identity join replacing old stages once; post-capture rv/rop/rrow/rdata are not producer inputs",
+      "Turing: existing retained-map floorplan continuation then actual region/CDC first-stage/CTS/receiver-load/SS60-FF25 extraction; external IO numbers remain budgets"
     ],
-    "non_sink_upper_bound_fits_owner_gateway_alone": false
+    "non_sink_upper_bound_fits_owner_gateway_alone": false,
+    "actual_owner_allocation_source": "results/uarch/hbm_w2_parent_physical_20261005/model.json",
+    "inherited_relative_bbox_um": [
+      17.28,
+      600.48,
+      527.04,
+      1270.08
+    ],
+    "inherited_outline_um2": 341335.29600000003,
+    "inherited_placement_upper_um2": 198705.06564000002,
+    "inherited_analytical_slot_fit": true,
+    "mapped_terminal": "results/physical/hbm_w2_parent_physical_20261006/mapped_r2/terminal.json",
+    "mapped_cells": 327725,
+    "mapped_DFF_bits": 27675,
+    "mapped_cell_area_um2": 42770.82366,
+    "mapped_FF_count_is_not_independent_copy_or_protection_proof": true,
+    "mapped_region_fit_qualified": false,
+    "native_SDC_API_failure": "remove_input_delay unsupported; source-identical retained-netlist continuation uses unset_input_delay/unset_output_delay",
+    "retained_map_continuation": "tools/hbm_w2_parent_resume.py; Turing continuation9801d0f7 owns existing E2 handle; no duplicate",
+    "live_producer_terminal": "results/rtl/hubble_live_swiglu_w2_20261005/runtime_r1_PASS/result.json",
+    "live_producer_terminal_collected": true,
+    "live_producer_release_cycle": 12828,
+    "live_producer_original_sink": true,
+    "live_GU": false,
+    "live_producer_new_protected_parent_gate": false
   },
   "dedicated_W2_context": {
     "top": "ot_hbm_w2_protected_parent_context",
@@ -611,8 +637,13 @@
       "clk_mem": 2
     },
     "inherited_registers_are_not_new_W2_slot_area": true,
-    "inherited_context_area_um2": null,
-    "inherited_receiver_bbox_um": null,
+    "inherited_context_area_upper_um2": 93352.53282000001,
+    "inherited_receiver_bbox_relative_um": [
+      17.28,
+      600.48,
+      527.04,
+      1270.08
+    ],
     "W2_child_bbox_um": [
       11112.336,
       9802.08,
@@ -626,7 +657,7 @@
       10277.28
     ],
     "gateway_transport_installed": true,
-    "inherited_protected_register_allocation_bound": false,
+    "inherited_protected_register_allocation_bound": true,
     "clock_domains": [
       "clk_sm",
       "clk_mem"
@@ -649,8 +680,9 @@
     "actual_propagated_clock_skew_ps": null,
     "actual_clk_mem_binding": {
       "tested_period_ps": 1024,
-      "owner_source_period_ps": 1000,
-      "reconciled": false
+      "owner_source_period_ps": 1024,
+      "reconciled": true,
+      "source": "results/uarch/hbm_w2_parent_physical_20261005/model.json"
     },
     "dispatch_admitted": false
   },
