@@ -12,7 +12,7 @@
     "HCLK_period_fs": 1024000,
     "HCLK_half_fs": 512000,
     "HCLK_pin": "controller callback assigns all4die hclk=hi; independent scheduled edges including coincident events",
-    "service_clock": "consumer u_kv_service .clk(clk); producer_clk=clk; producer_hclk=hclk; context actual .clk(producer_clk)/.hclk(producer_hclk)",
+    "service_clock": "consumer ot_qwen_rt_kv_stream4_service u_kv .clk(clk); producer_clk=clk; producer_hclk=hclk; transport u_transport .clk(producer_clk)/.hclk(producer_hclk)",
     "rate_clock_not_gated_ME": "me_clk_en gates compute/tile work; service and return link remain on actual core clock"
   },
   "literal_shape": {
