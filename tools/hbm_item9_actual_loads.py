@@ -66,7 +66,10 @@ summary=dict(mapped_sha256=hashlib.sha256(mapped.read_bytes()).hexdigest(),corne
 for corner,lib in caps.items():
  loads={bit:0. for bit in set(response)|{b for bs in inverted_branches.values() for b in bs}};count=Counter();clockload=0.;clockpins=0
  for name,cell in net['cells'].items():
-  typ=cell['type'];assert typ in lib,(typ,name)
+  typ=cell['type']
+  if typ=='$scopeinfo':
+   assert not cell['connections'];continue # Yosys metadata, no physical pins or cell
+  assert typ in lib,(typ,name)
   for pin,bits in cell['connections'].items():
    if pin not in lib[typ]:continue
    for bit in bits:
