@@ -11201,6 +11201,15 @@ def dsrom_window_parent_boundary_model():
         leaf_inventory_path = ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
+    leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
+    # Existing pinned SS/FF clock pin capacitances; these are sink loads,
+    # never a substitute for the enclosing propagated CTS/root input load.
+    ff_clk_caps = {'ss': {'DFFASRHQNx1_ASAP7_75t_R': .433982,
+                         'DFFHQNx1_ASAP7_75t_R': .446638},
+                   'ff': {'DFFASRHQNx1_ASAP7_75t_R': .503152,
+                         'DFFHQNx1_ASAP7_75t_R': .522010}}
+    leaf_sink_caps = {c: sum(n*ff_clk_caps[c][t] for t,n in leaf_ff_types.items())
+                      for c in ff_clk_caps}
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
     macro_dir = Path('physical/asap7_memory_macros') / macro_name
     macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
@@ -11321,6 +11330,22 @@ def dsrom_window_parent_boundary_model():
             actual_allocated_channel_capacity=None, route_fit=False),
         clock=dict(source='native clk -> source/producer/descriptor/attention staging/E1/R0; rst_s[1] reset',
             period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            flat_retained_SS_mapped_leaf_option=dict(
+                purpose='Bind real retained SS mapped cells directly when terminal leaf has no routed timing abstract; never manufacture a closed macro',
+                retained_leaf_source_pin=(leaf_inventory or {}).get('source_pin'),
+                leaf_actual_FF_types=leaf_ff_types,
+                leaf_actual_FF_count=sum(leaf_ff_types.values()),
+                parent_control_capture_FF_upper=ff_upper,
+                total_FF_count_upper=sum(leaf_ff_types.values())+ff_upper,
+                leaf_actual_sink_cap_fF=leaf_sink_caps,
+                total_sink_cap_upper_fF={c:leaf_sink_caps[c]+ff_upper*max(ff_clk_caps[c].values())+
+                    nl*slices*corner_views[c]['clk_cap_fF'] for c in ff_clk_caps},
+                macro_clock_count=nl*slices, leaf_replicas=1,
+                actual_parent_root_load_is_not_sink_cap_sum=True,
+                no_new_FF_ports_or_cycles=True,
+                retained_library_and_source_binding_required=True,
+                actual_allocation_required=True, actual_propagated_CTS=False,
+                field_root_clock_qualified=False, adoption=False),
             leaf_propagated_CTS_and_input_clock_load=None, parent_propagated_CTS=None,
             real_macro_SS_FF_clkQ_and_loaded_capture_required=True, IO_waiver=False),
         latency=dict(added_cycles=0, token_gain=0, preserves_actual_E1_R0_capture_edges=True,
