@@ -734,7 +734,8 @@
    "shoreline_w": 20.01,
    "spine_slab": 20.95,
    "note": "r18: row engines removed (strip = KV concentrator), CDC column, slab PG region; all interior rail-to-rail <= 35 mV"
-  }
+  },
+  "r18i_shoreline_w": 20.01
  },
  "r18_ir_tile_field": {
   "case": "c",
@@ -1211,6 +1212,143 @@
    }
   },
   "rail_to_rail_interior_mv": 20.95,
+  "pass_interior": true,
+  "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
+ },
+ "r18i_ir_shoreline_w": {
+  "case": "c",
+  "exit": 0,
+  "wall": "3:10.29",
+  "peak_rss_mb": 9146,
+  "meta": {
+   "case": "c",
+   "window": "shoreline_w",
+   "window_um": [
+    20.304,
+    7810.56,
+    2636.064,
+    10411.96
+   ],
+   "size_um": [
+    2615.76,
+    2601.4
+   ],
+   "cell_um": 20.0,
+   "loads": 16900,
+   "power_w_by_region": {
+    "phy": 0.7862,
+    "ctrl": 2.4486,
+    "inst:qfd_cdc": 0.852,
+    "strip": 1.995,
+    "tile_field": 2.7518,
+    "corridor": 0.5292,
+    "channel": 0.1042
+   },
+   "power_w": 9.467,
+   "cells_without_both_rails": 0,
+   "peak": true,
+   "cov_scale": 1.0,
+   "bump_pad": false,
+   "align": true,
+   "signal_bumps_phy": false,
+   "bump_sites": 1681,
+   "stripes": {
+    "M9": 1771,
+    "M8": 3432,
+    "vias": 2216786,
+    "width_um": 0.48,
+    "pitch_by_region": {
+     "tile_field": 9.0914,
+     "corridor": 9.0914,
+     "channel": 9.0914,
+     "hub": 12.728,
+     "strip": 1.8183,
+     "ctrl": 1.8183,
+     "io": 12.728,
+     "slab": 9.0914
+    }
+   },
+   "bumps": {
+    "array_pitch_um": 45.0,
+    "power_fraction": 0.25,
+    "vdd_pitch_um": 63.64,
+    "size_um": 20.0,
+    "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)"
+   },
+   "vdd_v": 0.7,
+   "budget_mv": 35.0,
+   "b3r2": {
+    "producer": "/home/ubuntu/wt-qwen-die/tools/qwen_rom_fulldie_b3r2.py",
+    "band": false,
+    "die": {
+     "w": 24650.784,
+     "h": 32801.76,
+     "mm2": 808.589,
+     "budget_mm2": 858,
+     "margin_mm2": 49.411
+    }
+   }
+  },
+  "worst_mv": {
+   "VDD": 9.63,
+   "VSS": 24.4
+  },
+  "avg_mv": {
+   "VDD": 1.79,
+   "VSS": 1.95
+  },
+  "rail_to_rail_worst_mv": 34.03,
+  "budget_mv": 35.0,
+  "pass": true,
+  "worst_interior_mv": {
+   "VDD": 9.63,
+   "VSS": 10.38
+  },
+  "worst_mv_by_region": {
+   "phy": {
+    "VDD": 1.89,
+    "VDD_interior": 1.89,
+    "VSS": 7.24,
+    "VSS_interior": 2.06
+   },
+   "ctrl": {
+    "VDD": 8.11,
+    "VDD_interior": 8.11,
+    "VSS": 18.74,
+    "VSS_interior": 8.8
+   },
+   "inst:qfd_cdc": {
+    "VDD": 8.09,
+    "VDD_interior": 8.09,
+    "VSS": 18.67,
+    "VSS_interior": 8.29
+   },
+   "strip": {
+    "VDD": 9.37,
+    "VDD_interior": 9.37,
+    "VSS": 19.12,
+    "VSS_interior": 8.74
+   },
+   "tile_field": {
+    "VDD": 9.63,
+    "VDD_interior": 9.63,
+    "VSS": 24.37,
+    "VSS_interior": 10.38
+   },
+   "corridor": {
+    "VDD": 9.62,
+    "VDD_interior": 9.62,
+    "VSS": 24.36,
+    "VSS_interior": 10.21
+   },
+   "channel": {
+    "VDD": 9.61,
+    "VDD_interior": 9.61,
+    "VSS": 9.56,
+    "VSS_interior": 9.56
+   }
+  },
+  "rail_to_rail_interior_mv": 20.01,
   "pass_interior": true,
   "interior_rule": "cells at least one VDD bump pitch from every window edge (the die continues)"
  }
