@@ -170,18 +170,17 @@
   }
  ],
  "adopted": {
-  "variant": "r5b_f3ba",
-  "setup_ss_ref_ps": 0.87,
-  "hold_ff_ref_ps": 7.12,
+  "variant": "r5_f2ba",
+  "setup_ss_ref_ps": 6.27,
+  "hold_ff_ref_ps": 6.92,
   "drc_errors": 0,
-  "added_cycles_per_core_program_end": 1,
-  "added_cycles_per_token": 112,
-  "token_cycles_before": 193955,
-  "token_cycles_after": 194067,
-  "tok_per_s_before": 6187.0,
-  "tok_per_s_after": 6183.43,
-  "rate_delta_percent": -0.058,
-  "exactness": "proof/fb2ba (FB2+BOUND+AMQ) and proof/fb3ba_e2 (FB3+BOUND+AMQ): 5/5 benches pass, 0 mismatches, tokens_ok and accept_ok true"
+  "added_cycles_per_core_program_end": 0,
+  "added_cycles_per_token": 0,
+  "token_cycles": 193955,
+  "tok_per_s": 6187.0,
+  "rate_delta_percent": 0.0,
+  "exactness": "proof/fb2b_e1 (FB2+BOUND, AMQ off; ot-epyc1tb): 5/5 benches pass, 0 mismatches (k_L0 40 checks, k_AR0 8, k_D0r 16), tokens_ok and accept_ok true; cycles = reference h exactly (k_L0 49,582, k_AR0 14,581, c_H1/c_H2 12,000, k_D0r 30,618)",
+  "supersedes": "r5b_f3ba (+1 cycle per core program END, 112 cycles/token, SS +0.87): r5_f2ba closes with more slack and no added cycle"
  },
  "exactness_benches": {
   "k_L0": 49585,
@@ -197,6 +196,28 @@
    "k_D0r": 30618
   },
   "deltas": "+3 per layer bench, +4 per chunked head bench (DEC_LA_AMQ boundary register)",
-  "adopted_r5_f2ba_no_amq": "proof running on ot-epyc1tb (FB2+BOUND); AMQ-off deltas are 0 by construction (parameter 0, same state set)"
+  "adopted_r5_f2ba_no_amq": {
+   "k_L0": 49582,
+   "k_AR0": 14581,
+   "c_H1": 12000,
+   "c_H2": 12000,
+   "k_D0r": 30618,
+   "mismatches": 0,
+   "host": "ot-epyc1tb proof/fb2b_e1"
+  }
+ },
+ "alternative_r5b_f3ba": {
+  "variant": "r5b_f3ba",
+  "setup_ss_ref_ps": 0.87,
+  "hold_ff_ref_ps": 7.12,
+  "drc_errors": 0,
+  "added_cycles_per_core_program_end": 1,
+  "added_cycles_per_token": 112,
+  "token_cycles_before": 193955,
+  "token_cycles_after": 194067,
+  "tok_per_s_before": 6187.0,
+  "tok_per_s_after": 6183.43,
+  "rate_delta_percent": -0.058,
+  "exactness": "proof/fb2ba (FB2+BOUND+AMQ) and proof/fb3ba_e2 (FB3+BOUND+AMQ): 5/5 benches pass, 0 mismatches, tokens_ok and accept_ok true"
  }
 }
