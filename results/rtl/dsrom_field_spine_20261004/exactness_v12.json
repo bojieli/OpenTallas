@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.dsrom.field_spine.v12_exactness.v1",
+ "spine_rtl_sha256": "db01b8154c71a675b1b74478575f406aa43ba03d1475fe57b4e24a4e49306e97",
+ "quantiser_rtl_sha256": "81946a90e378a1e6c860a13a18187e8bca890f6ef998eb196beb1508fc9b1f74",
+ "source_commit": "f9a0957a4",
+ "host": "ot-epyc2",
+ "bench": "tools/dsrom_field_spine.py run (Verilator; rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp); a run passes only with tb PASS, 0 mismatched and 0 extra rows; the CLI exits 1 on any failed run",
+ "campaigns": [
+  {
+   "config": "PQ=0 baseline",
+   "mode": "phase x region (S81 canonical)",
+   "runs": 20160,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node back-to-back",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node back-to-back (S81+R93)",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "single-phase nodes",
+   "runs": 3792,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  }
+ ],
+ "rows_checked_each_config": 249920,
+ "rows_mismatched": 0,
+ "records": [
+  "results/rtl/dsrom_field_spine_20261004/field_baseline_v12.json",
+  "results/rtl/dsrom_field_spine_20261004/field_pq_v12.json"
+ ],
+ "mutant_check": {
+  "mutation": "qb row low-half write takes the high half of the quantiser output (one line)",
+  "runs": 8,
+  "failed": 8,
+  "cli_exit": 1
+ },
+ "quantiser_equivalence_ref": "exactness_v11.json (ot_dsrom_aq12f unchanged in v12)",
+ "change_vs_v11": "g_reg select: per-lane kept {row_ge, s_hi, s_lo} copies (ot_v41_kreg u_g) feed each g_sel u_s through one mux; same function and latency",
+ "cycle_delta_vs_v11": "0 every node and phase in both PQ modes (records' nodes and node_summary identical to the v11 records apart from source hashes)",
+ "wire_stages_note": "records at the current main S81 floorplan: 78 wire cycles per crossing",
+ "manifest": [
+  "2026-10-06T04:36:23-07:00 source: v11 sim_src + v12 spine from git f9a0957a4 (sha db01b815)",
+  "2026-10-06T04:36:31-07:00 mutant diff lines 1",
+  "2026-10-06T04:36:31-07:00 build pq0",
+  "2026-10-06T04:42:13-07:00 build pq0 rc=0",
+  "2026-10-06T04:42:13-07:00 build pq1",
+  "2026-10-06T04:51:13-07:00 build pq1 rc=0",
+  "2026-10-06T04:51:13-07:00 start B_node",
+  "2026-10-06T04:51:13-07:00 start A_phase",
+  "2026-10-06T05:16:33-07:00 end B_node rc=0 failed 0",
+  "2026-10-06T05:16:33-07:00 start B_single",
+  "2026-10-06T05:36:28-07:00 end B_single rc=0 failed 0",
+  "2026-10-06T05:36:28-07:00 start B_np2",
+  "2026-10-06T05:39:45-07:00 end B_np2 rc=0 failed 0",
+  "2026-10-06T05:56:46-07:00 end A_phase rc=0 failed 0",
+  "2026-10-06T05:56:46-07:00 start A_node",
+  "2026-10-06T06:05:39-07:00 end A_node rc=0 failed 0",
+  "2026-10-06T06:05:39-07:00 start A_np2",
+  "2026-10-06T06:06:37-07:00 end A_np2 rc=0 failed 0",
+  "2026-10-06T06:06:37-07:00 records",
+  "2026-10-06T06:06:37-07:00 rec0 rc=0",
+  "2026-10-06T06:06:38-07:00 rec1 rc=0",
+  "2026-10-06T06:15:25-07:00 mutant run rc=1 (expect 1) failed 8",
+  "2026-10-06T06:15:25-07:00 DONE"
+ ]
+}

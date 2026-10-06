@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.dsrom.field_spine.aq12m_equivalence.v1",
+ "module": "rtl/hdc/v41x/ot_dsrom_aq12m.sv",
+ "module_sha256": "c3723230b0375ae771ba83d28af66e3fe55f05efe47ed5f95f3143355ccdfcdb",
+ "reference": "rtl/hdc/v41x/ot_dsrom_aq12f.sv (exact-proven in the v11/v12 field campaigns)",
+ "reference_sha256": "81946a90e378a1e6c860a13a18187e8bca890f6ef998eb196beb1508fc9b1f74",
+ "latency": {
+  "aq12m": 29,
+  "aq12f": 18,
+  "delta": 11
+ },
+ "multiplier_keep_module": "ot_dsrom_aq12m_mul (ot_hdc_fp32_mul_f12 CUTS 8'hFF, LAT 9)",
+ "bench": "rtl/test/dsrom_sys/tb_aq12m_eq.sv (iverilog -g2012, ot-epyc2): aq12m outputs at t+11 vs aq12f at t, every output every cycle; back-to-back bursts, nonfinite lanes, exact ties, zero/subnormal/tiny (floor) lanes",
+ "bench_sha256": "753ffba41b62cada8b5355036218966b6a602530d02e052d1eac7edf8fb307a6",
+ "runs": {
+  "shards": 12,
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "cycles_each": 6000,
+  "cycles_total": 72000,
+  "compared_total": 72408,
+  "valid_outputs_total": 60288,
+  "faults_total": 1374,
+  "mismatches": 0,
+  "verdict": "PASS"
+ },
+ "mutants": {
+  "OT_AQ12M_MUT_SEL (m4 select swapped)": {
+   "cycles": 5000,
+   "mismatches": 3840,
+   "cli_exit": 1
+  },
+  "OT_AQ12M_MUT_DD (S12 uses ep for dd)": {
+   "cycles": 5000,
+   "mismatches": 1777,
+   "cli_exit": 1
+  },
+  "OT_AQ12M_MUT_ST (sticky dropped)": {
+   "cycles": 3000,
+   "mismatches": 1360,
+   "cli_exit": 1
+  }
+ },
+ "note": "a first sticky mutant (bit 25 dropped from the OR) was equivalent on 5,000 cycles and was replaced by the full drop"
+}

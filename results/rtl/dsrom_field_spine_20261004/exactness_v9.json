@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.dsrom.field_spine.v9_exactness.v1",
+ "spine_rtl_sha256": "d3d0e1bae83fad943d3d4ff570fe499f37a9feea0eeb1cb8ecce00a8be87b7c9",
+ "source_commit": "f284118df",
+ "host": "ot-epyc1tb",
+ "bench": "tools/dsrom_field_spine.py run (Verilator; rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp); a run passes only with tb PASS, 0 mismatched and 0 extra rows; the CLI exits 1 on any failed run",
+ "campaigns": [
+  {
+   "config": "PQ=0 baseline",
+   "mode": "phase x region (S81 canonical)",
+   "runs": 20160,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node back-to-back",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=0 baseline",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node back-to-back (S81+R93)",
+   "runs": 5504,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "single-phase nodes",
+   "runs": 3792,
+   "failed": 0
+  },
+  {
+   "config": "PQ=1",
+   "mode": "node, np=2 multi-position sample",
+   "runs": 600,
+   "failed": 0
+  }
+ ],
+ "rows_checked_each_config": 249920,
+ "rows_mismatched": 0,
+ "records": [
+  "results/rtl/dsrom_field_spine_20261004/field_baseline_v9.json",
+  "results/rtl/dsrom_field_spine_20261004/field_pq_v9.json"
+ ],
+ "mutant_check": {
+  "mutation": "qb row low-half write takes the high half of the quantiser output (one line)",
+  "runs": 8,
+  "failed": 8,
+  "cli_exit": 1
+ },
+ "manifest": [
+  "2026-10-05T10:40:41-07:00 build pq0",
+  "2026-10-05T10:52:15-07:00 relaunch (admit 12/15 GB)",
+  "2026-10-05T10:52:18-07:00 build pq0",
+  "2026-10-05T10:57:12-07:00 build pq0 rc=0",
+  "2026-10-05T10:57:12-07:00 build pq1",
+  "2026-10-05T11:01:59-07:00 build pq1 rc=0",
+  "2026-10-05T11:01:59-07:00 start A_phase",
+  "2026-10-05T11:01:59-07:00 start B_node",
+  "2026-10-05T11:13:36-07:00 end B_node rc=0 failed 0",
+  "2026-10-05T11:13:36-07:00 start B_single",
+  "2026-10-05T11:22:32-07:00 end B_single rc=0 failed 0",
+  "2026-10-05T11:22:32-07:00 start B_np2",
+  "2026-10-05T11:24:04-07:00 end B_np2 rc=0 failed 0",
+  "2026-10-05T11:35:48-07:00 end A_phase rc=0 failed 0",
+  "2026-10-05T11:35:48-07:00 start A_node",
+  "2026-10-05T11:42:58-07:00 end A_node rc=0 failed 0",
+  "2026-10-05T11:42:59-07:00 start A_np2",
+  "2026-10-05T11:43:51-07:00 end A_np2 rc=0 failed 0",
+  "2026-10-05T11:43:51-07:00 DONE"
+ ]
+}

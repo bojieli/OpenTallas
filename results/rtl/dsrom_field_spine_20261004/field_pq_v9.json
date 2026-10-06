@@ -1,0 +1,3876 @@
+{
+ "schema": "opentallas.dsrom.field_spine.v1",
+ "config": "pq",
+ "status": "pass",
+ "claim_boundary": "RTL measurement (Verilator, 2-state) of the S81 rank-0 dies' ROM-field matvec nodes on the timing-closed spine ot_v41_spine_pqc_w17w10, one region at full shape, every region, bit-exact vs the golden; die-level node time composed from the region runs; S81 floorplan wire stages (504 um a stage) added analytically.",
+ "vehicle": {
+  "top": "ot_v41_fieldtop_pqc_w17w10 (PQ=1, flat)",
+  "NP_slots": 32,
+  "R": 1,
+  "NBF_slots": 5,
+  "PHW": 3,
+  "VAW": 17,
+  "FAST": 1,
+  "PP": 1,
+  "BP": 0,
+  "BST": 2,
+  "build_params": [
+   "-GFAST=1",
+   "-GPP=1",
+   "-GBP=0",
+   "-GNP=32",
+   "-GR=1",
+   "-GNBF=5",
+   "-GPHW=3",
+   "-GVAW=17",
+   "-GPQ=1",
+   "-GGAP=12",
+   "-GGUARD=180",
+   "-GGSLACK=6"
+  ]
+ },
+ "placement": "S81 canonical + R93 re-placement (tools/dsrom_recovery_field.py variant)",
+ "spine_rule": {
+  "c_first": 36,
+  "c_gap": 12,
+  "c_guard": 181,
+  "c_cfg": 37,
+  "rule_checked": 9072,
+  "rule_violations": 0,
+  "violations": []
+ },
+ "wire_stages_s81_floorplan_per_crossing": 80,
+ "plan_dir": "/srv/opentallas-scratch/claude/dsrom-field-spine/planv",
+ "plan_sha256": "6b9ceaa0296e376bb9fdc28e2d7041435614afca415dc9674aaabcc16dbba5a4",
+ "x_sha256": "ba9b1ce4c7d6e91c688e7503c332f1ffd1aee4ab9f0643364cce73b511c583d4",
+ "golden": {
+  "token_position": 1048575,
+  "context": 1048576,
+  "experts": {
+   "0": [
+    61,
+    69,
+    112,
+    170,
+    299,
+    357
+   ],
+   "1": [
+    15,
+    56,
+    72,
+    244,
+    276,
+    345
+   ],
+   "2": [
+    33,
+    36,
+    59,
+    182,
+    279,
+    352
+   ],
+   "3": [
+    128,
+    129,
+    142,
+    159,
+    160,
+    228
+   ],
+   "20": [
+    41,
+    65,
+    158,
+    164,
+    259,
+    266
+   ],
+   "21": [
+    12,
+    36,
+    176,
+    224,
+    271,
+    331
+   ],
+   "24": [
+    18,
+    143,
+    180,
+    218,
+    256,
+    271
+   ]
+  },
+  "gold_vm": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0",
+  "arith": "chunk8 (tools/hdc_golden_v41)"
+ },
+ "node_summary": [
+  {
+   "node": "L0.attn.a_proj",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "us": 0.39,
+   "asbuilt_us": 0.4008333333333333,
+   "model_us": 0.2575,
+   "rows_checked": 448,
+   "exact": true
+  },
+  {
+   "node": "L0.attn.wo_a",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L0.attn.wo_b",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L0.attn.wq_b",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "us": 0.3308333333333333,
+   "asbuilt_us": 0.33666666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 8192,
+   "exact": true
+  },
+  {
+   "node": "L0.ffn.down",
+   "layer": 0,
+   "dies": [
+    0,
+    1
+   ],
+   "total_cycles": 923,
+   "total_us_s81_floorplan_wire": 0.7691666666666667,
+   "us": 0.7691666666666667,
+   "asbuilt_us": 1.5025,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L0.ffn.experts_gu",
+   "layer": 0,
+   "dies": [
+    0,
+    1
+   ],
+   "total_cycles": 1080,
+   "total_us_s81_floorplan_wire": 0.8999999999999999,
+   "us": 0.8999999999999999,
+   "asbuilt_us": 1.5883333333333334,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L0.ffn.router",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L0.ffn.shared_gu",
+   "layer": 0,
+   "dies": [
+    0
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "E1.wkv",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 684,
+   "total_us_s81_floorplan_wire": 0.5700000000000001,
+   "us": 0.5700000000000001,
+   "asbuilt_us": 0.8383333333333333,
+   "model_us": 0.4416666666666667,
+   "rows_checked": 6400,
+   "exact": true
+  },
+  {
+   "node": "L1.attn.a_proj",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "us": 0.39,
+   "asbuilt_us": 0.4008333333333333,
+   "model_us": 0.2575,
+   "rows_checked": 448,
+   "exact": true
+  },
+  {
+   "node": "L1.attn.wo_a",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L1.attn.wo_b",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L1.attn.wq_b",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "us": 0.3308333333333333,
+   "asbuilt_us": 0.33666666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 8192,
+   "exact": true
+  },
+  {
+   "node": "L1.ffn.down",
+   "layer": 1,
+   "dies": [
+    1,
+    2,
+    3
+   ],
+   "total_cycles": 655,
+   "total_us_s81_floorplan_wire": 0.5458333333333333,
+   "us": 0.5458333333333333,
+   "asbuilt_us": 0.9158333333333333,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L1.ffn.experts_gu",
+   "layer": 1,
+   "dies": [
+    1,
+    2,
+    3
+   ],
+   "total_cycles": 874,
+   "total_us_s81_floorplan_wire": 0.7283333333333334,
+   "us": 0.7283333333333334,
+   "asbuilt_us": 1.1908333333333332,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L1.ffn.router",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L1.ffn.shared_gu",
+   "layer": 1,
+   "dies": [
+    1
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "L2.attn.a_proj",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 1313,
+   "total_us_s81_floorplan_wire": 1.0941666666666667,
+   "us": 1.0941666666666667,
+   "asbuilt_us": 1.8933333333333333,
+   "model_us": 0.3241666666666667,
+   "rows_checked": 736,
+   "exact": true
+  },
+  {
+   "node": "L2.attn.cmp.wk",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 287,
+   "total_us_s81_floorplan_wire": 0.23916666666666667,
+   "us": 0.23916666666666667,
+   "asbuilt_us": 0.23416666666666666,
+   "model_us": 0.23583333333333334,
+   "rows_checked": 128,
+   "exact": true
+  },
+  {
+   "node": "L2.attn.wo_a",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L2.attn.wo_b",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L2.attn.wq_b",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "us": 0.4166666666666667,
+   "asbuilt_us": 0.6491666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 12288,
+   "exact": true
+  },
+  {
+   "node": "L2.ffn.down",
+   "layer": 2,
+   "dies": [
+    3,
+    4,
+    5
+   ],
+   "total_cycles": 620,
+   "total_us_s81_floorplan_wire": 0.5166666666666666,
+   "us": 0.5166666666666666,
+   "asbuilt_us": 0.8908333333333333,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L2.ffn.experts_gu",
+   "layer": 2,
+   "dies": [
+    3,
+    4,
+    5
+   ],
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "us": 0.5566666666666668,
+   "asbuilt_us": 0.7933333333333333,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L2.ffn.router",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L2.ffn.shared_gu",
+   "layer": 2,
+   "dies": [
+    3
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "L3.attn.a_proj",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "us": 0.39,
+   "asbuilt_us": 0.4008333333333333,
+   "model_us": 0.2575,
+   "rows_checked": 448,
+   "exact": true
+  },
+  {
+   "node": "L3.attn.wo_a",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L3.attn.wo_b",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L3.attn.wq_b",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "us": 0.3308333333333333,
+   "asbuilt_us": 0.33666666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 8192,
+   "exact": true
+  },
+  {
+   "node": "L3.ffn.down",
+   "layer": 3,
+   "dies": [
+    5,
+    6
+   ],
+   "total_cycles": 1092,
+   "total_us_s81_floorplan_wire": 0.9099999999999999,
+   "us": 0.9099999999999999,
+   "asbuilt_us": 1.8333333333333333,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L3.ffn.experts_gu",
+   "layer": 3,
+   "dies": [
+    6
+   ],
+   "total_cycles": 1492,
+   "total_us_s81_floorplan_wire": 1.2433333333333334,
+   "us": 1.2433333333333334,
+   "asbuilt_us": 2.3833333333333333,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L3.ffn.router",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L3.ffn.shared_gu",
+   "layer": 3,
+   "dies": [
+    5
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "L20.attn.a_proj",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 1043,
+   "total_us_s81_floorplan_wire": 0.8691666666666666,
+   "us": 0.8691666666666666,
+   "asbuilt_us": 1.3958333333333333,
+   "model_us": 0.2841666666666667,
+   "rows_checked": 608,
+   "exact": true
+  },
+  {
+   "node": "L20.attn.cmp.wk",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 287,
+   "total_us_s81_floorplan_wire": 0.23916666666666667,
+   "us": 0.23916666666666667,
+   "asbuilt_us": 0.23416666666666666,
+   "model_us": 0.23583333333333334,
+   "rows_checked": 128,
+   "exact": true
+  },
+  {
+   "node": "L20.attn.wo_a",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L20.attn.wo_b",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L20.attn.wq_b",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "us": 0.4166666666666667,
+   "asbuilt_us": 0.6491666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 12288,
+   "exact": true
+  },
+  {
+   "node": "L20.ffn.down",
+   "layer": 20,
+   "dies": [
+    37,
+    38
+   ],
+   "total_cycles": 923,
+   "total_us_s81_floorplan_wire": 0.7691666666666667,
+   "us": 0.7691666666666667,
+   "asbuilt_us": 1.5025,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L20.ffn.experts_gu",
+   "layer": 20,
+   "dies": [
+    37,
+    38
+   ],
+   "total_cycles": 1080,
+   "total_us_s81_floorplan_wire": 0.8999999999999999,
+   "us": 0.8999999999999999,
+   "asbuilt_us": 1.5883333333333334,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L20.ffn.router",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L20.ffn.shared_gu",
+   "layer": 20,
+   "dies": [
+    37
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "L21.attn.a_proj",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "us": 0.39,
+   "asbuilt_us": 0.4008333333333333,
+   "model_us": 0.2575,
+   "rows_checked": 448,
+   "exact": true
+  },
+  {
+   "node": "L21.attn.wo_a",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L21.attn.wo_b",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L21.attn.wq_b",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "us": 0.3308333333333333,
+   "asbuilt_us": 0.33666666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 8192,
+   "exact": true
+  },
+  {
+   "node": "L21.ffn.down",
+   "layer": 21,
+   "dies": [
+    38,
+    39,
+    40
+   ],
+   "total_cycles": 655,
+   "total_us_s81_floorplan_wire": 0.5458333333333333,
+   "us": 0.5458333333333333,
+   "asbuilt_us": 0.9158333333333333,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L21.ffn.experts_gu",
+   "layer": 21,
+   "dies": [
+    38,
+    39,
+    40
+   ],
+   "total_cycles": 874,
+   "total_us_s81_floorplan_wire": 0.7283333333333334,
+   "us": 0.7283333333333334,
+   "asbuilt_us": 1.1908333333333332,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L21.ffn.router",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L21.ffn.shared_gu",
+   "layer": 21,
+   "dies": [
+    38
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  },
+  {
+   "node": "L24.attn.a_proj",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 773,
+   "total_us_s81_floorplan_wire": 0.6441666666666667,
+   "us": 0.6441666666666667,
+   "asbuilt_us": 0.8983333333333333,
+   "model_us": 0.2908333333333334,
+   "rows_checked": 480,
+   "exact": true
+  },
+  {
+   "node": "L24.attn.wo_a",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "us": 0.66,
+   "asbuilt_us": 1.7283333333333333,
+   "model_us": 0.9716666666666668,
+   "rows_checked": 2048,
+   "exact": true
+  },
+  {
+   "node": "L24.attn.wo_b",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "us": 0.32333333333333336,
+   "asbuilt_us": 0.33416666666666667,
+   "model_us": 0.2375,
+   "rows_checked": 5120,
+   "exact": true
+  },
+  {
+   "node": "L24.attn.wq_b",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "us": 0.4166666666666667,
+   "asbuilt_us": 0.6491666666666667,
+   "model_us": 0.2575,
+   "rows_checked": 12288,
+   "exact": true
+  },
+  {
+   "node": "L24.ffn.down",
+   "layer": 24,
+   "dies": [
+    44,
+    45
+   ],
+   "total_cycles": 958,
+   "total_us_s81_floorplan_wire": 0.7983333333333333,
+   "us": 0.7983333333333333,
+   "asbuilt_us": 1.5275,
+   "model_us": 0.275,
+   "rows_checked": 8960,
+   "exact": true
+  },
+  {
+   "node": "L24.ffn.experts_gu",
+   "layer": 24,
+   "dies": [
+    44,
+    45
+   ],
+   "total_cycles": 1286,
+   "total_us_s81_floorplan_wire": 1.0716666666666665,
+   "us": 1.0716666666666665,
+   "asbuilt_us": 1.9858333333333336,
+   "model_us": 0.32416666666666666,
+   "rows_checked": 6912,
+   "exact": true
+  },
+  {
+   "node": "L24.ffn.router",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "us": 0.48250000000000004,
+   "asbuilt_us": 0.4958333333333334,
+   "model_us": 0.25666666666666665,
+   "rows_checked": 96,
+   "exact": true
+  },
+  {
+   "node": "L24.ffn.shared_gu",
+   "layer": 24,
+   "dies": [
+    44
+   ],
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "us": 0.39499999999999996,
+   "asbuilt_us": 0.4058333333333333,
+   "model_us": 0.25083333333333335,
+   "rows_checked": 1152,
+   "exact": true
+  }
+ ],
+ "nodes": [
+  {
+   "node": "L0.attn.a_proj",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.a_proj.fp8"
+   ],
+   "exact": true,
+   "rows_checked": 448,
+   "rows_mismatched": 0,
+   "measured_cycles": 388,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "asbuilt_measured_cycles": 401,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4008333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L0.a_proj.fp8",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 448,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 389,
+     "go_to_last_row_cycles": 388,
+     "region_spread_go_to_last_row": [
+      384,
+      388
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L0.attn.wo_a",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.wo_a.g0",
+    "L0.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L0.attn.wo_b",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L0.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L0.attn.wq_b",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 8192,
+   "rows_mismatched": 0,
+   "measured_cycles": 317,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "asbuilt_measured_cycles": 324,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33666666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L0.wq_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 8192,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 318,
+     "go_to_last_row_cycles": 317,
+     "region_spread_go_to_last_row": [
+      317,
+      317
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L0.ffn.down",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.exp112.w2",
+    "L0.exp170.w2",
+    "L0.exp61.w2",
+    "L0.exp69.w2",
+    "L0.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 6400,
+   "rows_mismatched": 0,
+   "measured_cycles": 843,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 923,
+   "total_us_s81_floorplan_wire": 0.7691666666666667,
+   "asbuilt_measured_cycles": 1403,
+   "asbuilt_total_us_s81_floorplan_wire": 1.5025,
+   "old_pq_total_cycles": 909,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 843,
+    "stream": [
+     129,
+     122,
+     122,
+     122,
+     74
+    ],
+    "go": [
+     36,
+     177,
+     346,
+     480,
+     649
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L0.ffn.down",
+   "layer": 0,
+   "die_stage": 1,
+   "phases": [
+    "L0.exp299.w2",
+    "L0.exp357.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L0.ffn.experts_gu",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.exp112.gu",
+    "L0.exp170.gu",
+    "L0.exp61.gu",
+    "L0.exp69.gu"
+   ],
+   "exact": true,
+   "rows_checked": 4608,
+   "rows_mismatched": 0,
+   "measured_cycles": 1000,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1080,
+   "total_us_s81_floorplan_wire": 0.8999999999999999,
+   "asbuilt_measured_cycles": 1586,
+   "asbuilt_total_us_s81_floorplan_wire": 1.5883333333333334,
+   "old_pq_total_cycles": 1066,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 1000,
+    "stream": [
+     227,
+     194,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481,
+     687
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L0.ffn.experts_gu",
+   "layer": 0,
+   "die_stage": 1,
+   "phases": [
+    "L0.exp299.gu",
+    "L0.exp357.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L0.ffn.router",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L0.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L0.ffn.shared_gu",
+   "layer": 0,
+   "die_stage": 0,
+   "phases": [
+    "L0.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L0.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "E1.wkv",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.engram.wkv.engram.wkv.rows0",
+    "L1.engram.wkv.engram.wkv.rows4608"
+   ],
+   "exact": true,
+   "rows_checked": 6400,
+   "rows_mismatched": 0,
+   "measured_cycles": 604,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 684,
+   "total_us_s81_floorplan_wire": 0.5700000000000001,
+   "asbuilt_measured_cycles": 846,
+   "asbuilt_total_us_s81_floorplan_wire": 0.8383333333333333,
+   "old_pq_total_cycles": 670,
+   "model_us": 0.4416666666666667,
+   "composition": {
+    "cycles": 604,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.attn.a_proj",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.a_proj.fp8"
+   ],
+   "exact": true,
+   "rows_checked": 448,
+   "rows_mismatched": 0,
+   "measured_cycles": 388,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "asbuilt_measured_cycles": 401,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4008333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L1.a_proj.fp8",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 448,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 389,
+     "go_to_last_row_cycles": 388,
+     "region_spread_go_to_last_row": [
+      384,
+      388
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L1.attn.wo_a",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.wo_a.g0",
+    "L1.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.attn.wo_b",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L1.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L1.attn.wq_b",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 8192,
+   "rows_mismatched": 0,
+   "measured_cycles": 317,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "asbuilt_measured_cycles": 324,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33666666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L1.wq_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 8192,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 318,
+     "go_to_last_row_cycles": 317,
+     "region_spread_go_to_last_row": [
+      317,
+      317
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L1.ffn.down",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.exp15.w2",
+    "L1.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 371,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 451,
+   "total_us_s81_floorplan_wire": 0.3758333333333333,
+   "asbuilt_measured_cycles": 542,
+   "asbuilt_total_us_s81_floorplan_wire": 0.585,
+   "old_pq_total_cycles": 437,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 371,
+    "stream": [
+     129,
+     74
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.ffn.down",
+   "layer": 1,
+   "die_stage": 2,
+   "phases": [
+    "L1.exp56.w2",
+    "L1.exp72.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.ffn.down",
+   "layer": 1,
+   "die_stage": 3,
+   "phases": [
+    "L1.exp244.w2",
+    "L1.exp276.w2",
+    "L1.exp345.w2"
+   ],
+   "exact": true,
+   "rows_checked": 3840,
+   "rows_mismatched": 0,
+   "measured_cycles": 575,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 655,
+   "total_us_s81_floorplan_wire": 0.5458333333333333,
+   "asbuilt_measured_cycles": 859,
+   "asbuilt_total_us_s81_floorplan_wire": 0.9158333333333333,
+   "old_pq_total_cycles": 641,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 575,
+    "stream": [
+     129,
+     122,
+     122
+    ],
+    "go": [
+     36,
+     177,
+     346
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.ffn.experts_gu",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.exp15.gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 382,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 462,
+   "total_us_s81_floorplan_wire": 0.385,
+   "asbuilt_measured_cycles": 395,
+   "asbuilt_total_us_s81_floorplan_wire": 0.3958333333333333,
+   "old_pq_total_cycles": 448,
+   "model_us": 0.32416666666666666,
+   "phases_detail": [
+    {
+     "phase": "L1.exp15.gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 383,
+     "go_to_last_row_cycles": 382,
+     "region_spread_go_to_last_row": [
+      378,
+      382
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L1.ffn.experts_gu",
+   "layer": 1,
+   "die_stage": 2,
+   "phases": [
+    "L1.exp56.gu",
+    "L1.exp72.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.ffn.experts_gu",
+   "layer": 1,
+   "die_stage": 3,
+   "phases": [
+    "L1.exp244.gu",
+    "L1.exp276.gu",
+    "L1.exp345.gu"
+   ],
+   "exact": true,
+   "rows_checked": 3456,
+   "rows_mismatched": 0,
+   "measured_cycles": 794,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 874,
+   "total_us_s81_floorplan_wire": 0.7283333333333334,
+   "asbuilt_measured_cycles": 1189,
+   "asbuilt_total_us_s81_floorplan_wire": 1.1908333333333332,
+   "old_pq_total_cycles": 860,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 794,
+    "stream": [
+     227,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L1.ffn.router",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L1.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L1.ffn.shared_gu",
+   "layer": 1,
+   "die_stage": 1,
+   "phases": [
+    "L1.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L1.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L2.attn.a_proj",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.a_proj.fp8",
+    "L2.a_proj.bf16.compressor.wkv",
+    "L2.a_proj.bf16.compressor.wgate",
+    "L2.a_proj.bf16.indexer.weights_proj"
+   ],
+   "exact": true,
+   "rows_checked": 736,
+   "rows_mismatched": 0,
+   "measured_cycles": 1233,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1313,
+   "total_us_s81_floorplan_wire": 1.0941666666666667,
+   "asbuilt_measured_cycles": 1952,
+   "asbuilt_total_us_s81_floorplan_wire": 1.8933333333333333,
+   "old_pq_total_cycles": 1299,
+   "model_us": 0.3241666666666667,
+   "composition": {
+    "cycles": 1233,
+    "stream": [
+     227,
+     258,
+     258,
+     258
+    ],
+    "go": [
+     36,
+     275,
+     545,
+     815
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.attn.cmp.wk",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.cmp.wk"
+   ],
+   "exact": true,
+   "rows_checked": 128,
+   "rows_mismatched": 0,
+   "measured_cycles": 207,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 287,
+   "total_us_s81_floorplan_wire": 0.23916666666666667,
+   "asbuilt_measured_cycles": 201,
+   "asbuilt_total_us_s81_floorplan_wire": 0.23416666666666666,
+   "old_pq_total_cycles": null,
+   "model_us": 0.23583333333333334,
+   "phases_detail": [
+    {
+     "phase": "L2.cmp.wk",
+     "regions": 64,
+     "regions_run": 64,
+     "exact": true,
+     "rows_checked": 128,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 208,
+     "go_to_last_row_cycles": 207,
+     "region_spread_go_to_last_row": [
+      207,
+      207
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L2.attn.wo_a",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.wo_a.g0",
+    "L2.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.attn.wo_b",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L2.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L2.attn.wq_b",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.wq_b.wq_b.rows0+wq_b.rows4608",
+    "L2.wq_b.indexer.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 12288,
+   "rows_mismatched": 0,
+   "measured_cycles": 420,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "asbuilt_measured_cycles": 619,
+   "asbuilt_total_us_s81_floorplan_wire": 0.6491666666666667,
+   "old_pq_total_cycles": 491,
+   "model_us": 0.2575,
+   "composition": {
+    "cycles": 420,
+    "stream": [
+     122,
+     122
+    ],
+    "go": [
+     36,
+     170
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.down",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.exp33.w2",
+    "L2.exp36.w2",
+    "L2.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 3840,
+   "rows_mismatched": 0,
+   "measured_cycles": 540,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 620,
+   "total_us_s81_floorplan_wire": 0.5166666666666666,
+   "asbuilt_measured_cycles": 829,
+   "asbuilt_total_us_s81_floorplan_wire": 0.8908333333333333,
+   "old_pq_total_cycles": 606,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 540,
+    "stream": [
+     129,
+     122,
+     74
+    ],
+    "go": [
+     36,
+     177,
+     346
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.down",
+   "layer": 2,
+   "die_stage": 4,
+   "phases": [
+    "L2.exp182.w2",
+    "L2.exp59.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.down",
+   "layer": 2,
+   "die_stage": 5,
+   "phases": [
+    "L2.exp279.w2",
+    "L2.exp352.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.experts_gu",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.exp33.gu",
+    "L2.exp36.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.experts_gu",
+   "layer": 2,
+   "die_stage": 4,
+   "phases": [
+    "L2.exp182.gu",
+    "L2.exp59.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.experts_gu",
+   "layer": 2,
+   "die_stage": 5,
+   "phases": [
+    "L2.exp279.gu",
+    "L2.exp352.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L2.ffn.router",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L2.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L2.ffn.shared_gu",
+   "layer": 2,
+   "die_stage": 3,
+   "phases": [
+    "L2.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L2.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.attn.a_proj",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.a_proj.fp8"
+   ],
+   "exact": true,
+   "rows_checked": 448,
+   "rows_mismatched": 0,
+   "measured_cycles": 388,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "asbuilt_measured_cycles": 401,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4008333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L3.a_proj.fp8",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 448,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 389,
+     "go_to_last_row_cycles": 388,
+     "region_spread_go_to_last_row": [
+      384,
+      388
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.attn.wo_a",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.wo_a.g0",
+    "L3.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L3.attn.wo_b",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L3.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.attn.wq_b",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 8192,
+   "rows_mismatched": 0,
+   "measured_cycles": 317,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "asbuilt_measured_cycles": 324,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33666666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L3.wq_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 8192,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 318,
+     "go_to_last_row_cycles": 317,
+     "region_spread_go_to_last_row": [
+      317,
+      317
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.ffn.down",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 1280,
+   "rows_mismatched": 0,
+   "measured_cycles": 242,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 322,
+   "total_us_s81_floorplan_wire": 0.26833333333333337,
+   "asbuilt_measured_cycles": 255,
+   "asbuilt_total_us_s81_floorplan_wire": 0.2791666666666667,
+   "old_pq_total_cycles": 308,
+   "model_us": 0.275,
+   "phases_detail": [
+    {
+     "phase": "L3.shared.w2",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1280,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 243,
+     "go_to_last_row_cycles": 242,
+     "region_spread_go_to_last_row": [
+      242,
+      242
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.ffn.down",
+   "layer": 3,
+   "die_stage": 6,
+   "phases": [
+    "L3.exp128.w2",
+    "L3.exp129.w2",
+    "L3.exp142.w2",
+    "L3.exp159.w2",
+    "L3.exp160.w2",
+    "L3.exp228.w2"
+   ],
+   "exact": true,
+   "rows_checked": 7680,
+   "rows_mismatched": 0,
+   "measured_cycles": 1012,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1092,
+   "total_us_s81_floorplan_wire": 0.9099999999999999,
+   "asbuilt_measured_cycles": 1720,
+   "asbuilt_total_us_s81_floorplan_wire": 1.8333333333333333,
+   "old_pq_total_cycles": 1078,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 1012,
+    "stream": [
+     129,
+     122,
+     122,
+     122,
+     122,
+     122
+    ],
+    "go": [
+     36,
+     177,
+     346,
+     480,
+     649,
+     783
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L3.ffn.experts_gu",
+   "layer": 3,
+   "die_stage": 6,
+   "phases": [
+    "L3.exp128.gu",
+    "L3.exp129.gu",
+    "L3.exp142.gu",
+    "L3.exp159.gu",
+    "L3.exp160.gu",
+    "L3.exp228.gu"
+   ],
+   "exact": true,
+   "rows_checked": 6912,
+   "rows_mismatched": 0,
+   "measured_cycles": 1412,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1492,
+   "total_us_s81_floorplan_wire": 1.2433333333333334,
+   "asbuilt_measured_cycles": 2380,
+   "asbuilt_total_us_s81_floorplan_wire": 2.3833333333333333,
+   "old_pq_total_cycles": 1478,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 1412,
+    "stream": [
+     227,
+     194,
+     194,
+     194,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481,
+     687,
+     893,
+     1099
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L3.ffn.router",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L3.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L3.ffn.shared_gu",
+   "layer": 3,
+   "die_stage": 5,
+   "phases": [
+    "L3.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L3.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L20.attn.a_proj",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.a_proj.fp8",
+    "L20.a_proj.bf16.compressor.wkv",
+    "L20.a_proj.bf16.indexer.weights_proj"
+   ],
+   "exact": true,
+   "rows_checked": 608,
+   "rows_mismatched": 0,
+   "measured_cycles": 963,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1043,
+   "total_us_s81_floorplan_wire": 0.8691666666666666,
+   "asbuilt_measured_cycles": 1435,
+   "asbuilt_total_us_s81_floorplan_wire": 1.3958333333333333,
+   "old_pq_total_cycles": 1029,
+   "model_us": 0.2841666666666667,
+   "composition": {
+    "cycles": 963,
+    "stream": [
+     227,
+     258,
+     258
+    ],
+    "go": [
+     36,
+     275,
+     545
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.attn.cmp.wk",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.cmp.wk"
+   ],
+   "exact": true,
+   "rows_checked": 128,
+   "rows_mismatched": 0,
+   "measured_cycles": 207,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 287,
+   "total_us_s81_floorplan_wire": 0.23916666666666667,
+   "asbuilt_measured_cycles": 201,
+   "asbuilt_total_us_s81_floorplan_wire": 0.23416666666666666,
+   "old_pq_total_cycles": null,
+   "model_us": 0.23583333333333334,
+   "phases_detail": [
+    {
+     "phase": "L20.cmp.wk",
+     "regions": 64,
+     "regions_run": 64,
+     "exact": true,
+     "rows_checked": 128,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 208,
+     "go_to_last_row_cycles": 207,
+     "region_spread_go_to_last_row": [
+      207,
+      207
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L20.attn.wo_a",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.wo_a.g0",
+    "L20.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.attn.wo_b",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L20.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L20.attn.wq_b",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.wq_b.wq_b.rows0+wq_b.rows4608",
+    "L20.wq_b.indexer.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 12288,
+   "rows_mismatched": 0,
+   "measured_cycles": 420,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "asbuilt_measured_cycles": 619,
+   "asbuilt_total_us_s81_floorplan_wire": 0.6491666666666667,
+   "old_pq_total_cycles": 491,
+   "model_us": 0.2575,
+   "composition": {
+    "cycles": 420,
+    "stream": [
+     122,
+     122
+    ],
+    "go": [
+     36,
+     170
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.ffn.down",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.exp158.w2",
+    "L20.exp164.w2",
+    "L20.exp41.w2",
+    "L20.exp65.w2",
+    "L20.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 6400,
+   "rows_mismatched": 0,
+   "measured_cycles": 843,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 923,
+   "total_us_s81_floorplan_wire": 0.7691666666666667,
+   "asbuilt_measured_cycles": 1403,
+   "asbuilt_total_us_s81_floorplan_wire": 1.5025,
+   "old_pq_total_cycles": 909,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 843,
+    "stream": [
+     129,
+     122,
+     122,
+     122,
+     74
+    ],
+    "go": [
+     36,
+     177,
+     346,
+     480,
+     649
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.ffn.down",
+   "layer": 20,
+   "die_stage": 38,
+   "phases": [
+    "L20.exp259.w2",
+    "L20.exp266.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.ffn.experts_gu",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.exp158.gu",
+    "L20.exp164.gu",
+    "L20.exp41.gu",
+    "L20.exp65.gu"
+   ],
+   "exact": true,
+   "rows_checked": 4608,
+   "rows_mismatched": 0,
+   "measured_cycles": 1000,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1080,
+   "total_us_s81_floorplan_wire": 0.8999999999999999,
+   "asbuilt_measured_cycles": 1586,
+   "asbuilt_total_us_s81_floorplan_wire": 1.5883333333333334,
+   "old_pq_total_cycles": 1066,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 1000,
+    "stream": [
+     227,
+     194,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481,
+     687
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.ffn.experts_gu",
+   "layer": 20,
+   "die_stage": 38,
+   "phases": [
+    "L20.exp259.gu",
+    "L20.exp266.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L20.ffn.router",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L20.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L20.ffn.shared_gu",
+   "layer": 20,
+   "die_stage": 37,
+   "phases": [
+    "L20.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L20.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.attn.a_proj",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.a_proj.fp8"
+   ],
+   "exact": true,
+   "rows_checked": 448,
+   "rows_mismatched": 0,
+   "measured_cycles": 388,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 468,
+   "total_us_s81_floorplan_wire": 0.39,
+   "asbuilt_measured_cycles": 401,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4008333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L21.a_proj.fp8",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 448,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 389,
+     "go_to_last_row_cycles": 388,
+     "region_spread_go_to_last_row": [
+      384,
+      388
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.attn.wo_a",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.wo_a.g0",
+    "L21.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.attn.wo_b",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L21.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.attn.wq_b",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 8192,
+   "rows_mismatched": 0,
+   "measured_cycles": 317,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 397,
+   "total_us_s81_floorplan_wire": 0.3308333333333333,
+   "asbuilt_measured_cycles": 324,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33666666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2575,
+   "phases_detail": [
+    {
+     "phase": "L21.wq_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 8192,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 318,
+     "go_to_last_row_cycles": 317,
+     "region_spread_go_to_last_row": [
+      317,
+      317
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.ffn.down",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.exp12.w2",
+    "L21.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 371,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 451,
+   "total_us_s81_floorplan_wire": 0.3758333333333333,
+   "asbuilt_measured_cycles": 542,
+   "asbuilt_total_us_s81_floorplan_wire": 0.585,
+   "old_pq_total_cycles": 437,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 371,
+    "stream": [
+     129,
+     74
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.ffn.down",
+   "layer": 21,
+   "die_stage": 39,
+   "phases": [
+    "L21.exp176.w2",
+    "L21.exp224.w2",
+    "L21.exp36.w2"
+   ],
+   "exact": true,
+   "rows_checked": 3840,
+   "rows_mismatched": 0,
+   "measured_cycles": 575,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 655,
+   "total_us_s81_floorplan_wire": 0.5458333333333333,
+   "asbuilt_measured_cycles": 859,
+   "asbuilt_total_us_s81_floorplan_wire": 0.9158333333333333,
+   "old_pq_total_cycles": 641,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 575,
+    "stream": [
+     129,
+     122,
+     122
+    ],
+    "go": [
+     36,
+     177,
+     346
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.ffn.down",
+   "layer": 21,
+   "die_stage": 40,
+   "phases": [
+    "L21.exp271.w2",
+    "L21.exp331.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 406,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 486,
+   "total_us_s81_floorplan_wire": 0.40499999999999997,
+   "asbuilt_measured_cycles": 572,
+   "asbuilt_total_us_s81_floorplan_wire": 0.61,
+   "old_pq_total_cycles": 472,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 406,
+    "stream": [
+     129,
+     122
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.ffn.experts_gu",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.exp12.gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 382,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 462,
+   "total_us_s81_floorplan_wire": 0.385,
+   "asbuilt_measured_cycles": 395,
+   "asbuilt_total_us_s81_floorplan_wire": 0.3958333333333333,
+   "old_pq_total_cycles": 448,
+   "model_us": 0.32416666666666666,
+   "phases_detail": [
+    {
+     "phase": "L21.exp12.gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 383,
+     "go_to_last_row_cycles": 382,
+     "region_spread_go_to_last_row": [
+      378,
+      382
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.ffn.experts_gu",
+   "layer": 21,
+   "die_stage": 39,
+   "phases": [
+    "L21.exp176.gu",
+    "L21.exp224.gu",
+    "L21.exp36.gu"
+   ],
+   "exact": true,
+   "rows_checked": 3456,
+   "rows_mismatched": 0,
+   "measured_cycles": 794,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 874,
+   "total_us_s81_floorplan_wire": 0.7283333333333334,
+   "asbuilt_measured_cycles": 1189,
+   "asbuilt_total_us_s81_floorplan_wire": 1.1908333333333332,
+   "old_pq_total_cycles": 860,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 794,
+    "stream": [
+     227,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.ffn.experts_gu",
+   "layer": 21,
+   "die_stage": 40,
+   "phases": [
+    "L21.exp271.gu",
+    "L21.exp331.gu"
+   ],
+   "exact": true,
+   "rows_checked": 2304,
+   "rows_mismatched": 0,
+   "measured_cycles": 588,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 668,
+   "total_us_s81_floorplan_wire": 0.5566666666666668,
+   "asbuilt_measured_cycles": 792,
+   "asbuilt_total_us_s81_floorplan_wire": 0.7933333333333333,
+   "old_pq_total_cycles": 654,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 588,
+    "stream": [
+     227,
+     194
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L21.ffn.router",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L21.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L21.ffn.shared_gu",
+   "layer": 21,
+   "die_stage": 38,
+   "phases": [
+    "L21.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L21.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L24.attn.a_proj",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.a_proj.fp8",
+    "L24.a_proj.bf16"
+   ],
+   "exact": true,
+   "rows_checked": 480,
+   "rows_mismatched": 0,
+   "measured_cycles": 693,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 773,
+   "total_us_s81_floorplan_wire": 0.6441666666666667,
+   "asbuilt_measured_cycles": 918,
+   "asbuilt_total_us_s81_floorplan_wire": 0.8983333333333333,
+   "old_pq_total_cycles": 759,
+   "model_us": 0.2908333333333334,
+   "composition": {
+    "cycles": 693,
+    "stream": [
+     227,
+     258
+    ],
+    "go": [
+     36,
+     275
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.attn.wo_a",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.wo_a.g0",
+    "L24.wo_a.g1"
+   ],
+   "exact": true,
+   "rows_checked": 2048,
+   "rows_mismatched": 0,
+   "measured_cycles": 712,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 792,
+   "total_us_s81_floorplan_wire": 0.66,
+   "asbuilt_measured_cycles": 1754,
+   "asbuilt_total_us_s81_floorplan_wire": 1.7283333333333333,
+   "old_pq_total_cycles": 783,
+   "model_us": 0.9716666666666668,
+   "composition": {
+    "cycles": 712,
+    "stream": [
+     258,
+     258
+    ],
+    "go": [
+     36,
+     306
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.attn.wo_b",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.wo_b"
+   ],
+   "exact": true,
+   "rows_checked": 5120,
+   "rows_mismatched": 0,
+   "measured_cycles": 308,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 388,
+   "total_us_s81_floorplan_wire": 0.32333333333333336,
+   "asbuilt_measured_cycles": 321,
+   "asbuilt_total_us_s81_floorplan_wire": 0.33416666666666667,
+   "old_pq_total_cycles": null,
+   "model_us": 0.2375,
+   "phases_detail": [
+    {
+     "phase": "L24.wo_b",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 5120,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 309,
+     "go_to_last_row_cycles": 308,
+     "region_spread_go_to_last_row": [
+      308,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L24.attn.wq_b",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.wq_b.wq_b.rows0+wq_b.rows4608",
+    "L24.wq_b.indexer.wq_b"
+   ],
+   "exact": true,
+   "rows_checked": 12288,
+   "rows_mismatched": 0,
+   "measured_cycles": 420,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 500,
+   "total_us_s81_floorplan_wire": 0.4166666666666667,
+   "asbuilt_measured_cycles": 619,
+   "asbuilt_total_us_s81_floorplan_wire": 0.6491666666666667,
+   "old_pq_total_cycles": 491,
+   "model_us": 0.2575,
+   "composition": {
+    "cycles": 420,
+    "stream": [
+     122,
+     122
+    ],
+    "go": [
+     36,
+     170
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.ffn.down",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.exp18.w2",
+    "L24.shared.w2"
+   ],
+   "exact": true,
+   "rows_checked": 2560,
+   "rows_mismatched": 0,
+   "measured_cycles": 371,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 451,
+   "total_us_s81_floorplan_wire": 0.3758333333333333,
+   "asbuilt_measured_cycles": 542,
+   "asbuilt_total_us_s81_floorplan_wire": 0.585,
+   "old_pq_total_cycles": 437,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 371,
+    "stream": [
+     129,
+     74
+    ],
+    "go": [
+     36,
+     177
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.ffn.down",
+   "layer": 24,
+   "die_stage": 45,
+   "phases": [
+    "L24.exp143.w2",
+    "L24.exp180.w2",
+    "L24.exp218.w2",
+    "L24.exp256.w2",
+    "L24.exp271.w2"
+   ],
+   "exact": true,
+   "rows_checked": 6400,
+   "rows_mismatched": 0,
+   "measured_cycles": 878,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 958,
+   "total_us_s81_floorplan_wire": 0.7983333333333333,
+   "asbuilt_measured_cycles": 1433,
+   "asbuilt_total_us_s81_floorplan_wire": 1.5275,
+   "old_pq_total_cycles": 944,
+   "model_us": 0.275,
+   "composition": {
+    "cycles": 878,
+    "stream": [
+     129,
+     122,
+     122,
+     122,
+     122
+    ],
+    "go": [
+     36,
+     177,
+     346,
+     480,
+     649
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.ffn.experts_gu",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.exp18.gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 382,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 462,
+   "total_us_s81_floorplan_wire": 0.385,
+   "asbuilt_measured_cycles": 395,
+   "asbuilt_total_us_s81_floorplan_wire": 0.3958333333333333,
+   "old_pq_total_cycles": 448,
+   "model_us": 0.32416666666666666,
+   "phases_detail": [
+    {
+     "phase": "L24.exp18.gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 383,
+     "go_to_last_row_cycles": 382,
+     "region_spread_go_to_last_row": [
+      378,
+      382
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L24.ffn.experts_gu",
+   "layer": 24,
+   "die_stage": 45,
+   "phases": [
+    "L24.exp143.gu",
+    "L24.exp180.gu",
+    "L24.exp218.gu",
+    "L24.exp256.gu",
+    "L24.exp271.gu"
+   ],
+   "exact": true,
+   "rows_checked": 5760,
+   "rows_mismatched": 0,
+   "measured_cycles": 1206,
+   "measured_definition": "PQ: die composition of the region runs with the measured spine issue rule; S81 wire once a node",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 1286,
+   "total_us_s81_floorplan_wire": 1.0716666666666665,
+   "asbuilt_measured_cycles": 1983,
+   "asbuilt_total_us_s81_floorplan_wire": 1.9858333333333336,
+   "old_pq_total_cycles": 1272,
+   "model_us": 0.32416666666666666,
+   "composition": {
+    "cycles": 1206,
+    "stream": [
+     227,
+     194,
+     194,
+     194,
+     194
+    ],
+    "go": [
+     36,
+     275,
+     481,
+     687,
+     893
+    ]
+   },
+   "regions_run": 128,
+   "regions": 128
+  },
+  {
+   "node": "L24.ffn.router",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.router"
+   ],
+   "exact": true,
+   "rows_checked": 96,
+   "rows_mismatched": 0,
+   "measured_cycles": 499,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 579,
+   "total_us_s81_floorplan_wire": 0.48250000000000004,
+   "asbuilt_measured_cycles": 515,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4958333333333334,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25666666666666665,
+   "phases_detail": [
+    {
+     "phase": "L24.router",
+     "regions": 48,
+     "regions_run": 48,
+     "exact": true,
+     "rows_checked": 96,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 500,
+     "go_to_last_row_cycles": 499,
+     "region_spread_go_to_last_row": [
+      499,
+      499
+     ]
+    }
+   ]
+  },
+  {
+   "node": "L24.ffn.shared_gu",
+   "layer": 24,
+   "die_stage": 44,
+   "phases": [
+    "L24.shared_gu"
+   ],
+   "exact": true,
+   "rows_checked": 1152,
+   "rows_mismatched": 0,
+   "measured_cycles": 394,
+   "measured_definition": "as-built rule: sum over the node's sequential phases (go -> idle + 1) + go -> last VM row write of the last phase, each phase at the max over the die's regions; S81 wire per phase",
+   "wire_stage_cycles_s81_floorplan": 80,
+   "total_cycles": 474,
+   "total_us_s81_floorplan_wire": 0.39499999999999996,
+   "asbuilt_measured_cycles": 407,
+   "asbuilt_total_us_s81_floorplan_wire": 0.4058333333333333,
+   "old_pq_total_cycles": null,
+   "model_us": 0.25083333333333335,
+   "phases_detail": [
+    {
+     "phase": "L24.shared_gu",
+     "regions": 128,
+     "regions_run": 128,
+     "exact": true,
+     "rows_checked": 1152,
+     "rows_mismatched": 0,
+     "go_to_idle_cycles": 395,
+     "go_to_last_row_cycles": 394,
+     "region_spread_go_to_last_row": [
+      390,
+      394
+     ]
+    }
+   ]
+  }
+ ],
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "tb_sha256": "e21482fe6e408a210f1aa651054bf628a23572b4401f8e1cd07c6a9e3282c9e2",
+ "build_source_sha256": {
+  "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+  "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+  "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_fp32_f12.sv": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp": "e3583a2862c5f468f7452735ec758a65c9b2b6c8e69674947b48e8478bf875fa",
+  "rtl/v41die/ot_v41_field_pq_w17w10.sv": "0f4d028eb5144406be375123ea9ec664ce3a0685f82f505109210d5308d87a10",
+  "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv": "af931250d48f86a8b287fea0b5744f86cbc66e88148e6b3a4354070c7949b5e6",
+  "rtl/v41die/ot_v41_pair_pq_ld.sv": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+  "rtl/v41die/ot_v41_pair_pq_w17w10.sv": "56445710ae8eb0fc5326bbe382b10c02596961f4e6a850ba1c2245fc12b66887",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+  "rtl/v41die/ot_v41_spine_pqc_w17w10.sv": "d3d0e1bae83fad943d3d4ff570fe499f37a9feea0eeb1cb8ecce00a8be87b7c9",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+  "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+  "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+  "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+  "rtl/v41rom/ot_v41_elem_pq_tags.sv": "51a91a168fdd2a597c19f859780ad0da28e4e89ddd34d8247175ec1f91cdbc72",
+  "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+  "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+  "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+  "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv": "6cda229b4eea5fa05f4f1b2301265e76a2bd9dae5508ee5e74195b54acf43a61",
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+  "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+  "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+  "tools/dsrom_1m_field.py": "3177d6a8d7a0f113afc4f38137be5d4010260ba6028331a4c28167a6eec52f11",
+  "tools/dsrom_field_spine.py": "96dd24cf8a007cf6959877a2667794c6fa7cedcf5cf932575f6e036044a2c5da",
+  "tools/dsrom_recovery_field.py": "1f9e155447798287a69fba19b3adee6c038cc4a298b173f78b05d76439a8f26a",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
+  "tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780",
+  "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+ },
+ "source_sha256": {
+  "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+  "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+  "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "188ce9c0066a6791a864bee4134d8518365fba57270ccf2c145b1b022c32fe58",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_fp32_f12.sv": "79d7ef8c1a35bf46a6f5e9f78400798141e23e829cc6422e6cfb75e91525087c",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp": "e3583a2862c5f468f7452735ec758a65c9b2b6c8e69674947b48e8478bf875fa",
+  "rtl/v41die/ot_v41_field_pq_w17w10.sv": "0f4d028eb5144406be375123ea9ec664ce3a0685f82f505109210d5308d87a10",
+  "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv": "af931250d48f86a8b287fea0b5744f86cbc66e88148e6b3a4354070c7949b5e6",
+  "rtl/v41die/ot_v41_pair_pq_ld.sv": "17427eaa7973c0090fbdfb0c2c55dc68381edc9c567db57dff17693636291751",
+  "rtl/v41die/ot_v41_pair_pq_w17w10.sv": "56445710ae8eb0fc5326bbe382b10c02596961f4e6a850ba1c2245fc12b66887",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+  "rtl/v41die/ot_v41_spine_pqc_w17w10.sv": "d3d0e1bae83fad943d3d4ff570fe499f37a9feea0eeb1cb8ecce00a8be87b7c9",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+  "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+  "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+  "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+  "rtl/v41rom/ot_v41_elem_pq_tags.sv": "51a91a168fdd2a597c19f859780ad0da28e4e89ddd34d8247175ec1f91cdbc72",
+  "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+  "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+  "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+  "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv": "6cda229b4eea5fa05f4f1b2301265e76a2bd9dae5508ee5e74195b54acf43a61",
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+  "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+  "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+  "tools/dsrom_1m_field.py": "3177d6a8d7a0f113afc4f38137be5d4010260ba6028331a4c28167a6eec52f11",
+  "tools/dsrom_field_spine.py": "96dd24cf8a007cf6959877a2667794c6fa7cedcf5cf932575f6e036044a2c5da",
+  "tools/dsrom_recovery_field.py": "1f9e155447798287a69fba19b3adee6c038cc4a298b173f78b05d76439a8f26a",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
+  "tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780",
+  "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+ },
+ "git_head": ""
+}

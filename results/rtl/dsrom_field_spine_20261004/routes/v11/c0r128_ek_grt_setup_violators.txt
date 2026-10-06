@@ -1,0 +1,33 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+max_delay/setup group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_sp.g_reg[53].g_sel[2].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1573.93 1646.35  -72.42 (VIOLATED)
+u_sp.g_reg[53].g_sel[0].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1574.49 1646.46  -71.97 (VIOLATED)
+u_sp.g_reg[81].g_sel[1].u_s/q$_DFF_P_/D (DFFHQNx3_ASAP7_75t_R) 1575.18 1647.04  -71.86 (VIOLATED)
+u_sp.g_reg[53].g_sel[3].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1578.71 1645.43  -66.72 (VIOLATED)
+u_sp.g_reg[61].g_sel[3].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1571.57 1603.32  -31.75 (VIOLATED)
+u_sp.g_reg[7].g_sel[2].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1564.24 1585.09  -20.84 (VIOLATED)
+u_sp.g_reg[53].g_sel[1].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1574.56 1594.71  -20.15 (VIOLATED)
+u_sp.g_reg[7].g_sel[3].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1562.67 1582.18  -19.51 (VIOLATED)
+u_sp.g_reg[61].g_sel[0].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1573.62 1583.96  -10.34 (VIOLATED)
+u_sp.g_reg[85].g_sel[3].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1576.78 1584.29   -7.51 (VIOLATED)
+u_sp.g_reg[85].g_sel[2].u_s/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1577.68 1584.20   -6.52 (VIOLATED)
+u_sp.g_reg[91].g_sel[3].u_s/q$_DFF_P_/D (DFFHQNx3_ASAP7_75t_R) 1571.01 1573.44   -2.43 (VIOLATED)
+

@@ -7,8 +7,10 @@
 // its phase and stream ROMs as register files (written through a screen port so they are not constants; the die
 // holds them in ROM macros), both as TWO-CYCLE synchronous macros (ot_v41_pqc_rom2_model): the spine drives the next
 // address, the model registers it (kept copies, as a macro's address buffering), selects by the low address bits
-// into a registered stage, and selects by the high bits in the cycle after (the spine registers that word).  The pinned quantisers inside the spine
-// are a register-bounded stub (ot_hdc_actquant_screen_stub.sv): not new hardware, not screened here.
+// into a registered stage, and selects by the high bits in the cycle after (the spine registers that word).
+// v9 (2026-10-05): the spine's FP8 quantisers are the real ot_dsrom_aq12 (no stub); the scalar handshake outputs
+// (ready / idle / fault / ev) pass one more fixture register (the op issuer's input stage), as the wide ports
+// already pass the spine's own repeater stages.
 // ---------------------------------------------------------------------------
 module ot_v41_pqc_spine_screen #(
     parameter integer PHW = 6,
@@ -97,9 +99,11 @@ module ot_v41_pqc_spine_screen #(
         .r_v(q_rv), .r_row(q_row), .r_pos(q_pos), .r_fp32(q_f32), .r_bf16(q_bf), .r_e(q_re), .f_fault(q_ff),
         .fault(fault), .phase_cycles(), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag),
         .rom_pa0(pa0), .rom_pa1(pa1), .rom_pq0(pq0), .rom_pq1(pq1), .rom_sa(sa), .rom_sq(sq));
+    reg r_ready, r_idle, r_fault, r_ev;
     always @(posedge clk) begin
-        o_ready <= ready; o_idle <= idle; o_x_re <= x_re; o_x_addr <= x_addr; o_w_we <= w_we; o_w_addr <= w_addr;
-        o_w_data <= w_data; o_bus <= bus; o_fault <= fault; o_ev <= ev_go ^ ev_end ^ ^ev_tag;
+        r_ready <= ready; r_idle <= idle; r_fault <= fault; r_ev <= ev_go ^ ev_end ^ ^ev_tag;
+        o_ready <= r_ready; o_idle <= r_idle; o_x_re <= x_re; o_x_addr <= x_addr; o_w_we <= w_we; o_w_addr <= w_addr;
+        o_w_data <= w_data; o_bus <= bus; o_fault <= r_fault; o_ev <= r_ev;
     end
 endmodule
 
