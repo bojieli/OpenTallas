@@ -115,3 +115,11 @@ Flatcentral32mux commonwest upper-layercut:69824tracks required vs50594upper
 beforeOTHERclaims (19230deficit on allocatedM6-M9 basis). Real distributed
 masked reduction before sharedspine plus priced physical transport required;
 262144localvectorbits are not oneperimeter bank/free sharedchannel allowance.
+
+Concrete changed TREE actual32 SS synthesis terminal PASS0checkproblems:
+1279853cells/304836FF/176005.750499um2; versusprevious178333.520399um2
+removes31558cells/2327.7699um2 whileexact32gate789cycles/0extra. No routed
+physical gain/adoption inferred. ExistingfourclockSTA liveactualarrival search
+verified read-only anddetached; no jobrestart. Actualraw response QNloads and
+rootclock connectedpinloads extracted separately; sharedbuffer tree mustbe
+traced torealcaller receiver gates, rawregisterload is not32receiverload.

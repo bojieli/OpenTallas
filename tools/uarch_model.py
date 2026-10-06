@@ -10557,7 +10557,10 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             removed_priority_mux_area_credit_um2=0,
             new_cycles_per_collective=0, new_cycles_per_record=0, composed_token_delta_ns=0,
             source_local_inputs_required=True, actual_clock_load_slot_qualified=False,
-            exact_gate=False, physical_gain_measured=False, adopted=False),
+            measured_full32_tree_cell_um2=176005.750499, measured_full32_tree_cells=1279853,
+            measured_full32_tree_DFF=304836, measured_full32_tree_cell_delta_um2=-2327.7699,
+            measured_full32_cycles=789, measured_new_cycles=0,
+            exact_gate=True, physical_gain_measured=False, adopted=False),
         actual_32SM_caller_context=dict(
             lineage='ot_gpu_simt_sm O_COLL c_data/c_mode/c_count and B_COLL_REQ/B_COLL_RSP; original item9 baseline',
             selected_DS_smv_TU_equivalence=False,
