@@ -23,7 +23,8 @@
 //   * the HBM model must hold the token's K and V sectors (write-back with write-done);
 //   * kv_ok must rise only after the fill, and no fault.
 // Negative cases: a token write at a wrong position, and a non-E4M3 value, must fault.
-// Prints PASS/FAIL lines and a JSON summary on the last line.
+// Prints PASS/FAIL lines and a JSON summary on the last line; exits nonzero when any case fails.
+// -DCDC: the backend is ot_qwen_hbm_stream4_cdc (tb_qwen_rt_kv_stream4_cdc.sv) on an external periodic hclk.
 #include "Vtb_qwen_rt_kv_stream4.h"
 #include "Vtb_qwen_rt_kv_stream4___024root.h"
 #include <cinttypes>
@@ -47,7 +48,21 @@ static bool dbg2 = getenv("KVB_DEBUG2") != nullptr;
 static uint8_t t_rdy_prev = 0;
 static bool t_req_rdy_prev(int s) { return (t_rdy_prev >> s) & 1; }
 #endif
-#ifndef TAGGED
+#if defined(CDC)
+// CDC: the controller's EXTERNAL periodic clock hclk (period KVB_HFS fs, default 1,024,000) beside the 1.2 GHz
+// core clock, first rising edge at KVB_HPHASE fs (the static phase between the two roots)
+static const uint64_t CFS = 833333, HFS = getenv("KVB_HFS") ? strtoull(getenv("KVB_HFS"), 0, 10) : 1024000;
+static uint64_t next_h = getenv("KVB_HPHASE") ? strtoull(getenv("KVB_HPHASE"), 0, 10) : 0;
+static bool h_hi = false;
+static void step_to(uint64_t t) {
+    while (next_h <= t) { h_hi = !h_hi; top->hclk = h_hi; top->eval(); next_h += HFS / 2; }
+}
+static void tick() {
+    step_to(cyc * CFS + CFS / 2 - 1); top->clk = 0; top->eval();
+    step_to((cyc + 1) * CFS - 1); top->clk = 1; top->eval();
+    cyc++;
+}
+#elif !defined(TAGGED)
 static void tick() {
     top->clk = 0; top->eval();
     top->clk = 1; top->eval();
@@ -277,6 +292,9 @@ static std::string stats_line(const char* name) {
 }
 static void fresh() {
     delete top; top = new Vtb_qwen_rt_kv_stream4; cyc = 0;
+#ifdef CDC
+    next_h = getenv("KVB_HPHASE") ? strtoull(getenv("KVB_HPHASE"), 0, 10) : 0; h_hi = false; top->hclk = 0;
+#endif
     top->rst_n = 0; top->start = 0; top->kvd_v = 0; top->nx_layer = 255; top->pos_hint = 0; top->kv_free = 0;
     top->early_go = 0; top->posted_wb = 0;
 #ifdef TAGGED

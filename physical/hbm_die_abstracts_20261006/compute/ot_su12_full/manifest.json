@@ -41,7 +41,8 @@
     "pins.tsv": "5580e900e58d11c589e89a224c5666f0d70da54075e053a700db3d998923b138",
     "source_constraint.sdc": "ba765e4f8f7c7110751b29b05a059c0054770da6459003a358a33f921c9a27da",
     "interface.sdc": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
-    "ot_su12_full.lef": "0ecdcc2efebeae4dca2d936db9adf77e8a6d0f6f66991fbf12fab65f8d33c940"
+    "ot_su12_full.lef": "0ecdcc2efebeae4dca2d936db9adf77e8a6d0f6f66991fbf12fab65f8d33c940",
+    "ot_su12_full_bb.sv": "7a0b8e0381c2197a759931c78aeaabd2051ce5074bf151b2a4781e025059e9e4"
   },
   "ports": {
     "aibase": {
@@ -3006,5 +3007,12 @@
       "capacitance_unit": "fF"
     }
   },
-  "evidence": "results/physical/hbm_die_abstracts_20261006/compute/retained_su_export/export.json"
+  "evidence": "results/physical/hbm_die_abstracts_20261006/compute/retained_su_export/export.json",
+  "physical_symbol": {
+    "file": "ot_su12_full_bb.sv",
+    "pins": 2253,
+    "ports": 65,
+    "functional_simulation": false,
+    "backing": "actual matching retained LEF and SS/FF LIBs; no new qualification"
+  }
 }

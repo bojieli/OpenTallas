@@ -35,14 +35,23 @@ def dump(path, data):
  Path(path).write_text(json.dumps(data,indent=2,allow_nan=False)+'\n')
 
 
+def cpu_sample():
+ v=[int(x) for x in Path('/proc/stat').read_text().splitlines()[0].split()[1:]]
+ return sum(v[:8]),v[3]+v[4]
+
+
 def capacity(out, phase):
+ t0,i0=cpu_sample();time.sleep(.5);t1,i1=cpu_sample()
+ idle_cpus=(i1-i0)/(t1-t0)*os.cpu_count()
  m = dict(line.split(':',1) for line in Path('/proc/meminfo').read_text().splitlines())
  stat = os.statvfs(out)
  d = dict(utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),phase=phase,
           host=socket.gethostname(),cpus=os.cpu_count(),load1=os.getloadavg()[0],
           available_gib=int(m['MemAvailable'].split()[0])/1024**2,
           disk_free_gib=stat.f_bavail*stat.f_frsize/2**30)
- d['cpu_fit'] = d['load1'] < d['cpus']
+ d['idle_cpus']=idle_cpus
+ d['required_idle_cpus']=1
+ d['cpu_fit'] = d['load1'] < d['cpus'] and idle_cpus >= 1
  with (out/'capacity.jsonl').open('a') as f:f.write(json.dumps(d)+'\n')
  return d
 
@@ -133,10 +142,12 @@ exit
   with (out/f'export_{cc}.log').open('w') as f:
    ret=subprocess.call(cmd,stdout=f,stderr=subprocess.STDOUT)
   log=(out/f'export_{cc}.log').read_text()
-  rec['corners'][cc]=dict(returncode=ret,done='OT_EXPORT_DONE' in log,command=cmd)
+  rec['corners'][cc]=dict(returncode=ret,done='OT_EXPORT_DONE' in log,command=cmd,
+       post_extract_capacity=capacity(out,'after_'+cc))
   if ret or 'OT_EXPORT_DONE' not in log:
    rec['status']='EXTRACTION_FAILED';dump(out/'export.json',rec);return 1
  rec['files']={p.name:sha(p) for p in out.iterdir() if p.suffix in ['.lef','.lib','.sdc','.tsv']}
+ rec['post_export_capacity']=capacity(out,'post_export')
  rec['status']='EXPORTED_REAL_RETAINED_LEAF'
  dump(out/'export.json',rec)
  print(json.dumps(rec),flush=True)

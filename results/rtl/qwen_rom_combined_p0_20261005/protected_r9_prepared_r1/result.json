@@ -1,0 +1,45 @@
+{
+  "status": "SOURCE_IMPLEMENTED_PREPARED_NOT_DISPATCHED",
+  "source": "126513c37",
+  "merged_main": "77f92d88a",
+  "owner_protected_source": "3f3c2b790",
+  "raw_owner_object_inspected": "a06a7f7f5",
+  "job": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-126513c37/full",
+  "top": "ot_qwen_p0_full_numeric",
+  "selected_parameters": {
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1,
+    "HBM_LAYERS": 36,
+    "REAL_MEM": 1,
+    "HBM_PULLIN": 0
+  },
+  "selected_module": "ot_qwen_s4_protected_ring READ_RSEL=1 full504",
+  "raw_ot_qwen_stream4_cdc_pc_instantiated": false,
+  "raw_wrapper_branch": {
+    "PROTECTED_1": "ot_qwen_s4_protected_pc; no RSEL forwarding",
+    "PROTECTED_0": "ot_qwen_stream4_cdc_pc RSEL=RSEL"
+  },
+  "pending": "Direct Claude QWEN-PHYS/Descartes requested actual raw RSEL1 branch satisfying warm, mutable protection and held validated ACK; do not substitute the prepared protected candidate silently",
+  "new_heavy_job_started": false,
+  "fresh_E2_load": 193.53,
+  "old_runtime_preserved": 1959093,
+  "live_die0_observation": {
+    "unix_time": 1791263354.254606,
+    "core_cycle": 33458,
+    "fill_sectors": 131072,
+    "write_sectors": 136,
+    "kv_ok": 1,
+    "drained": 1,
+    "stall_kv": 32413,
+    "stall_bridge": 245,
+    "response_stall": 56,
+    "stall_mem": 0,
+    "mem_fault": 0,
+    "core_fault": 0,
+    "numeric_fault": 0,
+    "scope": "Asynchronous read-only sample of previously verified die0 only; no numerical comparison yet"
+  },
+  "full_token_pass": false,
+  "physical_qualified": false
+}
