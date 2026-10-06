@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
@@ -210,6 +210,7 @@ module ot_ds_hbm_cluster20_integrated #(
  output wire [ND*1088-1:0] w2_native_rsp_data,
  output wire rst_sm_n, output wire sys_fault
 );
+initial if(NORM_NATIVE_VM_ENABLE&&(!NORM_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||NORM_PUBLISH_QUANT||NORM_KIND!=1||NORM_RD!=0||NORM_D*3>16384)) $fatal(1,"native norm requires Q FP32-only window <=16384 words and existing root");
 initial if(NORM_C12_ENABLE&&(!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20)) $fatal(1,"norm requires enabled protected full73 combined parent");
 initial if(SFU_NATIVE_VM_ENABLE&&!SFU_C12_ENABLE) $fatal(1,"native VM requires actual SFUc12 stage");
 initial if(SFU_C12_ENABLE && (!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20))
@@ -441,13 +442,19 @@ end else begin:g_on
         wire sfu_req_v,sfu_rsp_r,sfu_lease_v,sfu_release_v,sfu_quiet,sfu_offer_r;
         wire [336:0] sfu_req;
         wire norm_lease_v,norm_quiet,norm_release_v,norm_offer_r;
+        wire norm_clk_enable,norm_read_permit,norm_backend_drained,norm_checked,norm_backend_fault;
+        wire norm_read_v,norm_read_r,norm_rsp_v,norm_rsp_r,norm_pub_v,norm_pub_r,norm_ACK_v,norm_ACK_r;
+        wire [31:0] norm_read_addr,norm_pub_addr;wire [7:0] norm_read_tag;wire [6:0] norm_read_rank;
+        wire [4*NORM_N*32-1:0] norm_native_q;
+        wire [1023:0] norm_pub_data;
+        wire norm_native_route=NORM_NATIVE_VM_ENABLE&&norm_retained[d];
         wire norm_route=NORM_C12_ENABLE&&norm_retained[d];
         wire sfu_route=SFU_C12_ENABLE&&sfu_retained[d];
         wire [72:0] peer0_frame=sfu_route?sfu_held_frame[d*73+:73]:norm_route?norm_held_frame[d*73+:73]:su_provider_frame;
         wire [72:0] actual_cp_frame={launch_pos,launch_token,cpl_generation,cpl_job};
         wire sfu_admit=!su_pending&&!su_selected&&!su_owned&&!norm_retained[d]&&!cp_reset_wait&&
                        sfu_enroll_frame[d*73+:73]==actual_cp_frame;
-        wire norm_admit=!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame;
+        wire norm_admit=!su_pending&&!su_selected&&!su_owned&&!cp_reset_wait&&!sfu_retained[d]&&!sfu_enroll_v[d]&&norm_enroll_frame[d*73+:73]==actual_cp_frame&&(!NORM_NATIVE_VM_ENABLE||(sfu_vm_retained[d]&&!sfu_vm_fault[d]&&sfu_vm_held_frame[d*73+:73]==actual_cp_frame));
         assign norm_enroll_r[d]=norm_offer_r&&norm_admit;
         assign sfu_enroll_r[d]=sfu_offer_r&&sfu_admit;
         wire [336:0] su_provider_req;
@@ -672,21 +679,28 @@ end else begin:g_on
         wire nv_source_owned=sfu_allocation_valid[d]&&sfu_allocation_frame[d*73+:73]==actual_cp_frame;
         if(SFU_NATIVE_VM_ENABLE)begin:g_sfu_native_vm
          wire vm_bind_ready,vm_activation_wr_ready,vm_activation_rd_ready,vm_su_pub_ready,vm_index_read_ready,vm_retire_ready;
+         wire vm_norm_ACK_v,vm_norm_rsp_v;
+         assign norm_ACK_v=vm_norm_ACK_v&&norm_native_route;
+         assign sfu_vm_su_ACK_v[d]=vm_norm_ACK_v&&!norm_native_route;
+         assign norm_rsp_v=vm_norm_rsp_v&&norm_native_route;
+         assign sfu_vm_index_rsp_v[d]=vm_norm_rsp_v&&!norm_native_route;
          assign sfu_vm_bind_r[d]=vm_bind_ready&&!cp_reset_req[d];
          assign sfu_vm_activation_wr_r[d]=vm_activation_wr_ready&&!cp_reset_req[d];
          assign sfu_vm_activation_rd_r[d]=vm_activation_rd_ready&&!cp_reset_req[d];
-         assign sfu_vm_su_pub_r[d]=vm_su_pub_ready&&!cp_reset_req[d];
-         assign sfu_vm_index_read_r[d]=vm_index_read_ready&&!cp_reset_req[d];
-         assign sfu_vm_retire_r[d]=vm_retire_ready&&!sfu_retained[d];
+         assign sfu_vm_su_pub_r[d]=vm_su_pub_ready&&!cp_reset_req[d]&&!norm_native_route;
+         assign norm_pub_r=vm_su_pub_ready&&norm_native_route;
+         assign sfu_vm_index_read_r[d]=vm_index_read_ready&&!cp_reset_req[d]&&!norm_native_route;
+         assign norm_read_r=vm_index_read_ready&&norm_native_route;
+         assign sfu_vm_retire_r[d]=vm_retire_ready&&!sfu_retained[d]&&!norm_retained[d];
          ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) u_vm(
-          .clk_sm(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]&&nv_drained),
+          .clk_sm(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]&&nv_drained&&(!norm_retained[d]||norm_checked)),
           .bind_v(sfu_vm_bind_v[d]&&!cp_reset_req[d]),
           .bind_r(vm_bind_ready),
           .bind_frame(sfu_vm_bind_frame[d*73+:73]),
           .bind_rank(sfu_vm_bind_rank[d*7+:7]),
           .bind_base(sfu_vm_bind_base[d*32+:32]),
           .bind_span(sfu_vm_bind_span[d*32+:32]),
-          .retire_v(sfu_vm_retire_v[d]&&!sfu_retained[d]),
+          .retire_v(sfu_vm_retire_v[d]&&!sfu_retained[d]&&!norm_retained[d]),
           .retire_r(vm_retire_ready),
           .retire_frame(sfu_vm_retire_frame[d*73+:73]),
           .held_frame(sfu_vm_held_frame[d*73+:73]),
@@ -724,24 +738,24 @@ end else begin:g_on
           .activation_release_r(sfu_vm_activation_release_r[d]),
           .activation_release_frame(sfu_vm_activation_release_frame[d*73+:73]),
           .activation_release_owner(sfu_vm_activation_release_owner[d*192+:192]),
-          .su_pub_v(sfu_vm_su_pub_v[d]&&!cp_reset_req[d]),
+          .su_pub_v(norm_native_route?norm_pub_v:(sfu_vm_su_pub_v[d]&&!cp_reset_req[d])),
           .su_pub_r(vm_su_pub_ready),
-          .su_pub_frame(sfu_vm_su_pub_frame[d*73+:73]),
-          .su_pub_addr(sfu_vm_su_pub_addr[d*32+:32]),
-          .su_pub_data(sfu_vm_su_pub_data[d*1024+:1024]),
-          .su_ACK_v(sfu_vm_su_ACK_v[d]),
-          .su_ACK_r(sfu_vm_su_ACK_r[d]),
+          .su_pub_frame(norm_native_route?norm_held_frame[d*73+:73]:sfu_vm_su_pub_frame[d*73+:73]),
+          .su_pub_addr(norm_native_route?norm_pub_addr:sfu_vm_su_pub_addr[d*32+:32]),
+          .su_pub_data(norm_native_route?norm_pub_data:sfu_vm_su_pub_data[d*1024+:1024]),
+          .su_ACK_v(vm_norm_ACK_v),
+          .su_ACK_r(norm_native_route?norm_ACK_r:sfu_vm_su_ACK_r[d]),
           .publication_ACK_addr(sfu_vm_publication_ACK_addr[d*32+:32]),
           .publication_ACK_frame(sfu_vm_publication_ACK_frame[d*73+:73]),
-          .index_read_v(sfu_vm_index_read_v[d]&&!cp_reset_req[d]),
+          .index_read_v(norm_native_route?norm_read_v:(sfu_vm_index_read_v[d]&&!cp_reset_req[d])),
           .index_read_r(vm_index_read_ready),
-          .index_read_frame(sfu_vm_index_read_frame[d*73+:73]),
-          .index_read_rank(sfu_vm_index_read_rank[d*7+:7]),
-          .index_read_addr(sfu_vm_index_read_addr[d*32+:32]),
-          .index_read_words(sfu_vm_index_read_words[d*6+:6]),
-          .index_read_tag(sfu_vm_index_read_tag[d*8+:8]),
-          .index_rsp_v(sfu_vm_index_rsp_v[d]),
-          .index_rsp_r(sfu_vm_index_rsp_r[d]),
+          .index_read_frame(norm_native_route?norm_held_frame[d*73+:73]:sfu_vm_index_read_frame[d*73+:73]),
+          .index_read_rank(norm_native_route?norm_read_rank:sfu_vm_index_read_rank[d*7+:7]),
+          .index_read_addr(norm_native_route?norm_read_addr:sfu_vm_index_read_addr[d*32+:32]),
+          .index_read_words(norm_native_route?6'd32:sfu_vm_index_read_words[d*6+:6]),
+          .index_read_tag(norm_native_route?norm_read_tag:sfu_vm_index_read_tag[d*8+:8]),
+          .index_rsp_v(vm_norm_rsp_v),
+          .index_rsp_r(norm_native_route?norm_rsp_r:sfu_vm_index_rsp_r[d]),
           .index_rsp_data(sfu_vm_index_rsp_data[d*1024+:1024]),
           .index_rsp_tag(sfu_vm_index_rsp_tag[d*8+:8]),
           .index_rsp_frame(sfu_vm_index_rsp_frame[d*73+:73]),
@@ -753,6 +767,7 @@ end else begin:g_on
           .sfu_complete_frame(nv_complete_frame),.sfu_complete_tag(nv_complete_tag),.sfu_retained(),.sfu_drained());
          assign nv_fault=sfu_vm_fault[d];
         end else begin:g_no_sfu_native_vm
+         assign norm_pub_r=0;assign norm_read_r=0;assign norm_rsp_v=0;assign norm_ACK_v=0;
          assign sfu_vm_bind_r[d*1+:1]=0;
          assign sfu_vm_retire_r[d*1+:1]=0;
          assign sfu_vm_held_frame[d*73+:73]=0;
@@ -813,9 +828,10 @@ end else begin:g_on
         // One norm stage replaces its former standalone VM/stream enclosure.
         // No native1024/512 alias: the real vectorVM caller supplies rd_q and
         // held checked publication/provider receipts with full73 identity.
-        ot_hbm_integrated_norm_stage #(.ENABLE(NORM_C12_ENABLE),.KIND(NORM_KIND),.N(NORM_N),.D(NORM_D),.RD(NORM_RD),.AW(NORM_AW),.PUBLISH_QUANT(NORM_PUBLISH_QUANT)) u_norm_c12(
+        ot_hbm_integrated_norm_stage #(.ENABLE(NORM_C12_ENABLE),.NATIVE_VM(NORM_NATIVE_VM_ENABLE),.KIND(NORM_KIND),.N(NORM_N),.D(NORM_D),.RD(NORM_RD),.AW(NORM_AW),.PUBLISH_QUANT(NORM_PUBLISH_QUANT)) u_norm_c12(
          .clk(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]),
-         .owner_valid(!cp_reset_wait||norm_retained[d]),.owner_frame(actual_cp_frame),
+         .native_clock_enable(norm_clk_enable),.native_read_permit(norm_read_permit),
+         .owner_valid((!cp_reset_wait||norm_retained[d])&&!norm_backend_fault),.owner_frame(actual_cp_frame),
          .grant(peer_grants[0]&&norm_route),.lease_v(norm_lease_v),.quiet(norm_quiet),
          .release_v(norm_release_v),.release_r(peer_releases[0]&&norm_route),
          .warm_ack(norm_warm_ack[d*(1)+:(1)]),
@@ -829,13 +845,13 @@ end else begin:g_on
          .enroll_matrix(norm_enroll_matrix[d*(1)+:(1)]),
          .enroll_row(norm_enroll_row[d*(11+1)+:(11+1)]),
          .enroll_count(norm_enroll_count[d*(8+1)+:(8+1)]),
-         .allocation_valid(norm_allocation_valid[d*(1)+:(1)]),
-         .allocation_frame(norm_allocation_frame[d*(72+1)+:(72+1)]),
-         .landing_reserved(norm_landing_reserved[d*(1)+:(1)]),
-         .landing_frame(norm_landing_frame[d*(72+1)+:(72+1)]),
-         .provider_drained(norm_provider_drained[d*(1)+:(1)]),
-         .publication_checked(norm_publication_checked[d*(1)+:(1)]),
-         .publication_frame(norm_publication_frame[d*(72+1)+:(72+1)]),
+         .allocation_valid(NORM_NATIVE_VM_ENABLE?(sfu_vm_retained[d]&&!sfu_vm_fault[d]):norm_allocation_valid[d]),
+         .allocation_frame(NORM_NATIVE_VM_ENABLE?sfu_vm_held_frame[d*73+:73]:norm_allocation_frame[d*73+:73]),
+         .landing_reserved(NORM_NATIVE_VM_ENABLE?(sfu_vm_retained[d]&&!norm_backend_fault):norm_landing_reserved[d]),
+         .landing_frame(NORM_NATIVE_VM_ENABLE?sfu_vm_held_frame[d*73+:73]:norm_landing_frame[d*73+:73]),
+         .provider_drained(NORM_NATIVE_VM_ENABLE?norm_backend_drained:norm_provider_drained[d]),
+         .publication_checked(NORM_NATIVE_VM_ENABLE?norm_checked:norm_publication_checked[d]),
+         .publication_frame(NORM_NATIVE_VM_ENABLE?norm_held_frame[d*73+:73]:norm_publication_frame[d*73+:73]),
          .publication_v(norm_publication_v[d*(1)+:(1)]),
          .publication_r(norm_publication_r[d*(1)+:(1)]),
          .publication_owner(norm_publication_owner[d*(72+1)+:(72+1)]),
@@ -854,7 +870,7 @@ end else begin:g_on
          .rd_addr(norm_rd_addr[d*(4*NORM_N*NORM_AW-1+1)+:(4*NORM_N*NORM_AW-1+1)]),
          .rd_re(norm_rd_re[d*(4*NORM_N-1+1)+:(4*NORM_N-1+1)]),
          .rd_src(norm_rd_src[d*(8*NORM_N-1+1)+:(8*NORM_N-1+1)]),
-         .rd_q(norm_rd_q[d*(4*NORM_N*32-1+1)+:(4*NORM_N*32-1+1)]),
+         .rd_q(NORM_NATIVE_VM_ENABLE?norm_native_q:norm_rd_q[d*4*NORM_N*32+:4*NORM_N*32]),
          .vm_we(norm_vm_we[d*(NORM_N-1+1)+:(NORM_N-1+1)]),
          .vm_waddr(norm_vm_waddr[d*(NORM_N*NORM_AW-1+1)+:(NORM_N*NORM_AW-1+1)]),
          .vm_wdata(norm_vm_wdata[d*(NORM_N*32-1+1)+:(NORM_N*32-1+1)]),
@@ -869,6 +885,17 @@ end else begin:g_on
          .fault(norm_fault[d*(1)+:(1)]),
          .ce(norm_ce[d*(1)+:(1)]),
          .due(norm_due[d*(1)+:(1)]));
+        ot_hbm_norm_native_vm_adapter #(.ENABLE(NORM_NATIVE_VM_ENABLE),.N(NORM_N),.D(NORM_D),.AW(NORM_AW)) u_norm_native_adapter(
+         .clk(clk_sm),.por_n(rst_sm_n),.enroll(norm_enroll_v[d]&&norm_enroll_r[d]),.bind_accept(sfu_vm_bind_v[d]&&sfu_vm_bind_r[d]),
+         .retained(norm_retained[d]),.owner_valid(actual_cp_frame==norm_held_frame[d*73+:73]&&sfu_vm_retained[d]&&!sfu_vm_fault[d]),
+         .frame(norm_held_frame[d*73+:73]),.rank(sfu_vm_bind_rank[d*7+:7]),
+         .rd_addr(norm_rd_addr[d*4*NORM_N*NORM_AW+:4*NORM_N*NORM_AW]),.rd_re(norm_rd_re[d*4*NORM_N+:4*NORM_N]),.rd_q(norm_native_q),
+         .wr_we(norm_vm_we[d*NORM_N+:NORM_N]),.wr_addr(norm_vm_waddr[d*NORM_N*NORM_AW+:NORM_N*NORM_AW]),.wr_data(norm_vm_wdata[d*NORM_N*32+:NORM_N*32]),
+         .child_enable(norm_clk_enable),.read_permit(norm_read_permit),.drained(norm_backend_drained),.publication_checked(norm_checked),.fault(norm_backend_fault),
+         .read_v(norm_read_v),.read_r(norm_read_r),.read_addr(norm_read_addr),.read_tag(norm_read_tag),.read_rank(norm_read_rank),
+         .rsp_v(norm_rsp_v),.rsp_r(norm_rsp_r),.rsp_data(sfu_vm_index_rsp_data[d*1024+:1024]),.rsp_frame(sfu_vm_index_rsp_frame[d*73+:73]),.rsp_tag(sfu_vm_index_rsp_tag[d*8+:8]),.rsp_rank(sfu_vm_index_rsp_rank[d*7+:7]),
+         .pub_v(norm_pub_v),.pub_r(norm_pub_r),.pub_addr(norm_pub_addr),.pub_data(norm_pub_data),
+         .ACK_v(norm_ACK_v),.ACK_r(norm_ACK_r),.ACK_frame(sfu_vm_publication_ACK_frame[d*73+:73]),.ACK_addr(sfu_vm_publication_ACK_addr[d*32+:32]));
         ot_hbm_accel_su_parent_exec #(.ENABLE(SU_ENABLE),.IMW(IMW)) u_su_exec(
          .clk(clk_sm),.rst_n(rst_sm_n),.owned(su_executor_owned),.config_idle(db_rdy[d]&&!su_selected&&!gather_retained[d]&&!fmt_retained&&w2_route_quiet),
          .loader_we(SU_ENABLE && im_we[d*NSM] && im_addr[IMW-1]),.loader_addr(im_addr),.loader_data(im_data),
