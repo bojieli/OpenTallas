@@ -204,6 +204,38 @@ def main():
         if bad:
             raise RuntimeError('actual L0 numerical comparison failed')
         return
+    if r.get('owner_supersession'):
+        # Only the explicitly named current owner runtime is retired, after
+        # this successor has linked and passed fresh admission. No automatic
+        # restart/replay, no signals to a peer or a different source vehicle.
+        import signal
+        handoff = r['owner_supersession']
+        hot = json.loads(Path(r['qualified_hot_gate']).read_text())
+        if hot['status'] != 'PASS_COMPILER_EQUIVALENCE' or not hot['adopted']:
+            raise RuntimeError('supersession requires exact changed compiler gate')
+        if hot['new_archive_sha256'] != hashlib.sha256(Path(r['completed_top']).read_bytes()).hexdigest():
+            raise RuntimeError('supersession archive qualification mismatch')
+        previous = Path('/proc')/str(handoff['pid'])
+        if previous.exists():
+            cmdline = (previous/'cmdline').read_bytes().split(b'\0')[0].decode()
+            start = (previous/'stat').read_text().rsplit(')',1)[1].split()[19]
+            if cmdline != handoff['binary'] or start != handoff['start_ticks']:
+                raise RuntimeError('owner supersession PID/source identity mismatch')
+            receipt = dict(status='OWNER_SUPERSEDED_BY_QUALIFIED_COMPILER',
+                previous=handoff, successor_binary=r['runtime'][0],
+                new_archive_sha256=hot['new_archive_sha256'],
+                compiler_gate=r['qualified_hot_gate'], time=time.time(),
+                numerical_failure_claim=False, full_token_pass=False)
+            with (output/'owner_supersession.json').open('x') as f:
+                json.dump(receipt,f,indent=2); f.write('\n')
+            os.kill(handoff['pid'],signal.SIGTERM)
+            while previous.exists():
+                try:
+                    if (previous/'stat').read_text().rsplit(')',1)[1].split()[0] == 'Z':
+                        break
+                except FileNotFoundError:
+                    break
+                time.sleep(1)
     stage(output, 'runtime', r['runtime'])
     log = (output/'runtime.log').read_text()
     if 'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE stages=37' not in log or 'WRITEBACK drained=1' not in log:
