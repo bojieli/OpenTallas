@@ -11,14 +11,14 @@ proc ot_place {name x y orient} {
   place_macro -macro_name [dict get $ot_lut $name] -location [list $x $y] -orientation $orient
 }
 ot_place {g_col[0].g_bank[0].u_rom} 2.16 2.16 R0
-ot_place {g_col[1].g_bank[0].u_rom} 142.992 2.16 R0
+ot_place {g_col[1].g_bank[0].u_rom} 142.776 2.16 R0
 ot_place {g_col[0].g_bank[1].u_rom} 2.16 69.552 R0
-ot_place {g_col[1].g_bank[1].u_rom} 142.992 69.552 R0
+ot_place {g_col[1].g_bank[1].u_rom} 142.776 69.552 R0
 ot_place {g_col[0].g_bank[2].u_rom} 2.16 136.944 R0
-ot_place {g_col[1].g_bank[2].u_rom} 142.992 136.944 R0
-ot_place {g_col[0].g_bank[3].u_rom} 2.16 1226.448 R0
-ot_place {g_col[1].g_bank[3].u_rom} 142.992 1226.448 R0
+ot_place {g_col[1].g_bank[2].u_rom} 142.776 136.944 R0
+ot_place {g_col[0].g_bank[3].u_rom} 2.16 1226.232 R0
+ot_place {g_col[1].g_bank[3].u_rom} 142.776 1226.232 R0
 ot_place {g_col[0].g_bank[4].u_rom} 2.16 1158.840 R0
-ot_place {g_col[1].g_bank[4].u_rom} 142.992 1158.840 R0
+ot_place {g_col[1].g_bank[4].u_rom} 142.776 1158.840 R0
 ot_place {g_kv[0].u_kv} 2.16 1113.264 R0
 ot_place {g_kv[1].u_kv} 169.992 1113.264 R0
