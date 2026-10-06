@@ -245,15 +245,23 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
    // Full current192-bit owner and current mutable phase/status veto remain.
    wire errors_ok=~|{qualified_sticky,exec_fault,shared_fault,ecc_fault_q};
    if(FAST_OWNER_FRONTIER)assign owned_frontier_terms={3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted};
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) pending_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[0],!lease_granted}),.result(pending));
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) lease_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[1],!lease_granted}),.result(lease_v));
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) owned_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted}),.result(owned));
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) release_gate(.bits({1'b1,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4}),.result(release_v));
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) accept_gate(.bits({equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4,release_r}),.result(balanced_release_accept));
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) done_gate(.bits({2'b11,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[5],!lease_granted,!exec_done}),.result(done));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) pending_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[0],!lease_granted}),.result(pending));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) lease_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[1],!lease_granted}),.result(lease_v));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(6)) owned_gate(.bits({3'b111,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[2],lease_granted}),.result(owned));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(8)) release_gate(.bits({1'b1,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4}),.result(release_v));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(9)) accept_gate(.bits({equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[4],lease_granted,exec_done,retired_original_ops==4,release_r}),.result(balanced_release_accept));
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(7)) done_gate(.bits({2'b11,equal64,four_phase_valid,errors_ok,!rails_bad,checked_valid_q,checked_status[5],!lease_granted,!exec_done}),.result(done));
    wire bypass_owner=is_idle||!checked_valid_q;
    wire [2:0] quiet_owner=equal64|{3{bypass_owner}};
-   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT)) quiet_gate(.bits({4'b1111,quiet_owner,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(quiet));
+   if(CONTROL_TAIL_CUT==2)begin:late_quiet
+    wire early_ok,owner_bad,owner_permit;
+    ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) early_gate(.bits({7'b1111111,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(early_ok));
+    ot_hbm_cp_frontier_nand3 late_owner(.bits(equal64),.result(owner_bad));
+    ot_hbm_cp_phase_nand2 bypass(.bits({owner_bad,!bypass_owner}),.result(owner_permit));
+    ot_hbm_cp_control_tail_and2 tail(.bits({early_ok,owner_permit}),.result(quiet));
+   end else begin:prior_quiet
+   ot_hbm_cp_frontier_and12 #(.FAST(FAST_OWNER_FRONTIER),.RETAINED_TAIL(CONTROL_TAIL_CUT),.OWNER_LSB(5)) quiet_gate(.bits({4'b1111,quiet_owner,four_phase_valid,errors_ok,!rails_bad,checked_status[3],!lease_granted}),.result(quiet));
+   end
   end else begin:original_balanced_frontiers
   ot_hbm_integrated_cp_and4 pending_gate(.bits({equal64,local_ok[0]}),.result(pending));
   ot_hbm_integrated_cp_and4 lease_gate(.bits({equal64,local_ok[1]}),.result(lease_v));
@@ -619,9 +627,14 @@ module ot_hbm_cp_frontier_entry(input wire [31:0] pc,output wire entry);
  ot_hbm_cp_frontier_nor3 root(.bits(upper),.result(entry));
 endmodule
 (* keep_hierarchy = "yes" *)
-module ot_hbm_cp_frontier_and12 #(parameter integer FAST=0,RETAINED_TAIL=0)(input wire [11:0] bits,output wire result);
+module ot_hbm_cp_frontier_and12 #(parameter integer FAST=0,RETAINED_TAIL=0,OWNER_LSB=6)(input wire [11:0] bits,output wire result);
  if(!FAST)begin:prior
   ot_hbm_cp_four_and12 gate(.bits(bits),.result(result));
+ end else if(RETAINED_TAIL==2)begin:late_owner
+  wire [11:0] early_bits=bits | (12'h007 << OWNER_LSB);
+  wire early_ok;
+  ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) early_gate(.bits(early_bits),.result(early_ok));
+  ot_hbm_integrated_cp_and4 late_gate(.bits({bits[OWNER_LSB+:3],early_ok}),.result(result));
  end else begin:fast
   wire [3:0] no;wire [1:0] yes;
   for(genvar k=0;k<4;k=k+1)begin:g
