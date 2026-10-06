@@ -23,7 +23,7 @@ def harness_dependencies(source):
         pins[str(p)]=sha(p)
         for name in re.findall(r'^\s*#include\s+"([^"]+)"',p.read_text(),re.M):
             path=p.parent/name
-            if not path.is_file() and re.fullmatch(r'V\w+\.h',name):continue
+            if not path.is_file() and (re.fullmatch(r'V\w+\.h',name) or re.fullmatch(r'verilated(?:_\w+)?\.h',name)):continue
             pending.append(path)
     return pins
 

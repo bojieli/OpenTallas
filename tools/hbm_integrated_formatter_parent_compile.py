@@ -104,7 +104,7 @@ def prepare(work,body_pin,partition_reduction=False,native_norm_production=False
             companions.append(str(source))
     if harness_source:
         for name in re.findall(r'^\s*#include\s+"([^"]+)"',(ROOT/harness_source).read_text(),re.M):
-            if name=='V'+top+'.h':continue  # Real generated header is a later dependency.
+            if name=='V'+top+'.h' or re.fullmatch(r'verilated(?:_\w+)?\.h',name):continue  # Generated/tool headers are pinned by the model build.
             rel=harness_source.parent/name
             if '..' in rel.parts:raise ValueError('Unsupported harness include path')
             companions.append(str(rel))
