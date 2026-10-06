@@ -49,7 +49,7 @@ proc ds_vm_connect {prefix serial_clock} {
   # Bind PG to each exact retained instance, escaping every regex metacharacter.
   foreach inst $cells {
     set name [$inst getName]
-    regsub -all {[][\.^$*+?(){}|]} $name {\&} escaped
+    regsub -all {[][\\.^$*+?(){}|]} $name {\\&} escaped
     set pattern "^${escaped}\$"
     add_global_connection -net VDD -inst_pattern $pattern -pin_pattern {^VDD$} -power
     add_global_connection -net VSS -inst_pattern $pattern -pin_pattern {^VSS$} -ground
