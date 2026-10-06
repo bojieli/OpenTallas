@@ -5,12 +5,12 @@ machine                              AR tok/s  MTP tok/s  MTP@3.8879  note
 DS ROM 1M (adopted levers)            1,673.8    4,900.4     4,581.0  tau 4.159; MTP physical_qualified=False
   + all PENDING_SSFF (CONDITIONAL)    2,290.1    6,287.8     5,877.9  not a headline
 Qwen ROM 8K (P8191)                   6,187.0    6,187.0           -  193,955 cycles; MTP mode AR (DSpark OFF) (DSpark 0.704x)
-HBM accel DS 1M, wire floor           2,048.9    4,040.3     3,776.9  +25.914 us wire
-HBM accel DS 1M, wire median          2,004.3    3,998.1     3,737.4  +36.783 us wire
-HBM accel DS 1M, wire bound           1,979.1    3,973.8     3,714.8  +43.126 us wire
+HBM accel DS 1M, wire floor           1,999.7    3,993.7     3,733.4  +37.917 us wire
+HBM accel DS 1M, wire median          1,948.8    3,944.2     3,687.1  +50.983 us wire
+HBM accel DS 1M, wire bound           1,921.5    3,917.2     3,661.8  +58.269 us wire
 full FEC vs light FEC (superseded) DS ROM dAR -64.1 tok/s (+22.049 us), dMTP -170.7 tok/s (+28.562 us step); HBM +29.89 us AR and MTP step (305 crossings x 98.0 ns)
 
-DS ROM / HBM (wire median): AR 0.8351x  MTP 1.2257x
+DS ROM / HBM (wire median): AR 0.8589x  MTP 1.2424x
 
 PER-LEVER DELTAS (adopted: headline minus headline-without; conditional: if-adopted minus headline)
 machine   lever                  class           dAR us  dAR tok/s  dMTP step  dMTP tok/s

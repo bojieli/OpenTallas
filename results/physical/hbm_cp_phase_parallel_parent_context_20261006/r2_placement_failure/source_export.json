@@ -1,0 +1,47 @@
+{
+  "actual_source_commit": "6dc352dbd",
+  "published_main": "2ad38981f",
+  "remote_export_commit": "bf4cf639f1defc2fa6adca102dd3245943db5daa",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "7e87b46e61c1d8d78b8c070b49cec10ec9c403ef42a100de900e19b3db8013bf",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv": "94c0febfce634f5879451d2d7195fbca775a8d9bab213e464565b9e502f904b0",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "3d2cd1ddf67a68181e94f61f7f0537e159d074d2d9d0197e7934b51361619205",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv": "1e5c0d01e2ee23d00b109a69ac95c0366b6d4be2742baf463c99228d05d91ef1",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "02ba26154518055890021ebdfdc9133592ae6c25fb251537a11922fb6daf6483",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "62b9487f9c813c1a625247d35a14feb9324a5f81afc888f05c64633184fe6c99",
+    "tools/uarch_model.py": "0f045f62c91e56e897d2e8b53497d943437c554bae754d43ff6c3a0c8e34f5c1"
+  },
+  "parameters": {
+    "SU_PARALLEL_PHASE_VALIDATION": 1
+  },
+  "variant": 1,
+  "verification_replayed": false,
+  "physical_launched": false,
+  "physical_packet_repair_commit": "c9f1d7d03",
+  "prior_failure_root": "/srv/opentallas-scratch2/jobs/harvey-cp-phase-parallel-parent-context-r1",
+  "prior_failure_exit": 2,
+  "RTL_changed": false,
+  "physical_dependencies_sha256": {
+    "physical/common/ot_macro_track_assert_hook.tcl": "9a31c37d470232411b116ccbf8607d16e494c968ab743e37992ef3ed2db7e2a1",
+    "physical/common/ot_macro_track_snap.tcl": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+    "physical/hbm_cp_parent_context_20261005/context.sdc": "01e2245575e46b71a555636c5ed4fa20ebcd17c5a47cdc80f378b2f654e519c5",
+    "physical/hbm_cp_parent_context_20261005/cts_membership.tcl": "8d870f5ed39c200a8eb30ac52354d054d8569783e651179a090c295e7413ca75",
+    "physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl": "290facd41e8109856a98d44dd2038902ff9b614c0fe45b38dae199a32bfc0596",
+    "physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl": "b528bd3853d8436663c7888050e7cccc96ae64baf010a0f3ad42dbc85a896c1c",
+    "physical/hbm_cp_parent_context_20261005/fast_frontier_regions.tcl": "4b4ac49af7ab876b0c4fa234b5e50a43122891772186d2fa68922d0e3d0a4842",
+    "physical/hbm_cp_parent_context_20261005/fast_frontier_unique_regions.tcl": "bcecd1f4cd0229bed7287060001562561e9c44be19464e367f8aa74d7fb78729",
+    "physical/hbm_cp_parent_context_20261005/pdn.tcl": "1b77ab0497b279c05db4116971cf55efa6053ff7ee96ccaf1605b372f784488d",
+    "physical/hbm_cp_parent_context_20261005/pins_and_regions.tcl": "93fb587acc88db047f846a01e88fc61c060921c47d1663314a832879c5209083",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "3d2cd1ddf67a68181e94f61f7f0537e159d074d2d9d0197e7934b51361619205",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "7e87b46e61c1d8d78b8c070b49cec10ec9c403ef42a100de900e19b3db8013bf",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "02ba26154518055890021ebdfdc9133592ae6c25fb251537a11922fb6daf6483"
+  }
+}

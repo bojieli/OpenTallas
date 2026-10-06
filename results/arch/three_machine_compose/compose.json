@@ -340,33 +340,33 @@
   "rows": {
    "floor": {
     "wire_basis": "stages_430_manhattan",
-    "wire_added_us": 25.914,
+    "wire_added_us": 37.917,
     "full_fec_added_us": 29.89,
-    "AR_us": 488.063,
-    "AR_tok_s": 2048.9,
-    "MTP_step_us": 1029.386,
-    "MTP_tok_s": 4040.3,
-    "MTP_tok_s_tau_published": 3776.9
+    "AR_us": 500.066,
+    "AR_tok_s": 1999.7,
+    "MTP_step_us": 1041.389,
+    "MTP_tok_s": 3993.7,
+    "MTP_tok_s_tau_published": 3733.4
    },
    "median": {
     "wire_basis": "stages_430_median_bundle",
-    "wire_added_us": 36.783,
+    "wire_added_us": 50.983,
     "full_fec_added_us": 29.89,
-    "AR_us": 498.932,
-    "AR_tok_s": 2004.3,
-    "MTP_step_us": 1040.255,
-    "MTP_tok_s": 3998.1,
-    "MTP_tok_s_tau_published": 3737.4
+    "AR_us": 513.132,
+    "AR_tok_s": 1948.8,
+    "MTP_step_us": 1054.455,
+    "MTP_tok_s": 3944.2,
+    "MTP_tok_s_tau_published": 3687.1
    },
    "bound": {
     "wire_basis": "stages_430",
-    "wire_added_us": 43.126,
+    "wire_added_us": 58.269,
     "full_fec_added_us": 29.89,
-    "AR_us": 505.275,
-    "AR_tok_s": 1979.1,
-    "MTP_step_us": 1046.598,
-    "MTP_tok_s": 3973.8,
-    "MTP_tok_s_tau_published": 3714.8
+    "AR_us": 520.418,
+    "AR_tok_s": 1921.5,
+    "MTP_step_us": 1061.741,
+    "MTP_tok_s": 3917.2,
+    "MTP_tok_s_tau_published": 3661.8
    }
   },
   "headline_row": "median",
@@ -391,25 +391,25 @@
   "inputs": {
    "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
    "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
-   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
   }
  },
  "ratios": {
-  "ds_rom_over_hbm_ar": 0.8351,
-  "ds_rom_over_hbm_mtp": 1.2257,
+  "ds_rom_over_hbm_ar": 0.8589,
+  "ds_rom_over_hbm_mtp": 1.2424,
   "hbm_row": "median",
   "by_wire_basis": {
    "floor": {
-    "ar": 0.8169,
-    "mtp": 1.2129
+    "ar": 0.837,
+    "mtp": 1.227
    },
    "median": {
-    "ar": 0.8351,
-    "mtp": 1.2257
+    "ar": 0.8589,
+    "mtp": 1.2424
    },
    "bound": {
-    "ar": 0.8457,
-    "mtp": 1.2332
+    "ar": 0.8711,
+    "mtp": 1.251
    }
   }
  },
@@ -463,7 +463,7 @@
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
-  "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "ca7ec5428f4e25c9da43ca1e219e75c78812788980467219c2986c54e44c161b"
+  "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
   "tools/three_machine_compose.py": "bbdbc64250c8fe52132eda48baae7fd0a396a73733749fff6465edf1f11380b3"

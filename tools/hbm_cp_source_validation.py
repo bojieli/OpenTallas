@@ -1,7 +1,26 @@
 """Validate the allocated CP source and measured successor without evaluating unrelated models."""
-def hbm_cp_validate_allocated_sources(root, cp, fourcut=False, fast_owner=False):
+def hbm_cp_validate_allocated_sources(root, cp, fourcut=False, fast_owner=False, phase_parallel=False):
     """Bind unchanged CP wiring across the two explicit default-off Jason W2 hooks."""
     import hashlib
+    if phase_parallel:
+        import json
+        if not fast_owner:raise ValueError('Parallel phase requires fast frontier context')
+        model=json.loads((root/'results/uarch/hbm_cp_phase_parallel_20261006/model.json').read_text())
+        exact=json.loads((root/model['exact_measurement']).read_text())
+        if exact['verdict']!='PASS_EXACT_CONNECTED' or exact['checks']!=8713 or exact['parent_checks']!=266 or exact['parallel_phase_complete_words']!=262144:
+            raise ValueError('Parallel phase requires changed complete-phase and connected exact gate')
+        for path,digest in exact['source_sha256'].items():
+            if hashlib.sha256((root/path).read_bytes()).hexdigest()!=digest:
+                raise ValueError('Parallel phase measured source changed: '+path)
+        for path in ['rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv','rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv']:
+            text=(root/path).read_text()
+            if text.count('SU_PARALLEL_PHASE_VALIDATION=0')!=1 or text.count('.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION)')!=1:
+                raise ValueError('Missing defaultOFF parallel phase parent forwarding: '+path)
+        return {path:dict(actual_sha256=exact['source_sha256'][path],allocation_sha256=expected,
+                    qualified_combinational_successor=True,parent_ports_unchanged=True,
+                    private_factor_bits=12,added_RTL_FF=0,added_cycles=0)
+                for path,expected in cp['association_join']['source_sha256'].items()
+                if not path.startswith('rtl/test/')}
     if fast_owner:
         import json
         model=json.loads((root/'results/uarch/hbm_cp_fast_frontier_20261006/model.json').read_text())
