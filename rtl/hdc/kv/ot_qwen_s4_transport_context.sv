@@ -4,7 +4,8 @@
 // No behavioural DRAM/provider is included. Parent free/gated root relation,
 // loaded source slots, pins and timing still require contextual qualification.
 module ot_qwen_s4_transport_context #(
-    parameter integer ENABLE=0,MEM_WORDS=36*131072,PHASE=0
+    parameter integer ENABLE=0,MEM_WORDS=36*131072,PHASE=0,
+    parameter integer CDC_CONSUMER_JOIN=0 // additive port join, no CDC structure change
 )(
     input wire clk, hclk, rst_n, warm_rst_n,
     input wire d_v, go,
@@ -232,6 +233,20 @@ module ot_qwen_s4_transport_context #(
             .busy(busy[sk*32+:32]),.fault(ctl_fault),.wr_v(wr_v),.wr_bank(wr_bank),.wr_col(wr_col),.wr_r(wr_r),.col_we(col_we[sk*32+:32]),.wr_rd(32'b0),.col_aq());
         for(genvar p=0;p<32;p=p+1)begin:pc
             wire [23:0] head_sec;
+            if(CDC_CONSUMER_JOIN)begin:consumer_join
+                // Local AD64 retires only when the checked stack R-pool
+                // accepts the ACK. Root consumer wd_accept remains on u_link;
+                // it must not be used to retire this earlier local callback.
+            ot_qwen_s4_protected_cdc_consumer_join #(.ENABLE(1),.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p))) u_pc(
+                .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(1'b1),
+                .l_v(blv[p]),.l_sec(blsec[p*17+:17]),.l_row(blrow[p*8+:8]),.l_data(bldata[p*256+:256]),.l_pop(blpop[p]),
+                .w_v(bwv[p]),.w_sec(bsec[p*24+:24]),.w_data(bdata[p*256+:256]),.w_tag(btag[p*9+:9]),.w_room(broom[p]),
+                .wd_v(bav[p]),.wd_tag(batag[p*9+:9]),.wd_accept(bardy[p]),.c_fault(pc_cf[p]),
+                .h_lv(h_lv[sk*32+p]),.h_lsec(h_lsec[(sk*32+p)*17+:17]),.h_lrow(h_lrow[(sk*32+p)*8+:8]),.h_ldata(h_ldata[(sk*32+p)*256+:256]),.h_cred(credits[p*3+:3]),
+                .h_wv(wr_v[p]),.h_wsec(head_sec),.h_hand(wr_v[p]&&wr_r[p]),.h_wcon(col_v[sk*32+p]&&col_we[sk*32+p]),
+                .h_cv(h_cv[sk*32+p]),.h_csec(h_csec[(sk*32+p)*24+:24]),.h_cdata(h_cdata[(sk*32+p)*256+:256]),.h_ctag(h_ctag[(sk*32+p)*9+:9]),
+                .h_av(h_av[sk*32+p]),.h_atag(h_atag[(sk*32+p)*9+:9]),.h_fault(pc_hf[p]));
+            end else begin:existing_endpoint
             ot_qwen_s4_protected_pc #(.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p)),.ACK_BACKPRESSURE(1)) u_pc(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(1'b1),
                 .l_v(blv[p]),.l_sec(blsec[p*17+:17]),.l_row(blrow[p*8+:8]),.l_data(bldata[p*256+:256]),.l_pop(blpop[p]),
@@ -241,6 +256,7 @@ module ot_qwen_s4_transport_context #(
                 .h_wv(wr_v[p]),.h_wsec(head_sec),.h_hand(wr_v[p]&&wr_r[p]),.h_wcon(col_v[sk*32+p]&&col_we[sk*32+p]),
                 .h_cv(h_cv[sk*32+p]),.h_csec(h_csec[(sk*32+p)*24+:24]),.h_cdata(h_cdata[(sk*32+p)*256+:256]),.h_ctag(h_ctag[(sk*32+p)*9+:9]),
                 .h_av(h_av[sk*32+p]),.h_atag(h_atag[(sk*32+p)*9+:9]),.h_fault(pc_hf[p]));
+            end
             // The R14 head comes from the checked local write-cache head,
             // not from the currently arriving global packet.
             wire [9:0] j={head_sec[14:6],head_sec[16]};

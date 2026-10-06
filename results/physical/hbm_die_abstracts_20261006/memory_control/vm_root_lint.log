@@ -1,0 +1,5 @@
+%Warning-WIDTH: physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv:21:14: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                        : ... In instance ot_hbm_die_vm_multicast_root
+   21 |  generate if(!ENABLE)begin:off
+      |              ^
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
