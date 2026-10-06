@@ -1,0 +1,487 @@
+{
+ "schema": "opentallas.dsrom-s81.boundary-window.v1",
+ "tool": "tools/dsrom_s81_boundary_window.py",
+ "unit": "smx_x7u35",
+ "top": "ot_dsrom_su_softmax",
+ "base": "/srv/opentallas-scratch/claude/dsrom-suchains/softmax/route/x7u35/orfs/results/asap7/opentallas_ot_dsrom_su_softmax_asap7_smx_x7u35/base",
+ "wire_ps": 30.0,
+ "dff": {
+  "clkq_min_ff": 32.2,
+  "clkq_max_ss": 115.6,
+  "setup_ss": 28.6,
+  "hold_ff": 13.6
+ },
+ "clock_tree_path_ps": {
+  "ss": {
+   "min_clock_tree_path": 822.72864,
+   "max_clock_tree_path": 886.55322
+  },
+  "ff": {
+   "min_clock_tree_path": 506.93195,
+   "max_clock_tree_path": 555.54718
+  }
+ },
+ "groups": [
+  {
+   "kind": "in",
+   "port": "cosv",
+   "bits": 1024,
+   "ss_slack_ps": 1304.160767,
+   "ff_slack_ps": -533.439392,
+   "req_min_ps": 533.44,
+   "max_arr_ps": 1304.16,
+   "offset_window_ps": [
+    501.24,
+    1158.56
+   ],
+   "feasible": true,
+   "P0_margin_ps": -501.24,
+   "P1_margin_ps": 5.69,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "lt",
+   "bits": 3,
+   "ss_slack_ps": 1053.611572,
+   "ff_slack_ps": -486.790558,
+   "req_min_ps": 486.79,
+   "max_arr_ps": 1053.61,
+   "offset_window_ps": [
+    454.59,
+    908.01
+   ],
+   "feasible": true,
+   "P0_margin_ps": -454.59,
+   "P1_margin_ps": 21.46,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "nv",
+   "bits": 7,
+   "ss_slack_ps": 1257.704224,
+   "ff_slack_ps": -510.642029,
+   "req_min_ps": 510.64,
+   "max_arr_ps": 1257.7,
+   "offset_window_ps": [
+    478.44,
+    1112.1
+   ],
+   "feasible": true,
+   "P0_margin_ps": -478.44,
+   "P1_margin_ps": 28.49,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "in",
+   "port": "pv_d",
+   "bits": 256,
+   "ss_slack_ps": 1535.709961,
+   "ff_slack_ps": -575.037109,
+   "req_min_ps": 575.04,
+   "max_arr_ps": 1535.71,
+   "offset_window_ps": [
+    542.84,
+    1390.11
+   ],
+   "feasible": true,
+   "P0_margin_ps": -542.84,
+   "P1_margin_ps": -35.91,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "pv_v",
+   "bits": 1,
+   "ss_slack_ps": 1557.073364,
+   "ff_slack_ps": -562.609985,
+   "req_min_ps": 562.61,
+   "max_arr_ps": 1557.07,
+   "offset_window_ps": [
+    530.41,
+    1411.47
+   ],
+   "feasible": true,
+   "P0_margin_ps": -530.41,
+   "P1_margin_ps": -23.48,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "rst_n",
+   "bits": 1,
+   "ss_slack_ps": -1650.013428,
+   "ff_slack_ps": -557.082031,
+   "req_min_ps": 557.08,
+   "max_arr_ps": -1650.01,
+   "offset_window_ps": [
+    524.88,
+    -1795.61
+   ],
+   "feasible": false,
+   "P0_margin_ps": -1795.61,
+   "P1_margin_ps": -2682.17,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "s_d",
+   "bits": 256,
+   "ss_slack_ps": 1561.7146,
+   "ff_slack_ps": -575.668823,
+   "req_min_ps": 575.67,
+   "max_arr_ps": 1561.71,
+   "offset_window_ps": [
+    543.47,
+    1416.11
+   ],
+   "feasible": true,
+   "P0_margin_ps": -543.47,
+   "P1_margin_ps": -36.54,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "s_v",
+   "bits": 1,
+   "ss_slack_ps": 1558.822998,
+   "ff_slack_ps": -564.236023,
+   "req_min_ps": 564.24,
+   "max_arr_ps": 1558.82,
+   "offset_window_ps": [
+    532.04,
+    1413.22
+   ],
+   "feasible": true,
+   "P0_margin_ps": -532.04,
+   "P1_margin_ps": -25.1,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "scale",
+   "bits": 32,
+   "ss_slack_ps": 915.764465,
+   "ff_slack_ps": -551.389343,
+   "req_min_ps": 551.39,
+   "max_arr_ps": 915.76,
+   "offset_window_ps": [
+    519.19,
+    770.16
+   ],
+   "feasible": true,
+   "P0_margin_ps": -519.19,
+   "P1_margin_ps": -116.39,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "sink",
+   "bits": 32,
+   "ss_slack_ps": 1068.794312,
+   "ff_slack_ps": -566.250854,
+   "req_min_ps": 566.25,
+   "max_arr_ps": 1068.79,
+   "offset_window_ps": [
+    534.05,
+    923.19
+   ],
+   "feasible": true,
+   "P0_margin_ps": -534.05,
+   "P1_margin_ps": -27.12,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "in",
+   "port": "sinv",
+   "bits": 1024,
+   "ss_slack_ps": 1207.946533,
+   "ff_slack_ps": -535.030151,
+   "req_min_ps": 535.03,
+   "max_arr_ps": 1207.95,
+   "offset_window_ps": [
+    502.83,
+    1062.35
+   ],
+   "feasible": true,
+   "P0_margin_ps": -502.83,
+   "P1_margin_ps": 4.1,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "den_d",
+   "bits": 32,
+   "ss_slack_ps": -317.056396,
+   "ff_slack_ps": 547.093384,
+   "out_min_ps": 572.09,
+   "out_max_ps": 1090.06,
+   "offset_window_ps": [
+    375.66,
+    533.49
+   ],
+   "feasible": true,
+   "P0_margin_ps": -375.66,
+   "P1_margin_ps": -22.05,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "den_v",
+   "bits": 1,
+   "ss_slack_ps": -236.263901,
+   "ff_slack_ps": 554.279785,
+   "out_min_ps": 579.28,
+   "out_max_ps": 1009.26,
+   "offset_window_ps": [
+    294.86,
+    540.68
+   ],
+   "feasible": true,
+   "P0_margin_ps": -294.86,
+   "P1_margin_ps": -14.87,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "e_d",
+   "bits": 256,
+   "ss_slack_ps": -437.455505,
+   "ff_slack_ps": 544.251953,
+   "out_min_ps": 569.25,
+   "out_max_ps": 1210.46,
+   "offset_window_ps": [
+    496.06,
+    530.65
+   ],
+   "feasible": true,
+   "P0_margin_ps": -496.06,
+   "P1_margin_ps": -24.9,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "e_v",
+   "bits": 1,
+   "ss_slack_ps": -368.106781,
+   "ff_slack_ps": 637.643433,
+   "out_min_ps": 662.64,
+   "out_max_ps": 1141.11,
+   "offset_window_ps": [
+    426.71,
+    624.04
+   ],
+   "feasible": true,
+   "P0_margin_ps": -426.71,
+   "P1_margin_ps": 68.5,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "es_d",
+   "bits": 32,
+   "ss_slack_ps": -470.556915,
+   "ff_slack_ps": 593.048706,
+   "out_min_ps": 618.05,
+   "out_max_ps": 1243.56,
+   "offset_window_ps": [
+    529.16,
+    579.45
+   ],
+   "feasible": true,
+   "P0_margin_ps": -529.16,
+   "P1_margin_ps": 23.9,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "es_v",
+   "bits": 1,
+   "ss_slack_ps": -372.468628,
+   "ff_slack_ps": 621.965576,
+   "out_min_ps": 646.97,
+   "out_max_ps": 1145.47,
+   "offset_window_ps": [
+    431.07,
+    608.37
+   ],
+   "feasible": true,
+   "P0_margin_ps": -431.07,
+   "P1_margin_ps": 52.82,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "fault",
+   "bits": 1,
+   "ss_slack_ps": "inf",
+   "ff_slack_ps": "inf",
+   "out_min_ps": "inf",
+   "out_max_ps": "-inf",
+   "offset_window_ps": [
+    "-inf",
+    "inf"
+   ],
+   "feasible": true,
+   "P0_margin_ps": null,
+   "P1_margin_ps": null,
+   "P0": true,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "mx_d",
+   "bits": 32,
+   "ss_slack_ps": -474.324036,
+   "ff_slack_ps": 636.194641,
+   "out_min_ps": 661.19,
+   "out_max_ps": 1247.32,
+   "offset_window_ps": [
+    532.92,
+    622.59
+   ],
+   "feasible": true,
+   "P0_margin_ps": -532.92,
+   "P1_margin_ps": 67.05,
+   "P0": false,
+   "P1": true
+  },
+  {
+   "kind": "out",
+   "port": "mx_v",
+   "bits": 1,
+   "ss_slack_ps": -265.458435,
+   "ff_slack_ps": 566.997742,
+   "out_min_ps": 592.0,
+   "out_max_ps": 1038.46,
+   "offset_window_ps": [
+    324.06,
+    553.4
+   ],
+   "feasible": true,
+   "P0_margin_ps": -324.06,
+   "P1_margin_ps": -2.15,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "o_d",
+   "bits": 128,
+   "ss_slack_ps": -427.516571,
+   "ff_slack_ps": 543.634033,
+   "out_min_ps": 568.63,
+   "out_max_ps": 1200.52,
+   "offset_window_ps": [
+    486.12,
+    530.03
+   ],
+   "feasible": true,
+   "P0_margin_ps": -486.12,
+   "P1_margin_ps": -25.51,
+   "P0": false,
+   "P1": false
+  },
+  {
+   "kind": "out",
+   "port": "o_v",
+   "bits": 1,
+   "ss_slack_ps": -276.567444,
+   "ff_slack_ps": 571.055176,
+   "out_min_ps": 596.06,
+   "out_max_ps": 1049.57,
+   "offset_window_ps": [
+    335.17,
+    557.46
+   ],
+   "feasible": true,
+   "P0_margin_ps": -335.17,
+   "P1_margin_ps": 1.91,
+   "P0": false,
+   "P1": true
+  }
+ ],
+ "summary": {
+  "groups": 22,
+  "infeasible": [
+   "rst_n"
+  ],
+  "common_offset": {
+   "in": {
+    "window_ps": [
+     543.47,
+     -1795.61
+    ],
+    "width_ps": -2339.08,
+    "feasible": false
+   },
+   "out": {
+    "window_ps": [
+     532.92,
+     530.03
+    ],
+    "width_ps": -2.89,
+    "feasible": false
+   }
+  },
+  "P0_pass": false,
+  "P1_pass": false,
+  "P0_worst_margin_ps": -1795.61,
+  "P1_worst_margin_ps": -2682.17,
+  "P0_fail": [
+   "cosv",
+   "lt",
+   "nv",
+   "pv_d",
+   "pv_v",
+   "rst_n",
+   "s_d",
+   "s_v",
+   "scale",
+   "sink",
+   "sinv",
+   "den_d",
+   "den_v",
+   "e_d",
+   "e_v",
+   "es_d",
+   "es_v",
+   "mx_d",
+   "mx_v",
+   "o_d",
+   "o_v"
+  ],
+  "P1_fail": [
+   "pv_d",
+   "pv_v",
+   "rst_n",
+   "s_d",
+   "s_v",
+   "scale",
+   "sink",
+   "den_d",
+   "den_v",
+   "e_d",
+   "mx_v",
+   "o_d"
+  ]
+ }
+}
