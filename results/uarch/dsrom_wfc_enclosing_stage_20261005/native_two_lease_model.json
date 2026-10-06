@@ -1,0 +1,42 @@
+{
+  "before_RTL": true,
+  "MAXU": 866,
+  "SOURCE": 0,
+  "mechanism": "Legal native RX nextposition concurrent TX previousposition: perform TX-only original read issue then actual queue capture/consumption and provider retirement; RX tuple held unaccepted and immutable; perform RX-only protected write with distinct savedowner then actual native acceptance/consumption and provider retirement before another TXread. XB unaccepted/backpressured during pair; sameowner normal read2/write5 path unchanged.",
+  "retained_fields": {
+    "current_provider_owner47_shadow94": true,
+    "paired_write_owner47_shadow94": true,
+    "state4_shadow8": true,
+    "flags9_shadow18": true,
+    "expectedwe5_shadow10": true
+  },
+  "caller_FF": 224,
+  "delta_FF": 98,
+  "new_read_payload_copy_FF": 0,
+  "new_write_payload_copy_FF": 0,
+  "new_memory_ports": 0,
+  "new_completion_authorities": 0,
+  "new_codecs": 0,
+  "MACs_per_cycle": 0,
+  "boundary_bits_delta": 33,
+  "tracks_delta": 33,
+  "mux": "two native memory step qualifiers, true savedlease comparator47 inside existing512NAND control margin",
+  "new_pipeline_edges": 0,
+  "latency": "Existing firstread reply12-13fast+ISSUE1+CAPTURE1+DRAIN1+receipt6-7 then nextwrite20-21fast+ISSUE1+DRAIN1+receipt6-7 plus phase transitions; two serial actual protected packets, measured accepted->retired pair in changed overlap fixture before composing. No free overlap or oneedge assumptions.",
+  "projected_pair_fast_edges_range": [
+    51,
+    57
+  ],
+  "projected_pair_ns_at833ps": [
+    42.5,
+    47.5
+  ],
+  "area_delta_um2_upper": 74.29968,
+  "parent_slot": "Turing currentWFC core648x648 logic+VM288 macro body unchanged; existingCE/control budget2923um2 retains growth allowance",
+  "default_ENABLE": 0,
+  "default_STRUCTURAL": 0,
+  "exact": "Read old TX row BEFORE held RX write commits; actual native stream writes/reads/pointers each advance once, not two duplicate general steps; both owner receipts protected by unchanged provider. Wrong/missing held write tuple faults, warm pair remains owned.",
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "adopted": false
+}

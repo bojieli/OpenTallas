@@ -11839,6 +11839,13 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
+def dsrom_wfc_native_two_lease_price():
+    """Legal next-position RX/previous-position TX before serialization RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/native_two_lease_model.json').read_text())
+
+
 def dsrom_wfc_protected_caller_adapter_price():
     """Actual readyless-to-protected service adapter, before its source build."""
     import json
