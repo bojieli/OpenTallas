@@ -56,8 +56,11 @@ module ot_meso_fifo #(
     parameter int HOLD     = 8,      // DOWN lasts >= HOLD + 1 own cycles (peer must see it)
     parameter int SETTLE   = 8,      // cycles the peer ring is seen running before placement (>= DEPTH)
     parameter bit ENABLE   = 0,
-    parameter bit RDREG    = 0       // register the data-ring readout (slot -> one-hot select -> readout flop) before the
+    parameter bit RDREG    = 0,      // register the data-ring readout (slot -> one-hot select -> readout flop) before the
                                      // read side: +1 period crossing latency, the crossing arc ends at the select
+    parameter bit NOBP     = 0       // consumer never back-pressures (r_rdy tied 1, die stations): no receive buffer,
+                                     // o_d loads the arriving word directly (same latency); a word that would have to
+                                     // be buffered (r_rdy low) faults the reader closed (r_fault) instead
 ) (
     input  logic         wclk,
     input  logic         wrst_n,     // synchronous to wclk
@@ -226,7 +229,13 @@ module ot_meso_fifo #(
         assign r_d      = o_d;
         assign r_take   = r_v && r_rdy;
         wire   load     = !o_v || r_rdy;
-        always_ff @(posedge rclk) if (load) o_d <= empty ? d_rd : buf_d[hd];
+        if (NOBP) begin : g_nobp
+            // no buffer: the W-wide 'empty ? d_rd : buf_d[hd]' select (a 512-load control net) and CREDITS x W
+            // buffer flops go; with r_rdy = 1 the buffer is provably never used (load = 1, push_1 = 0 when empty)
+            always_ff @(posedge rclk) if (load) o_d <= d_rd;
+        end else begin : g_buf
+            always_ff @(posedge rclk) if (load) o_d <= empty ? d_rd : buf_d[hd];
+        end
 `ifdef OT_MESO_MUTANT_EARLY_CREDIT
         assign c_pulse  = d_in;              // MUTANT: credit on arrival instead of consumption
 `else
@@ -242,7 +251,9 @@ module ot_meso_fifo #(
         wire   ovf_1    = push_1 && (cnt == BW'(CREDITS)) && !pop;
         // written every cycle unless full (read-domain condition only; no crossing signal in the enable); tl
         // advances only on push, so a non-push cycle just rewrites the free slot
-        always_ff @(posedge rclk) if (cnt != BW'(CREDITS)) buf_d[tl] <= d_rd;
+        if (!NOBP) begin : g_bufw
+            always_ff @(posedge rclk) if (cnt != BW'(CREDITS)) buf_d[tl] <= d_rd;
+        end
         // {cnt, tl, o_v} next state for d_hit = 1 / 0 from read-domain flops only, selected by d_hit in a kept 2:1
         localparam int RN = BW + IW + 1;
         logic [RN-1:0] rn1, rn0, rnd;
@@ -282,7 +293,7 @@ module ot_meso_fifo #(
                 else if (pop) hd <= (hd == IW'(CREDITS - 1)) ? '0 : hd + 1'b1;
                 if (!r_on) r_arm <= '0; else if (r_arm != 3'd5) r_arm <= r_arm + 1'b1;
                 if (r_on && ((r_arm == 3'd5 && (!d_glo || !d_ghi)) || !d_lap_ok ||
-                             (d_in && ovf_1))) r_flt <= 1'b1;
+                             (d_in && ovf_1) || (NOBP && d_in && push_1))) r_flt <= 1'b1;
             end
         end
 `ifdef OT_MESO_DEBUG
