@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,NORM_C12_ENABLE=0,NORM_NATIVE_VM_ENABLE=0,NORM_NATIVE_INPUT_CP=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_CONTROL_TAIL_CUT=0,SU_OWNER_VETO_POLARITY=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,FORMATTER_PREINSTALL_ENABLE=0,FORMATTER_DIRECT_SOURCE_REPLAY=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1,
  // Opt-in preinstall uses the actual 128MiB allocator successor. ENTRY_PC
  // remains caller-supplied metadata; it does not enroll a normal SM program.
@@ -674,7 +674,7 @@ end else begin:g_on
          .rsp_v(w2_sink_rsp_v),.rsp_r(w2_sink_rsp_r),.rsp(w2_provider_rsp));
         assign su_owned=peer_grants[0]&&!sfu_route&&!norm_route;assign su_release_r=peer_releases[0]&&!sfu_route&&!norm_route;
         wire [11:0] su_owned_frontier_terms;
-        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT)) u_su_cp(
+        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_cp(
          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
          .native_launch(native_launch),.lease_v(su_lease_v),.lease_granted(su_owned),
@@ -699,7 +699,7 @@ end else begin:g_on
          .exec_done(su_exec_done),.exec_fault(su_exec_fault),.retired_original_ops(su_retired),
          .caller_exec_done(su_caller_done),.caller_exec_fault(su_caller_fault),.caller_retired_original_ops(su_caller_retired));
         end else begin:g_su_legacy_provider
-        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT)) u_su_association(
+        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_association(
          .clk(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),.qualified_owned_terms(su_owned_frontier_terms),
          .exec_owned(su_executor_owned),.new_request_permit(su_new_request_permit),.fault(su_association_fault));
         assign su_provider_req_v=su_req_v&&su_new_request_permit;assign su_provider_req=su_request;

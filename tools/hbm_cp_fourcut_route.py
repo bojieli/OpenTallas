@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--fast-owner', action='store_true')
     parser.add_argument('--phase-parallel', action='store_true', help='Changed exact18-bit phase validation; one contextual source vehicle')
+    parser.add_argument('--owner-veto-polarity',action='store_true',help='Changed full192 sameedge negative owner/output frontier')
     parser.add_argument('--control-tail', action='store_true', help='Changed-source retained CP control/output-tail cut; requires finite pin/via repair')
     parser.add_argument('--gpl-repair', action='store_true', help='One source-identical GPL0307 continuation from retained IO')
     parser.add_argument('--variant', type=int, choices=(1,2,3), default=1,
@@ -37,8 +38,8 @@ def main():
     # the pinned clean source checkout during physical execution.
     from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
     cp = json.loads((ROOT/context.CONTRACT).read_text())['CP']
-    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner,phase_parallel=args.phase_parallel,control_tail=args.control_tail)
-    input_path=ROOT/('physical/hbm_cp_parent_context_20261005/control_tail_inputs.json' if args.control_tail else ('physical/hbm_cp_parent_context_20261005/phase_parallel_inputs.json' if args.phase_parallel else 'physical/hbm_cp_parent_context_20261005/inputs.json'))
+    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner,phase_parallel=args.phase_parallel,control_tail=args.control_tail,owner_veto=args.owner_veto_polarity)
+    input_path=ROOT/('physical/hbm_cp_parent_context_20261005/owner_veto_inputs.json' if args.owner_veto_polarity else ('physical/hbm_cp_parent_context_20261005/control_tail_inputs.json' if args.control_tail else ('physical/hbm_cp_parent_context_20261005/phase_parallel_inputs.json' if args.phase_parallel else 'physical/hbm_cp_parent_context_20261005/inputs.json')))
     inputs = json.loads(input_path.read_text())
     assert inputs['parameters']['SU_FOUR_COMBINATIONAL_CUTS'] == 1
     assert inputs['checked_sources'] == checked
@@ -107,6 +108,12 @@ def main():
         index=argv.index('--step-tcl')+1
         assert argv[index]=='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
         argv[index]='POST_IO_PLACEMENT=physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl'
+    if args.owner_veto_polarity:
+        assert args.control_tail and args.phase_parallel and args.fast_owner and args.variant==1
+        assert inputs['parameters']['SU_OWNER_VETO_POLARITY']==1
+        assert model['association_upper_um2']<=model['association_budget_um2']
+        argv += ['--param','SU_OWNER_VETO_POLARITY=1']
+        argv[argv.index('--nickname-tag')+1]='harvey_cp_owner_veto_context_r1'
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     if finite:
@@ -160,6 +167,8 @@ def main():
             parent_IR_budget_conditional=True)
         if not args.prepare_only and not record['physical_ready']:
             raise ValueError(record['physical_blocker'])
+    if args.owner_veto_polarity:
+        record.update(owner_veto_polarity=True,complete_current_owner_bits=192,source_changed=True)
     if args.gpl_repair:
         assert args.phase_parallel and args.fast_owner and args.variant==1
         assert args.resume_io_sha256 and not (args.resume_canonical or args.resume_cts_sha256 or args.resume_resized_sha256)

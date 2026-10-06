@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0,PARALLEL_PHASE_VALIDATION_TEST=0,CONTROL_TAIL_CUT_TEST=0);
+module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0,FOUR_COMBINATIONAL_CUTS_TEST=0,FAST_OWNER_FRONTIER_TEST=0,PARALLEL_PHASE_VALIDATION_TEST=0,CONTROL_TAIL_CUT_TEST=0,OWNER_VETO_POLARITY_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;reg[1:0] launch_v=0;reg[31:0] launch_pc=0,cp_job=0;
  reg[3:0] cp_gen=0;reg[16:0] launch_token=0;reg[19:0] launch_pos=0;
@@ -26,9 +26,51 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  integer tail_truth_checks=0,tail_unknown_checks=0;
  ot_hbm_cp_frontier_and12 #(.FAST(1),.RETAINED_TAIL(1)) tail_probe_dut(
   .bits(tail_probe),.result(tail_probe_result));
+ reg [63:0] veto_held_n=0,veto_live=0;wire veto_mismatch;
+ reg [3:0] veto_bad=0;wire veto_permit;
+ reg [2:0] veto_condition=0;wire veto_conditional,veto_fault;
+ integer veto_basis_checks=0,veto_root_checks=0,veto_unknown_checks=0;
+ ot_hbm_cp_owner_veto64 veto_compare_probe(.held_n(veto_held_n),.live(veto_live),.mismatch(veto_mismatch));
+ ot_hbm_cp_veto_nor4 veto_root_probe(.bad(veto_bad),.permit(veto_permit));
+ ot_hbm_cp_veto_conditional veto_quiet_probe(.local_ok(veto_condition[2]),.owner_ok(veto_condition[1]),.bypass(veto_condition[0]),.result(veto_conditional));
+ ot_hbm_cp_veto_conditional #(.NEGATIVE(1)) veto_fault_probe(.local_ok(veto_condition[2]),.owner_ok(veto_condition[1]),.bypass(veto_condition[0]),.result(veto_fault));
  task check_four_cut_oracles;
  begin
-  if(CONTROL_TAIL_CUT_TEST)begin
+  if(OWNER_VETO_POLARITY_TEST)begin
+   for(integer group=0;group<3;group=group+1)begin
+    veto_held_n=~(64'h123456789abcdef0^(64'h1010101010101010*group));
+    for(integer bit_index=0;bit_index<65;bit_index=bit_index+1)begin
+     veto_live=~veto_held_n;
+     if(bit_index<64)veto_live[bit_index]=~veto_live[bit_index];
+     #1;
+     if(veto_mismatch!==(veto_live!=(~veto_held_n)))$fatal(1,"full192 owner veto group%0d bit%0d",group,bit_index);
+     veto_basis_checks=veto_basis_checks+1;
+    end
+   end
+   for(integer bits=0;bits<16;bits=bits+1)begin
+    veto_bad=bits;#1;if(veto_permit!==(~|veto_bad))$fatal(1,"negative root truth%0d",bits);
+    veto_root_checks=veto_root_checks+1;
+   end
+   for(integer bits=0;bits<8;bits=bits+1)begin
+    veto_condition=bits;#1;
+    if(veto_conditional!==(veto_condition[2]&&(veto_condition[1]||veto_condition[0])) || veto_fault!==!veto_conditional)$fatal(1,"conditional owner veto truth%0d",bits);
+    veto_root_checks=veto_root_checks+1;
+   end
+   for(integer k=0;k<64;k=k+1)begin
+    veto_live=~veto_held_n;veto_live[k]=1'bx;#1;
+    if(veto_mismatch!==1'bx)$fatal(1,"unmasked owner unknown%0d",k);
+    veto_live[(k+1)%64]=~veto_live[(k+1)%64];#1;
+    if(veto_mismatch!==1'b1)$fatal(1,"known foreign bit must veto despite unknown%0d",k);
+    veto_unknown_checks=veto_unknown_checks+2;
+   end
+   for(integer k=0;k<4;k=k+1)begin
+    veto_bad=0;veto_bad[k]=1'bx;#1;if(veto_permit!==1'bx)$fatal(1,"unmasked root unknown%0d",k);
+    veto_bad[(k+1)%4]=1;#1;if(veto_permit!==0)$fatal(1,"masked root unknown%0d",k);
+    veto_unknown_checks=veto_unknown_checks+2;
+   end
+   $display("PASS owner_veto full_owner_basis=%0d roots=%0d unknown=%0d",veto_basis_checks,veto_root_checks,veto_unknown_checks);
+  end
+  if(CONTROL_TAIL_CUT_TEST&&!OWNER_VETO_POLARITY_TEST)begin
    for(integer bits=0;bits<4096;bits=bits+1)begin
     tail_probe=bits;#1;
     if(tail_probe_result!==(&tail_probe))$fatal(1,"exact complete12factor tail %h",tail_probe);
@@ -43,7 +85,7 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
    end
    $display("PASS control_tail complete_words=%0d unknown_cases=%0d",tail_truth_checks,tail_unknown_checks);
   end
-  if(PARALLEL_PHASE_VALIDATION_TEST&&!CONTROL_TAIL_CUT_TEST)begin
+  if(PARALLEL_PHASE_VALIDATION_TEST&&!CONTROL_TAIL_CUT_TEST&&!OWNER_VETO_POLARITY_TEST)begin
    for(integer bits=0;bits<262144;bits=bits+1)begin
     phase_probe=bits;#1;
     if(phase_probe_valid!==((phase_probe[17:9]==~phase_probe[8:0]) &&
@@ -53,7 +95,7 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
    end
    $display("PASS parallel_phase complete_words=%0d",phase_truth_checks);
   end
-  if(FOUR_COMBINATIONAL_CUTS_TEST)begin
+  if(FOUR_COMBINATIONAL_CUTS_TEST&&!OWNER_VETO_POLARITY_TEST)begin
    // Zero+allones+64 basis vectors establish the unchanged linear72bit codec.
    for(integer k=0;k<66;k=k+1)begin
     codec_probe_data=(k==64)?64'd0:(k==65)?~64'd0:(64'd1<<k);#1;
@@ -105,9 +147,9 @@ module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0
  cp_cpl_count=cp_cpl_count+1;
  end
  end
- ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST),.CONTROL_TAIL_CUT(CONTROL_TAIL_CUT_TEST)) dut(.*);
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST),.CONTROL_TAIL_CUT(CONTROL_TAIL_CUT_TEST),.OWNER_VETO_POLARITY(OWNER_VETO_POLARITY_TEST)) dut(.*);
  wire[1:0] off_native;wire off_done,off_fault;
- ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST),.CONTROL_TAIL_CUT(CONTROL_TAIL_CUT_TEST)) baseline(
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST),.FOUR_COMBINATIONAL_CUTS(FOUR_COMBINATIONAL_CUTS_TEST),.FAST_OWNER_FRONTIER(FAST_OWNER_FRONTIER_TEST),.PARALLEL_PHASE_VALIDATION(PARALLEL_PHASE_VALIDATION_TEST),.CONTROL_TAIL_CUT(CONTROL_TAIL_CUT_TEST),.OWNER_VETO_POLARITY(OWNER_VETO_POLARITY_TEST)) baseline(
  .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(launch_pc),.cp_job(cp_job),.cp_gen(cp_gen),
  .launch_token(launch_token),.launch_pos(launch_pos),.lease_granted(lease_granted),
  .release_r(release_r),.exec_done(exec_done),.exec_fault(exec_fault),
