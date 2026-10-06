@@ -1,0 +1,10 @@
+read_verilog /tmp/codex-kc8-hierarchical-source-r5/quarter_mapped.v
+read_verilog /tmp/codex-kc8-hierarchical-source-r5/shared_mapped.v
+read_verilog -sv /tmp/codex-kc8-hierarchical-source-r5/parent_link.sv
+hierarchy -check -top ot_dsrom_reindex_hierarchical_parent -chparam ENABLE 1
+proc
+opt_clean
+check -assert
+stat
+write_json /tmp/codex-kc8-hierarchical-source-r5/linked_mapped.json
+write_verilog /tmp/codex-kc8-hierarchical-source-r5/linked_mapped.v
