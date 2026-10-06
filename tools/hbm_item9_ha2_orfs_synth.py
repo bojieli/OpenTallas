@@ -5,12 +5,12 @@ from pathlib import Path
 import run_abi3_physical as D
 root=Path(__file__).resolve().parents[1];out=Path(sys.argv[1]);assert out.is_absolute() and not out.exists()
 assert not subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True).strip()
-r=json.loads((root/'results/rtl/hbm_item9_closure_20261005/HA2_cuts_exact_r1/result.json').read_text());assert r['verdict']=='PASS_CHANGED_HA2_FULL16_GOLDEN' and r['new_cycles']==0
+r=json.loads((root/'results/rtl/hbm_item9_closure_20261005/HA2_cuts_exact_r2/result.json').read_text());assert r['verdict']=='PASS_CHANGED_HA2_FULL16_GOLDEN' and r['new_cycles']==0
 sources=['rtl/hdc/ot_hdc_prefix.sv','rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv','rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv','rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv','rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter_item9_cuts.sv']
 for f in sources:assert hashlib.sha256((root/f).read_bytes()).hexdigest()==r['source_sha256'][f]
 block=dict(top='ot_ha2_tu_owner_adapter_item9_cuts',sources=sources,parameters=dict(CUTS=1,NC=8,NOG=8,PFMAX=384,LANES=16,BF16=1,INJ=2,NPT=8,LAT=7,SLOTREG=1),clock_port='clk',clock_uncertainty_ns=.06,clock_uncertainty_hold_ns=.025,false_path_from_ports=[],io_delay_fraction=.2)
 view=D.VIEWS['asap7'];pnr={**view['pnr'],'corner_env':'WC'}
-nickname='opentallas_item9_ha2cuts_full16_synth_r1';case=out/'work/orfs';case.mkdir(parents=True)
+nickname='opentallas_item9_'+out.name.replace('-','_');case=out/'work/orfs';case.mkdir(parents=True)
 (case/'constraint.sdc').write_text(D.sdc_text(view,block,.833))
 config=D.orfs_config_lines(nickname,block,'asap7',pnr,30,.55,memory_max_bits=None)
 config += ['export ADDER_MAP_FILE =','export SYNTH_MEMORY_MAX_BITS = 273645'] # actual previous fullshape267501 FF plus6144 added FF; compiler shape guard, no resource cap
