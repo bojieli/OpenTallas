@@ -43,7 +43,8 @@ module ot_hbm_integrated_formatter_provider #(
  wire bad=lo[65]||hi[65]||control[65];
  wire child_fault,child_retained,child_start_ready,child_pair_r,child_pairs_v,child_release_r;
  wire read_v,read_r,read_id,rsp_r;
- wire [31:0] read_addr,read_job;
+ wire [VM_AW-1:0] read_addr;wire [31:0] read_job;
+ wire [VM_AW+5:0] read_byte={read_addr,6'b0};
  wire [6:0] read_rank;wire [15:0] read_tag;
  wire [3:0] read_gen;wire [19:0] read_pos;
  wire [32:0] end_byte={1'b0,arena_base}+33'd393216;
@@ -53,9 +54,9 @@ module ot_hbm_integrated_formatter_provider #(
  wire start_owner=owner_valid&&owner_frame=={pos,token,gen,job};
  wire pair_match={pair_pos,pair_token,pair_gen,pair_job}==frame;
  wire release_match={release_pos,release_token,release_gen,release_job}==frame;
- wire response_match=bridge_rsp[636:564]==frame&&bridge_rsp[51:20]=={read_addr[25:0],6'b0}&&
+ wire response_match=bridge_rsp[636:564]==frame&&bridge_rsp[51:20]==32'(read_byte)&&
    bridge_rsp[19:4]==read_tag&&bridge_rsp[3:1]==3'd3;
- wire address_ok=read_addr[31:26]==0;
+ wire address_ok=33'(read_byte)+33'd64<=(33'd1<<32);
  assign fault=failed||bad||child_fault;
  assign retained=active||child_retained||fault;
  assign start_ready=child_start_ready&&!active&&!fault&&bounds&&start_owner;
@@ -64,17 +65,17 @@ module ot_hbm_integrated_formatter_provider #(
  assign pairs_frame=frame;
  assign release_r=child_release_r&&active&&!fault&&lease_match&&release_match;
  // Existing ABI: {frame73, payload512, word6, rank7, tag16, BYTEaddr32, kind3}.
- assign bridge_req={frame,512'b0,pairs_word,read_rank,read_tag,{read_addr[25:0],6'b0},3'd3};
+ assign bridge_req={frame,512'b0,pairs_word,read_rank,read_tag,32'(read_byte),3'd3};
  assign bridge_req_v=read_v&&active&&!fault&&lease_match&&address_ok;
  assign read_r=bridge_req_r&&active&&!fault&&lease_match&&address_ok;
  // Existing ABI: {frame73, payload512, BYTEaddr32, tag16, kind3, checked1}.
  // The formatter's protected outstanding owner holds ID/rank: rsp637 does
  // not carry them. Address/tag/frame must match before those pins are reused.
  assign bridge_rsp_r=rsp_r&&active&&!fault&&lease_match&&response_match;
- ot_hbm_accel_index_w15_planemajor_formatter #(.ENABLE(1),.N(96),.NPER(512),.AW(32)) u_formatter(
+ ot_hbm_accel_index_w15_planemajor_formatter #(.ENABLE(1),.N(96),.NPER(512),.AW(VM_AW)) u_formatter(
   .clk(clk),.por_n(por_n),.start(start&&start_ready),.start_ready(child_start_ready),
   .source_job(job),.source_gen(gen),.source_pos(pos),
-  .gather_base(arena_base>>6),.gather_limit({1'b0,arena_limit}>>6),
+  .gather_base(VM_AW'(arena_base>>6)),.gather_limit((VM_AW+1)'({1'b0,arena_limit}>>6)),
   .gather_exclusive(gather_retained&&owner_valid),.gather_writers_drained(arena_visible&&bounds),
   .retained(child_retained),.fault(child_fault),
   .pair_v(pair_v&&active&&!fault&&pair_match),.pair_r(child_pair_r),
@@ -86,7 +87,7 @@ module ot_hbm_integrated_formatter_provider #(
   .read_v(read_v),.read_r(read_r),.read_addr(read_addr),.read_id(read_id),.read_rank(read_rank),
   .read_tag(read_tag),.read_job(read_job),.read_gen(read_gen),.read_pos(read_pos),
   .rsp_v(bridge_rsp_v&&active&&!fault&&response_match),.rsp_r(rsp_r),.rsp_data(bridge_rsp[563:52]),
-  .rsp_addr(bridge_rsp[51:20]>>6),.rsp_id(read_id),.rsp_rank(read_rank),.rsp_tag(bridge_rsp[19:4]),
+  .rsp_addr(VM_AW'(bridge_rsp[51:20]>>6)),.rsp_id(read_id),.rsp_rank(read_rank),.rsp_tag(bridge_rsp[19:4]),
   .rsp_job(bridge_rsp[595:564]),.rsp_gen(bridge_rsp[599:596]),.rsp_pos(bridge_rsp[636:617]),
   .rsp_checked(bridge_rsp[0]),.rsp_uncorrectable(1'b0),
   .release_v(release_v&&active&&!fault&&release_match),.release_r(child_release_r),
