@@ -1,0 +1,4 @@
+QUARTER_STIMULUS ready_phase=1 hardware_clock_unchanged=1
+QUARTER_DIAG accepted=4 received=4 checked=61 refused=1 invalid=3 stalled=2
+PASS_KC8_NATIVE_QUARTER lanes=16 globalID=20 accepted=4 checked=61 refused=1 invalid=3 stalled=2 latency_min=100 latency_max=102 cold_reset_inflight=1 default_off=1 parent_qualified=0
+- /srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv:120: Verilog $finish
