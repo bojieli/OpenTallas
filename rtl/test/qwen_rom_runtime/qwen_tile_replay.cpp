@@ -6,8 +6,8 @@
 // holds the fabric clock) have no record: the VCD covers clocked cycles only, at the 1.2 GHz period.
 //
 //   qwen_tile_replay REC [+VCD=path] [+BEGIN=n] [+END=n] [+HALF_PS=417] [+FLIP=rec] [+STATS=json]
-//     BEGIN/END: record window traced to the VCD (default: all);  FLIP: negative control, invert ib bit 0 at
-//     that record (the replay must then report mismatches);  STATS: per-record port counts (ROM bank reads,
+//     BEGIN/END: record window traced to the VCD (default: all);  FLIP: negative control, invert the whole
+//     instruction word of the first issue (ib_go) at or after that record (the replay must then report mismatches);  STATS: per-record port counts (ROM bank reads,
 //     KV reads) for the macro access energy.
 // Compile with Verilator --trace, top ot_qwen_rom_tile_logic_w12, prefix Vtile, at the host's tile parameters.
 #include "Vtile.h"
@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
     const std::string vcd = plus_s("VCD"), stats = plus_s("STATS");
     const unsigned long long vb = plus("BEGIN", 0), ve = plus("END", ~0ULL), hp = plus("HALF_PS", 417);
     const unsigned long long flip = plus("FLIP", ~0ULL);
+    bool flipped = false;
     VerilatedVcdC* tfp = nullptr;
     std::vector<uint8_t> out(out_sz), mine(out_sz);
     unsigned long long rec = 0, mism = 0, first_bad = ~0ULL, traced = 0;
@@ -71,7 +72,10 @@ int main(int argc, char** argv) {
 #define OT_R(n) if (fread(&x->n, sizeof(x->n), 1, f) != 1) { fprintf(stderr, "short record\n"); return 2; }
         OT_TILE_INPUTS(OT_R)
 #undef OT_R
-        if (rec == flip) x->ib[0] ^= 1u;
+        if (!flipped && rec >= flip && x->ib_go) {   // negative control: corrupt the first issued instruction word
+            for (auto& w : x->ib.m_storage) w = ~w;
+            flipped = true;
+        }
         if (fread(out.data(), 1, out_sz, f) != out_sz) { fprintf(stderr, "short record\n"); return 2; }
         const bool in = !vcd.empty() && rec >= vb && rec < ve;
         if (in && !tfp) {
