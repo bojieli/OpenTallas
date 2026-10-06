@@ -1,0 +1,402 @@
+{
+ "dsfd_sp_collective": {
+  "w": 1015.176,
+  "h": 1369.416,
+  "domain": "stream_1p2",
+  "instances": 1,
+  "ports": {
+   "t_vm": [
+    "output",
+    2100,
+    "E",
+    "M4"
+   ],
+   "f_vm": [
+    "input",
+    592,
+    "E",
+    "M4"
+   ],
+   "ts": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "rE0": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE0": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE0": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "tdE1": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE1": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rE1": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "rE2": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE2": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE2": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rE3": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "tdE3": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "tfE3": [
+    "output",
+    1,
+    "E",
+    "M4"
+   ],
+   "rst_serial": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "pll_serial": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "pll_stream": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "rst_stream": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "pll_hbm": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "rst_hbm": [
+    "output",
+    1,
+    "S",
+    "M5"
+   ],
+   "por": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "refclk": [
+    "input",
+    1,
+    "N",
+    "M5"
+   ],
+   "tdW0": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW0": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "tdW1": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW1": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "tdW2": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW2": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "rW0": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "tdW3": [
+    "output",
+    512,
+    "W",
+    "M4"
+   ],
+   "tfW3": [
+    "output",
+    1,
+    "W",
+    "M4"
+   ],
+   "rW1": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "rW2": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ],
+   "rW3": [
+    "input",
+    515,
+    "W",
+    "M4"
+   ]
+  }
+ },
+ "dsfd_sp_vm": {
+  "w": 1015.176,
+  "h": 2620.056,
+  "domain": "serial_0p9",
+  "instances": 1,
+  "ports": {
+   "t_su_s": [
+    "output",
+    1024,
+    "E",
+    "M4"
+   ],
+   "t_gather": [
+    "output",
+    512,
+    "E",
+    "M4"
+   ],
+   "t_hc": [
+    "output",
+    1024,
+    "E",
+    "M4"
+   ],
+   "sel": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "aSE": [
+    "input",
+    1027,
+    "E",
+    "M4"
+   ],
+   "qSE": [
+    "output",
+    513,
+    "E",
+    "M4"
+   ],
+   "qSEs": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "f_hc": [
+    "input",
+    1024,
+    "E",
+    "M4"
+   ],
+   "xe": [
+    "output",
+    565,
+    "E",
+    "M4"
+   ],
+   "xes": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "rst": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "ck": [
+    "input",
+    1,
+    "E",
+    "M4"
+   ],
+   "qNE": [
+    "output",
+    513,
+    "E",
+    "M4"
+   ],
+   "qNEs": [
+    "input",
+    3,
+    "E",
+    "M4"
+   ],
+   "aNE": [
+    "input",
+    1027,
+    "E",
+    "M4"
+   ],
+   "col": [
+    "input",
+    515,
+    "E",
+    "M4"
+   ],
+   "f_capture": [
+    "input",
+    512,
+    "E",
+    "M4"
+   ],
+   "f_collective": [
+    "input",
+    2100,
+    "E",
+    "M4"
+   ],
+   "t_collective": [
+    "output",
+    592,
+    "E",
+    "M4"
+   ],
+   "tcs": [
+    "output",
+    3,
+    "E",
+    "M4"
+   ],
+   "t_su_n": [
+    "output",
+    1024,
+    "E",
+    "M4"
+   ],
+   "aSW": [
+    "input",
+    1027,
+    "W",
+    "M4"
+   ],
+   "qSW": [
+    "output",
+    513,
+    "W",
+    "M4"
+   ],
+   "qSWs": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ],
+   "xw": [
+    "output",
+    565,
+    "W",
+    "M4"
+   ],
+   "xws": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ],
+   "qNW": [
+    "output",
+    513,
+    "W",
+    "M4"
+   ],
+   "qNWs": [
+    "input",
+    3,
+    "W",
+    "M4"
+   ],
+   "aNW": [
+    "input",
+    1027,
+    "W",
+    "M4"
+   ]
+  }
+ }
+}
