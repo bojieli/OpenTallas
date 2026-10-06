@@ -24,7 +24,7 @@ BC=(--step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl 
 run() { # tag
   t=$1; c=${t%%_*}; v=${t##*_}; pq=${c:1:1}; r=${c#*r}
   KM="ot_hdc_fp32_mul_f12_l5"; DENS=(); case $v in *k) KM="$KM ot_dsrom_aq12"; v=${v%k};; esac
-  case $v in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
+  case ${v:0:1} in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
              d) H=0.022; S=45; X=(--orfs-var GPL_ROUTABILITY_DRIVEN=0);;
              e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");; esac
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
