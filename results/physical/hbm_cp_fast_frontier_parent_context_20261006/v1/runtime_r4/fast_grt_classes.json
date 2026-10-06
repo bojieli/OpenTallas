@@ -1,0 +1,77 @@
+{
+  "source_RTL": "e0e05a19e",
+  "stage": "GRT estimated RC/actual propagated CTS; not extracted signoff",
+  "actual_negative_endpoint_counts": {
+    "FF": 0,
+    "OUTPUT": 9,
+    "RESET": 0
+  },
+  "classes": [
+    {
+      "family": "OUTPUT:done",
+      "slack_ps": -118.260849,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "done (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:exec_owned",
+      "slack_ps": -104.83503,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "exec_owned (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:fault",
+      "slack_ps": -103.245468,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "fault (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:lease_v",
+      "slack_ps": -113.464516,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "lease_v (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:new_request_permit",
+      "slack_ps": -103.252243,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "new_request_permit (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:owned",
+      "slack_ps": -120.172318,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "owned (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:pending",
+      "slack_ps": -115.769562,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "pending (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:quiet",
+      "slack_ps": -114.608322,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "quiet (output port clocked by core_clk)"
+    },
+    {
+      "family": "OUTPUT:release_v",
+      "slack_ps": -120.683075,
+      "launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+      "endpoint": "release_v (output port clocked by core_clk)"
+    }
+  ],
+  "worst_setup_ps": -120.68307464474515,
+  "source_FF_negative": 0,
+  "reset_negative": 0,
+  "critical_launch": "u_su_cp.on.phase_n[8]$_DFF_PN1_",
+  "remaining_source_cone": "Existing18bit protectedphase fulllegal-word validation: three serial AND4, OR4/INV, AND4/INV before positive output gate. Owner192/entry cuts no longer criticalnegative family; no state/protection checks relaxed.",
+  "constraints": {
+    "period_ps": 833.3334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "qualified": false,
+  "adopted": false
+}
