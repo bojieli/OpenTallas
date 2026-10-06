@@ -33,8 +33,10 @@ CTRL = "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 MACRO = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
 MNAME = "ot_sram_1r1w_512x128_m4_r2c2"
 PERIOD_PS = 833
-KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1),
-                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1)}
+KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1,
+                             LINK_REG=1, VM_REG=1, RD_PIPE=1, SLEW_COPY=1),
+                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1,
+                             LINK_REG=1, VM_REG=1, SLEW_COPY=1)}
 # Estimated die-tree insertion delay [min, max] ps at the element's clock pins (r1 routes: src 505..588,
 # stg 312..401).  The routed SDC times IO against io_clk carrying it as SOURCE latency (kept after CTS
 # propagates the clocks), i.e. the neighbours' registers hang off the same tree -- the same model as
@@ -156,7 +158,9 @@ def cmd_prep(a):
             ioc = SDC_IDEAL_IO.format(io=io)
         else:
             lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
-            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
+            # --die-skew: the owner's die-clock IO budget (neighbour arrives up to S ps before / after the
+            # element's insertion) carried INTO the route, so repair_timing pads hold for it and sizes setup
+            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin - a.die_skew, lmax=lmax + a.die_skew, lmid=(lmin + lmax) // 2)
         # the route may be over-constrained (owner margin rule: ~770 ps); signoff is always at 833 ps
         (case / name).write_text(SDC.format(p=per, io_clk=ioc) + SDC_TAIL)
     src = a.src.resolve()
@@ -178,7 +182,7 @@ echo "end $(date -Is)" >> $W/status
     (case / "run.sh").write_text(run)
     (case / "run.sh").chmod(0o755)
     (case / "case.json").write_text(json.dumps(dict(inst=a.inst, params=params, util=a.util, macros=macros,
-                                                     route_period_ps=rp,
+                                                     route_period_ps=rp, die_skew_ps=a.die_skew,
                                                      orfs_var=a.orfs_var, src=str(src),
                                                      ctrl_sha256=sha(src / CTRL)), indent=1) + "\n")
     print(case / "run.sh")
@@ -278,7 +282,14 @@ def case_record(case: Path):
                                     for m in ("incontext", "reg2reg"))
                      and all(isinstance(timing[m]["ff_hold_ps"], (int, float)) and timing[m]["ff_hold_ps"] >= 15
                              for m in ("incontext", "reg2reg")))
-    return dict(inst=cj["inst"], route_period_ps=cj.get("route_period_ps"), margin_closed=margin_closed, util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
+    # owner acceptance (UPDATE 2 + die-integration addendum): SS setup >= +40 and FF hold >= +15 in context,
+    # reg2reg AND with the die clock +-150 ps against the IO (die150); SS hold >= 0 there too
+    def ge(x, lim):
+        return isinstance(x, (int, float)) and x >= lim
+    accepted = (closed and all(ge(timing[m]["ss_setup_ps"], 40) and ge(timing[m]["ff_hold_ps"], 15) and
+                               ge(timing[m]["ss_hold_ps"], 0) for m in ("incontext", "reg2reg", "die150")))
+    return dict(inst=cj["inst"], route_period_ps=cj.get("route_period_ps"), die_skew_ps=cj.get("die_skew_ps", 0),
+                accepted_40_15_die150=accepted, margin_closed=margin_closed, util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
                 source_dir=cj["src"], ctrl_sha256=cj["ctrl_sha256"],
                 insertion_ps=dict(SS=ss.get("insertion_ps"), FF=ff.get("insertion_ps")), timing=timing,
                 drv=drv, drc_errors=drc, antenna_violating_nets=ant,
@@ -301,7 +312,7 @@ def cmd_record(a):
                       case_record(Path(c).resolve()) for c in a.case},
                notes=a.note)
     a.out.write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: dict(closed=v["closed"], margin_closed=v["margin_closed"],
+    print(json.dumps({k: dict(closed=v["closed"], margin_closed=v["margin_closed"], accepted=v["accepted_40_15_die150"],
                               die150=v["timing"]["die150"]["ss_setup_ps"],
                               incontext=v["timing"]["incontext"]["ss_setup_ps"],
                               ff_hold=v["timing"]["incontext"]["ff_hold_ps"], drv=v["drv"])
@@ -325,6 +336,7 @@ def main():
     p.add_argument("--io-lat", default=None, help="MIN,MAX ps io_clk source latency (default per inst)")
     p.add_argument("--ideal-io", action="store_true", help="r1 SDC: IO against the ideal core_clk")
     p.add_argument("--route-period", type=int, default=None, help="over-constrained route period ps (signoff stays 833)")
+    p.add_argument("--die-skew", type=int, default=0, help="ps: io_clk min/max source latency widened by this (die150 budget)")
     s = sub.add_parser("sta")
     s.add_argument("--case", type=Path, required=True)
     s.add_argument("--macros", action="store_true")

@@ -25,6 +25,13 @@
 `ifndef WF_DUT
 `define WF_DUT ot_rom_pkg_ctrl_wf
 `endif
+// OT_WFC_LINK_REG = 1 (the DUT's registered link boundary): the bench's link ports reach the DUT through
+// the other end of a registered link (ot_rom_pkg_ctrl_wfc_ltx inbound, _lrx outbound), so the bench's
+// valid / ready protocol, flit stream and digests are unchanged; inbound flits are counted where the
+// DUT's controller logic takes them (the fault-flit check stays exact).
+`ifndef OT_WFC_LINK_REG
+`define OT_WFC_LINK_REG 0
+`endif
 module tb_wf_ctrl_equiv;
     parameter integer SOURCE   = 1;
     parameter integer LOCKSTEP = 1;       // SOURCE = 1 with ot_rom_pkg_ctrl_wfc: 0 (its engine retimes events)
@@ -115,10 +122,33 @@ module tb_wf_ctrl_equiv;
             ot_rom_pkg_ctrl_wf #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
                 .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.rst_n(rst_n_ref), .*);
+        end else if (`OT_WFC_LINK_REG) begin : d
+            wire l_in_valid, l_in_ready, l_in_last, l_out_valid, l_out_ready, l_out_last;
+            wire [FLIT-1:0] l_in_data, l_out_data;
+            ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT + 1)) atx (.clk(clk), .rst_n(rst_n),
+                .c_valid(in_valid), .c_ready(in_ready), .c_data({in_last, in_data}),
+                .l_valid(l_in_valid), .l_ready(l_in_ready), .l_data({l_in_last, l_in_data}));
+            `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
+                .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
+                .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (
+                .in_valid(l_in_valid), .in_ready(l_in_ready), .in_data(l_in_data), .in_last(l_in_last),
+                .out_valid(l_out_valid), .out_ready(l_out_ready), .out_data(l_out_data), .out_last(l_out_last), .*);
+            ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(4)) arx (.clk(clk), .rst_n(rst_n),
+                .l_valid(l_out_valid), .l_ready(l_out_ready), .l_data({l_out_last, l_out_data}),
+                .c_valid(out_valid), .c_ready(out_ready), .c_data({out_last, out_data}));
+            // flits inside the registered link (both directions), for the quiescence test
+            wire busy = atx.v || c.g_link_reg.u_rx.pv || c.g_link_reg.u_rx.cnt != 0 || c.g_link_reg.u_tx.v || arx.pv || arx.cnt != 0;
+            wire acc = c.g_link_reg.u_rx.c_valid && c.lk_in_ready;   // a flit taken by the DUT's controller logic
         end else begin : d
             `WF_DUT #(.WAVE(1), .WIN(WIN), .PKG_ID(0), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
                 .USER_W(USER_W), .MAXU(MAXU), .KVW(KVW), .XWORDS(XWORDS), .RXWORDS(RXWORDS), .SOURCE(SOURCE),
                 .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1)) c (.*);
+        end
+        wire link_busy, link_acc;
+        if (gi == 1 && `OT_WFC_LINK_REG) begin : lb
+            assign link_busy = d.busy; assign link_acc = d.acc;
+        end else begin : nb
+            assign link_busy = 1'b0; assign link_acc = in_valid && in_ready;
         end
         // The reference's combinational ready may be high while its actual
         // delayed reset is held. It cannot admit a flit on that edge. Qualify
@@ -139,7 +169,7 @@ module tb_wf_ctrl_equiv;
         reg [63:0] out_dig = 0, st_dig = 0;
         integer out_cnt = 0, st_cnt = 0;
         integer in_cnt = 0;                     // inbound flits accepted (identical message stream per instance)
-        always @(posedge clk) if (rst_n && in_valid && admission_ready) in_cnt <= in_cnt + 1;
+        always @(posedge clk) if (rst_n && ((gi == 1 && `OT_WFC_LINK_REG) ? link_acc : (in_valid && admission_ready))) in_cnt <= in_cnt + 1;
         function automatic [63:0] mix(input [63:0] d, input [FLIT-1:0] v);
             reg [63:0] x;
             begin
@@ -310,7 +340,7 @@ module tb_wf_ctrl_equiv;
         wait (rst_n);
         while (cyc < MAXCYC && !(SOURCE ? (fin_cyc[0] != 0 && fin_cyc[1] != 0)
                                         : (sent_n[0] >= NJOBS && sent_n[1] >= NJOBS && !g[0].in_valid && !g[1].in_valid
-                                           && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid)))
+                                           && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid && !g[1].link_busy)))
             @(posedge clk);
         repeat (50) @(posedge clk);
         if (STREAM)

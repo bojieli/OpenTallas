@@ -138,6 +138,18 @@
 `ifndef OT_WFC_MARGIN
 `define OT_WFC_MARGIN 0
 `endif
+`ifndef OT_WFC_LINK_REG
+`define OT_WFC_LINK_REG 0
+`endif
+`ifndef OT_WFC_VM_REG
+`define OT_WFC_VM_REG 0
+`endif
+`ifndef OT_WFC_RD_PIPE
+`define OT_WFC_RD_PIPE 0
+`endif
+`ifndef OT_WFC_SLEW_COPY
+`define OT_WFC_SLEW_COPY 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -176,6 +188,28 @@ module ot_rom_pkg_ctrl_wfc #(
     //    of the previous edge, used only when txh did not reset there and rxw did not reload there
     //    (conservative: never claims a word free that the exact compare would not; may stall a flit)
     parameter integer MARGIN = `OT_WFC_MARGIN,
+    // LINK_REG (owner die-integration rule: every block boundary register-to-register; priced in cycles):
+    //  the link ports become a REGISTERED LINK (ready latency 2): in_valid / in_data / in_last are captured
+    //  in pin flops (nothing between pin and D) and drain through a LINK_DEPTH-slot skid FIFO; in_ready is a
+    //  flop -- a grant: in_ready high in cycle c admits one flit on the link in cycle c + 2 (the sender
+    //  captures it in its own pin flop and launches from a flop), so the grant counts the flits still in
+    //  flight; out_valid / out_data / out_last are launched from flops, out_ready is captured in a pin flop
+    //  and a flit is sent only on a grant (a flit is transferred on every cycle out_valid is high).  Both
+    //  ends: ot_rom_pkg_ctrl_wfc_lrx / _ltx (the routers / die stations use the same pair).  +1 cycle
+    //  inbound, +1 outbound per hop.  LINK_DEPTH 4 = the grant round trip: full rate with zero stalls.
+    parameter integer LINK_REG = `OT_WFC_LINK_REG,
+    parameter integer LINK_DEPTH = 4,
+    // VM_REG: the vector-memory ports launched from flops (the VM is its own hardened element): a write
+    // and a read reach the memory one edge later; the read data is taken one edge later (+1 cycle per
+    // payload read; a second read in flight counts against the queue space)
+    parameter integer VM_REG = `OT_WFC_VM_REG,
+    // RD_PIPE (SOURCE with REC_SRAM): a second register stage on the SRAM read (rd_out -> a capture
+    // register that only feeds the second one, so it sits at the macro pins): +1 cycle per record event
+    parameter integer RD_PIPE = `OT_WFC_RD_PIPE,
+    // SLEW_COPY: kept register copies for the nets the margin routes left over the slew limit: the header
+    // user's group bits (upos group select, one copy per 4 groups), the registered hdr_pos + 1 into the upos
+    // groups (one copy per 4 groups), and the SRAM write row / address per (bank, column) macro (0 cycles)
+    parameter integer SLEW_COPY = `OT_WFC_SLEW_COPY,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -216,7 +250,7 @@ module ot_rom_pkg_ctrl_wfc #(
     input  wire [NW-1:0]      cfg_gen_len,
     // inbound link
     input  wire               in_valid,
-    output reg                in_ready,
+    output wire               in_ready,
     input  wire [FLIT-1:0]    in_data,
     input  wire               in_last,
     // outbound link
@@ -234,11 +268,11 @@ module ot_rom_pkg_ctrl_wfc #(
     input  wire [31:0]        core_next_val,
     output reg  [AW-1:0]      kv_base,
     // vector memory, one word per access, synchronous read
-    output reg                vm_we,
-    output reg  [VWA-1:0]     vm_waddr,
+    output wire               vm_we,
+    output wire [VWA-1:0]     vm_waddr,
     output wire [FLIT-1:0]    vm_wdata,
-    output reg                vm_re,
-    output reg  [VWA-1:0]     vm_raddr,
+    output wire               vm_re,
+    output wire [VWA-1:0]     vm_raddr,
     input  wire [FLIT-1:0]    vm_rq,
     // prompt tokens (SOURCE), synchronous read
     output reg                pr_re,
@@ -281,6 +315,24 @@ module ot_rom_pkg_ctrl_wfc #(
             $fatal(1, "ot_rom_pkg_ctrl_x: per-user KV base exceeds address space");
     end
     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
+    // the link as the controller logic sees it (LINK_REG: the core side of the registered boundary)
+    wire               lk_in_valid, lk_in_last, lk_out_valid, lk_out_ready, lk_out_last;
+    wire [FLIT-1:0]    lk_in_data, lk_out_data;
+    reg                lk_in_ready;
+    // the vector-memory ports as the controller logic drives them
+    reg                c_vm_we, c_vm_re;
+    reg  [VWA-1:0]     c_vm_waddr, c_vm_raddr;
+    wire [FLIT-1:0]    c_vm_wdata;
+    generate if (VM_REG) begin : g_vm_reg
+        reg we_q, re_q; reg [VWA-1:0] wa_q, ra_q; reg [FLIT-1:0] wd_q;
+        always @(posedge clk) begin
+            we_q <= c_vm_we; re_q <= c_vm_re; wa_q <= c_vm_waddr; ra_q <= c_vm_raddr; wd_q <= c_vm_wdata;
+        end
+        assign vm_we = we_q; assign vm_re = re_q; assign vm_waddr = wa_q; assign vm_raddr = ra_q; assign vm_wdata = wd_q;
+    end else begin : g_vm_direct
+        assign vm_we = c_vm_we; assign vm_re = c_vm_re; assign vm_waddr = c_vm_waddr; assign vm_raddr = c_vm_raddr;
+        assign vm_wdata = c_vm_wdata;
+    end endgenerate
 
     // run configuration as used inside (CFG_Q: boundary registers, no reset)
     wire [UCW-1:0] cfg_users_i;
@@ -322,10 +374,10 @@ module ot_rom_pkg_ctrl_wfc #(
         better = (okey(av) > okey(bv)) || ((okey(av) == okey(bv)) && (ai < bi));
     endfunction
 
-    wire [3:0]    in_type = in_data[HDR_TYPE +: 4];
-    wire [USER_W-1:0] in_user = USER_W'(in_data[HDR_USER +: 8]) |
-                                  (USER_W'(in_data[HDR_USER_HI +: UHIW]) << 8);
-    wire [NW-1:0] in_pos  = in_data[HDR_POS +: NW];
+    wire [3:0]    in_type = lk_in_data[HDR_TYPE +: 4];
+    wire [USER_W-1:0] in_user = USER_W'(lk_in_data[HDR_USER +: 8]) |
+                                  (USER_W'(lk_in_data[HDR_USER_HI +: UHIW]) << 8);
+    wire [NW-1:0] in_pos  = lk_in_data[HDR_POS +: NW];
 
     // -- per-user context --------------------------------------------------------------
     // (closed) the per-user expected position lives in groups of 32 users (ot_rom_pkg_ctrl_wfc_upos)
@@ -333,6 +385,19 @@ module ot_rom_pkg_ctrl_wfc #(
     // (a registered root for the reset tree; every flop below sees release one cycle later)
     (* keep *) reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+    generate if (LINK_REG) begin : g_link_reg
+        ot_rom_pkg_ctrl_wfc_lrx #(.W(FLIT + 1), .D(LINK_DEPTH)) u_rx (.clk(clk), .rst_n(rst_q),
+            .l_valid(in_valid), .l_ready(in_ready), .l_data({in_last, in_data}),
+            .c_valid(lk_in_valid), .c_ready(lk_in_ready), .c_data({lk_in_last, lk_in_data}));
+        ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT + 1)) u_tx (.clk(clk), .rst_n(rst_q),
+            .c_valid(lk_out_valid), .c_ready(lk_out_ready), .c_data({lk_out_last, lk_out_data}),
+            .l_valid(out_valid), .l_ready(out_ready), .l_data({out_last, out_data}));
+    end else begin : g_link_direct
+        assign lk_in_valid = in_valid; assign lk_in_data = in_data; assign lk_in_last = in_last;
+        assign in_ready = lk_in_ready;
+        assign out_valid = lk_out_valid; assign out_data = lk_out_data; assign out_last = lk_out_last;
+        assign lk_out_ready = out_ready;
+    end endgenerate
     wire rx_enable;
     generate if (HEADER_LOCAL) begin : g_header_local_release
         reg enable_q;
@@ -411,18 +476,20 @@ module ot_rom_pkg_ctrl_wfc #(
     (* keep *) reg [TXQ-1:0] txq_bank; // same-edge one-hot mirror of txq_w
     reg [QB:0]     txq_n;
     reg            rd_inflight, rd_last;
+    reg            rd_pre, rd_last_pre;   // VM_REG: a read issued, not yet at the memory
+    wire           rd_pre_v = VM_REG ? rd_pre : 1'b0;
     reg [VWA-1:0]  tx_k;
     reg [USER_W-1:0] tx_user;
     reg [NW-1:0]   tx_pos, tx_idx, tx_tok;
     reg [31:0]     tx_val;
-    assign out_valid = (txq_n != 0);
+    assign lk_out_valid = (txq_n != 0);
     wire [FLIT-1:0] txq_slice_out;
-    assign out_data  = TXQ_SLICE ? txq_slice_out : txq_d[QUEUE_SHIFT ? 0 : txq_r];
-    assign out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
-    wire tx_pop   = out_valid && out_ready;
-    wire tx_space = (txq_n + rd_inflight) < TXQ;
+    assign lk_out_data  = TXQ_SLICE ? txq_slice_out : txq_d[QUEUE_SHIFT ? 0 : txq_r];
+    assign lk_out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
+    wire tx_pop   = lk_out_valid && lk_out_ready;
+    wire tx_space = (txq_n + rd_inflight + rd_pre_v) < TXQ;
     // the finished job is taken once the previous one's messages are queued
-    wire completion_qual = running && c_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
+    wire completion_qual = running && c_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && !rd_pre_v && (txq_n + 2 <= TXQ);
     wire job_done;
     wire [NW-1:0] rep_idx;
     wire [31:0] rep_val;
@@ -524,7 +591,7 @@ module ot_rom_pkg_ctrl_wfc #(
     // a core start needs !running, so job_done = 0 there: the start terms use these job_done-free forms
     wire tx_hold_i = tx_st == T_DATA || tx_st == T_SHDR || tx_st == T_SDATA;
     wire rx_word_free_i = !(tx_st == T_DATA) || rw_lt_txh || rx_word >= TXB + XWORDS;
-    wire rx_last_word_i = (rx_st == R_DATA) && in_valid && rx_word_free_i && (rx_j == RXW - 1);
+    wire rx_last_word_i = (rx_st == R_DATA) && lk_in_valid && rx_word_free_i && (rx_j == RXW - 1);
     wire core_free = !running || job_done;
     // counter increments (PRECOMP: log-depth) and the position check compares
     wire [VWA:0]   txh_p1;
@@ -547,7 +614,7 @@ module ot_rom_pkg_ctrl_wfc #(
         assign pos_cw_d = {(NW+1){1'b0}};
         assign pos_bad = pos_c > upos_hr || pos_c + WIN < upos_hr;
     end endgenerate
-    assign vm_wdata = in_data;
+    assign c_vm_wdata = lk_in_data;
 
     // -- SOURCE: step scheduling and argmax reduction ------------------------------------
     reg          res_v;                  // registered RESULT header
@@ -610,13 +677,16 @@ module ot_rom_pkg_ctrl_wfc #(
     reg  [UNG-1:0] gsel_oh, gw_oh;      // the header user's group (t+2), and for the write (t+3)
     localparam integer NLC = (UNG + 3) / 4;
     wire [4:0] ug_lo [0:UNG-1];
+    wire [NW-1:0] ug_inc [0:UNG-1];     // the upos write data (hdr_pos + 1) each group sees
+    reg  [UNG-1:0] gsel_d;              // the header user's group, one-hot (gsel_oh's D)
+    localparam integer UGB = (USER_W > 5) ? USER_W - 5 : 1;
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
         ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL || MARGIN), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
             .clk(clk), .rst_n(rst_q), .lo(ug_lo[ugi]), .rd(uchk2), .rd_early(uchk),
             .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .wr_early(uchk3 && gsel_oh[ugi]),
-            .wdata_early(hdr_pos_inc_w), .part(ug_part[ugi]));
+            .wdata_early(ug_inc[ugi]), .part(ug_part[ugi]));
     end endgenerate
     reg [NW-1:0] upos_sel;
     integer usg;
@@ -629,7 +699,7 @@ module ot_rom_pkg_ctrl_wfc #(
     reg rx_hdr, rx_res, rx_last_word, rx_side, rx_side_last;
     wire side_ok = (SIDE_IN == 0) ||
                    ((hdr_user < MAXU) && (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN));
-    wire side_payload = (rx_st == R_SIDE) && in_valid && in_ready;
+    wire side_payload = (rx_st == R_SIDE) && lk_in_valid && lk_in_ready;
     reg st_rx, st_new, st_q, st_fb, st_wk;
     reg [USER_W-1:0] st_user;
     (* keep *) wire d_hid = in_type == MT_HIDDEN;
@@ -640,40 +710,40 @@ module ot_rom_pkg_ctrl_wfc #(
     (* keep *) wire ok_body = rx_enable && rx_st != R_IDLE && (rx_st == R_SIDE || (core_free && rx_word_free));
     wire d_res = !d_hid && !d_side;
     always @(*) begin
-        in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0;
-        vm_we = 1'b0; vm_waddr = rx_word;
+        lk_in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0;
+        c_vm_we = 1'b0; c_vm_waddr = rx_word;
         // The reset root releases one edge after rst_n. Do not advertise an
         // accepted flit until this controller can retain it on that edge.
         // Otherwise the sender consumes the header while we are still reset,
         // and the next payload is decoded as a new header.
         if (!rx_enable) begin
-            in_ready = 1'b0;
+            lk_in_ready = 1'b0;
         end else if (rx_st == R_IDLE) begin
             if (in_type == MT_HIDDEN) begin
-                in_ready = !pend; rx_hdr = in_valid && !pend;
+                lk_in_ready = !pend; rx_hdr = lk_in_valid && !pend;
             end else if (in_type == MT_SIDE) begin
-                in_ready = 1'b1; rx_side = in_valid;
+                lk_in_ready = 1'b1; rx_side = lk_in_valid;
             end else begin
-                in_ready = !(WF && e_rfull); rx_res = in_valid && in_ready;   // RESULT (or a bad type)
+                lk_in_ready = !(WF && e_rfull); rx_res = lk_in_valid && lk_in_ready;   // RESULT (or a bad type)
             end
         end else if (rx_st == R_SIDE) begin
-            in_ready = 1'b1;
-            vm_we = in_valid && side_user < MAXU;
-            vm_waddr = sww;
+            lk_in_ready = 1'b1;
+            c_vm_we = lk_in_valid && side_user < MAXU;
+            c_vm_waddr = sww;
         end else begin
-            in_ready = core_free && rx_word_free;
-            vm_we = in_valid && in_ready;
+            lk_in_ready = core_free && rx_word_free;
+            c_vm_we = lk_in_valid && lk_in_ready;
         end
         if (IN_DEC) begin
-            in_ready = ok_body || (d_hid && ok_hid) || (d_side && ok_idle) || (d_res && ok_res);
-            rx_hdr = in_valid && d_hid && ok_hid;
-            rx_side = in_valid && d_side && ok_idle;
-            rx_res = in_valid && d_res && ok_res;
+            lk_in_ready = ok_body || (d_hid && ok_hid) || (d_side && ok_idle) || (d_res && ok_res);
+            rx_hdr = lk_in_valid && d_hid && ok_hid;
+            rx_side = lk_in_valid && d_side && ok_idle;
+            rx_res = lk_in_valid && d_res && ok_res;
         end
-        rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
-        rx_side_last = side_payload && in_last && side_user < MAXU;
-        vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
-        vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
+        rx_last_word = (rx_st == R_DATA) && c_vm_we && (rx_j == RXW - 1);
+        rx_side_last = side_payload && lk_in_last && side_user < MAXU;
+        c_vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
+        c_vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
 
         // core start: at most one source per cycle; the core samples it on this edge
         st_rx = ((CONTROL_PIPE ? 1'b0 : rx_last_word_i) || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
@@ -694,7 +764,7 @@ module ot_rom_pkg_ctrl_wfc #(
         // the registered reset root releases one cycle after rst_n: take nothing from the link and start
         // nothing until then (the reference releases with rst_n; a flit offered in that cycle must wait)
         if (!rx_enable) begin
-            in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0; vm_we = 1'b0;
+            lk_in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0; c_vm_we = 1'b0;
             st_rx = 1'b0; st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0; start_i = 1'b0;
         end
     end
@@ -715,16 +785,37 @@ module ot_rom_pkg_ctrl_wfc #(
             assign ug_lo[lgi] = hdr_user[4:0];
         end
     end endgenerate
+    // SLEW_COPY: the group bits of the header user (loaded exactly as hdr_user: header edge, reset 0) and
+    // the registered hdr_pos + 1 (loaded every edge, as inc_q), one kept copy per 4 upos groups
+    genvar sgi;
+    generate if (SLEW_COPY) begin : g_slew_copy
+        (* keep *) reg [UGB-1:0] hi_c [0:NLC-1];
+        (* keep *) reg [NW-1:0]  inc_c [0:NLC-1];
+        integer hc;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) begin for (hc = 0; hc < NLC; hc = hc + 1) hi_c[hc] <= {UGB{1'b0}}; end
+            else if (rx_hdr) begin for (hc = 0; hc < NLC; hc = hc + 1) hi_c[hc] <= UGB'(in_user >> 5); end
+        always @(posedge clk) for (hc = 0; hc < NLC; hc = hc + 1) inc_c[hc] <= hdr_pos_increment;
+        for (sgi = 0; sgi < UNG; sgi = sgi + 1) begin : g_s
+            assign ug_inc[sgi] = PRECOMP ? inc_c[sgi / 4] : hdr_pos_increment;
+            always @(*) gsel_d[sgi] = hi_c[sgi / 4] == UGB'(sgi);
+        end
+    end else begin : g_slew_shared
+        for (sgi = 0; sgi < UNG; sgi = sgi + 1) begin : g_s
+            assign ug_inc[sgi] = hdr_pos_inc_w;
+            always @(*) gsel_d[sgi] = (hdr_user >> 5) == sgi;
+        end
+    end endgenerate
     // -- sequential ---------------------------------------------------------------------
-    wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight;   // RESULT after a HIDDEN
-    wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
+    wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight && !rd_pre_v;   // RESULT after a HIDDEN
+    wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight && !rd_pre_v;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
     generate if (MARGIN) begin : g_rdy_flags
         always @(posedge clk or negedge rst_q)
             if (!rst_q) begin txh_rel_q <= 1'b1; rxw_rel_q <= 1'b1; rxw_inc_q <= 1'b0; end
             else begin
                 txh_rel_q <= job_done || q_hdr_s; rxw_rel_q <= rx_hdr || rx_side;
-                rxw_inc_q <= (rx_st == R_DATA && vm_we) || side_payload;
+                rxw_inc_q <= (rx_st == R_DATA && c_vm_we) || side_payload;
             end
     end endgenerate
     integer u, qbank;
@@ -734,7 +825,7 @@ module ot_rom_pkg_ctrl_wfc #(
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
             pend <= 1'b0; hdr_user <= 0; hdr_pos <= 0; hdr_pa_idx <= 0; hdr_pa_val <= 0;
             txq_bank <= {{(TXQ-1){1'b0}}, 1'b1};
-            tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
+            tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0; rd_pre <= 1'b0; rd_last_pre <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
             rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
@@ -780,29 +871,29 @@ module ot_rom_pkg_ctrl_wfc #(
             // ---- inbound
             if (rx_hdr) begin
                 hdr_user <= in_user; hdr_pos <= in_pos;
-                hdr_pa_idx <= in_data[HDR_IDX +: NW]; hdr_pa_val <= in_data[HDR_VAL +: 32];
-                hdr_tok <= in_data[HDR_TOK +: NW];
-                if (in_last || in_user >= MAXU) proto_fault <= 1'b1;
+                hdr_pa_idx <= lk_in_data[HDR_IDX +: NW]; hdr_pa_val <= lk_in_data[HDR_VAL +: 32];
+                hdr_tok <= lk_in_data[HDR_TOK +: NW];
+                if (lk_in_last || in_user >= MAXU) proto_fault <= 1'b1;
                 // (closed) the position check and the upos update run on the next cycle, from the
                 // registered header and its one-hot user (a header is followed by >= 1 payload flit)
-                uchk <= !(in_last || in_user >= MAXU);
+                uchk <= !(lk_in_last || in_user >= MAXU);
                 rx_j <= 0; rxw <= RXB; rx_st <= R_DATA;
             end
-            if (rx_st == R_DATA && vm_we) begin
-                if (in_last != (rx_j == RXW - 1)) proto_fault <= 1'b1;
+            if (rx_st == R_DATA && c_vm_we) begin
+                if (lk_in_last != (rx_j == RXW - 1)) proto_fault <= 1'b1;
                 rx_j <= rx_j_p1; rxw <= rxw_p1;
                 if (rx_last_word) rx_st <= R_IDLE;
             end
             // ---- SIDE: header, then the payload into the user's staging slot
             if (rx_side) begin
-                if (SIDE_IN == 0 || in_last || in_user >= MAXU) proto_fault <= 1'b1;
-                side_user <= in_user; side_addr <= in_data[HDR_ADDR +: 16];
-                sww <= VWA'(in_data[HDR_ADDR +: 16]) + (VWA'(in_user) << SIDE_USH);
+                if (SIDE_IN == 0 || lk_in_last || in_user >= MAXU) proto_fault <= 1'b1;
+                side_user <= in_user; side_addr <= lk_in_data[HDR_ADDR +: 16];
+                sww <= VWA'(lk_in_data[HDR_ADDR +: 16]) + (VWA'(in_user) << SIDE_USH);
                 rx_j <= 0; rxw <= RXB; rx_st <= R_SIDE;
             end
             if (side_payload) begin
                 rx_j <= rx_j_p1; rxw <= rxw_p1; sww <= sww_p1;
-                if (in_last) rx_st <= R_IDLE;
+                if (lk_in_last) rx_st <= R_IDLE;
             end
             if (rx_side_last && st_rx && side_user == hdr_user) begin
                 side_cnt[side_user] <= side_cnt[side_user] + 4'd1 - SIDE_IN[3:0];
@@ -814,15 +905,15 @@ module ot_rom_pkg_ctrl_wfc #(
             // user is >= 2 cycles later: it carries >= 1 payload flit; its read at >= t+3 sees the write)
             if (uchk) uchk <= 1'b0;
             uchk2 <= uchk; uchk3 <= uchk2; uchk4 <= uchk3;
-            gsel_oh <= {{(UNG-1){1'b0}}, 1'b1} << (hdr_user >> 5);
+            gsel_oh <= gsel_d;
             if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos_inc_w; pos_c <= hdr_pos; pos_cw <= pos_cw_d; gw_oh <= gsel_oh; end
             if (uchk4 && pos_bad) proto_fault <= 1'b1;
             res_v <= 1'b0;
             if (rx_res) begin
-                if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
+                if (!SOURCE || in_type != MT_RESULT || !lk_in_last || in_user >= MAXU) proto_fault <= 1'b1;
                 res_v <= SOURCE && in_type == MT_RESULT && in_user < MAXU;
                 res_u <= in_user; res_p <= in_pos;
-                res_i <= in_data[HDR_IDX +: NW]; res_val <= in_data[HDR_VAL +: 32];
+                res_i <= lk_in_data[HDR_IDX +: NW]; res_val <= lk_in_data[HDR_VAL +: 32];
             end
 
             // (SOURCE && !WAVE: not implemented here -- ot_rom_pkg_ctrl_wf)
@@ -838,16 +929,19 @@ module ot_rom_pkg_ctrl_wfc #(
             if (SOURCE && cfg_users_i > MAXU) proto_fault <= 1'b1;
 
             // ---- outbound framing
-            if (vm_re && !job_done) begin
+            if (c_vm_re && !job_done) begin
                 tx_k <= tx_k_p1; txh <= txh_p1; txs <= txs_p1;
                 if (tx_st == T_DATA && tx_k == XWORDS - 1) tx_st <= T_AFTER_HID;
                 if (tx_st == T_SDATA && tx_k == SIDE_WORDS - 1) tx_st <= SEND_RESULT ? T_RHDR : T_IDLE;
             end
             if (q_hdr_r) tx_st <= T_IDLE;
             if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; txh <= TXB; txs <= SIDE_TXB; end
-            rd_inflight <= vm_re;
-            rd_last <= vm_re && (job_done ? (XWORDS == 1) :
+            rd_pre <= c_vm_re;
+            rd_last_pre <= c_vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
+            rd_inflight <= VM_REG ? rd_pre : c_vm_re;
+            rd_last <= VM_REG ? rd_last_pre : (c_vm_re && (job_done ? (XWORDS == 1) :
+                                 (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1)));
             // Same queue, same priority, same write edge. The opt-in bank
             // mirror removes binary write-address decoding from the late
             // core_done enqueue control. Payload registers remain unreset.
@@ -953,14 +1047,14 @@ module ot_rom_pkg_ctrl_wfc #(
         genvar s, b;
         for (s = 0; s < NS; s = s + 1) begin : g_s
             // copies: jd = job_done (the completion register's own D), rd = rd_inflight, ws / rs = txq_w / txq_r one-hot
-            (* keep *) reg jd, rd;
+            (* keep *) reg jd, rd, rdp;
             (* keep *) reg [TXQ-1:0] ws, rs;
             reg [SW-1:0] qd [0:TXQ-1];
             always @(posedge clk or negedge rst_q)
                 if (!rst_q) begin
-                    jd <= 1'b0; rd <= 1'b0; ws <= {{(TXQ-1){1'b0}}, 1'b1}; rs <= {{(TXQ-1){1'b0}}, 1'b1};
+                    jd <= 1'b0; rd <= 1'b0; rdp <= 1'b0; ws <= {{(TXQ-1){1'b0}}, 1'b1}; rs <= {{(TXQ-1){1'b0}}, 1'b1};
                 end else begin
-                    jd <= completion_qual && !job_done; rd <= vm_re;
+                    jd <= completion_qual && !job_done; rdp <= c_vm_re; rd <= VM_REG ? rdp : c_vm_re;
                     if (q_push) ws <= (ws << 1) | (ws >> (TXQ - 1));
                     if (tx_pop) rs <= (rs << 1) | (rs >> (TXQ - 1));
                 end
@@ -983,7 +1077,7 @@ module ot_rom_pkg_ctrl_wfc #(
     end endgenerate
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .RD_PIPE(RD_PIPE), .SLEW_COPY(SLEW_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users_i), .cfg_prompt_len(cfg_plen_i),
             .cfg_gen_len(cfg_glen_i), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
@@ -1083,6 +1177,8 @@ module ot_rom_pkg_ctrl_wfc_src #(
     parameter integer STEPS_PIPE = 0,   // CFG_Q: steps / steps_m1 from a 2-edge log-depth pipeline
     parameter integer PRECOMP = 0,      // EX-stage compares / increments from registers one edge earlier
     parameter integer FANOUT_COPY = 0,  // each SRAM bank's write row / address from its own register copy
+    parameter integer RD_PIPE = 0,      // REC_SRAM: a second SRAM read-capture stage (+1 cycle per record event)
+    parameter integer SLEW_COPY = 0,    // REC_SRAM + FANOUT_COPY: the write row / address copied per (bank, column) macro
     parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
     parameter integer MAXU = 16, parameter integer WIN = 6
 ) (
@@ -1113,7 +1209,8 @@ module ot_rom_pkg_ctrl_wfc_src #(
     // [13:11] k0, [17:14] wblk, then wnp, wkt, er (NW each)
     localparam integer O_WNP = 18, O_WKT = 18 + NW, O_ER = 18 + 2 * NW, RW = 18 + 3 * NW;
     localparam [1:0] K_RES = 0, K_PRET = 1, K_ISS = 2, K_RD = 3;
-    localparam [2:0] S_IDLE = 0, S_RD0 = 4, S_RD1 = 1, S_RD2 = 2, S_EX = 3;
+    localparam [2:0] S_IDLE = 0, S_RD0 = 4, S_RD1 = 1, S_RD2 = 2, S_EX = 3, S_RDM = 5;
+    localparam integer RDP = (RD_PIPE && REC_SRAM) ? 1 : 0;
 
     // run configuration (held while users are in flight)
     reg [NW-1:0] steps, steps_m1, plen;
@@ -1208,6 +1305,17 @@ module ot_rom_pkg_ctrl_wfc_src #(
     reg  [RB-1:0]   b_row;           // the row written one edge after EX
     reg  [USER_W-1:0] b_u;
     wire [8*NW-1:0] w_ring;
+    // the row written back, with the negative controls' corruption (one definition for every copy)
+    reg  [RB-1:0] w_row_n;
+    always @(*) begin
+        w_row_n = {w_ring, w_rec[RW-1:1]};
+`ifdef OT_WFC_NEG_ROW
+        if (w_u == 3) w_row_n[RW-1] = ~w_ring[0];   // negative control: corrupt user 3's ring slot 0 bit 0
+`endif
+`ifdef OT_WFC_NEG_ROW2
+        if (w_u == 3 && w_rec[0]) w_row_n[O_WNP-1] = ~w_rec[O_WNP];   // negative control: user 3's next position bit 0
+`endif
+    end
     generate if (REC_SRAM) begin : g_rec_sram
         localparam integer MW = 512, MB = 128, NC = (RB + MB - 1) / MB, NBK = (MAXU + MW - 1) / MW;
         localparam integer BKW = (NBK > 1) ? $clog2(NBK) : 1;
@@ -1217,7 +1325,10 @@ module ot_rom_pkg_ctrl_wfc_src #(
         for (bk = 0; bk < NBK; bk = bk + 1) begin : g_bank
             wire [RB-1:0] row_bk;
             wire [USER_W-1:0] u_bk;
-            if (FANOUT_COPY) begin : g_wcopy
+            if (FANOUT_COPY && SLEW_COPY) begin : g_wcopy_cc
+                // per (bank, column) copies: each loaded exactly as b_row / b_u are (every edge, same D)
+                assign row_bk = b_row; assign u_bk = b_u;   // unused here: each column below has its own
+            end else if (FANOUT_COPY) begin : g_wcopy
                 // loaded exactly as b_row / b_u are (every edge, same D)
                 (* keep *) reg [RB-1:0] rc;
                 (* keep *) reg [USER_W-1:0] uc;
@@ -1238,12 +1349,29 @@ module ot_rom_pkg_ctrl_wfc_src #(
             wire bank_rd = (NBK == 1) || (BKW'(ou >> 9) == BKW'(bk));
             wire bank_wr = (NBK == 1) || (BKW'(u_bk >> 9) == BKW'(bk));
             for (cc = 0; cc < NC; cc = cc + 1) begin : g_col
+                wire [MB-1:0] wd_cc; wire [USER_W-1:0] u_cc;
+                if (FANOUT_COPY && SLEW_COPY) begin : g_cc
+                    (* keep *) reg [MB-1:0] rcc;
+                    (* keep *) reg [USER_W-1:0] ucc;
+                    wire [NC*MB-1:0] w_full = {{(NC*MB-RB){1'b0}}, w_row_n};
+                    always @(posedge clk) begin ucc <= w_u; rcc <= w_full[cc*MB +: MB]; end
+                    assign wd_cc = rcc; assign u_cc = ucc;
+                end else begin : g_cs
+                    assign wd_cc = wd_row[cc*MB +: MB]; assign u_cc = u_bk;
+                end
+                wire bank_wr_cc = (NBK == 1) || (BKW'(u_cc >> 9) == BKW'(bk));
                 ot_sram_1r1w_512x128_m4_r2c2 u_m (
                     .clk(clk), .r_ce_in(st == S_RD0 && bank_rd), .r_addr_in(ou[8:0]), .rd_out(rd_row[bk][cc*MB +: MB]),
-                    .w_ce_in(b_en && bank_wr), .w_addr_in(u_bk[8:0]), .wd_in(wd_row[cc*MB +: MB]),
+                    .w_ce_in(b_en && bank_wr_cc), .w_addr_in(u_cc[8:0]), .wd_in(wd_cc),
                     .w_mask_in({MB{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
             end
-            always @(posedge clk) m_q[bk] <= rd_row[bk];
+            if (RDP) begin : g_rdp
+                // capture register at the macro pins (its only load is the second stage)
+                (* keep *) reg [NC*MB-1:0] m_p;
+                always @(posedge clk) begin m_p <= rd_row[bk]; m_q[bk] <= m_p; end
+            end else begin : g_rd1
+                always @(posedge clk) m_q[bk] <= rd_row[bk];
+            end
         end
         reg [NC*MB-1:0] msel;
         integer mb;
@@ -1435,7 +1563,8 @@ module ot_rom_pkg_ctrl_wfc_src #(
                     end
                 end
                 S_RD0: st <= S_RD1;
-                S_RD1: st <= S_RD2;
+                S_RD1: st <= RDP ? S_RDM : S_RD2;   // RD_PIPE: the read crosses the macro capture stage
+                S_RDM: st <= S_RD2;
                 S_RD2: st <= S_EX;
                 default: st <= S_IDLE;
             endcase
@@ -1625,4 +1754,86 @@ module ot_rom_pkg_ctrl_wfc_lt #(parameter integer W = 16) (
     wire         c;
     ot_rom_pkg_ctrl_wfc_ks #(.W(W)) u_ks(.a(a), .b(~b), .cin(1'b1), .s(s_unused), .cout(c));
     assign lt = !c;
+endmodule
+
+// ---------------------------------------------------------------------------
+// Registered link (LINK_REG): both ends of a link register every pin.  Ready latency 2: the receiver's
+// l_ready (a flop) high in cycle c grants ONE flit, which the sender (its pin flop captures the grant in
+// c + 1) launches from a flop in cycle c + 2; every cycle l_valid is high is a transfer.  The receiver
+// captures l_valid / l_data in pin flops (c + 3) and drains them through a D-slot FIFO (a flit not taken
+// by the core side the cycle it leaves the pin flop is queued).  A grant is issued only when the FIFO can
+// hold every flit already granted: count(next) + grants of the last three cycles <= D - 1; D = 4 is the
+// round trip, so a core side that takes a flit every cycle sees the link at full rate.  The FIFO data
+// path is enabled only from registers (pin valid, write pointer); the core side's ready moves pointers.
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_lrx #(parameter integer W = 513, parameter integer D = 4) (
+    input  wire         clk, rst_n,
+    input  wire         l_valid,
+    output wire         l_ready,
+    input  wire [W-1:0] l_data,
+    output wire         c_valid,
+    input  wire         c_ready,
+    output wire [W-1:0] c_data
+);
+    localparam integer CB = $clog2(D + 1) + 2;
+    reg live;
+    always @(posedge clk) live <= rst_n;
+    reg pv; reg [W-1:0] pd;
+    always @(posedge clk) begin pv <= l_valid; pd <= l_data; end   // pin flops
+    wire pvl = pv && live;
+    reg [W-1:0] q [0:D-1];
+    reg [D-1:0] wp, rp;                  // one-hot write / read slot
+    reg [CB-1:0] cnt;
+    reg rdy, r1, r2;
+    assign l_ready = rdy;
+    wire ne = cnt != 0;
+    reg [W-1:0] qh;
+    integer i;
+    always @(*) begin
+        qh = {W{1'b0}};
+        for (i = 0; i < D; i = i + 1) if (rp[i]) qh = qh | q[i];
+    end
+    assign c_valid = ne || pvl;
+    assign c_data = ne ? qh : pd;
+    wire pop  = c_valid && c_ready;
+    wire popq = pop && ne;
+    wire push = pvl && (ne || !c_ready);  // the pin flit, unless taken straight from the pin flop
+    wire [CB-1:0] cnt_n = cnt + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, popq};
+    always @(posedge clk)                // the slot write is enabled from registers only
+        for (i = 0; i < D; i = i + 1) if (pvl && wp[i]) q[i] <= pd;
+    always @(posedge clk)
+        if (!live) begin
+            cnt <= 0; rdy <= 1'b0; r1 <= 1'b0; r2 <= 1'b0;
+            wp <= {{(D-1){1'b0}}, 1'b1}; rp <= {{(D-1){1'b0}}, 1'b1};
+        end else begin
+            cnt <= cnt_n;
+            rdy <= (cnt_n + {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1} + {{(CB-1){1'b0}}, r2}) <= CB'(D - 1);
+            r1 <= rdy; r2 <= r1;
+            if (push) wp <= {wp[D-2:0], wp[D-1]};
+            if (popq) rp <= {rp[D-2:0], rp[D-1]};
+        end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (live && push && cnt == CB'(D)) begin
+        $display("LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)");
+        $fatal(1, "LINK_REG overflow");
+    end
+`endif
+endmodule
+
+module ot_rom_pkg_ctrl_wfc_ltx #(parameter integer W = 513) (
+    input  wire         clk, rst_n,
+    input  wire         c_valid,
+    output wire         c_ready,
+    input  wire [W-1:0] c_data,
+    output wire         l_valid,
+    input  wire         l_ready,
+    output wire [W-1:0] l_data
+);
+    reg live, rq, v;
+    reg [W-1:0] d;
+    always @(posedge clk) live <= rst_n;
+    always @(posedge clk) rq <= l_ready;                 // pin flop: the receiver's grant
+    assign c_ready = rq && live;                         // one flit per grant
+    always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
+    assign l_valid = v; assign l_data = d;
 endmodule
