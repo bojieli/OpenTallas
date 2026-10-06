@@ -81,7 +81,8 @@ if os.environ.get('GAUSS_RESUME_ORFS'):
   assert driver.sha256_file(old_case/'w11_endpoint_mapped.v')==driver.sha256_file(work/'mapped.v'),'actual mapped source changed'
   for directory in ('logs','reports'):
    for f in (case/directory).rglob('3_2_place_iop.*'):f.unlink() # new copy only; original failure retained
-  proof=dict(source_case=str(old_case),checkpoint_sha256=driver.sha256_file(checkpoint),checkpoint_relative=str(checkpoint.relative_to(case)),mapped_sha256=driver.sha256_file(work/'mapped.v'),sdc_sha256=driver.sha256_file(selected),reused_stages='actual synthesis/floorplan/global-placement-skip-IO; IO correction only, no passing stage replay')
+  held_files=sorted(str(f.relative_to(case)) for f in bases[0].iterdir() if f.is_file() and (f.name.startswith(('1_','2_')) or f.name=='3_1_place_gp_skip_io.odb'))
+  proof=dict(assumed_old_files=held_files,source_case=str(old_case),checkpoint_sha256=driver.sha256_file(checkpoint),checkpoint_relative=str(checkpoint.relative_to(case)),mapped_sha256=driver.sha256_file(work/'mapped.v'),sdc_sha256=driver.sha256_file(selected),reused_stages='actual synthesis/floorplan/global-placement-skip-IO; IO correction only, no passing stage replay')
   (work.parent/'resume_checkpoint.json').write_text(json.dumps(proof,indent=2)+'\n')
   original_run=driver.run
   def resume_run(cmd,*aa,**kk):
@@ -90,7 +91,7 @@ if os.environ.get('GAUSS_RESUME_ORFS'):
     if '&& chmod a+w /work/results/' in script:
      return subprocess.CompletedProcess(cmd,0,'Actual pinned synthesis/checkpoint reused; no gate replay.\n','')
     if 'finish metadata-generate' in script:
-     cmd=list(cmd);cmd[-1]=script.replace('finish metadata-generate','-o /work/'+proof['checkpoint_relative']+' finish metadata-generate')
+     cmd=list(cmd);cmd[-1]=script.replace('finish metadata-generate',' '.join('-o /work/'+f for f in held_files)+' finish metadata-generate')
    return original_run(cmd,*aa,**kk)
   driver.run=resume_run
   try:return original_pnr(*args,**kwargs)
