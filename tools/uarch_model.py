@@ -129,17 +129,27 @@ def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
         adoption=False, physical_closed=False, measured_cycles=None)
 
 
-def dsrom_fh_fault_retire_model():
+def dsrom_fh_fault_retire_model(integrated_parent=False):
     """C17 source-owned four-edge fault/transaction retirement cut, before RTL.
 
     This is a component proposal, not an adopted core or a rate measurement.
     The producer must retain its warm-index/commit debt until retirement.
     """
     packet_bits = 64*49 + (2048+64+4*24+4) + 160+1+1
+    if integrated_parent:
+        # Original tuple plus distinct progress/leaf-valid markers and an
+        # eight-bit in-flight identity, compared at actual warm commit.
+        packet_bits += 2+8
     ff = dict(transaction_packet=4*packet_bits, packet_valid=4,
               local_eight_bank_fault=8, two_row_fault=4,
               kept_global_relays=16, lane_veto_copies=64,
               write_veto_copies=4, status_copy=1)
+    if integrated_parent:
+        ff.update(parent_sequence_and_expected_identity=16,
+            parent_expected_warm_word_and_mask=24+16,
+            parent_warm_debt_sent_and_protocol_fault=3,
+            producer_issued_and_warm_marker=2, producer_raw_leaf_valid=1,
+            protected_SRAM_commit_identity_pipeline=2*(4*24+64+8+1))
     return dict(parameter='FAULT_RETIRE', default=0, G=4, W=16,
         stages=4, MACs_per_cycle=0, FP32_adds_per_cycle=0,
         new_memory_ports=0, memory_payload_bytes_per_cycle=256,
@@ -149,7 +159,10 @@ def dsrom_fh_fault_retire_model():
             result_data_mask_addr_write_enable=2048+64+4*24+4,
             result_tag=160, result_valid=1, warm_index_marker=1),
         FF_bits=ff, FF_total=sum(ff.values()), FF_area_proxy_um2=sum(ff.values())*DFF_UM2,
-        fault_tree=dict(local_banks_per_row=8, rows_per_quadrant=2,
+        fault_tree=dict(local_banks_per_cluster=8, local_cluster_macro_rows=2,
+            local_cluster_macro_columns=4, clusters_per_quadrant=2,
+            local_cluster_span_um=dict(x=3*240+174.096,y=70+29.7),
+            quadrant_span_um=dict(x=3*240+174.096,y=3*70+29.7),
             quadrant_sources_per_relay=4, relay_replicas=16,
             max_quadrant_logical_fanout=16, max_relay_logical_fanout=6,
             max_lane_veto_external_loads=2,
@@ -164,6 +177,8 @@ def dsrom_fh_fault_retire_model():
             requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
         protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
         flow_control='4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains',
+        integrated_parent=bool(integrated_parent),
+        commit_contract='Warm ACK must match in-flight8-bit identity, actual word address and lane mask; wrong/missing ACK keeps debt quarantined. Real SRAM commit timing or test consumer memory-write edge supplies ACK; pipeline emission alone does not.',
         floorplan=dict(existing_width_um=2000,existing_height_um=660,
             macro_count=64,macro_moves=0,actual_new_cell_area_um2=None,
             routing_tracks_and_loaded_clock_PG_repair_margin=None,
