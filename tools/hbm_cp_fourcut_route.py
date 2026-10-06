@@ -17,6 +17,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--job-root', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
+    parser.add_argument('--fast-owner', action='store_true')
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
@@ -29,7 +30,7 @@ def main():
     # the pinned clean source checkout during physical execution.
     from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
     cp = json.loads((ROOT/context.CONTRACT).read_text())['CP']
-    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True)
+    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner)
     inputs = json.loads((ROOT/'physical/hbm_cp_parent_context_20261005/inputs.json').read_text())
     assert inputs['parameters']['SU_FOUR_COMBINATIONAL_CUTS'] == 1
     assert inputs['checked_sources'] == checked
@@ -47,6 +48,9 @@ def main():
                           ('--output', job/'physical.json'),
                           ('--nickname-tag', 'harvey_cp_fourcut_context_r1')]:
         argv[argv.index(option)+1] = str(value)
+    if args.fast_owner:
+        assert inputs['parameters']['SU_FAST_OWNER_FRONTIER']==1
+        argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     record = dict(schema='hbm.cp.fourcut.context-route.v1', argv=argv,
@@ -56,7 +60,7 @@ def main():
         hook_sha256=sha(hook), source_changed=True, synthesis_required=True,
         old_R6_preserved=True, fences_changed=False, pins_changed=False,
         setup_ps=60, hold_ps=25, source_phase_ps=0,
-        added_RTL_FF=0, added_RTL_cycles=0, adopted=False)
+        added_RTL_FF=0, added_RTL_cycles=0, adopted=False,fast_owner=args.fast_owner)
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
