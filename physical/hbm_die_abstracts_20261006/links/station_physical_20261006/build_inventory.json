@@ -1,0 +1,30 @@
+{
+  "top": "ot_hbm_native_frame_station",
+  "ENABLE": 1,
+  "NO": 3,
+  "analytic_FF": 6566,
+  "source_hashes": {
+    "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_lowered.sv": "ce2b88f19c2b6983ed29ba36eafcaffe6ffcd095dc1062b838cdff23a956a916",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f"
+  },
+  "RAM_declared_GiB": 8,
+  "RAM_basis": "Single NO3 element6566 protected FF; no arrays/macros. Prior meso single-element39k cells export/route inventory bounds comparable size; 8GiB conservative scheduling estimate, not a process cap. First synth records actual RSS/cell count for subsequent PnR need.",
+  "CPU": 16,
+  "disk_declared_GiB": 8,
+  "disk_basis": "67MB scripts plus selected RTL, one mapped netlist and single-element ORFS checkpoints/reports, available disk checked; no full-array build",
+  "macro_count": 0,
+  "leaf_clock_target_GHz": 1.2,
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "physical_context": "source-local native-station receiver measured after synthesis; external SM/die clock/reset routing remains OPEN",
+  "variants": [
+    "NO3H55",
+    "NO3V60",
+    "NO2H55",
+    "NO2V60"
+  ],
+  "heavy_local": false
+}

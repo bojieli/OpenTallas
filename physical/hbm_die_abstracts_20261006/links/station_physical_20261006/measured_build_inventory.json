@@ -1,0 +1,33 @@
+{
+  "selected_bank_source": "ot_hbm_w2_protected_bank_static.sv",
+  "selected_bank_sha256": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+  "transform": "Same GF2 encode/raw/check function as actual W2; explicit equations replace procedural frontend unrolling. All remaining source bytes identical, state/repair/protection/clock preserved. 139 basis/offset checks plus parity mutant rejection retained.",
+  "original_lowering": "NO3_synth_r1 capacity FAIL: sampled 18902848 KiB RSS > owner16GiB. Only own new process stopped; source and failure retained. Original8GiB frontend estimate invalid.",
+  "measured_synth": {
+    "NO2": {
+      "RSS_peak_KiB": 384604,
+      "wall_s": 388.12,
+      "sequential_cells": 5916,
+      "cells": 62405,
+      "area_um2": 9393.35454
+    },
+    "NO3": {
+      "RSS_peak_KiB": 398532,
+      "wall_s": 328.09,
+      "sequential_cells": 6566,
+      "cells": 68323,
+      "area_um2": 10326.63492
+    }
+  },
+  "macro_count": 0,
+  "physical_job_declaration_GiB": 8,
+  "physical_threads": 16,
+  "physical_declaration_basis": "8GiB remains conservative actual cell-count routing estimate, not process cap. Fresh pre/post CPU16, RAM including unchanged reserve and ramp, disk8GiB before each route. New route peaks measured before subsequent fit.",
+  "pin_capacity_correction": "Default M4/M5 two-track6912 positions fails7795 ports. H actual wideoutline: bottom/top long faces, CORE_ASPECT_RATIO height/width0.25; V talloutline left/right long faces height/width4. M4/M6 horizontal + M5/M7 vertical, min_distance1 with explicit min_distance_in_tracks flag. No M2 borrowing. Pin-stage failures preserved; actual3_1 checkpoint resumes with hashes and all upstream Make inputs assumed-old. PRE_IO_PLACEMENT clears stored constraints and applies actual selected faces. NO2r6 incomplete resume dependency exclusion replayed floorplan; preserve its evidence and do not call it successful no-replay resume.",
+  "qualifications": {
+    "functional_basis_checks_passed": true,
+    "SSFF_physical_closed": false,
+    "die_context_bound": false,
+    "208_copies_not_208_masters": true
+  }
+}
