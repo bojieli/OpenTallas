@@ -1,0 +1,1074 @@
+{
+ "schema": "opentallas.dsrom-s81-fulldie.floorplan.r8.v1",
+ "tool": "tools/dsrom_s81_fulldie.py --gen r8",
+ "tool_sha256": "b70579e314b6e10441b53c5f28591ba182ec18929834dcef9fd9ea74770e03be",
+ "sources_sha256": {
+  "results/uarch/dsrom_c_recheck_20261004/model.json": "66b37862459271eef7e6857e340cc4f82b112239ddaec28a3e2e706f8700a348",
+  "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz": "3d904e3f5cda2c6a8cbf21d8109224254e295e3b9a23cb1185accc20ea88e512",
+  "results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+  "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "be8ed2bedd04427f94a32aff88f11f0427885c94e36fe76c605c1d4b56eec682",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+  "rtl/common/ot_ratio_cdc_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+  "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+ },
+ "die": {
+  "w_um": 33000.0,
+  "h_um": 26000.0,
+  "mm2": 858.0
+ },
+ "variant": {
+  "gen": "r8",
+  "die": "head",
+  "pairs": 1682,
+  "bf": 316,
+  "nv": 211,
+  "elem_frame_h": 157.68,
+  "slot_h": 239.76,
+  "slots": 12
+ },
+ "slot": {
+  "elem_frame_h_um": 157.68,
+  "slot_h_um": 239.76,
+  "slots_per_column": 12,
+  "capacity": {
+   "elem_frame_h_um": 157.68,
+   "slot_h_um": 239.76,
+   "slots_per_column": 12,
+   "columns": 128,
+   "max_pairs_per_layer_die": 2432,
+   "pairs_per_layer_die_now": 2417,
+   "layer_field_pairs_total": 783108,
+   "layer_field_pairs_basis": "81 stages x 4 ranks x 2,417 (S81 decision)",
+   "layer_dies_now": 324,
+   "layer_dies_at_max": 323,
+   "extra_layer_dies": -1,
+   "inventory_compiled_pairs_TP4": 783264
+  }
+ },
+ "instances": {
+  "bf": 316,
+  "cfg": 11774,
+  "seq": 1682,
+  "q": 1155,
+  "nvx": 211,
+  "bf_nv": 211,
+  "sstn": 1335,
+  "node": 3236,
+  "cfifo": 128,
+  "hub": 8,
+  "phy": 4,
+  "ctrl": 4,
+  "svc": 4,
+  "band_blk": 2,
+  "link": 8,
+  "rstg": 256,
+  "hend": 44,
+  "stn": 2606
+ },
+ "area_mm2_by_kind": {
+  "bf": 49.972,
+  "cfg": 28.187,
+  "seq": 3.516,
+  "q": 74.891,
+  "nvx": 24.683,
+  "bf_nv": 33.367,
+  "sstn": 4.186,
+  "node": 21.741,
+  "cfifo": 5.171,
+  "hub": 34.905,
+  "phy": 40.026,
+  "ctrl": 8.446,
+  "svc": 53.612,
+  "band_blk": 6.341,
+  "link": 4.238,
+  "rstg": 0.344,
+  "hend": 0.327,
+  "stn": 1.833
+ },
+ "placed_footprint_mm2": 395.79,
+ "utilisation": {
+  "placed_over_die": 0.4613,
+  "field_frames_mm2": 435.6
+ },
+ "geometry": {
+  "slot_h": 239.76,
+  "slots": 12,
+  "x_lw": 20.304,
+  "x_fw": 625.968,
+  "x_sp": 15174.0,
+  "x_fe": 17809.2,
+  "x_le": 32718.384,
+  "y_f": 3462.48,
+  "y_top": 22539.6,
+  "ch_y": [
+   3462.48,
+   6598.799999999999,
+   9735.119999999999,
+   12871.439999999999,
+   16007.759999999998,
+   19144.079999999998,
+   22280.399999999998
+  ],
+  "tier_y": [
+   3721.68,
+   6857.999999999999,
+   9994.32,
+   13130.64,
+   16266.96,
+   19403.28
+  ],
+  "band_depth": 3041.28,
+  "field_h": 19077.12,
+  "spine_cx": 16491.6,
+  "col_pitch": 1191.456,
+  "col_w": 1182.816,
+  "spf": 259.2,
+  "tier_cols": [
+   9,
+   11,
+   12,
+   12,
+   11,
+   9
+  ]
+ },
+ "forwarded": {
+  "stations": 2606,
+  "ot_fwd_link_stage_instances": 7489,
+  "chains": 62,
+  "max_hop_um": 430.3,
+  "hops_over_430p56": 0,
+  "over_examples": [],
+  "meso_fifos": 276,
+  "ratio_cdc_fifos": 12
+ },
+ "field_round_trip_cycles": {
+  "farthest_frame": 72,
+  "cycles": 129,
+  "x_trunk_stages": 54,
+  "column_slot_stages": 10,
+  "root_stages": 2,
+  "return_trunk_stages": 58,
+  "meso_crossings": 2,
+  "crossing_cycles_each": 2,
+  "basis": "per frame: x trunk stations to its tap + entry meso 2 + slot stations + return-tree root stages + return trunk stations + hub meso 2 (the tree levels and the element pipeline excluded)"
+ },
+ "bus_classes": {
+  "x_lane": {
+   "buses": 3466,
+   "wires": 946827
+  },
+  "x_ctl": {
+   "buses": 1463,
+   "wires": 21945
+  },
+  "cfg": {
+   "buses": 1682,
+   "wires": 90828
+  },
+  "go": {
+   "buses": 1682,
+   "wires": 1682
+  },
+  "rom_a": {
+   "buses": 1682,
+   "wires": 20184
+  },
+  "rom_ce": {
+   "buses": 11774,
+   "wires": 11774
+  },
+  "rom_q": {
+   "buses": 11774,
+   "wires": 565152
+  },
+  "stat": {
+   "buses": 8146,
+   "wires": 13056
+  },
+  "nv": {
+   "buses": 211,
+   "wires": 224504
+  },
+  "nvr": {
+   "buses": 211,
+   "wires": 26586
+  },
+  "ret_leaf": {
+   "buses": 3364,
+   "wires": 211932
+  },
+  "ret_tree": {
+   "buses": 3108,
+   "wires": 205128
+  },
+  "col_ret": {
+   "buses": 384,
+   "wires": 25344
+  },
+  "col_clock": {
+   "buses": 128,
+   "wires": 128
+  },
+  "col_reset": {
+   "buses": 128,
+   "wires": 128
+  },
+  "local": {
+   "buses": 50,
+   "wires": 27494
+  },
+  "fclk": {
+   "buses": 6208,
+   "wires": 6208
+  },
+  "lane": {
+   "buses": 6216,
+   "wires": 1480708
+  },
+  "hub": {
+   "buses": 12,
+   "wires": 9280
+  },
+  "phy_dfi": {
+   "buses": 4,
+   "wires": 88952
+  },
+  "hbm_read": {
+   "buses": 4,
+   "wires": 35456
+  },
+  "top_in": {
+   "buses": 2,
+   "wires": 2
+  },
+  "clock": {
+   "buses": 3,
+   "wires": 3
+  },
+  "reset": {
+   "buses": 3,
+   "wires": 3
+  }
+ },
+ "chains": [
+  {
+   "chain": "xWdn",
+   "lanes": [
+    566
+   ],
+   "stations": 24,
+   "length_um": 9407.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 2.3
+  },
+  {
+   "chain": "xW2",
+   "lanes": [
+    566
+   ],
+   "stations": 35,
+   "length_um": 13914.4,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW1",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12723.0,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW0",
+   "lanes": [
+    566
+   ],
+   "stations": 26,
+   "length_um": 10340.0,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xWup",
+   "lanes": [
+    566
+   ],
+   "stations": 17,
+   "length_um": 6454.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 2.3
+  },
+  {
+   "chain": "xW3",
+   "lanes": [
+    566
+   ],
+   "stations": 35,
+   "length_um": 13914.4,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12723.0,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xW5",
+   "lanes": [
+    566
+   ],
+   "stations": 26,
+   "length_um": 10340.0,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEdn",
+   "lanes": [
+    566
+   ],
+   "stations": 28,
+   "length_um": 11027.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 2.3
+  },
+  {
+   "chain": "xE2",
+   "lanes": [
+    566
+   ],
+   "stations": 35,
+   "length_um": 13744.2,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE1",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12552.7,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE0",
+   "lanes": [
+    566
+   ],
+   "stations": 26,
+   "length_um": 10169.8,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xEup",
+   "lanes": [
+    566
+   ],
+   "stations": 21,
+   "length_um": 8074.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 2.3
+  },
+  {
+   "chain": "xE3",
+   "lanes": [
+    566
+   ],
+   "stations": 35,
+   "length_um": 13744.2,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE4",
+   "lanes": [
+    566
+   ],
+   "stations": 32,
+   "length_um": 12552.7,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "xE5",
+   "lanes": [
+    566
+   ],
+   "stations": 26,
+   "length_um": 10169.8,
+   "max_hop_um": 400.0,
+   "last_hop_um": 1.0
+  },
+  {
+   "chain": "rW0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 43,
+   "length_um": 17287.6,
+   "max_hop_um": 430.3,
+   "last_hop_um": 157.9
+  },
+  {
+   "chain": "rW1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 16725.9,
+   "max_hop_um": 430.3,
+   "last_hop_um": 12.7
+  },
+  {
+   "chain": "rW2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 37,
+   "length_um": 14972.8,
+   "max_hop_um": 430.3,
+   "last_hop_um": 267.2
+  },
+  {
+   "chain": "rW3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 36,
+   "length_um": 14511.7,
+   "max_hop_um": 430.3,
+   "last_hop_um": 286.7
+  },
+  {
+   "chain": "rW4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 41,
+   "length_um": 16264.8,
+   "max_hop_um": 430.3,
+   "last_hop_um": 51.6
+  },
+  {
+   "chain": "rW5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 16826.5,
+   "max_hop_um": 430.3,
+   "last_hop_um": 88.8
+  },
+  {
+   "chain": "rE0",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 58,
+   "length_um": 23401.8,
+   "max_hop_um": 430.3,
+   "last_hop_um": 269.8
+  },
+  {
+   "chain": "rE1",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 56,
+   "length_um": 22456.6,
+   "max_hop_um": 430.3,
+   "last_hop_um": 140.7
+  },
+  {
+   "chain": "rE2",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 51,
+   "length_um": 20320.1,
+   "max_hop_um": 430.3,
+   "last_hop_um": 14.0
+  },
+  {
+   "chain": "rE3",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 42,
+   "length_um": 17073.1,
+   "max_hop_um": 430.3,
+   "last_hop_um": 366.6
+  },
+  {
+   "chain": "rE4",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 47,
+   "length_um": 18826.2,
+   "max_hop_um": 430.3,
+   "last_hop_um": 109.9
+  },
+  {
+   "chain": "rE5",
+   "lanes": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70
+   ],
+   "stations": 48,
+   "length_um": 19387.9,
+   "max_hop_um": 430.3,
+   "last_hop_um": 259.4
+  },
+  {
+   "chain": "qSW",
+   "lanes": [
+    514
+   ],
+   "stations": 32,
+   "length_um": 12868.4,
+   "max_hop_um": 427.7,
+   "last_hop_um": 67.0
+  },
+  {
+   "chain": "aSW",
+   "lanes": [
+    1026
+   ],
+   "stations": 32,
+   "length_um": 12960.0,
+   "max_hop_um": 429.8,
+   "last_hop_um": 190.7
+  },
+  {
+   "chain": "ixSW",
+   "lanes": [
+    514
+   ],
+   "stations": 12,
+   "length_um": 4862.5,
+   "max_hop_um": 401.8,
+   "last_hop_um": 60.5
+  },
+  {
+   "chain": "coSW",
+   "lanes": [
+    514
+   ],
+   "stations": 73,
+   "length_um": 29300.1,
+   "max_hop_um": 413.0,
+   "last_hop_um": 101.5
+  },
+  {
+   "chain": "qSE",
+   "lanes": [
+    514
+   ],
+   "stations": 55,
+   "length_um": 22218.5,
+   "max_hop_um": 413.4,
+   "last_hop_um": 217.8
+  },
+  {
+   "chain": "aSE",
+   "lanes": [
+    1026
+   ],
+   "stations": 54,
+   "length_um": 21909.8,
+   "max_hop_um": 416.9,
+   "last_hop_um": 333.3
+  },
+  {
+   "chain": "ixSE",
+   "lanes": [
+    514
+   ],
+   "stations": 27,
+   "length_um": 10962.1,
+   "max_hop_um": 400.0,
+   "last_hop_um": 162.0
+  },
+  {
+   "chain": "coSE",
+   "lanes": [
+    514
+   ],
+   "stations": 87,
+   "length_um": 35161.7,
+   "max_hop_um": 403.9,
+   "last_hop_um": 362.9
+  },
+  {
+   "chain": "qNW",
+   "lanes": [
+    514
+   ],
+   "stations": 32,
+   "length_um": 13146.6,
+   "max_hop_um": 401.8,
+   "last_hop_um": 346.4
+  },
+  {
+   "chain": "aNW",
+   "lanes": [
+    1026
+   ],
+   "stations": 33,
+   "length_um": 13255.9,
+   "max_hop_um": 402.0,
+   "last_hop_um": 69.1
+  },
+  {
+   "chain": "ixNW",
+   "lanes": [
+    514
+   ],
+   "stations": 73,
+   "length_um": 29393.2,
+   "max_hop_um": 416.0,
+   "last_hop_um": 192.2
+  },
+  {
+   "chain": "coNW",
+   "lanes": [
+    514
+   ],
+   "stations": 12,
+   "length_um": 4989.6,
+   "max_hop_um": 401.8,
+   "last_hop_um": 190.1
+  },
+  {
+   "chain": "qNE",
+   "lanes": [
+    514
+   ],
+   "stations": 56,
+   "length_um": 22498.6,
+   "max_hop_um": 401.8,
+   "last_hop_um": 99.4
+  },
+  {
+   "chain": "aNE",
+   "lanes": [
+    1026
+   ],
+   "stations": 55,
+   "length_um": 22192.8,
+   "max_hop_um": 401.8,
+   "last_hop_um": 192.7
+  },
+  {
+   "chain": "ixNE",
+   "lanes": [
+    514
+   ],
+   "stations": 89,
+   "length_um": 35867.8,
+   "max_hop_um": 427.2,
+   "last_hop_um": 265.7
+  },
+  {
+   "chain": "coNE",
+   "lanes": [
+    514
+   ],
+   "stations": 26,
+   "length_um": 10489.2,
+   "max_hop_um": 400.4,
+   "last_hop_um": 90.7
+  },
+  {
+   "chain": "sel",
+   "lanes": [
+    514
+   ],
+   "stations": 27,
+   "length_um": 11028.3,
+   "max_hop_um": 406.5,
+   "last_hop_um": 223.8
+  },
+  {
+   "chain": "col",
+   "lanes": [
+    514
+   ],
+   "stations": 26,
+   "length_um": 10751.8,
+   "max_hop_um": 402.0,
+   "last_hop_um": 351.6
+  },
+  {
+   "chain": "KW0t",
+   "lanes": [
+    512
+   ],
+   "stations": 49,
+   "length_um": 19634.1,
+   "max_hop_um": 429.0,
+   "last_hop_um": 34.9
+  },
+  {
+   "chain": "KW0r",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 19597.5,
+   "max_hop_um": 426.8,
+   "last_hop_um": 396.6
+  },
+  {
+   "chain": "KW1t",
+   "lanes": [
+    512
+   ],
+   "stations": 52,
+   "length_um": 21016.1,
+   "max_hop_um": 429.8,
+   "last_hop_um": 217.5
+  },
+  {
+   "chain": "KW1r",
+   "lanes": [
+    512
+   ],
+   "stations": 52,
+   "length_um": 20978.9,
+   "max_hop_um": 425.5,
+   "last_hop_um": 178.4
+  },
+  {
+   "chain": "KW2t",
+   "lanes": [
+    512
+   ],
+   "stations": 43,
+   "length_um": 17227.4,
+   "max_hop_um": 402.2,
+   "last_hop_um": 29.2
+  },
+  {
+   "chain": "KW2r",
+   "lanes": [
+    512
+   ],
+   "stations": 42,
+   "length_um": 17191.6,
+   "max_hop_um": 405.2,
+   "last_hop_um": 390.1
+  },
+  {
+   "chain": "KW3t",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 19511.3,
+   "max_hop_um": 429.8,
+   "last_hop_um": 312.6
+  },
+  {
+   "chain": "KW3r",
+   "lanes": [
+    512
+   ],
+   "stations": 48,
+   "length_um": 19474.8,
+   "max_hop_um": 412.6,
+   "last_hop_um": 273.5
+  },
+  {
+   "chain": "KE0t",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 21271.2,
+   "max_hop_um": 428.5,
+   "last_hop_um": 72.4
+  },
+  {
+   "chain": "KE0r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 21235.2,
+   "max_hop_um": 408.7,
+   "last_hop_um": 43.6
+  },
+  {
+   "chain": "KE1t",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 22653.4,
+   "max_hop_um": 413.0,
+   "last_hop_um": 255.1
+  },
+  {
+   "chain": "KE1r",
+   "lanes": [
+    512
+   ],
+   "stations": 56,
+   "length_um": 22616.6,
+   "max_hop_um": 428.1,
+   "last_hop_um": 216.0
+  },
+  {
+   "chain": "KE2t",
+   "lanes": [
+    512
+   ],
+   "stations": 47,
+   "length_um": 19156.0,
+   "max_hop_um": 428.2,
+   "last_hop_um": 356.6
+  },
+  {
+   "chain": "KE2r",
+   "lanes": [
+    512
+   ],
+   "stations": 47,
+   "length_um": 19120.6,
+   "max_hop_um": 430.3,
+   "last_hop_um": 321.4
+  },
+  {
+   "chain": "KE3t",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 21539.9,
+   "max_hop_um": 416.9,
+   "last_hop_um": 341.5
+  },
+  {
+   "chain": "KE3r",
+   "lanes": [
+    512
+   ],
+   "stations": 53,
+   "length_um": 21503.8,
+   "max_hop_um": 428.5,
+   "last_hop_um": 306.3
+  }
+ ],
+ "scan_die_power": {
+  "stages": 81,
+  "pairs": 2417,
+  "static_icg_w": 50.196,
+  "dynamic_saturated_w": 33.9,
+  "total_saturated_w": 84.1,
+  "cooling_limit_w": 474.56,
+  "fits_cooling": true,
+  "all_pairs_busy_in_phase_w": 744.2,
+  "basis": "static: tools/ds_energy_silicon_authoritative.LAYER_DIE_W (ICG ledger, 30.6 W of it SerDes); dynamic: uarch_model._v41_graph(proposal) L20 per-die energy (field 0.497, idx MAC 0.049, HBM IF 0.115, attention 0.007 mJ/token) x head-bound saturated 80,833.5 tok/s; IR windows use the local peak in-phase densities below, not this average"
+ },
+ "power_model": {
+  "seq": {
+   "w": 0.000217,
+   "basis": "DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)"
+  },
+  "sstn": {
+   "w": 0.001527,
+   "basis": "DERIVED 564 stage flops x W18 per-flop clock x 1.5"
+  },
+  "cfifo": {
+   "w": 0.007821,
+   "basis": "DERIVED meso W564 D4 (4 ring + 1 output word) + return register x W18 per-flop clock x 1.5"
+  },
+  "rstg": {
+   "w": 0.000179,
+   "basis": "DERIVED 66 stage flops"
+  },
+  "stn": {
+   "w": 0.0,
+   "basis": "per station: lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  },
+  "hend": {
+   "w": 0.0,
+   "basis": "per end/start block: 5 x lane bits x W18 per-flop clock x 1.5 (inst_power_r8)"
+  }
+ },
+ "legality_python": {
+  "instances": 22984,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "generated_pin_clashes": 0,
+ "windows_um": {
+  "field": [
+   7474.704,
+   9635.12,
+   11649.072,
+   12694.32
+  ],
+  "field_bf": [
+   12731.984,
+   3421.68,
+   15914.8,
+   6321.68
+  ],
+  "spine": [
+   14774.0,
+   11601.04,
+   18209.2,
+   14401.04
+  ],
+  "band_s": [
+   6149.968,
+   0.0,
+   9149.968,
+   3941.28
+  ],
+  "field_nv": [
+   12731.984,
+   3421.68,
+   15914.8,
+   6321.68
+  ]
+ },
+ "child_reservations": {}
+}
