@@ -1,0 +1,407 @@
+{
+ "schema": "opentallas.dsrom-combined.compose.v1",
+ "generated_utc": "2026-10-06T07:03:23Z",
+ "adopted_on_main": [
+  "su_hcpost",
+  "su_norm",
+  "su_routeract",
+  "su_swiglu"
+ ],
+ "matrix": {
+  "all_off": {
+   "levers_on": [],
+   "excluded": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 620.078,
+   "AR_tok_s": 1612.7,
+   "MTP_tok_s": 4773.2,
+   "II_us": 25.762,
+   "L20_on_critical_path_us": 24.534,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "head",
+    "router"
+   ],
+   "output": ".combined_matrix/all_off/composition.json"
+  },
+  "all_on": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "excluded": [],
+   "candidates": [],
+   "AR_us": 414.834,
+   "AR_tok_s": 2410.6,
+   "MTP_tok_s": 6568.9,
+   "II_us": 19.175,
+   "L20_on_critical_path_us": 18.6153,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_norm",
+    "su_routeract",
+    "su_softmax",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/all_on/composition.json"
+  },
+  "only_field_spine_pq": {
+   "levers_on": [
+    "field_spine_pq"
+   ],
+   "excluded": [
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 513.458,
+   "AR_tok_s": 1947.6,
+   "MTP_tok_s": 5583.5,
+   "II_us": 21.797,
+   "L20_on_critical_path_us": 21.2272,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router"
+   ],
+   "output": ".combined_matrix/only_field_spine_pq/composition.json"
+  },
+  "all_on_minus_field_spine_pq": {
+   "levers_on": [
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "excluded": [
+    "field_spine_pq"
+   ],
+   "candidates": [],
+   "AR_us": 521.454,
+   "AR_tok_s": 1917.7,
+   "MTP_tok_s": 5475.4,
+   "II_us": 23.139,
+   "L20_on_critical_path_us": 21.9219,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_norm",
+    "su_routeract",
+    "su_softmax",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/minus_field_spine_pq/composition.json"
+  },
+  "only_su_hcpost": {
+   "levers_on": [
+    "su_hcpost"
+   ],
+   "excluded": [
+    "field_spine_pq",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 604.348,
+   "AR_tok_s": 1654.7,
+   "MTP_tok_s": 4872.2,
+   "II_us": 25.367,
+   "L20_on_critical_path_us": 24.1413,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_hcpost"
+   ],
+   "output": ".combined_matrix/only_su_hcpost/composition.json"
+  },
+  "all_on_minus_su_hcpost": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "excluded": [
+    "su_hcpost"
+   ],
+   "candidates": [],
+   "AR_us": 430.767,
+   "AR_tok_s": 2321.4,
+   "MTP_tok_s": 6388.0,
+   "II_us": 19.574,
+   "L20_on_critical_path_us": 19.0135,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_norm",
+    "su_routeract",
+    "su_softmax",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/minus_su_hcpost/composition.json"
+  },
+  "only_su_routeract": {
+   "levers_on": [
+    "su_routeract"
+   ],
+   "excluded": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 608.656,
+   "AR_tok_s": 1643.0,
+   "MTP_tok_s": 4844.7,
+   "II_us": 25.475,
+   "L20_on_critical_path_us": 24.2485,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_routeract"
+   ],
+   "output": ".combined_matrix/only_su_routeract/composition.json"
+  },
+  "all_on_minus_su_routeract": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_norm",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "excluded": [
+    "su_routeract"
+   ],
+   "candidates": [],
+   "AR_us": 426.256,
+   "AR_tok_s": 2346.0,
+   "MTP_tok_s": 6438.2,
+   "II_us": 19.461,
+   "L20_on_critical_path_us": 18.9008,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_norm",
+    "su_softmax",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/minus_su_routeract/composition.json"
+  },
+  "only_su_norm": {
+   "levers_on": [
+    "su_norm"
+   ],
+   "excluded": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 578.854,
+   "AR_tok_s": 1727.6,
+   "MTP_tok_s": 5040.9,
+   "II_us": 24.754,
+   "L20_on_critical_path_us": 23.5307,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_norm"
+   ],
+   "output": ".combined_matrix/only_su_norm/composition.json"
+  },
+  "all_on_minus_su_norm": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_swiglu",
+    "su_softmax"
+   ],
+   "excluded": [
+    "su_norm"
+   ],
+   "candidates": [],
+   "AR_us": 456.262,
+   "AR_tok_s": 2191.7,
+   "MTP_tok_s": 6119.5,
+   "II_us": 20.188,
+   "L20_on_critical_path_us": 19.6239,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_routeract",
+    "su_softmax",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/minus_su_norm/composition.json"
+  },
+  "only_su_swiglu": {
+   "levers_on": [
+    "su_swiglu"
+   ],
+   "excluded": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 602.552,
+   "AR_tok_s": 1659.6,
+   "MTP_tok_s": 4888.9,
+   "II_us": 25.144,
+   "L20_on_critical_path_us": 23.9182,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/only_su_swiglu/composition.json"
+  },
+  "all_on_minus_su_swiglu": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_softmax"
+   ],
+   "excluded": [
+    "su_swiglu"
+   ],
+   "candidates": [],
+   "AR_us": 432.36,
+   "AR_tok_s": 2312.9,
+   "MTP_tok_s": 6361.7,
+   "II_us": 19.793,
+   "L20_on_critical_path_us": 19.2312,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_norm",
+    "su_routeract",
+    "su_softmax"
+   ],
+   "output": ".combined_matrix/minus_su_swiglu/composition.json"
+  },
+  "only_su_softmax": {
+   "levers_on": [
+    "su_softmax"
+   ],
+   "excluded": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu"
+   ],
+   "candidates": [],
+   "AR_us": 607.56,
+   "AR_tok_s": 1645.9,
+   "MTP_tok_s": 4851.6,
+   "II_us": 25.451,
+   "L20_on_critical_path_us": 24.2247,
+   "L20_nodes": 47,
+   "applied": [
+    "draft",
+    "head",
+    "router",
+    "su_softmax"
+   ],
+   "output": ".combined_matrix/only_su_softmax/composition.json"
+  },
+  "all_on_minus_su_softmax": {
+   "levers_on": [
+    "field_spine_pq",
+    "su_hcpost",
+    "su_routeract",
+    "su_norm",
+    "su_swiglu"
+   ],
+   "excluded": [
+    "su_softmax"
+   ],
+   "candidates": [],
+   "AR_us": 427.352,
+   "AR_tok_s": 2340.0,
+   "MTP_tok_s": 6426.1,
+   "II_us": 19.485,
+   "L20_on_critical_path_us": 18.9245,
+   "L20_nodes": 48,
+   "applied": [
+    "draft",
+    "field_spine_pq",
+    "head",
+    "router",
+    "su_hcpost",
+    "su_norm",
+    "su_routeract",
+    "su_swiglu"
+   ],
+   "output": ".combined_matrix/minus_su_softmax/composition.json"
+  },
+  "additivity": {
+   "sum_of_single_lever_savings_us": 205.04,
+   "all_on_saving_us": 205.244,
+   "interaction_us": 0.204
+  }
+ }
+}

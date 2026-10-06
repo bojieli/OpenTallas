@@ -50,7 +50,7 @@ module ot_hbm_accel_su_fused_vm #(
  wire accepted=cmd_valid && cmd_ready;
  integer l,k,element,wl;
  always @* begin
-  rd_addr=0;rd_re=0;rd_src=0;
+  rd_addr=0;rd_re=0;rd_src=0;element=0;
   if(read_gain) for(l=0;l<N;l=l+1) begin
    rd_addr[l*AW+:AW]=gb+requested*N+l; rd_re[l]=(requested*N+l<D);rd_src[l*2+:2]=1;
   end

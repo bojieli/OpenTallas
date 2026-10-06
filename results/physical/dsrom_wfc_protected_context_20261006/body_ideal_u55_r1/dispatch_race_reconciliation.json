@@ -1,0 +1,22 @@
+{
+  "verdict": "DISPATCH_RACE_SAME_BODY_BOTH_FLOW_ERROR",
+  "E1_container": "d4cb71ebc8ba0c00c308418401965222421a7fb15e00dc69fc350d254bba8461",
+  "E1_finished_utc": "2026-10-06T07:42:31.275828364Z",
+  "E2_container": "d855f086a226c6e4a68f00e4951b59de859ba2745fbf5bbf81fdfb01ce9d376a",
+  "E2_finished_utc": "2026-10-06T07:43:37.170284773Z",
+  "both_exit": 2,
+  "both_OOMKilled": false,
+  "both_active_children": false,
+  "cause_both": "SYNTH_MEMORY_MAX_BITS4096 vs existing protected request shadow6480",
+  "body_RTL_inputs_compared_SHA256_identical": 21,
+  "source_list_config_bodyconfig_launcher_ownerSDC_binder_identical": true,
+  "only_compared_file_difference": "E2 signoff.tcl adds explicit input/output bit-port inventory; no synthesis/RTL/SDC/parameter difference",
+  "canonical_RTLIL_identical_bytes": 19103221,
+  "canonical_RTLIL_SHA256": "58d0e836bc9819ac34062eaa58e0278470bf3aab0f89e98a4d32174bc602dcf1",
+  "sole_launcher_collector": "Zeno",
+  "capacity_ledger_only": "Kant",
+  "continuation_policy": "Consume retained E1 canonical object in ONE corrected continuation; E2 R2 remains preparation-only, no dispatch",
+  "all_source_logs_synth_objects_and_containers_retained": true,
+  "SSFF": null,
+  "DRC": null
+}

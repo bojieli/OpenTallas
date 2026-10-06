@@ -1,5 +1,5 @@
 {
-  "status": "REAL_ENABLED_FULL384_K6_MINIMUM_GATE_PASS_PHYSICAL_OPEN",
+  "status": "REAL_ENABLED_MINIMUM_GOLD_PASS_FLOWREPAIR_POSTCTS_FAIL_GRT_LIVE",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv": "fc05d7df80af5d8f668261e2e087f80a1eb723d53ce746fae6668e48e743231d",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/retained_final.sdc": "1ce35f39423e56ccad763261f78817a51b4eb8571e28b25d3b4491454600c849",
@@ -17,7 +17,7 @@
   "IW": 9,
   "syntax_ENABLED_returncode": 0,
   "functional_gate": "gate-r1/gate.json",
-  "physical_gate": "NOT_RUN",
+  "physical_gate": "route-r1_FAIL_RETAINED/collection.json",
   "parent_qualified": false,
   "fresh_path_repair": "registered compare and payload mux; two banks retain II1 input; each bank recurrence two clocks",
   "reset_repair": "only lane validity and pipeline control reset; invalid payload canonicalized at leaf boundary; unchanged actual rst_n recovery/removal constraint",
@@ -28,5 +28,7 @@
   ],
   "measured_last_input_to_output_cycles": 28,
   "retained_last_input_to_output_cycles": 23,
-  "extra_cycles": 5
+  "extra_cycles": 5,
+  "physical_continuation": "flowrepair_r2_postCTS_actual/record.json",
+  "original_failed_flow_preserved": "route-r1_FAIL_RETAINED/collection.json"
 }

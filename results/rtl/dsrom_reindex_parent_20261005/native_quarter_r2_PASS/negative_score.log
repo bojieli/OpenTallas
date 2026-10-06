@@ -1,0 +1,5 @@
+QUARTER_STIMULUS ready_phase=1 hardware_clock_unchanged=1
+[1795000] %Fatal: tb_dsrom_reindex_native_quarter.sv:82: Assertion failed in tb_dsrom_reindex_native_quarter.unnamedblk3: golden mismatch lane=0 beat=0 got=0c00d expected=0c00c
+%Error: /srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98/src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_native_quarter.sv:82: Verilog $stop
+Aborting...
+QUARTER_DIAG accepted=4 received=0 checked=0 refused=0 invalid=0 stalled=0
