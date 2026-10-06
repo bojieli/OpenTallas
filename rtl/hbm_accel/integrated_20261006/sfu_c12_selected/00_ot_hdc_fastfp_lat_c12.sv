@@ -10,8 +10,8 @@
 // original (rtl/test/tb_su_fp32_f12.sv / the SU campaigns).  A source list names this file OR an original, never
 // both.  Needs rtl/hdc/ot_hdc_fp32_f12.sv and rtl/hdc/v41x/ot_dsrom_su_add6.sv.
 // ---------------------------------------------------------------------------
-// ot_hbm_selected_c12__ot_hdc_qmul_lat #(LAT): ot_hdc_qmul with the multiplier's latency as a parameter.  LAT = 3 is ot_hdc_qmul
-// itself (ot_hdc_fp32_mul_fast); LAT = 4..7 is ot_hdc_fp32_mul_lat #(LAT) (rtl/hdc/ot_hdc_fp32_mul_lat.sv, which
+// ot_hbm_selected_c12__ot_hdc_qmul_lat #(LAT): ot_hbm_selected_c12__ot_hdc_qmul with the multiplier's latency as a parameter.  LAT = 3 is ot_hbm_selected_c12__ot_hdc_qmul
+// itself (ot_hbm_selected_c12__ot_hdc_fp32_mul_fast); LAT = 4..7 is ot_hdc_fp32_mul_lat #(LAT) (rtl/hdc/ot_hdc_fp32_mul_lat.sv, which
 // needs rtl/hdc/ot_hdc_fp32_add_lat.sv), bit-identical to it (21d9aab2: 5,000,000 biased pairs).  W11 serial
 // domain: the 3-stage multiply misses 1.111 ns at SS; LAT 4 reaches 987 MHz.
 module ot_hbm_selected_c12__ot_hdc_qmul_lat #(
@@ -28,7 +28,7 @@ module ot_hbm_selected_c12__ot_hdc_qmul_lat #(
     wire [1:0] err;
     wire vo;
     generate if (LAT == 3) begin : g_l3
-        ot_hdc_fp32_mul_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hbm_selected_c12__ot_hdc_fp32_mul_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 4) begin : g_l4
         // the fixed LAT-4 top: a plain module name, so synthesis can keep it as its own hierarchy
         // (ORFS SYNTH_KEEP_MODULES) and ABC maps it as the standalone unit
@@ -48,7 +48,7 @@ module ot_hbm_selected_c12__ot_hdc_qmul_lat #(
     assign fault = vo && (err != 2'd0);
 endmodule
 
-// ot_hbm_selected_c12__ot_hdc_qadd_lat #(KEEP, LAT): ot_hdc_qadd, or (KEEP = 1) the plain ot_hdc_fp32_add_lat3 top of
+// ot_hbm_selected_c12__ot_hdc_qadd_lat #(KEEP, LAT): ot_hbm_selected_c12__ot_hdc_qadd, or (KEEP = 1) the plain ot_hdc_fp32_add_lat3 top of
 // rtl/hdc/ot_hdc_fp32_add_lat.sv (needs rtl/hdc/ot_hdc_prefix.sv): the same binary32 add, bit for bit, with
 // (* keep *) Kogge-Stone prefix adders that ABC cannot re-ripple inside a parent block; LAT = 4 (KEEP = 1) is
 // the input-cut ot_hdc_fp32_add_lat4i (W11 serial domain, 0.9 GHz at SS).
@@ -67,7 +67,7 @@ module ot_hbm_selected_c12__ot_hdc_qadd_lat #(
     wire [1:0] err;
     wire vo;
     generate if (KEEP == 0) begin : g_fast
-        ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hbm_selected_c12__ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 4) begin : g_keep4
         // 1.2 GHz: decode..swap | add + LZC | shift + round | encode
         ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));

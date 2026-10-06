@@ -1,0 +1,307 @@
+{
+  "correction": "Initial supervisor-root-only inference was wrong; authoritative artifacts are nested under route/. Corrected before publication. Original remote failure records/checkpoints preserved.",
+  "jobs": [
+    {
+      "job": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2",
+      "wrapper_exit": "1",
+      "source_commit": "0b545b7b9f63277fa43d99172a6013c382390026",
+      "status": "error",
+      "flow_completed": false,
+      "error_firstline": "FlowError: ORFS place-and-route failed with exit 143:",
+      "driver": {
+        "commit": "0b545b7b9f63277fa43d99172a6013c382390026",
+        "file_modified_since_commit": false,
+        "note": "the driver and the sources come from the same tree; git.commit describes both",
+        "path": "/srv/opentallas/repos/goodall-collective-txmask-0b545b7b9/tools/run_abi3_physical.py",
+        "same_tree_as_sources": true,
+        "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+        "tree": "/srv/opentallas/repos/goodall-collective-txmask-0b545b7b9"
+      },
+      "sources": [
+        {
+          "path": "rtl/link/ot_link_afifo.sv",
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "size_bytes": 4344
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+          "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+          "size_bytes": 9119
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+          "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+          "size_bytes": 4276
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+          "sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+          "size_bytes": 18595
+        },
+        {
+          "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx_f12_txmask.sv",
+          "sha256": "5f36c7613a6fe4ec5ca654a2910a73ef74506d9a6c2453f5058136e344024282",
+          "size_bytes": 2266
+        }
+      ],
+      "native_stages": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2/route/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_r2/base/5_1_grt.tmp.log",
+          "sha256": "7dea870a5e27c9f30a518f0f4361e4e6006f2669b5f7635c69228c1d13d85bb3",
+          "last": {
+            "phase": "hold",
+            "line": "6150 |       0 |   24596 |            0 |    +5.7% | -665.151 | -5144844.000 | data[3007]$_DFF_P_/D"
+          },
+          "setup_final": "    final |      10 |    1669 |        0 |      0 |     0 |    +0.1% | -675.111 | -2135153.2 | -2685440.0 |  16330 | o_tx_rec[311]"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_r2/base/4_cts.odb",
+          "bytes": 154021930,
+          "sha256": "0462eee60d18a0b1a034abf28017b63282e97ed9ef6ac58ed7338b06f9692a4a"
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_r2/base/4_cts.sdc",
+          "bytes": 1543193,
+          "sha256": "c8a3adff629d0f7abee16baf82aaf8980aa1d9e956145eb4b41e70016c79cb84"
+        }
+      ],
+      "corner_sta": false,
+      "route_completed": false,
+      "matching_live_containers": [],
+      "no_stop_or_restart": true,
+      "original_failure_record_local": "results/rtl/hbm_item9_closure_20261005/retained_cts_target_STA_r1/txmask_r2_original_physical_FAIL.json",
+      "last_hold_repair_WNS_ps": -665.151,
+      "last_setup_repair_WNS_ps": -675.111,
+      "termination_signal_cause": "Not recorded; exit143 is not proof of timeout or numerical/timing signoff"
+    },
+    {
+      "job": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1",
+      "wrapper_exit": "rc=\"1\"",
+      "source_commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+      "status": "error",
+      "flow_completed": false,
+      "error_firstline": "FlowError: ORFS place-and-route failed with exit 143:",
+      "driver": {
+        "commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+        "file_modified_since_commit": false,
+        "note": "the driver and the sources come from the same tree; git.commit describes both",
+        "path": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664/tools/run_abi3_physical.py",
+        "same_tree_as_sources": true,
+        "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+        "tree": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664"
+      },
+      "sources": [
+        {
+          "path": "rtl/link/ot_link_afifo.sv",
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "size_bytes": 4344
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+          "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+          "size_bytes": 9119
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+          "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+          "size_bytes": 4276
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+          "sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+          "size_bytes": 18595
+        },
+        {
+          "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx_f12_txmask.sv",
+          "sha256": "5f36c7613a6fe4ec5ca654a2910a73ef74506d9a6c2453f5058136e344024282",
+          "size_bytes": 2266
+        }
+      ],
+      "native_stages": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1/route/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u12_r1/base/5_1_grt.tmp.log",
+          "sha256": "fec7345c4dcc4b268bc6482e01c4c7975b0148585519a628f1d3b85d05be1fc2",
+          "last": {
+            "phase": "hold",
+            "line": "6800 |       0 |   27196 |            0 |    +6.4% | -522.627 | -4014522.250 | data[2030]$_DFF_P_/D"
+          },
+          "setup_final": "    final |       8 |    1862 |        0 |      0 |     0 |    +0.1% | -479.215 | -1524260.4 | -1785972.9 |  12397 | o_rsp_data[3411]"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u12_r1/base/4_cts.odb",
+          "bytes": 141364160,
+          "sha256": "64ced1ea9b3c889e9e8f4f79f3a745300e09e6766056aeec327c29834b2fcc61"
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u12_r1/base/4_cts.sdc",
+          "bytes": 1543193,
+          "sha256": "c8a3adff629d0f7abee16baf82aaf8980aa1d9e956145eb4b41e70016c79cb84"
+        }
+      ],
+      "corner_sta": false,
+      "route_completed": false,
+      "matching_live_containers": [],
+      "no_stop_or_restart": true,
+      "original_failure_record_local": "results/rtl/hbm_item9_closure_20261005/retained_cts_target_STA_r1/ctx_u12_original_physical_FAIL.json",
+      "last_hold_repair_WNS_ps": -522.627,
+      "last_setup_repair_WNS_ps": -479.215,
+      "termination_signal_cause": "Not recorded; exit143 is not proof of timeout or numerical/timing signoff"
+    },
+    {
+      "job": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1",
+      "wrapper_exit": "rc=\"1\"",
+      "source_commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+      "status": "error",
+      "flow_completed": false,
+      "error_firstline": "FlowError: ORFS place-and-route failed with exit 143:",
+      "driver": {
+        "commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+        "file_modified_since_commit": false,
+        "note": "the driver and the sources come from the same tree; git.commit describes both",
+        "path": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664/tools/run_abi3_physical.py",
+        "same_tree_as_sources": true,
+        "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+        "tree": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664"
+      },
+      "sources": [
+        {
+          "path": "rtl/link/ot_link_afifo.sv",
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "size_bytes": 4344
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+          "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+          "size_bytes": 9119
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+          "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+          "size_bytes": 4276
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+          "sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+          "size_bytes": 18595
+        },
+        {
+          "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx_f12_txmask.sv",
+          "sha256": "5f36c7613a6fe4ec5ca654a2910a73ef74506d9a6c2453f5058136e344024282",
+          "size_bytes": 2266
+        }
+      ],
+      "native_stages": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1/route/work/orfs/logs/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u15_r1/base/5_1_grt.tmp.log",
+          "sha256": "6fcead345edc207ed30083c483281a15e61fcc3dd1e0b95b4b427a0db408c913",
+          "last": {
+            "phase": "hold",
+            "line": "7910 |       0 |   31636 |            0 |    +7.6% | -431.687 | -3375364.250 | rx_rec[421]$_DFF_P_/D"
+          },
+          "setup_final": "    final |      48 |    1662 |        0 |      0 |     0 |    +0.1% | -451.324 | -1234131.6 | -1367789.8 |   9779 | o_rsp_data[959]"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u15_r1/base/4_cts.odb",
+          "bytes": 135560793,
+          "sha256": "03bb402b820a58e3bae6c042e9b9d1299681710d49743ee3c8d6e713a7235a92"
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-ctx-u15-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_ctx_f12_txmask_asap7_goodall_coll_txmask_ctx_u15_r1/base/4_cts.sdc",
+          "bytes": 1543193,
+          "sha256": "c8a3adff629d0f7abee16baf82aaf8980aa1d9e956145eb4b41e70016c79cb84"
+        }
+      ],
+      "corner_sta": false,
+      "route_completed": false,
+      "matching_live_containers": [],
+      "no_stop_or_restart": true,
+      "original_failure_record_local": "results/rtl/hbm_item9_closure_20261005/retained_cts_target_STA_r1/ctx_u15_original_physical_FAIL.json",
+      "last_hold_repair_WNS_ps": -431.687,
+      "last_setup_repair_WNS_ps": -451.324,
+      "termination_signal_cause": "Not recorded; exit143 is not proof of timeout or numerical/timing signoff"
+    },
+    {
+      "job": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1",
+      "wrapper_exit": "rc=1",
+      "source_commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+      "status": "error",
+      "flow_completed": false,
+      "error_firstline": "FlowError: ORFS place-and-route failed with exit 143:",
+      "driver": {
+        "commit": "12f63a664fc4bdd0aa9d5e423e0e5e05a00893a8",
+        "file_modified_since_commit": false,
+        "note": "the driver and the sources come from the same tree; git.commit describes both",
+        "path": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664/tools/run_abi3_physical.py",
+        "same_tree_as_sources": true,
+        "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+        "tree": "/srv/opentallas/repos/goodall-collective-fanout-12f63a664"
+      },
+      "sources": [
+        {
+          "path": "rtl/link/ot_link_afifo.sv",
+          "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+          "size_bytes": 4344
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+          "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+          "size_bytes": 9119
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+          "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+          "size_bytes": 4276
+        },
+        {
+          "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+          "sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+          "size_bytes": 18595
+        },
+        {
+          "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_die_f12_txmask.sv",
+          "sha256": "c18081aa2d28c4c03d56da395c8c7a3d2bb1a8bc48cd1d6863219b760a3f7ae3",
+          "size_bytes": 2569
+        }
+      ],
+      "native_stages": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1/route/work/orfs/logs/asap7/opentallas_noc_tw_coll_die_f12_txmask_asap7_boole_coll_txmask_die_u12_r1/base/5_1_grt.tmp.log",
+          "sha256": "28d122589990ab6604adc85683e33f28edb2e849599f4982ac59f0ef83958e42",
+          "last": {
+            "phase": "hold",
+            "line": "7630 |       0 |   30086 |            0 |    +8.3% | -426.231 | -1284270.875 | u_ep.g_on.dat[1518]$_DFFE_PP_/D"
+          },
+          "setup_final": "    final |      16 |     819 |       52 |     15 |    71 |    +0.1% | -535.170 | -3087241.0 | -1831055.6 |   9232 | lk_tx_rec[176]"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_txmask_asap7_boole_coll_txmask_die_u12_r1/base/4_cts.odb",
+          "bytes": 130261165,
+          "sha256": "0794b40389ee5b09694947daaf57f33ceb9b5e790ebde13d050eb102d0ba04b7"
+        },
+        {
+          "path": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1/route/work/orfs/results/asap7/opentallas_noc_tw_coll_die_f12_txmask_asap7_boole_coll_txmask_die_u12_r1/base/4_cts.sdc",
+          "bytes": 1544830,
+          "sha256": "fb8023cdb0774f87c9c05bb84fa7ec6a94e57c2aa81154c2752feb5b190d5272"
+        }
+      ],
+      "corner_sta": false,
+      "route_completed": false,
+      "matching_live_containers": [],
+      "no_stop_or_restart": true,
+      "original_failure_record_local": "results/rtl/hbm_item9_closure_20261005/retained_cts_target_STA_r1/die_u12_original_physical_FAIL.json",
+      "last_hold_repair_WNS_ps": -426.231,
+      "last_setup_repair_WNS_ps": -535.17,
+      "termination_signal_cause": "Not recorded; exit143 is not proof of timeout or numerical/timing signoff"
+    }
+  ],
+  "no_git_in_peer_worktrees": true,
+  "no_stop_or_delete": true
+}
