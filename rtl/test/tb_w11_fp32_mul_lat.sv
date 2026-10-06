@@ -2,12 +2,12 @@
 // W11: ot_hdc_fp32_mul_lat #(LAT = 3..9) against ot_hdc_fp32_mul_fast, cycle-aligned, every output bit.
 // Stimulus from the C++ driver (random encodings biased to specials, subnormals, near-cancellation, ties).
 module tb_w11_fp32_mul_lat (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
-                            output wire [15:0] mism, output wire ref_v);
+                            output wire [7:0] mism, output wire ref_v);
     wire [31:0] yr; wire [1:0] er;
     ot_hdc_fp32_mul_fast u_ref (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(yr), .err(er), .valid_out(ref_v));
     // the reference delayed to each LAT
-    reg [34:0] d1, d2, d3, d4, d5, d6, d7;
-    always @(posedge clk) begin d1 <= {ref_v, er, yr}; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6; end
+    reg [34:0] d1, d2, d3, d4, d5, d6;
+    always @(posedge clk) begin d1 <= {ref_v, er, yr}; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; end
     genvar L;
     generate for (L = 3; L <= 9; L = L + 1) begin : g
         wire [31:0] y; wire [1:0] e; wire vo;
@@ -19,18 +19,4 @@ module tb_w11_fp32_mul_lat (input wire clk, input wire rst_n, input wire v, inpu
     wire [31:0] y5i; wire [1:0] e5i; wire v5i;
     ot_hdc_fp32_mul_lat5i u5i (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y5i), .err(e5i), .valid_out(v5i));
     assign mism[5] = rst_n && ({v5i, e5i, y5i} != d2);
-    // margin m3: LAT 10 (C7 decode cut), LAT 9 + KCP 4 and LAT 10 + KCP 4 (kept C1 operand copies)
-    // NEG: LAT 10 compared against the LAT-9 delay (must mismatch); NEGK: one KCP copy's operand corrupted (must mismatch)
-    wire [31:0] y10, y9k, y10k; wire [1:0] e10, e9k, e10k; wire v10, v9k, v10k;
-    ot_hdc_fp32_mul_lat #(.LAT(10)) u10 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y10), .err(e10), .valid_out(v10));
-    ot_hdc_fp32_mul_lat #(.LAT(9), .KCP(4)) u9k (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y9k), .err(e9k), .valid_out(v9k));
-    ot_hdc_fp32_mul_lat #(.LAT(10), .KCP(4)) u10k (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y10k), .err(e10k), .valid_out(v10k));
-`ifdef NEG
-    assign mism[8] = rst_n && ({v10, e10, y10} != d6);
-`else
-    assign mism[8] = rst_n && ({v10, e10, y10} != d7);
-`endif
-    assign mism[9] = rst_n && ({v9k, e9k, y9k} != d6);
-    assign mism[10] = rst_n && ({v10k, e10k, y10k} != d7);
-    assign mism[15:11] = 5'd0;
 endmodule

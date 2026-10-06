@@ -35,7 +35,7 @@ endmodule
 
 module tb_qwen_slab_port_group;
     parameter integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 6, LEAD = 8;
-    parameter integer IN_STAGE = 0, AM_SPLIT = 0, S5_CTL = 0, COVER_DPOS = 0, SCALE_PAIR = 0, OREG = 0, MUL_KCP = 1;
+    parameter integer IN_STAGE = 0, AM_SPLIT = 0, S5_CTL = 0, COVER_DPOS = 0, SCALE_PAIR = 0, OREG = 0;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = !clk;
 
@@ -64,7 +64,7 @@ module tb_qwen_slab_port_group;
     wire [W*32-1:0] o_data, tw_d;
     wire [1+32+NW-1:0] am_top;
     ot_qwen_slab_port_group #(.GID(GID), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
-        .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP)) dut (
+        .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG)) dut (
         .clk(clk), .rst_n(rst_n), .bw_clk(clk), .bw_rst_n(rst_n), .bw_v(1'b0), .bw_rdy(bw_rdy), .bw_d({W*32{1'b0}}),
         .tw_v(tw_v), .tw_rdy(1'b1), .tw_d(tw_d),
         .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc),
