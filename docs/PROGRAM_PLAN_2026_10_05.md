@@ -33,7 +33,7 @@ Owner rules in force:
 | Target | Headline (measured) | Exactness | Physical | Status |
 |---|---|---|---|---|
 | Qwen3-8B ROM, 8K | AR on STREAM4: **6,169.7 tok/s** (5,974.3 wire-bound); 2.99x the one-stack path (`results/rtl/qwen_rom_kv_fullbw_20261004/`) | All 4 dies and token K/V bit-exact vs GPU golden | Die 811.8 mm²; global route **closed** (b3r16B40, 0 overflow, `f1df64409`); IR 20–26 mV | Core decode −217 ps; port/scale slab share open; landing merge −0.75 ns |
-| DeepSeek-V4.1 ROM, 1M | **1,654.7 AR / 4,872.2 MTP** (all measured: AR 604.3 µs, MTP step 853.6 µs; fused hc_post lever `9082d0a53`, head lever `1c4e785ee`, window bound `42cf43125`; tau 4.159, 4,554.6 MTP at the published 3.8879) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers | Recovery in progress; several blocks still closing |
+| DeepSeek-V4.1 ROM, 1M | **1,654.7 AR / 4,872.2 MTP** (all measured: AR 604.3 µs, MTP step 853.6 µs; fused hc_post lever `9082d0a53`, head lever `1c4e785ee`, window bound `42cf43125`; tau 4.159, 4,554.6 MTP at the published 3.8879) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed physical feasibility at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers; that netlist had connectivity holes (x chain undriven at 2,161 of 2,417 pairs, cfg ROMs and return nodes unclocked, no forwarded stages or meso FIFOs; die-top lint `7ccef3810`), now wired by the S81-DIE `--gen r8` generator | Recovery in progress; several blocks still closing |
 | HBM accelerator, DS 1M | **2,173.7 AR / 4,683.2 MTP** (fully measured `7dfe62676`, notice default; tau 4.159, 4,377.9 at 3.8879). Matched reference `b39173b46` (review corrections measured, shared levers credited): **474.8 µs AR / 1,050.6 µs MTP step = 3,958.5 MTP** | Exact | Control loops closed (bulk copy, KV lifecycle `7ce508488`, SECDED fence `b5f1dcdf6`) | Datapath short of 1.2 GHz: collective endpoint −329 ps, SU lane −4.8/−46 ps, SFU tail −113/−167 ps, attention tile about 881 MHz |
 | HBM accelerator, Qwen 8K | 2,154–2,220 AR; DSpark about 5,055 (TP4, `2f4a6af49`) | Exact (TP2 and TP4 vs GPU golden) | Not closed: Qwen-side core, collective and lane blocks open | Handed to Codex |
 
@@ -113,7 +113,7 @@ Handoff files are in `/tmp/claude-review-20261003/handoff_to_codex_20261004/`; t
    - DS wavefront controller;
    - DS fused head;
    - DS q-element.
-3. **Physical regression from recovery levers.** The S81 die passed before the head, draft-placement (+52 dies), window, field and SU changes. A full-die rerun is required (Codex item 10).
+3. **Physical regression from recovery levers.** The S81 die passed physical feasibility before the head, draft-placement (+52 dies), window, field and SU changes, on a netlist with connectivity holes (die-top lint `7ccef3810`). A full-die rerun on the wired r8 netlist is required (Codex item 10).
 4. **Routability of dense blocks.**
    - Seen in the Qwen slab pins, the DS scanned element, the R5a macro channels and the earlier near-HBM hub.
    - Expect more frame or pin-plan iterations than logic iterations.

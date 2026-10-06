@@ -6,6 +6,8 @@
 create_clock -name clk -period 833.333 [get_ports clk]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
-source [file join [file dirname [info script]] io_plain.sdc]
+# Same lines as io_plain.sdc, inlined: ORFS copies this SDC into results/, so a relative `source` cannot resolve.
+set_input_delay 166.667 -clock clk [get_ports {rst_n p_* res_in*}]
+set_output_delay 166.667 -clock clk [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
 set_max_fanout 32 [current_design]
 set_load 5.55848 [all_outputs]
