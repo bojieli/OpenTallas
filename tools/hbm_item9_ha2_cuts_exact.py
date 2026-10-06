@@ -3,8 +3,11 @@
 from pathlib import Path
 import argparse,hashlib,json,subprocess,re
 import numpy as np
-p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--reuse-obj',type=Path);a=p.parse_args()
 o=a.out;assert o.is_absolute() and not o.exists();o.mkdir(parents=True)
+if a.reuse_obj:
+ assert a.reuse_obj.is_absolute() and a.reuse_obj.is_dir()
+ subprocess.run(['cp','-a','--reflink=auto',str(a.reuse_obj),str(o/'obj')],check=True) # no hardlinks or changes to completed originals
 vals=np.array([0x3f808000,0xbf800000,0x3f818000,0x33800000,0x4b000000,0xcb000000,0x3eaaaaab,0xbeaaaaab],dtype=np.uint32)
 words=[]
 for pf in (64,384):
@@ -34,4 +37,4 @@ s=(o/'run.log').read_text();assert 'PASS changedHA2 CUTS1 LANES16 PF384' in s,s
 assert 'DESTINATION PASS no slot write' in s
 phases=re.findall(r'PHASE PASS pf=(\d+) results=(\d+).*?first_latency_cycles=(\d+)',s)
 assert phases==[('64','4','23'),('384','24','23')],phases
-(o/'result.json').write_text(json.dumps(dict(verdict='PASS_CHANGED_HA2_FULL16_GOLDEN',shape=dict(NC=8,LANES=16,PFMAX=384,NPT=8,INJ=2,LAT=7,SLOTREG=1,CUTS=1),packed_words=28,BF16_scalar_results=896,first_latency_cycles=23,new_cycles=0,arithmetic_oracle='host float32 fixed pairwise tree then original RNE BF16 packing',source_sha256={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in files},host_oracle_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),contextual_SS_FF=False,adopted=False),indent=2)+'\n')
+(o/'result.json').write_text(json.dumps(dict(verdict='PASS_CHANGED_HA2_FULL16_GOLDEN',shape=dict(NC=8,LANES=16,PFMAX=384,NPT=8,INJ=2,LAT=7,SLOTREG=1,CUTS=1),packed_words=28,BF16_scalar_results=896,first_latency_cycles=23,new_cycles=0,arithmetic_oracle='host float32 fixed pairwise tree then original RNE BF16 packing',source_sha256={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in files},host_oracle_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),completed_objects_reused=str(a.reuse_obj) if a.reuse_obj else None,contextual_SS_FF=False,adopted=False),indent=2)+'\n')
