@@ -53,6 +53,7 @@ KEYS = ("QPIPE", "QP_XS", "QP_CAP", "QP_P1", "shift_L", "compared_cycles", "exem
 CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
 BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QW=1"], "pos_qm": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=1"], "pos_qm2": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=2"], "pos_qm3": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=3"], "pos_qm4": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=4"], "pos_qm5": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5"],
           "neg_qm2z": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Z"], "neg_qm2q": ["+define+QX_DUT_PQ0", "+define+QX_QM=2", "+define+ST6_MUTANT_Q"],
+          "pos_qm6": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=6"], "neg_qm6ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+BT5_MUTANT_NS"], "neg_qm6sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+BT5_MUTANT_SH"], "neg_qm6f4": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+QM6_MUTANT_F4"], "neg_qm6sf": ["+define+QX_DUT_PQ0", "+define+QX_QM=6", "+define+QM6_MUTANT_SF"],
           "neg_qm5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_NS"], "neg_qm5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_SH"],
           "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
@@ -152,7 +153,8 @@ def main() -> None:
         jobs += [("pos_qm2", s) for s in range(1, n + 1)] + [("pos_qm2", 7), ("neg_qm2z", 1), ("neg_qm2q", 1)]
         jobs += [("pos_qm3", s) for s in range(1, n + 1)] + [("pos_qm3", 7)]
         jobs += [("pos_qm4", s) for s in range(1, n + 1)] + [("pos_qm4", 1, ("+nan_sparse",))]
-        jobs += [("pos_qm5", s) for s in range(1, n + 1)] + [("pos_qm5", 1, ("+nan_sparse",))] + [("neg_qm5ns", 1, ("+nan_sparse",)), ("neg_qm5sh", 1)]      # QM lane (ot_v41_bterm5_w10) controls
+        jobs += [("pos_qm5", s) for s in range(1, n + 1)] + [("pos_qm5", 1, ("+nan_sparse",))] + [("neg_qm5ns", 1, ("+nan_sparse",)), ("neg_qm5sh", 1)]
+        jobs += [("pos_qm6", s) for s in range(1, n + 1)] + [("pos_qm6", 1, ("+nan_sparse",)), ("neg_qm6ns", 1, ("+nan_sparse",)), ("neg_qm6sh", 1), ("neg_qm6f4", 1), ("neg_qm6sf", 1)]      # QM lane (ot_v41_bterm5_w10) controls
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
