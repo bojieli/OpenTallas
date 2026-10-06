@@ -12,4 +12,4 @@ if a.stage in ['map','pnr']:
  for h,f in [('POST_PDN','regions.tcl'),('PRE_DETAIL_PLACE','pre_dpl.tcl'),('PRE_CTS','pre_dpl.tcl'),('PRE_GLOBAL_ROUTE','pre_dpl.tcl')]:c+=['--step-tcl',h+'='+str(Path(__file__).parent/f)]
 if a.stage=='map':c+=['--pnr-stop-after','floorplan']
 (o/(a.stage+'_argv.json')).write_text(json.dumps(c,indent=2)+'\n')
-os.environ['OT_ORFS_NUM_CORES']='16';raise SystemExit(subprocess.call(c,cwd=r))
+os.environ['OT_ORFS_NUM_CORES']='16';os.environ['OPENTALLAS_ORFS_IMAGE']='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29';raise SystemExit(subprocess.call(c,cwd=r))
