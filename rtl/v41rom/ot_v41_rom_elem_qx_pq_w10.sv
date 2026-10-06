@@ -212,7 +212,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     parameter integer QM = 0,           // margin-first (owner rule 2026-10-06): 1 = ot_v41_bterm5_w10 lanes (+5 cycles);
                                         // 2 = + ot_v41_segtree6 (adder-operand stage +1 a tree level, queue-head flags)
                                         // 3 = + go / restart candidates registered a cycle early, q + 2 sub-block table (0 cycles)
-                                        // 4 = + PQ configuration write stage (shadow file and tag tables; 0 walk cycles)
+                                        // 4 = + PQ configuration write stage (shadow file and tag tables; 0 walk cycles),
+                                        //     bterm5 kept fp4 copies / per-lane NaN, a word-mux output stage (+1 lane cycle)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -1789,10 +1790,37 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [TW-1:0] l0_t, l1_t;
     if (FAST != 0 && QPIPE != 0 && QM != 0) begin : g_l3
         // QM (margin-first, owner rule 2026-10-06): the 17-stage lane ot_v41_bterm5_w10 (+5 cycles, bit-identical)
-        ot_v41_bterm5_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
-            .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(l_v1), .fp4(1'b1),
-            .xq(l_xq1), .xe(l_xe1), .wq(w1q), .we(we1), .tag(l_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
+        // QM >= 4: one more stage at the word mux output (capture -> bank / FP4-FP8 word select -> register), so the
+        // macro-to-lane crossing is two register-to-register hops (Z24b post-CTS: cap -> mux -> lane input -31 ps at 770)
+        wire              p_v0, p_v1;
+        wire [TW-1:0]     p_t;
+        wire [255:0]      p_xq0, p_xq1, p_w0q, p_w1q;
+        wire [9:0]        p_xe0, p_xe1;
+        wire signed [9:0] p_we0, p_we1;
+        if (QM >= 4) begin : g_pl
+            reg              r_v0, r_v1;
+            reg [TW-1:0]     r_t;
+            reg [255:0]      r_xq0, r_xq1, r_w0q, r_w1q;
+            reg [9:0]        r_xe0, r_xe1;
+            reg signed [9:0] r_we0, r_we1;
+            always @(posedge gclk or negedge rst_m) if (!rst_m) begin r_v0 <= 1'b0; r_v1 <= 1'b0; end
+                                                    else begin r_v0 <= l_v0; r_v1 <= l_v1; end
+            always @(posedge gclk) begin
+                r_t <= l_t; r_xq0 <= l_xq0; r_xq1 <= l_xq1; r_xe0 <= l_xe0; r_xe1 <= l_xe1;
+                r_w0q <= w0q; r_w1q <= w1q; r_we0 <= we0; r_we1 <= we1;
+            end
+            assign p_v0 = r_v0; assign p_v1 = r_v1; assign p_t = r_t; assign p_xq0 = r_xq0; assign p_xq1 = r_xq1;
+            assign p_xe0 = r_xe0; assign p_xe1 = r_xe1; assign p_w0q = r_w0q; assign p_w1q = r_w1q;
+            assign p_we0 = r_we0; assign p_we1 = r_we1;
+        end else begin : g_npl
+            assign p_v0 = l_v0; assign p_v1 = l_v1; assign p_t = l_t; assign p_xq0 = l_xq0; assign p_xq1 = l_xq1;
+            assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
+            assign p_we0 = we0; assign p_we1 = we1;
+        end
+        ot_v41_bterm5_w10 #(.TW(TW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+            .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
+        ot_v41_bterm5_w10 #(.TW(TW)) u_l1 (.clk(gclk), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+            .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
             .xq(l_xq0), .xe(l_xe0), .wq(w0q), .we(we0), .tag(l_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
