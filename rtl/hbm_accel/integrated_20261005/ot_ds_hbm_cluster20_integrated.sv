@@ -373,7 +373,7 @@ end else begin:g_on
          .bridge_rsp_v(shared_gather_rsp_v&&formatter_response),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(shared_gather_rsp),
          .release_v(formatter_release_v[d]),.release_r(formatter_release_r[d]),
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
-         .release_pos(gather_release_frame[d*73+53+:20]),.release_token(gather_release_frame[d*73+36+:17]),
+         .release_pos(gather_release_frame[d*73+53+:20]),.release_token17(gather_release_frame[d*73+36+:17]),
          .publication_done(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]));
         ot_hbm_integrated_gather_owner #(.ENABLE(1),.VM_AW(VM_AW)) u_shared(
          .clk(clk_sm),.por_n(rst_sm_n),
