@@ -77,8 +77,19 @@ def main():
         f.write('\n'+line)
     for thread in ['01a10d79-dbea-74d1-972f-7a8c76a0dae1',
                    '01a10dba-5786-7d01-b636-797f591b5657',
-                   '01a10dba-5675-7043-8349-28565e5e1688']:
+                   '01a10dba-5675-7043-8349-28565e5e1688',
+                   '01a10f3a-f2f0-7900-9be0-099f8ef029f7']:
         subprocess.run(['codex','queue','--thread',thread,'--message',line],check=True)
     print(line,flush=True)
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    try:
+        main()
+    except Exception as error:
+        message=(f'Carson durable terminal publisher needs owner continuation: {type(error).__name__}: {error}. '
+                 f'Inspect {OUT} and /tmp/carson-router-successor-publisher-20261006.log; '
+                 'raw evidence/source/objects preserved. No new route/gold/source variant. '
+                 'Resume only collection/scoped merge and actual failing-class diagnosis.')
+        for thread in ['01a10f3a-f2f0-7900-9be0-099f8ef029f7','01a10d79-dbea-74d1-972f-7a8c76a0dae1']:
+            subprocess.run(['codex','queue','--thread',thread,'--message',message])
+        raise
