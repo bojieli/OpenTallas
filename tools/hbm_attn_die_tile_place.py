@@ -13,6 +13,8 @@ import json
 import math
 
 TW, TH = 1349.112, 1349.976
+# the core snaps to the site / row grid (0.054 / 0.27 um): banks at the east / north edges sit inside it
+CW_, CH_ = int(TW / 0.054) * 0.054, int(TH / 0.27) * 0.27
 QW, QH = 514.89, 562.95
 SNW, SNH = 105.84, 11.88           # ot_attn_bank_sn544
 EWW, EWH = 11.88, 105.84           # ot_attn_bank_ew544
@@ -125,15 +127,15 @@ def main():
     # inputs (stage 0 = the pin bank); outputs (last stage = the pin bank)
     pin["k"] = pins_s("u_pk", 0.624, 2, 0.0, "R0")
     pin["ci"] = pins_s("u_pc", 519.228, 3, 0.0, "R0")
-    pin["cf"] = [P.put(bname("u_fc", a.NFC, c, False), "R0", x, TH - SNH, SNW, SNH)
+    pin["cf"] = [P.put(bname("u_fc", a.NFC, c, False), "R0", x, round(CH_ - SNH, 3), SNW, SNH)
                  for c, x in enumerate([519.228 - 0.396, 519.228 - 0.396 + SNW + 1.62, 519.228 - 0.396 + 2 * (SNW + 1.62)])]
-    pin["q"] = pins_e("u_pq", 0, 1236.864, 1, TW - EWW, "MY")
-    pin["ri"] = pins_e("u_pr", 0, 725.952, 3, TW - EWW, "MY")
+    pin["q"] = pins_e("u_pq", 0, 1236.864, 1, round(CW_ - EWW, 3), "MY")
+    pin["ri"] = pins_e("u_pr", 0, 725.952, 3, round(CW_ - EWW, 3), "MY")
     pin["rf"] = pins_e("u_fr", a.NFR, 725.952, 3, 0.0, "MY")
     # i / o (pins y 624.2 .. 725.6) sit just below rf / ri: their banks end 1.62 um under the rf / ri banks (a ~6 um jog)
     yio = 725.952 - 0.396 - 1.62 - EWH
     pin["i"] = [P.put(bname("u_pi", 0, 0, True), "R0", 0.0, yio, EWW, EWH)]
-    pin["o"] = [P.put(bname("u_oo", 0, 0, True), "R0", TW - EWW, yio, EWW, EWH)]
+    pin["o"] = [P.put(bname("u_oo", 0, 0, True), "R0", round(CW_ - EWW, 3), yio, EWW, EWH)]
     # ROOT at the channels' crossing
     root = [P.snap(bname("u_root", 0, c, False), cc_x, mc_y + (c - 1) * 14.0) for c in range(3)]
     rc = (sum(p[0] for p in root) / 3, sum(p[1] for p in root) / 3)

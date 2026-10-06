@@ -12,7 +12,7 @@ echo "SRC=${SRC:-src_dt} QCV=${QCV:-$D/quad_b_cts/ot_attn_tile_m6h1q} CTSA=$CTSA
   --macro-view ot_attn_bank_sn544=$D/bank/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=$D/bank/ot_attn_bank_ew544 \
   --macro-place-halo 1 1 \
   --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
-  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages synth,pnr \
+  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --false-path-io --stages pnr \
   --die-area 0 0 1349.112 1349.976 --core-area 0 0 1349.112 1349.976 --place-density ${PD:-0.40} --routing-layers M2 M7 \
   --orfs-var MACRO_PLACEMENT_TCL=/src/$D/die_tile/macro_placement_b.tcl --orfs-var PDN_TCL=/src/$D/die_tile/pdn_dt.tcl \
   --orfs-var IO_CONSTRAINTS=/src/$D/die_tile/io_place.tcl --orfs-var MACRO_ROWS_HALO_X=1 --orfs-var MACRO_ROWS_HALO_Y=1 \
