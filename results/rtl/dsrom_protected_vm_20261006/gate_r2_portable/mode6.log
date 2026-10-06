@@ -1,0 +1,5 @@
+PASS PROTECTED_DSVM negative MODE=6 pending_preserved=1 no_publication=1
+- rtl/dsrom_sys/protected_vm/tb_dsrom_protected_vm.sv:26: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 585ns; walltime 0.253 s; speed 2.294 us/s
+- Verilator: cpu 0.255 s on 1 threads; alloced 511 MB
