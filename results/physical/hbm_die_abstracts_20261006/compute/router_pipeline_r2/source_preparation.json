@@ -1,5 +1,5 @@
 {
-  "status": "REAL_CHANGED_EXACT_AND_ACTUAL_LOCAL_CONTROL_MAPPING_PASS_PHYSICAL_PENDING",
+  "status": "ACTUAL_RETAINED_MAP_ROUTE_LIVE_PHYSICAL_PENDING",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182",
@@ -26,11 +26,8 @@
     "basis": "old literal384/K6 DRT26.75GiB times99238/45270=58.64GiB plus mapping/extraction/repair headroom; reservation not processcap",
     "host": "E1 ONLY fresh Kant fit; E2 useful currentDRT preserved",
     "launch_allowed": false,
-    "dependencies": [
-      "changed minimum exact+realnegatives",
-      "actual mapped control retention/load context",
-      "Turing finite enlargedframe allocation"
-    ]
+    "dependencies": [],
+    "state": "SOLE_ATTEMPT_ALREADY_ADMITTED_NO_DUPLICATE"
   },
   "changed_source_gate": "one actual384/K6 independent FP32 golden64vectors with II24 back-to-back/bubbles and partial+full-vector warmPOR; samebinary realbank/heldreset negatives",
   "actual_gate": "gate-r2/gate.json",
@@ -44,5 +41,6 @@
   "actual_mapped_cell_area_um2": 49127.9,
   "actual_prepared_route": "route_r2_prepared/preparation.json",
   "route_launch_allowed": false,
-  "route_blocking_dependency": "Turing actual source-bound finite315.956 allocation plus connected producer/receiver/clock-reset/corridor binding; missing actualrecord notcapacity"
+  "actual_route": "route-r2/launch.json",
+  "actual_allocation": "route-r2/actual_parent_allocation.json"
 }

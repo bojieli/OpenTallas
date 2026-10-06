@@ -1,0 +1,38 @@
+{
+  "status": "ACTUAL_SOLE_RETAINED_MAP_ROUTE_ADMITTED",
+  "utc": "2026-10-06T09:03:54Z",
+  "host": "ot-epyc1tb",
+  "supervisor_pid": 4043603,
+  "docker_id": "ad31d425b8fb",
+  "docker_init_pid": 4043845,
+  "remote_root": "/srv/opentallas-scratch/codex/carson-router-successor-20261006/route-r2",
+  "runner_commit": "a28309d27",
+  "allocation_sha256": "be71650b31f8a3c91f59a6967a48828a0dd4101d038be5fe5e7b341629b49000",
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182"
+  },
+  "mapped_verilog_sha256": "c04cc9b902f7669c56eabf34c4622612dae516f9aa25cab7b83f2b3249812657",
+  "sdc_sha256": "8205dd6c363bcfa53085ed30aedafd951c26881516a5e5f29e2e56a7a6c0aa93",
+  "synth_odb_sha256": "47976bf0c1c591ad5b99521b3b643e6cd2b6ce99cc36df69c18cb2b4a81872fd",
+  "fresh_capacity": "launch_capacity.jsonl",
+  "declared_ram_gib": 96,
+  "workers": 16,
+  "disk_need_gib": 64,
+  "reported_pre_MemAvailable_GiB": 751.58,
+  "unchanged_admission_guard": true,
+  "synthesis_replayed": false,
+  "golden_replayed": false,
+  "physical_closed": false,
+  "parent_qualified": false,
+  "conditional_scope": "Standalone leaf166.6ps input arrival/3.898fF output load,833ps SS60FF25; actual externalfull73 producer/receiver/clock/reset unresolved; no wholeparentclosure",
+  "latency": {
+    "tail_cycles": 48,
+    "II_cycles": 24,
+    "total_added_vs23": 25,
+    "increment_vs28": 20,
+    "compose_once": true
+  }
+}
