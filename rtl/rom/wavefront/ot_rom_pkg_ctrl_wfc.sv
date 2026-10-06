@@ -86,7 +86,7 @@
 // Per-user context: the expected next position of every user (a message out
 // of order latches `proto_fault`) and, at the SOURCE, the in-flight step, the
 // partial argmax reduction and the prefetched next prompt token.  The KV
-// slice of the running user is `kv_base` (user * KVW), added to the core's KV
+// slice of the running user is `kv_base_i` (user * KVW), added to the core's KV
 // addresses by the memory wrapper.
 //
 // Back-pressure: a HIDDEN header is taken while the core is busy, but its
@@ -283,28 +283,35 @@ module ot_rom_pkg_ctrl_wfc #(
     // -- core -------------------------------------------------------------------------
     reg start_i;
     reg [NW-1:0] start_tok_i, start_pos_i;
+    reg [AW-1:0] kv_base_i;
     wire launch_wait;
     generate if (CONTROL_PIPE) begin : g_control_launch
         reg v;
         reg [NW-1:0] token_q, pos_q;
+        reg [USER_W-1:0] user_q;
+        reg [AW-1:0] kv_q;
         always @(posedge clk or negedge rst_q)
             if (!rst_q) v <= 1'b0; else v <= start_i;
         always @(posedge clk) if (start_i) begin
             token_q <= start_tok_i; pos_q <= start_pos_i;
+            // Preserve the exact tuple the original receiver sampled before
+            // this edge, including existing core_user/KV publication phase.
+            user_q <= cur_user; kv_q <= kv_base_i;
         end
         assign core_start = v;
         assign core_token = token_q;
         assign core_pos = pos_q;
+        assign core_user = user_q; assign kv_base = kv_q;
         assign launch_wait = v;
     end else begin : g_control_launch_original
         assign core_start = start_i;
         assign core_token = start_tok_i;
         assign core_pos = start_pos_i;
+        assign core_user = cur_user; assign kv_base = kv_base_i;
         assign launch_wait = 1'b0;
     end endgenerate
     reg          running;              // from the start edge until the job is handed to TX
     reg [USER_W-1:0] cur_user;
-    assign core_user = cur_user;
     reg [NW-1:0] cur_pos, cur_pa_idx, cur_tok;
     reg [31:0]   cur_pa_val;
     assign core_busy = running;
@@ -546,7 +553,7 @@ module ot_rom_pkg_ctrl_wfc #(
     integer u, qbank;
     always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin
-            running <= 1'b0; cur_user <= 0; cur_pos <= 0; cur_pa_idx <= 0; cur_pa_val <= 0; kv_base <= 0;
+            running <= 1'b0; cur_user <= 0; cur_pos <= 0; cur_pa_idx <= 0; cur_pa_val <= 0; kv_base_i <= 0;
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
             pend <= 1'b0; hdr_user <= 0; hdr_pos <= 0; hdr_pa_idx <= 0; hdr_pa_val <= 0;
             txq_bank <= {{(TXQ-1){1'b0}}, 1'b1};
@@ -587,7 +594,7 @@ module ot_rom_pkg_ctrl_wfc #(
                 running <= 1'b1;
                 cur_user <= st_user; cur_pos <= start_pos_i;
                 cur_pa_idx <= hdr_pa_idx; cur_pa_val <= hdr_pa_val;
-                kv_base <= st_user * KVW;
+                kv_base_i <= st_user * KVW;
                 cur_tok <= start_tok_i;
             end
             if (st_rx) pend <= 1'b0;
