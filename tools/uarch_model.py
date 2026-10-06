@@ -10546,15 +10546,21 @@ def dsrom_window_full_block_pipeline_model():
     merge_read_address_FF = 21
     merge_accepted_identity_FF = 21
     merge_control_FF = merge_read_address_FF+merge_accepted_identity_FF
+    # Writer status-only counters retain their same-edge modulo-2^32 value.
+    # Three registered lower-byte carry predicates per counter limit each
+    # increment to eight bits; these predicates never authorize a transaction.
+    writer_stat_counters, writer_stat_chunk_bits = 4, 8
+    writer_stat_carry_FF = writer_stat_counters*3
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
              read_extra + read_qualification_extra + merge_control_FF +
-             writer_control_upper + job_control_upper)
+             writer_control_upper + job_control_upper + writer_stat_carry_FF)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
     merge_reset_FF_extra = merge_read_address_FF*(.37908-DFF_UM2)
-    ff_area = added*DFF_UM2+merge_reset_FF_extra
+    writer_stat_reset_FF_extra = writer_stat_carry_FF*(.37908-DFF_UM2)
+    ff_area = added*DFF_UM2+merge_reset_FF_extra+writer_stat_reset_FF_extra
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
@@ -10564,9 +10570,11 @@ def dsrom_window_full_block_pipeline_model():
     read_snapshot_enable_mux = read_snapshot_gross*4*.08748
     merge_increment_logic = 21*2*12*.08748
     merge_enable_and_lane_decode = (merge_control_FF*4+banks*3)*.08748
+    writer_stat_logic = (writer_stat_counters*32*12 +
+                         writer_stat_counters*(7+15+23) + writer_stat_carry_FF*4)*.08748
     cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
                    read_snapshot_enable_mux+merge_increment_logic+
-                   merge_enable_and_lane_decode)
+                   merge_enable_and_lane_decode+writer_stat_logic)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10587,6 +10595,10 @@ def dsrom_window_full_block_pipeline_model():
             winner_FF_bits=winner, column_payload_FF_bits=column_payload,
             row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
             extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            writer_stat_carry_FF_upper_bits=writer_stat_carry_FF,
+            writer_stat_counter_bits=32, writer_stat_chunk_bits=writer_stat_chunk_bits,
+            writer_stat_counters=writer_stat_counters,
+            writer_stat_same_edge_modular_value_preserved=True,
             read_wanted_snapshot_FF_bits=read_wanted_snapshot,
             read_owner_range_user_snapshot_FF_bits=read_owner_snapshot,
             read_completion_group_snapshot_FF_bits=read_completion_snapshot,
@@ -10616,6 +10628,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_extra_external_ports=0, merge_extra_memory_ports=0,
             merge_static_lane_decode_replicas=banks,
             merge_per_lane_write_enable_fanout=16*265,
+            writer_stat_comparator_input_bit_routes=writer_stat_counters*(8+16+24),
+            writer_stat_flag_receiver_upper_fanout=8,
+            writer_stat_flag_directed_receiver_routes=writer_stat_carry_FF*8,
+            writer_stat_extra_external_ports=0, writer_stat_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
@@ -10628,12 +10644,16 @@ def dsrom_window_full_block_pipeline_model():
             merge_increment_logic_allowance_um2=merge_increment_logic,
             merge_enable_and_static_lane_decode_allowance_um2=merge_enable_and_lane_decode,
             merge_removed_mux_or_adder_savings_credit_um2=0,
+            writer_stat_new_FF_upper_um2=writer_stat_carry_FF*.37908,
+            writer_stat_local_increment_compare_enable_allowance_um2=writer_stat_logic,
+            writer_stat_removed_increment_savings_credit_um2=0,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
             read_added_cycles=1, read_qualification_added_cycles=0, merge_added_cycles=0,
+            writer_stat_added_cycles=0,
             existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
@@ -10654,6 +10674,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_sink_clock_cap_fF={
                 'SS':21*(.433982+.446638), 'FF':21*(.503152+.52201)},
             merge_clock_cap_basis='21 DFFASRHQN address lookahead +21 DFFHQN independently captured accepted identity; pinned SS/FF CLK cap, not root loading',
+            writer_stat_new_clock_sink_upper=writer_stat_carry_FF,
+            writer_stat_sink_clock_cap_upper_fF={
+                'SS':writer_stat_carry_FF*.433982, 'FF':writer_stat_carry_FF*.503152},
+            writer_stat_clock_basis='four existing 32-bit status counters, three ASR carry predicates each; bound includes counters unreachable in the write/prime caller, no pruning credit. Sink sum is not parent root CTS.',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
@@ -11969,6 +11993,14 @@ def hbm_cp_phase_parallel_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_phase_parallel_20261006/model.json").read_text())
+
+
+def hbm_cp_control_tail_model():
+    """Bounded exact CP output-tail price before RTL; no added latency."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_control_tail_20261006/model.json").read_text())
 
 
 def dsrom_wfc_enclosing_stage_price():
