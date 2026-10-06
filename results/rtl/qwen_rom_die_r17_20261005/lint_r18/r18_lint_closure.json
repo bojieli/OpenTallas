@@ -1,0 +1,263 @@
+{
+ "schema": "opentallas.qwen-rom-die.r18-lint-closure.v1",
+ "lint": "tools/die_top_lint.py lint --die qwen_rom --qwen-recipe r18",
+ "die": {
+  "w": 24650.784,
+  "h": 32801.76,
+  "mm2": 808.589,
+  "budget_mm2": 858,
+  "margin_mm2": 49.411
+ },
+ "census": {
+  "instances": 3335,
+  "buses": 6622,
+  "net_bits": 2804668,
+  "masters": 42,
+  "real_instances": 132,
+  "placeholder_instances": 3203
+ },
+ "generator_side_findings": {
+  "connectivity": 0,
+  "unbound_real_pins": 0,
+  "placeholder_port_direction_conflicts": 0,
+  "no_clock": [],
+  "clock_domain_crossings_without_cdc": {},
+  "missing_pins": 0,
+  "face_away": 0,
+  "abstract_ports_without_net": {},
+  "block_shape": {}
+ },
+ "verilator": "--lint-only -Wall: rc 0; PINMISSING only on replicated-master chain ends (corridor a/b at the last station, head-chain w/e, tree n_a/n_b/n_y on non-host tiles), no other class",
+ "fixes": {
+  "Q1": "qfd_cdc clk (region net) / hclk (stack HBM net) / c_arst_n (kvc) / h_arst_n (ctrl)",
+  "Q2": "ctrl pll_hbm -> PHY clk + 32 CDC hclk per stack; ctrl hrst -> PHY rst_n + CDC h_arst_n; PHY clk/rst_n out of the dfi bundle",
+  "Q3": "stream clock net per decision-C region from hub_el pll_r<k> (112 nets) to every stream instance; serial net; UCIe / SerDes link clocks; io_collective PLL feeds the hub root",
+  "Q4": "clock / reset bits removed from corridor (-65), head chain (-65), tap (-2) words; tiles / stations / heads on the region nets",
+  "Q5": "16 crossings through sp_xfifo (channel, 9266 b) / io_xfifo (beside the collective, 4162 b); kvn removed (KV-new rides the CDC write queues)",
+  "Q6": "forwarded clock pin pair on every link hop (fck_<port>): the waypoint stations are the forwarded-stage masters; decision-C tap / block-word FIFOs remain area inside station / slab frames",
+  "Q7": "24 row engines and the near-HBM combine removed; strip = KV landing concentrator (qfd_kvc, 96.768 um) per stack; die 823.78 -> 808.589 mm2",
+  "Q8": "role variants qfd_cst_n/_s, qfd_chead_w/_e, qfd_lst_h_w/_e",
+  "Q9": "emb_a (24 b) sequencer core -> embedding ROM",
+  "Q10": "tt_res (512 b) tree top -> VM through sp_xfifo",
+  "Q11": "ucie_rx / serdes_rx added (tx + rx through io_xfifo); no hard IP view (minor, open)",
+  "Q12": "kept (margin; row 23 / column 32 abut the IO band / spine at 0.024 um) - unchanged",
+  "Q13": "hub x3/ar/lsw and VM em/xw face the channel",
+  "Q14": "abstract ports without a net dropped",
+  "Q15": "gone with Q7"
+ },
+ "r18": {
+  "crossings": [
+   {
+    "bus": "head_31",
+    "cls": "head_chain",
+    "bits": 323,
+    "src": "sp_vector_memory",
+    "dst": "h_31",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "serial_0p9",
+     "stream_1p2"
+    ]
+   },
+   {
+    "bus": "head_32",
+    "cls": "head_chain",
+    "bits": 323,
+    "src": "sp_vector_memory",
+    "dst": "h_32",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "serial_0p9",
+     "stream_1p2"
+    ]
+   },
+   {
+    "bus": "x3",
+    "cls": "spine_local",
+    "bits": 512,
+    "src": "sp_su64_sfu",
+    "dst": "hub_el",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "serial_0p9",
+     "stream_1p2"
+    ]
+   },
+   {
+    "bus": "attn_ret",
+    "cls": "spine_local",
+    "bits": 512,
+    "src": "hub_el",
+    "dst": "sp_vector_memory",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "emb",
+    "cls": "io",
+    "bits": 512,
+    "src": "io_embedding_rom",
+    "dst": "sp_vector_memory",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "ucie_tx",
+    "cls": "io",
+    "bits": 1024,
+    "src": "io_collective",
+    "dst": "io_ucie",
+    "fifo": "io_xfifo",
+    "domains": [
+     "serial_0p9",
+     "link_ucie"
+    ]
+   },
+   {
+    "bus": "serdes_tx",
+    "cls": "io",
+    "bits": 1024,
+    "src": "io_collective",
+    "dst": "io_serdes",
+    "fifo": "io_xfifo",
+    "domains": [
+     "serial_0p9",
+     "link_serdes"
+    ]
+   },
+   {
+    "bus": "seq_ib",
+    "cls": "sequencer",
+    "bits": 382,
+    "src": "sp_constants_sequencer",
+    "dst": "sp_vector_memory",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "seq_su",
+    "cls": "sequencer",
+    "bits": 492,
+    "src": "sp_constants_sequencer",
+    "dst": "sp_su64_sfu",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "seq_sud",
+    "cls": "sequencer",
+    "bits": 2,
+    "src": "sp_su64_sfu",
+    "dst": "sp_constants_sequencer",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "serial_0p9",
+     "stream_1p2"
+    ]
+   },
+   {
+    "bus": "seq_coll",
+    "cls": "sequencer",
+    "bits": 66,
+    "src": "sp_constants_sequencer",
+    "dst": "io_collective",
+    "fifo": "io_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "crom_a",
+    "cls": "crom",
+    "bits": 1600,
+    "src": "sp_su64_sfu",
+    "dst": "sp_constants_sequencer",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "serial_0p9",
+     "stream_1p2"
+    ]
+   },
+   {
+    "bus": "crom_q",
+    "cls": "crom",
+    "bits": 4096,
+    "src": "sp_constants_sequencer",
+    "dst": "sp_su64_sfu",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "tt_res",
+    "cls": "tree_spine",
+    "bits": 512,
+    "src": "sp_tree_top",
+    "dst": "sp_vector_memory",
+    "fifo": "sp_xfifo",
+    "domains": [
+     "stream_1p2",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "ucie_rx",
+    "cls": "io",
+    "bits": 1024,
+    "src": "io_ucie",
+    "dst": "io_collective",
+    "fifo": "io_xfifo",
+    "domains": [
+     "link_ucie",
+     "serial_0p9"
+    ]
+   },
+   {
+    "bus": "serdes_rx",
+    "cls": "io",
+    "bits": 1024,
+    "src": "io_serdes",
+    "dst": "io_collective",
+    "fifo": "io_xfifo",
+    "domains": [
+     "link_serdes",
+     "serial_0p9"
+    ]
+   }
+  ],
+  "clock_nets": 156,
+  "region_nets": 112,
+  "reset_nets": 8,
+  "sp_xfifo": [
+   12225.6,
+   13739.76,
+   199.992,
+   1643.736
+  ],
+  "io_xfifo": [
+   13480.992,
+   31216.32,
+   86.376,
+   1563.816
+  ],
+  "fifo_bits": {
+   "sp": 9266,
+   "io": 4162
+  }
+ }
+}

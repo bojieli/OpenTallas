@@ -15,7 +15,8 @@
       "actual_concurrent_process_cpus": 16,
       "tool": "Verilator5.050 hierarchical, build16 CPUs; runtime1CPU, sequential families",
       "estimate_basis": "Admission estimate, not measured RSS: unique SFU envelope ~0.76M cells vs old48.6M flatten; HC ~47k lane master plus one4lane group vs old12.1M flatten. Reserve includes full64-replica runtime state, protected wrapper and16 compiler processes. Record measured RSS; no process cap.",
-      "measured_peak": "time-v each stage plus generated hierarchy/makefile pins; retain objects/failures"
+      "measured_peak": "time-v each stage plus generated hierarchy/makefile pins; retain objects/failures",
+      "actual_vehicle": "Gibbs dd4a8e776 protected216FFstage + Carson2810FFframing + actualprotected5910FFquarter, each instantiatedONCE"
     },
     "hc": {
       "unique_arithmetic_masters": {

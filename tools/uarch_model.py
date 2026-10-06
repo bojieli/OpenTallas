@@ -10686,6 +10686,44 @@ def hbm_r5a_row_address_context_model():
         protection=base['cuts']['SM_protection'],
         gates=dict(exact=False,physical=False,performance=False,adopted=False))
 
+def hbm_r5a_external_calendar_context_model():
+    """Expose the existing PC descriptors/credits; remove private calendar owners.
+
+    The memory-control adapter owns job identity, row grants, REFpb, column
+    reservation and provider ordinals. This boundary adds no assumed service
+    latency or area saving; parent arbitration/receipt costs remain unqualified.
+    """
+    base = hbm_r5a_row_address_context_model()
+    return dict(item=6, enabled_default=False,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
+        fetch_source='rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_shared_p2.sv',
+        shape=base['shape'], compute=base['compute'],
+        state=dict(added_register_bits=0, added_codec_instances=0,
+            private_PC_controller_instances=0, external_calendar_PC_count=32,
+            job_lease_owned_by='Gibbs sole calendar adapter; not stored by payload caller'),
+        ports=dict(descriptor_bits=32*(1+19+11), descriptor_ready_bits=32,
+            provider_busy_fault_issue_bits=32*3, calendar_notice_bits=32,
+            landing_credit_bits=32*3, fetch_reset_bits=2,
+            provider_next_ordinal_bits=32*16, return_ordinal_bits=32*16,
+            raw_return_bits_per_cycle=32*256, coded_return_bits_per_cycle=32*360,
+            SM_capture_bits_per_cycle=8*1024,
+            new_service_boundary_bits=32*(1+19+11+1+3+1+3)+2,
+            former_row_column_boundary_bits=32*(1+1+3+5+5+5+19),
+            added_tracks_against_existing_boundary=2,
+            existing_channel_fit_not_parent_adapter_qualification=True),
+        memory=dict(macro_count=96, added_ports=0, read_credits_per_PC=32,
+            credit_return_event='actual service-domain CDC landing freed count, not PHY arrival'),
+        area=base['area'],
+        latency=dict(added_architectural_edges=0, existing_context_charge_ns=3.334,
+            parent_calendar_and_receipt_latency_pending=True,
+            full_off_package_FEC_owned_by='Claude DS-RACK actual handoff; no light130ns budget',
+            first_access_FAIL_ns=153.757, first_access_target_ns=140),
+        reset=dict(provider='whole-provider cold POR only; never fetch configuration reset',
+            fetch='existing independently synchronized config release on stream/service clocks',
+            warm_debt_clear_allowed=False),
+        gates=dict(syntax=False, exact=False, protection=False, physical=False,
+            performance=False, adopted=False))
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
@@ -11132,6 +11170,18 @@ def dsrom_window_parent_boundary_model():
             internal_WINDOW_payload_and_handshake_bits=nl*rowbits+nl+2,
             parent_timed_terminal_scalar_inputs=69082,
             parent_timed_terminal_scalar_outputs=101082,
+            parent_timed_terminal_scalar_pins=69082+101082,
+            default_parent_pin_layers={'horizontal':'M4', 'vertical':'M5'},
+            default_parent_pin_pitch_um=.048,
+            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.048,
+            historical_attention_placeholder_um=[2400,1700],
+            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.048,
+            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.048),
+            historical_placeholder_is_not_allocated_WINDOW_slot=True,
+            requested_pin_capacity_clock_PG_reserve_fraction=.20,
+            requested_pin_capacity_signal_fraction_after_reserve=.60,
+            requested_outer_pin_perimeter_um=(69082+101082)*.048/(.80*.60),
+            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks; gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
@@ -11534,6 +11584,14 @@ def hbm_cp_fast_frontier_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_fast_frontier_20261006/model.json").read_text())
+
+
+def hbm_cp_phase_parallel_model():
+    """Exact18-bit CP phase successor, bounded price before RTL."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_phase_parallel_20261006/model.json").read_text())
 
 
 def dsrom_wfc_enclosing_stage_price():
@@ -11944,6 +12002,13 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
+def dsrom_wfc_protected_context_physical_price():
+    """Actual minimum R4 WFC/producer/C8/protected VM, no whole S81 array."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/protected_context_physical_model.json').read_text())
+
+
 def dsrom_wfc_native_two_lease_price():
     """Legal next-position RX/previous-position TX before serialization RTL."""
     import json
@@ -12115,3 +12180,48 @@ def hbm_integrated_sfu_c12_stage_model():
         composed_latency='existing stage enrollment/start +3acceptedRX+actualc12child+3acceptedTX+drainedfinish+persistentcompletion; no new join edge',
         clock_binding='caller serial1111ps vs child833ps OPEN; same clk port does not confer qualified clock',
         production_source_binding=False, numerical_qualified=False, token_rate_credit=0)
+
+
+def hbm_integrated_sfu_provider_join_model():
+    """One actual SFU operation reuses the selected SU borrower/provider seat."""
+    return dict(default_OFF=True, replicas=1, existing_stage_wrapper_FF=8936,
+        new_raw_state_bits=1260, new_W6_rows=20, new_coded_FF=1440,
+        payload_seats=1, payload_bits=1024, payload_FF_included=True,
+        descriptor_owner='existing stage216 codedFF/full73, no second frame owner',
+        provider='existing CAP1 SU337/273 borrower, mutually exclusive with original SU executor',
+        provider_replicas_added=0, new_MACs_per_cycle=0, arithmetic='actual SFU64 c12',
+        provider_bytes_per_accept=32, provider_request_bits=337, provider_response_bits=273,
+        reads_per_operation=8, writes_per_operation=8, checked_readbacks_per_operation=8,
+        frame_RX_beats=3, frame_TX_beats=3,
+        routing_tracks_added=337+273+2*1024, channel_capacity=None,
+        new_FF_area_floor_um2=1440*.2916, floorplan_slot_fit=False,
+        latency='enroll/grant +8 CAP1 source reads +3RX +actual c12 arithmetic '
+                '+3TX +8 writes +8 matching readbacks +finish/held publication/reverse release ACK',
+        minimum_adapter_handshake_edges=24*2+6,
+        receiver_load_and_clkQ='unqualified; no inherited child or parent closure',
+        retirement='one explicit external operation; does not forge legacy four-op retirement',
+        cold_reset='POR cancels; warm blocks enrollment and drains accepted operation',
+        CE='all mutable payload/address/control W6 scrub before permission',
+        DUE='sticky no request/publication/release; retain owner',
+        clocks='real clk_sm;833/1111 parent context remains OPEN',
+        adopted=False, numerical_qualified=False, physical_closed=False, token_rate_credit=0)
+
+
+def hbm_pcwb_p2_return_binding_model():
+    """Actual sole-PCWB service return export; existing CRED64/prepaid FIFO retained."""
+    return dict(default_OFF=True,PCs=32,existing_controllers=32,new_controllers=0,
+        existing_CA_slots=16,new_CA_slots=0,new_SRAM=0,new_payload_FIFO=0,
+        full73_owner_raw_bits=75,owner_W6_FF=144,
+        per_PC_raw_bits=49,per_PC_W6_FF=72,total_added_W6_FF=2448,
+        original_core_landing='bypassed only in selected P2 mode; existing sharedP2 landing/credit_return is sole read landing',
+        original_read_allowance=64,P2_read_subreservation=32,
+        quota='PHY-accepted READ minus actual P2 landing freed credit; return alone does not free a seat',
+        arithmetic_MACs_per_cycle=0,read_bytes_per_PC_service_edge=32,
+        boundary_bits_per_PC=256+16+73+2,added_output_pipeline_edges=0,
+        routing_tracks=32*(256+16+73+2),channel_capacity=None,
+        min_added_FF_area_um2=2448*.2916,floorplan_fit=False,
+        latency='existing descriptor/calendar/prepaid PHYaccept -> actual ordered return -> existing P2 coded capture/landing -> actual freed credit; no invented response timer',
+        context='whole provider coldPOR; owner rebind only when original plus P2 debts drained; warm closes new window only',
+        PHY_contract='ordered untagged returns per PC; local ordinal minted at actual READ acceptance, not at descriptor/read-ready',
+        full73_source='explicit accepted owner_frame73 input; no producer/transport/IRS or job-only alias',
+        physical_closed=False,SS_uncertainty_ps=60,FF_uncertainty_ps=25,token_rate_credit=0)

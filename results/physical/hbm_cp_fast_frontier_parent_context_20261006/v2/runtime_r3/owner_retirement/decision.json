@@ -1,0 +1,23 @@
+{
+  "time": "2026-10-06T05:11:48.572735+00:00",
+  "decision": "OWNER_RESOURCE_PRIORITY_RETIRE_SEED",
+  "reason": "Same protected-phase/output SS failure across seeds, GRT setup -128.538/-124.542 versus retained best v1 -120.683ps, FF hold positive; DRT plateau ~4300. Release two redundant seed workers for critical source/parent-clock repair. Not wall-time cap or extracted timing verdict.",
+  "keep": "v1/runtime_r4",
+  "source": "e0e05a19e",
+  "pid": 2305185,
+  "cgroup": "0::/system.slice/docker-5abd25c05e0ebe42e099cb3469663832f58b6ed896972fd87621bfb2c1f6a701.scope\n",
+  "hashes": {
+    "source_export.json": "50ce3d3ff26119a2d2825b030f622786635b4dd3b78b16f8fbd4b2d8b2fa9e6c",
+    "work/orfs/config.mk": "4fb975cfb6eccc899f363409669d84eccc17cb7f0d793b3a6e65b27154978c96",
+    "work/orfs/logs/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_2_route.tmp.log": "7a49e515f2fab3af26920a7c1e455873f632d27cd0ddebd650315ed6f3e53172",
+    "work/orfs/logs/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_1_grt.json": "4797773611d9bdb7a0104c8bcc2aaf8366d39e2e3ec5374e77e747054b792aa2",
+    "work/orfs/logs/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/4_1_cts.json": "740d2bbbef55dfd806d42900c1f197efe78ca50377538b6a29836074a3162258",
+    "work/orfs/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_global_route.rpt": "6fdfd8b0c85574195155da52400902ae0da42a2c872158abc462e17c70b9998a",
+    "work/orfs/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/4_cts_final.rpt": "5a24f8e3eca276e041221a82b53f37615d23caed329a0752f8381da6196984f8",
+    "work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/4_cts.odb": "09951200677a2abbf1f3b2750fcee412df6301a1b80df54e9cdaa4a375bbe654",
+    "work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_1_grt.odb": "e58ce5d70ba843600e759c8a87fbed3a4b881035a081b1eec74ff17abfa0a104",
+    "work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_1_grt.sdc": "7048b947d3a4637a114f6695fafd39414bbedfdbfd77a2223c5449b94ab34dc7"
+  },
+  "checkpoints_deleted": false,
+  "signal": "SIGTERM to own validated OpenROAD only; supervisor allowed to record actual exit"
+}

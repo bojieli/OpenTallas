@@ -27,7 +27,9 @@ module ot_qwen_hbm_stream4_cdc #(
     parameter integer WQ        = 4,
     parameter integer WBUF      = 16,
     parameter integer PROTECTED = 0,
-    parameter integer SYNC      = 2
+    parameter integer SYNC      = 2,
+    parameter integer RSEL      = 0,       // ot_qwen_stream4_cdc_pc landing read select: 1 = r9 (closed route r9a)
+    parameter integer RNG       = 10
 ) (
     input  wire                 clk,
     input  wire                 rst_n, // cold POR only
@@ -136,7 +138,7 @@ module ot_qwen_hbm_stream4_cdc #(
             .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),
             .h_av(ap_v[q]), .h_atag(ap_tag[q]), .h_fault(h_fault_p[q]));
         end else begin:raw_path
-        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
+        ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC), .RSEL(RSEL), .RNG(RNG)) u_cdc (
             .clk(clk), .c_arst_n(rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
