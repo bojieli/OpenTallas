@@ -447,7 +447,6 @@
   "physical_qualified": false,
   "route_admitted": false,
   "remaining_dependencies": [
-    "Bacon actual native index-source held response FAIL; narrow parent PASS does not supersede it",
     "actual mapped codec/mux/cell/clock cost plus finite reserved channel geometry; model charges 3824 protected FF, not measured area",
     "Claude SM true destination visibility ACK; no delay-derived event",
     "Gibbs/Bacon single service CA calendar and actual expert ordinal/receipt binding",
@@ -465,5 +464,22 @@
     "reported_by": "Kant 2026-10-06T04:15:37Z",
     "qualification_effect": "Parent two-row gate is bounded evidence; full index-source campaign remains failed until source-owner diagnosis. No route/adoption from this gate."
   },
-  "off_package_FEC_policy": "Full FEC mandatory for every board/in-rack/rack-to-rack link; this local root join adds no off-package link and inherits no 130ns light-FEC latency."
+  "off_package_FEC_policy": "Full FEC mandatory for every board/in-rack/rack-to-rack link; this local root join adds no off-package link and inherits no 130ns light-FEC latency.",
+  "child_failure_resolution": {
+    "source_commit": "aa52fdb03",
+    "record": "results/physical/hbm_die_abstracts_20261006/memory_control/index_fp32_exact-agi-r2_PASS/terminal.json",
+    "sha256": "0f13157baaadc692a02c9748fa39fc83817eabc072f91ceb3cedda96c3913a6c",
+    "verdict": "PASS",
+    "RTL_unchanged": true,
+    "fixture_only_fix": "negedge sampling after publication edge",
+    "actual_counts": {
+      "writes": 257,
+      "checked_ACKs": 257,
+      "reads": 129,
+      "blocks": 128,
+      "FP32_comparisons": 4128
+    },
+    "SRAM_2bit_UE_negative": "PASS",
+    "qualification": "leaf source only; no parent SSFF"
+  }
 }
