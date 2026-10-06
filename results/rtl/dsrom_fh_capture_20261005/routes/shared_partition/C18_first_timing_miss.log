@@ -1,0 +1,34 @@
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 213, overflow: 0.634, keep resizer changes at: 1, HPWL: 4030370077
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    377581
+    final |     +1.3% |    6260 |   22601 |          9706 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 8975 slew violations.
+[INFO RSZ-0035] Found 2361 fanout violations.
+[INFO RSZ-0036] Found 120 capacitance violations.
+[INFO RSZ-0037] Found 4026 long wires.
+[INFO RSZ-0039] Resized 6260 instances.
+[INFO RSZ-0038] Inserted 22601 buffers in 9706 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    329181
+    32900 |     -0.0% |    1322 |     1896 |    296281
+    65800 |     -0.0% |    1876 |     2917 |    263381
+    98700 |     -0.0% |    2408 |     3931 |    230481
+   131600 |     +0.0% |    3239 |     5820 |    197581
+   164500 |     -0.0% |    4375 |     7076 |    164681
+   197400 |     -0.1% |    7159 |    10109 |    131781
+   230300 |     -0.2% |    9683 |    12574 |     98881
+   263200 |     -0.3% |   11551 |    14502 |     65981
+   296100 |     -0.3% |   12972 |    15895 |     33081
+   329000 |     -0.6% |   22593 |    25129 |       181
+    final |     -0.6% |   22601 |    25137 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -2.3847242e-09
+[INFO GPL-0107] Timing-driven: repair_design delta area: 2509.445 um^2 (+89.33%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 25137 (+6.89%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 47738, deleted: 22601
+[INFO GPL-0110] Timing-driven: new target density: 0.29564548

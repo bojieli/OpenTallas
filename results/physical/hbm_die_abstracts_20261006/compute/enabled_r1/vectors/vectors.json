@@ -1,0 +1,40 @@
+{
+  "seed": 20261006,
+  "SFU": {
+    "lanes": 64,
+    "cases": 10,
+    "opcodes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "fault_then_clean": [
+      8,
+      9
+    ]
+  },
+  "HC_POST": {
+    "groups": 64,
+    "outputs": 256,
+    "cases": 3,
+    "golden_order": "mul r0*c0+r1*c1, add r2, add r3, add y*p, BF16 RNE"
+  },
+  "sources": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/dsrom_su_hcpost.py": "6885c027283105f0db9365b053316cbd60c1975a111d663950fa41ee8b8b3aec",
+    "tools/hbm_compute_enabled_vectors_20261006.py": "e2405fd68be58c7d7b61d9d2f239b8ae0ea4ff45fe05d652b762858c389019c2"
+  },
+  "files": {
+    "sfu_req.mem": "ee4368a489f47aff06d2989932e3ed484317d7111cdab22d3cab99881fb6fd98",
+    "sfu_exp.mem": "6bdb97af9088f04dd8b1db1bd56d6c39d6c9a747f7153aea3ab83cf2d3f1172b",
+    "hc_exp.mem": "7d4303c201aa3ad2c25597aefebd23e9a439b084802018b8d976bd4ac2d6d269",
+    "hc_req.mem": "249f0f2731a260d936955d5c7ad616755982971dd5a074b722537623e9c77a47"
+  },
+  "scope": "One seeded full-shape parent cohort per family; enabled gates not yet run"
+}

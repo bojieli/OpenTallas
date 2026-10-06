@@ -1,0 +1,127 @@
+{
+  "ownership": "W5/power-gating structural now Claude, per owner; Codex releases structural/source dispatch and retains no new W5 proof/route assignment",
+  "route_source": "0477bd6d9",
+  "route_top": "ot_w5_context",
+  "route_parameters": {
+    "ENABLE": 1,
+    "K": 1,
+    "NB": 2,
+    "PP": 1,
+    "MTP": 1,
+    "EARLY": 1,
+    "FAST": 1,
+    "RD": 64,
+    "RST": 1,
+    "BYPASS": 1
+  },
+  "route_root": "ot-epyc2:/srv/opentallas-scratch2/codex/w5-context-20261005/route-r5",
+  "post_consumer": "ot-epyc2:/srv/opentallas-scratch2/codex/w5-context-20261005/route-r5-post.sh",
+  "source_worktree": "/srv/opentallas-scratch2/codex/w5-context-20261005/wt-0477bd6d9",
+  "supervisor": 21759,
+  "driver": 21958,
+  "container_client": 79856,
+  "openroad": 1712234,
+  "consumer": 29892,
+  "terminal": false,
+  "consumer_state": "Waiting for existing terminal.rc; then unique6_final.odb required, unchangedadmit8 and existing timing/activity/rawTTpower sequence. No new consumer launched. No-final exits with terminal.reason; set-e stops later steps on failure.",
+  "root_clock": {
+    "port": "clk",
+    "aon_clk": "same clk at u_stage.aon_clk; not independent domain",
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "root_reset": {
+    "port": "por_n",
+    "active_low": true,
+    "kind": "coordinated cold POR only; no warm reset port or warm debt clearance",
+    "fanout": "u_settings/u_go_source/u_ld sticky and raw state, u_stage.rst_n, BST and return rst_n"
+  },
+  "derived_clocks": [
+    {
+      "name": "w5_ao",
+      "master": "core_clk",
+      "source": "u_stage.u_ao.g_checked.u_freeze.u_icg/CLK",
+      "target": "u_stage.u_ao.g_checked.u_freeze.u_icg/GCLK"
+    },
+    {
+      "name": "w5_spine",
+      "master": "core_clk",
+      "source": "u_stage.u_ao.u_p.u_ctl.u_spine_cg.u_icg/CLK",
+      "target": "u_stage.u_ao.u_p.u_ctl.u_spine_cg.u_icg/GCLK"
+    },
+    {
+      "name": "w5_domain",
+      "master": "w5_spine",
+      "source": "u_stage.u_ao.u_fault_spine.u_icg/CLK",
+      "target": "u_stage.u_ao.u_fault_spine.u_icg/GCLK"
+    },
+    {
+      "name": "w5_loader",
+      "master": "core_clk",
+      "source": "u_ld.g_protected.u_freeze.u_icg/CLK",
+      "target": "u_ld.g_protected.u_freeze.u_icg/GCLK"
+    }
+  ],
+  "domain_reset": {
+    "source": "u_stage.u_ao.arst_n = primary arst_n_p AND !quarantine; primary power-controller dom_rst_n AND cold rst_n",
+    "capture": "u_stage.g_el[0].u_dif.cdc_dr1 then cdc_dr2 on real e_clk=s_clk",
+    "element_port": "u_stage.g_el[0].u_elem.rst_n=e_rst_n=cdc_dr2",
+    "policy": "Asynchronous assertion and two actual gated-domain release edges; replay/ready/ACK only actual toggle handshakes. No reset/gating/CDC falsepaths."
+  },
+  "pg_ports": {
+    "outputs": {
+      "sw_en": 4,
+      "ready": 1,
+      "late": 1,
+      "pg_fault": 1,
+      "fault": 1,
+      "busy": 1
+    },
+    "inputs": {
+      "sw_ack": 4,
+      "pg_en": 1,
+      "sched_v": 1,
+      "sched_gap": 24,
+      "pg_lead": 24,
+      "pg_bet": 24,
+      "pg_idle": 8,
+      "pg_rst": 8,
+      "pg_step": 16,
+      "pg_ack_to": 16
+    },
+    "isolation": "Internal iso_n and output quarantine masks; preserve actual drain, accepted shadow/replay debt and native ready"
+  },
+  "actual_macros": {
+    "weight_count": 4,
+    "type": "ot_rom_4096x274_m8",
+    "SS_clkQ_ps": 743.9627002267231,
+    "FF_clkQ_ps": 492.24471244471647,
+    "SS_CLK_load_fF": 34.73504,
+    "FF_CLK_load_fF": 41.4928,
+    "PP_capture": "actual ping-pong setup2/hold1 only"
+  },
+  "successor_cfg": {
+    "source": "d1676840a",
+    "record": "cfg_provider_r1/record.json",
+    "HARD_CFG_default": 0,
+    "enabled_pass": "25captures/42rows/36nonzero/168beats/36327cycles, deliberatepayloadnegativeFAILcycle7",
+    "real_macro": "ot_rom_4096x72_m8",
+    "new_FF": 0,
+    "new_loader_edges": 0,
+    "not_in_live_R5": true,
+    "physical_slot_fit": false
+  },
+  "qualification": false,
+  "energy_credit": false,
+  "power_result": null,
+  "preserved_evidence": [
+    "route_r3_cts",
+    "route_r5_mapping",
+    "cts_r5_diagnosis",
+    "cfg_provider_r1"
+  ],
+  "remaining": "Actual XS parent launch and final capture context, real ICG/DLL insertion balance, RD64 metadata/adder setup and internal MAC/control failures; five-macro successor slot/channel/PG margin. No UPF/EM/tapeout task.",
+  "dependency_release": false,
+  "cleanup": "Own source worktrees and remote objects remain because R5 and its consumer depend on them. No peer scratch removal."
+}

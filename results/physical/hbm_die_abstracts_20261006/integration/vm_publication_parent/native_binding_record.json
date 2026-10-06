@@ -1,0 +1,130 @@
+{
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv": "72bb7f2d112c594dd6da19cedb6dfddf8b98d62411f9797c898a308feeea9623",
+    "physical/hbm_die_abstracts_20261006/integration/tb_native_index_frame_binding.sv": "7ea04304e68ee82584ae0ada6cc0c00c587d3a3e67711ab2bbf8a2681c73ce3d"
+  },
+  "model": "uarch_model.hbm_vm_publication_parent_model.native_index_binding",
+  "default_enabled": false,
+  "logic_added": {
+    "FF": 0,
+    "pipeline_cycles": 0,
+    "payload_buffers": 0
+  },
+  "simulation_pass": "16 exact interface assertions incl high token/POS, wrong owner/noACK and backpressure",
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_native_index_frame_binding",
+    "-o",
+    "/tmp/turing-native-index-frame.vvp",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv",
+    "physical/hbm_die_abstracts_20261006/integration/tb_native_index_frame_binding.sv"
+  ],
+  "runtime_command": [
+    "vvp",
+    "/tmp/turing-native-index-frame.vvp"
+  ],
+  "lint_command": [
+    "verilator",
+    "--lint-only",
+    "-Wno-fatal",
+    "--top-module",
+    "ot_hbm_native_index_frame_binding",
+    "-GENABLE=1",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_native_index_frame_binding.sv"
+  ],
+  "child_PASS_reused": "results/physical/hbm_die_abstracts_20261006/memory_control/index_fp32_exact-agi-r2_PASS/terminal.json",
+  "parent_source": "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv",
+  "consumer_source": "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv",
+  "consumer_params": {
+    "ENABLE": 1,
+    "SOURCE_VM_ENABLE": 1,
+    "NS": 16,
+    "NK": 4,
+    "Q": 4,
+    "W": 16,
+    "IW": 20
+  },
+  "pin_binding": "vm_* literal native index_path ports -> binding vm_*; binding index_* -> publication parent index_*; source_cp_frame=real protected heldCP73; parent_held_frame=parent.held_frame; binding_fault -> Gibbs actual parent fault join; common real clk_sm, no live-grant gate",
+  "formatter_binding": "existing W15 pair85/599 remains real512 gather provider; never wire to this1024 FP32 query binding",
+  "barrier_leaf_verified": {
+    "kind": "hfd_barrier_K32_leaf",
+    "root": "physical/hbm_die_abstracts_20261006/memory_control/ot_gpu_barrier_node_k32",
+    "master": "ot_gpu_barrier_node",
+    "parameters": {
+      "K": 32
+    },
+    "size_um": [
+      8.66,
+      8.66
+    ],
+    "pins": 70,
+    "files": {
+      "ot_gpu_barrier_node.lef": "a90ce787d9264e0668b99f4eb9db518f6f37706c36e856bbc46beac2a545f812",
+      "ot_gpu_barrier_node_ff.lib": "42b7233a1784b6864e1f90290e3181cafc9600ef6dff4a49167fdf4e5d51d7ec",
+      "ot_gpu_barrier_node_ss.lib": "4455784ef6c855b0a6d103e5f6204096207d35e0910e2eef6feb5bf38045f3b7"
+    },
+    "hashes_and_arcs_verified": true,
+    "output_arcs_each_corner": 33,
+    "clock_contract": {
+      "master": "ot_gpu_barrier_node",
+      "parameters": {
+        "K": 32
+      },
+      "input_clock": "clk",
+      "cold_or_source_reset": "rst_n (source behavior retained; enclosing reset qualification open)",
+      "corners": {
+        "ss": {
+          "pin": "clk",
+          "capacitance_fF": 0.9247,
+          "internal_CTS_paths": {
+            "min_clock_tree_path": {
+              "rise_ps": 44.23618,
+              "fall_ps": 51.1759
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 46.75456,
+              "fall_ps": 53.3395
+            }
+          },
+          "time_unit": "1ps",
+          "capacitance_unit": "1fF",
+          "output_clock_arcs": 33
+        },
+        "ff": {
+          "pin": "clk",
+          "capacitance_fF": 0.9952,
+          "internal_CTS_paths": {
+            "min_clock_tree_path": {
+              "rise_ps": 22.65489,
+              "fall_ps": 23.63301
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 23.62895,
+              "fall_ps": 24.58861
+            }
+          },
+          "time_unit": "1ps",
+          "capacitance_unit": "1fF",
+          "output_clock_arcs": 33
+        }
+      },
+      "period_ps": 833,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "fixture_output_load_fF": 3.898,
+      "actual_parent_receiver_loads": null,
+      "parent_clock_skew": null,
+      "parent_qualified": false,
+      "source_signoff_reused": true
+    },
+    "qualification": "real K32 leaf only",
+    "parent_closed": false,
+    "source_SHA": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "actual_die_pin_binding": "OPEN: historical hfd_barrier ck3/t_cmdproc64 differs from real clk/rst_n/arr32/up/rel_in/rel32; Claude corrected generator source owner must bind native senses, not command64 alias",
+    "orientation_qualification": "LEF symmetry not declared; no generated die rotation/orientation credit"
+  },
+  "physical_closed": false,
+  "full_FEC_off_package_required": true
+}

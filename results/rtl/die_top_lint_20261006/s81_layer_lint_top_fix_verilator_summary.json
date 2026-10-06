@@ -1,0 +1,67 @@
+{
+ "rc": 0,
+ "time_s": 255.55,
+ "peak_GB": 3.02,
+ "counts": {
+  "Warning-MULTIDRIVEN": {
+   "top": 2417
+  },
+  "Warning-PINMISSING": {
+   "top": 28229
+  },
+  "Warning-UNDRIVEN": {
+   "top": 13996,
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 16,
+   "rtl:ot_rom_4096x72_m8_bb.v": 1,
+   "rtl:ot_pdie_serdes_bb.v": 1,
+   "rtl:ot_pdie_ucie_bb.v": 1
+  },
+  "Warning-UNUSEDPARAM": {
+   "rtl:s81_layer_lint_top_fix_real_shells.sv": 11
+  },
+  "Warning-UNUSEDSIGNAL": {
+   "top": 304542,
+   "rtl:ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": 15,
+   "rtl:ot_rom_4096x72_m8_bb.v": 3,
+   "rtl:ot_pdie_serdes_bb.v": 2,
+   "rtl:ot_pdie_ucie_bb.v": 2,
+   "stubs": 8
+  },
+  "Warning-WIDTHEXPAND": {
+   "top": 344
+  }
+ },
+ "examples": {
+  "Warning-PINMISSING": [
+   "Instance has missing pin: 'busy'",
+   "Instance has missing pin: 'fault'",
+   "Instance has missing pin: 'busy'",
+   "Instance has missing pin: 'fault'"
+  ],
+  "Warning-WIDTHEXPAND": [
+   "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W00' generates 770 bits.",
+   "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W01' generates 770 bits.",
+   "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W02' generates 704 bits.",
+   "Input port connection 'x' expects 836 bits on the pin connection, but pin connection's VARREF 'n_tp_cr_W10' generates 770 bits."
+  ],
+  "Warning-UNDRIVEN": [
+   "Signal is not driven: 'n_xc_3'",
+   "Signal is not driven: 'n_xc_5a'",
+   "Signal is not driven: 'n_xc_8'",
+   "Signal is not driven: 'n_xc_9a'"
+  ],
+  "Warning-UNUSEDSIGNAL": [
+   "Signal is not used: 'lint_nc_0'",
+   "Signal is not used: 'lint_nc_1'",
+   "Signal is not used: 'lint_nc_2'",
+   "Signal is not used: 'lint_nc_3'"
+  ],
+  "Warning-UNUSEDPARAM": [],
+  "Warning-MULTIDRIVEN": [
+   "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2412' have multiple combinational drivers. This can cause performance degradation.",
+   "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2408' have multiple combinational drivers. This can cause performance degradation.",
+   "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2403' have multiple combinational drivers. This can cause performance degradation.",
+   "Bits [53:0] of signal 's81_layer_lint_top_fix.n_cf_2398' have multiple combinational drivers. This can cause performance degradation."
+  ]
+ }
+}

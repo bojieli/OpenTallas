@@ -1,0 +1,281 @@
+{
+ "scope": "Owner-directed taller QELEM/fewer-elements die; support facts only, no new qelement RTL or generator edit",
+ "frame_owner": "Claude QELEM",
+ "generator_owner": "Claude S81-DIE",
+ "target_utilization": [
+  0.55,
+  0.6
+ ],
+ "old76_to78pct_fit_credit": false,
+ "new_element_or_die_count_assumed": false,
+ "stream_period_ps": 833.3333333333334,
+ "serial_period_ps": 1111.111111111111,
+ "SS_setup_ps": 60,
+ "FF_hold_ps": 25,
+ "phase_policy_ps": 0,
+ "parent_propagated_CTS_skew_wire_load_qualified": false,
+ "ROM_ECC_required": false,
+ "mutable_control_SRAM_HBM_link_protection_retained": true,
+ "ROM_views": [
+  {
+   "macro": "ot_rom_4096x274_m8",
+   "LEF_size_um": [
+    125.304,
+    62.952
+   ],
+   "LEF_sha256": "a283603bb491073a454f91dac30fa98687366aa2ef2d493eea6512771d876e6d",
+   "corners": {
+    "SS": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+     "sha256": "fcfbe440dee6ec96a6e02c0160132e7bbc3be7c80008bbb5e9ffef57a8bdfd09",
+     "clock_pin_fF": 8.6838,
+     "ce_pin_fF": 0.5788,
+     "min_period_ps": 711.852,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 748.4927,
+     "clkQ_cell_rise_ps_table_range": [
+      743.9627,
+      839.0934
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    },
+    "FF": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+     "sha256": "1b5b203f3b36184bce55d3203925c53b885618708dcc4732f0a0acb156436443",
+     "clock_pin_fF": 10.3732,
+     "ce_pin_fF": 0.6837,
+     "min_period_ps": 469.442,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 495.93,
+     "clkQ_cell_rise_ps_table_range": [
+      492.2447,
+      569.6351
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_rom_4096x266_m8",
+   "LEF_size_um": [
+    121.848,
+    62.952
+   ],
+   "LEF_sha256": "a68219dc931e84a62185b8ac8d330fb775c11437b4cf4adec5dd41b41a76fbcf",
+   "corners": {
+    "SS": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib",
+     "sha256": "cd4aa19ca360c60de39b3bc679eb0bf39abb8ffce89cb66531c1fc1bbe0fbfe8",
+     "clock_pin_fF": 8.6838,
+     "ce_pin_fF": 0.5788,
+     "min_period_ps": 707.099,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 743.7404,
+     "clkQ_cell_rise_ps_table_range": [
+      739.2103,
+      834.3411
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    },
+    "FF": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib",
+     "sha256": "b8cd5098208b024e6377c3762ccb5ac01a8db08c3eadc110a16510782ba13a75",
+     "clock_pin_fF": 10.3732,
+     "ce_pin_fF": 0.6837,
+     "min_period_ps": 464.69,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 491.1776,
+     "clkQ_cell_rise_ps_table_range": [
+      487.4923,
+      564.8827
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    }
+   }
+  },
+  {
+   "macro": "ot_rom_4096x72_m8",
+   "LEF_size_um": [
+    38.04,
+    62.952
+   ],
+   "LEF_sha256": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+   "corners": {
+    "SS": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+     "sha256": "5dd9fd0eeb9438bb41d9b687b8fdb7d52cad11cfd8dd25001f3a46555d941e15",
+     "clock_pin_fF": 8.6838,
+     "ce_pin_fF": 0.5788,
+     "min_period_ps": 634.964,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 671.6056,
+     "clkQ_cell_rise_ps_table_range": [
+      667.0756,
+      762.2063
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    },
+    "FF": {
+     "library_path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+     "sha256": "b5f09ecc876a340f8a6d6bdd3ff7d185a934b17cf990e469e1ffca7055a9a470",
+     "clock_pin_fF": 10.3732,
+     "ce_pin_fF": 0.6837,
+     "min_period_ps": 392.555,
+     "clkQ_cell_rise_ps_at20ps_slew_2p88fF": 419.0429,
+     "clkQ_cell_rise_ps_table_range": [
+      415.3576,
+      492.748
+     ],
+     "library_model_not_loaded_measurement": true,
+     "wire_RC_and_CTS_included": false
+    }
+   }
+  }
+ ],
+ "q_source": {
+  "path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "sha256": "6e090265a4e192a1bd965f0afd98cccd474e3440d499931e89a513cb2e3ce152",
+  "current_macro": "ot_rom_4096x274_m8",
+  "source_comment": "2 macros per element pingpong, each2cyclepath; do not replace274with266oroneedgewithoutsourcebinding",
+  "pair_contract": "historicalphysical_contract.json states4macrosperpair/274bits; not newtaller-slot qualification"
+ },
+ "S81_old_connectivity_invalid": {
+  "main": "7ccef3810",
+  "q_x_unwired_pairs": 2161,
+  "total_pairs": 2417,
+  "cfg_ROM_clock_enable_addr": 16919,
+  "return_clock_reset": 4706,
+  "PLL_nets": 53,
+  "top_not_elaborated": true
+ },
+ "owned_support": {
+  "clock": {
+   "WFC": "native u_ctrl.clk streaming1.2GHz833.333ps phase0",
+   "VM_parent": "sp_vm serial0.9GHz1111.111ps in actual selectedfloorplan",
+   "source_behavior": "native behavioral VM sameclk oneedge; not evidence of realcrossdomainmemory",
+   "source_phase_policy_ps": 0,
+   "SS_setup_ps": 60,
+   "FF_hold_ps": 25,
+   "crossing": "actual3:4 transport required; existing source-owned related boundary must be bound; no assumed sameedgephase/no waivedpath"
+  },
+  "ports": {
+   "write_enable": "xa_we",
+   "write_address": "xa_waddr[14:0]",
+   "write_data": "xa_wdata[511:0]",
+   "read_enable": "xa_re",
+   "read_address": "xa_raddr[14:0]",
+   "read_return": "xa_rq[511:0]",
+   "read_bytes_per_cycle": 64,
+   "write_bytes_per_cycle": 64,
+   "address_bounds_bits": 19,
+   "write_precedence": "xa then later xb0..3, later NBA wins; preedge read"
+  },
+  "native_macro_evidence": {
+   "primitive": "ot_sram_1r1w_512x128_m4_r2c2",
+   "library_ss": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+   "library_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+   "SS_clock_pin_fF": 8.6838,
+   "FF_clock_pin_fF": 10.3732,
+   "SS_data_address_pin_fF": 0.5788,
+   "FF_data_address_pin_fF": 0.6837,
+   "SS_clkQ_ps_table_range": [
+    524.0725,
+    619.2032
+   ],
+   "SS_slew_axis_ps": [
+    5,
+    20,
+    80,
+    160,
+    320
+   ],
+   "SS_load_axis_fF": [
+    0.72,
+    2.88,
+    11.52,
+    23.04,
+    46.08
+   ],
+   "SS_clkQ_at20ps_slew_2p88fF_ps": 528.6025,
+   "scope": "actual committed macro library model, not measured new WFC loaded context",
+   "full_AW15_backend_source": "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv",
+   "DEPTH_GROUPS": 16,
+   "macro_count": 256,
+   "macro_area_each_um2": 5177.6323,
+   "macro_area_total_mm2": 1.3254738688,
+   "existing_VM_slot_mm2": 0.89234,
+   "minimum_macro_only_deficit_mm2": 0.43313386880000004,
+   "read_valid_registered_edges": 5,
+   "write_ACK_registered_edges": 4,
+   "read_owner_bits": 227,
+   "mutable_protection": "rawmacrobackend explicitly unprotected; not selected protectedmemoryqualification; real backend mustretain owner/protection/olddata/writeprecedence",
+   "FF_clkQ_at20ps_slew_2p88fF_ps": 349.7289
+  },
+  "VM_finite_resize_decision": {
+   "existing_slot_area_mm2": 0.89234,
+   "successor_reserved_outline_um": [
+    1015.2,
+    2620.0800000000004
+   ],
+   "successor_reserved_area_mm2": 2.6599052160000003,
+   "delta_area_mm2": 1.7675652160000004,
+   "existing_real_macro_count": 256,
+   "primitive_LEF_width_um": 174.12,
+   "primitive_LEF_height_um": 29.736,
+   "native_source_count_preserved": true,
+   "macro_columns": 5,
+   "slot_rows": 64,
+   "slot_count": 320,
+   "positive_empty_protection_slots": 64,
+   "empty_slots_are_not_macro_instances": true,
+   "macro_gap_um": 10.8,
+   "macro_halo_um": 17.28,
+   "macro_occupied_envelope_width_um": 948.3600000000001,
+   "actual_256_macro_body_mm2": 1.3254738739200003,
+   "reserved_protection_slot_count_is_not_RTL_protection_evidence": true,
+   "source_non_drop_in_gaps": [
+    "olddataread/writecollision semantics",
+    "allnativewriterport/grant/visiblecompletion",
+    "mutableECC and codecarea",
+    "real3:4callerVMtransport"
+   ],
+   "admission": "ExistingVMphysicalslot insufficient. Resize SAMEspineVMslab with explicitpositive64slotprotection+channelreserve; protectedsourcebinding ownedZeno/Copernicus and nativeVMowner, no rawpayloadadoption",
+   "new_engine_build_before_source_model": false,
+   "actual_selected_parent_rect_um": [
+    15182.64,
+    11238.48,
+    16197.815999999999,
+    13858.536
+   ],
+   "source_macro_instance_inventory": "256 realv2 source macros +64 EMPTY positiveprotection reservations; no 320instance claim"
+  },
+  "canonical_producer_allocation": {
+   "source_owner": "Copernicus",
+   "source": "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv",
+   "envelope_um": [
+    15199.92,
+    14048.640000000001,
+    15679.92,
+    14448.640000000001
+   ],
+   "shape_um": [
+    480,
+    400
+   ],
+   "macro_body_um2": 87126.11424,
+   "macro_halo_reserved_um2": 102430.68192,
+   "positive_logic_budget_um2": 30000,
+   "macro_plus_logic50pct_footprint_um2": 162430.68192,
+   "envelope_um2": 192000,
+   "spare_um2": 29569.31808,
+   "WFC_control_remaining_outline_um2": 214691.02079999913,
+   "control_cell_cap_at50pct_um2": 107345.51039999956,
+   "additional_slot_area_credit": 0,
+   "actual_producer_clock_loads_from_own_mapped_context": true,
+   "qualification": "geometry/model only; ownsourcegate/macroclkQ/CTS/SSFF/receivermapping mandatory; L19STAGE_HANDOFFnotHEADtoken_result"
+  },
+  "additional_positive_CTS_PG_IO_repair_cell_reserve_um2": 40000
+ },
+ "owned_support_scope": "PriorS81 westspine geometry only; rebind to newtaller/fewer-elements parent. WFC50pctcellcap203345.5104+40000positiveCTS/repair; VM256realmacros+64emptyprotectionreservations/10.8gaps/17.28halo. Real3:4transport/mutableprotection/nativeallwriter semantics remain mandatory; supportslotsnotfreearea.",
+ "capacity_pricing": "If55-60pct plus actualCTS/PG/route cannotfit858mm2, abandonoldpacking; S81-DIE/COMPOSE priceactualadditionaldies, D2Dhardware, protectedCDC/captureedges, fullwires/pinloads, and exposedtokenlatency. No assumedadditionaldiecount or freedPGcredit."
+}

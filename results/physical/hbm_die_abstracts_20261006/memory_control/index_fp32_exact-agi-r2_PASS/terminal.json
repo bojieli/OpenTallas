@@ -1,0 +1,48 @@
+{
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv": "51e3a68eecb585486c91cc453fcdfb47f7de37a1f4e1475ffee9d909a200b62a"
+  },
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-DOT_MEM_NO_INIT",
+    "-s",
+    "tb_index_fp32_sram_adapter",
+    "-o",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/exact-agi-r2/index_adapter.vvp",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-aa52fdb03/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-aa52fdb03/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-aa52fdb03/rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-aa52fdb03/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/src-aa52fdb03/physical/hbm_die_abstracts_20261006/memory_control/tb_index_fp32_sram_adapter.sv"
+  ],
+  "compile_exit": 0,
+  "cases": [
+    {
+      "name": "exact_seed",
+      "command": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/exact-agi-r2/index_adapter.vvp"
+      ],
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "actual_SRAM_UE",
+      "command": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-memory-index-fp32-20261006/exact-agi-r2/index_adapter.vvp",
+        "+SRAM_UE"
+      ],
+      "exit": 0,
+      "passed": true
+    }
+  ],
+  "physical_closed": false,
+  "actual_parent_bindings_qualified": false,
+  "verdict": "PASS"
+}

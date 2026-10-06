@@ -21,7 +21,12 @@ ap.add_argument('--input', default=os.environ.get('FHCONE_INPUT'), required=not 
 ap.add_argument('--output', default=os.environ.get('FHCONE_OUTPUT'), required=not os.environ.get('FHCONE_OUTPUT'))
 ap.add_argument('--receipt', default=os.environ.get('FHCONE_RECEIPT'), required=not os.environ.get('FHCONE_RECEIPT'))
 ap.add_argument('--rect-strips', action='store_true', default=os.environ.get('FHCONE_RECT_STRIPS') == '1')
+ap.add_argument('--shared-partition', choices=('none', 'comb', 'receivers'),
+                default=os.environ.get('FHCONE_SHARED_PARTITION', 'none'))
+ap.add_argument('--vertical-seams', action='store_true',
+                default=os.environ.get('FHCONE_VERTICAL_SEAMS') == '1')
 a = ap.parse_args()
+assert not a.vertical_seams or a.shared_partition != 'none'
 assert Path(a.input).resolve() != Path(a.output).resolve()
 assert not Path(a.output).exists()
 db = odb.dbDatabase.create()
@@ -69,8 +74,10 @@ for n in comb:
         children[p].append(n)
 q = deque(n for n in comb if degree[n] == 0)
 visited = 0
+order = []
 while q:
     n = q.popleft()
+    order.append(n)
     for net in inputs[n]:
         if net in drivers:
             owner[n] |= owner[drivers[net]]
@@ -117,6 +124,94 @@ for i in insts:
         lane = int(re.search(r'g_bank\[(\d+)\]', i.getName().replace('\\', '')).group(1))
         macros[lane] = rect(i.getBBox())
 assert set(macros) == set(range(64))
+shared_groups = {}
+if a.shared_partition != 'none':
+    assert a.rect_strips
+    # Backward consumer affinity distinguishes each real argmax pair from
+    # the common veto feeding all pairs. Forward lane ownership alone gives
+    # every pair the full64 mask once the global fault enters its valid mux.
+    consumers = [0] * len(insts)
+    pair_registers = {}
+    local_receivers = 0
+    for n, i in enumerate(insts):
+        name = i.getName().replace('\\', '')
+        if i.getMaster().isBlock() or n in comb:
+            continue
+        match = re.search(r'g_argmax_consumer\[(\d+)\].*c\[', name)
+        if match:
+            pair = int(match[1])
+            pair_registers.setdefault(pair, []).append(i)
+            for net in inputs[n]:
+                if net in drivers and drivers[net] in comb:
+                    consumers[drivers[net]] |= 1 << pair
+        match = re.search(r'(?:^|/)result_capture\[(\d+)\]', name)
+        if match and int(match[1]) < 2112:
+            bit = int(match[1])
+            lane = bit // 32 if bit < 2048 else bit - 2048
+            assert i.getGroup() is None
+            groups[lane].addInst(i)
+            local_receivers += 1
+    assert set(pair_registers) == set(range(32))
+    # Every pair retains its32-bit key and valid. All leaves carry the same
+    # registered row, so synthesis may share the16 row flops across pairs.
+    assert {pair: len(cells) for pair, cells in pair_registers.items()} == {
+        pair: 49 if pair == 0 else 33 for pair in range(32)}
+    assert local_receivers == 2112
+    for n in reversed(order):
+        for net in inputs[n]:
+            if net in drivers and drivers[net] in comb:
+                consumers[drivers[net]] |= consumers[n]
+    plan = {}
+    for n in comb:
+        mask = owner[n]
+        if not mask & (mask - 1):
+            continue
+        cm = consumers[n]
+        if cm and not cm & (cm - 1):
+            pair = cm.bit_length() - 1
+            key = (pair // 4, 2 * (pair % 4))
+        else:
+            lanes = [lane for lane in range(64) if mask & (1 << lane)]
+            col = sum(lane % 8 for lane in lanes) / len(lanes)
+            row = sum(lane // 8 for lane in lanes) / len(lanes)
+            key = (min(7, max(0, round(row))), min(6, max(0, round(col - .5))))
+        assert insts[n].getGroup() is None
+        plan.setdefault(key, []).append(insts[n])
+    if a.shared_partition == 'receivers':
+        for pair, cells in pair_registers.items():
+            plan.setdefault((pair // 4, 2 * (pair % 4)), []).extend(cells)
+    # Only real nonempty components get a region. The seams borrow5um
+    # from each neighboring lane strip, inside the same modeled head slot.
+    for (row, col), cells in sorted(plan.items()):
+        left = rect(list(groups[row * 8 + col].getRegion().getBoundaries())[0])
+        right = rect(list(groups[row * 8 + col + 1].getRegion().getBoundaries())[0])
+        x1 = origin[0] + math.floor((left[2] - 5000 - origin[0]) / sx) * sx
+        x2 = origin[0] + math.ceil((right[0] + 5000 - origin[0]) / sx) * sx
+        y1 = origin[1] + math.ceil((macros[row * 8 + col][1] + 33000 - origin[1]) / sy) * sy
+        y2 = origin[1] + math.floor((min(left[3], right[3]) - origin[1]) / sy) * sy
+        if a.vertical_seams:
+            # The real intermacro gap is free below the lane strip too.
+            # Stay outside BOTH fixed macro halos; no macro or pin moves.
+            ml, mr = macros[row * 8 + col], macros[row * 8 + col + 1]
+            x1 = origin[0] + math.ceil((ml[2] + 2000 - origin[0]) / sx) * sx
+            x2 = origin[0] + math.floor((mr[0] - 2000 - origin[0]) / sx) * sx
+            y1 = origin[1] + math.ceil((max(ml[1], mr[1]) - 1000 - origin[1]) / sy) * sy
+            assert x1 >= ml[2] + 2000 and x2 <= mr[0] - 2000
+        assert x1 < x2 and y1 < y2
+        name = f'fh_shared_r{row}_c{col}'
+        region = odb.dbRegion.create(b, name)
+        region.setRegionType('EXCLUSIVE')
+        odb.dbBox.create(region, x1, y1, x2, y2)
+        g = odb.dbGroup.create(b, name)
+        region.addGroup(g)
+        for i in cells:
+            assert i.getGroup() is None
+            g.addInst(i)
+        shared_groups[(row, col)] = g
+    receipt.update(shared_partition=a.shared_partition, local_result_receivers=local_receivers,
+                   vertical_seams=a.vertical_seams,
+                   argmax_pair_registers_actual={pair:len(cells) for pair,cells in pair_registers.items()},
+                   shared_regions=[])
 for lane, g in sorted(groups.items()):
     cells = list(g.getInsts())
     assert not any(i.getMaster().isBlock() for i in cells)
@@ -133,6 +228,12 @@ for lane, g in sorted(groups.items()):
         x2 = origin[0] + math.floor((box[2]-origin[0])/sx)*sx
         y1 = origin[1] + math.ceil((macros[lane][1]+33000-origin[1])/sy)*sy
         y2 = origin[1] + math.floor((box[3]-origin[1])/sy)*sy
+        if a.shared_partition != 'none':
+            row, col = divmod(lane, 8)
+            if (row, col - 1) in shared_groups:
+                x1 = list(shared_groups[(row, col - 1)].getRegion().getBoundaries())[0].xMax()
+            if (row, col) in shared_groups:
+                x2 = list(shared_groups[(row, col)].getRegion().getBoundaries())[0].xMin()
         box = (x1, y1, x2, y2)
         assert y1 >= macros[lane][3]+2000 and x1<x2 and y1<y2
         # In 26Q3-1510, dbBox.destroy leaves the old boundary linked in
@@ -154,6 +255,18 @@ for lane, g in sorted(groups.items()):
                                   rectangle_dbu=box, usable_after_taps_um2=usable,
                                   capacity_after_guard5_um2=usable*0.95,
                                   guarded_padded_fraction=padded/(usable*0.95)))
+for key, g in sorted(shared_groups.items()):
+    box = rect(list(g.getRegion().getBoundaries())[0])
+    cells = list(g.getInsts())
+    assert cells and not any(i.getMaster().isBlock() for i in cells)
+    area = sum(i.getMaster().getWidth()*i.getMaster().getHeight() for i in cells)/1e6
+    padded = sum((i.getMaster().getWidth()+4*54)*i.getMaster().getHeight() for i in cells)/1e6
+    usable = sum(intersection(box, row) for row in rows) - sum(intersection(box, tap) for tap in taps)
+    assert padded < usable * .95, ('shared guard5 capacity exceeded', key, padded, usable)
+    receipt['shared_regions'].append(dict(name=g.getName(), members=len(cells), area_um2=area,
+                                          padded_area_um2=padded, rectangle_dbu=box,
+                                          usable_after_taps_um2=usable, capacity_after_guard5_um2=usable*.95,
+                                          guarded_padded_fraction=padded/(usable*.95)))
 odb.write_db(db, a.output)
 # Verify the actual serialized geometry consumed by GPL, not an in-memory
 # rectangle receipt. C16 exposed that these can differ after box deletion.
@@ -165,6 +278,11 @@ for row in receipt['groups']:
     assert [rect(x) for x in g.getRegion().getBoundaries()] == [tuple(row['rectangle_dbu'])]
     assert len(list(g.getInsts())) == row['members']
 receipt['serialized_regions_verified'] = 64
+for row in receipt.get('shared_regions', []):
+    g = check_groups[row['name']]
+    assert [rect(x) for x in g.getRegion().getBoundaries()] == [tuple(row['rectangle_dbu'])]
+    assert len(list(g.getInsts())) == row['members']
+receipt['serialized_shared_regions_verified'] = len(shared_groups)
 receipt['output_sha256'] = hashlib.sha256(Path(a.output).read_bytes()).hexdigest()
 receipt.update(geometry_changed=a.rect_strips, macro_geometry_changed=False,
                region_geometry_changed=a.rect_strips, macro_pins_changed=False, logic_changed=False,

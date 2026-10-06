@@ -1,0 +1,30 @@
+{
+  "status": "NAMED_SOURCE_ADAPTER_AND_RESULT_CODEC_COMPONENT_PASS",
+  "source_hashes": {
+    "physical/hbm_die_abstracts_20261006/links/callers/ot_hbm_station_source_abi.sv": "a0d30dc449eb7f287f9ce951a7ef4ac22fcea2c85151a86a9e7862b16d16ba3c",
+    "physical/hbm_die_abstracts_20261006/links/callers/tb_source_abi.sv": "987549e6555094c8f8b502836a2cfb8fdf8f4b9d06860fee7ce91ea11b6463ab",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "58b0502d2e6a23451314fe6df3447a7a1329641a6730017b6930ecb8ad3b5c0e",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+    "rtl/hbm_accel/integration/ot_hbm_tu_shared8.sv": "ccb99ba15698537dae682c6f1a717df3672aed75ab7fcd8141fafa5fb7444d4e",
+    "tools/die_top_lint.py": "7948d016146f6173112de1333b15809ffa489f3b0fd9ee3c9566178e0dec5c01"
+  },
+  "component_logs": [
+    "control_named_source_r2.log",
+    "duplex_named_source_r2.log",
+    "negative_wrong_tuple_r2.log"
+  ],
+  "seed": "1062026",
+  "vectors_per_function": 64,
+  "ports": "hierarchical SM RMAX4096/XD128/NC8:106 forward+5 reverse perSM; TU NPT8/FW512/PWT545",
+  "added_state": 0,
+  "added_cycles": 0,
+  "protection_added": false,
+  "warm_reset_ack_added": false,
+  "actual_parent_installed": false,
+  "physically_qualified": false,
+  "existing_held_component_PASS_replayed": false,
+  "unchanged_held_component_verdict": "results/physical/hbm_die_abstracts_20261006/links/parents/component_verdict.json",
+  "owner_identity_cohort_binding": "OPEN: physical SM output has no192 owner; integrated frame73/op32 are separate; codec does not invent owner source",
+  "negative": "actual wrong TU tuple PWT544 exits1, no silent padding/truncation",
+  "preserved_failure": "bench declaration-parser r1 failure source and compiler log; not a RTL/function failure"
+}

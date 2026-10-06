@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.wfc.canonical_stage.views.v1",
+  "top": "ot_dsrom_wfc_canonical_stage",
+  "parameter_defaults": {
+    "ENABLE": 0,
+    "STRUCTURAL": 0
+  },
+  "active_parameters": {
+    "ENABLE": 1,
+    "STRUCTURAL": 1
+  },
+  "SOURCE": 0,
+  "MAXU": 866,
+  "layer": 19,
+  "sources": {
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_canonical_stage.sv": "bc565b2aad9f77193cd0b5b8972b4db816ae390fd075051c7a3731164e3ac9ae",
+    "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv": "df20356c9e0a50f2495d56652a8ca8b88dda485ebe1701f77d6163af247e053b",
+    "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv": "aa088639650ef707d92cf8d5e5759feaacc9ace2357f4785c159d31258bb8a26",
+    "rtl/dft/ot_rom_secded_dec.sv": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_enclosing_stage.sv": "17a310698fdf22991c52b0872a9c87d5086c886831e8db60f633ca1375e39c80",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_vm_port.sv": "940de1ce7c77005c74fe82f590694550938db422ec693edbaf4eda4a84cc0ded",
+    "rtl/rom/wavefront/context/enclosing_20261005/ot_rom_pkg_ctrl_wfc_enclosed.sv": "7aaaee09349ed7b802957a2554beee337f317aeed6b0ed4652df13569645c517",
+    "rtl/rom/wavefront/context/enclosing_20261005/ot_dsrom_wfc_parent_enclosed.sv": "a9614a81313cfd864ce2daf29fbf25e6e7ebbe35c4f75fda210554341236953b",
+    "rtl/rom/wavefront/context/ot_dsrom_wfc_router_cut.sv": "3a670d52c59915221c2ecead31f6955fbabcc20777c3d35fbafb207d19db4ffb",
+    "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
+    "rtl/dsrom_sys/c8/ot_dsrom_c8_stage_context.sv": "cda9b462f1f4b4858aa0ad530b634cc23067570b56557e6c631b006ee53b249c"
+  },
+  "producer_macro_views": {
+    "ot_sram_1r1w_512x128_m4_r2c2": {
+      ".lef": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+        "sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde"
+      },
+      "_ss.lib": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+        "sha256": "ca6192f9a802f2d4aba9d1f8790fb702cabda02cae6617746b5754fade16e173"
+      },
+      "_ff.lib": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+        "sha256": "18a3127431ea348a3e87052ac5160fc2b46d748f9e70aef454da217102ea7864"
+      },
+      ".v": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+      },
+      "_bb.v": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+        "sha256": "ba479bdbfe3b4e23dfc17aa5cc31443aa6ffe87a5f112293c23b38212b35e268"
+      }
+    },
+    "ot_rom_4096x72_m8": {
+      ".lef": {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+        "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+      },
+      "_ss.lib": {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+        "sha256": "dc3a5a3e07e8508650a320f4ab27933622a52756c99e4d013278c849314da59d"
+      },
+      "_ff.lib": {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+        "sha256": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0"
+      },
+      ".v": {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+        "sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994"
+      },
+      "_bb.v": {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+        "sha256": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074"
+      }
+    }
+  },
+  "producer_macro_counts": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 14,
+    "ot_rom_4096x72_m8": 4
+  },
+  "native_VM_bits": 16777216,
+  "native_VM_physical_view_bound": false,
+  "native_VM_behavioral_slice_is_not_synthesizable_macro_replacement": true,
+  "target": {
+    "period_ps": 833.333333333,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "utilization_requested": [
+      55,
+      60
+    ],
+    "NUM_CORES_range": [
+      16,
+      24
+    ],
+    "host": "ot-epyc2",
+    "scratch": "NVMe"
+  },
+  "launch_ready": false,
+  "pending": [
+    "fresh CPU/RAM/disk pre/post unchangedguard fit with Kant",
+    "active changed-hookup exact gate: one seed plus meaningful negative, not old component replay",
+    "actual protected VM provider, 3:4 crossing and wire/capture contract",
+    "actual backend command/retire/restore/fence source bindings and host input launch clocks"
+  ],
+  "no_unqualified_IO_delay_or_load_assumptions": true
+}

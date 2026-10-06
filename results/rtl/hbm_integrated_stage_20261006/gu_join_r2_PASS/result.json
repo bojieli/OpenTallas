@@ -1,0 +1,41 @@
+{
+  "verdict": "PASS_ACTUAL_INTEGRATED_GU_DESCRIPTOR_JOIN",
+  "build_rc": 0,
+  "runtime_rc": 0,
+  "rows": 48,
+  "stores": 48,
+  "ACKs": 8,
+  "spans": 4,
+  "held_payload_cycles": 10,
+  "experts": [
+    41,
+    65
+  ],
+  "matrices": [
+    "G",
+    "U"
+  ],
+  "full_frame": 73,
+  "TOKEN": 17,
+  "POS": 20,
+  "enclosing_coded_bits": 216,
+  "producer_coded_bits": 216,
+  "combined_coded_metadata_bits": 432,
+  "payload_copy_bits": 0,
+  "checks": [
+    "golden BF16/store equality",
+    "full actual UR0/UR1 launch identity",
+    "held row/tag/expert/matrix/source/op",
+    "actual producer quiet+consumer acceptance before completion",
+    "wrong high token/position rejection"
+  ],
+  "retained_actual_GU_FP32": true,
+  "live_TC_producer": false,
+  "fullGU": false,
+  "full_token": false,
+  "physical_qualified": false,
+  "max_RSS_KiB": {
+    "build.log": 119040,
+    "runtime.log": 39168
+  }
+}

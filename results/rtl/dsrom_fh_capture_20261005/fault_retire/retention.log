@@ -1,0 +1,4 @@
+
+-- Running command `read_verilog -sv rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv; chparam -set ENABLE 1 ot_hdc_v41_fh_fault_retire; hierarchy -top ot_hdc_v41_fh_fault_retire; proc; flatten; opt; write_json /tmp/dsrom-fh-fault-retire-retention.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv
