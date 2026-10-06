@@ -1,0 +1,57 @@
+{
+ "tag": "c0r16_ak",
+ "verdict": "PASS",
+ "SS_ps": 11.85,
+ "SS_pins": 0,
+ "FF_ps": 7.26,
+ "FF_pins": 0,
+ "SI": {
+  "max_cap_violations": 0,
+  "max_fanout_violations": 0,
+  "max_slew_violations": 0
+ },
+ "drc": 0,
+ "antenna": 0,
+ "area_um2": 69367.9,
+ "replicas": {
+  "expected": {
+   "g_ixb": 32,
+   "g_ixq": 8,
+   "g_sel": 64,
+   "u_rsfm": 16,
+   "u_cc": 1,
+   "g_aqi": 9,
+   "g_qwe": 8,
+   "g_bwb": 16,
+   "u_aoh": 2,
+   "g_grp": 2,
+   "u_oh0": 16,
+   "u_oh1": 16,
+   "u_oh2": 16,
+   "u_oh3": 16,
+   "u_oh4": 16,
+   "g_ixc": 32,
+   "g_s11c": 8
+  },
+  "actual": {
+   "g_ixb": 32,
+   "g_ixq": 8,
+   "g_sel": 64,
+   "u_rsfm": 16,
+   "u_cc": 1,
+   "g_aqi": 9,
+   "g_qwe": 8,
+   "g_bwb": 16,
+   "u_aoh": 2,
+   "g_grp": 2,
+   "u_oh0": 16,
+   "u_oh1": 16,
+   "u_oh2": 16,
+   "u_oh3": 16,
+   "u_oh4": 16,
+   "g_ixc": 32,
+   "g_s11c": 8
+  },
+  "passed": true
+ }
+}
