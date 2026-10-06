@@ -32,3 +32,13 @@ if {$count != 306 || [dict get $kinds data] != 256 || [dict get $kinds check] !=
   error "Actual source hardmacro mismatch: $count $kinds"
 }
 puts "WFC_ACTUAL_MACROS $count $kinds; 32 reserved VM slots empty"
+
+# Consume Copernicus actual source hook, before PDN; it introduces no timing.
+source /src/physical/dsrom_wfc_protected_context/provider_macro_connect.tcl
+ds_vm_connect u_memory.g_live.u_backend clk_serial
+# Canonical producer macros also expose real LEF PG pins, not BB signals.
+foreach prefix {u_cfg u_whole} {
+  add_global_connection -net VDD -inst_pattern "^${prefix}\\..*" -pin_pattern {^VDD$} -power
+  add_global_connection -net VSS -inst_pattern "^${prefix}\\..*" -pin_pattern {^VSS$} -ground
+}
+global_connect
