@@ -19,14 +19,14 @@
 //          earlier (a credit seen stays true: written data stays written), so an op waiting on x_* may start one
 //          cycle later.  Nothing else moves; the element results are unchanged.
 //          CTL12 = 2 (the routed N = 16 vehicle at CTL12 = 1 missed by 0.71 ns over ~140 endpoint classes): the set-up
-//          runs over 9 sub-steps (10 for a non-flattening whole-op reduction; CTL12 = 1: 4 / 6), the stride / count
+//          runs over 10 sub-steps (11 for a non-flattening whole-op reduction; CTL12 = 1: 4 / 6), the stride / count
 //          products in 2-bit slices and their sums registered, the slot-size logarithms, the layout, the vector
 //          count, its levels and the result depth one register stage each; the vector loop's adds and compares are
 //          kept-prefix adders on registered operands (the slot size 1 << ls, nslot, a half stream's slot-size-1 flag,
 //          the remaining rows, the chaining accumulator and its two next needs are registers); and the loop's
 //          control state (a_v, a_started, the registered conditions, pst) is replicated in KC kept copies, one per
 //          register group, so no enable fans out to more than ~130 registers.  The vector loop is cycle for cycle
-//          that of CTL12 = 1; the set-up is 5 cycles longer (4 for a non-flattening reduction).
+//          that of CTL12 = 1; the set-up is 6 cycles longer (5 for a non-flattening reduction).
 // The checkpoint depths, the control pipe and sfu_d (now 10 bits: sqrt(softplus) exceeds 255 at MLAT 6 / ALAT 6)
 // follow them.  Nothing else changes.
 // ---------------------------------------------------------------------------
@@ -413,8 +413,8 @@ module ot_hdc_v41x_vec #(
     wire [6*AW-1:0] m_x = {f_n, q_osi, q_dsi, q_csi, q_bsi, q_asi};
     wire [6*8*AW-1:0] pq_w;
     reg  [6*8*AW-1:0] pq_r;
-    wire [6*AW-1:0] pr2_w;
-    reg  [6*AW-1:0] pr2_r;
+    wire [6*AW-1:0] pr2_w, pqs_w, pqc_w;
+    reg  [6*AW-1:0] pr2_r, pqs_r, pqc_r;      // S1: the slices' carry-save pair; S2: their sum
     genvar gx, gq;
     generate for (gx = 0; gx < 6; gx = gx + 1) begin : g_px
         // 2-bit slices: slice q is f[2q+1:2q] * x, weighted 4^q in the S1 sum
@@ -422,11 +422,15 @@ module ot_hdc_v41x_vec #(
             ot_hdc_v41x_cmul2 #(.W(AW), .K(KK)) u_m (.f(f_x[gx*AW + 2*gq +: 2]), .x(m_x[gx*AW +: AW]),
                                                      .y(pq_w[(gx*8 + gq)*AW +: AW]));
         end
-        ot_hdc_v41x_csum8 #(.W(AW), .K(KK)) u_s (.x(pq_r[gx*8*AW +: 8*AW]), .y(pr2_w[gx*AW +: AW]));
+        ot_hdc_v41x_csa8 #(.W(AW)) u_c (.x(pq_r[gx*8*AW +: 8*AW]), .s(pqs_w[gx*AW +: AW]), .c(pqc_w[gx*AW +: AW]));
+        wire unused_pc;
+        ot_hdc_kadd #(.W(AW), .K(KK)) u_s (.a(pqs_r[gx*AW +: AW]), .b(pqc_r[gx*AW +: AW]), .cin(1'b0),
+                                          .s(pr2_w[gx*AW +: AW]), .cout(unused_pc));
     end endgenerate
     always @(posedge clk) begin
         if (pst == 2'd1 && sst == 4'd0) pq_r <= pq_w;
-        if (pst == 2'd1 && sst == 4'd1) pr2_r <= pr2_w;
+        if (pst == 2'd1 && sst == 4'd1) begin pqs_r <= pqs_w; pqc_r <= pqc_w; end
+        if (pst == 2'd1 && sst == 4'd2) pr2_r <= pr2_w;
     end
     wire [AW-1:0] pr_a = (CTL12 >= 2) ? pr2_r[0*AW +: AW] : pl_a + {ph_a, 8'd0};
     wire [AW-1:0] pr_b = (CTL12 >= 2) ? pr2_r[1*AW +: AW] : pl_b + {ph_b, 8'd0};
@@ -440,7 +444,7 @@ module ot_hdc_v41x_vec #(
                   (q_dst == DST_NONE || q_oso == pr_o);
     wire s1_okx = (CTL12 != 0) ? s1_okp : s1_ok;
     wire [CW-1:0] s1_nn = (CTL12 != 0) ? pr_n : q_nout * q_nin;
-    wire s1_ld = (CTL12 >= 2) ? (pst == 2'd1 && sst == 4'd2) : (CTL12 != 0) ? (pst == 2'd1 && sst == 3'd1) : (pst == 2'd1);
+    wire s1_ld = (CTL12 >= 2) ? (pst == 2'd1 && sst == 4'd3) : (CTL12 != 0) ? (pst == 2'd1 && sst == 3'd1) : (pst == 2'd1);
     always @(posedge clk) if (s1_ld) begin
         s_flat <= s1_cand && s1_okx;
         // a whole-op reduction whose layout does not flatten: rows of whole 8-element chunks
@@ -561,14 +565,14 @@ module ot_hdc_v41x_vec #(
     wire        nva_unused;
     ot_hdc_kadd #(.W(CW + 1), .K(KK)) u_nva (.a({1'b0, s_ni}), .b({1'b0, (ONE_CW << c_ls) - ONE_CW}), .cin(1'b0),
                                             .s(nva_w), .cout(nva_unused));
-    wire [3:0] S2_LR = s_wnf ? 4'd8 : 4'd7;     // the levels L; the result depth and the check one step later
+    wire [3:0] S2_LR = s_wnf ? 4'd9 : 4'd8;     // the levels L; the result depth and the check one step later
     reg  [9:0] r2_dT, r2_dR, r2_dTa, r2_lth;
     reg  [AW-1:0] r2_gstr;
     reg  [15:0] r2_need1;
     genvar gt;
     generate for (gt = 0; gt < 5; gt = gt + 1) begin : g_lst
         ot_hdc_v41x_ckreg #(.W(4), .R(0)) u_lst (.clk(clk), .rst_n(rst_n),
-            .d((pst == 2'd1 && sst == 4'd4) ? ((c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0]) : r2_ls_t[gt*4 +: 4]),
+            .d((pst == 2'd1 && sst == 4'd5) ? ((c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0]) : r2_ls_t[gt*4 +: 4]),
             .q(r2_ls_t[gt*4 +: 4]));
     end endgenerate
     reg  [4:0] r2_L;
@@ -578,23 +582,23 @@ module ot_hdc_v41x_vec #(
     reg  [AW-1:0]      r2_rstep;
     wire [4:0] c2_L = log2c(r2_nvs);
     always @(posedge clk) begin
-        if (pst == 2'd1 && sst == 4'd3) begin
+        if (pst == 2'd1 && sst == 4'd4) begin
             r2_tz <= tzero(s_ni);
             r2_lg <= log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
             r2_gstr <= c_gstr;
         end
-        if (pst == 2'd1 && sst == 4'd4) begin
+        if (pst == 2'd1 && sst == 4'd5) begin
             r2_ls <= (c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0];
             r2_gsh <= log2f(r2_gstr); r2_rsh <= log2f(q_rso); r2_gpow <= pow2(r2_gstr); r2_rpow <= pow2(q_rso);
         end
-        if (pst == 2'd1 && sst == 4'd5) begin
+        if (pst == 2'd1 && sst == 4'd6) begin
             r2_packed <= x_packed; r2_nsh <= x_nsh; r2_sh <= s_ni >> c_ls; r2_nva <= nva_w;
             r2_dF <= x_dF; r2_dM <= x_dM; r2_dS <= x_dS; r2_lt2 <= x_lt;
             r2_ssz <= ONE_CW << c_ls; r2_hls0 <= q_bhalf && (c_ls == 4'd0);
             r2_terms <= c_terms; r2_istep <= c_istep;
             r2_need1 <= q_chlead + {8'd0, q_chmul[15:8]};
         end
-        if (pst == 2'd1 && sst == 4'd6) begin
+        if (pst == 2'd1 && sst == 4'd7) begin
             r2_nvs <= r2_nva >> c_ls;                    // replaced at S7 for a non-flattening reduction
             r2_wq <= wq_w;
             r2_nslot <= ONE_CW << c_nsh; r2_ostep <= c_ostep; r2_rstep <= s_wnf ? {AW{1'b0}} : q_rso << c_nsh;
@@ -602,8 +606,8 @@ module ot_hdc_v41x_vec #(
             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP + ROUT;
             r2_lth <= H_R[9:0] * c_lt;
         end
-        if (pst == 2'd1 && sst == 4'd7) r2_dT <= r2_dTa + r2_lth;
-        if (pst == 2'd1 && sst == 4'd7 && s_wnf) r2_nvs <= wsum_w;
+        if (pst == 2'd1 && sst == 4'd8) r2_dT <= r2_dTa + r2_lth;
+        if (pst == 2'd1 && sst == 4'd8 && s_wnf) r2_nvs <= wsum_w;
         if (pst == 2'd1 && sst == S2_LR) r2_L <= c2_L;
         if (pst == 2'd1 && sst == S2_LR + 4'd1) begin
             r2_dR <= r2_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, r2_L} : 10'd0);
@@ -816,16 +820,32 @@ module ot_hdc_v41x_vec #(
     // the count rt - pvm for both values of this cycle's retire (r_tot, r_tot + 1); ret_i selects last
     // the counts r_tot - pv_mark and r_tot - pvm_e as registers (and + 1), from the next-cycle values of their terms
     reg  [15:0] cnt_p0, cnt_p1, cnt_e0, cnt_e1;
-    wire [15:0] n_pvmark = (EMIT[14] && LAST[14]) ? (STRT[14] ? a_mark : e_tot) : pv_mark;
+    // the loop / set-up state's next values (the original registers and every copy take these)
+    wire       n_av = promote ? 1'b1 : (emit && last_v) ? 1'b0 : a_v;
+    wire       n_st = promote ? 1'b0 : (emit && !a_started) ? 1'b1 : a_started;
+    wire [1:0] n_pst = accept ? 2'd1 : (pst == 2'd1 && s_done) ? 2'd2 : (pst == 2'd2 && !s2_go) ? 2'd3 :
+                       promote ? 2'd0 : pst;
+    // every candidate of the next marks is subtracted from n_rtot in parallel; the selects (emit / promote state) last
     wire [15:0] n_amark = (!PROM[11] && EMIT[11] && !STRT[11]) ? e_tot : a_mark;
-    wire [15:0] n_pvme = n_st ? n_amark : e_tot_n;
-    wire [15:0] np0, ne0, np1, ne1;
-    wire [1:0]  unused_cc;
-    ot_hdc_kadd #(.W(16), .K(KK)) u_np0 (.a(n_rtot), .b(~n_pvmark), .cin(1'b1), .s(np0), .cout(unused_cc[0]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_ne0 (.a(n_rtot), .b(~n_pvme), .cin(1'b1), .s(ne0), .cout(unused_cc[1]));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_np1 (.a(np0), .inc(1'b1), .y(np1));
-    ot_hdc_kinc #(.W(16), .K(KK)) u_ne1 (.a(ne0), .inc(1'b1), .y(ne1));
-    always @(posedge clk) begin cnt_p0 <= np0; cnt_p1 <= np1; cnt_e0 <= ne0; cnt_e1 <= ne1; end
+    wire [15:0] dk0, dm0, de0, dA0, dB0, dk1, dm1, de1, dA1, dB1;
+    wire [4:0]  unused_cc;
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dk (.a(n_rtot), .b(~pv_mark), .cin(1'b1), .s(dk0), .cout(unused_cc[0]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dm (.a(n_rtot), .b(~a_mark), .cin(1'b1), .s(dm0), .cout(unused_cc[1]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_de (.a(n_rtot), .b(~e_tot), .cin(1'b1), .s(de0), .cout(unused_cc[2]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dA (.a(n_rtot), .b(~n_amark), .cin(1'b1), .s(dA0), .cout(unused_cc[3]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_dB (.a(n_rtot), .b(~e_tot_n), .cin(1'b1), .s(dB0), .cout(unused_cc[4]));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dk1 (.a(dk0), .inc(1'b1), .y(dk1));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dm1 (.a(dm0), .inc(1'b1), .y(dm1));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_de1 (.a(de0), .inc(1'b1), .y(de1));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dA1 (.a(dA0), .inc(1'b1), .y(dA1));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_dB1 (.a(dB0), .inc(1'b1), .y(dB1));
+    wire        pv_upd = EMIT[14] && LAST[14];
+    always @(posedge clk) begin
+        cnt_p0 <= pv_upd ? (STRT[14] ? dm0 : de0) : dk0;        // r_tot - pv_mark, next cycle
+        cnt_p1 <= pv_upd ? (STRT[14] ? dm1 : de1) : dk1;
+        cnt_e0 <= n_st ? dA0 : dB0;                              // r_tot - pvm_e, next cycle
+        cnt_e1 <= n_st ? dA1 : dB1;
+    end
     wire [1:0] cpa_o, cpi_o, cem_o, cho_o;
     genvar gr;
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
@@ -839,23 +859,21 @@ module ot_hdc_v41x_vec #(
         ot_hdc_v41x_chf #(.K(KK)) u_cho (.src(a_chsrc), .cseq(a_chseq), .nd(need0_r), .pvv(pv_v), .pvs(pv_seq), .cnt(cp),
             .dsq(n_idseq), .rsq(n_irseq), .x_dseq(x_dseq), .x_seq(x_seq), .x_cnt(x_cnt), .ok(cho_o[gr]));
     end endgenerate
-    wire ch2_prom_a = ret_i ? cpa_o[1] : cpa_o[0];
-    wire ch2_prom_i = ret_i ? cpi_o[1] : cpi_o[0];
-    wire ch2_emit = ret_i ? cem_o[1] : cem_o[0];
-    wire ch2_hold = ret_i ? cho_o[1] : cho_o[0];
-    wire n_ch = (CTL12 >= 2) ? (promote ? (a_v ? ch2_prom_a : ch2_prom_i) : emit ? ch2_emit : ch2_hold)
+    // next ch for each value of this cycle's retire; ret_i selects last, in two kept copies (13 control copies each)
+    wire [1:0] n_chr;
+    assign n_chr[0] = promote ? (a_v ? cpa_o[0] : cpi_o[0]) : emit ? cem_o[0] : cho_o[0];
+    assign n_chr[1] = promote ? (a_v ? cpa_o[1] : cpi_o[1]) : emit ? cem_o[1] : cho_o[1];
+    wire n_ch = (CTL12 >= 2) ? (ret_i ? n_chr[1] : n_chr[0])
                              : (promote ? (a_v ? ch_prom_a : ch_prom_i) : emit ? ch_emit : ch_hold);
-    // the loop / set-up state's next values (the original registers and every copy take these)
-    wire       n_av = promote ? 1'b1 : (emit && last_v) ? 1'b0 : a_v;
-    wire       n_st = promote ? 1'b0 : (emit && !a_started) ? 1'b1 : a_started;
-    wire [1:0] n_pst = accept ? 2'd1 : (pst == 2'd1 && s_done) ? 2'd2 : (pst == 2'd2 && !s2_go) ? 2'd3 :
-                       promote ? 2'd0 : pst;
+    wire n_chA, n_chB;
+    ot_hdc_v41x_ckmux u_chA (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chA));
+    ot_hdc_v41x_ckmux u_chB (.s(ret_i), .a(n_chr[0]), .b(n_chr[1]), .y(n_chB));
     genvar gk;
     generate if (CTL12 >= 2) begin : g_rep
         for (gk = 0; gk < KC; gk = gk + 1) begin : g_k
             wire [1:0] kp;
             wire       kav, kst, kck, kch, kwr, kol;
-            ot_hdc_v41x_ckreg #(.W(6), .R(1)) u_r (.clk(clk), .rst_n(rst_n), .d({n_pst, n_av, n_st, n_ck, n_ch}),
+            ot_hdc_v41x_ckreg #(.W(6), .R(1)) u_r (.clk(clk), .rst_n(rst_n), .d({n_pst, n_av, n_st, n_ck, (gk < KC / 2) ? n_chA : n_chB}),
                                                  .q({kp, kav, kst, kck, kch}));
             ot_hdc_v41x_ckreg #(.W(2), .R(0)) u_c (.clk(clk), .rst_n(rst_n), .d({n_wr, n_ol}), .q({kwr, kol}));
             wire kem = kav && (kst || kck) && kch;
@@ -1428,6 +1446,32 @@ module ot_hdc_v41x_csum8 #(parameter integer W = 24, parameter integer K = 1) (
     wire [W-1:0] a5 = a4 ^ b4 ^ b3,       b5 = ((a4 & b4) | (a4 & b3) | (b4 & b3)) << 1;
     wire co;
     ot_hdc_kadd #(.W(W), .K(K)) u (.a(a5), .b(b5), .cin(1'b0), .s(y), .cout(co));
+endmodule
+
+// the 8-way carry-save tree of ot_hdc_v41x_csum8 (x[q] weighted 4^q), its sum and carry vectors (s + c = the sum)
+module ot_hdc_v41x_csa8 #(parameter integer W = 24) (
+    input  wire [8*W-1:0] x,
+    output wire [W-1:0]   s,
+    output wire [W-1:0]   c
+);
+    wire [W-1:0] t [0:7];
+    genvar q;
+    generate for (q = 0; q < 8; q = q + 1) begin : g_t
+        assign t[q] = x[q*W +: W] << (2 * q);
+    end endgenerate
+    wire [W-1:0] a0 = t[0] ^ t[1] ^ t[2], b0 = ((t[0] & t[1]) | (t[0] & t[2]) | (t[1] & t[2])) << 1;
+    wire [W-1:0] a1 = t[3] ^ t[4] ^ t[5], b1 = ((t[3] & t[4]) | (t[3] & t[5]) | (t[4] & t[5])) << 1;
+    wire [W-1:0] a2 = a0 ^ b0 ^ a1,       b2 = ((a0 & b0) | (a0 & a1) | (b0 & a1)) << 1;
+    wire [W-1:0] a3 = b1 ^ t[6] ^ t[7],   b3 = ((b1 & t[6]) | (b1 & t[7]) | (t[6] & t[7])) << 1;
+    wire [W-1:0] a4 = a2 ^ b2 ^ a3,       b4 = ((a2 & b2) | (a2 & a3) | (b2 & a3)) << 1;
+    assign s = a4 ^ b4 ^ b3;
+    assign c = ((a4 & b4) | (a4 & b3) | (b4 & b3)) << 1;
+endmodule
+
+// a 2:1 multiplexer in its own kept hierarchy (a duplicated driver stays a separate cell)
+(* keep_hierarchy *)
+module ot_hdc_v41x_ckmux (input wire s, input wire a, input wire b, output wire y);
+    assign y = s ? b : a;
 endmodule
 
 // y = a + b + c + d mod 2^W (two levels of adders)

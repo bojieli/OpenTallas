@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
- "generated_at": "2026-10-06T08:35:15Z",
+ "generated_at": "2026-10-06T10:04:21Z",
  "wire_stages": {
   "BCAST_STAGES": 0,
   "RET_STAGES": 0
@@ -43,8 +43,8 @@
   "pass_": true
  },
  "verilator_build_seconds": {
-  "N16_M8": 130.4,
-  "N64_M16": 347.8
+  "N16_M8": 145.0,
+  "N64_M16": 276.8
  },
  "random": {
   "N16_M8": [
@@ -74,7 +74,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1820,
+    "cycles": 1830,
     "pass_": true
    },
    {
@@ -103,7 +103,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1152,
+    "cycles": 1165,
     "pass_": true
    },
    {
@@ -134,7 +134,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1631,
+    "cycles": 1638,
     "pass_": true
    },
    {
@@ -162,7 +162,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1487,
+    "cycles": 1499,
     "pass_": true
    },
    {
@@ -193,7 +193,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1880,
+    "cycles": 1891,
     "pass_": true
    },
    {
@@ -222,7 +222,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1714,
+    "cycles": 1723,
     "pass_": true
    },
    {
@@ -251,7 +251,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1645,
+    "cycles": 1656,
     "pass_": true
    },
    {
@@ -280,7 +280,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1720,
+    "cycles": 1728,
     "pass_": true
    },
    {
@@ -311,7 +311,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1922,
+    "cycles": 1931,
     "pass_": true
    },
    {
@@ -339,7 +339,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1465,
+    "cycles": 1482,
     "pass_": true
    },
    {
@@ -370,7 +370,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1593,
+    "cycles": 1603,
     "pass_": true
    },
    {
@@ -400,7 +400,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1500,
+    "cycles": 1513,
     "pass_": true
    },
    {
@@ -428,7 +428,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1554,
+    "cycles": 1567,
     "pass_": true
    },
    {
@@ -458,7 +458,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1714,
+    "cycles": 1725,
     "pass_": true
    },
    {
@@ -486,7 +486,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1375,
+    "cycles": 1388,
     "pass_": true
    },
    {
@@ -515,7 +515,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1445,
+    "cycles": 1460,
     "pass_": true
    },
    {
@@ -544,7 +544,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1795,
+    "cycles": 1805,
     "pass_": true
    },
    {
@@ -574,7 +574,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1555,
+    "cycles": 1570,
     "pass_": true
    },
    {
@@ -602,7 +602,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1539,
+    "cycles": 1556,
     "pass_": true
    },
    {
@@ -631,7 +631,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1518,
+    "cycles": 1533,
     "pass_": true
    },
    {
@@ -660,7 +660,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1716,
+    "cycles": 1729,
     "pass_": true
    },
    {
@@ -687,7 +687,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1160,
+    "cycles": 1175,
     "pass_": true
    },
    {
@@ -715,7 +715,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1687,
+    "cycles": 1699,
     "pass_": true
    },
    {
@@ -743,7 +743,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1421,
+    "cycles": 1432,
     "pass_": true
    }
   ],
@@ -773,7 +773,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1708,
+    "cycles": 1720,
     "pass_": true
    },
    {
@@ -801,7 +801,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1822,
+    "cycles": 1835,
     "pass_": true
    },
    {
@@ -830,7 +830,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1450,
+    "cycles": 1461,
     "pass_": true
    },
    {
@@ -858,7 +858,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1402,
+    "cycles": 1420,
     "pass_": true
    },
    {
@@ -890,7 +890,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2017,
+    "cycles": 2027,
     "pass_": true
    },
    {
@@ -921,7 +921,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1749,
+    "cycles": 1765,
     "pass_": true
    },
    {
@@ -948,7 +948,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1175,
+    "cycles": 1197,
     "pass_": true
    },
    {
@@ -978,7 +978,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1601,
+    "cycles": 1616,
     "pass_": true
    },
    {
@@ -1008,7 +1008,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1647,
+    "cycles": 1660,
     "pass_": true
    },
    {
@@ -1037,7 +1037,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1431,
+    "cycles": 1443,
     "pass_": true
    },
    {
@@ -1066,7 +1066,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1723,
+    "cycles": 1737,
     "pass_": true
    },
    {
@@ -1095,7 +1095,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1412,
+    "cycles": 1420,
     "pass_": true
    },
    {
@@ -1124,7 +1124,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1544,
+    "cycles": 1553,
     "pass_": true
    },
    {
@@ -1151,7 +1151,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1255,
+    "cycles": 1277,
     "pass_": true
    },
    {
@@ -1181,7 +1181,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2075,
+    "cycles": 2083,
     "pass_": true
    },
    {
@@ -1211,7 +1211,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1868,
+    "cycles": 1877,
     "pass_": true
    }
   ]
@@ -1238,7 +1238,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3824,
+    "cycles": 3843,
     "pass_": true
    },
    {
@@ -1257,7 +1257,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3401,
+    "cycles": 3419,
     "pass_": true
    },
    {
@@ -1278,7 +1278,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3024,
+    "cycles": 3040,
     "pass_": true
    },
    {
@@ -1299,7 +1299,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3144,
+    "cycles": 3163,
     "pass_": true
    },
    {
@@ -1318,7 +1318,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3194,
+    "cycles": 3215,
     "pass_": true
    },
    {
@@ -1339,7 +1339,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3024,
+    "cycles": 3040,
     "pass_": true
    },
    {
@@ -1360,7 +1360,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2936,
+    "cycles": 2957,
     "pass_": true
    },
    {
@@ -1381,7 +1381,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3499,
+    "cycles": 3518,
     "pass_": true
    },
    {
@@ -1400,7 +1400,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3194,
+    "cycles": 3215,
     "pass_": true
    },
    {
@@ -1421,7 +1421,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3024,
+    "cycles": 3040,
     "pass_": true
    },
    {
@@ -1442,7 +1442,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2936,
+    "cycles": 2957,
     "pass_": true
    },
    {
@@ -1461,7 +1461,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3414,
+    "cycles": 3434,
     "pass_": true
    },
    {
@@ -1482,7 +1482,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3024,
+    "cycles": 3040,
     "pass_": true
    },
    {
@@ -1503,7 +1503,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2936,
+    "cycles": 2957,
     "pass_": true
    },
    {
@@ -1524,7 +1524,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3499,
+    "cycles": 3518,
     "pass_": true
    },
    {
@@ -1543,7 +1543,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3194,
+    "cycles": 3215,
     "pass_": true
    },
    {
@@ -1564,7 +1564,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3024,
+    "cycles": 3040,
     "pass_": true
    },
    {
@@ -1585,7 +1585,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2936,
+    "cycles": 2957,
     "pass_": true
    },
    {
@@ -1606,7 +1606,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3499,
+    "cycles": 3518,
     "pass_": true
    },
    {
@@ -1625,7 +1625,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2939,
+    "cycles": 2955,
     "pass_": true
    },
    {
@@ -1646,7 +1646,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3295,
+    "cycles": 3316,
     "pass_": true
    },
    {
@@ -1665,7 +1665,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3404,
+    "cycles": 3421,
     "pass_": true
    },
    {
@@ -1686,7 +1686,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2684,
+    "cycles": 2703,
     "pass_": true
    },
    {
@@ -1707,7 +1707,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3291,
+    "cycles": 3307,
     "pass_": true
    },
    {
@@ -1728,7 +1728,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3388,
+    "cycles": 3409,
     "pass_": true
    },
    {
@@ -1747,7 +1747,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3404,
+    "cycles": 3421,
     "pass_": true
    },
    {
@@ -1768,7 +1768,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2684,
+    "cycles": 2703,
     "pass_": true
    },
    {
@@ -1789,7 +1789,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3291,
+    "cycles": 3307,
     "pass_": true
    },
    {
@@ -1810,7 +1810,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3398,
+    "cycles": 3418,
     "pass_": true
    },
    {
@@ -1829,7 +1829,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2997,
+    "cycles": 3019,
     "pass_": true
    },
    {
@@ -1850,7 +1850,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3088,
+    "cycles": 3103,
     "pass_": true
    },
    {
@@ -1871,7 +1871,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3080,
+    "cycles": 3103,
     "pass_": true
    },
    {
@@ -1892,7 +1892,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3498,
+    "cycles": 3515,
     "pass_": true
    },
    {
@@ -1911,7 +1911,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2564,
+    "cycles": 2585,
     "pass_": true
    },
    {
@@ -1932,7 +1932,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3328,
+    "cycles": 3344,
     "pass_": true
    },
    {
@@ -1953,7 +1953,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3278,
+    "cycles": 3301,
     "pass_": true
    },
    {
@@ -1972,7 +1972,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3537,
+    "cycles": 3554,
     "pass_": true
    },
    {
@@ -1993,7 +1993,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2632,
+    "cycles": 2652,
     "pass_": true
    },
    {
@@ -2014,7 +2014,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3328,
+    "cycles": 3344,
     "pass_": true
    },
    {
@@ -2035,7 +2035,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3297,
+    "cycles": 3318,
     "pass_": true
    },
    {
@@ -2054,7 +2054,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3263,
+    "cycles": 3282,
     "pass_": true
    },
    {
@@ -2075,7 +2075,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2725,
+    "cycles": 2743,
     "pass_": true
    },
    {
@@ -2096,7 +2096,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3259,
+    "cycles": 3276,
     "pass_": true
    },
    {
@@ -2117,7 +2117,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3544,
+    "cycles": 3564,
     "pass_": true
    },
    {
@@ -2136,7 +2136,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3026,
+    "cycles": 3045,
     "pass_": true
    },
    {
@@ -2157,7 +2157,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2985,
+    "cycles": 3001,
     "pass_": true
    },
    {
@@ -2178,7 +2178,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3003,
+    "cycles": 3022,
     "pass_": true
    },
    {
@@ -2199,7 +2199,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3602,
+    "cycles": 3621,
     "pass_": true
    },
    {
@@ -2218,7 +2218,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3103,
+    "cycles": 3124,
     "pass_": true
    },
    {
@@ -2239,7 +2239,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2985,
+    "cycles": 3001,
     "pass_": true
    },
    {
@@ -2260,7 +2260,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2967,
+    "cycles": 2987,
     "pass_": true
    },
    {
@@ -2281,7 +2281,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3545,
+    "cycles": 3563,
     "pass_": true
    },
    {
@@ -2300,7 +2300,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3148,
+    "cycles": 3170,
     "pass_": true
    },
    {
@@ -2321,7 +2321,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 3052,
+    "cycles": 3067,
     "pass_": true
    },
    {
@@ -2342,7 +2342,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2948,
+    "cycles": 2970,
     "pass_": true
    },
    {
@@ -2361,7 +2361,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 608,
+    "cycles": 610,
     "pass_": true
    }
   ]
@@ -2374,12 +2374,12 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 19,
-     "last_emit": 38,
+     "first_emit": 20,
+     "last_emit": 39,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 59,
-     "last_write": 78,
+     "first_write": 60,
+     "last_write": 79,
      "depth": 40,
      "chase": [
       0,
@@ -2393,12 +2393,12 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 60,
-     "last_emit": 79,
+     "first_emit": 61,
+     "last_emit": 80,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 100,
-     "last_write": 119,
+     "first_write": 101,
+     "last_write": 120,
      "depth": 40,
      "chase": [
       1,
@@ -2412,12 +2412,12 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 101,
-     "last_emit": 120,
+     "first_emit": 102,
+     "last_emit": 121,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 141,
-     "last_write": 160,
+     "first_write": 142,
+     "last_write": 161,
      "depth": 40,
      "chase": [
       1,
@@ -2431,12 +2431,12 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 142,
-     "last_emit": 161,
+     "first_emit": 143,
+     "last_emit": 162,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 182,
-     "last_write": 201,
+     "first_write": 183,
+     "last_write": 202,
      "depth": 40,
      "chase": [
       1,
@@ -2445,7 +2445,7 @@
      ],
      "layout": "whole-unflattened",
      "result_cycles": [
-      304
+      305
      ],
      "result_after_last_write": 103
     }
@@ -2456,7 +2456,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 314,
+    "cycles": 315,
     "pass_": true
    },
    "sequence": {
@@ -2558,7 +2558,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1977,
+    "cycles": 1991,
     "pass_": true
    }
   },
@@ -2567,12 +2567,13 @@
    "producer_period_cycles": 3,
    "write_to_emit_cycles": [
     2,
-    4,
-    6,
-    8,
-    10
+    3,
+    5,
+    7,
+    9,
+    11
    ],
-   "max_write_to_emit": 10,
+   "max_write_to_emit": 11,
    "check": {
     "ended": true,
     "vm_mismatch_words": 0,
@@ -2588,55 +2589,55 @@
     {
      "cls": "linear",
      "vectors": 4,
-     "first_emit": 19,
-     "last_emit": 22,
+     "first_emit": 20,
+     "last_emit": 23,
      "depth": 40
     },
     {
      "cls": "sfu1",
      "vectors": 16,
-     "first_emit": 32,
-     "last_emit": 47,
+     "first_emit": 34,
+     "last_emit": 49,
      "depth": 134
     },
     {
      "cls": "linear",
      "vectors": 4,
-     "first_emit": 142,
-     "last_emit": 145,
+     "first_emit": 144,
+     "last_emit": 147,
      "depth": 40
     },
     {
      "cls": "div",
      "vectors": 16,
-     "first_emit": 146,
-     "last_emit": 161,
+     "first_emit": 148,
+     "last_emit": 163,
      "depth": 55
     },
     {
      "cls": "sfu4",
      "vectors": 16,
-     "first_emit": 177,
-     "last_emit": 192,
+     "first_emit": 179,
+     "last_emit": 194,
      "depth": 161
     },
     {
      "cls": "linear",
      "vectors": 4,
-     "first_emit": 314,
-     "last_emit": 317,
+     "first_emit": 316,
+     "last_emit": 319,
      "depth": 40
     },
     {
      "cls": "linear",
      "vectors": 4,
-     "first_emit": 318,
-     "last_emit": 321,
+     "first_emit": 320,
+     "last_emit": 323,
      "depth": 40
     }
    ],
    "bubbles_between_ops": [
-    9,
+    10,
     94,
     0,
     15,
@@ -2649,7 +2650,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 371,
+    "cycles": 373,
     "pass_": true
    }
   }
@@ -2677,7 +2678,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "2cd24466a57c47077da2dcccdbb1b7f8f703e2812e43e610886a768485c892ba",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "cf8c7c91f7d7ce9f2e1c061180a401af8aef0b366e60200cd369cd0725878633",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "c84fd2f08e003f763d22ab926dce361616fbf5cfe8bd83000a2d28f7c4be2789",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "5da39b80d9202a7c99ef66afb45798c083460ea49f05973479b80347d25123b6",
   "rtl/test/tb_hdc_v41x_vec_c12.sv": "becffec8d415803e91937ce0733d95239c1420e27a7cf5f5554c37ab9893dcdb",
   "rtl/test/tb_hdc_v41x_vec_sfu_c12.sv": "ec827222cbded8b088ec2670773561aa7b125127659207804bb5e0fba6ef6a33",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
