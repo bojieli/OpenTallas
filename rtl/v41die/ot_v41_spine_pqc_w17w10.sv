@@ -785,8 +785,12 @@ module ot_v41_spine_pqc_w17w10 #(
 
     // ------------------------------------------------------------------ row counts from the registered root tags
     // stage A: per group of 8 regions and per tag, a popcount; stage B: groups of four summed; stage C: total
+    // v13: stage C is two stages (C1 pairs of B summed, C2 total; gb -> rc was +46 ps at 833), so a row is counted
+    // one cycle later -- the same cycle its write leaves (+1 row-write stage), keeping idle >= the last row write
     localparam integer NCA = (R + 7) / 8;
     localparam integer NCB = (NCA + 3) / 4;
+    localparam integer NCP = (NCB + 1) / 2;
+    reg [7:0] gp [0:NCP-1][0:3];
     reg [3:0] ga [0:NCA-1][0:3];
     reg [7:0] gb [0:NCB-1][0:3];
     reg [7:0] rc [0:3];
@@ -798,6 +802,7 @@ module ot_v41_spine_pqc_w17w10 #(
                 rc[kt] <= 8'd0;
                 for (kg = 0; kg < NCA; kg = kg + 1) ga[kg][kt] <= 4'd0;
                 for (kq = 0; kq < NCB; kq = kq + 1) gb[kq][kt] <= 8'd0;
+                for (kq = 0; kq < NCP; kq = kq + 1) gp[kq][kt] <= 8'd0;
             end
         end else begin
             for (kg = 0; kg < NCA; kg = kg + 1)
@@ -813,8 +818,10 @@ module ot_v41_spine_pqc_w17w10 #(
                     for (kg = 4 * kq; kg < 4 * kq + 4; kg = kg + 1) if (kg < NCA) racc = racc + 8'(ga[kg][kt]);
                     gb[kq][kt] <= racc;
                 end
+                for (kq = 0; kq < NCP; kq = kq + 1)
+                    gp[kq][kt] <= gb[2 * kq][kt] + ((2 * kq + 1 < NCB) ? gb[2 * kq + 1][kt] : 8'd0);
                 racc = 8'd0;
-                for (kq = 0; kq < NCB; kq = kq + 1) racc = racc + gb[kq][kt];
+                for (kq = 0; kq < NCP; kq = kq + 1) racc = racc + gp[kq][kt];
                 rc[kt] <= racc;
             end
         end
