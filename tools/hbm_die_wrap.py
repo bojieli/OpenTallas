@@ -137,8 +137,9 @@ def gen(spec):
                 elif b == 'open':
                     pass
                 else:
+                  for b1 in (b if isinstance(b, list) else [b]):
                     off = 0
-                    for part in b[4:].split('+'):
+                    for part in b1[4:].split('+'):
                         port, lo, hi = parse_rng(part)
                         n = min(hi - lo, rw - off)
                         for i in range(lo, lo + n):
@@ -244,5 +245,121 @@ def main():
     print(json.dumps({k: v for k, v in st.items() if k != 'cfg_inputs'}))
 
 
+
+
+def gen_tb(spec, cycles=400, seed=20261006):
+    """Lockstep bench: the wrapper against the same unchanged RTL instance(s) driven straight from the stimulus.
+    Die-bound inputs of the reference are the die input bits delayed one cycle (the wrapper's input register); every
+    other reference input (clock, reset, cfg chain, wrapper expressions) is the wrapper's own internal wire.  Every
+    die-bound output bit must equal the reference output one cycle later (the wrapper's output register).  One seed;
+    $fatal (nonzero exit) on any mismatch."""
+    master = spec['master']
+    rec = V.master_record(master)
+    ports = rec['ports']
+    T = [f'`timescale 1ns/1ps', f'// lockstep bench of {master} (tools/hbm_die_wrap.py --tb): one seed {seed}', f'module tb_{master};']
+    for p, v in sorted(ports.items()):
+        kind = v['direction']
+        T.append(f'    {"reg" if kind == "input" else "wire"} [{v["bits"] - 1}:0] {p};')
+        if kind == 'inout':
+            T.append(f'    reg [{v["bits"] - 1}:0] drv_{p};')
+    conn = ', '.join(f'.{p}({p})' for p in sorted(ports))
+    T.append(f'    {master} dut({conn});')
+    # inout drive: drive only the input bits
+    dirs = {}
+    for p, v in ports.items():
+        arr = ['in'] * v['bits']
+        for a, b, d in v['dir_segments']:
+            for i in range(a, b):
+                arr[i] = 'out' if d == 'out' else 'in'
+        dirs[p] = arr
+        if v['direction'] == 'inout':
+            for i, d in enumerate(arr):
+                if d == 'in':
+                    T.append(f"    assign {p}[{i}] = drv_{p}[{i}];")
+    T.append('    reg clk = 0; always #0.4165 clk = ~clk;')
+    T.append('    always @* ck[0] = clk;' if 'ck' in ports else '')
+    # one-cycle delayed copies of every input-capable port
+    for p, v in sorted(ports.items()):
+        if v['direction'] != 'output':
+            src = f'drv_{p}' if v['direction'] == 'inout' else p
+            T.append(f'    reg [{v["bits"] - 1}:0] d_{p}; always @(posedge clk) d_{p} <= {src};')
+    checks = []
+    for inst in spec['instances']:
+        pm = L.parse_module(inst['file'], inst['module'], inst.get('params'))['ports']
+        conns = []
+        for rp, (rd, rw) in pm.items():
+            b = inst['bind'].get(rp, 'cfg' if rd == 'input' else 'fold')
+            w = f'r_{inst["name"]}_{rp}'
+            T.append(f'    wire [{rw - 1}:0] {w};')
+            conns.append(f'.{rp}({w})')
+            if rd == 'input':
+                if isinstance(b, str) and b.startswith('die:'):
+                    srcs = []
+                    n = 0
+                    for part in b[4:].split('+'):
+                        port, lo, hi = parse_rng(part)
+                        srcs.append(f'd_{port}[{hi - 1}:{lo}]')
+                        n += hi - lo
+                    srcs = srcs[::-1]
+                    if n < rw:
+                        srcs = [f"{rw - n}'d0"] + srcs
+                    T.append(f'    assign {w} = {{{", ".join(srcs)}}};')
+                else:
+                    T.append(f'    assign {w} = dut.w_{inst["name"]}_{rp};')
+            else:
+                for b1 in (b if isinstance(b, list) else [b]):
+                    if not (isinstance(b1, str) and b1.startswith('die:')):
+                        continue
+                    off = 0
+                    for part in b1[4:].split('+'):
+                        port, lo, hi = parse_rng(part)
+                        n = min(hi - lo, rw - off)
+                        checks.append((f'{port}[{lo + n - 1}:{lo}]', f'q_{inst["name"]}_{rp}[{off + n - 1}:{off}]'))
+                        off += n
+                T.append(f'    reg [{rw - 1}:0] q_{inst["name"]}_{rp}; always @(posedge clk) q_{inst["name"]}_{rp} <= {w};')
+        prm = ', '.join(f'.{k}({v})' for k, v in inst.get('params', {}).items())
+        T.append(f'    {inst["module"]} {"#(" + prm + ") " if prm else ""}ref_{inst["name"]} ({", ".join(conns)});')
+    T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',
+          '    task automatic randomize_inputs; begin']
+    for p, v in sorted(ports.items()):
+        if p == 'ck' or v['direction'] == 'output':
+            continue
+        tgt = f'drv_{p}' if v['direction'] == 'inout' else p
+        if p == 'rst':
+            continue
+        for k in range(0, v['bits'], 32):
+            hi = min(v['bits'], k + 32)
+            T.append(f'        {tgt}[{hi - 1}:{k}] = $urandom(seed); seed = seed + 1;')
+    T += ['    end endtask', '    initial begin']
+    if 'rst' in ports:
+        T.append("        rst = 1;")
+    T += ['        randomize_inputs;', '        repeat (8) @(posedge clk);']
+    if 'rst' in ports:
+        T.append("        #0.05 rst = 0;")
+    T += [f'        for (cyc = 0; cyc < {cycles}; cyc = cyc + 1) begin', '            @(negedge clk);']
+    for a, b in checks:
+        T.append(f'            nchk = nchk + 1; if ({a} !== {b}) begin err = err + 1; '
+                 f'if (err < 10) $display("MISMATCH {a} %h ref %h cyc %0d", {a}, {b}, cyc); end')
+    T += ['            randomize_inputs;', '        end',
+          f'        $display("TB_{master} checks=%0d mismatches=%0d", nchk, err);',
+          '        if (err != 0 || nchk == 0) $fatal(1, "FAIL");', '        $finish;', '    end', 'endmodule']
+    return '\n'.join(T) + '\n'
+
+
+def main_tb():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--spec', required=True)
+    ap.add_argument('--out', required=True)
+    ap.add_argument('--cycles', type=int, default=400)
+    a = ap.parse_args(sys.argv[2:])
+    spec = json.loads(Path(a.spec).read_text())
+    out = Path(a.out)
+    (out / f'tb_{spec["master"]}.sv').write_text(gen_tb(spec, a.cycles))
+    print(f'tb_{spec["master"]}.sv')
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == '--tb':
+        main_tb()
+    else:
+        main()
