@@ -1,0 +1,8 @@
+build_rc=0
+run_rc=0
+phase 0: 3072 requests (1043 writes, 5084 read beats) on 32 PCs; responses dut 5084 ref 5084
+phase 1: 3072 requests (986 writes, 5203 read beats) on 32 PCs; responses dut 5203 ref 5203
+latency min (the crossing alone): request rq issue -> PHY accept 6.32 cks cycles; response PHY accept -> rd 5.08 cks cycles
+latency: request rq issue -> PHY accept mean 42.01 max 180.41 cks cycles; response PHY -> rd mean 5.58 max 6.07 cks cycles (cks 833 ps, ckh 900 ps)
+TB_DSFD_CTRL PASS
+DONE

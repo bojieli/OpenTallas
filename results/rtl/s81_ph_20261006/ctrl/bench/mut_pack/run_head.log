@@ -1,0 +1,15 @@
+ERR (a) pc 3 request 0: PHY saw tag 01801 addr 0000a614, issued tag 01800 addr 0000a614
+ERR (a) pc 4 request 0: PHY saw tag 02001 addr 00005a56, issued tag 02000 addr 00005a56
+ERR (a) pc 9 request 0: PHY saw tag 04801 addr 00000234, issued tag 04800 addr 00000234
+ERR (a) pc 12 request 0: PHY saw tag 06001 addr 0000e6bc, issued tag 06000 addr 0000e6bc
+ERR (a) pc 15 request 0: PHY saw tag 07801 addr 0000cad9, issued tag 07800 addr 0000cad9
+ERR (a) pc 17 request 0: PHY saw tag 08801 addr 0000b162, issued tag 08800 addr 0000b162
+ERR (a) pc 18 request 0: PHY saw tag 09001 addr 0000982c, issued tag 09000 addr 0000982c
+ERR (a) pc 23 request 0: PHY saw tag 0b801 addr 0000883c, issued tag 0b800 addr 0000883c
+ERR (a) pc 28 request 0: PHY saw tag 0e001 addr 0000f80c, issued tag 0e000 addr 0000f80c
+ERR (a) pc 0 request 0: PHY saw tag 00001 addr 0000438c, issued tag 00000 addr 0000438c
+phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 3824 ref 2521
+phase 1: 1536 requests (493 writes, 2635 read beats) on 32 PCs; responses dut 3872 ref 2635
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 18.58 max 148.71 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=3567

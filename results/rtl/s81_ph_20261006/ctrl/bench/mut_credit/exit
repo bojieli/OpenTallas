@@ -1,0 +1,19 @@
+build_rc=0
+run_rc=0
+ERR phase 0: timeout
+ERR (c) phase 0: response beats dut 2479 ref 2521 expected 2521
+ERR (c) phase 0: key 000282d3 data differs / missing
+ERR (c) phase 0: key 000502c1 data differs / missing
+ERR (c) phase 0: key 000802a1 data differs / missing
+ERR (d) phase 0: write-done dut 513 ref 526 writes 526
+ERR (d) phase 0: st 11
+phase 0: 1536 requests (526 writes, 2521 read beats) on 32 PCs; responses dut 2521 ref 2521
+ERR phase 1: timeout
+ERR (c) phase 1: response beats dut 2160 ref 2548 expected 2548
+ERR (d) phase 1: write-done dut 444 ref 532 writes 532
+ERR (d) phase 1: st 11
+phase 1: 1536 requests (532 writes, 2548 read beats) on 32 PCs; responses dut 2548 ref 2548
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 15.72 max 131.73 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=878
+DONE
