@@ -1,0 +1,63 @@
+{
+  "source_sha256": {
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv": "a438d922b44c8af7fe3eca8cdc6513059b18653885fa3b402913d3d1b8e002e4",
+    "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv": "fc05d7df80af5d8f668261e2e087f80a1eb723d53ce746fae6668e48e743231d"
+  },
+  "model_sha256": "a9fb8bd21be5b78ee084319b44083325057e11e20472328a971bc86603011681",
+  "declared_ram_gib": 2,
+  "workers": 1,
+  "parent_qualified": false,
+  "fixtures": {
+    "seed": 20261006,
+    "vectors": 64,
+    "values": 24576,
+    "independent_golden": "FP32 decode then descending numeric value/lowest-index tie, selected IDs ascending",
+    "input_sha256": "71d6603f9ad36d07e96dc04e3dcb342d4327351ba4b5b29fe2e10c94efa629da",
+    "expected_sha256": "cdd32ad1022f92845cde79ed924847ec3128f5d15217de9d511a07a65624fe39"
+  },
+  "runs": {
+    "exact": {
+      "returncode": 0,
+      "expected_marker": "ROUTER_PIPELINE_REAL384_K6_PASS",
+      "expected_outcome_observed": true
+    },
+    "negative_bank": {
+      "returncode": 1,
+      "expected_marker": "GOLDEN_BANK_FAIL",
+      "expected_outcome_observed": true
+    },
+    "negative_held_reset": {
+      "returncode": 1,
+      "expected_marker": "HELD_RESET_GHOST",
+      "expected_outcome_observed": true
+    }
+  },
+  "compile_returncode": 0,
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_router_pipeline",
+    "-o",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/gate-r1/router.vvp",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/source-eeb3a7e51/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk.sv",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/source-eeb3a7e51/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/source-eeb3a7e51/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/ot_hbm_router_topk_pipeline.sv",
+    "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/source-eeb3a7e51/physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv"
+  ],
+  "binary_sha256": "8b76718ded1cf9e56d07666edc4b885bc42e2c1430691764b70a6a62aa55e9d9",
+  "peak_child_rss_KiB": 22836,
+  "post_capacity": {
+    "phase": "terminal",
+    "utc": "2026-10-06T06:00:34Z",
+    "cpus": 128,
+    "load": 104.04541015625,
+    "idle_cpus": 18.80644656548271,
+    "disk_free_bytes": 1899001126912,
+    "cpu_fit": true
+  },
+  "passed": true,
+  "status": "PASS_CHANGED_ROUTER_MINIMUM_MECHANISM"
+}

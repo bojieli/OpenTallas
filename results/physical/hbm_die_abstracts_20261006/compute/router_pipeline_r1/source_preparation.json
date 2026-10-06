@@ -1,5 +1,5 @@
 {
-  "status": "REAL_DEFAULT_OFF_PIPELINE_RTL_ENABLED_SYNTAX_ONLY",
+  "status": "REAL_ENABLED_FULL384_K6_MINIMUM_GATE_PASS_PHYSICAL_OPEN",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/tb_router_pipeline.sv": "fc05d7df80af5d8f668261e2e087f80a1eb723d53ce746fae6668e48e743231d",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/retained_final.sdc": "1ce35f39423e56ccad763261f78817a51b4eb8571e28b25d3b4491454600c849",
@@ -16,7 +16,7 @@
   "K": 6,
   "IW": 9,
   "syntax_ENABLED_returncode": 0,
-  "functional_gate": "NOT_RUN",
+  "functional_gate": "gate-r1/gate.json",
   "physical_gate": "NOT_RUN",
   "parent_qualified": false,
   "fresh_path_repair": "registered compare and payload mux; two banks retain II1 input; each bank recurrence two clocks",
@@ -25,5 +25,8 @@
   "negative_controls": [
     "actual bank phase force",
     "actual held-reset stale-valid FF force"
-  ]
+  ],
+  "measured_last_input_to_output_cycles": 28,
+  "retained_last_input_to_output_cycles": 23,
+  "extra_cycles": 5
 }
