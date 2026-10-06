@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_die_views_index.v1",
  "die": "HBM accelerator DS die",
  "round": "r16h",
- "generator_sha256": "5ef5953be303f77ab213c78d22d6befdb09ec9c8f816ad3e9752b8e8d13e2c0d",
+ "generator_sha256": "28f08d7ee29a24095562b9ed8e52fdaa6a40aa42ab3256036ac98706b0533813",
  "status_values": [
   "closed",
   "closed-below-margin",
@@ -360,7 +360,8 @@
    "check": {
     "verdict": "MISMATCH",
     "problems": [
-     "size 1399.66 x 133.896 != 1399.656 x 326.28"
+     "size 1399.66 x 133.896 != 1399.656 x 326.28",
+     "2118 pins off the generator position (same face)"
     ],
     "positions": "2118 pins off the generator position (same face)",
     "size_view": [
@@ -431,7 +432,8 @@
     "verdict": "MISMATCH",
     "problems": [
      "size 2202.77 x 2072.79 != 2202.744 x 2073.576",
-     "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer"
+     "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer",
+     "3419 pins off the generator position (same face)"
     ],
     "positions": "3419 pins off the generator position (same face)",
     "size_view": [
@@ -1099,9 +1101,11 @@
     "ff": "hfd_stn_r26_ff.lib"
    },
    "check": {
-    "verdict": "MATCH",
-    "problems": [],
-    "positions": "exact",
+    "verdict": "MISMATCH",
+    "problems": [
+     "4330 pins off the generator position (same face)"
+    ],
+    "positions": "4330 pins off the generator position (same face)",
     "size_view": [
      126.12,
      49.656

@@ -267,6 +267,8 @@ def check_lef(master, lef, tol=0.0125, allow_extra=()):
         problems.append(f'pins: {len(missing)} missing, {len(extra)} extra, {len(face_bad)} wrong face, '
                         f'{len(layer_bad)} wrong layer')
     out['positions'] = 'exact' if not moved else f'{len(moved)} pins off the generator position (same face)'
+    if moved:       # the die GRT / pricing use the generator pin plan: a moved pin is a mismatch
+        problems.append(out['positions'])
     out['problems'] = problems
     out['verdict'] = 'MATCH' if not problems else 'MISMATCH'
     return out

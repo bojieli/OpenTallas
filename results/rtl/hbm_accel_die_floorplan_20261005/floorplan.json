@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm-accel-die-floorplan.v1",
  "tool": "tools/hbm_accel_die_fp.py",
- "tool_sha256": "5ef5953be303f77ab213c78d22d6befdb09ec9c8f816ad3e9752b8e8d13e2c0d",
+ "tool_sha256": "28f08d7ee29a24095562b9ed8e52fdaa6a40aa42ab3256036ac98706b0533813",
  "sources_sha256": {
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
@@ -12,7 +12,7 @@
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json": "34672497097022383bd473e225cf697fc67178f5b2c290b035e595a83335f3a8",
   "tools/dsrom_s81_fulldie.py": "a949387b7607dbc31748c9d335433b6c418ae623177a52522d9e4752ab5bcb20",
-  "tools/qwen_rom_fulldie.py": "bc892b806a6ff1652a5a2830028ea445edf6334161e36109aea0df187fbc30ff"
+  "tools/qwen_rom_fulldie.py": "f07588f12c4b54139ab5813ba8b7f57f0eee9dfce483dbce9292b820272ba687"
  },
  "die": {
   "w_um": 24401.52,
@@ -2090,6 +2090,12 @@
    9338.688,
    326.28
   ],
+  "corner_rule": {
+   "hfd_stn_r26": {
+    "keep": 1.0,
+    "tail": 8
+   }
+  },
   "W": 24401.52,
   "H": 24621.84
  },

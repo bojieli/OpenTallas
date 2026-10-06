@@ -209,7 +209,9 @@ FACE_FIX = {('hfd_attn_tile', 'k'): 'S', ('hfd_attn_tile', 'ci'): 'S', ('hfd_att
 # tall, [11069.136, 9338.688, 12468.792, 9664.968], taken from the loader / cmdproc gaps (each keeps 327.192 um);
 # loader and cmdproc do not move.  The die's pipelined router view (ot_gpu_router_topk_ps, ~7.4k um2 placed) fits either
 # envelope; the resize carries the alternative topk_f3 child frame (315.956 um square + 5 um halo).
-R16H = dict(R16G, router_env=(9338.688, 326.28))
+R16H = dict(R16G, router_env=(9338.688, 326.28), corner_rule={'hfd_stn_r26': dict(keep=1.0, tail=8)})
+# corner_rule: fully packed 48 nm faces keep >= 1 um off the corner with the last 8 pins at 96 nm (only masters whose
+# routed view showed M5 spacing DRC at the corner: hfd_stn_r26; r4 / r11 have the same packing and routed DRC 0)
 # Generator decisions recorded in floorplan.json (generator owner CLAUDE HBM-ABSTRACTS, 2026-10-06)
 DECISIONS = dict(
     item9_collective_path=('The selected native SM (ot_hbm_accel_sm_v / TU) has no O_COLL / VR path. The die collective '
@@ -226,6 +228,8 @@ ADOPTED = R16H
 
 def build(variant=None):
     variant = dict(variant if variant is not None else ADOPTED)
+    Q.CORNER_RULE.clear()
+    Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     smw, smh = sm_dims()
     strip_d = variant.get('strip_d', STRIP_D)
     grp_w = 4 * (smw + SHAVE) + 5 * CH
