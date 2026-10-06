@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
+    parser.add_argument('--resume-io-sha256', help='Resume actual validated mapped/PDN/IO objects without upstream replay')
     parser.add_argument('--resume-resized-sha256',
                         help='Reuse the mapped netlist and physical stages through validated3_4')
     args = parser.parse_args()
@@ -68,7 +69,8 @@ def main():
         index=argv.index('--step-tcl')+1
         assert argv[index].startswith('POST_IO_PLACEMENT=')
         argv[index]='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
-        argv += ['--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
+        argv += ['--step-tcl', 'PRE_GLOBAL_PLACE=physical/hbm_cp_parent_context_20261005/fast_frontier_unique_regions.tcl',
+                 '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
                  '--orfs-var', f'GPL_RANDOM_SEED={args.variant}',
                  '--orfs-var', f'OR_SEED={args.variant}']
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
@@ -106,19 +108,21 @@ def main():
         record['canonical_frontend_reused'] = True
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     frozen = {}
-    if args.resume_resized_sha256:
-        checkpoints = list((case/'results').rglob('3_4_place_resized.odb'))
-        assert len(checkpoints) == 1 and sha(checkpoints[0]) == args.resume_resized_sha256
+    if args.resume_resized_sha256 or args.resume_io_sha256:
+        checkpoint_name = '3_4_place_resized.odb' if args.resume_resized_sha256 else '3_2_place_iop.odb'
+        checkpoint_digest = args.resume_resized_sha256 or args.resume_io_sha256
+        checkpoints = list((case/'results').rglob(checkpoint_name))
+        assert len(checkpoints) == 1 and sha(checkpoints[0]) == checkpoint_digest
         for path in checkpoints[0].parent.iterdir():
             stage = path.name.split('_')
             if path.suffix not in ('.odb', '.sdc', '.v', '.rtlil') or 'failed' in path.name:
                 continue
-            if stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in ('1','2','3','4')):
+            if stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in (('1','2','3','4') if args.resume_resized_sha256 else ('1','2'))):
                 frozen[path] = sha(path)
         mapped = checkpoints[0].parent/'1_2_yosys.v'
         assert mapped in frozen
         record.update(synthesis_required=False, synthesis_reused=True,
-            resume_resized_sha256=args.resume_resized_sha256,
+            resume_resized_sha256=args.resume_resized_sha256,resume_io_sha256=args.resume_io_sha256,
             upstream_sha256={str(p.relative_to(case)):h for p,h in frozen.items()})
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if finite:
