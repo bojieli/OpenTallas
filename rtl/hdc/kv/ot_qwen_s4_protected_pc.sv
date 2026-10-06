@@ -4,7 +4,7 @@
 // drain through a warm pause; accepted pipeline/cache records are never reset.
 module ot_qwen_s4_protected_pc #(
     parameter integer PC_ID=0,TAGW=9,LD=64,WB=16,AD=64,SYNC=2,MEM_WORDS=3*131072,
-    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0
+    parameter integer LOCAL_WIRE_SPANS=0,ACK_BACKPRESSURE=0,LANDING_RSEL=0
 )(
     input wire clk,hclk,por_n,warm_rst_n,
     output wire l_v,output wire [16:0] l_sec,output wire [7:0] l_row,
@@ -38,7 +38,7 @@ module ot_qwen_s4_protected_pc #(
     wire take_l=lv&&l_pop&&!c_fault;
     assign l_v=lv&&!c_fault;assign {l_sec,l_row,l_data}=ld;
     assign wd_v=av&&!c_fault;assign wd_tag=ad;
-    ot_qwen_s4_protected_ring #(.WIDTH(281),.DEPTH(LD),.PC_ID(PC_ID),.KIND(0),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS)) u_l(
+    ot_qwen_s4_protected_ring #(.WIDTH(281),.DEPTH(LD),.PC_ID(PC_ID),.KIND(0),.SYNC(SYNC),.WIRE_STAGES(LOCAL_WIRE_SPANS),.READ_RSEL(LANDING_RSEL)) u_l(
         .wr_clk(hclk),.rd_clk(clk),.por_n(por_n),.allow_new(1'b1),
         .wr_valid(h_lv&&landing_identity_ok),.wr_ready(lwr),.wr_data({h_lsec,h_lrow,h_ldata}),.wr_occupancy(locc),.wr_fault(lwb),
         .retired_source(synced_ret),.retired_source_valid(synced_ret_valid),

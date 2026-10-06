@@ -11170,6 +11170,18 @@ def dsrom_window_parent_boundary_model():
             internal_WINDOW_payload_and_handshake_bits=nl*rowbits+nl+2,
             parent_timed_terminal_scalar_inputs=69082,
             parent_timed_terminal_scalar_outputs=101082,
+            parent_timed_terminal_scalar_pins=69082+101082,
+            default_parent_pin_layers={'horizontal':'M4', 'vertical':'M5'},
+            default_parent_pin_pitch_um=.048,
+            minimum_unreserved_outer_pin_perimeter_um=(69082+101082)*.048,
+            historical_attention_placeholder_um=[2400,1700],
+            historical_placeholder_gross_pin_capacity_upper=2*(2400+1700)/.048,
+            historical_placeholder_raw_pin_fraction=(69082+101082)/(2*(2400+1700)/.048),
+            historical_placeholder_is_not_allocated_WINDOW_slot=True,
+            requested_pin_capacity_clock_PG_reserve_fraction=.20,
+            requested_pin_capacity_signal_fraction_after_reserve=.60,
+            requested_outer_pin_perimeter_um=(69082+101082)*.048/(.80*.60),
+            pin_capacity_basis='pinned ASAP7 M4/M5 preferred-direction tracks; gross perimeter bound excludes corners/blockages/access/DRC. Larger finite allocation or actual interior receiver cuts required; no fit or clock credit',
             removed_external_KV_observation_bits=nl*rowbits+nl+2,
             parent_interface_basis='actual KV payload/valid/mask/ready remain internal to source, descriptor and consumer; no duplicate external observation loads',
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
@@ -11980,6 +11992,13 @@ def hbm_integrated_gu_wide_launch_model():
         tracks_required_delta=5,channel_capacity=None,parent_slot_fit=None,
         fullGU_service='existing Franklin768 source descriptors and9216 rows, actual TC/CVT/drain unchanged',
         whole_token=False,physical_admitted=False,adopted=False)
+
+
+def dsrom_wfc_protected_context_physical_price():
+    """Actual minimum R4 WFC/producer/C8/protected VM, no whole S81 array."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/protected_context_physical_model.json').read_text())
 
 
 def dsrom_wfc_native_two_lease_price():

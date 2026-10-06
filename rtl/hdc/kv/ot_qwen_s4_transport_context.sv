@@ -5,7 +5,7 @@
 // loaded source slots, pins and timing still require contextual qualification.
 module ot_qwen_s4_transport_context #(
     parameter integer ENABLE=0,MEM_WORDS=36*131072,PHASE=0,
-    parameter integer CDC_CONSUMER_JOIN=0 // additive port join, no CDC structure change
+    parameter integer CDC_CONSUMER_JOIN=0,LANDING_RSEL=0 // owner r9 protected landing read
 )(
     input wire clk, hclk, rst_n, warm_rst_n,
     input wire d_v, go,
@@ -237,7 +237,7 @@ module ot_qwen_s4_transport_context #(
                 // Local AD64 retires only when the checked stack R-pool
                 // accepts the ACK. Root consumer wd_accept remains on u_link;
                 // it must not be used to retire this earlier local callback.
-            ot_qwen_s4_protected_cdc_consumer_join #(.ENABLE(1),.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p))) u_pc(
+            ot_qwen_s4_protected_cdc_consumer_join #(.ENABLE(1),.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p)),.LANDING_RSEL(LANDING_RSEL)) u_pc(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(1'b1),
                 .l_v(blv[p]),.l_sec(blsec[p*17+:17]),.l_row(blrow[p*8+:8]),.l_data(bldata[p*256+:256]),.l_pop(blpop[p]),
                 .w_v(bwv[p]),.w_sec(bsec[p*24+:24]),.w_data(bdata[p*256+:256]),.w_tag(btag[p*9+:9]),.w_room(broom[p]),
@@ -247,7 +247,7 @@ module ot_qwen_s4_transport_context #(
                 .h_cv(h_cv[sk*32+p]),.h_csec(h_csec[(sk*32+p)*24+:24]),.h_cdata(h_cdata[(sk*32+p)*256+:256]),.h_ctag(h_ctag[(sk*32+p)*9+:9]),
                 .h_av(h_av[sk*32+p]),.h_atag(h_atag[(sk*32+p)*9+:9]),.h_fault(pc_hf[p]));
             end else begin:existing_endpoint
-            ot_qwen_s4_protected_pc #(.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p)),.ACK_BACKPRESSURE(1)) u_pc(
+            ot_qwen_s4_protected_pc #(.PC_ID(sk*32+p),.MEM_WORDS(MEM_WORDS),.LOCAL_WIRE_SPANS(local_spans(sk*32+p)),.ACK_BACKPRESSURE(1),.LANDING_RSEL(LANDING_RSEL)) u_pc(
                 .clk(clk),.hclk(hclk),.por_n(rst_n),.warm_rst_n(1'b1),
                 .l_v(blv[p]),.l_sec(blsec[p*17+:17]),.l_row(blrow[p*8+:8]),.l_data(bldata[p*256+:256]),.l_pop(blpop[p]),
                 .w_v(bwv[p]),.w_sec(bsec[p*24+:24]),.w_data(bdata[p*256+:256]),.w_tag(btag[p*9+:9]),.w_room(broom[p]),
