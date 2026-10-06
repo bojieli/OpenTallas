@@ -294,8 +294,10 @@ def cmd_index(a):
     base = ROOT / VIEWS
     m, pw, M, real = model()
     rows = {}
-    for vj in sorted(base.glob('*/view*.json')):
+    for vj in sorted(base.rglob('view*.json')):
         v = json.loads(vj.read_text())
+        if not isinstance(v, dict) or 'master' not in v or 'status' not in v:
+            continue
         v['dir'] = str(vj.parent.relative_to(ROOT))
         rows[v['master']] = v
     need = sorted({it.master for it in m['insts'] if it.master.startswith('hfd_')})
