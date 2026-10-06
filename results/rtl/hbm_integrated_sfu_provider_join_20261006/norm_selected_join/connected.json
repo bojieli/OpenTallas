@@ -1,0 +1,43 @@
+{
+  "source_commit": "73fe978cd",
+  "status": "PASS",
+  "N": 32,
+  "D": 64,
+  "actual_SRAM_root_count": 1,
+  "SRAM_macros": 32,
+  "checked_FP32_words": 64,
+  "actual_output_publication_ACKs": 2,
+  "samebank_checker": "Bacon0a2cb5fa0 actual u_readback",
+  "negatives": [
+    "HighTOKEN17 response refusal preserves stage/root debt",
+    "Warm held publication followed by joint caller/reverse ACK then root retirement"
+  ],
+  "live_norm_parent_connections": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_norm_native_adapter / u_norm_c12 / g_sfu_native_vm.u_vm",
+  "flags": {
+    "NORM_C12_ENABLE": 1,
+    "NORM_NATIVE_VM_ENABLE": 1,
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "NORM_KIND": 1,
+    "NORM_PUBLISH_QUANT": 0,
+    "NORM_RD": 0
+  },
+  "defaults_OFF": true,
+  "fullshape_DS1M_Qwen8K_qualified": false,
+  "quant_publication_qualified": false,
+  "HC_window_qualified": false,
+  "SS60_FF25_context_qualified": false,
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "f1e9c49f868f3d0fa4f50bcf0655969772c6604498769b7e3bb806fadec96da6",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv": "16b4b7b00be6fdcb70c4bf4f14a2b650cbd6439b43941d4ca5cd4e8409864b42",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_norm_stage.sv": "c41e7b60e225f006e9c7ff8358b28872be063d6e489a80d58ec9184b1b4688d2"
+  },
+  "protected_SU_port_fix": {
+    "source": "df384da4b",
+    "provider_frame": "existing W6 u_su_cp decoded held_pos20/token17/gen4/job32 via su_provider_frame",
+    "new_retained_owner_FF": 0,
+    "added_edges": 0,
+    "q_frame": "explicitly unused in actual KIND4/PUBLISH_QUANT0 branch; not production quant interface",
+    "element": "defined combinational default; prior temporary assigned before every output use"
+  },
+  "failure_retained": "r1_COMPILE_FAIL; missing wire-helper source graph fixed, original source/objects preserved"
+}
