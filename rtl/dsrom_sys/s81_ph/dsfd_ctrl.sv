@@ -6,9 +6,9 @@
 // The PHY W port (QE weight region) is unused on the S81 die (weights live in the ROM field): tied off.
 `default_nettype none
 module dsfd_ctrl (
-    input  wire ckh,
-    input  wire cks,
-    input  wire rst,
+    input  wire [0:0] ckh,
+    input  wire [0:0] cks,
+    input  wire [0:0] rst,
     inout  wire [22237:0] phy,
     output wire [8895:0] rd,
     input  wire [10911:0] rq,

@@ -27,7 +27,8 @@ def main():
          '// The PHY W port (QE weight region) is unused on the S81 die (weights live in the ROM field): tied off.',
          '`default_nettype none',
          'module dsfd_ctrl (',
-         '    input  wire ckh,', '    input  wire cks,', '    input  wire rst,',
+         # 1-bit die ports are [0:0] buses, as the generator's ports.svh declares them (pins ckh[0], cks[0], rst[0])
+         '    input  wire [0:0] ckh,', '    input  wire [0:0] cks,', '    input  wire [0:0] rst,',
          '    inout  wire [22237:0] phy,',
          f'    output wire [{8864 + NPC - 1}:0] rd,',
          f'    input  wire [{NPC * 341 - 1}:0] rq,',

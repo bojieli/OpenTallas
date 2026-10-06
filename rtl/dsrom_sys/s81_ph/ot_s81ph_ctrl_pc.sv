@@ -5,7 +5,8 @@
 // {kr_v, beat, tag, data} on rd (valid-only: the stream side drains every cycle), write-done pulses wd.
 // HBM domain (ckh): the PHY K/KR port of this PC (ot_hbm3e_phy_v41x_aw30_e8p5: k_v/k_rdy/k_addr/k_len/k_tag/k_we/
 // k_wdata/k_wstrb/k_wr_done, kr_v/kr_rdy/kr_tag/kr_beat/kr_data).
-// Every die input is captured in a flop at the pin, every die output is a flop, except the PHY k_rdy, which enters
+// Every die input is captured in a flop at the pin, every die output is a flop (data registers carry no reset; only
+// valid/state flops do), except the PHY k_rdy, which enters
 // the request hand-off (fire = k_v_q & k_rdy: one gate before the hold register's load enable) -- the PHY's own
 // valid/ready contract, on the abutted PHY face.
 // Latency (measured, tb_dsfd_ctrl): request rq pin -> k_v at the PHY = 1 cks + FIFO crossing (2 ckh sync) + 1 ckh;
@@ -56,25 +57,27 @@ module ot_s81ph_ctrl_pc #(
     always @(posedge cks or negedge srst_n)
         if (!srst_n) co <= 2'b00; else co <= {ci[1] | s_ovf, ci[0] & h_live};
     // ---- stream side: request pin register -> request FIFO
-    reg [340:0] rq_q;
+    // data bits carry no reset (only the valid bit does): the column's synchronised reset reaches ~30 flops, not ~1,300
+    reg         rq_v_q;
+    reg [339:0] rq_d_q;
     always @(posedge cks or negedge srst_n)
-        if (!srst_n) rq_q <= 341'd0; else rq_q <= rq;
+        if (!srst_n) rq_v_q <= 1'b0; else rq_v_q <= rq[0];
+    always @(posedge cks) rq_d_q <= rq[340:1];
     wire          q_v;
     wire [QW-1:0] q_d;
     reg           h_pop;
     wire          q_rdy_unused;
     ot_s81ph_afifo #(.W(QW), .DEPTH(DQ), .AF(1)) u_q (
-        .wclk(cks), .wrst_n(srst_n), .w_v(rq_q[0]), .w_d(rq_q[340:1]), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
+        .wclk(cks), .wrst_n(srst_n), .w_v(rq_v_q), .w_d(rq_d_q), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
         .rclk(ckh), .rrst_n(hrst_n), .r_v(q_v), .r_pop(h_pop), .r_d(q_d));
     // ---- HBM side: request hold register (the PHY's valid/ready)
     wire fire = k_v && k_rdy;
     always @(*) h_pop = q_v && (!k_v || fire);
     always @(posedge ckh or negedge hrst_n)
-        if (!hrst_n) begin
-            k_v <= 1'b0; k_we <= 1'b0; k_addr <= {AW{1'b0}}; k_len <= 4'd0; k_tag <= {TW{1'b0}};
-            k_wdata <= 256'd0; k_wstrb <= 32'd0;
-        end else if (!k_v || fire) begin
-            k_v <= q_v;
+        if (!hrst_n) k_v <= 1'b0;
+        else if (!k_v || fire) k_v <= q_v;
+    always @(posedge ckh)
+        if (!k_v || fire) begin
 `ifdef S81PH_MUT_PACK
             if (q_v) {k_wdata, k_wstrb, k_tag, k_len, k_addr, k_we} <= q_d ^ {{(QW-36){1'b0}}, 1'b1, 35'd0};   // mutant: tag bit 0 flipped
 `else
@@ -87,11 +90,8 @@ module ot_s81ph_ctrl_pc #(
     wire          l_rdy;
     assign kr_rdy = l_rdy;
     always @(posedge ckh or negedge hrst_n)
-        if (!hrst_n) begin kr_q <= 1'b0; krd_q <= {RW{1'b0}}; end
-        else begin
-            kr_q <= kr_v && l_rdy;
-            if (kr_v && l_rdy) krd_q <= {kr_data, kr_tag, kr_beat};
-        end
+        if (!hrst_n) kr_q <= 1'b0; else kr_q <= kr_v && l_rdy;
+    always @(posedge ckh) if (kr_v && l_rdy) krd_q <= {kr_data, kr_tag, kr_beat};
     wire          l_v;
     wire [RW-1:0] l_d;
     wire          l_ovf, l_cr;
@@ -99,9 +99,9 @@ module ot_s81ph_ctrl_pc #(
         .wclk(ckh), .wrst_n(hrst_n), .w_v(kr_q), .w_d(krd_q), .w_rdy(l_rdy), .w_credit(l_cr), .w_ovf(l_ovf),
         .rclk(cks), .rrst_n(srst_n), .r_v(l_v), .r_pop(1'b1), .r_d(l_d));
     always @(posedge cks or negedge srst_n)
-        if (!srst_n) begin rv <= 1'b0; r_data <= 256'd0; r_tag <= {TW{1'b0}}; r_beat <= 4'd0; end
-        else begin
-            rv <= l_v;
+        if (!srst_n) rv <= 1'b0; else rv <= l_v;
+    always @(posedge cks)
+        begin
 `ifdef S81PH_MUT_BEAT
             if (l_v) {r_data, r_tag, r_beat} <= {l_d[RW-1:4], l_d[2:0], l_d[3]};                        // mutant: beat bits rotated
 `else
