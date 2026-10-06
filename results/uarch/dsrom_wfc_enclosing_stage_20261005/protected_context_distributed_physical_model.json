@@ -248,5 +248,12 @@
   "physical_started": false,
   "physical_gain_credit": 0,
   "single_user_token_credit": 0,
-  "source_context_clock_IO_qualified": false
+  "source_context_clock_IO_qualified": false,
+  "physical_input_buffer_policy": {
+    "trigger": "actualR7 RSZ-3006 immutable bookROM CE sink prevents physical repair",
+    "scope": "306 fixed hardmacros only; masters/placement retained, no command q/check FF attribute changed",
+    "cost_in_existing_budget_um2": 40000,
+    "new_RTL_registers_or_cycles": 0,
+    "actual_buffers_area_and_SSFF_required": true
+  }
 }
