@@ -40,6 +40,16 @@
     "router": 320,
     "cmdproc": 1372
    },
+   "breakdown": {
+    "stations_us": 5.553,
+    "barrier_us": 1.143,
+    "spine_faces_us": 7.15,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 2.475,
+    "total_with_sm_interim_us": 16.321,
+    "total_with_sm_interim_AR_pct": 3.06
+   },
    "ds_wire_priced": {
     "AR_us": 533.077,
     "MTP_step_us": 1108.907,
@@ -110,6 +120,16 @@
     "router": 320,
     "cmdproc": 1372
    },
+   "breakdown": {
+    "stations_us": 5.552,
+    "barrier_us": 1.143,
+    "spine_faces_us": 7.15,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 2.583,
+    "total_with_sm_interim_us": 16.428,
+    "total_with_sm_interim_AR_pct": 3.12
+   },
    "ds_wire_priced": {
     "AR_us": 525.791,
     "MTP_step_us": 1101.621,
@@ -179,6 +199,16 @@
     "vm": 2328,
     "router": 320,
     "cmdproc": 1372
+   },
+   "breakdown": {
+    "stations_us": 5.552,
+    "barrier_us": 1.143,
+    "spine_faces_us": 7.15,
+    "quant_us_gate": 0.0,
+    "quant_us_bound": 2.281,
+    "sm_faces_interim_us": 0.0,
+    "total_with_sm_interim_us": 13.845,
+    "total_with_sm_interim_AR_pct": 2.7
    },
    "ds_wire_priced": {
     "AR_us": 512.725,

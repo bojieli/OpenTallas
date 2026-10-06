@@ -45,6 +45,12 @@ LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=8, serdes=8, vm=8
               quant_points_bound=161, quant_points_gate=0)
 
 
+# SM faces: the interim SM view's own pin plan priced on the die (results/rtl/hbm_accel_die_views_20261006/
+# wire_stages_r3_smpins.json minus wire_stages_r1_sm.json, same views / generator pins otherwise); 0 once the SM ports
+# land on the floorplan faces
+SM_FACES = {'stages_430': 2.475, 'stages_430_median_bundle': 2.583, 'stages_430_manhattan': 0.0}
+
+
 def priced(m, grt_work, meso):
     PR.MESO_CYC = meso
     rp = PR.routed_paths(m, grt_work)
@@ -103,7 +109,19 @@ def main(argv=None):
             qwen[dn_] = dict(priced_cycles=d0['priced_cycles'], margin_cycles=d0['priced_cycles'] + add, added_cycles=add,
                              delta_pct=round(100 * add / d0['priced_cycles'], 2),
                              ar_tok_s=d0['ar_tok_s_priced'], ar_tok_s_margin=round(hz / (d0['priced_cycles'] + add), 1))
-        rec['bases'][key] = dict(counts=n, extra_cycles=extra, ds_wire_priced=dict(AR_us=ar0, MTP_step_us=mtp0, tau=tau,
+        cus = lambda c: round(c / hz * 1e6, 3)  # noqa: E731
+        groups = dict(stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
+                      barrier_us=cus(extra['barrier']),
+                      spine_faces_us=cus(extra['coll'] + extra['serdes'] + extra['vm'] + extra['router'] + extra['cmdproc']),
+                      quant_us_gate=0.0,
+                      quant_us_bound=round(LEDGER['quant'] * LEDGER['quant_points_bound'] / hz * 1e6, 3))
+        sm = SM_FACES.get(key)
+        if sm is not None:
+            groups['sm_faces_interim_us'] = sm
+        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + (sm or 0.0)
+        groups['total_with_sm_interim_us'] = round(tot, 3)
+        groups['total_with_sm_interim_AR_pct'] = round(100 * tot / ar0, 2)
+        rec['bases'][key] = dict(counts=n, extra_cycles=extra, breakdown=groups, ds_wire_priced=dict(AR_us=ar0, MTP_step_us=mtp0, tau=tau,
                                                                                     AR_tok_s=gate['AR_tok_s_priced'],
                                                                                     MTP_tok_s=gate['MTP_tok_s_priced']),
                                  ds_margin=rows, qwen_8k=qwen)
