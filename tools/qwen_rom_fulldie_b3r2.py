@@ -66,7 +66,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
-             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0):
+             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -88,6 +88,11 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.FIFO = (v.FIFO[0], v.FIFO[1] + sf_extra_h)
     bw_mm2 = PORT_GROUPS * BW_FIFO_BITS * FIFO_MM2_PER_BIT
     v.SPINE_BLOCKS = [(n, (a + bw_mm2) if n == 'port_tiles' else a, d, s) for n, a, d, s in v.SPINE_BLOCKS]
+    if su_core_clock:
+        # r20g (coordinator 2026-10-06): the measured token cycles run the SU64/SFU and the vector memory on the 1.2 GHz
+        # core clock (one clock in the RTL: ot_qwen_rom_core's u_su / VM ports), so the die puts them in the stream domain
+        v.SPINE_BLOCKS = [(n, a, 'stream_1p2' if n in ('su64_sfu', 'vector_memory') else d, s)
+                          for n, a, d, s in v.SPINE_BLOCKS]
     # r17: the band slab is 8 routed port-group elements (ot_qwen_slab_port_group, 777.576 x slab_group_h um each,
     # BW_FIFO=0) stacked in its column plus the 8 block-word meso FIFOs (meso_d4_v7, own element); default 0 keeps
     # the b3r16 area-derived slab (8 x 342.9 um)
@@ -199,6 +204,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r12_bw_edge_inner'] = bw_edge_inner
     m['b3r2']['area_pins'] = area_pins
     m['b3r2']['r20f_bw_waypoint_every_cols'] = bw_wp
+    m['b3r2']['r20g_su_vm_core_clock'] = su_core_clock
     if bw_wp:
         _bw_waypoints(v, m, bw_wp)
     if r18:
@@ -1905,6 +1911,8 @@ def main(argv=None):
     ap.add_argument('--slab-w-per-mm2', type=float, default=0.646, help='r17: band-slab power density (measured r6d)')
     ap.add_argument('--r19', action='store_true', help='r19: r18 + full tiles with KV slices and the per-row landing '
                     'fabric from per-stack landing crossbars (KV reconciliation)')
+    ap.add_argument('--su-core-clock', action='store_true', help='r20g: SU64/SFU and the vector memory on the 1.2 GHz core '
+                    'clock (as the measured token RTL)')
     ap.add_argument('--bw-wp', type=int, default=0, help='r20f: block-word waypoint every N tile columns (0: off)')
     ap.add_argument('--corr-um', type=float, default=None, help='r20e: corridor width (um, on 0.432)')
     ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
@@ -1940,7 +1948,7 @@ def main(argv=None):
                     edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
                     slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
                     slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp)
+                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock)
     if a.mode == 'wire8k':
         rec = wire_bound_8k(v, m, routed=json.loads(a.routed.read_text()) if a.routed else None)
         if a.out:

@@ -97,7 +97,8 @@ QWEN_R18 = dict(QWEN_R17B, r18=True)
 QWEN_R19 = dict(QWEN_R17B, r19=True)     # r18 + full tiles with KV slices + per-row landing fabric
 QWEN_R20C = dict(QWEN_R19, tree_interleave=True)          # r19 + interleaved tree pins (both tile masters)
 QWEN_R20F1 = dict(QWEN_R20C, bw_wp=1)                     # r20c + a block-word waypoint in every corridor crossed
-QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1}
+QWEN_R20G = dict(QWEN_R20C, su_core_clock=True)          # r20c + SU64/SFU and VM on the 1.2 GHz core clock
+QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -1710,7 +1711,7 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
