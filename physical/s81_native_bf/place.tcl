@@ -56,6 +56,8 @@ set specs [list {u_elem.g_mac[0].g_pp.u_rom0} $xl $yl R0 \
  {u_elem.g_mac[1].g_pp.u_rom1} $xr $yh R180]
 foreach {name mx my orient} $specs {
  set inst [ot_find $block $name]
+ # rtl_macro_placer leaves its macros LOCKED; unlock before re-placing (ODB-0360 on orientation change)
+ $inst setPlacementStatus PLACED
  set px [ot_snap_joint $mx $xgrid0 $xpitch 0.0 0.048]
  set py [ot_snap_joint $my $ygrid0 $ypitch 0.0 0.048]
  place_inst -name [$inst getName] -location [format "%.3f %.3f" $px $py] -orientation $orient -status FIRM
