@@ -10164,10 +10164,10 @@ def dsrom_v9_parent_context_model():
     return model(Path(__file__).resolve().parents[1])
 
 
-def dsrom_qx10_parent_context_model(boundary_hold=False):
+def dsrom_qx10_parent_context_model(boundary_hold=False, hard_cfg=False):
     """Existing full QX10 element plus native parent, in the unchanged slot."""
     from dsrom_qx10_parent_context import model
-    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold)
+    return model(Path(__file__).resolve().parents[1], boundary_hold=boundary_hold, hard_cfg=hard_cfg)
 
 
 def dsrom_window_full_block_pipeline_model():
@@ -10536,6 +10536,20 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             bound_basis='prior routed full128 wrapper cell area; explicit FF inventory; .2um2 gate proxies; 10000um2 CTS/reset/repair allowance',
             no_macro_instances=True, all_IO_timed=True,
             actual_outer_allocation_qualified=False),
+        balanced_request_mux=dict(
+            optin_parameter='TREE default0; own additive successor only',
+            motivation='actual pinned owner->dat class; current full32 source uses 32-deep conditional overwrite',
+            source_inputs=nsm, payload_bits=width, select_replicas=copies,
+            padded_leaves=1 << (nsm-1).bit_length(),
+            AND_bit_equivalents=nsm*width, OR_bit_equivalents=(nsm-1)*width,
+            select_equalities=nsm*copies, max_local_mask_fanout_bits=(width+copies-1)//copies,
+            combinational_tree_levels=(nsm-1).bit_length(),
+            added_FF_bits=0, added_memory_ports=0, added_boundary_bits=0,
+            conservative_new_gate_area_um2=(nsm*width+(nsm-1)*width+nsm*copies*sb)*.2,
+            removed_priority_mux_area_credit_um2=0,
+            new_cycles_per_collective=0, new_cycles_per_record=0, composed_token_delta_ns=0,
+            source_local_inputs_required=True, actual_clock_load_slot_qualified=False,
+            exact_gate=False, physical_gain_measured=False, adopted=False),
         actual_32SM_caller_context=dict(
             lineage='ot_gpu_simt_sm O_COLL c_data/c_mode/c_count and B_COLL_REQ/B_COLL_RSP; original item9 baseline',
             selected_DS_smv_TU_equivalence=False,
@@ -10570,6 +10584,12 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             external_projection_is_distributed_caller_boundary=True,
             single_hb_coll_perimeter_pin_fit_qualified=False,
             next_build='source-pinned full32 loaded context synthesis; keep objects for real distributed pin/CTS binding',
+            actual_full32_SS_synthesis_cell_um2=178333.520399,
+            actual_full32_SS_synthesis_sequential_cell_um2=90842.643719,
+            actual_full32_SS_synthesis_DFF_count=304836,
+            prebuild_cell_upper_exceeded_for_NSM32=True,
+            measured_cell_area_replaces_prebuild_proxy_for_future_placement=True,
+            synthesis_record='results/rtl/hbm_item9_closure_20261005/loaded32_synth_r5/inventory.json',
             actual_context_route_qualified=False),
         latency=dict(new_mux_cycles_per_collective=0, new_mux_cycles_per_record=0,
             new_mux_token_delta_ns=0, retained_XREG_cycles_per_collective=2,
@@ -10691,6 +10711,9 @@ def dsrom_window_parent_boundary_model():
     inputs after its terminal; aggregate attention area is not a subslot.
     """
     import re
+    leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
+    leaf_inventory = (json.loads(leaf_inventory_path.read_text())
+                      if leaf_inventory_path.is_file() else None)
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
     macro_dir = Path('physical/asap7_memory_macros') / macro_name
     macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
@@ -10735,6 +10758,7 @@ def dsrom_window_parent_boundary_model():
     sources += [str(macro_dir/f'{macro_name}{suffix}') for suffix in
                 ('.json', '.lef', '_bb.v', '_ss.lib', '_ff.lib')]
     return dict(item=4, status='SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION',
+        leaf_implementation_inventory=leaf_inventory,
         scope='actual packed-block producer/native lifecycle and first attention captures; no whole S81',
         source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
         shape=dict(H=16,D=d,TD=td,NL=nl,TROWS=trows,NT=tiles,NSTAGE=1,PWORDS=pwords,ILV=0,REPL=0),
@@ -11079,6 +11103,18 @@ def hbm_attn_registered_parent_model():
         placement_area_at_half_utilization_um2=2*(ff_body+buffer_reserve),
         retained_outline_um=old['replicas']['chosen_tile_outline_um'],
         macro_replicas=16, new_macro_replicas=0,
+        actual_retained_mapping=dict(source='e5624a88a', FF_count=36158, FF_type='DFFASRHQNx1_ASAP7_75t_R',
+            INV_count=36174,phase_clock_inverters=16,BUFx2_count=529,macro_count=16,
+            standard_cell_area_um2=15328.77048,FF_area_um2=13706.77464,
+            mapped_INV_area_um2=1582.25076,
+            clock_pin_SS_fF_per_FF=.433982,FF_clock_pin_total_SS_fF=36158*.433982,
+            macro_clock_pin_total_SS_fF=16*16.3802,
+            combined_FF_macro_clock_pins_SS_fF=36158*.433982+16*16.3802,
+            negative_edge_FF_count=16*(w+1),positive_edge_FF_count=36158-16*(w+1),
+            clock_wire_and_phase_inverter_input_capacitance_not_yet_included=True,
+            per_block_FF_and_payload_reach_verified=True,
+            nonconstant_ordered_macro_payload_bits=25888,own_receiver_D_associations=544,
+            CTS_and_tracks_qualified=False, added_token_cycles_unchanged=3),
         retained_banks=dict(row_instances=4,head_instances=16,
             implementation='kept hierarchical row/head bank instances; wire keep alone actually merged firstmapping to7019FF',
             required_total_mapped_FF_count=ff+w,
@@ -11087,7 +11123,7 @@ def hbm_attn_registered_parent_model():
         finite_cell_space=dict(core_um=[1349.082,1349.730], macro_with_halo_um=304.782,
             free_area_um2=1349.082*1349.730-16*304.782**2,
             half_utilization_cell_capacity_um2=(1349.082*1349.730-16*304.782**2)*.5,
-            required_cell_area_upper_um2=ff_body+buffer_reserve+source_fixture_ff*.37908,
+            required_cell_area_upper_um2=max(ff_body+buffer_reserve+source_fixture_ff*.37908,15328.77048+buffer_reserve),
             fit_is_analytical_only=True),
         qualified_PG_hook=dict(commit='d1775001d',sha256='5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786',
             VDD_connected=True,VSS_connected=True,IR_qualified=False,added_M2_M3_area_um2=.2268,
@@ -11119,9 +11155,74 @@ def hbm_attn_registered_parent_model():
         route_ready=False, gain_credit=None)
 
 
-def hbm_existing_cp_fast_parent_allocation_model():
-    """Finite native M7 reservation and explicitly resized FAST CP cell budget."""
+def hbm_cp_fast_frontier_model():
+    """Default-off exact CP receiver/owner successor, priced before RTL."""
     import json
     from pathlib import Path
-    return json.loads((Path(__file__).resolve().parents[1] /
-        'results/uarch/hbm_cp_fast_parent_allocation_20261006/model.json').read_text())
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_fast_frontier_20261006/model.json").read_text())
+
+
+def dsrom_wfc_enclosing_stage_price():
+    """Minimum actual enclosing receiver/held-job context, before source build.
+
+    C8 source is reused unchanged. Full native VM depth and four collective
+    writers remain real mutable storage; no macro-area/clkQ credit is invented.
+    The added request register provides finite retention until both existing
+    whole-stage producer and C8 accept the same job, not completion authority.
+    """
+    request_bits = 16+10+21+21+14
+    request_control_bits = 3
+    c8_bits = 2*request_bits + (1+21+21+10+14+47+1+47+1+1+1+1+2+1+1)
+    core_capture_bits = 21+21+14
+    boundary_ff = request_bits+request_control_bits+c8_bits+core_capture_bits
+    gates = 4*(47+request_bits)+256
+    buffers = 3*boundary_ff+128
+    growth = 2*(boundary_ff*.37908+gates*.08748+buffers*.10206)
+    old = dsrom_wfc_control_pipeline_price()
+    queue = dsrom_wfc_queue_head_price()
+    header = dsrom_wfc_header_cut_price()
+    wfc_body = 23536.2+old['cell_growth_budget_um2']+queue['cell_growth_budget_um2']+header['cell_growth_budget_um2']
+    tracks = 11851+2*boundary_ff+128
+    return dict(schema='opentallas.dsrom.wfc.enclosing_stage_price.v1',
+      MAXU=866, SOURCE_modes=[0,1], MACs_per_cycle=0, replicas=1,
+      shared_native_VM_AW=19, VM_word_address_width=15, VM_lane_bits=32,
+      VM_lanes_per_word=16, VM_words=32768, VM_mutable_bits=16777216,
+      VM_controller_read_bytes_per_cycle=64, VM_controller_write_bytes_per_cycle=64,
+      VM_collective_write_ports=4, VM_collective_write_bytes_per_cycle=256,
+      VM_collective_read_bytes_per_cycle=64, VM_read_latency_edges=1,
+      VM_read_during_write='pre-edge old data, native nonblocking assignment semantics',
+      VM_write_precedence='controller xa first, collective xb0..3 later; later writer wins overlapping native rows',
+      shared_VM_macro=None, shared_VM_macro_area_um2=None,
+      shared_VM_macro_clkQ_SS_ps=None, shared_VM_macro_pin_loads=None,
+      VM_port_capture_bits=512, VM_implemented_as_new_flops=False,
+      retained_request_bits=request_bits, request_control_FF_bits=request_control_bits,
+      actual_reused_C8_FF_bits=c8_bits, native_core_capture_bits=core_capture_bits,
+      enclosing_boundary_FF_bits=boundary_ff, NAND2_reservation=gates,
+      buffer_reservation=buffers, added_boundary_cell_growth_budget_um2=growth,
+      control_body_budget_um2=wfc_body+growth,
+      controller_baseline_track_demand=11851, added_boundary_tracks=2*boundary_ff+128,
+      control_track_demand=tracks, old_local_characterization_tracks=16041,
+      old_local_characterization_tracks_fit=tracks<=16041,
+      physical_selected_WFC_slot_owner='Turing', physical_selected_WFC_slot=None,
+      physical_selected_VM_view_owner='Turing with native tile memory owner',
+      canonical_cfg_prompt_whole_stage_producer_owner='Copernicus',
+      request_boundary_bits=83, result_boundary_bits=101,
+      new_memory_ports=0, new_completion_authorities=0,
+      additional_owned_request_capture_edges=1,
+      existing_C8_offer_to_native_core_capture_edges=2,
+      exposed_start_to_core_capture_minimum_edges=3,
+      enclosing_vs_same_C8_direct_offer_added_edges=1,
+      composed_source_job_added_edges=3, composed_received_job_added_edges=4,
+      composed_reset_release_added_edges=1,
+      token_composition='extra_edges=3*N_source_jobs+4*N_received_jobs+N_resets relative to same native C8 receiver; C8 existing two edges are charged separately in its baseline, actual producer/restore/VM waits add without guessed overlap',
+      token_job_counts=None, whole_token_added_ns=None,
+      target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+      missing_nodes=['canonical cfg_users/plen/glen producer',
+        'canonical synchronous pr_q/pr_qk producer',
+        'accepted owned whole-stage producer with identity and actual ACK',
+        'stage_epoch/entry descriptor and actual context_restored/native_idle/fragment_done',
+        'full-depth native VM physical macro/read clkQ/clock/pin loads',
+        'finite WFC physical rectangle and channel allocation'],
+      P_and_R_ready=False, actual_parent_context_qualified=False,
+      SS_FF_closed=False, adopted=False)

@@ -29,6 +29,14 @@ def emit(host, output, top=TOP, transport_quiet=False):
     text = raw.decode()
     text = replace_once(text, '#include "Vdie.h"',
                         '#include "Vdie.h"\n#include "clock.hpp"')
+    # Complementary protected state receives its cold initialization on actual
+    # reset clock edges. The host must not interpret pre-edge zero-initialized
+    # inverse rails as an operational fault while RTL's cold POR is asserted.
+    # Check every real fault immediately once that actual POR releases.
+    text = replace_once(text,
+                        '            for (int d = 0; d < D; d++) mf |= die[d]->mem_fault << d;',
+                        '            for (int d = 0; d < D; d++)\n'
+                        '                mf |= (die[d]->rt_rst_n && die[d]->mem_fault) << d;')
     text = replace_once(text,
                         '    if (fread(v.data(), 4, KV_ELEMS, fp) != KV_ELEMS) fatal("KV history size");',
                         '    if (fread(v.data(), 4, KV_ELEMS, fp) != KV_ELEMS || fgetc(fp) != EOF)\n'
