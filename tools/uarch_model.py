@@ -11791,6 +11791,36 @@ def hbm_integrated_stage_join_model():
         SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25)
 
 
+def hbm_integrated_su_provider_adapter_model():
+    """Extract literal selected CP provider wires; reuse its single association.
+
+    Replace the parent association and bus wiring, never add a second instance.
+    No new state, arithmetic, payload seats, protection authority or cycles.
+    """
+    return dict(schema='opentallas.hbm.integrated.su_provider_adapter.v1',
+        selected_parent='ot_ds_hbm_cluster20_integrated',source_contract='4c59804ae04cf411477b200f87ea03f23b17f3e1',
+        token_bits=17,position_bits=20,job_bits=32,generation_bits=4,
+        owner_frame_bits=73,selected_pc_bits=32,retired_original_ops_bits=4,
+        request_bits=337,response_bits=273,request_payload_bytes=32,response_payload_bytes=32,
+        max_boundary_payload_bytes_per_accepted_edge=32,
+        MACs_per_cycle_delta=0,memory_bytes_per_cycle_delta=0,
+        inherited_association_FF=2,added_FF=0,new_payload_storage_bits=0,
+        replicas_per_selected_CP=1,new_replica_count=0,mux_demux_delta_bits=0,
+        fanout_delta=0,added_boundary_bits=0,tracks_required_delta=0,
+        inherited_boundary_tracks=337+273+73+32+4+2,
+        channel_capacity='same selected parent channel; no new routing admitted',
+        cell_area_delta_um2=0,macro_footprint_delta_um2=0,
+        floorplan='replace same association and permit gates in existing slot; not standalone physical qualification',
+        request_permit_ANDs_reused=2,added_pipeline_edges=0,
+        composed_token_latency_delta_ns=0,
+        response_debt='provider valid/ready and payload drain independently of live permission',
+        protection='existing association complementary rails and real CP-held full73 frame',
+        grant_release='real peer_grants[0]/peer_releases[0] outside adapter',
+        clock='actual selected clk_sm with cold por_n; no new domain/reset',
+        default_ENABLED=0,default_FAST_OWNER_FRONTIER=0,
+        numerical_order_changed=False,physical_admitted=False,adopted=False)
+
+
 def hbm_integrated_gu_wide_launch_model():
     """Integration-only source view; preserve actual selected-SIMT arithmetic."""
     return dict(schema='opentallas.hbm.integrated.gu_wide_launch.v1',
