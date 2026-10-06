@@ -17,6 +17,11 @@
 //     forwarded clock (the data changes on its rising edge, as ot_fwd_link_stage launches);
 //   forwarded outputs (row-1 lines, kv, ik) carry ck as their forwarded clock (ot_svc_fclk_buf).
 // Every die input lands in a flop (or a FIFO write port), every die output leaves a flop.
+// MARGIN (owner rule 2026-10-06): every face is register-to-register with no logic between pin and
+//   flop (forwarded inputs: a capture register on the forwarded clock's falling edge before the two-clock FIFO; PHY
+//   control inputs k_rdy / w_rdy / w_room / kr_v / wr_v and local SM request valids: raw capture registers, gating
+//   after the flop; k_v / w_v present for one cycle and are dropped while the registered ready of that cycle
+//   decides: accepted -> done, else present again), and every wire-stage chain carries XST (2) extra stages.
 module ot_svc_fclk_buf (input wire a, output wire y);  // kept: the forwarded clock / PHY clock driver
   assign y = a;
 endmodule
@@ -37,22 +42,25 @@ module ot_svc_pipe #(parameter integer W = 1, parameter integer N = 0) (
 endmodule
 
 // valid-qualified pipe: the valid bit is reset, the payload is not
-module ot_svc_vpipe #(parameter integer W = 1, parameter integer N = 0) (
+module ot_svc_vpipe #(parameter integer W = 1, parameter integer N = 0, parameter integer X = 0) (   // N + X stages
   input wire ck, input wire rst_n, input wire v, input wire [W-1:0] d, output wire qv, output wire [W-1:0] q);
-  generate if (N == 0) begin : g0
+  // stage registers are per-stage generate blocks (gn.st[k].r), not an unpacked array: iverilog mis-evaluates
+  // r[NT-1] of an unpacked array inside the full svc design (q stays X while the last word is valid)
+  localparam integer NT = N + X;
+  generate if (NT == 0) begin : g0
     assign qv = v; assign q = d;
   end else begin : gn
-    reg [N-1:0] rv;
-    reg [W-1:0] r [0:N-1];
-    integer k;
+    reg [NT-1:0] rv;
     always @(posedge ck or negedge rst_n)
-      if (!rst_n) rv <= {N{1'b0}};
-      else begin rv[0] <= v; for (k = 1; k < N; k = k + 1) rv[k] <= rv[k-1]; end
-    always @(posedge ck) begin
-      r[0] <= d;
-      for (k = 1; k < N; k = k + 1) r[k] <= r[k-1];
+      if (!rst_n) rv <= {NT{1'b0}};
+      else rv <= {rv, v};
+    genvar k;
+    for (k = 0; k < NT; k = k + 1) begin : st
+      reg [W-1:0] r;
+      if (k == 0) begin : h always @(posedge ck) r <= d; end
+      else begin : t always @(posedge ck) r <= st[k-1].r; end
     end
-    assign qv = rv[N-1]; assign q = r[N-1];
+    assign qv = rv[NT-1]; assign q = st[NT-1].r;
   end endgenerate
 endmodule
 
@@ -107,7 +115,8 @@ module ot_hbm_svc_core #(
   parameter [NSM-1:0] FWD = 0,            // SM i link forwarded (row 1): request with fclk, no ready; line with fclk
   parameter integer KV_PC = 0, IK_PC = 0,
   parameter integer KV_ST = 0, IK_ST = 0, // wire stages KV_PC / IK_PC -> kv / ik ports
-  parameter integer E_ST = 0              // wire stages e port -> PHY request side
+  parameter integer E_ST = 0,             // wire stages e port -> PHY request side
+  parameter integer XST = 2               // MARGIN: extra wire stages on every chain (route at <= 770 ps)
 )(
   input  wire ck, input wire rst,          // rst: active-low die reset (por_hbm)
   input  wire [NSM*42-1:0] q_d, input wire [NSM-1:0] q_v, input wire [NSM-1:0] q_fclk, output wire [NSM-1:0] q_rdy,
@@ -136,6 +145,11 @@ module ot_hbm_svc_core #(
   assign phy_rst_n = prst;
   assign k_we = {NPC{1'b0}}; assign k_wdata = {NPC*256{1'b0}}; assign k_wstrb = {NPC*32{1'b0}};
   reg rdy_q; always @(posedge ck or negedge rn) if (!rn) rdy_q <= 1'b0; else rdy_q <= 1'b1;
+  // MARGIN: PHY control inputs land in raw capture flops at the pin; all gating happens after them
+  reg [NPC-1:0] k_rdy_q, kr_v_q; reg w_rdy_q; reg [7:0] w_room_q, wr_v_q; reg rdy_q2;
+  always @(posedge ck or negedge rn)
+    if (!rn) begin k_rdy_q <= 0; kr_v_q <= 0; w_rdy_q <= 1'b0; w_room_q <= 8'h00; wr_v_q <= 8'h00; rdy_q2 <= 1'b0; end
+    else begin k_rdy_q <= k_rdy; kr_v_q <= kr_v; w_rdy_q <= w_rdy; w_room_q <= w_room; wr_v_q <= wr_v; rdy_q2 <= rdy_q; end
 
   // shared nets
   wire [NSM-1:0] rq_v;                 // request held at the PC side of its wire stages
@@ -152,24 +166,31 @@ module ot_hbm_svc_core #(
     reg pend, hv; reg [41:0] hd;
     if (FWD[i]) begin : fwd                                  // forwarded row-1 request: two-clock FIFO
       wire full_, empty_; wire [2:0] fr_;
-      ot_hbm_accel_cdc_fifo #(.W(42), .AW(2)) u_x (.wclk(~q_fclk[i]), .wrst_n(rst), .we(q_v[i]),
-        .wdata(q_d[i*42 +: 42]), .full(full_), .rd_freed(fr_), .rclk(ck), .rrst_n(rn), .re(iv),
+      reg fv; reg [41:0] fd;                                 // MARGIN: capture flop at the pin (falling edge)
+      wire wck = ~q_fclk[i];                                 // one inverted clock net for capture and FIFO write
+      always @(posedge wck or negedge rst) if (!rst) fv <= 1'b0; else fv <= q_v[i];
+      always @(posedge wck) fd <= q_d[i*42 +: 42];
+      ot_hbm_accel_cdc_fifo #(.W(42), .AW(2)) u_x (.wclk(wck), .wrst_n(rst), .we(fv),
+        .wdata(fd), .full(full_), .rd_freed(fr_), .rclk(ck), .rrst_n(rn), .re(iv),
         .rdata(id_), .empty(empty_));
       assign ine = !empty_;
       assign q_rdy[i] = 1'b0;
     end else begin : loc                                     // row-0 request: registered port + FIFO, registered ready
       reg v_q; reg [41:0] d_q; wire rdy_;
-      always @(posedge ck or negedge rn) if (!rn) v_q <= 1'b0; else v_q <= q_v[i] && rdy_;
-      always @(posedge ck) d_q <= q_d[i*42 +: 42];
-      ot_svc_fifo #(.W(42), .AW(3), .AF(4)) u_f (.ck(ck), .rst_n(rn), .we(v_q), .wd(d_q), .rdy(rdy_),
+      reg v_r, rdy_d; reg [41:0] d_r;                        // MARGIN: raw capture at the pin, gate one cycle later
+      always @(posedge ck or negedge rn) if (!rn) begin v_r <= 1'b0; rdy_d <= 1'b0; end else begin v_r <= q_v[i]; rdy_d <= rdy_; end
+      always @(posedge ck) d_r <= q_d[i*42 +: 42];
+      always @(posedge ck or negedge rn) if (!rn) v_q <= 1'b0; else v_q <= v_r && rdy_d;
+      always @(posedge ck) d_q <= d_r;
+      ot_svc_fifo #(.W(42), .AW(3), .AF(5)) u_f (.ck(ck), .rst_n(rn), .we(v_q), .wd(d_q), .rdy(rdy_),
         .re(iv), .rd(id_), .ne(ine));
       assign q_rdy[i] = rdy_;
     end
     // one request travels down the wire stages at a time; the PC side returns rq_take
     assign iv = ine && !pend;
     always @(posedge ck or negedge rn) if (!rn) pend <= 1'b0; else if (iv) pend <= 1'b1; else if (tk_back) pend <= 1'b0;
-    ot_svc_vpipe #(.W(1), .N(REQ_ST[i*4 +: 4])) u_tb (.ck(ck), .rst_n(rn), .v(rq_take[i]), .d(1'b0), .qv(tk_back), .q());
-    ot_svc_vpipe #(.W(42), .N(REQ_ST[i*4 +: 4])) u_rq (.ck(ck), .rst_n(rn), .v(iv), .d(id_), .qv(sv), .q(sd));
+    ot_svc_vpipe #(.W(1), .N(REQ_ST[i*4 +: 4]), .X(XST)) u_tb (.ck(ck), .rst_n(rn), .v(rq_take[i]), .d(1'b0), .qv(tk_back), .q());
+    ot_svc_vpipe #(.W(42), .N(REQ_ST[i*4 +: 4]), .X(XST)) u_rq (.ck(ck), .rst_n(rn), .v(iv), .d(id_), .qv(sv), .q(sd));
     always @(posedge ck or negedge rn) if (!rn) hv <= 1'b0; else if (sv) hv <= 1'b1; else if (rq_take[i]) hv <= 1'b0;
     always @(posedge ck) if (sv) hd <= sd;
     assign rq_v[i] = hv; assign rq_d[i*42 +: 42] = hd;
@@ -181,11 +202,15 @@ module ot_hbm_svc_core #(
   reg cpend, chv; reg [126:0] chd;
   wire e_re = !e_empty && !cpend;
   wire c_take, cb, cv; wire [126:0] cd;
-  ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(~e_fclk), .wrst_n(rst), .we(e_d[0]), .wdata(e_d[127:1]),
+  reg [127:0] e_f;                                           // MARGIN: capture flop at the pin (falling edge)
+  wire e_wck = ~e_fclk;                                      // one inverted clock net for capture and FIFO write
+  always @(posedge e_wck or negedge rst) if (!rst) e_f[0] <= 1'b0; else e_f[0] <= e_d[0];
+  always @(posedge e_wck) e_f[127:1] <= e_d[127:1];
+  ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_wck), .wrst_n(rst), .we(e_f[0]), .wdata(e_f[127:1]),
     .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
   always @(posedge ck or negedge rn) if (!rn) cpend <= 1'b0; else if (e_re) cpend <= 1'b1; else if (cb) cpend <= 1'b0;
-  ot_svc_vpipe #(.W(127), .N(E_ST)) u_ep (.ck(ck), .rst_n(rn), .v(e_re), .d(ed), .qv(cv), .q(cd));
-  ot_svc_vpipe #(.W(1), .N(E_ST)) u_eb (.ck(ck), .rst_n(rn), .v(c_take), .d(1'b0), .qv(cb), .q());
+  ot_svc_vpipe #(.W(127), .N(E_ST), .X(XST)) u_ep (.ck(ck), .rst_n(rn), .v(e_re), .d(ed), .qv(cv), .q(cd));
+  ot_svc_vpipe #(.W(1), .N(E_ST), .X(XST)) u_eb (.ck(ck), .rst_n(rn), .v(c_take), .d(1'b0), .qv(cb), .q());
   always @(posedge ck or negedge rn) if (!rn) chv <= 1'b0; else if (cv) chv <= 1'b1; else if (c_take) chv <= 1'b0;
   always @(posedge ck) if (cv) chd <= cd;
   wire [1:0] c_kind = chd[1:0];
@@ -195,11 +220,16 @@ module ot_hbm_svc_core #(
   // ---------------------------------------------------------------- W port (kind 0): one request outstanding per lane
   reg [7:0] lane_busy;
   reg wv_q; reg [23:0] wa_q; reg [9:0] wt_q;
-  wire w_issue = chv && (c_kind == 2'd0) && !wv_q && !lane_busy[c_tag[2:0]] && w_room[c_tag[2:0]];
+  reg wp_pend, wv_d;                                          // MARGIN: present-and-drop against w_rdy_q
+  wire w_issue = chv && (c_kind == 2'd0) && !wp_pend && !lane_busy[c_tag[2:0]] && w_room_q[c_tag[2:0]];
   always @(posedge ck or negedge rn)
-    if (!rn) begin wv_q <= 1'b0; lane_busy <= 8'h00; end
+    if (!rn) begin wv_q <= 1'b0; lane_busy <= 8'h00; wp_pend <= 1'b0; wv_d <= 1'b0; end
     else begin
-      if (w_issue) wv_q <= 1'b1; else if (w_rdy) wv_q <= 1'b0;
+      wv_d <= wv_q;
+      if (w_issue) begin wv_q <= 1'b1; wp_pend <= 1'b1; end
+      else if (wv_q) wv_q <= 1'b0;                              // presented one cycle: drop, w_rdy_q decides
+      else if (wp_pend && wv_d && w_rdy_q) wp_pend <= 1'b0;     // accepted last presentation
+      else if (wp_pend && !wv_d) wv_q <= 1'b1;                  // not accepted: present again
       lane_busy <= (lane_busy | (w_issue ? (8'h01 << c_tag[2:0]) : 8'h00)) & ~lane_done;
     end
   always @(posedge ck) if (w_issue) begin wa_q <= c_addr[23:0]; wt_q <= c_tag; end
@@ -233,11 +263,15 @@ module ot_hbm_svc_core #(
   generate for (p = 0; p < NPC; p = p + 1) begin : gk
     localparam integer S = own(p);
     wire ckv = (p == KV_PC) && c_kv, cik = (p == IK_PC) && c_ik, any = ckv || cik || sm_iss[p];
-    reg v, busy; reg [29:0] a; reg [3:0] ln; reg [16:0] t;
+    reg v, busy, pend, v_d; reg [29:0] a; reg [3:0] ln; reg [16:0] t;
     always @(posedge ck or negedge rn)
-      if (!rn) begin v <= 1'b0; busy <= 1'b0; end
+      if (!rn) begin v <= 1'b0; busy <= 1'b0; pend <= 1'b0; v_d <= 1'b0; end
       else begin
-        if (any) v <= 1'b1; else if (k_rdy[p]) v <= 1'b0;
+        v_d <= v;                                                 // MARGIN: present-and-drop against k_rdy_q
+        if (any) begin v <= 1'b1; pend <= 1'b1; end
+        else if (v) v <= 1'b0;
+        else if (pend && v_d && k_rdy_q[p]) pend <= 1'b0;
+        else if (pend && !v_d) v <= 1'b1;
         if (any) busy <= 1'b1; else if (pc_done[p]) busy <= 1'b0;
       end
     always @(posedge ck)
@@ -255,12 +289,16 @@ module ot_hbm_svc_core #(
   wire [NPC-1:0] b_v; wire [NPC*17-1:0] b_t; wire [NPC*4-1:0] b_b; wire [NPC*256-1:0] b_d;
   generate for (p = 0; p < NPC; p = p + 1) begin : gr
     reg v; reg [16:0] t; reg [3:0] bt; reg [255:0] d;
-    always @(posedge ck or negedge rn) if (!rn) v <= 1'b0; else v <= kr_v[p] && rdy_q;
-    always @(posedge ck) begin t <= kr_tag[p*17 +: 17]; bt <= kr_beat[p*4 +: 4]; d <= kr_data[p*256 +: 256]; end
+    always @(posedge ck or negedge rn) if (!rn) v <= 1'b0; else v <= kr_v_q[p] && rdy_q2;   // MARGIN: +1 cycle
+    reg [16:0] t_r; reg [3:0] bt_r; reg [255:0] d_r;          // MARGIN: raw capture at the pin, aligned with kr_v_q
+    always @(posedge ck) begin t_r <= kr_tag[p*17 +: 17]; bt_r <= kr_beat[p*4 +: 4]; d_r <= kr_data[p*256 +: 256]; end
+    always @(posedge ck) begin t <= t_r; bt <= bt_r; d <= d_r; end
     assign b_v[p] = v; assign b_t[p*17 +: 17] = t; assign b_b[p*4 +: 4] = bt; assign b_d[p*256 +: 256] = d;
   end endgenerate
-  always @(posedge ck or negedge rn) if (!rn) wr_q_v <= 8'h00; else wr_q_v <= wr_v & {8{rdy_q}};
-  always @(posedge ck) begin wr_q_t <= wr_tag; wr_q_b <= wr_beat; wr_q_d <= wr_data; end
+  always @(posedge ck or negedge rn) if (!rn) wr_q_v <= 8'h00; else wr_q_v <= wr_v_q & {8{rdy_q2}};   // MARGIN: +1 cycle
+  reg [79:0] wr_r_t; reg [39:0] wr_r_b; reg [2047:0] wr_r_d;
+  always @(posedge ck) begin wr_r_t <= wr_tag; wr_r_b <= wr_beat; wr_r_d <= wr_data; end
+  always @(posedge ck) begin wr_q_t <= wr_r_t; wr_q_b <= wr_r_b; wr_q_d <= wr_r_d; end
 
   // ---------------------------------------------------------------- SM lines: 4 K + 1 W assembler, round robin
   generate for (i = 0; i < NSM; i = i + 1) begin : gl
@@ -268,22 +306,22 @@ module ot_hbm_svc_core #(
     wire [4:0] full; wire [9:0] tg [0:4]; wire [1279:0] dt [0:4];
     for (p = 0; p < 4; p = p + 1) begin : ga
       wire sv; wire [276:0] sq; wire [12:0] t13;
-      ot_svc_vpipe #(.W(277), .N(RSP_ST[(B+p)*4 +: 4])) u_bp (.ck(ck), .rst_n(rn),
+      ot_svc_vpipe #(.W(277), .N(RSP_ST[(B+p)*4 +: 4]), .X(XST)) u_bp (.ck(ck), .rst_n(rn),
         .v(b_v[B+p] && (b_t[(B+p)*17+15 +: 2] == 2'b00)),
         .d({b_t[(B+p)*17 +: 17], b_b[(B+p)*4 +: 4], b_d[(B+p)*256 +: 256]}), .qv(sv), .q(sq));
       ot_svc_asm #(.NB(5), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv), .btag(sq[272:260]), .bbeat({1'b0, sq[259:256]}),
         .bdata(sq[255:0]), .full(full[p]), .tag(t13), .data(dt[p]), .take(k_take[B+p]));
       assign tg[p] = t13[9:0];
-      ot_svc_vpipe #(.W(1), .N(RSP_ST[(B+p)*4 +: 4])) u_dn (.ck(ck), .rst_n(rn), .v(k_take[B+p]), .d(1'b0),
+      ot_svc_vpipe #(.W(1), .N(RSP_ST[(B+p)*4 +: 4]), .X(XST)) u_dn (.ck(ck), .rst_n(rn), .v(k_take[B+p]), .d(1'b0),
         .qv(pc_done_sm[B+p]), .q());
     end
     wire wsv; wire [270:0] wsq; wire [9:0] t10;
-    ot_svc_vpipe #(.W(271), .N(W_ST[i*4 +: 4])) u_wp (.ck(ck), .rst_n(rn), .v(wr_q_v[i]),
+    ot_svc_vpipe #(.W(271), .N(W_ST[i*4 +: 4]), .X(XST)) u_wp (.ck(ck), .rst_n(rn), .v(wr_q_v[i]),
       .d({wr_q_t[i*10 +: 10], wr_q_b[i*5 +: 5], wr_q_d[i*256 +: 256]}), .qv(wsv), .q(wsq));
     ot_svc_asm #(.NB(5), .TW(10)) u_wa (.ck(ck), .rst_n(rn), .bv(wsv), .btag(wsq[270:261]), .bbeat(wsq[260:256]),
       .bdata(wsq[255:0]), .full(full[4]), .tag(t10), .data(dt[4]), .take(w_take[i]));
     assign tg[4] = t10;
-    ot_svc_vpipe #(.W(1), .N(W_ST[i*4 +: 4])) u_wdn (.ck(ck), .rst_n(rn), .v(w_take[i]), .d(1'b0), .qv(lane_done[i]), .q());
+    ot_svc_vpipe #(.W(1), .N(W_ST[i*4 +: 4]), .X(XST)) u_wdn (.ck(ck), .rst_n(rn), .v(w_take[i]), .d(1'b0), .qv(lane_done[i]), .q());
     reg [2:0] lr;
     wire [9:0] fx = {full, full};
     wire [4:0] rot = fx >> lr;
@@ -306,7 +344,7 @@ module ot_hbm_svc_core #(
   // ---------------------------------------------------------------- KV / index-key assemblers (4 beats)
   generate if (1) begin : gkv
     wire sv; wire [276:0] sq; wire full_; wire [12:0] t13; wire [1023:0] dd;
-    ot_svc_vpipe #(.W(277), .N(KV_ST)) u_p (.ck(ck), .rst_n(rn), .v(b_v[KV_PC] && (b_t[KV_PC*17+15 +: 2] == 2'b01)),
+    ot_svc_vpipe #(.W(277), .N(KV_ST), .X(XST)) u_p (.ck(ck), .rst_n(rn), .v(b_v[KV_PC] && (b_t[KV_PC*17+15 +: 2] == 2'b01)),
       .d({b_t[KV_PC*17 +: 17], b_b[KV_PC*4 +: 4], b_d[KV_PC*256 +: 256]}), .qv(sv), .q(sq));
     ot_svc_asm #(.NB(4), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv), .btag(sq[272:260]), .bbeat({1'b0, sq[259:256]}),
       .bdata(sq[255:0]), .full(full_), .tag(t13), .data(dd), .take(1'b1));
@@ -314,18 +352,18 @@ module ot_hbm_svc_core #(
     always @(posedge ck or negedge rn) if (!rn) v <= 1'b0; else v <= full_;
     always @(posedge ck) if (full_) begin t <= t13; d <= dd; end
     assign kv = {d, t, v};
-    ot_svc_vpipe #(.W(1), .N(KV_ST)) u_dn (.ck(ck), .rst_n(rn), .v(full_), .d(1'b0), .qv(kv_dn), .q());
+    ot_svc_vpipe #(.W(1), .N(KV_ST), .X(XST)) u_dn (.ck(ck), .rst_n(rn), .v(full_), .d(1'b0), .qv(kv_dn), .q());
   end endgenerate
   generate if (1) begin : gik
     wire sv; wire [276:0] sq; wire full_; wire [12:0] t13; wire [1023:0] dd;
-    ot_svc_vpipe #(.W(277), .N(IK_ST)) u_p (.ck(ck), .rst_n(rn), .v(b_v[IK_PC] && (b_t[IK_PC*17+15 +: 2] == 2'b10)),
+    ot_svc_vpipe #(.W(277), .N(IK_ST), .X(XST)) u_p (.ck(ck), .rst_n(rn), .v(b_v[IK_PC] && (b_t[IK_PC*17+15 +: 2] == 2'b10)),
       .d({b_t[IK_PC*17 +: 17], b_b[IK_PC*4 +: 4], b_d[IK_PC*256 +: 256]}), .qv(sv), .q(sq));
     ot_svc_asm #(.NB(4), .TW(13)) u_a (.ck(ck), .rst_n(rn), .bv(sv), .btag(sq[272:260]), .bbeat({1'b0, sq[259:256]}),
       .bdata(sq[255:0]), .full(full_), .tag(t13), .data(dd), .take(1'b1));
     reg [1023:0] d;
     always @(posedge ck) if (full_) d <= dd;
     assign ik = d;
-    ot_svc_vpipe #(.W(1), .N(IK_ST)) u_dn (.ck(ck), .rst_n(rn), .v(full_), .d(1'b0), .qv(ik_dn), .q());
+    ot_svc_vpipe #(.W(1), .N(IK_ST), .X(XST)) u_dn (.ck(ck), .rst_n(rn), .v(full_), .d(1'b0), .qv(ik_dn), .q());
   end endgenerate
 endmodule
 `default_nettype wire

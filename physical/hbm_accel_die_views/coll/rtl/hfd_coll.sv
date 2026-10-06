@@ -40,16 +40,20 @@ module hfd_coll (
     reg [24:0] i_f_cmdproc; always @(posedge clk) i_f_cmdproc <= i1_f_cmdproc;
     reg [1023:0] i0_f_su_NE; always @(posedge clk) i0_f_su_NE <= f_su_NE;
     reg [1023:0] i1_f_su_NE; always @(posedge clk) i1_f_su_NE <= i0_f_su_NE;
-    reg [1023:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i1_f_su_NE;
+    reg [1023:0] i2_f_su_NE; always @(posedge clk) i2_f_su_NE <= i1_f_su_NE;
+    reg [1023:0] i_f_su_NE; always @(posedge clk) i_f_su_NE <= i2_f_su_NE;
     reg [1023:0] i0_f_su_NW; always @(posedge clk) i0_f_su_NW <= f_su_NW;
     reg [1023:0] i1_f_su_NW; always @(posedge clk) i1_f_su_NW <= i0_f_su_NW;
-    reg [1023:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i1_f_su_NW;
+    reg [1023:0] i2_f_su_NW; always @(posedge clk) i2_f_su_NW <= i1_f_su_NW;
+    reg [1023:0] i_f_su_NW; always @(posedge clk) i_f_su_NW <= i2_f_su_NW;
     reg [1023:0] i0_f_su_SE; always @(posedge clk) i0_f_su_SE <= f_su_SE;
     reg [1023:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= i0_f_su_SE;
-    reg [1023:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
+    reg [1023:0] i2_f_su_SE; always @(posedge clk) i2_f_su_SE <= i1_f_su_SE;
+    reg [1023:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i2_f_su_SE;
     reg [1023:0] i0_f_su_SW; always @(posedge clk) i0_f_su_SW <= f_su_SW;
     reg [1023:0] i1_f_su_SW; always @(posedge clk) i1_f_su_SW <= i0_f_su_SW;
-    reg [1023:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i1_f_su_SW;
+    reg [1023:0] i2_f_su_SW; always @(posedge clk) i2_f_su_SW <= i1_f_su_SW;
+    reg [1023:0] i_f_su_SW; always @(posedge clk) i_f_su_SW <= i2_f_su_SW;
     reg [975:0] i0_llk_N0; always @(posedge clk) i0_llk_N0 <= llk_N0;
     reg [975:0] i1_llk_N0; always @(posedge clk) i1_llk_N0 <= i0_llk_N0;
     reg [975:0] i_llk_N0; always @(posedge clk) i_llk_N0 <= i1_llk_N0;
@@ -188,25 +192,25 @@ module hfd_coll (
     wire [0:0] od_pll_hbm = {1'd0};
     wire [0:0] o_pll_hbm;
     for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_hbm
-        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_hbm[k]), .q(o_pll_hbm[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_pll_hbm[k]), .q(o_pll_hbm[k]));
     end
     assign pll_hbm[0] = fclk_9;
     wire [0:0] od_pll_link = {1'd0};
     wire [0:0] o_pll_link;
     for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_link
-        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_link[k]), .q(o_pll_link[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_pll_link[k]), .q(o_pll_link[k]));
     end
     assign pll_link[0] = fclk_10;
     wire [0:0] od_pll_serial = {1'd0};
     wire [0:0] o_pll_serial;
     for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_serial
-        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_serial[k]), .q(o_pll_serial[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_pll_serial[k]), .q(o_pll_serial[k]));
     end
     assign pll_serial[0] = fclk_11;
     wire [0:0] od_pll_stream = {1'd0};
     wire [0:0] o_pll_stream;
     for (genvar k = 0; k < 1; k = k + 1) begin : g_o_pll_stream
-        ot_hfd_oreg3 u (.clk(clk), .d(od_pll_stream[k]), .q(o_pll_stream[k]));
+        ot_hfd_oreg5 u (.clk(clk), .d(od_pll_stream[k]), .q(o_pll_stream[k]));
     end
     assign pll_stream[0] = fclk_12;
     wire [0:0] od_por_hbm = {rst_s[1]};
@@ -242,25 +246,25 @@ module hfd_coll (
     wire [579:0] od_t_su_NE = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[3:3], w_ep_del_flit[2179:1635]};
     wire [579:0] o_t_su_NE;
     for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
     end
     assign t_su_NE[579:0] = o_t_su_NE[579:0];
     wire [579:0] od_t_su_NW = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[1:1], w_ep_del_flit[1089:545]};
     wire [579:0] o_t_su_NW;
     for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_NW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
     end
     assign t_su_NW[579:0] = o_t_su_NW[579:0];
     wire [579:0] od_t_su_SE = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[2:2], w_ep_del_flit[1634:1090]};
     wire [579:0] o_t_su_SE;
     for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE[579:0] = o_t_su_SE[579:0];
     wire [579:0] od_t_su_SW = {w_ep_inj_rd[1:0], w_ep_inj_idx[31:0], w_ep_del_valid[0:0], w_ep_del_flit[544:0]};
     wire [579:0] o_t_su_SW;
     for (genvar k = 0; k < 580; k = k + 1) begin : g_o_t_su_SW
-        ot_hfd_oreg3 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
+        ot_hfd_oreg4 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
     end
     assign t_su_SW[579:0] = o_t_su_SW[579:0];
 endmodule

@@ -32,5 +32,27 @@
   }
  ],
  "kept_out_regs": true,
- "face_stages": 3
+ "face_stages": 5,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ },
+ "port_stages": {
+  "f_vm": 2,
+  "t_su_SW": 4,
+  "t_su_NW": 4,
+  "t_su_SE": 3,
+  "t_su_NE": 3
+ },
+ "port_stages_basis": {
+  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
+  "d_um": {
+   "f_vm": 378,
+   "t_su_SW": 1198,
+   "t_su_NW": 1152,
+   "t_su_SE": 1140,
+   "t_su_NE": 1123
+  },
+  "source": "qm2_pd55 3_3_place_gp core endpoint -> pin, max over bits (face_chain_place.tcl OT_FC_REPORT)"
+ }
 }

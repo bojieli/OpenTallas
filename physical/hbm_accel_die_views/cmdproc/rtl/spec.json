@@ -1,11 +1,11 @@
 {
  "master": "hfd_cmdproc",
- "note": "INTERIM: two unchanged ot_ds_hbm_cmdproc20 (ENABLE 1, NSM 16) on the die ports; not routed before, not closed. Program store and doorbell are loaded through the loader bus f_loader (cmd_we/addr/wdata 73 b + db_v/token/pos/job/generation 74 b); launch_v[n] drives SM n start and d_valid, launch_pc the op fields (40 b) and d_base, launch_pos d_lines; SM arrive -> t_barrier, barrier release f_barrier -> release_in, SM released -> sm_done. res_v/res_data/sm_fault/cpl_rdy have no die net (cfg chain); completion/status outputs fold into spare die output bits. The pipelined issue sequencer of the ledger is not built.",
+ "note": "Two ot_hfd_cmdproc20_m (ENABLE 1, NSM 16): ot_ds_hbm_cmdproc20 with its 256 x 64 command memory in an ot_sram_2rw_512x64_m4_r2c2 macro (make_cmdproc_m.py; cycle-exact, tb_cmdproc_m_equiv.sv), on the die ports. Program store and doorbell are loaded through the loader bus f_loader (cmd_we/addr/wdata 73 b + db_v/token/pos/job/generation 74 b); launch_v[n] drives SM n start and d_valid, launch_pc the op fields (40 b) and d_base, launch_pos d_lines; SM arrive -> t_barrier, barrier release f_barrier -> release_in, SM released -> sm_done. res_v/res_data/sm_fault/cpl_rdy have no die net (cfg chain); completion/status outputs fold into spare die output bits. The pipelined issue sequencer of the ledger is not built.",
  "instances": [
   {
    "name": "cpS",
-   "module": "ot_ds_hbm_cmdproc20",
-   "file": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
    "params": {
     "TW": 17,
     "PW": 20,
@@ -94,8 +94,8 @@
   },
   {
    "name": "cpN",
-   "module": "ot_ds_hbm_cmdproc20",
-   "file": "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+   "module": "ot_hfd_cmdproc20_m",
+   "file": "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv",
    "params": {
     "TW": 17,
     "PW": 20,
@@ -570,5 +570,9 @@
   ]
  ],
  "kept_out_regs": true,
- "face_stages": 3
+ "face_stages": 5,
+ "share_tree": {
+  "min": 3,
+  "fanout": 4
+ }
 }

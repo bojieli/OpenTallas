@@ -7,6 +7,16 @@
 # onto its output.  CTS then balances that buffer as a sink, so each forwarded clock leaves at leaf insertion delay,
 # like the data it accompanies.  Logic, constraints and the clock are unchanged.
 source /src/physical/abi3/v41x_karb_repair_buffer_cap.tcl
+# vclk at the measured insertion before the CTS-stage timing repair (vclk_latency.tcl; also post_cts_vclk.tcl when
+# that repair is skipped)
+source /src/physical/hbm_accel_die_views/common/vclk_latency.tcl
+if { [info procs repair_timing_helper] ne "" && [info procs ot_l_repair_timing_helper] eq "" } {
+  rename repair_timing_helper ot_l_repair_timing_helper
+  proc repair_timing_helper { args } {
+    ot_vclk_from_insertion
+    ot_l_repair_timing_helper {*}$args
+  }
+}
 set ot_blk [ord::get_db_block]
 set ot_buf [[ord::get_db] findMaster BUFx24_ASAP7_75t_R]
 set ot_k 0

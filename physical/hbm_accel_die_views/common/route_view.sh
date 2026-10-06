@@ -8,7 +8,13 @@
 #      MAXL (top signal routing layer, default M7), PDN (PDN tcl, default common/pdn_view.tcl), HM (hold margin ns),
 #      SDCA (extra --sdc-append file), STEPS (extra --step-tcl args), CTSA (CTS_ARGS), PRECTS (PRE_CTS hook; die
 #      wrappers with forwarded-clock outputs use common/pre_cts_fclk_root_buf.tcl), POSTSDC (corner_sta --post-sdc),
-#      WSF (wire-stage fence density: common/wire_stage_fence.tcl POST_FLOORPLAN, regions per ot_svc_vpipe stage)
+#      PER (route clock period ns, default 0.833; margin rule: route at 0.770, sign off at 0.833), IOF (io delay
+#      fraction, default 0.2), WSF (wire-stage placement density: common/wire_stage_fence.tcl PRE_GLOBAL_PLACE, FIRM stage flops),
+#      POSTSYN (POST_SYNTH hook, default common/inout_retype_post_synth.tcl: every inout bit retyped by its netlist
+#      driver, so the post-GRT repair no longer stops on RSZ-0074; 'none' to omit), FCP (face_stages N: common/
+#      face_chain_place.tcl POST_GLOBAL_PLACE spreads every face chain evenly between its core end and its pin; FCF =
+#      the wrapper's <master>_face_stages.tcl for per-port depths);
+#      POSTSDC may list several files (space separated), e.g. signoff_unc60.sdc + vclk_corner_true.sdc
 set -u
 lab=$1; master=$2; topsrc=$3; shift 3
 W=$OUT/$lab; mkdir -p $W; cd $SRC
@@ -18,23 +24,25 @@ read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
-echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
+PS=${POSTSYN:-physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl}; [ "$PS" = none ] && PS=
+echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} POSTSYN=$PS FCP=${FCP:-} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} PER=${PER:-0.833} IOF=${IOF:-0.2} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs \
   ${MACROS:+--macro-place-halo 5 5} \
-  --clock-port ck --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
-  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 ${SDCA:+--sdc-append $SDCA} --stages pnr \
+  --clock-port ck --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
+  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction ${IOF:-0.2} ${SDCA:+--sdc-append $SDCA} --stages pnr \
   --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/hbm_accel_die_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
-  ${WSF:+--step-tcl POST_FLOORPLAN=physical/hbm_accel_die_views/common/wire_stage_fence.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl --orfs-var OT_WS_DENSITY=$WSF} \
+  ${WSF:+--step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl --orfs-var OT_WS_DENSITY=$WSF} \
+  ${PS:+--step-tcl POST_SYNTH=$PS} ${FCP:+--step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=$FCP ${FCF:+--orfs-var OT_FC_FILE=/src/$FCF}} \
   --step-tcl PRE_CTS=${PRECTS:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag hv_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
 mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
-python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} ${POSTSDC:+--post-sdc $POSTSDC} --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} $(for p in ${POSTSDC:-}; do echo -n " --post-sdc $p"; done) --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done
 python3 tools/hbm_fmax_attn_abstract.py --orfs-dir $W/work/orfs --name $master --out $W/view $mvx --tmp-dir $W/abs_tmp > $W/export.log 2>&1

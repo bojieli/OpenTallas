@@ -1,0 +1,54 @@
+{
+ "master": "hfd_router",
+ "lef": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/rt5_pd40/view/hfd_router.lef",
+ "macro": "hfd_router",
+ "size_view": [
+  1399.66,
+  133.896
+ ],
+ "size_gen": [
+  1399.656,
+  133.896
+ ],
+ "gen_pins": 2118,
+ "view_pins": 2118,
+ "missing": 0,
+ "extra": 0,
+ "moved": 0,
+ "wrong_layer": 0,
+ "wrong_face": 0,
+ "wrong_face_examples": [],
+ "missing_examples": [],
+ "extra_examples": [],
+ "moved_examples": [],
+ "wrong_layer_examples": [],
+ "pg_pins": {
+  "VDD": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ],
+  "VSS": [
+   "M1",
+   "M2",
+   "M6",
+   "M7"
+  ]
+ },
+ "obs_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_above_generator": [],
+ "positions": "exact",
+ "problems": [],
+ "verdict": "MATCH"
+}

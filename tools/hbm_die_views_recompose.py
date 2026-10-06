@@ -7,9 +7,12 @@ from the matched DS composition, Qwen 8K stage crossings), on a committed GRT wi
 wire_stages.json basis), and reports the delta against the same record priced without the adders.
 
 Cycle ledger (per fork report, 2026-10-06; edit LEDGER when a fork records a measured change):
-  meso crossing        +2 station stages + 1 meso FIFO readout  -> MESO_CYC 2 -> 5 on every meso-crossing path
-  gather (a2)          +1 on the SM -> SU result gather path
-  spine face_stages 3  pin flop + 2 stages on every spine view face = +2 per face traversal:
+  meso crossing        +3 per meso / mcast / cdist downstream FIFO crossing (pin capture, readout, pin launch; stations
+                       src16 f833ed394, FIFO campaign 307e2da66) -> MESO_CYC 2 -> 5 on every meso-crossing path
+  gather (a2)          +2 on the SM -> SU result gather path (once per barrier)
+  cdist b launch       +2 on the control-distribution launch (release / issue direction, once per barrier)
+  forward / launch stations: 0
+  spine face_stages 3 -> 5 (fd828b957) on the six interim wrappers: +4 per face traversal (barrier stays fs3 +2):
                          barrier: arrive in + release out          +4 per barrier       (measured: bm2_pd45 record)
                          collective endpoint: SU -> coll, coll -> SU +4 per collective
                          collective endpoint <-> SerDes macros      +4 per switch crossing
@@ -36,8 +39,18 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hbm_accel_die_fp as F  # noqa: E402
 import hbm_accel_die_price as PR  # noqa: E402
 
-LEDGER = dict(meso_extra=3, gather=1, barrier=4, coll=4, serdes=4, vm=4, router=4, cmdproc=2, quant=13,
+# spine faces sized per face (physical/hbm_accel_die_views/spine_face_stages.json, 6d290c8b3: N = clamp(ceil(d/380 um),
+# 2, 5), added cycles per face = N - 1 over the pre-margin pin flop): collective SU faces 4/4 -> +3 +3, endpoint <->
+# SerDes llk 3 -> +2 +2, VM f_su 5 (SE/SW, bound) -> +4 and x faces 3 -> +2, cmdproc issue faces c* 3 -> +2; router keeps
+# face_stages 5 (+4 +4) until the hbm-router view records its faces; barrier view face_stages 3 (+4 round trip, measured)
+LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=6, serdes=4, vm=6, router=8, cmdproc=2, quant=17,
               quant_points_bound=161, quant_points_gate=0)
+
+
+# SM faces: the interim SM view's own pin plan priced on the die (results/rtl/hbm_accel_die_views_20261006/
+# wire_stages_r3_smpins.json minus wire_stages_r1_sm.json, same views / generator pins otherwise); 0 once the SM ports
+# land on the floorplan faces
+SM_FACES = {'stages_430': 2.475, 'stages_430_median_bundle': 2.583, 'stages_430_manhattan': 0.0}
 
 
 def priced(m, grt_work, meso):
@@ -70,6 +83,7 @@ def main(argv=None):
         extra = dict(
             meso_paths_us=round(g['added_us'] - b['added_us'], 3),
             gather=n.get('barrier', 0) * LEDGER['gather'],
+            cdist=n.get('barrier', 0) * LEDGER['cdist'],
             barrier=n.get('barrier', 0) * LEDGER['barrier'],
             coll=n.get('coll_terms', 0) * LEDGER['coll'],
             serdes=n.get('coll_crossings', 0) * LEDGER['serdes'],
@@ -97,7 +111,19 @@ def main(argv=None):
             qwen[dn_] = dict(priced_cycles=d0['priced_cycles'], margin_cycles=d0['priced_cycles'] + add, added_cycles=add,
                              delta_pct=round(100 * add / d0['priced_cycles'], 2),
                              ar_tok_s=d0['ar_tok_s_priced'], ar_tok_s_margin=round(hz / (d0['priced_cycles'] + add), 1))
-        rec['bases'][key] = dict(counts=n, extra_cycles=extra, ds_wire_priced=dict(AR_us=ar0, MTP_step_us=mtp0, tau=tau,
+        cus = lambda c: round(c / hz * 1e6, 3)  # noqa: E731
+        groups = dict(stations_us=round(extra['meso_paths_us'] + cus(extra['gather'] + extra['cdist']), 3),
+                      barrier_us=cus(extra['barrier']),
+                      spine_faces_us=cus(extra['coll'] + extra['serdes'] + extra['vm'] + extra['router'] + extra['cmdproc']),
+                      quant_us_gate=0.0,
+                      quant_us_bound=round(LEDGER['quant'] * LEDGER['quant_points_bound'] / hz * 1e6, 3))
+        sm = SM_FACES.get(key)
+        if sm is not None:
+            groups['sm_faces_interim_us'] = sm
+        tot = groups['stations_us'] + groups['barrier_us'] + groups['spine_faces_us'] + (sm or 0.0)
+        groups['total_with_sm_interim_us'] = round(tot, 3)
+        groups['total_with_sm_interim_AR_pct'] = round(100 * tot / ar0, 2)
+        rec['bases'][key] = dict(counts=n, extra_cycles=extra, breakdown=groups, ds_wire_priced=dict(AR_us=ar0, MTP_step_us=mtp0, tau=tau,
                                                                                     AR_tok_s=gate['AR_tok_s_priced'],
                                                                                     MTP_tok_s=gate['MTP_tok_s_priced']),
                                  ds_margin=rows, qwen_8k=qwen)
