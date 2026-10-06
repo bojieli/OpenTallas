@@ -28,6 +28,7 @@ if os.environ.get('OT_FH_PLACE_DENSITY'):
     text='\n'.join(l for l in text.splitlines() if not l.startswith(('export PLACE_DENSITY =','export PLACE_DENSITY_LB_ADDON =')))+'\n'
     text+=f'export PLACE_DENSITY = {density}\n'
 assert os.environ.get('OT_FH_SHARED_PARTITION', 'none') == p['physical_parameters'].get('shared_partition', 'none')
+assert (os.environ.get('OT_FH_VERTICAL_SEAMS') == '1') == p['physical_parameters'].get('vertical_seams', False)
 cfg.write_text(text)
 print('SOURCE_PIN/reused objects verified',p['commit'],flush=True)
 PY
@@ -50,6 +51,7 @@ if [ "${OT_FH_ASSIGN_CONES:-0}" = 1 ]; then
   -e FHCONE_RECEIPT=/work/cone_grouping.json \
   -e FHCONE_RECT_STRIPS="${OT_FH_RECT_STRIPS:-0}" \
   -e FHCONE_SHARED_PARTITION="${OT_FH_SHARED_PARTITION:-none}" \
+  -e FHCONE_VERTICAL_SEAMS="${OT_FH_VERTICAL_SEAMS:-0}" \
   -v "$S:/src:ro" -v "$R/work/orfs:/work" openroad/orfs:latest bash -lc \
   'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 16 -python /src/physical/dsrom_fh_capture/assign_lane_cones.py'
  # The original mapped floorplan is retained by the previous terminal run;
