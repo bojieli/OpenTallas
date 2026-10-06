@@ -1,0 +1,100 @@
+FAILED: FlowError: yosys synthesis failed with exit -15:
+f `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98626 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98556 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98486 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98416 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98346 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98276 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98206 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98136 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98087 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+Computing hashes of 98066 cells of `\ot_hbm_native_frame_station'.
+Finding duplicate cells in `\ot_hbm_native_frame_station'.
+<suppressed ~21417 debug messages>
+Removed a total of 7139 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_fwd_clk_inv..
+Finding unused cells or wires in module \ot_hbm_native_frame_station..
+Removed 810 unused cells and 133137 unused wires.
+<suppressed ~811 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\ot_fwd_clk_inv' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               NOT cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+8.24.2. Extracting gate netlist of module `\ot_hbm_native_frame_station' to `<abc-temp-dir>/input.blif'..
+
+
+partial record written to /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/physical.json
+Command exited with non-zero status 1
+	Command being timed: "python3 physical/hbm_die_abstracts_20261006/links/station_physical_20261006/run_owned.py --persistent-workdir /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/work --launch-receipt /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/launch.json --view asap7 --top ot_hbm_native_frame_station --source physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_lowered.sv --source rtl/common/ot_fwd_link_stage.sv --source physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv --source physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv --source physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv --param ENABLE=1 --param NO=3 --clock-port clk_sm --clock-period-ns 0.833333333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --stages synth --output /srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/physical.json"
+	User time (seconds): 1792.05
+	System time (seconds): 40.36
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 30:47.52
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 20515536
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 264
+	Minor (reclaiming a frame) page faults: 11548112
+	Voluntary context switches: 448569
+	Involuntary context switches: 8179
+	Swaps: 0
+	File system inputs: 204648
+	File system outputs: 88
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

@@ -1,0 +1,49 @@
+{
+  "state": "RETIRED_OWNER_AUTHORIZED_NO_CURRENT_CONSUMER",
+  "UTC": "2026-10-06T05:53:15.342104+00:00",
+  "owner": "Galileo/Codex item6",
+  "authorization": "Owner explicit usefulness audit and cleanup",
+  "map_source": "f6fd8e306749eaa66aecadb7938a6625bb58bdce",
+  "mandatory_current_consumer": null,
+  "reason": "Rejected153.757>140 row9/privateREFpb caller is not current sharedrow19/Gibbssolecalendar/full73 provider source; no current mandatory consumer requires its mapped netlist. Canonical macro clocks already committed independently.",
+  "current_source": "3cd1068e8 sharedP2 provider join; minimumchangedjoin PASS, fullP2/physical open",
+  "collector_stopped": 2213358,
+  "ABC_host_PID": 1782594,
+  "ABC_container_PID": 20263,
+  "original_numerical_and_performance_failures_preserved": true,
+  "no_restart": true,
+  "signal": "SIGTERM to verified owned ABC after preserving both temp directories",
+  "signal_UTC": "2026-10-06T05:53:36.773226+00:00",
+  "retained_ABC_objects": [
+    {
+      "path": "map_r2/retirement/yosys-abc-LufZ8Z/abc.script",
+      "bytes": 744
+    },
+    {
+      "path": "map_r2/retirement/yosys-abc-LufZ8Z/input.blif",
+      "bytes": 469525181
+    },
+    {
+      "path": "map_r2/retirement/yosys-abc-N2W1o5/stdcells.genlib",
+      "bytes": 754
+    }
+  ],
+  "completed_UTC": "2026-10-06T05:55:43.708295+00:00",
+  "wrapper_exit": 1,
+  "exit_classification": "operator-authorized retirement after preserving ABC objects; NOT an independently observed RTL/numerical/physical failure",
+  "all_owned_PIDs_gone": [
+    1516454,
+    1516483,
+    1516530,
+    1524751,
+    1782594,
+    2213358
+  ],
+  "owned_container_removed_by_original_docker_rm": true,
+  "collector_launched_readout": false,
+  "final_mapped_netlist_produced": false,
+  "final_mapped_inventory_produced": false,
+  "source_and_checkpoints_retained": "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical",
+  "preserved_ABC_bytes": 469526679,
+  "canonical_checkpoint": "/srv/opentallas-scratch2/codex/r5a-stack-p2-physical/map_r2/flow/orfs/results/asap7/opentallas_ot_hbm_accel_expert_stack_p2_asap7_r5a_stack_p2_mapr2/base/1_1_yosys_canonicalize.rtlil"
+}

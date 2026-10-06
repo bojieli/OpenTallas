@@ -27,7 +27,7 @@ pins={x:hashlib.sha256((a.source/x).read_bytes()).hexdigest() for x in (recipe/'
 image='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'
 variant='u'+a.density.replace('0.','')
 flow='source /OpenROAD-flow-scripts/env.sh; cd /OpenROAD-flow-scripts/flow; make DESIGN_CONFIG=/src/physical/dsrom_wfc_protected_context/config.mk WORK_HOME=/work FLOW_VARIANT='+variant+' PLACE_DENSITY='+a.density+' NUM_CORES=16; route_rc=$?; if [ "$route_rc" -eq 0 ]; then make DESIGN_CONFIG=/src/physical/dsrom_wfc_protected_context/config.mk WORK_HOME=/work FLOW_VARIANT='+variant+' PLACE_DENSITY='+a.density+' NUM_CORES=16 RUN_SCRIPT=/src/physical/dsrom_wfc_protected_context/signoff.tcl RUN_LOG_NAME_STEM=protected_signoff run; exit $?; fi; exit "$route_rc"'
-cmd=['docker','run','--name','zeno-wfc-protected-r4-'+variant,'--cidfile',str(a.output/'container.id'),'-v',str(a.source)+':/src:ro','-v',str(a.output)+':/work',image,'bash','-lc',flow]
+cmd=['docker','run','--name','zeno-wfc-'+a.output.name,'--cidfile',str(a.output/'container.id'),'-v',str(a.source)+':/src:ro','-v',str(a.output)+':/work',image,'bash','-lc',flow]
 (a.output/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
 with (a.output/'run.log').open('w') as log:rc=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT).returncode
 (a.output/'terminal.exit').write_text(str(rc)+'\n')
