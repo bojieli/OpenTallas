@@ -20,7 +20,7 @@
 //          cycle later.  Nothing else moves; the element results are unchanged.
 //          CTL12 = 2 (the routed N = 16 vehicle at CTL12 = 1 missed by 0.71 ns over ~140 endpoint classes): the set-up
 //          runs over 9 sub-steps (10 for a non-flattening whole-op reduction; CTL12 = 1: 4 / 6), the stride / count
-//          products in 4-bit slices and their sums registered, the slot-size logarithms, the layout, the vector
+//          products in 2-bit slices and their sums registered, the slot-size logarithms, the layout, the vector
 //          count, its levels and the result depth one register stage each; the vector loop's adds and compares are
 //          kept-prefix adders on registered operands (the slot size 1 << ls, nslot, a half stream's slot-size-1 flag,
 //          the remaining rows, the chaining accumulator and its two next needs are registers); and the loop's
@@ -411,18 +411,18 @@ module ot_hdc_v41x_vec #(
                                           {{(AW-NW){1'b0}}, fx_r[1*NW +: NW]}, {{(AW-NW){1'b0}}, fx_r[0 +: NW]}}
                                        : {{{(AW-NW){1'b0}}, q_nin}, ni_a, f_h, ni_a, f_h, ni_a};     // n, o, d, c, b, a
     wire [6*AW-1:0] m_x = {f_n, q_osi, q_dsi, q_csi, q_bsi, q_asi};
-    wire [6*4*AW-1:0] pq_w;
-    reg  [6*4*AW-1:0] pq_r;
+    wire [6*8*AW-1:0] pq_w;
+    reg  [6*8*AW-1:0] pq_r;
     wire [6*AW-1:0] pr2_w;
     reg  [6*AW-1:0] pr2_r;
     genvar gx, gq;
     generate for (gx = 0; gx < 6; gx = gx + 1) begin : g_px
-        for (gq = 0; gq < 4; gq = gq + 1) begin : g_pq
-            ot_hdc_v41x_cmul4 #(.W(AW), .K(KK)) u_m (.f(f_x[gx*AW + 4*gq +: 4]), .x(m_x[gx*AW +: AW]),
-                                                     .y(pq_w[(gx*4 + gq)*AW +: AW]));
+        // 2-bit slices: slice q is f[2q+1:2q] * x, weighted 4^q in the S1 sum
+        for (gq = 0; gq < 8; gq = gq + 1) begin : g_pq
+            ot_hdc_v41x_cmul2 #(.W(AW), .K(KK)) u_m (.f(f_x[gx*AW + 2*gq +: 2]), .x(m_x[gx*AW +: AW]),
+                                                     .y(pq_w[(gx*8 + gq)*AW +: AW]));
         end
-        ot_hdc_v41x_csum4 #(.W(AW), .K(KK)) u_s (.a(pq_r[(gx*4)*AW +: AW]), .b(pq_r[(gx*4 + 1)*AW +: AW] << 4),
-            .c(pq_r[(gx*4 + 2)*AW +: AW] << 8), .d(pq_r[(gx*4 + 3)*AW +: AW] << 12), .y(pr2_w[gx*AW +: AW]));
+        ot_hdc_v41x_csum8 #(.W(AW), .K(KK)) u_s (.x(pq_r[gx*8*AW +: 8*AW]), .y(pr2_w[gx*AW +: AW]));
     end endgenerate
     always @(posedge clk) begin
         if (pst == 2'd1 && sst == 4'd0) pq_r <= pq_w;
@@ -475,8 +475,8 @@ module ot_hdc_v41x_vec #(
     reg  [3:0] r2_ls;
     wire [4:0] c2_lsz = s_wnf ? r2_tz : r2_lg;
     wire [3:0] c_ls = (CTL12 >= 2) ? r2_ls : (CTL12 != 0) ? r_ls : x_ls;
-    wire [3:0] r2_ls_t;                  // CTL12 >= 2: a kept copy of r2_ls for the offset terms
-    wire [3:0] c_ls_t = (CTL12 >= 2) ? r2_ls_t : c_ls;
+    wire [5*4-1:0] r2_ls_t;              // CTL12 >= 2: kept copies of r2_ls for the offset terms, one a stream
+    wire [5*4-1:0] c_ls_t = (CTL12 >= 2) ? r2_ls_t : {5{c_ls}};
     wire x_packed = !s_wnf && (s_ni <= (1 << c_ls));
     reg  r2_packed;
     wire c_packed = (CTL12 >= 2) ? r2_packed : (CTL12 != 0) ? r_packed : x_packed;
@@ -528,19 +528,19 @@ module ot_hdc_v41x_vec #(
         for (s = 0; s < 5; s = s + 1) begin
             // stream s's lane offset = d_i * si (or (d_i >> 1) * si for a half stream) + d_o * so
             for (kk = 0; kk < LN; kk = kk + 1) begin
-                if (kk < c_ls_t) begin
+                if (kk < c_ls_t[s*4 +: 4]) begin
                     if (s == 0 && q_aind == IND_I) c_terms[(s*LN + kk)*AW +: AW] = 0;
                     else if ((s == 1 || s == 3) && q_bhalf) c_terms[(s*LN + kk)*AW +: AW] = (kk == 0) ? 0 : si_s[s] << (kk - 1);
                     else c_terms[(s*LN + kk)*AW +: AW] = si_s[s] << kk;
                 end else begin
                     if (s == 0 && q_aind == IND_O) c_terms[(s*LN + kk)*AW +: AW] = 0;
-                    else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls_t);
+                    else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls_t[s*4 +: 4]);
                 end
             end
             c_ostep[s*AW +: AW] = (s == 0 && q_aind == IND_O) ? 0 : so_s[s] << c_nsh;
             c_istep[s*AW +: AW] = (s == 0 && q_aind == IND_I) ? 0 :
-                                  ((s == 1 || s == 3) && q_bhalf) ? ((c_ls_t == 0) ? 0 : si_s[s] << (c_ls_t - 1)) :
-                                  si_s[s] << c_ls_t;
+                                  ((s == 1 || s == 3) && q_bhalf) ? ((c_ls_t[s*4 +: 4] == 0) ? 0 : si_s[s] << (c_ls_t[s*4 +: 4] - 1)) :
+                                  si_s[s] << c_ls_t[s*4 +: 4];
         end
     end
     // CTL12 >= 2 sub-steps
@@ -565,8 +565,12 @@ module ot_hdc_v41x_vec #(
     reg  [9:0] r2_dT, r2_dR, r2_dTa, r2_lth;
     reg  [AW-1:0] r2_gstr;
     reg  [15:0] r2_need1;
-    ot_hdc_v41x_ckreg #(.W(4), .R(0)) u_lst (.clk(clk), .rst_n(rst_n),
-        .d((pst == 2'd1 && sst == 4'd4) ? ((c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0]) : r2_ls_t), .q(r2_ls_t));
+    genvar gt;
+    generate for (gt = 0; gt < 5; gt = gt + 1) begin : g_lst
+        ot_hdc_v41x_ckreg #(.W(4), .R(0)) u_lst (.clk(clk), .rst_n(rst_n),
+            .d((pst == 2'd1 && sst == 4'd4) ? ((c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0]) : r2_ls_t[gt*4 +: 4]),
+            .q(r2_ls_t[gt*4 +: 4]));
+    end endgenerate
     reg  [4:0] r2_L;
     reg        r2_bad;
     reg  [5*LN*AW-1:0] r2_terms;
@@ -810,12 +814,18 @@ module ot_hdc_v41x_vec #(
     reg  [23:0] acc1_r, acc2_r;          // a_acc + a_chmul, a_acc + 2 a_chmul
     reg  [15:0] need0_r, need1_r;        // a_chlead + a_acc[23:8], a_chlead + (a_acc + a_chmul)[23:8]
     // the count rt - pvm for both values of this cycle's retire (r_tot, r_tot + 1); ret_i selects last
-    wire [15:0] cnt_e0, cnt_e1, cnt_p0, cnt_p1;
-    wire [3:0]  unused_cc;
-    ot_hdc_kadd #(.W(16), .K(KK)) u_ce0 (.a(r_tot), .b(~pvm_e), .cin(1'b1), .s(cnt_e0), .cout(unused_cc[0]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_ce1 (.a(rtot1_r), .b(~pvm_e), .cin(1'b1), .s(cnt_e1), .cout(unused_cc[1]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_cp0 (.a(r_tot), .b(~pv_mark), .cin(1'b1), .s(cnt_p0), .cout(unused_cc[2]));
-    ot_hdc_kadd #(.W(16), .K(KK)) u_cp1 (.a(rtot1_r), .b(~pv_mark), .cin(1'b1), .s(cnt_p1), .cout(unused_cc[3]));
+    // the counts r_tot - pv_mark and r_tot - pvm_e as registers (and + 1), from the next-cycle values of their terms
+    reg  [15:0] cnt_p0, cnt_p1, cnt_e0, cnt_e1;
+    wire [15:0] n_pvmark = (EMIT[14] && LAST[14]) ? (STRT[14] ? a_mark : e_tot) : pv_mark;
+    wire [15:0] n_amark = (!PROM[11] && EMIT[11] && !STRT[11]) ? e_tot : a_mark;
+    wire [15:0] n_pvme = n_st ? n_amark : e_tot_n;
+    wire [15:0] np0, ne0, np1, ne1;
+    wire [1:0]  unused_cc;
+    ot_hdc_kadd #(.W(16), .K(KK)) u_np0 (.a(n_rtot), .b(~n_pvmark), .cin(1'b1), .s(np0), .cout(unused_cc[0]));
+    ot_hdc_kadd #(.W(16), .K(KK)) u_ne0 (.a(n_rtot), .b(~n_pvme), .cin(1'b1), .s(ne0), .cout(unused_cc[1]));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_np1 (.a(np0), .inc(1'b1), .y(np1));
+    ot_hdc_kinc #(.W(16), .K(KK)) u_ne1 (.a(ne0), .inc(1'b1), .y(ne1));
+    always @(posedge clk) begin cnt_p0 <= np0; cnt_p1 <= np1; cnt_e0 <= ne0; cnt_e1 <= ne1; end
     wire [1:0] cpa_o, cpi_o, cem_o, cho_o;
     genvar gr;
     generate for (gr = 0; gr < 2; gr = gr + 1) begin : g_cr
@@ -1387,6 +1397,37 @@ module ot_hdc_v41x_cmul4 #(parameter integer W = 24, parameter integer K = 1) (
     wire [W-1:0] p2 = f[2] ? (x << 2) : {W{1'b0}};
     wire [W-1:0] p3 = f[3] ? (x << 3) : {W{1'b0}};
     ot_hdc_v41x_csum4 #(.W(W), .K(K)) u (.a(p0), .b(p1), .c(p2), .d(p3), .y(y));
+endmodule
+
+// y = f * x mod 2^W for a 2-bit f
+module ot_hdc_v41x_cmul2 #(parameter integer W = 24, parameter integer K = 1) (
+    input  wire [1:0]   f,
+    input  wire [W-1:0] x,
+    output wire [W-1:0] y
+);
+    wire co;
+    ot_hdc_kadd #(.W(W), .K(K)) u (.a(f[0] ? x : {W{1'b0}}), .b(f[1] ? (x << 1) : {W{1'b0}}), .cin(1'b0), .s(y), .cout(co));
+endmodule
+
+// y = sum of x[q] << 2q, q = 0..7, mod 2^W (carry-save tree, one carry-propagate add)
+module ot_hdc_v41x_csum8 #(parameter integer W = 24, parameter integer K = 1) (
+    input  wire [8*W-1:0] x,
+    output wire [W-1:0]   y
+);
+    wire [W-1:0] t [0:7];
+    genvar q;
+    generate for (q = 0; q < 8; q = q + 1) begin : g_t
+        assign t[q] = x[q*W +: W] << (2 * q);
+    end endgenerate
+    // 8 -> 6 -> 4 -> 3 -> 2
+    wire [W-1:0] a0 = t[0] ^ t[1] ^ t[2], b0 = ((t[0] & t[1]) | (t[0] & t[2]) | (t[1] & t[2])) << 1;
+    wire [W-1:0] a1 = t[3] ^ t[4] ^ t[5], b1 = ((t[3] & t[4]) | (t[3] & t[5]) | (t[4] & t[5])) << 1;
+    wire [W-1:0] a2 = a0 ^ b0 ^ a1,       b2 = ((a0 & b0) | (a0 & a1) | (b0 & a1)) << 1;
+    wire [W-1:0] a3 = b1 ^ t[6] ^ t[7],   b3 = ((b1 & t[6]) | (b1 & t[7]) | (t[6] & t[7])) << 1;
+    wire [W-1:0] a4 = a2 ^ b2 ^ a3,       b4 = ((a2 & b2) | (a2 & a3) | (b2 & a3)) << 1;
+    wire [W-1:0] a5 = a4 ^ b4 ^ b3,       b5 = ((a4 & b4) | (a4 & b3) | (b4 & b3)) << 1;
+    wire co;
+    ot_hdc_kadd #(.W(W), .K(K)) u (.a(a5), .b(b5), .cin(1'b0), .s(y), .cout(co));
 endmodule
 
 // y = a + b + c + d mod 2^W (two levels of adders)
