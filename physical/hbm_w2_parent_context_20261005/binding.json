@@ -8933,5 +8933,18 @@
   "remaining_bindings": [
     "Claude SM/Franklin/Gibbs: actual pre-capture NC8/PIO2 caller port export/replacement hook, with the protected result stages and identity join replacing old stages once; post-capture rv/rop/rrow/rdata are not producer inputs",
     "Turing: existing retained-map floorplan continuation then actual region/CDC first-stage/CTS/receiver-load/SS60-FF25 extraction; external IO numbers remain budgets"
-  ]
+  ],
+  "station_CURRENT_registered_handoff": {
+    "owner": "Gauss station and Turing parent",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv",
+    "default_parameter": "REGISTERED_CURRENT=0",
+    "enabled_bank": "ot_hbm_w2_protected_bank_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "enabled_cut": "ot_hbm_w2_protected_cut_current_pipeline #(.REGISTERED_CURRENT(1))",
+    "exact_mechanism": "per-stripe protected snapshot/check register; current equality fence; held parallel CE repair then recheck",
+    "changed_minimum_gate": "results/rtl/w2_transaction_pipeline_20261005/current_station_r1/terminal.json",
+    "targeted_fault_gate": "results/rtl/w2_transaction_pipeline_20261005/current_bank_r1/terminal.json",
+    "Gauss_next": "Use new bank/cut in own exact station source with defaults0. Static codec expansion only if needed, preserving four codecs and state machine; retain attrs. Map actual FF/area/current-check fanout against existing H55/V60 slot, bind SS60/FF25 and real receiver/forwarded clock. Fix native constantone POWER tie separately once changed source qualified. No unchanged density route.",
+    "Turing_next": "Consume NO2 15420/NO3 16646 source FF, quarter65358; four-stage serial publication added-edge upper68(56.6667ns), actual changed gate release90. Actual fit/loadedclock/old-calendar delta remain open; no cached owner/ready credit.",
+    "physical_qualified": false
+  }
 }
