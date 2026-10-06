@@ -10,7 +10,9 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import threading
 import time
+from run_full import observe
 
 
 def sha(path):
@@ -91,8 +93,14 @@ def main():
     fresh(args.output,args.stage)
     (args.output/(args.stage+'_once')).mkdir()
     command=r['build' if args.stage=='build' else 'runtime']
-    with (args.output/(args.stage+'.log')).open('x') as log:
-        rc=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT).returncode
+    stop=threading.Event()
+    observer=threading.Thread(target=observe,args=(args.output,args.stage,stop))
+    observer.start()
+    try:
+        with (args.output/(args.stage+'.log')).open('x') as log:
+            rc=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT).returncode
+    finally:
+        stop.set();observer.join()
     (args.output/(args.stage+'.exit')).write_text(str(rc)+'\n')
     if rc or args.stage=='runtime':
         passed=rc==0 and 'PASS parallel32 releasedK/V' in (args.output/'runtime.log').read_text()
