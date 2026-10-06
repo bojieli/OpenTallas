@@ -12,7 +12,7 @@ Cycle ledger (per fork report, 2026-10-06; edit LEDGER when a fork records a mea
   gather (a2)          +2 on the SM -> SU result gather path (once per barrier)
   cdist b launch       +2 on the control-distribution launch (release / issue direction, once per barrier)
   forward / launch stations: 0
-  spine face_stages 3  pin flop + 2 stages on every spine view face = +2 per face traversal:
+  spine face_stages 3 -> 5 (fd828b957) on the six interim wrappers: +4 per face traversal (barrier stays fs3 +2):
                          barrier: arrive in + release out          +4 per barrier       (measured: bm2_pd45 record)
                          collective endpoint: SU -> coll, coll -> SU +4 per collective
                          collective endpoint <-> SerDes macros      +4 per switch crossing
@@ -39,7 +39,9 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hbm_accel_die_fp as F  # noqa: E402
 import hbm_accel_die_price as PR  # noqa: E402
 
-LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=4, serdes=4, vm=4, router=4, cmdproc=2, quant=13,
+# spine face_stages 5 (fd828b957: pin flop + 4 stages, +2 per face over face_stages 3) on the six interim wrappers
+# (router, quant, cmdproc, loader, coll, vm); the closed barrier view stays at face_stages 3 (+4 round trip, measured)
+LEDGER = dict(meso_extra=3, gather=2, cdist=2, barrier=4, coll=8, serdes=8, vm=8, router=8, cmdproc=4, quant=17,
               quant_points_bound=161, quant_points_gate=0)
 
 

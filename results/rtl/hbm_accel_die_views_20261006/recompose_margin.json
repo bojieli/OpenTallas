@@ -5,12 +5,12 @@
   "gather": 2,
   "cdist": 2,
   "barrier": 4,
-  "coll": 4,
-  "serdes": 4,
-  "vm": 4,
-  "router": 4,
-  "cmdproc": 2,
-  "quant": 13,
+  "coll": 8,
+  "serdes": 8,
+  "vm": 8,
+  "router": 8,
+  "cmdproc": 4,
+  "quant": 17,
   "quant_points_bound": 161,
   "quant_points_gate": 0
  },
@@ -34,11 +34,11 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 1060,
-    "serdes": 1220,
-    "vm": 1164,
-    "router": 160,
-    "cmdproc": 686
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
    },
    "ds_wire_priced": {
     "AR_us": 533.077,
@@ -49,40 +49,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 10.272,
-     "AR_us": 543.349,
-     "AR_delta_pct": 1.93,
-     "AR_tok_s": 1840.4,
-     "MTP_step_us": 1119.179,
-     "MTP_delta_pct": 0.93,
-     "MTP_tok_s": 3716.1
+     "added_us": 13.847,
+     "AR_us": 546.924,
+     "AR_delta_pct": 2.6,
+     "AR_tok_s": 1828.4,
+     "MTP_step_us": 1122.754,
+     "MTP_delta_pct": 1.25,
+     "MTP_tok_s": 3704.3
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 12.016,
-     "AR_us": 545.093,
-     "AR_delta_pct": 2.25,
-     "AR_tok_s": 1834.5,
-     "MTP_step_us": 1120.923,
-     "MTP_delta_pct": 1.08,
-     "MTP_tok_s": 3710.3
+     "added_us": 16.128,
+     "AR_us": 549.205,
+     "AR_delta_pct": 3.03,
+     "AR_tok_s": 1820.8,
+     "MTP_step_us": 1125.035,
+     "MTP_delta_pct": 1.45,
+     "MTP_tok_s": 3696.8
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1168433,
-     "margin_cycles": 1169563,
-     "added_cycles": 1130,
-     "delta_pct": 0.1,
+     "margin_cycles": 1170147,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
      "ar_tok_s": 1027.0,
-     "ar_tok_s_margin": 1026.0
+     "ar_tok_s_margin": 1025.5
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 563574,
-     "margin_cycles": 564704,
-     "added_cycles": 1130,
-     "delta_pct": 0.2,
+     "margin_cycles": 565288,
+     "added_cycles": 1714,
+     "delta_pct": 0.3,
      "ar_tok_s": 2129.3,
-     "ar_tok_s_margin": 2125.0
+     "ar_tok_s_margin": 2122.8
     }
    }
   },
@@ -104,11 +104,11 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 1060,
-    "serdes": 1220,
-    "vm": 1164,
-    "router": 160,
-    "cmdproc": 686
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
    },
    "ds_wire_priced": {
     "AR_us": 525.791,
@@ -119,40 +119,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 10.271,
-     "AR_us": 536.062,
-     "AR_delta_pct": 1.95,
-     "AR_tok_s": 1865.5,
-     "MTP_step_us": 1111.892,
-     "MTP_delta_pct": 0.93,
-     "MTP_tok_s": 3740.5
+     "added_us": 13.846,
+     "AR_us": 539.637,
+     "AR_delta_pct": 2.63,
+     "AR_tok_s": 1853.1,
+     "MTP_step_us": 1115.467,
+     "MTP_delta_pct": 1.26,
+     "MTP_tok_s": 3728.5
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 12.015,
-     "AR_us": 537.806,
-     "AR_delta_pct": 2.29,
-     "AR_tok_s": 1859.4,
-     "MTP_step_us": 1113.636,
-     "MTP_delta_pct": 1.09,
-     "MTP_tok_s": 3734.6
+     "added_us": 16.127,
+     "AR_us": 541.918,
+     "AR_delta_pct": 3.07,
+     "AR_tok_s": 1845.3,
+     "MTP_step_us": 1117.748,
+     "MTP_delta_pct": 1.46,
+     "MTP_tok_s": 3720.9
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1167632,
-     "margin_cycles": 1168762,
-     "added_cycles": 1130,
-     "delta_pct": 0.1,
+     "margin_cycles": 1169346,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
      "ar_tok_s": 1027.7,
-     "ar_tok_s_margin": 1026.7
+     "ar_tok_s_margin": 1026.2
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 562773,
-     "margin_cycles": 563903,
-     "added_cycles": 1130,
-     "delta_pct": 0.2,
+     "margin_cycles": 564487,
+     "added_cycles": 1714,
+     "delta_pct": 0.3,
      "ar_tok_s": 2132.3,
-     "ar_tok_s_margin": 2128.0
+     "ar_tok_s_margin": 2125.8
     }
    }
   },
@@ -174,11 +174,11 @@
     "gather": 686,
     "cdist": 686,
     "barrier": 1372,
-    "coll": 1060,
-    "serdes": 1220,
-    "vm": 1164,
-    "router": 160,
-    "cmdproc": 686
+    "coll": 2120,
+    "serdes": 2440,
+    "vm": 2328,
+    "router": 320,
+    "cmdproc": 1372
    },
    "ds_wire_priced": {
     "AR_us": 512.725,
@@ -189,40 +189,40 @@
    },
    "ds_margin": {
     "gate_quant_off_path": {
-     "added_us": 10.271,
-     "AR_us": 522.996,
-     "AR_delta_pct": 2.0,
-     "AR_tok_s": 1912.1,
-     "MTP_step_us": 1098.826,
-     "MTP_delta_pct": 0.94,
-     "MTP_tok_s": 3784.9
+     "added_us": 13.846,
+     "AR_us": 526.571,
+     "AR_delta_pct": 2.7,
+     "AR_tok_s": 1899.1,
+     "MTP_step_us": 1102.401,
+     "MTP_delta_pct": 1.27,
+     "MTP_tok_s": 3772.7
     },
     "bound_quant_on_every_fused_point": {
-     "added_us": 12.015,
-     "AR_us": 524.74,
-     "AR_delta_pct": 2.34,
-     "AR_tok_s": 1905.7,
-     "MTP_step_us": 1100.57,
-     "MTP_delta_pct": 1.1,
-     "MTP_tok_s": 3779.0
+     "added_us": 16.127,
+     "AR_us": 528.852,
+     "AR_delta_pct": 3.15,
+     "AR_tok_s": 1890.9,
+     "MTP_step_us": 1104.682,
+     "MTP_delta_pct": 1.48,
+     "MTP_tok_s": 3764.9
     }
    },
    "qwen_8k": {
     "a_TP2_same_silicon": {
      "priced_cycles": 1166501,
-     "margin_cycles": 1167631,
-     "added_cycles": 1130,
-     "delta_pct": 0.1,
+     "margin_cycles": 1168215,
+     "added_cycles": 1714,
+     "delta_pct": 0.15,
      "ar_tok_s": 1028.7,
-     "ar_tok_s_margin": 1027.7
+     "ar_tok_s_margin": 1027.2
     },
     "b_TP4_iso_silicon": {
      "priced_cycles": 561642,
-     "margin_cycles": 562772,
-     "added_cycles": 1130,
-     "delta_pct": 0.2,
+     "margin_cycles": 563356,
+     "added_cycles": 1714,
+     "delta_pct": 0.31,
      "ar_tok_s": 2136.6,
-     "ar_tok_s_margin": 2132.3
+     "ar_tok_s_margin": 2130.1
     }
    }
   }
