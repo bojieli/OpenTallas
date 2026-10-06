@@ -1,0 +1,1 @@
+ORFS failed source elaboration: generate-scope rptr forward-reference width. No mapped cell objects produced. Move own new rptr/issue declarations before first use, preserve expressions/state and pinned originalruntime. Revalidate changed full16 source using completed Verilator objects; unchanged own_index exhaustive proof reused.

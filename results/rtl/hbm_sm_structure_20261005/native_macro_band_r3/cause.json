@@ -1,0 +1,1027 @@
+{
+  "verdict": "REAL_GRT_CONGESTION_WITH_OWN_ALL_LAYER_KEEP_OUT_REGRESSION",
+  "API_or_termination_failure": false,
+  "original_overflow": 83,
+  "overflow": 2850,
+  "regions": 957,
+  "zero_capacity_regions": 927,
+  "zero_capacity_overflow": 2815,
+  "implicated_nets": 879,
+  "implicated_endpoint_occurrences": 3539,
+  "endpoint_occurrences_in_keepouts": 1225,
+  "endpoint_master_counts_in_keepouts": {
+    "AND3x1_ASAP7_75t_R": 46,
+    "BUFx2_ASAP7_75t_R": 62,
+    "INVx1_ASAP7_75t_R": 115,
+    "XNOR2x2_ASAP7_75t_R": 3,
+    "OR3x1_ASAP7_75t_R": 33,
+    "OA21x2_ASAP7_75t_R": 33,
+    "DFFASRHQNx1_ASAP7_75t_R": 253,
+    "NAND2x1_ASAP7_75t_R": 32,
+    "OR2x2_ASAP7_75t_R": 9,
+    "AND4x1_ASAP7_75t_R": 34,
+    "BUFx12f_ASAP7_75t_R": 11,
+    "DFFHQNx1_ASAP7_75t_R": 45,
+    "BUFx3_ASAP7_75t_R": 15,
+    "BUFx5_ASAP7_75t_R": 8,
+    "OR4x1_ASAP7_75t_R": 4,
+    "BUFx10_ASAP7_75t_R": 13,
+    "INVx2_ASAP7_75t_R": 10,
+    "AOI21x1_ASAP7_75t_R": 12,
+    "AND2x2_ASAP7_75t_R": 59,
+    "OAI21x1_ASAP7_75t_R": 11,
+    "AO21x1_ASAP7_75t_R": 92,
+    "OA211x2_ASAP7_75t_R": 43,
+    "AND5x1_ASAP7_75t_R": 10,
+    "NOR2x1_ASAP7_75t_R": 5,
+    "AO22x1_ASAP7_75t_R": 15,
+    "OR5x1_ASAP7_75t_R": 5,
+    "BUFx6f_ASAP7_75t_R": 28,
+    "AO221x1_ASAP7_75t_R": 9,
+    "OA22x2_ASAP7_75t_R": 5,
+    "BUFx24_ASAP7_75t_R": 10,
+    "INVx3_ASAP7_75t_R": 1,
+    "XOR2x2_ASAP7_75t_R": 3,
+    "CKINVDCx8_ASAP7_75t_R": 2,
+    "INVx5_ASAP7_75t_R": 2,
+    "CKINVDCx16_ASAP7_75t_R": 3,
+    "ot_sram_1r1w_128x256_m1_r2c2": 88,
+    "TIEHIx1_ASAP7_75t_R": 39,
+    "TIELOx1_ASAP7_75t_R": 57
+  },
+  "actual_static_mask_nets": [
+    {
+      "net": "net936",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[255]",
+          "bbox": [
+            207.12,
+            207.312,
+            207.144,
+            207.336
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_937",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            207.387,
+            209.448,
+            207.56
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net935",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[254]",
+          "bbox": [
+            207.12,
+            207.216,
+            207.144,
+            207.24
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_936",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            208.24,
+            209.61,
+            208.413
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net934",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[253]",
+          "bbox": [
+            207.12,
+            207.12,
+            207.144,
+            207.144
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_935",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            207.16,
+            209.448,
+            207.333
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net933",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[252]",
+          "bbox": [
+            207.12,
+            207.024,
+            207.144,
+            207.048
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_934",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            210.019,
+            208.24,
+            210.096,
+            208.413
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net932",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[251]",
+          "bbox": [
+            207.12,
+            206.928,
+            207.144,
+            206.952
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_933",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.695,
+            207.16,
+            209.772,
+            207.333
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net931",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[250]",
+          "bbox": [
+            207.12,
+            206.832,
+            207.144,
+            206.856
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_932",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            208.467,
+            209.61,
+            208.64
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net929",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[249]",
+          "bbox": [
+            207.12,
+            206.736,
+            207.144,
+            206.76
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_930",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            206.847,
+            209.448,
+            207.02
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net928",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[248]",
+          "bbox": [
+            207.12,
+            206.64,
+            207.144,
+            206.664
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_929",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            206.62,
+            209.61,
+            206.793
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net927",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[247]",
+          "bbox": [
+            207.12,
+            206.544,
+            207.144,
+            206.568
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_928",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            206.847,
+            209.61,
+            207.02
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net926",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[246]",
+          "bbox": [
+            207.12,
+            206.448,
+            207.144,
+            206.472
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_927",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            206.62,
+            209.448,
+            206.793
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net925",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[245]",
+          "bbox": [
+            207.12,
+            206.352,
+            207.144,
+            206.376
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_926",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            207.16,
+            209.61,
+            207.333
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net924",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[244]",
+          "bbox": [
+            207.12,
+            206.256,
+            207.144,
+            206.28
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_925",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            210.019,
+            206.307,
+            210.096,
+            206.48
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net923",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[243]",
+          "bbox": [
+            207.12,
+            206.16,
+            207.144,
+            206.184
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_924",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            206.307,
+            209.448,
+            206.48
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net922",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[242]",
+          "bbox": [
+            207.12,
+            206.064,
+            207.144,
+            206.088
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_923",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            206.08,
+            209.61,
+            206.253
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net921",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[241]",
+          "bbox": [
+            207.12,
+            205.968,
+            207.144,
+            205.992
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_922",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            206.307,
+            209.61,
+            206.48
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net920",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[240]",
+          "bbox": [
+            207.12,
+            205.872,
+            207.144,
+            205.896
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_921",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            206.08,
+            209.448,
+            206.253
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net918",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[239]",
+          "bbox": [
+            207.12,
+            205.776,
+            207.144,
+            205.8
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_919",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            205.54,
+            209.61,
+            205.713
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net917",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[238]",
+          "bbox": [
+            207.12,
+            205.68,
+            207.144,
+            205.704
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_918",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.695,
+            206.08,
+            209.772,
+            206.253
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net916",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[237]",
+          "bbox": [
+            207.12,
+            205.584,
+            207.144,
+            205.608
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_917",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.533,
+            205.767,
+            209.61,
+            205.94
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net915",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[236]",
+          "bbox": [
+            207.12,
+            205.488,
+            207.144,
+            205.512
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_916",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.371,
+            205.767,
+            209.448,
+            205.94
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net914",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[235]",
+          "bbox": [
+            207.12,
+            205.392,
+            207.144,
+            205.416
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_915",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.695,
+            206.307,
+            209.772,
+            206.48
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net909",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[230]",
+          "bbox": [
+            207.12,
+            204.912,
+            207.144,
+            204.936
+          ],
+          "macro": true,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_910",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.695,
+            205.767,
+            209.772,
+            205.94
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    },
+    {
+      "net": "net904",
+      "endpoints": [
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "pin": "w_mask_in[226]",
+          "bbox": [
+            207.12,
+            204.528,
+            207.144,
+            204.552
+          ],
+          "macro": true,
+          "inside_keepout": [],
+          "layers": [
+            "M4"
+          ]
+        },
+        {
+          "inst": "u.g_lf\\[1\\].u_leaf.g_xm\\[3\\].u_x_905",
+          "master": "TIELOx1_ASAP7_75t_R",
+          "pin": "L",
+          "bbox": [
+            209.857,
+            206.307,
+            209.934,
+            206.48
+          ],
+          "macro": false,
+          "inside_keepout": [
+            0
+          ],
+          "layers": [
+            "M1"
+          ]
+        }
+      ]
+    }
+  ],
+  "PG_region_box": [
+    110,
+    197,
+    215,
+    299
+  ],
+  "PG_shape_counts": {
+    "VIA": 19341,
+    "M6": 20,
+    "M5": 40,
+    "M2": 467,
+    "M1": 467,
+    "M3": 5869
+  },
+  "DB_grid_capacity_semantics": "Nominal layer capacity; DB usage includes blockages (GlobalRouter.cpp updateDbCongestionFromGuides). Not usable-track credit.",
+  "report_sha256": "cd8d52356aa5be24c9aad9cd407f22581dfa6f882ca950c9a5b4ccc50ca925d3",
+  "topology_sha256": "4026bd8ae12abb45fa7e4ea44696b88c6013a191f084efba3efcf970c5490183",
+  "repair": "Remove only own all-layer boxes; native one-GCell directional M2/M3/M4 SRAM OBS bands, preserve M5/M6 escape and ALL PG demand",
+  "baseline_closure_required": true,
+  "adopted": false,
+  "topology_capture": "Read-only failed ODB; actual rc0; no route rebuild",
+  "source_implementation": {
+    "frozen_GlobalRouter_cpp": "results/rtl/hbm_sm_structure_20261005/local_grt_r2/tool_source/GlobalRouter.cpp",
+    "native_macro_band_lines": [
+      5557,
+      5660
+    ],
+    "DB_grid_blockage_semantics_lines": [
+      3260,
+      3291
+    ]
+  }
+}

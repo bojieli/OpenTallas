@@ -10570,6 +10570,12 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             external_projection_is_distributed_caller_boundary=True,
             single_hb_coll_perimeter_pin_fit_qualified=False,
             next_build='source-pinned full32 loaded context synthesis; keep objects for real distributed pin/CTS binding',
+            actual_full32_SS_synthesis_cell_um2=178333.520399,
+            actual_full32_SS_synthesis_sequential_cell_um2=90842.643719,
+            actual_full32_SS_synthesis_DFF_count=304836,
+            prebuild_cell_upper_exceeded_for_NSM32=True,
+            measured_cell_area_replaces_prebuild_proxy_for_future_placement=True,
+            synthesis_record='results/rtl/hbm_item9_closure_20261005/loaded32_synth_r5/inventory.json',
             actual_context_route_qualified=False),
         latency=dict(new_mux_cycles_per_collective=0, new_mux_cycles_per_record=0,
             new_mux_token_delta_ns=0, retained_XREG_cycles_per_collective=2,
@@ -11135,3 +11141,56 @@ def dsrom_v9_cfg_context_model():
     """Finite physical configuration-ROM provider for the native PHW6 pair."""
     from dsrom_v9_cfg_context import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def hbm_smh_macro_band_price(macros, cells=0):
+    """Native directional SRAM OBS bands; same composed SM, zero new hardware.
+
+    Default OFF. The one measured GCell is a reservation, not physical tracks.
+    PG and true endpoint pins stay in the immutable CTS database. Unlike the
+    rejected all-layer rectangles, M5/M6 remain available for pin escape.
+    """
+    if cells not in (0, 1) or len(macros) != 8:
+        raise ValueError('Only measured eight-macro tile and one-GCell repair')
+    base = hbm_smh_local_grt_price([], reservation=0.25)
+    pitch = dict(M2=.039, M3=.036, M4=.048)
+    gcell = .57
+    bands = {layer: [] for layer in pitch}
+    edges = {layer: 0 for layer in pitch}
+    for m in macros:
+        x1,y1,x2,y2 = m['bbox']
+        if abs(x2-x1-94.824)>1e-6 or abs(y2-y1-41.04)>1e-6:
+            raise ValueError('Different SRAM geometry must be composed first')
+        for layer in pitch:
+            if layer == 'M3':
+                spans = [[x1-cells*gcell,y1,x1,y2],[x2,y1,x2+cells*gcell,y2]]
+                length = y2-y1
+            else:
+                # Conservative full macro width, including the M4 pin margin.
+                spans = [[x1,y1-cells*gcell,x2,y1],[x1,y2,x2,y2+cells*gcell]]
+                length = x2-x1
+            if cells:
+                bands[layer].extend(spans)
+                # Up to two quantized GCells per face; bound phase rounding.
+                edges[layer] += 2*2*math.ceil(length/gcell)*math.ceil(gcell/pitch[layer])
+    base.update(schema='opentallas.hbm.smh.native_macro_band.price.v1',
+        actual_macros=macros,macro_band_cells=cells,macro_extension_um=cells*gcell,
+        reservation_bands_um=bands,track_edge_slots_withheld_upper_bound=edges,
+        physical_tracks_added=0,PG_tracks_released=0,capacity_above_original=False,
+        original_resource_ceiling=dict(M2=3722977,M3=4603239,M4=3525788,M5=3721461,M6=2821839),
+        original_overflow=83,rejected_all_layer_overflow=2850,
+        rejected_zero_capacity_overflow=2815,
+        actual_PG='Retained M1/M2 followpins,M3 via enclosures,M5/M6 stripes; no PG ripup/reduction/relocation',
+        pin_escape='Original physical M4 SRAM pins; M5/M6 unmasked; no fictitious endpoint or access point',
+        replicas=8,new_mux_bits=0,new_demux_bits=0,new_clock_pins=0,
+        peak_memory_bytes_per_cycle_delta=0,MACs_per_cycle_delta=0,
+        boundary_bits_per_cycle_delta=0,added_pipeline_edges=0,added_register_bits=0,
+        density=.60,layers=["M2","M3","M4"],available_signal_layers=["M2","M3","M4","M5","M6"],
+        tile_density_parameter=.60,original_routing_usage_fraction=.4013,
+        slot_fit='Original tile allocation and every cell/macro coordinate unchanged',
+        source='GlobalRouter.cpp findInstancesObstructions extends perpendicular to preferred direction; native pin/PG accounting retained',
+        engine_RTL_changed=False,area_delta_um2=0,
+        latency_delta_cycles=0,routed_wire_buffer_and_clock_delta='Actual route/extraction required; no free physical latency claim',
+        macro_clk_to_q='Original SS SRAM library retained; full SS setup/FF hold required',
+        all_class_closure=False,parent_context_closed=False,adopted=False)
+    return base
