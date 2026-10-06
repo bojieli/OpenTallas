@@ -3,7 +3,7 @@
 // Shared grant/response owner and executor remain parent-facing boundaries.
 // No added registers, independent authority, or delay of live-owner veto.
 module ot_hbm_integrated_su_cp_context #(parameter integer ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,
- SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0) (
+ SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0) (
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -21,7 +21,7 @@ module ot_hbm_integrated_su_cp_context #(parameter integer ENABLE=0,SU_ENABLE=0,
  ot_hbm_integrated_su_cp_bind #(.ENABLE(ENABLE&&SU_ENABLE),
   .REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),
   .REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),
-  .BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_cp(
+  .BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION)) u_su_cp(
   .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(launch_pc),
   .cp_job(cp_job),.cp_gen(cp_gen),.launch_token(launch_token),.launch_pos(launch_pos),
   .native_launch(native_launch),.lease_v(lease_v),.lease_granted(lease_granted),
