@@ -20,13 +20,17 @@ EXTRA=['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
  'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv',BENCH,HARNESS]
 FILES=['vm.hex','kv.hex','cr.hex','wr.hex','prog.hex','expected_vm.hex','expected_kv.hex']
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def sources():
- sw=dict(C12.SWAP);sw['rtl/hdc/ot_hdc_fastfp_lat.sv']=C12.C12_UNITS
+def sources(fp_mode='rtl'):
+ sw=dict(C12.SWAP);sw['rtl/hdc/ot_hdc_fastfp_lat.sv']=C12.C12_UNITS if fp_mode=='rtl' else C12.C12_UNITS_DPI
+ lib=VC.LIB
+ if fp_mode=='dpi_beh':
+  import dshbm_baseline_measure as D
+  lib=D.fp_dpi_lib(lib,beh_prefix=True)
  paths=[]
- for p in VC.LIB+VC.RTL:
+ for p in lib+VC.RTL:
   name=str(p.relative_to(ROOT));paths+=sw.get(name,[name])
  return list(dict.fromkeys(paths+EXTRA))
-def prepare(spec,out):
+def prepare(spec,out,fp_mode='rtl'):
  r=json.loads(spec.read_text())
  if set(r['cases'])!={'DS1M','Qwen8K'}:raise ValueError('Both actual target fixtures required')
  out.mkdir(parents=True,exist_ok=False)
@@ -39,9 +43,9 @@ def prepare(spec,out):
    if sha(p)!=c['sha256'][name]:raise ValueError('changed actual input/golden '+str(p))
    shutil.copyfile(p,d/name)
   if c.get('external_producer'):raise ValueError('this minimum stage has no invented external producer')
- r.update(source_sha256={p:sha(ROOT/p) for p in sources()},
+ r.update(fp_mode=fp_mode,source_sha256={p:sha(ROOT/p) for p in sources(fp_mode)},
           include_sha256={'rtl/test/tb_hdc_v41x_vec_fields.svh':sha(ROOT/'rtl/test/tb_hdc_v41x_vec_fields.svh')},
-          c12_parameters=C12.P,scope='actual CP/73-bit protected descriptor/c12/local-VM stage; not whole token or installed HBM provider',
+          c12_parameters=dict(C12.P,redrogs=2),arithmetic_scope=('bit-level RTL' if fp_mode=='rtl' else 'existing qualified c12 dpi_beh primitive stand-ins; full control/ports RTL; no integrated bit-RTL qualification'),scope='actual CP/73-bit protected descriptor/c12/local-VM stage; not whole token or installed HBM provider',
           physical_qualified=False,all_levers_whole_token=False)
  (out/'prepared.json').write_text(json.dumps(r,indent=2)+'\n')
 def sample(work):
@@ -73,11 +77,11 @@ def run(work,reservation,inventory,threads,activity):
  obj=work/'obj'
  cmd=[VC.VERILATOR,'--cc','--exe','--build','--timing','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNOPTFLAT',
       '--top-module','tb_hdc_v41x_vec','--prefix','Vtb','-Mdir',str(obj),'-j',str(threads),
-      '-GN=1024','-GM=256','-GBCAST_STAGES=7','-GRET_STAGES=8','-GMLAT=6','-GALAT=6',
+      '-GN=1024','-GM=256','-GREDROGS=2','-GBCAST_STAGES=7','-GRET_STAGES=8','-GMLAT=6','-GALAT=6',
       *C12.vflags().split(),*[f'-G{k}={v}' for k,v in dict(VMA=VC.VMA,KVA=VC.KVA,CRA=VC.CRA,WRA=VC.WRA,XBA=VC.XBA).items()],
       '-I'+str(ROOT/'rtl/test')]
  if activity:cmd+=['--trace-fst']
- cmd += [str(ROOT/p) for p in sources()]+['-CFLAGS','-O1']
+ cmd += [str(ROOT/p) for p in sources(r.get('fp_mode','rtl'))]+['-CFLAGS','-O1']
  (work/'build_command.json').write_text(json.dumps(cmd,indent=2)+'\n')
  with (work/'build.log').open('w') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
  (work/'build.exit').write_text(str(rc)+'\n')
@@ -105,8 +109,9 @@ def run(work,reservation,inventory,threads,activity):
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',type=Path);p.add_argument('--work',type=Path,required=True)
  p.add_argument('--run',action='store_true');p.add_argument('--reservation-gib',type=int);p.add_argument('--prior-inventory-bytes',type=int)
- p.add_argument('--threads',type=int,choices=range(16,25),default=16);p.add_argument('--activity',action='store_true');a=p.parse_args()
- if a.prepare:prepare(a.prepare.resolve(),a.work.resolve())
+ p.add_argument('--threads',type=int,choices=range(16,25),default=16);p.add_argument('--activity',action='store_true')
+ p.add_argument('--fp',choices=['rtl','dpi_beh'],default='rtl');a=p.parse_args()
+ if a.prepare:prepare(a.prepare.resolve(),a.work.resolve(),a.fp)
  if a.run:
   if not a.reservation_gib or not a.prior_inventory_bytes:p.error('measured reservation and actual prior inventory required')
   raise SystemExit(run(a.work.resolve(),a.reservation_gib,a.prior_inventory_bytes,a.threads,a.activity))
