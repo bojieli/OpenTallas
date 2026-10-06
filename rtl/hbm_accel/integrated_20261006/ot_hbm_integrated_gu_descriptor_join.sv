@@ -28,7 +28,10 @@ module ot_hbm_integrated_gu_descriptor_join #(parameter integer ENABLE=0)(
    producer_source==held_source&&producer_expert==held_expert&&
    producer_matrix==held_matrix&&producer_row==held_row&&
    producer_count==held_count&&producer_lane_first==0;
- wire bad_export=producer_v&&(!issued||!tuple_match);
+ // Identity veto must not feed back through issued -> fault -> owner_valid.
+ // During enclosing CE the genuine producer keeps valid asserted; acceptance
+ // pauses through consumer_v, without declaring that held payload foreign.
+ wire bad_export=producer_v&&!tuple_match;
  wire qualified_owner=owner_valid&&!producer_fault&&!producer_due&&!bad_export;
  wire start_ready=native_drained;
  assign native_launch=start_v&&start_ready;

@@ -118,6 +118,16 @@ module tb_hbm_integrated_gu_sm20 #(parameter integer EXPORT=1, METADATA_ONLY=0);
    if(EXPORT) begin
     wait(gv||fault); if(fault) $fatal(1,"unexpected exporter fault span=%0d",span);
     @(negedge clk);held=bf16;
+    if(span==0)begin
+     enclosing.seat.g_on.descriptor.code[0][0]=~enclosing.seat.g_on.descriptor.code[0][0];
+     accept=1;#0.001;
+     if(!join_ce||gv||producer_accept||join_fault||!producer_v||bf16!==held)
+      $fatal(1,"enclosing CE misclassified genuine held producer or admitted accept");
+     @(negedge clk);accept=0;
+     if(join_ce||join_fault||!gv||bf16!==held)
+      $fatal(1,"enclosing CE scrub lost producer/owner/payload");
+     $display("PASS_INTEGRATED_GU_HELD_CE masks_accept=1 genuine_producer_preserved=1");
+    end
     repeat(1+span%17) begin
      if(!gv || bf16!==held || oe!==expert || om!==matrix || obr!==row_base || ofirst!=0 || oc!=12 ||
         oframe!==FRAME || oop!==(expert==41?32'd0:32'd1) || os!==sid || od!==did || done || terminal)
