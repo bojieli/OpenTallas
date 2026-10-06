@@ -14,7 +14,7 @@ module ot_hbm_sfu_quarter #(parameter integer ENABLE=0,LANES=64)(
   assign req_r=0;assign rsp_v=0;assign rsp_tag=0;assign rsp_y=0;assign rsp_error=0;assign fault=0;
  end else begin:g_on
   localparam integer IW=LANES*32+35,OW=LANES*32+33;
-  wire launch,engine_clk;wire [IW-1:0] payload;
+  wire launch,engine_clk,engine_error_seen;wire [IW-1:0] payload;
   wire [OW-1:0] response;
   wire [LANES*32-1:0] y;
   wire [LANES-1:0] v,f;
@@ -22,8 +22,8 @@ module ot_hbm_sfu_quarter #(parameter integer ENABLE=0,LANES=64)(
   wire [31:0] tag=payload[LANES*32+3+:32];
   ot_hbm_compute_held_exec #(.IW(IW),.OW(OW)) u_hold(
    .clk(clk),.rst_n(rst_n),.req_v(req_v),.req_r(req_r),.req_d({req_tag,req_fn,req_x}),
-   .rsp_v(rsp_v),.rsp_r(rsp_r),.rsp_d(response),.launch(launch),.engine_clk(engine_clk),.engine_d(payload),
-   .engine_v(&v),.engine_q({tag,|f,y}),.engine_fault(|f),.fault(fault));
+   .rsp_v(rsp_v),.rsp_r(rsp_r),.rsp_d(response),.launch(launch),.engine_clk(engine_clk),.engine_error_seen(engine_error_seen),.engine_d(payload),
+   .engine_v(&v),.engine_q({tag,(|f)|engine_error_seen,y}),.engine_fault(|f),.fault(fault));
   assign {rsp_tag,rsp_error,rsp_y}=response;
   for(genvar i=0;i<LANES;i=i+1)begin:g_lane
    ot_hbm_sfu_result_c12 u(
@@ -43,7 +43,7 @@ module ot_hbm_sfu_result_c12(
  localparam integer DE=94;
  wire exp_select=fn==1;wire sig_select=fn==4||fn==5;
  wire [31:0] ey,den,num,dy,sy;
- wire ev,dv,sv,ef,df,sf;wire [1:0] af;
+ wire ev,dv,sv,ef,df,sf,af;
  wire [DE:0] sig_v;
  wire [6:0] den_v;
  ot_hdc_v41x_exp #(.LM(6),.LA(6)) u_exp(

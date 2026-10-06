@@ -9,6 +9,8 @@ rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
 rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
 rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv
 rtl/hdc/ot_hdc_cg.sv
+rtl/hdc/ot_hdc_delay.sv
+rtl/hdc/ot_hdc_sfu.sv
 physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv
 physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv
 physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv

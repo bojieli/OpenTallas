@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm.compute.quarter_size.v1",
   "model_source": "tools/uarch_model.py PRESETS.proposal sfu_lanes / 4, hbm_gpu_design(v41) HC 5120 / 4",
-  "model_sha256": "e29f5b1d0a764191fc0ea7c7d1f684175d6f0da737e2a632b889f71c63d0e8dc",
+  "model_sha256": "df1ba2e379d818732b74c749e3f070b6a487be5d3f572bf3ffafbb31c54af062",
   "protection_source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
   "sfu": {
     "top": "ot_hbm_sfu_quarter",
@@ -82,42 +82,43 @@
   },
   "hc": {
     "top": "ot_hbm_hc_quarter",
-    "output_lanes": 1280,
-    "groups": 320,
+    "output_lanes": 256,
+    "groups": 64,
     "replicas": 4,
+    "fp32_mac_budget": 1280,
     "operation": "HC_POST",
     "coverage": "HC_POST only. HC_PRE/projection/Sinkhorn/selection remain source-owner dependencies, no whole mHC claim",
     "port_bits": {
-      "request": 51872,
-      "response": 40993
+      "request": 10912,
+      "response": 8225
     },
     "port_bytes": {
-      "request": 6484.0,
-      "response": 5124.125
+      "request": 1364.0,
+      "response": 1028.125
     },
     "ML": 6,
     "AL": 5,
     "WIN": 0,
     "WOUT": 0,
     "primitives": "ot_dsrom_su_hcpost_group/lane, closed lane_m6a5 SS+.56 FF+4.47; no parent clock inheritance",
-    "fp32_mul_replicas": 6400,
-    "fp32_add_replicas": 5120,
+    "fp32_mul_replicas": 1280,
+    "fp32_add_replicas": 1024,
     "golden_order": "r0*c0+r1*c1; +r2*c2; +r3*c3; +y*p; BF16 RNE",
     "composed_cycles": "request capture + dispatch + unchanged group input and HC-post pipeline + protected result capture",
     "held": {
       "request": {
-        "payload_bits": 51873,
-        "data_words": 811,
-        "storage_ff": 58754,
-        "check_bits": 6488,
+        "payload_bits": 10913,
+        "data_words": 171,
+        "storage_ff": 12674,
+        "check_bits": 1368,
         "control_words": 5,
         "repair": "existing W2 five-edge CE repair; permissions fail closed"
       },
       "response": {
-        "payload_bits": 40994,
-        "data_words": 641,
-        "storage_ff": 46514,
-        "check_bits": 5128,
+        "payload_bits": 8226,
+        "data_words": 129,
+        "storage_ff": 9650,
+        "check_bits": 1032,
         "control_words": 5,
         "repair": "existing W2 five-edge CE repair; permissions fail closed"
       },
@@ -129,8 +130,8 @@
         "control_words": 5,
         "repair": "existing W2 five-edge CE repair; permissions fail closed"
       },
-      "wrapper_ff": 105702,
-      "wrapper_dff_area_lower_um2": 30822.703200000004,
+      "wrapper_ff": 22758,
+      "wrapper_dff_area_lower_um2": 6636.232800000001,
       "combinational_SECDED_mux_fanout_area": "must measure; not zero or counted as closed",
       "outstanding_transactions": 1,
       "request_capture": 1,
