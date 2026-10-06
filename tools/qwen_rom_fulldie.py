@@ -464,7 +464,10 @@ def _build(spine_w, tree_mode):
                 xx = (xb_ - k * LINK_WAYPOINT_UM) if side == 'W' else (xa + k * LINK_WAYPOINT_UM - LST_H[0])
                 # sit in a corridor (never on a tile body): nearest corridor x
                 c = min(range(32) if side == 'W' else range(32, 64), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
-                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', col_x(c) + TILE_BODY_W + GX * 20, ch_y[si],
+                # r18: over a tile body, clear of the corridor that crosses the channel there (r18j i5: M9 1.035 at
+                # corridor 9 where lh_SW_* sat on the corridor's channel crossing)
+                lx = dn(col_x(c) + TILE_BODY_W / 2 - LST_H[0] / 2, GX) if R18 else col_x(c) + TILE_BODY_W + GX * 20
+                it = Inst(f'lh_{"SN"[si]}{side}_{k}', 'qfd_lst_h', lx, ch_y[si],
                           LST_H[0] - SHAVE, LST_H[1] - SHAVE, kind='link_station', region='channel')
                 lst.append(it)
                 pts.append(it)
