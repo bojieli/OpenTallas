@@ -23,14 +23,14 @@ OV=(--orfs-var "VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS")
 BC=(--step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl)
 run() { # tag
   t=$1; c=${t%%_*}; v=${t##*_}; pq=${c:1:1}; r=${c#*r}
-  KM="ot_hdc_fp32_mul_f12_l5"; case $v in *k) KM="$KM ot_dsrom_aq12"; v=${v%k};; esac
+  KM="ot_hdc_fp32_mul_f12_l5"; DENS=(); case $v in *k) KM="$KM ot_dsrom_aq12"; v=${v%k};; esac
   case $v in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
              d) H=0.022; S=45; X=(--orfs-var GPL_ROUTABILITY_DRIVEN=0);;
              e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");; esac
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
   echo "$(date -Is) START $t $(hostname)" >> $J/MANIFEST
-  /srv/opentallas-scratch/admit.sh $g -- python3 tools/run_abi3_physical.py $COMMON $SP "${OV[@]}" --orfs-var "SYNTH_KEEP_MODULES=$KM" "${X[@]}" --slew-margin-percent $S --hold-margin-ns $H --param PQ=$pq --param R=$r "${SH[@]}" --nickname-tag dsfs9_$t --keep-workdir $O/work_$t --output $O/$t.json --force > $J/$t.log 2>&1
+  /srv/opentallas-scratch/admit.sh $g -- python3 tools/run_abi3_physical.py $COMMON $SP "${OV[@]}" --orfs-var "SYNTH_KEEP_MODULES=$KM" "${X[@]}" "${DENS[@]}" --slew-margin-percent $S --hold-margin-ns $H --param PQ=$pq --param R=$r "${SH[@]}" --nickname-tag dsfs9_$t --keep-workdir $O/work_$t --output $O/$t.json --force > $J/$t.log 2>&1
   echo $? > $J/$t.exit
   python3 tools/w18/corner_sta.py --orfs-dir $O/work_$t/orfs --output $O/${t}_corner_sta.json > $J/${t}_sta.log 2>&1
   python3 physical/dsrom_field_spine/terminal.py $O $t > $J/${t}_terminal.log 2>&1
