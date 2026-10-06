@@ -78,18 +78,34 @@ def build_one(compiler,source,output,opts,envelope):
     write(record,dict(contract=contract,object_sha256=sha(output),command=command))
     return output
 
-def build(models,out,compiler,archiver,workers,harness=None):
+def build(models,out,compiler,archiver,workers,harness=None,reuse_archives=None):
     libraries=[];all_runtime=set();timing=False
     envelope=digest([{k:v for k,v in m.items() if k!='job'} for m in models])
+    prior=None
+    if reuse_archives:
+        old_inputs=json.loads((reuse_archives/'inputs.json').read_text())
+        old_terminal=json.loads((reuse_archives/'terminal.json').read_text())
+        if old_terminal['exit'] or old_inputs['compiler']!=sha(compiler) or old_inputs['archiver']!=sha(archiver):
+            raise ValueError('Completed archive/compiler envelope differs')
+        prior=({m['job']['prefix']:m for m in old_inputs['models']},old_terminal['libraries'])
     for m in models:
         prefix=m['job']['prefix'];d=out/prefix;d.mkdir(exist_ok=True)
+        all_runtime.update(m['runtime']);timing|=m['options']['use_timing']
+        library=d/(prefix+'.a')
+        old_library=reuse_archives/prefix/(prefix+'.a') if prior else None
+        if prior and prior[0].get(prefix)==m and str(old_library) in prior[1]:
+            if sha(old_library)!=prior[1][str(old_library)]:raise ValueError('Retained archive changed')
+            if library.exists() and sha(library)!=sha(old_library):raise ValueError('Do not overwrite differing archive')
+            if not library.exists():shutil.copyfile(old_library,library)
+            libraries.append(library)
+            write(d/'archive_reuse.json',dict(source=str(old_library),sha256=sha(library),exact_model_tool_flags=True))
+            continue
         opts=flags(m);sources=[Path(s) for s in m['sources']]
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
             futures=[pool.submit(build_one,compiler,s,d/(s.stem+'.o'),opts,envelope) for s in sources]
             objects=[f.result() for f in futures]
-        library=d/(prefix+'.a')
         subprocess.run([str(archiver),'rcs',str(library),*map(str,objects)],check=True)
-        libraries.append(library);all_runtime.update(m['runtime']);timing|=m['options']['use_timing']
+        libraries.append(library)
         write(out/'progress.json',dict(completed_libraries=list(map(str,libraries)),current=prefix))
     if not harness:return dict(libraries={str(p):sha(p) for p in libraries},linked=False)
     # A single runtime compiled with the superset of the real hierarchy options.
@@ -120,6 +136,7 @@ def main():
     p.add_argument('--components-only',action='store_true',help='Build only exact completed enrolled children; no parent/link/runtime claim')
     p.add_argument('--enrollment',type=Path)
     p.add_argument('--component-driver',type=Path,help='Pinned current exact-reuse implementation; snapshot runner remains immutable')
+    p.add_argument('--reuse-archives',type=Path,help='Completed exact model/compiler/flags archive build; no C++ replay')
     p.add_argument('--harness',type=Path);p.add_argument('--workers',type=int,required=True)
     p.add_argument('--memory-gib',type=int,required=True);p.add_argument('--disk-reserve-bytes',type=int,required=True)
     p.add_argument('--host',required=True);p.add_argument('--compiler',type=Path,default=Path(shutil.which('g++') or '/missing'))
@@ -164,6 +181,7 @@ def main():
         harness=sha(a.harness) if a.harness else None,workers=a.workers)
     if a.enrollment:inputs['enrollment_sha256']=sha(a.enrollment)
     if a.component_driver:inputs['component_driver_sha256']=sha(a.component_driver)
+    if a.reuse_archives:inputs['reuse_archive_inputs']=sha(a.reuse_archives/'inputs.json');inputs['reuse_archive_terminal']=sha(a.reuse_archives/'terminal.json')
     if a.harness:inputs['harness_dependencies']=harness_dependencies(a.harness)
     if terminal and set(terminal['completed'])!={m['job']['prefix'] for m in models}:
         raise ValueError('Terminal does not cover this actual generated hierarchy')
@@ -181,7 +199,7 @@ def main():
                 claim.write(str(os.getpid())+'\n')
             write(out/'guard_command.json',cmd);fcntl.flock(lock,fcntl.LOCK_UN)
             return subprocess.call(cmd)
-        try:result=build(models,out,a.compiler,a.archiver,a.workers,a.harness)
+        try:result=build(models,out,a.compiler,a.archiver,a.workers,a.harness,a.reuse_archives)
         except Exception as e:
             write(out/'failure.json',dict(error=str(e),completed_objects_preserved=True));raise
         write(out/'terminal.json',dict(exit=0,**result,components_only=a.components_only,numerical=False,physical_qualified=False))
