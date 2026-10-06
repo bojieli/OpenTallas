@@ -1,0 +1,20 @@
+{
+  "source_choice": "Owner authorized ideal external INPUT clocks for BODY-only physical defecthunt, not numeric external-IP characterization",
+  "source_assumed": true,
+  "clock_source_qualified": false,
+  "headline_allowed": false,
+  "body_source": "0dbeae18d",
+  "failed_generator_preserved": "76158a8b3; evidence410492892",
+  "SDC": "physical/dsrom_wfc_clock_ip_boundary_20261006/body_ideal_inputs.sdc",
+  "SDC_sha256": "28d09d1114a4b7f33c96bd26213c81f35cb479e7d37625144b079d94f6362024",
+  "bench": "rtl/test/dsrom_wavefront/tb_wfc_protected_stage.sv",
+  "bench_sha256": "0fe4eb2faf4a5895ed03ff50688fe76f4a0258f7e5b120afa70c252bc429ec33",
+  "bench_waveforms": "both start high at commonepoch;50pct;rounded833.334/1111.112 ps replaced by exact owner833.333333/1111.111111 preserving3:4",
+  "source_latency_transition_jitter": "Not supplied. Ideal source timing is stated diagnostic assumption, not characterizedzero. No set_clock_latency/transition source credit.",
+  "actual_body_CTS_and_RC": "Remain required; final propagatednetwork, namedcornerSPEF. No ideal body NETWORK assumption.",
+  "fault_reset_and_other_IO": "Real untied inputs retained; no delays/loads fabricated or paths waived. Unconstrained/coverage must be reported and any positive internal margin cannot qualify externalIO.",
+  "margin_reporting": "WC max and BC min clockpair reg2reg fullclockpaths. Slack remaining after60/25 is allowable combined source insertion/skew/jitter/electrical/extraCTS cost for that path, NOT measured source allowance. Negative slack means zero positive budget. No avg/borrowedphase/slack.",
+  "Zeno_recipe": "Use --body-clock-sdc absolute source/body_ideal_inputs.sdc with existing ownedbodyu55 run.py. Existing append60/25 now matches policy and needs no driver change for this diagnostic option.",
+  "API_validation": "Tcl contract execution only; no OpenSTA/API/physical qualification claimed",
+  "dispatch": "Only Zeno/Kant sole fresh64GiB16CPU unchanged admission; preserve existing healthyjobs. Not dispatched byTuring."
+}

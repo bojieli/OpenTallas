@@ -12417,3 +12417,23 @@ def dsrom_wfc_clock_ip_boundary_model():
         protection='External IP must hold phase-valid low before acquisition, and latch fault/invalidity until cold POR after any phase loss. Boundary vetoes enrollment, never gates clock outputs; it does not implement or qualify clock stop.',
         assumption='Explicit external coherent IP, not implemented divider or qualified PLL',
         physical_closed=False, PLL_IP_qualified=False)
+
+
+def dsrom_wfc_ideal_input_body_model():
+    """Owner-authorized BODY diagnostic, not a clock-IP timing envelope."""
+    return dict(default=0, replica_count=1, state_FF_bits=0,
+        MACs_per_cycle=0, memory_port_bytes_per_cycle=0,
+        boundary_bits_per_cycle=dict(external_clocks=2, external_fault=1),
+        replica_mux_demux_cost=0, added_pipeline_cycles=0,
+        fast_period_ps=2500/3, slow_period_ps=10000/9,
+        fast_waveform_ps=[0,1250/3], slow_waveform_ps=[0,5000/9],
+        common_rising_epoch_ps=0, common_rising_period_ps=10000/3,
+        setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        source_scope='Ideal external inputs solely for conditional BODY physical defecthunt',
+        source_insertion_ps=None, source_slew_ps=None, source_jitter_ps=None,
+        source_qualification=False, physical_closed=False,
+        other_IO_bound=False, headline_allowed=False,
+        latency_contribution='No changed data cycles. Body timing margin is available source/IO budget, not measured source timing. Clock-IP acquisition and physical cost are excluded unknowns, not zero.',
+        routing_tracks_needed=dict(body_clock_inputs=2, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        waveform_basis='tb_wfc_protected_stage fast/slow both start high at common epoch,50pct duty and3:4; owner exact833.333/1111.111 periods replace bench decimal rounding only')
