@@ -1,0 +1,13 @@
+{
+  "reason": "OpenROAD linking pruned four unobserved checked-grant receiver FFs; source-qualified context needs those loads. C22 exposes same existing captures. No consumer needs old terminal.",
+  "class": "physical context retention failure, not arithmetic/SSFF verdict",
+  "time": 1791280724.8216639,
+  "owned_process": [
+    [
+      1760094,
+      "7776d8e35c4cce1026a04c252189b2a3c8607335253b80e4cd0c219c4b450d24",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place_skip_io.tcl -metrics /work/logs/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C21_checked_permission_native/base/3_1_place_gp_skip_io.json"
+    ]
+  ],
+  "preserved": "All source, logs, mapped netlist, 2_4 PDN/other ODBs remain; reuse arithmetic/full guard mapped objects unchanged."
+}

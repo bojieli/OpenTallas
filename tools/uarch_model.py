@@ -10546,15 +10546,21 @@ def dsrom_window_full_block_pipeline_model():
     merge_read_address_FF = 21
     merge_accepted_identity_FF = 21
     merge_control_FF = merge_read_address_FF+merge_accepted_identity_FF
+    # Writer status-only counters retain their same-edge modulo-2^32 value.
+    # Three registered lower-byte carry predicates per counter limit each
+    # increment to eight bits; these predicates never authorize a transaction.
+    writer_stat_counters, writer_stat_chunk_bits = 4, 8
+    writer_stat_carry_FF = writer_stat_counters*3
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
              read_extra + read_qualification_extra + merge_control_FF +
-             writer_control_upper + job_control_upper)
+             writer_control_upper + job_control_upper + writer_stat_carry_FF)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
     merge_reset_FF_extra = merge_read_address_FF*(.37908-DFF_UM2)
-    ff_area = added*DFF_UM2+merge_reset_FF_extra
+    writer_stat_reset_FF_extra = writer_stat_carry_FF*(.37908-DFF_UM2)
+    ff_area = added*DFF_UM2+merge_reset_FF_extra+writer_stat_reset_FF_extra
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
@@ -10564,9 +10570,11 @@ def dsrom_window_full_block_pipeline_model():
     read_snapshot_enable_mux = read_snapshot_gross*4*.08748
     merge_increment_logic = 21*2*12*.08748
     merge_enable_and_lane_decode = (merge_control_FF*4+banks*3)*.08748
+    writer_stat_logic = (writer_stat_counters*32*12 +
+                         writer_stat_counters*(7+15+23) + writer_stat_carry_FF*4)*.08748
     cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
                    read_snapshot_enable_mux+merge_increment_logic+
-                   merge_enable_and_lane_decode)
+                   merge_enable_and_lane_decode+writer_stat_logic)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10587,6 +10595,10 @@ def dsrom_window_full_block_pipeline_model():
             winner_FF_bits=winner, column_payload_FF_bits=column_payload,
             row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
             extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            writer_stat_carry_FF_upper_bits=writer_stat_carry_FF,
+            writer_stat_counter_bits=32, writer_stat_chunk_bits=writer_stat_chunk_bits,
+            writer_stat_counters=writer_stat_counters,
+            writer_stat_same_edge_modular_value_preserved=True,
             read_wanted_snapshot_FF_bits=read_wanted_snapshot,
             read_owner_range_user_snapshot_FF_bits=read_owner_snapshot,
             read_completion_group_snapshot_FF_bits=read_completion_snapshot,
@@ -10616,6 +10628,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_extra_external_ports=0, merge_extra_memory_ports=0,
             merge_static_lane_decode_replicas=banks,
             merge_per_lane_write_enable_fanout=16*265,
+            writer_stat_comparator_input_bit_routes=writer_stat_counters*(8+16+24),
+            writer_stat_flag_receiver_upper_fanout=8,
+            writer_stat_flag_directed_receiver_routes=writer_stat_carry_FF*8,
+            writer_stat_extra_external_ports=0, writer_stat_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
@@ -10628,12 +10644,16 @@ def dsrom_window_full_block_pipeline_model():
             merge_increment_logic_allowance_um2=merge_increment_logic,
             merge_enable_and_static_lane_decode_allowance_um2=merge_enable_and_lane_decode,
             merge_removed_mux_or_adder_savings_credit_um2=0,
+            writer_stat_new_FF_upper_um2=writer_stat_carry_FF*.37908,
+            writer_stat_local_increment_compare_enable_allowance_um2=writer_stat_logic,
+            writer_stat_removed_increment_savings_credit_um2=0,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
             read_added_cycles=1, read_qualification_added_cycles=0, merge_added_cycles=0,
+            writer_stat_added_cycles=0,
             existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
@@ -10654,6 +10674,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_sink_clock_cap_fF={
                 'SS':21*(.433982+.446638), 'FF':21*(.503152+.52201)},
             merge_clock_cap_basis='21 DFFASRHQN address lookahead +21 DFFHQN independently captured accepted identity; pinned SS/FF CLK cap, not root loading',
+            writer_stat_new_clock_sink_upper=writer_stat_carry_FF,
+            writer_stat_sink_clock_cap_upper_fF={
+                'SS':writer_stat_carry_FF*.433982, 'FF':writer_stat_carry_FF*.503152},
+            writer_stat_clock_basis='four existing 32-bit status counters, three ASR carry predicates each; bound includes counters unreachable in the write/prime caller, no pruning credit. Sink sum is not parent root CTS.',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
@@ -12448,6 +12472,42 @@ def dsrom_protected_vm_model(distributed_cmd=False):
     """Finite protected xa/xb VM; optional registered macro command service."""
     from dsrom_protected_vm import model, distributed_model
     return distributed_model() if distributed_cmd else model()
+
+
+def hbm_native_selected_result_model():
+    """One installed formatter sink scalar consumed by the existing native SM."""
+    return dict(schema='opentallas.hbm.native_selected_result.v1',default_enabled=False,
+        source='rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv',
+        program='tools/gpu_sys/hbm_selected_result_program.py',
+        producer_owner='Gauss global512 merge/protected landing/checked sink writer',
+        parent_owner='Gibbs selected parent/native shared route/CP admission',
+        actual_sink_byte_base=0x70000,actual_sink_byte_limit=0x70800,
+        selected_IDs=512,sink_U32_bytes=2048,checked_kind4_rows=32,
+        final_sink_row_byte_address=0x707c0,
+        operation='read stored selected-ID ordinal0, publish full U32 SM RESULT; not a full-token inference claim',
+        instructions=['UMOVI U4,0x70000','LDG V0,U4,F32bits,count1','UFROMV U5,V0,lane0','RESULT U5','EXIT'],
+        instruction_words=5,instruction_bytes=40,command_words=2,command_bytes=16,
+        uniform_registers_used=[4,5],vector_registers_used=[0],
+        input_TOKEN_UR0_used_as_payload=False,payload_immediates=0,
+        new_FF_bits=0,new_SRAM_bits=0,new_arithmetic=0,new_MACs_per_cycle=0,
+        additional_memory_ports=0,actual_memory_read_bytes=4,native_sector_read_bytes=32,
+        native_sector_requests=1,native_sector_returns=1,
+        native_boundary_fields=dict(req=['valid','ready','we','addr32','wdata256','wstrb32','tag16'],
+                                    rsp=['valid','ready','we','data256','tag16']),
+        native_request_bits_including_valid_ready=339,
+        native_response_bits_including_valid_ready=275,
+        transport='existing a_req/a_rsp native LSU -> shared SM0 route -> existing AW3 CDC -> same HBM bank; kind3 arena-only read forbidden',
+        register_mux_or_fanout_added=0,area_delta_um2=0,slot='existing instruction/command memories, caller must reserve five contiguous instruction words and two commands',
+        ideal_instruction_issue_edges=5,LSU_completion_edges=None,
+        actual_native_provider_RTT_edges=None,CP_launch_END_edges=None,
+        composed_latency='five actual instructions plus native LSU blocking request/return and B_DRAIN/CP launch-END overhead; RTT/context calendar must be measured in existing parent',
+        composed_latency_bound=False,clock='actual clk_sm, existing inherited boundary; no clock or uncertainty change',
+        required_launch_fence='all32 full73 checked kind4 responses accepted, sink ACK/debt drained, actual consumer/source reverse and shared borrower release, same-frame sink allocation remains retained until native LSU return and SM/CP completion',
+        real_postrelease_allocation_source=None,
+        parent_condition='current preinstall RELEASE and old install_consumer retirement clear book/frame; owner must bind an actual persistent allocation in current CP context, not cached readiness',
+        entry_PC_bound=False,production_book_bound=False,
+        CP_RESULT_contract='SM full32bits preserved; CP END checks (res_q>>TW)==0 with TW17, otherwise status3; no ID truncation or TOKEN echo waiver',
+        RTL_numerical_gate_passed=False,parent_joined=False,physical_qualified=False,headline_rate_credit=False)
 
 
 def hbm_vm_publication_parent_model():

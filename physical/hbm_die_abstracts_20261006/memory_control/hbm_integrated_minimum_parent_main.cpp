@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -75,6 +76,9 @@ struct Sim {
  static constexpr unsigned ENGINE=7+(5+3*6+1)+(5+7*6+3*6)+7*6+9+8+6+(1+3*(3*5+6))+9+80+2*(5+1)+1+18+8+2;
  static constexpr unsigned STALL=ENGINE+(350000+10000+10000+19375+12500+16250+28125+1024+832)/833+512+4*256+2*72+256+64;
  std::string phase="reset";
+ // Formatter watchdog includes the unchanged N96/P64/PF16 merger's eight
+ // radix passes and filter pass, whose arithmetic can progress without I/O.
+ std::function<void()> preedge_observer;
  Sim(int argc,char**argv){context.commandArgs(argc,argv);
   #include "hbm_integrated_minimum_parent_inputs.inc"
   // No W2 work is offered. Quiet is derived from this fixture's empty caller
@@ -90,6 +94,7 @@ struct Sim {
   if(dut.eventsPending())at=std::min(at,dut.nextTimeSlot());
   require(at>=context.time(),"nonmonotone generated event");context.timeInc(at-context.time());
   bool rise=next[1]==at&&!dut.clk_sm;
+  if(rise&&preedge_observer)preedge_observer();
   if(next[0]==at){dut.clk_host=!dut.clk_host;next[0]+=half[0];}
   if(next[1]==at){dut.clk_sm=!dut.clk_sm;next[1]+=half[1];}
   if(next[2]==at){dut.clk_mem=!dut.clk_mem;next[2]+=half[2];}
@@ -101,28 +106,31 @@ struct Sim {
  void neg(){while(!dut.clk_sm)event();while(dut.clk_sm)event();}
  void edges(unsigned n){while(n--)sm();}
  void settle(){dut.eval();}
- uint64_t progress()const{return uint64_t(dut.fixture_cp_requests)+dut.fixture_cp_returns+dut.fixture_ACKs+dut.fixture_bind_accepts+dut.fixture_enroll_accepts+dut.fixture_read_accepts+dut.fixture_rsp_accepts+dut.fixture_retire_accepts+dut.fixture_db_accepts+dut.fixture_cpl_accepts+dut.fixture_sfu_enroll_accepts+dut.fixture_sfu_cp_requests+dut.fixture_sfu_cp_returns+dut.fixture_sfu_ACKs+dut.fixture_sfu_TXs+dut.fixture_sfu_releases;}
- void healthy(){require(!dut.sys_fault&&!dut.norm_fault&&!dut.sfu_fault&&!dut.sfu_vm_fault&&!dut.fixture_observer_fault,"actual parent/provider fault phase="+phase);}
+ uint64_t progress()const{return uint64_t(dut.fixture_cp_requests)+dut.fixture_cp_returns+dut.fixture_ACKs+dut.fixture_bind_accepts+dut.fixture_enroll_accepts+dut.fixture_read_accepts+dut.fixture_rsp_accepts+dut.fixture_retire_accepts+dut.fixture_db_accepts+dut.fixture_cpl_accepts+dut.fixture_sfu_enroll_accepts+dut.fixture_sfu_cp_requests+dut.fixture_sfu_cp_returns+dut.fixture_sfu_ACKs+dut.fixture_sfu_TXs+dut.fixture_sfu_releases+dut.fixture_formatter_source_accepts+dut.fixture_formatter_source_ACKs+dut.fixture_formatter_mem_requests+dut.fixture_formatter_mem_returns+dut.fixture_formatter_desc_accepts+dut.fixture_formatter_begin_accepts+dut.fixture_formatter_record_accepts+dut.fixture_formatter_go_accepts+dut.fixture_formatter_pairs+dut.fixture_formatter_reservations+dut.fixture_formatter_reverses;}
+ void healthy(){require(!dut.sys_fault&&!dut.norm_fault&&!dut.sfu_fault&&!dut.sfu_vm_fault&&!dut.fixture_observer_fault&&!dut.fixture_formatter_fault&&!(dut.preinstall_fault&1),"actual parent/provider fault phase="+phase);}
  template<class F>void wait(F ready){unsigned idle=0;auto old=progress();settle();while(!ready()){
   sm();healthy();auto now=progress();idle=(now!=old)?0:idle+1;old=now;
-  if(idle>STALL){std::cerr<<"BLOCKED phase="<<phase<<" cycles="<<cycles<<" cp="<<dut.fixture_cp_requests<<"/"<<dut.fixture_cp_returns<<" ACK="<<dut.fixture_ACKs<<" enroll_r="<<unsigned(dut.norm_enroll_r)<<" stage_retained="<<unsigned(dut.norm_retained)<<" root_retained="<<unsigned(dut.sfu_vm_retained)<<" db_rdy="<<unsigned(dut.db_rdy)<<" cpl_v="<<unsigned(dut.cpl_v)<<"\n";throw std::runtime_error("no accepted mechanism progress; source-owner blocker, no qualification");}
+  if(idle>STALL+(dut.fixture_formatter_enable?(8*(96*512/64+7)+96*512/16+9):0)){std::cerr<<"BLOCKED phase="<<phase<<" cycles="<<cycles<<" cp="<<dut.fixture_cp_requests<<"/"<<dut.fixture_cp_returns<<" ACK="<<dut.fixture_ACKs<<" enroll_r="<<unsigned(dut.norm_enroll_r)<<" stage_retained="<<unsigned(dut.norm_retained)<<" root_retained="<<unsigned(dut.sfu_vm_retained)<<" db_rdy="<<unsigned(dut.db_rdy)<<" cpl_v="<<unsigned(dut.cpl_v)<<"\n";throw std::runtime_error("no accepted mechanism progress; source-owner blocker, no qualification");}
  }}
  void held(){healthy();require((dut.norm_retained&1)&&(dut.sfu_vm_retained&1)&&owned(dut.norm_held_frame)&&owned(dut.sfu_vm_held_frame)&&!(dut.cpl_v&1),"held actual parent owner/debt changed");}
  void finish(){dut.final();}
 };
 #include "hbm_integrated_sfu_continuation.inc"
+#include "hbm_integrated_formatter_continuation.inc"
 int main(int argc,char**argv){try{
- std::filesystem::path dir;bool wrong_release=false,sfu_next=false,continue_sfu=false;
- for(int i=1;i<argc;++i){std::string a=argv[i];if(a.rfind("+DIR=",0)==0)dir=a.substr(5);if(a=="+WRONG_RELEASE")wrong_release=true;if(a=="+SFU_NEXT")sfu_next=true;if(a=="+CONTINUE_SFU")continue_sfu=true;
+ std::filesystem::path dir,formatter_dir;bool wrong_release=false,sfu_next=false,continue_sfu=false,continue_formatter=false,formatter_next=false;
+ for(int i=1;i<argc;++i){std::string a=argv[i];if(a.rfind("+DIR=",0)==0)dir=a.substr(5);if(a=="+WRONG_RELEASE")wrong_release=true;if(a=="+SFU_NEXT")sfu_next=true;if(a=="+CONTINUE_SFU")continue_sfu=true;if(a=="+CONTINUE_FORMATTER")continue_formatter=true;if(a=="+FORMATTER_NEXT")formatter_next=true;if(a.rfind("+FORMATTER_DIR=",0)==0)formatter_dir=a.substr(15);
   require(a.rfind("+gpu_sys_mem_prefix=",0)!=0,"shared prefix aliases both dies; use separate die0/die1 images");}
- require(!(wrong_release&&(sfu_next||continue_sfu)),"poisoned norm cannot continue SFU");
+ require(!(wrong_release&&(sfu_next||continue_sfu||continue_formatter||formatter_next)),"poisoned norm cannot continue SFU");
  require(!dir.empty(),"+DIR=retained_stage_directory required");require(std::filesystem::exists("fixture_manifest.json"),"verified fixture preparation required");Gold gold(dir);
  // Default real parent memsys_adapter prefixes; generated HBM scheduler loads
  // these files itself. Images are prepared separately; C++ never writes SRAM.
  for(auto name:{"die0_p0.hex","die0_p1.hex","die1_p0.hex","die1_p1.hex"})require(std::filesystem::exists(name),std::string("missing actual provider image ")+name);
  Sim s(argc,argv);auto& d=s.dut;
  s.edges(32);s.neg();d.por_n=1;s.phase="actual reset domains";s.wait([&]{return d.rst_sm_n&&(d.db_rdy&1);});
- if(sfu_next){run_native_sfu_next(s,dir);s.finish();return 0;}
+ if(continue_formatter||formatter_next)require(!formatter_dir.empty(),"actual +FORMATTER_DIR=prepared_installed_fixture required");
+ if(formatter_next){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);s.finish();return 0;}
+ if(sfu_next){run_native_sfu_next(s,dir);if(continue_formatter){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);}s.finish();return 0;}
  // Real END-only CP context from Gibbs caller recipe; status2 is mandatory.
  // There is no mathematical RESULT producer in this one-stage session.
  s.neg();d.cmd_we=1;put(d.cmd_addr,0,8,0);put(d.cmd_wdata,0,32,0);put(d.cmd_wdata,32,32,0x20000000);s.sm();s.neg();d.cmd_we=0;
@@ -172,6 +180,7 @@ int main(int argc,char**argv){try{
  require(!(d.sfu_vm_retained&1)&&!(d.norm_retained&1),"completion before owners drained");
  s.neg();d.cpl_rdy=1;s.wait([&]{return d.fixture_cpl_accepts==1;});s.neg();d.cpl_rdy=0;
  s.phase="joint warm reset acknowledgment";s.wait([&]{return (d.cp_reset_ack&1)&&(d.norm_warm_ack&1)&&(d.sfu_vm_warm_ack&1);});
- if(continue_sfu){run_native_sfu_next(s,dir);s.finish();return 0;}
+ if(continue_sfu){run_native_sfu_next(s,dir);if(continue_formatter){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);}s.finish();return 0;}
+ if(continue_formatter){FormatterFixture f(formatter_dir);run_formatter_source_next(s,f);s.finish();return 0;}
  std::cout<<"PARENT_ONE_STAGE_PASS stage=L20.attn.hc_pre_norm actual_CP=25600/25600 ACK=400 readback_words=12800 lastWORD=16383 full73_refusal=1 warm_held=1 cpl_status=2 token_qualified=0 SFU_execution_covered=0 formatter_execution_covered=0 physical_qualified=0 cycles="<<s.cycles<<"\n";s.finish();return 0;
  }catch(const std::exception& e){std::cerr<<"PARENT_STAGE_FAIL "<<e.what()<<"\n";return 1;}}

@@ -132,6 +132,17 @@ class ComponentReuse(unittest.TestCase):
         header.write_text('replaced generated ABI with different size')
         with self.assertRaises(ValueError):R.recorded_dependencies(d,'Vleaf')
 
+    def test_measured_frontend_reservation_raises_stale_estimate_without_process_cap(self):
+        d=self.work/'completed';d.mkdir()
+        (d/'resources.log').write_text('Maximum resident set size (kbytes): 397565336\n')
+        row=R.measured_model_reservation(d,192)
+        self.assertEqual(row['memory_gib'],428)
+        self.assertFalse(row['protective_process_limit'])
+        self.assertEqual(row['measured_maximum_rss_kib'],397565336)
+        self.assertEqual(R.measured_model_reservation(d,512)['memory_gib'],512)
+        (d/'resources.log').write_text('incomplete profile')
+        with self.assertRaises(ValueError):R.measured_model_reservation(d,192)
+
     def test_regenerated_dependency_interface_rejects_even_same_contract(self):
         j=self.jobs[1];directory=Path(j['directory']);directory.mkdir(parents=True)
         terminal=directory/'terminal.json';terminal.write_text('{"exit":0}')
