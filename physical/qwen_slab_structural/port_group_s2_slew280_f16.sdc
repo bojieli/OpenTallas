@@ -9,5 +9,8 @@ set_clock_uncertainty -hold 25 [all_clocks]
 # Same lines as io_plain.sdc, inlined: ORFS copies this SDC into results/, so a relative `source` cannot resolve.
 set_input_delay 166.667 -clock clk [get_ports {rst_n p_* res_in*}]
 set_output_delay 166.667 -clock clk [get_ports {o_we o_addr* o_mask* o_data* ov am_tv am_top* am_rmax fault}]
-set_max_fanout 32 [current_design]
+set_max_fanout 16 [current_design]
 set_load 5.55848 [all_outputs]
+# r10 slew class (r6d 120 / r6a 83 / r9b 25 pins over the 320 ps liberty limit; --max-transition-ns never reached this
+# custom SDC_FILE): an explicit, stricter max transition makes repair_design buffer to it (library unit ps)
+set_max_transition 280 [current_design]
