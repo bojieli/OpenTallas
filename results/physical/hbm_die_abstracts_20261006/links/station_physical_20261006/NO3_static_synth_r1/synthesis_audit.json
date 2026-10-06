@@ -1,0 +1,11 @@
+{
+  "NO": 3,
+  "actual_mapped_cell_count_including_four_forwarding_inverters": 68323,
+  "actual_mapped_area_um2_including_four_forwarding_inverters": 10326.63492,
+  "actual_sequential_cells": 6566,
+  "actual_memory_macro_count": 0,
+  "mapped_sha256": "ce7047aefcb100f4f7e37eb2376c1b96f39fcc2e6e515d86e8786ce9006f80ee",
+  "raw_record_preserved": true,
+  "driver_parser_defect": "Double counts module + hierarchy rows and treats hierarchy/submodules labels as macros. Correct values read from final design hierarchy in stat.txt. Original physical.json remains unmodified.",
+  "status": "MAPPED_ONLY_NO_SSFF_CLOSURE"
+}

@@ -1,0 +1,177 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T05:32:06.577116+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_native_frame_station",
+    "clock_port": "clk_sm",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1,
+      "NO": 3
+    },
+    "sources": [
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_lowered.sv",
+        "sha256": "ce2b88f19c2b6983ed29ba36eafcaffe6ffcd095dc1062b838cdff23a956a916",
+        "size_bytes": 5310
+      },
+      {
+        "path": "rtl/common/ot_fwd_link_stage.sv",
+        "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+        "size_bytes": 1611
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+        "sha256": "13e345bb4711c403d15b01946a68ce4776d2b457b738d21c2e101634afc116f1",
+        "size_bytes": 1973
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv",
+        "sha256": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+        "size_bytes": 7364
+      },
+      {
+        "path": "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv",
+        "sha256": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+        "size_bytes": 3472
+      }
+    ],
+    "top": "ot_hbm_native_frame_station"
+  },
+  "error": "FlowError: yosys synthesis failed with exit -15:\nf `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98626 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98556 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98486 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98416 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98346 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98276 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98206 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98136 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98087 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\nComputing hashes of 98066 cells of `\\ot_hbm_native_frame_station'.\nFinding duplicate cells in `\\ot_hbm_native_frame_station'.\n<suppressed ~21417 debug messages>\nRemoved a total of 7139 cells.\n\n8.23.3. Executing OPT_DFF pass (perform DFF optimizations).\n\n8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).\nFinding unused cells or wires in module \\ot_fwd_clk_inv..\nFinding unused cells or wires in module \\ot_hbm_native_frame_station..\nRemoved 810 unused cells and 133137 unused wires.\n<suppressed ~811 debug messages>\n\n8.23.5. Finished fast OPT passes.\n\n8.24. Executing ABC pass (technology mapping using ABC).\n\n8.24.1. Extracting gate netlist of module `\\ot_fwd_clk_inv' to `<abc-temp-dir>/input.blif'..\n\n8.24.1.1. Executed ABC.\nExtracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.\nRunning ABC script: <abc-temp-dir>/abc.script\nABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)\nABC: abc 01> empty\nABC: abc 01> source <abc-temp-dir>/abc.script\nABC: + read_blif <abc-temp-dir>/input.blif \nABC: + read_library <abc-temp-dir>/stdcells.genlib \nABC: + strash \nABC: + &get -n \nABC: + &fraig -x \nABC: + &put \nABC: + scorr \nABC: Warning: The network is combinational (run \"fraig\" or \"fraig_sweep\").\nABC: + dc2 \nABC: + dretime \nABC: + strash \nABC: + &get -n \nABC: + &dch -f \nABC: + &nf \nABC: + &put \nABC: + write_blif <abc-temp-dir>/output.blif \nABC: \nABC: YOSYS_ABC_DONE \n\n8.24.1.2. Re-integrating ABC results.\nABC RESULTS:               NOT cells:        1\nABC RESULTS:        internal signals:        0\nABC RESULTS:           input signals:        1\nABC RESULTS:          output signals:        1\nRemoving temp directory.\n\n8.24.2. Extracting gate netlist of module `\\ot_hbm_native_frame_station' to `<abc-temp-dir>/input.blif'..\n\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T05:01:19.166099+00:00",
+  "git": {
+    "commit": "b2e91534604f93b34294cc0962465b06688ca48a",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? tools/__pycache__/"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_native_frame_station",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_lowered.sv",
+      "--source",
+      "rtl/common/ot_fwd_link_stage.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv",
+      "--source",
+      "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "NO=3",
+      "--clock-port",
+      "clk_sm",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--stages",
+      "synth",
+      "--output",
+      "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/physical.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/NO3_synth_r1/work"
+    ],
+    "driver": {
+      "commit": "b2e91534604f93b34294cc0962465b06688ca48a",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
