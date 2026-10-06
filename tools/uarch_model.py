@@ -11261,3 +11261,11 @@ def hbm_item9_current32_parent_allocation_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/uarch/hbm_item9_current32_parent_allocation_20261006/model.json').read_text())
+
+
+def hbm_existing_h16_native_pin_grid_model():
+    """Actual retainedH16 native pin-access and both-rail connectivity repair."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/physical/hbm_h16_pin_grid_repair_20261006/model.json').read_text())
