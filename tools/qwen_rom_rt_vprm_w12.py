@@ -33,6 +33,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import qwen_rom_rt_token_w12_rm as RMT  # noqa: E402
 import qwen_rom_rt_core_emit_w12  # noqa: E402
 import qwen_rom_verify_core_emit_w12  # noqa: E402
+import qwen_rom_core_dec_emit_w12  # noqa: E402
 from qwen_rom_arithmetic_contract_w12 import flags as arithmetic_flags  # noqa: E402
 
 RT, RR, C = RMT.RT, RMT.RR, RMT.C
@@ -45,7 +46,7 @@ TILE_RTL, COLL_RTL = RMT.TILE_RTL, RMT.COLL_RTL
 SOURCES = sorted(set([*DIE_RTL, *TILE_RTL, *COLL_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
                       RR / "qwen_rom_rt_w12_vprm.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
                       Path(__file__), Path(RMT.__file__), ROOT / "tools/qwen_rom_rt_core_emit_w12.py",
-                      ROOT / "tools/qwen_rom_verify_core_emit_w12.py", ROOT / "tools/qwen_rom_rt_rm_access.py",
+                      ROOT / "tools/qwen_rom_verify_core_emit_w12.py", ROOT / "tools/qwen_rom_core_dec_emit_w12.py", ROOT / "tools/qwen_rom_rt_rm_access.py",
                       ROOT / "tools/qwen_rom_rt_vprm_access.py", ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
 sha = RMT.sha
 
@@ -87,6 +88,14 @@ def main() -> None:
     ap.add_argument("--vm-elems", type=int, default=1 << 20)
     ap.add_argument("--vpmax", type=int, default=4)
     ap.add_argument("--enable-ar256", type=int, default=1)
+    ap.add_argument("--dec-la", type=int, choices=(0, 1), default=1,
+                    help="core decode restructure DEC_LA (results/rtl/qwen_core_decode_closure_20261004)")
+    ap.add_argument("--dec-la-bound", type=int, choices=(0, 1), default=0,
+                    help="DEC_LA_BOUND (tools/qwen_rom_core_dec_bound_emit_w12.py); 0 = core unchanged")
+    ap.add_argument("--dec-la-amq", type=int, choices=(0, 1), default=0,
+                    help="DEC_LA_AMQ argmax boundary register (+1 cycle per core program END); 0 = core unchanged")
+    ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2, 3), default=0,
+                    help="DEC_LA issue fallback (tools/qwen_rom_core_issue_fallback_w12.py); 0 = core unchanged")
     ap.add_argument("--seq-la", type=int, choices=(0, 1), default=1,
                     help="sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA; results/rtl/qwen_dspark_closure_20261004)")
     ap.add_argument("--jobs", type=int, default=16)
@@ -117,7 +126,22 @@ def main() -> None:
     gen = bld / "gen"
     gen.mkdir(exist_ok=True)
     core_sv = gen / "ot_qwen_rom_core.sv"
-    core_sv.write_text(qwen_rom_verify_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text()))
+    core_text = qwen_rom_core_dec_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text())
+    if args.dec_la_bound:
+        import qwen_rom_core_dec_bound_emit_w12
+        core_text = qwen_rom_core_dec_bound_emit_w12.apply(core_text).replace(
+            "parameter integer DEC_LA_BOUND = 0", "parameter integer DEC_LA_BOUND = 1")
+    if args.dec_la_issue_fb:
+        import qwen_rom_core_issue_fallback_w12
+        core_text = qwen_rom_core_issue_fallback_w12.apply(core_text, args.dec_la_issue_fb, args.dec_la_issue_fb)
+    if args.dec_la_amq:
+        import qwen_rom_core_issue_fallback_w12
+        core_text = qwen_rom_core_issue_fallback_w12.apply_amq(core_text).replace(
+            "parameter integer DEC_LA_AMQ = 0", "parameter integer DEC_LA_AMQ = 1")
+    if args.dec_la_issue_fb >= 3:
+        import qwen_rom_core_issue_fallback_w12
+        core_text = qwen_rom_core_issue_fallback_w12.apply_start(core_text)
+    core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
     hier = gen / "hier.vlt"
@@ -135,7 +159,7 @@ def main() -> None:
           "-GREAL_MEM=1", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
           f"-GHBM_LAYERS={args.hbm_layers}", "-GEMBED_ROM=0", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}",
           f"-GLKA={args.lka}", f"-GVM_ELEMS={args.vm_elems}", "-GVPOS=1", "-GENABLE_ARP=1", f"-GVWA={vwa}",
-          f"-GVPMAX={args.vpmax}", f"-GENABLE_AR256={args.enable_ar256}", f"-GSEQ_LA={args.seq_la}", *arithmetic]),
+          f"-GVPMAX={args.vpmax}", f"-GENABLE_AR256={args.enable_ar256}", f"-GSEQ_LA={args.seq_la}", f"-GDEC_LA={args.dec_la}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_w12", [str(pub), *map(str, TILE_RTL)],
@@ -247,7 +271,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra,
-                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la,
+                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la, "dec_la": args.dec_la, "dec_la_issue_fb": args.dec_la_issue_fb, "dec_la_bound": args.dec_la_bound, "dec_la_amq": args.dec_la_amq,
                          "kv": "REAL_MEM: ot_qwen_rt_kv_mp_service + ot_qwen_hbm_model_ack NPC=32 CLK_PS=833 WR_ACK=1, KV_HBM=1, KV_VEC_WRITE_BRIDGE=1"},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},
         "stages": per_stage, "verify_tokens": tokens, "accept": accepts, "commits": commits,

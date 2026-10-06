@@ -1,0 +1,24 @@
+{
+  "scope": "Existing HEAD factory admission source and object compilation only",
+  "required_before_core_DOT": [
+    "same-bank H0..20479 actual VM ACK span",
+    "PF41152x4 matched publication and span",
+    "actual native normalization producer4891 completed publication",
+    "XN46464x5120 matched span and held native readbacks",
+    "same actual context and no pending read/fault"
+  ],
+  "existing_final_result": "Held native winner matches actual core END next_token/next_val plus publication/drain before acceptance; unchanged",
+  "model_delta": {
+    "added_RTL": false,
+    "added_FF": 0,
+    "added_ports": 0,
+    "added_hardware_cycles": 0,
+    "physical_timing_qualified": false
+  },
+  "actual_object": "/home/ubuntu/arch-s81-head-span-caller-r1/s81_minimum_source_factory.o",
+  "compiled_branch": "DSROM_S81_NATIVE_HEAD_STREAM; the actual-XN DOT SIM_ONLY branch requires its matching nonstream selector at its next ordinary caller compilation",
+  "runtime_launched": false,
+  "numerical_verdict": null,
+  "remaining_dependency": "Produced final L20 H/PF carry and Cicero sole enclosing caller; no failed I14 Q or expected/reference activation inputs",
+  "existing_stubs": "Unbound service requests remain refused; representative seeded boot, scalar-only tests and HEAD component execution are not a full40layer token"
+}

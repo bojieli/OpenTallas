@@ -1,0 +1,45 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 1393371 um^2 77% utilization.
+write_db /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/2_1_floorplan.sdc
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb           57            453 bfcf9d45d627c9f1f2c5
+2_1_floorplan             .sdc                             079f0286d8af0970ec34
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib
+read_db /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/hbm_attn_registered_parent/macro_placement.tcl
+[ERROR MPL-0020] Couldn't find a macro named u_tile.registered_parent.row\[0\].head\[0\].u_g.
+Error: macro_place.tcl, 6 MPL-0020
+
+Elapsed time: 0:02.86[h:]min:sec. CPU time: user 2.72 sys 0.13 (99%). Peak memory: 426260KB.
+Elapsed time: 0:57.33[h:]min:sec. CPU time: user 61.24 sys 3.72 (113%). Peak memory: 464576KB.
+Elapsed time: 0:02.35[h:]min:sec. CPU time: user 2.22 sys 0.13 (99%). Peak memory: 360600KB.
+make[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1
+make: *** [Makefile:456: /work/results/asap7/opentallas_ot_attn_registered_parent_phys_asap7_codex_h16_registered_parent_r1/base/2_2_floorplan_macro.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/codex/hbm-attn-registered-parent-20261006-r3/physical.json

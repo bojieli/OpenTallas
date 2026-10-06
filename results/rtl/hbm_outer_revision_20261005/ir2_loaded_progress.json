@@ -1,0 +1,118 @@
+{
+  "loaded_total": 152,
+  "completed_loaded": 75,
+  "incomplete_loaded": 77,
+  "zero_current_windows": 2,
+  "passes": 75,
+  "failing": [],
+  "worst": 23.54,
+  "zero_current_manifests": [
+    {
+      "case": "c",
+      "window": "w00_10",
+      "window_um": [
+        0.0,
+        24181.2,
+        2600.0,
+        25760.16
+      ],
+      "size_um": [
+        2600.0,
+        1578.96
+      ],
+      "cell_um": 20.0,
+      "loads": 10140,
+      "power_w": 0.0,
+      "power_w_by_kind": {},
+      "power_w_per_mm2": 0.0,
+      "cells_without_both_rails": 0,
+      "peak": true,
+      "scale": 1.0,
+      "align": true,
+      "signal_bumps_phy": true,
+      "coverage": {
+        "field": 0.0878,
+        "hub": 0.0878,
+        "spine": 0.0878,
+        "svc": 0.25,
+        "channel": 0.0878
+      },
+      "bump_sites": 1025,
+      "stripes": {
+        "M9": 1062,
+        "M8": 644,
+        "vias": 341964,
+        "width_um": 0.48,
+        "pitch_by_kind": {
+          "field": 4.8954,
+          "hub": 4.8954,
+          "spine": 4.8954,
+          "svc": 1.8183,
+          "channel": 4.8954
+        }
+      },
+      "bumps": {
+        "array_pitch_um": 45.0,
+        "vdd_pitch_um": 63.64,
+        "size_um": 20.0,
+        "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only"
+      },
+      "vdd_v": 0.7,
+      "budget_mv": 35.0
+    },
+    {
+      "case": "c",
+      "window": "w01_10",
+      "window_um": [
+        2417.904,
+        24181.2,
+        5018.305,
+        25760.16
+      ],
+      "size_um": [
+        2600.401,
+        1578.96
+      ],
+      "cell_um": 20.0,
+      "loads": 10140,
+      "power_w": 0.0,
+      "power_w_by_kind": {},
+      "power_w_per_mm2": 0.0,
+      "cells_without_both_rails": 0,
+      "peak": true,
+      "scale": 1.0,
+      "align": true,
+      "signal_bumps_phy": true,
+      "coverage": {
+        "field": 0.0878,
+        "hub": 0.0878,
+        "spine": 0.0878,
+        "svc": 0.25,
+        "channel": 0.0878
+      },
+      "bump_sites": 1025,
+      "stripes": {
+        "M9": 1062,
+        "M8": 644,
+        "vias": 341964,
+        "width_um": 0.48,
+        "pitch_by_kind": {
+          "field": 4.8954,
+          "hub": 4.8954,
+          "spine": 4.8954,
+          "svc": 1.8183,
+          "channel": 4.8954
+        }
+      },
+      "bumps": {
+        "array_pitch_um": 45.0,
+        "vdd_pitch_um": 63.64,
+        "size_um": 20.0,
+        "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only"
+      },
+      "vdd_v": 0.7,
+      "budget_mv": 35.0
+    }
+  ],
+  "supervisor_preserved": true
+}

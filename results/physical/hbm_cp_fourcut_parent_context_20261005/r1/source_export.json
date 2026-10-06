@@ -1,0 +1,30 @@
+{
+  "actual_main": "d3eb87af8a15ba139a6cb6b183b3d993c89fdf91",
+  "RTL_step": "174943d5e4f2b6a827e91ff997defee732853b35",
+  "paths": [
+    "tools",
+    "physical/hbm_cp_parent_context_20261005",
+    "physical/common",
+    "results/rtl/hbm_child_contract_20261005",
+    "results/physical/hbm_cp_cts_allocation_20261005",
+    "results/physical/hbm_cp_parent_context_20261005/r1",
+    "results/uarch/hbm_cp_fourcut_20261005",
+    "results/rtl/hbm_cp_fourcut_20261005",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv"
+  ],
+  "transport": "Exact git archive over retained own source base; separate local export commit",
+  "runner_fix_commit": "46340c9ff",
+  "export_commit": "eaab8fdd5487f57586e5f430c64eedc617e628e8",
+  "physical_RTL_main": "d3eb87af8a15ba139a6cb6b183b3d993c89fdf91"
+}

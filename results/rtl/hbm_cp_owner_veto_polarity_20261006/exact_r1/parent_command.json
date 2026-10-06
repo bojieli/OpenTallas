@@ -1,0 +1,23 @@
+[
+  "iverilog",
+  "-g2012",
+  "-Ptb_su_cp_parent_association.OWNER_VETO_POLARITY_TEST=1",
+  "-Ptb_su_cp_parent_association.CONTROL_TAIL_CUT_TEST=1",
+  "-Ptb_su_cp_parent_association.PARALLEL_PHASE_VALIDATION_TEST=1",
+  "-s",
+  "tb_su_cp_parent_association",
+  "-Ptb_su_cp_parent_association.PARENT_CONTEXT_TEST=1",
+  "-Ptb_su_cp_parent_association.FOUR_COMBINATIONAL_CUTS_TEST=1",
+  "-Ptb_su_cp_parent_association.FAST_OWNER_FRONTIER_TEST=1",
+  "-o",
+  "/tmp/harvey-cp-owner-veto-exact-r1/parent.vvp",
+  "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+  "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+  "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv",
+  "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv"
+]

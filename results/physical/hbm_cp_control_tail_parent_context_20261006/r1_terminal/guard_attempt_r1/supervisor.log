@@ -1,0 +1,16 @@
+{"utc": "2026-10-06T10:33:55Z", "phase": "preguard", "load": 51.73779296875, "idleCPU": 70.97548490068445, "memory_available": 645770194944, "disk_free": 1632881086464, "requiredCPU": 16, "expected_memory_GiB": 8, "disk_estimate_bytes": 1073741824, "inventory_source_bytes": 2810446, "existing_same_shape_work_bytes": 204573270}
+OSError: [Errno 28] No space left on device
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/admit_core.py", line 41, in <module>
+    while not try_admit(need):
+              ~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/admit_core.py", line 33, in try_admit
+    RECENT.write_text(json.dumps(recent))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 810, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device

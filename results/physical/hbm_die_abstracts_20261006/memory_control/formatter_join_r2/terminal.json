@@ -1,0 +1,50 @@
+{
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv": "b9a814be8b4455f3f26655224cfe05348bb144958d8ff2ef1230cc16480ed2c9",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv": "882d121877c05999659055c73ded1e5fdfb579cbbc747b56ea08d8a387e9fa87",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv": "a094761b1f8a4c794e0217f465e25016aa19d1485ea942635c30d3675623ec96",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv": "e918e96dbcd9c0b2bf3464a73d2da9ff811499cd36b9411555419c58a983afc3",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv": "d7b6164192a427049ae3b0f8a8fdda590a0d2bf2984f532f5827f1f3b63c87dd"
+  },
+  "compile_command": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "--threads",
+    "1",
+    "-j",
+    "1",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_hbm_formatter_provider_join",
+    "--Mdir",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/gate-r2/build",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_bridge.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_gather_owner.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv",
+    "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv"
+  ],
+  "compile_exit": 0,
+  "cases": [
+    {
+      "name": "causal_arena_exact_and_TOKEN17_negative",
+      "command": [
+        "/srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/179d4c7df/gate-r2/build/Vtb_hbm_formatter_provider_join"
+      ],
+      "exit": 0,
+      "passed": true
+    }
+  ],
+  "physical_closed": false,
+  "actual_parent_bindings_qualified": false,
+  "verilator_script_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "verilator_binary_sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+  "verdict": "PASS"
+}

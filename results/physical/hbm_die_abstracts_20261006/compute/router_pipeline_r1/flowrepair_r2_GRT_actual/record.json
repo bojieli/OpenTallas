@@ -1,0 +1,41 @@
+{
+  "status": "GRT_COMPLETE_SETUP_FAIL_DRT_LIVE",
+  "source_commit": "19c66ba94",
+  "ss_setup_ps": -238.344,
+  "ff_hold_ps": 10.0208,
+  "setup_tns_ps": -820080,
+  "setup_violations": 18360,
+  "hold_violations": 0,
+  "max_slew_violations": 0,
+  "max_capacitance_violations": 0,
+  "max_fanout_violations": 0,
+  "antenna_pins": 0,
+  "antenna_nets": 0,
+  "cell_area_um2": 35028.6,
+  "core_area_um2": 83666.1,
+  "utilization": 0.418671,
+  "worst_setup_start": "g_on.g_lane[31].u_lane.x_first$_DFF_PN0_",
+  "worst_setup_end": "g_on.g_lane[31].u_lane.ge_q[4]$_DFF_P_",
+  "reported_reset_removal_bc_ps": 27.63,
+  "reported_reset_recovery_wc_ps": 322.92,
+  "root_period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "extracted_final_signoff": false,
+  "DRC_final": "NOT_REACHED",
+  "physical_closed": false,
+  "parent_qualified": false,
+  "retained_checkpoint": {
+    "5_1_grt.odb": {
+      "sha256": "0646626635767632b8f095c79b78f6c2caff11db767919d60d7059a6b00cd4e9",
+      "bytes": 256524704
+    },
+    "5_1_grt.sdc": {
+      "sha256": "d817d08188fd7c345102875cdfcc2efc4019d750498d238fbf918f88e132894f",
+      "bytes": 57285
+    }
+  },
+  "observed_utc": "2026-10-06T07:57:21.298790+00:00",
+  "remote_root": "/srv/opentallas-scratch2/codex/carson-router-pipeline-20261006/flowrepair-r2",
+  "route_progress": "Same admitted run advanced to detailed routing; no source, synthesis, golden, frame or constraint changes"
+}

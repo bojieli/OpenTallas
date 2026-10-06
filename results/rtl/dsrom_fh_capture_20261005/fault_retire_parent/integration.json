@@ -1,0 +1,29 @@
+{
+  "status": "CONNECTED_DEFAULT_OFF_CANDIDATE_NOT_NUMERICAL_OR_PHYSICAL_QUALIFIED",
+  "source_sha256": {
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_core_v41.sv": "2f460e99255cf46d1a766a0c89add357aa30ed478d383864701fe3c7b4a77d8e",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_matvec.sv": "1488b30b36673d280f901281fc69ae7bf9008c7e1bc08cbf0165e41153c4261e",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_ctx.sv": "1a88f441d940ec11c9e50fe4be9469972f1606043176f40f9b543e60785e4ecb",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_macro_ctx.sv": "7a70e3e1fc0488af6cf8edb723c8698f82f3341a9f214ffed03bf2813a7cc390",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_sram_return.sv": "7ce30b050a00a3ec75f5963442a129ad180d9e5a1dde74f112039bb60271f9ec",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_fault_retire.sv": "b9d4d183a1a92eb9b811c3c0255dbff2c8e9393d4e5d2b999482d21308642a29",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/ot_hdc_v41_fh_retire_parent.sv": "4124274c098c212e64012f150827ece527636c164aa3c78b0d72bf1a52ce0c68",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_fh_retire_parent.sv": "3318895092d911a23b98628428a8c7763ff2c999be47894310c503a0e270a6ee",
+    "rtl/hdc/v41/dspark_fused_head/capture_candidate/tb_hdc_core_v41_mtp_slice_capture.sv": "969868b93a6830daa2a92e1b5672c53f5c9f8b34f8b3650d8bc1aa512e303b5f",
+    "tools/dsrom_fused_draft_head.py": "b3693fc994cba4abbb60a504f16ef45f41b5cfadd5ee87cf029edc4b645e3584",
+    "tools/uarch_model.py": "4a1fb2912e174912b9ce71a233bf5c490a95d619004b5e32bc87b1b7b8e533f1",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "shape": "G4W16 MP1",
+  "component_gate": "held_all_identity_fault.log PASS 10 checks; clustered_calendar.log PASS 163 accepted/161 released/2 reset abort; 33 warm =32 retired+1 reset abort",
+  "implementation": "Four-edge complete leaf/write/tag/progress packet; bounded consumer two-edge write; warm debt clears only real matched ID/word/mask commit, neither emission nor faulted ACK; kept 2x4-bank fault clusters, 16 OR4 relays and 69 local copies",
+  "golden_gate": "PENDING ONE ENABLEON original fused-gold4 fixture, changed source connected; unchanged ten-case evidence reused",
+  "price": {
+    "candidate_fivechain_added_cycles": 40,
+    "candidate_added_ns": 33.333333333,
+    "measured": false
+  },
+  "physical": "PENDING new mapped fanout/timing and real parent ACK loads/capture binding. Original 64 protected SRAM clocks and SS60/FF25 unchanged; no macro clkQ zero. Preserve C18/C19 progressing. No geometry-only rescue.",
+  "failure_evidence": "held_all_identity_fault_attempt0.log retained testbench compile failure"
+}

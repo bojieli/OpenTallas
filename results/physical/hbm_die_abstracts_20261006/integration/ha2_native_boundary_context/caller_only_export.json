@@ -1,0 +1,19 @@
+{
+  "evidence_class": "CALLER_ONLY_SOURCE_PORT_EXPORT",
+  "parameters": {
+    "CALLER_ONLY": 1,
+    "ENABLE": 1
+  },
+  "source_sha256": {
+    "tools/hbm_item9_native_caller_map.py": "e037c8e6e82cd860976035a04d85f4bdca93095061e10dbedf963e0a8fd150da",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_item9_ha2_native_boundary_context.sv": "24dfca226dfd1a5e6cb218ef467840729c925d00d41520d2e917dc6865c479bf",
+    "physical/hbm_die_abstracts_20261006/integration/ha2_native_boundary_internal.sdc": "3f865f26f18f9599097ba8a436dc47de53643810e9a0a64066e5137065343798"
+  },
+  "gate_reused": "446b1098d native cone PASS; no numerical rerun",
+  "source_changes": "wire aliases for literal child pins and external child-return cut; no new FF/edge/arithmetic",
+  "enabled_elaboration_exit": 0,
+  "driver_AST_PASS": true,
+  "clock_source_qualified": false,
+  "child_ABC_replayed": false,
+  "mapped_STA_has_no_CTS_or_RC": true
+}

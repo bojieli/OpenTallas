@@ -1,0 +1,450 @@
+{
+ "schema": "opentallas.qwen-rom-die.region-cts.v1",
+ "tool": "tools/qwen_rom_die_region_cts.py",
+ "method": "One decision-C clock region on the r17 die geometry; one DFFHQNx1 sink at every element clock entry; OpenROAD TritonCTS (BUFx12f root, BUFx4/8/12f, sink clustering, repair_clock_nets); propagated clock; OpenSTA SS/FF NLDM, placement parasitics (setRC). Pair skew = |arrival difference| of two elements joined by a die-level bus.",
+ "host": "ot-epyc2 openroad/orfs:asap7lock (16470cea)",
+ "runs": {
+  "cts_t0_1f": {
+   "sinks": 32,
+   "pairs": 46,
+   "SS": {
+    "insertion_min_ps": 3896.4,
+    "insertion_max_ps": 4113.5,
+    "skew_all_ps": 217.1,
+    "pair_skew_max_ps": 209.2,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 189.3,
+    "pairs_over_25ps": 31,
+    "pairs_over_60ps": 19
+   },
+   "FF": {
+    "insertion_min_ps": 2515.0,
+    "insertion_max_ps": 2677.0,
+    "skew_all_ps": 161.9,
+    "pair_skew_max_ps": 156.3,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 141.5,
+    "pairs_over_25ps": 29,
+    "pairs_over_60ps": 13
+   },
+   "clock_buffers": 429,
+   "path_depth": [
+    54,
+    54
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-station (corridor)": {
+     "pairs": 12,
+     "ss_max_ps": 201.6,
+     "ff_max_ps": 150.6
+    },
+    "station-tile (tap)": {
+     "pairs": 16,
+     "ss_max_ps": 209.2,
+     "ff_max_ps": 156.3
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 18,
+     "ss_max_ps": 171.6,
+     "ff_max_ps": 128.5
+    }
+   },
+   "manifest": {
+    "region": "creg_t0_1",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "elements": 32,
+    "kinds": {
+     "station": 16,
+     "tile": 16
+    },
+    "bus_pairs": 46,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   },
+   "case": "creg_t0_1 decision-C 4x4-tile block (5.26 x 1.25 mm), flat-placement bound"
+  },
+  "cts_f_r2": {
+   "sinks": 16,
+   "pairs": 21,
+   "SS": {
+    "insertion_min_ps": 2060.9,
+    "insertion_max_ps": 2234.8,
+    "skew_all_ps": 173.9,
+    "pair_skew_max_ps": 160.0,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 150.4,
+    "pairs_over_25ps": 17,
+    "pairs_over_60ps": 10
+   },
+   "FF": {
+    "insertion_min_ps": 1353.2,
+    "insertion_max_ps": 1482.6,
+    "skew_all_ps": 129.4,
+    "pair_skew_max_ps": 118.8,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 110.1,
+    "pairs_over_25ps": 17,
+    "pairs_over_60ps": 10
+   },
+   "clock_buffers": 131,
+   "path_depth": [
+    24,
+    24
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-station (corridor)": {
+     "pairs": 4,
+     "ss_max_ps": 150.4,
+     "ff_max_ps": 110.1
+    },
+    "station-tile (tap)": {
+     "pairs": 8,
+     "ss_max_ps": 160.0,
+     "ff_max_ps": 118.8
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 9,
+     "ss_max_ps": 149.1,
+     "ff_max_ps": 109.5
+    }
+   },
+   "manifest": {
+    "region": "creg_t0_1_rows2",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     7771.68
+    ],
+    "extent_mm": 2.5834,
+    "elements": 16,
+    "kinds": {
+     "station": 8,
+     "tile": 8
+    },
+    "bus_pairs": 21,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   },
+   "case": "creg_t0_1 first 2 tile rows (2.58 x 1.25 mm), flat bound"
+  },
+  "cts_f_r1": {
+   "sinks": 8,
+   "pairs": 6,
+   "SS": {
+    "insertion_min_ps": 1297.7,
+    "insertion_max_ps": 1361.3,
+    "skew_all_ps": 63.6,
+    "pair_skew_max_ps": 61.6,
+    "pair_worst": [
+     "t_0_4",
+     "t_1_4"
+    ],
+    "pair_skew_p90_ps": 61.6,
+    "pairs_over_25ps": 2,
+    "pairs_over_60ps": 1
+   },
+   "FF": {
+    "insertion_min_ps": 865.8,
+    "insertion_max_ps": 924.3,
+    "skew_all_ps": 58.5,
+    "pair_skew_max_ps": 57.1,
+    "pair_worst": [
+     "t_0_4",
+     "t_1_4"
+    ],
+    "pair_skew_p90_ps": 57.1,
+    "pairs_over_25ps": 2,
+    "pairs_over_60ps": 0
+   },
+   "clock_buffers": 47,
+   "path_depth": [
+    12,
+    12
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-tile (tap)": {
+     "pairs": 4,
+     "ss_max_ps": 14.2,
+     "ff_max_ps": 13.4
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 2,
+     "ss_max_ps": 61.6,
+     "ff_max_ps": 57.1
+    }
+   },
+   "manifest": {
+    "region": "creg_t0_1_rows1",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     6480.0
+    ],
+    "extent_mm": 1.2917,
+    "elements": 8,
+    "kinds": {
+     "station": 4,
+     "tile": 4
+    },
+    "bus_pairs": 6,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   },
+   "case": "creg_t0_1 first tile row (1.29 x 1.25 mm), flat bound"
+  },
+  "cts_f_bl2r": {
+   "sinks": 16,
+   "pairs": 21,
+   "SS": {
+    "insertion_min_ps": 2060.9,
+    "insertion_max_ps": 2234.8,
+    "skew_all_ps": 173.9,
+    "pair_skew_max_ps": 160.0,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 150.4,
+    "pairs_over_25ps": 17,
+    "pairs_over_60ps": 10
+   },
+   "FF": {
+    "insertion_min_ps": 1353.2,
+    "insertion_max_ps": 1482.6,
+    "skew_all_ps": 129.4,
+    "pair_skew_max_ps": 118.8,
+    "pair_worst": [
+     "s_0_4",
+     "t_0_4"
+    ],
+    "pair_skew_p90_ps": 110.1,
+    "pairs_over_25ps": 17,
+    "pairs_over_60ps": 10
+   },
+   "clock_buffers": 131,
+   "path_depth": [
+    24,
+    24
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-station (corridor)": {
+     "pairs": 4,
+     "ss_max_ps": 150.4,
+     "ff_max_ps": 110.1
+    },
+    "station-tile (tap)": {
+     "pairs": 8,
+     "ss_max_ps": 160.0,
+     "ff_max_ps": 118.8
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 9,
+     "ss_max_ps": 149.1,
+     "ff_max_ps": 109.5
+    }
+   },
+   "manifest": {
+    "region": "creg_t0_1_rows2",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     7771.68
+    ],
+    "extent_mm": 2.5834,
+    "elements": 16,
+    "kinds": {
+     "station": 8,
+     "tile": 8
+    },
+    "bus_pairs": 21,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   },
+   "case": "2 rows with -balance_levels (no change)"
+  },
+  "cts_t0_1_hier": {
+   "case": "creg_t0_1 with the element abstracts FIXED (hierarchical)",
+   "legal": false,
+   "note": "TritonCTS saw 2 blockages for 32 macros, built depth-54 trees through the tiles; 125 buffers could not be legalised into the corridors/channels (DPL-0701); latencies 4.2-41 ns are not physical",
+   "clock_buffers": 429
+  },
+  "cts_d8": {
+   "sinks": 32,
+   "pairs": 46,
+   "SS": {
+    "insertion_min_ps": 4253.8,
+    "insertion_max_ps": 4327.7,
+    "skew_all_ps": 73.8,
+    "pair_skew_max_ps": 64.7,
+    "pair_worst": [
+     "t_0_7",
+     "t_1_7"
+    ],
+    "pair_skew_p90_ps": 53.6,
+    "pairs_over_25ps": 21,
+    "pairs_over_60ps": 1
+   },
+   "FF": {
+    "insertion_min_ps": 2704.1,
+    "insertion_max_ps": 2757.3,
+    "skew_all_ps": 53.2,
+    "pair_skew_max_ps": 45.7,
+    "pair_worst": [
+     "t_0_7",
+     "t_1_7"
+    ],
+    "pair_skew_p90_ps": 39.9,
+    "pairs_over_25ps": 16,
+    "pairs_over_60ps": 0
+   },
+   "clock_buffers": 1448,
+   "path_depth": [
+    68,
+    69
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-station (corridor)": {
+     "pairs": 12,
+     "ss_max_ps": 50.4,
+     "ff_max_ps": 38.6
+    },
+    "station-tile (tap)": {
+     "pairs": 16,
+     "ss_max_ps": 57.5,
+     "ff_max_ps": 43.3
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 18,
+     "ss_max_ps": 64.7,
+     "ff_max_ps": 45.7
+    }
+   },
+   "case": "creg_t0_1 decision-C region (5.26 x 1.25 mm), flat bound, 16 sinks per tile (its flops) + one per station: TritonCTS balances a full sink population",
+   "manifest": {
+    "region": "creg_t0_1",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     10452.24
+    ],
+    "extent_mm": 5.2639,
+    "elements": 32,
+    "kinds": {
+     "station": 16,
+     "tile": 16
+    },
+    "bus_pairs": 46,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   }
+  },
+  "cts_d8r1": {
+   "sinks": 8,
+   "pairs": 6,
+   "SS": {
+    "insertion_min_ps": 1574.3,
+    "insertion_max_ps": 1600.0,
+    "skew_all_ps": 25.7,
+    "pair_skew_max_ps": 19.0,
+    "pair_worst": [
+     "s_3_4",
+     "t_3_4"
+    ],
+    "pair_skew_p90_ps": 19.0,
+    "pairs_over_25ps": 0,
+    "pairs_over_60ps": 0
+   },
+   "FF": {
+    "insertion_min_ps": 1001.3,
+    "insertion_max_ps": 1025.2,
+    "skew_all_ps": 23.9,
+    "pair_skew_max_ps": 18.5,
+    "pair_worst": [
+     "s_3_4",
+     "t_3_4"
+    ],
+    "pair_skew_p90_ps": 18.5,
+    "pairs_over_25ps": 0,
+    "pairs_over_60ps": 0
+   },
+   "clock_buffers": 249,
+   "path_depth": [
+    24,
+    24
+   ],
+   "legal": true,
+   "by_pair_class": {
+    "station-tile (tap)": {
+     "pairs": 4,
+     "ss_max_ps": 19.0,
+     "ff_max_ps": 18.5
+    },
+    "tile-tile (ME split tree)": {
+     "pairs": 2,
+     "ss_max_ps": 7.1,
+     "ff_max_ps": 6.6
+    }
+   },
+   "case": "creg_t0_1 first tile row (1.29 x 1.25 mm), flat bound, 16 sinks per tile",
+   "manifest": {
+    "region": "creg_t0_1_rows1",
+    "rect": [
+     1613.52,
+     5188.32,
+     2868.048,
+     6480.0
+    ],
+    "extent_mm": 1.2917,
+    "elements": 8,
+    "kinds": {
+     "station": 4,
+     "tile": 4
+    },
+    "bus_pairs": 6,
+    "sink": "DFFHQNx1_ASAP7_75t_R",
+    "tap": "W",
+    "macros": false,
+    "mode": "flat-placement bound: the region tree may use the element interiors (no abstracts)"
+   }
+  }
+ },
+ "verdict": "Representative sink population (cts_d8, 16 sinks per tile): over the decision-C 5.26 mm region the element pairs joined by die-level buses see at most 50 ps (corridor stations) / 58 ps (station-tile) / 65 ps (ME tree tiles) SS skew and 39/43/46 ps FF; insertion 4.25-4.33 ns SS. The 32-sink runs (one sink per element) reach 202-209 ps only because TritonCTS cannot balance isolated points; they are kept as the worst case. One tile row (1.29 mm, the span the measured stage vehicle built its own tree over): 19 / 7 ps SS. Die stage closure needs the measured +11.9 ps stage slack to absorb the 65 ps: stage pitch 430.56 -> 383.8 um (path_sta --skew-ps 65), priced in the routed wire bound.",
+ "priced_fixes": "path_sta skew-aware pitch: 65 ps -> 383.8 um stages (decision-C regions); 19 ps -> 424.6 um (one-row regions)"
+}

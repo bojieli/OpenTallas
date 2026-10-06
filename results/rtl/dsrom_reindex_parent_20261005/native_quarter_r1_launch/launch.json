@@ -1,0 +1,19 @@
+{
+  "source_commit": "68e98fbc8",
+  "fixture_commit": "5a3a03527",
+  "original_scorer_sha": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+  "owner": "Codex:DSROM-reindex-parent",
+  "workers": 16,
+  "expected_peak_GiB": 96,
+  "parent_qualified": false,
+  "scope": "one native sixteen-lane quarter only",
+  "host": "ot-epyc1tb",
+  "launcher_pid": 3014292,
+  "driver_pid": 3014294,
+  "verilator_pid": 3014310,
+  "scratch": "/srv/opentallas-scratch/codex/dsrom-kc8-native-quarter-68e98",
+  "status": "FRONTEND_ADMITTED",
+  "peak_basis": "historical fullshape NS4 lint reached ~58GiB; 96GiB accommodates frontend and sixteen compiler workers; unchanged admit adds100GiB+recentpeaks",
+  "disk_basis": "retained full64 native obj measured9597371964bytes;30GiB headroom exceeds3x this actual inventory",
+  "archive_inventory": "existing29a9 flat64 archive not standaloneAPI; ONE native quarter authorized by owner; directCicero packet CODEX_TO_CICERO_NATIVE_QUARTER_BUILD_ONCE_20261006.txt"
+}

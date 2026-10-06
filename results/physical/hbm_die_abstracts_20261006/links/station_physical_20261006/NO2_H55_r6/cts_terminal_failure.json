@@ -1,0 +1,20 @@
+{
+  "status": "ACTUAL_CTS_TIMING_FAIL_THEN_GRT_FLOW_FAIL",
+  "period_ps": 833.333333,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "SS_WNS_ps": -1707.94,
+  "FF_hold_WNS_ps": -96.0134,
+  "setup_skew_ps": 108.346,
+  "hold_skew_ps": 75.5658,
+  "stdcell_area_um2": 13750.9,
+  "actual_utilization": 0.808726,
+  "hold_buffers": 19008,
+  "cts_metric_sha256": "fccfff8798ca40c0ddadb5b1e03a7b8bddee47aea1e1cd3a14d0537991428a10",
+  "route_failure": "5_1_grt TritonRoute DRT-0305: Net one_ of signal type POWER is not routable. Move to special nets.",
+  "route_completed": false,
+  "LEF_LIB_exported": false,
+  "source_local_parent_open": true,
+  "structural_fix_selected": false,
+  "live_NO3_preserved": true
+}

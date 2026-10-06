@@ -1,0 +1,470 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/4_cts.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_route_fast_frontier_membership.tcl
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=0 shared=0
+OT_FAST_FINITE_AREA region=cp_body actual=855.9626399999981 cap=1117.87776
+OT_FAST_FINITE_AREA region=cp_association actual=1.13724 cap=11.19744
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       17
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hbm_integrated_su_cp_context
+Die area:                 ( 0 0 ) ( 82080 82080 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     7085
+Number of terminals:      238
+Number of snets:          2
+Number of nets:           6726
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 157.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 121232.
+[INFO DRT-0033] V1 shape region query size = 250083.
+[INFO DRT-0033] M2 shape region query size = 8840.
+[INFO DRT-0033] V2 shape region query size = 3894.
+[INFO DRT-0033] M3 shape region query size = 2211.
+[INFO DRT-0033] V3 shape region query size = 484.
+[INFO DRT-0033] M4 shape region query size = 506.
+[INFO DRT-0033] V4 shape region query size = 968.
+[INFO DRT-0033] M5 shape region query size = 484.
+[INFO DRT-0033] V5 shape region query size = 242.
+[INFO DRT-0033] M6 shape region query size = 720.
+[INFO DRT-0033] V6 shape region query size = 968.
+[INFO DRT-0033] M7 shape region query size = 638.
+[INFO DRT-0033] V7 shape region query size = 4488.
+[INFO DRT-0033] M8 shape region query size = 1020.
+[INFO DRT-0033] V8 shape region query size = 14450.
+[INFO DRT-0033] M9 shape region query size = 646.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 806 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 157 unique inst patterns.
+[INFO DRT-0084]   Complete 4448 groups.
+#scanned instances     = 7085
+#unique  instances     = 157
+#stdCellGenAp          = 4789
+#stdCellValidPlanarAp  = 90
+#stdCellValidViaAp     = 3774
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 17760
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:01:09, elapsed time = 00:00:05, memory = 339.57 (MB), peak = 331.05 (MB)
+Took 5 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 4038
+[INFO GRT-0019] Found 44 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 33
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal     288539        208272          27.82%
+M3         Vertical       320244        238212          25.62%
+M4         Horizontal     239371        177826          25.71%
+M5         Vertical       244013        182237          25.32%
+M6         Horizontal     182952        123310          32.60%
+M7         Vertical       177825        120135          32.44%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 38107
+[INFO GRT-0198] Via related Steiner nodes: 862
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 50096
+[INFO GRT-0112] Final usage 3D: 188835
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              208272         15782            7.58%             0 /  0 /  0
+M3              238212         14985            6.29%             0 /  0 /  0
+M4              177826          1425            0.80%             0 /  0 /  0
+M5              182237          1901            1.04%             0 /  0 /  0
+M6              123310          2261            1.83%             0 /  0 /  0
+M7              120135          2193            1.83%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          1049992         38547            3.67%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 30529 um
+[INFO GRT-0014] Routed nets: 6726
+[INFO GRT-0303] Global routing runtime = 00:00:03
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |      6762
+     1000 |     +0.0% |       0 |       0 |             0 |      5762
+     2000 |     +0.0% |       0 |       0 |             0 |      4762
+     3000 |     +0.0% |       0 |       0 |             0 |      3762
+     4000 |     +0.0% |       0 |       0 |             0 |      2762
+     5000 |     +0.0% |       0 |       0 |             0 |      1762
+     6000 |     +0.0% |       0 |       0 |             0 |       762
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0504] Runtime: 0.71s
+global_route -start_incremental
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=0 shared=0
+OT_FAST_FINITE_AREA region=cp_body actual=855.9626399999981 cap=1117.87776
+OT_FAST_FINITE_AREA region=cp_association actual=1.13724 cap=11.19744
+detailed_placement
+[INFO DPL-0006] Core area: 2258.15 um^2
+[INFO DPL-0007] Movable instances area: 857.10 um^2
+[INFO DPL-0008] Fixed instances area within core: 12.86 um^2
+[INFO DPL-0009] Utilization: 38.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 7085 cells
+[INFO DPL-0500] Runtime: 0.05s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL           19473.6 u
+legalized HPWL          19473.6 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 89 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 89 out of 89 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -268.699 |   -23589.9 |    -3641.7 |     89 | exec_owned
+      10* |       0 |       0 |        0 |      0 |     9 |    +0.0% | -262.970 |   -23469.0 |    -3754.2 |     89 | quiet
+      16* |       0 |       0 |        1 |      0 |    12 |    +0.0% | -261.923 |   -23458.8 |    -3499.3 |     89 | exec_owned
+      20* |       1 |       1 |        1 |      0 |    13 |    -0.0% | -262.330 |   -23435.6 |    -3717.0 |     89 | exec_owned
+      26* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      30* |       4 |       5 |        2 |      0 |    13 |    -0.0% | -261.243 |   -23398.8 |    -3592.1 |     89 | exec_owned
+      30* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      34* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      38* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      40* |       4 |       2 |        2 |      0 |    14 |    -0.0% | -260.833 |   -23389.8 |    -3601.1 |     89 | exec_owned
+      42* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      46* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      50* |       4 |       3 |        2 |      0 |    15 |    -0.0% | -261.188 |   -23404.3 |    -3572.7 |     89 | exec_owned
+      50* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      53* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      57* |       4 |       2 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23385.2 |    -3597.8 |     89 | exec_owned
+      60* |       4 |       4 |        2 |      0 |    13 |    -0.0% | -261.188 |   -23399.1 |    -3543.9 |     89 | exec_owned
+      60* |       4 |       3 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23386.8 |    -3581.7 |     89 | exec_owned
+      63* |       4 |       3 |        2 |      0 |    13 |    -0.0% | -260.833 |   -23386.8 |    -3581.7 |     89 | exec_owned
+      67* |       4 |       3 |        2 |      0 |    15 |    -0.0% | -260.833 |   -23386.8 |    -3577.7 |     89 | exec_owned
+      70* |       4 |       5 |        2 |      0 |    15 |    -0.0% | -261.188 |   -23399.1 |    -3539.3 |     89 | exec_owned
+      70* |       4 |       3 |        2 |      0 |    15 |    -0.0% | -260.833 |   -23386.8 |    -3577.7 |     89 | exec_owned
+      73* |       4 |       3 |        2 |      0 |    15 |    -0.0% | -260.833 |   -23386.8 |    -3577.7 |     89 | exec_owned
+      74* |       4 |       3 |        2 |      0 |    15 |    -0.0% | -260.833 |   -23386.8 |    -3577.7 |     89 | exec_owned
+      80* |       4 |       4 |        6 |      3 |    15 |    +0.1% | -260.833 |   -23386.8 |    -2934.7 |     89 | exec_owned
+      81* |       4 |       5 |        6 |      3 |    15 |    +0.1% | -260.833 |   -23386.8 |    -2908.0 |     89 | exec_owned
+      85* |       4 |       6 |        6 |      3 |    15 |    +0.1% | -260.833 |   -23386.8 |    -2887.2 |     89 | exec_owned
+      90* |       4 |       7 |        8 |      3 |    16 |    +0.1% | -260.833 |   -23170.0 |    -2860.7 |     89 | exec_owned
+      98* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+      99* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     100* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     101* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     102* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     103* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     105* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     106* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     108* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     110* |       4 |       9 |       12 |      3 |    19 |    +0.2% | -261.083 |   -22523.2 |    -2429.1 |     89 | exec_owned
+     110* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     111* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     112* |       4 |       8 |       12 |      3 |    19 |    +0.2% | -260.833 |   -22518.5 |    -2849.2 |     89 | exec_owned
+     119* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     120* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     120* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     121* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     123* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     125* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     126* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     127* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     128* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     130* |       6 |      11 |       13 |      3 |    20 |    +0.2% | -261.083 |   -22523.2 |    -2413.1 |     89 | exec_owned
+     130* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     131* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     133* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     134* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     135* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     136* |       6 |      10 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2833.4 |     89 | exec_owned
+     138* |       6 |      11 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2838.0 |     89 | exec_owned
+     139* |       6 |      11 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2838.0 |     89 | exec_owned
+     140* |       6 |      11 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2838.0 |     89 | exec_owned
+     141* |       6 |      12 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2855.9 |     89 | exec_owned
+     142* |       6 |      12 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2855.9 |     89 | exec_owned
+     143* |       6 |      12 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2855.9 |     89 | exec_owned
+     144* |       6 |      12 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2855.9 |     89 | exec_owned
+     145* |       6 |      12 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2855.9 |     89 | exec_owned
+     148* |       6 |      14 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2764.0 |     89 | exec_owned
+     149* |       6 |      14 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2764.0 |     89 | exec_owned
+     150* |       6 |      14 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2764.0 |     89 | exec_owned
+     150* |       6 |      14 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2764.0 |     89 | exec_owned
+     151* |       6 |      14 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2764.0 |     89 | exec_owned
+     156* |       6 |      18 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2642.9 |     89 | exec_owned
+     157* |       6 |      18 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2642.9 |     89 | exec_owned
+     160* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     160* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     161* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     162* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     163* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     164* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     165* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     166* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     167* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     168* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     169* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     170* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     170* |       6 |      20 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2617.5 |     89 | exec_owned
+     172* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     173* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     174* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     175* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     176* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     177* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     178* |       6 |      21 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2626.9 |     89 | exec_owned
+     180* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     180* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     181* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     182* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     183* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     184* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     185* |       6 |      22 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2577.6 |     89 | exec_owned
+     187* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     188* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     189* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     190* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     190* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     191* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     192* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     193* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     194* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     195* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     195* |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     89 | exec_owned
+     196+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     197+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     198+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     199+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     200+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     200+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     201+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     202+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     203+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     204+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     205+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     206+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     207+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     208+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     209+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     210+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     210+ |       6 |      23 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2535.4 |     32 | exec_owned
+     212+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     213+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     214+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     215+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     216+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     217+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     218+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     219+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     220+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     220+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     221+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     222+ |       6 |      24 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2509.1 |     32 | exec_owned
+     223+ |       6 |      25 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.8 |     32 | exec_owned
+     224+ |       6 |      25 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.8 |     32 | exec_owned
+     225+ |       6 |      25 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.8 |     32 | exec_owned
+     226+ |       6 |      25 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.8 |     32 | exec_owned
+     227+ |       6 |      26 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.1 |     32 | exec_owned
+     228+ |       6 |      26 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.1 |     32 | exec_owned
+    final |       6 |      26 |       13 |      3 |    20 |    +0.2% | -260.833 |   -22518.5 |    -2497.1 |     26 | exec_owned
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 6 buffers.
+[INFO RSZ-0040] Inserted 13 buffers.
+[INFO RSZ-0051] Resized 26 instances: 26 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 20 instances.
+[INFO RSZ-0049] Cloned 3 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 12.01s
+[INFO RSZ-0046] Found 9 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -30.146 | -40.198 | u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/D
+       10 |       0 |       6 |            0 |    +0.1% | -30.146 | -40.000 | u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/D
+       10 |       0 |       6 |            0 |    +0.1% | -30.146 | -40.000 | u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/D
+    final |       0 |       6 |            0 |    +0.1% | -30.146 | -40.000 | u_su_cp.on.registered_status.qualification_fault_n$_DFFE_PN1P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 6 hold buffers.
+[INFO RSZ-0506] Runtime: 1.08s
+Took 13 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -verbose
+global_route -start_incremental
+OT_CP_POST_INSERTION_MEMBERSHIP clock=0 repair=22 shared=0
+OT_FAST_FINITE_AREA region=cp_body actual=858.3391799999985 cap=1117.87776
+OT_FAST_FINITE_AREA region=cp_association actual=1.13724 cap=11.19744
+detailed_placement
+[INFO DPL-0006] Core area: 2258.15 um^2
+[INFO DPL-0007] Movable instances area: 859.48 um^2
+[INFO DPL-0008] Fixed instances area within core: 12.86 um^2
+[INFO DPL-0009] Utilization: 38.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 7101 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         12 |         2 |        10
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.05s
+Placement Analysis
+---------------------------------
+total displacement         13.0 u
+average displacement        0.0 u
+max displacement            1.3 u
+original HPWL           19631.5 u
+legalized HPWL          19642.7 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 31 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 31 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -262.108 |   -22561.1 |    -2516.3 |     31 | exec_owned
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -262.108 |   -22561.1 |    -2516.3 |     31 | exec_owned
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -262.108 |   -22561.1 |    -2516.3 |     31 | exec_owned
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% | -262.108 |   -22561.1 |    -2516.3 |     31 | exec_owned
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 0.69s
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 872 um^2 39% utilization.
+[INFO FLW-0007] clock core_clk period 833.333435
+[INFO FLW-0008] Clock core_clk period 1040.669
+[INFO FLW-0009] Clock core_clk slack -262.108
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/updated_clks.sdc
+[INFO FLW-0011] Path endpoint path count 1591
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_owner_veto_context_r1/base/5_1_grt.sdc
+Elapsed time: 0:31.40[h:]min:sec. CPU time: user 146.80 sys 4.36 (481%). Peak memory: 554196KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb           31            541 1b11b503035bacb4ddcc
+5_1_grt                   .sdc                             439899a81694f5c73df6

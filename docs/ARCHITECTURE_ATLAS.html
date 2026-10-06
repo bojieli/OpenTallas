@@ -497,7 +497,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <tbody>
       <tr><td>In-package UCIe, edge-adjacent dies (diagonal relayed)</td><td class="r m">10 ns (3–30)</td><td class="r m">edge share</td><td><span class="tag cite">cited</span></td></tr>
       <tr><td>Package link, 112G PAM4 with full RS(544,514) FEC (plain option (b))</td><td class="r m">209 ns (129–409)</td><td class="r m">1.69 TB/s net per four-die-class package</td><td><span class="tag cite">cited</span></td></tr>
-      <tr><td>Package link with a light, reduced-interleave FEC: the on-module link between the two packages of a tensor group (≈120 mm trace) only</td><td class="r m">130 ns (100–170)</td><td class="r m">same</td><td>derived from cited components, checked in §8.9 [<a href="#r-dassharma">UCIe PHY</a>, <a href="#r-ualink">UALink</a>, <a href="#r-oif112">OIF CEI-112G</a>, <a href="#r-sue">SUE</a>]</td></tr>
+      <tr><td>Package link with a light, reduced-interleave FEC: the on-module link between the two packages of a tensor group (≈120 mm trace) only. <b>Superseded 2026-10-06: every off-package link is charged full RS(544,514), 209 ns (§6.9)</b></td><td class="r m">130 ns (100–170)</td><td class="r m">same</td><td>derived from cited components, checked in §8.9 [<a href="#r-dassharma">UCIe PHY</a>, <a href="#r-ualink">UALink</a>, <a href="#r-oif112">OIF CEI-112G</a>, <a href="#r-sue">SUE</a>]</td></tr>
       <tr><td>Rack-cable stage hop (≤0.8 m twinax): a light FEC is not qualified on CR copper, so full RS(544,514)</td><td class="r m">209 ns (160–300)</td><td class="r m">per lane split</td><td>checked in §8.9 [<a href="#r-llfec">LL-FEC</a>, <a href="#r-gustlin3ck">802.3ck</a>]</td></tr>
       <tr><td>Plain (b): collective latency 40.3 + bytes 3.3 + hops 11.9 µs</td><td class="r m">55.6 of 224.7 µs</td><td class="r m">25%</td><td><span class="tag dag">DAG model</span></td></tr>
       <tr><td>Adopted design point, 1M: collective latency 15.3 + exposed collective bytes 4.8 (bench-measured tails) + hops 11.0 µs</td><td class="r m">31.1 of 122.2 µs</td><td class="r m">25%</td><td><span class="tag spec">design-point model</span></td></tr>
@@ -550,7 +550,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p>The energy argument is supported by a common-KV cross-check: on the same reduced decode step, routed logic activity and modeled HBM bytes give 5.7× lower energy with ROM weights. The two machines pay the same KV HBM energy and interface idle (§8.4, Figure 8-2).</p>
 
   <h3 id="s5-3">5.3 Design principles</h3>
-  <p>The architecture follows ten principles tied to the bottlenecks in §4. Table 5-2 shows their consequences for the implemented designs. The last three are implementation-method principles adopted on 2026-09-29, after composing independently verified components exposed latency and resource gaps that a design-time model should have found.</p>
+  <p>The architecture follows eleven principles tied to the bottlenecks in §4. Table 5-2 shows their consequences for the implemented designs. The last three are implementation-method principles adopted on 2026-09-29, after composing independently verified components exposed latency and resource gaps that a design-time model should have found.</p>
   <div class="tablebox"><table class="data">
     <caption>Table 5-2. Architectural principles and the bottlenecks they address</caption>
     <thead><tr><th>Principle</th><th>Statement</th><th>Answers</th><th>Consequence in the design</th></tr></thead>
@@ -564,6 +564,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td class="req">Streamed per-user state</td><td>Per-user state streams from attached HBM at close to raw bandwidth</td><td class="m">Ch 1</td><td>KV and index keys in HBM beside the ROM die, prefetched a layer ahead; a refresh-aware controller with deep per-channel queues and no head-of-line blocking (§6.7).</td></tr>
       <tr><td class="req">Microarchitecture model before build</td><td>Size every block with a microarchitecture-level analytical model before writing RTL or running place and route</td><td class="m">Ch 2, Ch 3</td><td>For each block of each design: MACs per cycle, compute and communication intensity, bytes per cycle at every memory port, bits per cycle across every boundary, routing tracks against channel capacity, replica count and the multiplexer/fanout cost those replicas imply, and floorplan slot fit. Place and route validates this model; it must not be where the architecture is discovered.</td></tr>
       <tr><td class="req">Replicated hardened elements</td><td>Floorplan first, then one hardened array element sized to the full goal, replicated</td><td class="m">Ch 1, Ch 2</td><td>Transformers are regular (layers, experts, heads), so each die is a symmetric array of one element with a real macro abstract, replicated to the count the budget requires. No undersized instance is called a design. Irregular operators (Sinkhorn/mHC, indexer, specialised attention) keep dedicated units where they beat general compute on latency.</td></tr>
+      <tr><td class="req">Fused dependent chains</td><td>A chain of small dependent vector operations runs as one streaming pipeline in the consumer's clock domain, never as a sequence of operations on a shared vector unit</td><td class="m">Ch 2</td><td>Once weights are free, a norm, mix or activation chain costs almost nothing in arithmetic but about 70 ns per dependent operation in overhead: a vector-memory round trip, a cross-lane reduction tree, wire stages to the far lanes and two clock-domain crossings. A fused pipeline pays one fill and runs at its cycle floor, with the golden's rounding and reduction order kept, so it stays bit-exact. Constant operands get constant units (a divider by a fixed vector length, not a general divider). Applied to both the ROM and the HBM accelerator, so the comparison stays matched (§8.5).</td></tr>
       <tr><td class="req">Established organisation for HBM comparators</td><td>HBM-weight comparators replicate a GPU organisation; only the ROM designs are novel</td><td class="m">Ch 1</td><td>HBM comparators use SM-like elements with Tensor-Core-style matrix units, register files and shared memory, L2 and shoreline HBM controllers. Another established organisation (e.g. a systolic array) is used only where it is shown better. ROM designs place compute beside the weight banks.</td></tr>
     </tbody>
   </table></div>
@@ -578,7 +579,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <thead><tr><th>Product</th><th>Model and design point</th><th>Organisation</th><th>Optimised for</th><th>State</th></tr></thead>
     <tbody>
       <tr><td><b>ROM package</b></td><td>Qwen3-8B, 8K context, FP8 KV</td><td>two 815 mm² dies in one package, every layer split across both over UCIe; 6,144 lane groups a die (196,608 lanes in the pair) with four lane copies (m = 5); INT8 weights in ROM beside each group; each user's KV in eight attached HBM3E stacks, four a die</td><td>per-user latency, energy</td><td><span class="status s-part">spec + budget; 5 blocks landed, bit-exact on the reduced vehicle; whole core pending</span></td></tr>
-      <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash, 200K and 1M context</td><td>188 reticle dies in 94 two-die packages; tensor group of 4 across a package pair; 28 layer groups; light-FEC package link; KV and index keys in four HBM3E stacks per layer die</td><td>per-user speed at flagship scale</td><td><span class="status s-part">spec + budget; blocks with benches; integration core in progress</span></td></tr>
+      <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash, 200K and 1M context</td><td>188 reticle dies in 94 two-die packages; tensor group of 4 across a package pair; 28 layer groups; full-FEC (RS(544,514)) package link, adopted 2026-10-06 (was light FEC); KV and index keys in four HBM3E stacks per layer die</td><td>per-user speed at flagship scale</td><td><span class="status s-part">spec + budget; blocks with benches; integration core in progress</span></td></tr>
       <tr style="background:var(--hbm-soft)"><td><b>HBM comparator</b></td><td>Qwen3-8B, V4.1</td><td>the same decode cores with weights and KV streamed from HBM: the same two-reticle package with eight stacks (Qwen3-8B); 99 logic dies of four stacks each at equal logic area (V4.1)</td><td>fair comparison of the memory technology</td><td><span class="status s-part">reduced vehicle only, no full-scale bandwidth or production rate: KV streamer bit-exact (results/rtl/hdc_kv_stream_campaign.json); scalar Qwen weight-HBM one-token gate (results/rtl/hdc_qwen_whbm_split_single.json) and 16-prompt / 3-generated gate (results/rtl/hdc_qwen_whbm_split_e2e.json); matched vector-core ROM/HBM weight gate on the G4/SW16 vehicle, 18 steps exact in both modes with zero logit, vector-memory, KV, physical-byte and weight-word mismatches over the same timed four-pseudo-channel KV-HBM path, 494,099 vs 521,782 summed core cycles (+5.60%, boot excluded, no HBM queue pressure; results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json, docs/QWEN_VECTOR_MATCHED_WEIGHT_GATE.md); secondary scalar matched gate, 30,127 vs 30,539 cycles for one token (results/rtl/hdc_qwen_matched_weight_single.json); Qwen vector core with ROM weights and KV on the timed four-pseudo-channel HBM controller, 18 exact steps from an empty cache (492,687 core cycles, 12% over the one-cycle KV model), no calibrated bandwidth (results/rtl/hdc_qwen_vector_system_timed_g4sw16.json); at 2,048 positions (reducer hierarchy at LV=7), one token exact at position 2047 (271 → 1509, 1,357,554 core cycles; results/rtl/hdc_qwen_context_2048.json); at 1,024 positions (LV=6), one token exact at position 1023 (271 → 1509, 687,598 core cycles; results/rtl/hdc_qwen_context_1024.json); at 512 positions (LV=5), one token exact at position 511 (271 → 1509, 321,363 core cycles; results/rtl/hdc_qwen_context_512.json); at 256 positions (LV=4), token 1561 exact at position 255 and at consecutive positions 254/255 with 16 cross-token V reads after write, both also exact under a tagged HBM queue-pressure episode (26 core stalls, core cycles unchanged; offered-load knee not measured; docs/QWEN_VECTOR_LONG_CONTEXT_STRESS.md, docs/QWEN_VECTOR_LONG_TWO_STRESS.md); larger contexts by provisioning a deeper reducer and larger VM/KV/CROM, 8K unproven</span></td></tr>
     </tbody>
   </table></div>
@@ -867,6 +868,9 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   Every figure in Table 6-11a is pending the regenerated model records and the slow-corner closures in progress (§8.3). The model prices the two-domain plan at +28% autoregressive over running everything at 1.2 GHz.</p>
   <p class="note"><b>Correction, 2026-10-03: model only, unqualified.</b> The two-domain rates in Table 6-11a (and 3,369.6 tok/s in <code>results/uarch/consolidation.json</code> <code>clock_domain_cases</code> b) depend on a 0.9 GHz serial-chain domain that does not exist in RTL. The only ratio FIFO, <code>ot_chip_v41_ratio_fifo</code>, fails setup in its two-clock route at the SS corner at 0.833 ns by −75.6 ps with 64 violating paths (<code>results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_ratio_fifo_2clk/physical.json</code>). The PAR2 row split prices at −8.4% AR at 1M (branch <code>claude/dsrom-par2-boundary-20261003</code> @ <code>aafbe3a75</code>) as a model sensitivity. The selected S58/PAR2 mapping remains unchanged; alternatives remain proposals. MTP uses τ 3.649 measured on a mixed set; a pilot agentic median is 4.69 (multi-turn agents alone 3.92), and τ 3.78 is a third-party verify window, so MTP acceptance is not yet qualified (<code>results/speculative/v41_mtp_acceptance_pilot_20261003/mtp_acceptance.json</code>).</p>
   <h3 id="s6-9">6.9 Multi-die fabric and packaging</h3>
+  <p class="note"><b>Adopted link baseline (owner, 2026-10-06): full FEC on every off-package link.</b> Every link that leaves a package (the board link inside a tray, the in-rack cable and the rack-to-rack cable) runs full RS(544,514) KP4 FEC, for the DeepSeek-V4.1 ROM array and the HBM accelerator alike. This is the adopted conservative baseline: it needs no light-FEC qualification argument on any channel. In-package UCIe links keep their own specification. Each off-package hop is priced at the 209 ns full-KP4 hop (technology.json <code>rom_board_serdes</code>/<code>rom_rack_cable_serdes</code>) plus its cable flight beyond the 0.3 m inside that budget. The DS ROM stage hop, token return and TP4 collectives are re-measured in RTL on that channel (results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json): the stage hop goes from 0.7575 to 0.8367 µs, and every TP4 collective moves by +100 cycles. On the HBM accelerator, the SUE endpoint PHY on every switch crossing goes from 100 ns to the 198 ns full-KP4 channel. The S81 racks pack two stages a tray: 40 board hops, 39 tray-to-tray hops and one rack crossing, the minimum at two stages a tray (results/arch/dsrom_s81_rack_20261006/rack.json). Recomposed (results/arch/three_machine_compose/compose.json), the DS ROM goes from 1,737.9 to 1,673.8 tok/s AR (+22.05 µs) and from 5,071.1 to 4,900.4 tok/s MTP. The HBM accelerator (median wire) goes from 2,132.0 to 2,004.3 tok/s AR and from 4,116.3 to 3,998.1 tok/s MTP (+29.89 µs over 305 crossings). The 130 ns light-FEC figures below are kept as the superseded design history.</p>
+  <p class="note"><b>Field wire re-priced on the wired S81 die (2026-10-06).</b> The composition charged every ROM-field phase 80 wire cycles: 2 × 41 stages at 504 µm (the r7 floorplan) less the 2 broadcast stages inside the field vehicle. The wired r8 die (<code>tools/dsrom_s81_fulldie.py --gen r8</code>) instantiates every forwarded stage at ≤ 430.56 µm (SS, 1.2 GHz) and counts the round trip per frame: x trunk stations, entry meso FIFO, one station per slot, return root and trunk stations and the hub meso FIFO. The farthest frame takes 139 stages on the scan die and 140 on the 1-stack die (the r7 count was 92 at 430 µm); frames range from 31 to 140. The hub slabs are joined by direct wires, so the field return path also needs 1 + 8 + 1 forwarded stations (end block → gather → capture → VM, scan die). Each phase is now charged the maximum, over the regions that hold its rows, of the region's measured cycles plus its frame's wire: 124 to 147 cycles a phase instead of 80 (results/rtl/dsrom_field_reprice_r8_20261006/reprice.json). The SU out path through HC and the collective → VM bus add 0.8–3.3 ns and 2 cycles a node. Recomposed, the DS ROM goes from 1,798.5 to 1,687.9 tok/s AR (+36.4 µs) and from 5,184.4 to 4,922.6 tok/s MTP (τ 4.159); with every pending lever it is 2,219.8 / 6,141.6. The taller q-element frames shorten the round trip by 1 to 6 stages but add layer dies and stage hops: frame heights 177.12 / 192.24 / 209.52 µm need +16 / +59 / +112 layer dies (+4 / +15 / +28 stage hops at the full-FEC hop) and give 1,680.0 / 1,657.3 / 1,630.8 tok/s AR and 4,907.2 / 4,861.4 / 4,807.4 tok/s MTP (results/rtl/dsrom_field_reprice_r8_20261006/compose.json).</p>
+  <p class="note"><b>Default q-element in the headline (owner go, 2026-10-06).</b> The S81 die's FP8/FP4 pairs are the DS q-element, and its QX = 10 version closed at the 177.12 µm frame (Z20c: SS +3.54 ps, FF +0.61 ps, DRC 0, exact; results/rtl/dsrom_qz_20261004/Z20/Z20c/verdict.json). The headline ROM field is therefore the as-built field measured with that element on every FP8/FP4 pair (59 nodes bit-exact; results/rtl/dsrom_field_qelem_20261005/field_qelem_qx10.json), priced at its frame (11 slots, +16 layer dies, +4 stage hops; regions/asbuilt_qelem10.json.gz in the re-price record). The DS ROM headline moves from 1,687.9 to 1,675.0 tok/s AR and from 4,922.6 to 4,895.0 tok/s MTP (τ 4.159); with every pending lever it is 2,204.6 / 6,113.9 (results/arch/three_machine_compose/table.txt). The PQ spine with the q-element (levers/qelem_pq.json) stays pending until its routes close.</p>
   <p class="finding">Multi-die systems keep every die's weights local and move only activations, with deterministic collectives (§5.3). A tensor group of four dies spans a pair of shippable two-die packages; its fixed-order collectives return bit-identical results on every die; between tensor groups, a pipeline of layer groups passes one token's state. Link latency after the last partial sum, not bandwidth, is what remains on the critical path.</p>
   <h4>Qwen3-8B two-reticle package</h4>
   <figure class="fig">
@@ -883,7 +887,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <figcaption><b>Figure 6-3.</b> Top: the token's path through the layer groups, with the state each KV-source layer shares with the layers that read it (dashed). Bottom: one layer as it executes inside a tensor group — attention half, hyper-connection mix, MoE half — with the hardware unit that runs each step.</figcaption>
   </figure>
   <p class="finding"><b>Re-cut array (2026-09-30).</b> The adopted die of §6.4.2 re-cuts the array into <b>37 pipeline stages on 188 dies</b>. The organisation below is unchanged: four-die tensor groups across a package pair, fixed-order collectives, stage hops on the ring and head dies at the ring's close. The 28-stage layout, its 1.087 GHz clock and the rates in this subsection are the published design point, pending restatement. KV and index state stay in attached HBM (1M primary, 200K secondary).</p>
-  <p><b>Physical organisation.</b> The array is 188 reticle dies of 815 mm² in 94 two-die packages — the shipping, B200-class package on an interposer of about 3.3 reticles. A tensor group of four dies spans a pair of neighbouring packages: every matrix, including a quarter of every expert, is split four ways; each all-reduce is reduced inside each package over UCIe, exchanged once over the package link and broadcast inside the package. The 40 layers are packed onto the dies in order in 28 layer groups, so a token visits 28 pipeline stages, and the ring's closing link carries the next embedding row from the head group directly to stage 0. The four head dies each store a quarter of both the output head and token embedding, so the argmax winner reads the next embedding row locally.  Each layer die streams its KV and index keys from four HBM3E stacks — eight per two-die package. The Engram-table dies have no HBM; the four head dies carry four stacks each for the draft KV (results/arch/v41_lanes.json). The committed baseline adds two shippable levers to plain option (b): a <b>light-FEC package link</b> on the on-module channel between the two packages of a tensor group (a 112G PAM4 channel with a reduced-interleave FEC, 130 ns per hop, range 100–170, at unchanged bandwidth, instead of full RS(544,514) at 209 ns; the rack-cable stage hops keep full RS(544,514), because a light FEC is not qualified on CR-class copper, §8.9) and <b>overlapped reductions</b> (a collective's bytes stream behind its producer, so only the latency after the last partial stays on the path). Plain (b) appears only as the published graph the requirement starts from.</p>
+  <p><b>Physical organisation.</b> The array is 188 reticle dies of 815 mm² in 94 two-die packages — the shipping, B200-class package on an interposer of about 3.3 reticles. A tensor group of four dies spans a pair of neighbouring packages: every matrix, including a quarter of every expert, is split four ways; each all-reduce is reduced inside each package over UCIe, exchanged once over the package link and broadcast inside the package. The 40 layers are packed onto the dies in order in 28 layer groups, so a token visits 28 pipeline stages, and the ring's closing link carries the next embedding row from the head group directly to stage 0. The four head dies each store a quarter of both the output head and token embedding, so the argmax winner reads the next embedding row locally.  Each layer die streams its KV and index keys from four HBM3E stacks — eight per two-die package. The Engram-table dies have no HBM; the four head dies carry four stacks each for the draft KV (results/arch/v41_lanes.json). The baseline of 2026-09-27 added two shippable levers to plain option (b). The first, the light-FEC package link, is superseded: since 2026-10-06 the adopted conservative baseline charges full RS(544,514) on every off-package link (note above). The levers were a <b>light-FEC package link</b> on the on-module channel between the two packages of a tensor group (a 112G PAM4 channel with a reduced-interleave FEC, 130 ns per hop, range 100–170, at unchanged bandwidth, instead of full RS(544,514) at 209 ns; the rack-cable stage hops keep full RS(544,514), because a light FEC is not qualified on CR-class copper, §8.9) and <b>overlapped reductions</b> (a collective's bytes stream behind its producer, so only the latency after the last partial stays on the path). Plain (b) appears only as the published graph the requirement starts from.</p>
   <p>The proposed compressed-KV HBM map stripes groups of sixteen rows across the four tensor dies and their four stacks, with separate main and index regions and per-layer window rings. The executable contract is in <code>runtime/prefill/v41_hbm_placement.py</code>. Placement profile v2 (commit 81c18201, <code>docs/V41_HBM_KV_PLACEMENT.md</code>) uses the ingest engine’s lossless 68-byte index-key super-blocks rather than 96-byte padded linear rows. At 1M context its all-layer, owner-only envelope reserves 754,974,720 bytes for main rows, 178,257,920 for index keys and 11,141,120 for window rings: <b>944,373,760 bytes</b> across 16 die/stack pairs. In the 28-stage placement the busiest owner stage reserves <b>93,462,528 bytes per die per user</b>; its busiest stack reserves 655,212,544 bytes at the 28-user fill. The rack’s separate replicate-on-write model already uses 288 + 68 = 356 bytes per compressed row (commit 0facdc17, <code>results/arch/v41_rack.json</code>), so its 7.84 GB per-user replicated allocation and 963-user HBM capacity do not change with this address-map correction. This is an OpenTallas address map; vendor cache conversion, hardware descriptors, physical HBM bases, and the cross-die attention schedule remain open.</p>
   <figure class="fig">
     <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 660" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout on two-die packages"></svg></div>
@@ -954,7 +958,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr class="rej"><td class="m">(c)</td><td>4 dies + HBM; tensor group 4 in one package</td><td>beyond the 5.5-reticle class in production</td><td class="r m">future</td><td class="r m">—</td><td class="r m">—</td></tr>
     </tbody>
   </table></div>
-  <p><b>Why the baseline is (b) with two levers.</b> Only (a) and (b) use packaging in volume production; (b) splits every matrix four ways and wins per user, (a) splits two ways and wins aggregate throughput. The two levers are the ones with a published basis for shipping today. A plain 112G PHY costs about 20 ns of transmit and receive against more than 100 ns for KP4 FEC [<a href="#r-dassharma">UCIe PHY</a>, <a href="#r-ieee3df">IEEE 802.3df</a>], and the OIF CEI-112G agreements and UALink 1.0 allow lighter, lower-latency FEC [<a href="#r-oif112">OIF CEI-112G</a>, <a href="#r-ualink">UALink</a>]; no 112G board-reach standard runs without FEC, so a no-FEC hop is not claimed. The validation of §8.9 qualifies the light FEC only on the ~120 mm on-module trace: on the rack's ≤0.8 m copper cables the low-latency FEC's raw bit-error requirement is not met under DFE burst errors and IEEE 802.3ck mandates RS(544,514) for CR1, so every stage hop runs full KP4 at 209 ns [<a href="#r-llfec">LL-FEC</a>, <a href="#r-gustlin3ck">802.3ck</a>]. Overlapping a collective with its producer is established on GPUs [<a href="#r-flux">FLUX</a>, <a href="#r-t3">T3</a>], but in decode every collective feeds a matrix product that needs the whole reduced vector, so only the serialisation overlaps and the latency after the last partial stays on the path. In the budget model the light-FEC link is worth +9.8% per user at 200K without MTP and +9.2% with it (5,418 / 4,933 and 14,937 / 13,674), and it cuts collective latency on the critical path from 40.3 to 26.4 µs per token. Pairing the two packages as one substrate module would be worth +21%, but four reticle dies and 16 HBM stacks exceed the current two-die package design, above the 5.5-reticle CoWoS in production [<a href="#r-tsmc26">TSMC 2026</a>], and the one four-die product announced was reportedly cut back [<a href="#r-rubinultra">Rubin Ultra</a>]; it and option (c) are roadmap, discussed in §10.3.</p>
+  <p><b>Why the baseline is (b) with two levers.</b> Only (a) and (b) use packaging in volume production; (b) splits every matrix four ways and wins per user, (a) splits two ways and wins aggregate throughput. The two levers are the ones with a published basis for shipping today. A plain 112G PHY costs about 20 ns of transmit and receive against more than 100 ns for KP4 FEC [<a href="#r-dassharma">UCIe PHY</a>, <a href="#r-ieee3df">IEEE 802.3df</a>], and the OIF CEI-112G agreements and UALink 1.0 allow lighter, lower-latency FEC [<a href="#r-oif112">OIF CEI-112G</a>, <a href="#r-ualink">UALink</a>]; no 112G board-reach standard runs without FEC, so a no-FEC hop is not claimed. (Superseded 2026-10-06: the adopted baseline drops the light FEC everywhere and charges full RS(544,514) on every off-package link; the paragraph is kept as history.) The validation of §8.9 qualifies the light FEC only on the ~120 mm on-module trace: on the rack's ≤0.8 m copper cables the low-latency FEC's raw bit-error requirement is not met under DFE burst errors and IEEE 802.3ck mandates RS(544,514) for CR1, so every stage hop runs full KP4 at 209 ns [<a href="#r-llfec">LL-FEC</a>, <a href="#r-gustlin3ck">802.3ck</a>]. Overlapping a collective with its producer is established on GPUs [<a href="#r-flux">FLUX</a>, <a href="#r-t3">T3</a>], but in decode every collective feeds a matrix product that needs the whole reduced vector, so only the serialisation overlaps and the latency after the last partial stays on the path. In the budget model the light-FEC link is worth +9.8% per user at 200K without MTP and +9.2% with it (5,418 / 4,933 and 14,937 / 13,674), and it cuts collective latency on the critical path from 40.3 to 26.4 µs per token. Pairing the two packages as one substrate module would be worth +21%, but four reticle dies and 16 HBM stacks exceed the current two-die package design, above the 5.5-reticle CoWoS in production [<a href="#r-tsmc26">TSMC 2026</a>], and the one four-die product announced was reportedly cut back [<a href="#r-rubinultra">Rubin Ultra</a>]; it and option (c) are roadmap, discussed in §10.3.</p>
   <p class="note">The link's analog channel in the RTL is a delay parameter (<code>CHANNEL_CYCLES</code>); it is set to the package-link latency of the configuration under test.</p>
 <!-- V41_RACK_FIGURES_BEGIN -->
 <h4>Proposed one-rack physical layout</h4>
@@ -972,7 +976,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
 <p><b>Power and provisioning.</b> Because the schedule is fixed, its saturated form is the worst case, and the rack can be provisioned against it directly. At the rack input the design draws 21.5 kW at batch 1, 29.8 kW at the 28-user fill and 32.9 kW at the fill with MTP (33.3 kW saturated with MTP, where the busiest pipeline stage bounds the rate); the worst case is 33.3 kW, and the rack is provisioned at 1.2× that, 39.9 kW, on six 33 kW ORv3 power shelves in a 2N arrangement, in 34 of 44 OU. The rack's sum is the array average, but each die is checked at the hottest die's power against the liquid limit, the V4.1 baseline cooling: with the adopted stage rebalancing (layer 20's index scan split over S12–S14, and the shorter full scans of layers 2, 8 and 14 over the stage upstream in MTP verify passes) the hottest die draws 397 W of chip power saturated in the rack model (556 W provisioned at the wall) and at most 471 W in the power scenarios' worst point, within the 474.6 W a liquid-cooled two-die package allows at every operating point, over the 374.6 W of an air-cooled one; a stage tray dissipates 3.71 kW in 1 OU, so the stage packages are on cold plates. These are production values (configs/hardware/technology.json); on our measured MAC lane the power scenarios cap the design point at 1,211 tokens/s per user with liquid and 839 with air (§8.8). A GB200 NVL72 is provisioned at 132 kW [<a href="#r-smc-nvl72">SMC NVL72</a>]; provisioned against provisioned, the ROM rack needs 30% of it. Per token at batch 1 the ROM chips spend 2.15 J; at the wall with the off-path switch, 2.85 J; at the rack input, adding host, management and the physical switch, 3.04 J (results/arch/v41_rack.json <code>power</code>). The ROM:HBM energy ratios are taken from the power scenarios instead (§8.8), which price both machines on one model.</p>
 <figure class="fig" id="fig-rack-links">
   <div class="svgbox"><svg viewBox="0 0 1000 400" role="img" aria-label="Link tiers: reach, latency, bandwidth" xmlns="http://www.w3.org/2000/svg"><defs><marker id="lka" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker><marker id="lkr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--rom)"/></marker><marker id="lkh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--hbm)"/></marker><marker id="lkk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker></defs><text x="10.0" y="22.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="start" style="fill:var(--ink)" >Link tiers: physical length (dot) against reach limit (bar end)</text><line x1="250.0" y1="56.0" x2="250.0" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="250.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >1 mm</text><line x1="311.7" y1="56.0" x2="311.7" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="311.7" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >1 cm</text><line x1="373.3" y1="56.0" x2="373.3" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="373.3" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >10 cm</text><line x1="435.0" y1="56.0" x2="435.0" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="435.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >1 m</text><line x1="496.7" y1="56.0" x2="496.7" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="496.7" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >10 m</text><line x1="558.3" y1="56.0" x2="558.3" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="558.3" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >100 m</text><line x1="620.0" y1="56.0" x2="620.0" y2="364.0" style="stroke:var(--grid);stroke-width:1"/><text x="620.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="middle" style="fill:var(--faint)" >1 km</text><text x="650.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >latency / hop</text><text x="760.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >per link, per dir</text><text x="880.0" y="50.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >per token, b1</text><text x="10.0" y="72.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--rom)" >T0</text><text x="40.0" y="72.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10.5" font-weight="600" text-anchor="start" style="fill:var(--ink)" >in-package UCIe</text><text x="10.0" y="88.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--muted)" >1 die-to-die link</text><text x="10.0" y="101.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >length ~1 mm die edge to die edge</text><rect x="250.0" y="64.0" width="18.6" height="12.0" rx="2" style="fill:var(--rom-soft);stroke:var(--rom);stroke-width:0.8" /><text x="254.0" y="90.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >UCIe advanced, &lt;= 2 mm</text><circle cx="250.0" cy="70" r="4.5" style="fill:var(--ink)"/><text x="650.0" y="74.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >10 ns</text><text x="760.0" y="74.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >4.2 TB/s</text><text x="880.0" y="74.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >32.6 MB</text><text x="880.0" y="88.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >2.6% busy, fill+MTP</text><text x="10.0" y="134.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--rom)" >T1</text><text x="40.0" y="134.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10.5" font-weight="600" text-anchor="start" style="fill:var(--ink)" >on-module PCB trace</text><text x="10.0" y="150.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--muted)" >4 die-pair links x 13 lanes = 52</text><text x="10.0" y="163.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >length ~120 mm</text><rect x="250.0" y="126.0" width="166.4" height="12.0" rx="2" style="fill:var(--rom-soft);stroke:var(--rom);stroke-width:0.8" /><text x="254.0" y="152.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >VSR/MR trace, 100-500 mm</text><circle cx="378.2" cy="132" r="4.5" style="fill:var(--ink)"/><text x="650.0" y="136.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >129 ns</text><text x="650.0" y="150.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >130 ns light FEC + trace</text><text x="760.0" y="136.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >171 GB/s</text><text x="880.0" y="136.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >15.8 MB</text><text x="880.0" y="150.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >25.5% busy, fill+MTP</text><text x="10.0" y="196.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--rom)" >T2</text><text x="40.0" y="196.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10.5" font-weight="600" text-anchor="start" style="fill:var(--ink)" >in-rack copper</text><text x="10.0" y="212.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--muted)" >14 out + 14 in</text><text x="10.0" y="225.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >length 0.25-0.80 m</text><rect x="250.0" y="188.0" width="203.6" height="12.0" rx="2" style="fill:var(--rom-soft);stroke:var(--rom);stroke-width:0.8" /><rect x="453.6" y="188.0" width="33.6" height="12.0" rx="2" style="fill:none;stroke:var(--rom);stroke-width:0.8" stroke-dasharray="3 2" /><text x="491.1" y="198.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >AEC</text><text x="254.0" y="214.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >passive DAC &lt;= 2 m (AEC 7 m)</text><circle cx="429.0" cy="194" r="4.5" style="fill:var(--ink)"/><text x="650.0" y="198.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >213 ns</text><text x="650.0" y="212.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >209 ns full KP4 + flight</text><text x="760.0" y="198.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >369 GB/s</text><text x="880.0" y="198.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >1.1 MB</text><text x="880.0" y="212.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >6.9% busy, fill+MTP</text><text x="10.0" y="258.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--rom)" >T3</text><text x="40.0" y="258.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10.5" font-weight="600" text-anchor="start" style="fill:var(--ink)" >switched copper</text><text x="10.0" y="274.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--muted)" >4 lanes (layer/head), 2 (table)</text><text x="10.0" y="287.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >length 0.80-1.57 m</text><rect x="250.0" y="250.0" width="203.6" height="12.0" rx="2" style="fill:var(--rom-soft);stroke:var(--rom);stroke-width:0.8" /><text x="254.0" y="276.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >passive DAC to switch</text><circle cx="447.0" cy="256" r="4.5" style="fill:var(--ink)"/><text x="650.0" y="260.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >682 ns</text><text x="650.0" y="274.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >2 ports + switch</text><text x="760.0" y="260.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >53 GB/s</text><text x="880.0" y="260.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >13.9 KB</text><text x="880.0" y="274.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >8.4% busy, fill+MTP</text><text x="10.0" y="320.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--rom)" >T4</text><text x="40.0" y="320.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10.5" font-weight="600" text-anchor="start" style="fill:var(--ink)" >out-of-rack optics</text><text x="10.0" y="336.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--muted)" >via the switch</text><text x="10.0" y="349.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="400" text-anchor="start" style="fill:var(--faint)" >length to the GPU prefill pod</text><rect x="250.0" y="312.0" width="388.6" height="12.0" rx="2" style="fill:var(--rom-soft);stroke:var(--rom);stroke-width:0.8" /><text x="254.0" y="338.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >optics, 100 m - 2 km</text><circle cx="558.3" cy="318" r="4.5" style="fill:var(--ink)"/><text x="650.0" y="322.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >ms-scale bulk</text><text x="760.0" y="322.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >100 GB/s</text><text x="880.0" y="322.0" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" font-weight="600" text-anchor="start" style="fill:var(--ink)" >933.2 MB/user</text><text x="880.0" y="336.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="8.5" font-weight="400" text-anchor="start" style="fill:var(--muted)" >9.3 ms per 1M user</text><text x="10.0" y="382.0" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10" font-weight="400" text-anchor="start" style="fill:var(--ink)" >Every stage hop, TP link and switch cable is within passive-copper reach: no retimer or AEC. The ring&#x27;s worst hop is 212.7 ns on full KP4 (validated 209 ns, band 160-300).</text></svg></div>
-  <figcaption><b>Figure 6-8.</b> <b>Five link tiers.</b> Latency is the hardware floor per hop, on values validated against normative specs and production datasheets. The on-module trace (T1) keeps the 130 ns light-FEC link (an OIF CEI-112G-MR channel), re-based to its ~120 mm of trace at 6.7 ns/m. The ring cables (T2) run full RS(544,514) KP4, 209 ns, because a light FEC is not qualified on CR-class copper; their flight (4.6 ns/m) is added on top. The switched tier pays two full-KP4 Ethernet ports and 250 ns of switch. Bandwidth is per link and direction on the lane allocation TP 52 / stage 14 + 14 / switch 4 / spare 6 of the package's 90 lanes (R-L9, results/arch/v41_lanes.json). Reach classes: UCIe (Hot Chips 2023 tutorial), OIF CEI-112G, IEEE 802.3ck, Credo AEC.</figcaption>
+  <figcaption><b>Figure 6-8.</b> <b>Five link tiers.</b> Latency is the hardware floor per hop, on values validated against normative specs and production datasheets. As adopted on 2026-10-06, every tier that leaves the package runs full RS(544,514) at 209 ns plus flight. The figure shows the earlier design point: the on-module trace (T1) keeps the 130 ns light-FEC link (an OIF CEI-112G-MR channel), re-based to its ~120 mm of trace at 6.7 ns/m. The ring cables (T2) run full RS(544,514) KP4, 209 ns, because a light FEC is not qualified on CR-class copper; their flight (4.6 ns/m) is added on top. The switched tier pays two full-KP4 Ethernet ports and 250 ns of switch. Bandwidth is per link and direction on the lane allocation TP 52 / stage 14 + 14 / switch 4 / spare 6 of the package's 90 lanes (R-L9, results/arch/v41_lanes.json). Reach classes: UCIe (Hot Chips 2023 tutorial), OIF CEI-112G, IEEE 802.3ck, Credo AEC.</figcaption>
 </figure>
 
 <figure class="fig" id="fig-rack-compare">
@@ -1033,6 +1037,582 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   </div>
   <p>The reduced Qwen3 gates run the same decode core with weights and KV in HBM: <code>ot_hdc_kv_stream</code> prefetches KV so the engine never stalls, and the reduced Qwen3 token stays bit-exact (<code>results/rtl/hdc_kv_stream_campaign.json</code>); the per-pseudo-channel weight streamer (<code>rtl/hdc/hbm/ot_hdc_wstream.sv</code>) passes a one-token and a 16-prompt / 3-generated reduced gate from an empty cache and the matched vector-core ROM/HBM weight gate (§8.2, §8.4); these are reduced-vehicle results, not full-scale bandwidth. For V4.1 the HBM-only comparator is a model: the 99-die comparator below has no die or array RTL yet. The existing V4.1x array bench with W_HBM = 1 fetches only the QE weights from HBM; its ME, expert and head weights still come from ROM, so it is not a comparator run. The best V4.1 comparator carries the ROM die's block specification on every die and spans a 96-die tensor group in one NVL72-class switched domain, a single pipeline stage; its extra logic area is headroom that the MTP lane multiplier uses (m = 6). At 1M its 279 µs token is 126 µs of collective latency, 112 µs of compute chain and 37 µs of weight sweep.</p>
   <div class="callout hbm">The comparator gets the same hardwired dataflow and the same specification discipline, so the measured difference is the memory technology, not the control path.</div>
+  <h4 id="s6-10-die">6.10.1 HBM accelerator die floorplan (DeepSeek-V4.1 organisation)</h4>
+  <p class="finding"><b>Finding: floorplanning the HBM accelerator die priced its on-die wire for the first time. On a clean global route, the wire adds 8.0–12.3% to its DeepSeek-V4.1 1M token (round 16g; round 14b, before the die-top interface fixes and the measured attention tiles, put it at 5.5–9.1%).</b> The ROM compositions already charge every registered wire stage on their floorplans (504 µm per stage at the SS corner, §6.9). The HBM accelerator's matched reference did not, so the ROM-versus-HBM comparison was unbalanced in the HBM accelerator's favour until this floorplan existed.</p>
+  <p>The die is 24,402 × 24,622 µm (600.8 mm², 406.9 mm² of blocks), within the 858 mm² reticle. Each long edge carries two HBM3E PHY macros (four stacks). Each PHY has its stream service (32 pseudo-channels) and then that stack's group of eight SM elements (four columns × two rows); there are 32 SMs in all. The west groups are mirrored, so every group's activation face looks at the spine. A 12.1 mm hub band between the north and south groups holds the SU, SFU and HC split into four quarters, one per stack; the four copies of each shared block are mirror images, so each copy's pins face the spine. Beside each quarter sits a per-stack quadrant of 16 attention tiles and a quarter of the index path. Each tile now takes the measured outline of its 16 m6h1 head macros, 1,349 × 1,350 µm (the 0.5 mm² estimate of earlier rounds did not fit them); this is why the hub band grew from 7.2 mm and the die from 481.3 mm². A centre spine holds the collective endpoint, the command processor with pipelined issue, the activation-multicast root, the barrier root, the router with expert workgroup, the quantisers and the loader. The nine SerDes macros sit at the centre of the north and south edges; moving them there from the east and west edges cut the endpoint-to-farthest-macro path from 56 to about 22 stages in round 14b. The SM area (4.566 mm²), the SU lane array and the attention-tile outline are measured. SFU, HC and the index path come from the model ledger. TU endpoint, command processor, VM and stream service are labelled estimates in the record.</p>
+  <p><b>Round 16: the die-top interface fixes.</b> A die-top lint, which elaborated the generated die top against the blocks' RTL (results/rtl/die_top_lint_20261006), found defects in the floorplan generator. <b>Round 14b, and every round before it, was routed and priced with the 16 south SMs mirrored</b>: an orientation test compared a boolean with <code>None</code>, so each south SM's weight-line and request face looked away from its stream service and its control face away from the hub. The generator also clocked only 4 of the 32 SMs and none of the attention tiles, left the SM's 58-bit bulk-copy descriptor without a net, gave the SerDes 4,131 receive bits where the TU endpoint needs 4,376 and the host link no receive pins, and did not match the TU-endpoint and attention-tile port lists to their RTL. The forwarded-link stations and mesochronous FIFOs were not represented. Round 16 fixes all of these in the generator. It also adds the clocks and resets per domain, the forwarded clocks inside every chained segment, and 204 W512 meso-FIFO slices, and it shares the 299 stations among 33 masters. The re-run lint finds no generator-side defect, and the die top elaborates without errors. Re-routing round 14b with only the orientation corrected moves the priced wire by +0.4 / −0.2 / 0 µs (bound / median / floor). The interface fixes add +7.6 µs at the bound on the round-14b geometry: a newly priced query path from the VM to the tiles, and meso crossings at the SerDes. The measured tiles add a further +7.6 µs, through the taller hub band (results/rtl/hbm_accel_die_floorplan_20261005/attribution_r16.json).</p>
+  <figure>
+    <div class="svgbox"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HBM accelerator die floorplan, round 16g" viewBox="0 0 732.0 738.7">
+<rect width="732.0" height="738.7" fill="#fff" stroke="#000"/>
+<rect x="11.0" y="550.8" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.1" y="694.7" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="391.9" y="550.8" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="416.1" y="694.7" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="11.0" y="47.9" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.1" y="36.2" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="391.9" y="47.9" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="416.1" y="36.2" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="11.0" y="187.9" width="684.2" height="362.9" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="232.7" y="198.2" width="240.8" height="342.2" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="18.3" y="374.5" width="204.1" height="165.9" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="483.8" y="374.5" width="204.1" height="165.9" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="18.3" y="198.2" width="204.1" height="165.9" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="483.8" y="198.2" width="204.1" height="165.9" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="316.1" y="559.5" width="73.9" height="178.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="316.1" y="0.6" width="73.9" height="178.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="705.5" y="0.6" width="25.9" height="737.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.08" y="702.69" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="707.5" font-size="4">phy_SW</text>
+<rect x="35.08" y="694.66" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="699.5" font-size="4">svc_SW</text>
+<rect x="18.75" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<text x="19.7" y="633.4" font-size="4">sm0</text>
+<rect x="92.61" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="18.75" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="416.05" y="702.69" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="707.5" font-size="4">phy_SE</text>
+<rect x="416.05" y="694.66" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="699.5" font-size="4">svc_SE</text>
+<rect x="399.73" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="628.56" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="399.73" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="550.80" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="35.08" y="0.65" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="5.4" font-size="4">phy_NW</text>
+<rect x="35.08" y="36.22" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="41.0" font-size="4">svc_NW</text>
+<rect x="18.75" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="18.75" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="416.05" y="0.65" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="5.4" font-size="4">phy_NE</text>
+<rect x="416.05" y="36.22" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="41.0" font-size="4">svc_NE</text>
+<rect x="399.73" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="399.73" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="117.87" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="332.07" y="348.30" width="41.99" height="42.12" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="353.1" font-size="4">hb_coll</text>
+<rect x="332.07" y="468.31" width="41.99" height="7.13" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="473.1" font-size="4">hb_loader</text>
+<rect x="332.07" y="451.59" width="41.99" height="4.02" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="456.4" font-size="4">hb_router</text>
+<rect x="332.07" y="396.77" width="41.99" height="42.12" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="401.6" font-size="4">hb_cmdproc</text>
+<rect x="332.07" y="284.99" width="41.99" height="60.00" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="289.8" font-size="4">hb_vm</text>
+<rect x="332.07" y="277.41" width="41.99" height="1.10" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="282.2" font-size="4">hb_barrier</text>
+<rect x="332.07" y="260.11" width="41.99" height="10.76" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="333.0" y="264.9" font-size="4">hb_quant</text>
+<rect x="273.65" y="374.54" width="21.10" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="274.6" y="379.3" font-size="4">hb_su_SW</text>
+<rect x="411.39" y="374.54" width="21.10" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="412.3" y="379.3" font-size="4">hb_su_SE</text>
+<rect x="273.65" y="198.22" width="21.10" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="274.6" y="203.0" font-size="4">hb_su_NW</text>
+<rect x="411.39" y="198.22" width="21.10" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="412.3" y="203.0" font-size="4">hb_su_NE</text>
+<rect x="251.32" y="374.54" width="11.96" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="252.2" y="379.3" font-size="4">hb_sfu_SW</text>
+<rect x="442.86" y="374.54" width="11.96" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="443.8" y="379.3" font-size="4">hb_sfu_SE</text>
+<rect x="251.32" y="198.22" width="11.96" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="252.2" y="203.0" font-size="4">hb_sfu_NW</text>
+<rect x="442.86" y="198.22" width="11.96" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="443.8" y="203.0" font-size="4">hb_sfu_NE</text>
+<rect x="232.68" y="374.54" width="8.27" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="233.6" y="379.3" font-size="4">hb_hc_SW</text>
+<rect x="465.19" y="374.54" width="8.27" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="466.1" y="379.3" font-size="4">hb_hc_SE</text>
+<rect x="232.68" y="198.22" width="8.27" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="233.6" y="203.0" font-size="4">hb_hc_NW</text>
+<rect x="465.19" y="198.22" width="8.27" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="466.1" y="203.0" font-size="4">hb_hc_NE</text>
+<rect x="194.41" y="374.54" width="27.90" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="195.3" y="379.3" font-size="4">hb_index_SW</text>
+<rect x="18.26" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="483.82" y="374.54" width="27.90" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="484.7" y="379.3" font-size="4">hb_index_SE</text>
+<rect x="522.09" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="499.93" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="458.14" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="416.34" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="374.54" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="194.41" y="198.22" width="27.90" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="195.3" y="203.0" font-size="4">hb_index_NW</text>
+<rect x="18.26" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="18.26" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="60.03" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="101.80" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="143.57" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="483.82" y="198.22" width="27.90" height="165.89" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="484.7" y="203.0" font-size="4">hb_index_NE</text>
+<rect x="522.09" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="323.61" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="281.82" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="240.02" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.09" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="563.86" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="605.63" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="647.40" y="198.22" width="40.47" height="40.50" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="316.13" y="628.30" width="73.87" height="109.71" fill="#fff7bc" stroke="#555" stroke-width="0.05"/>
+<rect x="315.52" y="559.50" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="330.54" y="559.50" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="345.57" y="559.50" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="360.59" y="559.50" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="375.61" y="559.50" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="316.13" y="0.65" width="73.87" height="109.71" fill="#fff7bc" stroke="#555" stroke-width="0.05"/>
+<rect x="323.04" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="338.06" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="353.08" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="368.10" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="705.53" y="344.54" width="7.82" height="49.57" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="713.62" y="116.96" width="17.83" height="504.73" fill="#fec44f" stroke="#555" stroke-width="0.05"/>
+<rect x="13.80" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="42.24" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="15.84" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="15.84" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.66" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="116.10" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.70" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.70" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.52" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="189.95" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.56" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.56" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.38" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="263.81" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="237.41" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="237.41" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="363.27" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="414.98" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="466.63" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="518.27" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.88" y="562.21" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.88" y="613.85" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="306.67" y="618.52" width="7.26" height="12.31" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="229.43" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="155.57" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="81.71" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="13.65" y="593.18" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.22" y="593.18" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.08" y="592.73" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.08" y="589.68" width="5.00" height="9.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.71" y="554.04" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="233.62" y="554.04" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.68" y="554.04" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="458.40" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="510.11" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="299.30" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="247.64" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="195.97" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="162.71" y="543.67" width="3.33" height="6.48" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.36" y="615.28" width="2.03" height="6.09" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="483.21" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="534.86" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="270.06" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="218.40" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="166.73" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="602.38" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="646.45" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.21" y="640.03" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.21" y="590.46" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="88.81" y="541.15" width="1.80" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="140.47" y="541.15" width="1.80" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="644.18" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="590.46" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="94.10" y="543.48" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="145.77" y="543.48" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="197.43" y="543.48" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="309.07" y="352.25" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="275.37" y="371.11" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="223.72" y="371.11" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="386.73" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="438.44" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="490.08" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.77" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="423.21" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="396.81" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="396.81" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.63" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="497.07" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.67" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.67" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.49" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="570.93" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.53" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.53" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="616.35" y="642.10" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="644.79" y="623.64" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="618.39" y="637.31" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="618.39" y="688.95" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="363.27" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="414.98" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="466.63" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="518.27" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.41" y="563.44" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.41" y="615.08" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="392.21" y="618.52" width="7.26" height="12.31" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="462.68" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="536.54" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.40" y="622.86" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.48" y="593.18" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="690.06" y="593.18" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.91" y="592.73" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="614.91" y="589.68" width="5.00" height="9.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="565.00" y="617.03" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.86" y="563.05" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.84" y="554.04" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="467.43" y="554.04" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="458.40" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="510.11" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="404.90" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="456.55" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="508.23" y="548.66" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="543.68" y="543.67" width="3.33" height="6.48" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.33" y="615.28" width="2.03" height="6.09" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="483.21" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="534.86" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="432.59" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="484.25" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="535.92" y="548.08" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="589.94" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="641.65" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.04" y="640.03" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.04" y="590.46" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.06" y="646.25" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.06" y="586.31" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="539.38" y="543.48" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="395.77" y="352.25" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="429.77" y="369.94" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="481.44" y="369.94" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="386.73" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="438.44" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="490.08" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="13.80" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="42.24" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="15.84" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="15.84" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.66" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="116.10" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.70" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.70" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.52" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="189.95" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.56" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.56" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.38" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="263.81" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="237.41" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="237.41" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="265.23" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="315.61" y="213.52" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.88" y="169.65" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.88" y="117.94" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="306.67" y="95.26" width="7.26" height="12.31" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="229.43" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="155.57" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="81.71" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="13.65" y="135.37" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.22" y="135.37" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.08" y="134.91" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.08" y="131.87" width="5.00" height="9.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="167.40" y="180.86" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="219.08" y="180.86" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="270.73" y="180.86" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="375.39" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="323.68" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="272.03" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="312.66" y="220.39" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="292.97" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="241.30" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="189.64" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="162.71" y="180.73" width="3.33" height="6.48" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.36" y="104.59" width="2.03" height="6.09" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="420.49" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="368.84" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="317.20" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="265.49" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="311.45" y="213.84" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="283.60" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="231.95" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="180.27" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="153.97" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="98.43" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="50.61" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.21" y="92.73" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.21" y="146.45" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="88.81" y="195.57" width="1.80" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="140.47" y="195.57" width="1.80" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="92.73" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="146.45" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="94.10" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="145.77" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="197.43" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="309.07" y="334.24" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="289.79" y="367.48" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="238.11" y="367.48" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="365.34" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="313.70" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="188.58" y="262.05" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.77" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="423.21" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="396.81" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="396.81" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.63" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="497.07" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.67" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.67" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.49" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="570.93" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.53" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.53" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="616.35" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="644.79" y="112.95" width="11.95" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="618.39" y="97.14" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="618.39" y="45.49" width="0.44" height="4.28" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="265.23" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="386.88" y="213.52" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.41" y="168.42" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.41" y="116.77" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="392.21" y="120.40" width="7.26" height="12.31" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="462.68" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="536.54" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.40" y="112.17" width="14.01" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.48" y="135.37" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="690.06" y="135.37" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.91" y="134.91" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="614.91" y="131.87" width="5.00" height="9.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="565.00" y="110.23" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.86" y="166.54" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="507.79" y="180.86" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="456.11" y="180.86" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="375.39" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="323.68" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="272.03" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="391.79" y="220.39" width="1.67" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="411.22" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="462.89" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="514.55" y="188.37" width="1.93" height="1.68" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="543.68" y="180.73" width="3.33" height="6.48" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.33" y="104.59" width="2.03" height="6.09" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="420.49" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="368.84" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="317.20" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="265.49" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.10" y="213.84" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="419.05" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="470.71" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="522.38" y="190.06" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="158.76" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="99.40" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="55.40" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.04" y="92.73" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.04" y="146.45" width="2.01" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.06" y="92.73" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.06" y="146.45" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="539.37" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="395.77" y="334.24" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="415.37" y="366.32" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="467.04" y="366.32" width="2.18" height="1.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="362.95" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="311.30" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="516.26" y="259.65" width="1.28" height="2.20" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="431.89" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="483.60" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="535.25" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="325.83" y="582.68" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="422.50" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="474.21" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="525.85" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="340.85" y="559.42" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="321.15" y="413.10" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="321.15" y="464.75" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="321.15" y="516.46" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="343.49" y="545.81" width="1.81" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="355.87" y="583.14" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="414.20" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="465.91" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="517.56" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="370.89" y="562.14" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="404.81" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="456.52" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="508.16" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="385.91" y="551.58" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="331.52" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="279.87" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="328.16" y="228.23" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="333.34" y="179.82" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="329.12" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="277.47" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="324.66" y="225.83" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="343.88" y="193.30" width="1.81" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="348.36" y="144.25" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="319.72" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="268.08" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="376.06" y="216.43" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="363.39" y="175.48" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="317.33" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="265.68" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.56" y="214.04" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="378.41" y="161.61" width="1.90" height="5.70" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.47" y="516.39" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="404.30" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="455.97" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="507.64" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="559.30" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.97" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="662.64" y="543.28" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="527.67" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="476.02" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="424.31" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="369.56" width="1.18" height="8.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+</svg></div>
+    <figcaption><b>Figure 6-11a.</b> HBM accelerator die, round 16g: 600.8 mm², measured attention tiles in the four scan quadrants of the 12.1 mm hub band (results/rtl/hbm_accel_die_floorplan_20261005/floorplan.svg; round 14b in floorplan_r14b.svg).</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17a. HBM accelerator die: physical checks, round 16g, OpenROAD (results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json). The record keeps every round, including failures: round 1 failed IR at 41.45 mV, round 4 worsened congestion and was reverted, round 8 ended at 128 overflows, and round 16b (measured tiles without the spine changes) ended at 121</caption>
+    <thead><tr><th>Check</th><th>Result</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Legality</td><td class="m">439 instances, 0 overlaps, 0 outside the die</td><td>pass</td></tr>
+      <tr><td>On-track pins</td><td class="m">0 of 1,703,027 off track</td><td>pass</td></tr>
+      <tr><td>Pin access</td><td>every pin has an access point; every net end has a pin (128 had none in round 8)</td><td>pass</td></tr>
+      <tr><td>Global route, 5 / 50 iterations</td><td class="m">overflow 10 / 0 (round 14b: 33 / 0; round 8: 218 / 128); no 4×4 window over capacity</td><td>pass</td></tr>
+      <tr><td>Static IR drop, 121 windows</td><td class="m">worst 33.26 mV over the 100 loaded windows (budget 35 mV; round 14b 25.41 mV)</td><td>pass</td></tr>
+      <tr><td>Die-top lint</td><td>no generator-side finding; every SM, tile, link macro and meso station clocked; elaborates without errors</td><td>pass</td></tr>
+      <tr><td>Power grid, clocks</td><td>M8/M9 strap coverage 0.0878 over compute and hub, 0.1639 over stream services; one clock and one reset net per domain, clock regions ≤5 mm with FIFO crossings; 396 W peak in-phase load</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17b. On-die wire stages priced into the HBM accelerator's compositions at 1.2 GHz. Stages per path are Σ ceil(routed length ÷ 430.56 µm), plus a 2-cycle crossing between hub and SM groups (from round 16 also at the SerDes ends and the row-1 weight lines, and on the new query path to the tiles). They are bounds from routed length, not timing sign-off. The floor uses straight-line distance; the bound uses the longest routed bundle (results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json). DeepSeek is the matched reference (results/rtl/dshbm_matched_reference_20261005/composition.json); Qwen applies this die's collective and stream-service distances only (its own tile die is floorplanned separately). MTP uses the gate's τ 4.159.</caption>
+    <thead><tr><th>Basis</th><th class="r">Added to DS AR token</th><th class="r">DS AR</th><th class="r">DS MTP (tok/s)</th><th class="r">Qwen TP4 / TP2 AR (tok/s)</th></tr></thead>
+    <tbody>
+      <tr><td>Unpriced (previous matched reference)</td><td class="r m">—</td><td class="r m">474.8 µs</td><td class="r m">3,958.5</td><td class="r m">2,154.2 / 1,032.8</td></tr>
+      <tr><td>Floor: straight-line distance</td><td class="r m">+37.9 µs (+8.0%)</td><td class="r m">512.7 µs</td><td class="r m">3,820.7</td><td class="r m">2,136.6 / 1,028.7</td></tr>
+      <tr><td>Median routed bundle</td><td class="r m">+51.0 µs</td><td class="r m">525.8 µs</td><td class="r m">3,775.3</td><td class="r m">2,132.3 / 1,027.7</td></tr>
+      <tr class="sel"><td>Bound: longest routed bundle</td><td class="r m">+58.3 µs (+12.3%)</td><td class="r m">533.1 µs</td><td class="r m">3,750.5</td><td class="r m">2,129.3 / 1,027.0</td></tr>
+      <tr><td>Round 14b bound (south SMs mirrored, 0.5 mm² tile slots), for comparison</td><td class="r m">+43.1 µs (+9.1%)</td><td class="r m">517.9 µs</td><td class="r m">3,802.5</td><td class="r m">2,136.0 / 1,028.6</td></tr>
+      <tr><td>Round 8 bound (128 overflows), for comparison</td><td class="r m">+102.4 µs (+21.6%)</td><td class="r m">577.2 µs</td><td class="r m">3,606.9</td><td class="r m">2,108.9 / 1,022.3</td></tr>
+    </tbody>
+  </table></div>
+  <p>The first route (round 8) left 128 overflows and priced the wire at +30.6 to +102.4 µs. Three defects in that floorplan, not the router, caused most of the gap:</p>
+  <ul>
+    <li>the north SM groups abutted the hub band, and every overflow lay on that boundary;</li>
+    <li>shared hub blocks took every pin from their south-west copy, so 128 net ends had no pin;</li>
+    <li>the east-side quarters faced away from the spine, which made the north-east SU-to-endpoint link route 53 stages against 4.</li>
+  </ul>
+  <p>With these fixed, routing lanes reserved for every die trunk, and a corridor through the spine for the SU's east–west links, the 50-iteration route had no overflow in round 14b. Round 16g also routes clean. Its taller hub band needed the spine blocks on a centred 7.5 mm span, a narrower spine with wider side channels, a longer VM face and fixed faces for the shared tile and SU masters' role pins; without them (round 16b) the route ended at 121 overflows. At the bound, three terms dominate: the activation multicast from the hub to the farthest SM (71 cycles one way, 291 serial loads, 17.2 µs), the barrier over the routed control tree (343 barriers, 16.6 µs) and endpoint ↔ SerDes (15.8 µs). SU ↔ collective endpoint stays at 2.7 µs (22.7 µs in round 8). The 20 µs left between bound and floor are not congestion. They come from three sources: segments that route a few hundred µm past a 4-stage station pitch, pins spread along the SerDes and SM faces, and the star leaves of the control tree. With the HBM levers and full FEC on the off-package links, the HBM accelerator's DeepSeek-V4.1 token is 1,921.5–1,999.7 tok/s AR and 3,917.2–3,993.7 tok/s MTP (bound to floor; 1,979.1–2,048.9 and 3,973.8–4,040.3 with the round-14b wire; results/arch/three_machine_compose). Qwen is barely affected (0.6–1.2%): the priced stages add 6,518 cycles to a token of 557,056 (TP4) or 1,161,915 (TP2) cycles.</p>
+  <h4 id="s6-10-die-qwen">6.10.1a HBM accelerator die floorplan (Qwen3-8B tile organisation)</h4>
+  <p class="finding"><b>Finding: the Qwen3-8B HBM accelerator's own tile die routes cleanly. Its on-die wire adds 3.5–5.6% to the TP4 token and 2.0–3.1% to the TP2 token, several times the 0.6–1.2% (0.4–0.9% in round 14b) estimated by mapping the Qwen vehicle onto the DeepSeek die above.</b> That mapping priced only the collective and stream-service distances. On the tile die, the cost comes mostly from the depth of the instruction / activation broadcast and of the block-word return across a 32 mm field.</p>
+  <p>The die is 32,149 × 25,760 µm (828.2 mm², 29.8 mm² inside the 858 mm² reticle); there is one die per tensor-parallel rank. It follows the method of floorplan, then one hardened element, then replication. The element is the measured routed W12 tile logic (0.249 mm² TP2 / 0.244 mm² TP4 core) plus its share of the code and KV SRAM in real ASAP7 macros (eight <code>ot_sram_1rw_2048x128_m4</code> and two <code>ot_sram_1r1w_1024x256_m2_r2c2</code>), plus its corridor and fill forwarding banks. That makes 313.6 × 1,388.9 µm (0.4356 mm²), replicated as 96 columns × 16 rows (1,536 elements, 480 MiB of SRAM against the 421.5 MiB goal). Each of the four HBM3E stacks serves a 24-column quarter. Its PHY sits on the north or south edge, with the stream service between the PHY and the field, and each column's fill runs through the column's own elements (4 stages per element pitch). The split tree reduces 4 × 4 tile blocks inside the field; 96 block words then cross to four port slices in a 2.0 mm centre spine, which also holds the core (tree top, VM / x root, sequencer, SU64 + SFU, stream control), the scale stores and the loader. The SerDes sit at the spine's south end and the host link at its north end. Blocks fill 93.2% of the die. The core, port, scale and IO blocks are sized from model ledgers and labelled as such in the record.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17c. Qwen3-8B HBM accelerator tile die: physical checks, round q3a, OpenROAD (results/rtl/hbm_accel_qwen_die_floorplan_20261005/feasibility.json). The record keeps every round. Round q2, which packed the port slices against the core, ended at 2,764 overflows and was rejected. IR round 1, with 0.1639 strap coverage over the stream services, failed 10 north-edge windows at up to 37.6 mV. A band-located port-slice variant was rejected at the Manhattan floor (52 against 47 block-word stages, for 9 mm² more).</caption>
+    <thead><tr><th>Check</th><th>Result</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Legality</td><td class="m">1,737 instances, 0 overlaps, 0 outside the die</td><td>pass</td></tr>
+      <tr><td>On-track pins</td><td class="m">0 of 7,378,096 off track</td><td>pass</td></tr>
+      <tr><td>Pin access</td><td>every macro pin has an access point; every replicated copy owns its pins (768 element-internal tree hops kept inside the element, no self nets)</td><td>pass</td></tr>
+      <tr><td>Global route, 5 / 50 iterations</td><td class="m">overflow 2,539 / 0</td><td>pass</td></tr>
+      <tr><td>Static IR drop</td><td class="m">worst 23.54 mV over 152 loaded windows (budget 35 mV); 2 windows carry no core load</td><td>pass</td></tr>
+      <tr><td>Power grid, power</td><td>M8/M9 straps at 0.0878 coverage, 0.25 over the stream services. Measured at the P8191 decode (TT): 309.0 W die average over the token against the 474.6 W liquid-cooling budget (SS 267.3, FF 369.0); tiles 689.6 W in phase while clocked (1.03 W/mm²), 182.3 W averaged; in-phase die bound 967.9 W for at most one stage (Table 6-17e)</td><td>pass (time-averaged)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17d. Tile-die wire stages priced into the Qwen3-8B HBM accelerator's P8191 compositions at 1.2 GHz (results/rtl/hbm_accel_qwen_die_floorplan_20261005/wire_stages.json). The measured vehicle already carries its own broadcast, tree and block-word depths (TP4: bd 41, nws 5, tws 38; TP2: 31, 4, 30). The floorplan adds only the excess of the routed depths over them, once per ME op (217 a token). It also adds the collective run per switch crossing and the fill and status depth per KV first access. Deltas are clamped at zero. These are bounds from routed length, not die-level timing sign-off.</caption>
+    <thead><tr><th>Basis</th><th class="r">TP4 AR (tok/s)</th><th class="r">TP4 added cycles</th><th class="r">TP2 AR (tok/s)</th><th class="r">TP2 added cycles</th></tr></thead>
+    <tbody>
+      <tr><td>Unpriced composition</td><td class="r m">2,154.2</td><td class="r m">— (557,056)</td><td class="r m">1,032.8</td><td class="r m">— (1,161,915)</td></tr>
+      <tr><td>Floor: straight-line distance</td><td class="r m">2,081.8</td><td class="r m">19,366 (+3.48%)</td><td class="r m">1,012.1</td><td class="r m">23,706 (+2.04%)</td></tr>
+      <tr><td>Median routed bundle</td><td class="r m">2,068.2</td><td class="r m">23,145 (+4.15%)</td><td class="r m">1,008.5</td><td class="r m">27,919 (+2.40%)</td></tr>
+      <tr class="sel"><td>Bound: longest routed bundle</td><td class="r m">2,040.7</td><td class="r m">30,975 (+5.56%)</td><td class="r m">1,002.0</td><td class="r m">35,749 (+3.08%)</td></tr>
+    </tbody>
+  </table></div>
+  <p>At the bound, the TP4 token's 30,975 added cycles split into five terms:</p>
+  <ul>
+    <li>the broadcast: 82 stages one way (50 die-net and 32 element stages) against the vehicle's 41, adding 8,897 cycles;</li>
+    <li>the block-word return: 77 stages against 38, adding 8,463 cycles;</li>
+    <li>the collective run per crossing: 6,862 cycles;</li>
+    <li>the KV first-access fill and status: 4,248 cycles;</li>
+    <li>the in-block tree: 2,387 cycles.</li>
+  </ul>
+  <p>The block word's depth comes from its 6,144-bit width crossing the spine channel, not from the port's band distance, which is why moving the port slices to their bands did not help. With the adopted SRAM-spread composition (2,219.8 tok/s TP4), the same terms give 2,143.0 at the floor and 2,099.5 at the bound.</p>
+  <p><b>Measured power.</b> The tile power is now measured. The TP4 vehicle ran at the routed tile's exact parameters and bit-exact at P8191, for one SRAM layer, one HBM layer and the head. Every fabric clock edge of seven tiles was recorded (one per split-tree class), replayed bit-exact on the tile alone (a corrupted instruction is detected), and mapped register by register onto the routed <code>tile_tp4_t4</code> flops (102,101 of 102,102). OpenSTA then reported the power at the routed SPEF.</p>
+  <p>While the fabric clock runs, the tiles draw 689.6 W: 1.03 W/mm², close to the 1.05 W/mm² the floorplan assumed. The core's engine clock gate already stops the fabric for 73.3% of the token, because HBM layers wait on the stream for 59% of their cycles. Averaged over the token, the tiles therefore draw 182.3 W and the die 309.0 W, which passes the budget at every corner. The in-phase peak exceeds the budget only for the length of one stage (the head runs clocked for 2.7 µs).</p>
+  <p>The binding consequence is on batching rather than on the single user. The budget allows a fabric duty of 0.50 at TT and 0.38 at FF, against 0.27 for one user, so batched requests that fill idle stages are power-capped near half duty. The first lever there is tile-internal clock gating, which costs no rate: the clock network and flop clock pins make up ~57% of the clocked tile power.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17e. Qwen3-8B HBM accelerator tile die power at the P8191 TP4 decode, 1.2 GHz (results/rtl/hbm_accel_qwen_die_power_20261006/die_power.json). Tile terms are measured: routed netlist and SPEF with the exact decode's register activity. The die wire uses routed lengths, measured port activity and measured per-flop energy. The HBM PHY uses the published 0.8 pJ/bit plus idle. The stream services and spine (73.2 W) keep the floorplan's assumed densities. The combinational share is an upper bound: halving it gives tiles of 157.8 W at TT.</caption>
+    <thead><tr><th>Corner</th><th class="r">Tiles clocked (W)</th><th class="r">Tiles, token avg (W)</th><th class="r">Die wire avg (W)</th><th class="r">Die, token avg (W)</th><th class="r">Die in-phase bound (W)</th><th class="r">Max fabric duty at 474.6 W</th></tr></thead>
+    <tbody>
+      <tr class="sel"><td>TT 0.70 V</td><td class="r m">689.6</td><td class="r m">182.3</td><td class="r m">19.9</td><td class="r m">309.0</td><td class="r m">967.9</td><td class="r m">0.50</td></tr>
+      <tr><td>SS 0.63 V</td><td class="r m">542.0</td><td class="r m">144.5</td><td class="r m">16.0</td><td class="r m">267.3</td><td class="r m">785.9</td><td class="r m">0.65</td></tr>
+      <tr><td>FF 0.77 V</td><td class="r m">901.2</td><td class="r m">237.7</td><td class="r m">24.5</td><td class="r m">369.0</td><td class="r m">1,225.6</td><td class="r m">0.38</td></tr>
+    </tbody>
+  </table></div>
   <h3 id="s6-11">6.11 Host interface and runtime</h3>
   <p class="finding">A descriptor-ring host interface, DMA and an OpenAI-compatible endpoint have been exercised with reduced RTL vehicles. Binding them to the adopted Qwen HBM-KV tile and V41x die remains a system integration gate.</p>
 
@@ -1427,6 +2007,24 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p>On the Qwen3-8B design, the KV stream from eight stacks takes 92,161 cycles and the calibrated dependent chain takes 101,037, 1,419 of them in the die-to-die exchanges and 1,085 in the INT8 scale multiply. The chain is therefore 10% above the stream floor, and its exposed dependencies set the rate at every context: at 2K the calibrated chain takes 84,469 cycles against a 23,040-cycle KV stream. The FP8 K-split HBM path still needs integrated RTL verification.</p>
   <p>For V4.1, separate weight, attention and index engines and vector-credit chaining keep long sequential operations off the token path (§6.4). At 1M, 31.1 µs of the 142.7 µs modeled token is synchronization, 4.8 µs of it collective bytes that remain exposed under the bench-measured tails of the adopted levers (§8.9), and 21.1 µs is the on-die wire of the layer die's registered traversals, every one of them on the critical path (§8.4). The 7,049-token/s rate carries those tails and that wire and assumes a 1.087 GHz system clock, which has not closed in an integrated route. A reduced pooled V4.1x core with joined QE weight HBM and timed index-key HBM now passes a ten-step empty-state functional gate (3 generated tokens exact, DPI arithmetic, no production rate), and a two-package point-to-point array passes three exact tokens both with the X_HE unit alone and with all units on timed behavioural HBM (no production clock or rate), while switched-array timing and whole-core clock closure remain decisive tests.</p>
 
+  <h4 id="s8-5-fusion">Ablation: fusing serial vector chains (measured, DeepSeek-V4.1 ROM at 1M)</h4>
+  <p class="finding"><b>Finding: on a machine whose weights are free, the token's serial vector chains cost overhead, not arithmetic, and fusing each chain into one pipeline removes 60–75% of its latency at no loss of exactness.</b> In the DeepSeek-V4.1 ROM, every RMSNorm, hyper-connection mix, SwiGLU and activation quantise ran as separate operations on the serial vector unit (SU) at 0.9 GHz. Each operation read its vector from vector memory, reduced it across 1,024 lanes through a ten-level tree and 4–8 wire stages, wrote it back and crossed the clock domain twice. Four such chains sit in every layer, so ×43 layers the overhead is a large share of the token: the serial SU chains were about 26% of the 1M token before recovery.</p>
+  <p>Each fused unit streams the vector once through the whole chain (for RMSNorm: sum of squares → reduction → mean → reciprocal square root → scale → optional RoPE → FP8 quantise) at 1.2 GHz, with no vector-memory round trip and no clock crossing inside the chain. It keeps the golden's rounding points and its chunks-of-eight pairwise reduction order (§6.5), so every result is bit-exact against the golden on real 1M-context operands. Two units were rebuilt to reach 1.2 GHz: the FP8 activation quantiser (the original reaches 745 MHz pre-layout; the re-staged <code>ot_dsrom_aq12</code> routes at SS +27.0 ps / FF +2.5 ps) and the divider, replaced by a constant divider <code>ot_dsrom_divc</code> because the divisor is always the fixed vector length (5,120, 1,280 or 512). It is checked against every positive finite input with zero errors and routes at SS +22.0 ps / FF +7.7 ps, where the general divider misses by 357 ps.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-14b. Serial vector chains before and after fusion, latency per occurrence on the token path, DeepSeek-V4.1 ROM at 1M. "Before" is the wired SU at 0.9 GHz plus the measured clock-domain crossings; "after" is the fused unit at 1.2 GHz, from the vector-memory read to the last result landing at its consumer, hub and wire stages included. Every "after" row is bit-exact on the L0/L3/L20/L24 golden 1M operands plus stress rows. Signoff is SS 60 ps / FF 25 ps at 0.833 ns on the routed minimum component. Records: results/rtl/dsrom_recovery_20261004/levers/{su_hcpost, su_norm, su_swiglu, su_routeract}.json; su_norm on branch claude/dsrom-su-norm-20261004 (commit e7dea0004).</caption>
+    <thead><tr><th>Chain (dependent steps)</th><th class="r">Before (µs)</th><th class="r">After (µs)</th><th class="r">After (cycles)</th><th class="r">Saving</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Post-attention / post-FFN hyper-connection mix (4 dependent mul-add steps)</td><td class="r m">0.290</td><td class="r m">0.086</td><td class="r m">103</td><td class="r m">70%</td><td>Adopted; routed lane SS +0.23 / FF +1.69 ps; 6 cycles over its 97-cycle floor</td></tr>
+      <tr><td>Attention pre-norm: hc_pre → RMSNorm → FP8 quantise</td><td class="r m">0.755</td><td class="r m">0.230</td><td class="r m">276</td><td class="r m">70%</td><td rowspan="4">At floor, exact. Quantiser and divider routed closed; lane and RoPE routes pending, adopted when both close</td></tr>
+      <tr><td>FFN pre-norm: hc_pre → RMSNorm</td><td class="r m">0.522</td><td class="r m">0.215</td><td class="r m">258</td><td class="r m">59%</td></tr>
+      <tr><td>Query: q-norm → quantise</td><td class="r m">0.489</td><td class="r m">0.208</td><td class="r m">250</td><td class="r m">57%</td></tr>
+      <tr><td>Key/value: kv-norm → RoPE → quantise-dequantise</td><td class="r m">0.510</td><td class="r m">0.203</td><td class="r m">244</td><td class="r m">60%</td></tr>
+      <tr><td>SwiGLU → route-weight multiply → FP8 quantise</td><td class="r m">0.483</td><td class="r m">0.155</td><td class="r m">186</td><td class="r m">68%</td><td>Exact; reopened as mandatory recovery after the first routes missed (lane −51.7 ps); re-staged quantiser now routes closed</td></tr>
+      <tr><td>Router activation: softplus → √ (already one fused correctly rounded unit)</td><td class="r m">0.152</td><td class="r m">0.147</td><td class="r m">132 at 0.9 GHz</td><td class="r m">4%</td><td>Adopted; routed SS +17.0 / FF +3.74 ps. Control case: little to gain where the chain was already one unit</td></tr>
+    </tbody>
+  </table></div>
+  <p>The router-activation row is the control: that chain was already one fused, correctly rounded unit, so moving it gains only the clock crossing. The gain comes from removing per-operation overhead, not from faster arithmetic. At the token level, the norm fusion alone takes the 1M rate on current main (1,710.8 tok/s plain decoding, 5,005.9 tok/s with speculation at τ 4.159; results/rtl/dsrom_recovery_20261004/composition.json) by +8.38% and +6.52% in a trial composition against the same baseline. Every unit is opt-in: the shared SU (<code>ot_hdc_v41x_vec</code>) and its lowering are unchanged, and a fused unit is adopted only once it is exact and its routed minimum component closes.</p>
+  <p><b>Matched comparison.</b> The HBM accelerator receives the same fusion (fused SU chains with the SU at 1.2 GHz), credited in its matched reference, so the ROM-versus-HBM comparison does not credit one side with an optimisation the other lacks. One physical caveat applies to both: the fused units' routes sign off register to register at full margins but defer data-input hold repair to the parent's clock balance, which the full-die route must check at each block boundary.</p>
   <h3 id="s8-6">8.6 Speculative decoding: it pays where the step's cost is shared</h3>
   <h4 id="s8-6-ablation">Ablation: speculation on a compute-balanced ROM (measured, Qwen3-8B at 8K)</h4>
   <p class="finding"><b>Finding: speculation trades an idle resource for fewer serial steps, and the Qwen3-8B ROM at 8K has no idle resource to trade.</b> A verify pass pays only when the step's dominant cost is shared by the positions it verifies. On GPUs and the HBM accelerator the shared cost is the weight stream. On the DeepSeek-V4.1 ROM array it is pipeline latency: a wavefront of positions fills idle stages. On the Qwen3-8B ROM the code ROM reads exactly as fast as the lanes multiply, and the STREAM4 path hides the 8K KV fill behind prefetch. The AR layer (5,282 cycles) therefore sits at its compute-only bound (5,283), and every extra position adds its own softmax, all-reduce payload and stream-unit work. The measured verify layer costs 3.26× an AR layer for four positions, so DSpark at τ = 3.14 runs at 0.70× of plain decoding, and 0.97× even with a free drafter. <b>The Qwen3-8B ROM therefore runs in plain decoding (AR) mode at 8K: 194,498 cycles a token, 6,169.7 tok/s per user.</b> DSpark stays built and bit-exact in RTL, and it is switched off. MTP remains required, and pays, on the DeepSeek-V4.1 ROM array and on the HBM accelerators.</p>
@@ -1614,6 +2212,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p><b>Where the energy goes.</b> On the Qwen3-8B package at batch 1 (scenario B), 16.7 of the 96.7 mJ per token is in the DRAM stacks and 80.0 mJ on the two dies, 49.2 mJ of which is the dies' share of the HBM path (controller, PHY and I/O) for the 604 MB of FP8 KV; the rest is leakage (9.9), clock (6.1), multiply-accumulates (5.9; 39.7 on the routed lane of scenario A), the KV rings' SRAM traffic (3.3), the ROM read and delivery (2.3), stack idle (2.0), the stream unit (1.0) and the UCIe exchanges (0.01). The KV format is therefore the largest energy lever as well as the largest speed lever, and the ratio to the HBM core moves with the 13.64 pJ/bit HBM path energy, which carries most of the ROM's energy. The same package on HBM at the same weights spends 1,284 mJ, 1,059 mJ of it on its dies: 666 mJ of HBM path for its weights and KV and 383 mJ of leakage, clock and stack idle over a token that takes 1.14 ms. On the V4.1 array the chips' static power, 14.9 kW in the rack model, dominates a batch-1 token; filling the pipeline divides it among 28 users. <b>The hardwired schedule bounds the power.</b> Its saturated worst case has every lane copy multiply-accumulate every cycle, the stream unit and the ROM read path busy every cycle and the stacks at full raw bandwidth; no program can exceed it, so it is provisioned at 1.2× rather than at nameplate. GPUs are provisioned near nameplate because their measured draw can exceed TDP [<a href="#r-polca">POLCA</a>, <a href="#r-fan-barroso">Fan et al.</a>]. The ASAP7 sign-off is power scenario A: its BF16 × BF16 lane at 3.97 pJ per MAC puts each Qwen3-8B die at 1,116 W with DFlash at its design rate (619 W at the calibrated autoregressive rate), capped at 6,680 tokens/s (7,859 without speculation) by the 474.6 W a die of the liquid-cooled package; the production lane of scenario B (0.59 pJ per 8-bit-weight MAC) runs uncapped there, and would cap at 14,176 (8,921 without speculation) with air. The lane must be designed for the ROM's INT8 weights with BF16 activations, operand isolation and clock gating. A GPU tensor core's reported 1.4 pJ per MAC shows that target is not exotic.</p>
 
   <h3 id="s8-9">8.9 Synchronisation and links against a GB200 NVL72</h3>
+  <p class="note"><b>Adopted link baseline (owner, 2026-10-06): full FEC on every off-package link.</b> Every link that leaves a package (the board link inside a tray, the in-rack cable and the rack-to-rack cable) runs full RS(544,514) KP4 FEC, for the DeepSeek-V4.1 ROM array and the HBM accelerator alike. This is the adopted conservative baseline: it needs no light-FEC qualification argument on any channel. In-package UCIe links keep their own specification. Each off-package hop is priced at the 209 ns full-KP4 hop (technology.json <code>rom_board_serdes</code>/<code>rom_rack_cable_serdes</code>) plus its cable flight beyond the 0.3 m inside that budget. The DS ROM stage hop, token return and TP4 collectives are re-measured in RTL on that channel (results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json): the stage hop goes from 0.7575 to 0.8367 µs, and every TP4 collective moves by +100 cycles. On the HBM accelerator, the SUE endpoint PHY on every switch crossing goes from 100 ns to the 198 ns full-KP4 channel. The S81 racks pack two stages a tray: 40 board hops, 39 tray-to-tray hops and one rack crossing, the minimum at two stages a tray (results/arch/dsrom_s81_rack_20261006/rack.json). Recomposed (results/arch/three_machine_compose/compose.json), the DS ROM goes from 1,737.9 to 1,673.8 tok/s AR (+22.05 µs) and from 5,071.1 to 4,900.4 tok/s MTP. The HBM accelerator (median wire) goes from 2,132.0 to 2,004.3 tok/s AR and from 4,116.3 to 3,998.1 tok/s MTP (+29.89 µs over 305 crossings). The 130 ns light-FEC figures in this section are the superseded history; the comparison stands, with every ROM hop now at full KP4.</p>
   <p class="finding">The order-of-magnitude synchronisation advantage of a compiled schedule is an on-chip property. A dependent handoff costs 5 cycles (4.8 ns) against 371 ns measured on a Blackwell GPU, and a gather from every unit 4.8 ns against about 1 µs: 77× and 208×. Across packages both machines pay SerDes and FEC physics, and the advantage narrows to 7.9–13.4× for a four-die all-reduce against the best measured GB200 kernel and its speed-of-light floor, and 3.6× for a point-to-point stage hop. Per V4.1 token at 1M, synchronisation takes 32.4 µs on the ROM array — collective latency, the collective bytes left exposed under the bench-measured tails, and stage hops — 23% of the token, against 517 µs for the same collective graph at the best GB200 kernel: 16×, or 10× against the floor.</p>
   <p>Table 8-22 compares each kind of synchronisation event. The GPU on-chip rows are our own measurements on GB202 (RTX PRO 6000 Blackwell), not a B200, and the per-token rows price the ROM array's own collective graph at the GPU's measured per-event cost, so they bound what a GPU would pay for the same schedule rather than measure a GPU decode. The cross-package advantage is structural but modest: the ROM array's all-reduce has fixed-function one-shot endpoints, no software and one link crossing, while the GPU pays its NVLink switch traversals. Against NCCL as shipped, which adds software latency, the four-die all-reduce is 28–62× and the per-token figure 43–94×; we treat those as the gap to deployed software, not to the hardware. No production end-to-end latency measurement of a 112G port exists, so our 130 and 209 ns link values are sums of component latencies, cross-checked against Broadcom's published Scale-Up Ethernet budget; the HPC systems at the foot of Table 8-22 show the same order of per-hop latency.</p>
 <div class="tablebox"><table class="data">
@@ -1624,7 +2223,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <tr><td>On-chip all-unit gather (every SM / lane -&gt; next op)</td><td><span class="m">1.00 µs</span> <span class="tag meas">measured</span> [<a href="#r-gpu-meas">gpu-meas</a>]</td><td><span class="m">4.8 ns</span> <span class="tag rtl">RTL sim</span> [<a href="#r-rtl-tp">rtl-tp</a>]</td><td class="r m">208×</td><td>the schedule is compiled: a lane-array reduction retires into the next issue</td></tr>
     <tr><td>In-package die-to-die collective (all-reduce over the dies of one package)</td><td><span class="m">—</span> <span class="tag pend">not published</span> </td><td><span class="m">37 ns</span> <span class="tag rtl">RTL sim</span> [<a href="#r-rtl-tp">rtl-tp</a>] [<a href="#r-ucie-tcpmt">ucie-tcpmt</a>] [<a href="#r-ucie-jssc26">ucie-jssc26</a>]</td><td class="r m">—</td><td>one-shot fixed-order all-reduce of 128 fp32 over 4 dies: 331 cycles per token step / 9 collectives = 36.8 cycles, with a 12-cycle UCIe model (spec &lt;2 ns PHY+adapter; measured 3.5 ns FDI-to-FDI; model charges 10 ns)</td></tr>
     <tr><td>Cross-package point-to-point handoff (pipeline stage hop)</td><td><span class="m">792 ns</span> <span class="tag cite">cited (measured)</span> [<a href="#r-sol">sol</a>]</td><td><span class="m">219 ns</span> <span class="tag spec">spec model, normative links</span> [<a href="#r-ualink">ualink</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-llfec">llfec</a>] [<a href="#r-sue">sue</a>]</td><td class="r m">3.6×</td><td>rack-cable tier 209 ns (full RS(544,514), un-interleaved) + UCIe fan-out</td></tr>
-    <tr><td>Cross-package collective (TP4 all-reduce, 20 KB)</td><td><span class="m">2.37 µs</span> <span class="tag cite">cited (measured)</span> [<a href="#r-sol">sol</a>] [<a href="#r-nccl227">nccl227</a>]</td><td><span class="m">177 ns</span> <span class="tag spec">spec model, normative links</span> [<a href="#r-sue">sue</a>] [<a href="#r-sun3cd">sun3cd</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-ucie-tcpmt">ucie-tcpmt</a>] [<a href="#r-rtl-tp">rtl-tp</a>]</td><td class="r m">7.9–13.4× (NCCL 28–62×)</td><td>one-shot: reduce over UCIe, ONE exchange across the pair on the on-module link (130 ns light FEC), broadcast over UCIe: 150 ns latency + 27 ns serialisation; 256 ns with full KP4</td></tr>
+    <tr><td>Cross-package collective (TP4 all-reduce, 20 KB)</td><td><span class="m">2.37 µs</span> <span class="tag cite">cited (measured)</span> [<a href="#r-sol">sol</a>] [<a href="#r-nccl227">nccl227</a>]</td><td><span class="m">177 ns</span> <span class="tag spec">spec model, normative links</span> [<a href="#r-sue">sue</a>] [<a href="#r-sun3cd">sun3cd</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-ucie-tcpmt">ucie-tcpmt</a>] [<a href="#r-rtl-tp">rtl-tp</a>]</td><td class="r m">7.9–13.4× (NCCL 28–62×)</td><td>one-shot: reduce over UCIe, ONE exchange across the pair on the on-module link (130 ns light FEC), broadcast over UCIe: 150 ns latency + 27 ns serialisation; 256 ns with full KP4, the adopted baseline since 2026-10-06 (the RTL TP4 all-reduce moves +100 cycles)</td></tr>
     <tr><td>Rack-wide all-reduce (72 GPUs)</td><td><span class="m">1.40 µs</span> <span class="tag cite">cited (measured floor)</span> [<a href="#r-sol">sol</a>] [<a href="#r-nccl-cost">nccl-cost</a>]</td><td><span class="m">—</span> <span class="tag cite">n/a</span> </td><td class="r m">—</td><td>tensor groups span 4 dies; no rack-wide collective per token. The token return is one cable hop; Engram requests take the switch (2 x 209 + 250 ns + cable, ~680 ns)</td></tr>
     <tr><td>Per token, V4.1 at 1M context, batch 1 (209 collectives + 27 stage hops)</td><td><span class="m">517 µs</span> <span class="tag spec">spec model × cited GPU cost</span> [<a href="#r-sol">sol</a>] [<a href="#r-nccl227">nccl227</a>]</td><td><span class="m">32.4 µs</span> <span class="tag spec">design-point model, normative links, collective tails measured in RTL</span> [<a href="#r-rtl-tp">rtl-tp</a>] [<a href="#r-sue">sue</a>] [<a href="#r-ualink">ualink</a>]</td><td class="r m">10–16× (NCCL 33–72×)</td><td>adopted design point (results/arch/v41_lanes.json design_point; results/arch/sync_cost_table.json): collectives 15.3 us + exposed collective bytes 4.8 us + hops 12.3 us (27 stage hops on the 209 ns cable tier); 23% of the 141.9 us token</td></tr>
     <tr><td>Per token, Qwen3-8B on one die (~220 all-SM boundaries)</td><td><span class="m">221 µs</span> <span class="tag spec">spec model × cited GPU cost</span> [<a href="#r-gpu-meas">gpu-meas</a>]</td><td><span class="m">1.06 µs</span> <span class="tag rtl">RTL sim</span> [<a href="#r-rtl-tp">rtl-tp</a>]</td><td class="r m">208×</td><td>220 x 4.8 ns</td></tr>
@@ -1639,12 +2238,12 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <tr><td>UCIe (advanced package)</td><td class="m">&lt;2 ns PHY+adapter (spec); 3.5 ns FDI-to-FDI (measured)</td><td class="m">-</td><td class="r">CRC + retry</td><td><span class="tag cite">normative + measured</span> [<a href="#r-ucie-tcpmt">ucie-tcpmt</a>] [<a href="#r-ucie-jssc26">ucie-jssc26</a>]</td></tr>
   </tbody>
 </table></div>
-  <p>Table 8-23 records each link value the models use and the result of checking it. Every value held except one: the rack's copper stage hop cannot run a light FEC, because the low-latency FEC's raw bit-error requirement is not met under DFE burst errors and IEEE 802.3ck mandates RS(544,514) for CR1. The hop runs full RS(544,514), un-interleaved, at 209 ns — UALink's in-rack mode. The light FEC is used only on the ~120 mm on-module trace, where it is qualified.</p>
+  <p>Table 8-23 records each link value the models use and the result of checking it. Every value held except one: the rack's copper stage hop cannot run a light FEC, because the low-latency FEC's raw bit-error requirement is not met under DFE burst errors and IEEE 802.3ck mandates RS(544,514) for CR1. The hop runs full RS(544,514), un-interleaved, at 209 ns — UALink's in-rack mode. The light FEC was used only on the ~120 mm on-module trace, where it is qualified. Since 2026-10-06 the adopted conservative baseline drops it there too: every off-package link runs full RS(544,514) (note at the top of this section).</p>
 <div class="tablebox"><table class="data">
   <caption>Table 8-23. Link values the model relies on, checked against normative and production sources (full quotes in results/arch/sync_cost_table.json, commit 872da542)</caption>
   <thead><tr><th>Value</th><th>Model</th><th>Verdict</th><th>Sources</th></tr></thead>
   <tbody>
-    <tr><td>On-module package link, light FEC</td><td class="m">130 ns (100-170)</td><td>HELD; band 100-185</td><td>[<a href="#r-sue">sue</a>] [<a href="#r-sun3cd">sun3cd</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-dassharma-ofa">dassharma-ofa</a>] [<a href="#r-oif-cei5">oif-cei5</a>]</td></tr>
+    <tr><td>On-module package link, light FEC</td><td class="m">130 ns (100-170)</td><td>HELD; band 100-185. Not used: full RS(544,514) adopted on every off-package link (owner, 2026-10-06)</td><td>[<a href="#r-sue">sue</a>] [<a href="#r-sun3cd">sun3cd</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-dassharma-ofa">dassharma-ofa</a>] [<a href="#r-oif-cei5">oif-cei5</a>]</td></tr>
     <tr><td>Rack-cable stage hop (T2, &lt;= 0.8 m twinax)</td><td class="m">209 ns (160-300), full RS(544,514)</td><td>HELD at full KP4: a light FEC's raw bit-error requirement is not met on CR copper under DFE burst errors</td><td>[<a href="#r-llfec">llfec</a>] [<a href="#r-ualink">ualink</a>] [<a href="#r-ieee3ck-obj">ieee3ck-obj</a>] [<a href="#r-gustlin3ck">gustlin3ck</a>]</td></tr>
     <tr><td>Full-KP4 hop</td><td class="m">209 ns (129-409)</td><td>HELD (conservative end of 139-199 typical; 190-300 with Clause 161 interleave)</td><td>[<a href="#r-gustlin3ck">gustlin3ck</a>] [<a href="#r-nicholl3ck">nicholl3ck</a>] [<a href="#r-brown3cd">brown3cd</a>]</td></tr>
     <tr><td>UCIe hop</td><td class="m">10 ns (3-30)</td><td>HELD, pessimistic (~3x measured)</td><td>[<a href="#r-ucie-tcpmt">ucie-tcpmt</a>] [<a href="#r-ucie-jssc26">ucie-jssc26</a>]</td></tr>

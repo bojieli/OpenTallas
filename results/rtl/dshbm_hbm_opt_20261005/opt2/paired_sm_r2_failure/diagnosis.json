@@ -1,0 +1,16 @@
+{
+  "verdict": "FAILED_BENCH_DUPLICATE_START",
+  "source": "e78847262",
+  "compile_returncode": 0,
+  "runtime_returncode": 0,
+  "supervisor_returncode": 1,
+  "bench_nonprogress_cycle": 23244,
+  "unique_output_rows": 80,
+  "expected_output_rows": 86,
+  "performance_verdict": null,
+  "candidate_adopted": false,
+  "failure_preserved": true,
+  "cause": "Combinational descriptor-valid ready tested in same event as op_rows update; first public start accepted twice. Duplicate op0/row0 in immutable out.txt before W2.",
+  "successor_change": "Settle payload decode before asserting start; assert accepted public op count equals currently driven descriptor.",
+  "arithmetic_or_fixture_changed": false
+}

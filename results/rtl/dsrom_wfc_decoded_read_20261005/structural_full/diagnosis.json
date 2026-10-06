@@ -1,0 +1,43 @@
+{
+  "owner": "Zeno",
+  "rtl_source": "8e1291a72",
+  "r1": {
+    "verdict": "FAIL_RUNTIME_134",
+    "preserved": true,
+    "first_cycle": 5804,
+    "actual_cause": "Same-edge blocking sent_n cross-lane lead comparisons released golden offer header75 while defaultOFF still held packet74. Retained full866 archive prefix trace demonstrates actual input mismatch before output comparison.",
+    "fixture_fix": "Immutable negedge snapshot for all lead counts; strict defaultOFF comparisons unchanged."
+  },
+  "r2": {
+    "source": "0ba6333be",
+    "terminal_exit": 0,
+    "SOURCE1": {
+      "MAXU": 866,
+      "USERS": 866,
+      "committed_each": 27712,
+      "fault_each": 0,
+      "errors_each": 0,
+      "issues": [
+        29192,
+        29224,
+        29222
+      ],
+      "candidate_launch_checks": 29222,
+      "candidate_completion_checks": 29222
+    },
+    "SOURCE0": {
+      "classification": "Retained deliberate illegal-header negative; NOT the mandatory fault-free nominal gate",
+      "jobs_each": 20000,
+      "first_fault_header_each": 19961,
+      "default_OFF_cycle_mismatches": 0,
+      "exact_writes": 820000,
+      "exact_flits": 940000,
+      "exact_launches": 20000
+    },
+    "warm": "Full866 user865 SOURCE0 pending completion reset/live-payload/stall gate PASS"
+  },
+  "next_gate": "Only SOURCE0 full866/20000 fault-free independent gold plus minimum SOURCE1 prompt/END/warm lifecycle; reuse R2 SOURCE1 actual logs/archive, never repeat full-source gate",
+  "adopted": false,
+  "physical_context_qualified": false,
+  "retained_artifacts": "All R1/R2 source, objects, logs remain at exact remote roots; old healthy SOURCE1 route unchanged"
+}

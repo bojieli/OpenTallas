@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS_TARGETED_QUIET_AND_VALIDATED_ACK",
+  "exit_code": 0,
+  "WR_COUNT": 2,
+  "negative_ACK_tag": 130,
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "ab97220c5cb152c3e6d1775f523d3b184f10f66f9927ca53e18df208b226a232",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5af1f271972a17082430c9c2f53765967478c30566d36540ab3a006b2e58dc8e",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv": "efa44e417bbfffdf93203998a82f9dee58e27ed11284cb63b3f7f69463add9ba"
+  },
+  "reason": "only source difference from full130 WR gate r3 is quiet output gating on admission and both retained advertisements; targeted two actual WRs prove warm service quiet and reopened nonquiet, paired pops, consumed desc/GO, OOO retirement; rejected later actual WR ACK retains ticket and return debt",
+  "compile_variant": "iverilog -g2012 -s tb_qwen_s4_stack_transport -P tb_qwen_s4_stack_transport.WR_COUNT=2 -o /tmp/tb_qwen_s4_stack_transport_r4.vvp (same source list as stack_gate_r3/terminal.json)",
+  "run_command": "stdbuf -oL vvp /tmp/tb_qwen_s4_stack_transport_r4.vvp",
+  "physical_qualified": false
+}

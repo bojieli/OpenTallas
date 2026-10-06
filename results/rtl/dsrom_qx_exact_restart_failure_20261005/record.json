@@ -1,0 +1,211 @@
+{
+  "schema": "opentallas.dsrom_qx.exact_source_failure.v1",
+  "verdict": "BENCH_REPAIR_MINIMUM_PASS",
+  "engine_source": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "qx9_source": "4134cb5e6",
+  "repair_source": "3e8638771",
+  "observation_method": "Read-only /proc/PID/mem without ptrace attach, signals or writes. offsetof compiled from existing generated headers identifies model fields; source objects untouched.",
+  "observed_processes": [
+    422892,
+    422894,
+    3031127
+  ],
+  "cause": "Accepted input-dependent go is left unserviced before configure quiescence. Once serviced, comparator macro/segment/position key aliases independent rows: configure deliberately draws s_idx in1..3 for eight unique rows. Data-dependent segtree5 latency may reorder independent rows; key must include full row identity.",
+  "correction": "Service real outstanding reference XS requests during phase drain, retaining configuration. Require actual busy/drain, full tree emptiness, output-valid idle and32 quiet cycles. Match sparse event queues by full macro,row,segment,position identity; compare every FP32,row,segments,error field and preserve order within each identity. Reject unmatched events after full drain. No reset/queue discard beyond original reset handling; SEQ=0 unchanged. Add24 directed same-configuration go starts after real walkers idle while actual drain remains nonzero; all coverage thresholds unchanged.",
+  "validation": "QX10 pos seed1, full NRAND400+24 directed real drain-window restarts: PASS2602880 compared cycles/7801 matched partials, go_mid_drain34, all original coverage thresholds. Same-source neg_tree9 seed1 caught cycle2073. Not a whole campaign PASS or SSFF qualification.",
+  "qualification": {
+    "exact_campaign": false,
+    "SSFF": false,
+    "whole_field": false,
+    "missing_input_clocks": true
+  },
+  "current_routes": {
+    "Z18a": {
+      "state": "LIVE_GRT_HOLD_REPAIR",
+      "worst_endpoint": "b_xs_q0[212]",
+      "intermediate_hold_slack_ps": -88.528,
+      "final_SSFF": false
+    },
+    "Z18b": {
+      "state": "LIVE_GRT_HOLD_REPAIR",
+      "worst_endpoint": "b_xs_q0[113]",
+      "intermediate_hold_slack_ps": -101.422,
+      "final_SSFF": false
+    },
+    "Z18c": {
+      "state": "LIVE_GRT_HOLD_REPAIR",
+      "worst_endpoint": "b_xs_pos[2]",
+      "intermediate_hold_slack_ps": -51.057,
+      "final_SSFF": false
+    },
+    "Z18d": {
+      "state": "LIVE_GRT_HOLD_REPAIR",
+      "worst_endpoint": "b_xs_q0[238]",
+      "intermediate_hold_slack_ps": -85.311,
+      "final_SSFF": false
+    }
+  },
+  "analytical_QX10_added_cycles_over_QX9": 0,
+  "measured_min_field_added_cycles_over_QX9": 0,
+  "composition_credit": false,
+  "preserved": [
+    "All four0032 Z18 routes",
+    "All QX9fix/QX10 original exact processes and sources",
+    "Golden field inputs, 28-row vehicle binary and objects",
+    "narrow repair live source/binary/objects/pid3074006",
+    "immutable r2/r3 mismatch failures",
+    "immutable r4 coverage failure",
+    "final minimum source/binary/objects on EPYC1"
+  ],
+  "evidence_sha256": {
+    "offsets.txt": "a0404cf6e73720e2afe8f3da010f70e6a8ffa4e87be3a915eb5f648d80be6f04",
+    "qx9-pos-pid3031127-live-state.json": "aba3d11ea949cbab9c9a96f3191aa70a142b9732a57e8d3ce7c2b1fa0523ad18",
+    "original_tb.sv": "169823545a9e4cfee7b6882c29344d45bc155cca1cdf048beaf88fb28f85c862",
+    "qx10-pos-pid422894-live-state.json": "88536baa497938bc54c0569c72c4c646a14c9c32e01784a883107b056eae3eb1",
+    "noether-qx-exact-restart-source.json": "c900400e43cb1d11d3025c6d0f81a5f33fe5228452441b229fdc3895889914a7",
+    "repair.patch": "80eaf334f2381e47e27fb73e482a7a063deeedb115335b2d293e662361ec316e",
+    "fixed-offsets.cpp": "d53c4f51a041a5a91ff4a1edd1a19394b828530dde14ffa884231bab7f0d47f9",
+    "offsets.cpp": "5c22ac3b33b2c233fe635404e182a97fe4decebba49c2dd8ac4e6ec2a97c54ba",
+    "narrow_repair.patch": "e6d0f9c54e74c1296f558625480ccba78110ee36ef6c23141df18c4f07661170",
+    "noether-qx-exact-restart-run.py": "442da22e3b0c1983fb8aec2cbdeccb236ac58e3087e23c941781cde1aebc1334",
+    "final-source.json": "2c7742fbe3e5c5b4bed79b15872a72d8ee109e2fd9f136edbb0b0f94c927de17",
+    "qx9-offsets.txt": "d375351cc0ba21088f432c3023ec2ab096ea4ad18399347ea205495f3afcea62",
+    "qx9-offsets.cpp": "8c3b562730690a2c5ad71cf04deed16c24725a07b1d46088c409e0b1ebc55c98",
+    "fixed-offsets.txt": "a0404cf6e73720e2afe8f3da010f70e6a8ffa4e87be3a915eb5f648d80be6f04",
+    "fixed-pos-pid3074006-live-state.json": "3a5a41097888a1f17243137b20ed2bcf7b2c0e9dfbeb0309cba293e53591a0b1",
+    "qx10-pos-pid422892-live-state.json": "254552e753bc1c118047489be723b91b2829afdeeee7e4e5d162f6b7938eda32",
+    "final-run.py": "64f6ad2afa4dbe361be8110ced024a76baab9e75d76ce6ad06ae2ea5c8ac1717",
+    "final_minimum/build.command.json": "cf6d03bf148368fa674e9810b0dbb22d5de6eada2ae7f3c3a474439d31b57fdd",
+    "final_minimum/build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "final_minimum/done": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431",
+    "final_minimum/negative.build.command.json": "a114ef222b3d7b2dda4c26efc6eb3b53532ad6a50e7e3247736292808380e203",
+    "final_minimum/negative.log": "7a4d05be5c418724e999ba58328e9cb0ba41b3d77c0af2aa5a3b5081090806f5",
+    "final_minimum/source.json": "2c7742fbe3e5c5b4bed79b15872a72d8ee109e2fd9f136edbb0b0f94c927de17",
+    "final_minimum/seed1.log": "f456bae373100ec301d9312ba65b21d35d9184d34592627ef641be8d3ec2bce4",
+    "final_minimum/capacity.jsonl": "2095987ab3990c74674733a25d9ae9cef669224cea5af5a269b78a6ab324423c",
+    "final_minimum/run.py": "64f6ad2afa4dbe361be8110ced024a76baab9e75d76ce6ad06ae2ea5c8ac1717",
+    "final_minimum/started.json": "7e436e44da216370ef2e4c47b748a31de927945e12f7d89b100f63f275b16ada",
+    "final_minimum/run.command.json": "d4404b21f230c96c8b852c17842c1f3775dbabfb08783a9111b36b64a68b8f6c",
+    "final_minimum/result.json": "e8fd4e77ebdc01065dbbe4c943a32cacf7a1d9a6f23de5d14732196a568747cb",
+    "r3_mismatch/build.command.json": "046591f000e05a925495a8ec938605b493f403e84408997dd4e41a8aa28663ea",
+    "r3_mismatch/build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "r3_mismatch/done": "4f8e9e45f8a9e1843b81eaf3bdf52a6b778d415d23bf985774a9d34a43f69bd5",
+    "r3_mismatch/source.json": "45c7cee0670824ea41eb2166e5b9ffd34a9fdc071aaa2f06cf3b48ef103f97e6",
+    "r3_mismatch/seed1.log": "db5888e188cc7c4521e14c880e25649645f089b681c24400455a18e2782f540d",
+    "r3_mismatch/capacity.jsonl": "61a2ff8f35bba3081127c16817595ea23b94aa7227e0ef5a763a57edf3f14c47",
+    "r3_mismatch/started.json": "c85ffe283d5f4ef8b04b2f77ee396418e34218dec862340e95e31c2793e2a7a2",
+    "r3_mismatch/run.command.json": "ff0e2772b5cbd06eaafec11d864de13dcd56a77ff5b4220e40e3e92b54a197cd",
+    "r3_mismatch/result.json": "afe714668820d1fea9344e9b706202ca333126287ccf0f06274766d9cbb86f9b",
+    "r2_mismatch/build.command.json": "2f4151de22cf947c35f58acd72c1652e2db18429a386f01a20a12033a437a0cf",
+    "r2_mismatch/build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "r2_mismatch/done": "4f8e9e45f8a9e1843b81eaf3bdf52a6b778d415d23bf985774a9d34a43f69bd5",
+    "r2_mismatch/source.json": "9e327faa66e14c4f2045241461d87bb5dbb7519ba99ddae4228d6f91b7b7a332",
+    "r2_mismatch/seed1.log": "967822c1e9cc69676319b71386fa9f22a198146562db2a23c20e0ca7ecdca177",
+    "r2_mismatch/capacity.jsonl": "2ce78e1b3b41a011773882f9bcc8615048c8460bed7ecda93bd1daf07de2bd54",
+    "r2_mismatch/started.json": "ea7dcbc9b1644602512d292ed19aa582ec9b64d7a4a7472a1244d0031c75e3a6",
+    "r2_mismatch/run.command.json": "9658e6fe65097b7d94ea93c6437f72464400ca0f8f2107052332ea5cdba7052f",
+    "r2_mismatch/result.json": "dd7f52680befe4fd7c6efdcc30ef9f07cc41d4ce856d864b7b449e049eb9da1b",
+    "r4_coverage_failure/build.command.json": "bd14a1a56453fbbb468c152c523c0ae8e1ba3cc5ab40b55bf1a808bc27f42e51",
+    "r4_coverage_failure/build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "r4_coverage_failure/done": "4f8e9e45f8a9e1843b81eaf3bdf52a6b778d415d23bf985774a9d34a43f69bd5",
+    "r4_coverage_failure/source.json": "f8b433e85f6db4190471a6f85d5d64bec62775600d89953250659c31fb0b913b",
+    "r4_coverage_failure/seed1.log": "8c2499d7b7b444d14de4db319e5674a30fd56b4740d7e08b9849d786958384b9",
+    "r4_coverage_failure/capacity.jsonl": "9e71f294196826848bdd96ea65faae8c356f0a25ae735ee11a58bb90d9884553",
+    "r4_coverage_failure/started.json": "bc3f293fec0dd832e74a9b535e2ad19ad18dc248fadd52cbcd74cb7b4ad77548",
+    "r4_coverage_failure/run.command.json": "79fe21ff2e9e8f33e04dadbe0207ac3ab3f4ccb1b8a6c13c4b74a3a07c333791",
+    "r4_coverage_failure/result.json": "358d0027cb6b65a5e9d8716c6fb03166725ed12795a6ec854e7c1e21830b953b"
+  },
+  "failure_history": [
+    {
+      "source": "0f32da0de",
+      "verdict": "BENCH_DEADLOCK",
+      "reason": "Fixing only extra go misses the zero-delay phase go path; separate live pid3074006 reproduces same input starvation; source/binary/objects/process retained."
+    },
+    {
+      "source": "d1e02139f",
+      "verdict": "FAIL",
+      "run": "QX10 pos seed1 fullNRAND400",
+      "cycle": 942188,
+      "key": 8,
+      "dut": {
+        "fp32_hex": "ff376825",
+        "row": 2,
+        "segments": 1,
+        "err": 1
+      },
+      "reference": {
+        "fp32_hex": "fdcf90cb",
+        "row": 1,
+        "segments": 1,
+        "err": 1
+      },
+      "receipt": "r2_mismatch/result.json",
+      "reason": "Tree-only quiescence excludes ROM/lane/chain pipeline drain, permitting a configuration-boundary identity mismatch; immutable numerical failure retained."
+    },
+    {
+      "source": "124138d5b",
+      "verdict": "FAIL",
+      "cycle": 947291,
+      "key": 8,
+      "receipt": "r3_mismatch/result.json",
+      "reason": "Same row2 versus row1 event mismatch survives real busy/drain fence; previous drain hypothesis does not explain this failure."
+    },
+    {
+      "source": "32e9d2b99",
+      "verdict": "FAIL_COVERAGE",
+      "receipt": "r4_coverage_failure/result.json",
+      "matched_partials": 7033,
+      "unmatched_events": 0,
+      "go_mid_drain_observed": 10,
+      "go_mid_drain_required": 20,
+      "reason": "Proper configuration fence removes accidental mid-drain phase starts; preserve threshold and exercise real same-configuration restart window directly."
+    }
+  ],
+  "minimum_result": {
+    "receipt": "final_minimum/result.json",
+    "positive": {
+      "QPIPE": 1,
+      "QP_XS": 1,
+      "QP_CAP": 0,
+      "QP_P1": 1,
+      "shift_L": 2,
+      "compared_cycles": 2602880,
+      "exempt_cycles": 81,
+      "seed": 1,
+      "cycles": 2602924,
+      "gated_edges": 2566019,
+      "closed_cycles": 37364,
+      "hits": 196793,
+      "issues": 274753,
+      "rows": 7801,
+      "nonzero": 6519,
+      "classes_mask": 255,
+      "wraps": 5232,
+      "q_advances": 649,
+      "mtp_restarts": 382,
+      "rejected": 13133,
+      "go_gate_closed": 434,
+      "go_mid_drain": 34,
+      "go_walking": 19,
+      "resets": 15
+    },
+    "matched_partials": 7801,
+    "dropped_at_reset": 0,
+    "extra_delay_vs_pinned_reference_after_L": {
+      "min_cycles": -1,
+      "max_cycles": 8,
+      "mean_cycles": 3.828
+    },
+    "negative_control": {
+      "name": "neg_tree9",
+      "seed": 1,
+      "returncode": 1,
+      "caught": true,
+      "log_sha256": "7a4d05be5c418724e999ba58328e9cb0ba41b3d77c0af2aa5a3b5081090806f5",
+      "excerpt": "[2073000] %Fatal: tb_dsrom_qx_exact.sv:137: Assertion failed in tb_dsrom_qx_exact.seq_push: sequence mismatch key=1048 cycle=2073 dut 3fb5074e000103 ref 3fb0fae9800103\n%Error: /srv/opentallas-scratch/codex/noether-qx-exact-restart-r5-20261005/src/rtl/test/tb_dsrom_qx_exact.sv:137: Verilog $stop\nAborting...\n"
+    }
+  },
+  "field_equality_checks_unchanged": true,
+  "matching_key_changed": true,
+  "runner_annotation": "Raw minimal runner comparison_changed=false denotes retained byte-equality checks; the matching key was strengthened to macro,row,segment,position as the source diff shows."
+}

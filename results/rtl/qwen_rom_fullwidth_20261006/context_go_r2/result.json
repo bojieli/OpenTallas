@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.qwen_p0_parallel_context_go.v1",
+ "status": "PASS",
+ "bench": "rtl/test/qwen_rom_runtime/realmem/tb_qwen_p0_parallel_context_go.sv on ot_qwen_p0_parallel_transport_context (ENABLE 1, CDC_CONSUMER_JOIN 1, LANDING_RSEL 1, full36 backing, 4 stacks x 32 PCs); Verilator 5.050, AGIdock /srv/opentallas-scratch/claude/tk-qwen-go2",
+ "source_commit": "59da397a9",
+ "cases": {
+  "SCG1_mode0_desc_and_go_same_cycle": "no fault, descriptor and GO consumed by all 4 stacks (PASS)",
+  "SCG1_mode1_go_one_cycle_after_desc": "no fault, consumed by all 4 stacks (PASS)",
+  "SCG1_mode2_go_without_desc_NEGATIVE": "faults (state[5] on all stacks, expected) (PASS)",
+  "SCG1_mode3_idle": "no fault (PASS)",
+  "SCG0_mode0_NEGATIVE_reproduces_runtime_bug": "faults via context go&&!gr (state[5]) although control accepted desc+GO: the full36_r1 L0 cyc14 failure (PASS as expected-fault)",
+  "SCG0_mode1": "no fault (PASS)",
+  "SCG0_mode2_NEGATIVE": "faults (PASS)",
+  "SCG0_mode3_idle": "no fault (PASS)"
+ },
+ "root_causes": [
+  "RTL: control go_ready omitted the same-cycle descriptor (ca) that its own GO accept ga counts; SAME_CYCLE_GO=1 adds it (default 0 keeps pinned behaviour).",
+  "Bench (earlier 'SCG1 still faults' result): fault sampled before the first POR edge; Verilator init left checked-state primary==inverse, read as an upset. Bench now drives a real POR edge and samples only after release."
+ ],
+ "cycle_cost": 0,
+ "full_token": "r2 rerun with SAME_CYCLE_GO=1: E2 /srv/opentallas-scratch2/claude/qwen-fullwidth-r2"
+}

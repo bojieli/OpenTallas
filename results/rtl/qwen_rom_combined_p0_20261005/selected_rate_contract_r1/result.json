@@ -1,0 +1,88 @@
+{
+  "status": "SOURCE_PINNED_RATE_REPORTING_CONTRACT_RUNTIME_PENDING",
+  "runtime_pid": 2318397,
+  "runtime_start_ticks": 10812315,
+  "model_source": "b04e893e7",
+  "top_archive_sha256": "3deafa9e800d0ff21cb6a1dd1b1160eca3d34744c3771c0973c95eeb7e36a0a9",
+  "bound_host_sha256": "8e94008897ea20e354c4f323041b7671fb7bfc0104bcbfa75184106404ad652f",
+  "bound_clock_header_sha256": "8334cb5212cb1c78eeee1ded53a731fe972d2fe981985bfd9adda46f361caa82",
+  "literal_clocks": {
+    "core_period_fs": 833333,
+    "core_rise": "clocks.edge(tick*833333+416666), all4die clk=1; corefall tick*833333 all4die clk=0",
+    "HCLK_period_fs": 1024000,
+    "HCLK_half_fs": 512000,
+    "HCLK_pin": "controller callback assigns all4die hclk=hi; independent scheduled edges including coincident events",
+    "service_clock": "consumer ot_qwen_rt_kv_stream4_service u_kv .clk(clk); producer_clk=clk; producer_hclk=hclk; transport u_transport .clk(producer_clk)/.hclk(producer_hclk)",
+    "rate_clock_not_gated_ME": "me_clk_en gates compute/tile work; service and return link remain on actual core clock"
+  },
+  "literal_shape": {
+    "D": 4,
+    "NSTK": 4,
+    "NPC_per_rank": 128,
+    "HBM_LAYERS": 36,
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1,
+    "cache_precision": "FP8 E4M3",
+    "system_bytes_per_layer": 16777216,
+    "system_bytes_36layers": 603979776
+  },
+  "counter_units": "st_fill_sectors += countones(l_v & l_pop & ~b_bad); one checked accepted256bit=32byte sector; no hidden multiword burst",
+  "heartbeat": {
+    "rank_scope": "all4ranks actual printed FLOW",
+    "samples": [
+      {
+        "tick": 4096,
+        "core_cyc": 4097,
+        "fill_each_rank": 15492,
+        "stall_kv_each_rank": 3506,
+        "rsp_stall_each_rank": 1,
+        "wall_s": 749
+      },
+      {
+        "tick": 8192,
+        "core_cyc": 8193,
+        "fill_each_rank": 31876,
+        "stall_kv_each_rank": 7602,
+        "rsp_stall_each_rank": 12,
+        "wall_s": 1427
+      }
+    ],
+    "delta_core_edges": 4096,
+    "delta_fill_each_rank": 16384,
+    "accepted_sectors_per_rank_core_edge": 4,
+    "accepted_payload_bytes_per_rank_core_edge": 128,
+    "kv_fault_codes_all4": 0,
+    "writes_each_rank": 0,
+    "wrack_debt_each_rank": 0,
+    "stall_mem_each_rank": 0,
+    "stall_bridge_each_rank": 245,
+    "layer_all4": 0,
+    "kv_ok": 0,
+    "drained": 1,
+    "first_L0_numerical": false
+  },
+  "capacity_proof": "No clock/count/format mismatch found. Four32byte checked sectors/core/rank upper bound;36mandatory reload1179648coreedges.983.04us using exactly1.2GHz assumption; literal833333fs gives983.039606784us, rounding difference only.",
+  "actual_final_result_reporting": {
+    "required_before_rate": "all36+fullhead300byte comparisons plus real fault/warm/ACK/drain terminal",
+    "clock_evidence": "retain observed core_final_visible/core_token/controller_rises/elapsed_fs parsed from actual P0_FINAL_VISIBLE and P0_CLOCK terminal log; source period833333fs and1024000fs explicit",
+    "service_evidence": "retain actual full log stage cycles and FLOW fill/write/WRACKdebt/stall/RSP counters; label sampled heartbeat counters as sampled, not exact unsampled terminal totals",
+    "measured_rate_scope": "single completed P8191 token under selected finite service clocks, including all observed service stalls; separately state full-result visibility and drain; do not call a single smoke steady mult-token throughput",
+    "drain_inclusive_simulated_rate_definition": "1e15 divided by measured terminal elapsed_fs if reported, explicitly from simulated clock epoch through drain; not host wall time or route estimate",
+    "cache_comparison": "source-pin HBM/GPUcacheprecision; only matched-cache ratios if verified; label different formats or pending otherwise",
+    "old_6k_composition": "not applicable to selected vehicle; r18gi50 5783.8/5702.3 is compute/wire bound pending reconciliation with return service, not actualtoken rate",
+    "physical_scope": "GRT11534overflows not physicalsignoff; nominal simulated clocks do not confer setup/hold qualification"
+  },
+  "evidence_source_sha256": {
+    "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_full_consumer_exports.sv": "56c1421e8436363dc77ba0d289a56e93ef1576f0654538ed8371372711d66cb8",
+    "rtl/experimental/qwen_rom_combined_p0_20261005/ot_qwen_p0_full_transport_join.sv": "cf87998e7d5f02d1b6c3a1965140e798be09152120c8af07be9d82aaf0966823",
+    "rtl/hdc/kv/ot_qwen_s4_transport_context.sv": "25404add8c6f947d6a51f495a9dd2f2fa40ce16a6a5d14c9efdd4c021b1ef938",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f",
+    "tools/qwen_rom_combined_p0_20261005/clock.hpp": "8334cb5212cb1c78eeee1ded53a731fe972d2fe981985bfd9adda46f361caa82",
+    "tools/qwen_rom_combined_p0_20261005/run_full.py": "f9159cb7e89df24b9999f63ddaac3c0757bfc722eff8465fb3aa5b6a363eba29"
+  },
+  "new_build_model_format_or_gate": false,
+  "live_job_changed": false,
+  "full_token_pass": false,
+  "physical_qualified": false
+}

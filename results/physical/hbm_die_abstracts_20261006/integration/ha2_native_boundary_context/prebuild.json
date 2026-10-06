@@ -1,0 +1,67 @@
+{
+  "evidence_class": "CONDITIONAL_NATIVE_CALLER_CONTEXT",
+  "top": "ot_hbm_item9_ha2_native_boundary_context",
+  "default_ENABLE": 0,
+  "arithmetic_changed": false,
+  "reducer_copies": 1,
+  "MACs_per_cycle": 0,
+  "hub": {
+    "copies": 2,
+    "W": 544,
+    "D": 35,
+    "read_mux_entries": 35
+  },
+  "peer": {
+    "copies": 8,
+    "W": 545,
+    "AW": 8,
+    "read_mux_entries": 256
+  },
+  "receiver": {
+    "dqo_copies": 1,
+    "qr_copies": 8,
+    "W": 545,
+    "AW": 6
+  },
+  "bytes_per_cycle": {
+    "hub": 136,
+    "peer": 545,
+    "result": 64
+  },
+  "boundary_bits": {
+    "hub": 1090,
+    "peer": 4368,
+    "result": 532
+  },
+  "routing_tracks_needed": 5990,
+  "actual_unreserved_tracks": null,
+  "channel_fit": false,
+  "storage_FF_bits": 1468769,
+  "storage_FF_floor_um2": 428293.04040000006,
+  "producer_and_receiver_decode_mux_area_um2": null,
+  "actual_current_adapter_area_um2": null,
+  "retained_previous_adapter_area_um2": 490159.0422,
+  "retained_previous_adapter_is_current": false,
+  "selected_outer_r16g_bbox_um": [
+    11069.136,
+    11607.84,
+    12468.792,
+    13011.816
+  ],
+  "outer_area_um2": 1965083.4322559994,
+  "maximum_final_utilization": 0.55,
+  "full_TU_TX_partial_queues_and_CDC_included": false,
+  "new_register_edges": 0,
+  "new_token_ns": 0,
+  "clock": {
+    "root": "clk",
+    "period_ps": 833,
+    "SS_setup_ps": 60,
+    "FF_hold_ps": 25,
+    "source_characterized": false
+  },
+  "external_rearm_credit_release_and_upstream_IO_bound": false,
+  "route_ready": false,
+  "contextual_SS_FF": false,
+  "adopted": false
+}

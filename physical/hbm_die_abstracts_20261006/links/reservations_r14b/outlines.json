@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm.links.slab_blockages.v1",
+  "def_sha256": "35cff2e0c93e1abdf12f52b9cc92b34ca8cca78728c5d2399970057bea7e0991",
+  "abstract_list_sha256": "78934f31e63d413b6786967b90def71f378eb9838575cfc289e46475df0172e6",
+  "outlines": [
+    {
+      "name": "sd_S",
+      "master": "hfd_serdes_slab",
+      "rectangle_um": [
+        10537.776,
+        21.6,
+        13000.152,
+        3678.456
+      ],
+      "pins": [],
+      "logic": false
+    },
+    {
+      "name": "sd_N",
+      "master": "hfd_serdes_slab",
+      "rectangle_um": [
+        10537.776,
+        16044.48,
+        13000.152,
+        19701.336
+      ],
+      "pins": [],
+      "logic": false
+    },
+    {
+      "name": "hs_slab",
+      "master": "hfd_host_slab",
+      "rectangle_um": [
+        23787.216,
+        1449.36,
+        24381.624,
+        18273.576
+      ],
+      "pins": [],
+      "logic": false
+    }
+  ],
+  "parent_adopted": false,
+  "geometry_status": "REFERENCE_ONLY_PARENT_INVALIDATED"
+}

@@ -1,0 +1,275 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T00:04:11.031141+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_integrated_su_cp_context",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.166666666667,
+    "core_input_delay_min_ns": 0.0,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_cp_parent_context_20261005/context.sdc",
+          "sha256": "01e2245575e46b71a555636c5ed4fa20ebcd17c5a47cdc80f378b2f654e519c5"
+        }
+      ],
+      "lines": [
+        "create_clock -name core_clk -period 833.333333333 [get_ports clk]",
+        "set_clock_uncertainty -setup 60 [get_clocks core_clk]",
+        "set_clock_uncertainty -hold 25 [get_clocks core_clk]",
+        "set_clock_latency -source 0 [get_clocks core_clk]",
+        "set_clock_latency -min 90 [get_clocks core_clk]",
+        "set_clock_latency -max 100 [get_clocks core_clk]",
+        "set ot_inputs [get_ports {launch_v launch_pc cp_job cp_gen launch_token launch_pos lease_granted release_r exec_done exec_fault retired_original_ops shared_fault}]",
+        "set ot_outputs [get_ports {native_launch lease_v release_v owned pending quiet selected done fault selected_pc held_job held_gen held_token held_pos}]",
+        "set_input_delay -clock core_clk -max 166.666666667 $ot_inputs",
+        "set_input_delay -clock core_clk -min 0 $ot_inputs",
+        "set_output_delay -clock core_clk -max 166.666666667 $ot_outputs",
+        "set_output_delay -clock core_clk -min 0 $ot_outputs",
+        "set_load 9.673192000 $ot_outputs",
+        "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $ot_inputs",
+        "set ot_association_outputs [get_ports {exec_owned new_request_permit association_fault}]",
+        "set_output_delay -clock core_clk -max 166.666666667 $ot_association_outputs",
+        "set_output_delay -clock core_clk -min 0 $ot_association_outputs",
+        "set_load 9.673192000 $ot_association_outputs",
+        "set_input_delay -clock core_clk -max 166.666666667 [get_ports por_n]",
+        "set_input_delay -clock core_clk -min 0 [get_ports por_n]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.166666666667,
+    "output_delay_min_ns": 0.0,
+    "parameters": {
+      "ENABLE": 1,
+      "SU_BALANCED_OWNER_BOUNDARY": 1,
+      "SU_ENABLE": 1,
+      "SU_FOUR_COMBINATIONAL_CUTS": 1,
+      "SU_REGISTERED_BOUNDARY": 1,
+      "SU_REGISTERED_OUTPUTS": 1,
+      "SU_REGISTERED_STATUS": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+        "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+        "size_bytes": 2175
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+        "sha256": "bb6731bdf3d07083cc6f5e68e81853f20c16a186ab2b76a0a7c13ba75659bd31",
+        "size_bytes": 28659
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+        "sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+        "size_bytes": 1067
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+        "sha256": "3e92bcb8fbb7bb10a52d6e0c61ff00c0599a5889fab504bd34320f9d7fa0310f",
+        "size_bytes": 2365
+      }
+    ],
+    "top": "ot_hbm_integrated_su_cp_context"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nndent set matching.\n[INFO DPL-0300] Set matching objective is wirelength.\n[INFO DPL-0301] Pass   1 of matching; objective is 4.288071e+07.\n[INFO DPL-0302] End of matching; objective is 4.273342e+07, improvement is 0.34 percent.\n[INFO DPL-0303] Running algorithm for global swaps.\n[INFO DPL-0306] Pass   1 of global swaps; hpwl is 4.194007e+07.\n[INFO DPL-0306] Pass   2 of global swaps; hpwl is 4.181090e+07.\n[INFO DPL-0307] End of global swaps; objective is 4.181090e+07, improvement is 2.16 percent.\n[INFO DPL-0303] Running algorithm for vertical swaps.\n[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 4.168997e+07.\n[INFO DPL-0309] End of vertical swaps; objective is 4.168997e+07, improvement is 0.29 percent.\n[INFO DPL-0303] Running algorithm for reordering.\n[INFO DPL-0304] Pass   1 of reordering; objective is 4.158538e+07.\n[INFO DPL-0305] End of reordering; objective is 4.158538e+07, improvement is 0.25 percent.\n[INFO DPL-0303] Running algorithm for random improvement.\n[INFO DPL-0324] Random improver is using random generator.\n[INFO DPL-0325] Random improver is using hpwl objective.\n[INFO DPL-0326] Random improver cost string is (a).\n[INFO DPL-0332] End of pass, Generator random called 126540 times.\n[INFO DPL-0335] Generator random, Cumulative attempts 126540, swaps 7816, moves 44185 since last reset.\n[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 4.150487e+07, Scratch cost 4.109177e+07, Incremental cost 4.109177e+07, Mismatch? N\n[INFO DPL-0338] End of pass, Total cost is 4.109177e+07.\n[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 1.00 percent.\n[INFO DPL-0328] End of random improver; improvement is 0.995307 percent.\n[INFO DPL-0380] Cell flipping.\n[INFO DPL-0382] Changed 0 cell orientations for row compatibility.\n[INFO DPL-0383] Performed 1795 cell flips.\n[INFO DPL-0384] End of flipping; objective is 4.084892e+07, improvement is 0.79 percent.\n[INFO DPL-0313] Found 0 cells in wrong regions.\n[INFO DPL-0315] Found 0 row alignment problems.\n[INFO DPL-0314] Found 6 site alignment problems.\n[INFO DPL-0311] Found 2 overlaps between adjacent cells.\n[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.\nDetailed Improvement Results\n------------------------------------------\nOriginal HPWL            42723.7 u (   16260.9,    26462.8)\nFinal HPWL               40854.5 u (   15004.0,    25850.5)\nDelta HPWL                  -4.4 % (      -7.7,       -2.3)\n\noptimize_mirroring\n[INFO DPL-0020] Mirrored 862 instances\n[INFO DPL-0021] HPWL before           40854.5 u\n[INFO DPL-0022] HPWL after            40823.0 u\n[INFO DPL-0023] HPWL delta               -0.1 %\n[WARNING DPL-0006] Site aligned check failed (6).\n input1168\n input1195\n input1221\n input1226\n output1276\n place2589\n[ERROR DPL-0033] detailed placement checks failed during check placement.\nwrite_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_5_place_dp-failed.odb\nError: detail_place.tcl, 39 DPL-0033\n\nElapsed time: 0:02.95[h:]min:sec. CPU time: user 2.85 sys 0.10 (100%). Peak memory: 308552KB.\nElapsed time: 0:03.78[h:]min:sec. CPU time: user 4.09 sys 0.62 (124%). Peak memory: 334364KB.\nElapsed time: 0:02.28[h:]min:sec. CPU time: user 2.19 sys 0.09 (99%). Peak memory: 303964KB.\nElapsed time: 0:02.02[h:]min:sec. CPU time: user 1.92 sys 0.10 (99%). Peak memory: 304564KB.\nElapsed time: 0:02.02[h:]min:sec. CPU time: user 1.94 sys 0.08 (99%). Peak memory: 308212KB.\nElapsed time: 0:04.12[h:]min:sec. CPU time: user 15.28 sys 0.15 (374%). Peak memory: 316052KB.\nElapsed time: 0:02.72[h:]min:sec. CPU time: user 2.59 sys 0.13 (99%). Peak memory: 320580KB.\nElapsed time: 0:07.21[h:]min:sec. CPU time: user 21.60 sys 2.69 (336%). Peak memory: 493868KB.\nElapsed time: 0:04.49[h:]min:sec. CPU time: user 5.32 sys 0.90 (138%). Peak memory: 342616KB.\nElapsed time: 0:03.66[h:]min:sec. CPU time: user 3.55 sys 0.11 (99%). Peak memory: 322140KB.\nmake[1]: *** [Makefile:511: do-3_5_place_dp] Error 1\nmake: *** [Makefile:511: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/3_5_place_dp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T00:03:23.669415+00:00",
+  "git": {
+    "commit": "048d1e3f129912756f980d8d38ad0304b23223bf",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_integrated_su_cp_context",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "SU_ENABLE=1",
+      "--param",
+      "SU_REGISTERED_OUTPUTS=1",
+      "--param",
+      "SU_REGISTERED_STATUS=1",
+      "--param",
+      "SU_REGISTERED_BOUNDARY=1",
+      "--param",
+      "SU_BALANCED_OWNER_BOUNDARY=1",
+      "--source",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--io-delay-fraction",
+      "0.2",
+      "--core-input-delay-min-ns",
+      "0",
+      "--core-input-delay-max-ns",
+      "0.166666666667",
+      "--output-delay-min-ns",
+      "0",
+      "--output-delay-max-ns",
+      "0.166666666667",
+      "--sdc-append",
+      "physical/hbm_cp_parent_context_20261005/context.sdc",
+      "--die-area",
+      "0",
+      "0",
+      "77.76",
+      "77.76",
+      "--core-area",
+      "17.28",
+      "17.28",
+      "60.48",
+      "60.48",
+      "--step-tcl",
+      "POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/pins_and_regions.tcl",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/hbm_cp_parent_context_20261005/pdn.tcl",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--orfs-var",
+      "IO_PLACER_H=M6",
+      "--orfs-var",
+      "IO_PLACER_V=M7",
+      "--corner",
+      "TT",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--max-transition-ns",
+      "0.320",
+      "--max-fanout",
+      "32",
+      "--hold-margin-ns",
+      "0.010",
+      "--stages",
+      "pnr",
+      "--place-density",
+      "0.50",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "TMPDIR=/work/tmp",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--keep-heavy-artifacts",
+      "--nickname-tag",
+      "harvey_cp_fourcut_context_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/work",
+      "--output",
+      "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl",
+      "--param",
+      "SU_FOUR_COMBINATIONAL_CUTS=1"
+    ],
+    "driver": {
+      "commit": "048d1e3f129912756f980d8d38ad0304b23223bf",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/source/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/source"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/jobs/harvey-cp-fourcut-parent-context-r1/runtime_r2/source"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -27,6 +27,7 @@ module tb_dsrom_integ_reindex_wf #(
     parameter integer NJOBS = 2,
     parameter integer LSW = 3,
     parameter integer MDROP = 1,
+    parameter integer OPT_REINDEX_PARENT = 0,
     parameter integer LAT = 48,              // scorer stand-in latency (idx array)
     parameter integer SETTLE = 24,           // query settle before the first key is scored
     parameter integer BASE = 123, BSTEP = 777, OSTEP = 8,
@@ -92,7 +93,7 @@ module tb_dsrom_integ_reindex_wf #(
     wire [Q*16*16-1:0] out_val;
     wire [Q*48-1:0] c_keys, c_beats;
     ot_dsrom_reindex_chain #(.Q(Q), .NPC(NPC), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW), .DW(DW),
-        .LBW(LBW), .LMW(LMW), .LSW(LSW), .IW(IW), .K(K), .MDROP(MDROP)) dut (
+        .LBW(LBW), .LMW(LMW), .LSW(LSW), .IW(IW), .K(K), .MDROP(MDROP),.OPT_REINDEX_PARENT(OPT_REINDEX_PARENT)) dut (
         .clk(clk), .rst_n(rst_n), .lw_v(lw_v), .lw_slot(lw_slot), .lw_addr(lw_addr), .lw_blk(lw_blk),
         .start(c_start), .start_slot(c_slot), .start_pos(c_pos), .start_k(KW'(K)), .start_base(c_base),
         .start_skip(c_skip), .start_n(c_n), .start_qbase(c_qb), .done(c_done), .busy(c_busy), .fault(c_fault),

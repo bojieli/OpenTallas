@@ -1,0 +1,101 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+0 um.
+Total number of vias = 52660.
+Up-via summary (total 52660):
+
+----------------
+ Active        0
+     M1    16661
+     M2    28450
+     M3     4345
+     M4     1238
+     M5      995
+     M6      971
+     M7        0
+     M8        0
+     M9        0
+----------------
+       52660
+
+
+[INFO DRT-0195] Start 60th optimization iteration.
+    Completing 10% with 4351 violations.
+    elapsed time = 00:00:00, memory = 2359.83 (MB).
+    Completing 20% with 4351 violations.
+    elapsed time = 00:00:00, memory = 2359.83 (MB).
+    Completing 30% with 4351 violations.
+    elapsed time = 00:08:06, memory = 2349.55 (MB).
+    Completing 40% with 4351 violations.
+    elapsed time = 00:08:06, memory = 2349.55 (MB).
+    Completing 50% with 4351 violations.
+    elapsed time = 00:08:06, memory = 2349.55 (MB).
+    Completing 60% with 4332 violations.
+    elapsed time = 00:16:28, memory = 2349.51 (MB).
+    Completing 70% with 4332 violations.
+    elapsed time = 00:16:28, memory = 2349.51 (MB).
+    Completing 80% with 4332 violations.
+    elapsed time = 00:16:28, memory = 2349.51 (MB).
+    Completing 90% with 4332 violations.
+    elapsed time = 00:16:28, memory = 2349.51 (MB).
+    Completing 100% with 4332 violations.
+    elapsed time = 00:16:28, memory = 2349.51 (MB).
+[INFO DRT-0199]   Number of violations = 4332.
+Viol/Layer          V4     M5     M6     V6     M7
+CutSpcTbl            1      0      0    433      0
+EOL                  0      1      0      0     22
+Metal Spacing        0      0    397      0    106
+Rect Only            0      0    474      0      0
+Short                0      0    322    492    314
+eolKeepOut           0      6    225      0   1539
+[INFO DRT-0267] cpu time = 00:30:34, elapsed time = 00:16:28, memory = 2349.51 (MB), peak = 2840.85 (MB)
+Total wire length = 23642 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 7867 um.
+Total wire length on LAYER M3 = 9882 um.
+Total wire length on LAYER M4 = 3292 um.
+Total wire length on LAYER M5 = 597 um.
+Total wire length on LAYER M6 = 1055 um.
+Total wire length on LAYER M7 = 947 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 52692.
+Up-via summary (total 52692):
+
+----------------
+ Active        0
+     M1    16661
+     M2    28454
+     M3     4351
+     M4     1246
+     M5     1001
+     M6      979
+     M7        0
+     M8        0
+     M9        0
+----------------
+       52692
+
+
+[INFO DRT-0195] Start 61st optimization iteration.
+    Completing 10% with 4332 violations.
+    elapsed time = 00:00:00, memory = 2349.51 (MB).
+    Completing 20% with 4332 violations.
+    elapsed time = 00:00:00, memory = 2349.51 (MB).
+    Completing 30% with 4329 violations.
+    elapsed time = 00:08:04, memory = 2404.52 (MB).
+    Completing 40% with 4329 violations.
+    elapsed time = 00:08:04, memory = 2404.52 (MB).
+    Completing 50% with 4329 violations.
+    elapsed time = 00:08:04, memory = 2404.52 (MB).
+
+Elapsed time: 0:06.22[h:]min:sec. CPU time: user 17.56 sys 1.90 (312%). Peak memory: 499984KB.
+Elapsed time: 0:03.44[h:]min:sec. CPU time: user 4.12 sys 1.15 (153%). Peak memory: 341304KB.
+Elapsed time: 0:04.55[h:]min:sec. CPU time: user 5.18 sys 0.64 (128%). Peak memory: 344200KB.
+Elapsed time: 0:13.02[h:]min:sec. CPU time: user 23.69 sys 4.54 (216%). Peak memory: 366972KB.
+Elapsed time: 0:14.61[h:]min:sec. CPU time: user 67.70 sys 4.81 (496%). Peak memory: 566600KB.
+Elapsed time: 4:01:28.35[h:]min:sec. CPU time: user 26499.22 sys 12.67 (182%). Peak memory: 2909032KB.
+make[1]: *** [Makefile:589: do-5_2_route] Error 241
+make: *** [Makefile:589: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_2_route.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-fast-frontier-parent-context-v2/runtime_r3/physical.json

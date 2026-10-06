@@ -1,0 +1,34 @@
+{
+  "status": "PASS_RELEASED_PARALLEL32_COMPONENT",
+  "source_commit": "0c9bba0d77d06c944cf1e51e404c02517b1560ff",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/codex/item1-qwen-fullwidth-20261006/parallel32-r1",
+  "configuration": {
+    "PC_BASE": 0,
+    "PCs": 32,
+    "MEM_WORDS": 4718592,
+    "LANDING_RSEL": 1,
+    "LOCAL_WIRE_SPANS": 0
+  },
+  "checks": {
+    "released_KV_rows": 128,
+    "simultaneous_PCs": 32,
+    "writes": 32,
+    "ACKs": 32,
+    "final_debt": 0,
+    "warm_held": true,
+    "actual_credits": true
+  },
+  "clock_ps": {
+    "core": 833.333,
+    "hbm": 1024
+  },
+  "scope": "One full32-PC independent protected landing bank; no controller/numerical full36 result yet",
+  "physical_qualified": false,
+  "full_token_pass": false,
+  "rate_adopted": false,
+  "exclusions": [
+    "r19 physical768b row queues and burst-conflict arbitration are absent",
+    "later LOCAL_WIRE_SPANS14 topology bench is not executed by this gate"
+  ]
+}

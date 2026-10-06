@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.hbm.vm_publication_parent.v1",
+  "composition": [
+    "memory_control/vm_root_composed_component.json",
+    "memory_control/index_fp32_adapter_prebuild.json"
+  ],
+  "default_enabled": false,
+  "replicas": 1,
+  "MACs_per_cycle_delta": 0,
+  "activation": {
+    "banks": 2,
+    "rows": 128,
+    "payload_bits": 2063,
+    "owner_bits": 192,
+    "real_SRAM_count": 22,
+    "macro_read_bits": 5632,
+    "macro_write_bits": 2816,
+    "multicast_bits": 8252
+  },
+  "index": {
+    "real_SRAM_count": 10,
+    "rows": 512,
+    "FP32_words": 16384,
+    "macro_read_bits": 1280,
+    "macro_write_bits": 1280,
+    "client_bytes_per_accept": 128,
+    "outstanding": 1
+  },
+  "added_registers": {
+    "descriptor_useful": 156,
+    "descriptor_W6_FF": 216,
+    "current_context_row_validity_useful": 256,
+    "row_validity_W6_FF": 288,
+    "pending_publisher_useful": 2,
+    "pending_publisher_W6_FF": 72,
+    "reverse_receipt_seats": 4,
+    "reverse_receipt_payload": 265,
+    "reverse_receipt_FF_each": 722,
+    "release_receipt_FF": 360,
+    "total_FF": 3824
+  },
+  "FF_area_floor_um2": 1115.0784,
+  "minimum_FF_footprint_at55_um2": 2027.4152727272728,
+  "combinational_area": "actual mapping required; 2:1 1056-bit publication mux, full73-frame comparators, protected validity address selector and codecs; not free",
+  "replica_cost": {
+    "activation_read_taps": 4,
+    "reverse_ACK_banks": 4,
+    "publication_arbiter_inputs": 2,
+    "index_read_clients": 1
+  },
+  "native_index_binding": {
+    "source": "ot_hbm_native_index_frame_binding",
+    "protocol": "actual index_path vm_read/vm_rsp1024/tag8/WORD32; not W15 pair85/599",
+    "extra_FF": 0,
+    "extra_pipeline_cycles": 0,
+    "payload_muxes": 0,
+    "owner": "existing protected CP full73 and parent retained full73; no new authority",
+    "comparator_bits": 202,
+    "area": "map actual comparators and permission gates; not measured/free",
+    "clocks": "same actual clk_sm; no serial CDC or off-package link",
+    "new_boundary_token_bits": 17,
+    "full_parent_physical_closed": false
+  },
+  "boundaries_bits_per_accept": {
+    "publisher_each": 1131,
+    "index_request": 128,
+    "index_response": 1114,
+    "activation_write": 2338,
+    "activation_tap_each": 2330,
+    "reverse_ACK_each": 267
+  },
+  "routing": {
+    "new_reverse_ACK_payload_tracks": 1064,
+    "new_reverse_ACK_root_clock_pins": 4,
+    "finite_parent_channels_bound": false,
+    "route_launch_allowed": false
+  },
+  "area_and_slot": "existing VM reservation, positive added FF cost above; full caller/result channel allocation and actual mapped cell cost remain open",
+  "clocks": "real clk_sm833.333ps and cold por_n; output clocks directly inherit that root, no new oscillator or borrowed propagated latency",
+  "latency": {
+    "provider_write_verified_ACK_edges": 4,
+    "provider_read_publication_edges": 3,
+    "reverse_receipt_capture_edges": 1,
+    "added_publication_arbitration_edges": 0,
+    "root_release": "after all actual branch ACKs; incoming ACK seat adds one capture edge and held release receipt adds one capture edge before actual parent retirement",
+    "single_user_composition": "existing producer -> verified provider ACK -> actual index/activation consumer -> matching receipt -> parent retire; CE repair and backpressure extend the same retained transaction"
+  },
+  "source_SM_visibility_owner": "Claude HBM-SM; no delay-derived ACK",
+  "service_CA_calendar_owner": "Gibbs/Bacon; this provider join does not duplicate controllers",
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "parent_physical_closed": false,
+  "adopted": false
+}

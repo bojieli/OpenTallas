@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL_POST_PDN_TCL_ARRAY_SCALAR_COLLISION",
+  "source_commit": "6512685dd",
+  "engine_source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "canonical_and_synthesis_pass": true,
+  "four_actual_ROMs_placed": true,
+  "failed_statement": "set count 0 with existing count(parent)/count(engine) array",
+  "correction": "isolated pdn_count_fix.tcl renames only scalar fault count to fault_count; keep all original60 source pins and fault-family gates",
+  "earliest_valid_checkpoint": "2_3_floorplan_tapcell.odb",
+  "resume_without_synthesis_or_smoke": true,
+  "source_objects_and_original_failure_retained": true,
+  "physical_qualified": false,
+  "missing_input_clocks": true,
+  "files": {
+    "physical.json": "7450e83b830dfbdaa518b1a93446eae5b9c49d644f0078967c0084c33f91b57c",
+    "2_4_floorplan_pdn.log": "8dc071c98ebb93dc3ccd90e10a2181ce744f4a3c08d3033cac9974e48d7f2626",
+    "receipt.json": "45809871357c9de188d87a0c9d092d0301e43e24e3862a07f5d14bb22be33469",
+    "terminal.json": "216b6afdc4c659e2f47e9e4ca87a9bfdcb15873115251a1089b787aecf223143"
+  }
+}

@@ -1,0 +1,53 @@
+{
+ "rung": "R5a",
+ "adopted": false,
+ "SS_FF_qualified": false,
+ "new_fanout_physical_failures": 2,
+ "fanout_attempts": 3,
+ "e11a": {
+  "source_commit": "1d8895147271fe6fdb816df2604c37d07e227608",
+  "exit": 1,
+  "stage": "4_1_cts",
+  "placement_legal": true,
+  "placed_area_um2": 590109,
+  "error": "RSZ-0060 Max buffer count reached; cts.tcl:83",
+  "hold_buffers": 390354,
+  "final_hold_repair_WNS_ps": -1777.625,
+  "endpoint": "on.u_ids.wbin[0]$_DFF_PN0_/D",
+  "setup_repair_initial_violating_endpoints": 93971,
+  "setup_repair_initial_WNS_ps": -2586.436,
+  "setup_repair_initial_worst": "s_data[4857]",
+  "final_hold_startpoint": "not recorded in retained CTS log",
+  "SS_FF_signoff": "not completed",
+  "last_legal_checkpoint": "routes/e11_toolfix/work/orfs/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11_toolfix/base/3_5_place_dp.odb"
+ },
+ "e11c": {
+  "source_commit": "3f3945cc284fec684c48485369b3450cb2967580",
+  "exit": 1,
+  "stage": "3_5_place_dp",
+  "error": "DPL-0033 detailed placement checks failed; detail_place.tcl:39",
+  "placed_in_rows_failures": 5844,
+  "overlap_violations": 0,
+  "edge_spacing_violations": 0,
+  "padding_violations": 0,
+  "examples": [
+   "PHY_EDGE_ROW_0_15_Left_1246",
+   "TAP_TAPCELL_ROW_1137_11705"
+  ],
+  "failed_checkpoint": "routes/e11c/work/orfs/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11c/base/3_5_place_dp-failed.odb"
+ },
+ "e11b": {
+  "source_commit": "3f3945cc284fec684c48485369b3450cb2967580",
+  "wrapper": 3524522,
+  "stage": "4_1_cts live at review",
+  "terminal": false,
+  "placement_legal": true,
+  "placed_area_um2": 586782,
+  "last_sample_hold_buffers": 126785,
+  "last_sample_hold_WNS_ps": -1736.558,
+  "action": "Preserve live flow; no restart"
+ },
+ "blocker": "CTS hold-buffer explosion at FIFO write pointer and compact macro-block row membership for tap/endcap cells; no source redesign or constraint relaxation inferred/implemented",
+ "next_action": "Preserve e11b until terminal; designed remedy review requested from Claude, no blind next variant",
+ "cached_exactness": "88/88 source4aa retained without replay; completed e10 netlist reused without RTL resynthesis"
+}

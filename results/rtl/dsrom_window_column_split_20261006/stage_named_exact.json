@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "source_commit": "141c415d0",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv": "69143c9fb9a70431ed33f7697d7084443bd3104d99be9e17dfd714da3d55f6af",
+    "rtl/test/dsrom_sys/s81_window_la/tb_window_stage_read_qualification.sv": "be13a9538c93ed57ee3524658a2700b4cce76319eb16b6625d26877150d36a5c"
+  },
+  "released_rows_sha256": "0c8ab9073125988af02b5632466c0b86f43f56723afc78d5d67e443d43890ac8",
+  "NPC": 32,
+  "rows": 128,
+  "columns": 68,
+  "SPLIT_COLUMNS": 1,
+  "reads": 269,
+  "valid_lanes": 645,
+  "denied": 16,
+  "completion_races": 2,
+  "response_edges": 3,
+  "added_cycles": 0,
+  "scope": "Changed full-shape staging component only; existing 344-case source campaign not repeated",
+  "positive_exit": 0,
+  "physical_closed": false,
+  "fixed_macro_cells": [
+    "ot_dsrom_window_column_128",
+    "ot_dsrom_window_column_256"
+  ]
+}

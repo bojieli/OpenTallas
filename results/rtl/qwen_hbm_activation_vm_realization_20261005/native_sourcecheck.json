@@ -1,0 +1,28 @@
+{
+  "source_commit": "e6b3b13830bc4cb8c69fbaf77def472505848d46",
+  "host": "ot-epyc1tb",
+  "job": "arendt-qwen-finite-vm-sourcecheck-r1",
+  "launcher_pid": 823032,
+  "exit_code": 0,
+  "tool": "Verilator5.032 --lint-only -Wno-fatal",
+  "top": "ot_qwen_finite_vm_adapter",
+  "parameters": {
+    "ENABLE": 1,
+    "HEAD_CACHE": 0
+  },
+  "actual_macro_model": true,
+  "errors": 0,
+  "warnings": 38,
+  "warning_classes": [
+    "TIMESCALEMOD",
+    "WIDTHEXPAND",
+    "WIDTHTRUNC"
+  ],
+  "native_simulation_run": false,
+  "whole_core_build": false,
+  "physical_admission": false,
+  "sourcecheck_log_sha256": "c4841f0a8ff411a0c9661d3b4cab9b9765d72d2074c212f069a6cad0c5d9f954",
+  "sourcecheck_elapsed_seconds": 19.669,
+  "verilator_allocator_MB": 2857.309,
+  "owned_running_jobs": 0
+}

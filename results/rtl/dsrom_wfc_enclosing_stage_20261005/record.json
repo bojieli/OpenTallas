@@ -1,0 +1,92 @@
+{
+  "owner": "Zeno",
+  "verdict": "PASS_MINIMUM_ENCLOSING_MECHANISM_ONLY",
+  "tool": {
+    "name": "Verilator",
+    "version": "5.032",
+    "reported_date": "2025-01-01",
+    "archive_mix": false,
+    "version_5_050_qualified": false
+  },
+  "model_before_source_commit": "f1fd583ca",
+  "source_implementation": "ab2816d84",
+  "source_ack_guard": "76d459146",
+  "retained_controller": {
+    "full866_gate_main": "d1a5fbefc",
+    "sha256": "4032da3c9b4baa4f4639b836379d8f5eba3b365c68b708edbaeb185784dbcc62",
+    "exact_body_reverse_extraction_verified": true,
+    "controller_body_state_calendar_changed": false,
+    "replayed_full_shape": false
+  },
+  "r1": {
+    "supervisor": 2005275,
+    "start": "2026-10-06T00:44:19.067697+00:00",
+    "terminal_exit": 0,
+    "build_wall_seconds": 4.77,
+    "build_frontend_alloc_MB": 49.773,
+    "runtime_wall_seconds": 0.005,
+    "runtime_simulated_ns": 348,
+    "runtime_alloc_MB": 1022,
+    "default_OFF_and_structural": true,
+    "MAXU": 866,
+    "actual_user": 865,
+    "full_VM_words": 32768,
+    "word_bits": 512,
+    "VM_mutable_bits": 16777216,
+    "VM_highest_address": 32767,
+    "request_stall_edges": 8,
+    "restore_stall_edges": 6,
+    "exact_VM_writes": 41,
+    "exact_routed_flits": 47,
+    "actual_C8_retirements": 1,
+    "actual_whole_stage_ACKs": 1,
+    "fragment_C8_retirement_did_not_authorize_whole_ACK": true,
+    "warm_reset_second_accepted_job_retained_and_quarantined": true,
+    "warm_VM_highword_preserved": true,
+    "un_stalled_WFC_start_to_native_capture_edges": {
+      "default_OFF": 4,
+      "structural": 3
+    }
+  },
+  "r2_negative": {
+    "supervisor": 2050655,
+    "start": "2026-10-06T00:48:47.963467+00:00",
+    "terminal_exit": 0,
+    "build_wall_seconds": 3.212,
+    "runtime_wall_seconds": 0.003,
+    "runtime_simulated_ns": 182,
+    "case": "Wrong whole-stage identity after actual qualified completion capture, before acceptance",
+    "false_ACKs": 0,
+    "owned_job_retained": true,
+    "quarantine": true,
+    "new_SOURCE1_enclosing_elaboration_exit": 0,
+    "source1_numerical_replayed": false,
+    "unchanged_positive_gate_replayed": false
+  },
+  "production_status": {
+    "default_ENABLE": 0,
+    "default_STRUCTURAL": 0,
+    "canonical_cfg_prompt_whole_stage_producer_body_bound": false,
+    "canonical_native_engine_body_bound": false,
+    "canonical_protection_hooks": "C8 write journal/restore/collective owners remain real input hooks; existing C8 receiver unchanged",
+    "VM_port_scope": "Full native xa plus four xb collective ports, exact lane/priority/synchronous-read contract; other tile core writers remain outside this minimum port slice; not a whole-tile VM/macro qualification",
+    "P_and_R_ready": false,
+    "SS_FF_closed": false,
+    "adopted": false
+  },
+  "missing_nodes": {
+    "Copernicus": [
+      "real cfg_users10/plen21/glen21 register/programming bank and validity/run stability",
+      "real synchronous pr_re/pr_user10/pr_pos21/pr_blk4 -> pr_q21/pr_qk launch/capture source",
+      "real stage_epoch16/stage_entry14 descriptor producer",
+      "accepted whole-stage request_v/ready identity47/token21/entry14 -> held result_v/identity47/token21/value32 until actual WFC ACK; full stage/visibility authority",
+      "real context_restored/native_idle/native_fragment_done owner sources and loaded clocks/pins"
+    ],
+    "Turing": [
+      "finite selected WFC rectangle/channel/clock allocation for controlbody30388.24596um2/477enclosingFF/tracks12933",
+      "native tile full19bit scalar VM/16x32lane physicalview/macro/SSclkQ/setup/hold/pin caps/propagatedclock; complete existing shared-writer contract, no FF/no free-macro substitution"
+    ]
+  },
+  "source_evidence": "Existing pinned native C8 cda9b462... and tile784e4dc6...; no native parent or wholearray build",
+  "claim": "Fixture supplies dynamic held requests/results and fences to measure boundary mechanics. It is not a canonical numerical whole-stage producer or parent physical closure."
+}

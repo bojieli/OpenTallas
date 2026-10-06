@@ -1,0 +1,12 @@
+{
+  "source_commit": "d0488d023 + unchanged mapped C21 objects with four existing capture outputs exposed",
+  "base": "/work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C22_checked_receivers/base",
+  "reused_sha256": {
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C22_checked_receivers/base/1_2_yosys.v": "9f4c8ea03a5e71a9837390a887c222e54ed53ee060821e9b0e4a75e7bf04c84c",
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C22_checked_receivers/base/1_2_yosys.sdc": "90988c2c8b9cbefabc316959b0b3ed21d0df999d71ffdfbf766161199408f6f1",
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C22_checked_receivers/base/clock_period.txt": "3e2268493d780708f234bc17eeb1d99e5d197adfa0ccf8c0c859e62dcc40bf78"
+  },
+  "original_mapped_SHA256": "dd09d63c4252179836b473926bb20f362a934cf988bd1066004ee8fb41f2f5e9",
+  "mapping_change": "Only top output declaration, four-bit concat of existing kept receiver nets, and port list; reverting these text additions reproduces old mapped bytes exactly. All cells/logic/arithmetic identical; OpenROAD must now retain existing receivers.",
+  "no_arithmetic_synthesis_or_exact_replay": true
+}

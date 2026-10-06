@@ -1,0 +1,38 @@
+{
+  "ownership": "Carson sole additive bounded router repair; Turing no router source/job; no newer selected closed tuple supplied",
+  "selected": "topk_f3 source181dedac+1f131d8c P16 N384 K6 IW9 latency23",
+  "actual_retained_sdc": "/home/ubuntu/claude-hbm-fmax-ctl/routes/topk_f3/work/orfs/results/asap7/opentallas_ot_gpu_router_topk_f_asap7_fmc_topk_f3/base/6_final.sdc",
+  "sdc_sha256": "1ce35f39423e56ccad763261f78817a51b4eb8571e28b25d3b4491454600c849",
+  "clock": {
+    "port": "clk",
+    "name": "core_clk",
+    "period_ps": 833,
+    "propagated": true,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "boundary_contract": {
+    "input_delay_ps": 166.6,
+    "output_delay_ps": 166.6,
+    "output_load_fF": 3.898,
+    "basis": "Assigned standalone flow contract (20% period and fixed load), NOT measured parent producer clkQ/wire or receiver pin caps. Preserve exact retained SDC semantics, including min/max omissions, for comparable diagnostic."
+  },
+  "parent_context_missing": [
+    "actual selected producer and receiver instance/pin mapping",
+    "SS/FF producer clock-to-Q and wire delays",
+    "receiver SS/FF pin caps plus wire",
+    "actual parent clock root/insertion/skew/slew and reset distribution"
+  ],
+  "candidate_model_as_reported_not_independently_verified": {
+    "cells_um2": 48938.8,
+    "existing_core_um2": 83666.1,
+    "utilization": 0.5849298580906723,
+    "60pct_cell_ceiling_um2": 50199.66,
+    "remaining_to_60pct_um2": 1260.8600000000006,
+    "FF": 49370,
+    "extra_FF": 17836,
+    "tail_cycles_added": 5,
+    "forty_layer_latency_ns_added": 166.67
+  },
+  "allocation_status": "Analytical fit only at 60%, no selected physical reallocation or CTS/PG/channel clearance inferred. Actual buffer/reset/routing growth must be charged; enlarge finite slot if needed, do not silently exceed cap. No SSFF parent closure credit from retained assigned IO."
+}

@@ -1,0 +1,98 @@
+{
+  "verdict": "PASS_LIVE_SWIGLU_W2_CONNECTED_PUBLICATION_CPL",
+  "scope": "retained actual GU/router -> live numerical W64 SwiGLU -> readyless capture/transpose -> W2/NS2 -> protected four-row readback -> shared release/held END-CPL",
+  "source_private": "95fd2b20ead9b3c0100bd4b8c0c1758a27dc635a",
+  "downstream_source": "a86d3cfd32b62f28e86abcbcd8044b57baf20db1",
+  "host": "ot-epyc2",
+  "remote_job": "/srv/opentallas-scratch2/jobs/franklin-live-swiglu-w2-r1",
+  "terminal_exits": {
+    "compile": 0,
+    "runtime": 0,
+    "run_sh": 0
+  },
+  "numeric_rows": [
+    {
+      "cycle": 11234,
+      "op": 0,
+      "row": 0,
+      "bits": "3dd91184"
+    },
+    {
+      "cycle": 11628,
+      "op": 0,
+      "row": 1,
+      "bits": "3caccd6c"
+    },
+    {
+      "cycle": 12358,
+      "op": 1,
+      "row": 0,
+      "bits": "3d9c2d26"
+    },
+    {
+      "cycle": 12752,
+      "op": 1,
+      "row": 1,
+      "bits": "bbd91c50"
+    }
+  ],
+  "full_readbacks": [
+    {
+      "cycle": 11535,
+      "slot": 0
+    },
+    {
+      "cycle": 12196,
+      "slot": 1
+    },
+    {
+      "cycle": 12655,
+      "slot": 2
+    },
+    {
+      "cycle": 12826,
+      "slot": 3
+    }
+  ],
+  "last_readback_cycle": 12826,
+  "release_cycle": 12828,
+  "cycles": 12845,
+  "sector_reads": 212,
+  "native_requests": 64,
+  "native_returns": 64,
+  "provider_accepts": 220,
+  "writes": 4,
+  "readbacks": 4,
+  "shared_releases": 1,
+  "producer_vectors": 2,
+  "elements_per_vector": 2304,
+  "total_FP8_blocks": 144,
+  "payload_comparator": "all64 live xwrite beats checked against retained exact xwords; no expected outputs used as producer",
+  "retained_GU_boundary": true,
+  "live_GU": false,
+  "full_token": false,
+  "physical_closed": false,
+  "parent_model_ready": false,
+  "adopted": false,
+  "generic_SUc12_command_enrolled": false,
+  "source_SU_pins": {
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "7a24121cf7494d5beaf1ebfd935424ed4d7cc512a764e970d6517841af0e90d2",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "61c22f6180c13408549ee52020cd3150860243c91393b268eddcc308eb46fc24",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007"
+  },
+  "original_NS2_prefix": "/srv/opentallas-scratch2/jobs/hubble-native-connected-w2-r1/original/mem",
+  "NS2_loading": "original p0/p1 images before sparse W2 overlays",
+  "evidence_sha256": {
+    "source_manifest.json": "ac269cb34f0f68df7a049f6fb39a556309e2fc17ecc5fda60025fa9b7e168362",
+    "producer_source_pin.json": "9d5c568209da05569db71561b72b3e79a333a05461c2484ddc66b70b2c8fc227",
+    "compiled_source_pin.json": "1257bdd08ac7c4da8338de070f62aea986cf922b563e7c93ac3857169c04c277",
+    "runtime.log": "966903d516817214211293675ba83d66f7085ad565759e6ed2acd630a75f7b7b",
+    "runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "toolchain.log": "31ee8ba532711b2dcaef0bb2e203e20284e39ea422325f094074f3c2a9da7996",
+    "finished.utc": "2b0b14adee1652164f05d0fc6a47c1ad4881f3d4ffee9dc2177b7b740916d5c3",
+    "command.json": "ca2d283cae446a4b02d7246fd134b96eed4597f561596462c3ac50efa972399b",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "started.utc": "7a8ad63291e0fa62d5ef430fafa82d1769211575a38f5b49346bd30cf983d71a"
+  }
+}

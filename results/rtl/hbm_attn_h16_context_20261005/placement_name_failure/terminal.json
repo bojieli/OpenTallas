@@ -1,0 +1,12 @@
+{
+  "source_commit": "944f6b7364c5354244ba5b4f8e8afdc835d2cb6e",
+  "original_job_root": "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_pnr",
+  "native_error": "MPL-0020 macro g_g[0].u_g missing",
+  "actual_db_name": "g_g\\[0\\].u_g",
+  "original_failure_preserved": true,
+  "same_artifact_corrected_placement_regression": "PASS16_SELECTED_FIXED_HEADS; all16 originalslots FIRM/R0",
+  "new_rtl_cycles": 0,
+  "density_geometry_clock_uncertainty_changes": false,
+  "context_qualified": false,
+  "successor_action": "Resume stored2_1floorplan ODB with corrected instance escaping only; preserve synthesis and original failed case"
+}

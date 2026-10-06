@@ -1,0 +1,278 @@
+{
+  "verdict": "PASS_MINIMUM_PROTECTED_PARENT_COMPONENTS",
+  "error": null,
+  "source_stable": true,
+  "stages": [
+    {
+      "name": "caller_compile",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-I/tmp/w2-protected-parent-min-r1",
+        "-s",
+        "tb_hbm_w2_protected_caller",
+        "-o",
+        "/tmp/w2-protected-parent-min-r1/caller.vvp",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/link/ot_link_afifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_caller.sv"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.019411444198340178
+    },
+    {
+      "name": "sector_compile",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-I/tmp/w2-protected-parent-min-r1",
+        "-s",
+        "tb_hbm_w2_protected_sector_min",
+        "-o",
+        "/tmp/w2-protected-parent-min-r1/sector.vvp",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/link/ot_link_afifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/test/hbm_accel/integrated_20261005/tb_hbm_w2_protected_sector_min.sv"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.034205182921141386
+    },
+    {
+      "name": "publication_compile",
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-I/tmp/w2-protected-parent-min-r1",
+        "-s",
+        "tb_hbm_integrated_w2_publication_nash",
+        "-o",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp",
+        "-Ptb_hbm_integrated_w2_publication_nash.PROTECTED_TRANSACTION_PIPELINE=1",
+        "-Ptb_hbm_integrated_w2_publication_nash.PROTECTED_PARENT_BOUNDARY=1",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/link/ot_link_afifo.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+        "/home/ubuntu/wt-w2-publication-bound-20261005/rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_w2_publication_nash.sv"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.042854847852140665
+    },
+    {
+      "name": "caller_clean",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/caller.vvp",
+        "+GOLD=/home/ubuntu/wt-w2-publication-bound-20261005/results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/expected_rows.hex"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.23933566687628627
+    },
+    {
+      "name": "caller_CE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/caller.vvp",
+        "+GOLD=/home/ubuntu/wt-w2-publication-bound-20261005/results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/expected_rows.hex",
+        "+CALLER_CE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.24295335030183196
+    },
+    {
+      "name": "caller_DUE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/caller.vvp",
+        "+GOLD=/home/ubuntu/wt-w2-publication-bound-20261005/results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/expected_rows.hex",
+        "+CALLER_DUE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.19417245779186487
+    },
+    {
+      "name": "sector_clean",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/sector.vvp",
+        "+DIR=/tmp/w2-protected-parent-min-r1",
+        "+NWORDS=3268",
+        "+NCASES=2",
+        "+OUT_BASE=71bd800",
+        "+OUT_LIMIT=71bd880"
+      ],
+      "returncode": 0,
+      "elapsed_s": 6.8294236697256565
+    },
+    {
+      "name": "sector_CE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/sector.vvp",
+        "+DIR=/tmp/w2-protected-parent-min-r1",
+        "+NWORDS=3268",
+        "+NCASES=2",
+        "+OUT_BASE=71bd800",
+        "+OUT_LIMIT=71bd880",
+        "+SECTOR_CE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 6.654126933775842
+    },
+    {
+      "name": "sector_DUE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/sector.vvp",
+        "+DIR=/tmp/w2-protected-parent-min-r1",
+        "+NWORDS=3268",
+        "+NCASES=2",
+        "+OUT_BASE=71bd800",
+        "+OUT_LIMIT=71bd880",
+        "+SECTOR_DUE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 1.2131155566312373
+    },
+    {
+      "name": "publication_clean",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp"
+      ],
+      "returncode": 0,
+      "elapsed_s": 11.550856047309935
+    },
+    {
+      "name": "publication_gateway_CE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp",
+        "+CORRECT_GATEWAY_CE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 11.614990328904241
+    },
+    {
+      "name": "publication_gateway_DUE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp",
+        "+CORRUPT_GATEWAY_CONTROL"
+      ],
+      "returncode": 1,
+      "elapsed_s": 1.5834106360562146
+    },
+    {
+      "name": "publication_CDC_memory_CE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp",
+        "+CORRECT_CDC_MEMORY_CE"
+      ],
+      "returncode": 0,
+      "elapsed_s": 11.651544426102191
+    },
+    {
+      "name": "publication_CDC_memory_DUE",
+      "command": [
+        "vvp",
+        "/tmp/w2-protected-parent-min-r1/publication.vvp",
+        "+CORRUPT_CDC_MEMORY_DUE"
+      ],
+      "returncode": 1,
+      "elapsed_s": 1.7595920977182686
+    }
+  ],
+  "scope": "Existing four-row32word literal publication/shared-owner/CP-END-CPL gate plus canonical actual caller four rows and two actual source sector frames; protection/transport only. No native arithmetic replay or full-token claim.",
+  "source_default_off": true,
+  "new_extracted_context_warm_qualified": false,
+  "physical_qualified": false,
+  "release_cycle": 322,
+  "fourrow_direct_component_release": 196,
+  "observed_delta_including_asynchronous_context": 126,
+  "delta_is_not_gateway_only": true,
+  "artifact_sha256": {
+    "memory.hex": "fa09b534ee631996a6762ad38601017a2ce1df421f53aa52619bdaa9d3b9d915",
+    "publication_compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_CDC_memory_DUE.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "sector_CE.log": "1a6d196bc4fe6224b750d259e5215806109909eafcef94840e9302738bf3b0a2",
+    "publication_CDC_memory_CE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_gateway_DUE.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "caller_compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "sector_compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "expected.hex": "f9af96fc6c04ee473440bf1fec95a87a9c87fa592386c31f5f1004b9d79d173b",
+    "sector_DUE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_compile.log": "c31dd92d4f3113fa79681b17a808f6c52a2bdfd883ea2e8dd371e97aa484eb9c",
+    "publication_CDC_memory_DUE.log": "c8f864de1634d03859995e34333e03836fdada9dbf402512124f7515324524f5",
+    "sector_CE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_CDC_memory_CE.log": "0a5bf9f02539031908d876f199f4873dd7e909d87850433a4748133881d45dd8",
+    "caller_clean.log": "31345008ba0ad853817e2319bb92aa86fcce753952ff7377a8959dc3428c5c01",
+    "publication_clean.log": "06f40744acb1eba8c139b5ae5144e5c51f9a3e17f8a18545bc79f61b080bb172",
+    "source.json": "97705058382c8a858d25233d2b0092742640552301dafaae297948efb039f730",
+    "caller_DUE.log": "6ec5a73217e87e9aa6d925af9dd027f2f20c70874c9a390645c525c9b3c9462d",
+    "caller_CE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "memory_addresses.hex": "d9adb79111536de2447369fce6fe1ebe10288ddfae79d2a1c1a2bc0ddd5a6cab",
+    "sector_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "publication_gateway_CE.log": "bc7c6c2421993b2a86040d0c0f917c66aa99a48a921e01b3d1f69a9745b595c6",
+    "caller_DUE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_gateway_CE.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_gateway_DUE.log": "d5a1101dd18503870f28ae7531a854f3d75797ea27db9374346c0f9deb794b69",
+    "sector_clean.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "publication_clean.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "private_alloc.svh": "e75032ac4a0187bf7f34b793b372f6da3d749e68e4009259d920cf359c1bee36",
+    "caller_CE.log": "51b8272844927d297b03783d0a44d2a052461552beaf849b3f6001569b28ef39",
+    "sector_clean.log": "a9a22db55dc1b6de57b241c263186b1d1c0e8f2193d927a06768a9488ddcfb44",
+    "sector_DUE.log": "494406c43d9f22cb6ab268dba1c32a4d72a2bec819c4496cdd4dd3a2a9e751e9",
+    "caller_clean.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "maps.hex": "0567cebf1befd8d28e2c9a35d8ff97b67f2a30e0b371006e1ca9ca2586e0c66a",
+    "caller_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

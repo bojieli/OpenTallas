@@ -1,0 +1,6 @@
+make: Entering directory '/srv/opentallas-scratch2/jobs/w2-protected-parent-warm-r1-diagnostic/obj'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_integrated_gu_w2_hubble__pch.h.fast -c -o Vtb_hbm_integrated_gu_w2_hubble___024root__DepSet_he38e0ad3__12.o Vtb_hbm_integrated_gu_w2_hubble___024root__DepSet_he38e0ad3__12.cpp
+echo "" > Vtb_hbm_integrated_gu_w2_hubble__ALL.verilator_deplist.tmp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_hbm_integrated_gu_w2_hubble__ALL.a    -pthread -lpthread -latomic   -o Vtb_hbm_integrated_gu_w2_hubble
+rm Vtb_hbm_integrated_gu_w2_hubble__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch2/jobs/w2-protected-parent-warm-r1-diagnostic/obj'

@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "su_routeract",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": {
+  "period_ps": 1111.0,
+  "spsqrt_lane": {
+   "ss_setup_wns_ps": 33.0,
+   "ff_hold_wns_ps": -0.9,
+   "cell_area_um2": 21247.53606,
+   "worst_end": "u.u.g_lane[0].g_short.u.g_h[7].u_h.s1_rows[13]$_DFF_P_",
+   "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock",
+   "record": "results/rtl/dsrom_recovery_20261004/su_routeract/screens/r2_lane1_1111.json"
+  },
+  "bias_select": null,
+  "route": {
+   "closes_signoff": true,
+   "period_ns": 1.111,
+   "ss_setup_wns_ps": 17.0,
+   "ff_hold_wns_ps": 3.74,
+   "top": "ot_dsrom_su_spsqrt_lane1 (one ot_hdc_v41x_softplus_s PCUT 1 lane + in register)",
+   "record": "results/rtl/dsrom_recovery_20261004/su_routeract/route_lane1_1111/corner_sta.json"
+  },
+  "closes": true
+ },
+ "nodes": {
+  "*.ffn.softplus_sqrt": {
+   "us": 0.14667,
+   "cls": "measured",
+   "source": "ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token + 200016 stress inputs (sim.json)"
+  }
+ },
+ "measurement": {
+  "old": {
+   "softplus_sqrt_us": 0.1522,
+   "bias_us": 0.0922,
+   "top6_order_us": 0.0367,
+   "record": "results/rtl/dsrom_recovery_20261004/composition.json (wired SU 0.9 GHz + measured CDC)"
+  },
+  "new": {
+   "softplus_sqrt_clock_hz": 900000000.0,
+   "softplus_sqrt_cycles": 132,
+   "softplus_sqrt_us": 0.14667,
+   "lane_latency": 128,
+   "bias_select_cycles": 48,
+   "top6_order_us": 0.04
+  },
+  "saving_us_per_layer": 0.00553,
+  "bias_fold": "not applied (see note)",
+  "floor": {
+   "anatomy_floor_router_act_fast_cycles": 219,
+   "anatomy_floor_us": 0.1825,
+   "achieved_us": 0.14667,
+   "achieved_on_path_us_incl_cdc": 0.1522,
+   "why_below": "the short unit (ot_hdc_v41x_softplus_s) computes each golden rounding with fused correctly-rounded steps (Horner step 5, sqrt 16, t/(t+2) 19 from the exp Horner result), depth 124 at 0.9 GHz vs the 216-cycle op-by-op chain at 1.2 GHz; same bits (exhaustive 2^32 in results/rtl/w11_softplus_short.json, plus all 40 layers here)",
+   "residual": "lane latency 128 (in 2 + 124 + out reg 1 + out 2 - 1) + 3 stream beats + 1; re-pipelining the short unit for 1.2 GHz would save ~0.01 us a layer (<0.1% AR): not pursued"
+  }
+ },
+ "default": "opt-in: applied only in the recovery baseline; the stream unit's side pipe and ot_hdc_select_tree are unchanged",
+ "note": "1.2 GHz variants do not close: the serial f12 lane screens -431.2 ps at 833 ps (fsqrt, fdiv, exp glue; screens/r1_lane0_f12_833_FAIL.json), the short lane -245.0 ps at 833; the short lane closes 1.111 ns ROUTED (SS +17.0 / FF +3.74 ps), so the unit runs in the 0.9 GHz serial domain at the router field root and the composition charges the measured CDC on its two edges. Bias fold (ot_dsrom_su_bias_select, exact 40/40 layers + 4,000 random, 48 cyc) REJECTED: worth ~0.09 us a layer (<1% alone) and its in-context f12 adder screens -170.7 / -46.2 (keep) / -85.4 (LA 5, keep) ps at 833 ps; ffn.bias stays on the SU. Composed (this lever alone on main 620.078 us): AR 1,612.7 -> 1,643.0 tok/s (+1.88%), MTP 4,462.1 -> 4,528.9 (+1.50%). Area: 24 lanes x 21,248 um2 cell = 0.51 mm2 (extent ~0.71 mm < 748 um reach: the 2 in / 2 out wire stages are conservative)."
+}

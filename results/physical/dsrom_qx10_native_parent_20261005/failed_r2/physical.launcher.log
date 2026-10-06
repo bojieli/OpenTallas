@@ -1,0 +1,43 @@
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+D-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+13. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv
+14. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_kreg.sv
+15. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain3.sv
+16. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_rom_elem_w10.sv
+17. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm.sv
+18. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain.sv
+19. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree.sv
+20. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes.sv
+21. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_fadd.sv
+22. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm2_w10.sv
+23. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_chain2.sv
+24. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree2.sv
+25. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bf16_lanes2.sv
+26. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_bterm3_w10.sv
+27. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree3.sv
+28. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree4.sv
+29. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_segtree5.sv
+30. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_rom_elem_qx_w10.sv
+31. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_bterm4_w10.sv
+32. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_chain4.sv
+33. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/selected_0032/ot_v41_fadd2.sv
+34. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv
+35. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+36. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+37. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_cg.sv
+38. Executing Verilog-2005 frontend: /src/rtl/proto/ot_fp32_add_rne_pipe.sv
+39. Executing Verilog-2005 frontend: /src/rtl/common/ot_prefix.sv
+40. Executing Verilog-2005 frontend: /src/physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv
+41. Executing Verilog-2005 frontend: /src/rtl/v41die/ot_v41_retn_w17w10.sv
+42. Executing Verilog-2005 frontend: /src/rtl/v41rom/ot_v41_ret.sv
+/src/rtl/v41rom/ot_v41_ret.sv:75: ERROR: syntax error, unexpected TOK_IMPORT
+
+Elapsed time: 0:00.92[h:]min:sec. CPU time: user 0.89 sys 0.03 (99%). Peak memory: 83344KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_ot_v41_qx10_native_parent_asap7/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/noether-qx10-native-parent-r2-20261005/physical.json

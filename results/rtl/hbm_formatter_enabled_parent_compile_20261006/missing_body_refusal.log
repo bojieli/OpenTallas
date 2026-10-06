@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/lorentz-enabled-parent-prep-20261006-r2/runner.py", line 136, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/tmp/lorentz-enabled-parent-prep-20261006-r2/runner.py", line 135, in main
+    return prepare(a.work.resolve(),a.body_sha256) if a.prepare else run(a)
+  File "/tmp/lorentz-enabled-parent-prep-20261006-r2/runner.py", line 89, in run
+    work=a.work.resolve();m=verified(work)
+  File "/tmp/lorentz-enabled-parent-prep-20261006-r2/runner.py", line 69, in verified
+    if not m['source_ready']:raise ValueError('Actual owner-pinned body/source closure not ready; no guard/compiler')
+ValueError: Actual owner-pinned body/source closure not ready; no guard/compiler

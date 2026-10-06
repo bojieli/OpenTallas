@@ -1,0 +1,572 @@
+{
+ "schema": "opentallas.dsrom-1m.links-full-fec.v1",
+ "generated_utc": "2026-10-06T04:31:43Z",
+ "decision": "OWNER 2026-10-06: charge FULL FEC (RS(544,514) KP4) on every link that leaves the package (board / in-tray, in-rack cable, rack to rack) for the DS ROM array and the HBM accelerator; light FEC is dropped from every composition (conservative baseline). In-package UCIe keeps its own spec.",
+ "status": "pass",
+ "exact": true,
+ "clock_hz": 1200000000.0,
+ "channel": {
+  "board_full_kp4_ns": 209.0,
+  "light_fec_ns_was": 130.0,
+  "source": "configs/hardware/technology.json links.rom_board_serdes.hop_latency_s (full_kp4_fec_s: 200 ns channel incl. ~0.3 m board flight + 4 CDC + 5 endpoint cycles = 209 ns); links.rom_rack_cable_serdes (same 209 ns hop on <= 0.8 m twinax)",
+  "flight_included_m": 0.3,
+  "tp4_board_leg": {
+   "X_DLY": 58.736,
+   "X_DEC": 147,
+   "X_T": 0.9340659340659341,
+   "X_ENC": 4,
+   "total_ns": 199.78,
+   "light_total_ns": 115.71
+  }
+ },
+ "hop": {
+  "total_cycles": 1004,
+  "us": 0.8367,
+  "light_fec_cycles": 909,
+  "delta_cycles": 95,
+  "measured": {
+   "exact": true,
+   "payload_B": 40976,
+   "flit_bytes": 64,
+   "payload_flits": 641,
+   "link_rt_first_to_last_cycles": 914,
+   "first_flit_cycles": 274,
+   "board_leg_last_flit_cycles": 897,
+   "board_leg_first_flit_cycles": 257,
+   "vendor_channel_cycles": {
+    "board": 251,
+    "ucie_fanout": 11
+   },
+   "measured_endpoint_cycles": 652,
+   "endpoint_serialization_cycles": 640,
+   "endpoint_rate_GBps": 76.8,
+   "in_ready_stalls": 0,
+   "sustained_1_flit_per_cycle": true,
+   "phy_lane_rate_GBps": 171.29,
+   "phy_serialization_ns": 239.21,
+   "phy_serialization_binding": false,
+   "phy_serialization_extra_cycles": 0,
+   "wire_stage_cycles": 90,
+   "total_cycles": 1004,
+   "us": 0.8367
+  },
+  "source": "results/rtl/dsrom_1m_allmeasured_20261004/links.json hop.kp4_sensitivity (RTL, board channel 251 cycles)"
+ },
+ "token_return": {
+  "exact": true,
+  "payload_B": 8,
+  "traversals": 8,
+  "per_traversal_cycles": 257,
+  "measured_endpoint_cycles_per_traversal": 6,
+  "vendor_channel_cycles_per_traversal": 251,
+  "wire_stage_cycles": 90,
+  "total_cycles": 2146,
+  "us": 1.7883,
+  "light_fec_cycles": 1386,
+  "delta_cycles": 760,
+  "source": "results/rtl/dsrom_1m_allmeasured_20261004/links.json hop.token_return_kp4_sensitivity (RTL)"
+ },
+ "collectives": {
+  "attn.a_allgather": {
+   "op": "all_gather",
+   "payload_B": 3648,
+   "words_per_rank": 15,
+   "cycles": 380,
+   "us": 0.3167,
+   "exact": true,
+   "cycles_each_issue": [
+    380,
+    380
+   ],
+   "free_running_cycles": [
+    375,
+    382
+   ],
+   "light_fec_cycles": 280,
+   "delta_cycles": 100
+  },
+  "attn.idx.topk_merge": {
+   "op": "all_gather",
+   "payload_B": 16384,
+   "words_per_rank": 64,
+   "cycles": 434,
+   "us": 0.3617,
+   "exact": true,
+   "cycles_each_issue": [
+    434
+   ],
+   "free_running_cycles": [
+    430,
+    435
+   ],
+   "light_fec_cycles": 334,
+   "delta_cycles": 100
+  },
+  "attn.cand.merge": {
+   "op": "all_gather",
+   "payload_B": 65536,
+   "words_per_rank": 256,
+   "cycles": 650,
+   "us": 0.5416,
+   "exact": true,
+   "cycles_each_issue": [
+    650
+   ],
+   "free_running_cycles": [
+    645,
+    651
+   ],
+   "light_fec_cycles": 550,
+   "delta_cycles": 100
+  },
+  "attn.rows_allgather": {
+   "op": "all_gather",
+   "payload_B": 67584,
+   "words_per_rank": 264,
+   "cycles": 659,
+   "us": 0.5491,
+   "exact": true,
+   "cycles_each_issue": [
+    659,
+    659
+   ],
+   "free_running_cycles": [
+    654,
+    662
+   ],
+   "light_fec_cycles": 559,
+   "delta_cycles": 100
+  },
+  "attn.out_allreduce": {
+   "op": "all_reduce",
+   "payload_B": 20480,
+   "words_per_rank": 320,
+   "cycles": 690,
+   "us": 0.575,
+   "exact": true,
+   "cycles_each_issue": [
+    690,
+    690
+   ],
+   "free_running_cycles": [
+    685,
+    692
+   ],
+   "light_fec_cycles": 590,
+   "delta_cycles": 100
+  },
+  "ffn.router_allgather": {
+   "op": "all_gather",
+   "payload_B": 1536,
+   "words_per_rank": 6,
+   "cycles": 371,
+   "us": 0.3092,
+   "exact": true,
+   "cycles_each_issue": [
+    371
+   ],
+   "free_running_cycles": [
+    366,
+    372
+   ],
+   "light_fec_cycles": 271,
+   "delta_cycles": 100
+  },
+  "ffn.combine_allreduce": {
+   "op": "all_reduce",
+   "payload_B": 20480,
+   "words_per_rank": 320,
+   "cycles": 690,
+   "us": 0.575,
+   "exact": true,
+   "cycles_each_issue": [
+    690
+   ],
+   "free_running_cycles": [
+    685,
+    692
+   ],
+   "light_fec_cycles": 590,
+   "delta_cycles": 100
+  },
+  "head.argmax_merge": {
+   "op": "all_gather",
+   "payload_B": 32,
+   "words_per_rank": 1,
+   "cycles": 364,
+   "us": 0.3033,
+   "exact": true,
+   "cycles_each_issue": [
+    364,
+    364
+   ],
+   "free_running_cycles": [
+    359,
+    365
+   ],
+   "light_fec_cycles": 264,
+   "delta_cycles": 100
+  }
+ },
+ "collective_delta_cycles": {
+  "values": [
+   100
+  ],
+  "constant": true,
+  "note": "every S81 payload (32 B .. 67,584 B, all-gather and all-reduce) moves by the same number of cycles: the deterministic release tracks the board arrival"
+ },
+ "collective_config": {
+  "top": "tb_w15b_v41_tp4",
+  "parameters": {
+   "RELAY": 0,
+   "DEPTH": 1024,
+   "U_WIRE": 34,
+   "X_WIRE": 45,
+   "T_CORE": 0.8333,
+   "FPLAT": 1,
+   "ADD_LAT": 7,
+   "X_DEC": 147
+  },
+  "fixture": "s81",
+  "record_bytes": 64,
+  "fixture_manifest_sha256": "7054704a1ff865e298980a7ef62b802fa4dee775d9a592efd90a2c04cd7f5288",
+  "binary": "s81kp4_r0d1024",
+  "clock_hz": 1200048001.9200766,
+  "release_guard_cycles": 3,
+  "arrival_hub_to_hub_cycles": {
+   "ucie": {
+    "min": 83,
+    "max": 85
+   },
+   "board": {
+    "min": 342,
+    "max": 348
+   }
+  },
+  "release_delay_cycles": {
+   "U_DREL": 88,
+   "X_DREL": 351
+  },
+  "free_running": {
+   "det": 0,
+   "runs": 8,
+   "all_passed": true,
+   "distinct_timings": 8,
+   "distinct_results": 1,
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    1000,
+    1001
+   ],
+   "corner_channels": [
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736,
+     "U_DLY": 2.0,
+     "U_JS": 0.0,
+     "X_JS": 0.0
+    },
+    {
+     "X_DLY": 61.736,
+     "U_DLY": 2.5,
+     "U_JS": 0.0,
+     "X_JS": 0.0
+    }
+   ]
+  },
+  "deterministic": {
+   "det": 1,
+   "runs": 3,
+   "all_passed": true,
+   "distinct_timings": 1,
+   "distinct_results": 1,
+   "timing_sha256": "3c7bac2e7342f104c98dece609b873a8c9b84730e33ad9fa2f6b16da4e6effd2",
+   "result_sha256": "1294170d03a2f62f7e21ee46dc037ddf07222caa86fff2f1c3b838809c7189eb",
+   "late_faults": 0,
+   "seeds": [
+    1,
+    2000,
+    2001
+   ],
+   "corner_channels": [
+    {
+     "X_DLY": 58.736
+    },
+    {
+     "X_DLY": 58.736,
+     "U_DLY": 2.0,
+     "U_JS": 0.0,
+     "X_JS": 0.0
+    },
+    {
+     "X_DLY": 61.736,
+     "U_DLY": 2.5,
+     "U_JS": 0.0,
+     "X_JS": 0.0
+    }
+   ]
+  },
+  "fit": {
+   "all_gather": {
+    "fixed_cycles": 363.15,
+    "cycles_per_word": 1.1204,
+    "points": [
+     [
+      15,
+      380
+     ],
+     [
+      64,
+      434
+     ],
+     [
+      256,
+      650
+     ],
+     [
+      264,
+      659
+     ],
+     [
+      6,
+      371
+     ],
+     [
+      1,
+      364
+     ],
+     [
+      264,
+      659
+     ],
+     [
+      15,
+      380
+     ],
+     [
+      1,
+      364
+     ]
+    ]
+   },
+   "all_reduce": {
+    "points": [
+     [
+      320,
+      690
+     ],
+     [
+      320,
+      690
+     ],
+     [
+      320,
+      690
+     ]
+    ]
+   }
+  },
+  "sum_issue_to_last_commit_cycles": 6331,
+  "free_running_latency_range": {
+   "0": [
+    375,
+    379
+   ],
+   "1": [
+    430,
+    435
+   ],
+   "2": [
+    645,
+    651
+   ],
+   "3": [
+    654,
+    660
+   ],
+   "4": [
+    685,
+    691
+   ],
+   "5": [
+    366,
+    372
+   ],
+   "6": [
+    685,
+    692
+   ],
+   "7": [
+    359,
+    365
+   ],
+   "8": [
+    655,
+    662
+   ],
+   "9": [
+    687,
+    692
+   ],
+   "10": [
+    376,
+    382
+   ],
+   "11": [
+    360,
+    365
+   ]
+  },
+  "wall_s": 168.6,
+  "all_runs_passed": true,
+  "vm_hash_distinct_all_runs": 1
+ },
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "fixture": {
+  "schema": "dsrom_s81_collective_fixture_v1",
+  "seed": 81,
+  "lanes": 16,
+  "word_bytes": 64,
+  "ops": [
+   {
+    "op_index": 0,
+    "node": "attn.a_allgather",
+    "op": "all_gather",
+    "payload_B": 3648,
+    "words_per_rank": 15
+   },
+   {
+    "op_index": 1,
+    "node": "attn.idx.topk_merge",
+    "op": "all_gather",
+    "payload_B": 16384,
+    "words_per_rank": 64
+   },
+   {
+    "op_index": 2,
+    "node": "attn.cand.merge",
+    "op": "all_gather",
+    "payload_B": 65536,
+    "words_per_rank": 256
+   },
+   {
+    "op_index": 3,
+    "node": "attn.rows_allgather",
+    "op": "all_gather",
+    "payload_B": 67584,
+    "words_per_rank": 264
+   },
+   {
+    "op_index": 4,
+    "node": "attn.out_allreduce",
+    "op": "all_reduce",
+    "payload_B": 20480,
+    "words_per_rank": 320
+   },
+   {
+    "op_index": 5,
+    "node": "ffn.router_allgather",
+    "op": "all_gather",
+    "payload_B": 1536,
+    "words_per_rank": 6
+   },
+   {
+    "op_index": 6,
+    "node": "ffn.combine_allreduce",
+    "op": "all_reduce",
+    "payload_B": 20480,
+    "words_per_rank": 320
+   },
+   {
+    "op_index": 7,
+    "node": "head.argmax_merge",
+    "op": "all_gather",
+    "payload_B": 32,
+    "words_per_rank": 1
+   },
+   {
+    "op_index": 8,
+    "node": "attn.rows_allgather",
+    "op": "all_gather",
+    "payload_B": 67584,
+    "words_per_rank": 264
+   },
+   {
+    "op_index": 9,
+    "node": "attn.out_allreduce",
+    "op": "all_reduce",
+    "payload_B": 20480,
+    "words_per_rank": 320
+   },
+   {
+    "op_index": 10,
+    "node": "attn.a_allgather",
+    "op": "all_gather",
+    "payload_B": 3648,
+    "words_per_rank": 15
+   },
+   {
+    "op_index": 11,
+    "node": "head.argmax_merge",
+    "op": "all_gather",
+    "payload_B": 32,
+    "words_per_rank": 1
+   }
+  ],
+  "reference": "all_reduce: hdc_golden.add((r0 + r1), (r2 + r3)), FP32 result (rnd 0); all_gather: rank-major copy",
+  "images_sha256": {
+   "part.hex": "8315eb8a6336f377314b7c5b0bbaf5487fcd4b6796f27ffe8f488a74b4546758",
+   "expected.hex": "4ef83f7a8551a77851ceadcb1010554ec93e4eab76169958b6c10855ea6af31a",
+   "desc.hex": "a6e71fa233fad058be64a078d0598799f768535ec96c97f8f8f92515c678e9ce"
+  },
+  "golden_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+ },
+ "sources": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+  "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+  "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/link/ot_fifo_sram_fwft.sv": "f11b227be6dcc879130657a3b1f5d88ed1a3a6cae0f56b5a20e0b5e6c2942af8",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+  "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+  "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/rom/ot_w15_rom_oneshot_px.sv": "988a50f900c011c2912f66166bcf01d46117c47a6e930c6186c202b5bbd03794",
+  "rtl/test/tb_w15b_v41_tp4.sv": "3b9f233674461bdd67b83a21c606e120e66654a0cb62101308870a8e7e5ef797",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/w15_collectives.py": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a",
+  "tools/dsrom_1m_links.py": "ad41531ef97d24c6c887a2a1f6beb3cb67f67f48a9016161b53c0fb89f9ae51d",
+  "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b"
+ },
+ "command": "python3 tools/dsrom_1m_links.py coll --configs s81kp4_r0d1024 --ncal 6 --nmeas 1 (ot-agidock128); python3 tools/dsrom_1m_links.py record-full-fec"
+}

@@ -1,0 +1,52 @@
+{
+  "supervisor": 4020932,
+  "source": "b04e893e7",
+  "owner_protected_source": "3f3c2b790",
+  "selected_flags": {
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1
+  },
+  "selected_module": "ot_qwen_s4_protected_ring READ_RSEL=1 full504",
+  "raw_cdc_instantiated": false,
+  "job": "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7",
+  "command": [
+    "python3",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/src/tools/qwen_rom_combined_p0_20261005/run_full.py",
+    "--output",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/full",
+    "--source",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-protected-r9-b04e893e7/src",
+    "--stage",
+    "dispatch",
+    "--workers",
+    "16"
+  ],
+  "continuation": "one build then one fullshapeL0 only; no automaticfulltoken",
+  "physical_qualified": false,
+  "build_supervisor": 4021288,
+  "frontend_wrapper": 4021295,
+  "status": "ADMITTED_CHANGED_TOP_FRONTEND_LIVE",
+  "full_token_pass": false,
+  "minimum_layer_pass": false,
+  "unchanged_old_runtime": 1959093,
+  "build_pre_guard": {
+    "time": 1791264614.091007,
+    "load": 78.1845703125,
+    "idle_CPUs": 51.2520325203252,
+    "MemAvailable_bytes": 367425253376,
+    "available_disk_bytes": 1926351458304,
+    "required_CPUs": 16,
+    "requested_guard_GiB": 128
+  },
+  "build_post_guard": {
+    "load": 76.88818359375,
+    "idle_CPUs": 49.38015171658716,
+    "required_CPUs": 16,
+    "MemAvailable_bytes": 367361458176,
+    "available_disk_bytes": 1926350684160
+  },
+  "binding_agreement": "Latest USER selects protected3f3 functional candidate; Descartes delivered exact ENABLE1/CDC_CONSUMER_JOIN1/LANDING_RSEL1 hook, literal readback delegated directly. Raw a06 branch separate; physical does not block functional.",
+  "owner_modules_byte_identical_to": "3f3c2b790",
+  "runtime_scope": "One fullshape TP4 L0/P8191, actual full36backing, 8golden outputs, clocks/faults/warm/heldvalidatedACK/drain/cycles; no automaticfull36 token"
+}

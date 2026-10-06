@@ -1,0 +1,23 @@
+{
+ "source_commit": "3f3945cc284fec684c48485369b3450cb2967580",
+ "hook": "physical/hbm_accel/r5a_macro_grid_30x20.tcl",
+ "command": [
+  "bash",
+  "/srv/opentallas-scratch/codex/hbm-r5a-physical/wt11-fanout/physical/hbm_accel/r5a_route.sh",
+  "e11b",
+  "--orfs-var",
+  "SYNTH_NETLIST_FILES=/work/e10_completed_yosys.v"
+ ],
+ "completed_netlist_sha256": "a0fe384c611701ea2145f0eed9a5d90466081be85da479c629e58864bb4fd455",
+ "RTL_of_record": "4aa3ad968",
+ "exactness_replayed": false,
+ "cores": 16,
+ "synth_timeout": "unlimited",
+ "flow_timeout": "unlimited",
+ "existing_admission_GiB": 120,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "clk_period_ps": 833,
+ "hclk_period_ps": 1024,
+ "full_ports_and_PG_routing_constraints_unchanged": true
+}

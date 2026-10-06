@@ -95,6 +95,41 @@ def bind(cases_path, case_index, candidate_index, out):
     return plan
 
 
+def bind_finite_norm(cases_path, case_index, candidate_index, out):
+    """Bind actual saved norm bits to the selected finite sector provider.
+
+    This is a component command, never a replacement original program or
+    fabricated schedule/retirement. The enclosing caller retains native RoPE
+    and quantisation and must supply an actual drained exclusive route lease.
+    """
+    from gpu_sys.mem_image import write_images
+    out=Path(out)
+    plan=bind(cases_path,case_index,candidate_index,out)
+    if plan['kind'] not in ('q_norm','kv_norm'):
+        raise ValueError('finite norm adapter does not implement this family')
+    if not plan['check_words']:
+        raise ValueError('KV saved check requires original retained RoPE; enclosing native binding still required')
+    # Initial memory contains only init/CR source bits. expected.mem is never
+    # added to the provider image, including output/intermediate regions.
+    from hbm_accel_su_fused_program import load_hex
+    vm=load_hex(out/'vm.mem');cr=load_hex(out/'cr_lo.mem')
+    write_images({0:vm.astype('<u4').tobytes(),0x100000:cr.astype('<u4').tobytes()},
+                 2,32768,out,prefix='memory')
+    cmd=load_hex(out/'cmd.mem');cfg=load_hex(out/'cfg.mem')
+    write_words(out/'finite_cmd.mem',np.concatenate((cmd,cfg[20:22])))
+    plan.update(schema='opentallas.hbm-su-finite-norm-command.v1',
+        provider=dict(source='rtl/gpu_sys/ot_gpu_mreq_cdc.sv -> ot_gpu_memsys.sv',
+                      AW=3,NC=1,NS=2,NPC=2,MEM_WORDS=32768,USE_W2=0,
+                      vm_byte_base=0,cr_byte_base=0x100000),
+        parent_program_integration=False,original_schedule_replaced=False,
+        retained_RoPE_and_quant='original runtime, not executed by this component',
+        actual_parent_lease_bound=False,SS60_FF25_qualified=False)
+    plan['files_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('*.mem')}
+    plan['files_sha256'].update({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('memory_*.hex')})
+    (out/'finite_command.json').write_text(json.dumps(plan,indent=2)+'\n')
+    return plan
+
+
 if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--cases',type=Path,required=True)

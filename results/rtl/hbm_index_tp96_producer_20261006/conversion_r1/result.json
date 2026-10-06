@@ -1,0 +1,29 @@
+{
+  "status": "PASS_ACTUAL_ARCHIVED_CONVERSION_AND_NEGATIVE_CONTROLS",
+  "checks": {
+    "actual_archived_top512_independent_gold": true,
+    "quarter_concat_preserves_native_ID_order": true,
+    "exact_FP32_U32_conversion": true,
+    "wrong_literal_rank_caught": true,
+    "wrong_score_caught": true,
+    "repeated_rank0_96_times_refused": true
+  },
+  "native_run_repeated": false,
+  "actual_reference": {
+    "rank": 0,
+    "score_compares": 10928,
+    "topk_exact": 512,
+    "candidate_exact": 1366,
+    "source_phase": "L20.op14.index_scores.pre_candidate_mask.local_top512",
+    "native_source_record_sha256": "b2e60c613b78b43c7d0c310aa655a1b60fb7a00cd9a6034cc339563b1c52099f",
+    "input_record_sha256": "f7233cdbc1c60e1320a1f88d441b5edc57b07c90a0005c482b9561229d9eb47b",
+    "native_output_pins": {
+      "topk.txt": "800c91f2e620c370dcecb7841f871468a7f977fbe30f89aeebcde05f4c9d8849",
+      "candidates.txt": "9cafeda66966ce760f0a81d821102475dc75740248bd4e8e7d47e9c2c546e20a",
+      "runtime.log": "ae5823a3866c0a156cfe548359232a395c2188d403cf48c75d1de1f54c4bda41"
+    },
+    "full_token_qualified": false,
+    "SS_FF_closed": false
+  },
+  "full96_producer_ready": false
+}

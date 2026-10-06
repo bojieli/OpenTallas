@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS_ORIGINAL_REFERENCE_HA2_FULL16",
+  "source_commit": "20dbf6690",
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv": "755267df5522c9bf08a612e4d504fe6eb1dbea9d33e4954b8d2a0b6dbafe172b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter.sv": "b08049440bdd2f7afa66b496b778f61d1a5fd15a10f1d8177d8a4a7d8c510445",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_ha2_fullshape.sv": "d7687efdc210ec92e32e01e99d74ebb053472408e425e9bb4781caeb16aaaa57"
+  },
+  "LANES": 16,
+  "PFMAX": 384,
+  "packed_words": 28,
+  "BF16_scalar_results": 896,
+  "first_latency_cycles": 23,
+  "new_cycles": 0,
+  "reference_scalar_elements": [
+    1024,
+    6144
+  ],
+  "destination_rejection": true,
+  "runtime_rearm": true,
+  "clock_period_ps": 833.333334,
+  "contextual_SS_FF": false,
+  "adopted": false
+}

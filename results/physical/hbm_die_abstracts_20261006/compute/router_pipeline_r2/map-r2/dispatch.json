@@ -1,0 +1,19 @@
+{
+  "supervisor": 3696255,
+  "source": "9e74a6096",
+  "argv": [
+    "python3",
+    "/srv/opentallas-scratch/codex/carson-router-successor-20261006/map-source-9e74a6096/tools/hbm_router_successor_map_20261006.py",
+    "--out",
+    "/srv/opentallas-scratch/codex/carson-router-successor-20261006/map-r2"
+  ],
+  "preflight": {
+    "utc": "2026-10-06T08:33:24Z",
+    "load": 42.77783203125,
+    "idle": 89.57287497056745,
+    "mem": 871865966592,
+    "disk": 506642456576
+  },
+  "script_sha256": "9acc53878aa999ec005ec4c2621c47c049f798488b1a943bc83d0a13d3384be3",
+  "gate_sha256": "d1972309c85ec8437a27116a24e625123ceb01bf50bcdb9860907d19eef2422a"
+}

@@ -289,6 +289,19 @@ COLL_CONFIGS = {
     # from the die's wire stages
     "s81rc_r0d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17, T_CORE=T_CORE_NS), "s81"),
 }
+# s81kp4_r0d1024 = FULL FEC (owner 2026-10-06: no light FEC on any off-package link): the headline config with the
+# board leg on the full RS(544,514) channel.  Full-KP4 board leg in tb_w15b_v41_tp4 terms (w15_collectives.LINKS board_112g, PCS clock X_T = 0.93405 ns kept):
+#   enc 4 PCS stages (3.74 ns) + channel X_DLY = tx analog 3 + flight 0.3 m 2 + rx AFE/DSP 50 + RS(544,514) codeword
+#   store 5,440 bits / (13 x 112 Gb/s) = 3.736 ns, = 58.736 ns + decode X_DEC = deskew 10 + RS(544) decode (the
+#   remainder of the 200 ns channel, 127.53 ns) = 147 PCS stages (137.3 ns).  Total 199.8 ns against the light leg's
+#   3.74 + 56.868 + 59 x 0.934 = 115.7 ns.
+_XT = 2720 / (13 * 112.0) / 2
+_KP4_CW = 5440 / (13 * 112.0)
+KP4_BOARD = dict(X_DLY=round(3.0 + 2.0 + 50.0 + _KP4_CW, 3),
+                 X_DEC=round((200.0 - 4 * _XT - (3.0 + 2.0 + 50.0 + _KP4_CW)) / _XT))
+COLL_CONFIGS["s81kp4_r0d1024"] = ("tb_w15b_v41_tp4", dict(COLL_CONFIGS["s81_r0d1024"][1], X_DEC=KP4_BOARD["X_DEC"]),
+                                  "s81")
+COLL_PLUSARGS = {"s81kp4_r0d1024": dict(X_DLY=KP4_BOARD["X_DLY"])}
 
 
 def cmd_coll(a):
@@ -302,9 +315,19 @@ def cmd_coll(a):
     meta = s81_fixture(W.VEC / "s81")
     out = dict(simulator=W.verilator_version(), verilator_flags=W.VFLAGS, fixture=meta, configs={})
     names = a.configs.split(",") if a.configs else list(COLL_CONFIGS)
+    run0, chan0 = W.run, dict(W.CHAN_DEFAULT)
     for name in names:
         t0 = time.time()
-        c = W.campaign_config(name, a.ncal, a.nmeas, a.jobs)
+        pa = COLL_PLUSARGS.get(name, {})
+        W.CHAN_DEFAULT.clear(); W.CHAN_DEFAULT.update(chan0, **pa)       # corners pin the config's channel
+        W.run = (lambda n, s, d, r, e=None, _pa=pa: run0(n, s, d, r, {**_pa, **(e or {})} if _pa else e))
+        try:
+            c = W.campaign_config(name, a.ncal, a.nmeas, a.jobs)
+        finally:
+            W.run = run0
+            W.CHAN_DEFAULT.clear(); W.CHAN_DEFAULT.update(chan0)
+        if pa:
+            c["channel_plusargs"] = pa
         rec = W.config_record(c)
         rec["wall_s"] = round(time.time() - t0, 1)
         meas = c["measured"]
@@ -436,9 +459,73 @@ def cmd_record(a):
     return rec
 
 
+FULL_FEC_OUT = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
+
+
+def cmd_record_full_fec(a):
+    """links_full_fec.json: the owner's full-FEC baseline (2026-10-06: no light FEC on any off-package link) from RTL.
+    Stage hop and token return: links.json hop.kp4_sensitivity / token_return_kp4_sensitivity (ot_dsrom_link_rt with
+    the board channel at the full-KP4 209 ns budget, 251 cycles).  TP4 collectives: tb_w15b_v41_tp4 config
+    s81kp4_r0d1024 (board leg on the full RS(544,514) channel, KP4_BOARD), deterministic release re-calibrated."""
+    work = Path(a.work)
+    coll = json.loads((work / "coll.json").read_text())
+    links = json.loads(OUT.read_text())
+    c = coll["configs"]["s81kp4_r0d1024"]
+    h = links["hop"]
+    colls = {}
+    for nm, r in c["by_collective"].items():
+        lf = links["collectives"][nm]
+        colls[nm] = dict(op=r["op"], payload_B=r["payload_B"], words_per_rank=r["words_per_rank"], cycles=r["cycles"],
+                         us=r["us"], exact=r["exact"], cycles_each_issue=r["cycles_each_issue"],
+                         free_running_cycles=r["free_running_cycles"], light_fec_cycles=lf["cycles"],
+                         delta_cycles=r["cycles"] - lf["cycles"])
+    deltas = sorted({v["delta_cycles"] for v in colls.values()})
+    exact = bool(c["all_runs_passed"]) and h["kp4_sensitivity"]["exact"] and h["token_return_kp4_sensitivity"]["exact"]
+    rec = dict(
+        schema="opentallas.dsrom-1m.links-full-fec.v1",
+        generated_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        decision="OWNER 2026-10-06: charge FULL FEC (RS(544,514) KP4) on every link that leaves the package (board / "
+                 "in-tray, in-rack cable, rack to rack) for the DS ROM array and the HBM accelerator; light FEC is "
+                 "dropped from every composition (conservative baseline). In-package UCIe keeps its own spec.",
+        status="pass" if exact else "FAIL", exact=exact, clock_hz=CLK,
+        channel=dict(board_full_kp4_ns=KP4_NS, light_fec_ns_was=LFEC_NS,
+                     source="configs/hardware/technology.json links.rom_board_serdes.hop_latency_s (full_kp4_fec_s: "
+                            "200 ns channel incl. ~0.3 m board flight + 4 CDC + 5 endpoint cycles = 209 ns); "
+                            "links.rom_rack_cable_serdes (same 209 ns hop on <= 0.8 m twinax)",
+                     flight_included_m=0.3,
+                     tp4_board_leg=dict(KP4_BOARD, X_T=_XT, X_ENC=4, total_ns=round(4 * _XT + KP4_BOARD["X_DLY"] +
+                                                                                  KP4_BOARD["X_DEC"] * _XT, 2),
+                                        light_total_ns=round(4 * _XT + 56.868 + 59 * _XT, 2))),
+        hop=dict(total_cycles=h["kp4_sensitivity"]["total_cycles"], us=h["kp4_sensitivity"]["us"],
+                 light_fec_cycles=h["total_cycles"], delta_cycles=h["kp4_sensitivity"]["total_cycles"] - h["total_cycles"],
+                 measured=h["kp4_sensitivity"], source=rel(OUT) + " hop.kp4_sensitivity (RTL, board channel 251 cycles)"),
+        token_return=dict(h["token_return_kp4_sensitivity"], light_fec_cycles=h["token_return"]["total_cycles"],
+                          delta_cycles=h["token_return_kp4_sensitivity"]["total_cycles"] - h["token_return"]["total_cycles"],
+                          source=rel(OUT) + " hop.token_return_kp4_sensitivity (RTL)"),
+        collectives=colls,
+        collective_delta_cycles=dict(values=deltas, constant=len(deltas) == 1,
+                                     note="every S81 payload (32 B .. 67,584 B, all-gather and all-reduce) moves by the "
+                                          "same number of cycles: the deterministic release tracks the board arrival"),
+        collective_config={k: v for k, v in c.items() if k not in ("collectives", "by_collective")},
+        simulator=coll.get("simulator"), fixture=coll.get("fixture"),
+        sources={**coll.get("sources", {}), "tools/dsrom_1m_links.py": sha(ROOT / "tools/dsrom_1m_links.py"),
+                 rel(OUT): sha(OUT)},
+        command="python3 tools/dsrom_1m_links.py coll --configs s81kp4_r0d1024 --ncal 6 --nmeas 1 (ot-agidock128); "
+                "python3 tools/dsrom_1m_links.py record-full-fec")
+    out = Path(a.out) if a.out != str(OUT) else FULL_FEC_OUT
+    out.write_text(json.dumps(rec, indent=1, default=str) + "\n")
+    print("status", rec["status"], "deltas", deltas, "->", out)
+    return rec
+
+
+def rel(p):
+    p = Path(p).resolve()
+    return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=("hop", "coll", "record", "all"))
+    ap.add_argument("cmd", choices=("hop", "coll", "record", "all", "record-full-fec"))
     ap.add_argument("--work", default=os.environ.get("DSROM_LINKS_WORK", "/tmp/claude-1000/dsrom_1m_links"))
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--configs", default="")
@@ -453,6 +540,8 @@ def main():
         cmd_coll(a)
     if a.cmd in ("record", "all"):
         cmd_record(a)
+    if a.cmd == "record-full-fec":
+        cmd_record_full_fec(a)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,340 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-06T02:48:16.521266+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_w2_protected_parent_context",
+    "clock_port": "clk_sm",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.166666666666667,
+    "core_input_delay_min_ns": 0.0,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/context.sdc",
+          "sha256": "63993f18de415e11d5609cc803b9833f9e452e9c1fbe8b249e1c8486f0d7cc7d"
+        }
+      ],
+      "lines": [
+        "create_clock -name mem_clk -period 1024 [get_ports clk_mem]",
+        "set_clock_uncertainty -setup 60 [get_clocks mem_clk]",
+        "set_clock_uncertainty -hold 25 [get_clocks mem_clk]",
+        "set_clock_latency -source 0 [get_clocks {core_clk mem_clk}]",
+        "remove_input_delay [get_ports clk_mem]",
+        "set ot_mem_inputs [get_ports {rst_mem_n m_req_rdy m_rsp_v m_rsp_we m_rsp_tag* m_rsp_data*}]",
+        "set ot_mem_outputs [get_ports {m_req_v m_req_we m_req_addr* m_req_wdata* m_req_wstrb* m_req_tag* m_rsp_rdy}]",
+        "remove_input_delay $ot_mem_inputs",
+        "remove_output_delay $ot_mem_outputs",
+        "set_input_delay -min 0 -clock mem_clk $ot_mem_inputs",
+        "set_input_delay -max 204.8 -clock mem_clk $ot_mem_inputs",
+        "set_output_delay -min 0 -clock mem_clk $ot_mem_outputs",
+        "set_output_delay -max 204.8 -clock mem_clk $ot_mem_outputs"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.166666666666667,
+    "output_delay_min_ns": 0.0,
+    "parameters": {
+      "ENABLE": 1,
+      "PROTECTED_PARENT_BOUNDARY": 1,
+      "PROTECTED_TRANSACTION_PIPELINE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+        "sha256": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+        "size_bytes": 3972
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+        "sha256": "dcc126bc31b1fe79e1d01052cb57437deb2929c3e21535a0b37924ebc1937ff6",
+        "size_bytes": 7290
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+        "sha256": "dfe45d8ed0bf01aef162f05bd3154dcdb7934766c198c7f7d16b69bbad29aa4d",
+        "size_bytes": 4124
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+        "sha256": "c0ab7af47cdbe75491f9be2c3c8c69b244a481417eb9b6a2ab4d14405003125a",
+        "size_bytes": 5004
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+        "sha256": "dcf0922701e5bfb33aaa3905cdee43edaa21be60de9254d1dec47777100a9669",
+        "size_bytes": 2649
+      },
+      {
+        "path": "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+        "sha256": "2659ca75beecd5311e796873722d54ed8710aa84f014677d6dc2be066b34c58b",
+        "size_bytes": 16350
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+        "sha256": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
+        "size_bytes": 25764
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+        "sha256": "17ce25ec8eac80df2fe39d56eb612726072ebf10223d2f3faa436c6ecd77e347",
+        "size_bytes": 5909
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+        "sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+        "size_bytes": 8716
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+        "sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+        "size_bytes": 3492
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+        "sha256": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+        "size_bytes": 1345
+      },
+      {
+        "path": "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "sha256": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+        "size_bytes": 3195
+      },
+      {
+        "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+        "size_bytes": 29816
+      },
+      {
+        "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+        "size_bytes": 21613
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+        "sha256": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+        "size_bytes": 3067
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+        "sha256": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+        "size_bytes": 2134
+      },
+      {
+        "path": "rtl/link/ot_link_afifo.sv",
+        "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+        "size_bytes": 4344
+      }
+    ],
+    "top": "ot_hbm_w2_protected_parent_context"
+  },
+  "error": "FlowError: ORFS place-and-route through floorplan failed with exit 2:\n{\"allcorner_spef_evaluator\": \"/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl\", \"original_sha256\": \"8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c\", \"patched_sha256\": \"532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\ncp /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_w2_protected_parent_context_asap7_w2_parent_real/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_w2_protected_parent_context_asap7_w2_parent_real/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 16 thread(s).\nmkdir -p /work/objects/asap7/opentallas_ot_hbm_w2_protected_parent_context_asap7_w2_parent_real/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\nlink_design ot_hbm_w2_protected_parent_context\nTook 6 seconds: link_design ot_hbm_w2_protected_parent_context\nread_sdc /work/results/asap7/opentallas_ot_hbm_w2_protected_parent_context_asap7_w2_parent_real/base/1_2_yosys.sdc\nError: 1_2_yosys.sdc, 18 invalid command name \"remove_input_delay\"\n\nElapsed time: 0:11.50[h:]min:sec. CPU time: user 11.00 sys 0.48 (99%). Peak memory: 1045428KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/asap7/opentallas_ot_hbm_w2_protected_parent_context_asap7_w2_parent_real/base/1_synth.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-06T00:56:46.165013+00:00",
+  "git": {
+    "commit": "b2f680b23dc97629413ad9d0bbf21e1a747facc5",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_w2_protected_parent_context",
+      "--source",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv",
+      "--source",
+      "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv",
+      "--source",
+      "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+      "--source",
+      "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "--source",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_mreq_cdc.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+      "--source",
+      "rtl/link/ot_link_afifo.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "PROTECTED_TRANSACTION_PIPELINE=1",
+      "--param",
+      "PROTECTED_PARENT_BOUNDARY=1",
+      "--clock-port",
+      "clk_sm",
+      "--clock-period-ns",
+      ".8333333333333334",
+      "--clock-uncertainty-ns",
+      ".060",
+      "--clock-uncertainty-hold-ns",
+      ".025",
+      "--core-input-delay-min-ns",
+      "0",
+      "--core-input-delay-max-ns",
+      ".166666666666667",
+      "--output-delay-min-ns",
+      "0",
+      "--output-delay-max-ns",
+      ".166666666666667",
+      "--stages",
+      "pnr",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--orfs-var",
+      "SYNTH_SLANG_ARGS=--unroll-limit 549460",
+      "--sdc-append",
+      "/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/context.sdc",
+      "--purpose",
+      "signoff_target",
+      "--output",
+      "/srv/opentallas-scratch/codex/w2-parent-real-20261006/map_r2/map.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/w2-parent-real-20261006/map_r2/work",
+      "--nickname-tag",
+      "w2_parent_real",
+      "--die-area",
+      "0",
+      "0",
+      "1814.376",
+      "1403.976",
+      "--core-area",
+      "17.28",
+      "25.92",
+      "1797.096",
+      "1386.72",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--orfs-var",
+      "MIN_CLK_ROUTING_LAYER=M8",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/hbm_w2_parent_physical_20261005/pdn.tcl",
+      "--step-tcl",
+      "POST_PDN=/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/regions.tcl",
+      "--step-tcl",
+      "PRE_DETAIL_PLACE=/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/pre_dpl.tcl",
+      "--step-tcl",
+      "PRE_CTS=/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/pre_dpl.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/physical/hbm_w2_parent_physical_20261005/pre_dpl.tcl",
+      "--pnr-stop-after",
+      "floorplan"
+    ],
+    "driver": {
+      "commit": "b2f680b23dc97629413ad9d0bbf21e1a747facc5",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/source/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/source"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/w2-parent-real-20261006/source"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.8333333333333334,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "actual_installed_script_sha256": "81cb1177c4103778f760c73944b59c8e62a4ec966b731448bedf392081cf1a5f",
+  "observed_image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "observed_container": "574aed79c217",
+  "supported_native_variables": [
+    "SYNTH_HIERARCHICAL",
+    "SYNTH_KEEP_MODULES"
+  ],
+  "selected_variables": {
+    "SYNTH_HIERARCHICAL": 1,
+    "SYNTH_KEEP_MODULES": "ot_hbm_router_lane_local"
+  },
+  "gated_RTL_changed": false,
+  "intermediate_attributes": "native write_verilog -nohex -nodec retains attributes; private noattr removal remains active if needed",
+  "map_check": "32 distinct actualcontrol cells/Qnets eachclass +ge/valid192 and real SSFFloads; analyze-only physicalflatten no RTLopt",
+  "place_launched": false,
+  "capacity": {
+    "host": "E1 ONLY",
+    "workers": 16,
+    "RAM_GiB": 32,
+    "basis": "9GiB retainedflowpeak times99238/45270=19.73GiB +12GiB reserve",
+    "unchanged_guard": true
+  },
+  "parent_allocation": "PENDING Turing literalfinite315.956 receiver/corridor/allocation; generic IO notparentclosure"
+}

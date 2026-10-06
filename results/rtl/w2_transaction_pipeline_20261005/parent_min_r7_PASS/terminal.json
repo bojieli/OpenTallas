@@ -1,0 +1,41 @@
+{
+  "verdict": "PASS_MINIMUM_CONNECTED_PROTECTED_PARENT_WARM",
+  "compile_exit": 0,
+  "runtime_exit": 0,
+  "publication_rows": 4,
+  "FP32_words": 32,
+  "writes": 4,
+  "full_checked_readbacks": 4,
+  "releases": 1,
+  "release_cycle": 526,
+  "warm_request_cycle": 28,
+  "warm_ack_cycle": 545,
+  "accepted": 14,
+  "consumed": 14,
+  "native_frames": 2,
+  "native_reads": 6,
+  "root_POR_high": true,
+  "held_CPL_samples": 12,
+  "source_default_off": true,
+  "inactive_resetless_payload_tested": true,
+  "scope": "Canonical retained GU/SwiGLU rows through actual NC8/PIO2 caller cuts, two emitted native-sector frames, shared protected owner, four gateway cuts, AW3/SYNC2 crossing, unchanged CP20 and real warm reset hook. Sparse finite addressed RAM; no arithmetic engine replay/full-token/HBM timing/loaded-clock claim.",
+  "performance_delta_vs_R2": null,
+  "physical_qualified": false,
+  "command": [
+    "vvp",
+    "/tmp/w2_parent_min_r7.vvp",
+    "+DIR=/tmp/w2-protected-parent-min-r1",
+    "+GOLD=results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/expected_rows.hex"
+  ],
+  "artifact_sha256": {
+    "memory.hex": "fa09b534ee631996a6762ad38601017a2ce1df421f53aa52619bdaa9d3b9d915",
+    "runtime.log": "8f0be126847ca773f50054f834a0a73b3cd29baefdcb09d4662211ed3093da87",
+    "runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.log": "6a9e40ecb98a89c61d1a6e05424c487d04d2c69ea238a386596b95dba9482c8c",
+    "expected.hex": "f9af96fc6c04ee473440bf1fec95a87a9c87fa592386c31f5f1004b9d79d173b",
+    "source.json": "6dd2551db1d4023a2dcbd2ca1a04a532bb1e6b0d6e61ad01cdc95e86c3004cbd",
+    "memory_addresses.hex": "d9adb79111536de2447369fce6fe1ebe10288ddfae79d2a1c1a2bc0ddd5a6cab",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "maps.hex": "0567cebf1befd8d28e2c9a35d8ff97b67f2a30e0b371006e1ca9ca2586e0c66a"
+  }
+}

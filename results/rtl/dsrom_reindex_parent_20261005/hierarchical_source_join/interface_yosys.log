@@ -1,0 +1,84 @@
+
+-- Running command `read_verilog -lib -sv /tmp/codex-kc8-hierarchical-source-r5/interface_only.sv
+read_verilog -sv /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+hierarchy -check -top ot_dsrom_reindex_hierarchical_parent -chparam ENABLE 1
+proc
+opt_clean
+check -assert
+write_json /tmp/codex-kc8-hierarchical-source-r5/interface.json' --
+
+1. Executing Verilog-2005 frontend: /tmp/codex-kc8-hierarchical-source-r5/interface_only.sv
+Parsing SystemVerilog input from `/tmp/codex-kc8-hierarchical-source-r5/interface_only.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_reindex_native_quarter'.
+Generating RTLIL representation for module `\ot_dsrom_reindex_chain'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv
+Parsing SystemVerilog input from `/home/ubuntu/wt-codex-dsrom-reindex-parent/rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_hierarchical_parent.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_reindex_hierarchical_parent'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_reindex_hierarchical_parent'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_dsrom_reindex_hierarchical_parent\ENABLE=1'.
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_dsrom_reindex_hierarchical_parent
+
+4.2. Analyzing design hierarchy..
+Top module:  \ot_dsrom_reindex_hierarchical_parent
+Removing unused module `$paramod\ot_dsrom_reindex_hierarchical_parent\ENABLE=1'.
+Removed 1 unused modules.
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_reindex_chain'.
+Parameter \OPT_REINDEX_PARENT = 1
+Parameter \Q = 4
+Parameter \NPC = 32
+Parameter \WB = 128
+Parameter \AW = 28
+Parameter \HW = 20
+Parameter \TAGW = 16
+Parameter \LENW = 4
+Parameter \BEATW = 4
+Parameter \DW = 256
+Parameter \LBW = 14
+Parameter \LMW = 11
+Parameter \DF = 8
+Parameter \LSW = 3
+Parameter \IW = 20
+Parameter \K = 512
+Parameter \SAW = 8
+Parameter \MDROP = 1
+Generating RTLIL representation for module `$paramod$bc944aa246fe6ebb3ab13fed33a9b778f3697cdd\ot_dsrom_reindex_chain'.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_INIT pass (extract init attributes).
+
+5.4. Executing PROC_ARST pass (detect async resets in processes).
+
+5.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_dsrom_reindex_hierarchical_parent..
+
+7. Executing CHECK pass (checking for obvious problems).
+checking module ot_dsrom_reindex_hierarchical_parent..
+found and reported 0 problems.
+
+8. Executing JSON backend.

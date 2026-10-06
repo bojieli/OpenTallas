@@ -1,0 +1,68 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   8.210 |   0.000 | u_su_cp.on.frame_lo[61]$_DFFE_PN0P_/D
+    final |       0 |       8 |            0 |    +0.1% |  10.029 |   0.000 | u_su_cp.on.pc_code[26]$_DFFE_PN0P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 8 hold buffers.
+[INFO RSZ-0506] Runtime: 0.27s
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 2258.15 um^2
+[INFO DPL-0007] Movable instances area: 877.92 um^2
+[INFO DPL-0008] Fixed instances area within core: 12.86 um^2
+[INFO DPL-0009] Utilization: 39.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 7080 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         70 |        18 |        43
+        1 |         31 |        15 |        16
+        2 |         32 |        14 |        18
+        3 |         20 |        10 |        10
+        4 |         14 |         8 |         6
+        5 |         14 |         8 |         6
+        6 |         14 |         8 |         6
+        7 |         14 |         8 |         6
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 14 for 3 consecutive iterations.
+Using old diamond search for 8 remaining illegal cells.
+diamond recovery: recovered 0/8 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         14 |         8 |         6
+      403 |         14 |         8 |         6
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 14 for 3 consecutive iterations. Using diamond search for 8 remaining illegal cells.
+diamond recovery: recovered 0/8 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 8
+[INFO DPL-0500] Runtime: 0.41s
+Placement Analysis
+---------------------------------
+total displacement         27.1 u
+average displacement        0.0 u
+max displacement            2.6 u
+original HPWL           20966.3 u
+legalized HPWL          20984.1 u
+delta HPWL                    0 %
+
+check_placement -verbose
+[WARNING DPL-0005] Overlap check failed (1).
+ hold2576 (BUFx2_ASAP7_75t_R) overlaps hold2575 (BUFx2_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (1).
+ hold2576
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: global_route.tcl, 175 DPL-0033
+
+Elapsed time: 0:06.08[h:]min:sec. CPU time: user 17.47 sys 1.95 (319%). Peak memory: 502660KB.
+Elapsed time: 0:03.48[h:]min:sec. CPU time: user 4.17 sys 0.94 (146%). Peak memory: 340328KB.
+Elapsed time: 0:04.36[h:]min:sec. CPU time: user 5.05 sys 0.91 (136%). Peak memory: 345704KB.
+Elapsed time: 0:12.39[h:]min:sec. CPU time: user 22.60 sys 4.83 (221%). Peak memory: 369820KB.
+Elapsed time: 0:11.67[h:]min:sec. CPU time: user 61.72 sys 3.19 (556%). Peak memory: 558896KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_fourcut_context_r1/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-fast-frontier-parent-context-v1/runtime_r3/physical.json

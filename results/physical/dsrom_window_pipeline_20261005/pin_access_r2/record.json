@@ -1,0 +1,59 @@
+{
+  "status": "PASS_FULLSHAPE_PIN_ACCESS_ONLY",
+  "terminal_exit": 0,
+  "source_pin": "81ce7328c0ac2db15425e49b8ab543e59fd6734c",
+  "root": "/srv/opentallas-scratch2/jobs/mencius-window-pin-access-r2",
+  "retained_placed_ODB_reused": true,
+  "real_PG_geometry_retained": true,
+  "signal_IO": 70354,
+  "legal_positions": 151588,
+  "IO_with_sink": 69481,
+  "IO_without_sink": 873,
+  "ODB_BTerms_including_two_PG": 70356,
+  "BTerms_with_BPins": 70356,
+  "min_distance_tracks": 2,
+  "horizontal_layers": [
+    "M4",
+    "M6",
+    "M8"
+  ],
+  "vertical_layers": [
+    "M5",
+    "M7",
+    "M9"
+  ],
+  "die_um": [
+    1550,
+    1550
+  ],
+  "NUM_CORES": 16,
+  "admission_GiB": 20,
+  "admission_basis": "old IOP peak7.1177GiB plus full3.99M-cell ODB20GiB allowance",
+  "observed_peak_memory_GiB": null,
+  "actual_prepost_capacity_records": [
+    "preexec.json",
+    "postguard.json"
+  ],
+  "no_wall_file_AS_CPU_caps": true,
+  "output_ODB": "/srv/opentallas-scratch2/jobs/mencius-window-pin-access-r2/three_pair_pins.odb",
+  "added_FF_bits": 0,
+  "added_payload_bits": 0,
+  "added_ports": 0,
+  "added_logical_cycles": 0,
+  "numerical_verification_repeated": false,
+  "synthesis_repeated": false,
+  "CTS": false,
+  "routing": false,
+  "routed_SS_FF": false,
+  "parent_context_proof": false,
+  "original_IO_failure_preserved": "results/physical/dsrom_window_pipeline_20261005/r1/terminal_20261006/",
+  "pricing_before_probe": "results/uarch/dsrom_window_pipeline_20261005/pin_layer_access_preprobe_r5.json",
+  "adoption": false,
+  "files": {
+    "probe.log": "295c574450f3716d69239b2e98e04d45e17c0a4e4e5a59c469a0d248b404771e",
+    "recipe.json": "2922062301ee7efe2bc1d4333640f7802b7d94e2c7e250a3d3519383d2aa41ba",
+    "preexec.json": "ead40c08a25ce61ff7338edbe0c1fff320b87baa9ac7cc0de8b24e4f3c29f5f7",
+    "postguard.json": "20445847d0dcf98d3d44b3e251a6c523d9fe802552be9159f93161dc4dddc68a",
+    "probe.tcl": "61feec20e2a1739bb2449a38091f0abe0120add8768a160f0f738eff2b28871a"
+  }
+}

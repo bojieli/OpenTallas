@@ -39,10 +39,7 @@ DEC_END = "    end\n    `undef F\n"
 DECL_START = "    // decoded, DYN-adjusted fields\n"
 DECL_END = "\n    wire [15:0] su_progress"
 # NEXT fields the issue logic reads: kept as registers loaded at LOAD; the rest are read from the FIFO entry.
-# d_chase_n (16 bits) is read from the NEXT entry like a data field: it is half of the LOAD enable fan-out.
-CTRL = {"d_unit", "d_barrier", "d_chase", "d_wait_me", "d_wait_su", "d_chase_rows", "me_wsrc", "a_src"}
-# predecoded at push (pend1) like the control fields, but read from the NEXT entry (la_nx)
-EARLY = {"d_chase_n"}
+CTRL = {"d_unit", "d_barrier", "d_chase", "d_chase_n", "d_wait_me", "d_wait_su", "d_chase_rows", "me_wsrc", "a_src"}
 
 
 def _sub1(pattern: str, repl: str, s: str) -> str:
@@ -136,11 +133,11 @@ def emit_dec(text: str) -> str:
             adders.append(f"    wire {w + ' ' if w else ''}pa_{name};\n"
                           f"    ot_hdc_ksadd_k #(.W({wexpr(w)})) u_pa_{name} (.a({pre(sp[0])}), .b({pre(sp[1])}), .cin(1'b0), "
                           f".s(pa_{name}), .cout());")
-            push.append(f"            fqd_{name}[la_wr_r] <= pa_{name};")
-        elif name in ctrl or name in EARLY:
+            push.append(f"            for (lw = 0; lw < 8; lw = lw + 1) if (la_we[lw]) fqd_{name}[lw] <= pa_{name};")
+        elif name in ctrl:
             cpush.append(f"            fqd_{name}[la_wr] <= {expr.replace('`F(', '`FQ(')};")
         else:
-            push.append(f"            fqd_{name}[la_wr_r] <= {pre(expr)};")
+            push.append(f"            for (lw = 0; lw < 8; lw = lw + 1) if (la_we[lw]) fqd_{name}[lw] <= {pre(expr)};")
         if name in ctrl:
             load.append(f"            {name} <= fqd_{name}[la_rd];")
         else:
@@ -220,11 +217,14 @@ def emit_dec(text: str) -> str:
     reg [INSTR_BITS-1:0] pq_r;
     reg [2:0]     la_wr_r;
     reg           pq_v;
+    reg  [7:0]    la_we;
+    integer       lw;
     wire [2:0]    pg_off = (VPOS != 0) ? prog_q[{V.POS_OFF_LO} +: {V.POS_OFF_W}] : 3'd0;
     wire [6:0]    pg_rti = ((VPOS != 0) ? {{pg_off, 4'd0}} : 7'd0) + prog_q[O_ME_SPLIT +: 4];
     reg  [NW-1:0] pq_split_rounds;
     always @(posedge clk) if (DEC_LA != 0) begin
         pq_v <= pend1; la_wr_r <= la_wr;
+        la_we <= pend1 ? (8'd1 << la_wr) : 8'd0;     // one-hot write strobes of the staged word's slot
         if (pend1) begin
             pq_r <= prog_q;
             pq_split_rounds <= la_rt[pg_rti];
@@ -252,7 +252,7 @@ def emit_dec(text: str) -> str:
 {chr(10).join(adders)}
     // data fields from the staged word; control fields (below) from prog_q at pend1.  Written on pend1 (pq_v) alone:
     // outside S_RUN the slot la_wr is free (never NEXT, never held), so such a write is dead
-    always @(posedge clk) if (DEC_LA != 0 && pq_v) begin
+    always @(posedge clk) if (DEC_LA != 0) begin
 {chr(10).join(push)}
     end
     always @(posedge clk) if (DEC_LA != 0 && pend1) begin
@@ -301,6 +301,14 @@ def emit_dec(text: str) -> str:
                  "    wire la_am_gt;\n"
                  "    ot_qwen_core_key_gt u_la_am_gt (.a(okey(am_val)), .b(run_key), .gt(la_am_gt));\n"
                  "    wire am_wins = am_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(am_val) > run_key)));\n", text)
+    # the lm_head chunk argmax update: its own kept copy of issue (half the issue fan-out)
+    text = _sub1("    assign me_go = issue && (d_unit == 2'd1);\n",
+                 "    assign me_go = issue && (d_unit == 2'd1);\n"
+                 "    (* keep *) wire la_issue_am = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&\n"
+                 "                 (d_barrier ? drained : ((!d_chase || chased) && (!d_wait_me || me_idle) && (!d_wait_su || su_idle)))\n"
+                 "                 && unit_ready && kv_gate && w_gate;\n"
+                 "    wire la_me_go_am = (DEC_LA != 0) ? (la_issue_am && (d_unit == 2'd1)) : me_go;\n", text)
+    text = _sub1("        else if (me_go && me_amax) begin\n", "        else if (la_me_go_am && me_amax) begin\n", text)
     # the step cycle counter: a kept incrementer (it was the next ripple at 1.2 GHz once the decode closed)
     text = _sub1("            if (st != S_IDLE) cycles <= cycles + 1;\n",
                  "            if (st != S_IDLE) cycles <= (DEC_LA != 0) ? la_cycles1 : cycles + 1;\n", text)

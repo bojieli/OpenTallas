@@ -33,7 +33,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_attn_campaign as C  # noqa: E402
 
 V, T = ROOT / "rtl/hdc/v41x", ROOT / "rtl/test"
-FPLIB = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv"]
+FPLIB = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv",
+         ROOT / "rtl/hdc/v41x/ot_dsrom_su_add6.sv"]   # ot_hdc_fp32_add_f12_l6x (F12 LAT 6)
 AS_BUILT = dict(RTL_TILE=C.RTL_TILE, RTL_ENG=C.RTL_ENG, TB_ENG=C.TB_ENG, lib=C.lib)
 VL_BASE = list(C.VL_EXTRA) + ["-MAKEFLAGS", "OPT_SLOW=-O0"]   # the root ctor/var-reset file is ~38 MB at FPL 7
 # --hier: Verilator hierarchical blocks (simulation compilation boundaries only), as the full-geometry benches
@@ -141,7 +142,7 @@ def gate_sched(a):
         for cname, ex in SCHED_CFGS.items():
             variants = [] if a.no_as_built else [("as_built", False, dict(ex))]
             variants += [(f"s{fpl}{fml}_b{nb}{a.tag}", True, dict(ex, FPL=fpl, FML=fml, NBANKP=nb,
-                                                                     TILE_S=1 if fml == 6 else 0, **SX[0]))
+                                                                     TILE_S=1 if fml in (6, 8) else 0, **SX[0]))
                          for nb in a.banks]
             for vname, s, e in variants:
                 use(s)
@@ -169,7 +170,7 @@ def gate_verify6(a):
         ex = {"PWORDS": 2, "ILV": 1, "REPL": 2, "NSTAGE": 2}
         for vname, s, e in ([] if a.no_as_built else [("as_built", False, dict(ex))]) + \
                 [(f"s{fpl}{fml}_b{nb}{a.tag}", True, dict(ex, FPL=fpl, FML=fml, NBANKP=nb,
-                                                           TILE_S=1 if fml == 6 else 0, **SX[0]))
+                                                           TILE_S=1 if fml in (6, 8) else 0, **SX[0]))
                  for nb in a.banks]:
             use(s)
             exe = C.build_engine(work, {k: SCHED[k] for k in ("H", "D", "TD", "NL", "TROWS")}, man["counts"], e)

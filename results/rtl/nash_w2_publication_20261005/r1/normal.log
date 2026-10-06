@@ -1,0 +1,18 @@
+PROVIDER_ACCEPT cycle=19 we=1 byte_address=4128 slot=1
+PROVIDER_ACCEPT cycle=37 we=0 byte_address=4128 slot=1
+ORIGINAL_ROW_VERIFIED cycle=48 slot=1
+PROVIDER_ACCEPT cycle=57 we=1 byte_address=4096 slot=0
+PROVIDER_ACCEPT cycle=74 we=0 byte_address=4096 slot=0
+ORIGINAL_ROW_VERIFIED cycle=86 slot=0
+PROVIDER_ACCEPT cycle=93 we=1 byte_address=4224 slot=2
+PROVIDER_ACCEPT cycle=112 we=0 byte_address=4224 slot=2
+ORIGINAL_ROW_VERIFIED cycle=123 slot=2
+PROVIDER_ACCEPT cycle=132 we=1 byte_address=4256 slot=3
+PROVIDER_ACCEPT cycle=149 we=0 byte_address=4256 slot=3
+ORIGINAL_ROW_VERIFIED cycle=160 slot=3
+ACTUAL_SHARED_RELEASE cycle=162 verified=4
+PASS W2_PUBLICATION_SHARED_CPEND_CPL rows=4 words=32 writes=4 reads=4 verified=4 releases=1 reqstall=7 delivery_stall=1
+- rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_w2_publication_nash.sv:192: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.030 s; speed 62.190 us/s
+- Verilator: cpu 0.029 s on 1 threads; alloced 1018 MB

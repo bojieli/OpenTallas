@@ -1,0 +1,50 @@
+{
+  "status": "LIVE_QUALIFIED_CONCAT_FULL36_HEAD_SUCCESSOR_NOT_TOKEN_PASS",
+  "supervisor_pid": 2316509,
+  "runtime_pid": 2318397,
+  "retired_pid": 439595,
+  "retired_pid_confirmed_absent": true,
+  "retirement_scope": "Intentional qualified supersession after linkPASS and fresh actual admission, not numerical failure",
+  "source_commit": "f7492a8b9",
+  "helper_source": "dbe630ae5",
+  "model_source": "b04e893e7",
+  "protected_source": "3f3c2b790",
+  "top_archive_sha256": "3deafa9e800d0ff21cb6a1dd1b1160eca3d34744c3771c0973c95eeb7e36a0a9",
+  "unchanged_host_sha256": "8e94008897ea20e354c4f323041b7671fb7bfc0104bcbfa75184106404ad652f",
+  "flags": {
+    "PROTECTED_STREAM4": 1,
+    "CDC_CONSUMER_JOIN": 1,
+    "LANDING_RSEL": 1,
+    "kv_ideal": 0,
+    "early_go": 1,
+    "posted_wb": 1,
+    "RT_THREADS": 16,
+    "compiled_DUT_threads": 1
+  },
+  "shape": {
+    "position": 8191,
+    "layers": 36,
+    "head": true,
+    "ranks": 4,
+    "history_images": 144,
+    "required_byte_output_comparisons": 300
+  },
+  "cache_precision": "Existing FP8 E4M3 K+V, full8KVheads/head_dim128, unchanged golden rounding/reduction order",
+  "fair_comparison": "Publish matched-cache precision only after source-verifying each HBM/GPU comparator; otherwise label differing precision explicitly next to rate ratio. Checkpoint BF16 dtype is not proof of GPU cache dtype; same FP8 oracle is not whole physical qualification. No new quality waiver.",
+  "selected_steady_payload_floor_us_at_assumed_1p2GHz": 983.04,
+  "prefix_evidence": "concat_gate_r2 PASS identical513edge/1860events/52negativefaults/eventtrace+state+KV and measured1.204193x; not fulltoken exactness",
+  "startup_observation": "Actual images loaded3.4s and models/preload11.5s, initialcyc1 all4rankKVfault0, no numerical result yet",
+  "failure_history": "R1 FAIL_COMPILE retained in concat_gate_r1; previous owner-retired runtimes and all archives/evidence retained",
+  "no_model_frontend_or_engine_rebuild": true,
+  "duplicate_fullruntime": false,
+  "full_token_pass": false,
+  "physical_qualified": false,
+  "runtime_runner_pid": 2318393,
+  "runtime_start_ticks": 10812315,
+  "supervisor_start_ticks": 10809455,
+  "retired_cohort_confirmed_absent": [
+    439595,
+    439566,
+    437677
+  ]
+}

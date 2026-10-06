@@ -1,0 +1,230 @@
+{
+  "DBU_per_um": 1000,
+  "rows": [
+    {
+      "name": "ROW_144",
+      "bbox_DBU": [
+        17280,
+        56160,
+        60480,
+        56430
+      ],
+      "origin": [
+        17280,
+        56160
+      ],
+      "orientation": "R0",
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "site_height_DBU": 270
+    },
+    {
+      "name": "ROW_145",
+      "bbox_DBU": [
+        17280,
+        56430,
+        60480,
+        56700
+      ],
+      "origin": [
+        17280,
+        56430
+      ],
+      "orientation": "MX",
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "site_height_DBU": 270
+    },
+    {
+      "name": "ROW_146",
+      "bbox_DBU": [
+        17280,
+        56700,
+        60480,
+        56970
+      ],
+      "origin": [
+        17280,
+        56700
+      ],
+      "orientation": "R0",
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "site_height_DBU": 270
+    },
+    {
+      "name": "ROW_147",
+      "bbox_DBU": [
+        17280,
+        56970,
+        60480,
+        57240
+      ],
+      "origin": [
+        17280,
+        56970
+      ],
+      "orientation": "MX",
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "site_height_DBU": 270
+    },
+    {
+      "name": "ROW_148",
+      "bbox_DBU": [
+        17280,
+        57240,
+        60480,
+        57510
+      ],
+      "origin": [
+        17280,
+        57240
+      ],
+      "orientation": "R0",
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "site_height_DBU": 270
+    }
+  ],
+  "regions": [
+    {
+      "name": "cp_body",
+      "bounds_DBU": [
+        [
+          17280,
+          17280,
+          60480,
+          56160
+        ]
+      ]
+    },
+    {
+      "name": "cp_association",
+      "bounds_DBU": [
+        [
+          17280,
+          56160,
+          22464,
+          60480
+        ]
+      ]
+    }
+  ],
+  "cells": [
+    {
+      "name": "output1276",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "MX",
+      "origin_DBU": [
+        22463,
+        57240
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        22463,
+        56970,
+        22733,
+        57240
+      ]
+    },
+    {
+      "name": "input1226",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "R0",
+      "origin_DBU": [
+        23003,
+        56160
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        23003,
+        56160,
+        23273,
+        56430
+      ]
+    },
+    {
+      "name": "input1221",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "R0",
+      "origin_DBU": [
+        22733,
+        56160
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        22733,
+        56160,
+        23003,
+        56430
+      ]
+    },
+    {
+      "name": "input1195",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "R0",
+      "origin_DBU": [
+        23543,
+        56160
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        23543,
+        56160,
+        23813,
+        56430
+      ]
+    },
+    {
+      "name": "input1168",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "R0",
+      "origin_DBU": [
+        23273,
+        56160
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        23273,
+        56160,
+        23543,
+        56430
+      ]
+    },
+    {
+      "name": "place2589",
+      "master": "BUFx2_ASAP7_75t_R",
+      "master_width_DBU": 270,
+      "master_height_DBU": 270,
+      "orientation": "R0",
+      "origin_DBU": [
+        22463,
+        56160
+      ],
+      "site": "asap7sc7p5t",
+      "site_width_DBU": 54,
+      "bbox_DBU": [
+        22463,
+        56160,
+        22733,
+        56430
+      ]
+    }
+  ]
+}

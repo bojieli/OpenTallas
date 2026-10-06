@@ -1,0 +1,51 @@
+A 13 0
+C 21 e0 -0 -0
+A 21 1
+C 22 e0 -0 -0
+C 23 e0 -0 -0
+C 24 e0 -0 -0
+C 25 e0 -0 -0
+A 29 2
+C 70 e1 -0 -0
+C 71 e1 -0 -0
+C 72 e1 -0 -0
+C 73 e1 -0 -0
+C 74 e1 -0 -0
+C 76 -2 r0 -0
+C 77 -2 r0 -0
+C 78 -2 r0 -0
+C 79 -2 r0 -0
+C 80 -2 r0 -0
+C 119 e2 -0 -0
+C 120 e2 -0 -0
+C 121 e2 -0 -0
+C 122 e2 -0 -0
+C 123 e2 -0 -0
+C 125 -2 r1 -0
+C 126 -2 r1 -0
+C 127 -2 r1 -0
+C 128 -2 r1 -0
+C 129 -2 r1 -0
+C 174 -2 r2 -0
+C 175 -2 r2 -0
+C 176 -2 r2 -0
+C 177 -2 r2 -0
+C 178 -2 r2 -0
+C 293 -2 -0 s2
+A 294 3
+C 302 e3 -0 -0
+A 302 4
+C 443 e4 -0 -0
+C 444 e4 -0 -0
+C 445 e4 -0 -0
+C 446 e4 -0 -0
+C 447 e4 -0 -0
+C 449 -4 r3 -0
+C 498 -4 r4 -0
+C 499 -4 r4 -0
+C 500 -4 r4 -0
+C 501 -4 r4 -0
+C 502 -4 r4 -0
+PASS_INTEGRATED_STAGE_DRAIN position=1048575 token=1a321 job=9234abcd gen=9 ops=5 held_cpl_edges=5
+END 521 ok
+- /srv/opentallas-scratch/codex/item2-c12-integrated-20261006/source/rtl/test/hbm_accel/integrated_20261006/tb_hbm_integrated_su_c12.sv:272: Verilog $finish

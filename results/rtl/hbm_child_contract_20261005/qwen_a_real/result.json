@@ -1,0 +1,53 @@
+{
+  "case": "a",
+  "exit": 0,
+  "wall": "5:05.99",
+  "peak_rss_mb": 14267,
+  "manifest": {
+    "case": "a",
+    "instances": 1737,
+    "generated_pins": 321729,
+    "nets_bits": 3468326,
+    "variant": {
+      "x_trunk": 1.0,
+      "die": "qwen"
+    }
+  },
+  "legality": {
+    "instances": 1737,
+    "overlaps": 0,
+    "outside": 0
+  },
+  "snap_moves": {
+    "count": 0,
+    "by_master": {},
+    "max_um": 0.0
+  },
+  "track_assert": {
+    "verdict": "PASS",
+    "macros": 1737,
+    "pins_checked": 7378096,
+    "offtrack": 0,
+    "max_offset_nm": 0.0,
+    "no_track_grid": 0
+  },
+  "track_assert_offenders": [],
+  "pin_access": {
+    "scanned_instances": 1737,
+    "inst_terms_valid_planar": 0,
+    "macro_valid_planar_ap": 2217005,
+    "macro_valid_via_ap": 837950,
+    "macro_no_ap": 0,
+    "status": "DONE",
+    "no_access_errors": 0,
+    "examples": []
+  },
+  "errors": [],
+  "source_sha256": {
+    "run.log.start": "a1c4faf11944c08c8d9cee5032a154102e522b61f1d82323eeb4a61f1258ce96",
+    "run.log.end": "143b87904f09a64af00ef13b375518db422948e041c53f8e45d8938ee9cfb396",
+    "run.log.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "manifest.json": "15e6eb1d156bd3b4d61576dde89f73af59d3161b2195c37ebc8f55c007b4992c",
+    "run.log": "eef1746efc50ba16cdef6044bcd882b2917c42e7310c1749b125ce8e126dcd28"
+  }
+}

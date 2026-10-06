@@ -1,0 +1,92 @@
+{
+  "schema": "opentallas.hbm.router.pipeline.before_rtl.v1",
+  "canonical_shape": {
+    "N": 384,
+    "P": 16,
+    "K": 6,
+    "IW": 9,
+    "input_bits": 512,
+    "output_bits": 54
+  },
+  "mechanism": "two alternating lane banks; registered compare predicates then payload insert; exact per-bank top6; five merge levels",
+  "baseline_source": "topk_f3 181dedac8d9c; SS FAIL is history, not adoption",
+  "unified_model": {
+    "source": "tools/uarch_model.py",
+    "sha256": "b85b100cb49af85069e5b4b66f45099555e6cc703139287d2cbc8ad1bb3b8790",
+    "DFF_um2": 0.2916,
+    "model_layers": 40
+  },
+  "MACs_per_cycle": 0,
+  "comparisons": {
+    "old_parallel_inventory": 428,
+    "new_parallel_inventory": 657
+  },
+  "memory_ports": {
+    "SRAM": 0,
+    "HBM": 0,
+    "ROM": 0
+  },
+  "bytes_per_input_cycle": 64,
+  "bits_per_input_cycle": 514,
+  "output_bits_per_vector": 55,
+  "vector_beats": 24,
+  "vector_II_cycles": 24,
+  "comparator_bank_recurrence_cycles": 2,
+  "bank_replicas": 32,
+  "die_leaf_replicas": 1,
+  "FF_inventory": {
+    "lane_payload": 7872,
+    "lane_valid": 192,
+    "incoming_keys": 1344,
+    "compare_predicates": 192,
+    "lane_control_pipes": 192,
+    "merge_pipeline": 39060,
+    "id_sort": 480,
+    "output_valid_pipeline": 29,
+    "beat_address": 9
+  },
+  "total_FF": 49370,
+  "baseline_mapped_FF": 31534,
+  "FF_delta": 17836,
+  "reset_scope": "mutable lane-valid/control resets retained; payload eligibility gated by valid; no new protection credit",
+  "baseline_lastbeat_latency_cycles": 23,
+  "candidate_lastbeat_latency_cycles": 28,
+  "latency_delta_cycles": 5,
+  "latency_is_analytical_pending_exact_gate": true,
+  "period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "added_ns_per_layer_at_1p2GHz": 4.166666666666667,
+  "nonoverlapped_token_delta_ns": 166.66666666666669,
+  "current_die_outline_um2": 86101.8,
+  "current_core_um2": 83666.1,
+  "comparison_mux_area_allowance_um2": 30093.49448411214,
+  "FF_area_um2": 14396.292000000001,
+  "CTS_reset_repair_allowance_fraction": 0.1,
+  "total_cell_allowance_um2": 48938.76513252336,
+  "variants": [
+    {
+      "utilization_percent": 55,
+      "allowed_cell_um2": 46016.355,
+      "analytical_slot_fit": false
+    },
+    {
+      "utilization_percent": 57.5,
+      "allowed_cell_um2": 48108.0075,
+      "analytical_slot_fit": false
+    },
+    {
+      "utilization_percent": 60,
+      "allowed_cell_um2": 50199.66,
+      "analytical_slot_fit": true
+    }
+  ],
+  "external_context": "Turing/source owner must supply actual launch/capture clock, min/max ports and load; no scalar zero-IO or parent qualification",
+  "routing_tracks": {
+    "input_signals": 514,
+    "output_signals": 55,
+    "capacity": "existing real die corridor/pin allocation, owner binding pending"
+  },
+  "adopted": false,
+  "physical_qualified": false
+}

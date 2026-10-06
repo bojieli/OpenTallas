@@ -5,6 +5,9 @@ Representative layers (one per type, golden 1M operands): SU records L0 (sliding
 entry is (seconds, source, class, modelled_seconds)."""
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 SINKHORN_UNIT_S = 41 / 151.9e6     # ot_hdc_sinkhorn: 41 unit clocks measured (hdc_v41_sinkhorn_campaign), routed fmax 151.9 MHz
 
 
@@ -79,10 +82,32 @@ def field_rep(L):
     return 3 if L < 20 else 21
 
 
-def field_rows(g, field):
+# CLAUDE DS-REPRICE 2026-10-06: the field wire comes from the wired S81 r8 die (per-frame round trip at 430.56 um a
+# stage + the hub stations on the return path, results/rtl/dsrom_field_reprice_r8_20261006/reprice.json) instead of
+# the r7 floorplan's 80 cycles a phase.  FIELD_GEOM selects the element-frame geometry; None = the old 80-cycle charge.
+REPRICE = Path(__file__).resolve().parents[1] / "results/rtl/dsrom_field_reprice_r8_20261006/reprice.json"
+FIELD_GEOM = "f183.60"          # default QELEM (owner go 2026-10-06): the closed QX 10 element frame (Z20c FH 177.12); was f157.68
+_RP = {}
+
+
+def reprice_table(field, geom):
+    """node name -> re-priced entry for this field record (config asbuilt / baseline / pq) at `geom`, or None"""
+    if geom is None or not REPRICE.exists():
+        return None
+    if "rec" not in _RP:
+        _RP["rec"] = json.loads(REPRICE.read_text())
+    q = (field.get("vehicle") or {}).get("qelem")
+    cfg = field.get("config") or (f"asbuilt_qelem{q['QX']}" if q else "asbuilt")
+    return _RP["rec"]["geoms"][geom]["configs"][cfg]
+
+
+def field_rows(g, field, geom="default"):
     """field.json node_summary: per measured layer (0, 1, 2, 3, 20, 21, 24) the slowest die's one-region RTL time
-    + S81 floorplan wire stages; other layers take their type's representative (expert-path times are those of the
-    representative layer's golden-routed experts)."""
+    + field wire stages (r8 die per-region round trip, reprice.json; geom None = the old S81 floorplan 80 a phase);
+    other layers take their type's representative (expert-path times are those of the representative layer's
+    golden-routed experts)."""
+    geom = FIELD_GEOM if geom == "default" else geom
+    rp = reprice_table(field, geom)
     by = {x["node"]: x for x in field["node_summary"]}
     out = {}
     for name in g.nodes:
@@ -97,8 +122,14 @@ def field_rows(g, field):
             x = by.get(name) or by.get(f"L{field_rep(L)}.{suf}")
             if x is None:
                 continue
-        out[name] = (x["total_us_s81_floorplan_wire"] * 1e-6,
+        if rp is None:
+            us, wsrc = x["total_us_s81_floorplan_wire"], "+ S81 floorplan wire stages"
+        else:
+            e = rp[x["node"]]
+            us, wsrc = e["us"], (f"+ r8 die wire {e['wire_cycles']} cyc over {e['phases']} phase(s) (per-region round "
+                                 f"trip + hub return stations, {geom})")
+        out[name] = (us * 1e-6,
                      f"{x['node']}: one-region full-shape ROM field RTL (S81 canonical placement), {x['rows_checked']} "
-                     f"rows exact={x['exact']}, + S81 floorplan wire stages", "measured" if x["exact"] else
+                     f"rows exact={x['exact']}, {wsrc}", "measured" if x["exact"] else
                      "measured_not_exact", 0.0)
     return out

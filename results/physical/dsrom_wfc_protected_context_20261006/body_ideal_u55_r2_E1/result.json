@@ -1,0 +1,23 @@
+{
+  "verdict": "RUNNING_COND_BODY_DIAGNOSTIC",
+  "recipe_source": "581beef92",
+  "RTL_source": "9915aa96b body same21RTL asE1original/E2original",
+  "container": "16d304ed42b757fe65ae5bbc3afeb2c195d18abc81c688a5ffd1e3fb6d81efc0",
+  "supervisor": 3538019,
+  "verified_Yosys_child": 3539351,
+  "admitted_utc": "2026-10-06T07:51:08.527042573Z",
+  "headroom": "pre/postload96.88 idle42.18/39.96 Mem779GiB disk494GiB",
+  "exact_vehicle_SYNTH_MEMORY_MAX_BITS": 6480,
+  "array": "u_r4.u_memory.g_live.u_request.sh two3240bit slow-domain FFshadows; existingmodel transport19296bits",
+  "prior_objects": "E1 canonicalRTLIL copied/hashverified; make regenerated canonicalization11.27s due prerequisites; original objects remain retained; no numerical/provider replay",
+  "macros": "288VM SRAM+14promptSRAM+4bookROM actualblackboxes unchanged",
+  "SSFF": null,
+  "DRC": null,
+  "unconstrained_IO_counts": null,
+  "external_clock_source_fault_reset_engine_IO_qualified": false,
+  "headline_allowed": false,
+  "safe_reset_claim": false,
+  "sole_launcher_collector": "Zeno",
+  "Kant_role": "capacity/ledger ONLY",
+  "E2_R2": "UNLAUNCHED"
+}

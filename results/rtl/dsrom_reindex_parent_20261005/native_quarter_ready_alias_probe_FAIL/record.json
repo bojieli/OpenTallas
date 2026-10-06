@@ -1,0 +1,9 @@
+{
+  "verdict": "PROBE_FAIL_PRESERVED",
+  "scope": "Unsupported out-of-SV-event internal ready alias write; not native arithmetic/physical verdict",
+  "actual_failure": "held score assertion;1stalled/0scores beforeabort",
+  "cause": "direct CData write did not propagate through compiled consumer combinational/scheduling path. Removed this pin-write method; successful source-scheduled R2 uses only initial TESTBENCH edge-counter origin.",
+  "fatal_checks_disabled": false,
+  "source_native_changed": false,
+  "parent_qualified": false
+}

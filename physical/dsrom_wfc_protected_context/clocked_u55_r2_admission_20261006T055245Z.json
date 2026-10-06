@@ -1,0 +1,32 @@
+{
+  "source": "ec21982c1",
+  "physical_status": "PREPARED_CORRECTED_FRONTEND_CPU_REFUSED",
+  "runroot": "/srv/opentallas-scratch2/codex/zeno-wfc-r4-physical/clocked-u55-r2",
+  "source_root": "/srv/opentallas-scratch2/codex/zeno-wfc-r4-physical/clocked-source-r2",
+  "exit": 75,
+  "headroom": [
+    {
+      "utc": "2026-10-06T05:52:45Z",
+      "stage": "pre-guard",
+      "cpus": 128,
+      "load1": 118.39794921875,
+      "idle_cpus": 5.068711848489592,
+      "available_bytes": 234755317760,
+      "nvme_free_bytes": 1904111480832,
+      "threads": 16,
+      "guard": "/srv/opentallas-scratch/admit.sh",
+      "reservation_GiB": 64,
+      "cpu_fit": false,
+      "fit": false
+    }
+  ],
+  "guard_invoked": false,
+  "container": null,
+  "supervisor": null,
+  "r1_retained": "clocked-u55 terminal2/frontendasyncCE failure",
+  "target_halfcycle_reference_ps": 138.888888889,
+  "reference_halfcycle_less_SS60_ps": 78.888888889,
+  "root_timing_verdict": null,
+  "interpretation": "Actual posedge fq -> negedge fh data path must fit clkQ+wire+setup in78.889ps before further characterized PLL jitter/insertion; no routed evidence or impossible-target inference yet",
+  "parent_SS_FF_qualified": false
+}

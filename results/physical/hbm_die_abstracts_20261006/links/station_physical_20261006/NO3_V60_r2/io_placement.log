@@ -1,0 +1,27 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.sdc
+Took 14 seconds: read_sdc /work/results/asap7/opentallas_ot_hbm_station_NO3_V60_asap7_Gauss_NO3_V60/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers "M4 M6" -ver_layers "M5 M7" -min_distance 1
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ clk_sm por_n in_data\[0\] in_data\[1000\] in_data\[1001\] ... ]
+[INFO PPL-0044] Pin group: [ fclk_o out_data\[0\] out_data\[2063\] out_data\[4126\] out_data\[1000\] ... ]
+[ERROR PPL-0024] Number of IO pins (10391) exceeds maximum number of available positions (1314). Increase the die perimeter from 671.94um to 10640.38um.
+Error: io_placement.tcl, 21 PPL-0024
+Elapsed time: 0:17.86[h:]min:sec. CPU time: user 17.56 sys 0.31 (100%). Peak memory: 433560KB.

@@ -319,6 +319,70 @@ def fused_rows(L, op, fused, P, clk):
                  how=f"fused SU chain (replaces {', '.join(f['replaces'])}): {f['how']}", budget_us=0.0, domain="su")]
 
 
+def finite_q_candidate_price(rec=REC):
+    """Price the actual finite-provider Q component without inventing a baseline.
+
+    Retain the historical wide-provider paper comparison, but do not transfer
+    its fusion saving or its clock qualification to this different service.
+    """
+    folder = Path(rec)/"su_fused"/"finite_q_component"
+    result_path, calendar_path = folder/"result.json", folder/"calendar.json"
+    if not result_path.exists() or not calendar_path.exists():
+        return None
+    result = json.loads(result_path.read_text())
+    calendar = json.loads(calendar_path.read_text())
+    actual = next(r for r in result['runs'] if r['name'] == 'actual')
+    m = actual['metrics']
+    assert result['terminal'] and result['pass_exact'] and actual['rc'] == 0
+    assert m == calendar['metrics'] and m['errors'] == 0 and m['checked'] == 1280 and m['debt'] == 0
+    assert m['requests'] == m['read_sectors']+m['write_sectors']+m['publication_sectors']
+    assert result['binary_sha256'] == calendar['binary_sha256']
+    accepted_event = next(e for e in actual['events'] if e.startswith('FINITE_EVENT accept '))
+    accepted_ns = float(accepted_event.split('time_ns=')[1])
+    elapsed = (m['time_ns']-accepted_ns)/1000
+    assert abs(elapsed-calendar['observed_command_to_completion_us']) < 1e-9
+    assert abs(sum(calendar['segments_us'].values())-elapsed) < 1e-9
+    wait = m['request_response_wait_edges']*calendar['clock_period_ns_resolved']/1000
+    assert 0 < wait <= elapsed
+    historical_path = Path(rec)/'su_fused'/'fused.json'
+    historical = json.loads(historical_path.read_text())
+    q = next(r for r in historical['rows'] if r['lever'].startswith('norm q'))
+    paper_saving = q['on_path_P1_us']['saving']
+    return dict(scope='one Q norm component, different finite provider; not original seven-op Q/KV/RoPE/quant program',
+        source_records={rel(p):sha(p) for p in (result_path,calendar_path,historical_path)},
+        measured_RTL_source=calendar['measurement_source'],
+        selected_RTL_source=calendar['selected_source'],
+        numerical_exact=True, checked_Q_words=m['checked'],
+        accepted_to_observed_completion_us=elapsed,
+        completion_observation=calendar['completion_observation'],
+        request_counts=dict(read=m['read_sectors'], write=m['write_sectors'],
+                            ordered_publication_readback=m['publication_sectors'], total=m['requests']),
+        response_wait_edges=m['request_response_wait_edges'],
+        resolved_simulation_period_ns=calendar['clock_period_ns_resolved'],
+        response_wait_us_including_CDC_backend=wait,
+        response_wait_fraction=wait/elapsed,
+        remaining_control_engine_observation_us=elapsed-wait,
+        critical_segments_us=calendar['segments_us'],
+        extra_CDC_charge_us=0,
+        extra_CDC_charge_basis='already measured inside these request/response waits; unmeasured parent crossings remain unknown, not zero',
+        parent_extra_crossing_and_borrower_cost_us=None,
+        historical_wide_provider_Q_KV_pair_us=q['fused']['us'],
+        historical_wide_provider_40_P1_saving_us=paper_saving,
+        cost_over_historical_total_saving=elapsed/paper_saving,
+        historical_comparison_scope='budget mismatch only; neither a same-provider regression nor an all-layer extrapolation',
+        effect_on_original_benefit='historical Q/KV fused benefit cannot be credited to this finite candidate; its single Q cost exceeds the entire old 40-occurrence saving',
+        native_same_provider_baseline_us=None,
+        native_provider_cost='original native wide ports also unpriced; retain neither as a physically guaranteed baseline',
+        architecture_risk='one-outstanding sector service and dependent response/publication waits dominate; engine fusion alone does not remove that exposed movement path',
+        remaining_engineering='bind actual program borrower/admission and read/write lease, remaining KV/RoPE/quant, actual owner publication and dependent consumer; then measure paired same-provider program',
+        parent_program_bound=calendar['parent_program_integration'],
+        installed_borrower_lease=calendar['installed_client_borrower_lease'],
+        mixed_native_fused_program_measured=calendar['mixed_native_fused_program_measured'],
+        physical_clock_qualified=calendar['physical_clock_qualified'],
+        whole_program_composed_delta_us=None, headline_acceleration_credit_us=None,
+        candidate_adopted=False)
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 def mtp(prog, smseq, su6, coll, local, hbm, clk, use, wg, fused):
     from hbm_accelerator_model import _load_study
@@ -522,7 +586,10 @@ def main():
                        MTP_tok_s=m_inh["mtp_tok_s"], reproduced=True),
         headline=dict(row=head["name"], AR_us=head["AR_us"], AR_tok_s=head["AR_tok_s"], MTP_step_us=head["MTP_step_us"],
                       MTP_tok_s=head["MTP_tok_s"], tau=head["MTP"]["tau"], tau_source=head["MTP"]["tau_source"],
-                      MTP_tok_s_tau_sensitivity=A._tau_sens(head["MTP_step_us"])),
+                      MTP_tok_s_tau_sensitivity=A._tau_sens(head["MTP_step_us"]),
+                      scope='paper-credited target-clock comparison; not measured integrated finite-provider performance',
+                      physical_qualified=False),
+        finite_provider_measured_candidate=finite_q_candidate_price(a.rec),
         gate=gate, unvalidated=UNVALIDATED,
         index_path=index_path(paths[head["name"]], paths["corrected"]),
         ladder_target_clocks=steps, ladder_today_clocks=today, sensitivities=sens,

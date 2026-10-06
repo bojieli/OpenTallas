@@ -1,0 +1,36 @@
+{
+  "scope": "literal existing receipt/source binding only; no DUT run",
+  "source_paths": [
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+    "rtl/chip/ot_coll_topk_merge.sv"
+  ],
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+    "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+  },
+  "component_receipt_verified": true,
+  "component_geometry": {
+    "N": 2,
+    "NPER": 16
+  },
+  "target_geometry": {
+    "N": 96,
+    "NPER": 512
+  },
+  "source_closure_present": true,
+  "enclosing_ready": false,
+  "target_ENABLE": 0,
+  "source_formatter_owner": "Sagan",
+  "global_ordered_gather_qualified": false,
+  "rate_credit": false,
+  "planning": {
+    "existing_model_edges": 448512,
+    "additional_explicit_output_load_edges": 6144,
+    "serial_floor_edges_at_priced_checked_service": 454656,
+    "conditional_us_at_1p2": 378.88,
+    "model_delta_writer": "Maxwell",
+    "no_rate_credit": true
+  }
+}
