@@ -22,7 +22,8 @@ ncpu=os.cpu_count();idle=d[3]/sum(d)*ncpu
 m={l.split(':')[0]:int(l.split()[1])*1024 for l in Path('/proc/meminfo').read_text().splitlines()
    if l.startswith(('MemTotal:','MemAvailable:'))}
 recent=json.loads(guard.with_name('admit.recent.json').read_text())
-ramp=sum(v for t,v in recent if time.time()-t<180)*2**30
+# The unchanged shared guard records reservations in bytes, not GiB.
+ramp=sum(v for t,v in recent if time.time()-t<180)
 reserve=min(100*2**30,int(.15*m['MemTotal']))
 v=os.statvfs('/srv/opentallas-scratch');free=v.f_bavail*v.f_frsize
 r=dict(UTC=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()), phase='post' if a.post else 'pre',

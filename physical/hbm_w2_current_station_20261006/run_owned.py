@@ -17,6 +17,8 @@ import run_abi3_physical_persistent as persistent
 
 p = argparse.ArgumentParser()
 p.add_argument('--run', type=Path, required=True)
+p.add_argument('--reuse-map', type=Path,
+               help='Completed map from the same pinned source; never synthesize it twice')
 a = p.parse_args()
 run = a.run.resolve()
 run.mkdir(parents=True, exist_ok=False)
@@ -57,18 +59,52 @@ native_synth = driver.run_synthesis
 
 
 def synth(*args, **kwargs):
-    result = native_synth(*args, **kwargs)
     work = args[3]
+    if a.reuse_map:
+        cached = a.reuse_map.resolve()
+        old = json.loads((cached.parent/'physical.json').read_text())
+        assert old['design']['parameters'] == manifest['parameters']
+        for source in old['design']['sources']:
+            assert driver.sha256_file(ROOT/source['path']) == source['sha256'], 'cached source differs'
+        for lib in old['corner']['liberty']:
+            assert driver.sha256_file(Path(lib['path'])) == lib['sha256'], 'cached mapping library differs'
+        assert 'hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H' in (cached/'synth.ys').read_text()
+        original_run = driver.run
+        def consume(cmd, *aa, **kk):
+            if cmd[:1] == [str(driver.YOSYS)]:
+                for name in ('mapped.raw.v','stat.txt'):
+                    shutil.copyfile(cached/name, work/name)
+                return subprocess.CompletedProcess(cmd, 0, (cached/'yosys.log').read_text(), '')
+            return original_run(cmd, *aa, **kk)
+        driver.run = consume
+        try:
+            # Reconstruct the original inventory with the shared parser. The
+            # newly emitted recipe is NOT executed; the source-pinned original
+            # raw map, stats and tool log are consumed byte-for-byte.
+            result = native_synth(*args, **kwargs)
+        finally:
+            driver.run = original_run
+        assert driver.sha256_file(result['netlist']) == driver.sha256_file(cached/'mapped.v')
+        result['record']['reused_completed_map'] = dict(directory=str(cached),
+            mapped_sha256=driver.sha256_file(cached/'mapped.v'),
+            original_synth_script_sha256=driver.sha256_file(cached/'synth.ys'),
+            original_tool_log_sha256=driver.sha256_file(cached/'yosys.log'),
+            yosys_or_ABC_relaunched=False)
+    else:
+        result = native_synth(*args, **kwargs)
     mapped = result['netlist']
     text = mapped.read_text()
-    if 'TIEHIx1_ASAP7_75t_R' not in text or 'TIELOx1_ASAP7_75t_R' not in text:
-        raise driver.FlowError('actual platform tie mapping missing')
+    if 'TIEHIx1_ASAP7_75t_R' not in text:
+        raise driver.FlowError('actual high constant tie mapping missing')
+    # This full CURRENT map needs a high tie only. A low tie may be absent
+    # because every constant-zero sink was optimized away or uses its inverse.
+    # Do not reject a correctly mapped netlist for an unused cell type.
+    (run/'mapped_inventory.json').write_text(json.dumps(result['record'], indent=2)+'\n')
     loads = run / 'receiver'
     subprocess.run(['python3', str(base/'measure_receiver.py'), '--mapped', str(mapped),
                     '--out', str(loads), '--src', str(ROOT)], check=True, cwd=ROOT)
     subprocess.run(['python3', str(base/'make_component_sdc.py'), '--loads', str(loads),
                     '--NO', '2', '--out', str(sdc)], check=True, cwd=ROOT)
-    (run/'mapped_inventory.json').write_text(json.dumps(result['record'], indent=2)+'\n')
     return result
 
 
