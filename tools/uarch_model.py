@@ -11906,6 +11906,14 @@ def hbm_vm_publication_parent_model():
             'full73-frame comparators, protected validity address selector and codecs; not free',
         replica_cost=dict(activation_read_taps=4, reverse_ACK_banks=4,
                           publication_arbiter_inputs=2, index_read_clients=1),
+        native_index_binding=dict(source='ot_hbm_native_index_frame_binding',
+            protocol='actual index_path vm_read/vm_rsp1024/tag8/WORD32; not W15 pair85/599',
+            extra_FF=0, extra_pipeline_cycles=0, payload_muxes=0,
+            owner='existing protected CP full73 and parent retained full73; no new authority',
+            comparator_bits=56+73+73,
+            area='map actual comparators and permission gates; not measured/free',
+            clocks='same actual clk_sm; no serial CDC or off-package link',
+            new_boundary_token_bits=17, full_parent_physical_closed=False),
         boundaries_bits_per_accept=dict(publisher_each=1024+32+73+2,
             index_request=32+6+8+73+7+2, index_response=1024+8+73+7+2,
             activation_write=2063+192+8+73+2,
@@ -11931,3 +11939,25 @@ def hbm_vm_publication_parent_model():
         service_CA_calendar_owner='Gibbs/Bacon; this provider join does not duplicate controllers',
         SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
         parent_physical_closed=False, adopted=False)
+
+
+def hbm_native_index_sram_join_model():
+    """Literal native-query/SRAM wiring; existing parent retains full73 owner."""
+    return dict(default_OFF=True, replicas=1, new_payload_FF=0, new_owner_FF=0,
+        new_control_FF=0, added_pipeline_edges=0, MACs_per_cycle=0,
+        request_payload_bits=1024, response_payload_bits=1024,
+        publication_frame_bits=73, dedicated_backend_owner_bits=63,
+        combinational_frame_comparators=4, frame_comparator_bits=73,
+        ACK_owner_compare_bits=63, read_bytes_per_accepted_transaction=128,
+        write_bytes_per_accepted_transaction=128, simultaneous_backend_transactions=1,
+        query_reads=129, query_blocks=128,
+        latency_basis='existing index_fp32_adapter_prebuild write4/read3 plus original query held consumption; no wire-cycle addition or overlap claim',
+        memory_model='results/physical/hbm_die_abstracts_20261006/memory_control/index_fp32_adapter_prebuild.json',
+        owner_model='hbm_integrated_stage_join_model: existing216 codedFF; no second owner seat',
+        address_unit='FP32 words, aligned32; caller supplies actual exclusive allocation',
+        comparator_logic_NAND2_reservation=4*(4*73+63),
+        added_boundary_signal_bits=4*73+63,
+        track_capacity=None, loaded_wire_delay=None, mapped_area_um2=None,
+        floorplan_slot_fit=False, parent_qualified=False, physical_closed=False,
+        protection_limit='existing query source raw buffers/control remain component source; not whole-index mutable protection qualification',
+        token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
