@@ -133,14 +133,14 @@ module tb_hbm_formatter_provider_join;
  .job(job),.gen(gen),.token(token),.pos(pos),.arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
  .gather_retained(retained),.arena_visible(arena_visible),
  .owner_valid(formatter_lease_valid),.owner_frame(formatter_lease_frame),
- .pair_v(fmt_pair_v),.pair_r(fmt_pair_r),.pair_job(job),.pair_gen(gen),.pair_token(token),.pair_pos(pos),
+ .pair_v(fmt_pair_v),.pair_r(fmt_pair_r),.pair_job(job),.pair_gen(gen),.pair_pos(pos),
  .pair_rank(fmt_rank),.pair_word(fmt_word),.pair_tag(fmt_tag),
  .pairs_v(fmt_pairs_v),.pairs_r(fmt_pairs_r),.pairs(fmt_pairs),.pairs_job(fmt_job),.pairs_gen(fmt_gen),.pairs_pos(fmt_pos),
  .pairs_rank(fmt_out_rank),.pairs_word(fmt_out_word),.pairs_tag(fmt_out_tag),.pairs_frame(fmt_frame),
  .pairs_checked(fmt_checked),.pairs_uncorrectable(fmt_ue),.retained(fmt_retained),.fault(fmt_fault),
  .bridge_req_v(fmt_req_v),.bridge_req_r(fmt_req_r),.bridge_req(fmt_req),
  .bridge_rsp_v(rsp_v&&fmt_mode),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(fmt_rsp),
- .release_v(fmt_release_v),.release_r(fmt_release_r),.release_job(job),.release_gen(gen),.release_token(token),.release_pos(pos),
+ .release_v(fmt_release_v),.release_r(fmt_release_r),.release_job(job),.release_gen(gen),.release_token17(token),.release_pos(pos),
  .publication_done(sink_visible),.source_reverse_done(source_reverse_done));
  integer pair_checks=0,formatter_reads=0,first_pair_cycle;
  always @(posedge clk)if(por_n&&fmt_req_v&&fmt_req_r)begin
