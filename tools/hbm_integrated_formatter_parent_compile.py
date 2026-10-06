@@ -11,6 +11,8 @@ ROOT=Path(__file__).resolve().parents[1]
 LIST='physical/hbm_die_abstracts_20261006/memory_control/formatter_provider.files.f'
 BODY='physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_integrated_formatter_provider.sv'
 PARENT='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv'
+PARENT_TOP='ot_ds_hbm_cluster20_integrated'
+OBSERVER_TOP='tb_hbm_integrated_minimum_parent'
 SELECTED='results/rtl/hbm_integrated_sfu_provider_join_20261006/selected_parameters.json'
 # Literal selected Gibbs parameters; standalone snapshot runner has no imports
 # from another worktree. Original ALAT5 executor is not rewritten as c12ALAT6.
@@ -56,12 +58,46 @@ def files():
         if s not in paths:raise ValueError('Missing actual selected source '+s)
     return paths
 
-def prepare(work,body_pin,partition_reduction=False):
+def selected_parameters(document,native_norm_production=False):
+    parameters=dict(document['parameters'])
+    if native_norm_production:
+        candidate=document['norm_native_production_candidate']['parameters']
+        if candidate.get('NORM_NATIVE_VM_ENABLE')!=1 or candidate.get('NORM_NATIVE_INPUT_CP')!=1:
+            raise ValueError('Actual Gibbs native norm production flags unavailable')
+        parameters.update(candidate)
+    return parameters
+
+def observation_top(observation_wrapper,wrapper_pin,parameters):
+    top=PARENT_TOP
+    if observation_wrapper:
+        rel=str(observation_wrapper)
+        if observation_wrapper.is_absolute() or '..' in observation_wrapper.parts:
+            raise ValueError('Bacon wrapper must be a committed root-relative source')
+        if not wrapper_pin or sha(ROOT/rel)!=wrapper_pin:
+            raise ValueError('Actual Bacon wrapper source SHA required')
+        wrapper=(ROOT/rel).read_text()
+        if not re.search(r'\bmodule\s+'+OBSERVER_TOP+r'\b',wrapper) or not re.search(r'\b'+PARENT_TOP+r'\s*#\s*\(',wrapper):
+            raise ValueError('Observation wrapper must instantiate the actual full parent')
+        header=re.search(r'\bmodule\s+'+OBSERVER_TOP+r'\s*#\s*\((.*?)\)\s*\(',wrapper,re.S)
+        if not header or any(not re.search(r'\b'+k+r'\s*=',header[1]) for k in parameters):
+            raise ValueError('Wrapper must expose the actual selected parent parameters')
+        top=OBSERVER_TOP
+    elif wrapper_pin:raise ValueError('Wrapper pin without actual source')
+    return top
+
+def prepare(work,body_pin,partition_reduction=False,native_norm_production=False,
+            observation_wrapper=None,wrapper_pin=None):
     blocks=HIER_BLOCKS+(REDUCTION_BLOCKS if partition_reduction else [])
     if json.loads((ROOT/SELECTED).read_text())['parameters']!=PARAMS:
         raise ValueError('Actual Gibbs selected enabled parameters changed; align source runner')
+    parameters=selected_parameters(json.loads((ROOT/SELECTED).read_text()),native_norm_production)
+    paths=files();top=PARENT_TOP
+    top=observation_top(observation_wrapper,wrapper_pin,parameters)
+    if observation_wrapper:
+        if str(observation_wrapper) in paths:raise ValueError('Duplicate observation wrapper source')
+        paths.append(str(observation_wrapper))
     work.mkdir(parents=True,exist_ok=False)
-    paths=files();all_files=paths+INCLUDES
+    all_files=paths+INCLUDES
     missing=[s for s in all_files if not (ROOT/s).is_file()]
     pins={s:sha(ROOT/s) for s in all_files if (ROOT/s).is_file()}
     errors=[]
@@ -127,16 +163,21 @@ def prepare(work,body_pin,partition_reduction=False):
         if s in missing:continue
         dst=work/'src'/s;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/s,dst)
     shutil.copyfile(ROOT/LIST,work/'src/files.f')
+    if observation_wrapper:
+        with (work/'src/files.f').open('a') as f:f.write('\n'+str(observation_wrapper)+'\n')
     hier=work/'src/hierarchy.vlt'
     hier.write_text('`verilator_config\n'+''.join(f'hier_block -module "{name}"\n' for name in blocks))
     runner=work/'runner.py';shutil.copyfile(Path(__file__),runner)
     m=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-        source_sha256=pins,files_f_sha256=sha(ROOT/LIST),runner_sha256=sha(runner),
+        source_sha256=pins,files_f_sha256=sha(work/'src/files.f'),runner_sha256=sha(runner),
         binding_sha256=sha(ROOT/'tools/hbm_opt_integrated_20261005_w2_on.py'),
         hierarchy_sha256=sha(hier),hierarchy_blocks={name:declarations.get(name) for name in blocks},
         partition_reduction=partition_reduction,
+        native_norm_production=native_norm_production,
+        top=top,observation_wrapper=str(observation_wrapper) if observation_wrapper else None,
+        observation_wrapper_sha256=wrapper_pin,
         compiler_mode='real hierarchical --cc, sequential Verilation, no C++ build/runtime',
-        sources=paths,includes=INCLUDES,parameters=PARAMS,body_owner_sha256=body_pin,
+        sources=paths,includes=INCLUDES,parameters=parameters,body_owner_sha256=body_pin,
         missing=missing,errors=errors,source_ready=not missing and not errors,
         prepared_bytes=sum((ROOT/s).stat().st_size for s in all_files if s not in missing),
         full_parent_elaborated=False,numerical=False,physical_qualified=False,
@@ -148,7 +189,7 @@ def prepare(work,body_pin,partition_reduction=False):
 def verified(work):
     m=json.loads((work/'prepared.json').read_text())
     if not m['source_ready']:raise ValueError('Actual owner-pinned body/source closure not ready; no guard/compiler')
-    if m['parameters']!=json.loads((work/'src'/SELECTED).read_text())['parameters']:
+    if m['parameters']!=selected_parameters(json.loads((work/'src'/SELECTED).read_text()),m.get('native_norm_production',False)):
         raise ValueError('Snapshot differs from its pinned selected parameters')
     if sha(work/'src/files.f')!=m['files_f_sha256']:raise ValueError('Source list changed')
     if sha(work/'runner.py')!=m['runner_sha256']:raise ValueError('Runner changed')
@@ -211,7 +252,7 @@ def run(a):
     # One frontend at a time bounds concurrency without process memory caps.
     cmd=[str(a.tool.resolve()),'--cc','--hierarchical','--timing','-Wno-fatal',
          '-Werror-LATCH','--build-jobs','1','--verilate-jobs','1','--hierarchical-threads','1',
-         '--top-module','ot_ds_hbm_cluster20_integrated','--Mdir',str(obj),
+         '--top-module',m.get('top',PARENT_TOP),'--Mdir',str(obj),
          *[f'-G{k}={v}' for k,v in m['parameters'].items()],'hierarchy.vlt','-f','files.f']
     if a.plan:
         # --make json writes the real derived block/parameter/dependency graph
@@ -230,7 +271,7 @@ def run(a):
         return rc
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
     leaves=list(obj.glob('*__hierMkArgs.f'))
-    hierarchy_complete=bool(leaves) and (obj/'Vot_ds_hbm_cluster20_integrated.h').is_file()
+    hierarchy_complete=bool(leaves) and (obj/('V'+m.get('top',PARENT_TOP)+'.h')).is_file()
     write(work/'elaboration.json',dict(frontend_exit=rc,dangerous_diagnostics=dangerous,
         hierarchy_models=[p.name for p in leaves],hierarchy_complete=hierarchy_complete,
         full_parent_elaborated=(rc==0 and not dangerous and hierarchy_complete),parameters=m['parameters'],
@@ -379,7 +420,7 @@ def dependency_interfaces(j,by_prefix):
 def enroll_models(a):
     """Read completed models only; no compiler, admission or live-directory writes."""
     work=a.work.resolve();m=verified(work);old=a.retained_models.resolve()
-    jobs=json.loads((work/'obj/Vot_ds_hbm_cluster20_integrated.json').read_text())['submodules']
+    jobs=json.loads((work/'obj'/('V'+m.get('top',PARENT_TOP)+'.json')).read_text())['submodules']
     old_inputs=json.loads((old/'inputs.json').read_text())
     if old_inputs['source_sha256']!=m['source_sha256']:raise ValueError('Terminal/source snapshot mismatch')
     tool_pins=tool_identity(a.tool);contracts=component_contracts(work,m,jobs,tool_pins)
@@ -390,7 +431,7 @@ def enroll_models(a):
         t=json.loads(terminal.read_text());directory=Path(j['directory'])
         if t['exit'] or not t['real_model_header']:
             rejected[prefix]='Compiler/model failure';continue
-        if j['top']=='ot_ds_hbm_cluster20_integrated':
+        if j['top'] in (PARENT_TOP,OBSERVER_TOP):
             rejected[prefix]='Parent always rebuilt against current source';continue
         try:
             dependency_signatures=recorded_dependencies(directory,prefix,work/'src')
@@ -449,7 +490,7 @@ def compile_plan(a):
     out=a.output.resolve()
     if a.enrollment and a.retained_models:
         raise ValueError('Choose exact component enrollment or same-plan continuation')
-    graph=work/'obj/Vot_ds_hbm_cluster20_integrated.json'
+    graph=work/'obj'/('V'+m.get('top',PARENT_TOP)+'.json')
     jobs=json.loads(graph.read_text())['submodules']
     guard=Path('/srv/opentallas-scratch/admit.sh')
     if socket.gethostname()!=a.epyc2_hostname or not guard.is_file():
@@ -514,7 +555,7 @@ def compile_plan(a):
                and all(Path(s).is_file() for s in j['sources'])]
         if not ready:raise ValueError('Real dependency wrappers unavailable; no substitute')
         j=ready[0];remaining.remove(j)
-        if enrollment and j['top']!='ot_ds_hbm_cluster20_integrated':
+        if enrollment and j['top'] not in (PARENT_TOP,OBSERVER_TOP):
             if reuse_component(j,contracts[j['prefix']],enrollment,out,
                                dependency_interfaces(j,{n['prefix']:n for n in jobs})):
                 completed.append(j['prefix']);continue
@@ -548,6 +589,9 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true');g.add_argument('--enroll-models',action='store_true')
     p.add_argument('--partition-reduction',action='store_true',help='Opt-in future real reducer partitions after measured peak/convergence justifies them')
+    p.add_argument('--native-norm-production',action='store_true',help='Consume literal Gibbs published norm production candidate flags')
+    p.add_argument('--observation-wrapper',type=Path,help='Actual Bacon additive full-parent observation wrapper')
+    p.add_argument('--wrapper-sha256',help='Published Bacon wrapper source SHA')
     p.add_argument('--enrollment',type=Path);p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
@@ -555,5 +599,5 @@ def main():
     p.add_argument('--wait-for-capacity',action='store_true')
     p.add_argument('--admitted',action='store_true',help=argparse.SUPPRESS)
     a=p.parse_args()
-    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
+    return prepare(a.work.resolve(),a.body_sha256,a.partition_reduction,a.native_norm_production,a.observation_wrapper,a.wrapper_sha256) if a.prepare else (enroll_models(a) if a.enroll_models else compile_plan(a) if a.compile_plan else run(a))
 if __name__=='__main__':raise SystemExit(main())

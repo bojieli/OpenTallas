@@ -1,0 +1,95 @@
+1: OpenROAD 26Q3-1510-g6cb3f2b704 
+2: Features included (+) or not (-): +GPU +GUI +Python
+3: This program is licensed under the BSD-3 license. See the LICENSE file for details.
+4: Components of this program may be licensed under more restrictive licenses which must be honored.
+5: [INFO ORD-0030] Using 16 thread(s).
+6: source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+7: read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+8: read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+9: read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+10: read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+11: read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+12: read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+13: read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+14: read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+15: read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+16: read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+17: read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+18: read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+19: read_db /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C20_fault_retire_native/base/3_4_place_resized.odb
+20: read_sdc /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C20_fault_retire_native/base/2_floorplan.sdc
+21: source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+22: detailed_placement
+23: [INFO DPL-0006] Core area: 1309002.58 um^2
+24: [INFO DPL-0007] Movable instances area: 67969.70 um^2
+25: [INFO DPL-0008] Fixed instances area within core: 333455.62 um^2
+26: [INFO DPL-0009] Utilization: 30.7%
+27: [INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+28: [INFO DPL-1102] Legalizing using negotiation legalizer.
+29: [INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+30: 	Automatic search window extension enabled.
+31: 	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+32: [INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+33: [INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+34: [INFO DPL-0393]   height 1 row(s): 589754 cells
+35: [INFO DPL-0393]   height 110 row(s): 64 cells
+36:           |      Total |  Illegal |  Illegal
+37: Iteration | Violations |    Cells |    Sites
+38: ---------------------------------------------
+39:         0 |     792702 |     99826 |    434351
+40:         1 |     676077 |     81119 |    347118
+41:         2 |     650920 |     77018 |    327755
+42:         3 |     636004 |     75574 |    314622
+43:         4 |     625903 |     74697 |    305737
+44:         5 |     618925 |     74127 |    299416
+45:         6 |     614907 |     73847 |    295660
+46:         7 |     611524 |     73522 |    292638
+47:         8 |     608426 |     73316 |    289746
+48:         9 |     606922 |     73230 |    288307
+49:        10 |     605295 |     73097 |    286789
+50:        20 |     599956 |     72718 |    281874
+51:        30 |     599266 |     72670 |    281232
+52:        40 |     598917 |     72649 |    280904
+53:        50 |     598951 |     72651 |    280936
+54:        60 |     598884 |     72644 |    280876
+55:        65 |     598849 |     72639 |    280846
+56: [WARNING DPL-0700] Negotiation phase 1: violations stuck at 598849 for 3 consecutive iterations.
+57: Using old diamond search for 72639 remaining illegal cells.
+58: diamond recovery: recovered 43006/72639 stuck cells.
+59: Negotiation phase 2: isolation point active, 1000 iterations.
+60:       400 |     461516 |     29632 |    229873
+61:       403 |     461516 |     29632 |    229873
+62: [WARNING DPL-0702] Negotiation phase 2: violations stuck at 461516 for 3 consecutive iterations. Using diamond search for 29632 remaining illegal cells.
+63: diamond recovery: recovered 0/29632 stuck cells.
+64: [WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 29632
+65: [INFO DPL-0500] Runtime: 2846.14s
+66: Placement Analysis
+67: ---------------------------------
+68: total displacement     653498.2 u
+69: average displacement        1.1 u
+70: max displacement           51.5 u
+71: original HPWL         8553276.7 u
+72: legalized HPWL        9204457.9 u
+73: delta HPWL                    8 %
+74: 
+75: Took 2846 seconds: detailed_placement
+76: improve_placement -max_displacement "5 1"
+77: Detailed placement improvement.
+78: [INFO DPL-0401] Setting random seed to 1.
+79: [INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+80: [INFO DPL-0320] Collected 118737 fixed cells.
+81: [INFO DPL-0318] Collected 502856 single height cells.
+82: [INFO DPL-0321] Collected 0 wide cells.
+83: [INFO DPL-0322] Image (2052, 2160) - (1998000, 657990)
+84: [INFO DPL-0310] Assigned 502856 cells into segments.  Movement in X-direction is 32631498.000000, movement in Y-direction is 671680080.000000.
+85: [WARNING DPL-0200] Unexpected displacement during legalization.
+86: [INFO DPL-0313] Found 0 cells in wrong regions.
+87: [INFO DPL-0315] Found 0 row alignment problems.
+88: [INFO DPL-0314] Found 28262 site alignment problems.
+89: [INFO DPL-0311] Found 20305 overlaps between adjacent cells.
+33541: [WARNING DPL-0011] Padding check failed (405).
+60077: [WARNING DPL-0008] Region placement check failed (2401).
+62479: [ERROR DPL-0033] detailed placement checks failed during check placement.
+62480: write_db /work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C20_fault_retire_native/base/3_5_place_dp-failed.odb
+62481: Error: detail_place.tcl, 39 DPL-0033
+62482: Elapsed time: 59:14.90[h:]min:sec. CPU time: user 3551.68 sys 2.55 (99%). Peak memory: 6240316KB.
