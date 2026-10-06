@@ -517,6 +517,32 @@ def rom_stage_context_price():
                 physical_track_slot_fit=False, context_SSFF_closed=False, energy_credit=False)
 
 
+def rom_stage_cfg_provider_price():
+    """W5-local optional real PQ0 provider, current Copernicus read contract.
+
+    One 4096x72 ROM supplies 48 bits to both protected original loader copies.
+    The existing ld_start/ld_a lookahead adds no state or loader/token edges.
+    No ROM ECC. Source-owned provider is a prerequisite for loaded context,
+    not a performance lever or an adopted energy saving.
+    """
+    q=rom_stage_context_price()
+    q.update(configuration_macro_count=1,configuration_macro='ot_rom_4096x72_m8',
+        configuration_macro_body_um2=2391.58656,configuration_payload_bits=48,
+        configuration_read_address_bits=12,configuration_reads_per_phase=25,
+        configuration_capacity_words=4096,configuration_used_words=25*64,
+        configuration_wire_bits_per_cycle=12+1+48,
+        configuration_logic_gate_bound=160,configuration_logic_area_bound_um2=160*.08748,
+        configuration_added_FF=0,configuration_added_loader_cycles=0,
+        configuration_added_token_cycles=0,configuration_macro_root_clock=True,
+        configuration_clock_load_SS_fF=8.6838,configuration_clock_load_FF_fF=10.3732,
+        configuration_macro_SS_clkQ_ps=665.94,
+        configuration_provider_source='physical/dsrom_v9_cfg_context/ot_v41_pair_pq_ld_cfgrom.sv',
+        configuration_current_context_delta_um2=2391.58656+160*.08748,
+        configuration_tracks_vs_available_pending=True,configuration_floorplan_slot_fit=False,
+        default_off=True,residual_power_w=None,context_SSFF_closed=False,energy_credit=False)
+    return q
+
+
 def rom_stage_retention_edge_price(elements=2417):
     """Mandatory write preservation on the PG falling edge, NB2 full25 map.
 
