@@ -11,7 +11,9 @@ loads,allocation,out=map(Path,sys.argv[1:4]);payload_only='--payload-affinity' i
 s=json.loads((loads/'summary.json').read_text());a=json.loads(allocation.read_text())
 assert s['actual_library_pin_loads'] and not s['physical_qualified']
 raw=loads/'mapped.json';assert hashlib.sha256(raw.read_bytes()).hexdigest()==s['artifacts']['mapped.json']['sha256']
-net=json.loads(raw.read_text())['modules']['ot_gpu_coll_item9_context32_tree']
+modules=json.loads(raw.read_text())['modules']
+top=next(name for name in modules if name.startswith('ot_gpu_coll_item9_context32'))
+net=modules[top]
 lib=json.loads((loads/'library_input_caps_ff.json').read_text())['SS']
 regions={x['caller']:x['proposed_local_register_bbox_um'] for x in a['local_caller_proposal']}
 assert set(regions)==set(range(32))

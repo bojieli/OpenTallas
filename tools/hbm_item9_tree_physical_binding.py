@@ -37,7 +37,9 @@ subprocess.run(['docker', 'run', '--rm', '-v', f'{out}:/work', D.ORFS_IMAGE,
                 'bash', '-lc', "python3 /work/extract_areas.py; rc=$?; chmod -R a+rwX /work; exit $rc"], check=True)
 areas = json.loads((out / 'library_areas_um2.json').read_text())
 caps = json.loads((loads / 'library_input_caps_ff.json').read_text())
-net = json.loads((loads / 'mapped.json').read_text())['modules']['ot_gpu_coll_item9_context32_tree']
+modules = json.loads((loads / 'mapped.json').read_text())['modules']
+top = next(name for name in modules if name.startswith('ot_gpu_coll_item9_context32'))
+net = modules[top]
 regions = {'hb_coll': 32, **{f'caller_{i}': i for i in range(32)}}
 names = {}
 region_area = Counter()
