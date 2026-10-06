@@ -337,7 +337,7 @@ def terminal_path(old,prefix):
         if ref.exists():p=Path(json.loads(ref.read_text())['terminal'])
     return p
 
-def recorded_dependencies(directory,prefix):
+def recorded_dependencies(directory,prefix,source_root=None):
     """Verify legacy generation-time dependency signatures before hashing them.
 
     Verilator recorded inode, size and nanosecond mtime for every read input.
@@ -351,7 +351,9 @@ def recorded_dependencies(directory,prefix):
         if not line.startswith('S '):continue
         parts=shlex.split(line)
         if len(parts)!=9:raise ValueError('Unsupported Verilator dependency signature')
-        path=Path(parts[8]);stat=path.stat()
+        path=Path(parts[8])
+        if not path.is_absolute():path=(source_root or directory)/path
+        stat=path.stat()
         expected=[int(parts[1]),int(parts[2]),int(parts[5])*10**9+int(parts[6])]
         if [stat.st_size,stat.st_ino,stat.st_mtime_ns]!=expected:
             raise ValueError('Input changed since model generation '+str(path))
@@ -376,7 +378,7 @@ def enroll_models(a):
             rejected[prefix]='Compiler/model failure';continue
         if j['top']=='ot_ds_hbm_cluster20_integrated':
             rejected[prefix]='Parent always rebuilt against current source';continue
-        try:dependency_signatures=recorded_dependencies(directory,prefix)
+        try:dependency_signatures=recorded_dependencies(directory,prefix,work/'src')
         except (OSError,ValueError) as e:
             rejected[prefix]=str(e);continue
         artifacts={str(p.relative_to(directory)):sha(p) for p in directory.rglob('*') if p.is_file()}
