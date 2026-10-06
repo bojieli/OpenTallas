@@ -54,38 +54,42 @@ def sample(work):
  mem=next(int(x.split()[1])*1024 for x in Path('/proc/meminfo').read_text().splitlines() if x.startswith('MemAvailable:'))
  return dict(load=list(os.getloadavg()),idle_cores=os.cpu_count()*(delta[3]+delta[4])/sum(delta),
              available_bytes=mem,disk_free=shutil.disk_usage(work).free)
-def run(work,reservation,inventory,threads,activity):
+def run(work,reservation,inventory,threads,activity,phase='all'):
  r=json.loads((work/'prepared.json').read_text())
  if any(sha(ROOT/p)!=h for p,h in r['source_sha256'].items()):raise ValueError('pinned stage source changed')
  if any(sha(ROOT/p)!=h for p,h in r['include_sha256'].items()):raise ValueError('instruction field include changed')
  for target,c in r['cases'].items():
   for name in FILES:
    if sha(work/target/name)!=c['sha256'][name]:raise ValueError('prepared input/golden changed')
- if (work/'build.exit').exists():raise FileExistsError('preserve prior build; no implicit retry/rebuild')
+ if phase!='build-run' and (work/'build.exit').exists():raise FileExistsError('preserve prior build; no implicit retry/rebuild')
+ required_cores=1 if phase=='frontend' else threads
+ if phase=='build-run' and (not (work/'frontend.exit').exists() or (work/'frontend.exit').read_text().strip()!='0'):
+  raise ValueError('completed unchanged frontend required')
  # Unchanged protected admission; explicit CPU/disk checks precede and follow it.
  import sys
  sys.path.insert(0,'/srv/opentallas-scratch');import admit_core
  pre=sample(work)
- if pre['load'][0]>=128 or pre['idle_cores']<threads+1 or pre['disk_free']<2*inventory:
+ if pre['load'][0]+required_cores>=min(110,os.cpu_count()) or pre['idle_cores']<required_cores+1 or pre['disk_free']<2*inventory:
   raise RuntimeError('CPU/disk capacity miss; no compiler launched: '+json.dumps(pre))
  if not admit_core.try_admit(reservation*2**30):raise RuntimeError('unchanged admission declined')
  post=sample(work)
- if post['load'][0]>=128 or post['idle_cores']<threads+1 or post['disk_free']<2*inventory:
+ if post['load'][0]+required_cores>=min(110,os.cpu_count()) or post['idle_cores']<required_cores+1 or post['disk_free']<2*inventory:
   raise RuntimeError('post-admission CPU/disk miss; no compiler launched: '+json.dumps(post))
- (work/'admission.json').write_text(json.dumps(dict(pre=pre,post=post,reservation_GiB=reservation,
+ (work/('admission_'+phase+'.json')).write_text(json.dumps(dict(pre=pre,post=post,reservation_GiB=reservation,
        prior_actual_inventory_bytes=inventory,threads=threads,execution_caps=None),indent=2)+'\n')
  obj=work/'obj'
- cmd=[VC.VERILATOR,'--cc','--exe','--build','--timing','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNOPTFLAT',
+ cmd=[VC.VERILATOR,'--cc','--exe',*(['--build'] if phase=='all' else []),'--timing','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNOPTFLAT',
       '--top-module','tb_hdc_v41x_vec','--prefix','Vtb','-Mdir',str(obj),'-j',str(threads),
       '-GN=1024','-GM=256','-GREDROGS=2','-GBCAST_STAGES=7','-GRET_STAGES=8','-GMLAT=6','-GALAT=6',
       *C12.vflags().split(),*[f'-G{k}={v}' for k,v in dict(VMA=VC.VMA,KVA=VC.KVA,CRA=VC.CRA,WRA=VC.WRA,XBA=VC.XBA).items()],
       '-I'+str(ROOT/'rtl/test')]
  if activity:cmd+=['--trace-fst']
  cmd += [str(ROOT/p) for p in sources(r.get('fp_mode','rtl'))]+['-CFLAGS','-O1']
- (work/'build_command.json').write_text(json.dumps(cmd,indent=2)+'\n')
- with (work/'build.log').open('w') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
- (work/'build.exit').write_text(str(rc)+'\n')
- if rc:return rc
+ if phase=='build-run':cmd=['make','-C',str(obj),'-f','Vtb.mk','-j',str(threads),'OPT_FAST=-O0','OPT_SLOW=-O0']
+ (work/('build_command_'+phase+'.json')).write_text(json.dumps(cmd,indent=2)+'\n')
+ with (work/('build_'+phase+'.log')).open('x') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
+ (work/('frontend.exit' if phase=='frontend' else 'build.exit')).write_text(str(rc)+'\n')
+ if rc or phase=='frontend':return rc
  rows=[];exe=obj/'Vtb'
  for target,c in r['cases'].items():
   d=work/target
@@ -110,8 +114,9 @@ if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',type=Path);p.add_argument('--work',type=Path,required=True)
  p.add_argument('--run',action='store_true');p.add_argument('--reservation-gib',type=int);p.add_argument('--prior-inventory-bytes',type=int)
  p.add_argument('--threads',type=int,choices=range(16,25),default=16);p.add_argument('--activity',action='store_true')
- p.add_argument('--fp',choices=['rtl','dpi_beh'],default='rtl');a=p.parse_args()
+ p.add_argument('--fp',choices=['rtl','dpi_beh'],default='rtl')
+ p.add_argument('--phase',choices=['all','frontend','build-run'],default='all');a=p.parse_args()
  if a.prepare:prepare(a.prepare.resolve(),a.work.resolve(),a.fp)
  if a.run:
   if not a.reservation_gib or not a.prior_inventory_bytes:p.error('measured reservation and actual prior inventory required')
-  raise SystemExit(run(a.work.resolve(),a.reservation_gib,a.prior_inventory_bytes,a.threads,a.activity))
+  raise SystemExit(run(a.work.resolve(),a.reservation_gib,a.prior_inventory_bytes,a.threads,a.activity,a.phase))
