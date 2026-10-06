@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--fast-owner', action='store_true')
     parser.add_argument('--phase-parallel', action='store_true', help='Changed exact18-bit phase validation; one contextual source vehicle')
+    parser.add_argument('--gpl-repair', action='store_true', help='One source-identical GPL0307 continuation from retained IO')
     parser.add_argument('--variant', type=int, choices=(1,2,3), default=1,
                         help='Distinct installed GPL/DRT seeds, unchanged constraints and density')
     parser.add_argument('--resume-canonical', type=Path,
@@ -80,7 +81,8 @@ def main():
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
     if args.phase_parallel:
         assert inputs['parameters']['SU_PARALLEL_PHASE_VALIDATION']==1
-        assert not (args.resume_canonical or args.resume_cts_sha256 or args.resume_io_sha256 or args.resume_resized_sha256), "Changed RTL needs fresh synthesis"
+        if not args.gpl_repair:
+            assert not (args.resume_canonical or args.resume_cts_sha256 or args.resume_io_sha256 or args.resume_resized_sha256), "Changed RTL needs fresh synthesis"
         argv += ['--param','SU_PARALLEL_PHASE_VALIDATION=1']
         argv[argv.index('--nickname-tag')+1]='harvey_cp_phase_parallel_context_r1'
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
@@ -104,6 +106,49 @@ def main():
             explicit_modeled_density=0.5,automatic_density_prequery_disabled=True,
             canonical_initial_placement_removes_empty_core=True,
             membership_after_port_buffering=True)
+    # Validate the actual pinned packet before --prepare-only can succeed.
+    # The tapcell gate has one canonical file-join dependency; other installed
+    # CP hooks source literal /src paths. No Tcl hook is rewritten or waived.
+    dependencies=set()
+    for index,option in enumerate(argv[:-1]):
+        if option in ('--source','--sdc-append'):
+            dependencies.add(argv[index+1])
+        elif option=='--step-tcl':
+            dependencies.add(argv[index+1].split('=',1)[1])
+        elif option=='--orfs-var' and argv[index+1].startswith('PDN_TCL=/src/'):
+            dependencies.add(argv[index+1].split('/src/',1)[1])
+    pending=list(dependencies)
+    import re
+    while pending:
+        path=pending.pop()
+        file=ROOT/path
+        if not file.is_file():raise FileNotFoundError('Pinned CP packet missing required input: '+path)
+        if file.suffix!='.tcl':continue
+        children=re.findall(r'^source /src/([^\s]+)',file.read_text(),re.MULTILINE)
+        if path=='physical/common/ot_macro_track_assert_hook.tcl':
+            children.append('physical/common/ot_macro_track_snap.tcl')
+        for child in children:
+            if child not in dependencies:dependencies.add(child);pending.append(child)
+    record['physical_dependencies_sha256']={path:sha(ROOT/path) for path in sorted(dependencies)}
+    if args.gpl_repair:
+        assert args.phase_parallel and args.fast_owner and args.variant==1
+        assert args.resume_io_sha256 and not (args.resume_canonical or args.resume_cts_sha256 or args.resume_resized_sha256)
+        repair_path=ROOT/'results/physical/hbm_cp_phase_parallel_parent_context_20261006/r3_gpl_repair/model.json'
+        repair=json.loads(repair_path.read_text())
+        assert repair['retained_IO_sha256']==args.resume_io_sha256
+        assert repair['fixed_MAX_PLACE_STEP_COEF']==1.01 and repair['fixed_place_density']==0.55
+        for name,key in [('3_2_place_iop.odb','retained_IO_sha256'),('1_2_yosys.v','retained_mapped_sha256')]:
+            found=list((job/'work/orfs/results').rglob(name))
+            assert len(found)==1 and sha(found[0])==repair[key], 'GPL repair requires exact retained '+name
+        for path,digest in repair['RTL_source_sha256'].items():
+            assert sha(ROOT/path)==digest, 'GPL source-identical repair changed '+path
+        argv += ['--orfs-var','MAX_PLACE_STEP_COEF=1.01']
+        argv[argv.index('--place-density')+1]='0.55'
+        record.update(argv=argv,physical_repair='GPL0307 smaller max_phi_coef',
+            explicit_modeled_density=0.55,gpl_max_phi_coef=1.01,
+            source_changed=False,synthesis_required=False,synthesis_reused=True,
+            retained_IO_sha256=repair['retained_IO_sha256'],
+            gpl_repair_model_sha256=sha(repair_path))
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
@@ -171,6 +216,14 @@ assert s.count(needle)==2, 'Installed GRT repair legalization API changed'
 s=s.replace(needle,'    source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
 p.write_text(s)
 '''
+    if args.gpl_repair:
+        patch="""from pathlib import Path
+import hashlib
+p=Path('/OpenROAD-flow-scripts/flow/scripts/global_place.tcl')
+s=p.read_text()
+assert hashlib.sha256(s.encode()).hexdigest()=='05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33', 'Installed canonical GPL changed'
+assert 'lappend global_placement_args -max_phi_coef $::env(MAX_PLACE_STEP_COEF)' in s
+"""+patch
     (case/'bind_cts_membership.py').write_text(patch)
     import run_abi3_physical as driver
     original_run = driver.run

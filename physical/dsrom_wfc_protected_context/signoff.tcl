@@ -7,8 +7,9 @@ foreach c {WC BC} {
   report_checks -corner $c -path_delay max -format full_clock_expanded -group_path_count 100 > $out/${c}_setup_raw.rpt
   report_checks -corner $c -path_delay min -format full_clock_expanded -group_path_count 100 > $out/${c}_hold_raw.rpt
   report_check_types -corner $c -max_slew -max_capacitance -max_fanout -violators > $out/${c}_electrical_raw.rpt
-  foreach cls {controller provider producer capture} {
+  foreach cls {divider controller provider producer capture} {
     switch $cls {
+      divider {set pat {*u_common_clock*}}
       controller {set pat {*u_stage*u_ctrl*}}
       provider {set pat {*u_memory*}}
       producer {set pat {*u_cfg* *u_whole*}}

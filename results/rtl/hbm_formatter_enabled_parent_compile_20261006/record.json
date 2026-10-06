@@ -34,12 +34,68 @@
   "E2_disk_reservation_bytes": 2147483648,
   "E2_admission": "Sole light supervisor awaits fresh load<128/idleCPU/RAM/disk; then unchanged admit.sh and fresh postguard fit; no heavy compiler until fit",
   "existing_W5_dependencies": "preserved; no W5 source/job mutation",
-  "SFUc12_join": "Source dd4a8e776/main9f258 adds stand-alone stage, absent from selected parent; Gibbs actual instance/enable/source-publication binding requested; no ALLON claim",
+  "SFUc12_join": "Actual source86709d1d2 now selectedparent u_sfu_c12, SFU_C12_ENABLE=1; 45literalports checked; changed-source r8 preparation ready, NOT launched while r7 admitted",
   "current_runner_host_policy": "E2 NVMe only; AGI mode removed after owner correction; pinned queued r7 actual command remains E2",
   "E2_compiler_pid": 3243007,
   "E2_admitted_runner_pid": 3240336,
   "E2_admitted_utc": "2026-10-06T05:19:43Z",
   "last_observed_compiler_RSS_KiB": 385841996,
   "last_observed_utc": "2026-10-06T05:29:53Z",
-  "memory_estimate_correction": "Declared64GiB was underestimated; observed367.97GiB reported directKant/Gibbs; live process preserved, actual memory reflected in host headroom"
+  "memory_estimate_correction": "Declared64GiB was underestimated; observed367.97GiB reported directKant/Gibbs; live process preserved, actual memory reflected in host headroom",
+  "successor_preparation": {
+    "source_commit": "dd0e60938a39673b5a1982eb7a875e799a372664",
+    "source_files": 108,
+    "source_ready": true,
+    "missing": [],
+    "errors": [],
+    "parameters": {
+      "ENABLE": 1,
+      "COMBINED_ENABLE": 1,
+      "W2_RESULT_ENABLE": 1,
+      "W2_SECTOR_ENABLE": 1,
+      "SU_ENABLE": 1,
+      "SU_PROVIDER_ADAPTER": 1,
+      "SU_REGISTERED_OUTPUTS": 1,
+      "SU_REGISTERED_STATUS": 1,
+      "SU_REGISTERED_BOUNDARY": 1,
+      "SU_BALANCED_OWNER_BOUNDARY": 1,
+      "SU_FOUR_COMBINATIONAL_CUTS": 1,
+      "SU_FAST_OWNER_FRONTIER": 1,
+      "ND": 2,
+      "NSM": 2,
+      "NS": 2,
+      "NPC": 2,
+      "MEM_WORDS": 2097152,
+      "VM_AW": 21,
+      "FORMATTER_ENABLE": 1,
+      "NORMAL_GATHER_ENABLE": 1,
+      "LOCAL_CP_RESET_ENABLE": 1,
+      "TW": 17,
+      "PW": 20,
+      "IMW": 14,
+      "SFU_C12_ENABLE": 1
+    },
+    "local_snapshot": "/tmp/lorentz-enabled-parent-prep-20261006-r8-ready",
+    "compile_launched": false,
+    "superseded_for_native_VM": true
+  },
+  "next_native_VM_source_list": {
+    "source_files": 116,
+    "parameters_include": {
+      "SFU_C12_ENABLE": 1,
+      "SFU_NATIVE_VM_ENABLE": 1
+    },
+    "actual_named_ports": {
+      "formatter": 51,
+      "SFU_provider_join": 60,
+      "native_VM_root": 88
+    },
+    "missing": [],
+    "duplicate_modules": [],
+    "snapshot_created": false,
+    "compile_launched": false,
+    "numerical_gate_owner": "Gibbs",
+    "existing_gate": "E2 hbm-native-sfu-selected-5cf293aa6/r3, supervisor4134163/4134176 frontend4134194/4137660; preserve/no replay",
+    "memory_basis": "Use actual r7 terminal maxRSS (current observed ~425GiB) plus changed native/SFU hierarchy inventory; never reuse64GiB estimate"
+  }
 }

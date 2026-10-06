@@ -1,0 +1,175 @@
+{
+  "source_commit": "090bd3652350efbe578d644fa1ae19e6469c1ab7",
+  "source_ODB_sha256": "cb9b75f79d3717639533081d450bfcf7b03c21aa0048d1af4ad53fcd0f030cd0",
+  "source_SDC_sha256": "e91eba248145133d5dd4873522f1b73835ea53029349bc0b4f398925fa39dc5a",
+  "pinned_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "phase": "RETAINED_CTS_PLACEMENT_RC",
+  "live_GRT_checkpoint": false,
+  "final_SPEF": false,
+  "signoff": false,
+  "exit": 0,
+  "paths": [
+    {
+      "startpoint": "i_data[6562] (input port clocked by core_clk)",
+      "endpoint": "data[6562]$_DFF_P_",
+      "path_type": "max",
+      "corner": "ss",
+      "slack_ps": 1428.96,
+      "status": "MET",
+      "arrival_ps": 249.69,
+      "required_ps": 1678.65,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "data[6562]$_DFF_P_/CLK",
+          "time_ps": 1752.48
+        }
+      ]
+    },
+    {
+      "startpoint": "i_data[6562] (input port clocked by core_clk)",
+      "endpoint": "data[6562]$_DFF_P_",
+      "path_type": "min",
+      "corner": "ss",
+      "slack_ps": -746.32,
+      "status": "VIOLATED",
+      "arrival_ps": 255.74,
+      "required_ps": 1002.05,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "data[6562]$_DFF_P_/CLK",
+          "time_ps": 956.1
+        }
+      ]
+    },
+    {
+      "startpoint": "o_tx_rec[122]$_DFF_P_",
+      "endpoint": "o_tx_rec[122] (output port clocked by core_clk)",
+      "path_type": "max",
+      "corner": "ss",
+      "slack_ps": -678.21,
+      "status": "VIOLATED",
+      "arrival_ps": 1284.61,
+      "required_ps": 606.4,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "o_tx_rec[122]$_DFF_P_/CLK",
+          "time_ps": 935.97
+        }
+      ]
+    },
+    {
+      "startpoint": "o_tx_rec[122]$_DFF_P_",
+      "endpoint": "o_tx_rec[122] (output port clocked by core_clk)",
+      "path_type": "min",
+      "corner": "ss",
+      "slack_ps": 1369.31,
+      "status": "MET",
+      "arrival_ps": 1227.71,
+      "required_ps": -141.6,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "o_tx_rec[122]$_DFF_P_/CLK",
+          "time_ps": 901.49
+        }
+      ]
+    },
+    {
+      "startpoint": "i_data[6562] (input port clocked by core_clk)",
+      "endpoint": "data[6562]$_DFF_P_",
+      "path_type": "max",
+      "corner": "ff",
+      "slack_ps": 1155.89,
+      "status": "MET",
+      "arrival_ps": 207.84,
+      "required_ps": 1363.73,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "data[6562]$_DFF_P_/CLK",
+          "time_ps": 1429.08
+        }
+      ]
+    },
+    {
+      "startpoint": "i_data[6562] (input port clocked by core_clk)",
+      "endpoint": "data[6562]$_DFF_P_",
+      "path_type": "min",
+      "corner": "ff",
+      "slack_ps": -449.32,
+      "status": "VIOLATED",
+      "arrival_ps": 208.3,
+      "required_ps": 657.62,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "data[6562]$_DFF_P_/CLK",
+          "time_ps": 620.57
+        }
+      ]
+    },
+    {
+      "startpoint": "o_tx_rec[122]$_DFF_P_",
+      "endpoint": "o_tx_rec[122] (output port clocked by core_clk)",
+      "path_type": "max",
+      "corner": "ff",
+      "slack_ps": -200.2,
+      "status": "VIOLATED",
+      "arrival_ps": 806.6,
+      "required_ps": 606.4,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "o_tx_rec[122]$_DFF_P_/CLK",
+          "time_ps": 608.64
+        }
+      ]
+    },
+    {
+      "startpoint": "o_tx_rec[122]$_DFF_P_",
+      "endpoint": "o_tx_rec[122] (output port clocked by core_clk)",
+      "path_type": "min",
+      "corner": "ff",
+      "slack_ps": 908.51,
+      "status": "MET",
+      "arrival_ps": 766.91,
+      "required_ps": -141.6,
+      "propagated_clock_pin_rows": [
+        {
+          "pin": "o_tx_rec[122]$_DFF_P_/CLK",
+          "time_ps": 584.94
+        }
+      ]
+    }
+  ],
+  "report_sha256": "864dd93ef06a04527592655ea30a89fdc7a0da0b048efd30fd4eb13520d473bc",
+  "clock_period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "default_OFF": true,
+  "adopted": false,
+  "remote_root": "/srv/opentallas-scratch2/codex/item9-closure-20261005/retained-cts-target-STA-r1",
+  "supervisor": 4034924,
+  "completed_container": "adc7657a8b88",
+  "admission_GiB": 24,
+  "admission_guard_unchanged": true,
+  "threads": 2,
+  "preguard": {
+    "load": [
+      69.12451171875,
+      93.70556640625,
+      140.32763671875
+    ],
+    "CPUs": 128,
+    "idle_cores": 66.08460874342673,
+    "meminfo": "MemTotal:       1188103384 kB\nMemFree:        37875108 kB\nMemAvailable:   386324848 kB\nBuffers:         2303540 kB\nCached:         332470936 kB\nSwapCached:         2732 kB\nActive:         638570828 kB\nInactive:       475190792 kB\nActive(anon):   636048224 kB\nInactive(anon): 142956464 kB\nActive(file):    2522604 kB\nInactive(file): 332234328 kB\nUnevictable:       11576 kB\nMlocked:            8504 kB\nSwapTotal:       8388604 kB\nSwapFree:        8374672 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:            855140 kB\nWriteback:             0 kB\nAnonPages:      779000848 kB\nMapped:           762344 kB\nShmem:             11600 kB\nKReclaimable:   20977428 kB\nSlab:           25159040 kB\nSReclaimable:   20977428 kB\nSUnreclaim:      4181612 kB\nKernelStack:       62160 kB\nPageTables:      1604748 kB\nSecPageTables:     38892 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    602440296 kB\nCommitted_AS:   713835980 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:      118372 kB\nVmallocChunk:          0 kB\nPercpu:           842240 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:  11718656 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:         1308956 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      496732 kB\nDirectMap2M:    32634880 kB\nDirectMap1G:    1174405120 kB\n"
+  },
+  "postguard": {
+    "load": [
+      67.7529296875,
+      93.01318359375,
+      139.85302734375
+    ],
+    "CPUs": 128,
+    "idle_cores": 74.62067884298817,
+    "meminfo": "MemTotal:       1188103384 kB\nMemFree:        37053228 kB\nMemAvailable:   385729444 kB\nBuffers:         2303544 kB\nCached:         332696956 kB\nSwapCached:         2732 kB\nActive:         638529016 kB\nInactive:       475416800 kB\nActive(anon):   636006424 kB\nInactive(anon): 142956464 kB\nActive(file):    2522592 kB\nInactive(file): 332460336 kB\nUnevictable:       11576 kB\nMlocked:            8504 kB\nSwapTotal:       8388604 kB\nSwapFree:        8374672 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:           1082052 kB\nWriteback:             0 kB\nAnonPages:      778959640 kB\nMapped:           765360 kB\nShmem:             11592 kB\nKReclaimable:   20977908 kB\nSlab:           25159472 kB\nSReclaimable:   20977908 kB\nSUnreclaim:      4181564 kB\nKernelStack:       62768 kB\nPageTables:      1604280 kB\nSecPageTables:     38892 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    602440296 kB\nCommitted_AS:   713146956 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:      119796 kB\nVmallocChunk:          0 kB\nPercpu:           842240 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:  11747328 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:         1309244 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      496732 kB\nDirectMap2M:    32634880 kB\nDirectMap1G:    1174405120 kB\n"
+  },
+  "CPU_fit_before_after_guard": true,
+  "proof_or_golden_replay": false
+}
