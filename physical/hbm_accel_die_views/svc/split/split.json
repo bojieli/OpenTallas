@@ -1,0 +1,2576 @@
+{
+ "schema": "opentallas.hbm_die_split_x.v1",
+ "axis": "x",
+ "note": "svc SEGMENT SPLIT (coordinator DECISION 2026-10-06): x-bands of the 8500 x 259 um service slot; NW / NE reuse the SW / SE segment masters (identical pin plans, placed MX); band ports renamed by core SM rank (l<k> = line, q<k> = request); phy split by bit range; every band gets its own die clock leaf ck / reset rst (new N-face pins, except the band holding the parent ck / rst); cross buses eo->wi (eastward) and wo->ei (westward) abut at the same y on the shared edge (M4, 0.096 um pitch, zero-length die nets).",
+ "parents": {
+  "hfd_svc_SW": {
+   "bands": [
+    "hfd_svc_SW_s0",
+    "hfd_svc_SW_s1",
+    "hfd_svc_SW_s2",
+    "hfd_svc_SW_s3",
+    "hfd_svc_SW_s4",
+    "hfd_svc_SW_s5",
+    "hfd_svc_SW_s6",
+    "hfd_svc_SW_s7"
+   ],
+   "port_map": {
+    "hfd_svc_SW_s0": {
+     "l0": {
+      "parent_port": "lsm4",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q0": {
+      "parent_port": "qsm4",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "l1": {
+      "parent_port": "lsm0",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q1": {
+      "parent_port": "qsm0",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       0,
+       3625
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s1": {
+     "kv": {
+      "parent_port": "kv",
+      "parent_bits": [
+       0,
+       1040
+      ]
+     },
+     "l2": {
+      "parent_port": "lsm5",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q2": {
+      "parent_port": "qsm5",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "ik": {
+      "parent_port": "ik",
+      "parent_bits": [
+       0,
+       1025
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       3626,
+       7831
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s2": {
+     "l3": {
+      "parent_port": "lsm1",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q3": {
+      "parent_port": "qsm1",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       7832,
+       10319
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s3": {
+     "l4": {
+      "parent_port": "lsm6",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q4": {
+      "parent_port": "qsm6",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "e": {
+      "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       10320,
+       12907
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s4": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       12908,
+       14773
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s5": {
+     "l5": {
+      "parent_port": "lsm2",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q5": {
+      "parent_port": "qsm2",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       14774,
+       17261
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s6": {
+     "l6": {
+      "parent_port": "lsm7",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q6": {
+      "parent_port": "qsm7",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       17262,
+       19749
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s7": {
+     "l7": {
+      "parent_port": "lsm3",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q7": {
+      "parent_port": "qsm3",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "ck": {
+      "parent_port": "ck",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "rst",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       19750,
+       22237
+      ]
+     }
+    }
+   }
+  },
+  "hfd_svc_NW": {
+   "bands": [
+    "hfd_svc_SW_s0",
+    "hfd_svc_SW_s1",
+    "hfd_svc_SW_s2",
+    "hfd_svc_SW_s3",
+    "hfd_svc_SW_s4",
+    "hfd_svc_SW_s5",
+    "hfd_svc_SW_s6",
+    "hfd_svc_SW_s7"
+   ],
+   "port_map": {
+    "hfd_svc_SW_s0": {
+     "l0": {
+      "parent_port": "lsm20",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q0": {
+      "parent_port": "qsm20",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "l1": {
+      "parent_port": "lsm16",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q1": {
+      "parent_port": "qsm16",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       0,
+       3625
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s1": {
+     "kv": {
+      "parent_port": "kv",
+      "parent_bits": [
+       0,
+       1040
+      ]
+     },
+     "l2": {
+      "parent_port": "lsm21",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q2": {
+      "parent_port": "qsm21",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "ik": {
+      "parent_port": "ik",
+      "parent_bits": [
+       0,
+       1025
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       3626,
+       7831
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s2": {
+     "l3": {
+      "parent_port": "lsm17",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q3": {
+      "parent_port": "qsm17",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       7832,
+       10319
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s3": {
+     "l4": {
+      "parent_port": "lsm22",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q4": {
+      "parent_port": "qsm22",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "e": {
+      "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       10320,
+       12907
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s4": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       12908,
+       14773
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s5": {
+     "l5": {
+      "parent_port": "lsm18",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q5": {
+      "parent_port": "qsm18",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       14774,
+       17261
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s6": {
+     "l6": {
+      "parent_port": "lsm23",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q6": {
+      "parent_port": "qsm23",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       17262,
+       19749
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SW_s7": {
+     "l7": {
+      "parent_port": "lsm19",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q7": {
+      "parent_port": "qsm19",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "ck": {
+      "parent_port": "ck",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "rst",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       19750,
+       22237
+      ]
+     }
+    }
+   }
+  },
+  "hfd_svc_SE": {
+   "bands": [
+    "hfd_svc_SE_s0",
+    "hfd_svc_SE_s1",
+    "hfd_svc_SE_s2",
+    "hfd_svc_SE_s3",
+    "hfd_svc_SE_s4",
+    "hfd_svc_SE_s5",
+    "hfd_svc_SE_s6",
+    "hfd_svc_SE_s7"
+   ],
+   "port_map": {
+    "hfd_svc_SE_s0": {
+     "ck": {
+      "parent_port": "ck",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "rst",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "l0": {
+      "parent_port": "lsm12",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q0": {
+      "parent_port": "qsm12",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "l1": {
+      "parent_port": "lsm8",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q1": {
+      "parent_port": "qsm8",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       0,
+       3625
+      ]
+     }
+    },
+    "hfd_svc_SE_s1": {
+     "l2": {
+      "parent_port": "lsm13",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q2": {
+      "parent_port": "qsm13",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       3626,
+       7831
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s2": {
+     "l3": {
+      "parent_port": "lsm9",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q3": {
+      "parent_port": "qsm9",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       7832,
+       10319
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s3": {
+     "kv": {
+      "parent_port": "kv",
+      "parent_bits": [
+       0,
+       1040
+      ]
+     },
+     "l4": {
+      "parent_port": "lsm14",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q4": {
+      "parent_port": "qsm14",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "ik": {
+      "parent_port": "ik",
+      "parent_bits": [
+       0,
+       1025
+      ]
+     },
+     "e": {
+      "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       10320,
+       13529
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s4": {
+     "l5": {
+      "parent_port": "lsm10",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q5": {
+      "parent_port": "qsm10",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       13530,
+       16017
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s5": {
+     "l6": {
+      "parent_port": "lsm15",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q6": {
+      "parent_port": "qsm15",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       16018,
+       18505
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s6": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       18506,
+       20371
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s7": {
+     "l7": {
+      "parent_port": "lsm11",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q7": {
+      "parent_port": "qsm11",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       20372,
+       22237
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    }
+   }
+  },
+  "hfd_svc_NE": {
+   "bands": [
+    "hfd_svc_SE_s0",
+    "hfd_svc_SE_s1",
+    "hfd_svc_SE_s2",
+    "hfd_svc_SE_s3",
+    "hfd_svc_SE_s4",
+    "hfd_svc_SE_s5",
+    "hfd_svc_SE_s6",
+    "hfd_svc_SE_s7"
+   ],
+   "port_map": {
+    "hfd_svc_SE_s0": {
+     "ck": {
+      "parent_port": "ck",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "rst",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "l0": {
+      "parent_port": "lsm28",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q0": {
+      "parent_port": "qsm28",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "l1": {
+      "parent_port": "lsm24",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q1": {
+      "parent_port": "qsm24",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       0,
+       3625
+      ]
+     }
+    },
+    "hfd_svc_SE_s1": {
+     "l2": {
+      "parent_port": "lsm29",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q2": {
+      "parent_port": "qsm29",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       3626,
+       7831
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s2": {
+     "l3": {
+      "parent_port": "lsm25",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q3": {
+      "parent_port": "qsm25",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       7832,
+       10319
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s3": {
+     "kv": {
+      "parent_port": "kv",
+      "parent_bits": [
+       0,
+       1040
+      ]
+     },
+     "l4": {
+      "parent_port": "lsm30",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q4": {
+      "parent_port": "qsm30",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "ik": {
+      "parent_port": "ik",
+      "parent_bits": [
+       0,
+       1025
+      ]
+     },
+     "e": {
+      "parent_port": "e",
+      "parent_bits": [
+       0,
+       128
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       10320,
+       13529
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s4": {
+     "l5": {
+      "parent_port": "lsm26",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q5": {
+      "parent_port": "qsm26",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       13530,
+       16017
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s5": {
+     "l6": {
+      "parent_port": "lsm31",
+      "parent_bits": [
+       0,
+       1101
+      ]
+     },
+     "q6": {
+      "parent_port": "qsm31",
+      "parent_bits": [
+       0,
+       44
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       16018,
+       18505
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s6": {
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       18506,
+       20371
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    },
+    "hfd_svc_SE_s7": {
+     "l7": {
+      "parent_port": "lsm27",
+      "parent_bits": [
+       0,
+       1098
+      ]
+     },
+     "q7": {
+      "parent_port": "qsm27",
+      "parent_bits": [
+       0,
+       43
+      ]
+     },
+     "phy": {
+      "parent_port": "phy",
+      "parent_bits": [
+       20372,
+       22237
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     }
+    }
+   }
+  }
+ },
+ "bands": {
+  "hfd_svc_SW_s0": {
+   "x0_um": 0.0,
+   "w_um": 1017.0,
+   "h_um": 259.176,
+   "ports": {
+    "l0": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q0": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "l1": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q1": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 3626,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "eo": {
+     "bits": 597,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 1175,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s1": {
+   "x0_um": 1017.024,
+   "w_um": 1305.912,
+   "h_um": 259.176,
+   "ports": {
+    "kv": {
+     "bits": 1041,
+     "direction": "output",
+     "face": "N"
+    },
+    "l2": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q2": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "ik": {
+     "bits": 1026,
+     "direction": "output",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 4206,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 597,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 1175,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 1417,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 980,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s2": {
+   "x0_um": 2322.96,
+   "w_um": 1056.984,
+   "h_um": 259.176,
+   "ports": {
+    "l3": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q3": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 1417,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 980,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 1145,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 1019,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s3": {
+   "x0_um": 3379.968,
+   "w_um": 1072.968,
+   "h_um": 259.176,
+   "ports": {
+    "l4": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q4": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "e": {
+     "bits": 129,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2588,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 1145,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 1019,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 867,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 894,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s4": {
+   "x0_um": 4452.96,
+   "w_um": 785.976,
+   "h_um": 259.176,
+   "ports": {
+    "phy": {
+     "bits": 1866,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 867,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 894,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 816,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 6,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s5": {
+   "x0_um": 5238.96,
+   "w_um": 1062.984,
+   "h_um": 259.176,
+   "ports": {
+    "l5": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q5": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 816,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 6,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 544,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 4,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s6": {
+   "x0_um": 6301.968,
+   "w_um": 1061.976,
+   "h_um": 259.176,
+   "ports": {
+    "l6": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q6": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 544,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 4,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 272,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 2,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SW_s7": {
+   "x0_um": 7363.968,
+   "w_um": 1136.064,
+   "h_um": 259.176,
+   "ports": {
+    "l7": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q7": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "wi": {
+     "bits": 272,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 2,
+     "direction": "output",
+     "face": "W"
+    }
+   }
+  },
+  "hfd_svc_SE_s0": {
+   "x0_um": 0.0,
+   "w_um": 1017.0,
+   "h_um": 259.176,
+   "ports": {
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "l0": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q0": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "l1": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q1": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 3626,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "eo": {
+     "bits": 597,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 1175,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s1": {
+   "x0_um": 1017.024,
+   "w_um": 1300.968,
+   "h_um": 259.176,
+   "ports": {
+    "l2": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q2": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 4206,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 597,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 1175,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 1413,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 939,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s2": {
+   "x0_um": 2318.016,
+   "w_um": 1061.928,
+   "h_um": 259.176,
+   "ports": {
+    "l3": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q3": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 1413,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 939,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 1141,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 937,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s3": {
+   "x0_um": 3379.968,
+   "w_um": 1381.992,
+   "h_um": 259.176,
+   "ports": {
+    "kv": {
+     "bits": 1041,
+     "direction": "output",
+     "face": "N"
+    },
+    "l4": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q4": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "ik": {
+     "bits": 1026,
+     "direction": "output",
+     "face": "N"
+    },
+    "e": {
+     "bits": 129,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 3210,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 1141,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 937,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 920,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 562,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s4": {
+   "x0_um": 4761.984,
+   "w_um": 1008.984,
+   "h_um": 259.176,
+   "ports": {
+    "l5": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q5": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 920,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 562,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 648,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 560,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s5": {
+   "x0_um": 5770.992,
+   "w_um": 1094.952,
+   "h_um": 259.176,
+   "ports": {
+    "l6": {
+     "bits": 1102,
+     "direction": "output",
+     "face": "N"
+    },
+    "q6": {
+     "bits": 45,
+     "direction": "input",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 2488,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 648,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 560,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 376,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 558,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s6": {
+   "x0_um": 6865.968,
+   "w_um": 763.992,
+   "h_um": 259.176,
+   "ports": {
+    "phy": {
+     "bits": 1866,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 376,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 558,
+     "direction": "output",
+     "face": "W"
+    },
+    "eo": {
+     "bits": 550,
+     "direction": "output",
+     "face": "E"
+    },
+    "ei": {
+     "bits": 54,
+     "direction": "input",
+     "face": "E"
+    }
+   }
+  },
+  "hfd_svc_SE_s7": {
+   "x0_um": 7629.984,
+   "w_um": 870.048,
+   "h_um": 259.176,
+   "ports": {
+    "l7": {
+     "bits": 1099,
+     "direction": "output",
+     "face": "N"
+    },
+    "q7": {
+     "bits": 44,
+     "direction": "inout",
+     "face": "N"
+    },
+    "phy": {
+     "bits": 1866,
+     "direction": "inout",
+     "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "wi": {
+     "bits": 550,
+     "direction": "input",
+     "face": "W"
+    },
+    "wo": {
+     "bits": 54,
+     "direction": "output",
+     "face": "W"
+    }
+   }
+  }
+ },
+ "cross": [
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s0.eo",
+   "to": "hfd_svc_SW_s1.wi",
+   "bits": 597,
+   "chains": [
+    "c_ewb",
+    "c_wl2",
+    "c_wl3",
+    "c_dn4",
+    "c_dn5",
+    "c_dn6",
+    "c_dn7",
+    "c_rq1"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s1.wo",
+   "to": "hfd_svc_SW_s0.ei",
+   "bits": 1175,
+   "chains": [
+    "c_wr4",
+    "c_wr5",
+    "c_wr6",
+    "c_wr7",
+    "c_ew",
+    "c_rs4",
+    "c_rs5",
+    "c_rs6",
+    "c_rs7",
+    "c_wd2",
+    "c_wd3",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_tb1"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s1.eo",
+   "to": "hfd_svc_SW_s2.wi",
+   "bits": 1417,
+   "chains": [
+    "c_ewb",
+    "c_wl3",
+    "c_wl4",
+    "c_wl5",
+    "c_wl6",
+    "c_wl7",
+    "c_dn10",
+    "c_dn11",
+    "c_dn8",
+    "c_dn9",
+    "c_ekb",
+    "c_ikd",
+    "c_rq2"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s2.wo",
+   "to": "hfd_svc_SW_s1.ei",
+   "bits": 980,
+   "chains": [
+    "c_is8",
+    "c_ew",
+    "c_rs10",
+    "c_rs11",
+    "c_rs9",
+    "c_wd3",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_ek",
+    "c_tb2"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s2.eo",
+   "to": "hfd_svc_SW_s3.wi",
+   "bits": 1145,
+   "chains": [
+    "c_ewb",
+    "c_wl4",
+    "c_wl5",
+    "c_wl6",
+    "c_wl7",
+    "c_dn12",
+    "c_dn13",
+    "c_dn14",
+    "c_dn15",
+    "c_eib",
+    "c_ekb",
+    "c_rq3"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s3.wo",
+   "to": "hfd_svc_SW_s2.ei",
+   "bits": 1019,
+   "chains": [
+    "c_is12",
+    "c_ew",
+    "c_rs13",
+    "c_rs14",
+    "c_rs15",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_ei",
+    "c_ek",
+    "c_tb3"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s3.eo",
+   "to": "hfd_svc_SW_s4.wi",
+   "bits": 867,
+   "chains": [
+    "c_wl5",
+    "c_wl6",
+    "c_wl7",
+    "c_dn16",
+    "c_dn17",
+    "c_dn18",
+    "c_dn19",
+    "c_rq4"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s4.wo",
+   "to": "hfd_svc_SW_s3.ei",
+   "bits": 894,
+   "chains": [
+    "c_is16",
+    "c_rs17",
+    "c_rs18",
+    "c_rs19",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_tb4"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s4.eo",
+   "to": "hfd_svc_SW_s5.wi",
+   "bits": 816,
+   "chains": [
+    "c_wl5",
+    "c_wl6",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s5.wo",
+   "to": "hfd_svc_SW_s4.ei",
+   "bits": 6,
+   "chains": [
+    "c_wd5",
+    "c_wd6",
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s5.eo",
+   "to": "hfd_svc_SW_s6.wi",
+   "bits": 544,
+   "chains": [
+    "c_wl6",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s6.wo",
+   "to": "hfd_svc_SW_s5.ei",
+   "bits": 4,
+   "chains": [
+    "c_wd6",
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s6.eo",
+   "to": "hfd_svc_SW_s7.wi",
+   "bits": 272,
+   "chains": [
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SW",
+   "frm": "hfd_svc_SW_s7.wo",
+   "to": "hfd_svc_SW_s6.ei",
+   "bits": 2,
+   "chains": [
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s0.eo",
+   "to": "hfd_svc_SE_s1.wi",
+   "bits": 597,
+   "chains": [
+    "c_ewb",
+    "c_wl2",
+    "c_wl3",
+    "c_dn4",
+    "c_dn5",
+    "c_dn6",
+    "c_dn7",
+    "c_rq1"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s1.wo",
+   "to": "hfd_svc_SE_s0.ei",
+   "bits": 1175,
+   "chains": [
+    "c_wr4",
+    "c_wr5",
+    "c_wr6",
+    "c_wr7",
+    "c_ew",
+    "c_rs4",
+    "c_rs5",
+    "c_rs6",
+    "c_rs7",
+    "c_wd2",
+    "c_wd3",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_tb1"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s1.eo",
+   "to": "hfd_svc_SE_s2.wi",
+   "bits": 1413,
+   "chains": [
+    "c_ewb",
+    "c_wl3",
+    "c_wl4",
+    "c_wl5",
+    "c_wl6",
+    "c_wl7",
+    "c_dn10",
+    "c_dn11",
+    "c_dn8",
+    "c_dn9",
+    "c_rq2"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s2.wo",
+   "to": "hfd_svc_SE_s1.ei",
+   "bits": 939,
+   "chains": [
+    "c_is8",
+    "c_ew",
+    "c_rs10",
+    "c_rs11",
+    "c_rs9",
+    "c_wd3",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_tb2"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s2.eo",
+   "to": "hfd_svc_SE_s3.wi",
+   "bits": 1141,
+   "chains": [
+    "c_ewb",
+    "c_wl4",
+    "c_wl5",
+    "c_wl6",
+    "c_wl7",
+    "c_dn12",
+    "c_dn13",
+    "c_dn14",
+    "c_dn15",
+    "c_rq3"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s3.wo",
+   "to": "hfd_svc_SE_s2.ei",
+   "bits": 937,
+   "chains": [
+    "c_is12",
+    "c_ew",
+    "c_rs13",
+    "c_rs14",
+    "c_rs15",
+    "c_wd4",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7",
+    "c_tb3"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s3.eo",
+   "to": "hfd_svc_SE_s4.wi",
+   "bits": 920,
+   "chains": [
+    "c_is18",
+    "c_is19",
+    "c_wl5",
+    "c_wl6",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s4.wo",
+   "to": "hfd_svc_SE_s3.ei",
+   "bits": 562,
+   "chains": [
+    "c_rs18",
+    "c_rs19",
+    "c_wd5",
+    "c_wd6",
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s4.eo",
+   "to": "hfd_svc_SE_s5.wi",
+   "bits": 648,
+   "chains": [
+    "c_is22",
+    "c_is23",
+    "c_wl6",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s5.wo",
+   "to": "hfd_svc_SE_s4.ei",
+   "bits": 560,
+   "chains": [
+    "c_rs22",
+    "c_rs23",
+    "c_wd6",
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s5.eo",
+   "to": "hfd_svc_SE_s6.wi",
+   "bits": 376,
+   "chains": [
+    "c_is26",
+    "c_is27",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s6.wo",
+   "to": "hfd_svc_SE_s5.ei",
+   "bits": 558,
+   "chains": [
+    "c_rs26",
+    "c_rs27",
+    "c_wd7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s6.eo",
+   "to": "hfd_svc_SE_s7.wi",
+   "bits": 550,
+   "chains": [
+    "c_rs28",
+    "c_wl7"
+   ]
+  },
+  {
+   "family": "SE",
+   "frm": "hfd_svc_SE_s7.wo",
+   "to": "hfd_svc_SE_s6.ei",
+   "bits": 54,
+   "chains": [
+    "c_is28",
+    "c_wd7"
+   ]
+  }
+ ]
+}
