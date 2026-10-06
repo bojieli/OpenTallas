@@ -12,6 +12,8 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
   Lmax - L - 25 and output -min delay L - Lmin - 25 against vclk at L (with the 25 ps hold uncertainty: 50 ps), i.e. the neighbour's die-clock leaf lands in
   this block's own FF leaf spread with a 50 ps die-skew allowance; the 150 ps die arrival term stays on setup.  One
   SS L on the hold side alone demands ~130 ps of hold buffers per output (M2_hfd_meso_r32: -7.75 ps after 7 buffers).
+* the hold-side -min delays also credit the connected die path's minimum arrival (io_min_delay.json: upstream FF
+  clk->Q for inputs + 50 % of the measured FF wire delay over the minimum die wire, coordinator decision 2026-10-06).
 * meso views: rst (synchroniser input only) is a false path.
 * vclk <-> forwarded clocks: false paths (rst only; resynchronised per domain).
 * route: over-constrained to an effective 770 ps -- setup uncertainty 60 + 63 ps on every clock and the meso crossing
@@ -25,6 +27,9 @@ FFM = len(sys.argv) > 5
 Lmin = float(sys.argv[4]) if len(sys.argv) > 4 else L   # outputs: FF min leaf insertion
 Lmax = float(sys.argv[5]) if len(sys.argv) > 5 else Lmin   # inputs: FF max leaf insertion
 T = 833.333
+_iom = __import__('pathlib').Path(src).resolve().parents[1] / 'io_min_delay.json'
+_mst = __import__('pathlib').Path(src).stem
+IOMIN = __import__('json').loads(_iom.read_text())['views'].get(_mst, {}) if _iom.exists() else {}
 OVER = 63.0 if mode == 'route' else 0.0
 io = round(0.2 * T + 150, 3)
 out = []
@@ -37,6 +42,9 @@ for l in open(src):
         # insertion plus 50 ps -- one SDC for routing (hold repair at BC) and for both sign-off corners
         if FFM:
             mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)   # + 25 ps hold uncertainty = 50
+            # + the minimum arrival credit of the connected die path (stations/io_min_delay.json, stn_io_min.py):
+            # upstream pin-launch clk->Q at FF + 50 % of the measured FF wire delay over the minimum die wire
+            mn += IOMIN.get('in' if m.group(1) == 'set_input_delay' else 'out', {}).get('min_delay_ps', 0.0)
         else:
             mn = 0
         out.append(f'{m.group(1)} {io} -clock vclk{m.group(3) or ""} {m.group(4)}')
