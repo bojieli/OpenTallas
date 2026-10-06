@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.qwen_kv_landing_fabric.v1",
+ "trace": "results/rtl/qwen_rom_die_r17_20261005/kv_landing/kvtrace_ISO_P8191.txt.gz",
+ "mode": "reach",
+ "k_bits": 281,
+ "v_half_bits": 152,
+ "result": {
+  "slice_writes": 196592,
+  "stacks_per_tile": {
+   "2": 1024,
+   "3": 512
+  },
+  "stack_sets": {
+   "0,1": 512,
+   "0,2,3": 128,
+   "1,2,3": 128,
+   "2,3": 512,
+   "0,1,2": 128,
+   "0,1,3": 128
+  },
+  "tiles_per_stack": {
+   "0": 896,
+   "1": 896,
+   "2": 896,
+   "3": 896
+  },
+  "locality": {
+   "same_quadrant": 0.3333,
+   "same_side": 0.3333,
+   "cross_side": 0.3333
+  },
+  "per_stack_quadrant_crossbar_deliverable": 0.3333,
+  "side_bit_share": {
+   "W": 0.6374,
+   "E": 0.3626
+  },
+  "landing_span_cycles": 1290,
+  "row_half_bits_max": 1018240,
+  "row_half_bits_min": 524320,
+  "row_half_cycles_at_768_max": 1325.8
+ }
+}
