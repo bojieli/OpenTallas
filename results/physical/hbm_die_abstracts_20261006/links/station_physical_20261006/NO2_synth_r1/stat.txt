@@ -1,0 +1,135 @@
+
+14. Printing statistics.
+
+=== ot_fwd_clk_inv ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        2        - wires
+        2        - wire bits
+        2        - public wires
+        2        - public wire bits
+        2        - ports
+        2        - port bits
+        1    0.044 cells
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '\ot_fwd_clk_inv': 0.043740
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_hbm_native_frame_station ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    67599        - wires
+    67599        - wire bits
+     7810        - public wires
+     7810        - public wire bits
+     7795        - ports
+     7795        - port bits
+    62401  9393.18 cells
+      896   78.382   AND2x2_ASAP7_75t_R
+     1877    164.2   AND3x1_ASAP7_75t_R
+      624   63.685   AND4x1_ASAP7_75t_R
+      319   37.208   AND5x1_ASAP7_75t_R
+        6      1.4   AO211x2_ASAP7_75t_R
+     1428  124.921   AO21x1_ASAP7_75t_R
+      250    36.45   AO221x1_ASAP7_75t_R
+       39    6.823   AO222x2_ASAP7_75t_R
+      228   29.918   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+      152   17.729   AO32x1_ASAP7_75t_R
+       31    5.424   AOI211x1_ASAP7_75t_R
+     2880  335.923   AOI21x1_ASAP7_75t_R
+       30    6.124   AOI221x1_ASAP7_75t_R
+       47    6.853   AOI22x1_ASAP7_75t_R
+     5916 2.24E+03   DFFASRHQNx1_ASAP7_75t_R
+     4006  175.222   INVx1_ASAP7_75t_R
+     3835  335.486   NAND2x1_ASAP7_75t_R
+       34    5.453   NAND3x1_ASAP7_75t_R
+     1897   165.95   NOR2x1_ASAP7_75t_R
+       11    1.764   NOR3x1_ASAP7_75t_R
+     2941  343.038   OA211x2_ASAP7_75t_R
+     2661  271.582   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+     2037  356.394   OA222x2_ASAP7_75t_R
+     2443  356.189   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+      453   52.838   OAI21x1_ASAP7_75t_R
+     1236  180.209   OAI22x1_ASAP7_75t_R
+      578   50.563   OR2x2_ASAP7_75t_R
+     1584  138.568   OR3x1_ASAP7_75t_R
+      474   48.376   OR4x1_ASAP7_75t_R
+      311   36.275   OR5x1_ASAP7_75t_R
+    18423 2.95E+03   XNOR2x2_ASAP7_75t_R
+     4747  761.324   XOR2x2_ASAP7_75t_R
+        4        - submodules
+        4        -   ot_fwd_clk_inv
+
+   Chip area for module '\ot_hbm_native_frame_station': 9393.179580
+     of which used for sequential elements: 2242.637280 (23.88%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+    62405 9.39E+03 ot_hbm_native_frame_station
+        1    0.044 ot_fwd_clk_inv
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+    67607        - wires
+    67607        - wire bits
+     7818        - public wires
+     7818        - public wire bits
+     7803        - ports
+     7803        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+    62405 9.39E+03 cells
+      896   78.382   AND2x2_ASAP7_75t_R
+     1877    164.2   AND3x1_ASAP7_75t_R
+      624   63.685   AND4x1_ASAP7_75t_R
+      319   37.208   AND5x1_ASAP7_75t_R
+        6      1.4   AO211x2_ASAP7_75t_R
+     1428  124.921   AO21x1_ASAP7_75t_R
+      250    36.45   AO221x1_ASAP7_75t_R
+       39    6.823   AO222x2_ASAP7_75t_R
+      228   29.918   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+      152   17.729   AO32x1_ASAP7_75t_R
+       31    5.424   AOI211x1_ASAP7_75t_R
+     2880  335.923   AOI21x1_ASAP7_75t_R
+       30    6.124   AOI221x1_ASAP7_75t_R
+       47    6.853   AOI22x1_ASAP7_75t_R
+     5916 2.24E+03   DFFASRHQNx1_ASAP7_75t_R
+     4010  175.397   INVx1_ASAP7_75t_R
+     3835  335.486   NAND2x1_ASAP7_75t_R
+       34    5.453   NAND3x1_ASAP7_75t_R
+     1897   165.95   NOR2x1_ASAP7_75t_R
+       11    1.764   NOR3x1_ASAP7_75t_R
+     2941  343.038   OA211x2_ASAP7_75t_R
+     2661  271.582   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+     2037  356.394   OA222x2_ASAP7_75t_R
+     2443  356.189   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+      453   52.838   OAI21x1_ASAP7_75t_R
+     1236  180.209   OAI22x1_ASAP7_75t_R
+      578   50.563   OR2x2_ASAP7_75t_R
+     1584  138.568   OR3x1_ASAP7_75t_R
+      474   48.376   OR4x1_ASAP7_75t_R
+      311   36.275   OR5x1_ASAP7_75t_R
+    18423 2.95E+03   XNOR2x2_ASAP7_75t_R
+     4747  761.324   XOR2x2_ASAP7_75t_R
+        4    0.175 submodules
+        4    0.175   ot_fwd_clk_inv
+
+   Chip area for top module '\ot_hbm_native_frame_station': 9393.354540
+     of which used for sequential elements: 2242.637280 (23.87%)
+

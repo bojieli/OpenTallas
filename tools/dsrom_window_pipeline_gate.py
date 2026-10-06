@@ -2,7 +2,7 @@
 """Reuse the actual full-shape WINDOW golden/DRAM gate for the default-off pipeline.
 
 No native S81 wiring or golden-format changes. The original gate and vectors
-are reused; only the source parameter and three successor modules are added.
+are reused; only the source parameter and successor modules are added.
 """
 import argparse
 import json
@@ -10,7 +10,7 @@ from pathlib import Path
 import dsrom_s81_window_la as gate
 
 PIPELINE = [f'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_{name}_pipeline.sv'
-            for name in ('writer', 'stage', 'source')]
+            for name in ('writer', 'stage', 'source', 'row_merge')]
 
 
 def main():

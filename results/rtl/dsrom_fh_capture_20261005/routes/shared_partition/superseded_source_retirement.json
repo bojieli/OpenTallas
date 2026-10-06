@@ -1,0 +1,52 @@
+{
+  "reason": "OWNER superseded-source retirement: fd25 geometry affinity vehicles do not include current four-edge retirement/native endpoint dd6; no current terminal consumer found. Reclaim capacity for existing C20, not arbitrary runtime cutoff.",
+  "verdict": "SUPERSEDED_SOURCE_CANCELLED_NOT_SSFF_FAILURE",
+  "preserve_ref": "refs/preserve/dsrom-fh-C18-C19-superseded-source-20261006",
+  "preserve_source_commit": "3c45a456a9f2cf52d04940a5d35347f369127286",
+  "before": {
+    "time": "2026-10-06T05:13:21.879833+00:00",
+    "load": 196.12255859375,
+    "idle_cores": 3.746049088851602,
+    "available_GiB": 477.27906799316406,
+    "free_GiB": 1807.628532409668
+  },
+  "jobs": [
+    {
+      "name": "C18_shared_comb",
+      "pid": 3612063,
+      "container": "1a9b673c74a4622ec2671057841763e552eb8c0be0fd3bd5c959f47fbfb39450",
+      "namespace_pid": 296,
+      "rss_KiB": 11125292,
+      "source_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/wt-shared-r7",
+      "work_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb/work/orfs",
+      "preserved_pdn": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/2_4_floorplan_pdn.odb",
+      "pdn_sha256": "6b9b423c6360301a42126d6965437c39e880e3e061c10cf4f3e43ca0464fc3dd",
+      "snapshot": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C18_shared_comb/superseded_source_preTERM.log",
+      "snapshot_sha256": "0d7bbf4fca52471ac62656a12969bb8b500cfde755b651cf0cc9d5994fc30042",
+      "cancel_signal": "SIGTERM exact OpenROAD process only",
+      "openroad_pid_live_after": false
+    },
+    {
+      "name": "C19_shared_receivers",
+      "pid": 470573,
+      "container": "bb93497800f173861702a45e4189f4df59743878ceaa65df2645597f3ee36270",
+      "namespace_pid": 296,
+      "rss_KiB": 11121456,
+      "source_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/wt-shared-r8",
+      "work_root": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers/work/orfs",
+      "preserved_pdn": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers/work/orfs/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C12_decode_split/base/2_4_floorplan_pdn.odb",
+      "pdn_sha256": "94fd9120bfd60ebf1e2adaef89ef83f1098fc17819f6558afaf634fd10532c07",
+      "snapshot": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C19_shared_receivers/superseded_source_preTERM.log",
+      "snapshot_sha256": "b9b58cc8ecac16448a894af55c93f1fdee8c115eeea369f255b8f05f3aab5a22",
+      "cancel_signal": "SIGTERM exact OpenROAD process only",
+      "openroad_pid_live_after": false
+    }
+  ],
+  "signals_sent": "2026-10-06T05:13:38.572507+00:00",
+  "rss_reclaimed_GiB": 21.21615219116211,
+  "after": {
+    "time": "2026-10-06T05:13:41.573282+00:00",
+    "load": 200.76220703125,
+    "available_GiB": 492.4869804382324
+  }
+}

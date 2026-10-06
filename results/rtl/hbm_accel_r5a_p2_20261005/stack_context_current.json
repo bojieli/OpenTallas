@@ -362,5 +362,13 @@
     "r4_STACK_PROTECTION_FAIL/exact.json": "b07e1f960867ded06a159d4eb0187a133d4379b2841ddf04d834b4a1d2333d34",
     "r5_MUTATION_CAPTURE_PASS/mutation.json": "580d94f424cef3dfbdd40985bda7c94cf9f400fd13ef8b1c2e5902df0b114795",
     "r5_MUTATION_CAPTURE_PASS/original_force_lowering.txt": "c8935f6372e1cd5ecaf4941efb06a039777d075922de1669ea85cd9dd6b8c89b"
+  },
+  "physical_map_current": {
+    "state": "RETIRED_OWNER_AUTHORIZED_NO_CURRENT_CONSUMER",
+    "mapped_source": "f6fd8e306749eaa66aecadb7938a6625bb58bdce",
+    "record": "results/physical/hbm_r5a_stack_p2_20261005/map_r2_RETIRED/record.json",
+    "reason": "old row9/private REFpb caller is not mandatory current sharedrow19/solecalendar/full73 provider baseline",
+    "final_inventory_produced": false,
+    "restart": false
   }
 }

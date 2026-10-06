@@ -1,0 +1,13 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_cfg_prompt.sv:21:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_dsrom_wfc_canonical_stage.u_cfg'
+   21 |  generate if(ENABLE) begin:g_live
+      |           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv:32:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'ot_dsrom_wfc_canonical_stage.u_whole'
+   32 |  generate if(ENABLE)begin:g_live
+      |           ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.153 MB sources in 12 modules, into 0.005 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.019 s (elab=0.004, cvt=0.004, bld=0.000); cpu 0.019 s on 1 threads; allocated 35.152 MB

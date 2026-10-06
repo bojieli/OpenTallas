@@ -1,0 +1,1182 @@
+{
+ "schema": "opentallas.rom_die_abstract_list.v1",
+ "die": "s81_layer",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "generator_tag": {
+  "file": "tools/dsrom_s81_fulldie.py",
+  "sha256": "e04e88954c667f2598a57d4c580a04d480ef123b711f1d0257c9ac993ae07cc5",
+  "tree_head": "4f7fe01f339b63dfddea78ebbfe1b0d7c118e9ec",
+  "file_commit": "24995d5129881c5bc0aa89d19d820a7d5202fc99"
+ },
+ "qwen_source": null,
+ "qwen_recipe": null,
+ "variant": {
+  "die": "layer",
+  "pairs": 2417,
+  "bf": 519,
+  "nv": 0
+ },
+ "die_um": [
+  32980.104,
+  25978.32
+ ],
+ "status_codes": [
+  "REAL_VIEW",
+  "REAL_VIEW_NOT_CLOSED",
+  "RTL_CLOSED",
+  "RTL_OPEN",
+  "NO_RTL_TOP",
+  "RESERVATION_ONLY"
+ ],
+ "summary": {
+  "kinds": 19,
+  "copies": 24355,
+  "families_by_status": {
+   "REAL_VIEW": 2,
+   "REAL_VIEW_NOT_CLOSED": 2,
+   "RTL_CLOSED": 0,
+   "RTL_OPEN": 3,
+   "NO_RTL_TOP": 12,
+   "RESERVATION_ONLY": 0
+  },
+  "instances_by_status": {
+   "REAL_VIEW": 16923,
+   "REAL_VIEW_NOT_CLOSED": 1906,
+   "RTL_CLOSED": 0,
+   "RTL_OPEN": 5226,
+   "NO_RTL_TOP": 300,
+   "RESERVATION_ONLY": 0
+  }
+ },
+ "families": [
+  {
+   "family": "dsfd_bf",
+   "kind": "bf",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bf"
+   ],
+   "distinct_masters": 1,
+   "instances": 519,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1002.888,
+     157.656
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "xai": {
+     "bits": 266,
+     "face": "S"
+    },
+    "xao": {
+     "bits": 266,
+     "face": "N"
+    },
+    "ka": {
+     "bits": 20,
+     "face": "S"
+    },
+    "xbi": {
+     "bits": 266,
+     "face": "S"
+    },
+    "xbo": {
+     "bits": 266,
+     "face": "N"
+    },
+    "kb": {
+     "bits": 20,
+     "face": "S"
+    },
+    "cfg": {
+     "bits": 54,
+     "face": "S"
+    },
+    "r0": {
+     "bits": 63,
+     "face": "N"
+    },
+    "r1": {
+     "bits": 63,
+     "face": "N"
+    },
+    "nv": {
+     "bits": 0,
+     "face": "N"
+    }
+   },
+   "rtl_top": "BF-capable pair: ot_v41_rom_elem_w10 BF16=1 XF=8 WAKE_REG=1 (results/uarch/dsrom_noECC_complete_element_20261002/physical_source_manifest.json)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "never routed in the 1002.89 x 157.68 outline (inputs/wake.json: BF_SS_FF_closed false, fullframe_routed_fit false); old 0.92 ns TT routes errored",
+   "owner": "CODEX",
+   "note": "outline = mapped area; pairs with the q element (same pin order per lane)",
+   "generator_note": [
+    "BF-capable pair (1002.89 x 157.68 mapped outline, W4 wake.json); two x lanes (q-element pin order per lane), cfg and return words as the q element"
+   ]
+  },
+  {
+   "family": "dsfd_bk_collector",
+   "kind": "band_blk",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bk_collector"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     5270.376,
+     881.256
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "cSW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "cSE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "cNW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "cNE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "vm": {
+     "bits": 512,
+     "face": "S"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "S"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "band block; only its SRAM body has a retained macro abstract",
+   "generator_note": [
+    "hub reservation slab collector (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_bk_selector",
+   "kind": "band_blk",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_bk_selector"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     5270.376,
+     321.816
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "iSW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "iSE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "iNW": {
+     "bits": 512,
+     "face": "W"
+    },
+    "iNE": {
+     "bits": 512,
+     "face": "E"
+    },
+    "vm": {
+     "bits": 512,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "band block",
+   "generator_note": [
+    "hub reservation slab selector (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_ctrl",
+   "kind": "ctrl",
+   "domain": [
+    "hbm"
+   ],
+   "masters": [
+    "dsfd_ctrl"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.032,
+     248.376
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "rd": {
+     "bits": 8864,
+     "face": "N"
+    },
+    "phy": {
+     "bits": 22238,
+     "face": "xy"
+    }
+   },
+   "rtl_top": "none (only the behavioural PHY model)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CODEX",
+   "note": "streaming HBM3E controller + async FIFOs; no clock port (lint S7). The Qwen ROM stream controller (qwen_hbm_sustained_bw ck2 r6, closed at 1.024 ns) is the nearest RTL",
+   "generator_note": [
+    "streaming HBM3E controller + async (HBM -> stream) FIFOs"
+   ]
+  },
+  {
+   "family": "dsfd_fifo",
+   "kind": "fifo_blk",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_fifo"
+   ],
+   "distinct_masters": 1,
+   "instances": 44,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     380.136,
+     129.576
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "x0L": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k0L": {
+     "bits": 20,
+     "face": "N"
+    },
+    "x0R": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k0R": {
+     "bits": 20,
+     "face": "N"
+    },
+    "r0": {
+     "bits": 66,
+     "face": "N"
+    },
+    "x1L": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k1L": {
+     "bits": 20,
+     "face": "N"
+    },
+    "x1R": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k1R": {
+     "bits": 20,
+     "face": "N"
+    },
+    "r1": {
+     "bits": 66,
+     "face": "N"
+    },
+    "x2L": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k2L": {
+     "bits": 20,
+     "face": "N"
+    },
+    "x2R": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k2R": {
+     "bits": 20,
+     "face": "N"
+    },
+    "r2": {
+     "bits": 66,
+     "face": "N"
+    },
+    "x3L": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k3L": {
+     "bits": 20,
+     "face": "N"
+    },
+    "x3R": {
+     "bits": 266,
+     "face": "N"
+    },
+    "k3R": {
+     "bits": 20,
+     "face": "N"
+    },
+    "r3": {
+     "bits": 66,
+     "face": "N"
+    },
+    "x": {
+     "bits": 836,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "S"
+    }
+   },
+   "rtl_top": "no block top; slot = ot_meso_fifo (rtl/common/ot_meso_fifo.sv) x3 + region fan-out",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "slot meso_d4_v7 CLOSED SS +10.13 / FF +9.44, 4,842 um2 (results/uarch/meso_fifo_20261004/verdict.json); the 3-slot + fan-out block is not built",
+   "owner": "CLAUDE S81-DIE",
+   "note": "generator area constant still names meso_d4_v3 (not closed); no wclk/rclk pins (lint S12a)",
+   "generator_note": [
+    "clock-region entry/exit FIFO block: 3 meso FIFO slots (W512 D4) + fan-out to the region's column lanes"
+   ]
+  },
+  {
+   "family": "dsfd_mfifo",
+   "kind": "hub_fifo",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_mfifo"
+   ],
+   "distinct_masters": 1,
+   "instances": 24,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     125.256,
+     125.256
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "h": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "hx": {
+     "bits": 572,
+     "face": "N"
+    },
+    "hr": {
+     "bits": 858,
+     "face": "S"
+    },
+    "f": {
+     "bits": 1536,
+     "face": "W"
+    }
+   },
+   "rtl_top": "no block top; slot = ot_meso_fifo (rtl/common/ot_meso_fifo.sv)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "slot meso_d4_v7 CLOSED (as dsfd_fifo); the hub-side block is not built",
+   "owner": "CLAUDE S81-DIE",
+   "note": "hub-side meso / async slot",
+   "generator_note": [
+    "hub-side meso / async FIFO slot(s)"
+   ]
+  },
+  {
+   "family": "dsfd_node",
+   "kind": "node",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_node"
+   ],
+   "distinct_masters": 1,
+   "instances": 4706,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     86.376,
+     77.736
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract (bound to its RTL ports in the lint)",
+   "ports": {
+    "a": {
+     "bits": 66,
+     "face": "W"
+    },
+    "b": {
+     "bits": 66,
+     "face": "W"
+    },
+    "o": {
+     "bits": 66,
+     "face": "N"
+    }
+   },
+   "rtl_top": "ot_v41_retn_w17w10 (rtl/v41die/ot_v41_retn_w17w10.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "RTL only, never routed standalone",
+   "owner": "CODEX",
+   "note": "abstract has no clock/reset pin (lint S4b); leaf 63 b -> node 66 b",
+   "generator_note": [
+    "ragged RD64 return node (ot_v41_retn_w17w10, 2 x 66 in, 66 out; slot = decision storage area 6,704 um2)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_capture",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_capture"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     107.976
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "f_gather": {
+     "bits": 576,
+     "face": "S"
+    },
+    "t_vm": {
+     "bits": 512,
+     "face": "S"
+    }
+   },
+   "rtl_top": "none",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none",
+   "owner": "CLAUDE FIELD-SPINE",
+   "note": "",
+   "generator_note": [
+    "hub reservation slab capture (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_collective",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_collective"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     1369.416
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "t_vm": {
+     "bits": 512,
+     "face": "S"
+    },
+    "pll": {
+     "bits": 3,
+     "face": "E"
+    },
+    "lW0": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "lW1": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "lW2": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "lW3": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "lE0": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "lE1": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "lE2": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "lE3": {
+     "bits": 1024,
+     "face": "E"
+    }
+   },
+   "rtl_top": "ot_dsrom_link_rt (rtl/dsrom_sys/ot_dsrom_link_rt.sv)",
+   "status": "RTL_OPEN",
+   "hardened_view": null,
+   "closure": "context_r1 SS -176.57 / FF -44.74, FAIL_CONTEXT_CLOCK (results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL/verdict.json)",
+   "owner": "CODEX",
+   "note": "duplicate pll binding (lint S1)",
+   "generator_note": [
+    "hub reservation slab collective (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_gather",
+   "kind": "hub",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_sp_gather"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     1369.416
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "rTW0": {
+     "bits": 528,
+     "face": "E"
+    },
+    "rTW1": {
+     "bits": 726,
+     "face": "E"
+    },
+    "rTW2": {
+     "bits": 858,
+     "face": "E"
+    },
+    "rTW3": {
+     "bits": 858,
+     "face": "E"
+    },
+    "rTW4": {
+     "bits": 726,
+     "face": "E"
+    },
+    "rTW5": {
+     "bits": 528,
+     "face": "E"
+    },
+    "rTE0": {
+     "bits": 528,
+     "face": "E"
+    },
+    "rTE1": {
+     "bits": 726,
+     "face": "E"
+    },
+    "rTE2": {
+     "bits": 858,
+     "face": "E"
+    },
+    "rTE3": {
+     "bits": 858,
+     "face": "E"
+    },
+    "rTE4": {
+     "bits": 726,
+     "face": "E"
+    },
+    "rTE5": {
+     "bits": 528,
+     "face": "E"
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "N"
+    },
+    "t_capture": {
+     "bits": 576,
+     "face": "N"
+    }
+   },
+   "rtl_top": "none (field spine ot_v41_spine_pqc_w17w10 may cover it: unconfirmed)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none (spine c0r16_h20 PASS_SCREEN_ONLY, not adopted)",
+   "owner": "CLAUDE FIELD-SPINE",
+   "note": "return gather of the 12 tier roots",
+   "generator_note": [
+    "hub reservation slab gather (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_hc",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_hc"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     18040.296
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "f_vm": {
+     "bits": 1024,
+     "face": "W"
+    },
+    "f_su_s": {
+     "bits": 512,
+     "face": "W"
+    },
+    "f_su_n": {
+     "bits": 512,
+     "face": "W"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "E"
+    }
+   },
+   "rtl_top": "no slab top; ot_hdc_sinkhorn (rtl/hdc/v41/ot_hdc_sinkhorn.sv) / ot_a3_hc_sinkhorn20_rne_pipe",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "ot_hdc_sinkhorn TT 4 ns setup -2.58 ns; a3 pipe closes at TT 3.7 / 4.0 ns only",
+   "owner": "CODEX",
+   "note": "no output net (lint S9)",
+   "generator_note": [
+    "hub reservation slab hc (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_su_*",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_su_n",
+    "dsfd_sp_su_s"
+   ],
+   "distinct_masters": 2,
+   "instances": 2,
+   "per_master": {
+    "dsfd_sp_su_n": 1,
+    "dsfd_sp_su_s": 1
+   },
+   "placeholder_size_um": [
+    [
+     1015.176,
+     6307.176
+    ],
+    [
+     1015.176,
+     6309.336
+    ]
+   ],
+   "distinct_sizes": 2,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "f_vm": {
+     "bits": 1024,
+     "face": "N/S"
+    },
+    "t_hc": {
+     "bits": 512,
+     "face": "E"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "W"
+    }
+   },
+   "rtl_top": "no slab top; lanes rtl/hdc/v41x/ot_dsrom_su_*.sv",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "lanes only: su_routeract SS +17.0 / FF +3.74 at 1.111 ns; su_hcpost +0.23 / +1.69; norm / swiglu / softmax components closed, levers PENDING_SSFF",
+   "owner": "CLAUDE SU-FUSION",
+   "note": "serial 0.9 GHz domain; su_n / su_s halves",
+   "generator_note": [
+    "hub reservation slab su_n (W4 source rectangle area)",
+    "hub reservation slab su_s (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_sp_vm",
+   "kind": "hub",
+   "domain": [
+    "serial_0p9"
+   ],
+   "masters": [
+    "dsfd_sp_vm"
+   ],
+   "distinct_masters": 1,
+   "instances": 1,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     1015.176,
+     2620.056
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "xroot": {
+     "bits": 572,
+     "face": "E"
+    },
+    "sSW": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "sSE": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "sNW": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "sNE": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "sel": {
+     "bits": 512,
+     "face": "S"
+    },
+    "col": {
+     "bits": 512,
+     "face": "N"
+    },
+    "t_su_s": {
+     "bits": 1024,
+     "face": "S"
+    },
+    "t_su_n": {
+     "bits": 1024,
+     "face": "N"
+    },
+    "t_hc": {
+     "bits": 1024,
+     "face": "E"
+    },
+    "t_gather": {
+     "bits": 512,
+     "face": "S"
+    },
+    "f_capture": {
+     "bits": 512,
+     "face": "N"
+    },
+    "f_collective": {
+     "bits": 512,
+     "face": "N"
+    }
+   },
+   "rtl_top": "no slab top (behavioural ot_chip_v41x_tile u_tile.vm; SRAM ot_sram_1r1w_512x128_m4_r2c2)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "none (old 0.92 ns TT slices only)",
+   "owner": "CODEX",
+   "note": "WFC child allocated beside it (codex ds-wfc)",
+   "generator_note": [
+    "hub reservation slab vm (W4 source rectangle area)"
+   ]
+  },
+  {
+   "family": "dsfd_stn_*",
+   "kind": "waypoint",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_stn_h",
+    "dsfd_stn_l",
+    "dsfd_stn_v"
+   ],
+   "distinct_masters": 3,
+   "instances": 216,
+   "per_master": {
+    "dsfd_stn_h": 100,
+    "dsfd_stn_l": 72,
+    "dsfd_stn_v": 44
+   },
+   "placeholder_size_um": [
+    [
+     51.816,
+     86.376
+    ],
+    [
+     86.376,
+     34.536
+    ]
+   ],
+   "distinct_sizes": 2,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "w": {
+     "bits": 1536,
+     "face": "W"
+    },
+    "e": {
+     "bits": 1536,
+     "face": "E"
+    },
+    "t": {
+     "bits": 836,
+     "face": "S",
+     "masters": 1
+    },
+    "a": {
+     "bits": 1536,
+     "face": "S",
+     "masters": 1
+    },
+    "b": {
+     "bits": 1536,
+     "face": "N",
+     "masters": 1
+    }
+   },
+   "rtl_top": "no block top; stage = ot_fwd_link_stage (rtl/common/ot_fwd_link_stage.sv) x4 per waypoint x ceil(W/512)",
+   "status": "NO_RTL_TOP",
+   "hardened_view": null,
+   "closure": "fwd_hop2_v11 hop reg-to-reg SS +373.97 / FF +246.18; fixture port boundary not_met (-426.15 ps) (results/uarch/meso_fifo_20261004/verdict.json)",
+   "owner": "CLAUDE S81-DIE",
+   "note": "parameterised waypoint family (h: 1536 b + 836 tap, l: 1024 b, v: 1536 b); 2,304 W512 stage slices needed, 0 instantiated, no forwarded-clock pin (lint S12b)",
+   "generator_note": [
+    "forwarded-link waypoint (4 x 430.56 um stages), horizontal",
+    "forwarded-link waypoint, vertical"
+   ]
+  },
+  {
+   "family": "dsfd_svc",
+   "kind": "svc",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "dsfd_svc"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.032,
+     1576.776
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "generated placeholder abstract",
+   "ports": {
+    "rd": {
+     "bits": 8864,
+     "face": "S"
+    },
+    "hub": {
+     "bits": 1536,
+     "face": "N"
+    },
+    "ix": {
+     "bits": 512,
+     "face": "N"
+    },
+    "co": {
+     "bits": 512,
+     "face": "N"
+    },
+    "ck": {
+     "bits": 3,
+     "face": "N"
+    }
+   },
+   "rtl_top": "no service top; parts ot_hdc_v41x_attn_tile_s / ot_attn_hgrp_m6h1 + ot_hdc_v41x_idx_*",
+   "status": "NO_RTL_TOP",
+   "hardened_view": [
+    "leaf only: physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ (LEF + ss/ff LIB; HBM-die leaf, contextual tile not closed)"
+   ],
+   "closure": "no block closure; WINDOW screen SS -1175.2 pre-layout (results/rtl/dsrom_window_full_block_screen_20261005)",
+   "owner": "CODEX",
+   "note": "16 attention tiles + pooled indexer ring reader per stack",
+   "generator_note": [
+    "per-stack scan service: 16 attention tiles + pooled indexer ring reader (quarter of the W4 reservations)"
+   ]
+  },
+  {
+   "family": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "kind": "phy",
+   "domain": [
+    "hbm"
+   ],
+   "masters": [
+    "ot_hbm3e_phy_v41x_aw30_e8p5"
+   ],
+   "distinct_masters": 1,
+   "instances": 4,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     8500.056,
+     1177.2
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "dfi": {
+     "bits": 22238,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "black box only (behavioural rtl/chip/ot_chip_v41x_hbm3e_phy.sv)",
+   "status": "REAL_VIEW",
+   "hardened_view": [
+    "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ (LEF + ss/tt/ff LIB + _bb.v)"
+   ],
+   "closure": "generated macro (tools/mem_compiler/hbm_phy_gen.py), assumed boundary timing",
+   "owner": "-",
+   "note": "\"PHY + controller abstract, controller-side pins\": overlaps dsfd_ctrl in function (uncertain)",
+   "generator_note": []
+  },
+  {
+   "family": "ot_pdie_*",
+   "kind": "link",
+   "domain": [
+    "link"
+   ],
+   "masters": [
+    "ot_pdie_serdes",
+    "ot_pdie_ucie"
+   ],
+   "distinct_masters": 2,
+   "instances": 8,
+   "per_master": {
+    "ot_pdie_serdes": 6,
+    "ot_pdie_ucie": 2
+   },
+   "placeholder_size_um": [
+    [
+     250.056,
+     2250.216
+    ],
+    [
+     260.808,
+     1652.424
+    ]
+   ],
+   "distinct_sizes": 2,
+   "die_view": "real LEF macro",
+   "ports": {
+    "io": {
+     "bits": 1024,
+     "face": "LEF",
+     "masters": 1
+    },
+    "ck": {
+     "bits": 0,
+     "face": "LEF",
+     "masters": 1
+    }
+   },
+   "rtl_top": "none (placeholder pin macro, tools/chip_assembly/macros.py)",
+   "status": "REAL_VIEW_NOT_CLOSED",
+   "hardened_view": [
+    "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ (LEF, _tt.lib, _bb.v)",
+    "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ (LEF, _tt.lib, _bb.v)"
+   ],
+   "closure": "n/a: pin-only shell (512 tx + 512 rx), TT LIB only",
+   "owner": "CODEX",
+   "note": "real SerDes / UCIe hard IP abstract still needed (SS/FF LIB)",
+   "generator_note": []
+  },
+  {
+   "family": "ot_rom_4096x72_m8",
+   "kind": "cfg",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "ot_rom_4096x72_m8"
+   ],
+   "distinct_masters": 1,
+   "instances": 16919,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     38.016,
+     62.91
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "rd": {
+     "bits": 54,
+     "face": "LEF"
+    },
+    "ctl": {
+     "bits": 14,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "compiler ROM macro (functional model physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v)",
+   "status": "REAL_VIEW",
+   "hardened_view": [
+    "results/uarch/dsrom_c_w4_20261003/s82_inputs/cfg.lef (= v1 physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef, 38.016 x 62.910, + _ss/_tt/_ff.lib)",
+    "v2 aligned view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ (38.040 x 62.952, LEF + 3 LIB) NOT used"
+   ],
+   "closure": "macro (SS clk->q in results/uarch/v41_rom_depth_study.json)",
+   "owner": "CLAUDE S81-DIE",
+   "note": "generator uses the v1 (unaligned) view; v2 is the mirror-legal one. Lint S3: clk/ce/addr undriven, 7-way multi-driven cfg nets (no cfg sequencer RTL)",
+   "generator_note": []
+  },
+  {
+   "family": "ot_v41_rom_elem_q_qp_w10",
+   "kind": "q",
+   "domain": [
+    "stream_1p2"
+   ],
+   "masters": [
+    "ot_v41_rom_elem_q_qp_w10"
+   ],
+   "distinct_masters": 1,
+   "instances": 1898,
+   "per_master": null,
+   "placeholder_size_um": [
+    [
+     510.84,
+     126.9
+    ]
+   ],
+   "distinct_sizes": 1,
+   "die_view": "real LEF macro",
+   "ports": {
+    "xi": {
+     "bits": 266,
+     "face": "LEF"
+    },
+    "k": {
+     "bits": 20,
+     "face": "LEF"
+    },
+    "xo": {
+     "bits": 266,
+     "face": "LEF"
+    },
+    "cfg": {
+     "bits": 54,
+     "face": "LEF"
+    },
+    "r0": {
+     "bits": 63,
+     "face": "LEF"
+    },
+    "r1": {
+     "bits": 63,
+     "face": "LEF"
+    },
+    "st": {
+     "bits": 0,
+     "face": "LEF"
+    }
+   },
+   "rtl_top": "ot_v41_rom_elem_q_qp_w10 (rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv); successor QX10 ot_v41_rom_elem_q_qx_w10",
+   "status": "REAL_VIEW_NOT_CLOSED",
+   "hardened_view": [
+    "results/uarch/dsrom_c_w4_20261003/s82_combined_r1/routed_q/routed_element.lef.gz (no LIB)"
+   ],
+   "closure": "R_cap0 (the routed DB the LEF was read back from): SS -236.4 / FF -215.0 ps, not_met (results/rtl/dsrom_qz_20261004/r_cap0_classification.json); QX10 Z18c SS -3.90 / FF +7.01, Z18d SS +3.67 / FF -10.84 (results/physical/dsrom_qx10_z18_20261005); owner 20:30 PT: frame-D chase stopped, taller frames Z20a/b/c routing (510.84 x 209.52 / 192.24 / 177.12)",
+   "owner": "CLAUDE QELEM",
+   "note": "the die abstract is a readback of a failing route; the adopted element will be a taller frame (S81-DIE slot change). Lint S2: xs_q1 is an RTL input used as the x forward",
+   "generator_note": []
+  }
+ ]
+}

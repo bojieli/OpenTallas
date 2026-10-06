@@ -1,0 +1,52 @@
+{
+  "prepared_before_RTL_UTC": "2026-10-06T05:38:44.116634+00:00",
+  "model": {
+    "default": 0,
+    "replica_count": 1,
+    "MACs_per_cycle": 0,
+    "memory_port_bytes_per_cycle": 0,
+    "communication_intensity": 0,
+    "boundary_bits_per_cycle": {
+      "clock_inputs": 1,
+      "clock_outputs": 2,
+      "cold_reset": 1,
+      "fault": 1
+    },
+    "state_FF_bits": 16,
+    "FF_area_floor_um2": 4.6656,
+    "combinational_area_um2": null,
+    "actual_mapped_loads_required": true,
+    "root_period_ps": 277.77777777777777,
+    "fast_period_ps": 833.3333333333334,
+    "slow_period_ps": 1111.111111111111,
+    "generated_clock_edges": {
+      "fast": [
+        1,
+        4,
+        7
+      ],
+      "slow": [
+        1,
+        5,
+        9
+      ]
+    },
+    "replica_mux_demux_cost": 0,
+    "added_pipeline_cycles": 0,
+    "latency_contribution": "Existing model W18 /3,/4 domains; no new data pipeline. Source clkQ, clock-wire, reset-release, phase/skew and PLL jitter must be measured.",
+    "routing_tracks_needed": {
+      "root_clock": 1,
+      "generated_clocks": 2,
+      "POR": 1,
+      "fault": 1
+    },
+    "channel_capacity": null,
+    "floorplan_slot_fit": false,
+    "protection": "Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.",
+    "physical_closed": false,
+    "PLL_IP_qualified": false,
+    "fast_output_OR_gates": 1,
+    "clock_waveform": "both50percent; fast OR overlappingposedge+negedgepulses, fallingedge1.5VCOperiods; min/maxnegativeedgepaths physicallyOPEN"
+  },
+  "basis": "Existing W18 3.6GHz /3,/4 plan; actualmissing producer, no PLL analog implementation or parent qualification"
+}
