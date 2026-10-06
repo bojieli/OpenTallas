@@ -1429,7 +1429,7 @@ def q_tile():
 def build_qwen(variant=None):
     variant = dict(variant or {}, die='qwen')
     T = q_tile()
-    T['tree_pin_pitch'] = int(variant.get('tree_pitch', 4))   # q2: 4 (q1 at 2: the M8 area-pin columns congested)
+    T['tree_pin_pitch'] = int(variant.get('tree_pitch', 2))   # q3: 2 (q2 tried 4 with packing: i50 2,764)
     th = T['h']
     spw = up(variant.get('spine_w', 2000.16), GX)
     spc = up(variant.get('spine_ch', 172.8), GX)
@@ -1551,7 +1551,7 @@ def build_qwen(variant=None):
     core = blk('sp_core', 'qhd_core', QBLOCKS['core'][0], dn(geo['mid'] - core_h / 2, GY))
     # q2: the port slices pack against the core (q1 GRT: 65 % of the i5 overflow was the 6,144-bit port -> core words
     #     climbing over the slabs between them); the scale slabs and the loader spread over the rest of the column
-    packed = variant.get('port_core', 1)
+    packed = variant.get('port_core', 0)   # q3: MEASURED q1 spread i50 overflow 0; packing at the core (q2) gave 2,764 (pword at the slab boundary)
     if packed:
         lower = [('sp_scale0', 'scale', 0), ('sp_scale1', 'scale', 1), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1)]
         upper = [('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale2', 'scale', 2), ('sp_scale3', 'scale', 3),
