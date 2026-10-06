@@ -11,6 +11,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     a=p.parse_args(); out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
+    (out/'work/orfs/tmp').mkdir(parents=True)
     cmd=['python3','tools/run_abi3_physical.py','--view','asap7',
          '--top','ot_dsrom_window_stage_pipeline','--param','SPLIT_COLUMNS=1',
          '--source','rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv',
@@ -20,6 +21,7 @@ def main():
          '--die-area','0','0','1900','1900','--core-area','5','5','1895','1895',
          '--place-density','0.55','--max-fanout','32','--max-transition-ns','0.15',
          '--hold-margin-ns','0.008','--orfs-var','ADDER_MAP_FILE=',
+         '--orfs-var','TMPDIR=/work/tmp',
          '--orfs-var','IO_PLACER_H=M4 M6 M8','--orfs-var','IO_PLACER_V=M5 M7 M9',
          '--routing-layers','M2','M9','--macro-place-halo','4','4',
          '--step-tcl','POST_MACRO_PLACE=physical/dsrom_window_columns/place_stage.tcl',
