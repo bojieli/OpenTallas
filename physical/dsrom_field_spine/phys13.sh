@@ -3,8 +3,8 @@
 # _20261006.txt): routed OVER-CONSTRAINED at 770 ps (60 / 25 ps uncertainty), signed off at 833.333 ps by
 # tools/w18/corner_sta.py with --post-sdc physical/dsrom_field_spine/signoff_r<R>.sdc; pass = SS >= +40 ps (design target +60), FF >= +15 ps
 # (terminal.py with OT_FS_MARGIN=1).  The IO is NOT false-pathed: every port carries the die-integration budget (neighbour
-# clock arrival = the block's measured insertion +/- 150 ps, 100 ps wire allowance), the same numbers in the routing SDC
-# and the sign-off SDC.  Ports are registered at the screen boundary (ot_v41_pqc_spine_screen).
+# clock arrival = the block's insertion +/- 150 ps, 100 ps wire allowance): io_budget_r<R>.sdc in the flow (measured
+# insertion), signoff_r<R>.sdc at sign-off (each corner's propagated arrival at the boundary registers).  Ports are registered at the screen boundary (ot_v41_pqc_spine_screen).
 # Usage: phys13.sh <scratch dir> <tag>...   tag = c<PQ>r<R>_<v>[k]; v = e/f/g/h/p/q/r as phys.sh with hold targets raised
 #   (FF >= +15 ps over the 25 ps hold uncertainty): e 40 ps / slew 40%, f 45 / 40, g 42 / 45, h e + routability-off GPL,
 #   p / q / r: e at place density 0.55 / 0.70 / 0.62.  All with the raised repair buffer budget (IO hold buffering).
@@ -28,11 +28,11 @@ run() { # tag
              q) H=0.040; S=40; X=(); DENS=(--place-density 0.70);;
              r) H=0.040; S=40; X=(); DENS=(--place-density 0.62);;
              *) echo "phys13.sh: unknown variant '$v' (tag $t)" >&2; exit 2;; esac
-  # IO budget (ns; rst_n false-pathed, the die reset is its own synchronised tree): measured insertion 0.65 (R16) / 0.85 (R128), +/- 150 ps neighbour arrival, 100 ps wire allowance
-  if [ "$r" = 128 ]; then g=56; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); I=0.85
-  else g=44; SH=(--core-utilization 35); I=0.65; fi
-  IO=(--false-path-from rst_n --core-input-delay-min-ns $(python3 -c "print(round($I-0.15,3))") --core-input-delay-max-ns $(python3 -c "print(round($I+0.25,3))")
-      --output-delay-min-ns $(python3 -c "print(round(-$I-0.15,3))") --output-delay-max-ns $(python3 -c "print(round(0.25-$I,3))"))
+  if [ "$r" = 128 ]; then g=56; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84)
+  else g=44; SH=(--core-utilization 35); fi
+  # IO budget: physical/dsrom_field_spine/io_budget_r<R>.sdc (measured insertion as the core clock's ideal latency
+  # pre-CTS, boundary delays = insertion +/- 150 ps + 100 ps wire; fixture ROM write ports and rst_n false-pathed)
+  IO=(--sdc-append physical/dsrom_field_spine/io_budget_r$r.sdc)
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
   echo "$(date -Is) START $t $(hostname) period=$PER aq=$AQ" >> $J/MANIFEST
   /srv/opentallas-scratch/admit.sh $g -- python3 tools/run_abi3_physical.py $COMMON $SP "${OV[@]}" "${IO[@]}" --orfs-var "SYNTH_KEEP_MODULES=$KM" "${BC[@]}" "${X[@]}" "${DENS[@]}" --slew-margin-percent $S --hold-margin-ns $H --param PQ=$pq --param R=$r "${SH[@]}" --nickname-tag dsfs13_$t --keep-workdir $O/work_$t --output $O/$t.json --force > $J/$t.log 2>&1
