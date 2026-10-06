@@ -47,7 +47,9 @@ module tb_wf_ctrl_equiv;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
     parameter integer FDLY     = 4;       // the DUT may latch a header-position fault this many cycles later
-    parameter integer RSTD     = 1;       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
+    parameter integer RSTD     = 1;
+    parameter integer STREAM   = 0;       // 1: a real VM model, and (SOURCE = 0) the outbound flit stream and the
+                                          //    core-start stream must match the reference's in order (not lockstep)       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
 
     reg clk = 1'b0, rst_n = 1'b0;
     always #0.5 clk = ~clk;
@@ -131,9 +133,34 @@ module tb_wf_ctrl_equiv;
                                tok_valid ? tok_id : {NW{1'b0}}, users_done, 1'b0,
                                wf_issue, wf_reject, wf_squash};   // proto_fault: checked below (FDLY)
 
+        // ---- vector memory model (STREAM), and the in-order stream digests
+        reg [FLIT-1:0] vm [0:(1<<VWA)-1];
+        initial for (int k = 0; k < (1<<VWA); k++) vm[k] = {FLIT/32{h32(k, 0, 32'h5A)}};
+        reg [63:0] out_dig = 0, st_dig = 0;
+        integer out_cnt = 0, st_cnt = 0;
+        function automatic [63:0] mix(input [63:0] d, input [FLIT-1:0] v);
+            reg [63:0] x;
+            begin
+                x = d;
+                for (int k = 0; k < FLIT / 32; k++) x = (x ^ {32'd0, v[k*32 +: 32]}) * 64'h100000001B3 + 64'h9E3779B97F4A7C15;
+                mix = x;
+            end
+        endfunction
+        always @(posedge clk) if (rst_n) begin
+            if (out_valid && out_ready) begin out_dig <= mix(out_dig, {out_data[FLIT-2:0], out_last}); out_cnt <= out_cnt + 1; end
+            if (core_start) begin
+                st_dig <= mix(st_dig, FLIT'({core_token, core_pos, core_user, kv_base}));
+                st_cnt <= st_cnt + 1;
+            end
+        end
+
         // ---- core: level done, per-job latency
         integer cbusy = 0;
         always @(posedge clk) begin
+            if (STREAM) begin
+                if (vm_re) vm_rq <= vm[vm_raddr];
+                if (vm_we) vm[vm_waddr] <= vm_wdata;
+            end else
             vm_rq <= {FLIT/32{h32(vm_raddr, cyc, 32'h77)}};
             if (core_start) begin
                 core_done <= 1'b0;
@@ -279,13 +306,18 @@ module tb_wf_ctrl_equiv;
                                            && !g[0].core_busy && !g[1].core_busy && !g[0].out_valid && !g[1].out_valid)))
             @(posedge clk);
         repeat (50) @(posedge clk);
+        if (STREAM)
+            $display("EQUIV STREAM out=%0d/%0d dig=%h/%h starts=%0d/%0d dig=%h/%h", g[0].out_cnt, g[1].out_cnt,
+                     g[0].out_dig, g[1].out_dig, g[0].st_cnt, g[1].st_cnt, g[0].st_dig, g[1].st_dig);
         $display("EQUIV STATS source=%0d lockstep=%0d maxu=%0d users=%0d cycles=%0d fin=%0d/%0d issues=%0d/%0d rejects=%0d/%0d squashed=%0d/%0d committed_ok=%0d/%0d err=%0d/%0d fault_cyc=%0d/%0d mism=%0d",
                  SOURCE, LOCKSTEP, MAXU, USERS, cyc, fin_cyc[0], fin_cyc[1], iss_n[0], iss_n[1], rej_n[0], rej_n[1],
                  sq_n[0], sq_n[1], ok_n[0], ok_n[1], err_n[0], err_n[1], fault_cyc[0], fault_cyc[1], mism);
         if (mism != 0 || err_n[0] != 0 || err_n[1] != 0 || !fault_ok ||
             (SOURCE && (fin_cyc[0] == 0 || fin_cyc[1] == 0 || fault_cyc[0] != 0 ||
                         ok_n[0] != USERS * (PLEN + GEN - 1) || ok_n[1] != USERS * (PLEN + GEN - 1))) ||
-            (!SOURCE && iss_n[0] != iss_n[1]))
+            (!SOURCE && iss_n[0] != iss_n[1]) ||
+            (STREAM && !SOURCE && (g[0].out_cnt != g[1].out_cnt || g[0].out_dig != g[1].out_dig ||
+                                   g[0].st_cnt != g[1].st_cnt || g[0].st_dig != g[1].st_dig || g[0].out_cnt == 0)))
             begin
                 $display("EQUIV FAIL");
                 $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");

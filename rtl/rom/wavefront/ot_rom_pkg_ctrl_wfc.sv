@@ -111,6 +111,12 @@
 `ifndef OT_WFC_DECODED_READ
 `define OT_WFC_DECODED_READ 0
 `endif
+`ifndef OT_WFC_REC_SRAM
+`define OT_WFC_REC_SRAM 0
+`endif
+`ifndef OT_WFC_UPOS_LWR
+`define OT_WFC_UPOS_LWR 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -118,6 +124,8 @@ module ot_rom_pkg_ctrl_wfc #(
     parameter integer QUEUE_SHIFT = 0, // priced same-edge constant-head TXQ
     parameter integer CONTROL_PIPE = `OT_WFC_CONTROL_PIPE, // priced completion/start capture, default off
     parameter integer LOCAL_CONTROL = `OT_WFC_LOCAL_CONTROL, // opt-in same-edge control locality
+    parameter integer REC_SRAM = `OT_WFC_REC_SRAM,   // SOURCE engine: per-user record + issued-token ring in 1R1W SRAM macros (0 cycles)
+    parameter integer UPOS_LWR = `OT_WFC_UPOS_LWR,   // upos groups: registered local write strobe / data copies (0 cycles)
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -474,9 +482,10 @@ module ot_rom_pkg_ctrl_wfc #(
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
-        ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
+        ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
             .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2), .rd_early(uchk),
-            .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .part(ug_part[ugi]));
+            .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .wr_early(uchk3 && gsel_oh[ugi]),
+            .wdata_early(hdr_pos_increment), .part(ug_part[ugi]));
     end endgenerate
     reg [NW-1:0] upos_sel;
     integer usg;
@@ -765,7 +774,7 @@ module ot_rom_pkg_ctrl_wfc #(
     end
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len),
             .cfg_gen_len(cfg_gen_len), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
@@ -788,11 +797,13 @@ endmodule
 // locally; a registered read of that entry (0 until written) and a write of it;
 // its own reset copy (synchronous clear).
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_upos #(parameter integer LOCAL_CONTROL = 0, parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_upos #(parameter integer LOCAL_CONTROL = 0, parameter integer LWR = 0, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    lo,
     input  wire          rd, rd_early, wr,
     input  wire [NW-1:0] wdata,
+    input  wire          wr_early,      // LWR: wr one cycle earlier (uchk3 && this group)
+    input  wire [NW-1:0] wdata_early,   // LWR: wdata one cycle earlier (captured with wr_early)
     output reg  [NW-1:0] part
 );
     // This local copy equals top-level uchk2 on every edge, including reset.
@@ -809,10 +820,29 @@ module ot_rom_pkg_ctrl_wfc_upos #(parameter integer LOCAL_CONTROL = 0, parameter
     reg [4:0]    lo_r;                  // local copy of the user's low bits (one cycle later)
     reg [NW-1:0] upos [0:N-1];
     reg [N-1:0]  uval;
+    // LWR: the write strobe and data are this group's own registers, loaded one edge earlier from
+    // the same sources the top-level uchk4 / gw_oh / hdr_pos1 are loaded from (equal on every edge)
+    wire          wr_x;
+    wire [NW-1:0] wd_x;
+    generate if (LWR) begin : g_local_write
+        (* keep *) reg wr_l;
+        (* keep *) reg [NW-1:0] wd_l;
+        always @(posedge clk) begin
+            wr_l <= wr_early;
+`ifdef OT_WFC_NEG_UPOS
+            if (wr_early) wd_l <= wdata_early + 1'b1;   // negative control: wrong expected position
+`else
+            if (wr_early) wd_l <= wdata_early;
+`endif
+        end
+        assign wr_x = wr_l; assign wd_x = wd_l;
+    end else begin : g_shared_write
+        assign wr_x = wr; assign wd_x = wdata;
+    end endgenerate
     always @(posedge clk) begin
         lo_r <= lo;
-        if (!rq) uval <= 0; else if (wr && lo_r < N) uval[lo_r] <= 1'b1;   // synchronous clear
-        if (wr && lo_r < N) upos[lo_r] <= wdata;
+        if (!rq) uval <= 0; else if (wr_x && lo_r < N) uval[lo_r] <= 1'b1;   // synchronous clear
+        if (wr_x && lo_r < N) upos[lo_r] <= wd_x;
         if (rd_local) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
     end
 endmodule
@@ -840,6 +870,7 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_src #(
     parameter integer DECODED_READ = 0,
+    parameter integer REC_SRAM = 0,
     parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
     parameter integer MAXU = 16, parameter integer WIN = 6
 ) (
@@ -916,7 +947,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
     genvar gi;
     generate for (gi = 0; gi < NG; gi = gi + 1) begin : g
         (* keep_hierarchy *)
-        ot_rom_pkg_ctrl_wfc_grp #(.DECODED_READ(DECODED_READ), .RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
+        ot_rom_pkg_ctrl_wfc_grp #(.DECODED_READ(DECODED_READ), .STORE(!REC_SRAM), .RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
             .clk(clk), .rst_n(rst_n), .rd_lo(ou[4:0]), .rd_slot(oslot), .rec_q(g_rec[gi]), .ring_q(g_ring[gi]),
             .we(b_en && b_oh[gi]), .wlo(b_lo), .wrec(b_rec), .wek(b_ek), .wef(b_ef),
             .rwe(b_ren && b_oh[gi]), .rslot(b_slot), .rdata(b_data),
@@ -940,8 +971,61 @@ module ot_rom_pkg_ctrl_wfc_src #(
         rsel = 0; rgsel = 0;
         for (sg = 0; sg < NG; sg = sg + 1) if (o_oh[sg]) begin rsel = rsel | g_rec[sg]; rgsel = rgsel | g_ring[sg]; end
     end
+    // REC_SRAM: the record (minus the started bit, which stays in the group) and all 8 ring slots
+    // of a user are one SRAM row; read at the RD0 edge (address = ou, a register), captured at the
+    // RD1 edge (register at the macro boundary), selected into rec / ring at the RD2 edge.  The
+    // row is written back whole one edge after EX (b_*, registers).  An event's RD0 is always
+    // >= 1 cycle after the previous event's write edge, so the read sees it.
+    wire idle_new;
+    localparam integer RB = (RW - 1) + 8 * NW;
+    wire [RW-1:0] rec_d; wire [NW-1:0] ring_d; wire [8*NW-1:0] rrow_d;
+    reg  [8*NW-1:0] rrow;            // the user's whole ring (EX), for the write-back
+    reg  [RB-1:0]   b_row;           // the row written one edge after EX
+    reg  [USER_W-1:0] b_u;
+    wire [8*NW-1:0] w_ring;
+    generate if (REC_SRAM) begin : g_rec_sram
+        localparam integer MW = 512, MB = 128, NC = (RB + MB - 1) / MB, NBK = (MAXU + MW - 1) / MW;
+        localparam integer BKW = (NBK > 1) ? $clog2(NBK) : 1;
+        wire [NC*MB-1:0] rd_row [0:NBK-1];
+        reg  [NC*MB-1:0] m_q [0:NBK-1];
+        wire [NC*MB-1:0] wd_row = {{(NC*MB-RB){1'b0}}, b_row};
+        genvar bk, cc;
+        for (bk = 0; bk < NBK; bk = bk + 1) begin : g_bank
+            wire bank_rd = (NBK == 1) || (BKW'(ou >> 9) == BKW'(bk));
+            wire bank_wr = (NBK == 1) || (BKW'(b_u >> 9) == BKW'(bk));
+            for (cc = 0; cc < NC; cc = cc + 1) begin : g_col
+                ot_sram_1r1w_512x128_m4_r2c2 u_m (
+                    .clk(clk), .r_ce_in(st == S_RD0 && bank_rd), .r_addr_in(ou[8:0]), .rd_out(rd_row[bk][cc*MB +: MB]),
+                    .w_ce_in(b_en && bank_wr), .w_addr_in(b_u[8:0]), .wd_in(wd_row[cc*MB +: MB]),
+                    .w_mask_in({MB{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+            end
+            always @(posedge clk) m_q[bk] <= rd_row[bk];
+        end
+        reg [NC*MB-1:0] msel;
+        integer mb;
+        always @(*) begin
+            msel = m_q[0];
+            for (mb = 1; mb < NBK; mb = mb + 1) if (BKW'(ou >> 9) == BKW'(mb)) msel = m_q[mb];
+        end
+        assign rec_d = {msel[RW-2:0], rsel[0]};
+        assign rrow_d = msel[RW-1 +: 8*NW];
+        assign ring_d = rrow_d[oslot * NW +: NW];
+    end else begin : g_rec_flops
+        assign rec_d = rsel; assign ring_d = rgsel; assign rrow_d = {8*NW{1'b0}};
+    end endgenerate
+    // the ring row written back: a new user's row is slot 0 = its first token (others 0); an
+    // issue replaces slot w_slot; every other event writes the row it read
+    genvar rs;
+    for (rs = 0; rs < 8; rs = rs + 1) begin : g_wring
+        assign w_ring[rs*NW +: NW] = idle_new ? ((rs == 0) ? nu_tok : {NW{1'b0}})
+                                   : (w_ren && w_slot == rs) ? w_data : rrow[rs*NW +: NW];
+    end
     always @(posedge clk) begin
-        rec <= rsel; ring <= rgsel; o_oh <= {{(NG-1){1'b0}}, 1'b1} << (ou >> 5);
+        rec <= rec_d; ring <= ring_d; rrow <= rrow_d; o_oh <= {{(NG-1){1'b0}}, 1'b1} << (ou >> 5);
+        b_u <= w_u; b_row <= {w_ring, w_rec[RW-1:1]};
+`ifdef OT_WFC_NEG_ROW
+        if (w_u == 3) b_row[RW-1] <= ~w_ring[0];   // negative control: corrupt user 3's ring slot 0 bit 0
+`endif
         b_en <= w_en; b_ren <= w_ren; b_oh <= {{(NG-1){1'b0}}, 1'b1} << (w_u >> 5); b_lo <= w_u[4:0];
         b_rec <= w_rec; b_slot <= w_slot; b_data <= w_data;
         b_ek <= w_rec[0] && w_rec[2] && w_rec[7:5] < WIN && w_rec[1];
@@ -961,7 +1045,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
     // ---- decisions
     wire nu_start = nu_ok && next_u < MAXU && core_free;           // a new user's first position
     wire fetch = !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU;
-    wire idle_new = st == S_IDLE && rq_n == 0 && pq_n == 0 && nu_start;
+    assign idle_new = st == S_IDLE && rq_n == 0 && pq_n == 0 && nu_start;
     wire ex = st == S_EX;
     wire ex_iss = ex && kind == K_ISS && core_free && r_stv && r_wkv && r_wnf < WIN && r_lt;
     wire ex_rd = ex && kind == K_RD;
@@ -1075,7 +1159,7 @@ endmodule
 // the started / eligibility bits are cleared (own reset copy, synchronous); a
 // record is written whole when its user starts and read only after.
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_grp #(parameter integer DECODED_READ = 0, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_grp #(parameter integer DECODED_READ = 0, parameter integer STORE = 1, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    rd_lo,
     input  wire [2:0]    rd_slot,
@@ -1101,10 +1185,16 @@ module ot_rom_pkg_ctrl_wfc_grp #(parameter integer DECODED_READ = 0, parameter i
         lo_r <= rd_lo; slot_r <= rd_slot;
         if (!rq) begin stv <= 0; ek <= 0; ef <= 0; end                    // synchronous clear
         else if (we && wlo < N) begin stv[wlo] <= wrec[0]; ek[wlo] <= wek; ef[wlo] <= wef; end
-        if (we && wlo < N) recm[wlo] <= wrec[RW-1:1];
-        if (rwe && wlo < N) ringm[{wlo, rslot}] <= rdata;
+        if (STORE && we && wlo < N) recm[wlo] <= wrec[RW-1:1];
+        if (STORE && rwe && wlo < N) ringm[{wlo, rslot}] <= rdata;
     end
-    generate if (DECODED_READ) begin : g_decoded_read
+    generate if (!STORE) begin : g_bits_only
+        // the record and ring live in the engine's SRAM rows: only the started bit is read here
+        always @(posedge clk) begin
+            rec_q <= {{(RW-1){1'b0}}, (lo_r < N) && stv[lo_r]};
+            ring_q <= {NW{1'b0}};
+        end
+    end else if (DECODED_READ) begin : g_decoded_read
         // Decode on the existing address-latch edge. The data is read on
         // the original following edge, including read-before-write behavior.
         reg [N-1:0] user_sel;
