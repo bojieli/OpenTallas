@@ -7,7 +7,7 @@ root=Path(__file__).resolve().parents[4];rel='physical/hbm_die_abstracts_2026100
 run=a.run.resolve();run.mkdir(parents=True,exist_ok=True)
 name=f'ot_hbm_station_NO{a.NO}_{a.orientation}{a.util}'
 ev=json.loads((a.cache.parent/'physical.json').read_text());assert ev['flow_completed'] and ev['design']['parameters']['NO']==a.NO
-load_dir=a.cache.parent/'measured_receiver_sta_r2'
+load_dir=a.cache.parent/'measured_receiver_sta_r3'
 if not load_dir.exists():
  subprocess.run(['python3',f'{rel}/measure_receiver.py','--mapped',str(a.cache/'mapped.v'),'--out',str(load_dir),'--src',str(root)],cwd=root,check=True)
 assert (load_dir/'receiver.json').is_file(), 'incomplete measurement retained; use a fresh correction run'

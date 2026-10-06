@@ -18,7 +18,7 @@ set f [open /out/caps_CORNER.tsv w]
 puts $f "port\tcap_fF\tsink_count\tsinks"
 foreach p [all_inputs] {
  set cap 0;set sinks {};set pin_count 0
- foreach pin [get_pins -of_objects [get_nets -of_objects $p]] {
+ foreach pin [get_fanout -from $p -flat -pin_levels 1 -trace_arcs all] {
   if {[get_property $pin direction] ne "input"} {continue}
   set cs [get_cells -of_objects $pin]
   if {[llength $cs]!=1} {continue}
