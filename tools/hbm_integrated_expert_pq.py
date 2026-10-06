@@ -66,7 +66,7 @@ def main():
   if any(sha(ROOT/s)!=h for s,h in sources.items()):raise ValueError('frontend source changed')
  if a.step=='frontend':return 0
  with (a.out/'make.log').open('x') as log:
-  rc=subprocess.run(['make','-C',str(a.out/'obj'),'-f','V'+TOP+'.mk','-j',str(a.jobs)],stdout=log,stderr=subprocess.STDOUT).returncode
+  rc=subprocess.run(['make','-C',str(a.out/'obj'),'-f','V'+TOP+'.mk','-j',str(a.jobs),'OPT_FAST=-O0','OPT_SLOW=-O0'],stdout=log,stderr=subprocess.STDOUT).returncode
  if rc:return rc
  exe=a.out/'obj'/('V'+TOP);ids=[int(x) for x in a.ids.split(',')]
  if len(ids)!=6:raise ValueError('six router IDs required')
