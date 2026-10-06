@@ -204,6 +204,7 @@ module tb_hbm_integrated_minimum_parent #(
  output wire [ND*1088-1:0] w2_native_rsp_data,
  output wire rst_sm_n, output wire sys_fault,
  output reg [31:0] fixture_cp_requests,fixture_cp_returns,fixture_ACKs,fixture_final_ACK_addr,fixture_bind_accepts,fixture_enroll_accepts,fixture_read_accepts,fixture_rsp_accepts,fixture_retire_accepts,fixture_db_accepts,fixture_cpl_accepts,
+ output reg [31:0] fixture_sfu_enroll_accepts,fixture_sfu_cp_requests,fixture_sfu_cp_returns,fixture_sfu_ACKs,fixture_sfu_TXs,fixture_sfu_releases,
  output reg fixture_observer_fault
 );
 
@@ -536,6 +537,7 @@ module tb_hbm_integrated_minimum_parent #(
   .sys_fault(sys_fault));
  initial if(ND!=2||NSM!=2||NS!=2||NPC!=2||MEM_WORDS!=2097152||TW!=17||PW!=20||NORM_KIND!=0||NORM_N!=64||NORM_D!=5120||NORM_AW!=24||NORM_RD!=0||!NORM_PUBLISH_QUANT||!ENABLE||!COMBINED_ENABLE||!NORM_C12_ENABLE||!NORM_NATIVE_VM_ENABLE||!NORM_NATIVE_INPUT_CP||!SFU_C12_ENABLE||!SFU_NATIVE_VM_ENABLE||!FORMATTER_ENABLE||!LOCAL_CP_RESET_ENABLE)
   $fatal(1,"minimum parent fixture selected graph/geometry mismatch");
+ reg [1:0] seen_sfu_ACK;
  reg [399:0] seen_ACK;
  integer slot;
  always @(posedge clk_sm) begin
@@ -551,7 +553,8 @@ module tb_hbm_integrated_minimum_parent #(
    fixture_retire_accepts<=0;
    fixture_db_accepts<=0;
    fixture_cpl_accepts<=0;
-   fixture_observer_fault<=0;seen_ACK<=0;
+   fixture_observer_fault<=0;seen_ACK<=0;seen_sfu_ACK<=0;
+   fixture_sfu_enroll_accepts<=0;fixture_sfu_cp_requests<=0;fixture_sfu_cp_returns<=0;fixture_sfu_ACKs<=0;fixture_sfu_TXs<=0;fixture_sfu_releases<=0;
   end else begin
    if(db_v[0]&&db_rdy[0])fixture_db_accepts<=fixture_db_accepts+1;
    if(cpl_v[0]&&cpl_rdy[0])fixture_cpl_accepts<=fixture_cpl_accepts+1;
@@ -577,6 +580,30 @@ module tb_hbm_integrated_minimum_parent #(
     end
    end
    if(norm_publication_v[0]&&(!(&seen_ACK)||fixture_ACKs!=400))fixture_observer_fault<=1;
+   // Read-only observation of actual CASE1 native SFU transport/checked SRAM.
+   if(sfu_enroll_v[0]&&sfu_enroll_r[0])fixture_sfu_enroll_accepts<=fixture_sfu_enroll_accepts+1;
+   if(dut.g_on.g_die[0].sfu_req_v&&dut.g_on.g_die[0].p_req_rdy[1]&&dut.g_on.g_die[0].sfu_route)begin
+    fixture_sfu_cp_requests<=fixture_sfu_cp_requests+1;
+    if(dut.g_on.g_die[0].sfu_req[336]||dut.g_on.g_die[0].sfu_req[335:304]<32'ha0000||dut.g_on.g_die[0].sfu_req[335:304]>=32'ha0100||dut.g_on.g_die[0].sfu_req[308:304]!=0)fixture_observer_fault<=1;
+   end
+   if(dut.g_on.g_die[0].p_rsp_v[1]&&dut.g_on.g_die[0].sfu_rsp_r&&dut.g_on.g_die[0].sfu_route)
+    fixture_sfu_cp_returns<=fixture_sfu_cp_returns+1;
+   if(dut.g_on.g_die[0].nv_tx_v&&dut.g_on.g_die[0].nv_tx_r)begin
+    fixture_sfu_TXs<=fixture_sfu_TXs+1;
+    if(dut.g_on.g_die[0].nv_tx_owner!=sfu_held_frame[72:0]||dut.g_on.g_die[0].nv_tx_index!=fixture_sfu_TXs||dut.g_on.g_die[0].nv_tx_last!=(fixture_sfu_TXs==2))fixture_observer_fault<=1;
+   end
+   if(dut.g_on.g_die[0].g_sfu_native_vm.u_vm.result_ACK_v&&dut.g_on.g_die[0].g_sfu_native_vm.u_vm.result_ACK_r)begin
+    fixture_sfu_ACKs<=fixture_sfu_ACKs+1;
+    if(sfu_vm_publication_ACK_frame[72:0]!=sfu_held_frame[72:0]||(sfu_vm_publication_ACK_addr[31:0]!=64&&sfu_vm_publication_ACK_addr[31:0]!=96))fixture_observer_fault<=1;
+    else begin
+     slot=(sfu_vm_publication_ACK_addr[31:0]-64)/32;
+     if(seen_sfu_ACK[slot])fixture_observer_fault<=1;
+     seen_sfu_ACK[slot]<=1;
+    end
+   end
+   if(dut.g_on.g_die[0].sfu_release_v&&dut.g_on.g_die[0].peer_releases[0]&&dut.g_on.g_die[0].sfu_route)
+    fixture_sfu_releases<=fixture_sfu_releases+1;
+   if(sfu_publication_v[0]&&(!(&seen_sfu_ACK)||fixture_sfu_ACKs!=2||fixture_sfu_TXs!=3))fixture_observer_fault<=1;
   end
  end
 endmodule

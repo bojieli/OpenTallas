@@ -58,3 +58,43 @@ Lorentz adds this wrapper to actual files.f and chooses wrapper top BEFORE new
  alongside same-directory hbm_integrated_minimum_parent_inputs.inc. Lorentz must
  verify emitted generated wide-port layout and any API compilation diagnostics.
  No Bacon frontend, C++ compiler, math gate, primitive gate or runtime was run.
+
+CONTINUATION SOURCE (opt-in, first norm source snapshot remains immutable):
+Gibbs actual recipe GIBBS_TO_BACON_PARENT_SFU_FORMATTER_CONTINUATION_20261006.txt
+selects CASE1/fn1/tagc5000001, all64 golden results DIFFER from inputs. Provider
+BYTEa0000..a00ff preserves all norm input bytes. Native output WORD64..127 is
+an independent32SRAM extent. New session full73 uses JOB9234abce/GENa/TOKEN10002/
+POSfffff after actual prior warm/reset release. Same parent, no leaf replacement.
+
+prepare helper optional --sfu-vectors results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors
+verifies both immutable vector hashes and emits CASE1 into actual provider.
+Lorentz schedules +SFU_NEXT after first norm terminal, which runs ONLY the new
+actual SFU mechanism in the same parent/harness and avoids norm passing replay.
+Optional +CONTINUE_SFU instead runs norm thenSFU within the same model instance
+ONLY when the norm portion has not been run before. Do not run both. No new
+frontend/runtime by Bacon; Lorentz owns source-pin/header/compile diagnostics.
+Readonly SFU monitors count8CP reads/returns,3orderedfull73TX,2uniquecheckedSRAM
+ACKs,1realsharedreverseACK. Two held root responses compare all64 exact golden.
+Wrong highTOKEN offered enrollment refuses before matching positive; actual
+warm/publication/rootretire/CPLcontext/warm ACK drains. ENDstatus2 remains a real
+context terminal, NEVER a numerical RESULT or all-levers completion claim.
+
+FORMATTER CONTINUATION SOURCE BLOCKERS, confirmed directly by Gibbs:
+- selected parent external gather_book_valid -> u_shared.installed_book_valid
+  has no installed allocation/book-receipt producer inside current graph;
+- no released numerical96x512 score/ID producer/vector fixture supplied;
+- gather_result_published and gather_reverse_done are external callbacks with
+  no installed selected-ID consumer/publication/reverse receipt producer;
+- SM RESULT readsUR[fa], with launchUR0=inputTOKEN. No native SRAM/formatter
+  result-to-SMRESULT program/producer exists in supplied current locators.
+Actual hooks are rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv
+u_shared (.installed_book_valid/.result_published/.source_reverse_done),
+u_normal_store exposed normal_* source/consumer ports and u_formatter_provider
+publication_done/source_reverse_done; actualRESULT source
+rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv O_RESULT.
+The retained formatter benchmark's page() protocol pattern is NOT a released
+numerical producer. Do not use it or constantbookvalid/reverse_done/UR0echo to
+qualify this chain. Formatter flags remain1, execution0 until literal receipts
+and real payload producer arrive. Runtime emits explicit PARENT_FORMATTER_OPEN;
+only real SFU stage exactness can receive PASS, all_levers_qualified stays0.
+No formatter request is sent while these actual source bindings are missing.

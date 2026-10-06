@@ -22,7 +22,7 @@ RETAINED = {
  'eqy.mem': ('2ec27a9bd55debace006c7134037a22b4c47ae2ee2f252fd3172aebb29eac00b',160,512),
 }
 
-def prepare(source, output):
+def prepare(source, output, sfu_vectors=None):
     values = {}
     for name, (expected, count, width) in RETAINED.items():
         data = (source/name).read_bytes()
@@ -32,11 +32,34 @@ def prepare(source, output):
         if len(words) != count or any(len(w) != width//4 for w in words):
             raise ValueError(f'retained shape mismatch: {name}')
         values[name] = [int(w,16) for w in words]
+    sfu = None
+    if sfu_vectors is not None:
+        pins = {'sfu_req.mem':'ee4368a489f47aff06d2989932e3ed484317d7111cdab22d3cab99881fb6fd98',
+                'sfu_exp.mem':'6bdb97af9088f04dd8b1db1bd56d6c39d6c9a747f7153aea3ab83cf2d3f1172b'}
+        cases = {}
+        for name, expected in pins.items():
+            data = (sfu_vectors/name).read_bytes()
+            if hashlib.sha256(data).hexdigest() != expected:
+                raise ValueError(f'retained SFU source hash mismatch: {name}')
+            words=data.decode('ascii').split()
+            if len(words)!=10 or any(len(w)!=521 for w in words):
+                raise ValueError(f'retained SFU2083/2081 shape mismatch: {name}')
+            cases[name]=int(words[1],16)
+        req, exp=cases['sfu_req.mem'],cases['sfu_exp.mem']
+        changed=sum(((req>>(32*i))&0xffffffff)!=((exp>>(32*i))&0xffffffff) for i in range(64))
+        if req>>2048&7!=1 or req>>2051!=0xc5000001 or exp>>2048&1 or exp>>2049!=0xc5000001 or changed!=64:
+            raise ValueError('SFU continuation must select actual nonidentity CASE1')
+        sfu={'case':1,'fn':1,'tag':0xc5000001,'changed_lanes':changed,
+             'source_byte_base':0xa0000,'source_byte_limit':0xa0100,
+             'native_output_base':64,'native_output_span':64,'source_sha256':pins}
     # First validate all retained sources; then create a fresh immutable attempt.
     output.mkdir(parents=True, exist_ok=False)
     (output/'gold').mkdir()
     for name in RETAINED:
         shutil.copyfile(source/name,output/'gold'/name)
+    if sfu is not None:
+        for name in sfu['source_sha256']:
+            shutil.copyfile(sfu_vectors/name,output/'gold'/name)
     source_words = values['x.mem']+values['w.mem']
     rows = [{}, {}]
     for word, value in enumerate(source_words):
@@ -47,6 +70,14 @@ def prepare(source, output):
         if sector >= 2097152:
             raise ValueError('actual selected provider aliases source address')
         rows[slice_index][sector] = rows[slice_index].get(sector,0) | (value << (lane*8))
+    if sfu is not None:
+        req=cases['sfu_req.mem']
+        for word in range(64):
+            address=0xa0000+word*4
+            slice_index=(address>>7)&1
+            local=((address>>8)<<7)|(address&127)
+            sector,lane=local>>5,address&31
+            rows[slice_index][sector]=rows[slice_index].get(sector,0)|(((req>>(word*32))&0xffffffff)<<(lane*8))
     for die in range(2):
         for partition in range(2):
             image = rows[partition] if die == 0 else {0:0}
@@ -75,6 +106,7 @@ def prepare(source, output):
       'images_sha256':files,'input_mapping_words_checked':len(source_words),
       'runtime_verdict':None,'full_token_qualified':False,'physical_qualified':False,
       'SFU_execution_covered':False,'formatter_execution_covered':False,
+      'SFU_continuation_prepared':sfu,
     }
     (output/'fixture_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     return manifest
@@ -83,6 +115,7 @@ if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--retained-stage',type=Path,required=True)
     ap.add_argument('--output',type=Path,required=True)
+    ap.add_argument('--sfu-vectors',type=Path,help='optional authentic existing enabled_r1/vectors; prepares CASE1 only')
     args=ap.parse_args()
-    result=prepare(args.retained_stage,args.output)
+    result=prepare(args.retained_stage,args.output,args.sfu_vectors)
     print(json.dumps({'prepared':str(args.output),'input_mapping_words_checked':result['input_mapping_words_checked'],'runtime_verdict':None}))
