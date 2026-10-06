@@ -470,7 +470,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             reg [4:0]  rg_a;
             reg [NSEG-1:0] rg_cdec;
             always @(posedge clk) begin
+`ifdef QM5_MUTANT_RG
+                // negative control: the group word read one entry off (entry 4g + (rk ^ 1))
+                for (int g = 0; g < NGR; g++) rg_d[g] <= sh_w[(4 * g + (rk[1:0] ^ 2'd1)) < RPW ? 4 * g + (rk[1:0] ^ 2'd1) : 0];
+`else
                 for (int g = 0; g < NGR; g++) rg_d[g] <= sh_w[(4 * g + rk[1:0]) < RPW ? 4 * g + rk[1:0] : 0];
+`endif
                 rg_s <= rk[4:2]; rg_a <= rk;
             end
             always @(posedge clk or negedge rst_n)
