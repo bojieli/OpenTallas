@@ -5,7 +5,7 @@
 set ot_n 0
 foreach ot_i [[ord::get_db_block] getInsts] {
   set ot_nm [$ot_i getName]
-  if {![regexp {g_in\\?\[(\d)\\?\]\.u_in\.u_q\.g_tile\\?\[(\d)\\?\]\.g_m1\.u_m$} $ot_nm -> ot_l ot_t]} { continue }
+  if {![regexp {g_in\\?\[(\d)\\?\]\.u_in\.u_q\.g_tile\\?\[(\d)\\?\]\..*u_m$} $ot_nm -> ot_l ot_t]} { continue }
   set ot_e [expr {$ot_l % 2}]
   set ot_nn [expr {$ot_l / 2}]
   set ot_x [expr {$ot_e ? (2678.4 + $ot_t * 194.4) : (2224.8 + $ot_t * 194.4)}]
