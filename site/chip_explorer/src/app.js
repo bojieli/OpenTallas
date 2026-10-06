@@ -267,7 +267,7 @@ function drawDsRibbon(svg){
       if (n.r === r){ const dir = n.x > x ? 1 : -1; const xa = dir > 0 ? x + cw + 1 : x - 1, xb = dir > 0 ? n.x - 2 : n.x + cw + 2; dpath = `M${xa} ${ym} L${xb} ${ym}`; }
       else { turnHere = true; const right = r % 2 === 0; const xe = right ? x + cw + 1 : x - 1, xo = right ? x + cw + turn : x - turn; dpath = `M${xe} ${ym} C${xo} ${ym} ${xo} ${yn} ${right ? xe + 1 : xe - 1} ${yn}`; }
       link(linkG, dpath, {w: lwStage, arrow: true, flow: true, ends: [id, 'c' + (k + 1)], cls: turnHere ? 'turn' : '',
-        tip: linkTip(`Stage hop ${k} → ${k + 1}${turnHere ? ' (row turn)' : ''}`, L.ds_stage, `${vs(DATA.ds_hop, 4)} µs measured: link RTL + light-FEC PHY budget + UCIe + wire stages`)});
+        tip: linkTip(`Stage hop ${k} → ${k + 1}${turnHere ? ' (row turn)' : ''}`, L.ds_stage, `${vs(DATA.ds_hop, 4)} µs measured: link RTL + full RS(544,514) PHY budget (209 ns) + UCIe + wire stages; cable flight per hop class in the rack view`)});
       if (turnHere){ const right = r % 2 === 0; txt(lay, right ? x + cw + turn + 1 : x - turn - 1, (ym + yn) / 2 + 3, '↩', {fs: 11, anchor: right ? 'start' : 'end', fill: css('--muted')}).setAttribute('aria-hidden', 'true'); }
     }
   }
@@ -292,13 +292,13 @@ function drawDsRibbon(svg){
   const rowH = 2 * gs + 3 + (narrow ? 16 : 20);
   const lwD = lw(L.ds_draft);
   const rmid = r => primY + r * rowH + gs + 1;
-  link(linkG, `M${primX + 2 * (ps + pg) - pg + 1} ${primY + ps} L${trunkX} ${primY + ps} L${trunkX} ${rmid(gRows - 1)}`, {w: lwD + 1, ends: ['dp'], tip: linkTip('Draft trunk (15 replica links per primary die, bundled)', L.ds_draft, `draft hop ${vs(S.draft_hop, 3)} µs measured (ot_dsrom_link_ct)`)});
+  link(linkG, `M${primX + 2 * (ps + pg) - pg + 1} ${primY + ps} L${trunkX} ${primY + ps} L${trunkX} ${rmid(gRows - 1)}`, {w: lwD + 1, ends: ['dp'], tip: linkTip('Draft trunk (15 replica links per primary die, bundled)', L.ds_draft, `draft x-row link ${vs(S.draft_hop, 4)} µs measured (ot_dsrom_link_rt, full FEC)`)});
   for (let gi = 0; gi < groups; gi++){
     const r = Math.floor(gi / perG), c = gi % perG; const gx1 = gx0 + c * pitch, gy1 = primY + r * rowH;
     const id = 'dr' + gi;
     for (let q = 0; q < 4; q++) dieGlyph(svg, gx1 + (q % 2) * (gs + 3), gy1 + Math.floor(q / 2) * (gs + 3), gs, gs, mix(bg, css('--k-attn'), .45), null, {id});
     const xPrev = c === 0 ? trunkX : gx0 + (c - 1) * pitch + gW;
-    link(linkG, `M${xPrev} ${rmid(r)} L${gx1 - 1} ${rmid(r)}`, {w: lwD, flow: true, ends: ['dp', id], tip: linkTip(`Replica group ${gi}: DSpark block ${r}, expert group ${c}`, L.ds_draft, `4 dies, one link per primary rank die (light-FEC board + UCIe class)`)});
+    link(linkG, `M${xPrev} ${rmid(r)} L${gx1 - 1} ${rmid(r)}`, {w: lwD, flow: true, ends: ['dp', id], tip: linkTip(`Replica group ${gi}: DSpark block ${r}, expert group ${c}`, L.ds_draft, `4 dies, one link per primary rank die (board + UCIe class, full RS(544,514) FEC)`)});
   }
   for (let r = 0; r < 3 && r < gRows; r++) txt(lay, gx0 + (perG - 1) * pitch + gW + 4, rmid(r) + 3, narrow ? '' : `block ${r}`, {fs: 10});
   yb = primY + gRows * rowH + 4;
@@ -324,7 +324,7 @@ function drawDsStage(svg){
   linkDefs(svg);
   const bg = css('--die');
   const lay = svgEl('g', {}, svg), lk = svgEl('g', {}, svg);
-  let y = 18 + txtWrap(lay, 14, 18, `Stage view · stretch ${k}: ${s ? s.layers.join(', ') : ''} · TP4 rank dies, four HBM3E stacks each`, W - 28, {fs: 12.5});
+  let y = 18 + txtWrap(lay, 14, 18, `Stage view · stretch ${k}: ${s ? s.layers.join(', ') : ''} · TP4 rank dies (four HBM3E stacks on the 32 scan dies, one on the others)`, W - 28, {fs: 12.5});
   const stubW = wide ? 56 : Math.min(160, W * 0.4), stubH = wide ? 120 : 34;
   let dies = [], prev, next, H;
   if (wide){
@@ -365,7 +365,7 @@ function drawDsStage(svg){
     if (A.y === B.y) d = `M${A.x + A.w + 2} ${A.y + A.h / 2} L${B.x - 2} ${B.y + B.h / 2}`; else d = `M${A.x + A.w / 2} ${A.y + A.h + 13} L${B.x + B.w / 2} ${B.y - 13}`;
     link(lk, d, {w: lwT, dash: '6 4', ends: ['r' + a, 'r' + b], tip: linkTip(`TP4 collective link, rank ${a} ↔ rank ${b}`, L.ds_tp, 'all-gather and all-reduce inside the stage')});
   }
-  H += 8 + txtWrap(lay, 14, H, 'Dashed: TP4 collectives inside the stage (all-gather, all-reduce). Solid with arrows: stage hops over the light-FEC board link + UCIe fan-out. The die floorplan below is one of these rank dies.', W - 28, {fs: 11.5, fill: css('--ink')});
+  H += 8 + txtWrap(lay, 14, H, 'Dashed: TP4 collectives inside the stage (all-gather, all-reduce). Solid with arrows: stage hops over the board or cable link (full RS(544,514) FEC) + UCIe fan-out. The die floorplan below is the scan die (four stacks; 32 of the 324 layer dies); the other layer dies carry one stack.', W - 28, {fs: 11.5, fill: css('--ink')});
   sizeSvg(svg, W, H + 4);
   renderDsArrayRead(k);
 }
@@ -496,7 +496,7 @@ function renderRack(){
   const d = state.design, RD = rkData(), F = DATA.racks.frame, R = DATA.rates;
   const racks = val(RD.racks), C = val(RD.counts);
   const sum = k => racks.reduce((a, r) => a + r[k], 0);
-  const lede = { ds: `The S81 pipeline packed into Open Rack v3 racks with liquid-cooled 1 OU trays of four two-die packages, two pipeline stages a tray. ${racks.length} racks hold ${fmt0(C.dies)} dies. The packing is derived from the legacy rack study's tray, power and cable template; it is not a committed S81 rack design.`,
+  const lede = { ds: `The S81 pipeline packed into Open Rack v3 racks with liquid-cooled 1 OU trays of four two-die packages, two pipeline stages a tray. ${racks.length} racks hold ${fmt0(C.dies)} dies. Two stages share a tray; the chain runs down R1 and up R2 with one rack crossing, the head trays sit beside stage 0 and the draft trays beside the head. Every off-package link runs full RS(544,514) FEC. Packing from the committed S81 rack record on the legacy rack study's tray, power and cable template.`,
     hbm: `The HBM accelerator's ${fmt0(C.dies)} dies in ${C.packages} two-die packages, four packages a liquid-cooled 1 OU tray, around one Tomahawk-Ultra tier of ${C.switch_chips} switch chips. Every package stripes ${C.ports_per_package} ports of 800G over the switch chips, so each collective is one or two switch crossings.`,
     qwen: 'The Qwen ROM TP4 group is two two-die packages on one tray: a rack holds many independent groups, and one is drawn. Shown for scale beside the two array machines.' }[d];
   $('rackLede').textContent = lede;
@@ -580,7 +580,7 @@ function drawRack(){
     link(lk, path, {w: lw(L.ds_stage), hit: 6, flow: true, tip: linkTip('Token path through the stage trays', L.ds_stage, `${val(RD.hops).tray} hops inside a tray, ${val(RD.hops).rack} tray to tray, ${val(RD.hops).cross} rack to rack`)});
     // token return: last stage back to the head tray
     const head = trayPos.find(t => t.row.kind === 'head'); const last = centers[C.stages - 1];
-    if (head && last){ const hx = head.x + head.w / 2, hy = head.y + head.h / 2; const ym = y0 + elevH + 44; link(lk, `M${last[0]} ${last[1]} L${last[0]} ${ym} L${hx} ${ym} L${hx} ${hy}`, {w: 2, dash: '5 4', tip: linkTip('Token return: last stage to the head dies', null, `${vs(DATA.ds_system.draft_hop, 3)} µs draft hop class; token return ${fmt(1.155, 3)} µs measured`)}); }
+    if (head && last){ const hx = head.x + head.w / 2, hy = head.y + head.h / 2; const ym = y0 + elevH + 44; link(lk, `M${last[0]} ${last[1]} L${last[0]} ${ym} L${hx} ${ym} L${hx} ${hy}`, {w: 2, dash: '5 4', tip: linkTip('Head hop: last stage to the head dies (rack to rack)', null, `head hop ${esc(val(DATA.ds_system.head_hop))}; token return (head → S0, beside it in R1) ${vs(DATA.ds_system.token_return_us, 3)} µs measured, full FEC`)}); }
   } else if (d === 'hbm'){
     const sw = racks[0].rows.filter(r => r.kind === 'switch');
     const rk = racks[0], x = rackX0, bx = x + (frameW - bayW) / 2 * k;
@@ -622,7 +622,7 @@ function drawRack(){
     sel.row.pk.forEach((p, i) => {
       const [cx, cy] = loop[i]; const s = pk * kk; const x = cx - s / 2, y = cy - s / 2;
       svgEl('rect', {x, y, width: s, height: s, fill: css('--die'), stroke: css('--die-edge'), 'stroke-width': 1, rx: 2}, svg);
-      // two dies side by side (rotated to portrait), four stacks on each outer edge
+      // two dies side by side (rotated to portrait), the die's HBM stacks (p.k, default four) on its outer edge
       const dW = dm[0] * kk, dH = dm[1] * kk, gapD = 1.5 * kk;
       p.d.forEach((id, j) => {
         const dx = cx - (p.d.length * dW + (p.d.length - 1) * gapD) / 2 + j * (dW + gapD), dy = cy - dH / 2;
@@ -632,7 +632,7 @@ function drawRack(){
         g.addEventListener('mousemove', ev => showTip(`<b>${esc(dieRole(p, id))}</b><br>package ${p.id} · ${esc(val(rkData().racks)[sel.ri].name)} OU ${sel.row.ou}<br>click to open this die in The die`, ev));
         g.addEventListener('mouseleave', hideTip);
         keyActivate(g, () => jumpToDie(`${dieRole(p, id)} · ${val(rkData().racks)[sel.ri].name}, OU ${sel.row.ou}, package ${p.id}`));
-        for (let q = 0; q < 4; q++){ const hx = j === 0 ? dx - hm * kk - 1 : dx + dW + 1; svgEl('rect', {x: hx, y: dy + q * (dH / 4) + 0.5, width: hm * kk, height: Math.min(hm * kk, dH / 4 - 1), fill: css('--k-hbm')}, svg); }
+        for (let q = 0; q < (p.k ?? 4); q++){ const hx = j === 0 ? dx - hm * kk - 1 : dx + dW + 1; svgEl('rect', {x: hx, y: dy + q * (dH / 4) + 0.5, width: hm * kk, height: Math.min(hm * kk, dH / 4 - 1), fill: css('--k-hbm')}, svg); }
       });
     });
     txt(lay, tx, ty + th + 14, `${np} packages · ${fmt0(pk)} mm · ${fmt(sel.row.w, 0)} W of chips`, {fs: 10.5});
@@ -646,7 +646,7 @@ function renderRackRead(sel){
   const dies = sel.row.pk.reduce((a, p) => a + p.d.length, 0);
   const lim = val(F.cooling_limit_w);
   $('rackRead').innerHTML = `<div class="eyebrow">${esc(rk.name)} · OU ${sel.row.ou} · ${esc(RK_KIND[sel.row.kind][0])}</div><h3>${esc(sel.row.label)}</h3>
-    <dl><dt>Packages</dt><dd>${sel.row.pk.length}</dd><dt>Dies</dt><dd>${dies}</dd><dt>Chip power</dt><dd>${fmt(sel.row.w, 0)} W</dd>
+    <dl><dt>Packages</dt><dd>${sel.row.pk.length}</dd><dt>Dies</dt><dd>${dies}</dd>${sel.row.stacks != null ? `<dt>HBM3E stacks</dt><dd>${sel.row.stacks} (${esc(sel.row.pk.map(p => p.k).join('/'))} a die)</dd>` : ''}<dt>Chip power</dt><dd>${fmt(sel.row.w, 0)} W</dd>
     <dt>Per die</dt><dd>${fmt(sel.row.w / dies, 1)} W of ${fmt0(lim)} W liquid limit</dd><dt>At the wall</dt><dd>${fmt(sel.row.w * val(F.wall_factor), 0)} W</dd></dl>
     <div class="eyebrow" style="margin-top:12px">Dies on this tray</div><p style="font-size:12.5px;margin-top:4px">${esc(trayDies(sel.row))}</p>
     <div class="eyebrow" style="margin-top:12px">Rack ${esc(rk.name)}</div>
@@ -667,7 +667,7 @@ function rackTables(){
   $('rackSrc').innerHTML = `${linkBW}. ${ctx}<br>${esc(RD.racks.note || '')} ${pill(st(RD.racks))} ${esc(RD.racks.src)}`;
   const lc = val(RD.links);
   $('linkTable').innerHTML = `<thead><tr><th>Class</th><th>Carries</th><th>Medium</th><th class="n">ns / hop</th><th class="n">GB/s</th><th>Status</th></tr></thead><tbody>${lc.map(l => `<tr title="${esc(l.src)}"><td class="mono" style="white-space:nowrap">${esc(l.cls)}</td><td>${esc(l.what)}</td><td>${esc(l.medium)}</td><td class="n">${l.ns == null ? '—' : fmt(l.ns, 1) + (l.ns_hi ? '–' + fmt(l.ns_hi, 0) : '')}</td><td class="n">${l.GBps == null ? '—' : fmt0(l.GBps)}</td><td>${pill(l.st)}</td></tr>`).join('')}</tbody>`;
-  if (d === 'ds'){ const h = val(RD.hops); const kx = val(RD.kp4_extra_us); $('linkNote').innerHTML = `Stage hops in this packing: <b>${h.tray}</b> inside a tray, <b>${h.rack}</b> tray to tray, <b>${h.cross}</b> rack to rack, plus the token return ${pill(st(RD.hops))}. The composition prices every hop on the light-FEC board link; light FEC is not qualified on rack copper, so if the ${h.rack + h.cross} cable hops run full RS(544,514) each costs +${fmt(kx, 4)} µs, +${fmt((h.rack + h.cross) * kx, 2)} µs a token ${pill(st(RD.kp4_extra_us))}.`; }
+  if (d === 'ds'){ const h = val(RD.hops); const f = val(RD.fec); $('linkNote').innerHTML = `Stage hops in this packing: <b>${h.tray}</b> inside a tray, <b>${h.rack}</b> tray to tray, <b>${h.cross}</b> rack to rack (the minimum for 81 stages at two a tray), plus the head hop and the token return ${pill(st(RD.hops))}. Owner baseline (2026-10-06): every off-package link runs full RS(544,514) FEC, board and cable alike; no light FEC anywhere. Each hop is the measured ${fmt(f.hop_us, 4)} µs full-FEC hop (was ${fmt(f.hop_light_us_was, 4)} µs on light FEC), every TP4 collective +${f.coll_delta_cycles} cycles, and the cable flight beyond 0.3 m adds ${fmt(f.cable_flight_us, 3)} µs a token. Against the superseded light-FEC row: DS ROM ${fmt(f.d_AR_tok_s, 1)} tok/s AR (+${fmt(f.d_AR_us, 2)} µs), ${fmt(f.d_MTP_tok_s, 1)} tok/s MTP; the HBM accelerator pays +${fmt(f.hbm_d_us, 2)} µs over ${f.hbm_crossings} switch crossings ${pill(st(RD.fec))}.`; }
   else $('linkNote').innerHTML = esc(RD.links.src);
 }
 function jumpToDie(label){

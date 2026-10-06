@@ -47,7 +47,7 @@ module ot_dsrom_wfc_vm_caller_adapter #(parameter ENABLE=0)(
   assign xb_ready=request_v&&request_ready&&include_b;
   assign memory_step=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&(state==IDLE||state==ISSUE||state==WRITE_REQUEST);
   assign read_step=state==WRITE_REQUEST?1'b0:state==ISSUE?flags[RA]:1'b1;
-  assign write_step=state==ISSUE?flags[WA]:1'b1;
+  assign write_step=!(state==ISSUE&&flags[PAIRED]);
   assign advance=cold_n&&fast_rst_n&&slow_rst_n&&!fault&&!initializing&&
     ((state==IDLE&&!event_v&&!pending)||(state==ISSUE&&(flags[RA]||flags[WA]))||(state==CAPTURE&&flags[RA]));
   // Quiet is a real protected visible fact; transport debt still retires later.
