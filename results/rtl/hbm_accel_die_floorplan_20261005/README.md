@@ -144,7 +144,7 @@ The adopted round also takes the **measured attention-tile outline** (16 `ot_att
 | Mean bundle | 61 | 55 | 5 + 6 | 27 | 38 | +51.34 us | 526.148 | 1,900.6 | 3,774.1 | 2,132.0 | 1,027.7 |
 | **Floor:** Manhattan between placed stations and pins | 48 | 45 | 3 + 3 | 22 | 33 | **+37.92 us (+8.0 %)** | 512.725 | 1,950.4 | 3,820.7 | 2,136.6 | 1,028.7 |
 
-Per-token terms at the bound: x multicast 17.2 us (291 x 71), barrier tree delta 16.6 us (343 x (2 x 58 - 58)), endpoint <-> SerDes 15.8 us (305 x 2 x 31, incl. meso), SU <-> endpoint 2.7 us, expert fetch 2.6 us, query 1.3 us, KV / index / attention-out 2.2 us. With the HBM levers (`tools/three_machine_compose.py`) the HBM accelerator stands at AR 2,038.6 / 2,069.4 / 2,126.9 tok/s and MTP 4,030.6 / 4,059.3 / 4,111.7 tok/s (bound / median / floor; r14b: 2,103.6 / 2,132.0 / 2,182.6 and 4,090.7 / 4,116.3 / 4,161.1).
+Per-token terms at the bound: x multicast 17.2 us (291 x 71), barrier tree delta 16.6 us (343 x (2 x 58 - 58)), endpoint <-> SerDes 15.8 us (305 x 2 x 31, incl. meso), SU <-> endpoint 2.7 us, expert fetch 2.6 us, query 1.3 us, KV / index / attention-out 2.2 us. With the HBM levers and full FEC on the off-package links (`tools/three_machine_compose.py`, main 2026-10-06) the HBM accelerator stands at AR 1,921.5 / 1,948.8 / 1,999.7 tok/s and MTP 3,917.2 / 3,944.2 / 3,993.7 tok/s (bound / median / floor; with the r14b wire: 1,979.1 / 2,004.3 / 2,048.9 and 3,973.8 / 3,998.1 / 4,040.3).
 
 **Results, r14b** (superseded; measured with the 16 S SMs mirrored, see section 0).
 

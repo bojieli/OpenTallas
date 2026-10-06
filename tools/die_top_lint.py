@@ -983,24 +983,49 @@ def gap(die, m, ports_w):
     return out
 
 
+HBM_CDC_HOSTS = {           # HBM die: blocks whose abstract holds the CDC of their crossings (domains.sdc H* / X* / L*)
+    'hfd_svc_': 'async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)',
+    'hfd_su': 'ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages', 'hfd_sfu': 'ratio CDC 3:4 at the SFU hub ports',
+    'hfd_hc': 'ratio CDC 3:4 at the HC hub ports', 'hfd_quant': 'ratio CDC 3:4 at the quantiser hub ports',
+    'hfd_coll': 'core <-> pclk inside ot_hbm_accel_tu_endpoint'}
+_DOM = {'stream': 'stream_1p2', 'serial': 'serial_0p9', 'hbm': 'hbm', 'link': 'link'}
+
+
 def domain_crossings(m):
     """every non-clock bus whose endpoints sit in different clock DOMAINS (independent of region): each needs a
-    ratio / async FIFO or a CDC element at one end."""
+    ratio / async FIFO or a CDC element at one end.  HBM r15+: forwarded stations carry their source's clock (no
+    domain of their own), meso / launch stations are CDC elements on their region clock, and a crossing that ends in a
+    block holding the CDC (HBM_CDC_HOSTS) is listed as attributed."""
     by = {it.name: it for it in m['insts']}
+    clocked = m.get('clocked', {})
+    hbm = bool(m.get('fclk'))
     out = defaultdict(lambda: dict(buses=0, bits=0, examples=[]))
+    att = defaultdict(lambda: dict(buses=0, bits=0, examples=[], cdc=None))
     for bid, cls, nb, eps in m['buses']:
-        if cls in ('clock_trunk', 'reset'):
+        if cls in ('clock_trunk', 'reset', 'reset_tree'):
             continue
         if any(by[i].kind in ('cdc', 'xfifo') for i, _ in eps):
             continue                 # ends in a CDC element / CDC FIFO cluster (its two clocks are pins of it)
-        ds = [by[i].domain for i, _ in eps]
+        if hbm and any(by[i].kind == 'waypoint' and i in clocked for i, _ in eps):
+            continue                 # a meso / launch station: the FIFO / launch register is the crossing
+        ds = []
+        for i, _ in eps:
+            if hbm and by[i].kind == 'waypoint':
+                continue             # forwarded station: the clock of its source travels with the data
+            ds.append(_DOM.get(clocked.get(i), by[i].domain))
         if len(set(ds)) > 1:
-            r = out[f'{cls}|{"->".join(ds)}']
+            host = next((v for k, v in HBM_CDC_HOSTS.items() for i, _ in eps if hbm and by[i].master.startswith(k)), None)
+            r = (att if host else out)[f'{cls}|{"->".join(ds)}']
             r['buses'] += 1
             r['bits'] += nb
+            if host:
+                r['cdc'] = host
             if len(r['examples']) < 3:
                 r['examples'].append(bid)
-    return dict(out)
+    res = dict(out)
+    if hbm:
+        res = dict(unattributed=dict(out), attributed_to_block_cdc=dict(att))
+    return res
 
 
 def region_crossings(die, m):

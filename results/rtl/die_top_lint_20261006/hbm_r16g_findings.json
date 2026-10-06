@@ -6,7 +6,7 @@
  "lint_record": "hbm_r16g_lint_top_lint.json",
  "verilator": {
   "rc": 0,
-  "time_s": 11.02,
+  "time_s": 11.17,
   "peak_GB": 0.12,
   "counts": {
    "Warning-PINMISSING": {
@@ -197,6 +197,22 @@
    "owner_2026_10_06": "HBM-SM element",
    "status_r16g": "OPEN (HBM-SM element owner)",
    "evidence_r16g": "hardened _bb views declare no parameters"
+  },
+  {
+   "id": "domain_crossings",
+   "block": "die",
+   "cls": "check added on main after 2026-10-06 (Qwen ROM die lint)",
+   "owner_2026_10_06": "-",
+   "status_r16g": "PASS",
+   "evidence_r16g": "unattributed: {}; attributed to block CDC: ['attn_out|stream_1p2->serial_0p9', 'hub|serial_0p9->stream_1p2', 'hub|stream_1p2->serial_0p9', 'weight_req|stream_1p2->hbm', 'weight|hbm->stream_1p2']"
+  },
+  {
+   "id": "abstract_ports_without_net",
+   "block": "die",
+   "cls": "check added on main after 2026-10-06 (Qwen ROM die lint)",
+   "owner_2026_10_06": "-",
+   "status_r16g": "PASS",
+   "evidence_r16g": "{}"
   }
  ]
 }

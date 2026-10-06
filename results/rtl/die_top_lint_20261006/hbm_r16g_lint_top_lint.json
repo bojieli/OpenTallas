@@ -3,8 +3,17 @@
  "die": "hbm",
  "top_fix": false,
  "generator": "tools/hbm_accel_die_fp.py",
- "generator_sha256": "f7b5563620283f08abeccdce432a26c6925c299f81e55f7207c7d6c2e9591af9",
- "lint_tool_sha256": "59e659f4d06ec984c400919b2666ccab7d7f67b43f43e54e539139373dc50a27",
+ "generator_sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+ "generator_tag": {
+  "file": "tools/hbm_accel_die_fp.py",
+  "sha256": "c1e674fad8b1f581f0bc9ccd243383fc8b0b76ac432ea09daebe957e4d37d44c",
+  "tree_head": "e2b45f8e8c0b30d395b1232dda00e9c8073b0acb",
+  "file_commit": "e2b45f8e8c0b30d395b1232dda00e9c8073b0acb"
+ },
+ "qwen_source": null,
+ "qwen_recipe": null,
+ "pin_fit_errors": {},
+ "lint_tool_sha256": "9d5ef26e7168265410a54696d5f44bf7affbfbc0110530ac1cdc4af706d00e82",
  "variant": {
   "n_mirror_fix": true,
   "x_chain": true,
@@ -1365,6 +1374,61 @@
     "buses": 1,
     "bits": 1
    }
+  },
+  "clock_domain_crossings": {
+   "unattributed": {},
+   "attributed_to_block_cdc": {
+    "weight|hbm->stream_1p2": {
+     "buses": 16,
+     "bits": 17584,
+     "examples": [
+      "wl_sm0",
+      "wl_sm1",
+      "wl_sm2"
+     ],
+     "cdc": "async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)"
+    },
+    "weight_req|stream_1p2->hbm": {
+     "buses": 16,
+     "bits": 704,
+     "examples": [
+      "rq_sm0",
+      "rq_sm1",
+      "rq_sm2"
+     ],
+     "cdc": "async hbm <-> stream FIFOs inside the stream service (ledger: 8 x ot_hbm_accel_cdc_fifo_r2)"
+    },
+    "attn_out|stream_1p2->serial_0p9": {
+     "buses": 4,
+     "bits": 4232,
+     "examples": [
+      "ao_SW",
+      "ao_SE",
+      "ao_NW"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    },
+    "hub|stream_1p2->serial_0p9": {
+     "buses": 13,
+     "bits": 11792,
+     "examples": [
+      "hb_vm_quant",
+      "hb_vm_su_SW",
+      "hb_coll_su_SW"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    },
+    "hub|serial_0p9->stream_1p2": {
+     "buses": 12,
+     "bits": 13312,
+     "examples": [
+      "hb_su_SW_vm",
+      "hb_su_SW_coll",
+      "hb_su_SW_router"
+     ],
+     "cdc": "ratio CDC 3:4 in the SU HUB_IN / HUB_OUT stages"
+    }
+   }
   }
  },
  "block_shape": {
@@ -1521,6 +1585,7 @@
    "instantiated_in_die_top": 0
   }
  },
+ "abstract_ports_without_net": {},
  "top_fixes": {},
  "verilog": {
   "top": "hbm_r16g_lint_top",
