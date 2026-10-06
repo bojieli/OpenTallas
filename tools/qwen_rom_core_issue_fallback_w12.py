@@ -418,7 +418,9 @@ def apply_pinreg(text: str) -> str:
                         previous cycles (registered at the pin) masks it, so a write the registered status predates
                         is never passed (a stale 1 only delays).
     The weight-ROM address select (unit buses -> ROM) leaves the block as ot_qwen_core_wrom_port.
-    DEC_LA_PINREG 2 / 3 are NEGATIVE CONTROLS: 2 = no kv_we mask, 3 = prog_q registered but pend1 not delayed."""
+      kv_ok / me_mem_ok registered (masks: see the kv block); me_mem_ok is a static readiness in the ROM die.
+    DEC_LA_PINREG 2 / 3 are NEGATIVE CONTROLS: 2 = registered status without masks, 3 = prog_q registered but pend1
+    not delayed."""
     text = _rep(text, "    parameter integer DEC_LA = 0,\n",
                 "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_PINREG = 0,\n") \
         if "    parameter integer DEC_LA = 0,\n" in text else \
@@ -449,14 +451,38 @@ def apply_pinreg(text: str) -> str:
         if (!rst_n) begin pr_kvd_q <= 1'b1; pr_kvwe_q <= {SW{1'b0}}; pr_kvwe_qq <= 1'b0; end
         else begin pr_kvd_q <= kv_write_drained; pr_kvwe_q <= kv_we; pr_kvwe_qq <= |pr_kvwe_q; end
     wire kv_write_drained_i = (DEC_LA_PINREG == 0) ? kv_write_drained :
-                            (DEC_LA_PINREG == 2) ? pr_kvd_q : (pr_kvd_q && !(|pr_kvwe_q) && !pr_kvwe_qq);
+                            (DEC_LA_PINREG == 2) ? pr_kvd_q : (pr_kvd_q && !(|pr_kvwe_q) && !pr_kvwe_qq);   // 2: NEGATIVE CONTROL (no masks)
 """
     import re
     end = text.index("\nendmodule", hdr_end)
     core_body = text[hdr_end:end]
-    for n in ("rst_n", "start", "token", "pos", "prog_q", "kv_write_drained"):
+    for n in ("rst_n", "start", "token", "pos", "prog_q", "kv_write_drained", "kv_ok", "me_mem_ok"):
         core_body = re.sub(r"(?<![.\w`])%s(?![\w])" % n, n + "_i", core_body)
     text = text[:hdr_end] + block + core_body + text[end:]
+    # kv_ok / me_mem_ok: registered at the pin; their consumers are declared in the body, so the masks go in front of
+    # the first use (kv_gate).
+    kvblk = """    // ---- DEC_LA_PINREG: kv_ok and me_mem_ok registered at the pin ----
+    //: kv_ok (KV service) falls on a descriptor (kvd_v pulse, accepted at the next edge) and while a token K/V write
+    //: from the stream unit is in flight; the registered copy is one cycle old, so it is masked on the descriptor's
+    //: cycle AND the next, and for the whole of a stream-unit op that writes KV (dst 2), until the core sees the unit
+    //: idle (registered, SUIF), by which time the registered kv_ok covers the write's landing.
+    //: me_mem_ok: in the ROM die every engine-side memory is a fixed-latency ROM (no back-pressure): it is the
+    //: services' static readiness after reset, so the registered copy only adds one stalled cycle after reset
+    //: (a fault, which is fatal, is seen one engine edge later).
+    reg pr_kvok_q, pr_kvdv_q, pr_su_kv, pr_mmo_q;
+    always @(posedge clk or negedge rst_n_i)
+        if (!rst_n_i) begin pr_kvok_q <= 1'b0; pr_kvdv_q <= 1'b0; pr_su_kv <= 1'b0; pr_mmo_q <= 1'b0; end
+        else begin
+            pr_kvok_q <= kv_ok; pr_kvdv_q <= kvd_v; pr_mmo_q <= me_mem_ok;
+            if (su_go && dst == 2'd2) pr_su_kv <= 1'b1; else if (su_idle) pr_su_kv <= 1'b0;
+        end
+    wire kv_ok_i = (DEC_LA_PINREG == 0) ? kv_ok :
+                   (DEC_LA_PINREG == 2) ? pr_kvok_q : (pr_kvok_q && !pr_kvdv_q && !pr_su_kv);
+    wire me_mem_ok_i = (DEC_LA_PINREG == 0) ? me_mem_ok : pr_mmo_q;
+"""
+    k = text.index("    wire kv_gate = ")
+    k = text.rfind("\n", 0, text.rfind("\n", 0, k)) + 1      # before the two comment lines above kv_gate
+    text = text[:k] + kvblk + text[k:]
     # program-read latency +1 (pend0 -> pend1)
     text = _rep(text, "prog_re <= 1'b0; pend1 <= 1'b0;\n", "prog_re <= 1'b0; pend1 <= 1'b0; pend0 <= 1'b0;\n")
     text = _rep(text, "            pend1 <= prog_re && (st != S_IDLE);\n",
