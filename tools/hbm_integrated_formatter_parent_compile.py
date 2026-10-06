@@ -19,7 +19,8 @@ PARAMS=dict(ENABLE=1,COMBINED_ENABLE=1,W2_RESULT_ENABLE=1,W2_SECTOR_ENABLE=1,
     SU_REGISTERED_BOUNDARY=1,SU_BALANCED_OWNER_BOUNDARY=1,SU_FOUR_COMBINATIONAL_CUTS=1,
     SU_FAST_OWNER_FRONTIER=1,ND=2,NSM=2,NS=2,NPC=2,MEM_WORDS=2097152,VM_AW=21,
     FORMATTER_ENABLE=1,NORMAL_GATHER_ENABLE=1,LOCAL_CP_RESET_ENABLE=1,TW=17,PW=20,IMW=14,
-    SFU_C12_ENABLE=1,SFU_NATIVE_VM_ENABLE=1)
+    SFU_C12_ENABLE=1,SFU_NATIVE_VM_ENABLE=1,NORM_C12_ENABLE=1,
+    NORM_KIND=0,NORM_N=64,NORM_D=5120,NORM_RD=0,NORM_AW=24,NORM_PUBLISH_QUANT=1)
 INCLUDES=['rtl/test/tb_hdc_v41x_vec_fields.svh',SELECTED]
 # Compiler partitions only. Every block is the real selected module body;
 # Verilator derives each parameter variant and connects generated leaf wrappers.
@@ -33,7 +34,8 @@ HIER_BLOCKS=[
     'ot_hbm_selected_c12__ot_hdc_v41x_rsqrt',
     'ot_hbm_selected_c12__ot_hdc_v41x_fdiv',
     'ot_hbm_selected_c12__ot_hdc_v41x_softplus',
-    'ot_hbm_selected_c12__ot_hbm_sfu_result_c12']
+    'ot_hbm_selected_c12__ot_hbm_sfu_result_c12',
+    'ot_dsrom_su_norm_mix','ot_dsrom_rsqrt','ot_dsrom_su_norm']
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
@@ -169,7 +171,8 @@ def run(a):
         raise ValueError('Full-parent compile only on E2 NVMe through unchanged guard')
     if socket.gethostname()!=a.epyc2_hostname:raise ValueError('Execution host differs from measured E2 identity')
     if not a.tool.is_file():raise FileNotFoundError('Actual Verilator tool missing')
-    if (work/'frontend.exit').exists() or (work/'elaboration.log').exists():
+    stem='hierarchy_plan' if a.plan else 'elaboration'
+    if (work/'frontend.exit').exists() or (work/(stem+'.log')).exists():
         raise FileExistsError('Preserve prior compile; no duplicate/restart')
     receipt=work/('post_guard.json' if a.admitted else 'pre_guard.json')
     if receipt.exists() or (not a.admitted and (work/'guard_command.json').exists()):
@@ -189,7 +192,7 @@ def run(a):
     write(receipt,snap)
     if not fits(snap,a):print('CAPACITY_REFUSAL no compiler: '+json.dumps(snap));return 75
     if not a.admitted:
-        cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--run',
+        cmd=[str(guard),str(a.memory_gib),'--',sys.executable,str(work/'runner.py'),'--plan' if a.plan else '--run',
             '--work',str(work),'--tool',str(a.tool.resolve()),'--memory-gib',str(a.memory_gib),
             '--cpu-cores',str(a.cpu_cores),'--disk-reserve-bytes',str(a.disk_reserve_bytes),
             '--epyc2-hostname',a.epyc2_hostname,'--admitted']
@@ -203,13 +206,21 @@ def run(a):
          '-Werror-LATCH','--build-jobs','1','--verilate-jobs','1','--hierarchical-threads','1',
          '--top-module','ot_ds_hbm_cluster20_integrated','--Mdir',str(obj),
          *[f'-G{k}={v}' for k,v in m['parameters'].items()],'hierarchy.vlt','-f','files.f']
+    if a.plan:
+        # --make json writes the real derived block/parameter/dependency graph
+        # without invoking child frontends. It is inventory, never proof PASS.
+        cmd+=['--make','json']
     write(work/'command.json',cmd)
     env=dict(os.environ,TMPDIR=str(tmp))
-    with (work/'elaboration.log').open('w') as log:
+    with (work/(stem+'.log')).open('x') as log:
         rc=subprocess.run(['/usr/bin/time','-v','-o',str(work/'resources.log'),*cmd],
                           cwd=work/'src',env=env,stdout=log,stderr=subprocess.STDOUT).returncode
-    (work/'frontend.exit').write_text(str(rc)+'\n')
-    log=(work/'elaboration.log').read_text()
+    (work/('plan.exit' if a.plan else 'frontend.exit')).write_text(str(rc)+'\n')
+    log=(work/(stem+'.log')).read_text()
+    if a.plan:
+        write(work/'hierarchy_plan.json',dict(frontend_exit=rc,generated_files=[str(p.relative_to(work)) for p in obj.rglob('*') if p.is_file()],
+              parameters=m['parameters'],source_sha256=m['source_sha256'],full_parent_elaborated=False))
+        return rc
     dangerous=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',log)
     leaves=list(obj.glob('*__hierMkArgs.f'))
     hierarchy_complete=bool(leaves) and (obj/'Vot_ds_hbm_cluster20_integrated.h').is_file()
@@ -222,7 +233,7 @@ def run(a):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true')
+    g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true')
     p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
