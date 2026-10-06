@@ -7,13 +7,13 @@
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
   "sha256": "8337b225c5e7c77e3b9eb89f93e365c011c800c6b512d05060a7e44ba78fd26c",
-  "tree_head": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d",
-  "file_commit": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d"
+  "tree_head": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9",
+  "file_commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "5c61fdfac33c1e7618cc405e5dfeabfee7edcc9d",
+  "commit": "768dee5fb7dcc42e2eb21be2ddb6fa7b440349f9",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -31,11 +31,11 @@
   "r18": true
  },
  "pin_fit_errors": {},
- "lint_tool_sha256": "f03eef0d702bec770504e6d6473efd7ca58ec22b1cd9cea70fa109a330b99a56",
+ "lint_tool_sha256": "08e3d8858a78d00142b74d39469fec34a11f2e1591558028cc9cca841d6c5bf7",
  "variant": null,
  "census": {
   "instances": 3334,
-  "buses": 6615,
+  "buses": 6871,
   "net_bits": 2795406,
   "masters": 41,
   "real_instances": 132,
@@ -905,11 +905,11 @@
     "bits": 6336
    },
    "hbm_cdc|domain": {
-    "buses": 128,
+    "buses": 256,
     "bits": 78464
    },
    "cdc_core|domain": {
-    "buses": 84,
+    "buses": 168,
     "bits": 49140
    },
    "phy_dfi|region": {

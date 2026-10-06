@@ -83,6 +83,8 @@ STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack
 # endpoint grown to take the 32 CDC core sides and the KV-new write; kept under the lfifo_<stack> name); an IO-band
 # CDC slot (io_xfifo, IOX_W long) beside the collective; the PHY clk / rst_n leave the dfi bundle
 R18 = False
+CDC_HO = 319                   # h_cred 3 + h_wv 1 + h_wsec 24 + h_cv 1 + h_csec 24 + h_cdata 256 + h_ctag 9 + h_fault 1
+CDC_CO = 283                   # l_v 1 + l_sec 17 + l_row 8 + l_data 256 + l_pop 1 (l_* = the element's W face)
 KVC_W = 96.768
 IOX_W = 400.032
 IOX_GAP = 40.176                # r18e: routing gap each side of io_xfifo (r18c i5: M4-M9 1.18-1.41 at 4.3 um gaps)
@@ -571,8 +573,13 @@ def buses(m):
     for st, res in m['renges'].items():
         if R18:
             for p, cd in enumerate(m['cdcs'][st]):
-                B.append((f'cdh_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'], [(f'ctrl_{st}', f'c{p}'), (cd.name, 'h')]))
-                B.append((f'cdc_{st}_{p}', 'cdc_core', CDC['core_bits'], [(cd.name, 'c'), (m['lfifos'][st].name, f'c{p}')]))
+                # the closed element's four pin faces (route r11a, ot_qwen_stream4_cdc_pc RSEL=1): HCLK outputs E,
+                # HCLK inputs N, landing outputs (+ l_pop) W, write-queue / write-done side S
+                kvn = m['lfifos'][st].name
+                B.append((f'cdho_{st}_{p}', 'hbm_cdc', CDC_HO, [(cd.name, 'ho'), (f'ctrl_{st}', f'c{p}i')]))
+                B.append((f'cdhi_{st}_{p}', 'hbm_cdc', CDC['hbm_bits'] - CDC_HO, [(f'ctrl_{st}', f'c{p}o'), (cd.name, 'hi')]))
+                B.append((f'cdco_{st}_{p}', 'cdc_core', CDC_CO, [(cd.name, 'co'), (kvn, f'c{p}i')]))
+                B.append((f'cdci_{st}_{p}', 'cdc_core', CDC['core_bits'] - CDC_CO, [(kvn, f'c{p}o'), (cd.name, 'ci')]))
             B.append((f'dfi_{st}', 'phy_dfi', len(phy_pins()), [(f'ctrl_{st}', 'phy'), (f'phy_{st}', '*dfi')]))
             continue
         B.append((f'fan_{st}_s', 'strip_fan', LINK_TRACKS, [(f'lfifo_{st}', 'fs'), (res[2].name, 'fn')]))
@@ -706,10 +713,21 @@ def masters(m, k=1, port_bits=None):
                 c.ports.pop(o)
         cds = m['cdcs'][st0]
         for p, cd in enumerate(cds):
+            if R18:
+                yc = cd.y - m['ctrls'][st0].y
+                c.face(f'c{p}i', CDC_HO, 'W', 'M4', yc + cd.h * 0.35, 1)
+                c.face(f'c{p}o', CDC['hbm_bits'] - CDC_HO, 'W', 'M4', yc + cd.h + 20.0, 1)
+                continue
             c.face(f'c{p}', CDC['hbm_bits'], 'W', 'M4', cd.y - m['ctrls'][st0].y + cd.h / 2, 2)
         cdm = mk('qfd_cdc', CDC['w'], CDC['h'], 7, 'STREAM4 per-PC CDC element (ot_qwen_stream4_cdc_pc, routed frame)')
-        cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
-        cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
+        if R18:
+            cdm.face('ho', CDC_HO, 'E', 'M4', cdm.h * 0.35, 1)
+            cdm.face('hi', CDC['hbm_bits'] - CDC_HO, 'N', 'M5', cdm.w / 2, 1)
+            cdm.face('co', CDC_CO, 'W', 'M4', cdm.h * 0.6, 1)
+            cdm.face('ci', CDC['core_bits'] - CDC_CO, 'S', 'M5', cdm.w / 2, 1)
+        else:
+            cdm.face('h', CDC['hbm_bits'], 'E', 'M4', cdm.h / 2, 2)
+            cdm.face('c', CDC['core_bits'], 'W', 'M4', cdm.h / 2, 2)
         nmax = max(sum(1 for p in range(len(cds)) if p * 6 // len(cds) == k) for k in range(6))
         if R18:
             # the KV landing concentrator: link endpoint on the array face, every PC's CDC core side level with
@@ -723,7 +741,9 @@ def masters(m, k=1, port_bits=None):
                     'words -> the stack link, KV-new write into the CDC write queues) + strip-end link endpoint')
             kv.face('lk', LINK_TRACKS, 'W', 'M4', (m['geo']['stack_cy'][0] - m['lfifos'][st0].y), 1)
             for p, cd in enumerate(cds):
-                kv.face(f'c{p}', CDC['core_bits'], 'E', 'M4', cd.y - m['lfifos'][st0].y + cd.h / 2, 2)
+                yc = cd.y - m['lfifos'][st0].y
+                kv.face(f'c{p}i', CDC_CO, 'E', 'M4', yc + cd.h * 0.6, 1)
+                kv.face(f'c{p}o', CDC['core_bits'] - CDC_CO, 'E', 'M4', yc - 20.0, 1)
             nmax = 0
         if 'rd' in re_.ports:
             re_.order.remove('rd')

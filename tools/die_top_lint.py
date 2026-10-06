@@ -288,6 +288,13 @@ def real_blocks(die):
         prm = dict(TAGW=9)
         bind = dict(CDC_LAYOUT)
         if QWEN_RECIPE == 'r18':
+            # r18: the closed element's four pin faces (route r11a): HCLK outputs / inputs, landing / write side
+            h, c = CDC_LAYOUT['h'], CDC_LAYOUT['c']
+            ho = [p for p in h if p.split('[')[0] in ('h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag',
+                                                      'h_fault')]
+            co = [p for p in c if p.startswith('l_')]
+            bind = dict(ho=ho, hi=[p for p in h if p not in ho], co=co, ci=[p for p in c if p not in co])
+            assert len(ho) == 319 and len(co) == 283
             bind.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
             out['ot_hbm3e_phy']['binding'].update(clk=['clk'], rst_n=['rst_n'])
         out['qfd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL,
