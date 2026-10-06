@@ -44,5 +44,6 @@
     "HC_PRE": "golden seqsum4/preweights then BF16; existing SU lower_hc_pre_norm needs selected source hook",
     "projection": "ot_hdc_v41x_hcp actual command+eight skewed FP32weight/BF16x bank ports, held o_valid/o_ready; not closed as parent",
     "Sinkhorn": "ot_hdc_sinkhorn_mc held req until busy/done+512b output, actual STEP_CYC related clock, source/parameters/heldconsumer ownership required from Gibbs/Turing afterPOSTgate"
-  }
+  },
+  "HC_build": "BLOCKED before admission/compilation: current16132 arithmetic source must be owner-corrected with m4/data/e4 phase alignment; owner pin + minimum actualgroup receipt required before HC64 build"
 }

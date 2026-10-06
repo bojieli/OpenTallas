@@ -15,7 +15,7 @@
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_held_exec.sv": "9dc13b406faf8fb4f68c514664e2266aad5a02239e7613cba9d806000d102714",
-    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "11c7b1f3773af137f9a2cf5070223ed692532f391c548f550f7b594b0df4c5f8",
+    "physical/hbm_die_abstracts_20261006/compute/ot_hbm_hc_quarter.sv": "f23d31cec2a67943f2c7d067a6240aa8c03e8b437b88a795aa0a631fbeaf1be2",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_quarter.sv": "fce12e60081ecad5d72ce344a63b861ddc9f58d470fae6b00336811befdfcdc3",
     "physical/hbm_die_abstracts_20261006/compute/ot_hbm_sfu_side_result_c12.sv": "7b60ea8e66981e40d6b7f4de93dee8d9be7f01b5199fbac8b07b5936953a52fd"
   },
@@ -24,7 +24,7 @@
     "SFU_LANES": 64,
     "HC_POST_NG": 64
   },
-  "status": "PRIME_ALIGNMENT_AND_TRANSACTION_RESET_SOURCE_READY_ENABLE1_GATE_NOT_STARTED",
+  "status": "HC_KNOWN_ARITHMETIC_SOURCE_BLOCKED_PENDING_OWNER_CORRECTION_AND_ONEGROUP_GOLD",
   "source_size": "results/physical/hbm_die_abstracts_20261006/compute/quarter_size.json",
   "side_adapter": "Only module name/vo port added: valid mirrors primitive vo OR into the same y_q result edge; source arithmetic and existing intermediate attributes preserved",
   "hc_coverage": "HC_POST only; HC_PRE/projection/Sinkhorn/selection remain explicit actual source dependencies",

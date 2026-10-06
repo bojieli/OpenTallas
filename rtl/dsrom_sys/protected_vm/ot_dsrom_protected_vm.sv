@@ -16,7 +16,17 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
 );
  import ot_dsrom_vm_pkg::*;
  generate if(ENABLE!=0)begin:g_live
-  request_t source_packet,source_check;
+  request_t source_packet,source_check,accepted_input;
+  // Only native-enabled data enters protection; unused buses may be undriven.
+  always @*begin
+   accepted_input='0;accepted_input.ordinal=serial;accepted_input.owner=request_owner;
+   accepted_input.re=read_enable;accepted_input.we=write_enable;
+   for(integer r=0;r<2;r=r+1)if(read_enable[r])accepted_input.ra[r*15+:15]=read_addr[r*15+:15];
+   for(integer w=0;w<5;w=w+1)if(write_enable[w])begin
+    accepted_input.wa[w*15+:15]=write_addr[w*15+:15];accepted_input.wm[w*16+:16]=write_mask[w*16+:16];
+    for(integer l=0;l<16;l=l+1)if(write_mask[w*16+l])accepted_input.wd[w*512+l*32+:32]=write_data[w*512+l*32+:32];
+   end
+  end
   reply_t held_reply,held_check,decoded_reply;
   reg [31:0] serial,serial_check;reg exhausted,exhausted_check;
   reg debt,debt_check,launch,launch_check,received,received_check,acked,acked_check;
@@ -78,8 +88,8 @@ module ot_dsrom_protected_vm #(parameter integer ENABLE=0)(
     else if(bad)fail();
     else if(!fault)begin
      if(request_v&&request_ready)begin
-      source_packet<={serial,request_owner,read_enable,read_addr,write_enable,write_addr,write_data,write_mask};
-      source_check<=~{serial,request_owner,read_enable,read_addr,write_enable,write_addr,write_data,write_mask};
+      source_packet<=accepted_input;
+      source_check<=~accepted_input;
       if(serial==32'hffffffff)begin exhausted<=1;exhausted_check<=0;end
       else begin serial<=serial+1;serial_check<=~(serial+32'd1);end
       debt<=1;debt_check<=0;launch<=1;launch_check<=0;received<=0;received_check<=1;acked<=0;acked_check<=1;

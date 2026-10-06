@@ -19,7 +19,8 @@ module ot_hdc_v41_fh_sram_return #(
     input wire [G*W-1:0] wr_mask,
     input wire [G*W*32-1:0] wr_data,
     output wire [G*W-1:0] wr_committed,
-    output wire fault
+    output wire fault,
+    output wire [G-1:0] address_fault_bits
 );
     localparam integer LG=$clog2(G);
     wire [G-1:0] read_ok,write_ok;
@@ -46,6 +47,7 @@ module ot_hdc_v41_fh_sram_return #(
             .rd_data(rd_data[32*b+:32]),.rd_valid(rd_valid[b]),.corrected(corrected[b]),
             .poisoned(poisoned[b]),.wr_committed(wr_committed[b]));
     end
+    assign address_fault_bits=address_fault;
     assign fault=(|address_fault)||(|poisoned);
 `ifndef SYNTHESIS
     initial if(G!=4||W!=16||ROWS>512||ROWS<1) $fatal(1,"G4W16/512-row geometry required");

@@ -14,6 +14,15 @@ import subprocess
 
 from emit import emit
 
+# Owner candidate provenance only; the protected leaf/context is not supplied
+# by the raw source. R6/R7/R8 unconditional held-output reload is invalid.
+OWNER_CDC_LEAF_CANDIDATE = dict(
+    commit='c8ba43664', revision='r9', RSEL=1,
+    source_sha256='67d30ee4c889cad1bc65eaf37e93fc35152eab2de4ffedb9c5c580d832fa71a8',
+    held_output='per-group kept valid copy; capture only when !vg || l_pop',
+    invalid_route_families=['r6', 'r7', 'r8'],
+    protected_source_agreement=False, physical_qualified=False)
+
 
 def prepare(job, source, numerical_top, provider, output,
             consumer_prefix=None, backing_member=None, backend_dependencies=(),
@@ -123,6 +132,7 @@ def prepare(job, source, numerical_top, provider, output,
                   backend_dependencies=list(map(str, backend_dependencies)),
                   cdc_consumer_join=bool(cdc_consumer_join),
                   cdc_binding_scope='Descartes protected port adapter only; raw RSEL CDC and protected parent route unqualified',
+                  owner_cdc_leaf_candidate=OWNER_CDC_LEAF_CANDIDATE if cdc_consumer_join else None,
                   access_generation='Run access.py on genuine generated header with exact consumer-prefix/backing-member before driver TU',
                   reused_archives=list(map(str, retained)),
                   matching_runtime_sources=list(map(str, runtime_sources)),
