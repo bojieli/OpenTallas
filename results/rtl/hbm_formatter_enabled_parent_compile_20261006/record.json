@@ -76,6 +76,26 @@
       "SFU_C12_ENABLE": 1
     },
     "local_snapshot": "/tmp/lorentz-enabled-parent-prep-20261006-r8-ready",
-    "compile_launched": false
+    "compile_launched": false,
+    "superseded_for_native_VM": true
+  },
+  "next_native_VM_source_list": {
+    "source_files": 116,
+    "parameters_include": {
+      "SFU_C12_ENABLE": 1,
+      "SFU_NATIVE_VM_ENABLE": 1
+    },
+    "actual_named_ports": {
+      "formatter": 51,
+      "SFU_provider_join": 60,
+      "native_VM_root": 88
+    },
+    "missing": [],
+    "duplicate_modules": [],
+    "snapshot_created": false,
+    "compile_launched": false,
+    "numerical_gate_owner": "Gibbs",
+    "existing_gate": "E2 hbm-native-sfu-selected-5cf293aa6/r3, supervisor4134163/4134176 frontend4134194/4137660; preserve/no replay",
+    "memory_basis": "Use actual r7 terminal maxRSS (current observed ~425GiB) plus changed native/SFU hierarchy inventory; never reuse64GiB estimate"
   }
 }
