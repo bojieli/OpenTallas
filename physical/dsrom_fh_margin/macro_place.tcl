@@ -26,15 +26,6 @@ foreach inst [$block getInsts] {
     if {[[$inst getMaster] getName] ne "ot_sram_1r1w_512x128_m4_r2c2"} {continue}
     set clean [string map [list "\\" ""] [$inst getName]]
     if {![regexp {g_bank\[(\d+)\].*u_sram} $clean -> b]} {error "Unknown macro $clean"}
-    set col [expr {$b%8}]
-    set row [expr {$b/8}]
-    set xx [joint_snap [expr {20.0+$col*240.0}] $x0 $xp]
-    set yy [joint_snap [expr {20.0+$row*70.0}] $y0 $yp]
-set n 0
-foreach inst [$block getInsts] {
-    if {[[$inst getMaster] getName] ne "ot_sram_1r1w_512x128_m4_r2c2"} {continue}
-    set clean [string map [list "\\" ""] [$inst getName]]
-    if {![regexp {g_bank\[(\d+)\].*u_sram} $clean -> b]} {error "Unknown macro $clean"}
     set g [expr {$b/16}]
     set w [expr {$b%16}]
     set col [expr {2*($g%2) + $w/8}]
