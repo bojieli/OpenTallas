@@ -1,0 +1,235 @@
+{
+ "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+ "ps_per_um": 0.1118,
+ "clkq_ff_ps": 32.2,
+ "views": {
+  "hfd_cdist_r14": {
+   "in": {
+    "min_wire_um": 1132.992,
+    "min_delay_ps": 158.87,
+    "via": {
+     "inst": "w39_cdSW1",
+     "port": "t2",
+     "to": "sm6",
+     "to_port": "c"
+    }
+   },
+   "out": {
+    "min_wire_um": 1132.992,
+    "min_delay_ps": 126.67,
+    "via": {
+     "inst": "w39_cdSW1",
+     "port": "t2",
+     "to": "sm6",
+     "to_port": "c"
+    }
+   }
+  },
+  "hfd_cdist_r15": {
+   "in": {
+    "min_wire_um": 1305.288,
+    "min_delay_ps": 178.13,
+    "via": {
+     "inst": "w161_cdNW0",
+     "port": "t2",
+     "to": "sm18",
+     "to_port": "c"
+    }
+   },
+   "out": {
+    "min_wire_um": 1305.288,
+    "min_delay_ps": 145.93,
+    "via": {
+     "inst": "w161_cdNW0",
+     "port": "t2",
+     "to": "sm18",
+     "to_port": "c"
+    }
+   }
+  },
+  "hfd_gath_r10": {
+   "in": {
+    "min_wire_um": 794.304,
+    "min_delay_ps": 121.0,
+    "via": {
+     "inst": "w149_rgNW2",
+     "port": "t1",
+     "to": "sm22",
+     "to_port": "r"
+    }
+   }
+  },
+  "hfd_gath_r24": {
+   "in": {
+    "min_wire_um": 925.92,
+    "min_delay_ps": 135.72,
+    "via": {
+     "inst": "w214_rgNE1",
+     "port": "t1",
+     "to": "sm29",
+     "to_port": "r"
+    }
+   }
+  },
+  "hfd_gath_r25": {
+   "in": {
+    "min_wire_um": 794.304,
+    "min_delay_ps": 121.0,
+    "via": {
+     "inst": "w215_rgNE2",
+     "port": "t1",
+     "to": "sm30",
+     "to_port": "r"
+    }
+   }
+  },
+  "hfd_gath_r8": {
+   "in": {
+    "min_wire_um": 953.712,
+    "min_delay_ps": 138.83,
+    "via": {
+     "inst": "w213_rgNE3",
+     "port": "t1",
+     "to": "sm31",
+     "to_port": "r"
+    }
+   },
+   "out": {
+    "min_wire_um": 2353.656,
+    "min_delay_ps": 263.14,
+    "via": {
+     "inst": "w90_rgSE3",
+     "port": "b",
+     "to": "w92_rgSE2",
+     "to_port": "a"
+    }
+   }
+  },
+  "hfd_gath_r9": {
+   "in": {
+    "min_wire_um": 926.496,
+    "min_delay_ps": 135.78,
+    "via": {
+     "inst": "w148_rgNW1",
+     "port": "t1",
+     "to": "sm21",
+     "to_port": "r"
+    }
+   }
+  },
+  "hfd_mcast_r5": {
+   "out": {
+    "min_wire_um": 452.064,
+    "min_delay_ps": 50.54,
+    "via": {
+     "inst": "w208_xmNE0",
+     "port": "t1",
+     "to": "sm28",
+     "to_port": "x"
+    }
+   }
+  },
+  "hfd_mcast_r6": {
+   "out": {
+    "min_wire_um": 1006.536,
+    "min_delay_ps": 112.53,
+    "via": {
+     "inst": "w210_xmNE2",
+     "port": "t1",
+     "to": "sm30",
+     "to_port": "x"
+    }
+   }
+  },
+  "hfd_mcast_r7": {
+   "out": {
+    "min_wire_um": 1006.536,
+    "min_delay_ps": 112.53,
+    "via": {
+     "inst": "w211_xmNE3",
+     "port": "t1",
+     "to": "sm31",
+     "to_port": "x"
+    }
+   }
+  },
+  "hfd_meso_r1": {
+   "out": {
+    "min_wire_um": 476.352,
+    "min_delay_ps": 53.26,
+    "via": {
+     "inst": "w135_wl_sm23",
+     "port": "b",
+     "to": "sm23",
+     "to_port": "d"
+    }
+   }
+  },
+  "hfd_meso_r28": {
+   "in": {
+    "min_wire_um": 94.008,
+    "min_delay_ps": 42.71,
+    "via": {
+     "inst": "w288_lk_lk_N3",
+     "port": "b",
+     "to": "lk_N3",
+     "to_port": "iox"
+    }
+   },
+   "out": {
+    "min_wire_um": 94.008,
+    "min_delay_ps": 10.51,
+    "via": {
+     "inst": "w288_lk_lk_N3",
+     "port": "b",
+     "to": "lk_N3",
+     "to_port": "iox"
+    }
+   }
+  },
+  "hfd_meso_r32": {
+   "in": {
+    "min_wire_um": 154.008,
+    "min_delay_ps": 49.42,
+    "via": {
+     "inst": "w299_host",
+     "port": "b",
+     "to": "lk_host",
+     "to_port": "iox"
+    }
+   },
+   "out": {
+    "min_wire_um": 154.008,
+    "min_delay_ps": 17.22,
+    "via": {
+     "inst": "w299_host",
+     "port": "b",
+     "to": "lk_host",
+     "to_port": "iox"
+    }
+   }
+  },
+  "hfd_stn_r2": {
+   "in": {
+    "min_wire_um": 1288.272,
+    "min_delay_ps": 176.23,
+    "via": {
+     "inst": "w194_rq_sm29",
+     "port": "a",
+     "to": "sm29",
+     "to_port": "q"
+    }
+   },
+   "out": {
+    "min_wire_um": 1288.272,
+    "min_delay_ps": 144.03,
+    "via": {
+     "inst": "w194_rq_sm29",
+     "port": "a",
+     "to": "sm29",
+     "to_port": "q"
+    }
+   }
+  }
+ }
+}

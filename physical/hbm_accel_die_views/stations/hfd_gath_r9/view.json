@@ -39,25 +39,56 @@
   }
  },
  "source": {
-  "route": "ot-agidock128:/srv/opentallas-scratch/claude/hbm-abstracts/stn/routes/r1_hfd_gath_r9",
-  "SOURCE_COMMIT": "b44eeb19e9e7edddadfc9bbd36b46b62d0681a2f",
-  "args": "SRC=/srv/opentallas-scratch/claude/hbm-abstracts/stn/src4 master=hfd_gath_r9 top=physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv DW=109.704 DH=110.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= --orfs-var SDC_FILE=/src/physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv",
+  "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M5_hfd_gath_r9",
+  "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
+  "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_gath_r9 top=physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv DW=109.704 DH=110.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M5_hfd_gath_r9/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
   "exit": [
    "rc=0",
    "corner_rc=0",
    "export_rc=0",
-   "check_rc=0"
+   "check_rc=0",
+   "signoff_corner_rc=0",
+   "signoff_export_rc=0"
   ],
-  "ss_setup_ps": 60.37,
-  "ff_hold_ps": 3.51,
+  "ss_setup_ps": 112.85,
+  "ff_hold_ps": 23.2,
   "drc": 0,
   "closes_signoff": true,
+  "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+  "margin": {
+   "margin": true,
+   "ckins_ps": 230,
+   "route_sdc": ".views/M5_hfd_gath_r9/route.sdc",
+   "signoff_sdc": ".views/M5_hfd_gath_r9/signoff.sdc",
+   "recipe": "bench/stn_margin_sdc.py"
+  },
+  "route_sta": {
+   "ss": 49.85,
+   "ff": 23.2
+  },
   "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sv",
   "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r9/hfd_gath_r9.sdc",
   "generator": "tools/hbm_die_station_gen.py"
  },
+ "io_min_delay": {
+  "method": "Per-view minimum IO arrival credit for the station hold model (coordinator decision 2026-10-06).",
+  "ps_per_um": 0.1118,
+  "clkq_ff_ps": 32.2,
+  "view": {
+   "in": {
+    "min_wire_um": 926.496,
+    "min_delay_ps": 135.78,
+    "via": {
+     "inst": "w148_rgNW1",
+     "port": "t1",
+     "to": "sm21",
+     "to_port": "r"
+    }
+   }
+  }
+ },
  "bench": {
-  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench6/hfd_gath_r9",
+  "dir": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/bench16/hfd_gath_r9",
   "simulator": "verilator (tools/hbm_die_station_bench.py)",
   "positive": {
    "verdict": "PASS",
@@ -80,9 +111,9 @@
  ],
  "packing": "every forwarded segment port of fc = (base, nd, nu): data bits [0, base) in the generator DIRECTION MODEL directions, then nd downstream forwarded clocks [base, base+nd), then nu upstream forwarded clocks [base+nd, base+nd+nu); downstream data bits in ascending index cut in slices of 512, slice k clocked by base+k; upstream data likewise by base+nd+k; data captured on the falling edge of the received forwarded clock, every launch on the rising edge of the forwarded clock it sends; station maps data bit i to data bit i (role maps: gath b = {a2, a, t1, t0} from bit 0 (t0 [0,270), t1 [270,540), a [540,1080), a2 [1080,2160)); cdist leaves of 103 b: a leaves 0-3 = taps t0-t3, a leaves 4-7 = b leaves 0-3; SM request launch: a[43] (req_ready) driven 1, b[43] driven 0); rst active low",
  "sha256": {
-  "hfd_gath_r9.lef": "8b71214910ee298885dae97c5e83805d61eb0a020fd2eb46a0295d5139937b15",
-  "hfd_gath_r9_ss.lib": "2adc9461265ce8edd0fee4bfc36eb1d3c854ae9428fd375356d383dc179831c2",
-  "hfd_gath_r9_ff.lib": "16b7a0f383c0216f8622f345121e76bef0135440283e78087b21114b5bee2506"
+  "hfd_gath_r9.lef": "9fcbf0ebd5f460fb162caf4ee2dcd3d0b562aa8c6a5c7dc6245d440dd0f3d0c5",
+  "hfd_gath_r9_ss.lib": "3934c7030b8ee31a3ad6d05807a664609143218ccd917d4999bdea5e9e132e04",
+  "hfd_gath_r9_ff.lib": "7044bca25b0f3d01625f0e6114643dda847442f352527d586f22080b5851ad4c"
  },
  "defects": []
 }

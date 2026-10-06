@@ -68,12 +68,16 @@ def phases(n: int) -> list:
     return sorted(set(base + [1.0, 4.0, 12.0, round(T - 12, 3), round(T - 4, 3)]))
 
 
+NOBP = False
+
+
 def plan(cfg: dict) -> list:
     jobs = []
+    modes = ("sparse", "stream", "random", "reset") if NOBP else ("sparse", "stream", "random", "bp", "reset")
     w = cfg["wander"]
     for i, ph in enumerate(phases(cfg["phases"])):
         wph = math.pi / 2 if i % 2 == 0 else -math.pi / 2          # wander at +w or -w when the pointer is placed
-        for mode in ("sparse", "stream", "random", "bp", "reset"):
+        for mode in modes:
             cyc = cfg["cycles"] if mode != "sparse" else cfg["cycles"] // 2
             jobs.append(dict(kind="nominal", mode=mode, phase=ph, wander=0, cycles=cyc, seed=11 + i, credits=cfg["credits"]))
             jobs.append(dict(kind="nominal", mode=mode, phase=ph, wander=w, wph=round(wph, 6),
@@ -84,6 +88,9 @@ def plan(cfg: dict) -> list:
             cyc = int(min(4_000_000, max(50_000, 3.5 * T * (cfg["ghi"] + 1) / abs(dr))))
             jobs.append(dict(kind="drift", mode="drift", phase=ph, drift=dr, expfault=1, cycles=cyc, seed=201 + i,
                              credits=cfg["credits"]))
+    if NOBP:
+        for j in jobs:
+            j["rdy1"] = 1
     return jobs
 
 
@@ -155,11 +162,25 @@ def main(argv=None):
     ap.add_argument("--jobs", type=int, default=max(4, (os.cpu_count() or 8) // 2))
     ap.add_argument("--configs", default=",".join(CONFIGS))
     ap.add_argument("--rdreg", action="store_true", help="ot_meso_fifo RDREG=1 (registered data-ring readout, +1 period)")
+    ap.add_argument("--crdreg", action="store_true", help="ot_meso_fifo CRDREG=1 (registered credit-ring readout)")
+    ap.add_argument("--wchk", action="store_true", help="ot_meso_fifo WCHK=1 (chunked data-ring write, 0 periods)")
+    ap.add_argument("--obyp", action="store_true", help="ot_meso_fifo OBYP=1 (readout flop is the last register; -1 period)")
+    ap.add_argument("--nobp", action="store_true", help="ot_meso_fifo NOBP=1 (no receive buffer; consumer always ready: "
+                    "every run +rdy1=1, no bp mode, EARLY_CREDIT not applicable; negative control: bp mode must fault)")
     a = ap.parse_args(argv)
-    global OUT_REG_PERIODS
+    global OUT_REG_PERIODS, NOBP
+    if a.nobp:
+        os.environ["NOBP"] = "1"
+        NOBP = True
+    if a.crdreg:
+        os.environ["CRDREG"] = "1"
+    if a.obyp:
+        os.environ["OBYP"] = "1"
+    if a.wchk:
+        os.environ["WCHK"] = "1"
     if a.rdreg:
         os.environ["RDREG"] = "1"
-        OUT_REG_PERIODS = 2      # data side: readout flop + the output (capture) register (credit ring unchanged)
+        OUT_REG_PERIODS = 1 if a.obyp else 2   # data side: readout flop (+ the output register unless OBYP)
     a.work.mkdir(parents=True, exist_ok=True)
     out = dict(schema="opentallas.meso_fifo.campaign.v1", scope="DIGITAL_ONLY dual-clock RTL simulation with a "
                "physical lag-window checker; edges closer than 20 ps processed in random order; not an MTBF proof",
@@ -170,6 +191,10 @@ def main(argv=None):
                            capture_output=True, text=True).stdout.strip()
     out["git"] = dict(head=git, sources_dirty=bool(dirty))
     out["rdreg"] = bool(a.rdreg)
+    out["nobp"] = bool(a.nobp)
+    out["crdreg"] = bool(a.crdreg)
+    out["obyp"] = bool(a.obyp)
+    out["wchk"] = bool(a.wchk)
     for name in a.configs.split(","):
         cfg = CONFIGS[name]
         tb = build(a.work, name, cfg)
@@ -180,11 +205,17 @@ def main(argv=None):
         out["configs"][name] = summarise(cfg, recs)
         print(name, json.dumps(out["configs"][name]["nominal"]), flush=True)
     cfg = CONFIGS["d4_central"]
-    for mut, mode in MUTANTS.items():
-        tb = build(a.work, f"mut_{mut}", cfg, f"OT_MESO_MUTANT_{mut}")
+    muts = dict(MUTANTS)
+    if NOBP:
+        muts.pop("EARLY_CREDIT")          # credit on arrival == on consumption when the consumer is always ready
+        muts["NOBP_BACKPRESSURE"] = "bp"  # negative control: the unmodified NOBP FIFO under back-pressure must fault
+    for mut, mode in muts.items():
+        tb = build(a.work, f"mut_{mut}", cfg, "" if mut == "NOBP_BACKPRESSURE" else f"OT_MESO_MUTANT_{mut}")
         recs = []
         for i, ph in enumerate(phases(8)):
             kw = dict(mode=mode, phase=ph, cycles=200000, seed=301 + i, credits=cfg["credits"])
+            if NOBP and mode != "bp":
+                kw["rdy1"] = 1
             if mode == "drift":
                 kw.update(drift=0.5, expfault=1)
             else:

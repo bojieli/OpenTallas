@@ -90,6 +90,9 @@ def main():
                             rtl=f'physical/hbm_accel_die_views/stations/{m}/{m}.sv',
                             sdc=f'physical/hbm_accel_die_views/stations/{m}/{m}.sdc',
                             generator='tools/hbm_die_station_gen.py'),
+                io_min_delay=(lambda j: dict(method=j['method'], ps_per_um=j['ps_per_um'], clkq_ff_ps=j['clkq_ff_ps'],
+                                             view=j['views'].get(m)))(json.loads((VIEWS / 'io_min_delay.json').read_text()))
+                if (VIEWS / 'io_min_delay.json').exists() else None,
                 bench=bench, size_um=ck.get('size_view'), packing=PACKING,
                 sha256={f: sha(d / f) for f in (f'{m}.lef', f'{m}_ss.lib', f'{m}_ff.lib')}, defects=[])
     old = d / 'view.json'

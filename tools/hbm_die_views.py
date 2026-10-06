@@ -39,7 +39,7 @@ S = L.S
 Q = L.Q
 VIEWS = 'physical/hbm_accel_die_views'
 KIND_OF = {      # master prefix -> view kind directory
-    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q',
+    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
@@ -119,9 +119,9 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
-    if d is not None:
-        return d
     m, pw, M, real = model()
+    if d is not None and name not in M:     # a split the generator does not place yet
+        return d
     mst = M[name]
     wmap = {p: pw.get((name, p), 0) for p in mst.order}
     rects = S.pin_rects(mst, 1, wmap)
@@ -141,6 +141,12 @@ def master_record(name):
         kinds = set(arr or ['?'])
         p['direction'] = ('input' if kinds <= {'in', '?'} or (len(kinds - {'?'}) > 1 and (name, base) in narrow)
                           else 'output' if kinds <= {'out'} else 'inout')
+    if d is not None:       # generator-placed band: directions / forwarded-clock bits from the split record
+        for p_, v_ in ports.items():
+            if p_ in d['ports']:
+                for k_ in ('direction', 'dir_segments'):
+                    if k_ in d['ports'][p_]:
+                        v_[k_] = d['ports'][p_][k_]
     return dict(master=name, kind=kind_of(name), w_um=round(mst.w, 4), h_um=round(mst.h, 4), obs_top=mst.obs_top,
                 note=mst.note, instances=len(insts), orients=sorted({it.orient for it in insts}),
                 inst_names=[it.name for it in insts], ports=ports,
@@ -278,6 +284,8 @@ def check_lef(master, lef, tol=0.0125, allow_extra=()):
         problems.append(f'pins: {len(missing)} missing, {len(extra)} extra, {len(face_bad)} wrong face, '
                         f'{len(layer_bad)} wrong layer')
     out['positions'] = 'exact' if not moved else f'{len(moved)} pins off the generator position (same face)'
+    if moved:       # the die GRT / pricing use the generator pin plan: a moved pin is a mismatch
+        problems.append(out['positions'])
     out['problems'] = problems
     out['verdict'] = 'MATCH' if not problems else 'MISMATCH'
     return out
@@ -493,12 +501,13 @@ def bundle_real_pins(macro_text, view, k):
         along = w if f in 'NS' else h
         lo, hi = math.ceil((2 * p - off) / p), math.floor((along - 2 * p - off) / p)
         used = set()
+        dense = len(grp) > (hi - lo) // 2      # more bundles than 2-track slots: 1-track spacing (the generator's)
         for c, nm in sorted(grp):
             t = min(max(round((c - off) / p), lo), hi)
             d = 0
             while True:      # nearest free track (2-track pitch keeps bundled pins spaced like the generator's)
                 cand = [t + d, t - d] if d else [t]
-                ok = [q for q in cand if lo <= q <= hi and q not in used and q - 1 not in used and q + 1 not in used]
+                ok = [q for q in cand if lo <= q <= hi and q not in used and (dense or (q - 1 not in used and q + 1 not in used))]
                 if ok:
                     t = ok[0]
                     break
@@ -563,7 +572,7 @@ def cmd_die(a):
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
         idx = json.loads(Path(a.index).read_text())['masters']
         mismatched = {n for n in views if idx[n].get('check', {}).get('verdict') == 'MISMATCH'}
-        pinrec, regadj = {}, []
+        pinrec, regadj, contract_assumed = {}, [], []
         el = (work / 'elements.lef').read_text()
         for n, lef in views.items():
             r = parse_lef(lef)
@@ -585,6 +594,9 @@ def cmd_die(a):
                     if cur or not mm:
                         keep.append(ln)
             obs = '\n'.join(keep)
+            if n in (a.contract_m89 or ()):   # decided re-hardening to the die contract (PG <= M7): M8/M9 free
+                contract_assumed.append(n)
+                hi = {}
             for ly, rs in hi.items():
                 if len(rs) > 16:        # a reduced outline-minus-pins OBS: its bounding box
                     rs = [(min(r_[0] for r_ in rs), min(r_[1] for r_ in rs), max(r_[2] for r_ in rs),
@@ -616,6 +628,7 @@ def cmd_die(a):
         man['mirror_pads'] = pads
     if a.case == 'grt':
         man['m8_m9_view_blockages'] = len(regadj)
+        man['m8_m9_contract_assumed'] = contract_assumed
         man['real_pin_plan'] = pinrec if a.real_pins else 'generator pins (views MATCH or --real-pins off)'
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
@@ -828,7 +841,7 @@ def cmd_ir_attn(a):
                 if x0_ + 0.25 <= x <= x1_ - 0.25 and a_ <= yc <= b_ and not inq(x, yc):
                     nv.append((net, x, yc))
                     added += 1
-    qvias, qdrop = 0, {}
+    qvias, qdrop, qpads = 0, {}, {}
     if a.quad_pg:       # quad M8 PG segments x quad M9 PG straps (the quad's own internal vias)
         for net in ('VDD', 'VSS'):
             m9s = sorted(qpg['M9'][net])
@@ -846,6 +859,30 @@ def cmd_ir_attn(a):
                         used9.add(k_)
                 if hit:
                     keep8.append((x0_, y0_, x1_, y1_))
+            # bump-pad vias: a bump over a quad lands on every same-net quad M9 strap under its 20 um pad (the
+            # AP / pad-layer vias of a real bump; the die grid's own bumps reach its M9 the same way in PSM)
+            other = qpg['M8']['VSS' if net == 'VDD' else 'VDD']
+            for row in (work / f'vsrc_{net}.loc').read_text().splitlines():
+                if not row.strip():
+                    continue
+                bx, by = (float(v) for v in row.split(',')[:2])
+                if not inq(bx, by):
+                    continue
+                for k_ in range(bisect.bisect_left(xs, bx - 9.5), bisect.bisect_right(xs, bx + 9.5)):
+                    if not (m9s[k_][1] + 0.5 <= by <= m9s[k_][3] - 0.5):
+                        continue
+                    yy = None
+                    for dy in (0.0, 0.6, -0.6, 1.2, -1.2, 1.8, -1.8, 2.4, -2.4):
+                        y_ = round((by + dy) * 1e3) / 1e3
+                        if all(not (abs((o[1] + o[3]) / 2 - y_) < 0.6 and o[0] - 0.4 < xs[k_] < o[2] + 0.4) for o in other):
+                            yy = y_
+                            break
+                    if yy is None:
+                        continue
+                    keep8.append((xs[k_] - 0.24, yy - 0.237, xs[k_] + 0.24, yy + 0.237))
+                    nv.append((net, xs[k_], yy))
+                    qpads[net] = qpads.get(net, 0) + 1
+                    used9.add(k_)
             # a shape with no via is an isolated PSM node (IRSolver::checkOpen connections_map.at -> map::at)
             qdrop[net] = (len(qpg['M8'][net]) - len(keep8), len(m9s) - len(used9))
             qpg['M8'][net] = keep8
@@ -1012,16 +1049,8 @@ def cmd_ir_attn(a):
     for net in ('VDD', 'VSS'):
         f = work / f'vsrc_{net}.loc'
         rows = [r for r in f.read_text().splitlines() if r.strip()]
-        if a.quad_pg:     # a bump over a quad lands on the quad's own M9 PG: its centre on the nearest same-net strap
-            xs_ = sorted((r_[0] + r_[2]) / 2 for r_ in qpg['M9'][net])
-            ok = []
-            for r in rows:
-                fs = r.split(',')
-                x, y = float(fs[0]), float(fs[1])
-                if inq(x, y) and xs_:
-                    x = min(xs_, key=lambda v: abs(v - x))
-                    fs[0] = f'{x:.3f}'
-                ok.append(','.join(fs))
+        if a.quad_pg:     # bumps over a quad stay: they land on the quad's M9 through the bump-pad vias
+            ok = rows
         else:
             ok = [r for r in rows if not inq(float(r.split(',')[0]), float(r.split(',')[1]))]
         nb[net] = len(rows) - len(ok)
@@ -1034,7 +1063,7 @@ def cmd_ir_attn(a):
                 m9_to_tile_m8_vias=added, tile_open_cells=tile_open_moved, quad_stub_loads=len(stubs),
                 quad_power_w=round(sum(pool.values()), 4), bumps_removed_over_quads=nb,
                 quad_pg=bool(a.quad_pg), quad_m9_straps={k: len(v) for k, v in qpg['M9'].items()},
-                quad_m8_segments={k: len(v) for k, v in qpg['M8'].items()}, quad_m8_m9_vias=qvias, quad_isolated_dropped_m8_m9=qdrop,
+                quad_m8_segments={k: len(v) for k, v in qpg['M8'].items()}, quad_m8_m9_vias=qvias, quad_isolated_dropped_m8_m9=qdrop, quad_bump_pad_vias=qpads,
                 quad_load_cells_on_m9=quad_cells,
                 quad_power_without_in_window_stubs_w=round(sum(orphan.values()), 4),
                 power_w=round(sum(power.values()), 4), view_lef_sha256=sha(ROOT / VIEWS / 'attn_tile' / f'{ATTN}.lef'))
@@ -1071,6 +1100,8 @@ def main(argv=None):
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)
     p.add_argument('--tag', default='views')
+    p.add_argument('--contract-m89', action='append', help='grt: treat this view\'s M8/M9 as free (a decided '
+                   're-hardening to the die PG <= M7 contract, e.g. hfd_attn_tile option B); recorded in the manifest')
     p.add_argument('--real-pins', action='store_true', help='grt: bundle a MISMATCH view\'s pins at its real '
                    'positions (default: generator positions + the view\'s obstructions)')
     p.set_defaults(fn=cmd_die)
