@@ -15,6 +15,7 @@
 // Required geometry and owner clock policy remain explicit below.
 module ot_qwen_p0_full_consumer_exports #(
     parameter integer PROTECTED_STREAM4 = 0, // source candidate, opt-in until owner gates pass
+    parameter integer KV_MAP = 0, // 1: option-M quadrant-local KV stripe (ot_qwen_kv_map_m.svh); default off
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
     parameter integer G = 6144,
@@ -353,7 +354,7 @@ module ot_qwen_p0_full_consumer_exports #(
         else if (kv_layer_start) kv_started <= 1'b1;
     wire [7:0] kv_notice = (kv_started || rm_layer == 8'hff) ? rm_next_layer : 8'hff;
     ot_qwen_rt_kv_stream4_service #(.G(G), .SW(SW), .AW(AW), .NW(NW), .NSTK(NSTK), .NPC(NPC), .FILL_LAT(FILL_LAT), .KV_IDEAL(0),
-                                   .WBW(WBW)) u_kv (
+                                   .WBW(WBW), .KV_MAP(KV_MAP)) u_kv (
         .clk(clk), .rst_n(rst_n), .start(kv_layer_start), .ideal_in(rm_kv_ideal), .pos(core_pos[NW-1:0]), .layer(rm_layer),
         .nx_layer(kv_notice), .pos_hint(tp_pos[NW-1:0]),
         .kv_free(kv_free), .early_go_in(rm_early_go), .posted_wb_in(rm_posted_wb), .wb_busy(kv_wb_busy),

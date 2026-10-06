@@ -12,6 +12,7 @@ module ot_qwen_p0_full_numeric #(
     parameter integer CDC_CONSUMER_JOIN = 0,
     parameter integer LANDING_RSEL = 0, // owner implemented protected full504 r9 read
     parameter integer SAME_CYCLE_GO = 0, // default OFF: early-go GO accepted with its own descriptor
+    parameter integer KV_MAP = 0, // 1: option-M quadrant-local KV stripe (ot_qwen_kv_map_m.svh); default off
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
     parameter integer G = 6144,
@@ -133,6 +134,7 @@ module ot_qwen_p0_full_numeric #(
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
         .LANDING_RSEL(LANDING_RSEL),
         .SAME_CYCLE_GO(SAME_CYCLE_GO),
+        .KV_MAP(KV_MAP),
         .BASELINE_AR(BASELINE_AR),
         .CORE_FS(CORE_FS),
         .CTL_FS(CTL_FS),
@@ -263,7 +265,7 @@ module ot_qwen_p0_full_numeric #(
         .st_stall_mem(st_stall_mem)
     );
     ot_qwen_s4_numeric_memory #(.MEM_WORDS(HBM_LAYERS*131072),
-        .PHASE(HBM_PHASE),.PULLIN(HBM_PULLIN)) u_numeric (
+        .PHASE(HBM_PHASE),.PULLIN(HBM_PULLIN),.KV_MAP(KV_MAP)) u_numeric (
         .hclk(hclk),
         .rst_n(rt_rst_n),
         .row_v(row_v),

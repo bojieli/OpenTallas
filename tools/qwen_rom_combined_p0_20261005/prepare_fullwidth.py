@@ -18,6 +18,8 @@ def main():
     p.add_argument('--source-root', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--backend-dependency', type=Path, action='append', default=[])
+    p.add_argument('--kv-map', type=int, choices=[0, 1], default=0,
+                   help='1: option-M quadrant-local KV stripe end to end (default 0)')
     a = p.parse_args()
     source = a.source_root.resolve()
     exp = source / 'rtl/experimental/qwen_rom_combined_p0_20261005'
@@ -46,7 +48,8 @@ def main():
     r = prepare(a.authority_job, source, top,
                 source / 'rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv',
                 a.output, backend_dependencies=deps,
-                cdc_consumer_join=True, landing_rsel=1, parallel_transport=True)
+                cdc_consumer_join=True, landing_rsel=1, parallel_transport=True,
+                kv_map=a.kv_map)
     r['parallel_transport'] = True
     r['cdc_binding_scope'] = ('128 independent protected 32-byte sector lanes; '
                               'actual ot_qwen_stream4_cdc_pc RSEL=1; '

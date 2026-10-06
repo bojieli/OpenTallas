@@ -28,7 +28,7 @@ OWNER_CDC_LEAF_CANDIDATE = dict(
 
 def prepare(job, source, numerical_top, provider, output,
             consumer_prefix=None, backing_member=None, backend_dependencies=(),
-            cdc_consumer_join=False, landing_rsel=0, parallel_transport=False):
+            cdc_consumer_join=False, landing_rsel=0, parallel_transport=False, kv_map=0):
     if not numerical_top.is_file() or not provider.is_file():
         raise ValueError('genuine owner numerical top and provider source required')
     module = re.search(r'^module\s+(\w+)', numerical_top.read_text(), re.M)
@@ -47,6 +47,8 @@ def prepare(job, source, numerical_top, provider, output,
         'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv': numerical_top,
         'ot_hbm_r14_stream_pc.sv': source/'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv',
         'ot_hbm_r14_stream_stack.sv': source/'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv',
+        # current STREAM4 KV service (KV_MAP parameter, default 0 = the src4 snapshot's behaviour)
+        'ot_qwen_rt_kv_stream4_service.sv': source/'rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv',
     }
     for line in text.splitlines():
         if line.startswith('--top-module'):
@@ -107,6 +109,11 @@ def prepare(job, source, numerical_top, provider, output,
             exp/'ot_qwen_p0_parallel_bank.sv', exp/'ot_qwen_p0_parallel_transport_context.sv']))
         params = [v for v in params if not v.startswith('-GPARALLEL_TRANSPORT=')]
         params += ['-GPARALLEL_TRANSPORT=1']
+    if kv_map:
+        if not parallel_transport:
+            raise ValueError('KV_MAP=1 requires the parallel protected transport')
+        params = [v for v in params if not v.startswith('-GKV_MAP=')]
+        params += ['-GKV_MAP=%d' % int(kv_map)]
     # The authority's literal public macro and hierarchy directives are retained.
     configs = [job/'reuse/gen/public.vlt', job/'reuse/gen/hier.vlt']
     for path in configs:
@@ -157,6 +164,7 @@ def prepare(job, source, numerical_top, provider, output,
                   transport_rate_scope=('parallel protected source candidate; exact gate/physical context pending' if parallel_transport else 'serialized protected numerical vehicle only; publish no P0 rate'),
                   cdc_consumer_join=bool(cdc_consumer_join),
                   landing_rsel=int(landing_rsel),
+                  kv_map=int(kv_map),
                   cdc_binding_scope=('Implemented protected full504 r9 read with actual warm/ACK ports; parent physical route unqualified'
                                      if landing_rsel else 'Descartes protected port adapter only; raw RSEL CDC and protected parent route unqualified'),
                   owner_cdc_leaf_candidate=OWNER_CDC_LEAF_CANDIDATE if cdc_consumer_join else None,

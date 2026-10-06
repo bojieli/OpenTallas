@@ -9,6 +9,7 @@ module ot_qwen_p0_full_transport_join #(
     parameter integer PARALLEL_TRANSPORT = 0, // owner full32-PC return; defaultOFF
     parameter integer CDC_CONSUMER_JOIN = 0, // existing protected port join only; not raw CDC qualification
     parameter integer SAME_CYCLE_GO = 0, // default OFF
+    parameter integer KV_MAP = 0, // 1: option-M quadrant-local KV stripe (ot_qwen_kv_map_m.svh); default off
     parameter integer LANDING_RSEL = 0, // corrected protected owner r9 read; default OFF
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
     parameter integer CORE_FS = 833333, CTL_FS = 1024000,
@@ -143,6 +144,7 @@ module ot_qwen_p0_full_transport_join #(
     wire producer_fault;
     ot_qwen_p0_full_consumer_exports #(
         .PROTECTED_STREAM4(PROTECTED_STREAM4),
+        .KV_MAP(KV_MAP),
         .BASELINE_AR(BASELINE_AR),
         .CORE_FS(CORE_FS),
         .CTL_FS(CTL_FS),
@@ -274,6 +276,7 @@ module ot_qwen_p0_full_transport_join #(
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
         .LANDING_RSEL(LANDING_RSEL),
         .SAME_CYCLE_GO(SAME_CYCLE_GO),
+        .KV_MAP(KV_MAP),
         .MEM_WORDS(HBM_LAYERS*131072), .PHASE(HBM_PHASE)) u_transport (
         .clk(producer_clk),
         .hclk(producer_hclk),
@@ -326,6 +329,8 @@ module ot_qwen_p0_full_transport_join #(
         .h_go_ordinal(h_go_ordinal)
     );
     end else begin:serialized
+    // the serialized protected context carries the base map only
+    if(KV_MAP!=0)begin:kv_map_unsupported initial $fatal(1,"KV_MAP=1 requires PARALLEL_TRANSPORT=1"); end
     ot_qwen_s4_transport_context #(.ENABLE(PROTECTED_STREAM4),
         .CDC_CONSUMER_JOIN(CDC_CONSUMER_JOIN),
         .LANDING_RSEL(LANDING_RSEL),
