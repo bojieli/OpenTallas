@@ -883,6 +883,16 @@ def cmd_block(a):
         # OpenROAD buffer_ports segfaults (Sim::findDisabledEdges) on the canonical SDC's -reference_pin under the
         # WC + BC corners; the port flops sit at the pins (no port buffer needed), so skip port buffering.
         extra["DONT_BUFFER_PORTS"] = "1"
+    if getattr(a, "hold_buffer_pct", None):
+        # hold repair to the sign-off target (FF >= +15 after the 25 ps uncertainty needs ORFS hold margin ~25) inserts
+        # more hold buffers than repair_timing's default cap (20 % of instances: RSZ-0060 on be m2g at 21 % utilization):
+        # wrap ORFS's repair_timing_helper before CTS / global route to raise -max_buffer_percent.
+        (work / "rt_hook.tcl").write_text(
+            "# raise repair_timing's buffer cap (tools/hbm_accel_smh_physical.py --hold-buffer-pct)\n"
+            "if {[info commands ::ot_rth_orig] eq \"\"} { rename ::repair_timing_helper ::ot_rth_orig }\n"
+            f"proc ::repair_timing_helper {{args}} {{ ::ot_rth_orig {{*}}$args -max_buffer_percent {a.hold_buffer_pct} }}\n")
+        extra["PRE_CTS_TCL"] = "/work/rt_hook.tcl"
+        extra["PRE_GLOBAL_ROUTE_TCL"] = "/work/rt_hook.tcl"
     if a.grt_allow:
         extra["GLOBAL_ROUTE_ARGS"] = "-congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 60"
     if a.piece == "tile":
@@ -1066,6 +1076,7 @@ def main(argv=None):
     b.add_argument("--die-skew", default="150", help="setup budget on the element pins (cross a die wire, ps)")
     b.add_argument("--pin-flops", action="store_true", help="tile / be: every port flop FIRM at its pin")
     b.add_argument("--pin-depth", default="16", help="tile / be: edge strip depth (um) for the W / E port flops")
+    b.add_argument("--hold-buffer-pct", default=None, help="raise repair_timing -max_buffer_percent at CTS / GRT")
     b.add_argument("--io-ref", action="store_true", help="abutting port delays referenced to a register clock pin of "
                    "the block (per-corner insertion) instead of nbr_clk with the SS insertion as source latency")
     t = sub.add_parser("top")
