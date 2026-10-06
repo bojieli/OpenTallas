@@ -13,7 +13,7 @@ def model():
     return dict(schema='opentallas.ds.protected-vm.v1',before_RTL=True,default_ENABLE=0,
       native_minimum=dict(scalar_address_bits=19,word_address_bits=15,word_bits=512,words=32768,capacity_bytes=2097152,
         reads=['xa','xb'],writers_in_native_priority_order=['xa','xb0','xb1','xb2','xb3'],
-        masked_write_bits_per_writer=16,read_before_any_same_bundle_write=True,
+        masked_write_bits_per_writer=16,masked_undriven_ingress='disabled ports and unselected32bit lanes sanitized before SECDED; enabled values unchanged',read_before_any_same_bundle_write=True,
         all_native_core_ports_integrated=False,identity_bits=47,identity_fields='epoch16/user10/pos21',accepted_transaction_ordinal_bits=32),
       memory=dict(MACs_per_cycle=0,payload_macros=256,check_macros=32,real_total=288,
         primitive=p.parent.name,view_family='aligned-v2',SRAM_SECDED='existing encode64/decode64, eight check bits per64 payload',ROM_ECC=False,

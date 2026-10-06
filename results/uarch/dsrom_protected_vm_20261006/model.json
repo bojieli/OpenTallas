@@ -20,6 +20,7 @@
       "xb3"
     ],
     "masked_write_bits_per_writer": 16,
+    "masked_undriven_ingress": "disabled ports and unselected32bit lanes sanitized before SECDED; enabled values unchanged",
     "read_before_any_same_bundle_write": true,
     "all_native_core_ports_integrated": false,
     "identity_bits": 47,
