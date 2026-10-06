@@ -34,7 +34,8 @@ module ot_dsrom_vm_backend #(parameter integer DISTRIBUTED_CMD=0)(
    decoded_data!=~decoded_check||expected!=~expected_check||decoded_ue!=~decoded_ue_check||had_ce!=~had_ce_check));
  wire distributed_fault;
  assign fault=poison||bad||distributed_fault;wire safe=cold_n&&rst_n&&!fault;
- assign initializing=state==INIT;assign req_ready=safe&&state==IDLE&&!debt;
+ assign initializing=state==INIT||(DISTRIBUTED_CMD!=0&&(state==DIST_LOCAL||state==DIST_EXEC)&&command_was_init);
+ assign req_ready=safe&&state==IDLE&&!debt;
  assign receipt_ready=safe&&state==WAIT_RECEIPT&&debt;
  reply_t response;
  always @*begin
