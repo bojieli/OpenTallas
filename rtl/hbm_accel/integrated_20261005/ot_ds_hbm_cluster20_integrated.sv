@@ -679,21 +679,56 @@ end else begin:g_on
          .rsp_v(w2_sink_rsp_v),.rsp_r(w2_sink_rsp_r),.rsp(w2_provider_rsp));
         assign su_owned=peer_grants[0]&&!sfu_route&&!norm_route;assign su_release_r=peer_releases[0]&&!sfu_route&&!norm_route;
         wire [11:0] su_owned_frontier_terms;
-        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY),.PIN_MARGIN(SU_PIN_MARGIN),.RELEASE_REPLAY(SU_RELEASE_REPLAY?3:0)) u_su_cp(
+        // SU_PIN_MARGIN=1 (default off): the CP is the register-to-register block
+        // ot_hbm_integrated_su_cp_context (2 input + 1 output pin edges, registered
+        // owner compare from the pin stage, association inside the block, and with
+        // SU_RELEASE_REPLAY the accepted release is the caller's actual fire). The
+        // default instances below are unchanged (renamed output nets only).
+        wire [NSM-1:0] d_native_launch,m_native_launch;
+        wire d_su_lease_v,d_su_release_v,d_su_qualified_owned,d_su_pending,d_su_quiet,d_su_selected,d_su_done,d_su_fault;
+        wire m_su_lease_v,m_su_release_v,m_su_qualified_owned,m_su_pending,m_su_quiet,m_su_selected,m_su_done,m_su_fault;
+        wire [31:0] d_su_pc,d_su_job,m_su_pc,m_su_job;wire [3:0] d_su_gen,m_su_gen;wire [16:0] d_su_token,m_su_token;wire [19:0] d_su_pos,m_su_pos;
+        wire d_su_executor_owned,d_su_new_request_permit,d_su_association_fault,m_su_executor_owned,m_su_new_request_permit,m_su_association_fault;
+        ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE&&!SU_PIN_MARGIN),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS),.REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.GROUPED_OWNER_BOUNDARY(0),.BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY),.PIN_MARGIN(0),.RELEASE_REPLAY(0)) u_su_cp(
          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
-         .native_launch(native_launch),.lease_v(su_lease_v),.lease_granted(su_owned),
-         .release_v(su_release_v),.release_r(su_release_r),.exec_done(su_caller_done),.exec_fault(su_caller_fault),
-         .retired_original_ops(su_caller_retired),.shared_fault(shared_fault),.owned(su_qualified_owned),.owned_frontier_terms(su_owned_frontier_terms),.pending(su_pending),
-         .quiet(su_quiet),.selected(su_selected),.done(su_done),.fault(su_fault),
-         .selected_pc(su_pc),.held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos),.owner_live_next(192'd0));
+         .native_launch(d_native_launch),.lease_v(d_su_lease_v),.lease_granted(su_owned),
+         .release_v(d_su_release_v),.release_r(su_release_r),.exec_done(su_caller_done),.exec_fault(su_caller_fault),
+         .retired_original_ops(su_caller_retired),.shared_fault(shared_fault),.owned(d_su_qualified_owned),.owned_frontier_terms(su_owned_frontier_terms),.pending(d_su_pending),
+         .quiet(d_su_quiet),.selected(d_su_selected),.done(d_su_done),.fault(d_su_fault),
+         .selected_pc(d_su_pc),.held_job(d_su_job),.held_gen(d_su_gen),.held_token(d_su_token),.held_pos(d_su_pos),.owner_live_next(192'd0));
+        assign native_launch=SU_PIN_MARGIN?m_native_launch:d_native_launch;
+        assign su_lease_v=SU_PIN_MARGIN?m_su_lease_v:d_su_lease_v;assign su_release_v=SU_PIN_MARGIN?m_su_release_v:d_su_release_v;
+        assign su_qualified_owned=SU_PIN_MARGIN?m_su_qualified_owned:d_su_qualified_owned;assign su_pending=SU_PIN_MARGIN?m_su_pending:d_su_pending;
+        assign su_quiet=SU_PIN_MARGIN?m_su_quiet:d_su_quiet;assign su_selected=SU_PIN_MARGIN?m_su_selected:d_su_selected;
+        assign su_done=SU_PIN_MARGIN?m_su_done:d_su_done;assign su_fault=SU_PIN_MARGIN?m_su_fault:d_su_fault;
+        assign su_pc=SU_PIN_MARGIN?m_su_pc:d_su_pc;assign su_job=SU_PIN_MARGIN?m_su_job:d_su_job;assign su_gen=SU_PIN_MARGIN?m_su_gen:d_su_gen;
+        assign su_token=SU_PIN_MARGIN?m_su_token:d_su_token;assign su_pos=SU_PIN_MARGIN?m_su_pos:d_su_pos;
+        assign su_executor_owned=SU_PIN_MARGIN?m_su_executor_owned:d_su_executor_owned;
+        assign su_new_request_permit=SU_PIN_MARGIN?m_su_new_request_permit:d_su_new_request_permit;
+        assign su_association_fault=SU_PIN_MARGIN?m_su_association_fault:d_su_association_fault;
+        if(SU_PIN_MARGIN)begin:g_su_cp_margin
+         initial if(SU_PROVIDER_ADAPTER)$fatal(1,"SU_PIN_MARGIN CP context carries the association; the provider adapter is not defined with it");
+         ot_hbm_integrated_su_cp_context #(.ENABLE(1),.SU_ENABLE(SU_ENABLE),.SU_REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.SU_REGISTERED_STATUS(SU_REGISTERED_STATUS),.SU_REGISTERED_BOUNDARY(SU_REGISTERED_BOUNDARY),.SU_BALANCED_OWNER_BOUNDARY(SU_BALANCED_OWNER_BOUNDARY),.SU_FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS),.SU_FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.SU_PARALLEL_PHASE_VALIDATION(SU_PARALLEL_PHASE_VALIDATION),.SU_CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.SU_OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY),.SU_PIN_MARGIN(1),.SU_RELEASE_REPLAY(SU_RELEASE_REPLAY)) u_su_cp_margin(
+          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
+          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
+          .native_launch(m_native_launch),.lease_v(m_su_lease_v),.lease_granted(su_owned),
+          .release_v(m_su_release_v),.release_r(su_release_r),.exec_done(su_caller_done),.exec_fault(su_caller_fault),
+          .retired_original_ops(su_caller_retired),.shared_fault(shared_fault),
+          .owned(m_su_qualified_owned),.pending(m_su_pending),.quiet(m_su_quiet),.selected(m_su_selected),.done(m_su_done),.fault(m_su_fault),
+          .selected_pc(m_su_pc),.held_job(m_su_job),.held_gen(m_su_gen),.held_token(m_su_token),.held_pos(m_su_pos),
+          .exec_owned(m_su_executor_owned),.new_request_permit(m_su_new_request_permit),.association_fault(m_su_association_fault));
+        end else begin:g_su_cp_direct
+         assign m_native_launch=0;assign {m_su_lease_v,m_su_release_v,m_su_qualified_owned,m_su_pending,m_su_quiet,m_su_selected,m_su_done,m_su_fault}=0;
+         assign {m_su_pc,m_su_job,m_su_gen,m_su_token,m_su_pos,m_su_executor_owned,m_su_new_request_permit,m_su_association_fault}=0;
+        end
         // Response valid/ready and captured provider requests are unchanged.
         // New requests use the live veto; admitted execution holds the grant.
         if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
         ot_hbm_integrated_su_provider_adapter #(.ENABLE(SU_ENABLE),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_provider(
          .clk_sm(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),
-         .qualified_owned_terms(su_owned_frontier_terms),.exec_owned(su_executor_owned),
-         .new_request_permit(su_new_request_permit),.fault(su_association_fault),
+         .qualified_owned_terms(su_owned_frontier_terms),.exec_owned(d_su_executor_owned),
+         .new_request_permit(d_su_new_request_permit),.fault(d_su_association_fault),
          .exec_req_v(su_req_v),.exec_req_r(su_req_rdy),.exec_req(su_request),
          .provider_req_v(su_provider_req_v),.provider_req_r(p_req_rdy[1]&&!sfu_route&&!norm_route),.provider_req(su_provider_req),
          .provider_rsp_v(p_rsp_v[1]&&!sfu_route&&!norm_route),.provider_rsp_r(su_provider_rsp_r),
@@ -704,9 +739,9 @@ end else begin:g_on
          .exec_done(su_exec_done),.exec_fault(su_exec_fault),.retired_original_ops(su_retired),
          .caller_exec_done(su_caller_done),.caller_exec_fault(su_caller_fault),.caller_retired_original_ops(su_caller_retired));
         end else begin:g_su_legacy_provider
-        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_association(
+        ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY&&!SU_PIN_MARGIN),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER),.CONTROL_TAIL_CUT(SU_CONTROL_TAIL_CUT),.OWNER_VETO_POLARITY(SU_OWNER_VETO_POLARITY)) u_su_association(
          .clk(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),.qualified_owned_terms(su_owned_frontier_terms),
-         .exec_owned(su_executor_owned),.new_request_permit(su_new_request_permit),.fault(su_association_fault));
+         .exec_owned(d_su_executor_owned),.new_request_permit(d_su_new_request_permit),.fault(d_su_association_fault));
         assign su_provider_req_v=su_req_v&&su_new_request_permit;assign su_provider_req=su_request;
         assign su_req_rdy=p_req_rdy[1]&&su_new_request_permit&&!sfu_route&&!norm_route;
         assign su_rsp_v=p_rsp_v[1]&&!sfu_route&&!norm_route;assign su_provider_rsp_r=su_rsp_rdy;
