@@ -1,0 +1,3268 @@
+{
+  "status": "EXACT_FROZEN_MAP_SOURCE_ATTRIBUTION",
+  "mapping_identity": {
+    "all_nonassign_bytes_equal": true,
+    "complete_assign_multiset_equal": true,
+    "assign_count": 2328,
+    "raw_bytes_equal": false,
+    "difference": "write_json changes only order of complete identical assign statements; all cell/nets/ports/attributes nonassign bytes match"
+  },
+  "frozen_sha256": "1500f9ead64c8c390d68ce52df40e957687da4f7a2d983ef05597822f494f6b7",
+  "diagnostic_sha256": "53ef6a4040976ebc47164c57a9b81b283b2edbf3cd5f3d382f4fb5e8278263ac",
+  "before_purge_sha256": "93adcee1bfb675f8a61fa7193923d9ae7874eaa2eaccb7d3c5c27ee6f27790c3",
+  "after_purge_sha256": "344c1c9b486427d3c797167196728144f4a73c3018f70602830de40d676b8215",
+  "report_sha256": "f88a223477afe2ac07d405e2df920a278be3d5868ed087f8c4ca097e2936f7ec",
+  "pin_direction_libraries_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "startpoint": {
+    "mapped": "_121746_",
+    "original": "$auto$ff.cc:337:slice$27822",
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "attributes": {
+      "src": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv:76.2-104.5"
+    },
+    "ports": {
+      "CLK": {
+        "bits": [
+          2
+        ],
+        "aliases": [
+          [
+            "clk_sm",
+            "held.u_frame_guard.clk",
+            "held.u_native.fclk_i",
+            "held.u_native.genblk1.held.inputs[0].u_cut.clk",
+            "held.u_native.genblk1.held.inputs[0].u_cut.u_state.clk",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.clk",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.clk",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.clk",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.clk",
+            "held.u_native.genblk1.held.u_permissions.clk",
+            "held.u_receipt.clk",
+            "held.u_receipt.u_state.clk"
+          ]
+        ],
+        "mapped_sink_pin_count": [
+          5917
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "D": {
+        "bits": [
+          40217
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          1
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "QN": {
+        "bits": [
+          8686
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          11
+        ],
+        "one_inversion_aliases": [
+          [
+            {
+              "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254488",
+              "aliases": [
+                "held.u_native.genblk1.held.inputs[0].u_cut.out_d[2232]",
+                "held.u_native.genblk1.held.inputs[0].u_cut.q[2232]",
+                "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[34][62]",
+                "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[2510]",
+                "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[2232]",
+                "held.u_native.genblk1.held.owner0[96]",
+                "held.u_native.genblk1.held.seats[2232]",
+                "held.u_native.out_owner[288]",
+                "held.u_native.out_owner[96]",
+                "held.u_receipt.in_d[96]",
+                "out_owner[288]",
+                "out_owner[96]"
+              ]
+            }
+          ]
+        ]
+      },
+      "RESETN": {
+        "bits": [
+          3
+        ],
+        "aliases": [
+          [
+            "held.u_frame_guard.por_n",
+            "held.u_native.genblk1.held.inputs[0].u_cut.por_n",
+            "held.u_native.genblk1.held.inputs[0].u_cut.u_state.por_n",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.por_n",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.por_n",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.por_n",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.por_n",
+            "held.u_native.genblk1.held.u_permissions.por_n",
+            "held.u_native.rst_n[0]",
+            "held.u_native.rst_n[1]",
+            "held.u_native.rst_n[2]",
+            "held.u_native.rst_n[3]",
+            "held.u_receipt.por_n",
+            "held.u_receipt.u_state.por_n",
+            "por_n"
+          ]
+        ],
+        "mapped_sink_pin_count": [
+          5916
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "SETN": {
+        "bits": [
+          "1"
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          0
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      }
+    }
+  },
+  "endpoint": {
+    "mapped": "_118149_",
+    "original": "$auto$ff.cc:337:slice$23387",
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "attributes": {
+      "src": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv:76.2-104.5"
+    },
+    "ports": {
+      "CLK": {
+        "bits": [
+          2
+        ],
+        "aliases": [
+          [
+            "clk_sm",
+            "held.u_frame_guard.clk",
+            "held.u_native.fclk_i",
+            "held.u_native.genblk1.held.inputs[0].u_cut.clk",
+            "held.u_native.genblk1.held.inputs[0].u_cut.u_state.clk",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.clk",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.clk",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.clk",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.clk",
+            "held.u_native.genblk1.held.u_permissions.clk",
+            "held.u_receipt.clk",
+            "held.u_receipt.u_state.clk"
+          ]
+        ],
+        "mapped_sink_pin_count": [
+          5917
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "D": {
+        "bits": [
+          34935
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          1
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "QN": {
+        "bits": [
+          17509
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          5
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "RESETN": {
+        "bits": [
+          3
+        ],
+        "aliases": [
+          [
+            "held.u_frame_guard.por_n",
+            "held.u_native.genblk1.held.inputs[0].u_cut.por_n",
+            "held.u_native.genblk1.held.inputs[0].u_cut.u_state.por_n",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.por_n",
+            "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.por_n",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.por_n",
+            "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.por_n",
+            "held.u_native.genblk1.held.u_permissions.por_n",
+            "held.u_native.rst_n[0]",
+            "held.u_native.rst_n[1]",
+            "held.u_native.rst_n[2]",
+            "held.u_native.rst_n[3]",
+            "held.u_receipt.por_n",
+            "held.u_receipt.u_state.por_n",
+            "por_n"
+          ]
+        ],
+        "mapped_sink_pin_count": [
+          5916
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      },
+      "SETN": {
+        "bits": [
+          "1"
+        ],
+        "aliases": [
+          []
+        ],
+        "mapped_sink_pin_count": [
+          0
+        ],
+        "one_inversion_aliases": [
+          []
+        ]
+      }
+    }
+  },
+  "path_nodes": [
+    {
+      "mapped": "_121746_",
+      "original": "$auto$ff.cc:337:slice$27822",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "attributes": {
+        "src": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv:76.2-104.5"
+      },
+      "ports": {
+        "CLK": {
+          "bits": [
+            2
+          ],
+          "aliases": [
+            [
+              "clk_sm",
+              "held.u_frame_guard.clk",
+              "held.u_native.fclk_i",
+              "held.u_native.genblk1.held.inputs[0].u_cut.clk",
+              "held.u_native.genblk1.held.inputs[0].u_cut.u_state.clk",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.clk",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.clk",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.clk",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.clk",
+              "held.u_native.genblk1.held.u_permissions.clk",
+              "held.u_receipt.clk",
+              "held.u_receipt.u_state.clk"
+            ]
+          ],
+          "mapped_sink_pin_count": [
+            5917
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "D": {
+          "bits": [
+            40217
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "QN": {
+          "bits": [
+            8686
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            11
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254488",
+                "aliases": [
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[2232]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[2232]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[34][62]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[2510]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[2232]",
+                  "held.u_native.genblk1.held.owner0[96]",
+                  "held.u_native.genblk1.held.seats[2232]",
+                  "held.u_native.out_owner[288]",
+                  "held.u_native.out_owner[96]",
+                  "held.u_receipt.in_d[96]",
+                  "out_owner[288]",
+                  "out_owner[96]"
+                ]
+              }
+            ]
+          ]
+        },
+        "RESETN": {
+          "bits": [
+            3
+          ],
+          "aliases": [
+            [
+              "held.u_frame_guard.por_n",
+              "held.u_native.genblk1.held.inputs[0].u_cut.por_n",
+              "held.u_native.genblk1.held.inputs[0].u_cut.u_state.por_n",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.por_n",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.por_n",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.por_n",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.por_n",
+              "held.u_native.genblk1.held.u_permissions.por_n",
+              "held.u_native.rst_n[0]",
+              "held.u_native.rst_n[1]",
+              "held.u_native.rst_n[2]",
+              "held.u_native.rst_n[3]",
+              "held.u_receipt.por_n",
+              "held.u_receipt.u_state.por_n",
+              "por_n"
+            ]
+          ],
+          "mapped_sink_pin_count": [
+            5916
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "SETN": {
+          "bits": [
+            "1"
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            0
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070154_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262055",
+      "type": "XOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            8685
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            12
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254487",
+                "aliases": [
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[2231]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[2231]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[34][61]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[2509]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[2231]",
+                  "held.u_native.genblk1.held.owner0[95]",
+                  "held.u_native.genblk1.held.seats[2231]",
+                  "held.u_native.out_owner[287]",
+                  "held.u_native.out_owner[95]",
+                  "held.u_receipt.in_d[95]",
+                  "out_owner[287]",
+                  "out_owner[95]"
+                ]
+              }
+            ]
+          ]
+        },
+        "B": {
+          "bits": [
+            8686
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            11
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254488",
+                "aliases": [
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[2232]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[2232]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[34][62]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[2510]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[2232]",
+                  "held.u_native.genblk1.held.owner0[96]",
+                  "held.u_native.genblk1.held.seats[2232]",
+                  "held.u_native.out_owner[288]",
+                  "held.u_native.out_owner[96]",
+                  "held.u_receipt.in_d[96]",
+                  "out_owner[288]",
+                  "out_owner[96]"
+                ]
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            17579
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070157_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262058",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            17579
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            17580
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17582
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070161_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262062",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            17582
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            17585
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17586
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070162_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262063",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            8673
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            13
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254478",
+                "aliases": [
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[2225]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[2225]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[34][55]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[2503]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[2225]",
+                  "held.u_native.genblk1.held.owner0[89]",
+                  "held.u_native.genblk1.held.seats[2225]",
+                  "held.u_native.out_owner[281]",
+                  "held.u_native.out_owner[89]",
+                  "held.u_receipt.in_d[89]",
+                  "out_owner[281]",
+                  "out_owner[89]"
+                ]
+              }
+            ]
+          ]
+        },
+        "B": {
+          "bits": [
+            17586
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17587
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070204_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262105",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            17587
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            17631
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17632
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070205_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262106",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            17628
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            17632
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17633
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_070215_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$262116",
+      "type": "AO31x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            17621
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            17622
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A3": {
+          "bits": [
+            17633
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            17643
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            17644
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084113_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276014",
+      "type": "AO221x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            17644
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            17717
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B1": {
+          "bits": [
+            18576
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B2": {
+          "bits": [
+            18586
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            18658
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33109
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084114_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276015",
+      "type": "AO22x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            18401
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            18455
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B1": {
+          "bits": [
+            20398
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$264762",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "B2": {
+          "bits": [
+            33109
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33110
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084115_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276016",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            22119
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33110
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            16204
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33111
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084116_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276017",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            21735
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33111
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            20011
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$264391",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33112
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084117_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276018",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            21355
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33112
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            19439
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33113
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084118_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276019",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            18865
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$263289",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33113
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            18173
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33114
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084119_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276020",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            19828
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33114
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            21161
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$265495",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33115
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084120_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276021",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            19629
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33115
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            15435
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33116
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084121_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276022",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            13857
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33116
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            21546
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33117
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084122_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276023",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            15818
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$260606",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33117
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            20205
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33118
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084123_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276024",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            15006
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33118
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            14051
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33119
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084124_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276025",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            19248
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33119
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            21926
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33120
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084125_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276026",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            16012
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33120
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            19061
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33121
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084126_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276027",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            15627
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33121
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            14816
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$259679",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33122
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084127_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276028",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            16591
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33122
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            20971
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33123
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084128_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276029",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            14624
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33123
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            16395
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$261163",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33124
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084130_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276031",
+      "type": "AO21x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            14241
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            33124
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            20589
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$264946",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33126
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084153_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276054",
+      "type": "AO211x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            20780
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$265129",
+                "aliases": []
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33126
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33108
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            14432
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33149
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            12
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084165_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276066",
+      "type": "OR3x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            33097
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            8
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33130
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            17
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            33149
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            12
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33161
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            73
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084258_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276159",
+      "type": "OA22x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            6961
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$253035",
+                "aliases": [
+                  "held.payload[1340]",
+                  "held.payload[3476]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[1340]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[1340]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[20][67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[1507]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[1340]",
+                  "held.u_native.genblk1.held.seats[1340]",
+                  "held.u_native.out_data[1340]",
+                  "held.u_native.out_data[3476]",
+                  "out_data[1340]",
+                  "out_data[3403]"
+                ]
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33154
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            73
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B1": {
+          "bits": [
+            33161
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            73
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B2": {
+          "bits": [
+            6451
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            6
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$252556",
+                "aliases": [
+                  "held.payload[3028]",
+                  "held.payload[892]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[892]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[892]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[13][67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[1003]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[892]",
+                  "held.u_native.genblk1.held.seats[892]",
+                  "held.u_native.out_data[3028]",
+                  "held.u_native.out_data[892]",
+                  "out_data[2955]",
+                  "out_data[892]"
+                ]
+              }
+            ]
+          ]
+        },
+        "Y": {
+          "bits": [
+            33254
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084259_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276160",
+      "type": "OA211x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            5715
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$251932",
+                "aliases": [
+                  "held.payload[2516]",
+                  "held.payload[380]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[380]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[380]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[5][67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[427]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[380]",
+                  "held.u_native.genblk1.held.seats[380]",
+                  "held.u_native.out_data[2516]",
+                  "held.u_native.out_data[380]",
+                  "out_data[2443]",
+                  "out_data[380]"
+                ]
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33165
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            73
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33234
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            33254
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33255
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084260_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276161",
+      "type": "OA211x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            9070
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254778",
+                "aliases": [
+                  "held.payload[124]",
+                  "held.payload[2260]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[124]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[124]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[1][67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[139]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[124]",
+                  "held.u_native.genblk1.held.seats[124]",
+                  "held.u_native.out_data[124]",
+                  "held.u_native.out_data[2260]",
+                  "out_data[124]",
+                  "out_data[2187]"
+                ]
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33153
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            73
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33253
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            33255
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33256
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084261_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276162",
+      "type": "OA21x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            9006
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            [
+              {
+                "cell": "$abc$251689$auto$blifparse.cc:397:parse_blif$254714",
+                "aliases": [
+                  "held.payload[2196]",
+                  "held.payload[60]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.out_d[60]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.q[60]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.code[0][67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.encoded_q[67]",
+                  "held.u_native.genblk1.held.inputs[0].u_cut.u_state.q[60]",
+                  "held.u_native.genblk1.held.seats[60]",
+                  "held.u_native.out_data[2196]",
+                  "held.u_native.out_data[60]",
+                  "out_data[2123]",
+                  "out_data[60]"
+                ]
+              }
+            ]
+          ]
+        },
+        "A2": {
+          "bits": [
+            33191
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            70
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33256
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33257
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_084262_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$276163",
+      "type": "NAND3x1_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            33247
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33252
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C": {
+          "bits": [
+            33257
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            33258
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085859_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277760",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            33258
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            33457
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34855
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085860_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277761",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            33499
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34855
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34856
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085864_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277765",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34856
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34859
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34860
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085865_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277766",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34854
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34860
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34861
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085866_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277767",
+      "type": "XOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34828
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34861
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34862
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085909_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277810",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34862
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34904
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34905
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085930_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277831",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34905
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34925
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            3
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34926
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085937_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277838",
+      "type": "XNOR2x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A": {
+          "bits": [
+            34926
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            2
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34932
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34933
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085938_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277839",
+      "type": "AO222x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            30376
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            6
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            32319
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            12
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B1": {
+          "bits": [
+            33087
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            14
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B2": {
+          "bits": [
+            34933
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C1": {
+          "bits": [
+            33078
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "C2": {
+          "bits": [
+            17508
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            4
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34934
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_085939_",
+      "original": "$abc$251689$auto$blifparse.cc:397:parse_blif$277840",
+      "type": "OA21x2_ASAP7_75t_R",
+      "attributes": {},
+      "ports": {
+        "A1": {
+          "bits": [
+            33075
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            18
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "A2": {
+          "bits": [
+            34934
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "B": {
+          "bits": [
+            34929
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "Y": {
+          "bits": [
+            34935
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    },
+    {
+      "mapped": "_118149_",
+      "original": "$auto$ff.cc:337:slice$23387",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "attributes": {
+        "src": "/srv/opentallas-scratch/codex/gauss-station-physical-20261006/src_NO2_static/physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_static.sv:76.2-104.5"
+      },
+      "ports": {
+        "CLK": {
+          "bits": [
+            2
+          ],
+          "aliases": [
+            [
+              "clk_sm",
+              "held.u_frame_guard.clk",
+              "held.u_native.fclk_i",
+              "held.u_native.genblk1.held.inputs[0].u_cut.clk",
+              "held.u_native.genblk1.held.inputs[0].u_cut.u_state.clk",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.clk",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.clk",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.clk",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.clk",
+              "held.u_native.genblk1.held.u_permissions.clk",
+              "held.u_receipt.clk",
+              "held.u_receipt.u_state.clk"
+            ]
+          ],
+          "mapped_sink_pin_count": [
+            5917
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "D": {
+          "bits": [
+            34935
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            1
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "QN": {
+          "bits": [
+            17509
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            5
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "RESETN": {
+          "bits": [
+            3
+          ],
+          "aliases": [
+            [
+              "held.u_frame_guard.por_n",
+              "held.u_native.genblk1.held.inputs[0].u_cut.por_n",
+              "held.u_native.genblk1.held.inputs[0].u_cut.u_state.por_n",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.por_n",
+              "held.u_native.genblk1.held.receipts[0].reserved.u_ack.u_state.por_n",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.por_n",
+              "held.u_native.genblk1.held.receipts[1].reserved.u_ack.u_state.por_n",
+              "held.u_native.genblk1.held.u_permissions.por_n",
+              "held.u_native.rst_n[0]",
+              "held.u_native.rst_n[1]",
+              "held.u_native.rst_n[2]",
+              "held.u_native.rst_n[3]",
+              "held.u_receipt.por_n",
+              "held.u_receipt.u_state.por_n",
+              "por_n"
+            ]
+          ],
+          "mapped_sink_pin_count": [
+            5916
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        },
+        "SETN": {
+          "bits": [
+            "1"
+          ],
+          "aliases": [
+            []
+          ],
+          "mapped_sink_pin_count": [
+            0
+          ],
+          "one_inversion_aliases": [
+            []
+          ]
+        }
+      }
+    }
+  ],
+  "limits": "Mapped sink counts are pre-placement connectivity; actual path report fanout includes placed buffers. Source attribution is not a new functional/timing qualification."
+}
