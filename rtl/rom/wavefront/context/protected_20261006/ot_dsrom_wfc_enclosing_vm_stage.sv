@@ -5,14 +5,16 @@
 module ot_dsrom_wfc_enclosing_vm_stage #(
  parameter ENABLE=0,SOURCE=0,STRUCTURAL=0
 )(
- input wire clk,rst_n,advance,memory_step,
+ input wire clk,rst_n,advance,memory_step,read_step,write_step,
  output wire vm_we,vm_re,
  output wire [14:0]vm_waddr,vm_raddr,
  output wire [511:0]vm_wdata,
  input wire [511:0]vm_rq,
  output wire [9:0]vm_owner_user,
  output wire [20:0]vm_owner_pos,
- output wire vm_read_capture,
+ output wire vm_read_capture,vm_owner_conflict,
+ output wire [9:0]vm_read_owner_user,
+ output wire [20:0]vm_read_owner_pos,
  input wire [9:0]cfg_users,
  input wire [20:0]cfg_prompt_len,cfg_gen_len,
  input wire [20:0]pr_q,
@@ -128,8 +130,8 @@ module ot_dsrom_wfc_enclosing_vm_stage #(
    ot_dsrom_wfc_parent_enclosed_vm #(.SOURCE(SOURCE),.XWORDS(SOURCE?41:46),
      .DECODED_READ(STRUCTURAL),.CONTROL_PIPE(STRUCTURAL),.QUEUE_SHIFT(STRUCTURAL),
      .HEADER_LOCAL(STRUCTURAL),.PREFIX_INC(STRUCTURAL))u_boundary(
-     .clk(clk),.rst_n(rst_n),.advance(advance),.memory_step(memory_step),
-     .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),.cfg_users(cfg_users),.cfg_prompt_len(cfg_prompt_len),.cfg_gen_len(cfg_gen_len),
+     .clk(clk),.rst_n(rst_n),.advance(advance),.memory_step(memory_step),.read_step(read_step),.write_step(write_step),
+     .vm_owner_user(vm_owner_user),.vm_owner_pos(vm_owner_pos),.vm_read_capture(vm_read_capture),.vm_owner_conflict(vm_owner_conflict),.vm_read_owner_user(vm_read_owner_user),.vm_read_owner_pos(vm_read_owner_pos),.cfg_users(cfg_users),.cfg_prompt_len(cfg_prompt_len),.cfg_gen_len(cfg_gen_len),
      .in_valid(in_valid),.in_last(in_last),.in_data(in_data),.in_ready(in_ready),
      .out_valid(out_valid),.out_last(out_last),.out_data(out_data),.out_ready(out_ready),
      .core_start(core_start),.core_token(core_token),.core_pos(core_pos),.core_user(core_user),
@@ -139,7 +141,7 @@ module ot_dsrom_wfc_enclosing_vm_stage #(
      .c8_write_quiet(c8_write_quiet),.c8_write_quarantine(c8_write_quarantine||poison||c8_poison),
      .c8_write_fault(c8_write_fault),.coll_busy(coll_busy),.*);
  end else begin:g_disabled
-   assign {vm_we,vm_re,vm_waddr,vm_raddr,vm_wdata,vm_owner_user,vm_owner_pos,vm_read_capture}=0;
+   assign {vm_we,vm_re,vm_waddr,vm_raddr,vm_wdata,vm_owner_user,vm_owner_pos,vm_read_capture,vm_owner_conflict,vm_read_owner_user,vm_read_owner_pos}=0;
    assign {pr_re,pr_user,pr_pos,pr_blk,in_ready,out_valid,out_last,out_data,
      bl_rx_ready,bl_tx_valid,bl_tx_last,bl_tx_data,stage_request_v,stage_request_identity,
      stage_request_token,stage_request_entry,whole_stage_accepted,context_v,context_identity,

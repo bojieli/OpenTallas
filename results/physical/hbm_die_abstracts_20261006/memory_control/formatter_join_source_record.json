@@ -1,0 +1,24 @@
+{
+  "schema": "hbm.memory_control.formatter_join.source_milestone.v1",
+  "delivered_RTL_source": "4a506770b",
+  "actual_parent_ABI": "Gibbs9d24f8eff/defae6764",
+  "required_ports": [
+    "gather_granted",
+    "gather_frame73",
+    "pair_token17",
+    "pairs_frame73",
+    "release_token17"
+  ],
+  "RTL_SHA256": "95d3e48a9d1d4aebfc65c31373397efff755a4c5fa441229c854dd51f2807f7f",
+  "actual_backing": "existing shared gather_owner 649/637, 2x256 sector provider route; no private provider",
+  "state_FF_delta": 216,
+  "new_SRAM": 0,
+  "component_runtime_r2": "179d4c7df PASS 6144checked publications,4pairs512,8reads,576925cycles,24722realbeats; previous port spellings",
+  "delivered_source_changed_gate": "pending fresh capacity; r3 CPUfit but RAM+unchanged reserve+ramping refused; no job started",
+  "first_failure_preserved": "f7d25ef01 r1 existing gatherrow11DUE beforefirstpacket undertool5.032; rootcause not asserted",
+  "production_aperture_VM_AW": 21,
+  "parent_qualified": false,
+  "physical_qualified": false,
+  "production_enrollment_qualified": false,
+  "clock": "clk_sm, cold rst_sm_n from Gibbs; context SS60FF25 still open"
+}
