@@ -8,7 +8,7 @@
 //     (QPIPE boundary registers, QZ / QY, QX = QXV); the PQ loader runs in its PQ = 0 mode, which never reads the
 //     element's shadow / bank status (ld_ok = 1), so those inputs are tied to 1.  A BF16 go never starts it.
 //   QELEM != 0 with PQ != 0: NOT BUILDABLE -- the q-element has no PQ shadow configuration, no op tag on its rows and
-//     no segment-tree op parity (ot_v41_rom_elem_pq_w10's mechanism); elaboration stops with $fatal.
+//     no segment-tree op parity (ot_v41_rom_elem_pq_w10's mechanism); elaboration stops (a missing-module error).
 `ifndef OT_PAIR_PQ_QELEM
 `define OT_PAIR_PQ_QELEM 0
 `endif
@@ -137,7 +137,9 @@ module ot_v41_pair_pq_w17w10 #(
     assign quiet = !e_busy && !ld_busy && !cfg_go && !(go && go_e);
     if (QELEM != 0 && BF16 == 0) begin : g_q
         if (PQ != 0) begin : g_bad
-            $fatal(1, "ot_v41_pair_pq_w17w10 (swap): QELEM with PQ = 1 is not buildable (no PQ q-element)");
+            // a hard elaboration error that no lint waiver demotes (a $fatal here is only a USERFATAL warning under
+            // -Wno-fatal, which the field benches pass): the module below does not exist on purpose
+            ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element u_not_buildable ();
         end
         assign e_walking = 1'b0;
         assign e_bank_free = 1'b1;
