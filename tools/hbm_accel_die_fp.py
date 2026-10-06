@@ -65,7 +65,7 @@ SS_REACH_UM = 504.0             # SS wire reach at 0.833 ns (W15)
 WAYPOINT_UM = 4 * LINK_STAGE_UM
 WP_DEFAULT = WAYPOINT_UM
 CLK_HZ = 1.2e9
-FINAL_ROUND = 'r16h'            # (r16g until 2026-10-06 09:30 PT: r16h = r16g + router_env)
+FINAL_ROUND = 'r16i'            # (r16g until 09:30 PT; r16h = r16g + router_env + pin rules; r16i = r16h + index_q bands)
 # the round the records and the pricing are taken from (r8 until 2026-10-05 pm, r14b
 #                                 until 2026-10-06: measured with the 16 S SMs mirrored, see R15 orient_fix)
 
@@ -228,7 +228,13 @@ DECISIONS = dict(
     r16h_router_env=('Router envelope [11069.136, 9338.688, 12468.792, 9664.968] (326.280 um tall, from 133.896) per '
                      'TURING ROUTER_FINITE_FRAME allocation; loader / cmdproc fixed, each adjacent gap 327.192 um. The '
                      'die router view (ot_gpu_router_topk_ps PIPESEL=1, ~7.4k um2 placed) fits.'))
-ADOPTED = R16H
+# r16i (2026-10-06, coordinator decision on the svc / index_q clock blocker): no multi-tap clock pins; a long master is
+# split into ~1 mm segment masters (bands), each with one ck pin (a normal die clock leaf) and registered faces, at
+# boundaries on existing wire-stage registers (0 cycles).  The split record (tools/hbm_die_split.py) gives every band its
+# parent ports at unchanged absolute positions plus the cross buses between abutting bands; the generator replaces each
+# parent instance by its bands in the same slot (mirrored with the parent) and rewires (apply_splits).
+R16I = dict(R16H, split_masters={'hfd_index_q': 'physical/hbm_accel_die_views/index_q/split/split.json'})
+ADOPTED = R16I
 
 
 def build(variant=None):
@@ -472,7 +478,107 @@ def build(variant=None):
     if variant.get('child_contract'):
         from hbm_die_child_contract import allocations
         m['child_reservations'] = allocations(m)
+    if variant.get('split_masters'):
+        apply_splits(m, variant['split_masters'])
     return m
+
+
+def _split_spec(ports):
+    """('face', bits, face, layer, centre, pitch) reproducing a split record's explicit pins (uniform per port)."""
+    out, order = {}, []
+    for pn, v in ports.items():
+        face, layer = v['face'], v['layer']
+        pins = sorted(v['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+        pos = [((q[2] + q[4]) / 2) if face in 'NS' else ((q[3] + q[5]) / 2) for q in pins]
+        step = (pos[-1] - pos[0]) / (len(pos) - 1) if len(pos) > 1 else Q.TRK[layer][1]
+        pitch = max(1, round(step / Q.TRK[layer][1]))
+        out[pn] = ('face', v['bits'], face, layer, round(pos[0] + v['bits'] * pitch * Q.TRK[layer][1] / 2, 4), pitch)
+        order.append(pn)
+    return out, order
+
+
+def apply_splits(m, specs):
+    """r16i: replace each instance of a split parent by its bands (same slot, mirrored with the parent), move every
+    parent-port bus end to the band that owns the port, give every band the parent's ck / rst nets, add the cross buses
+    between abutting bands, and fix the band masters' pin plans to the split record (m['fixed_ports'])."""
+    fixed = m.setdefault('fixed_ports', {})
+    for parent, rel in specs.items():
+        sp = json.loads((ROOT / rel).read_text())
+        bands = sorted(sp['bands'].items(), key=lambda kv: kv[1]['y0_um'])
+        Hp = sp['parent_size_um'][1]
+        recs = {}
+        for bn, b in bands:
+            recs[bn] = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+            spec, order = _split_spec(recs[bn]['ports'])
+            def fn(mst, k=1, spec=spec, order=order):
+                sp_ = dict(spec)
+                if k > 1:       # bundled view: runs of one face packed apart (>= two bundled tracks between runs)
+                    byf = defaultdict(list)
+                    for pn in order:
+                        byf[sp_[pn][2]].append(pn)
+                    for f_, pns in byf.items():
+                        runs = []
+                        for pn in pns:
+                            t_ = sp_[pn]
+                            st_ = Q.TRK[t_[3]][1] * k * t_[5]
+                            n_ = max(1, math.ceil(t_[1] / k))
+                            runs.append([t_[4] - n_ * st_ / 2, n_ * st_, pn])
+                        along = mst.h if f_ in 'EW' else mst.w
+                        gap = 2 * Q.TRK['M4' if f_ in 'EW' else 'M5'][1] * k
+                        for r_ in runs:     # the clamp Q.pin_rects applies
+                            r_[0] = min(max(r_[0], gap), along - gap - r_[1])
+                        runs.sort()
+                        for a_, b_ in zip(runs, runs[1:]):          # push up
+                            b_[0] = max(b_[0], a_[0] + a_[1] + gap)
+                        if runs and runs[-1][0] + runs[-1][1] > along - gap:   # then down from the top
+                            runs[-1][0] = along - gap - runs[-1][1]
+                            for a_, b_ in zip(runs[-2::-1], runs[::-1]):
+                                a_[0] = min(a_[0], b_[0] - gap - a_[1])
+                        for r_ in runs:
+                            t_ = sp_[r_[2]]
+                            sp_[r_[2]] = t_[:4] + (round(r_[0] + r_[1] / 2, 4),) + t_[5:]
+                mst.ports, mst.order = sp_, list(order)
+            fixed[bn] = fn
+        owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
+        new_insts, repl = [], {}
+        for it in m['insts']:
+            if it.master != parent:
+                new_insts.append(it)
+                continue
+            assert abs(it.h - Hp) < 0.01, (parent, it.h, Hp)
+            names = {}
+            for bn, b in bands:
+                y0, h = b['y0_um'], b['h_um']
+                yy = it.y + (Hp - y0 - h if it.orient in ('MX', 'R180') else y0)
+                nm = f'{it.name}_{bn.rsplit("_", 1)[1]}'
+                new_insts.append(Inst(nm, bn, it.x, round(yy, 4), it.w, h, it.orient, kind=it.kind, region=it.region,
+                                      domain=it.domain))
+                names[bn] = nm
+            repl[it.name] = names
+        m['insts'] = new_insts
+        nb = []
+        for bid, cls, bits, eps in m['buses']:
+            e2 = []
+            for inst, port in eps:
+                if inst not in repl:
+                    e2.append((inst, port))
+                elif port in ('ck', 'rst'):
+                    e2 += [(repl[inst][bn], port) for bn, _ in bands]
+                else:
+                    assert port in owner, (parent, port)
+                    e2.append((repl[inst][owner[port]], port))
+            nb.append((bid, cls, bits, e2))
+        for pin_, names in repl.items():
+            for j, x in enumerate(sp['cross']):
+                fb, fp = x['from'].split('.')
+                tb, tp = x['to'].split('.')
+                nb.append((f'{pin_}_x{j}', 'hub', x['bits'], [(names[fb], fp), (names[tb], tp)]))
+        m['buses'] = nb
+        hub = m['hub']
+        for k_, v_ in list(hub.items()):
+            if getattr(v_, 'name', None) in repl:
+                hub[k_] = next(i for i in new_insts if i.name == repl[v_.name][bands[-1][0]])
+        m.setdefault('splits', {})[parent] = dict(record=rel, bands=[bn for bn, _ in bands], instances=sorted(repl))
 
 
 # ------------------------------------------------------------------------------------------------ station masters
@@ -1241,7 +1347,10 @@ def masters(m, k=1):
     items = defaultdict(lambda: defaultdict(list))
     for mname, fn in fixed.items():
         if mname in M:
-            fn(M[mname])
+            try:
+                fn(M[mname], k)
+            except TypeError:
+                fn(M[mname])
     for (mname, port), others in peers.items():
         if mname in REAL or mname not in M or mname in fixed:
             continue
@@ -1974,7 +2083,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
