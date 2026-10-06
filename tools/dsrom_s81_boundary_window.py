@@ -58,14 +58,16 @@ set_input_delay 0 -clock $ck $ins
 set_output_delay 0 -clock $ck [all_outputs]
 set fo [open /o/window_${{C}}.tsv w]
 set chk [expr {{"$C" eq "FF" ? "min" : "max"}}]
-foreach p $ins {{
-  set pe [find_timing_paths -from $p -path_delay $chk -group_path_count 1 -endpoint_path_count 1]
-  if {{[llength $pe]}} {{ puts $fo "in\t[get_full_name $p]\t[get_property [lindex $pe 0] slack]" }} else {{ puts $fo "in\t[get_full_name $p]\tinf" }}
+set prop [expr {{"$C" eq "FF" ? "slack_min" : "slack_max"}}]
+proc ot_sl {{p prop}} {{
+  set bt [[ord::get_db_block] findBTerm [get_full_name $p]]
+  if {{$bt eq "NULL"}} {{ return inf }}
+  set n [$bt getNet]
+  if {{$n eq "NULL" || [llength [$n getITerms]] == 0}} {{ return inf }}
+  return [string tolower [get_property $p $prop]]
 }}
-foreach p [all_outputs] {{
-  set pe [find_timing_paths -to $p -path_delay $chk -group_path_count 1 -endpoint_path_count 1]
-  if {{[llength $pe]}} {{ puts $fo "out\t[get_full_name $p]\t[get_property [lindex $pe 0] slack]" }} else {{ puts $fo "out\t[get_full_name $p]\tinf" }}
-}}
+foreach p $ins {{ puts $fo "in\t[get_full_name $p]\t[ot_sl $p $prop]" }}
+foreach p [all_outputs] {{ puts $fo "out\t[get_full_name $p]\t[ot_sl $p $prop]" }}
 close $fo
 write_timing_model -library_name {top}_{c} /o/{top}_{c}.lib
 set_false_path -from $ins
@@ -141,10 +143,12 @@ def check(a):
     for corner in ("SS", "FF"):
         for ln in (d / f"window_{corner}.tsv").read_text().splitlines():
             kind, port, s = ln.split("\t")
-            s = float(s) if s != "inf" else float("inf")
+            s = float(s)
             win.setdefault((kind, _bus(port)), {}).setdefault(corner, []).append(s)
     tree = {c: _tree(d / f"{top}_{c}.lib") for c in ("ss", "ff")}
     i_min_ff = tree["ff"]["min_clock_tree_path"] or 0.0
+    i_max_ff = tree["ff"]["max_clock_tree_path"] or 0.0
+    i_min_ss = tree["ss"]["min_clock_tree_path"] or 0.0
     i_max_ss = tree["ss"]["max_clock_tree_path"] or 0.0
     groups = []
     for (kind, bus), cs in sorted(win.items()):
@@ -156,26 +160,41 @@ def check(a):
             # parent launch-clock offset o (relative to the port edge): data arrives in [o + clkq_min, o + clkq_max + w]
             lo = req_min - DFF["clkq_min_ff"]
             hi = max_arr - DFF["clkq_max_ss"] - a.wire_ps
+            # lo is a hold (FF) bound, hi a setup (SS) bound: P1 launches at the unit's own insertion
+            p1 = min(i_min_ff - lo, hi - i_max_ss)
             g.update(req_min_ps=round(req_min, 2), max_arr_ps=round(max_arr, 2), offset_window_ps=[round(lo, 2),
-                     round(hi, 2)], feasible=lo <= hi, P0=lo <= 0 <= hi, P1=lo <= i_min_ff and i_max_ss <= hi)
+                     round(hi, 2)], feasible=lo <= hi, P0_margin_ps=round(min(-lo, hi), 2), P1_margin_ps=round(p1, 2))
         else:
             out_min, out_max = ff + HOLD_U, T_PS - SETUP_U - ss
             # parent capture-clock offset o: setup out_max + w <= T - 60 + o - tsu ; hold out_min >= o + th + 25
             lo = out_max + a.wire_ps + DFF["setup_ss"] + SETUP_U - T_PS
             hi = out_min - DFF["hold_ff"] - HOLD_U
+            # lo is a setup (SS) bound, hi a hold (FF) bound: P1 captures at the unit's own insertion
+            p1 = min(i_min_ss - lo, hi - i_max_ff)
             g.update(out_min_ps=round(out_min, 2), out_max_ps=round(out_max, 2), offset_window_ps=[round(lo, 2),
-                     round(hi, 2)], feasible=lo <= hi, P0=lo <= 0 <= hi, P1=lo <= i_min_ff and i_max_ss <= hi)
+                     round(hi, 2)], feasible=lo <= hi, P0_margin_ps=round(min(-lo, hi), 2), P1_margin_ps=round(p1, 2))
+        if g["ss_slack_ps"] == float("inf") and g["ff_slack_ps"] == float("inf"):
+            g["P0_margin_ps"] = g["P1_margin_ps"] = None          # unconstrained port (no timing path)
+        g["P0"] = g["P0_margin_ps"] is None or g["P0_margin_ps"] >= 0
+        g["P1"] = g["P1_margin_ps"] is None or g["P1_margin_ps"] >= 0
         groups.append(g)
     fails = [g["port"] for g in groups if not g["feasible"]]
+    common = {}
+    for kind in ("in", "out"):
+        ws = [g["offset_window_ps"] for g in groups if g["kind"] == kind and g["P0_margin_ps"] is not None]
+        if ws:
+            lo, hi = max(w[0] for w in ws), min(w[1] for w in ws)
+            common[kind] = dict(window_ps=[lo, hi], width_ps=round(hi - lo, 2), feasible=lo <= hi)
     rec = dict(schema="opentallas.dsrom-s81.boundary-window.v1", tool="tools/dsrom_s81_boundary_window.py",
                unit=meta["name"], top=top, base=meta["base"], wire_ps=a.wire_ps, dff=DFF,
                clock_tree_path_ps=tree, groups=groups,
-               summary=dict(groups=len(groups), infeasible=fails,
-                            P0_pass=all(g["P0"] for g in groups if g["ss_slack_ps"] != float("inf") or g["ff_slack_ps"] != float("inf")),
-                            P1_pass=all(g["P1"] for g in groups if g["ss_slack_ps"] != float("inf") or g["ff_slack_ps"] != float("inf")),
+               summary=dict(groups=len(groups), infeasible=fails, common_offset=common,
+                            P0_pass=all(g["P0"] for g in groups), P1_pass=all(g["P1"] for g in groups),
+                            P0_worst_margin_ps=min((g["P0_margin_ps"] for g in groups if g["P0_margin_ps"] is not None), default=None),
+                            P1_worst_margin_ps=min((g["P1_margin_ps"] for g in groups if g["P1_margin_ps"] is not None), default=None),
                             P0_fail=[g["port"] for g in groups if not g["P0"]],
                             P1_fail=[g["port"] for g in groups if not g["P1"]]))
-    txt = json.dumps(rec, indent=1).replace("Infinity", '"inf"')
+    txt = json.dumps(rec, indent=1).replace("-Infinity", '"-inf"').replace("Infinity", '"inf"')
     (d / "boundary_window.json").write_text(txt + "\n")
     print(json.dumps(rec["summary"], indent=1), json.dumps(tree))
 
