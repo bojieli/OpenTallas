@@ -158,13 +158,21 @@ module ot_qwen_stream4_cdc_pc #(
             wire [LD-1:0] hot;
             ot_hdc_v41x_kreg #(.W(LD), .R(0)) u_sel (.clk(clk), .rst_n(1'b1),
                 .d(c_rl ? lr_hot_n : {{(LD-1){1'b0}}, 1'b1}), .q(hot));
-            reg [HI-LO-1:0] rowg;
-            integer e;
-            always @(*) begin
-                rowg = '0;
-                for (e = 0; e < LD; e = e + 1) rowg = rowg | ({(HI-LO){hot[e]}} & lmem[e][HI-1:LO]);
+            // AND-OR mux as continuous assigns (an always @(*) loop over the storage array is not re-evaluated
+            // on storage writes by every simulator: r8 bench CHAIN ph137000 timed out with it)
+            wire [HI-LO-1:0] acc [0:LD];
+            assign acc[0] = {(HI-LO){1'b0}};
+            for (genvar e = 0; e < LD; e = e + 1) begin : g_or
+                assign acc[e+1] = acc[e] | ({(HI-LO){hot[e]}} & lmem[e][HI-1:LO]);
             end
-            always @(posedge clk) l_q[HI-1:LO] <= rowg;
+            // the group loads only when the presented word is free (!l_v || l_pop), as r5: an unconditional
+            // load (r6) re-reads the slot AFTER the presented one while l_v is held, and the writer may refill
+            // the presented slot once the read pointer passed it.  The enable uses this group's own kept copy
+            // of l_v, so each enable cone drives one group (~29 flops), not the whole 281-bit word.
+            wire vg;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_vg (.clk(clk), .rst_n(c_rl),
+                .d(l_ren ? 1'b1 : (l_pop ? 1'b0 : vg)), .q(vg));
+            always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= acc[LD];
         end else begin : g_ix
             (* keep *) reg [LA-1:0] ix;
                 always @(posedge clk or negedge c_rl)
