@@ -1,0 +1,114 @@
+{
+  "schema": "w2-check-station-physical-v1",
+  "source_pins": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv": "75b147f18c0cb93980c9436469c548118fce889cab551957ec7a7d8613efda82",
+    "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json": "9839da8d116fbd0a36a30daaeb88a02d5f96c0ee68975771b66c818ec2bb411e",
+    "physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv": "57f72d64c87c9ea4c8f1f3bf8d9043ed357f2fa97f48a0df070890a0907ec9f7",
+    "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/ot_hbm_native_station.sv": "d06a6485256c42c5a992e1d36355fb118b16fa9ed7cf8d9bdf5f4228b27c586f",
+    "physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv": "27ad20cff6f60e5aec62141cb9ad5b36eb262e7fcb8c1901e8bdfe7486b5e65f",
+    "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/ot_hbm_native_frame_station.sv": "b409ef04dc1f39e6d6ffb8dc5e256c43dd5847e4f6cd12f1fb7a7f601eabc3df"
+  },
+  "generated_pins": {
+    "bank_legacy_static.sv": "95daa28084bd1a644939d083f00f47758c14a25faf70445ce15d99b98475db0e",
+    "bank_current_static.sv": "1ae03d1b14f9f8a8a9560174c776ea4356d5810ca4c7f7a5b3f1be477c2ecb73",
+    "bank_check_static.sv": "9846186582d35ef916cf3bc044b0991a66fae7047f6db60fffdc70475f0b16b0",
+    "ot_hbm_native_station.sv": "5e142eb5d87985b1d782d326271e5640ce4e3b5d664a1503692a9b2679e08c20",
+    "ot_hbm_native_frame_station.sv": "f51cec694451a08e6a8fd1f5100841ebcfff87213189b03b8f2c70c22828e36d"
+  },
+  "enrolled_source": "10ce / main19cf9da3c",
+  "top": "ot_hbm_native_frame_station",
+  "parameters": {
+    "ENABLE": 1,
+    "NO": 2,
+    "REGISTERED_CURRENT": 1,
+    "REGISTERED_CHECK": 1
+  },
+  "defaults": {
+    "REGISTERED_CURRENT": 0,
+    "REGISTERED_CHECK": 0
+  },
+  "functional_gates_reused": [
+    "PASS36 checker",
+    "PASS19 native quarter"
+  ],
+  "source_declared_FF_bits": 30396,
+  "NO3_source_FF_bits": 32774,
+  "quarter_source_FF_bits": 128718,
+  "full_payload_bits": 2063,
+  "full_frame_bits": 73,
+  "full_owner_bits": 192,
+  "macro_count": 0,
+  "macro_timing": "No memory macros in station; no parent macro/clock credit borrowed",
+  "binding": {
+    "controller_source_owner": "Codex",
+    "physical_vehicle_tie_mapping_route_owner": "Descartes",
+    "parent_cost_owner": "Turing",
+    "source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv",
+    "parameters": {
+      "REGISTERED_CURRENT": 0,
+      "REGISTERED_CHECK": 0
+    },
+    "physical_selected_parameters": {
+      "REGISTERED_CURRENT": 1,
+      "REGISTERED_CHECK": 1
+    },
+    "bank_hook": "ot_hbm_w2_protected_bank_check_pipeline #(.WORDS(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "cut_hook": "ot_hbm_w2_protected_cut_check_pipeline #(.W(existing),.REGISTERED_CURRENT(REGISTERED_CURRENT),.REGISTERED_CHECK(REGISTERED_CHECK))",
+    "binding": "CHECK/VERIFY/EVAL/REPAIR phases0/1/2/3; exact216bit W6 checker-input mirror per stripe plus protected4bit verdict; CURRENT equality remains. Mirror/parity/verdict mutations fail closed. CE correction goes through CHECK and VERIFY again.",
+    "dependencies": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
+      "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv"
+    ],
+    "gate": "results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json",
+    "checker_checks": 36,
+    "parent_checks": 19,
+    "CE_edges": 7,
+    "added_load_edges_vs_R2": 1,
+    "NO2_source_FF_bits": 30396,
+    "NO3_source_FF_bits": 32774,
+    "quarter_source_FF_bits": 128718,
+    "quarter_added_source_FF_bits_vs_R2": 63360,
+    "chain_incremental_serial_edge_upper": 68,
+    "chain_incremental_latency_upper_ns": 56.66666666666667,
+    "slot_clock_binding": "Reuse actual NO2 core382.644x95.31/36469.79964um2 and current source-specific receiver/clock/POR contract SS60FF25. Map added FF/clock/check binding tracks; no copied R2 area/fanout/clock closure credit.",
+    "physical_next": "Descartes owns vehicle adaptation/static codec expansion/native tie implementation; replace bank/cut calls only and propagate new default0 REGISTERED_CHECK through station/frame top. Preserve four codecs/attributes/protected phase. One changed-source mapping/context route after actual fit/admission. No same-source geometry variants or gate replay.",
+    "parent_next": "Turing composes actual NO2/NO3 inventories and incremental VERIFY calendar; actual warm parent unchanged32macros/full73/owner192. Published calendar94/99 has shifted startup origin; no clean measured chain delta claimed.",
+    "rejected_parent": "results/physical/hbm_w2_current_station_20261006/r2/terminal_result.json",
+    "gate_passed": true,
+    "physical_qualified": false
+  },
+  "binding_sha256": "895fd175e33fb1da2b6b800b53ec2922e9278da188aa8f8fdd9b80a360e527ef",
+  "unified_model_sha256": "fbb9d41b92d57a5c76c985bb422c0d90cc28d3870c66afbdda9be030d3320c68",
+  "model_term": "station_CHECK_pipeline_successor",
+  "serial_incremental_edge_upper": 68,
+  "incremental_latency_upper_ns": 56.66666666666667,
+  "actual_mapped_clock_caps_required": true,
+  "actual_mapped_area_required": true,
+  "inherited_core_area_um2": 36469.79964,
+  "core_bbox_um": [
+    2.052,
+    2.16,
+    384.696,
+    97.47
+  ],
+  "die_bbox_um": [
+    0,
+    0,
+    386.709,
+    99.677
+  ],
+  "target_buffered_utilization_percent": [
+    55,
+    60
+  ],
+  "fit_not_claimed_from_preoptimisation_FF_count": true,
+  "codec_scope": "Exact existing static W6 equations; every non-import CHECK source byte unchanged; CURRENT and legacy dependencies unchanged",
+  "clocks": "clk_sm833.333333ps and four kept real forwarding inversions",
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "memory_admission_GiB": 16,
+  "admission_basis": "R2 actual ORFS peak3.199GB and R1 Yosys peak517.63MB; 30396/15420 FF growth<2x; unchanged16GiB reservation covers measured growth with headroom, no process cap",
+  "physical_qualified": false,
+  "installed_parent_qualified": false
+}
