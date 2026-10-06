@@ -129,6 +129,49 @@ def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
         adoption=False, physical_closed=False, measured_cycles=None)
 
 
+def dsrom_fh_fault_retire_model():
+    """C17 source-owned four-edge fault/transaction retirement cut, before RTL.
+
+    This is a component proposal, not an adopted core or a rate measurement.
+    The producer must retain its warm-index/commit debt until retirement.
+    """
+    packet_bits = 64*49 + (2048+64+4*24+4) + 160+1+1
+    ff = dict(transaction_packet=4*packet_bits, packet_valid=4,
+              local_eight_bank_fault=8, two_row_fault=4,
+              kept_global_relays=16, lane_veto_copies=64,
+              write_veto_copies=4, status_copy=1)
+    return dict(parameter='FAULT_RETIRE', default=0, G=4, W=16,
+        stages=4, MACs_per_cycle=0, FP32_adds_per_cycle=0,
+        new_memory_ports=0, memory_payload_bytes_per_cycle=256,
+        boundary_bits_per_cycle=dict(transaction=packet_bits, valid=1,
+                                    poison=64, address_fault=4, arithmetic_fault=1),
+        packet_fields=dict(leaf_valid_key_row=64*49,
+            result_data_mask_addr_write_enable=2048+64+4*24+4,
+            result_tag=160, result_valid=1, warm_index_marker=1),
+        FF_bits=ff, FF_total=sum(ff.values()), FF_area_proxy_um2=sum(ff.values())*DFF_UM2,
+        fault_tree=dict(local_banks_per_row=8, rows_per_quadrant=2,
+            quadrant_sources_per_relay=4, relay_replicas=16,
+            max_quadrant_logical_fanout=16, max_relay_logical_fanout=6,
+            max_lane_veto_external_loads=2,
+            retention='kept hierarchy on each OR4/register relay and final register copy'),
+        latency=dict(output_retirement_extra_cycles=4,
+            index_write_retirement_extra_cycles=4,
+            conservative_added_cycles_per_fused_chain=8,
+            five_chain_added_cycles=40,
+            predicted_five_chain_cycles=62878+40,
+            predicted_five_chain_added_ns=40*0.833333,
+            measured_cycles=None,
+            requirement='Price actual producer drain/commit handshake before adoption; this bound is not a core measurement'),
+        protection='Snapshot all 64 sticky poison flags, four address faults and arithmetic fault with the same complete transaction; never retire a faulted packet',
+        flow_control='4-slot valid pipeline; warm-index debt cleared only on retired index write; parent must refuse reuse until debt drains',
+        floorplan=dict(existing_width_um=2000,existing_height_um=660,
+            macro_count=64,macro_moves=0,actual_new_cell_area_um2=None,
+            routing_tracks_and_loaded_clock_PG_repair_margin=None,
+            ready_for_route=False),
+        scope='Own head component. Requires real parent retirement/debt integration; no standalone cut qualifies parent hold or whole-die timing.',
+        adoption=False, physical_closed=False)
+
+
 def dsrom_field_spine_route_price(r=16, pq=0):
     """Immutable a721 spine, physical-only hold/slew repair budget.
 
@@ -10802,6 +10845,9 @@ def dsrom_window_parent_boundary_model():
     """
     import re
     leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
+    ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/ss_synthesis_inventory.json'
+    if ss_inventory_path.is_file():
+        leaf_inventory_path = ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
