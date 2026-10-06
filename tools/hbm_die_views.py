@@ -178,10 +178,9 @@ def parse_lef(path):
     name = re.search(r'^MACRO (\S+)', t, re.M).group(1)
     w, h = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', t).groups())
     pins, pg = {}, {}
-    for pm in re.finditer(r'\n\s*PIN (\S+)\n(.*?)\n\s*END \1\b', t, re.S):
+    for pm in re.finditer(r'\n\s*PIN (\S+)\n(.*?)\n\s*END \1[ \t]*(?=\n)', t, re.S):
         body = pm.group(2)
-        rects = [(lm, tuple(float(v) for v in rm)) for lm, rm in
-                 ((None, None),)][:0]
+        rects = []
         cur = None
         for ln in body.split('\n'):
             mm = re.match(r'\s*LAYER (\S+)', ln)

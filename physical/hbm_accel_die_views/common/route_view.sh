@@ -22,7 +22,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   ${MACROS:+--macro-place-halo 5 5} \
   --clock-port ck --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 ${SDCA:+--sdc-append $SDCA} --stages pnr \
-  --die-area 0 0 $DW $DH --core-area 0 0 $DW $DH --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
+  --die-area 0 0 $DW $DH --core-area 0 0.54 $DW $(python3 -c "print(round($DH-0.54,4))") --place-density ${PD:-0.55} --routing-layers M2 ${MAXL:-M7} \
   --orfs-var PDN_TCL=/src/${PDN:-physical/hbm_accel_die_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
