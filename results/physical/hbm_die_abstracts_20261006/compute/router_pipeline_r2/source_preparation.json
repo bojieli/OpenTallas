@@ -1,5 +1,5 @@
 {
-  "status": "CHANGED_SUCCESSOR_RTL_PREPARED_ENABLED_GATE_NOT_RUN",
+  "status": "REAL_CHANGED_SUCCESSOR_FULL384_K6_EXACT_AND_NEGATIVES_PASS_MAPPING_PENDING",
   "source_sha256": {
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/ot_hbm_router_topk_successor.sv": "c410d816f7866ca3d2afd503009fb1bc8516ca782b7717ec8c8cb4fc954bac5e",
     "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r2/tb_router_successor.sv": "aa8436e4d94a73df92c4f3663f13dff345febde427aea7fe323d6a8f72f75182",
@@ -9,7 +9,7 @@
   "model_sha256": "99235d32c82fd4bd8270973b6027e3832f26dbd96aa480c41170bf3cbeb55dd6",
   "previous_live_source_untouched": "19c66ba94/a438d922",
   "default_ENABLE": 0,
-  "functional_pass": false,
+  "functional_pass": true,
   "physical_closed": false,
   "parent_qualified": false,
   "gate_inventory": {
@@ -32,5 +32,9 @@
       "Turing finite enlargedframe allocation"
     ]
   },
-  "changed_source_gate": "one actual384/K6 independent FP32 golden64vectors with II24 back-to-back/bubbles and partial+full-vector warmPOR; samebinary realbank/heldreset negatives"
+  "changed_source_gate": "one actual384/K6 independent FP32 golden64vectors with II24 back-to-back/bubbles and partial+full-vector warmPOR; samebinary realbank/heldreset negatives",
+  "actual_gate": "gate-r2/gate.json",
+  "actual_binary_sha256": "1fb68c48a7fffde07c347f217af4105c8a31eab7489daa28d47110b3c2ff3f68",
+  "actual_peak_child_rss_KiB": 46292,
+  "gate_replayed": false
 }
