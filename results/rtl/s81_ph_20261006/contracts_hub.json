@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.s81_ph.contracts.v1",
+ "owner": "Claude:s81-ph (CLAUDE S81-PH, 2026-10-06)",
+ "generator": {"file": "tools/dsrom_s81_fulldie.py @ claude/s81-rerun-20261006 cbe161d6c (sha256 4d9103ae7110ac6e)", "options": "--gen r8 --rev r9 --cc-reach-um 215 --elem-h 198.72, layer --pairs 2050", "ports": "physical/s81_ph_views/ports/<die>/<master>/ports.json"},
+ "reference_rtl": "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv (+ ot_chip_v41x_tile.sv, ot_v41_rt_die_l20_c8.sv: FULL_SHAPE 1, X_ROM 1, SUN 256, SUM 64, HHW 8, VM_AW 19, ROM_R 128): the S81 hub slabs are a physical partition of this core",
+ "common_rules": {
+  "transport": "every die bus is a valid-only stream: hub end blocks (ot_meso_fifo / ot_ratio_cdc_fifo) deliver {data, valid} in the receiver's clock; the only die-level flow control is a start block's 3-b status {0, w_live, w_rdy} (xes/xws/qNEs..). A receiving slab accepts one word every cycle and never drops.",
+  "boundary": "every slab is register-to-register: each die input bit is captured in a flop at its pin, each die output bit is launched from a flop at its pin (OWNER 2026-10-06 addendum); slab-internal wires > ~400 um get a register stage.",
+  "framing": "hub buses carry typed in-band frames, no width change: a header beat {type 4, tag 8, op 8, len 12, ...payload} followed by len data beats; the receiver knows the frame length from the header. Types: 1 op descriptor, 2 operand/data beat, 3 result beat, 4 done/status (tag, fault code), 5 fault. Units never stall on their own data (the core's rule: every unit is a fixed pipeline); the VM sequencer issues a unit op only when its wait mask has drained, exactly as ot_hdc_core_v41x.",
+  "domains": "serial 0.9 GHz: VM, SU s/n, HC s/n. stream 1.2 GHz: gather, capture, collective, selector, collector, svc, ctrl (cks; ckh HBM)."
+ },
+ "generator_gaps_common": [
+  {"id": "G1", "what": "hub buses vm->gather (512), capture->vm (512), collective->vm (512) connect a serial-domain slab and a stream-domain slab with a direct net (r9: common-clock stations): no CDC", "change": "insert ratio-CDC end blocks (ot_ratio_cdc_fifo, format vr, as hx_*/hq_*) on those three buses, with a 3-b status back to the writer (capture: input 'ts', collective: 'ts')"},
+  {"id": "G2", "what": "SU throughput: the S81 core issues SU ops on SUN = 256 lanes with 4 x 256 x 32 b operand reads a cycle; the die gives VM->SU 2 x 1024 b (64 elements/cycle, 16x narrower)", "change": "COMPOSE must re-price every SU op at the hub-bus width, or the generator widens vm->su_s/su_n to 4 x 1024 b each (die count is not scarce); decision with the SU slab design (next step)"}
+ ],
+ "kinds": {
+  "vm": {
+   "master": "dsfd_sp_vm (layer 1015.176 x 2620.056, head 1015.176 x 879.096, serial)",
+   "function": "the hub: the core's instruction sequencer + DYN/predicate/wait-mask issue + the vector memory + the spine x loader / broadcast (field x lanes xe/xw 565) + the query sender to the four scan services (qNE..qSW 513) + receivers of every unit's results",
+   "rtl": "sequencer/issue: ot_hdc_core_v41x (FSM, unit dispatch); x loader + broadcast: ot_v41_spine_w17w10 LOAD/STREAM (pqc successor owned by FIELD-SPINE); memory: no synthesizable 128-port VM exists (tile reg array is behavioural, not a fit claim); rtl/dsrom_sys/protected_vm/ot_dsrom_protected_vm.sv (5W/2R, 512-b rows, 64 x 4 ot_sram_1r1w_512x128 + check macros, SECDED) is the only real VM backend",
+   "die_ports": {"t_su_s/t_su_n/t_hc 1024": "op descriptor + operand frames (common framing)", "f_hc 1024": "HC result frames -> VM writes", "t_gather 512": "capture phase descriptor (gather contract)", "f_capture 512": "VM write words from capture (capture contract)", "f_collective 512": "collective result frames", "sel/col 515": "selector index list / collector rows", "aNE..aSW 1027": "svc attention output + index frames (2 x 513)", "qNE..qSW 513 + 3-b status": "query frames to svc", "xe/xw 565 + 3-b status": "field x lane stream {x0 283, x1 266, cc 15} (spine broadcast format, ot_s81 column FIFO decode)"},
+   "gaps": ["no VM->collective port (collective contract)", "VM capacity: 256 x 64 Kb macros (16 Mb, VM_AW 19) = 1.33 mm2 of macros: fits the layer slab (2.66 mm2), NOT the head-die slab (0.89 mm2): head die needs its own capacity number"],
+   "state": "CONTRACT ONLY (no slab RTL)",
+   "next": "design the hub memory system at the die-bus widths: banked 512-b-row VM (protected_vm backend pattern) with one port per hub bus + the core sequencer; size from the S81 per-die VM footprint (COMPOSE / L20 program); exact gate = the S81 L20 program on the core with the behavioural VM vs the slab"
+  },
+  "su": {
+   "master": "dsfd_sp_su_s / dsfd_sp_su_n (1015.176 x 6307 / 6309, serial)",
+   "function": "the stream/vector unit (X_SU = 1: ot_hdc_v41x_su_adapt -> ot_hdc_v41x_vec, N light lanes, M SFU lanes, LV reducer levels), half the lanes per slab",
+   "rtl": "ot_hdc_v41x_vec / su_adapt (core); closed lane leaves owned by SU-FUSION (takeover-ds): su_hcpost lane, swiglu lane, norm sub-blocks, spsqrt lane; softmax PENDING_SSFF",
+   "die_ports": {"f_vm 1024": "op descriptor (the core's su_* issue fields) + operand beats (32 elements/beat)", "t_hc 512": "result beats (16 elements/beat) to HC"},
+   "gaps": ["G2 throughput", "results go to HC, not the VM: the core writes SU results to the VM (xs_vm_we/xs_res); the S81 hub must route SU results VM-ward through HC (hc_n t_vm) -> HC needs a pass-through mode in its op set"],
+   "state": "CONTRACT ONLY",
+   "next": "after SU-FUSION lane margin views: slab top = registered broadcast tree (one stage per <= 400 um over 6.3 mm) + lane macros + reducer + return tree (HBM-die hfd_su generator tools/hbm_hub_quarter_gen.py is the physical pattern; its port mapping is NOT a functional contract and must not be reused as one)"
+  },
+  "hc": {
+   "master": "dsfd_sp_hc_s (layer 7205.736 / head 8365.656 tall) / dsfd_sp_hc_n (10836.696 / 9674.616), serial",
+   "function": "hyper-connection projection (X_HE = 1: ot_hdc_v41x_he_adapt -> ot_hdc_v41x_hcp, FP32 MAC lanes, weight banks) + mHC post (su_hcpost) + the SU->VM return path; the Sinkhorn is driven by the XU (ot_hdc_sinkhorn_mc), not HC",
+   "rtl": "ot_hdc_v41x_he_adapt / ot_hdc_v41x_hcp (core); ot_dsrom_su_hcpost lane (closed, SU-FUSION)",
+   "die_ports": {"f_vm 1024 (hc_s)": "op descriptor + x beats", "f_su_s/f_su_n 512": "SU result beats", "t_n/f_s, t_s/f_n 1024": "hc_s <-> hc_n split crossing (same framing)", "t_vm 1024 (hc_n)": "result frames to the VM"},
+   "gaps": ["weight banks (hb_*: 8 banks x HHW x 32) have no die port: HC weights must be resident in the slab (ROM or loaded once per layer through f_vm)", "split n/s across the crossing corridor: one logical unit in two blocks"],
+   "state": "CONTRACT ONLY",
+   "next": "HC slab design after the HCP lane margin view; decide resident weights (ROM) vs streamed"
+  },
+  "svc": {
+   "master": "dsfd_svc (x4 per die, 8500.032 x 1576.776, stream)",
+   "function": "per-HBM-stack scan service: 16 attention tiles (ot_hdc_v41x_attn_tile_s / leaf ot_attn_hgrp_m6h1) + the stack's indexer key stream (ot_hdc_v41x_idx_kstream_ring + ring port) + the WINDOW sliding-window KV loader (rtl/dsrom_sys/s81_window_la, takeover-ds)",
+   "die_ports": {"q 515": "query frames from the VM", "rd 8864 (+ ctrl contract additions)": "HBM read responses per PC", "ad 1026": "attention output + index frames to the VM", "xd 514": "index-score stream to the selector (selector contract)", "od 514": "attention partials to the collector"},
+   "gaps": ["no request path svc -> ctrl (ctrl contract adds it)", "SVC_HUB_BITS q/ao/ix = 1536 but ad = 1026"],
+   "state": "CONTRACT ONLY (depends on WINDOW closure, takeover-ds, and an attention-tile margin view: leaf SS +18.9 / FF +1.5, below +40/+15)",
+   "next": "hierarchical slab: hardened attention tiles + idx reader + WINDOW as macros, registered distribution of q and rd; route after the leaves have margin views"
+  },
+  "collector": {
+   "master": "dsfd_bk_collector (5270.376 x 881.256, stream)",
+   "function": "combines the four stacks' attention partials (cNE..cSW 515) into the attention output for the VM (vd 514 + vf forwarded clock)",
+   "rtl": "NONE for a cross-stack partial-attention merge (no LSE/max-rescale combine RTL found); ot_chip_v41x_ckv_die_service_cr is the CKV selected-row service (VM/HBM/all-gather ports), a different function",
+   "gaps": ["the combine arithmetic must match the golden attention (the core attention engine computes over all selected rows in one pass): a split-softmax merge changes the FP32 summation order -> not bit-exact with the core unless the partial format is {exact max, unnormalised sums} and the golden is re-derived", "die_top_lint note 'banked collector: only its SRAM body has a retained macro abstract': no macro named"],
+   "state": "CONTRACT ONLY: needs an arithmetic decision (exactness vs the golden) before RTL",
+   "next": "decide the partial format with the attention owner; if the golden cannot be matched, keep attention unsplit (all selected rows to one svc) and the collector becomes a row-gather FIFO"
+  }
+ }
+}
