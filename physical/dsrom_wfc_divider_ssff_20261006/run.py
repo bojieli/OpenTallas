@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """One pinned divider internal map/SSFF check; no parent/PLL timing fiction."""
-import argparse, datetime, gzip, hashlib, json, os, shutil, subprocess, sys, time
+import argparse, datetime, gzip, hashlib, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
 
 IMAGE='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'
@@ -9,6 +9,27 @@ PIN='efde53cd44c63fcef68439283da31ff4a1d5bc795fdf52a81f3c50b3ffd06eb7'
 TOP='ot_dsrom_wfc_common_clock_source'
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def blocks(text,kind):
+    for m in re.finditer(r'\b'+kind+r'\s*\(([^()]+)\)\s*\{',text):
+        at=m.end();end=at;depth=1
+        while depth:
+            if text[end]=='{':depth+=1
+            elif text[end]=='}':depth-=1
+            end+=1
+        yield m.group(1).strip().strip('"'),text[at:end-1]
+def cells(paths):
+    result={}
+    for path in paths:
+        for name,body in blocks(path.read_text(),'cell'):
+            ports={}
+            for pin,b in blocks(body,'pin'):
+                direction=re.search(r'\bdirection\s*:\s*(\w+)',b)
+                cap=re.search(r'\bcapacitance\s*:\s*([\d.eE+-]+)',b)
+                ports[pin]=dict(direction=direction.group(1) if direction else None,
+                    capacitance=float(cap.group(1)) if cap else None)
+            area=re.search(r'\barea\s*:\s*([\d.eE+-]+)',body)
+            result[name]=dict(ports=ports,area=float(area.group(1)) if area else None)
+    return result
 def run(cmd,out):
     with out.open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
     if r.returncode:raise RuntimeError(f'{out.name} exit{r.returncode}')
@@ -77,11 +98,21 @@ write_json {out/'mapped.json'}
                 q.append(name+'/QN' if 'QN' in c['connections'] else name+'/Q');d.append(name+'/D')
         groups[group]=dict(Q=q,D=d)
     (out/'path_pins.json').write_text(json.dumps(groups,indent=2)+'\n')
+    actual_cells=cells(libs['SS'])
     badbits=design['netnames']['on.bad']['bits'];badpins=[]
     for name,c in design['cells'].items():
         for port,bits in c['connections'].items():
-            if c['port_directions'].get(port)=='output' and any(b in badbits for b in bits):badpins.append(name+'/'+port)
+            if actual_cells[c['type']]['ports'][port]['direction']=='output' and any(b in badbits for b in bits):badpins.append(name+'/'+port)
     for corner in ('SS','FF'):
+        libcells=cells(libs[corner]);footprint=[]
+        for name,c in design['cells'].items():
+            for port,bits in c['connections'].items():
+                info=libcells[c['type']]['ports'][port]
+                if info['direction']=='input':footprint.append(dict(pin=name+'/'+port,cell=c['type'],net_bits=bits,**info))
+        (out/f'{corner}_pin_caps.json').write_text(json.dumps(dict(
+            library_capacitance_unit='exact corner Liberty native unit; see report_units',
+            mapped_area_library_units=sum(libcells[c['type']]['area'] for c in design['cells'].values()),
+            pins=footprint,bad_driver_pins=badpins),indent=2)+'\n')
         tcl='\n'.join('read_liberty '+str(x) for x in libs[corner])+f'''
 read_verilog {out/'mapped.v'}
 link_design {TOP}
