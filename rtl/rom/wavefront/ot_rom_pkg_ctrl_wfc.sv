@@ -135,6 +135,9 @@
 `ifndef OT_WFC_FANOUT_COPY
 `define OT_WFC_FANOUT_COPY 0
 `endif
+`ifndef OT_WFC_MARGIN
+`define OT_WFC_MARGIN 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -165,6 +168,14 @@ module ot_rom_pkg_ctrl_wfc #(
     // the header user's low bits into the 28 upos groups (one copy per 4 groups), and the SOURCE
     // record row / address into each SRAM bank (0 cycles)
     parameter integer FANOUT_COPY = `OT_WFC_FANOUT_COPY,
+    // MARGIN (owner margin-first rule; needs CONTROL_PIPE; priced in cycles by the bench):
+    //  - core_done / core_next_token / core_next_val captured in flops at the pins (+1 cycle per completion;
+    //    the completion is held off one more edge after a start so the pre-start done level is never taken);
+    //  - the upos groups' read strobe from their own registered copies (as LOCAL_CONTROL);
+    //  - the payload word-free compare (rx word < txh) from registers: (rxw < txh) and (rxw + 1 < txh)
+    //    of the previous edge, used only when txh did not reset there and rxw did not reload there
+    //    (conservative: never claims a word free that the exact compare would not; may stall a flit)
+    parameter integer MARGIN = `OT_WFC_MARGIN,
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
     parameter integer NW           = 16,     // token / position bits
@@ -364,7 +375,14 @@ module ot_rom_pkg_ctrl_wfc #(
         assign core_token = token_q;
         assign core_pos = pos_q;
         assign core_user = user_q; assign kv_base = kv_q;
-        assign launch_wait = v;
+        if (MARGIN) begin : g_lw2
+            // the core drops its done level on the edge after it sees core_start; done is one more edge late
+            reg v2;
+            always @(posedge clk or negedge rst_q) if (!rst_q) v2 <= 1'b0; else v2 <= v;
+            assign launch_wait = v || v2;
+        end else begin : g_lw1
+            assign launch_wait = v;
+        end
     end else begin : g_control_launch_original
         assign core_start = start_i;
         assign core_token = start_tok_i;
@@ -404,7 +422,7 @@ module ot_rom_pkg_ctrl_wfc #(
     wire tx_pop   = out_valid && out_ready;
     wire tx_space = (txq_n + rd_inflight) < TXQ;
     // the finished job is taken once the previous one's messages are queued
-    wire completion_qual = running && core_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
+    wire completion_qual = running && c_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
     wire job_done;
     wire [NW-1:0] rep_idx;
     wire [31:0] rep_val;
@@ -430,10 +448,21 @@ module ot_rom_pkg_ctrl_wfc #(
         assign rep_val = rep_val_raw;
     end endgenerate
     // argmax this package reports: its own part's, or the running one if better
-    wire [NW-1:0] own_idx = core_next_token + ROW0;
-    wire          keep_pa = COMBINE_IN && !better(own_idx, core_next_val, cur_pa_idx, cur_pa_val);
+    wire          c_done;
+    wire [NW-1:0] c_ntok;
+    wire [31:0]   c_nval;
+    generate if (MARGIN) begin : g_core_in_q
+        reg d_q; reg [NW-1:0] t_q; reg [31:0] v_q;
+        always @(posedge clk or negedge rst_q) if (!rst_q) d_q <= 1'b0; else d_q <= core_done;
+        always @(posedge clk) begin t_q <= core_next_token; v_q <= core_next_val; end
+        assign c_done = d_q; assign c_ntok = t_q; assign c_nval = v_q;
+    end else begin : g_core_in_direct
+        assign c_done = core_done; assign c_ntok = core_next_token; assign c_nval = core_next_val;
+    end endgenerate
+    wire [NW-1:0] own_idx = c_ntok + ROW0;
+    wire          keep_pa = COMBINE_IN && !better(own_idx, c_nval, cur_pa_idx, cur_pa_val);
     wire [NW-1:0] rep_idx_raw = keep_pa ? cur_pa_idx : own_idx;
-    wire [31:0]   rep_val_raw = keep_pa ? cur_pa_val : core_next_val;
+    wire [31:0]   rep_val_raw = keep_pa ? cur_pa_val : c_nval;
     // payload words still to be read: [tx_lo, TXB + XWORDS)
     wire           tx_reading = (tx_st == T_DATA) || (job_done && SEND_HIDDEN);
     wire [VWA-1:0] tx_lo = job_done ? TXB : TXB + tx_k;
@@ -478,7 +507,15 @@ module ot_rom_pkg_ctrl_wfc #(
     wire [VWA-1:0] rx_word = rxw;
     // (closed: the job_done select after the two compares, not before one)
     wire rw_lt_txh;
-    generate if (RDY_LT) begin : g_rdy_lt
+    reg  txh_rel_q, rxw_rel_q, rxw_inc_q;   // MARGIN: last-edge reload / advance flags (set below)
+    generate if (MARGIN) begin : g_rdy_q
+        // event flags of the last edge: txh reloaded (job taken / SIDE header), rxw reloaded (HIDDEN or
+        // SIDE header), rxw advanced (a payload word written); otherwise txh only holds or grows by one
+        reg lt0_q, lt1_q;
+        wire [VWA-1:0] rxw1 = rxw + 1'b1;
+        always @(posedge clk) begin lt0_q <= {1'b0, rxw} < txh; lt1_q <= {1'b0, rxw1} < txh; end
+        assign rw_lt_txh = !txh_rel_q && !rxw_rel_q && (rxw_inc_q ? lt1_q : lt0_q);
+    end else if (RDY_LT) begin : g_rdy_lt
         ot_rom_pkg_ctrl_wfc_lt #(.W(VWA+1)) u_lt(.a({1'b0, rx_word}), .b(txh), .lt(rw_lt_txh));
     end else begin : g_rdy_direct
         assign rw_lt_txh = rx_word < txh;
@@ -576,7 +613,7 @@ module ot_rom_pkg_ctrl_wfc #(
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
-        ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
+        ot_rom_pkg_ctrl_wfc_upos #(.LOCAL_CONTROL(LOCAL_CONTROL || MARGIN), .LWR(UPOS_LWR), .NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
             .clk(clk), .rst_n(rst_q), .lo(ug_lo[ugi]), .rd(uchk2), .rd_early(uchk),
             .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .wr_early(uchk3 && gsel_oh[ugi]),
             .wdata_early(hdr_pos_inc_w), .part(ug_part[ugi]));
@@ -682,6 +719,14 @@ module ot_rom_pkg_ctrl_wfc #(
     wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight;   // RESULT after a HIDDEN
     wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
+    generate if (MARGIN) begin : g_rdy_flags
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) begin txh_rel_q <= 1'b1; rxw_rel_q <= 1'b1; rxw_inc_q <= 1'b0; end
+            else begin
+                txh_rel_q <= job_done || q_hdr_s; rxw_rel_q <= rx_hdr || rx_side;
+                rxw_inc_q <= (rx_st == R_DATA && vm_we) || side_payload;
+            end
+    end endgenerate
     integer u, qbank;
     always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin

@@ -33,8 +33,8 @@ CTRL = "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 MACRO = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
 MNAME = "ot_sram_1r1w_512x128_m4_r2c2"
 PERIOD_PS = 833
-KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1),
-                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1)}
+KNOBS_DEFAULT = {"src": dict(REC_SRAM=1, UPOS_LWR=1, CONTROL_PIPE=1, CFG_Q=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1),
+                 "stg": dict(UPOS_LWR=1, CONTROL_PIPE=1, PRECOMP=1, IN_DEC=1, TXQ_SLICE=1, RDY_LT=1, FANOUT_COPY=1, MARGIN=1)}
 # Estimated die-tree insertion delay [min, max] ps at the element's clock pins (r1 routes: src 505..588,
 # stg 312..401).  The routed SDC times IO against io_clk carrying it as SOURCE latency (kept after CTS
 # propagates the clocks), i.e. the neighbours' registers hang off the same tree -- the same model as
@@ -150,12 +150,15 @@ def cmd_prep(a):
         lines.append(f"export {k} = {v}")
     (case / "config.mk").write_text("\n".join(lines) + "\n")
     io = round(0.2 * PERIOD_PS, 1)
-    if a.ideal_io:
-        ioc = SDC_IDEAL_IO.format(io=io)
-    else:
-        lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
-        ioc = SDC_IO_CLK.format(p=PERIOD_PS, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
-    (case / "constraint.sdc").write_text(SDC.format(p=PERIOD_PS, io_clk=ioc) + SDC_TAIL)
+    rp = a.route_period or PERIOD_PS
+    for name, per in (("constraint.sdc", rp), ("signoff.sdc", PERIOD_PS)):
+        if a.ideal_io:
+            ioc = SDC_IDEAL_IO.format(io=io)
+        else:
+            lmin, lmax = IO_LAT[a.inst] if a.io_lat is None else map(int, a.io_lat.split(","))
+            ioc = SDC_IO_CLK.format(p=per, io=io, lmin=lmin, lmax=lmax, lmid=(lmin + lmax) // 2)
+        # the route may be over-constrained (owner margin rule: ~770 ps); signoff is always at 833 ps
+        (case / name).write_text(SDC.format(p=per, io_clk=ioc) + SDC_TAIL)
     src = a.src.resolve()
     run = f"""#!/bin/bash
 # CLAUDE WFC {a.inst} {case.name}: ORFS route, then signoff STA.  /src = pinned source {src}
@@ -175,6 +178,7 @@ echo "end $(date -Is)" >> $W/status
     (case / "run.sh").write_text(run)
     (case / "run.sh").chmod(0o755)
     (case / "case.json").write_text(json.dumps(dict(inst=a.inst, params=params, util=a.util, macros=macros,
+                                                     route_period_ps=rp,
                                                      orfs_var=a.orfs_var, src=str(src),
                                                      ctrl_sha256=sha(src / CTRL)), indent=1) + "\n")
     print(case / "run.sh")
@@ -188,6 +192,13 @@ def cmd_sta(a):
                       "catch {unset_input_delay -clock [get_clocks io_clk] $ins}\n"
                       "catch {unset_output_delay -clock [get_clocks io_clk] [all_outputs]}\nunset_input_delay $ins\n")
     assert "io_clk" in tcl
+    if (case / "signoff.sdc").is_file():     # sign off at 833 ps whatever period the route was constrained to
+        tcl = tcl.replace("read_sdc $::env(WF_SDC)", "read_sdc /work/signoff.sdc")
+    # die150: IO against a die clock arriving up to 150 ps before / after the element's own measured insertion
+    tcl = tcl.replace("rep incontext\n", "rep incontext\nset_clock_latency -min [expr $lmin - 150] [get_clocks vclk]\n"
+                      "set_clock_latency -max [expr $lmax + 150] [get_clocks vclk]\nrep die150\n"
+                      "set_clock_latency -min $lmin [get_clocks vclk]\nset_clock_latency -max $lmax [get_clocks vclk]\n")
+    assert "rep die150" in tcl
     if a.macros:
         tcl = tcl.replace("read_db $::env(WF_ODB)",
                           f"read_liberty /src/{MACRO}/{MNAME}_[string tolower $::env(WF_LIB)].lib\n"
@@ -208,8 +219,8 @@ def cmd_sta(a):
     (case / "wf_drv.json").write_text(json.dumps(drv, indent=1) + "\n")
     print(json.dumps(drv))
     print(json.dumps({c: {"insertion_ps": v.get("insertion_ps")} |
-                      {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "reg2reg")} |
-                      {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "reg2reg")}
+                      {m: (v.get(m) or {}).get("setup_wns_ps") for m in ("block", "incontext", "die150", "reg2reg")} |
+                      {"hold_" + m: (v.get(m) or {}).get("hold_wns_ps") for m in ("block", "incontext", "die150", "reg2reg")}
                       for c, v in rec["corners"].items()}, indent=1))
 
 
@@ -259,11 +270,15 @@ def case_record(case: Path):
                          ss_failing=[v(ss, mode, "failing_setup"), v(ss, mode, "failing_hold")],
                          ff_failing=[v(ff, mode, "failing_setup"), v(ff, mode, "failing_hold")],
                          ss_worst_setup_path=v(ss, mode, "worst_max_path"))
-              for mode in ("block", "incontext", "reg2reg")}
+              for mode in ("block", "incontext", "die150", "reg2reg")}
     closed = (all(nn(timing[mode][f]) for mode in ("incontext", "reg2reg")
                   for f in ("ss_setup_ps", "ss_hold_ps", "ff_hold_ps"))
               and drc == 0 and ant == 0 and drv_ok and bool(ss.get("done")) and bool(ff.get("done")))
-    return dict(inst=cj["inst"], util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
+    margin_closed = (closed and all(isinstance(timing[m]["ss_setup_ps"], (int, float)) and timing[m]["ss_setup_ps"] >= 60
+                                    for m in ("incontext", "reg2reg"))
+                     and all(isinstance(timing[m]["ff_hold_ps"], (int, float)) and timing[m]["ff_hold_ps"] >= 15
+                             for m in ("incontext", "reg2reg")))
+    return dict(inst=cj["inst"], route_period_ps=cj.get("route_period_ps"), margin_closed=margin_closed, util=cj["util"], params=cj["params"], orfs_var=cj.get("orfs_var"),
                 source_dir=cj["src"], ctrl_sha256=cj["ctrl_sha256"],
                 insertion_ps=dict(SS=ss.get("insertion_ps"), FF=ff.get("insertion_ps")), timing=timing,
                 drv=drv, drc_errors=drc, antenna_violating_nets=ant,
@@ -286,7 +301,9 @@ def cmd_record(a):
                       case_record(Path(c).resolve()) for c in a.case},
                notes=a.note)
     a.out.write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: dict(closed=v["closed"], incontext=v["timing"]["incontext"]["ss_setup_ps"],
+    print(json.dumps({k: dict(closed=v["closed"], margin_closed=v["margin_closed"],
+                              die150=v["timing"]["die150"]["ss_setup_ps"],
+                              incontext=v["timing"]["incontext"]["ss_setup_ps"],
                               ff_hold=v["timing"]["incontext"]["ff_hold_ps"], drv=v["drv"])
                       for k, v in rec["cases"].items()}, indent=1))
 
@@ -307,6 +324,7 @@ def main():
     p.add_argument("--need", type=int, default=24)
     p.add_argument("--io-lat", default=None, help="MIN,MAX ps io_clk source latency (default per inst)")
     p.add_argument("--ideal-io", action="store_true", help="r1 SDC: IO against the ideal core_clk")
+    p.add_argument("--route-period", type=int, default=None, help="over-constrained route period ps (signoff stays 833)")
     s = sub.add_parser("sta")
     s.add_argument("--case", type=Path, required=True)
     s.add_argument("--macros", action="store_true")
