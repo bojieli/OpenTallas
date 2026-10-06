@@ -67,5 +67,14 @@
     "HOLD_COMPLETION": 1,
     "functional_parent_qualified": false,
     "supplier_binding": "clock-held 4*N FP32 read ports; explicit allocation and checked publication full73 required"
+  },
+  "norm_native_minimum_gate": {
+    "status": "PASS",
+    "N": 32,
+    "D": 64,
+    "Q_FP32_ONLY": true,
+    "NORM_NATIVE_VM_ENABLE": 1,
+    "default_OFF": true,
+    "production_config_adopted": false
   }
 }
