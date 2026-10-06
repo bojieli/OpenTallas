@@ -76,6 +76,10 @@ def main():
   import shutil
   cfg=out/'hierarchical.vlt'
   cfg.write_text('`verilator_config\nhier_block -module "ot_hbm_selected_c12__ot_hbm_sfu_result_c12"\nhier_block -module "ot_hbm_die_vm_sfu_publication_root"\n')
+  import runpy
+  child_dependencies=set(runpy.run_path(str(ROOT/'physical/hbm_die_abstracts_20261006/memory_control/run_vm_sfu_warm_join.py'))['SOURCES'][:-1])
+  child_dependencies.update(json.loads((ROOT/'results/uarch/hbm_integrated_sfu_provider_join_20261006/namespace_export.json').read_text())['files'])
+  child_dependencies.update(['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv','rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv','physical/hbm_die_abstracts_20261006/compute/ot_hbm_compute_frame1024.sv','rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv'])
   copied=[]
   for previous,name in [(a.reuse_native_models,'Vot_hbm_selected_c12___05Fot_hbm_sfu_result_c12'),(a.reuse_vm_model,'Vot_hbm_die_vm_sfu_publication_root_2')]:
    previous=previous.resolve()
@@ -83,13 +87,13 @@ def main():
    prior=old.get('source_sha256',old.get('sources',{}))
    # Every shared dependency except changed testbench/compiler configuration must match.
    for path,value in prior.items():
-    if path in pins and path.endswith('.sv') and not Path(path).name.startswith('tb_') and pins[path]!=value:
+    if path in child_dependencies and path in pins and pins[path]!=value:
      raise ValueError('Changed RTL cannot reuse model: '+path)
    child=previous/'obj'/name
    if not list(child.glob('*.a')):raise ValueError('Missing completed child '+str(child))
    shutil.copytree(child,out/'obj'/name,dirs_exist_ok=True)
    copied.append(dict(previous=str(previous),model=name,library_sha256={p.name:sha(p) for p in child.glob('*.a')}))
-  write(out/'reuse.json',dict(models=copied,RTL_unchanged=True,original_objects_preserved=True))
+  write(out/'reuse.json',dict(models=copied,child_RTL_unchanged=True,parent_always_rebuilt=True,original_objects_preserved=True))
  cmd=[str(tool),'--binary','--timing','--hierarchical','-O2','-Wno-fatal','-Wno-WIDTH',
       '--top-module',TOP,'-Mdir',str(out/'obj'),'--build-jobs','16','--verilate-jobs','1',
       '--hierarchical-threads','1','--unroll-count','4',
