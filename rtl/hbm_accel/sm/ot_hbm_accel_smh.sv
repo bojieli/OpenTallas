@@ -313,6 +313,52 @@ module ot_hbm_accel_smh_skid #(
     end
 endmodule
 
+// ot_hbm_accel_smh_skid's behaviour with the data kept in place: two entries written by a write pointer, read
+// through one-hot read-select copies (one per 32-bit slice, registered), so a pop moves no data and fans out only to
+// the select copies' inputs.  Registered ready (not full), one transfer a cycle, +1 cycle, order and data unchanged.
+module ot_hbm_accel_smh_skid2 #(
+    parameter integer W = 8
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         s_valid,
+    output wire         s_ready,
+    input  wire [W-1:0] s_data,
+    output wire         m_valid,
+    input  wire         m_ready,
+    output wire [W-1:0] m_data
+);
+    localparam integer NS = (W + 31) / 32;
+    reg [1:0]   cnt;
+    reg         wp, rp;
+    reg [W-1:0] e0, e1;
+    assign s_ready = (cnt != 2'd2);
+    assign m_valid = (cnt != 2'd0);
+    wire push = s_valid && s_ready;
+    wire pop  = m_valid && m_ready;
+    wire rp_nx = pop ? ~rp : rp;
+    wire [2*NS-1:0] ro;
+    ot_hbm_accel_bc_kreg #(.W(2*NS), .RV({NS{2'b01}})) u_ro (.clk(clk), .rst_n(rst_n), .d({NS{rp_nx, ~rp_nx}}),
+        .q(ro));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cnt <= 2'd0; wp <= 1'b0; rp <= 1'b0; end
+        else begin
+            cnt <= cnt + {1'b0, push} - {1'b0, pop};
+            if (push) wp <= ~wp;
+            rp <= rp_nx;
+        end
+    always @(posedge clk) begin
+        if (push && !wp) e0 <= s_data;
+        if (push && wp)  e1 <= s_data;
+    end
+    genvar i;
+    generate for (i = 0; i < NS; i = i + 1) begin : g_s
+        localparam integer LO = 32 * i;
+        localparam integer WB = (W - LO < 32) ? W - LO : 32;
+        assign m_data[LO +: WB] = ({WB{ro[2*i]}} & e0[LO +: WB]) | ({WB{ro[2*i+1]}} & e1[LO +: WB]);
+    end endgenerate
+endmodule
+
 // ot_hbm_accel_smv_chan with a registered head: the sink FIFO's output is a register holding mem[rp] (refilled
 // from mem[rp + 1] on a pop, or from the arriving entry when it lands at the new head), so m_data leaves a flop
 // and no read-pointer mux sits between the FIFO and the consumer / pin.  Cycle-identical to ot_hbm_accel_smv_chan:
@@ -465,8 +511,9 @@ module ot_hbm_accel_smh_front #(
     wire        h_gs   = h_op[2];
     wire [1:0]  h_fmt  = h_op[1:0];
     wire h_rsp_v; wire [9:0] h_rsp_tag; wire [1087:0] h_rsp_data;
-    ot_hbm_accel_smv_chain #(.W(1), .D(PIH), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(h_rsp_v));
-    ot_hbm_accel_smv_chain #(.W(1098), .D(PIH), .RST(0)) u_prd (.clk(clk), .rst_n(rst_n), .d({rsp_tag, rsp_data}),
+    // (round 6) the 1088-bit response crosses ~560 um to the ring block: PIO + 2 stages
+    ot_hbm_accel_smv_chain #(.W(1), .D(PIO + 2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(rsp_v), .q(h_rsp_v));
+    ot_hbm_accel_smv_chain #(.W(1098), .D(PIO + 2), .RST(0)) u_prd (.clk(clk), .rst_n(rst_n), .d({rsp_tag, rsp_data}),
         .q({h_rsp_tag, h_rsp_data}));
     wire h_release;
     ot_hbm_accel_smv_chain #(.W(1), .D(PIO), .RST(1)) u_prl (.clk(clk), .rst_n(rst_n), .d(release_in), .q(h_release));
@@ -475,9 +522,14 @@ module ot_hbm_accel_smh_front #(
         .s_valid(d_valid), .s_ready(d_ready), .s_data({d_base, d_lines}),
         .m_valid(h_d_valid), .m_ready(h_d_ready), .m_data(h_d));
     wire h_req_v, h_req_ready; wire [31:0] h_req_addr; wire [9:0] h_req_tag;
+    wire o_req_v, o_req_ready; wire [41:0] o_req_d;
     ot_hbm_accel_smh_chan #(.W(42), .P(PIH), .DEPTH(CHD)) u_rch (.clk(clk), .rst_n(rst_n),
         .s_valid(h_req_v), .s_ready(h_req_ready), .s_data({h_req_addr, h_req_tag}),
-        .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
+        .m_valid(o_req_v), .m_ready(o_req_ready), .m_data(o_req_d));
+    // (round 6) the request leaves through a registered 2-entry skid beside the pins: req_ready drives only the
+    // skid's own count and head select (+1 cycle on requests)
+    ot_hbm_accel_smh_skid #(.W(42)) u_rsk (.clk(clk), .rst_n(rst_n), .s_valid(o_req_v), .s_ready(o_req_ready),
+        .s_data(o_req_d), .m_valid(req_v), .m_ready(req_ready), .m_data({req_addr, req_tag}));
     wire          w_valid, w_ready, b_valid, b_ready;
     wire [1087:0] w_data, b_data;
     ot_hbm_accel_bulk_copy_oq4 #(.ENABLE(1), .LINE_BITS(1088), .DEPTH(1024), .MAX_OUT(MAX_OUT), .SRAM_RING(1),
@@ -488,7 +540,7 @@ module ot_hbm_accel_smh_front #(
         .s_valid(b_valid), .s_ready(b_ready), .s_data(b_data), .outstanding(), .idle());
     // the line stream to the issue through a 2-entry skid with a registered ready and a registered head: the bulk
     // copy's pop sees only its own queue and this register (+1 cycle on the stream; order and data unchanged)
-    ot_hbm_accel_smh_skid #(.W(1088)) u_sk (.clk(clk), .rst_n(rst_n), .s_valid(b_valid), .s_ready(b_ready),
+    ot_hbm_accel_smh_skid2 #(.W(1088)) u_sk (.clk(clk), .rst_n(rst_n), .s_valid(b_valid), .s_ready(b_ready),
         .s_data(b_data), .m_valid(w_valid), .m_ready(w_ready), .m_data(w_data));
     reg  [XW-1:0] xb_q;
     wire        sv, h_busy, h_arrive, h_released;
@@ -507,7 +559,7 @@ module ot_hbm_accel_smh_front #(
     // 2 NFMT replicas (one set per side) load: visible 3 cycles after the launch; the first line of the new op
     // reaches the unpack >= 4 cycles after it (setup, issue, s1, hop H).
     localparam integer NFR = 2 * NFMT;
-    localparam integer NFC = (NFR + 15) / 16;
+    localparam integer NFC = (NFR + 7) / 8;
     reg              pop_r;
     reg  [1:0]       fmt_q;
     always @(posedge clk or negedge rst_n)
@@ -523,8 +575,8 @@ module ot_hbm_accel_smh_front #(
             .q(fq_c[2*k +: 2]));
     end endgenerate
     generate for (k = 0; k < NFR; k = k + 1) begin : g_fmt
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1), .EN(1)) u (.clk(clk), .rst_n(rst_n), .en(pd_c[k / 16]),
-            .d(fq_c[2*(k / 16) +: 2]), .q(fmt_r[2*k +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1), .EN(1)) u (.clk(clk), .rst_n(rst_n), .en(pd_c[k / 8]),
+            .d(fq_c[2*(k / 8) +: 2]), .q(fmt_r[2*k +: 2]));
     end endgenerate
     // DBF = BF16 column latency - block-dot column latency: 14 for sm_pq's columns; the tile's block-dot column is
     // 7 cycles deeper (bterm3) and its BF16 column 3 deeper (ot_hbm_accel_smh_tc_col): 14 - 7 + 3 = 10
@@ -635,26 +687,32 @@ module ot_hbm_accel_smh_front #(
         end
     end endgenerate
     // stage A and the output registers: valid bits reset, data not; one copy per side
-    wire [2*SUB*RBW-1:0] a_r, o_r;
-    wire [2*(SUB/RPT)*BBW-1:0] a_b;             // x-write A stage, per (side, row)
+    wire [2*SUB*RBW-1:0] a_r, m_r, o_r;            // (round 6) A -> M -> O: one more hop to the pins (+1 on reads)
+    wire [2*(SUB/RPT)*BBW-1:0] a_b, m_b;        // x-write A and M stages, per (side, row) (+1 on writes)
     wire [2*(SUB/RPT)*BBW-1:0] o_b;
     wire [BBW-1:0]       w0_b = {w0_en, w0_addr, w0_oh, w0_data};
     generate for (sd = 0; sd < 2; sd = sd + 1) begin : g_side
         for (sp = 0; sp < SUB; sp = sp + 1) begin : g_rs
             ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_a (.clk(clk), .rst_n(rst_n),
                 .d(a_in[(sd*SUB+sp)*RBW +: RBW]), .q(a_r[(sd*SUB+sp)*RBW +: RBW]));
+            ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_m (.clk(clk), .rst_n(rst_n),
+                .d(a_r[(sd*SUB+sp)*RBW +: RBW]), .q(m_r[(sd*SUB+sp)*RBW +: RBW]));
             ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_o (.clk(clk), .rst_n(rst_n),
-                .d(a_r[(sd*SUB+sp)*RBW +: RBW]), .q(o_r[(sd*SUB+sp)*RBW +: RBW]));
+                .d(m_r[(sd*SUB+sp)*RBW +: RBW]), .q(o_r[(sd*SUB+sp)*RBW +: RBW]));
             if (sp % RPT == 0) begin : g_bo     // one x-write bundle per tile (RPT rows)
                 localparam integer PI = sd * (SUB / RPT) + sp / RPT;
                 ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bav (.clk(clk), .rst_n(rst_n), .en(1'b1),
                     .d(w0_b[BBW-1]), .q(a_b[PI*BBW + BBW - 1]));
                 ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bad (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(w0_b[BBW-2:0]),
                     .q(a_b[PI*BBW +: BBW-1]));
+                ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bmv (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                    .d(a_b[PI*BBW + BBW - 1]), .q(m_b[PI*BBW + BBW - 1]));
+                ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bmd (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                    .d(a_b[PI*BBW +: BBW-1]), .q(m_b[PI*BBW +: BBW-1]));
                 ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bov (.clk(clk), .rst_n(rst_n), .en(1'b1),
-                    .d(a_b[PI*BBW + BBW - 1]), .q(o_b[PI*BBW + BBW - 1]));
+                    .d(m_b[PI*BBW + BBW - 1]), .q(o_b[PI*BBW + BBW - 1]));
                 ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bod (.clk(clk), .rst_n(rst_n), .en(1'b1),
-                    .d(a_b[PI*BBW +: BBW-1]), .q(o_b[PI*BBW +: BBW-1]));
+                    .d(m_b[PI*BBW +: BBW-1]), .q(o_b[PI*BBW +: BBW-1]));
             end
         end
     end endgenerate
@@ -695,7 +753,7 @@ module ot_hbm_accel_smh_front #(
     // the issue's row retire: column 0's aligned valid, registered once more beside the issue (the landing flop
     // sits at the back-end edge, the issue mid-front; +1 cycle on the retire count only)
     // (round 4) two hop registers (the landing is at the back-end edge, the issue mid-front): +2 on the retire
-    ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(sv));
+    ot_hbm_accel_smv_chain #(.W(1), .D(3), .RST(1)) u_sv (.clk(clk), .rst_n(rst_n), .d(al[QLW - 1]), .q(sv));   // (round 6) 3
     reg fault_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault_q <= 1'b0;
