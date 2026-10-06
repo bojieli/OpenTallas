@@ -9,7 +9,8 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     localparam integer H = 16, TD = 32, NBANK = 5, BW = 3, PWORDS = 2, FPL = 6;
     parameter integer NCYC = 20000;
     parameter integer NEG = 0;
-    localparam integer RIN = 3, XD = 2 + 1;
+    parameter integer ROC = 1;
+    localparam integer RIN = 3, XD = 2 + ROC;
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
     reg [BW-1:0] ld_bank, ibank;
@@ -33,7 +34,7 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
         .clk(clk), .rst_n(d_rst_n), .ld_v(d_ld_v), .ld_mode(d_ld_mode), .ld_bank(d_ld_bank), .ld_grp(d_ld_grp),
         .ld_w(d_ld_w), .ld_w2v(d_ld_w2v), .iv(d_iv), .ibank(d_ibank), .ib(d_ib), .ov(ov_l0), .oy(oy_l0), .oflt(of_l0));
     ot_hdc_v41x_dly #(.W(1 + H*32 + H), .D(XD)) u_xd (.clk(clk), .d({ov_l0, oy_l0, of_l0}), .q({ov_l, oy_l, of_l}));
-    ot_attn_tile_m6h1r u_s (
+    ot_attn_tile_m6h1r #(.ROC(ROC)) u_s (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     assign oy_c = (NEG != 0) ? {oy_s[H*32-1:64], oy_s[31:0], oy_s[63:32]} : oy_s;

@@ -7,10 +7,11 @@
 // ibank, ib} plus rst_n is distributed by a positive-edge register tree whose every hop is a short wire:
 //   ROOT (1 copy, tile centre) -> COL (2 copies, one per pair channel) -> HC (4 copies, one per channel half;
 //   each drives the input pins of the 4 leaves of two rows of its pair, <= ~300 um)
-// and each leaf's 33/34 output bits are captured next to its output pins (OC, one per leaf).
+// and (ROC = 1) each leaf's 33/34 output bits are captured next to its output pins (OC, one per leaf); ROC = 0 takes the
+// outputs straight from the leaves, whose outputs are register-direct inside the hardened macro.
 // Every register bank is a kept-hierarchy instance (ot_attn_rp_reg), so synthesis keeps the copies.
 // Function: ot_attn_tile_m6h1 with every input (rst_n included) delayed by RIN = 3 cycles and every output by
-// ROUTD = 1 cycle (+4 cycles on the tile's latency; tb_hdc_v41x_attn_tile_m6h1r_lockstep against tile_l).
+// ROC cycles (+3 + ROC cycles on the tile's latency; tb_hdc_v41x_attn_tile_m6h1r_lockstep against tile_l).
 // rst_n is carried as data (the leaves' asynchronous reset is driven from the HC register).
 // Sources: this file, ot_hdc_v41x_attn_tile_m8_phys.sv (ot_attn_hgrp_m6h1) and its sources.
 // ---------------------------------------------------------------------------
@@ -23,7 +24,9 @@ module ot_attn_rp_reg #(parameter integer W = 1) (
     always @(posedge clk) q <= d;
 endmodule
 
-module ot_attn_tile_m6h1r (
+module ot_attn_tile_m6h1r #(
+    parameter integer ROC = 1               // 1: per-leaf output capture (+1 cycle); 0: outputs straight from the leaves
+) (                                         //    (the leaf's outputs are register-direct inside the macro)
     input  wire          clk,
     input  wire          rst_n,
     input  wire          ld_v,
@@ -70,7 +73,9 @@ module ot_attn_tile_m6h1r (
                             .clk(clk), .rst_n(l_rst_n), .gid(G[7:0]), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
                             .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
                             .ibank(l_ibank), .ib(l_ib), .ov(hv), .oy(hy), .oflt(hf));
-                        if (G == 0) begin : g_ov
+                        if (ROC == 0) begin : g_od
+                            assign {gov[G], oflt[G], oy[G*32 +: 32]} = {hv, hf, hy};
+                        end else if (G == 0) begin : g_ov
                             wire [33:0] oc_q;
                             (* keep = "true" *) ot_attn_rp_reg #(.W(34)) u_oc (.clk(clk), .d({hv, hf, hy}), .q(oc_q));
                             assign {gov[G], oflt[G], oy[G*32 +: 32]} = oc_q;
