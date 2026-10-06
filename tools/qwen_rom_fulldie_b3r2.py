@@ -1212,8 +1212,10 @@ def _tree_cols(v, ncols, interleave=False):
 
     def masters(model, k=1, port_bits=None):
         out = base_masters(model, k, port_bits)
-        t = out['qfd_tile']
-        for i, pn in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
+        # r20: the r19 east-array variant qfd_tile_e copies the tile's ports BEFORE this wrapper ran, so it kept the
+        # one-stack b3r5 tree pins (x 100: r19 i5 M9 33.8k, the 'li/lo' swap is its only intended difference)
+        for t, i, pn in [(out[tn], i, pn) for tn in ('qfd_tile', 'qfd_tile_e') if tn in out
+                         for i, pn in enumerate(('t_out', 'n_a', 'n_b', 'n_y'))]:
             spec = t.ports[pn]
             if spec[0] == 'area' and len(spec) == 5:
                 # x 10 + 60 i (was 40 + 60 i): the ncols sub-columns stay inside the 260.9 um body
