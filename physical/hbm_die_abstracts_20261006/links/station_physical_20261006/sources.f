@@ -1,0 +1,5 @@
+physical/hbm_die_abstracts_20261006/links/station_physical_20261006/ot_hbm_w2_protected_bank_lowered.sv
+rtl/common/ot_fwd_link_stage.sv
+physical/hbm_die_abstracts_20261006/links/ot_hbm_native_register_slice.sv
+physical/hbm_die_abstracts_20261006/links/parents/ot_hbm_native_station.sv
+physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_frame_station.sv
