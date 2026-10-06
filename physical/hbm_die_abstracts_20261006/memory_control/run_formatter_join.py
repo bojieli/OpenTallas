@@ -45,22 +45,14 @@ def main():
  launch=json.loads((a.out/'launch.json').read_text());dump(a.out/'post_guard_capacity.json',cap)
  if pins!=launch['source_sha256'] or sha(guard)!=launch['guard_sha256'] or cap['guard_core_sha256']!=launch['capacity']['guard_core_sha256']:return 65
  if not cap['CPU_fit']:return 66
- # Tool package is extracted privately; no global package or peer tool mutation.
- tool=a.out/'tool';tool.mkdir()
- with (a.out/'tool.log').open('w') as log:
-  ret=subprocess.call(['apt-get','download','verilator'],cwd=tool,stdout=log,stderr=subprocess.STDOUT)
-  if ret:return ret
-  deb=list(tool.glob('verilator*.deb'))
-  if len(deb)!=1:return 65
-  ret=subprocess.call(['dpkg-deb','-x',str(deb[0]),str(tool/'unpacked')],stdout=log,stderr=subprocess.STDOUT)
-  if ret:return ret
- env=os.environ.copy();env['VERILATOR_ROOT']=str(tool/'unpacked/usr/share/verilator')
- executable=tool/'unpacked/usr/bin/verilator'
+ # Reuse the installed 5.050 tool used by the retained successful gather gate.
+ executable=Path('/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator')
+ env=os.environ.copy();env.pop('VERILATOR_BIN',None);env.pop('VERILATOR_ROOT',None)
  with (a.out/'tool.version').open('w') as log:
   subprocess.check_call([str(executable),'--version'],env=env,stdout=log,stderr=subprocess.STDOUT)
  cmd=[str(executable),'--binary','--timing','--threads','1','-j','1','-Wno-fatal','--top-module','tb_hbm_formatter_provider_join','--Mdir',str(a.out/'build'),*[str(a.root/s) for s in SOURCES]]
  with (a.out/'compile.log').open('w') as log:ret=subprocess.call(cmd,env=env,stdout=log,stderr=subprocess.STDOUT)
- rec={'source_sha256':pins,'compile_command':cmd,'compile_exit':ret,'cases':[],'physical_closed':False,'actual_parent_bindings_qualified':False,'private_tool_deb_sha256':sha(deb[0])}
+ rec={'source_sha256':pins,'compile_command':cmd,'compile_exit':ret,'cases':[],'physical_closed':False,'actual_parent_bindings_qualified':False,'verilator_script_sha256':sha(executable),'verilator_binary_sha256':sha(executable.with_name('verilator_bin'))}
  if ret:dump(a.out/'terminal.json',rec);return ret
  cmd=[str(a.out/'build/Vtb_hbm_formatter_provider_join')]
  with (a.out/'exact_and_token_negative.log').open('w') as log:ret=subprocess.call(cmd,stdout=log,stderr=subprocess.STDOUT)
