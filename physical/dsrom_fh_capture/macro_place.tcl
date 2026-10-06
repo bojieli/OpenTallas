@@ -32,8 +32,15 @@ foreach inst [$block getInsts] {
     # and capture registers. The head's shared tag/control stays outside groups.
     set region [odb::dbRegion_create $block "fh_lane_$b"]
     $region setRegionType EXCLUSIVE
-    odb::dbBox_create $region [expr {int(($xx-1)*$dbu)}] [expr {int(($yy-1)*$dbu)}] \
-        [expr {int(($xx+225)*$dbu)}] [expr {int(($yy+65)*$dbu)}]
+    # C20 DPL failed on macro-overlapping, off-site std-cell fences.
+    # Keep all fixed macros/pins; use site-aligned rows above BBox + guard5.
+    set mb [$inst getBBox]
+    set rx1 [expr {int(round(($x0+ceil(($xx-1-$x0)/$xp)*$xp)*$dbu))}]
+    set rx2 [expr {int(round(($x0+floor(($xx+225-$x0)/$xp)*$xp)*$dbu))}]
+    set ry1 [expr {int(round(($y0+ceil((double([$mb yMax])/$dbu+5-$y0)/$yp)*$yp)*$dbu))}]
+    set ry2 [expr {int(round(($y0+floor(($yy+65-$y0)/$yp)*$yp)*$dbu))}]
+    if {$rx1 >= $rx2 || $ry1 >= $ry2} {error "No macro-free rows bank=$b"}
+    odb::dbBox_create $region $rx1 $ry1 $rx2 $ry2
     set group [odb::dbGroup_create $block "fh_lane_$b"]
     $region addGroup $group
     # The SRAM is already fixed by place_inst. GPL treats a fixed macro in a
@@ -51,6 +58,11 @@ foreach inst [$block getInsts] {
         }
         if {[regexp {u_head.*u_rh.*line\[(\d+)\]} $cn -> bit]} {
             if {($bit%2048)/32==$b} {set local 1}
+        }
+        # Actual native request payload/capture mirror FFs follow the lane.
+        if {[regexp {g_request_bank\[(\d+)\].*u_bank.*(q|check)\[(\d+)\]} $cn -> bank kind bit]} {
+            set packetbit [expr {$bank*32+$bit}]
+            if {$packetbit>=592 && $packetbit<2640 && ($packetbit-592)/32==$b} {set local 1}
         }
         if {$local && $cell ne $inst} {$group addInst $cell}
     }
