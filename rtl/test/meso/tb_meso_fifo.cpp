@@ -69,6 +69,7 @@ int main(int argc, char** argv) {
     const double holdps = atof(arg(argc, argv, "holdps", "60").c_str());
     const int expfault = atoi(arg(argc, argv, "expfault", "0").c_str());
     const int credits = atoi(arg(argc, argv, "credits", "8").c_str());
+    const int rdy1 = atoi(arg(argc, argv, "rdy1", "0").c_str());              // consumer never back-pressures (NOBP)
     const std::string wph = arg(argc, argv, "wph", "rand");                   // wander phase at cycle 0 (rad)
     const double wphase0 = wph == "rand" ? urand() * 2 * M_PI : atof(wph.c_str());
 
@@ -231,7 +232,7 @@ int main(int argc, char** argv) {
                 if (rrst_left > 0) { rrst_left--; d->rrst_n = 0; } else d->rrst_n = 1;
                 if (!draining && preset > 0 && chance(preset)) { rrst_left = 3 + rnd() % 20; d->rrst_n = 0; resets++; }
                 bool rdy;
-                if (draining || sparse || stream) rdy = true;
+                if (draining || sparse || stream || rdy1) rdy = true;
                 else if (bp) { if (bp_burst <= 0) { bp_rdy = !bp_rdy; bp_burst = 1 + rnd() % (bp_rdy ? 40 : 25); } bp_burst--; rdy = bp_rdy; }
                 else rdy = chance(pr);
                 d->r_rdy = rdy;

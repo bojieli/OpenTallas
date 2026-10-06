@@ -1,7 +1,7 @@
 #!/bin/bash
 # stn_route.sh (CLAUDE HBM-ABSTRACTS stations) <src> <out> <label> <master> [PD] : one station view route via route_view.sh
 # env FENCE=1: compact region per meso FIFO (bench/stn_meso_fence.tcl, POST_FLOORPLAN; OT_FENCE_DENSITY)
-# env MARGIN=1 CKINS=<ps> [CKFF=<ps>, FF minimum insertion for the vclk hold latency]: owner margin rule (2026-10-06) -- route against bench/stn_margin_sdc.py route (effective
+# env MARGIN=1 CKINS=<ps> [CKFF="<ff_min> <ff_max>", FF leaf insertion range for the IO hold model]: owner margin rule (2026-10-06) -- route against bench/stn_margin_sdc.py route (effective
 #     770 ps: setup uncertainty 123 ps, crossing bound -63 ps; ck IO vs vclk at the measured insertion CKINS, 0.2 T +
 #     150 ps), then sign off on stn_margin_sdc.py signoff (60 ps, 356.667 ps, same IO): corner STA and the SS/FF ETM
 #     export re-run against it (corner_sta.json; the route-SDC STA is kept as corner_sta_route.json).

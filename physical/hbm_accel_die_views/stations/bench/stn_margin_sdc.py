@@ -7,14 +7,11 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
 * ck-domain IO (die clock tree) is re-timed against a virtual clock vclk at the view's measured ck insertion L with a
   0.2 T + 150 ps budget (the 150 ps die clock-arrival allowance); forwarded-clock IO (f_* / o_*) is source-synchronous
   (the clock travels with its bus) and keeps the 0.2 T budget against its own clock.
-* vclk latency is corner-true: the SS insertion for the SS (setup) file; the FF (hold) file (4th/5th arguments) times
-  outputs against vclk at the FF minimum insertion and inputs against vclki at the FF maximum insertion, i.e. the
-  neighbour's die-clock leaf arrives no earlier than this block's earliest leaf (outputs) and no later than its latest
-  (inputs); the die clock-arrival difference is the setup-side 150 ps -- stn_resignoff.sh times each corner against
-  its own file.  The FF file adds a 50 ps die-clock skew allowance on IO hold (inter-clock hold uncertainty).  One SS figure on the hold side
-  demands ~130 ps of hold buffers per output that the die clock never needs (M2_hfd_meso_r32: FF -7.75 ps against a
-  294 ps vclk latency with a 163 ps FF insertion, after 7 hold buffers).  (OpenSTA -min/-max latency is not a
-  per-corner split: a -min latency moves the setup capture edge.)
+* hold: corner-true IO hold in one SDC (coordinator-approved 2026-10-06; common/make_io_vclk_ff.sh is the post-SDC
+  form): with the FF leaf insertion range Lmin..Lmax (4th/5th arguments, measured on a routed view), input -min delay
+  Lmax - L - 25 and output -min delay L - Lmin - 25 against vclk at L (with the 25 ps hold uncertainty: 50 ps), i.e. the neighbour's die-clock leaf lands in
+  this block's own FF leaf spread with a 50 ps die-skew allowance; the 150 ps die arrival term stays on setup.  One
+  SS L on the hold side alone demands ~130 ps of hold buffers per output (M2_hfd_meso_r32: -7.75 ps after 7 buffers).
 * meso views: rst (synchroniser input only) is a false path.
 * vclk <-> forwarded clocks: false paths (rst only; resynchronised per domain).
 * route: over-constrained to an effective 770 ps -- setup uncertainty 60 + 63 ps on every clock and the meso crossing
@@ -24,8 +21,9 @@ import re
 import sys
 
 src, L, mode = sys.argv[1], float(sys.argv[2]), sys.argv[3]
-Lmin = float(sys.argv[4]) if len(sys.argv) > 4 else L   # outputs (FF file: FF min insertion)
-Lmax = float(sys.argv[5]) if len(sys.argv) > 5 else Lmin   # inputs (FF file: FF max insertion)
+FFM = len(sys.argv) > 5
+Lmin = float(sys.argv[4]) if len(sys.argv) > 4 else L   # outputs: FF min leaf insertion
+Lmax = float(sys.argv[5]) if len(sys.argv) > 5 else Lmin   # inputs: FF max leaf insertion
 T = 833.333
 OVER = 63.0 if mode == 'route' else 0.0
 io = round(0.2 * T + 150, 3)
@@ -34,9 +32,15 @@ for l in open(src):
     s = l.rstrip('\n')
     m = re.match(r'^(set_(?:input|output)_delay) ([0-9.]+) -clock ck( -add_delay)? (.*)$', s)
     if m:
-        vc = 'vclk' if m.group(1) == 'set_output_delay' else 'vclki'
-        out.append(f'{m.group(1)} {io} -clock {vc}{m.group(3) or ""} {m.group(4)}')
-        out.append(f'{m.group(1)} -min 0 -clock {vc} -add_delay {m.group(4)}')
+        # hold side (min delays, against vclk at the SS insertion L): inputs arrive no earlier than the block's FF
+        # MAX leaf insertion minus the 50 ps die-skew allowance, outputs are captured no earlier than its FF MIN leaf
+        # insertion plus 50 ps -- one SDC for routing (hold repair at BC) and for both sign-off corners
+        if FFM:
+            mn = (Lmax - L - 25) if m.group(1) == 'set_input_delay' else (L - Lmin - 25)   # + 25 ps hold uncertainty = 50
+        else:
+            mn = 0
+        out.append(f'{m.group(1)} {io} -clock vclk{m.group(3) or ""} {m.group(4)}')
+        out.append(f'{m.group(1)} -min {mn:g} -clock vclk -add_delay {m.group(4)}')
         continue
     m = re.match(r'^(set_max_delay -ignore_clock_latency .*\]) ([0-9.]+)$', s)
     if m:
@@ -48,16 +52,13 @@ for l in open(src):
     out.append(s)
     if s.startswith('create_clock -name ck '):
         out.append(f'create_clock -name vclk -period {T}')
-        out.append(f'set_clock_latency {Lmin:g} [get_clocks vclk]')
-        out.append(f'create_clock -name vclki -period {T}')
-        out.append(f'set_clock_latency {Lmax:g} [get_clocks vclki]')
+        out.append(f'set_clock_latency {L:g} [get_clocks vclk]')
 # vclk only times the die-clock IO; the one terminal it shares with a forwarded domain is rst, which reaches that
 # domain through its own two-flop resynchroniser (timed against the forwarded clock's own input delay above)
 fcl = [re.match(r'create_clock -name (f_\S+)', x).group(1) for x in out if re.match(r'create_clock -name f_', x)]
 for f in fcl:
-    for v in ('vclk', 'vclki'):
-        out.append(f'set_false_path -from [get_clocks {v}] -to [get_clocks {f}]')
-        out.append(f'set_false_path -from [get_clocks {f}] -to [get_clocks {v}]')
+    out.append(f'set_false_path -from [get_clocks vclk] -to [get_clocks {f}]')
+    out.append(f'set_false_path -from [get_clocks {f}] -to [get_clocks vclk]')
 # A meso view's rst terminal reaches only the two-flop resynchronisers of each FIFO domain (ot_hbm_stn_meso wrs/rrs):
 # a synchroniser input carries no single-cycle setup/hold relation (M2_hfd_meso_r32 FF: rst -> rrs[0] -39 ps).
 sv = open(src[:-4] + '.sv').read()
@@ -65,8 +66,5 @@ if 'ot_hbm_stn_meso' in sv and 'rst[0]' not in sv.replace('.rst_n(rst[0])', ''):
     out.append('set_false_path -from [get_ports {rst[0]}]')
 # FF file only (4th argument given): a 50 ps die-clock skew allowance on IO hold (coordinator 2026-10-06: a die
 # tree still has skew at FF), as inter-clock hold uncertainty on both IO directions
-if len(sys.argv) > 4:
-    out.append('set_clock_uncertainty -hold 50 -from [get_clocks vclki] -to [get_clocks ck]')
-    out.append('set_clock_uncertainty -hold 50 -from [get_clocks ck] -to [get_clocks vclk]')
 print('\n'.join(out))
-print(f'# stn_margin_sdc.py {mode}: ck IO vs vclk/vclki at insertion {Lmin:g}/{Lmax:g} ps, 0.2 T + 150 ps; over-constraint {OVER:g} ps')
+print(f'# stn_margin_sdc.py {mode}: ck IO vs vclk at {L:g} ps (hold model FF leaf {Lmin:g}..{Lmax:g} ps +- 50 ps), 0.2 T + 150 ps; over-constraint {OVER:g} ps')
