@@ -1,0 +1,9 @@
+JOIN_PAIR rank=0 word=0 latency=102
+JOIN_PAIR rank=95 word=63 latency=101
+JOIN_PAIR rank=41 word=32 latency=101
+JOIN_PAIR rank=41 word=33 latency=102
+PASS_FORMATTER_PROVIDER_JOIN full96x512_planes 6144checked_publications 4pair512 8reads full73 held_reverse_release TOKEN17negative cycles=576925 beats=24722
+- /srv/opentallas-scratch/codex/hbm-memory-formatter-join-20261006/4a506770b/src/physical/hbm_die_abstracts_20261006/memory_control/tb_hbm_formatter_provider_join.sv:338: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 577us; walltime 280.455 s; speed 2.057 us/s
+- Verilator: cpu 279.834 s on 1 threads; allocated 9 MB
