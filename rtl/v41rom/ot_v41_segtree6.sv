@@ -93,11 +93,7 @@ module ot_v41_segtree6 #(
     reg [NQ-1:0] uq, byp;
     always @* for (int c = 0; c < NQ; c++) begin
         uq[c]  = !svc[c] && !fl[c][0];                                       // use_q
-`ifdef ST6_MUTANT_Q
-        byp[c] = fl[c][0] || (fl[c][2] && svc[c]);                          // negative control: one-entry bypass dropped
-`else
         byp[c] = fl[c][0] || (fl[c][1] && !svc[c]) || (fl[c][2] && svc[c]);  // qr + use_q == qw
-`endif
     end
     // STAGE 1 -- the event considered this cycle: adder result first, else the queue head.  It is registered
     // (x_*) with its held-operand index decoded one-hot and the mask of its tree's levels above it, so the
@@ -287,7 +283,11 @@ module ot_v41_segtree6 #(
                 for (int b = c * 8; b < c * 8 + 8; b++) h_v[b] <= in_val[b];
                 if (c == 0) begin h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos; end
             end else begin
+`ifdef ST6_MUTANT_Q
+                for (int b = c * 8; b < c * 8 + 8; b++) h_v[b] <= qv[qr][b];   // negative control: the pop's advance ignored
+`else
                 for (int b = c * 8; b < c * 8 + 8; b++) h_v[b] <= uq[c] ? qv[qr1][b] : qv[qr][b];
+`endif
                 if (c == 0) begin
                     h_t <= uq[c] ? qt[qr1] : qt[qr]; h_f <= uq[c] ? qf[qr1] : qf[qr];
                     h_e <= uq[c] ? qe[qr1] : qe[qr]; h_p <= uq[c] ? qp[qr1] : qp[qr];
