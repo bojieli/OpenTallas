@@ -6,12 +6,17 @@
 // routes of the softmax missed 0.833 ns by 52-67 ps, every violator the l5x adder's compare/align stage fed from the
 // Horner multiplier's register (another unit).  Same algorithm, same function bit for bit; only register boundaries
 // move.  DEPTH = 7 LM + 8 * 6 + 4.
+// MARGIN build (owner margin-first rule 2026-10-06): LA 9 = the input-registered all-cut adder
+// (ot_dsrom_su_softmax_add9), LM 9 = the all-cut multiplier (ot_dsrom_su_softmax_mul9), NSPLIT 2 = n = rint(t) over
+// three stages (exponent decode | shift + round bits | increment + negate) and the ln2 table through a registered
+// one-hot decode (x6u40: m_t.y -> nint +17 ps, nint -> a_hi +2.6 ps).  DEPTH = 7 LM + 8 LA + 4 + NSPLIT + (NSPLIT == 2).
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_softmax_exp6 #(
     parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
-    parameter integer LA = 6,                   // add latency: the six-cut f12 adder (must be 6)
+    parameter integer LA = 6,                   // add latency: 6 the six-cut f12 adder, 9 the margin adder
     parameter integer NSPLIT = 0                // 1: n = rint(t) over two stages (shift + round bits | increment +
-                                                //    negate), +1 cycle: the one-stage form missed by 12 ps (x6u25)
+                                                //    negate), +1 cycle: the one-stage form missed by 12 ps (x6u25);
+                                                // 2: three stages + the one-hot table stage, +3 cycles (MARGIN)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -22,11 +27,13 @@ module ot_dsrom_su_softmax_exp6 #(
     output wire        fault
 );
     localparam integer T_N = 1 + LM + 1 + NSPLIT; // n registered
-    localparam integer T_K = T_N + 1;           // table products registered
+    localparam integer TB = (NSPLIT == 2) ? 1 : 0;
+    localparam integer T_K = T_N + 1 + TB;      // table products registered
     localparam integer T_R1 = T_K + LA;
     localparam integer T_R = T_R1 + LA;
     localparam integer T_P = T_R + 6 * (LM + LA);
-    localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 4 (LA 6)
+    localparam integer DEPTH = T_P + 1;         // 7 LM + 8 LA + 4 + NSPLIT + TB
+    localparam integer AM = (LA == 9) ? 2 : 1;  // ot_dsrom_su_softmax_add mode
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
@@ -311,7 +318,7 @@ module ot_dsrom_su_softmax_exp6 #(
 
     wire [31:0] t;
     wire [2:0] f;
-    ot_hdc_qmul_lat #(LM) m_t (clk, rst_n, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
+    ot_dsrom_su_softmax_mul #(LM) m_t (clk, rst_n, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
 
     // n = rint-to-even(t), |t| < 127.  With E = field - 127, the integer part
     // is the significand shifted right by 23 - E (E in [-1, 6]); below E = -1,
@@ -324,7 +331,28 @@ module ot_dsrom_su_softmax_exp6 #(
     wire        thalf = tm[trb];
     wire        tstk = |(tm & ~({24{1'b1}} << trb));
     reg  [8:0]  nint;
-    generate if (NSPLIT) begin : g_ns
+    generate if (NSPLIT == 2) begin : g_n3
+        // stage 0: the exponent decode (shift amount, round-bit position, |t| < 1/2, sign) beside the significand
+        reg [23:0] z_m;
+        reg [4:0]  z_sh, z_rb;
+        reg        z_small, z_neg;
+        always @(posedge clk) begin
+            z_m <= tm; z_sh <= tsh; z_rb <= trb; z_small <= (te < 8'd126); z_neg <= t[31];
+        end
+        // stage 1: the shifted integer part, its round bit and sticky
+        wire [23:0] zip = z_m >> z_sh;
+        reg [7:0] s_ip;
+        reg       s_rnd, s_small, s_neg;
+        always @(posedge clk) begin
+            s_ip <= zip[7:0];
+            s_rnd <= z_m[z_rb] && ((|(z_m & ~({24{1'b1}} << z_rb))) || zip[0]);
+            s_small <= z_small;
+            s_neg <= z_neg;
+        end
+        // stage 2: the increment and the negate
+        wire [7:0] tmag2 = s_small ? 8'd0 : (s_ip + {7'd0, s_rnd});
+        always @(posedge clk) nint <= s_neg ? -{1'b0, tmag2} : {1'b0, tmag2};
+    end else if (NSPLIT) begin : g_ns
         // stage 1: the shifted integer part, its round bit and sticky, the |t| < 1/2 test, the sign
         reg [7:0] s_ip;
         reg       s_rnd, s_small, s_neg;
@@ -343,13 +371,26 @@ module ot_dsrom_su_softmax_exp6 #(
     end endgenerate
 
     reg [31:0] a_hi, a_lo;
-    always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    generate if (TB) begin : g_tb
+        // a registered one-hot decode of n's low 8 bits, then each table bit an OR over the rows that set it
+        reg [255:0] oh;
+        always @(posedge clk) oh <= 256'd1 << nint[7:0];
+        reg [63:0] tv;
+        integer ti;
+        always @(*) begin
+            tv = 64'd0;
+            for (ti = 0; ti < 256; ti = ti + 1) if (oh[ti]) tv = tv | ln2_nk(ti[7:0]);
+        end
+        always @(posedge clk) {a_hi, a_lo} <= tv;
+    end else begin : g_t1
+        always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    end endgenerate
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_dsrom_su_softmax_add #(.ADD6(1), .LA(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_dsrom_su_softmax_add #(.ADD6(AM), .LA(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_dsrom_su_softmax_add #(.ADD6(1), .LA(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_dsrom_su_softmax_add #(.ADD6(AM), .LA(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -364,8 +405,8 @@ module ot_dsrom_su_softmax_exp6 #(
             if (k < 6) begin : g_rd
                 ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_dsrom_su_softmax_add #(.ADD6(1), .LA(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_dsrom_su_softmax_mul #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+            ot_dsrom_su_softmax_add #(.ADD6(AM), .LA(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 

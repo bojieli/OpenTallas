@@ -3,6 +3,7 @@
 // +N=<pairs> +SEED=<seed>.  Operands: random bit patterns, subnormals, specials (0, inf, NaN), equal and adjacent
 // significands, results near overflow / underflow.  Prints FDIVEQ n=<pairs> mismatches=<m>.
 module tb_dsrom_su_fdiv_f12_eq;
+    parameter integer NR = 0;                   // the unit under test's non-restoring build (DEPTH 34)
     reg clk = 1'b0, rst_n = 1'b0;
     always #1 clk = ~clk;
     reg         v;
@@ -10,7 +11,7 @@ module tb_dsrom_su_fdiv_f12_eq;
     wire [31:0] y0, y1;
     wire        f0, f1, vo0, vo1;
     ot_hdc_v41x_fdiv     u0 (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y0), .vo(vo0), .fault(f0));
-    ot_dsrom_su_fdiv_f12 u1 (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y1), .vo(vo1), .fault(f1));
+    ot_dsrom_su_fdiv_f12 #(.NR(NR)) u1 (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y1), .vo(vo1), .fault(f1));
     reg [32:0] q0 [0:63];
     integer n, N, seed, mism, w0, r0, k;
     function automatic [31:0] pick(input integer s);
