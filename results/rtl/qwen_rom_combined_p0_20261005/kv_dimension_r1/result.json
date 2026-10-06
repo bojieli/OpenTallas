@@ -1,0 +1,110 @@
+{
+  "status": "SOURCE_DIMENSION_CONFIRMED_FP8_FULL_K_AND_V",
+  "runtime_pid_preserved": 439595,
+  "model_source": "b04e893e7",
+  "oracle_sha256": "cc80fee4a6559b96a982a59a34133a6c480fdb53c2dbe060cdda1d84907088e1",
+  "inputs_sha256": "fd1e10058607c92f012cfb0b0069a727c6040e9a26ae8b95904b89b2af77d659",
+  "oracle_record": {
+    "schema": "opentallas.qwen-tp-position-oracle-gpu.v1",
+    "status": "ISA_golden_only",
+    "tp": 4,
+    "layers": 36,
+    "head": true,
+    "kv_format": "fp8",
+    "groups": 6144
+  },
+  "model_config": {
+    "layers": 36,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "torch_dtype": "bfloat16",
+    "selected_runtime_KV_format": "FP8 E4M3, one byte/value; model torch_dtype is not selected cache storage precision"
+  },
+  "coverage": {
+    "TP": 4,
+    "KV_heads_per_rank": 2,
+    "global_KV_heads_by_rank": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        7
+      ]
+    ],
+    "head_sharding_source": "hdc_qwen_int8_image_w12.py row partition codes[die*n:(die+1)*n]; K and V each1024 rows ->256/rank ->two128-dimension heads",
+    "positions_per_window": 8192,
+    "position_under_test": 8191,
+    "K_values_per_rank_layer": 2097152,
+    "V_values_per_rank_layer": 2097152,
+    "total_values_per_rank_layer": 4194304,
+    "history_files": 144,
+    "unique_source_paths": 144,
+    "unique_manifest_source_hashes": 144,
+    "unique_manifest_raw_hashes": 144,
+    "actual_all144_npy_headers": "<u4, shape(4194304,), C contiguous; actual payload16777216B each; corresponding raw files same extent; exact layer/rank/pos and oraclehash pins checked",
+    "payload_hash_scope": "existing committed manifest pins checked against oracle, not a new bulk payload rehash/test; actual file headers/extents read",
+    "raw_history_dtype": "uint32 FP32 bitwords of already-rounded E4M3 values",
+    "raw_bytes_per_rank_layer": 16777216,
+    "on_load": "actual fullhost load_kv_codes consumes4194304 bitwords and requiresEOF; exact finite E4M3 inverse rejects unrepresentable/nonfinite values, returns4194304 uint8 codes; no new quantization",
+    "physical_packed_bytes_per_rank_layer": 4194304,
+    "physical_packed_bytes_system_layer": 16777216,
+    "physical_packed_bytes_rank36": 150994944,
+    "physical_packed_bytes_system36": 603979776
+  },
+  "layout": {
+    "K_index": "((head*512 + position//16)*128 + dim)*16 + position%16",
+    "V_index": "2097152 + (head*8192 + position)*128 + dim",
+    "bounds": "head0..1, position0..8191, dim0..127; K addresses0..2097151 and V2097152..4194303, disjoint and complete",
+    "sector_bytes": 32,
+    "sector_count_per_rank_layer": 131072,
+    "K_sector_range": [
+      0,
+      65535
+    ],
+    "V_sector_range": [
+      65536,
+      131071
+    ],
+    "SPT": "8/NSTK =2 atNSTK4",
+    "nfill_per_PC": "(P//16+1)*SPT =512*2=1024 atP8191",
+    "PC_count": 128,
+    "p2l": "{j[0],q[4],j[9:1],q[3:0],k}; j10bits q5bits k2bits -> all17 sectoraddressbits exactlyonce; no dropped head/halfwindow",
+    "current_token": "history preload covers positions<P; K current-tail lanes masked and V>=P not installed from history; actual current K/V comes from kv_we with E4M3 exact check, tagged writeback and finite ACK, not duplicated history",
+    "layer_mapping": "numeric memory address=layer*131072+logical_sector; fullhost loads actual L0..L35/rank0..3 into all144 distinct backing slots, tilewindow overwritten perlayer"
+  },
+  "BF16_same_shape_comparison": {
+    "bytes_per_value": 2,
+    "bytes_rank_layer": 8388608,
+    "bytes_system_layer": 33554432,
+    "bytes_system36": 1207959552,
+    "payload_floor_us_if_same128B_per_rank_core_and1p2GHz": 1966.08,
+    "scope": "dimension arithmetic only; BF16 format not implemented/adopted by this vehicle; no runtime/source format change or quality waiver"
+  },
+  "selected_vehicle_floor_us": 983.04,
+  "floor_semantics": "Mandatory steady36-layer FP8 reload floor, not cold-only; independent host simulation speed. Stock BF16-cache equivalence not claimed.",
+  "evidence_source_sha256": {
+    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+    "tools/runtime/qwen_combined/frozen_history.py": "0964153bbc25cfec2d97f3d1992df6bd8a3481570969b526df294ec8e2873be0",
+    "tools/qwen_hbmacc_position_oracle_gpu.py": "86ee29443de62fae006a289479a084aafba58717ec0d844feea6be100eb27424",
+    "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+    "tools/hdc_qwen_int8_image_w12.py": "33d5e4a7359c793d605c6864c156d21f7edd3286187721c9e949d155ffbe8db3",
+    "tools/qwen_rom_combined_p0_20261005/emit.py": "11f043364a9004f1c5bc6af6b416f6e7863c0245c42797e2b3160e62ed47a5ca",
+    "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f",
+    "rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv": "6179d3802cc4482ae527e3ad51f755aa1deaea6af58bac53421a4a01f3cd2106"
+  },
+  "new_build_or_test": false,
+  "live_job_changed": false,
+  "new_quality_waiver": false,
+  "full_token_pass": false,
+  "physical_qualified": false
+}
