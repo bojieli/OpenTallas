@@ -197,3 +197,41 @@ def apply_start(text: str) -> str:
     text = _rep(text, "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end",
                 "if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; end")
     return text
+
+
+def apply_nxreg(text: str) -> str:
+    """DEC_LA_NXREG (default 0; owner margin rule 2026-10-06): the issued instruction's data fields leave the core from
+    registers.  In the DEC_LA core every output field is fqd_<f>[la_nx], an 8:1 read of the decoded-field FIFO behind
+    the NEXT pointer (r5b_f3ba: every endpoint within 60 ps of SS sign-off is la_nx -> such a field -> output port).
+    Here each field is copied into nx_<f> on the LOAD edge that makes its entry NEXT (la_nx <= la_rd), from
+    fqd_<f>[la_rd], or from the entry's write data when that write lands on the same edge (data fields: la_we[la_rd];
+    control fields: pend1 && la_wr == la_rd).  The NEXT entry is never written while it is NEXT (FIFO depth 8), so
+    nx_<f> == fqd_<f>[la_nx] on every cycle after the first LOAD: cycle-identical, 0 added cycles."""
+    import re
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_NXREG = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_NXREG = 0\n) (")
+    fields = sorted(set(re.findall(r"fqd_(\w+)\[la_nx\]", text)))
+    assert fields, "no fqd_*[la_nx] reads"
+    regs, upd = [], []
+    for f in fields:
+        m = re.search(r"\n    reg\s+(\[[^\]]*\]\s*)?fqd_%s\s*\[0:7\];" % re.escape(f), text)
+        assert m, f
+        w = (m.group(1) or "").strip()
+        dm = re.findall(r"if \(la_we\[lw\]\) fqd_%s\[lw\] <= (.*);\n" % re.escape(f), text)
+        cm = re.findall(r"\n\s+fqd_%s\[la_wr\]\s*<= (.*);" % re.escape(f), text)
+        assert len(dm) + len(cm) == 1, (f, dm, cm)
+        regs.append(f"    reg {w + ' ' if w else ''}nx_{f};")
+        if dm:
+            upd.append(f"            nx_{f} <= la_we[la_rd] ? ({dm[0]}) : fqd_{f}[la_rd];")
+        else:
+            upd.append(f"            nx_{f} <= (pend1 && la_wr == la_rd) ? ({cm[0]}) : fqd_{f}[la_rd];")
+    block = ("    // ---- DEC_LA_NXREG (tools/qwen_rom_core_issue_fallback_w12.py apply_nxreg): NEXT fields registered ----\n"
+             + "\n".join(regs) + "\n"
+             + "    always @(posedge clk) if (DEC_LA != 0 && DEC_LA_NXREG != 0 && load) begin\n"
+             + "\n".join(upd) + "\n    end\n")
+    text = _rep(text, "    `undef FP\n", block + "    `undef FP\n")
+    for f in fields:
+        text = text.replace(f"fqd_{f}[la_nx]", f"((DEC_LA_NXREG != 0) ? nx_{f} : fqd_{f}[la_nx])")
+    return text
