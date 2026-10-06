@@ -25,7 +25,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_rom_tile_w12 $S \
   --pin-region '^(n_a|n_b|n_va)=left:300-880' --pin-region '^(t_out|t_vout|n_y|n_vy)=left:880-1100' \
   --pin-region '^(ib|ib_go|xl|tile_id|fault|rst_n|clk)(\[|$)=right:450-850' --pin-region '^kvw_=right:870-1100' \
   --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
-  --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr \
+  --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages pnr \
   --place-density ${PD:-0.45} --hold-margin-ns 0.02 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=16 --orfs-var SDC_FILE=$D/tile_p770.sdc --orfs-var QDM_SDC_DIR=$D \
   --orfs-var PDN_TCL=/src/physical/qwen_slab_m5/pdn_m5.tcl --orfs-var MACRO_PLACEMENT_TCL=$D/macro_place_tile.tcl \
