@@ -77,7 +77,10 @@ module ot_hbm_accel_smh_bd_col #(
         assign acc[32*l +: 32] = sum;
     end endgenerate
     // the chunk's final sum leaves the adder 1 + ALAT cycles after its last term is registered
-    localparam integer LS = 1 + ALAT;
+    // (margin m1) and is registered once more in front of the tree (+1: acc_r)
+    localparam integer LS = 1 + ALAT + 1;
+    reg [LB*32-1:0] acc_r;
+    always @(posedge clk) acc_r <= acc;
     wire [LS:0] lo;
     ot_hdc_vline #(.D(LS)) u_lo (.clk(clk), .rst_n(rst_n), .v(last_q), .vd(lo));
     wire [TAGW-1:0] tag_d;
@@ -90,7 +93,7 @@ module ot_hbm_accel_smh_bd_col #(
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(7)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
+    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(7)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc_r), .tag(tag_d),
                                               .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     // output registers: the hardened macro's outputs leave flops
     reg ov_q, fault_q;
@@ -410,7 +413,7 @@ module ot_hbm_accel_smh_tc_col #(
     output wire            fault
 );
     localparam integer FB = IL - ALAT;          // ring = acc register + adder + (FB - 1) delay = IL
-    localparam integer ML = 6;                  // ot_hbm_accel_smh_bmul latency
+    localparam integer ML = 7;                  // ot_hbm_accel_smh_bmul latency (margin m1: 6 -> 7)
     reg            v_q, first_q, last_q, v_q2, first_q2, last_q2;
     reg [L-1:0]    v_ql;
     reg [TAGW-1:0] tag_q, tag_q2;
@@ -433,7 +436,7 @@ module ot_hbm_accel_smh_tc_col #(
     ot_hdc_vline #(.D(ML)) u_f (.clk(clk), .rst_n(rst_n), .v(first_q2), .vd(fl));
     // chunk end: the lane's final sum leaves the adder ML (mul) + ALAT (add) cycles after the second input register,
     // and its register one cycle later
-    localparam integer LL = ML + ALAT + 1;
+    localparam integer LL = ML + ALAT + 2;      // (margin m1) + the second lane-sum register (sum_q2)
     wire [LL:0] ll;
     ot_hdc_vline #(.D(LL)) u_l (.clk(clk), .rst_n(rst_n), .v(last_q2), .vd(ll));
     wire [TAGW-1:0] tag_d;
@@ -441,7 +444,8 @@ module ot_hbm_accel_smh_tc_col #(
     wire [ML:0] vl;
     ot_hdc_vline #(.D(ML)) u_v (.clk(clk), .rst_n(rst_n), .v(v_q2), .vd(vl));
     wire [L*32-1:0] sum;
-    reg  [L*32-1:0] sum_q;
+    reg  [L*32-1:0] sum_q, sum_q2;
+    always @(posedge clk) sum_q2 <= sum_q;      // (margin m1) the lane sums cross the tile to the tree: two registers
     wire [L-1:0] lf;
     genvar l;
     generate for (l = 0; l < L; l = l + 1) begin : g_lane
@@ -462,7 +466,7 @@ module ot_hbm_accel_smh_tc_col #(
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(L), .TAGW(TAGW), .ALAT(ALAT)) u_tree (.clk(clk), .rst_n(rst_n), .v(ll[LL]), .d(sum_q), .tag(tag_d),
+    ot_gpu_tree #(.N(L), .TAGW(TAGW), .ALAT(ALAT)) u_tree (.clk(clk), .rst_n(rst_n), .v(ll[LL]), .d(sum_q2), .tag(tag_d),
                                              .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     reg lane_fault, ov_q, fault_q;
     reg [31:0] y_q;
@@ -481,7 +485,8 @@ module ot_hbm_accel_smh_tc_col #(
     assign fault = fault_q;
 endmodule
 
-// ot_hbm_accel_bmul with the 8x8 significand product in two stages (8x2 partials, then the 8x4 sums): LATENCY 6.
+// ot_hbm_accel_bmul with the 8x8 significand product in two stages (8x2 partials, then the 8x4 sums) and the encode
+// decision registered ahead of the select (margin m1): LATENCY 7.
 module ot_hbm_accel_smh_bmul (
     input  wire        clk,
     input  wire        rst_n,
@@ -566,22 +571,36 @@ module ot_hbm_accel_smh_bmul (
         if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e8; end
         else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e7; end
     end
-    // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
-    reg        s4_v, s4_bad;
-    reg [31:0] s4_y;
+    // stage 3b (margin m1, +1): the encode decision and both candidate words registered; stage 4 only selects
+    reg        t3_v, t3_zero, t3_bad, t3_norm;
+    reg [31:0] t3_n, t3_sub;
     wire [23:0] sig24 = {1'b1, s3_f};
     wire [3:0]  sub_sh = 4'd1 - s3_be[3:0];
     wire [23:0] sub_v = sig24 >> sub_sh;
     always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) t3_v <= 1'b0;
+        else t3_v <= s3_v;
+    end
+    always @(posedge clk) begin
+        t3_zero <= s3_z && !s3_nf;
+        t3_bad  <= s3_nf || s3_be > 11'sd254 || s3_be < -11'sd6;
+        t3_norm <= s3_be >= 11'sd1;
+        t3_n    <= {s3_s, s3_be[7:0], s3_f};
+        t3_sub  <= {s3_s, 8'd0, sub_v[22:0]};
+    end
+    // stage 4: encode (select)
+    reg        s4_v, s4_bad;
+    reg [31:0] s4_y;
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s4_v <= 1'b0;
-        else s4_v <= s3_v;
+        else s4_v <= t3_v;
     end
     always @(posedge clk) begin
         s4_bad <= 1'b0;
-        if (s3_z && !s3_nf) s4_y <= 32'd0;
-        else if (s3_nf || s3_be > 11'sd254 || s3_be < -11'sd6) begin s4_y <= 32'd0; s4_bad <= 1'b1; end
-        else if (s3_be >= 11'sd1) s4_y <= {s3_s, s3_be[7:0], s3_f};
-        else s4_y <= {s3_s, 8'd0, sub_v[22:0]};
+        if (t3_zero) s4_y <= 32'd0;
+        else if (t3_bad) begin s4_y <= 32'd0; s4_bad <= 1'b1; end
+        else if (t3_norm) s4_y <= t3_n;
+        else s4_y <= t3_sub;
     end
     // stage 5: output register
     always @(posedge clk or negedge rst_n) begin

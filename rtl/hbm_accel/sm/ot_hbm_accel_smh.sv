@@ -640,8 +640,9 @@ module ot_hbm_accel_smh_front #(
             .d(fq_c[2*(k / 8) +: 2]), .q(fmt_r[2*k +: 2]));
     end endgenerate
     // DBF = BF16 column latency - block-dot column latency: 14 for sm_pq's columns; the tile's block-dot column is
-    // 7 cycles deeper (bterm3) and its BF16 column 3 deeper (ot_hbm_accel_smh_tc_col): 14 - 7 + 3 = 10
-    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(10)) u_issue (
+    // 7 cycles deeper (bterm3) and its BF16 column 3 deeper (ot_hbm_accel_smh_tc_col): 14 - 7 + 3 = 10;
+    // (margin m1) BF16 column +2 (bmul 7, second lane-sum register), block-dot column +1 (tree-input register): 11
+    ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(11)) u_issue (
         .clk(clk), .rst_n(rst_n), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
         .op_gs(h_gs), .op_bf(h_fmt == 2'd0),
         .w_valid(w_valid), .x_rdy(1'b1), .w_ready(w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
@@ -697,6 +698,36 @@ module ot_hbm_accel_smh_front #(
                 .q(hw[k*1088 +: 1088]));
         end
     end endgenerate
+    // (margin m1) hop H2: one more kept register per (side, tile row) after H, at the far end of the s1 -> H wire,
+    // in front of the unpack (+1 on every row read; the x-write beat gets the same +1 (wl2), margin unchanged).
+    // The fmt replicas switch at t + 4 after a launch at t: the new op's first line now unpacks at >= t + 5 and the
+    // previous op's last line no later than t + 1.
+    wire [NSC*S1W-1:0]  s1c2;
+    wire [NSC*1088-1:0] hw2;
+    generate for (k = 0; k < NSC; k = k + 1) begin : g_h2
+        ot_hbm_accel_smh_kreg #(.W(3), .RST(1)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(s1c[k*S1W + TAGW + XW +: 3]), .q(s1c2[k*S1W + TAGW + XW +: 3]));
+        ot_hbm_accel_smh_kreg #(.W(TAGW + XW)) u_t (.clk(clk), .rst_n(rst_n), .en(1'b1),
+            .d(s1c[k*S1W +: TAGW + XW]), .q(s1c2[k*S1W +: TAGW + XW]));
+        localparam integer PR2 = k % (SUB / RPT);
+        if (SUB == 4 && RPT == 2 && LBS == 2 && LSB == 16) begin : g_rows
+            if (PR2 == 0) begin : g_r0
+                ot_hbm_accel_smh_kreg #(.W(1056)) u_w (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                    .d(hw[k*1088 +: 1056]), .q(hw2[k*1088 +: 1056]));
+                assign hw2[k*1088 + 1056 +: 32] = 32'd0;
+            end else begin : g_r1
+                ot_hbm_accel_smh_kreg #(.W(512)) u_w (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                    .d(hw[k*1088 + 512 +: 512]), .q(hw2[k*1088 + 512 +: 512]));
+                ot_hbm_accel_smh_kreg #(.W(32)) u_e (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                    .d(hw[k*1088 + 1056 +: 32]), .q(hw2[k*1088 + 1056 +: 32]));
+                assign hw2[k*1088 +: 512] = 512'd0;
+                assign hw2[k*1088 + 1024 +: 32] = 32'd0;
+            end
+        end else begin : g_full
+            ot_hbm_accel_smh_kreg #(.W(1088)) u_w (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                .d(hw[k*1088 +: 1088]), .q(hw2[k*1088 +: 1088]));
+        end
+    end endgenerate
     // ---------------- x-write beat at the pins (sm_pq's w0) ----------------
     reg              w0_en;
     reg [XW-1:0]     w0_addr;
@@ -705,17 +736,19 @@ module ot_hbm_accel_smh_front #(
     integer gq;
     // (round 4) landed at the pins first (wl), decoded one edge later (w0): +1 cycle on every x write, matched by
     // the row bundles' hop H
-    reg              wl_en;
-    reg [XW-1:0]     wl_addr;
-    reg [6:0]        wl_grp;
-    reg [2047:0]     wl_data;
+    reg              wl_en, wm_en;
+    reg [XW-1:0]     wl_addr, wm_addr;
+    reg [6:0]        wl_grp, wm_grp;
+    reg [2047:0]     wl_data, wm_data;
+    // (margin m1) wl2 (wm_*): one more landing register, matching the row reads' H2
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wl_en <= 1'b0; w0_en <= 1'b0; end
-        else begin wl_en <= xw_en; w0_en <= wl_en; end
+        if (!rst_n) begin wl_en <= 1'b0; wm_en <= 1'b0; w0_en <= 1'b0; end
+        else begin wl_en <= xw_en; wm_en <= wl_en; w0_en <= wm_en; end
     always @(posedge clk) begin
         wl_addr <= xw_addr; wl_grp <= xw_grp; wl_data <= xw_data;
-        w0_addr <= wl_addr; w0_data <= wl_data;
-        for (gq = 0; gq < NBEAT; gq = gq + 1) w0_oh[gq] <= (wl_grp == gq);
+        wm_addr <= wl_addr; wm_grp <= wl_grp; wm_data <= wl_data;
+        w0_addr <= wm_addr; w0_data <= wm_data;
+        for (gq = 0; gq < NBEAT; gq = gq + 1) w0_oh[gq] <= (wm_grp == gq);
     end
 
     // ---------------- stage A: unpack per sub (sm_pq's g_sub, format from the replicas), per side ----------------
@@ -724,7 +757,7 @@ module ot_hbm_accel_smh_front #(
     generate for (sp = 0; sp < SUB; sp = sp + 1) begin : g_sub
         for (sd = 0; sd < 2; sd = sd + 1) begin : g_sd
             localparam integer CI = sd * (SUB / RPT) + sp / RPT;
-            wire [1087:0] lw = hw[CI*1088 +: 1088];
+            wire [1087:0] lw = hw2[CI*1088 +: 1088];
             wire [WSW-1:0] un;
             for (q = 0; q < LBS; q = q + 1) begin : g_q
                 localparam integer J = sp * LBS + q;
@@ -742,7 +775,7 @@ module ot_hbm_accel_smh_front #(
             localparam integer RC = sd * NFMT + (SUB * LBS * 8 + sp) % NFMT;
             wire bf_op = (fmt_r[2*RC +: 2] == 2'd0);
             wire fp4_op = (fmt_r[2*RC +: 2] == 2'd2);
-            wire [S1W-1:0] c1 = s1c[CI*S1W +: S1W];
+            wire [S1W-1:0] c1 = s1c2[CI*S1W +: S1W];
             wire s1_v = c1[S1W-1], s1_first = c1[S1W-2], s1_last = c1[S1W-3];
             wire [TAGW-1:0] s1_tag = c1[XW +: TAGW];
             wire [XW-1:0] s1_xa = c1[XW-1:0];
@@ -1126,6 +1159,19 @@ module ot_hbm_accel_smh_leaf #(
         iw <= w3;
         ix <= xrd[SLW-1:0];
     end
+    // ---- E5 (margin m1, +1 on both columns): the macro read lands in E4 at the macro pins, then E5 feeds the
+    // columns; the x-store read edge and the write-before-read margin are unchanged ----
+    reg              jv_b, jv_f, jfirst, jlast, jfp4;
+    reg [TAGW-1:0]   jtag;
+    reg [WSW-1:0]    jw;
+    reg [SLW-1:0]    jx;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin jv_b <= 1'b0; jv_f <= 1'b0; end
+        else begin jv_b <= iv_b; jv_f <= iv_f; end
+    end
+    always @(posedge clk) begin
+        jfirst <= ifirst; jlast <= ilast; jfp4 <= ifp4; jtag <= itag; jw <= iw; jx <= ix;
+    end
     // ---- the column logic (flat in the tile: the modules of the sm_pq leaf's macros) ----
     wire bov, bfault, fov, ffault;
     wire [31:0] by, fy;
@@ -1134,27 +1180,27 @@ module ot_hbm_accel_smh_leaf #(
     wire [LBS*10-1:0]  xe_s;
     genvar qq;
     generate for (qq = 0; qq < LBS; qq = qq + 1) begin : g_bx
-        assign xq_s[256*qq +: 256] = ix[qq*266 +: 256];
-        assign xe_s[10*qq +: 10]   = ix[qq*266 + 256 +: 10];
+        assign xq_s[256*qq +: 256] = jx[qq*266 +: 256];
+        assign xe_s[10*qq +: 10]   = jx[qq*266 + 256 +: 10];
     end endgenerate
     generate
         if (TCK != 0) begin : g_k
             ot_hbm_accel_smh_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (   // bterm3: +7 cycles
-                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
-                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                .clk(clk), .rst_n(rst_n), .v(jv_b), .first(jfirst), .last(jlast), .fp4(jfp4), .tag(jtag),
+                .wq(jw[0 +: LBS*256]), .we(jw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
             ot_hbm_accel_smh_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (   // +3 cycles (tile context)
-                .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
-                .w(iw[LBS*266 +: LSB*16]), .x(ix[LBS*266 +: LSB*16]),
+                .clk(clk), .rst_n(rst_n), .v(jv_f), .first(jfirst), .last(jlast), .tag(jtag),
+                .w(jw[LBS*266 +: LSB*16]), .x(jx[LBS*266 +: LSB*16]),
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
         end else begin : g_o
             ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
-                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
-                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                .clk(clk), .rst_n(rst_n), .v(jv_b), .first(jfirst), .last(jlast), .fp4(jfp4), .tag(jtag),
+                .wq(jw[0 +: LBS*256]), .we(jw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
             ot_gpu_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
-                .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
-                .w(iw[LBS*266 +: LSB*16]), .x(ix[LBS*266 +: LSB*16]),
+                .clk(clk), .rst_n(rst_n), .v(jv_f), .first(jfirst), .last(jlast), .tag(jtag),
+                .w(jw[LBS*266 +: LSB*16]), .x(jx[LBS*266 +: LSB*16]),
                 .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
         end
     endgenerate
