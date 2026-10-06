@@ -119,6 +119,7 @@ def main():
     p.add_argument('--terminal',type=Path)
     p.add_argument('--components-only',action='store_true',help='Build only exact completed enrolled children; no parent/link/runtime claim')
     p.add_argument('--enrollment',type=Path)
+    p.add_argument('--component-driver',type=Path,help='Pinned current exact-reuse implementation; snapshot runner remains immutable')
     p.add_argument('--harness',type=Path);p.add_argument('--workers',type=int,required=True)
     p.add_argument('--memory-gib',type=int,required=True);p.add_argument('--disk-reserve-bytes',type=int,required=True)
     p.add_argument('--host',required=True);p.add_argument('--compiler',type=Path,default=Path(shutil.which('g++') or '/missing'))
@@ -137,7 +138,7 @@ def main():
     if a.components_only:
         if not a.enrollment or a.harness:raise ValueError('Exact enrollment required; partial children cannot link a parent')
         if sha(work/'runner.py')!=prepared['runner_sha256']:raise ValueError('Pinned component driver changed')
-        spec=importlib.util.spec_from_file_location('component_driver',work/'runner.py')
+        spec=importlib.util.spec_from_file_location('component_driver',a.component_driver or work/'runner.py')
         driver=importlib.util.module_from_spec(spec);spec.loader.exec_module(driver)
         m=driver.verified(work);jobs=json.loads(a.graph.read_text())['submodules']
         enrolled=json.loads(a.enrollment.read_text())
@@ -162,6 +163,7 @@ def main():
         models=models,compiler=sha(a.compiler),archiver=sha(a.archiver),driver=sha(__file__),
         harness=sha(a.harness) if a.harness else None,workers=a.workers)
     if a.enrollment:inputs['enrollment_sha256']=sha(a.enrollment)
+    if a.component_driver:inputs['component_driver_sha256']=sha(a.component_driver)
     if a.harness:inputs['harness_dependencies']=harness_dependencies(a.harness)
     if terminal and set(terminal['completed'])!={m['job']['prefix'] for m in models}:
         raise ValueError('Terminal does not cover this actual generated hierarchy')
