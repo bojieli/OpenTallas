@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm.compute.quarter_size.v1",
   "model_source": "tools/uarch_model.py PRESETS.proposal sfu_lanes / 4, hbm_gpu_design(v41) HC 5120 / 4",
-  "model_sha256": "df1ba2e379d818732b74c749e3f070b6a487be5d3f572bf3ffafbb31c54af062",
+  "model_sha256": "caf0d5b67a790700538177bb0fdaaff6ed3dac5a521cf6505531ce6438215b33",
   "protection_source": "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv",
   "sfu": {
     "top": "ot_hbm_sfu_quarter",
@@ -31,7 +31,7 @@
     "DDIV": 21,
     "SIDEX": 4,
     "primitives": "c12 exp/divider/side arithmetic from adopted SU; completion exported from same side result register",
-    "composed_cycles": "request capture + dispatch + existing opcode pipeline + protected result capture; engine completion drives retirement, no invented zero latency",
+    "composed_cycles": "request capture + PRIME (1 added root/engine edge) + dispatch + existing opcode pipeline + protected result capture; engine completion drives retirement, no invented zero latency",
     "expected_engine_depth": {
       "exp": 94,
       "sigm": 121,
@@ -71,13 +71,18 @@
       "combinational_SECDED_mux_fanout_area": "must measure; not zero or counted as closed",
       "outstanding_transactions": 1,
       "request_capture": 1,
+      "prime": 1,
       "dispatch": 1,
       "response_capture": 1,
       "no_backpressure_loss": "request held until response consumed; response held in protected cut",
       "parent_clock_closed": false,
       "ICG_replicas": 1,
       "ICG_clock_load_area": "must measure actual parent; no leaf insertion inheritance",
-      "clock_freezes_on": "CE repair or protected controller nonnormal"
+      "clock_freezes_on": "CE repair or protected controller nonnormal",
+      "engine_reset_policy": "POR or normal IDLE only; no reset during CE repair",
+      "latency_delta_cycles": 1,
+      "state_ff_delta": 0,
+      "reset_fanout_cost": "real reset fanout/CTS/load cost remains to be measured; not free"
     }
   },
   "hc": {
@@ -104,7 +109,7 @@
     "fp32_mul_replicas": 1280,
     "fp32_add_replicas": 1024,
     "golden_order": "r0*c0+r1*c1; +r2*c2; +r3*c3; +y*p; BF16 RNE",
-    "composed_cycles": "request capture + dispatch + unchanged group input and HC-post pipeline + protected result capture",
+    "composed_cycles": "request capture + PRIME (1 added root/engine edge) + dispatch + unchanged group input and HC-post pipeline + protected result capture",
     "held": {
       "request": {
         "payload_bits": 10913,
@@ -135,13 +140,18 @@
       "combinational_SECDED_mux_fanout_area": "must measure; not zero or counted as closed",
       "outstanding_transactions": 1,
       "request_capture": 1,
+      "prime": 1,
       "dispatch": 1,
       "response_capture": 1,
       "no_backpressure_loss": "request held until response consumed; response held in protected cut",
       "parent_clock_closed": false,
       "ICG_replicas": 1,
       "ICG_clock_load_area": "must measure actual parent; no leaf insertion inheritance",
-      "clock_freezes_on": "CE repair or protected controller nonnormal"
+      "clock_freezes_on": "CE repair or protected controller nonnormal",
+      "engine_reset_policy": "POR or normal IDLE only; no reset during CE repair",
+      "latency_delta_cycles": 1,
+      "state_ff_delta": 0,
+      "reset_fanout_cost": "real reset fanout/CTS/load cost remains to be measured; not free"
     }
   },
   "physical": {

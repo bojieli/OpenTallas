@@ -1,0 +1,26 @@
+{
+ "rc": 0,
+ "time_s": 3.65,
+ "peak_GB": 0.24,
+ "counts": {
+  "Warning-PINMISSING": {
+   "rtl:qwen_rom_lint_top.sv": 956
+  },
+  "Warning-UNDRIVEN": {
+   "rtl:ot_hbm3e_phy_bb.v": 5
+  },
+  "Warning-UNUSEDSIGNAL": {
+   "rtl:ot_hbm3e_phy_bb.v": 9,
+   "rtl:ot_qwen_stream4_cdc_pc.sv": 5,
+   "stubs": 2
+  }
+ },
+ "examples": {
+  "Warning-PINMISSING": [],
+  "Warning-UNUSEDSIGNAL": [
+   "Signal is not used: 'lint_clk'",
+   "Signal is not used: 'lint_in'"
+  ],
+  "Warning-UNDRIVEN": []
+ }
+}

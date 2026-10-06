@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
  parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1,
@@ -199,6 +199,11 @@ end else begin:g_on
         wire su_req_v,su_req_rdy,su_rsp_v,su_rsp_rdy;
         wire [336:0] su_request;
         wire [272:0] su_response;
+        wire su_provider_req_v,su_provider_rsp_r,su_caller_done,su_caller_fault;
+        wire [336:0] su_provider_req;
+        wire [3:0] su_caller_retired;
+        wire [31:0] su_executor_pc;
+        wire [72:0] su_provider_frame;
         wire [NCL-1:0] obs_req,obs_rsp,obs_req_we,obs_rsp_we;
         wire [NCL*16-1:0] obs_req_tag,obs_rsp_tag;
         wire [2:0] p_req_v,p_req_rdy,p_req_we,p_rsp_v,p_rsp_rdy,p_rsp_we;
@@ -241,14 +246,14 @@ end else begin:g_on
         // Reservation gates NEW native acceptance in the adapter. Once accepted,
         // its sector debt must drain even if native_done/source permit changes.
         wire w2_native_permit=W2_SECTOR_ENABLE||!W2_RESULT_ENABLE||(w2_source_permit[d]&&!w2_native_done[d]);
-        assign p_req_v={w2_sink_route||(w2_route_req_v&&w2_native_permit),su_req_v&&su_new_request_permit,a_req_v[0]};
+        assign p_req_v={w2_sink_route||(w2_route_req_v&&w2_native_permit),su_provider_req_v,a_req_v[0]};
         assign {p_req_we[2],p_req_addr[95:64],p_req_wdata[767:512],p_req_wstrb[95:64],p_req_tag[47:32]}=
          w2_sink_route?w2_sink_req:w2_route_req;
-        assign {p_req_we[1],p_req_addr[63:32],p_req_wdata[511:256],p_req_wstrb[63:32],p_req_tag[31:16]}=su_request;
+        assign {p_req_we[1],p_req_addr[63:32],p_req_wdata[511:256],p_req_wstrb[63:32],p_req_tag[31:16]}=su_provider_req;
         assign {p_req_we[0],p_req_addr[31:0],p_req_wdata[255:0],p_req_wstrb[31:0],p_req_tag[15:0]}=
                {a_req_we[0],a_req_addr[31:0],a_req_wdata[255:0],a_req_wstrb[31:0],a_req_tag[15:0]};
         assign w2_adapter_req_r=p_req_rdy[2]&&!w2_sink_route&&w2_native_permit;
-        assign w2_req_r[d]=!W2_SECTOR_ENABLE&&w2_adapter_req_r;assign w2_sink_req_r=p_req_rdy[2]&&w2_sink_route;assign su_req_rdy=p_req_rdy[1]&&su_new_request_permit;assign a_req_rdy[0]=p_req_rdy[0];
+        assign w2_req_r[d]=!W2_SECTOR_ENABLE&&w2_adapter_req_r;assign w2_sink_req_r=p_req_rdy[2]&&w2_sink_route;assign a_req_rdy[0]=p_req_rdy[0];
         assign w2_provider_rsp={p_rsp_tag[47:32],p_rsp_we[2],p_rsp_data[767:512]};
         // Assembly drains before a result write starts; the sink retains the
         // same single CAP1 route through write ACK and readback consumption.
@@ -256,10 +261,10 @@ end else begin:g_on
         assign w2_sink_rsp_v=p_rsp_v[2]&&sink_response;
         assign w2_adapter_rsp_v=p_rsp_v[2]&&!sink_response;
         assign w2_rsp_v[d]=!W2_SECTOR_ENABLE&&w2_adapter_rsp_v;assign w2_rsp[d*273+:273]=w2_provider_rsp;
-        assign su_rsp_v=p_rsp_v[1];assign su_response={p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]};
+
         assign a_rsp_v[0]=p_rsp_v[0]&&response_authorized[0];
         assign a_rsp_tag[15:0]=p_rsp_tag[15:0];assign a_rsp_we[0]=p_rsp_we[0];assign a_rsp_data[255:0]=p_rsp_data[255:0];
-        assign p_rsp_rdy={sink_response?w2_sink_rsp_r:w2_route_rsp_r,su_rsp_rdy,a_rsp_rdy[0]&&response_authorized[0]};
+        assign p_rsp_rdy={sink_response?w2_sink_rsp_r:w2_route_rsp_r,su_provider_rsp_r,a_rsp_rdy[0]&&response_authorized[0]};
         assign return_offer[0]=p_rsp_v[0];
         assign obs_req[0]=a_req_v[0]&&a_req_rdy[0];assign obs_rsp[0]=a_rsp_v[0]&&a_rsp_rdy[0];
         assign obs_req_tag[15:0]=a_req_tag[15:0];assign obs_req_we[0]=a_req_we[0];
@@ -286,19 +291,42 @@ end else begin:g_on
          .clk(clk_sm),.por_n(rst_sm_n),.launch_v(launch_v),.launch_pc(launch_pc),
          .cp_job(cpl_job),.cp_gen(cpl_generation),.launch_token(launch_token),.launch_pos(launch_pos),
          .native_launch(native_launch),.lease_v(su_lease_v),.lease_granted(su_owned),
-         .release_v(su_release_v),.release_r(su_release_r),.exec_done(su_exec_done),.exec_fault(su_exec_fault),
-         .retired_original_ops(su_retired),.shared_fault(shared_fault),.owned(su_qualified_owned),.owned_frontier_terms(su_owned_frontier_terms),.pending(su_pending),
+         .release_v(su_release_v),.release_r(su_release_r),.exec_done(su_caller_done),.exec_fault(su_caller_fault),
+         .retired_original_ops(su_caller_retired),.shared_fault(shared_fault),.owned(su_qualified_owned),.owned_frontier_terms(su_owned_frontier_terms),.pending(su_pending),
          .quiet(su_quiet),.selected(su_selected),.done(su_done),.fault(su_fault),
          .selected_pc(su_pc),.held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos));
         // Response valid/ready and captured provider requests are unchanged.
         // New requests use the live veto; admitted execution holds the grant.
+        if(SU_PROVIDER_ADAPTER)begin:g_su_provider_adapter
+        ot_hbm_integrated_su_provider_adapter #(.ENABLE(SU_ENABLE),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_provider(
+         .clk_sm(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),
+         .qualified_owned_terms(su_owned_frontier_terms),.exec_owned(su_executor_owned),
+         .new_request_permit(su_new_request_permit),.fault(su_association_fault),
+         .exec_req_v(su_req_v),.exec_req_r(su_req_rdy),.exec_req(su_request),
+         .provider_req_v(su_provider_req_v),.provider_req_r(p_req_rdy[1]),.provider_req(su_provider_req),
+         .provider_rsp_v(p_rsp_v[1]),.provider_rsp_r(su_provider_rsp_r),
+         .provider_rsp({p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]}),
+         .exec_rsp_v(su_rsp_v),.exec_rsp_r(su_rsp_rdy),.exec_rsp(su_response),
+         .held_job(su_job),.held_gen(su_gen),.held_token(su_token),.held_pos(su_pos),.owner_frame(su_provider_frame),
+         .held_selected_pc(su_pc),.selected_pc(su_executor_pc),
+         .exec_done(su_exec_done),.exec_fault(su_exec_fault),.retired_original_ops(su_retired),
+         .caller_exec_done(su_caller_done),.caller_exec_fault(su_caller_fault),.caller_retired_original_ops(su_caller_retired));
+        end else begin:g_su_legacy_provider
         ot_hbm_integrated_su_cp_association #(.ENABLE(SU_ENABLE&&SU_BALANCED_OWNER_BOUNDARY),.FAST_OWNER_FRONTIER(SU_FAST_OWNER_FRONTIER)) u_su_association(
          .clk(clk_sm),.por_n(rst_sm_n),.raw_grant(su_owned),.qualified_owned(su_qualified_owned),.qualified_owned_terms(su_owned_frontier_terms),
          .exec_owned(su_executor_owned),.new_request_permit(su_new_request_permit),.fault(su_association_fault));
+        assign su_provider_req_v=su_req_v&&su_new_request_permit;assign su_provider_req=su_request;
+        assign su_req_rdy=p_req_rdy[1]&&su_new_request_permit;
+        assign su_rsp_v=p_rsp_v[1];assign su_provider_rsp_r=su_rsp_rdy;
+        assign su_response={p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]};
+        assign su_provider_frame={su_pos,su_token,su_gen,su_job};assign su_executor_pc=su_pc;
+        assign su_caller_done=su_exec_done;assign su_caller_fault=su_exec_fault;assign su_caller_retired=su_retired;
+        end
         wire [648:0] shared_gather_req,fmt_req,store_req;
         wire [636:0] shared_gather_rsp;
         wire shared_gather_req_v,shared_gather_req_r,shared_gather_rsp_v,shared_gather_rsp_r;
         wire fmt_req_v,fmt_req_r,fmt_rsp_r,fmt_retained,fmt_fault,bridge_release_r;
+        wire fmt_lease_valid;wire [72:0] fmt_lease_frame;
         wire store_req_v,store_req_r,store_rsp_r,store_fault;
         wire [VM_AW-1:0] store_vm_raddr;
         assign normal_vm_raddr[d*32+:32]=32'(store_vm_raddr);
@@ -333,6 +361,7 @@ end else begin:g_on
          .job(cpl_job),.gen(cpl_generation),.token(launch_token),.pos(launch_pos),
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
          .gather_retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),
+         .owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame),
          .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),
          .pair_job(index_pair[d*85+53+:32]),.pair_gen(index_pair[d*85+49+:4]),.pair_pos(index_pair[d*85+29+:20]),
          .pair_rank(index_pair[d*85+22+:7]),.pair_word(index_pair[d*85+16+:6]),.pair_tag(index_pair[d*85+:16]),
@@ -344,7 +373,7 @@ end else begin:g_on
          .bridge_rsp_v(shared_gather_rsp_v&&formatter_response),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(shared_gather_rsp),
          .release_v(formatter_release_v[d]),.release_r(formatter_release_r[d]),
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
-         .release_pos(gather_release_frame[d*73+53+:20]),
+         .release_pos(gather_release_frame[d*73+53+:20]),.release_token(gather_release_frame[d*73+36+:17]),
          .publication_done(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]));
         ot_hbm_integrated_gather_owner #(.ENABLE(1),.VM_AW(VM_AW)) u_shared(
          .clk(clk_sm),.por_n(rst_sm_n),
@@ -353,6 +382,7 @@ end else begin:g_on
          .job(cpl_job),.gen(cpl_generation),.token(launch_token),.pos(launch_pos),
          .retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),.sink_visible(gather_sink_visible[d]),.fault(shared_fault),
          .bound_arena_base(bound_arena_base),.bound_arena_limit(bound_arena_limit),
+         .formatter_lease_valid(fmt_lease_valid),.formatter_lease_frame(fmt_lease_frame),
          .req_v(shared_gather_req_v),.req_r(shared_gather_req_r),
          .req_kind(shared_gather_req[0+:3]),.req_addr(shared_gather_req[3+:32]),.req_tag(shared_gather_req[35+:16]),
          .req_rank(shared_gather_req[51+:7]),.req_word(shared_gather_req[58+:6]),.req_data(shared_gather_req[64+:512]),
@@ -374,10 +404,10 @@ end else begin:g_on
          .native_credit_empty(native_credit_empty),.shared_idle(shared_idle),
          .peer_lease_v({w2_lease_v[d],su_lease_v}),.peer_quiet({w2_route_quiet&&!w2_sink_retained,su_quiet}),
          .peer_release_v({w2_release_v[d]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r),su_release_v}),.peer_release_r(peer_releases),.peer_lease_granted(peer_grants),
-         .peer_lease_job({w2_lease_frame[d*73+:32],su_job}),.peer_lease_gen({w2_lease_frame[d*73+32+:4],su_gen}),
-         .peer_lease_token({w2_lease_frame[d*73+36+:17],su_token}),.peer_lease_pos({w2_lease_frame[d*73+53+:20],su_pos}),
-         .peer_release_job({w2_release_frame[d*73+:32],su_job}),.peer_release_gen({w2_release_frame[d*73+32+:4],su_gen}),
-         .peer_release_token({w2_release_frame[d*73+36+:17],su_token}),.peer_release_pos({w2_release_frame[d*73+53+:20],su_pos}),
+         .peer_lease_job({w2_lease_frame[d*73+:32],su_provider_frame[31:0]}),.peer_lease_gen({w2_lease_frame[d*73+32+:4],su_provider_frame[35:32]}),
+         .peer_lease_token({w2_lease_frame[d*73+36+:17],su_provider_frame[52:36]}),.peer_lease_pos({w2_lease_frame[d*73+53+:20],su_provider_frame[72:53]}),
+         .peer_release_job({w2_release_frame[d*73+:32],su_provider_frame[31:0]}),.peer_release_gen({w2_release_frame[d*73+32+:4],su_provider_frame[35:32]}),
+         .peer_release_token({w2_release_frame[d*73+36+:17],su_provider_frame[52:36]}),.peer_release_pos({w2_release_frame[d*73+53+:20],su_provider_frame[72:53]}),
          .p_req_v(p_req_v),.p_req_rdy(p_req_rdy),.p_req_we(p_req_we),.p_req_addr(p_req_addr),.p_req_wdata(p_req_wdata),
          .p_req_wstrb(p_req_wstrb),.p_req_tag(p_req_tag),.p_rsp_v(p_rsp_v),.p_rsp_rdy(p_rsp_rdy),
          .p_rsp_we(p_rsp_we),.p_rsp_tag(p_rsp_tag),.p_rsp_data(p_rsp_data),
@@ -387,7 +417,7 @@ end else begin:g_on
         ot_hbm_accel_su_parent_exec #(.ENABLE(SU_ENABLE),.IMW(IMW)) u_su_exec(
          .clk(clk_sm),.rst_n(rst_sm_n),.owned(su_executor_owned),.config_idle(db_rdy[d]&&!su_selected&&!gather_retained[d]&&!fmt_retained&&w2_route_quiet),
          .loader_we(SU_ENABLE && im_we[d*NSM] && im_addr[IMW-1]),.loader_addr(im_addr),.loader_data(im_data),
-         .selected_pc(su_pc),.job_id(su_job),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_request),
+         .selected_pc(su_executor_pc),.job_id(su_provider_frame[31:0]),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_request),
          .rsp_v(su_rsp_v),.rsp_rdy(su_rsp_rdy),.rsp(su_response),.done(su_exec_done),.fault(su_exec_fault),
          .virtual_edges(),.read_requests(),.write_requests(),.publication_requests(),.retired_original_ops(su_retired));
         genvar u;

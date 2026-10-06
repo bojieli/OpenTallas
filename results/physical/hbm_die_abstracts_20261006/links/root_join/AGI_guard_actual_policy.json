@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-06T04:19:08Z",
+  "CPU": 64,
+  "load1": 28.81982421875,
+  "total_GiB": 125.7047004699707,
+  "available_GiB": 56.923309326171875,
+  "actual_guard_reserve_GiB": 18.855705070495606,
+  "need_plus_reserve_if16_GiB": 34.8557050704956,
+  "guard_core_SHA256": "12ea64b70a65e7699b90febd671050581be627098e1895a0b63914f3400adc6f",
+  "guard_wrapper_SHA256": "1df56a684423dae47d0c314dead6656a66e952c25f6379f1a98a28bf0da300eb",
+  "policy": "min100GiB/15%RAM, plus recent admitted peaks and actual CPU fit, unchanged",
+  "owner_job_cap_GiB": 16,
+  "actual_requested_job": null,
+  "peak_job_RAM_GiB": null,
+  "admission_attempted": false,
+  "guard_queue_started": false,
+  "required": "fresh CPU/RAM/disk pre/post actual guard before a measured/inventoried job; no fixed100 overlay"
+}

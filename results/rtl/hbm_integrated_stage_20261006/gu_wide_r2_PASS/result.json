@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS_ACTUAL_GU_WIDE_LAUNCH",
+  "rows": 48,
+  "spans": 4,
+  "stores": 48,
+  "ACKs": 8,
+  "experts": [
+    41,
+    65
+  ],
+  "matrices": [
+    "G",
+    "U"
+  ],
+  "build_rc": 0,
+  "runtime_rc": 0,
+  "compile_peak_RSS_KiB": 109056,
+  "runtime_peak_RSS_KiB": 35840,
+  "source_pins": "source_pins.json",
+  "retained_FP32_input": true,
+  "live_TC_producer": false,
+  "fullGU": false,
+  "full_token": false,
+  "physical_qualified": false,
+  "checks": [
+    "golden BF16 payload and stores",
+    "held full73 frame/row/op/source tags",
+    "actual UR0 TOKEN17/UR1 POS20",
+    "token16 and position19 wrongframe rejection"
+  ]
+}
