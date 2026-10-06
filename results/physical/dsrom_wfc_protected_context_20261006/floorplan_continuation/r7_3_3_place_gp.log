@@ -1,0 +1,121 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib
+read_db /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/3_2_place_iop.odb
+read_sdc /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO RSZ-0026] Removed 31173 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 4424 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 1917 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.55 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: ( 17.280 17.280 ) ( 997.920 3224.880 ) um
+[INFO GPL-0016] Core area:                  3145500.864 um^2
+[INFO GPL-0036] Movable instances area:      42332.520 um^2
+[INFO GPL-0037] Total instances area:       1634736.296 um^2
+[INFO GPL-0035] Pin density area adjust:      5562.085 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            578234
+[INFO GPL-0007] Movable instances:              333817
+[INFO GPL-0008] Fixed instances:                178156
+[INFO GPL-0009] Dummy instances:                 66261
+[INFO GPL-0010] Number of nets:                 377187
+[INFO GPL-0011] Number of pins:                1281994
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1015.200 3242.160 ) um
+[INFO GPL-0013] Placement BBox: ( 17.280 17.280 ) ( 997.920 3224.880 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                3145500.864 um^2
+[INFO GPL-0017] Fixed instances area:       1840185.365 um^2
+[INFO GPL-0018] Movable instances area:      47894.604 um^2
+[INFO GPL-0019] Utilization:                     3.669 %
+[INFO GPL-0020] Standard cells area:         47894.604 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 333817	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.01279421 HPWL: 58821068800
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00189586 HPWL: 47595241175
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00139441 HPWL: 37838671054
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00150521 HPWL: 30002785031
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00085300 HPWL: 28069494687
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00034353 HPWL: 26680722530
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00021473 HPWL: 25620932519
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00018033 HPWL: 24907813610
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00016555 HPWL: 24310421781
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00008912 HPWL: 23931402655
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00007258 HPWL: 23584357370
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00009360 HPWL: 23258220851
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00004745 HPWL: 23040480260
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00003851 HPWL: 22858955507
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00002926 HPWL: 22731731556
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00003364 HPWL: 22652931197
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00003630 HPWL: 22575645961
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00002220 HPWL: 22526017181
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00001804 HPWL: 22486221915
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00001700 HPWL: 22453640054
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5500
+[INFO GPL-0024] Movable insts average area:      0.143 um^2
+[INFO GPL-0025] Ideal bin area:                  0.261 um^2
+[INFO GPL-0026] Ideal bin count:              12058010
+[INFO GPL-0027] Total bin area:             3145500.864 um^2
+[INFO GPL-0028] Bin count (X, Y):        2048 ,   4096
+[INFO GPL-0029] Bin size (W * H):       0.479 *  0.783 um
+[INFO GPL-0030] Number of bins:                8388608
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9175 |  1.744581e+07 |   +0.00% |  2.91e-14 |      
+       10 |   0.8684 |  1.798734e+07 |   +3.10% |  4.32e-14 |      
+       20 |   0.8436 |  1.818272e+07 |   +1.09% |  6.88e-14 |      
+       30 |   0.8234 |  1.833512e+07 |   +0.84% |  1.10e-13 |      
+       40 |   0.8061 |  1.845962e+07 |   +0.68% |  1.77e-13 |      
+       50 |   0.7937 |  1.855693e+07 |   +0.53% |  2.85e-13 |      
+       60 |   0.7809 |  1.862996e+07 |   +0.39% |  4.61e-13 |      
+       70 |   0.7687 |  1.867124e+07 |   +0.22% |  7.47e-13 |      
+       80 |   0.7614 |  1.869453e+07 |   +0.12% |  1.21e-12 |      
+       90 |   0.7579 |  1.870742e+07 |   +0.07% |  1.97e-12 |      
+      100 |   0.7550 |  1.871295e+07 |   +0.03% |  3.21e-12 |      
+      110 |   0.7518 |  1.870504e+07 |   -0.04% |  5.23e-12 |      
+      120 |   0.7505 |  1.869477e+07 |   -0.05% |  8.52e-12 |      
+      130 |   0.7490 |  1.869537e+07 |   +0.00% |  1.39e-11 |      
+      140 |   0.7471 |  1.870302e+07 |   +0.04% |  2.26e-11 |      
+      150 |   0.7450 |  1.872771e+07 |   +0.13% |  3.67e-11 |      
+      160 |   0.7435 |  1.879955e+07 |   +0.38% |  5.94e-11 |      
+      170 |   0.7401 |  1.897131e+07 |   +0.91% |  9.50e-11 |      
+      180 |   0.7327 |  1.934595e+07 |   +1.97% |  1.49e-10 |      
+      190 |   0.7221 |  2.014082e+07 |   +4.11% |  2.24e-10 |      
+      200 |   0.7093 |  2.179626e+07 |   +8.22% |  3.08e-10 |      
+      210 |   0.6908 |  2.399729e+07 |  +10.10% |  3.95e-10 |      
+      220 |   0.6423 |  2.678356e+07 |  +11.61% |  4.81e-10 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 225, overflow: 0.634, keep resizer changes at: 1, HPWL: 27604291072
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    377187
+[WARNING ODB-1211] InsertBufferBeforeLoads: Load pin 'u_r4.u_whole.g_live.g_rank\[0\].u_book/ce_in' is dont_touch. Cannot insert a buffer.
+[ERROR RSZ-3006] Failed to insert buffer before loads for net _090116_
+write_db /work/results/asap7/zeno_wfc_inputclock_r4_u55/u55/3_3_place_gp-failed.odb
+Error: global_place.tcl, 69 RSZ-3006
+Elapsed time: 8:03.69[h:]min:sec. CPU time: user 978.22 sys 56.36 (213%). Peak memory: 5813156KB.

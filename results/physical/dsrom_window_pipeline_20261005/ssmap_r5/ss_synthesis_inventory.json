@@ -1,0 +1,57 @@
+{
+  "status": "SS_MAPPED_INVENTORY_NOT_PHYSICAL_CLOSURE",
+  "source_pin": "d52bce29876307a1c7d9aeb32f369d116dd25944",
+  "source_main_pin": "39285918e6de41a01cea37c14dff2d7fa10da116",
+  "host": "ot-epyc2",
+  "remote_work": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run/work/orfs",
+  "corner": "SS",
+  "ORFS_corner": "WC",
+  "ORFS_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "cell_count": 3795412,
+  "FF_cells_by_type": {
+    "DFFASRHQNx1_ASAP7_75t_R": 42171,
+    "DFFHQNx1_ASAP7_75t_R": 749832
+  },
+  "whole_leaf_FF_cells": 792003,
+  "mapped_cell_area_um2": 536256.584453,
+  "mapped_sequential_area_um2": 234637.193879,
+  "scalar_port_bits": 70354,
+  "synth_structural_problems": 0,
+  "ABC_phase_seconds": 5337,
+  "synthesis_elapsed_seconds": 6689.69,
+  "synthesis_peak_RSS_KiB": 17945096,
+  "canonicalization_elapsed_seconds": 3198.04,
+  "canonicalization_peak_RSS_KiB": 1710512,
+  "mapped_netlist": {
+    "path": "/srv/opentallas-scratch2/jobs/mencius-window-ssmap-r5/run/work/orfs/results/asap7/opentallas_ot_dsrom_window_pipeline_context_asap7_window_full_pipeline_r1/base/1_2_yosys.v",
+    "bytes": 528340795,
+    "sha256": "81133f54e73add39596f56fc8cfb750e056683779424776b5980d0e9f9d338c5",
+    "scalar_port_bits": 70354
+  },
+  "nominal_component_core_dimensions_um": [
+    1540,
+    1540
+  ],
+  "PLACE_DENSITY_setting": 0.5,
+  "synthesis_area_fraction_of_nominal_core": 0.22611594891760836,
+  "actual_placed_utilization": null,
+  "embedded_memory": "fully priced actual FF implementation; no behavioral or unpriced macro memory",
+  "actual_parent_root_clock_capacitance_fF": null,
+  "routed_SS_FF_qualified": false,
+  "parent_slot_fit": false,
+  "adoption": false,
+  "flow_terminal": false,
+  "physical_phase_boundary": "floorplan",
+  "numerical_verification_repeated": false,
+  "WINDOW_140ns_performance_miss_preserved": true,
+  "note": "Actual changed R2/R3 full-shape SS mapping. Statistics are not placement, routed timing, parent clock/load/slot or protection qualification. Retained81ce SS map and all failures remain immutable. Parent preparations using old81ce mapped leaf receive no new-source credit.",
+  "initial_inventory_parse_failure": "Unchanged driver two-column parse_stat returned empty per_cell on four-column ORFS rows; assertion prevented inventory creation. Counts extracted from retained raw four-column rows; driver unchanged.",
+  "files_sha256": {
+    "synth_check.txt": "fadcac75fe13a207fc72c63b5da72b00a46ad51c0b66df68c8b1ad78c3381559",
+    "1_1_yosys_canonicalize.log": "6e79afbcfd8e85057a16edbde9e6aeb821df0f7dcc16c8e354978c3fbc633f1b",
+    "source_verified.json": "e488cec539b28921f44282000e110ccb3714d56e9f79ebcf81ceb156ac54ac2b",
+    "1_2_yosys.log": "4215a16f87cedec95e6064ac9cd9d3bd6bfc4297c26fcce4555b298e0979ee8e",
+    "ss_mapped_netlist_metadata.json": "4e77d4a5ae3b7add091d9590593cb660972f122a26ec84c3276e6ee18cddfd55",
+    "synth_stat.txt": "f3eb755e559482492b14872de21b12ed1a3a185e87cc5a3396a680e6d5d59636"
+  }
+}
