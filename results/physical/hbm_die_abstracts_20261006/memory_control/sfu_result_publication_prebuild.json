@@ -27,5 +27,8 @@
   "source_clock": "explicitclk_sm; mustbindsameactualroot asVM parent. SFU833psvsnative1111ps mismatch stillOPEN; noimplicitCDC",
   "parent_qualified": false,
   "adopted": false,
-  "default_enabled": false
+  "default_enabled": false,
+  "composed_top": "ot_hbm_die_vm_sfu_publication_root",
+  "composition_added_FF": 0,
+  "warm_debt_contract": "stop new external bind/activation/SU/index on warm; keep existing root warm request deferred until resultpublisher drains. AlreadyacceptedSFU result publishes and ACKs before full73 root retire/warmACK. One existing32SRAM root, no replica."
 }
