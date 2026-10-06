@@ -12,8 +12,8 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
     parameter integer ROC = 1;
     parameter integer RMID = 0;
     parameter integer RV = 0;
-    parameter integer HALF = 0;            // 1: the H16 tile as two half tiles ot_attn_tile_m6h1h (RIN 2, outputs direct)
-    localparam integer RIN = HALF ? 2 : 3 + RV + RMID, XD = 2 + (HALF ? 0 : ROC);
+    parameter integer HALF = 0;            // 1: two half tiles ot_attn_tile_m6h1h (RIN 2); 2: four quads ot_attn_tile_m6h1x (RIN 1)
+    localparam integer RIN = (HALF == 2) ? 1 : HALF ? 2 : 3 + RV + RMID, XD = 2 + (HALF ? 0 : ROC);
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
     reg [BW-1:0] ld_bank, ibank;
@@ -37,7 +37,11 @@ module tb_hdc_v41x_attn_tile_m6h1r_lockstep (input wire clk);
         .clk(clk), .rst_n(d_rst_n), .ld_v(d_ld_v), .ld_mode(d_ld_mode), .ld_bank(d_ld_bank), .ld_grp(d_ld_grp),
         .ld_w(d_ld_w), .ld_w2v(d_ld_w2v), .iv(d_iv), .ibank(d_ibank), .ib(d_ib), .ov(ov_l0), .oy(oy_l0), .oflt(of_l0));
     ot_hdc_v41x_dly #(.W(1 + H*32 + H), .D(XD)) u_xd (.clk(clk), .d({ov_l0, oy_l0, of_l0}), .q({ov_l, oy_l, of_l}));
-    generate if (HALF != 0) begin : g_half
+    generate if (HALF == 2) begin : g_quad
+        ot_attn_tile_m6h1x u_s (
+            .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
+            .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
+    end else if (HALF != 0) begin : g_half
         ot_attn_tile_m6h1h u_s (
             .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
             .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));

@@ -208,3 +208,91 @@ module ot_attn_tile_m6h1h (
         .oflt(oflt[8 +: 8]));
     assign ov = gov0[0];
 endmodule
+
+// ---------------------------------------------------------------------------
+// Quad (H4), the hardened element of the H16 tile: four one-head leaves, two (R0) below a register strip and two (MX)
+// above it, every leaf pin on the strip; one register bank (HC) in the strip registers the packet and drives the four
+// leaves; the outputs come straight from the leaves.  Leaf (r, s) is head GB + 4 r + s (r = 0 below, 1 above;
+// s = column), its outputs at local slot 2 r + s.  ot_attn_tile_m6h1 on those heads with every input, rst_n included,
+// delayed RIN = 1 cycle.  The H16 tile is four quads, GB = 0, 2, 8, 10, fed the same packet (ot_attn_tile_m6h1x).
+// ---------------------------------------------------------------------------
+module ot_attn_tile_m6h1q #(
+    parameter integer GB = 0
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire [3:0]    gov,
+    output wire [127:0]  oy,
+    output wire [3:0]    oflt
+);
+    localparam integer PW = 1 + 1618;
+    wire [PW-1:0] pk = {rst_n, ld_v, ld_mode, ld_bank, ld_grp, ld_w, ld_w2v, iv, ibank, ib};
+    wire [PW-1:0] hc_q;
+    (* keep = "true" *) ot_attn_rp_reg #(.W(PW)) u_hc (.clk(clk), .d(pk), .q(hc_q));
+    wire          l_rst_n, l_ld_v, l_ld_mode, l_ld_w2v, l_iv;
+    wire [2:0]    l_ld_bank, l_ibank;
+    wire [7:0]    l_ld_grp;
+    wire [1023:0] l_ld_w;
+    wire [575:0]  l_ib;
+    assign {l_rst_n, l_ld_v, l_ld_mode, l_ld_bank, l_ld_grp, l_ld_w, l_ld_w2v, l_iv, l_ibank, l_ib} = hc_q;
+    genvar s, r;
+    generate
+        for (r = 0; r < 2; r = r + 1) begin : g_r
+            for (s = 0; s < 2; s = s + 1) begin : g_s
+                localparam integer L = 2 * r + s;
+                localparam integer G = GB + 4 * r + s;
+                wire [31:0] hy;
+                wire [0:0]  hf;
+                wire        hv;
+                ot_attn_hgrp_m6h1 u_g (
+                    .clk(clk), .rst_n(l_rst_n), .gid(G[7:0]), .ld_v(l_ld_v), .ld_mode(l_ld_mode),
+                    .ld_bank(l_ld_bank), .ld_grp(l_ld_grp), .ld_w(l_ld_w), .ld_w2v(l_ld_w2v), .iv(l_iv),
+                    .ibank(l_ibank), .ib(l_ib), .ov(hv), .oy(hy), .oflt(hf));
+                assign {gov[L], oflt[L], oy[L*32 +: 32]} = {hv, hf, hy};
+            end
+        end
+    endgenerate
+endmodule
+
+// The H16 tile as four quads (function; each quad is the hardened element, the packet's fan-out to the four quads
+// is the enclosing tile's / die's distribution)
+module ot_attn_tile_m6h1x (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [511:0]  oy,
+    output wire [15:0]   oflt
+);
+    genvar q, l;
+    wire [15:0] gov;
+    generate for (q = 0; q < 4; q = q + 1) begin : g_q
+        localparam integer GB = (q / 2) * 8 + (q % 2) * 2;     // 0, 2, 8, 10
+        wire [3:0]   qv, qf;
+        wire [127:0] qy;
+        ot_attn_tile_m6h1q #(.GB(GB)) u_q (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+            .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .gov(qv), .oy(qy), .oflt(qf));
+        for (l = 0; l < 4; l = l + 1) begin : g_l
+            localparam integer G = GB + 4 * (l / 2) + (l % 2);
+            assign {gov[G], oflt[G], oy[G*32 +: 32]} = {qv[l], qf[l], qy[l*32 +: 32]};
+        end
+    end endgenerate
+    assign ov = gov[0];
+endmodule

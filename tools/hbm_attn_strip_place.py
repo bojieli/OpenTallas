@@ -30,6 +30,7 @@ def main():
     ap.add_argument("--gap", type=float, default=12.0)
     ap.add_argument("--margin", type=float, default=10.0)
     ap.add_argument("--half", action="store_true", help="the half tile ot_attn_tile_m6h1s: one strip, rows 0 / 1")
+    ap.add_argument("--quad", action="store_true", help="the quad ot_attn_tile_m6h1q: one strip, 2 columns, rows 0 / 1")
     a = ap.parse_args()
     lef = a.lef.read_text()
     w, h = (round(float(x) * 1000) for x in re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef).groups())
@@ -41,19 +42,23 @@ def main():
     ys.append(up(ys[0] + h + S))                    # row 1 (MX)
     ys.append(up(ys[1] + h + M))                    # row 2
     ys.append(up(ys[2] + h + S))                    # row 3 (MX)
-    dw = math.ceil((xs[3] + w + E) / 54) * 54
+    if a.quad:
+        a.half = True
+        xs = xs[:2]
     if a.half:
         ys = ys[:2]
+    dw = math.ceil((xs[-1] + w + E) / 54) * 54
     dh = math.ceil((ys[-1] + h + E) / 270) * 270
     L = [f"# H16 registered tile, two-strip floorplan (tools/hbm_attn_strip_place.py): leaf {w/1000} x {h/1000} um,",
          f"# strips {S/1000} um (rows 0|1 and 2|3), middle gap {M/1000} um, column gaps {G/1000} um, margins {E/1000} um;",
          f"# die {dw/1000} x {dh/1000} um"]
     for p in range(1 if a.half else 2):
-        for hh in range(2):
+        for hh in range(1 if a.quad else 2):
             for r in range(2):
                 for s in range(2):
                     row, col = 2 * p + r, 2 * hh + s
-                    n = (f"g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g" if a.half else
+                    n = (f"g_r\\[{r}\\].g_s\\[{s}\\].u_g" if a.quad else
+                         f"g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g" if a.half else
                          f"g_p\\[{p}\\].g_h\\[{hh}\\].g_r\\[{r}\\].g_s\\[{s}\\].u_g")
                     L.append(f"place_macro -macro_name {{{n}}} -location {{{xs[col]/1000:.3f} {ys[row]/1000:.3f}}} "
                              f"-orientation {'R0' if r == 0 else 'MX'} -exact")
@@ -75,9 +80,21 @@ def main():
           "  }",
           "  incr ot_n",
           "}",
-          f"if {{$ot_n != {8 if a.half else 16}}} {{error \"expected {8 if a.half else 16} leaves, placed $ot_n\"}}",
+          f"if {{$ot_n != {4 if a.quad else 8 if a.half else 16}}} {{error \"expected {4 if a.quad else 8 if a.half else 16} leaves, placed $ot_n\"}}",
           "puts OT_H16S_MACROS_PLACED_ON_GRID"]
     a.out.write_text("\n".join(L) + "\n")
+    if a.quad:
+        yc = (ys[0] + h + ys[1]) / 2000
+        a.io.write_text(f"""# H4 quad: every input port on the left edge at the register strip (y {yc:.1f} um); the HC bank sits in the strip.
+set ot_ins {{}}
+foreach ot_p [get_ports *] {{
+  if {{[get_property $ot_p direction] eq "input"}} {{ lappend ot_ins [get_full_name $ot_p] }}
+}}
+puts "OT_IO_LEFT_STRIP inputs=[llength $ot_ins]"
+set_io_pin_constraint -pin_names $ot_ins -region left:{yc - 150:.1f}-{yc + 150:.1f}
+""")
+        print(f"die {dw/1000} {dh/1000} xs {xs} ys {ys}")
+        return
     if a.half:
         xc = dw / 2000
         a.io.write_text(f"""# H8 half tile: every input port on the bottom edge centre (x {xc:.1f} um); the ROOT sits in the strip above.
