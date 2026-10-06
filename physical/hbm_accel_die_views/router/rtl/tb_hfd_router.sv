@@ -55,7 +55,7 @@ module tb_hfd_router;
     reg [53:0] q0_rt_out_ids; always @(posedge clk) q0_rt_out_ids <= r_rt_out_ids;
     reg [53:0] q1_rt_out_ids; always @(posedge clk) q1_rt_out_ids <= q0_rt_out_ids;
     reg [53:0] q_rt_out_ids; always @(posedge clk) q_rt_out_ids <= q1_rt_out_ids;
-    ot_gpu_router_topk_f #(.N(384), .P(16), .K(6), .IW(9)) ref_rt (.clk(r_rt_clk), .rst_n(r_rt_rst_n), .in_valid(r_rt_in_valid), .in_vals(r_rt_in_vals), .in_last(r_rt_in_last), .out_valid(r_rt_out_valid), .out_ids(r_rt_out_ids));
+    ot_gpu_router_topk_ps #(.N(384), .P(16), .K(6), .IW(9), .PIPESEL(1)) ref_rt (.clk(r_rt_clk), .rst_n(r_rt_rst_n), .in_valid(r_rt_in_valid), .in_vals(r_rt_in_vals), .in_last(r_rt_in_last), .out_valid(r_rt_out_valid), .out_ids(r_rt_out_ids));
     integer err = 0, nchk = 0, cyc;
     integer seed = 20261006;
     task automatic randomize_inputs; begin
@@ -113,7 +113,7 @@ module tb_hfd_router;
         randomize_inputs;
         repeat (8) @(posedge clk);
         #0.05 rst = 0;
-        for (cyc = 0; cyc < 400; cyc = cyc + 1) begin
+        for (cyc = 0; cyc < 4000; cyc = cyc + 1) begin
             @(negedge clk);
             nchk = nchk + 1; if (t_cmdproc[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH t_cmdproc[54:54] %h ref %h cyc %0d", t_cmdproc[54:54], q_rt_out_valid[0:0], cyc); end
             nchk = nchk + 1; if (eSW[54:54] !== q_rt_out_valid[0:0]) begin err = err + 1; if (err < 10) $display("MISMATCH eSW[54:54] %h ref %h cyc %0d", eSW[54:54], q_rt_out_valid[0:0], cyc); end

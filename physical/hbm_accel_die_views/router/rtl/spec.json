@@ -1,16 +1,17 @@
 {
  "master": "hfd_router",
- "note": "INTERIM: the current best routed router RTL ot_gpu_router_topk_f N384 P16 K6 IW9 (topk_f3, ctl_takeover_20261005, SS -369.79 / FF +6.23 ps, NOT closed; source physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned, sha = routed). The VM -> router bus f_vm[511:0] is in_vals (16 FP32 logits a beat); in_valid / in_last ride bits 0..1 of the SU(SW) -> router bus (the RTL has no other use for the 4 x 256 SU buses); the selected ids + valid (55 b) go to the cmdproc (t_cmdproc[54:0]) and, as the expert-fetch descriptor, to every stack's stream service (e*[54:0]; the expert workgroup steering is not built).",
+ "note": "Router core: ot_gpu_router_topk_ps PIPESEL=1 (CLAUDE hbm-router, branch claude/hbm-router-close-20261006): pipelined selection at 16 scores/cycle, exact vs ot_gpu_router_topk (results/rtl/hbm_router_ps_20261006/exact_campaign.json: 12,000 vectors 0 mismatches, 4 negatives fail), latency 13 vs reference 23 / topk_f 24 cycles (-11 vs the topk_f3 vehicle). The VM -> router bus f_vm[511:0] is in_vals (16 FP32 logits a beat); in_valid / in_last ride bits 0..1 of the SU(SW) -> router bus (the RTL has no other use for the 4 x 256 SU buses); the selected ids + valid (55 b) go to the cmdproc (t_cmdproc[54:0]) and, as the expert-fetch descriptor, to every stack's stream service (e*[54:0]; the expert workgroup steering is not built).",
  "instances": [
   {
    "name": "rt",
-   "module": "ot_gpu_router_topk_f",
-   "file": "physical/hbm_die_abstracts_20261006/compute/router_pipeline_r1/pinned/ot_gpu_router_topk_f.sv",
+   "module": "ot_gpu_router_topk_ps",
+   "file": "rtl/gpu/ot_gpu_router_topk_ps.sv",
    "params": {
     "N": 384,
     "P": 16,
     "K": 6,
-    "IW": 9
+    "IW": 9,
+    "PIPESEL": 1
    },
    "bind": {
     "clk": "clk",
