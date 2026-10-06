@@ -100,3 +100,12 @@ Gibbs real actor hooks: W15 normal_busy+bound_arena under non-replay; non-native
 SFU held lifetime+protected dst..dst+256; native norm HBM writer absent because
 CP we=0 and publication is SRAM. External actor intervals remain in the union;
 no blanket absence claim for SM LSU, legacySU, W2 or other retained provider.
+
+SOURCE INSTALLATION ENROLLMENT: installation mode now requires emitted producer
+source_path/source_phase_path to be canonical installer-relative paths, resolve
+inside that root, match the actual workspace index_producer entries, and BOTH
+match installation.source_artifacts SHA pins. Absolute scratch paths or absent
+phase pins cannot produce a fixture. Existing require_index_producer/compiler
+remain unchanged. External native-stage --book mode remains explicitly outside
+normal-SM enrollment and cannot qualify a production installation. Sourcephase
+packets remain plane->word->rank with actual held acceptance/ACK before advance.
