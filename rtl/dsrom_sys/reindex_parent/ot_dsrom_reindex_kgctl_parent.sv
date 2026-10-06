@@ -705,9 +705,9 @@ module ot_dsrom_reindex_counter_slot (
     generate for(genvar p=0;p<32;p=p+1) begin : g_priority
         wire [31:0] later;
         for(genvar q=0;q<32;q=q+1) begin : g_later
-            assign later[q]=(q>p && (q%4)==(p%4)) ? accept[q] : 1'b0;
+            assign later[q]=(q>p && (q%4)==(p%4)) ? (accept[q]===1'b1) : 1'b0;
         end
-        assign highest[p]=accept[p] && !(|later);
+        assign highest[p]=(accept[p]===1'b1) && !(|later);
     end endgenerate
     generate for(genvar c=0;c<4;c=c+1) begin : g_counter
         reg [4:0] value;

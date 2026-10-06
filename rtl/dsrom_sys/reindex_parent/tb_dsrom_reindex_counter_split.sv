@@ -44,6 +44,7 @@ module tb_dsrom_reindex_counter_split;
             for(integer s=0;s<128;s=s+1) begin
                 rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);
                 fc[s]=rng[1:0];accept[s]=rng;
+                if((rng&31)==0) accept[s][rng[9:5]]=1'bx;
                 if((rng&32'h11111111)!=0 && (rng&32'h11111111)!=(rng&-rng)) aliases=aliases+1;
             end
         end
