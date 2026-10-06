@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--resume-canonical', type=Path,
                         help='Retained canonical RTLIL after an unsuccessful mapping invocation')
     parser.add_argument('--canonical-sha256')
+    parser.add_argument('--resume-cts-sha256', help='Resume validated CTS with mapped/floorplan/placement frozen')
+    parser.add_argument('--resume-io-sha256', help='Resume actual validated mapped/PDN/IO objects without upstream replay')
     parser.add_argument('--resume-resized-sha256',
                         help='Reuse the mapped netlist and physical stages through validated3_4')
     args = parser.parse_args()
@@ -68,9 +70,11 @@ def main():
         index=argv.index('--step-tcl')+1
         assert argv[index].startswith('POST_IO_PLACEMENT=')
         argv[index]='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
-        argv += ['--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
+        argv += ['--step-tcl', 'PRE_GLOBAL_PLACE=physical/hbm_cp_parent_context_20261005/fast_frontier_unique_regions.tcl',
+                 '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl',
                  '--orfs-var', f'GPL_RANDOM_SEED={args.variant}',
-                 '--orfs-var', f'OR_SEED={args.variant}']
+                 '--orfs-var', f'OR_SEED={args.variant}',
+                 '--orfs-var', 'PLACE_DENSITY_LB_ADDON=']
         argv += ['--param', 'SU_FAST_OWNER_FRONTIER=1']
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
@@ -89,7 +93,10 @@ def main():
             finite_parent_model_sha256=sha(finite_path), finite_allocation=finite,
             placement_seed=args.variant, detailed_route_seed=args.variant,
             analytical_inputs_until_actual_CTS=True,
-            parent_supply_drop_unmeasured=True)
+            parent_supply_drop_unmeasured=True,
+            explicit_modeled_density=0.5,automatic_density_prequery_disabled=True,
+            canonical_initial_placement_removes_empty_core=True,
+            membership_after_port_buffering=True)
     job.mkdir(parents=True, exist_ok=True)
     (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if args.prepare_only:
@@ -106,19 +113,21 @@ def main():
         record['canonical_frontend_reused'] = True
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     frozen = {}
-    if args.resume_resized_sha256:
-        checkpoints = list((case/'results').rglob('3_4_place_resized.odb'))
-        assert len(checkpoints) == 1 and sha(checkpoints[0]) == args.resume_resized_sha256
+    if args.resume_resized_sha256 or args.resume_io_sha256 or args.resume_cts_sha256:
+        checkpoint_name = '4_1_cts.odb' if args.resume_cts_sha256 else ('3_4_place_resized.odb' if args.resume_resized_sha256 else '3_2_place_iop.odb')
+        checkpoint_digest = args.resume_cts_sha256 or args.resume_resized_sha256 or args.resume_io_sha256
+        checkpoints = list((case/'results').rglob(checkpoint_name))
+        assert len(checkpoints) == 1 and sha(checkpoints[0]) == checkpoint_digest
         for path in checkpoints[0].parent.iterdir():
             stage = path.name.split('_')
             if path.suffix not in ('.odb', '.sdc', '.v', '.rtlil') or 'failed' in path.name:
                 continue
-            if stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in ('1','2','3','4')):
+            if (args.resume_cts_sha256 and stage[0]=='4') or stage[0] in ('1', '2') or (stage[0]=='3' and len(stage)>1 and stage[1] in (('1','2','3','4','5','place') if args.resume_cts_sha256 else (('1','2','3','4') if args.resume_resized_sha256 else ('1','2')))):
                 frozen[path] = sha(path)
         mapped = checkpoints[0].parent/'1_2_yosys.v'
         assert mapped in frozen
         record.update(synthesis_required=False, synthesis_reused=True,
-            resume_resized_sha256=args.resume_resized_sha256,
+            resume_resized_sha256=args.resume_resized_sha256,resume_io_sha256=args.resume_io_sha256,resume_cts_sha256=args.resume_cts_sha256,
             upstream_sha256={str(p.relative_to(case)):h for p,h in frozen.items()})
         (job/'prepared.json').write_text(json.dumps(record, indent=2)+'\n')
     if finite:
@@ -134,6 +143,26 @@ needle='set result [catch { log_cmd detailed_placement } msg]'
 assert s.count(needle)==2, 'Installed CTS legalization API changed'
 print(json.dumps(dict(original_cts_sha256=hashlib.sha256(s.encode()).hexdigest(),membership_calls=2)))
 p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
+'''
+    if finite:
+        # Same installed canonical GPL as Noether a0076e760/c3f2e5fb0:
+        # initial placement removes an empty top-level component. The earlier
+        # automatic-density prequery cannot initialize that empty component.
+        # Preserve exact modeled density0.5 and bind newly inserted IO cells
+        # after native port buffering, before canonical initial placement.
+        patch += '''
+p=Path('/OpenROAD-flow-scripts/flow/scripts/global_place.tcl')
+s=p.read_text()
+needle='proc do_placement { global_placement_args } {'
+assert s.count(needle)==1, 'Installed GPL port-buffer/placement API changed'
+s=s.replace(needle,'source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
+p.write_text(s)
+p=Path('/OpenROAD-flow-scripts/flow/scripts/global_route.tcl')
+s=p.read_text()
+needle='    log_cmd detailed_placement'
+assert s.count(needle)==2, 'Installed GRT repair legalization API changed'
+s=s.replace(needle,'    source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
+p.write_text(s)
 '''
     (case/'bind_cts_membership.py').write_text(patch)
     import run_abi3_physical as driver
