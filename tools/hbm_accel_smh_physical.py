@@ -341,6 +341,12 @@ ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 4 200 785 860
 ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_ba[dv]} 232 428 785 860
 ot_place {^g_side\[0\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 3 47 470 660
 ot_place {^g_side\[1\]\.g_rs\[2\]\.g_bo\.u_bm[dv]} 378 430 470 660
+# (round 8) the hub stacked in the ring block's central channel (x 151 .. 273), above the bulk copy's queue:
+# line skid data, then s1 (the issue gathers around it), the row-1 hop copies halfway down to row 1
+ot_place {^u_sk\.g_c\[\d+\]\.g_d\.e[01]} 152 272 730 770
+ot_place {^s1_(w|cv|ct)} 152 272 772 815
+ot_place {^g_h\[1\]\.g_rows\.g_r1\.} 152 210 560 640
+ot_place {^g_h\[3\]\.g_rows\.g_r1\.} 214 272 560 640
 # the request skid beside the south pins
 ot_place {^u_rsk\.} 120 200 3 12
 """
