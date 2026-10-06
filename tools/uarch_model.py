@@ -12044,3 +12044,28 @@ def hbm_native_index_sram_join_model():
         floorplan_slot_fit=False, parent_qualified=False, physical_closed=False,
         protection_limit='existing query source raw buffers/control remain component source; not whole-index mutable protection qualification',
         token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
+
+
+def hbm_integrated_sfu_c12_stage_model():
+    """Existing protected stage seat + Carson finite framed SFU; before join RTL."""
+    return dict(default_OFF=True, replicas=1, MACs_per_cycle=0,
+        stage_descriptor_model='hbm_integrated_stage_join_model',
+        stage_coded_FF=216, frame_bank_FF=2810,
+        arithmetic_model='results/physical/hbm_die_abstracts_20261006/compute/quarter_size.json:sfu (PRESETS.proposal sfu_lanes/4)',
+        child_request_response_controller_FF=5910,
+        total_enclosure_and_child_wrapper_FF=8936,
+        wrapper_FF_area_floor_um2=8936*.2916,
+        frame_model='results/physical/hbm_die_abstracts_20261006/compute/framed_sfu_before_rtl.json',
+        additional_join_FF=0, additional_join_payload_seats=0, added_pipeline_cycles=0,
+        full_owner_bits=73, frame_compare_bits=73, frame_compare_count=5,
+        comparator_NAND2_reservation=5*4*73,
+        RX_payload_bits_per_accepted_cycle=1024, TX_payload_bits_per_accepted_cycle=1024,
+        RX_bytes_per_accepted_cycle=128, TX_bytes_per_accepted_cycle=128,
+        RX_sideband_bits=76, TX_sideband_bits=79,
+        request_beats=3, response_beats=3, replicas_mux_demux='one caller, one child; no additional mux or replicated owner',
+        routing_tracks_required=2*1024+76+79+5*73,
+        routing_capacity=None, actual_receiver_load=None, mapped_area_um2=None,
+        floorplan_slot_fit=False, physical_closed=False,
+        composed_latency='existing stage enrollment/start +3acceptedRX+actualc12child+3acceptedTX+drainedfinish+persistentcompletion; no new join edge',
+        clock_binding='caller serial1111ps vs child833ps OPEN; same clk port does not confer qualified clock',
+        production_source_binding=False, numerical_qualified=False, token_rate_credit=0)

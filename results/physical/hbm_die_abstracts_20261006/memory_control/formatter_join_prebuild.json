@@ -1,0 +1,26 @@
+{
+  "schema": "hbm.memory_control.formatter_join.prebuild.v1",
+  "existing_model": "results/uarch/hbm_index_w15_formatter_20261005/plane_major/model.json",
+  "selected_logic": "existing N96 NPER512 plane-major formatter and existing gather_owner, single actual shared 256-bit provider; missing callable adapter only",
+  "formatter_FF": 2160,
+  "adapter_added_protected_FF": 216,
+  "added_state": "full73 frame in 2xW6 rows; active/fail control in one W6 row",
+  "new_backing_SRAM_bytes": 0,
+  "MACs_per_cycle": 0,
+  "boundary_bits": {
+    "pair_request": 102,
+    "bridge_request": 649,
+    "bridge_response": 637,
+    "pair_response": 672
+  },
+  "memory_ports": "existing one 256b serialized provider, 2 sectors per checked512b read",
+  "replicas": 1,
+  "mux_cost": "one formatter/gather request selection exists in selected parent; no new provider arbitration",
+  "routing": "existing649/637 packet wires plus token17 pair and release binding; no extra physical port",
+  "area_allowance_um2": 370.379574,
+  "floorplan_fit": "not qualified until context mapping/routing; existing formatter model body allowance retained",
+  "latency": "no added handshake stage; reuse existing formatter sequence and actual gather bridge provider service, not model9edge physical timing",
+  "whole_parent_clock_qualified": false,
+  "adopted": false,
+  "rate_credit": 0
+}
