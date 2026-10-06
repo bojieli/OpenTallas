@@ -20,9 +20,12 @@ RTL (bit-exact, default-off parameters):
 Flow (constraint consistency, no setting sweep):
 - `pre_resize_ioanchor.tcl` (PRE_RESIZE): every res_in capture flop and every o_*/ov output flop (+ its output buffer) is moved
   beside its pin before repair_design; DPL legalises. The register stages behind them absorb the wire.
-- `io_gclk_skew_m3.sdc` (via pre_cts_skew_m3.tcl / pre_ref_skew_m3.tcl / post_plain_m3.tcl): the skew boundary as a generated clock at
-  res_q[0]/CLK, so the boundary is exact in every corner (checked on the m2 final ODB: identical IO slacks to io_lat_skew90.sdc at SS and
-  FF); hold repaired at BC against it; hold margin 40 ps (FF acceptance +15 with 25 ps uncertainty).
+- `io_refpin_skew_m3.sdc` (via pre_cts_skew_m3.tcl / pre_ref_skew_m3.tcl / post_plain_m3.tcl): the skew boundary with
+  `-reference_pin res_q[0]/CLK`, so WC setup and BC hold see that corner's arrival (checked on the m3 CTS ODB with both corners:
+  WC max launch 988, BC max 642, BC input hold -103 = the single-corner FF value). This OpenSTA reports no WC min path from such an
+  input (WC input hold is not a sign-off check). Hold margin 40 ps (FF acceptance +15 with 25 ps uncertainty).
+  Rejected on the way (attempt 2, killed after CTS): a generated clock at res_q[0]/CLK -- OpenSTA uses the MIN latency over all
+  corners for every hold check, so WC showed fake input hold -445 ps and repair inserted 32,018 hold buffers.
 Sign-off unchanged: corner_sta.py + io_lat_skew90.sdc, accept SS >= +40 at 833.333 and FF >= +15.
 
 ## m3 benches (m3_bench/)
