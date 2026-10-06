@@ -128,5 +128,30 @@
     "physical_ready_requirement": "native protectedVMreceiver at actualselectedbox plus existing source-faithful transport/capture; charge actualcrossing/transportedges before newchildcontext; cannot claim longwirezeroedge",
     "analytical25cuts_oneway_latency_ps": 20833.3333333325,
     "actual_wire_RC_not_measured": true
+  },
+  "canonical_producer_allocation": {
+    "source_owner": "Copernicus",
+    "source": "rtl/dsrom_sys/wfc_producers/ot_dsrom_wfc_whole_stage.sv",
+    "envelope_um": [
+      15199.92,
+      3527.28,
+      15679.92,
+      3927.28
+    ],
+    "shape_um": [
+      480,
+      400
+    ],
+    "macro_body_um2": 87126.11424,
+    "macro_halo_reserved_um2": 102430.68192,
+    "positive_logic_budget_um2": 30000,
+    "macro_plus_logic50pct_footprint_um2": 162430.68192,
+    "envelope_um2": 192000,
+    "spare_um2": 29569.31808,
+    "WFC_control_remaining_outline_um2": 227904,
+    "control_cell_cap_at50pct_um2": 113952,
+    "additional_slot_area_credit": 0,
+    "actual_producer_clock_loads_from_own_mapped_context": true,
+    "qualification": "geometry/model only; ownsourcegate/macroclkQ/CTS/SSFF/receivermapping mandatory; L19STAGE_HANDOFFnotHEADtoken_result"
   }
 }
