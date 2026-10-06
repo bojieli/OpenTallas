@@ -1,9 +1,9 @@
-// Full36+head source join to the actual finite protected transport.
-// Reuses the priced protected model; adds no storage/controller/latency.
-// Loaded physical context remains unqualified. Descartes supplies the genuine
-// numerical provider at these literal PHY pins; no constant completion/ready.
+// Numerical full36+head vehicle only. Real finite protected transport and
+// Descartes' timed HBM3E checker/backing are connected at literal PHY pins.
+// One Vdie per actual TP rank, each with all36 layers; no physical claim.
 `timescale 1ns/1ps
-module ot_qwen_p0_full_transport_join #(
+module ot_qwen_p0_full_numeric #(
+
 
     parameter integer PROTECTED_STREAM4 = 0, // source candidate, opt-in until owner gates pass
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
@@ -48,22 +48,7 @@ module ot_qwen_p0_full_transport_join #(
     parameter integer HBM_PULLIN = 0,         // controller refresh pull-in (ot_hbm_r14_stream_pc PULLIN)
     parameter integer EMBED_ROM = 1         // the token's X from the INT8 embedding ROM (stage E); 0: X preloaded
 ) (
-    // Actual registered HCLK PHY return and completion inputs.
-    input wire [127:0] h_lv, h_av,
-    input wire [128*17-1:0] h_lsec,
-    input wire [128*8-1:0] h_lrow,
-    input wire [128*256-1:0] h_ldata,
-    input wire [128*9-1:0] h_atag,
-    input wire phy_fault,
-    output wire [127:0] row_v, col_v, col_we, busy,
-    output wire [128*3-1:0] row_op,
-    output wire [128*5-1:0] row_bank, col_bank, col_col,
-    output wire [128*19-1:0] row_row,
-    // The actual WR capture follows the column command by one HCLK edge.
-    output wire [127:0] h_cv,
-    output wire [128*24-1:0] h_csec,
-    output wire [128*256-1:0] h_cdata,
-    output wire [128*9-1:0] h_ctag,
+    output wire [15:0] numeric_fault_code,
     output wire [383:0] h_cred_ret,
     output wire [3:0] h_desc_commit, h_go_commit,
     output wire [11:0] h_desc_ordinal, h_go_ordinal,
@@ -122,22 +107,21 @@ module ot_qwen_p0_full_transport_join #(
     output wire [31:0]       st_kvok_low_desc, st_drain_low, st_wr_lat_max, st_fill_exposed,
     output reg  [31:0]       st_stall_kv, st_stall_drain, st_stall_bridge, st_stall_retire, st_stall_mem
 );
-    wire producer_clk, producer_hclk, producer_por_n, producer_warm_rst_n;
-    wire stream_d_v, stream_go;
-    wire stream_d_rdy;
-    wire [18:0] stream_d_row;
-    wire [10:0] stream_d_n;
-    wire [NPC-1:0] stream_l_v, stream_w_room, stream_wd_v;
-    wire [NPC-1:0] stream_l_pop, stream_w_v, stream_wd_accept;
-    wire [NPC*17-1:0] stream_l_sec;
-    wire [NPC*8-1:0] stream_l_row;
-    wire [NPC*256-1:0] stream_l_data;
-    wire [NPC*24-1:0] stream_w_sec;
-    wire [NPC*256-1:0] stream_w_data;
-    wire [NPC*9-1:0] stream_w_tag;
-    wire [NPC*9-1:0] stream_wd_tag;
-    wire producer_fault;
-    ot_qwen_p0_full_consumer_exports #(
+    wire [127:0] h_lv, h_av;
+    wire [128*17-1:0] h_lsec;
+    wire [128*8-1:0] h_lrow;
+    wire [128*256-1:0] h_ldata;
+    wire [128*9-1:0] h_atag;
+    wire phy_fault;
+    wire [127:0] row_v, col_v, col_we, busy;
+    wire [128*3-1:0] row_op;
+    wire [128*5-1:0] row_bank, col_bank, col_col;
+    wire [128*19-1:0] row_row;
+    wire [127:0] h_cv;
+    wire [128*24-1:0] h_csec;
+    wire [128*256-1:0] h_cdata;
+    wire [128*9-1:0] h_ctag;
+    ot_qwen_p0_full_transport_join #(
         .PROTECTED_STREAM4(PROTECTED_STREAM4),
         .BASELINE_AR(BASELINE_AR),
         .CORE_FS(CORE_FS),
@@ -180,30 +164,33 @@ module ot_qwen_p0_full_transport_join #(
         .HBM_PHASE(HBM_PHASE),
         .HBM_PULLIN(HBM_PULLIN),
         .EMBED_ROM(EMBED_ROM)
-    ) u_consumer (
-        .producer_clk(producer_clk),
-        .producer_hclk(producer_hclk),
-        .producer_por_n(producer_por_n),
-        .producer_warm_rst_n(producer_warm_rst_n),
-        .stream_d_v(stream_d_v),
-        .stream_go(stream_go),
-        .stream_d_rdy(stream_d_rdy),
-        .stream_d_row(stream_d_row),
-        .stream_d_n(stream_d_n),
-        .stream_l_v(stream_l_v),
-        .stream_w_room(stream_w_room),
-        .stream_wd_v(stream_wd_v),
-        .stream_l_pop(stream_l_pop),
-        .stream_w_v(stream_w_v),
-        .stream_wd_accept(stream_wd_accept),
-        .stream_l_sec(stream_l_sec),
-        .stream_l_row(stream_l_row),
-        .stream_l_data(stream_l_data),
-        .stream_w_sec(stream_w_sec),
-        .stream_w_data(stream_w_data),
-        .stream_w_tag(stream_w_tag),
-        .stream_wd_tag(stream_wd_tag),
-        .producer_fault(producer_fault),
+    ) u_join (
+        .h_lv(h_lv),
+        .h_av(h_av),
+        .h_lsec(h_lsec),
+        .h_lrow(h_lrow),
+        .h_ldata(h_ldata),
+        .h_atag(h_atag),
+        .phy_fault(phy_fault),
+        .row_v(row_v),
+        .col_v(col_v),
+        .col_we(col_we),
+        .busy(busy),
+        .row_op(row_op),
+        .row_bank(row_bank),
+        .col_bank(col_bank),
+        .col_col(col_col),
+        .row_row(row_row),
+        .h_cv(h_cv),
+        .h_csec(h_csec),
+        .h_cdata(h_cdata),
+        .h_ctag(h_ctag),
+        .h_cred_ret(h_cred_ret),
+        .h_desc_commit(h_desc_commit),
+        .h_go_commit(h_go_commit),
+        .h_desc_ordinal(h_desc_ordinal),
+        .h_go_ordinal(h_go_ordinal),
+        .transport_quiet(transport_quiet),
         .clk(clk),
         .hclk(hclk),
         .warm_rst_n(warm_rst_n),
@@ -265,43 +252,13 @@ module ot_qwen_p0_full_transport_join #(
         .st_stall_retire(st_stall_retire),
         .st_stall_mem(st_stall_mem)
     );
-    ot_qwen_s4_transport_context #(.ENABLE(PROTECTED_STREAM4),
-        .MEM_WORDS(HBM_LAYERS*131072), .PHASE(HBM_PHASE)) u_transport (
-        .clk(producer_clk),
-        .hclk(producer_hclk),
-        .rst_n(producer_por_n),
-        .warm_rst_n(producer_warm_rst_n),
-        .d_v(stream_d_v),
-        .go(stream_go),
-        .d_row(stream_d_row),
-        .d_n(stream_d_n),
-        .d_rdy(stream_d_rdy),
-        .fault(producer_fault),
-        .quiet(transport_quiet),
-        .l_v(stream_l_v),
-        .l_sec(stream_l_sec),
-        .l_row(stream_l_row),
-        .l_data(stream_l_data),
-        .l_pop(stream_l_pop),
-        .w_v(stream_w_v),
-        .w_sec(stream_w_sec),
-        .w_data(stream_w_data),
-        .w_tag(stream_w_tag),
-        .w_room(stream_w_room),
-        .wd_v(stream_wd_v),
-        .wd_tag(stream_wd_tag),
-        .wd_accept(stream_wd_accept),
-        .h_lv(h_lv),
-        .h_av(h_av),
-        .h_lsec(h_lsec),
-        .h_lrow(h_lrow),
-        .h_ldata(h_ldata),
-        .h_atag(h_atag),
-        .phy_fault(phy_fault),
+    ot_qwen_s4_numeric_memory #(.MEM_WORDS(HBM_LAYERS*131072),
+        .PHASE(HBM_PHASE),.PULLIN(HBM_PULLIN)) u_numeric (
+        .hclk(hclk),
+        .rst_n(rt_rst_n),
         .row_v(row_v),
         .col_v(col_v),
         .col_we(col_we),
-        .busy(busy),
         .row_op(row_op),
         .row_bank(row_bank),
         .col_bank(col_bank),
@@ -311,10 +268,14 @@ module ot_qwen_p0_full_transport_join #(
         .h_csec(h_csec),
         .h_cdata(h_cdata),
         .h_ctag(h_ctag),
-        .h_cred_ret(h_cred_ret),
-        .h_desc_commit(h_desc_commit),
-        .h_go_commit(h_go_commit),
-        .h_desc_ordinal(h_desc_ordinal),
-        .h_go_ordinal(h_go_ordinal)
+        .h_lv(h_lv),
+        .h_av(h_av),
+        .h_lsec(h_lsec),
+        .h_lrow(h_lrow),
+        .h_ldata(h_ldata),
+        .h_atag(h_atag),
+        .phy_fault(phy_fault),
+        .cred_ret(h_cred_ret),
+        .fault_code(numeric_fault_code)
     );
 endmodule
