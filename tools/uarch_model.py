@@ -12532,6 +12532,7 @@ def dsrom_wfc_clock_ip_boundary_model():
 def dsrom_wfc_ideal_input_body_model():
     """Owner-authorized BODY diagnostic, not a clock-IP timing envelope."""
     return dict(default=0, replica_count=1, state_FF_bits=0,
+        evidence_class='IDEAL_EXTERNAL_INPUT_DIAGNOSTIC',
         MACs_per_cycle=0, memory_port_bytes_per_cycle=0,
         boundary_bits_per_cycle=dict(external_clocks=2, external_fault=1),
         replica_mux_demux_cost=0, added_pipeline_cycles=0,
