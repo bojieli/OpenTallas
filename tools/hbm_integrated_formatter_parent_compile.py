@@ -265,9 +265,24 @@ def compile_plan(a):
              '--compile-plan','--work',str(work),'--output',str(out),'--tool',str(a.tool.resolve()),
              '--memory-gib',str(a.memory_gib),'--cpu-cores',str(a.cpu_cores),
              '--disk-reserve-bytes',str(a.disk_reserve_bytes),'--epyc2-hostname',a.epyc2_hostname,'--admitted']
+        if a.retained_models:cmd+=['--retained-models',str(a.retained_models.resolve())]
         write(out/'guard_command.json',cmd)
         return subprocess.run(cmd).returncode
-    completed=[];remaining=list(jobs);rc=0
+    completed=[];remaining=list(jobs);rc=0;diagnostics=[]
+    if a.retained_models:
+        old=a.retained_models.resolve()
+        old_inputs=json.loads((old/'inputs.json').read_text())
+        if any(old_inputs[k]!=inputs[k] for k in ('plan_sha256','source_sha256','parameters')):
+            raise ValueError('Retained models differ from real source/parameter plan')
+        for j in list(remaining):
+            terminal=old/j['prefix']/'terminal.json'
+            if terminal.is_file():
+                t=json.loads(terminal.read_text())
+                header=Path(j['directory'])/(j['prefix']+'.h')
+                if t['exit']==0 and t['real_model_header'] and header.is_file():
+                    completed.append(j['prefix']);remaining.remove(j)
+                    diagnostics.extend(t['dangerous_diagnostics'])
+                    write(out/(j['prefix']+'.retained.json'),dict(terminal=str(terminal),header_sha256=sha(header)))
     while remaining:
         ready=[j for j in remaining if set(j.get('deps',[]))<=set(completed)
                and all(Path(s).is_file() for s in j['sources'])]
@@ -286,18 +301,19 @@ def compile_plan(a):
         bad=re.findall(r'%Warning-(LATCH|UNOPTFLAT|SELRANGE|PIN[^:]*|USERERROR):',text)
         generated=Path(j['directory'])/(j['prefix']+'.h')
         write(leaf/'terminal.json',dict(exit=rc,dangerous_diagnostics=bad,real_model_header=generated.is_file()))
-        if rc or bad or not generated.is_file():
+        diagnostics.extend(bad)
+        if rc or not generated.is_file():
             rc=rc or 2;break
         completed.append(j['prefix'])
     write(out/'terminal.json',dict(exit=rc,completed=completed,total=len(jobs),
-          full_parent_elaborated=rc==0 and len(completed)==len(jobs),
+          dangerous_diagnostics=diagnostics,full_parent_elaborated=rc==0 and not diagnostics and len(completed)==len(jobs),
           source_sha256=m['source_sha256'],parameters=m['parameters'],numerical=False,physical_qualified=False))
     return rc
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     g=p.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',action='store_true');g.add_argument('--run',action='store_true');g.add_argument('--plan',action='store_true');g.add_argument('--compile-plan',action='store_true')
-    p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
+    p.add_argument('--retained-models',type=Path);p.add_argument('--output',type=Path);p.add_argument('--work',type=Path,required=True);p.add_argument('--body-sha256')
     p.add_argument('--tool',type=Path,default=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--memory-gib',type=int,default=0);p.add_argument('--cpu-cores',type=int,default=0)
     p.add_argument('--disk-reserve-bytes',type=int,default=0);p.add_argument('--epyc2-hostname',default='')
