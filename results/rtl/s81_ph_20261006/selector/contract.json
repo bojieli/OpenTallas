@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.s81_ph.contract.v1",
+ "kind": "selector",
+ "master": "dsfd_bk_selector",
+ "owner": "Claude:s81-ph (fork C, 2026-10-06)",
+ "die": "layer and head (identical ports; only ck/rst sit at another x on the head die's N face: ck 2335.8 vs 2316.4, rst 2466.2 vs 2446.9 um)",
+ "outline_um": [5270.376, 321.816],
+ "domain": "stream 1.2 GHz (ck), rst active low (die reset net, as every r8/r9 glue block)",
+ "function": "streaming exact top-k of the DeepSeek-V4.1 indexer (k <= 512, ties to the lower position, -0 == +0, -inf smallest, output in position order): the UNCHANGED ot_hdc_v41x_sel (rtl/hdc/v41x/ot_hdc_v41x_sel.sv, Q 4, W 16, IW 20, K 512, AW 8) behind a lane decoder per scan service, a qslot crossbar, four line memories and a paced output merger",
+ "rtl": {
+  "top": "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv",
+  "core": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv (ot_s81ph_sel_in, ot_s81ph_sel_mem, ot_s81ph_sel_core)",
+  "unchanged": ["rtl/hdc/v41x/ot_hdc_v41x_sel.sv", "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv", "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"],
+  "macros": "12 x ot_sram_1r1w_256x256_m2_r2c2 (3 per quarter: 256 lines x 16 lanes x 37 b = 592 b of 768; read-before-write, rd_out holds = the sel's synchronous-read line-memory contract); SS clk->rd_out ~515 ps, rd_out feeds one mux into a sel flop"
+ },
+ "inputs": {
+  "ports": "iSW, iSE, iNW, iNE (515 b): one per scan service (HBM stack), delivered by the hub end block dsfd_m2l_vr_512x1__hix_<st> (ot_meso_fifo) in ck: [0] valid, [512:1] data, [513] live, [514] fault",
+  "quarter": "each stack's stream is ONE select quarter: a contiguous, ascending position range of the segment; every position of qslot q is below every position of qslot q+1 (the W11 quarter-per-stack layout; the ring wrap is a forward REBASE inside the quarter)",
+  "word_types": {
+   "data[511:508]": "type", "data[507:500]": "tag (segment id, echoed)",
+   "1 HDR": "[19:0] base position of the first beat, [29:20] k (<= 512; every header of a segment carries the same k and tag), [31:30] qslot (the sel quarter this stack feeds); opens the stack's quarter",
+   "2 BEAT": "[255:0] 16 BF16 scores (lane i at [16i +: 16]), [271:256] lane valid, [272] last beat of the quarter; lane i is position cur + i, then cur += 16 (masked lanes advance the position). An empty quarter sends one BEAT with lane valid 0 and last",
+   "6 REBASE": "[19:0] position of the next beat's lane 0 (a forward jump inside the quarter)"
+  },
+  "index": "NOT carried: the slab reconstructs in_idx = cur + lane (20 b), so the select arithmetic sees exactly the native in_idx",
+  "rate": "one word a cycle per stack (64 scores/cycle over the four stacks = the sel's native ingest), never throttled",
+  "readiness": "the lanes have no ready: a DONE or REP word leaves the slab only once all four sel quarters are ready (in_ready), so every beat the VM causes after receiving DONE (next segment) or REP (replay) is accepted. After reset the slab sends one DONE (count 0) when ready."
+ },
+ "output": {
+  "ports": "vd (514 b, vr format: [0] rst_n (synchronised reset, launched from a flop), [1] valid, [513:2] data) + vf (forwarded clock = ck through a kept ot_fwd_clk_inv: the first station captures on negedge vf = posedge ck, one full cycle) -> station chain -> VM ratio CDC dsfd_r2l_vr_512x1__hsel",
+  "pacing": "the VM end is ot_ratio_cdc_fifo (DEPTH 4) with no w_rdy back on the die: the slab sends at most ONE word every PACE = 2 cycles (0.6 G words/s into the 0.9 GHz reader)",
+  "word_types": {
+   "3 IDX": "[319:0] 16 x 20-b position, [335:320] lane valid, [351:336] -inf flags, [353:352] qslot, [354] last of the quarter: the sel out beats 1:1, quarter 0..3 in order (the concatenation is the selection)",
+   "4 DONE": "[9:0] selected count, [10] overflow seen (the segment needed the two replays), [15:11] sticky fault bits",
+   "5 FAULT": "[15:11] fault bits (sent once when a sticky fault bit first rises; fail closed: the slab keeps them until reset)",
+   "7 REP": "[0] replay number 0/1: the sel overflowed a quarter's line memory (rep_req); the VM must re-issue the whole segment (all four scans, same beats, headers included) once per REP word"
+  },
+  "fault_bits": {"11": "overrun (beat while its sel quarter is not ready, or a beat / rebase with no open header)", "12": "format (unknown type, a qslot claimed by two open stacks, position carry past 2^20)", "13": "k or tag differ between the headers of one segment", "14": "input lane fault bit, or a valid word while the lane is not live", "15": "reserved"}
+ },
+ "overflow": "rep_req is the sel's exact fallback (two full replays). There is no svc back-channel on the die, so it is routed through the VM (REP word). Frequency: results/rtl/hdc_v41x_sel_campaign.json shipped_200k / tail_1m families (normal, uniform, lognormal, real_resampled, real_tiled, recency) ovf 0 in every segment; only adversarial families (ascending, all_equal, ties, masked_few at n 50000) overflow",
+ "vm_sequencer_rules": ["issue a scan segment (q to the four svc) only after the previous segment's DONE (or the reset DONE) arrived", "on each REP word re-issue the same segment to all four svc", "a FAULT word aborts: reset the selector (and re-run the segment)"],
+ "generator_changes": [],
+ "generator_notes": ["the r9 selector input hix end blocks drop the meso FIFO w_rdy (valid-only lane): consistent with this contract", "head die master differs only in ck / rst x; one RTL, the head view needs its own route (same RTL) or the generator aligns ck/rst x across dies"]
+}
