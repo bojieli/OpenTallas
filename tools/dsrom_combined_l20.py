@@ -392,7 +392,10 @@ FIELD_CFGS = {
     "pq0": dict(pq=0, qelem=0, plan="base"),
     "pq1": dict(pq=1, qelem=0, plan="pq"),           # recorded from the committed v9 field_pq.json (no replay)
     "pq0_q9": dict(pq=0, qelem=9, plan="base"),
-    "pq1_q9": dict(pq=1, qelem=9, plan="pq"),        # expected NOT buildable (negative structural control)
+    # PQ 1 + the PQ q-element (ot_v41_rom_elem_qx_pq_w10, 2026-10-06; before it this case was a NOT-buildable
+    # control): the spine's GAP / GUARD carry the element's configuration replay (see the element header)
+    "pq1_q10": dict(pq=1, qelem=10, plan="pq", gap=int(os.environ.get("OT_PQQ_GAP", "42")),
+                    guard=int(os.environ.get("OT_PQQ_GUARD", "210"))),
 }
 
 
@@ -410,7 +413,8 @@ def cmd_field(a):
         FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
     status = dict(cfg=a.cfg, **cfg, plan_dir=str(plan))
     if not (work / "build" / "tb").exists():
-        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=12, guard=180, gslack=6, jobs=a.jobs)
+        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=cfg.get("gap", 12), guard=cfg.get("guard", 180), gslack=6,
+                                jobs=a.jobs)
         try:
             FS.cmd_build(ns)
         except SystemExit as e:
@@ -743,10 +747,6 @@ def cmd_record(a):
     if not parts["units"] or not parts["units"]["all_exact"]:
         fails.append("units")
     for c, s in field.items():
-        if c == "pq1_q9":
-            if s.get("build") == "ok":
-                fails.append("field pq1_q9 built (expected NOT buildable)")
-            continue
         if not s.get("exact"):
             fails.append(f"field {c}")
     fails += [f"run-vs-composition: {x['kind']} {x.get('node') or x.get('case')}" for x in xc

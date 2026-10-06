@@ -98,7 +98,8 @@ TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/
          ROOT / "tools/v41_die_field.py"]
 # --qelem N (default 0 = off): the FP8/FP4 pairs are the DS-V4.1 ROM q-element the S81 die is built from
 # (ot_v41_rom_elem_q_qx_w10 at its routed parameters, QX = N; ot_v41_pair_w17w10 QELEM), BF16-capable pairs keep W10's
-QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10", "ot_v41_kreg",
+QRTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_rom_elem_q_qx_w10", "ot_v41_rom_elem_qx_w10",
+                                              "ot_v41_rom_elem_q_qxpq_w10", "ot_v41_rom_elem_qx_pq_w10", "ot_v41_kreg",
                                               "ot_v41_chain3", "ot_v41_chain4", "ot_v41_fadd2",
                                               "ot_v41_bterm3_w10", "ot_v41_bterm4_w10",
                                               "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]

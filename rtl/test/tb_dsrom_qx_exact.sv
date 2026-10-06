@@ -61,7 +61,13 @@ module tb_dsrom_qx_exact;
   .clk(clk), .rst_n(rf_rst_n), .cfg_v(rf_cfg_v), .cfg_a(rf_cfg_a), .cfg_d(rf_cfg_d), .go(rf_go),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
   .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
+`ifdef QX_DUT_PQ0
+ // QX_DUT_PQ0 (2026-10-06): the PQ successor ot_v41_rom_elem_q_qxpq_w10 at PQ = 0 must equal the qx element
+ wire dut_walking, dut_bank_free, dut_sh_free;
+ ot_v41_rom_elem_q_qxpq_w10 #(.PQ(0), .QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+`else
  ot_v41_rom_elem_q_qx_w10 #(.QX(QX), .QY(QY), .QZ(QZ), .NB(2), .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(QP), .QP_XS(XS),
+`endif
   .QP_CAP(CAP), .QP_P1(P1), .QP_CSAM(CSAM), .INSTANCE("d")) dut (
   .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
