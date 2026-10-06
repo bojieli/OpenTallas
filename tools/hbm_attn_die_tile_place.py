@@ -15,6 +15,14 @@ import math
 TW, TH = 1349.112, 1349.976
 # the core snaps to the site / row grid (0.054 / 0.27 um): banks at the east / north edges sit inside it
 CW_, CH_ = int(TW / 0.054) * 0.054, int(TH / 0.27) * 0.27
+# bank pins on the M4 / M5 track grid (pitch 0.048, offset 0.012; dt1_bd150 GRT: 61 SN clk pins off track, DRT-0073):
+# SN x = 0, y = 0.024 (mod 0.048); EW x = 0, y = 0 (mod 0.048)
+def trk(v, ph=0.0, down=False):
+    import math
+    if not down and v - ph < 0:
+        return round(ph, 3)
+    k = math.floor((v - ph) / 0.048 + 1e-9) if down else round((v - ph) / 0.048)
+    return round(k * 0.048 + ph, 3)
 QW, QH = 514.89, 562.95
 SNW, SNH = 105.84, 11.88           # ot_attn_bank_sn544
 EWW, EWH = 11.88, 105.84           # ot_attn_bank_ew544
@@ -62,8 +70,8 @@ class Plan:
         for r in range(0, 400):
             for dx in range(-r, r + 1):
                 for dy in (-r, r) if abs(dx) != r else range(-r, r + 1):
-                    x = round((cx - w / 2 + dx * 2.16) / 0.054) * 0.054
-                    y = round((cy - h / 2 + dy * 2.16) / 0.27) * 0.27
+                    x = trk(cx - w / 2 + dx * 2.16)
+                    y = trk(cy - h / 2 + dy * 2.16, 0.0 if ew else 0.024)
                     if self.free((x, y, x + w, y + h)):
                         d = abs(x + w / 2 - cx) + abs(y + h / 2 - cy)
                         if best is None or d < best[0]:
@@ -113,7 +121,8 @@ def main():
             if c and x < cs[-1][0] + SNW + 1.5:
                 x = cs[-1][0] + SNW + 1.62                  # a jog of a few um, next chunk
             cs.append((x, y))
-        return [P.put(bname(pipe, (0 if orient == "R0" else -1), c, False), orient, x, yy, SNW, SNH) for c, (x, yy) in enumerate(cs)]
+        return [P.put(bname(pipe, (0 if orient == "R0" else -1), c, False), orient, x, trk(yy, 0.024, yy > 1.0), SNW, SNH)
+                for c, (x, yy) in enumerate(cs)]
 
     def pins_e(pipe, s, first_y, nb, x, orient):
         cs = []
@@ -127,15 +136,15 @@ def main():
     # inputs (stage 0 = the pin bank); outputs (last stage = the pin bank)
     pin["k"] = pins_s("u_pk", 0.624, 2, 0.0, "R0")
     pin["ci"] = pins_s("u_pc", 519.228, 3, 0.0, "R0")
-    pin["cf"] = [P.put(bname("u_fc", a.NFC, c, False), "R0", x, round(CH_ - SNH, 3), SNW, SNH)
+    pin["cf"] = [P.put(bname("u_fc", a.NFC, c, False), "R0", x, trk(CH_ - SNH, 0.024, True), SNW, SNH)
                  for c, x in enumerate([519.228 - 0.396, 519.228 - 0.396 + SNW + 1.62, 519.228 - 0.396 + 2 * (SNW + 1.62)])]
-    pin["q"] = pins_e("u_pq", 0, 1236.864, 1, round(CW_ - EWW, 3), "MY")
-    pin["ri"] = pins_e("u_pr", 0, 725.952, 3, round(CW_ - EWW, 3), "MY")
+    pin["q"] = pins_e("u_pq", 0, 1236.864, 1, trk(CW_ - EWW, 0.0, True), "MY")
+    pin["ri"] = pins_e("u_pr", 0, 725.952, 3, trk(CW_ - EWW, 0.0, True), "MY")
     pin["rf"] = pins_e("u_fr", a.NFR, 725.952, 3, 0.0, "MY")
     # i / o (pins y 624.2 .. 725.6) sit just below rf / ri: their banks end 1.62 um under the rf / ri banks (a ~6 um jog)
     yio = 725.952 - 0.396 - 1.62 - EWH
     pin["i"] = [P.put(bname("u_pi", 0, 0, True), "R0", 0.0, yio, EWW, EWH)]
-    pin["o"] = [P.put(bname("u_oo", 0, 0, True), "R0", round(CW_ - EWW, 3), yio, EWW, EWH)]
+    pin["o"] = [P.put(bname("u_oo", 0, 0, True), "R0", trk(CW_ - EWW, 0.0, True), yio, EWW, EWH)]
     # ROOT at the channels' crossing
     root = [P.snap(bname("u_root", 0, c, False), cc_x, mc_y + (c - 1) * 14.0) for c in range(3)]
     rc = (sum(p[0] for p in root) / 3, sum(p[1] for p in root) / 3)
