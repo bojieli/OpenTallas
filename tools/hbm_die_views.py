@@ -358,6 +358,16 @@ def cmd_die(a):
             r = parse_lef(lef)
             om = re.search(r'\n(\s*OBS\n.*?\n\s*END)\n', r['text'], re.S)
             obs = om.group(1) if om else '  OBS\n  END'
+            # bundled tech LEF (k > 1) defines the metal layers only: keep the view's metal obstructions
+            keep, cur = [], True
+            for ln in obs.split('\n'):
+                mm = re.match(r'\s*LAYER (\S+)', ln)
+                if mm:
+                    cur = bool(re.fullmatch(r'M[1-9]', mm.group(1)))
+                if cur or not ln.strip().startswith(('LAYER', 'RECT', 'POLYGON')):
+                    if cur or not mm:
+                        keep.append(ln)
+            obs = '\n'.join(keep)
             pat = r'(MACRO ' + re.escape(n) + r'\n.*?)\n  OBS\n.*?\n  END\n(END ' + re.escape(n) + r'\n)'
             el, k = re.subn(pat, lambda mm: mm.group(1) + '\n' + obs + '\n' + mm.group(2), el, flags=re.S)
             assert k == 1, (n, k)
@@ -366,6 +376,56 @@ def cmd_die(a):
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(case=a.case, real_views=len(views), work=str(work))))
+
+
+def parse_case_log(t):
+    """legality / on-track / pin access / GRT figures of one die case log."""
+    r = {}
+    m_ = re.search(r'OT_LEGAL instances=(\d+) overlaps=(\d+) outside=(\d+)', t)
+    if m_:
+        r.update(instances=int(m_.group(1)), overlaps=int(m_.group(2)), outside=int(m_.group(3)))
+    if 'OT_ASSERT' in t:
+        r['on_track'] = 'PASS' if 'OT_ASSERT PASS' in t else 'FAIL'
+    if 'OT_PA' in t:
+        r['pin_access'] = 'DONE' if 'OT_PA DONE' in t else 'FAIL'
+        r['pa_errors'] = len(re.findall(r'\[ERROR DRT', t))
+        mm = re.search(r'#macroNoAp\s*=\s*(\d+)', t)
+        r['macro_no_access'] = int(mm.group(1)) if mm else None
+    tot = re.findall(r'^Total\s+(\d+)\s+(\d+)\s+([\d.]+)%\s+(\d+) /\s+(\d+) /\s+(\d+)', t, re.M)
+    if tot:
+        a, b, u, h, v, o = tot[-1]
+        r.update(grt_capacity=int(a), grt_demand=int(b), grt_usage_pct=float(u), overflow_h=int(h), overflow_v=int(v),
+                 overflow=int(o))
+    for k in ('place_s', 'pa_s', 'grt_s'):
+        mm = re.search(r'OT_TIME ' + k + r'=(\d+)', t)
+        if mm:
+            r[k] = int(mm.group(1))
+    return r
+
+
+def cmd_die_record(a):
+    rd = Path(a.round)
+    out = dict(schema='opentallas.hbm_die_views_round.v1', round=rd.name, cases={})
+    for c in sorted(p for p in rd.iterdir() if p.is_dir()):
+        lg = c / 'run.log'
+        if not lg.exists():
+            continue
+        rec = parse_case_log(lg.read_text(errors='replace'))
+        ex = c / 'run.log.exit'
+        rec['exit'] = ex.read_text().strip() if ex.exists() else None
+        man = c / 'manifest.json'
+        if man.exists():
+            mj = json.loads(man.read_text())
+            rec['real_views'] = sorted(mj.get('real_views', {}))
+            rec['bundle_k'] = mj.get('bundle_k')
+            rec['iterations'] = mj.get('congestion_iterations')
+        out['cases'][c.name] = rec
+    sc = rd / 'SOURCE_COMMIT'
+    out['source_commit'] = sc.read_text().strip() if sc.exists() else None
+    txt = json.dumps(out, indent=1) + '\n'
+    if a.out:
+        Path(a.out).write_text(txt)
+    print(txt)
 
 
 def main(argv=None):
@@ -393,6 +453,10 @@ def main(argv=None):
     p.add_argument('--iters', type=int, default=50)
     p.add_argument('--tag', default='views')
     p.set_defaults(fn=cmd_die)
+    p = sp.add_parser('die-record')
+    p.add_argument('--round', required=True)
+    p.add_argument('--out')
+    p.set_defaults(fn=cmd_die_record)
     a = ap.parse_args(argv)
     return a.fn(a) or 0
 
