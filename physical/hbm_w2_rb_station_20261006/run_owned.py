@@ -22,7 +22,9 @@ p.add_argument('--core-width', type=float, required=True)
 p.add_argument('--core-height', type=float, required=True)
 p.add_argument('--place-density', type=float, default=0.50)
 p.add_argument('--period-ps', type=float, default=770.0)
-p.add_argument('--insertion-ps', type=float, default=450.0)
+p.add_argument('--l-max', type=float, default=500.0)
+p.add_argument('--l-min', type=float, default=440.0)
+p.add_argument('--l-ff-min', type=float, default=250.0)
 p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
@@ -75,7 +77,8 @@ def station_stat(text):
 driver.parse_stat = station_stat
 sdc = run/'station.sdc'
 subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', str(a.period_ps),
-                '--insertion-ps', str(a.insertion_ps), '--out', str(sdc)], check=True)
+                '--l-max', str(a.l_max), '--l-min', str(a.l_min), '--l-ff-min', str(a.l_ff_min),
+                '--out', str(sdc)], check=True)
 native_synth = driver.run_synthesis
 
 
@@ -126,7 +129,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb',
         '--pin-region', '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$=top',
         '--purpose', 'signoff_target', '--nickname-tag', f'{a.tag}_NO{a.no}',
         '--output', str(run/'physical.json')]
-(run/'argv.json').write_text(json.dumps(dict(argv=argv, period_ps=a.period_ps, insertion_ps=a.insertion_ps,
+(run/'argv.json').write_text(json.dumps(dict(argv=argv, period_ps=a.period_ps, insertion=[a.l_min, a.l_max, a.l_ff_min],
     density=a.place_density, core=[a.core_width, a.core_height], tie_map=tie_map,
     effective_driver_sha256=hashlib.sha256(code.encode()).hexdigest()), indent=2)+'\n')
 try:

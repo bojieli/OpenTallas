@@ -13,16 +13,19 @@ Contract (decided for die integration):
     station hop); each block keeps INT ps for its own pin<->flop wire, clk->Q
     budgeted CLKQ. Input max = L+SKEW+CLKQ+INT+WIRE; output max =
     WIRE+INT+SETUP+SKEW-L (external capture up to SKEW early).
-  * Hold: the whole SKEW is budgeted on the receiving side only (input min =
-    L-SKEW+CLKQ_MIN); output min assumes nothing beyond the block's own launch
-    (output min = -L), so the skew is never double counted.
+  * Hold: the whole SKEW (150 ps, not scaled to FF) is budgeted on the
+    receiving side only (input min = Lff_min-SKEW+CLKQ_MIN); output min
+    asks nothing beyond the block's own launch (output min = -Lff_min), so
+    the skew is never double counted.
 """
 import argparse
 from pathlib import Path
 
 p = argparse.ArgumentParser()
 p.add_argument('--period-ps', type=float, required=True)
-p.add_argument('--insertion-ps', type=float, required=True, help='block clock insertion L (measured after CTS)')
+p.add_argument('--l-max', type=float, required=True, help='SS clk_sm insertion, latest flop (setup: input side)')
+p.add_argument('--l-min', type=float, required=True, help='SS clk_sm insertion, earliest flop (setup: output side)')
+p.add_argument('--l-ff-min', type=float, required=True, help='FF clk_sm insertion, earliest flop (hold side)')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--wire-ps', type=float, default=200.0)
 p.add_argument('--int-ps', type=float, default=60.0)
@@ -31,13 +34,16 @@ p.add_argument('--clkq-min-ps', type=float, default=30.0)
 p.add_argument('--setup-ps', type=float, default=25.0)
 p.add_argument('--out', type=Path, required=True)
 a = p.parse_args()
-L = a.insertion_ps
-in_max = L + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps
-in_min = L - a.skew_ps + a.clkq_min_ps
-out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - L
-out_min = -L
+# Each budget takes the insertion that is pessimistic for it: inputs are
+# captured by our latest flop at SS (setup) and earliest flop at FF (hold);
+# outputs are captured externally up to SKEW before our earliest SS flop.
+in_max = a.l_max + a.skew_ps + a.clkq_ps + a.int_ps + a.wire_ps
+in_min = a.l_ff_min - a.skew_ps + a.clkq_min_ps
+out_max = a.wire_ps + a.int_ps + a.setup_ps + a.skew_ps - a.l_min
+out_min = -(a.l_ff_min - 60.0)  # launch-only promise; 60 ps below our earliest FF flop
+L = a.l_max
 lines = [
-    f'# W2 rb station receiver clock-root contract: period {a.period_ps} ps, L {L} ps, skew +-{a.skew_ps} ps',
+    f'# W2 rb station receiver clock-root contract: period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, skew +-{a.skew_ps} ps (setup and hold)',
     f'create_clock -name clk_sm -period {a.period_ps:.3f} [get_ports clk_sm]',
     'set prev [get_ports clk_sm]', 'set master clk_sm',
     'for {set i 0} {$i<4} {incr i} {',
