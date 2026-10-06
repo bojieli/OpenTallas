@@ -40,5 +40,14 @@
     "sfu_allocation_* from accepted exclusive allocation",
     "sfu_publication_owner and positive consumption"
   ],
-  "sole_existing_parent_compile": "E2 r7 PID2914466 preserved; not this successor/no SFU flag"
+  "sole_existing_parent_compile": "E2 r7 PID2914466 preserved; not this successor/no SFU flag",
+  "native_VM_selected_successor_flags": {
+    "ENABLE": 1,
+    "COMBINED_ENABLE": 1,
+    "SFU_C12_ENABLE": 1,
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "TW": 17,
+    "PW": 20
+  },
+  "native_VM_numerical_qualified": false
 }

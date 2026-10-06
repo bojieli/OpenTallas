@@ -12,7 +12,7 @@ VECTOR='results/physical/hbm_die_abstracts_20261006/compute/enabled_r1/vectors'
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def write(p,d):p.write_text(json.dumps(d,indent=2)+'\n')
-def sources():
+def sources(native=False):
  export=json.loads((ROOT/'results/uarch/hbm_integrated_sfu_provider_join_20261006/namespace_export.json').read_text())
  paths=list(export['files'])+[
   'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
@@ -23,6 +23,9 @@ def sources():
   BASE+'ot_hbm_integrated_sfu_provider_join.sv',BASE+TOP+'.sv',
   'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv',
   'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv']
+ if native:
+  import runpy
+  paths+=runpy.run_path(str(ROOT/'physical/hbm_die_abstracts_20261006/memory_control/run_vm_sfu_warm_join.py'))['SOURCES'][:-1]
  return list(dict.fromkeys(paths))
 
 def capacity(out,phase):
@@ -38,14 +41,17 @@ def capacity(out,phase):
  return d
 
 def main():
+ global TOP
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,required=True)
- ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--admitted',action='store_true');a=ap.parse_args()
+ ap.add_argument('--native-vm',action='store_true');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--admitted',action='store_true');a=ap.parse_args()
+ if a.native_vm:TOP='tb_hbm_integrated_sfu_native_vm_join'
  out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
- pins={p:sha(ROOT/p) for p in sources()+[VECTOR+'/sfu_req.mem',VECTOR+'/sfu_exp.mem',
+ pins={p:sha(ROOT/p) for p in sources(a.native_vm)+[VECTOR+'/sfu_req.mem',VECTOR+'/sfu_exp.mem',
   BASE+'sfu_c12_selected/hierarchical.vlt','tools/hbm_integrated_sfu_provider_gate.py']}
  m=dict(top=TOP,sources=pins,ENABLE=1,LANES=64,contexts=[1048575,8191],seed=20261006,
-        expected='unchanged Carson64-lane golden; all8 opcodes in10 cases',
-        negatives=['checked readback mismatch','TOKEN17 publication mismatch','real W6 landing two-bit UE'],
+        expected='actual64-lane golden through native32SRAM root' if a.native_vm else 'unchanged Carson64-lane golden; all8 opcodes in10 cases',
+        native_vm_publication=a.native_vm,
+        negatives=['TOKEN17 joint completion refusal','warm held completion drain'] if a.native_vm else ['checked readback mismatch','TOKEN17 publication mismatch','real W6 landing two-bit UE'],
         required_memory_gib=32,threads=16,disk_inventory_gib=12,
         inventory_basis='reuse actual SFU hierarchical admission_inventory.json, plus1440FF finite landing/controller',
         whole_parent_qualified=False,physical_qualified=False)
@@ -59,14 +65,14 @@ def main():
  c=capacity(out,'post_guard' if a.admitted else 'pre_guard')
  if not c['fit']:write(out/'not_started.json',dict(reason='CURRENT_CAPACITY_BLOCKED',capacity=c));return 75
  if not a.admitted:
-  return subprocess.call(['/srv/opentallas-scratch/admit.sh','32','--',sys.executable,str(Path(__file__).resolve()),'--out',str(out),'--admitted'])
+  return subprocess.call(['/srv/opentallas-scratch/admit.sh','32','--',sys.executable,str(Path(__file__).resolve()),'--out',str(out),'--admitted',*(['--native-vm'] if a.native_vm else [])])
  tool=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
  version=subprocess.check_output([str(tool),'--version'],text=True).strip()
  if 'Verilator 5.050' not in version:raise ValueError('Pinned5.050 required')
  cmd=[str(tool),'--binary','--timing','--hierarchical','-O2','-Wno-fatal','-Wno-WIDTH',
       '--top-module',TOP,'-Mdir',str(out/'obj'),'--build-jobs','16','--verilate-jobs','1',
       '--hierarchical-threads','1','--unroll-count','4',
-      str(ROOT/(BASE+'sfu_c12_selected/hierarchical.vlt'))]+[str(ROOT/p) for p in sources()]
+      str(ROOT/(BASE+'sfu_c12_selected/hierarchical.vlt'))]+[str(ROOT/p) for p in sources(a.native_vm)]
  write(out/'command.json',dict(command=cmd,tool_version=version))
  with (out/'compile.log').open('x') as log:
   rc=subprocess.call(['/usr/bin/time','-v','-o',str(out/'compile.resources'),*cmd],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
@@ -75,7 +81,7 @@ def main():
   write(out/'pending.json',dict(reason='CPU_FIT_BLOCKED',binary=str(out/'obj'/('V'+TOP))));return 75
  with (out/'run.log').open('x') as log:
   rc=subprocess.call(['/usr/bin/time','-v','-o',str(out/'run.resources'),str(out/'obj'/('V'+TOP)),'+DIR='+str(ROOT/VECTOR)],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
- passed=rc==0 and 'SFU_PROVIDER_JOIN_PASS' in (out/'run.log').read_text()
+ passed=rc==0 and ('SFU_NATIVE_VM_JOIN_PASS' if a.native_vm else 'SFU_PROVIDER_JOIN_PASS') in (out/'run.log').read_text()
  write(out/'terminal.json',dict(status='PASS' if passed else 'FAIL',returncode=rc,source_sha256=pins,
        full_parent_qualified=False,SSFF_qualified=False))
  return 0 if passed else (rc or 2)
