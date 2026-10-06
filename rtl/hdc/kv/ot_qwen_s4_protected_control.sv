@@ -2,7 +2,7 @@
 // Selected STREAM4 descriptor/GO boundary, one finite outstanding of each.
 // The descriptor ring retires only on acceptance by every real controller.
 // GO carries that descriptor's ordinal, not a reset-replayable toggle.
-module ot_qwen_s4_protected_control #(parameter integer MEM_ROWS=3) (
+module ot_qwen_s4_protected_control #(parameter integer MEM_ROWS=3, parameter integer SAME_CYCLE_GO=0) (
     input wire clk,hclk,por_n,warm_rst_n,
     input wire d_v, output wire d_rdy,
     input wire [18:0] d_row,input wire [10:0] d_n,input wire go,
@@ -38,7 +38,7 @@ module ot_qwen_s4_protected_control #(parameter integer MEM_ROWS=3) (
     assign desc_v=dvalid&&!h_fault;
     assign {desc_row,desc_n}=ddata;
     assign h_go=gvalid&&!h_fault&&busy_all&&((dc-gc)!=0);
-    assign go_ready=gr&&warm_ok&&!c_fault&&(gocc==0)&&((di-gi)!=0);
+    assign go_ready=gr&&warm_ok&&!c_fault&&(gocc==0)&&((di+3'(SAME_CYCLE_GO&&ca)-gi)!=0); // SAME_CYCLE_GO=1: early-go GO may accompany its own descriptor (matches ga)
     assign desc_commit=d_take;assign go_commit=g_take;
     assign desc_ordinal=do_owner;assign go_ordinal=go_owner;
     ot_qwen_s4_checked_state #(.W(7)) u_cs(.clk(clk),.por_n(por_n),.en(!cb),
