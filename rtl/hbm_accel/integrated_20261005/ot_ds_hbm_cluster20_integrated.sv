@@ -363,11 +363,11 @@ end else begin:g_on
          .arena_base(bound_arena_base),.arena_limit(bound_arena_limit),
          .gather_retained(gather_retained[d]),.arena_visible(gather_arena_visible[d]),
          .owner_valid(fmt_lease_valid),.owner_frame(fmt_lease_frame),
-         .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),.pair_token17(index_pair_token17[d*17+:17]),
+         .pair_v(index_pair_v[d]),.pair_r(index_pair_r[d]),.pair_token(index_pair_token17[d*17+:17]),
          .pair_job(index_pair[d*85+53+:32]),.pair_gen(index_pair[d*85+49+:4]),.pair_pos(index_pair[d*85+29+:20]),
          .pair_rank(index_pair[d*85+22+:7]),.pair_word(index_pair[d*85+16+:6]),.pair_tag(index_pair[d*85+:16]),
          .pairs_v(index_pairs_v[d]),.pairs_r(index_pairs_r[d]),.pairs(index_pairs[d*599+2+:512]),
-         .pairs_frame73(index_pairs_frame73[d*73+:73]),
+         .pairs_frame(index_pairs_frame73[d*73+:73]),
          .pairs_job(index_pairs[d*599+567+:32]),.pairs_gen(index_pairs[d*599+563+:4]),.pairs_pos(index_pairs[d*599+543+:20]),
          .pairs_rank(index_pairs[d*599+536+:7]),.pairs_word(index_pairs[d*599+530+:6]),.pairs_tag(index_pairs[d*599+514+:16]),
          .pairs_checked(index_pairs[d*599+1]),.pairs_uncorrectable(index_pairs[d*599]),.retained(fmt_retained),.fault(fmt_fault),
@@ -375,7 +375,7 @@ end else begin:g_on
          .bridge_rsp_v(shared_gather_rsp_v&&formatter_response),.bridge_rsp_r(fmt_rsp_r),.bridge_rsp(shared_gather_rsp),
          .release_v(formatter_release_v[d]),.release_r(formatter_release_r[d]),
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
-         .release_pos(gather_release_frame[d*73+53+:20]),.release_token17(gather_release_frame[d*73+36+:17]),
+         .release_pos(gather_release_frame[d*73+53+:20]),.release_token(gather_release_frame[d*73+36+:17]),
          .publication_done(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]));
         ot_hbm_integrated_gather_owner #(.ENABLE(1),.VM_AW(VM_AW)) u_shared(
          .clk(clk_sm),.por_n(rst_sm_n),
