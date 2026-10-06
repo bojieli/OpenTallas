@@ -9888,6 +9888,12 @@ def hbm_existing_cp_local_pg_model():
     return cp_local_pg_model()
 
 
+def hbm_existing_w2_parent_physical_model():
+    """Finite current protected W2 parent, inside the existing service block."""
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_w2_parent_physical_20261005/model.json').read_text())
+
+
 def hbm_existing_h16_boundary_pg_model():
     """Finite H16 bottom rail stitches; connectivity does not qualify loaded IR."""
     import json

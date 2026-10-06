@@ -1,0 +1,178 @@
+{
+  "scope": "Sole minimum real W2 parent context in existing hb_cmdproc; current canonical joined source, no child source/recipe duplication",
+  "source_top": "ot_hbm_w2_protected_parent_context",
+  "source_commit_basis": "912ee91c90eb1fcbe5111fcc6b78f78f2daadcd1",
+  "parameters": {
+    "ENABLE": 1,
+    "PROTECTED_TRANSACTION_PIPELINE": 1,
+    "PROTECTED_PARENT_BOUNDARY": 1
+  },
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_sector_adapter.sv": "dcc126bc31b1fe79e1d01052cb57437deb2929c3e21535a0b37924ebc1937ff6",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_caller.sv": "dfe45d8ed0bf01aef162f05bd3154dcdb7934766c198c7f7d16b69bbad29aa4d",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_cdc.sv": "c0ab7af47cdbe75491f9be2c3c8c69b244a481417eb9b6a2ab4d14405003125a",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_gateway_cdc.sv": "dcf0922701e5bfb33aaa3905cdee43edaa21be60de9254d1dec47777100a9669",
+    "physical/hbm_w2_parent_context_20261005/ot_hbm_w2_protected_parent_context.sv": "2659ca75beecd5311e796873722d54ed8710aa84f014677d6dc2be066b34c58b",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_sector_adapter.sv": "17ce25ec8eac80df2fe39d56eb612726072ebf10223d2f3faa436c6ecd77e347",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv": "2d147fe2f62f2669ada289e3c6a7d6f3b1473bb844a6da85668322f78f894d10",
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613"
+  },
+  "source_gate": "results/rtl/w2_transaction_pipeline_20261005/parent_min_r7_PASS/terminal.json",
+  "source_gate_passed": true,
+  "arithmetic_R2_replayed": false,
+  "area": {
+    "non_sink_cell_upper_um2": 106901.53774000001,
+    "gateway_subset_upper_um2": 13549.004920000003,
+    "inherited_subset_upper_um2": 93352.53282000001,
+    "additional_CTS_hold_IO_cell_allowance_um2": 6000,
+    "inherited_relative_um": [
+      17.28,
+      600.48,
+      527.04,
+      1270.08
+    ],
+    "inherited_outline_um2": 341335.29600000003,
+    "gateway_relative_um": [
+      17.28,
+      345.6,
+      527.04,
+      518.4
+    ],
+    "gateway_outline_um2": 88086.528,
+    "child_core_relative_um": [
+      250.56,
+      43.2,
+      509.76,
+      302.4
+    ],
+    "child_allocation_unchanged": true,
+    "retained_cmdproc_relative_um": [
+      700.272,
+      600.48,
+      1600.128,
+      1270.08
+    ],
+    "retained_cmdproc_claim_mm2": 0.6,
+    "removal_credit_um2": 0,
+    "placement_utilization_ceiling": 0.5,
+    "inherited_placement_upper_um2": 198705.06564000002
+  },
+  "clock": {
+    "clk_sm_period_ps": 833.3333333333334,
+    "clk_mem_period_ps": 1024,
+    "clk_mem_source": "results/rtl/hbm_accel_die_floorplan_20261005/domains.sdc:clk_hbm",
+    "fixture_1000ps_not_selected": true,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "source_phase_ps": 0,
+    "actual_propagated_insertion_ps": null,
+    "actual_skew_ps": null,
+    "external_cut_budget": {
+      "SM_max_ps": 166.666666667,
+      "mem_max_ps": 204.8,
+      "min_ps": 0,
+      "external_output_load_ff": 3.898,
+      "measurement": false,
+      "false_IO_paths": false,
+      "async_first_stage_exceptions_pending_real_pin_binding": true
+    }
+  },
+  "latency": {
+    "added_architectural_stages_against_current_joined_source": 0,
+    "inherited_added_domain_edges_per_transaction": {
+      "clk_sm": 6,
+      "clk_mem": 2
+    },
+    "inherited_added_nominal_ns": 7.048,
+    "wire_stage_need_pending_actual_context": true
+  },
+  "communication": {
+    "MACs_per_cycle_delta": 0,
+    "memory_ports_delta": 0,
+    "boundary_bits_per_cycle_delta": 0,
+    "actual_W2_boundary_bits": 1213,
+    "provider614_result302_metadata297": true,
+    "replicas_per_die": 1,
+    "codec_words": 332,
+    "mux_bits": 18791,
+    "physical_loads_measured": false,
+    "finite_tracks": [
+      {
+        "group": "provider",
+        "layer": "M6",
+        "raw_tracks": 1350,
+        "inherited_via_escape_reserved": 68,
+        "inherited_clock_reserved": 64,
+        "new_local_PG_and_landing_track_reserve": 0,
+        "available_signal_tracks": 1218,
+        "demand": 614,
+        "residual": 604,
+        "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+      },
+      {
+        "group": "result",
+        "layer": "M7",
+        "raw_tracks": 1351,
+        "inherited_via_escape_reserved": 68,
+        "inherited_clock_reserved": 64,
+        "new_local_PG_and_landing_track_reserve": 141,
+        "available_signal_tracks": 1078,
+        "demand": 302,
+        "residual": 776,
+        "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+      },
+      {
+        "group": "metadata",
+        "layer": "M7",
+        "raw_tracks": 1351,
+        "inherited_via_escape_reserved": 68,
+        "inherited_clock_reserved": 64,
+        "new_local_PG_and_landing_track_reserve": 141,
+        "available_signal_tracks": 1078,
+        "demand": 297,
+        "residual": 781,
+        "basis": "Native0.064 pitch; M7 two0.160 stripes per4.32 plus40 finite via-escape tracks; M6 no PG stripes"
+      }
+    ]
+  },
+  "PG": {
+    "M1_M2_followpin_width_um": 0.018,
+    "pitch_um": 0.54,
+    "M3_width_um": 0.09,
+    "M4_width_um": 0.12,
+    "M7_width_um": 0.16,
+    "local_pitch_um": 4.32,
+    "M8_M9_width_um": 0.474,
+    "upper_pitch_um": 5.4,
+    "upper_fraction": 0.17555555555555555,
+    "local_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M7",
+      "M8",
+      "M9"
+    ],
+    "native_vias": true,
+    "M6_PG_stripes": 0,
+    "existing_W2_M6_M7_signal_reservations_preserved": true
+  },
+  "qualified": false,
+  "physical_sequence": [
+    "one ORFS current source map and finite PG/regions checkpoint",
+    "bind actual CDC first-stage/capture pin identities without IO exceptions",
+    "continue same mapped checkpoint through CTS/route with frozen upstream targets",
+    "extract actual WC/BC clocks, caps and explicit-corner SPEF for Jason"
+  ]
+}
