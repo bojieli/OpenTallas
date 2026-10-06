@@ -267,12 +267,118 @@
   "controller_pause": "clock enables; root clocks unchanged, actual router drains independently",
   "latency": "measured accept->protectedreply->actual WFC commit/readcapture->consume->backendretire in fast/slow counters; no fixed1edge or overlap credit",
   "mandatory_per_A_read_capture_bubble_edges": 1,
-  "actual_service_wait_edges": null,
+  "actual_service_wait_edges": {
+    "XBpreload_writes": {
+      "bundles": [
+        1,
+        47
+      ],
+      "accept_to_reply_fast_edges": [
+        20,
+        21
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        7
+      ]
+    },
+    "XBhighword_read": {
+      "bundles": [
+        48,
+        48
+      ],
+      "accept_to_reply_fast_edges": [
+        12,
+        12
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "XA_canonical_writes": {
+      "bundles": [
+        49,
+        89
+      ],
+      "accept_to_reply_fast_edges": [
+        20,
+        21
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "actual_XAread_XBread_fourwriter_sameedge": {
+      "bundles": [
+        90,
+        90
+      ],
+      "accept_to_reply_fast_edges": [
+        71,
+        71
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    },
+    "remaining_XA_reads": {
+      "bundles": [
+        91,
+        135
+      ],
+      "accept_to_reply_fast_edges": [
+        12,
+        13
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        7
+      ]
+    },
+    "XB_lastwriter_readback": {
+      "bundles": [
+        136,
+        136
+      ],
+      "accept_to_reply_fast_edges": [
+        13,
+        13
+      ],
+      "consume_to_retire_fast_edges": [
+        6,
+        6
+      ]
+    }
+  },
   "actual_token_latency_ns": null,
-  "allwriter_contract": "bundle XA/XB0..3 native order, old reads before writes; distinct XB owner is backpressured and not bundled",
+  "allwriter_contract": "bundle XA/XB0..3 native order including sameowner simultaneous XAread/write; old reads before all writes; distinct XB owner backpressured and unaccepted; distinct simultaneous XA RX/TX owners explicitly rejected without serialization",
   "global_VM_geometry_owner": "Turing current r8/new-frame binding",
   "provider_source_owner": "Copernicus",
   "P_and_R_ready": false,
   "SS_FF_qualified": false,
-  "adopted": false
+  "adopted": false,
+  "owner_comparison_cost": "31bit native RX/TX identity comparator inside existing512NAND2 control reservation; no added FF or pipeline edges",
+  "actual_changed_context_measurement": {
+    "path": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r2_PASS/result.json",
+    "source": "42d3fc004",
+    "nominal_fast_cycles": 17510,
+    "native_capture_fast_edges": 8,
+    "restoration_fixture_hold_edges": 6,
+    "physical_period_fast_ps": 833.333333333,
+    "physical_period_slow_ps": 1111.111111111,
+    "token_latency_credit": 0,
+    "scope": "service alone; whole L19 numerical engine timeline and parent loaded physical still pending; nominal totals include cold init,866configprefix,preload and real consumer stalls, not token latency"
+  },
+  "selected_native_successor": {
+    "source": "1860b98a0",
+    "receipt": "results/rtl/dsrom_wfc_enclosing_stage_20261005/protected_join/gate_r4_PASS/result.json",
+    "caller_control_FF": 224,
+    "delta_FF": 98,
+    "legal_distinct_XA_owner_pairs": 41,
+    "supported": true,
+    "native_two_lease_price": "results/uarch/dsrom_wfc_enclosing_stage_20261005/native_two_lease_model.json"
+  }
 }

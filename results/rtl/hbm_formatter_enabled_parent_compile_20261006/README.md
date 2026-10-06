@@ -1,0 +1,7 @@
+Enabled fullparent compile runner preparation
+
+Lorentz owns only formatter_provider.files.f and hbm_integrated_formatter_parent_compile.py. Bacon alone owns the formatter body; Gibbs owns the parent. Preparation uses actual main0047 release_token17/full73 lease ports, canonical512 plane-major leaf N96/NPER512, restored originalW15 DMA/store and enabledSU dependency sources. It preserves originalALAT5 rather than substituting releasedc12ALAT6.
+
+88 real source entries are selected, with the formatter body the only currently missing file. Formatter/normalgather/localCPreset branches are enabled with exactND2/NSM2/NS2/NPC2/MEM2097152/VM_AW21/TW17/PW20/IMW14. No body/stub/provider/storage/authority is emitted. The copied runner correctly refuses before guard/compiler while its source snapshot lacks the actual owner-pinned body.
+
+After Bacon publishes the body, prepare a new pinned snapshot with --body-sha256. The --run path requires E2 NVMe, measured E2 hostname, explicit honest CPU/RAM/disk reservations, fresh measured capacity before and after the unchanged admit.sh, exact snapshot hashes and no prior queued attempt. No compiler deadline/AS/file/CPU limit is installed. Compiler errors and source-bound PIN/SELRANGE/LATCH/UNOPTFLAT diagnostics remain failures. No heavy job or full-parent elaboration has run yet. Numerical/token/SSFF/productionlease qualification are separate owner work.

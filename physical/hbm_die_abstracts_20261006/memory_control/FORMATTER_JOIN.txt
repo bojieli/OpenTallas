@@ -1,0 +1,16 @@
+Actual shared-native formatter bridge, default ENABLE0.
+Source: ot_hbm_integrated_formatter_provider.sv. Canonical formatter N96/NPER512/AW=VM_AW. Production VM_AW21; actual384KiB plane arena, not64KiB native query SRAM. No numeric conversion, extra SRAM, private337/273provider or REF controller.
+
+Gibbs owns selected parent wiring. Current required input ports:
+ gather_granted = u_shared.formatter_lease_valid, actual shared arbiter grant AND retained AND !fault;
+ gather_frame73[72:0] = u_shared.formatter_lease_frame, {held_pos20,held_token17,held_gen4,held_job32};
+ pair_token17[16:0] = actual index_pair_token17 sideband from the retained source. The wrapper compares it with all73 held lease bits; no absent-token alias. Caller must retain the source and lease until source debt drains.
+ release_token17[16:0] = actual gather_release_frame[52:36].
+ pairs_frame73[72:0] output carries the protected held owner; existing599 pair packet remains literal numerical payload/metadata. Do not attach this to the separate native1024 query bus.
+ clk actual clk_sm; por_n actual cold rst_sm_n per Gibbs handoff. Warm reset must wait on retained/fault/shared route debt outside wrapper; no warm-clear credit or new clock.
+
+Request649 literal {frame73,zeroREADdata512,word6,rank7,tag16,BYTEaddr32,kind3}. Response637 literal {frame73,data512,BYTEaddr32,tag16,kind3,checked1}. Address conversion uses checked aligned /64 on admission, then width-checked *64. Both planes use existing protected outstanding formatter context; ID/rank are recovered from that actual context only after response address/tag/kind/full73 match.
+
+The checked bit is actual bridge receipt: localW6 captured sectors and causal write/readback publication. It is not HBM physical ECC qualification. Unchecked or mismatched returned receipt quarantines the retained owner, with no pair output or response ACK. Loss/change of real gather_granted/frame also refuses traffic and retains fault debt until cold POR.
+
+Production reservation [118763520,119156736) bytes, 6144 words, VM_AW21, from Gibbs df8b6d833/ecf9. Hardware enrollment, source normal-gather producer and production installer lease remain open; reservation alone is not a closed parent. Fullparent SS60/FF25 clock/load is unqualified. Component runtime fixture has real native borrow grant and descriptor/gather-owner state but private finite beat-store backing, not production SRAM/PHY qualification.
