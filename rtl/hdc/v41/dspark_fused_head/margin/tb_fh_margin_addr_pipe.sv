@@ -25,12 +25,13 @@ module tb_fh_margin_addr_pipe;
    if(i>6 && a0!==a1q2) $fatal(1,"address fault cycle %0d",i);
    if(|v1) rv=rv+1;
    for(g=0;g<4;g=g+1) begin
-    // bank-aligned words, rows 0..15 (dense reuse) and rare out-of-range addresses
-    re[g]=$random(seed); we[g]=$random(seed);
+    // first 16 cycles initialise rows 0..15 of every lane; then bank-aligned rows 0..15 (dense
+    // reuse, read-after-write in flight) and rare out-of-range read addresses
+    re[g]=(i<16)?0:$random(seed); we[g]=(i<16)?1:$random(seed);
     ra[g*24+:24]=((($random(seed)&15)<<2)|g) + ((($random(seed)&4095)==0)?24'h800000:0);
-    wa[g*24+:24]=((($random(seed)&15)<<2)|g);
+    wa[g*24+:24]=(i<16)?((i<<2)|g):((($random(seed)&15)<<2)|g);
    end
-   wm={$random(seed),$random(seed)};
+   wm=(i<16)?{64{1'b1}}:{$random(seed),$random(seed)};
    for(g=0;g<64;g=g+1) wd[32*g+:32]=$random(seed);
   end
   if(rv<500) $fatal(1,"read coverage %0d",rv);

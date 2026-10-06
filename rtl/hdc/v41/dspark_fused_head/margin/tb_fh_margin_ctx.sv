@@ -22,12 +22,14 @@ module tb_fh_margin_ctx;
    if(i>40 && {we1,lv1,ov1,re1,ra1,rt1,rv1,lf1,owe1,oa1,om1,od1,f1,gf1}!=={we0,lv0,ov0,re0,ra0,rt0,rv0,lf0,owe0,oa0,om0,od0,f0,gf0}) $fatal(1,"ctx lockstep %0d",i);
    if(MUT && i>40 && lf1===lf0 && i==2999) $fatal(1,"no-op");
    if(ref0.u_fh.protected_v) fused=fused+1; if(ref0.iw_go) iw=iw+1;
-   s3_v_in=(($random(seed)&3)==0); go_fus=(($random(seed)&63)==0); tv_in=$random(seed); ov1_in=$random(seed);
-   rb=(($random(seed)&7)==0); wack=(($random(seed)&15)==0);
+   // busy windows alternate with quiet windows so the pending index write drains and issues
+   s3_v_in=((i%200)<120)&&(($random(seed)&3)==0); go_fus=(($random(seed)&63)==0);
+   tv_in=((i%200)<120)&&$random(seed); ov1_in=((i%200)<120)&&$random(seed);
+   rb=((i%200)<120)&&(($random(seed)&7)==0); wack=(($random(seed)&15)==0);
    for(j=0;j<TW;j=j+32) tag[j+:32]=$random(seed);
    tag[0]=$random(seed); // fused
    for(j=0;j<G*W;j=j+1) begin res_in[32*j+:32]=$random(seed); ra_q[32*j+:32]=$random(seed); end
-   i_iaddr=$random(seed); busy_in=(($random(seed)&3)==0)?$random(seed):0; o_we1_in=$random(seed);
+   i_iaddr=$random(seed); busy_in=((i%200)<120&&($random(seed)&3)==0)?$random(seed):0; o_we1_in=$random(seed);
    for(j=0;j<G;j=j+1) o_addr1_in[24*j+:24]=$random(seed);
    o_mask1_in={$random(seed),$random(seed)}; leaf_mask_in={$random(seed),$random(seed)};
    leaf_row_in=$random(seed); am_idx_in=$random(seed);
