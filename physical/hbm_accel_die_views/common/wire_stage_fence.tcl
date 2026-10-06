@@ -70,9 +70,10 @@ proc ws_bfs {all dir depth} {
         }
       }
     }
-    if {[llength $pins]} { return $pins }
+    if {[llength $pins]} { set ::ws_lastd $d; return $pins }
     set front $next
   }
+  set ::ws_lastd -1
   return {}
 }
 proc ws_cent {l} {
@@ -98,8 +99,11 @@ foreach c [lsort -dictionary [array names ws_n]] {
   set N $ws_n($c)
   if {[ws_partner $c] ne ""} continue
   if {![info exists ws_st($c,0)] || ![info exists ws_st($c,[expr {$N-1}])]} continue
-  set A [ws_bfs $ws_st($c,0) back $ws_depth]
-  set B [ws_bfs $ws_st($c,[expr {$N-1}]) fwd $ws_depth]
+  set A [ws_bfs $ws_st($c,0) back $ws_depth]; set dA $::ws_lastd
+  set B [ws_bfs $ws_st($c,[expr {$N-1}]) fwd $ws_depth]; set dB $::ws_lastd
+  # a chain end whose terminal is reached within one cell (pin -> flop, flop QN -> inverter -> pin) is a FACE register:
+  # it is anchored at that pin; otherwise the end sits one hop in from its terminal
+  set anA [expr {$dA >= 0 && $dA <= 1}]; set anB [expr {$dB >= 0 && $dB <= 1}]
   if {![llength $A] || ![llength $B]} {
     puts "OT_WS: chain $c N=$N: no terminal on one side ([llength $A] in / [llength $B] out), left unfenced"
     continue
@@ -108,7 +112,7 @@ foreach c [lsort -dictionary [array names ws_n]] {
   set dx [expr {[lindex $b 0]-[lindex $a 0]}]; set dy [expr {[lindex $b 1]-[lindex $a 1]}]
   set len [expr {hypot($dx,$dy)}]
   set ux [expr {$len > 0 ? $dx/$len : 1.0}]; set uy [expr {$len > 0 ? $dy/$len : 0.0}]
-  puts [format "OT_WS: chain %s N=%d from (%.1f %.1f) to (%.1f %.1f) um, %.1f um Manhattan, %.1f um a hop" $c $N \
+  puts [format "OT_WS: chain %s N=%d anchored %d/%d from (%.1f %.1f) to (%.1f %.1f) um, %.1f um Manhattan, %.1f um a hop" $c $N $anA $anB \
         [expr {[lindex $a 0]/$ws_dbu}] [expr {[lindex $a 1]/$ws_dbu}] [expr {[lindex $b 0]/$ws_dbu}] \
         [expr {[lindex $b 1]/$ws_dbu}] [expr {(abs($dx)+abs($dy))/$ws_dbu}] [expr {(abs($dx)+abs($dy))/$ws_dbu/($N+1)}]]
   if {[info exists ::env(OT_WS_REPORT)]} {
@@ -128,7 +132,9 @@ foreach c [lsort -dictionary [array names ws_n]] {
   }
   for {set k 0} {$k < $N} {incr k} {
     if {![info exists ws_st($c,$k)]} continue
-    set f [expr {double($k+1)/($N+1)}]
+    if {$anA && $anB} { set f [expr {$N > 1 ? double($k)/($N-1) : 0.5}] } \
+    elseif {$anA} { set f [expr {double($k)/$N}] } elseif {$anB} { set f [expr {double($k+1)/$N}] } \
+    else { set f [expr {double($k+1)/($N+1)}] }
     set ws_tgt($c,$k) [list [expr {[lindex $a 0]+$f*$dx}] [expr {[lindex $a 1]+$f*$dy}]]
     set ws_cells($c,$k) $ws_st($c,$k)
   }
