@@ -1,0 +1,38 @@
+{
+  "bench_source": "6bb9b0cf2",
+  "production_source": "16e5cb9f8",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv": "d93086deb486fa2f2d3d30f4d4cdef2c7b4658c863a31e5b2d366ce8d4cfa8e9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv": "065929a23d6a6b2b40618db4d7bf307201909c6df47ff50b009fea96c76a248f",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_index_fp32_sram_adapter.sv": "18635599b0cef92d09c95cb7148dcebcdafa60a886fd8958f47208496a4b9d7e",
+    "physical/hbm_die_abstracts_20261006/integration/ot_hbm_vm_publication_parent.sv": "89934e63a051b7c7845033d36cd3aceed03cca046f1fdc43f6df6d7ae68a11b8",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_vm_sfu_result_publication.sv": "a0751dc0f9050191a225a5c6d85df79aa78a831c51cb251df75061f0fe7e94b0",
+    "physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_sfu_publication_root.sv": "3e669ab7e65fd4a27fbe1b647437f1bcabe285324fd9617ddf36ab010f7e2233",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_integrated_stage_join.sv": "49b472d7c40d05b91250368d5fdf497370a688189f0eed0229ddc363a3b11ffa",
+    "rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv": "f9d9c32f98c468bad29466fe657ebc2c6190b5b675e4c6925cd4e3c6430b2a68",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+    "physical/hbm_die_abstracts_20261006/memory_control/tb_norm_quant_native_publication.sv": "51508f0539bc5bc405be33f52283f42cbd6b613a778c4c8ecf839aee3f8db5f8"
+  },
+  "golden_sha256": {
+    "x.mem": "afa68c72c5a4233b2dba671efdbd41b647c24cf07f83865524eb1b63ed283566",
+    "w.mem": "93e4e41f7cb05544c846b3316c0866659ac28c7e64a9820ec491f7b0f82a3f52",
+    "cfg.mem": "b88aa9d6b0933b929cd9481dffe8b471ee4d0ca6e5df2012e8250186f79679b0",
+    "ey.mem": "c1dc401770017fad13fdf96bde3f305baadb17b139e30334f7c6c0adcedfca47",
+    "eqc.mem": "279e90327e21465622d703455303efb78dd4525cb4756fa9e41d6412177a68de",
+    "eqe.mem": "a9a5537e0d27665ac84ff25aa758b6833955a386d9cefa14aad0da6d6e1fc394",
+    "eqy.mem": "2ec27a9bd55debace006c7134037a22b4c47ae2ee2f252fd3172aebb29eac00b"
+  },
+  "reservation_GiB": 96,
+  "threads": 4,
+  "basis": "measured native enclosing frontend74.6GiB plus unchanged100GiB reserve",
+  "arithmetic_instantiated": false,
+  "whole_parent_qualified": false,
+  "SSFF_qualified": false
+}
