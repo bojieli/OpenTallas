@@ -11,7 +11,7 @@ common/make_io_vclk_margin.sh / io_vclk_m_<L>.sdc adapted to the station clockin
   outputs against vclk at the FF minimum insertion and inputs against vclki at the FF maximum insertion, i.e. the
   neighbour's die-clock leaf arrives no earlier than this block's earliest leaf (outputs) and no later than its latest
   (inputs); the die clock-arrival difference is the setup-side 150 ps -- stn_resignoff.sh times each corner against
-  its own file.  One SS figure on the hold side
+  its own file.  The FF file adds a 50 ps die-clock skew allowance on IO hold (inter-clock hold uncertainty).  One SS figure on the hold side
   demands ~130 ps of hold buffers per output that the die clock never needs (M2_hfd_meso_r32: FF -7.75 ps against a
   294 ps vclk latency with a 163 ps FF insertion, after 7 hold buffers).  (OpenSTA -min/-max latency is not a
   per-corner split: a -min latency moves the setup capture edge.)
@@ -63,5 +63,10 @@ for f in fcl:
 sv = open(src[:-4] + '.sv').read()
 if 'ot_hbm_stn_meso' in sv and 'rst[0]' not in sv.replace('.rst_n(rst[0])', ''):
     out.append('set_false_path -from [get_ports {rst[0]}]')
+# FF file only (4th argument given): a 50 ps die-clock skew allowance on IO hold (coordinator 2026-10-06: a die
+# tree still has skew at FF), as inter-clock hold uncertainty on both IO directions
+if len(sys.argv) > 4:
+    out.append('set_clock_uncertainty -hold 50 -from [get_clocks vclki] -to [get_clocks ck]')
+    out.append('set_clock_uncertainty -hold 50 -from [get_clocks ck] -to [get_clocks vclk]')
 print('\n'.join(out))
 print(f'# stn_margin_sdc.py {mode}: ck IO vs vclk/vclki at insertion {Lmin:g}/{Lmax:g} ps, 0.2 T + 150 ps; over-constraint {OVER:g} ps')
