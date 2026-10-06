@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "d484725400a0a6d46422a281ef34103f2d7abb10bc4a3ad272b07c78c9be34f8",
+ "generator_sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "d484725400a0a6d46422a281ef34103f2d7abb10bc4a3ad272b07c78c9be34f8",
-  "tree_head": "76c0ded2b611d11ad58668c8675116578f51e2ed",
-  "file_commit": "76c0ded2b611d11ad58668c8675116578f51e2ed"
+  "sha256": "26a327ab3e770df6a3bdd92bb2b351dfef0a8b94209fd2d0e45686f90b6309bc",
+  "tree_head": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
+  "file_commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-qwen-die",
   "ref": "None",
-  "commit": "76c0ded2b611d11ad58668c8675116578f51e2ed",
+  "commit": "4b55654e416824d6cf67eac91d8ec37a67a9c54c",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -579,8 +579,8 @@
     "pairs": 9,
     "min_gap_um": 0.024,
     "examples": [
-     "t_53_23 / io_serdes gap 0.02 um",
-     "t_54_23 / io_serdes gap 0.02 um"
+     "t_54_23 / io_serdes gap 0.02 um",
+     "t_55_23 / io_serdes gap 0.02 um"
     ]
    },
    {
@@ -590,8 +590,8 @@
     "pairs": 21,
     "min_gap_um": 0.024,
     "examples": [
-     "t_33_23 / io_ucie gap 0.02 um",
-     "t_34_23 / io_ucie gap 0.02 um"
+     "t_34_23 / io_ucie gap 0.02 um",
+     "t_35_23 / io_ucie gap 0.02 um"
     ]
    },
    {

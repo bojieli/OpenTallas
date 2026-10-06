@@ -84,7 +84,8 @@ STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack
 # CDC slot (io_xfifo, IOX_W long) beside the collective; the PHY clk / rst_n leave the dfi bundle
 R18 = False
 KVC_W = 96.768
-IOX_W = 86.4
+IOX_W = 400.032
+IOX_GAP = 40.176                # r18e: routing gap each side of io_xfifo (r18c i5: M4-M9 1.18-1.41 at 4.3 um gaps)
 CORRIDOR_BITS = 637            # clock 64 + reset 64 + instruction 379 + go 1 + x 128 + ready 1
 TAP_BITS = 511                 # instruction 379 + go 1 + x 128 + ready 1 + clock 1 + reset 1
 TREE_BITS = 512                # W12 tile n_y / t_out word (16 x 32)
@@ -420,7 +421,7 @@ def _build(spine_w, tree_mode):
     elen = up(11.046e6 / IO_DEPTH, GX)
     xs['embedding_rom'] = xs['collective'] - elen - 10 * GX
     ulen = up(10.0e6 / IO_DEPTH, GX)
-    xs['ucie'] = xs['collective'] + clen + 10 * GX + ((up(IOX_W, GX) + 10 * GX) if R18 else 0)
+    xs['ucie'] = xs['collective'] + clen + 10 * GX + ((up(IOX_W, GX) + 2 * IOX_GAP - 10 * GX) if R18 else 0)
     slen = up(4.0e6 / IO_DEPTH, GX)
     xs['serdes'] = xs['ucie'] + ulen + 10 * GX
     for (name, mm2, dom), ln in zip(IO_BLOCKS, (clen, elen, ulen, slen)):
@@ -428,7 +429,7 @@ def _build(spine_w, tree_mode):
                         region='io', domain=dom)
         insts.append(io[name])
     if R18:
-        io['xfifo'] = Inst('io_xfifo', 'qfd_io_xfifo', xs['collective'] + clen + 10 * GX, y_io, up(IOX_W, GX) - SHAVE,
+        io['xfifo'] = Inst('io_xfifo', 'qfd_io_xfifo', xs['collective'] + clen + IOX_GAP, y_io, up(IOX_W, GX) - SHAVE,
                            IO_DEPTH - SHAVE, kind='xfifo', region='io', domain='cdc')
         insts.append(io['xfifo'])
     regions.append(dict(name='io_band', kind='io', rect=[x_arr_w, y_io, x_eband, y_io + IO_DEPTH]))

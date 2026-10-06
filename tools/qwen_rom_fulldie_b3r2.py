@@ -351,11 +351,13 @@ def _r18_masters(v, m):
         iox = model['io']['xfifo']
         out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
                                        'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
-        # CDC cluster data ports: one pin group per crossing on the face toward its other endpoint
+        # CDC cluster data ports: one pin group per crossing on the face toward its other endpoint; sp_xfifo groups
+        # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
+        # faces and staggered cluster groups), the rest in the free intervals from the top
         byn = {i.name: i for i in model['insts']}
         for X in (xf, iox):
             M = out[X.master]
-            cur = {}
+            want = []
             for bid, cl, nb, eps in model['buses']:
                 for j, (inst, port) in enumerate(eps):
                     if inst != X.name:
@@ -366,11 +368,38 @@ def _r18_masters(v, m):
                     else:
                         face, along, layer = ('E' if ot.cx > X.cx else 'W'), M.h, 'M4'
                     span = (max(1, math.ceil(nb / k)) * 0.048 * k if k > 1 else nb * 0.048) + 1.0
-                    c0 = cur.get(face, along - 2.0)
-                    if c0 - span < 1.0:
-                        raise ValueError(f'{X.master}.{port}: face {face} full')
-                    M.face(port, nb, face, layer, c0 - span / 2, 1)
-                    cur[face] = c0 - span
+                    yc = None
+                    pm = out.get(ot.master)
+                    pspec = pm.ports.get(eps[1 - j][1].lstrip('*')) if pm is not None else None
+                    if X is xf and pspec is not None and pspec[0] == 'face' and \
+                            pspec[2] == ('W' if face == 'E' else 'E'):
+                        yc = ot.y + pspec[4] - X.y
+                        if not (span / 2 + 1.0 <= yc <= along - span / 2 - 1.0):
+                            yc = None
+                    want.append((port, nb, face, layer, along, span, yc))
+            occ = {}
+            for port, nb, face, layer, along, span, yc in sorted(want, key=lambda w_: w_[6] is None):
+                iv = occ.setdefault(face, [])
+                if yc is not None and all(yc + span / 2 <= a_ or yc - span / 2 >= b_ for a_, b_ in iv):
+                    iv.append((yc - span / 2, yc + span / 2))
+                    M.face(port, nb, face, layer, yc, 1)
+                    continue
+                top = along - 2.0
+                for a_, b_ in sorted(iv, key=lambda z: -z[1]):
+                    if b_ <= top - span:
+                        continue          # this group lies below a candidate slot [top - span, top]
+                    top = min(top, a_)
+                # scan downward for the highest free slot
+                cands = sorted(iv, key=lambda z: -z[0])
+                y_hi = along - 2.0
+                for a_, b_ in cands + [(-1e9, 1.0)]:
+                    if y_hi - b_ >= span:
+                        break
+                    y_hi = min(y_hi, a_)
+                if y_hi - span < 1.0:
+                    raise ValueError(f'{X.master}.{port}: face {face} full')
+                iv.append((y_hi - span, y_hi))
+                M.face(port, nb, face, layer, y_hi - span / 2, 1)
         used = {}
         for bid, cl, bits, eps in model['buses']:
             for inst, port in eps:
