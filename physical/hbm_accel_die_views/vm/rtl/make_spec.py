@@ -38,7 +38,7 @@ for src, dst in (('SW', 'SE'), ('SE', 'SW'), ('NW', 'NE'), ('NE', 'NW')):
     eo.append((f'q{dst}', 512, 580, f'i_f_su_{dst}[2047:1980]'))
 eo.append(('t_quant', 0, 1024, 'i_f_su_NE[1023:0]'))
 eo.append(('t_router', 0, 512, 'i_f_su_NE[1535:1024]'))
-F = 'physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_die_vm_multicast_root.sv'
+F = 'physical/hbm_accel_die_views/vm/rtl/ot_hbm_die_vm_multicast_root.sv'
 spec = dict(master='hfd_vm', note=(
     'Thin registered VM top (no VM RTL exists): the x staging / multicast root ot_hbm_die_vm_multicast_root (22 SRAM '
     'macros, Codex component, sim receipt) on the four x trunks; the SU publication, tile query, quantiser and router '
