@@ -25,6 +25,10 @@ i = C.RTL.index(su)
 C.RTL[i:i + 1] = [ROOT / "rtl/dsrom_sys/s81_ph/su/ot_s81ph_vec_lane.sv", ROOT / "rtl/dsrom_sys/s81_ph/su/ot_s81ph_vec.sv",
                   ROOT / "rtl/dsrom_sys/s81_ph/su/ot_s81ph_su_adapt.sv", ROOT / "rtl/dsrom_sys/s81_ph/su/ot_s81ph_su_xing.sv",
                   ROOT / "rtl/dsrom_sys/s81_ph/test/ot_hdc_v41x_su_adapt_s81ph_shim.sv"]
+# the current tb_hdc_core_v41x.sv names the pooled index unit hierarchically: its modules must exist even when unused
+C.RTL.extend(ROOT / f"rtl/hdc/v41x/{n}.sv" for n in (
+    "ot_hdc_v41x_idx_pcol", "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_pool_finish", "ot_hdc_v41x_idx_pool_batch",
+    "ot_hdc_v41x_idx_pool_replica", "ot_hdc_v41x_idx_pool_adapt", "ot_hdc_v41x_idx_pool_kwr", "ot_hdc_v41x_idx_pool_hbm_bridge"))
 _defs = C.defines
 C.defines = lambda lanes=None: _defs(lanes) + [f"+define+S81PH_DF={a.df}", f"+define+S81PH_DR={a.dr}", f"+define+S81PH_NEG={a.neg}"]
 a.out.mkdir(parents=True, exist_ok=True)
