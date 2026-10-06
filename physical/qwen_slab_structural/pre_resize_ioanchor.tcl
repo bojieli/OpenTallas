@@ -19,6 +19,25 @@ proc qa_put {inst x y} {
   $inst setPlacementStatus PLACED
   return $w
 }
+proc qa_walk {net fwd depth} {
+  if {$depth < 0 || $net eq "NULL"} { return {} }
+  set next {}
+  foreach it [$net getITerms] {
+    if {$fwd ? ![$it isInputSignal] : ![$it isOutputSignal]} continue
+    lappend next [$it getInst]
+  }
+  if {[llength $next] != 1} { return {} }
+  set i [lindex $next 0]
+  if {[qa_is_seq $i]} { return [list $i] }
+  if {![qa_is_buf $i]} { return {} }
+  foreach jt [$i getITerms] {
+    if {[[$jt getMTerm] getSigType] ne "SIGNAL"} continue
+    if {$fwd ? ![$jt isOutputSignal] : ![$jt isInputSignal]} continue
+    set rest [qa_walk [$jt getNet] $fwd [expr {$depth - 1}]]
+    if {[llength $rest]} { return [concat [list $i] $rest] }
+  }
+  return {}
+}
 set qa_n 0; set qa_skip 0
 foreach bt [$qa_block getBTerms] {
   set name [$bt getName]
@@ -27,28 +46,10 @@ foreach bt [$qa_block getBTerms] {
   set bb [$bt getBBox]
   set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
   set right [expr {$px > ([$qa_core xMin] + [$qa_core xMax]) / 2}]
-  set chain {}
-  if {[$bt getIoType] eq "INPUT"} {
-    foreach it [$net getITerms] {
-      set i [$it getInst]
-      if {![$it isInputSignal]} continue
-      if {[qa_is_seq $i]} { lappend chain $i }
-    }
-  } else {
-    foreach it [$net getITerms] {
-      if {![$it isOutputSignal]} continue
-      set i [$it getInst]; lappend chain $i
-      if {![qa_is_seq $i] && [qa_is_buf $i]} {
-        foreach jt [$i getITerms] {
-          if {![$jt isInputSignal]} continue
-          set dn [$jt getNet]; if {$dn eq "NULL"} continue
-          foreach kt [$dn getITerms] { if {[$kt isOutputSignal] && [qa_is_seq [$kt getInst]]} { lappend chain [$kt getInst] } }
-        }
-      }
-    }
-  }
+  # walk through port / placement buffers and inverters (<= 4 levels) to the boundary flop; chain is pin-side first
+  set chain [qa_walk $net [expr {[$bt getIoType] eq "INPUT"}] 4]
   if {[llength $chain] == 0 || ![qa_is_seq [lindex $chain end]]} { incr qa_skip; continue }
-  # pin-side first: outputs = [buffer, flop] (buffer nearest the pin), inputs = [flop]
+  # pin-side first: [port buffer, flop] (buffer nearest the pin)
   set x [expr {$right ? [$qa_core xMax] : [$qa_core xMin]}]
   foreach i $chain {
     set w [[$i getMaster] getWidth]
