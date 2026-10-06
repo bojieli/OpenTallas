@@ -197,6 +197,8 @@ def model(root=ROOT):
         latency_gate='changed-source golden held/refill comparison required; do not assume zero added cycles',
         warm='no warm reset on selector or D0; existing reservation/retirement debt unchanged',
         bandwidth='four global return frames/core/rank unchanged')
+    from qwen_stream4_parallel_pc_model import model as parallel_pc_model
+    result['parallel_protected_PC_candidate']=parallel_pc_model(root)
     return result
 
 

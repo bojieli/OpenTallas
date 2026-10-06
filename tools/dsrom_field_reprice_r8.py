@@ -191,7 +191,7 @@ def cmd_regions(a):
         groups = FS.groups_all(plan)
         for key, phs in sorted(groups.items()):
             L_, node, st = key
-            if a.config == "pq" and len(phs) > 1:
+            if a.config.startswith("pq") and len(phs) > 1:
                 regs = sorted({r for ph in phs for r in ph["regions"]})
                 runs = {}
                 for reg in regs:
@@ -293,7 +293,7 @@ def node_table(reg, wire, per_phase_extra=0):
         items = [(k, dict(mode="seq", phases=v)) for k, v in grp.items()]
     else:
         items = [((n["layer"], n["node"], n["stage"]), n) for n in reg["nodes"].values()]
-        k = spine_rule(reg["nodes"]) if reg["config"] == "pq" else None
+        k = spine_rule(reg["nodes"]) if reg["config"].startswith("pq") else None
     for key, n in items:
         if n["mode"] == "seq":
             w = lambda r: wire(r) + per_phase_extra
@@ -333,8 +333,10 @@ DIES = ("layer", "layer1")
 PROXY_REF = "f198.72"                  # scan die (4 stacks, 32 of the rack) and 1-stack layer die (292)
 CONFIGS = dict(asbuilt=("regions/asbuilt.json.gz", "results/rtl/dsrom_1m_allmeasured_20261004/field.json"),
                baseline=("regions/baseline.json.gz", "results/rtl/dsrom_field_spine_20261004/field_baseline.json"),
-               pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"))
-LEVER_CONFIG = dict(field_spine="baseline", field_spine_pq="pq")
+               pq=("regions/pq.json.gz", "results/rtl/dsrom_field_spine_20261004/field_pq.json"),
+               # PQ spine x DS q-element (2026-10-06, GAP 32 / GUARD 202 / GSLACK 32; tools/dsrom_combined_l20.py qelem-lever)
+               pq_qelem=("regions/pq_qelem.json.gz", "results/rtl/dsrom_qelem_pq_20261006/field_pq_qelem.json"))
+LEVER_CONFIG = dict(field_spine="baseline", field_spine_pq="pq", qelem_pq="pq_qelem")
 # SU hub traverse already charged (stages): fused 1.2 GHz units HUB_IN 33 / HUB_OUT 23; unfused wired SU (0.9 GHz)
 # BCAST 22 / RET 15 slow stages (tools/dsrom_1m_su.py, la6_inputs/dsrom_su_norm.py)
 SU_CHARGED_NS = dict(fused=dict(inp=33 / 1.2, out=23 / 1.2), wired=dict(inp=22 / 0.9, out=15 / 0.9))
@@ -454,8 +456,8 @@ def cmd_record(a):
         cfgs = {}
         for c, reg in regs.items():
             new = summarise(node_table(reg, lambda r: W[r]))
-            old = summarise(node_table(reg, lambda r: OLD_WIRE_PER_PHASE)) if c != "pq" else None
-            if c == "pq":       # PQ: old charge was 80 once per node (pipelined) -- recompute that way
+            old = summarise(node_table(reg, lambda r: OLD_WIRE_PER_PHASE)) if not c.startswith("pq") else None
+            if c.startswith("pq"):  # PQ: old charge was 80 once per node (pipelined) -- recompute that way
                 old = {}
                 for key, t in node_table(reg, lambda r: 0).items():
                     w = OLD_WIRE_PER_PHASE * (1 if t["mode"] == "pq" else t["phases"])
@@ -613,7 +615,7 @@ if __name__ == "__main__":
     p = sub.add_parser("regions")
     p.add_argument("--work", type=Path, required=True)
     p.add_argument("--plan-dir", type=Path, required=True)
-    p.add_argument("--config", required=True, choices=["asbuilt", "baseline", "pq"])
+    p.add_argument("--config", required=True, choices=["asbuilt", "baseline", "pq", "pq_qelem"])
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("record")
     p.add_argument("--levers", action="store_true", help="also re-price the field_spine lever records")

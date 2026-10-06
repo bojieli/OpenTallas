@@ -191,6 +191,26 @@
      "measured_share": 1.0001
     }
    },
+   "qelem_pq": {
+    "cls": "conditional",
+    "verdict": "PENDING_SSFF",
+    "record": "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json",
+    "delta": {
+     "AR_us": -121.046,
+     "AR_tok_s": 433.4,
+     "MTP_step_us": -143.629,
+     "MTP_tok_s": 1008.2
+    },
+    "if_adopted": {
+     "AR_us": 471.42,
+     "AR_tok_s": 2121.3,
+     "MTP_step_us": 701.25,
+     "MTP_tok_s": 5930.8,
+     "MTP_tok_s_tau_published": 5544.2,
+     "II_us": 20.765,
+     "measured_share": 1.0002
+    }
+   },
    "su_softmax": {
     "cls": "conditional",
     "verdict": "PENDING_SSFF",
@@ -232,7 +252,8 @@
     "su_softmax"
    ],
    "alternatives_not_stacked": {
-    "field_spine": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
+    "field_spine": "overlaps qelem_pq on 325 nodes; qelem_pq kept in the joint",
+    "qelem_pq": "overlaps field_spine_pq on 325 nodes; field_spine_pq kept in the joint"
    },
    "composed": {
     "AR_us": 450.492,
@@ -262,13 +283,76 @@
      "cycles": 0,
      "AR_tok_s": 0.0
     }
+   },
+   "slab_mul_lat7": {
+    "cls": "adopted",
+    "verdict": "ADOPT (closed SS60 +11.47 / FF25 +4.20 ps, 0 slew/DRC)",
+    "record": "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json",
+    "variant": "r11c_456_lead2_t260_d75",
+    "delta": {
+     "cycles": 217,
+     "AR_tok_s": -6.914
+    }
    }
   },
-  "token_cycles": 193955,
-  "AR_us": 161.629,
-  "AR_tok_s": 6187.0,
+  "kv_traffic": {
+   "bytes_system_token": 603979776,
+   "MiB_system_token": 576.0,
+   "bytes_per_rank_layer": 4194304,
+   "sectors_per_die_token": {
+    "0": 4718592,
+    "1": 4718592,
+    "2": 4718592,
+    "3": 4718592
+   },
+   "exposed_fill_cycles_per_die": 1363,
+   "steady_window_fill_cycles": {
+    "n": 34,
+    "min": 1305,
+    "mean": 1378.8,
+    "max": 1620
+   },
+   "landing_bytes_per_core_cycle_per_rank": {
+    "mean": 3042.1,
+    "best": 3214.0
+   },
+   "achieved_TBps_per_die": {
+    "mean": 3.65,
+    "best": 3.857
+   },
+   "pct_of_4stack_peak": {
+    "mean": 91.3,
+    "best": 96.4
+   },
+   "token_average_system_TBps": 3.733,
+   "record": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log",
+   "not_this_vehicle": {
+    "record": "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json",
+    "P0_return_bytes_per_core_cycle_per_rank": 128,
+    "P0_payload_floor_us": 983.04,
+    "verdict": "the Codex P0 integration vehicle serialises each stack's 32 PC landings through ONE 288-bit sealed frame per core edge (ot_qwen_s4_stack_transport); the measured headline token lands every PC in parallel (ot_qwen_rt_kv_stream4_service l_v[127:0]). P0's floor describes P0's transport, not the measured machine; P0 must adopt the per-PC landing (ot_qwen_stream4_cdc_pc RSEL=1 per PC)"
+   }
+  },
+  "pending_not_composed": {
+   "r18g_die_wire_bound": {
+    "record": "claude/qwen-die-rebuild-20261005@279518cd0 results/rtl/qwen_rom_die_r17_20261005/path_sta/r18g_i50_wire8k_skew{0,65}.json (STREAM4 deltas per CLAUDE QWEN-PHYS 08:29Z)",
+    "penalty_cycles": {
+     "skew0": 13305,
+     "skew65": 16268
+    },
+    "grt_overflow": 11534,
+    "status": "PENDING: GRT not closed; r18j spreading IO words; die KV landing path not reconciled",
+    "bound_tok_s": {
+     "skew0": 5783.8,
+     "skew65": 5702.3
+    }
+   }
+  },
+  "token_cycles": 194172,
+  "AR_us": 161.81,
+  "AR_tok_s": 6180.1,
   "MTP_mode": "AR (DSpark OFF)",
-  "MTP_tok_s": 6187.0,
+  "MTP_tok_s": 6180.1,
   "dspark_reference": {
    "tok_s": 4346.2,
    "speedup_vs_ar": 0.704,
@@ -280,7 +364,11 @@
   "inputs": {
    "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
    "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
-   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0"
+   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+   "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
+   "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
+   "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5"
   }
  },
  "hbm_ds": {
@@ -416,6 +504,7 @@
   "ds_rom_conditional": [
    "field_spine",
    "field_spine_pq",
+   "qelem_pq",
    "su_softmax"
   ],
   "ds_rom_excluded": [
@@ -423,7 +512,8 @@
    "hop"
   ],
   "qwen_rom_adopted": [
-   "core_context"
+   "core_context",
+   "slab_mul_lat7"
   ],
   "hbm_exact_credited": [
    "joint_PQ_XMAP",
@@ -434,10 +524,11 @@
   "levers": {
    "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
    "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "4ae2036774202fdbf5dded2521c3bd20da3d03f9b5d2002365ffe9fb951c0b3d",
-   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "17f21cbb2894c5805e1fb8301477d18cf018d64df003cf23e92e1832241182ad",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "3e6af41146bfb1d9b38560ae8f766aa8f03f253187b8e9cd89a2d7ba48999931",
+   "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "8af663b80905cc1d2056f6e593b489ea02965045aff91953143b6c313b8350a5",
    "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
    "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
+   "results/rtl/dsrom_recovery_20261004/levers/qelem_pq.json": "fd84c48f4e98fc1a704d90a3e5d15d37e7105302ddb990c18b9dd8f6ed790359",
    "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
    "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
    "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "d93d1ea4fc1eb4ad2b4e36f5e8fe8d3962998d9e6d5a60c1c45b97349af6b9ba",
@@ -451,11 +542,15 @@
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_core_decode_closure_20261004/claude_context_20261005/verdict.json": "e014c8fb8214a64bf1d8fa28adef65e7f3b36c78f60605ed4c55cc388c78dd63",
   "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json": "7dd1f7c92c34634d50ebe8c46de3f8c1a5c7e15cda4ddab0a6d9d6e1218ea9e0",
+  "results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json": "8833c88727ad5a288c0d42b5b1ad7dddf792af2456e89db8fa28114c6bd45fa1",
+  "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "results/rtl/qwen_plain_ar_stream4_P8191_20261005/runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
+  "results/rtl/qwen_rom_combined_p0_20261005/stream4_capacity_r1/result.json": "3035dd96b08d7e7e5205fabc31d32d402f825109bb748adf772163ec36d342e5",
   "results/rtl/dshbm_matched_reference_20261005/composition.json": "d64a44a2f1382658e66e620fe2d01372497c5a38d6c60a8f2697053cb4993a7f",
   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json": "b3e0335aea501bc08149ab01bf129e18cd361697207f87ffd39ea767a052b2a6",
   "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json": "6adee352a7090fc604665e37eaa10e3b1ee783514186d96454697d93867574ba"
  },
  "tool_sha256": {
-  "tools/three_machine_compose.py": "bbdbc64250c8fe52132eda48baae7fd0a396a73733749fff6465edf1f11380b3"
+  "tools/three_machine_compose.py": "ff20eda591cbc2baa90302ef8e20f701fea929d568b4cfa65974d60489fad956"
  }
 }

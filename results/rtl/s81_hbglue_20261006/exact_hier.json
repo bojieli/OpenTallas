@@ -1,0 +1,36 @@
+{
+  "pass": true,
+  "scope": "USE_HARD_DELAY8=1 native hierarchical glue cycle equivalence; element numerical datapaths replaced by traffic stubs in reference only",
+  "cycles": 1200,
+  "seed": 12345,
+  "added_cycles": 0,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "bdceec7d6c41747e741de0b14baef74af18d34b5c2c38f47e50c0da2fc0399e2",
+    "rtl/s81/ot_dsrom_head_bundle_glue.sv": "2667d09e8cd3928a8c8d879268d08b56d43d336b2408d83e2fa886f93c17e506",
+    "rtl/test/s81/tb_head_bundle_glue.sv": "e4e1ceb81cd462d4f621e4310bd6a153346865a3dccf88530b0db39245eed07e",
+    "rtl/s81/ot_s81_head_delay8x32.sv": "da1551fd135b4d476f2bf1c069362fa6bbdf92c366c5c8aa70f0334b0cf2ce83"
+  },
+  "cases": {
+    "baseline": {
+      "returncode": 0,
+      "output": "PASS glue lockstep 1200 cycles results=590"
+    },
+    "demux": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:19: lockstep cycle 66\n       Time: 70000 Scope: tb"
+    },
+    "tie": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:19: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "skew": {
+      "returncode": 1,
+      "output": "FATAL: /tmp/codex-item8-hbglue-20261006/rtl/test/s81/tb_head_bundle_glue.sv:19: lockstep cycle 65\n       Time: 69000 Scope: tb"
+    },
+    "unsupported_sk9": {
+      "returncode": 1,
+      "output": "/tmp/codex-item8-hbglue-20261006/rtl/s81/ot_dsrom_head_bundle_glue.sv:47: error: Unknown module type: ERROR_hardened_head_delay_requires_SK8\n1 error(s) during elaboration.\n*** These modules were missing:\n        ERROR_hardened_head_delay_requires_SK8 referenced 1 times.\n***"
+    }
+  }
+}

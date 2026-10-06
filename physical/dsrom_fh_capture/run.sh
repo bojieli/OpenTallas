@@ -53,6 +53,6 @@ exec python3 "$S/tools/run_abi3_physical.py" --source-root "$S" --view asap7 --t
  --macro-view "$M=physical/asap7_memory_macros/$M" --macro-place-halo 2 2 \
  --orfs-var ADDER_MAP_FILE= --die-area 0 0 2000 660 --core-area 2 2 1998 658 \
  --orfs-var MACRO_PLACEMENT_TCL=/src/physical/dsrom_fh_capture/macro_place.tcl \
- --place-density 0.60 --orfs-var ENABLE_DPO=0 --orfs-var PLACE_DENSITY_LB_ADDON= --core-utilization 35 --max-transition-ns 0.25 --max-fanout 16 --slew-margin-percent 20 --hold-margin-ns 0.02 \
+ --place-density "${OT_FH_PLACE_DENSITY:-0.60}" --orfs-var DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer --orfs-var ENABLE_DPO=0 --orfs-var PLACE_DENSITY_LB_ADDON= --core-utilization 35 --max-transition-ns 0.25 --max-fanout 16 --slew-margin-percent 20 --hold-margin-ns 0.02 \
  --sdc-append physical/dsrom_fh_capture/boundary.sdc --io-delay-fraction 0.2 \
  --keep-workdir "$R/work" --nickname-tag "$TAG" --output "$R/physical.json"

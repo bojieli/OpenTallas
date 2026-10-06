@@ -2,11 +2,13 @@
 """Single changed-source native-quarter gate; peer sources remain read-only."""
 import argparse, hashlib, json, subprocess
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--registered-check',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--registered-check',action='store_true');ap.add_argument('--balanced-check',action='store_true');a=ap.parse_args()
+if a.balanced_check:a.registered_check=True
 root=Path(__file__).resolve().parents[1];out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False)
 new='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv'
 if a.registered_check:
  new='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv'
+if a.balanced_check:new=new.replace('_check_pipeline','_balanced_pipeline')
 srcs=(root/'physical/hbm_die_abstracts_20261006/links/native_quarter/sources.f').read_text().splitlines()
 files=[];pins={}
 for rel in srcs:
@@ -15,6 +17,7 @@ for rel in srcs:
  if rel.endswith(('ot_hbm_native_station.sv','ot_hbm_native_frame_station.sv')):
   bank='ot_hbm_w2_protected_bank_check_on' if a.registered_check else 'ot_hbm_w2_protected_bank_current_on'
   cut='ot_hbm_w2_protected_cut_check_on' if a.registered_check else 'ot_hbm_w2_protected_cut_current_on'
+  if a.balanced_check:bank=bank.replace('_check_on','_balanced_on');cut=cut.replace('_check_on','_balanced_on')
   s=s.replace('ot_hbm_w2_protected_bank #',bank+' #').replace('ot_hbm_w2_protected_cut #',cut+' #')
   p=out/p.name;p.write_text(s)
  files.append(str(p))
@@ -28,8 +31,11 @@ s=b.read_text();pins[str(b.relative_to(root))]=hashlib.sha256(b.read_bytes()).he
 s=s.replace('module tb_native_quarter_publication;', 'module tb_native_quarter_publication;\n integer edge_count=0; always @(posedge clk_sm) edge_count<=edge_count+1;\n always @(posedge clk_sm) if(q_ack_v && ack_gate) $display("CALENDAR_QUARTER_ACK edge=%0d",edge_count);\n always @(posedge clk_sm) if(activation_release && activation_release_r) $display("CALENDAR_PARENT_RELEASE edge=%0d",edge_count);\n always @(posedge clk_sm) if(warm_ack) $display("CALENDAR_WARM_ACK edge=%0d",edge_count);')
 if a.registered_check:
  aux_rel='rtl/hbm_accel/integrated_20261005/tb_w2_bank_check_pipeline.sv'
- files.append(str(root/aux_rel));pins[aux_rel]=hashlib.sha256((root/aux_rel).read_bytes()).hexdigest()
- (out/Path(aux_rel).name).write_bytes((root/aux_rel).read_bytes())
+ aux_path=root/aux_rel
+ if a.balanced_check:
+  aux_path=out/'tb_w2_bank_check_pipeline.sv';aux_path.write_text((root/aux_rel).read_text().replace('_bank_check_on','_bank_balanced_on'))
+ files.append(str(aux_path));pins[aux_rel]=hashlib.sha256((root/aux_rel).read_bytes()).hexdigest()
+ if not a.balanced_check:(out/Path(aux_rel).name).write_bytes((root/aux_rel).read_bytes())
  s=s.replace(' integer edge_count=0;', ' wire checker_gate_done; tb_w2_bank_check_pipeline checker_gate(clk_sm,checker_gate_done);\n integer edge_count=0;')
  s=s.replace('  cold;launch;', '  wait(checker_gate_done); cold;launch;',1)
  s=s.replace(' integer edge_count=0;', ' integer edge_count=0; integer calendar_base=0;')

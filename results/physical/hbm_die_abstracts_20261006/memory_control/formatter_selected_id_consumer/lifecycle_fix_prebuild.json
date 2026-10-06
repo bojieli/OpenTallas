@@ -1,0 +1,18 @@
+{
+  "status": "MODEL_BEFORE_LIFECYCLE_SOURCE_FIX",
+  "existing_model": "results/physical/hbm_die_abstracts_20261006/memory_control/formatter_selected_id_consumer/prebuild.json",
+  "stored_bits_added": 0,
+  "coded_FF_added": 0,
+  "provider_ports_added": 0,
+  "replicas_added": 0,
+  "control_output_bits_added": 1,
+  "output": "consumer_adapter_drained",
+  "dependency": "Actual reverse acceptance -> accepted legacy adapter release -> actual adapter retained drop -> permit helper source-reverse acceptance -> formatter release -> gather release/drop",
+  "nominal_helper_release_edge_delta": 1,
+  "stream_1p2GHz_nominal_added_ns": 0.8333333333333334,
+  "clock_note": "Analytical edge price only, not physical timing qualification; actual parent fixture clock/source determines runtime.",
+  "fault_latency": "CE stalls actual release; no timer bypass. DUE retains/quarantines. No fixed bound or relaxed clock/reset.",
+  "validation": "Source-only per owner no-new-build instruction; Lorentz sole later parent compile/runtime.",
+  "numerical_pass": false,
+  "physical_closed": false
+}

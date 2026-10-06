@@ -26,7 +26,10 @@ module ot_v41_bterm4_w10 #(
     parameter integer P1S = 0,
     parameter integer CSAM = 7,
     parameter integer P2S = 0,
-    parameter integer NS = 0          // 1 (requires P1S = 1): the NaN flag as 4 registered 8-lane partials, ORed in P1b
+    parameter integer NS = 0,         // 1 (requires P1S = 1): the NaN flag as 4 registered 8-lane partials, ORed in P1b
+    parameter integer WD = 0          // 1 (2026-10-06, PQ q-element routes Z21: p0_wq -> FP4 decode -> pa_sh, -43 ps
+                                      // post-GRT): the weight codes are decoded (e2m1 for FP4) BEFORE the P0 register,
+                                      // so p0_wq holds the 8-bit E4M3 code of every lane; bit-identical, zero cycles
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -48,6 +51,9 @@ module ot_v41_bterm4_w10 #(
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
     endfunction
+    function automatic [255:0] wdec(input [255:0] w, input f4);
+        for (int l = 0; l < 32; l++) wdec[8*l +: 8] = f4 ? e2m1(w[8*l +: 4]) : w[8*l +: 8];
+    endfunction
 
 
     integer i;
@@ -63,7 +69,7 @@ module ot_v41_bterm4_w10 #(
     end
     always @(posedge clk) begin
         p0_first <= first; p0_last <= last; p0_fp4 <= fp4;
-        p0_xq <= xq; p0_wq <= wq; p0_xe <= xe; p0_we <= we;
+        p0_xq <= xq; p0_wq <= (WD != 0) ? wdec(wq, fp4) : wq; p0_xe <= xe; p0_we <= we;
     end
 
     // -- P1: decode, signed 4x4 products, shift amounts (P1S: P1a decode | P1b product) ------------------
@@ -88,7 +94,7 @@ module ot_v41_bterm4_w10 #(
             nan = 1'b0;
             for (i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
-                wc = p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8];
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 xs = {(xc[6:3] != 4'd0), xc[2:0]};
                 ws = {(wc[6:3] != 4'd0), wc[2:0]};
@@ -120,7 +126,7 @@ module ot_v41_bterm4_w10 #(
             nan = 1'b0; nang = 4'd0;
             for (i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
-                wc = p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8];
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 pa_sg[i] <= xc[7] ^ wc[7];

@@ -143,6 +143,23 @@ class ComponentReuse(unittest.TestCase):
         (d/'resources.log').write_text('incomplete profile')
         with self.assertRaises(ValueError):R.measured_model_reservation(d,192)
 
+    def test_fixture_import_and_both_continuation_includes_are_enrolled(self):
+        from unittest.mock import patch
+        cpp=Path('main.cpp');(self.work/'src'/cpp).write_text('#include "Vtb.h"\n#include "verilated.h"\n#include "norm.inc"\n#include "sfu.inc"\n#include "formatter.inc"\n')
+        with patch.object(R,'ROOT',self.work/'src'):
+            got=R.companion_sources(cpp,Path('prepare.py'),[Path('tools/gather.py')],'tb')
+            self.assertEqual(set(got),{'main.cpp','prepare.py','tools/gather.py','norm.inc','sfu.inc','formatter.inc'})
+            with self.assertRaises(ValueError):R.companion_sources(cpp,None,[Path('../peer.py')],'tb')
+            with self.assertRaises(ValueError):R.companion_sources(cpp,None,[Path('/absolute.py')],'tb')
+
+    def test_projected_cpu_priority_ceiling_includes_new_workers(self):
+        from types import SimpleNamespace
+        a=SimpleNamespace(cpu_cores=2,memory_gib=16,disk_reserve_bytes=20,max_projected_load=110)
+        row=dict(load=[109,90,80],idle_cores=40,available_bytes=100*2**30,disk_free=100)
+        self.assertFalse(R.fits(row,a))
+        row['load'][0]=108;self.assertTrue(R.fits(row,a))
+        row['available_bytes']=15*2**30;self.assertFalse(R.fits(row,a))
+
     def test_regenerated_dependency_interface_rejects_even_same_contract(self):
         j=self.jobs[1];directory=Path(j['directory']);directory.mkdir(parents=True)
         terminal=directory/'terminal.json';terminal.write_text('{"exit":0}')

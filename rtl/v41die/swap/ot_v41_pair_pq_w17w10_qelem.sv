@@ -7,10 +7,15 @@
 //   QELEM != 0 with BF16 = 0 and PQ = 0: ot_v41_rom_elem_q_qx_w10 at the routed parameters ot_v41_pair_w17w10 uses
 //     (QPIPE boundary registers, QZ / QY, QX = QXV); the PQ loader runs in its PQ = 0 mode, which never reads the
 //     element's shadow / bank status (ld_ok = 1), so those inputs are tied to 1.  A BF16 go never starts it.
-//   QELEM != 0 with PQ != 0: NOT BUILDABLE -- the q-element has no PQ shadow configuration, no op tag on its rows and
-//     no segment-tree op parity (ot_v41_rom_elem_pq_w10's mechanism); elaboration stops (a missing-module error).
+//   QELEM != 0 with PQ != 0 (2026-10-06, CLAUDE QELEM): the PQ q-element ot_v41_rom_elem_q_qxpq_w10 (PQ = 1: banked
+//     output tags, op parity on the segment-tree id, configuration shadow by replay), at the same routed parameters;
+//     go_tag, walking, bank_free and sh_free connect as for ot_v41_rom_elem_pq_w10.  (Before 2026-10-06 this case
+//     was a structural NOT-BUILDABLE control: the q-element had no PQ mechanism.)
 `ifndef OT_PAIR_PQ_QELEM
 `define OT_PAIR_PQ_QELEM 0
+`endif
+`ifndef OT_PAIR_PQ_QW
+`define OT_PAIR_PQ_QW 0
 `endif
 `ifndef OT_PAIR_PQ_QXV
 `define OT_PAIR_PQ_QXV 9
@@ -136,11 +141,16 @@ module ot_v41_pair_pq_w17w10 #(
     assign busy = e_busy;
     assign quiet = !e_busy && !ld_busy && !cfg_go && !(go && go_e);
     if (QELEM != 0 && BF16 == 0) begin : g_q
-        if (PQ != 0) begin : g_bad
-            // a hard elaboration error that no lint waiver demotes (a $fatal here is only a USERFATAL warning under
-            // -Wno-fatal, which the field benches pass): the module below does not exist on purpose
-            ot_v41_pair_pq_qelem_NOT_BUILDABLE_no_PQ_q_element u_not_buildable ();
-        end
+        if (PQ != 0) begin : g_qpq
+            ot_v41_rom_elem_q_qxpq_w10 #(.PQ(1), .QW(`OT_PAIR_PQ_QW), .NB(2), .MTP(MTP), .EARLY(EARLY), .FAST(1), .PP(1), .FRONT_PAR(0),
+                                       .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1),
+                                       .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(QXV), .INSTANCE(INSTANCE)) u_e (
+                .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d), .go(go_e && !go_bf), .go_tag(go_tag),
+                .walking(e_walking), .bank_free(e_bank_free), .sh_free(e_sh_free),
+                .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0),
+                .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(pv), .pval(pval), .prow(prow), .pseg(pseg),
+                .pnseg(pnseg), .perr(perr), .ppos(ppos), .busy(e_busy), .fault(e_fault));
+        end else begin : g_q0
         assign e_walking = 1'b0;
         assign e_bank_free = 1'b1;
         assign e_sh_free = 1'b1;
@@ -151,6 +161,7 @@ module ot_v41_pair_pq_w17w10 #(
             .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0),
             .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(pv), .pval(pval), .prow(prow), .pseg(pseg),
             .pnseg(pnseg), .perr(perr), .ppos(ppos), .busy(e_busy), .fault(e_fault));
+        end
     end else begin : g_w
         ot_v41_rom_elem_pq_w10 #(.PQ(PQ), .NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(2), .MTP(MTP), .EARLY(EARLY),
                           .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .INSTANCE(INSTANCE)) u_e (
