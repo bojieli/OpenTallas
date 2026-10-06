@@ -395,7 +395,7 @@ FIELD_CFGS = {
     # PQ 1 + the PQ q-element (ot_v41_rom_elem_qx_pq_w10, 2026-10-06; before it this case was a NOT-buildable
     # control): the spine's GAP / GUARD carry the element's configuration replay (see the element header)
     "pq1_q10": dict(pq=1, qelem=10, plan="pq", gap=int(os.environ.get("OT_PQQ_GAP", "42")),
-                    guard=int(os.environ.get("OT_PQQ_GUARD", "210"))),
+                    guard=int(os.environ.get("OT_PQQ_GUARD", "210")), gslack=int(os.environ.get("OT_PQQ_GSLACK", "32"))),
 }
 
 
@@ -413,7 +413,7 @@ def cmd_field(a):
         FS.SOURCES = sorted(set(FS.SOURCES) | set(F1.QRTL) | {SWAP_PAIR})
     status = dict(cfg=a.cfg, **cfg, plan_dir=str(plan))
     if not (work / "build" / "tb").exists():
-        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=cfg.get("gap", 12), guard=cfg.get("guard", 180), gslack=6,
+        ns = argparse.Namespace(work=work, pq=cfg["pq"], gap=cfg.get("gap", 12), guard=cfg.get("guard", 180), gslack=cfg.get("gslack", 6),
                                 jobs=a.jobs)
         try:
             FS.cmd_build(ns)
