@@ -1,0 +1,22 @@
+{
+  "verdict": "FAIL_FIXTURE_ATTEMPT_LIMIT",
+  "build_rc": 0,
+  "smoke_rc": 1,
+  "physical_started": false,
+  "actual_source_commit": "13f0d2b51",
+  "started_metadata_stale_source_commit": "7e1f6706e",
+  "failure": "attempted-beat limit17 is below required8 classes *8 walker rounds =64; accepted-beat trace was absent, so this failure alone does not prove a walker deadlock",
+  "required_correction": "hold tuple until actual gated-clock hit; log real accepted tuples; require64 accepts and16 exact zero-ROM returns",
+  "objects_preserved_on_host": "ot-epyc1tb:/srv/opentallas-scratch/codex/noether-qx10-native-parent-20261005/smoke_objects",
+  "engine_source_changed": false,
+  "whole_campaign_qualified": false,
+  "files": {
+    "smoke.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "smoke.build.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "smoke.started.json": "e6d0271fa86de2ce0ecb46f994b187f6327a44b321543463cac6a413f66dedc7",
+    "capacity.jsonl": "efe2ccad73a1d553794835d8554096763265010b0935307517ea9e79744f220a",
+    "source_snapshot.json": "0feebf260da63eb22cb682d6e96f63aff5dfbd7ef17c1c730d07b704e5c0e07e",
+    "smoke.log": "37536c247b306c6263c0ae5689cba03ead09a9105f8b2aad803dff362a08178f",
+    "terminal.json": "152b182055a40228eec30168b7c090e73928a1c199ec8562f0f69741af969431"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "netlist_sha256": "221fdef73dac49b2b390e96933aa561eb21de2dfd2cb9f4e8cd011d460050c25",
+  "FF_families_by_mapped_instance": {
+    "loader_secondary": 72,
+    "loader_primary": 75,
+    "AO_secondary": 860,
+    "AO_secondary_shadow": 676,
+    "AO_secondary_schedule_counter": 24,
+    "AO_primary": 885,
+    "AO_primary_shadow": 676,
+    "AO_primary_schedule_counter": 24
+  },
+  "ICGs": [
+    "u_ld.g_protected.u_freeze.u_icg",
+    "u_stage.g_el[0].u_elem.g_cg.u_cg.u_icg",
+    "u_stage.u_ao.g_checked.u_freeze.u_icg",
+    "u_stage.u_ao.g_checked.u_r.g_e[0].u_eao.u_ao_cg.u_icg",
+    "u_stage.u_ao.g_checked.u_r.g_e[0].u_eao.u_sh_cg.u_icg",
+    "u_stage.u_ao.u_fault_spine.u_icg",
+    "u_stage.u_ao.u_p.g_e[0].u_eao.u_ao_cg.u_icg",
+    "u_stage.u_ao.u_p.g_e[0].u_eao.u_sh_cg.u_icg",
+    "u_stage.u_ao.u_p.u_ctl.u_spine_cg.u_icg"
+  ],
+  "DLLs": [
+    "u_ld.g_qualify.u_low.u_latch",
+    "u_stage.u_ao.g_checked.u_qualify.u_latch"
+  ],
+  "macros": [
+    "u_stage.g_el[0].u_elem.g_mac[0].g_pp.u_rom0",
+    "u_stage.g_el[0].u_elem.g_mac[0].g_pp.u_rom1",
+    "u_stage.g_el[0].u_elem.g_mac[1].g_pp.u_rom0",
+    "u_stage.g_el[0].u_elem.g_mac[1].g_pp.u_rom1"
+  ],
+  "mapped_cells_total": 239290,
+  "scope": "mapped instance inventory; Q connectivity/corner timing pending actual physical terminal"
+}

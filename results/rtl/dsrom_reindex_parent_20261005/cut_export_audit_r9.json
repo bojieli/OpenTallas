@@ -1,0 +1,92 @@
+{
+  "canonical_sha256": "a0ed73948956f0ff5a2b4b7ae9c91984f9b9592108cccac67f3c2106efbc1148",
+  "canonical_bytes": 265653697,
+  "kept_partition_wires": [
+    {
+      "module": "$paramod\\ot_dsrom_parent_payload_last\\W=s32'00000000000000000000000000001000",
+      "wire": "\\selected",
+      "declaration": "wire width 8 \\selected",
+      "attributes": [
+        "attribute \\keep 1"
+      ]
+    },
+    {
+      "module": "$paramod\\ot_dsrom_parent_payload_last\\W=s32'00000000000000000000000000001000",
+      "wire": "\\available",
+      "declaration": "wire width 8 \\available",
+      "attributes": [
+        "attribute \\keep 1"
+      ]
+    },
+    {
+      "module": "$paramod\\ot_dsrom_parent_ready_last\\W=s32'00000000000000000000000000000100",
+      "wire": "\\eligible_head",
+      "declaration": "wire width 4 \\eligible_head",
+      "attributes": [
+        "attribute \\keep 1"
+      ]
+    },
+    {
+      "module": "$paramod\\ot_dsrom_parent_ready_last\\W=s32'00000000000000000000000000010000",
+      "wire": "\\eligible_head",
+      "declaration": "wire width 16 \\eligible_head",
+      "attributes": [
+        "attribute \\keep 1"
+      ]
+    },
+    {
+      "module": "$paramod\\ot_dsrom_parent_ready_last\\W=s32'00000000000000000000000000000001",
+      "wire": "\\eligible_head",
+      "declaration": "wire \\eligible_head",
+      "attributes": [
+        "attribute \\single_bit_vector 1",
+        "attribute \\keep 1"
+      ]
+    }
+  ],
+  "keep_hierarchy_modules": [
+    "$paramod\\ot_dsrom_parent_payload_last\\W=s32'00000000000000000000000000001000",
+    "$paramod\\ot_hdc_v41x_kg_kreg_parent\\W=s32'00000000000000000000000110000000",
+    "$paramod\\ot_hdc_v41x_kg_kreg_parent\\W=s32'00000000000000000000000001000011",
+    "$paramod\\ot_hdc_v41x_kg_kreg_parent\\W=s32'00000000000000000000000001011111",
+    "$paramod\\ot_hdc_v41x_kg_kreg_parent\\W=s32'00000000000000000000000010000000",
+    "$paramod\\ot_hdc_v41x_kg_kreg_parent\\W=s32'00000000000000000000000100001111"
+  ],
+  "route_source": {
+    "commit": "13c87eea0f8d76ffac17c45d28b72e5a2a83d9f8",
+    "sha256": {
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_physctx.sv": "2fbf16a36c1f3b00107fbce598004220e0cacb2323d175e897f24497ee722854",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv": "35d507cc120d31b45f417ce6f745f6e0c2cc35067274e49642674005f70af456",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "721776856893abf83ab657258db526ad4bdafe9602c46b4eae99fc2390fc0893",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_list_macro.sv": "efe426432312318e2f09cec91ba8119a7d5c346a60c65eba7f5cc5d25f0f3016",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_request_cut.sv": "fc541e1b3e98d135659b33eb9339eb557f2f57e25768b911306247186dabf351",
+      "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv": "bff165be724d2e40dfd24f19eb3cc1b9f7e73b4c6dad6cde44b165ce8e6b439d",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v": "ba479bdbfe3b4e23dfc17aa5cc31443aa6ffe87a5f112293c23b38212b35e268",
+      "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+      "tools/dsrom_reindex_parent_physical.py": "fec71a9f2a1fe80c6e3f273b82c9d48ea1009eb4d453987aad52215786efaf9d",
+      "physical/common/ot_macro_track_snap.tcl": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+      "physical/dsrom_reindex_parent/place.tcl": "75e5405a928722a98a9a8099150b3322849a5207ee67c5b05bf09e72f39513eb",
+      "physical/dsrom_reindex_parent/regions.tcl": "0ec56feab920537ccaf8256d115486c2ee5e801a11f568c7092869f0222502cb",
+      "tools/dsrom_reindex_parent_model.py": "8001f2a68799daf8fd0c8eb62aa7e3f91335fbbf2d3815b569fc87f819ba2a7e"
+    },
+    "exact_record_sha256": "b6bf9b7294474f298dfefe2565c6c065d49af81a8404acdf52810a8ea4b16100",
+    "scope": "Actual production control, list SRAM/capture, request slots and four-entry drain header; key data store outside scope; all interfaces timed; fixed control cap37452.2um2"
+  },
+  "mapped_exists": false,
+  "local_mapping_noattr_not_used": true,
+  "actual_path": "--stages pnr -> ORFS canonical RTLIL -> read_rtlil -> mapped write_verilog -nohex -nodec -> signed declaration normalization -> OpenROAD",
+  "own_cut_or_presynth_Verilog_export": false,
+  "source_logic_changed": false,
+  "existing_same_source_exact_reused": true,
+  "final_mapped_retention_qualified": false,
+  "parent_qualified": false,
+  "live_job_preserved": true,
+  "unsupported_Qwen_domain_delays_imported": false,
+  "source_sha256": {
+    "tools/dsrom_reindex_parent_physical.py": "fec71a9f2a1fe80c6e3f273b82c9d48ea1009eb4d453987aad52215786efaf9d",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+    "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_kgctl_parent.sv": "721776856893abf83ab657258db526ad4bdafe9602c46b4eae99fc2390fc0893"
+  }
+}

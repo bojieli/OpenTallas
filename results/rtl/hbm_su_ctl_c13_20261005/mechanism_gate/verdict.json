@@ -1,0 +1,28 @@
+{
+  "status": "MECHANISM_PASS_FULL_CONTROLLER_AND_PHYSICAL_PENDING",
+  "default_enabled": false,
+  "adopted": false,
+  "primitives": {
+    "cycles": 2400,
+    "control_word_bits": 190,
+    "maximum_depth": 276,
+    "return_depth": 8,
+    "multiplier": "16x24 modulo24",
+    "checks": "original same positive-edge data, valid/collision/busy/reset; bridge half-cycle internal only"
+  },
+  "flags": {
+    "cycles": 2000,
+    "accepted_after_final_reset": 24,
+    "emits": 138,
+    "shape": "N8/M8 physical folded stubs; nextstate property only, no numerical gate credit"
+  },
+  "full_controller_exact": false,
+  "SS_FF_context_qualified": false,
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_c13.sv": "d0126dfb7b2be34180acdd357ef18f21ad1ba91cbc18dd01bf9c6768d42f8812",
+    "rtl/hdc/v41x/ot_hdc_su_ctl_c13_primitives.sv": "262e2e926bc08f2ea766fddc042be06b12afefd0bd6d75b7c055de97d1b22324",
+    "rtl/test/tb_hbm_su_ctl_c13_primitives.sv": "2b6ae132f0038ef2716699329beb130e769cc0837d15561bc00a9a7bc26b31ee",
+    "rtl/test/tb_hbm_su_ctl_c13_flags.sv": "edb21e82aa1387427f44a799e60c135baddcabdad455ee33d6cf2a773f123a4c"
+  },
+  "prior_failure": "initial expanded flag test exposed old phase1 s1_ld capture; phase5 correction, no original c12 change"
+}

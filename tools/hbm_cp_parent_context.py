@@ -8,11 +8,11 @@ ROOT=Path(__file__).resolve().parents[1]
 CONTRACT='results/rtl/hbm_child_contract_20261005/child_reservations.json'
 OUT=ROOT/'physical/hbm_cp_parent_context_20261005'
 
-def prepare():
+def prepare(four_cut=False,fast_owner=False):
     r=json.loads((ROOT/CONTRACT).read_text());cp=r['CP'];clock=r['clock']
     c=next(c for c in r['channels'] if c['child']=='CP')
     from uarch_model import hbm_cp_validate_allocated_sources
-    checked_sources=hbm_cp_validate_allocated_sources(ROOT,cp)
+    checked_sources=hbm_cp_validate_allocated_sources(ROOT,cp,fourcut=four_cut,fast_owner=fast_owner)
     OUT.mkdir(parents=True,exist_ok=True)
     gx,gy,gx1,gy1=cp['gross_bbox_um'];cx,cy,cx1,cy1=cp['core_bbox_um']
     assert abs(cx1-cx-43.2)<1e-8 and abs(cy1-cy-43.2)<1e-8
@@ -58,23 +58,24 @@ def prepare():
     for name,bbox in regions:
         dbbox=[f'[expr {{round({v:.9f}*$ot_dbu)}}]' for v in bbox]
         lines += [f'set ot_region [odb::dbRegion_create $ot_block {name}]',
-                  '$ot_region setType EXCLUSIVE',
+                  '$ot_region setRegionType EXCLUSIVE',
                   f'odb::dbBox_create $ot_region {" ".join(dbbox)}',
-                  f'set ot_group_{name} [odb::dbGroup_create $ot_block {name}]',
-                  f'$ot_group_{name} setRegion $ot_region']
+                  f'set ot_group_{name} [odb::dbGroup_create $ot_region {name}]']
     # Yosys/ABC may give cells anonymous names. Use source-held/output nets;
     # never infer the cell's ownership from an anonymous generated instance ID.
     lines += ['set ot_assoc_members 0','set ot_cp_members 0',
               'foreach ot_inst [$ot_block getInsts] {',
               ' if {[[$ot_inst getMaster] isBlock]} {error "Unexpected macro in CP-only context"}',
-              ' set ot_association_cell 0',
+              ' set ot_association_cell 0; set ot_signal_outputs 0',
               ' foreach ot_iterm [$ot_inst getITerms] {',
               '  if {[[$ot_iterm getMTerm] getIoType] ne "OUTPUT"} {continue}',
+              '  incr ot_signal_outputs',
               '  set ot_net [$ot_iterm getNet]; if {$ot_net eq "NULL"} {continue}',
               '  set ot_name [$ot_net getName]',
               '  if {[string match {u_su_association.on.*} $ot_name] ||',
               '      $ot_name in {exec_owned new_request_permit association_fault}} {set ot_association_cell 1}',
               ' }',
+              ' if {$ot_signal_outputs==0} {continue} ;# Physical-only tap/endcap cells have no source cone.',
               ' if {$ot_association_cell} {',
               '  $ot_group_cp_association addInst $ot_inst; incr ot_assoc_members',
               ' } else {',
@@ -87,21 +88,9 @@ def prepare():
     lines+=['orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb',
             'write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl']
     (OUT/'pins_and_regions.tcl').write_text('\n'.join(lines)+'\n')
-    # Existing selected service PDN, retaining M8/M9 straps over the child.
-    fp=json.loads((ROOT/'results/rtl/hbm_child_contract_20261005/floorplan_revision.json').read_text())
-    pitch=fp['pdn']['strap_pitch_um']['svc'];width=.48
-    pdn='''add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
-add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
-global_connect
-set_voltage_domain -name CORE -power VDD -ground VSS
-define_pdn_grid -name cp_service -voltage_domains {CORE} -pins {M8 M9}
-add_pdn_stripe -grid cp_service -layer M1 -width 0.018 -pitch 0.54 -offset 0 -followpins
-add_pdn_stripe -grid cp_service -layer M2 -width 0.018 -pitch 0.54 -offset 0 -followpins
-'''
-    for layer in ('M8','M9'):
-        pdn+=f'add_pdn_stripe -grid cp_service -layer {layer} -width {width} -spacing {pitch/2-width:.9f} -pitch {pitch:.9f} -offset {pitch/2:.9f}\n'
-    pdn+='add_pdn_connect -grid cp_service -layers {M1 M2}\nadd_pdn_connect -grid cp_service -layers {M2 M8}\nadd_pdn_connect -grid cp_service -layers {M8 M9}\n'
-    (OUT/'pdn.tcl').write_text(pdn)
+    # Native local bridge contract; preserve the tested hook when regenerating pins/SDC.
+    from hbm_cp_local_pg import cp_local_pdn_tcl
+    (OUT/'pdn.tcl').write_text(cp_local_pdn_tcl())
     record=dict(schema='hbm.cp.parent-context.physical-inputs.v1',contract=CONTRACT,
         contract_sha256=hashlib.sha256((ROOT/CONTRACT).read_bytes()).hexdigest(),
         checked_sources=checked_sources,
@@ -110,11 +99,17 @@ add_pdn_stripe -grid cp_service -layer M2 -width 0.018 -pitch 0.54 -offset 0 -fo
         signal_ports=234,power_clock_reset_ports_excluded_from_signal_count=True,
         reserved_signal_tracks=236,available_signal_tracks=577,
         physical_pin_placement_may_snap_to_translated_native_grid=True,
-        clock=clock,PG_source='existing selected service M8/M9 width.48 and svc pitch',
+        clock=clock,PG_source='native M1/M2 rails -> M3/M4 local bridge -> M7 -> retained M8/M9; hbm_cp_local_pg model',
         measured_load_or_CTS=False,adopted=False,
         parameters={k:1 for k in ['ENABLE','SU_ENABLE','SU_REGISTERED_OUTPUTS','SU_REGISTERED_STATUS','SU_REGISTERED_BOUNDARY','SU_BALANCED_OWNER_BOUNDARY']},
         source_faithful_top='ot_hbm_integrated_su_cp_context',joint_W2_parent_repeat=False)
     (OUT/'inputs.json').write_text(json.dumps(record,indent=2)+'\n')
+    if four_cut:
+        record['parameters']['SU_FOUR_COMBINATIONAL_CUTS']=1
+        record['four_cut_model']='results/uarch/hbm_cp_fast_frontier_20261006/model.json' if fast_owner else 'results/uarch/hbm_cp_fourcut_20261005/model.json'
+        if fast_owner:record['parameters']['SU_FAST_OWNER_FRONTIER']=1
+        record['four_cut_model_sha256']=hashlib.sha256((ROOT/record['four_cut_model']).read_bytes()).hexdigest()
+        (OUT/'inputs.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
 
 def corner_sta(orfs, output):
@@ -179,9 +174,11 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--corner-sta',metavar='ORFS_DIR')
     parser.add_argument('--output')
+    parser.add_argument('--four-cut',action='store_true')
+    parser.add_argument('--fast-owner',action='store_true')
     args=parser.parse_args()
     if args.corner_sta:
         if not args.output:parser.error('--corner-sta requires --output')
         corner_sta(args.corner_sta,args.output)
     else:
-        r=prepare();print(f"CP context: {len(r['pins'])} physical pins,234 signals; allocated43.2um core; analytical clock/load budgets")
+        r=prepare(args.four_cut or args.fast_owner,args.fast_owner);print(f"CP context: {len(r['pins'])} physical pins,234 signals; allocated43.2um core; analytical clock/load budgets")

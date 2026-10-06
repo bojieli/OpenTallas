@@ -362,6 +362,9 @@ def build(variant=None):
     variant.update(W=W, H=H)
     m = dict(geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, scan=scan, links=links, host=host_mac,
              notes=notes, variant=variant, stn_faces={})
+    if variant.get('r5a_sidebands'):
+        from hbm_r5a_parent_allocation import allocate
+        allocate(m)
     m['buses'], m['paths'] = buses(m)
     if variant.get('child_contract'):
         from hbm_die_child_contract import allocations
@@ -397,6 +400,8 @@ def _router(m, B, P):
     n_wp = [0]
     pf = m['variant'].get('port_fix')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
+
+    blocked += [tuple(r) for r in m.get('reserved_regions', [])]
 
     def free(x, y, w, h):
         if x < EDGE or y < EDGE or x + w > g['W'] - EDGE or y + h > g['H'] - EDGE:
@@ -1553,7 +1558,7 @@ def variant_arg(v):
 #             macros at the spine's S end, host UCIe macro at its N end; collective + SerDes slab in the free S band
 #             W of the spine, host slab in the free N band E of the spine
 Q_OUT = 'results/rtl/hbm_accel_qwen_die_floorplan_20261005'
-Q_FINAL_ROUND = 'q4'
+Q_FINAL_ROUND = 'q3'
 Q_TILE_ROUTE = dict(TP2='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/physical.json',
                     TP4='results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/physical.json')
 Q_SRAM_RW = 'physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.json'
@@ -1633,7 +1638,7 @@ def q_tile():
 def build_qwen(variant=None):
     variant = dict(variant or {}, die='qwen')
     T = q_tile()
-    T['tree_pin_pitch'] = int(variant.get('tree_pitch', 4))   # q2: 4 (q1 at 2: the M8 area-pin columns congested)
+    T['tree_pin_pitch'] = int(variant.get('tree_pitch', 2))   # q3: 2 (q2 tried 4 with packing: i50 2,764)
     th = T['h']
     spw = up(variant.get('spine_w', 2000.16), GX)
     spc = up(variant.get('spine_ch', 172.8), GX)
@@ -1753,9 +1758,10 @@ def build_qwen(variant=None):
         return it
     core_h = up(QBLOCKS['core'][0] * 1e6 / bw, GY)
     core = blk('sp_core', 'qhd_core', QBLOCKS['core'][0], dn(geo['mid'] - core_h / 2, GY))
+    band_port = bool(variant.get('band_ports'))    # put each band's port slice at its own band's mid-height
     # q2: the port slices pack against the core (q1 GRT: 65 % of the i5 overflow was the 6,144-bit port -> core words
     #     climbing over the slabs between them); the scale slabs and the loader spread over the rest of the column
-    packed = variant.get('port_core', 1)
+    packed = variant.get('port_core', 0)   # q3: MEASURED q1 spread i50 overflow 0; packing at the core (q2) gave 2,764 (pword at the slab boundary)
     if packed:
         lower = [('sp_scale0', 'scale', 0), ('sp_scale1', 'scale', 1), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1)]
         upper = [('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale2', 'scale', 2), ('sp_scale3', 'scale', 3),
@@ -1771,45 +1777,63 @@ def build_qwen(variant=None):
         return dict(scale=QBLOCKS['scale'][0] / 4, port=QBLOCKS['port'][0] / 4, loader=QBLOCKS['loader'][0],
                     host_b=hb_mm2)[kind_]
     PG_ = 2 * Q_GAP                                   # port slice <-> core / port spacing when packed
-    for lo_side, seq, a, b in ((True, lower, y_lo, core.y - Q_GAP), (False, upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
+    # slab order: with band_ports the port slices sit at their own block-row band's mid-height (the q3 bound showed the
+    # port word reaching 81 stages against the vehicle's 38); the scale slabs and the loader fill the remaining column.
+    kinds_of = dict((nn, kk) for nn, kk, _ in lower + upper)
+
+    def slab_gap(occ, need):
+        gs = [(y_lo, occ[0][0])] + [(occ[i][1], occ[i + 1][0]) for i in range(len(occ) - 1)] + \
+             [(occ[-1][1], y_hi)]
+        gs = [g for g in gs if g[1] - g[0] > need + Q_GAP]
+        if not gs:
+            return None
+        gs.sort(key=lambda g: -(g[1] - g[0]))
+        return gs[0]
+    if band_port:
+        ph = up(mm('port') * 1e6 / bw, GY)
+        occ = []
+        for band in range(4):
+            r0 = band * 4
+            ymid = (row_y[r0] + row_y[r0 + 3] + th) / 2
+            yb_ = up(min(max(ymid - ph / 2, y_lo), y_hi - ph), GY)
+            cz0, cz1 = core.y - Q_GAP - ph, core.y + core.h + SHAVE + Q_GAP     # clear of the core slab
+            if yb_ < cz1 and yb_ + ph > cz0:                                     # band mid-height is inside the core
+                yb_ = dn(cz0 - Q_GAP, GY) if ymid < (cz0 + cz1) / 2 else up(cz1 + Q_GAP, GY)
+            yb_ = up(min(max(yb_, y_lo), y_hi - ph), GY)
+            blk(f'sp_port{band}', 'qhd_port', mm('port'), yb_, w=bw)
+            occ.append((yb_, yb_ + ph + SHAVE))
+        occ.sort()
+        rest = [n for n, k_, _ in lower + upper if k_ != 'port']
+        hs_r = [up(mm(kinds_of[n]) * 1e6 / bw, GY) for n in rest]
+        gs = [(y_lo, occ[0][0])] + [(occ[i][1], occ[i + 1][0]) for i in range(len(occ) - 1)] + [(occ[-1][1], y_hi)]
+        gs = [g for g in gs if g[1] - g[0] > 2 * Q_GAP]
+        gs.sort(key=lambda g: -(g[1] - g[0]))          # fill the largest free span first
+        for n, h_ in zip(rest, hs_r):
+            placed = False
+            for gi, (a_, b_) in enumerate(gs):
+                if b_ - a_ >= h_ + 2 * Q_GAP:
+                    blk(n, f'qhd_{n[3:]}', mm(kinds_of[n]), up(a_ + Q_GAP, GY),
+                        kind='host_slab' if n == 'sp_host_b' else 'spine',
+                        dom='link' if n == 'sp_host_b' else 'stream_1p2')
+                    gs[gi] = (a_ + Q_GAP + h_ + Q_GAP, b_)
+                    placed = True
+                    break
+            assert placed, ('no free column span for ' + n, h_, gs, occ)
+        gs.sort(key=lambda g: -(g[1] - g[0]))
+    for seq, a_, b_ in ((lower, y_lo, core.y - Q_GAP), (upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
+        if band_port:
+            continue
         hs_ = [up(mm(k_) * 1e6 / bw, GY) for _, k_, _ in seq]
-        ys_ = {}
-        if packed:
-            ports = [i for i, (_, k_, _) in enumerate(seq) if k_ == 'port']
-            rest = [i for i in range(len(seq)) if i not in ports]
-            if lo_side:          # ports top-down from the core, the rest spread below
-                y = core.y - PG_
-                for i in reversed(ports):
-                    y = dn(y - hs_[i], GY)
-                    ys_[i] = y
-                    y -= PG_
-                b2, a2 = y, a
-            else:
-                y = core.y + core.h + SHAVE + PG_
-                for i in ports:
-                    ys_[i] = up(y, GY)
-                    y = ys_[i] + hs_[i] + PG_
-                a2, b2 = y, b
-            gap = (b2 - a2 - sum(hs_[i] for i in rest)) / (len(rest) + 1)
-            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap)
-            y = a2 + gap
-            for i in rest:
-                ys_[i] = up(y, GY)
-                y += hs_[i] + gap
-        else:
-            gap = (b - a - sum(hs_)) / (len(seq) + 1)
-            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a, b, sum(hs_))
-            y = a + gap
-            for i in range(len(seq)):
-                ys_[i] = up(y, GY)
-                y += hs_[i] + gap
-        for i, (name, k_, _) in enumerate(seq):
-            master = f'qhd_{name[3:]}'
-            blk(name, master, mm(k_), ys_[i], kind='host_slab' if k_ == 'host_b' else 'spine',
+        gap = (b_ - a_ - sum(hs_)) / (len(seq) + 1)
+        assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a_, b_, sum(hs_))
+        y = a_ + gap
+        for (name, k_, _), h_ in zip(seq, hs_):
+            blk(name, f'qhd_{name[3:]}', mm(k_), up(y, GY), kind='host_slab' if k_ == 'host_b' else 'spine',
                 dom='link' if k_ == 'host_b' else 'stream_1p2')
+            y += h_ + gap
     notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
                  f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
-    m = dict(die='qwen', geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, heads=heads,
+    m = dict(die='qwen', geo=geo, insts=insts, regions=regions, internal_nets=[], groups=groups, hub=hub, tiles=tiles, heads=heads,
              links=links, host=host, coll=coll, notes=notes, variant=variant, stn_faces={}, tile_element=T,
              final_round=Q_FINAL_ROUND, out=Q_OUT, col_x=col_x, qcols=qcols)
     m['buses'], m['paths'] = buses_qwen(m)
@@ -1850,6 +1874,7 @@ def _q_head_pins(mst):
 
 def buses_qwen(m):
     B, P = [], defaultdict(list)
+    internal_nets = m.setdefault('internal_nets', [])
     station, chain = _router(m, B, P)
     g = m['geo']
     T = m['tile_element']
@@ -1914,8 +1939,14 @@ def buses_qwen(m):
                     sub = tl[i * (2 ** lv): i * (2 ** lv) + span]
                     hostt = next(f't_{c}_{r}' for c, r in sub if f't_{c}_{r}' not in used)
                     used.add(hostt)
-                    B.append((f'tree_{nb}_{lv}_{i}a', 'tree_block', Q_TREE_BITS, [level[i], (hostt, 'n_a')]))
-                    B.append((f'tree_{nb}_{lv}_{i}b', 'tree_block', Q_TREE_BITS, [level[i + 1], (hostt, 'n_b')]))
+                    # the host tile's own t_out feeding its own n_a is INSIDE the element (not a die net): emit it
+                    # as an internal connection, never as a die-level bus (a self net is unroutable / degenerate)
+                    for cid_, peer in ((f'tree_{nb}_{lv}_{i}a', level[i]), (f'tree_{nb}_{lv}_{i}b', level[i + 1])):
+                        if peer[0] == hostt:
+                            internal_nets.append(dict(id=cid_, bits=Q_TREE_BITS, at=hostt, port=peer[1],
+                                                           note='host tile consumes its own t_out: element-internal'))
+                        else:
+                            B.append((cid_, 'tree_block', Q_TREE_BITS, [peer, (hostt, 'n_a' if cid_.endswith('a') else 'n_b')]))
                     nxt.append((hostt, 'n_y'))
                 level = nxt
                 lv += 1
@@ -1987,10 +2018,15 @@ def q_tree_paths(m):
     out_from = defaultdict(list)
     for bid, eps in by_dst.items():
         out_from[eps[0]].append(bid)
+    # a host tile consuming its own t_out is an element-internal hop (no die net, no die-level stage)
+    internal = {(e['at'], e['port']) for e in m.get('internal_nets', [])}
     paths = {}
     for (c, r), it in m['tiles'].items():
         p, node = [], (it.name, 't_out')
-        while node in out_from:
+        while node in out_from or node in internal:
+            if node in internal:
+                node = (node[0], 'n_y')
+                continue
             bid = out_from[node][0]
             p.append(bid)
             node = (by_dst[bid][1][0], 'n_y')
@@ -2053,6 +2089,7 @@ def q_check(m):
                                                               'capacity_over_goal_pct')),
                power=die_power(m)['peak_in_phase_w'], notes=m['notes'],
                buses=len(m['buses']), wires=sum(b[2] for b in m['buses']),
+               replicated_copy_pin_check=_copy_pins(m), internal_nets=len(m.get('internal_nets', [])),
                instances=len(m['insts']))
     mp = manhattan_paths(m)
     worst = {}
@@ -2062,6 +2099,25 @@ def q_check(m):
             worst[k] = (v['stages_430'], p, v['um'])
     out['manhattan_worst'] = worst
     return out
+
+
+def _copy_pins(m):
+    """Every replicated copy must own its pins: no die net may connect two ends to the same instance, and no port of
+    one instance may carry two different die nets (the DS-die failure class: 128 nets unroutable)."""
+    deg = defaultdict(lambda: defaultdict(list))
+    selfnets = []
+    for bid, cls, bits, eps in m['buses']:
+        if len({e[0] for e in eps}) < len(eps):
+            selfnets.append(bid)
+            continue
+        for inst, port in eps:
+            deg[inst][port].append(bid)
+    multi = {(i, p): ids for i, d in deg.items() for p, ids in d.items() if len(ids) > 1}
+    return dict(self_nets=len(selfnets), self_net_examples=selfnets[:5], ports_with_two_nets=len(multi),
+                examples=[(k, v[:3]) for k, v in list(multi.items())[:5]],
+                instances_without_pins=[it.name for it in m['insts'] if it.name not in deg and
+                                        it.kind not in ('phy', 'link', 'serdes_slab', 'host_slab')][:10],
+                verdict='PASS' if not selfnets else 'FAIL')
 
 
 DENS.update(tile=1.05, head=0.6)
@@ -2100,8 +2156,7 @@ def main(argv=None):
     ap.add_argument('--cov', default='')
     ap.add_argument('--out', type=Path)
     ap.add_argument('--only', default='')
-    ap.add_argument('--variant', default='', help='preset name (r8, r10) or a JSON dict of build() variant keys')
-    ap.add_argument('--die', choices=['ds', 'qwen'], default='ds', help='ds: the selected DS SM die; qwen: the Qwen3-8B '
+    ap.add_argument('--die', choices=['ds', 'qwen'], default='ds', help='ds: the DS SM die (r8); qwen: the Qwen3-8B '
                     'W12 tile die')
     ap.add_argument('--var', default='', help='qwen floorplan variant knobs k=v,... (spine_w, spine_ch)')
     a = ap.parse_args(argv)
@@ -2109,7 +2164,7 @@ def main(argv=None):
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build(variant_arg(a.variant))
+        m = build()
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

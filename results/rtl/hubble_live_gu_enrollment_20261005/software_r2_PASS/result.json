@@ -1,0 +1,31 @@
+{
+  "status": "PASS_SOFTWARE_IMAGE_ENROLLMENT",
+  "remote_root": "/srv/opentallas-scratch2/jobs/franklin-live-gu-enrollment-r2",
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "experts": [
+    41,
+    65
+  ],
+  "rows_each_G_or_U": 2304,
+  "total_rows": 9216,
+  "descriptor_count": 768,
+  "kernel_words": 178,
+  "conversion_pc": 173,
+  "verification": "all 768 new software kernel executions match unchanged golden linear_q BF16; all four complete vectors match retained actual GU boundary; full released tensor and per-slice hashes verified",
+  "scope": "software/image only; no live-GU RTL/export, owner/fence acceptance or physical gate claimed",
+  "new_RTL_build_launched": false,
+  "current_live_SwiGLU_job_unchanged": true,
+  "failed_initial_input_probe_preserved": "/srv/opentallas-scratch2/jobs/franklin-live-gu-enrollment-r1: copied output-only archive had no lines.hex; software.exit1/raw log/source remain immutable",
+  "artifact_sha256": {
+    "software.log": "ffef60228ee563efd136d2ead76020cc238674168b9109c00644c5e2c8a46eef",
+    "command.json": "63adf91c3d2a3e35b707e248da9211115651f8233f4c40ad5be1db9b54e84bc9",
+    "software.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "image/enrollment.json": "9f94d3ae6e3b410de91d088e3237812886cc8633fb42a7e7af369501ca3f91b4",
+    "image/expert65_w1_expected_bf16.hex": "72080543c4114d407bd3dcfcb783624744ee9a95a7aea3fcfa2f9fe62c067728",
+    "image/expert41_w1_expected_bf16.hex": "e984abc08329b92001d3b394cf2cdc12579e30e98582aab0c494cb4669a25618",
+    "image/kernel.hex": "dda022333e48957f86e7fbd15c12a4ff91f496c2d78e0e26a34558ecc4f3fc81",
+    "image/expert41_w3_expected_bf16.hex": "f67b997ae9ec2a7175738f6547c81357df4c48896bb951df86dea297c72a6e7b",
+    "image/expert65_w3_expected_bf16.hex": "268c6109d99eb420462ebe2e320f94ffe182272dfdedb0c556c9ba74af980086",
+    "src/source_manifest.json": "432eaef2c0b3ce9dc67ded55f08fabc3427b2c4b263c999c54d463bbc7693cd6"
+  }
+}

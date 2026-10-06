@@ -1,0 +1,17 @@
+[
+  "docker",
+  "run",
+  "--rm",
+  "--name",
+  "codex_lagrange_h16_pdn_resume_20261005",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src:/src:ro",
+  "-v",
+  "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_pdn_resume/work/orfs:/work",
+  "-w",
+  "/OpenROAD-flow-scripts/flow",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "bash",
+  "-lc",
+  "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_4_floorplan_pdn.odb --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.odb --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_2_floorplan_macro.tcl --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_2_floorplan_macro.odb --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_3_floorplan_tapcell.odb --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/1_2_yosys.v --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/clock_period.txt --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/1_2_yosys.sdc --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/1_synth.odb --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/mem.json --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/1_synth.sdc --old-file=/work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/1_1_yosys_canonicalize.rtlil finish metadata-generate"
+]

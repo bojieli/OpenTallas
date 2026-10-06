@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.wfc.producer.component-gate.v1",
+  "source_commit": "75c5dacb5",
+  "model": "results/uarch/dsrom_wfc_producers_20261005/model_v2.json",
+  "remote_retained": "ot-epyc2:/srv/opentallas-scratch2/codex/wfc-producers-20261005/gate_r2",
+  "verdict": "PASS_MINIMUM_PRODUCER_MECHANISMS",
+  "modes": {
+    "0": {
+      "exit": 0,
+      "log": "gate_r2/mode0.log"
+    },
+    "1": {
+      "exit": 0,
+      "log": "gate_r2/mode1.log"
+    },
+    "2": {
+      "exit": 0,
+      "log": "gate_r2/mode2.log"
+    },
+    "3": {
+      "exit": 0,
+      "log": "gate_r2/mode3.log"
+    },
+    "4": {
+      "exit": 0,
+      "log": "gate_r2/mode4.log"
+    },
+    "5": {
+      "exit": 0,
+      "log": "gate_r2/mode5.log"
+    }
+  },
+  "main_fixture_cycles": 12401,
+  "literal_commands": 668,
+  "retirements": 192,
+  "MAXU": 866,
+  "real_prompt_SRAMs": 14,
+  "real_book_ROMs": 4,
+  "scope": [
+    "finite cfg admission and full absolute tagged prompt reads",
+    "literal L19 book command and held stage-handoff control",
+    "SRAM single-bit repair and double-bit refusal",
+    "wrong-PC, early-fence and warm-reset refusal"
+  ],
+  "not_qualified": [
+    "actual source backend visibility receipts",
+    "full arithmetic stage or HEAD token completion",
+    "SS60/FF25 CTS/SPEF timing",
+    "global slot and downstream input clocks"
+  ],
+  "default_enable": 0,
+  "missing_input_clocks": true,
+  "prior_failure": {
+    "source_commit": "9e1099f40",
+    "verdict": "FRONTEND_FAILURE",
+    "reason": "Verilator readmemh non-variable two-dimensional subarray",
+    "retained": "gate_r1/build.log"
+  },
+  "initial_model_extent_correction": "model.json preserved historical; canonical PREFIX8 plus eight resident draft seats with full21-bit tags in model_v2.json, fourteen real SRAMs; not an absolute32-position limit",
+  "receipt_sha256": {
+    "gate_r1/build.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "gate_r1/build.log": "61ef13a51dcfdcdde34223e5e31063e8db94f37c902651ef6438f9815d20ef5b",
+    "gate_r1/command.json": "919cbc62755a8974748eaa943c13bae0efa62e3e2eba64e5aebdb6eb5ee48a29",
+    "gate_r1/headroom.jsonl": "0aa9f37e0f44bcad291ee21e88f33522f33a073a43beaf9a3b840c0883b9feed",
+    "gate_r1/source_pins.json": "3d71d2cfb034d17cf4c9f1fe9b27bd99f7175c080d143be47a1b7b751ce40ad4",
+    "gate_r2/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/command.json": "31f685e8ae8497c9912a011bdd3aad2526772c07a3cfcaa85d84283286c62b73",
+    "gate_r2/headroom.jsonl": "d8f97acb32529ff78c9049e4daea731e164bf21f20bb4a9b4d43ec66bc3f1e2c",
+    "gate_r2/mode0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode0.log": "6b1d22865bd43104dd51b517a4d4c893de8afe1dc480fbcb6900f8f2d8b9ef89",
+    "gate_r2/mode1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode1.log": "b48735ba53f7bbe38cb0ae9c29bc8fc2a4010a5eb383d2e1cf196931ff122b2f",
+    "gate_r2/mode2.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode2.log": "447a7acc8ecc6c5eb9f078315081aa1c19fb794cce90f99539a91865ff0362ea",
+    "gate_r2/mode3.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode3.log": "35363177ef3fd762c2fa1086981e32f3c32e9c0f152b71741689fa672f44dc3e",
+    "gate_r2/mode4.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode4.log": "8073f33ee792f87fdeda3857cb11eb39722d4c9768da491e34535c0e02d5c6de",
+    "gate_r2/mode5.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gate_r2/mode5.log": "d9b7e9922db82c301f11321bcb713072ca8a88e63e3ccde1cb07710ee763770a",
+    "gate_r2/source_pins.json": "99bee0aca57f42e1068ce42eadf554e188af8e4c71191a334d45dc755abc9677",
+    "gate_r2/terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

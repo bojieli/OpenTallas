@@ -1,0 +1,109 @@
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce.g_cuts.g_lv[3].g_n[0].g_ln[15].u_add.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:55:64: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BF16' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   55 |     wire config_ok = PF > 0 && PF <= PFMAX && PF % NC == 0 && (!BF16 || !(OF & 1));
+      |                                                                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:55:73: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's AND generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   55 |     wire config_ok = PF > 0 && PF <= PFMAX && PF % NC == 0 && (!BF16 || !(OF & 1));
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:56:53: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rptr' generates 6 bits.
+                                                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   56 |     assign quiet = pending == 0 && (!active || rptr >= OF);
+      |                                                     ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:60:64: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BF16' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   60 |       else pending <= pending + (issue ? 1 : 0) - (r_v ? (BF16 ? 2 : 1) : 0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:67:69: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rptr' generates 6 bits.
+                                                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   67 |     always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (rptr < OF) ? pres[c][rptr] : 1'b0;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:80:66: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'rptr_n' generates 6 bits.
+                                                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+   80 |     wire [OFMX-1:0] read_oh_n={{(OFMX-1){1'b0}},1'b1} << (rptr_n < OFMX ? rptr_n : 0);
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv:155:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'BF16' generates 32 bits.
+                                                                                  : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_owner.u_owner.u_reduce'
+  155 |                 if (BF16) begin
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv:93:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 9 bits.
+                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.g_rx[7].u_rb'
+   93 |     wire full = count == D;
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv:93:23: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 7 bits.
+                                                                : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.u_dqo'
+   93 |     wire full = count == D;
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:74:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'BF16' generates 32 bits.
+                                                                                   : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   74 |         wire [31:0] ROF = BF16 ? OF / 2 : OF;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:79:34: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                                    : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   79 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:79:47: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                                    : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   79 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:79:58: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'BF16' generates 32 bits.
+                                                                                   : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   79 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:79:72: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'pf' generates 16 bits.
+                                                                                    : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   79 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:79:67: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's AND generates 32 bits.
+                                                                                   : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+   79 |         wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96;  
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:222:34: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                                                     : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+  222 |              rb_head[p][FW+16+:8]>=NC || rb_head[p][FW+:16]>=OF);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:222:60: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                     : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+  222 |              rb_head[p][FW+16+:8]>=NC || rb_head[p][FW+:16]>=OF);
+      |                                                            ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:317:79: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'delivered_words' generates 16 bits.
+                                                                                     : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+  317 |           else if(arm)delivered_words<=0;else delivered_words<=delivered_words+delivered_now;
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:317:62: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                    : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+  317 |           else if(arm)delivered_words<=0;else delivered_words<=delivered_words+delivered_now;
+      |                                                              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:325:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'delivered_words' generates 16 bits.
+                                                                                     : ... note: In instance 'ot_hbm_accel_tu_endpoint_item9_owner'
+  325 |           (!context_bound || ((!CONTRIB||k>=PF)&&delivered_words==expected_words));
+      |                                                                 ^~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:276:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.unnamedblk9.inj.ord' (not all control paths of combinational always assign a value)
+                                                                              : ... Suggest use of always_latch for intentional latches
+  276 |         always @* begin
+      |         ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:276:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.unnamedblk9.inj.f' (not all control paths of combinational always assign a value)
+                                                                              : ... Suggest use of always_latch for intentional latches
+  276 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:276:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.unnamedblk9.inj.pt' (not all control paths of combinational always assign a value)
+                                                                              : ... Suggest use of always_latch for intentional latches
+  276 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv:276:9: Latch inferred for signal 'ot_hbm_accel_tu_endpoint_item9_owner.g_candidate.g_on.unnamedblk9.inj.s' (not all control paths of combinational always assign a value)
+                                                                              : ... Suggest use of always_latch for intentional latches
+  276 |         always @* begin
+      |         ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.631 MB sources in 33 modules, into 43.689 MB in 57 C++ files needing 0.000 MB
+- Verilator: Walltime 15.706 s (elab=0.235, cvt=14.542, bld=0.000); cpu 15.705 s on 1 threads; allocated 1344.266 MB

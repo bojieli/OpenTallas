@@ -1,0 +1,25 @@
+{
+  "load": 70.50439453125,
+  "idle_CPUs": 56.712028781479745,
+  "MemAvailable_bytes": 700295286784,
+  "disk_free_bytes": 2266184613888,
+  "expected_peak_GiB": 16,
+  "workers": 16,
+  "estimate_source": "retained actual full36 runtime RSS13998308KiB=13.35GiB; same144history/tile geometry plus finite transport, admission estimate no AS limit",
+  "source": "183a4dde5",
+  "runner": "acf7dac4c",
+  "supervisor": 1923457,
+  "command": [
+    "/srv/opentallas-scratch/admit.sh",
+    "16",
+    "--",
+    "python3",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/src/tools/qwen_rom_combined_p0_20261005/run_full.py",
+    "--output",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/full",
+    "--source",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-full-183a4dde5/src",
+    "--stage",
+    "runtime"
+  ]
+}

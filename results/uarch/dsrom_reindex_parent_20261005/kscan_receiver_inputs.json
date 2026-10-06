@@ -1,0 +1,147 @@
+{
+  "source_sha256": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+    "rtl/dsrom_sys/ot_dsrom_idx_edge.sv": "6c699f55408c9cd02ad6a04450f597a08b7507b2d0920074aa52c7a279f796fa",
+    "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv": "18e61f566cf15c32314e7011c57557fc9d0b5f1b73c6a4738e53e32f44fa3c99",
+    "physical/dsrom_qx10_parent_context/ot_v41_qx10_native_parent.sv": "5782e575da9a2d7bb0fd90579eb994aa990707bf19b3a2de4188576ceb034afb",
+    "physical/dsrom_qx10_parent_context/boundary.sdc": "20d61e20094f3743527fd36d4571df77c68802a131388b947c85734bf2cebd02",
+    "results/physical/dsrom_qx10_native_parent_20261005/slang_r4/record.json": "9cb82593d2c8bfd4ccbb7f630737c8f2a1386187637d1bff55486fb18b8972fe",
+    "tools/dsrom_reindex_kscan_loads.py": "599bb39470ae7b7f8e5c48577d493c281887f2d7b3013e48c570323fcce70808",
+    "tools/uarch_topk_station_SSFF_cell_model.py": "39a9310350fe557e17f87306d372abf557df2e865a6552a147ba228edbf898a0",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"
+  },
+  "corner_cells": {
+    "SS": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.524726,
+          "CLK": 0.446638
+        },
+        "cell_definition_sha256": "bb0c89da06a59e286ea507d3faf8f12c11dc808765d2ff42c331a60db64634bc"
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.52508,
+          "CLK": 0.44817
+        },
+        "cell_definition_sha256": "f1d2a1ea3cd36ef8e511e97cbed687a420f23ba3c3be46e119e0f6a8121e4d01"
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.52504,
+          "CLK": 0.447474
+        },
+        "cell_definition_sha256": "642122d6bbacf39386f080863897983c58ddc073657ba0dadd77fe129db358f5"
+      },
+      "DFFHQx4_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.524567,
+          "CLK": 0.449202
+        },
+        "cell_definition_sha256": "73a27ed3c770d49b1a0b0279a415e831907a0826e7fd94d4e1b6c86d88cef3df"
+      }
+    },
+    "FF": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.62135,
+          "CLK": 0.52201
+        },
+        "cell_definition_sha256": "8d837289be3ba433847fdfed84e322b899740c224ebb357253b958eb536713d3"
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.621553,
+          "CLK": 0.521959
+        },
+        "cell_definition_sha256": "5f46cb6d75c1d296fc70cefebc350cae11b8ac20d7fba67268a7126f634c8eca"
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.621641,
+          "CLK": 0.522174
+        },
+        "cell_definition_sha256": "c03201e5e05ed1e9079c9692176900240702dc6c3ffae3ad5138e9bdf80c79e7"
+      },
+      "DFFHQx4_ASAP7_75t_R": {
+        "input_pin_capacitance_fF": {
+          "D": 0.621217,
+          "CLK": 0.522765
+        },
+        "cell_definition_sha256": "a2c01ba595486357746e3d507c97779c9dbf33c05d7d4e3ae8ea74f1c813723f"
+      }
+    }
+  },
+  "pin_bounds": {
+    "SS": {
+      "single_D_pin_fF": [
+        0.524567,
+        0.52508
+      ],
+      "unmerged_four_capture_D_pins_fF": [
+        2.098268,
+        2.10032
+      ],
+      "unmerged_quarter_query_sixteen_D_pins_fF": [
+        8.393072,
+        8.40128
+      ]
+    },
+    "FF": {
+      "single_D_pin_fF": [
+        0.621217,
+        0.621641
+      ],
+      "unmerged_four_capture_D_pins_fF": [
+        2.484868,
+        2.486564
+      ],
+      "unmerged_quarter_query_sixteen_D_pins_fF": [
+        9.939472,
+        9.946256
+      ]
+    }
+  },
+  "source_shape": {
+    "NS": 4,
+    "NK": 4,
+    "NB": 4,
+    "IH": 32,
+    "chunks_per_slice": 4,
+    "key_bits_per_beat": 8704,
+    "source_rkey_capture_bits": 34816
+  },
+  "source_receiver_family": "u_score.g_slice[s].u.engine.g_ch[c].u_c.{rkey,rkv,rv}; source register family, not invented mapped pins",
+  "key_bit_source_capture_fanout": 4,
+  "identical_capture_opt_merge_possible": true,
+  "key_bit_mapped_capture_count_bound": [
+    1,
+    4
+  ],
+  "query_bit_source_capture_fanout_per_quarter": 16,
+  "query_first_capture": "g_slice[s].u.engine.g_ch[c].u_c.{rql_codes,rql_sc,rql_w,rql_head}; direct ROOT clock",
+  "query_bit_mapped_capture_count_bound_per_quarter": [
+    1,
+    16
+  ],
+  "query_scope": "One quarter NS4/NK4; full four-stack query broadcast has separate replication/transport and needs its actual loaded source contract",
+  "capture_clock": "posedge clk ROOT in native idx_chunk_l; no gated-clock substitution",
+  "QX_clocks": {
+    "root": "clk/core_clk",
+    "gated": "q_gated from u_qx.u_e.g_cg.u_cg.u_icg/GCLK",
+    "XS": "gated",
+    "configuration_go_and_root_capture": "root",
+    "root_and_gated_must_remain_distinct": true
+  },
+  "actual_root_gated_CTS_evidence": "Existing Noether physical source6512685dd, controller3597753/exec3598462; synthesis at pinned launch record, await actual CTS insertion. Do not use standalone Z18 insertion as enclosing-parent proof.",
+  "matched_live_libs": "SHA256 matched actual route_r9 containerf37c73c98a89 SEQ SS/FF libraries",
+  "mapped_receiver_pins_qualified": false,
+  "extracted_wire_load_qualified": false,
+  "root_gated_insertion_qualified": false,
+  "parent_qualified": false,
+  "adopted": false,
+  "next_binding": "Use actual selected receiver master/D pins, connected fanout and root/gated CTS insertion from source-bound samegeometry parent; do not treat these positive library bounds as a full-parent PASS"
+}

@@ -1,0 +1,2 @@
+PASS actual68macro/full64tile golden captures=7 blocked_writes=2 masked_write=1 no_init/reset_guard/read_before_write
+rtl/dsrom_sys/s81_window_la/pipeline/tb_window_attention_capture.sv:104: $finish called at 234000 (1ps)

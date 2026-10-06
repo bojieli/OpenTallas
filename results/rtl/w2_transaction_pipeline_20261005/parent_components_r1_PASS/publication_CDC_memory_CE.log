@@ -1,0 +1,22 @@
+BOUNDARY_DEBUG cycle=20 launch=00 lease=0 grants=100 permit=0 retained=1 boundary_drained=1 fault=0 owner_req=0 stage_req=0 mem_req=0
+BOUNDARY_EMPTY cuts=1111 cdc=1 req=1 rsp=1 reqptr=0000000000000000/0000000000000000 normals=1/1 headphase=00
+CDC_MEMORY_CE_REPAIR_BEGIN cycle=28
+PASS_CDC_MEMORY_CE_REPAIR cycle=35 accepted_owner_debt=1
+BOUNDARY_DEBUG cycle=35 launch=00 lease=0 grants=100 permit=0 retained=1 boundary_drained=0 fault=0 owner_req=0 stage_req=0 mem_req=0
+BOUNDARY_EMPTY cuts=1111 cdc=0 req=0 rsp=1 reqptr=0000000000000001/0000000000000010 normals=1/1 headphase=01
+PROVIDER_ACCEPT cycle=37 we=1 byte_address=4128 provider_slot=1
+PROVIDER_ACCEPT cycle=73 we=0 byte_address=4128 provider_slot=1
+ORIGINAL_ROW_VERIFIED cycle=93 slot=1
+BOUNDARY_DEBUG cycle=100 launch=00 lease=0 grants=100 permit=0 retained=1 boundary_drained=1 fault=0 owner_req=0 stage_req=0 mem_req=0
+BOUNDARY_EMPTY cuts=1111 cdc=1 req=1 rsp=1 reqptr=0000000000000002/0000000000000002 normals=1/1 headphase=00
+PROVIDER_ACCEPT cycle=114 we=1 byte_address=4224 provider_slot=2
+PROVIDER_ACCEPT cycle=152 we=0 byte_address=4224 provider_slot=2
+ORIGINAL_ROW_VERIFIED cycle=171 slot=2
+PROVIDER_ACCEPT cycle=192 we=1 byte_address=4096 provider_slot=0
+PROVIDER_ACCEPT cycle=228 we=0 byte_address=4096 provider_slot=0
+ORIGINAL_ROW_VERIFIED cycle=247 slot=0
+PROVIDER_ACCEPT cycle=268 we=1 byte_address=4256 provider_slot=3
+PROVIDER_ACCEPT cycle=302 we=0 byte_address=4256 provider_slot=3
+ORIGINAL_ROW_VERIFIED cycle=320 slot=3
+ACTUAL_SHARED_RELEASE cycle=325 verified=4
+PASS W2_PUBLICATION_SHARED_CPEND_CPL rows=4 words=32 writes=4 reads=4 verified=4 releases=1 reqstall=8 delivery_stall=6

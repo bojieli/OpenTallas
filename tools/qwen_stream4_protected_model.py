@@ -128,7 +128,7 @@ def model(root=ROOT):
            'results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_stream4_cdc_pc.sv',
            'results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv',
            'results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json']
-    return dict(schema='opentallas.qwen.stream4.mutable-interface.prebuild.v1',
+    result = dict(schema='opentallas.qwen.stream4.mutable-interface.prebuild.v1',
         PROTECTED=0, selected_candidate_only=True, ROM_ECC=False,
         original_raw_source='6fc28b155c419ee79da72f1eb084aae2141f1f64',
         rings=rows, shared_descriptor_GO=shared, causal_paths=causal,
@@ -159,6 +159,18 @@ def model(root=ROOT):
             asynchronous_budget_ps=833.333-60, asynchronous_min_ps=0,
             no_blanket_clock_group_or_payload_falsepath=True),
         source_SHA256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths})
+    from qwen_stream4_die_allocation import allocation
+    die = allocation(result, root)
+    from qwen_stream4_transport_model import transport
+    link = transport(die, result, root)
+    result.update(parent_slot_fit=None, endpoint_slot_fit=die['slot_fit'],
+        slot_reason='Endpoint homes alone fit. Selected finite transport adds its complete positive area charge; central ingress/local legs/PHY and loaded clock homes still require nonoverlapping actual allocation. Scalar area fit is not complete system fit.',
+        selected_transport=link,
+        die_allocation=die)
+    result['actual_parent_clock_relation'].update(die['source_clocks'])
+    result['actual_parent_clock_relation']['service_clock']='selected top free-running clk -> u_kv.clk'
+    result['physical_gates'].append('full-width protected service transport and real PHY adapter/clock endpoint budgets')
+    return result
 
 
 if __name__ == '__main__':

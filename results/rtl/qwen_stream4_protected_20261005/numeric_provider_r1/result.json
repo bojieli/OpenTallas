@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS_MINIMUM_NUMERICAL_CHECKER_AND_STACK_FAULT",
+  "canonical_verilator": "5.050",
+  "full36_backing_words": 4718592,
+  "backing_bytes_per_rank": 150994944,
+  "rank_count": 4,
+  "public_type": "VlUnpacked<VlWide<8>,4718592>",
+  "actual_generated_minimum_member": "tb_qwen_s4_numeric_memory__DOT__dut__DOT__mem",
+  "full_provider_member": "resolve actual generated <top>__DOT__u_numeric__DOT__mem using consumer access.py; no old5.032 types",
+  "pins": "actual row/col/WR capture/credits HCLK; timed registered landing and ACK/tag; sticky genuine checker fault",
+  "callback_outputs": "h_cred_ret384 h_desc_commit4 h_go_commit4 h_desc_ordinal12 h_go_ordinal12 direct actual nets, zero added FF/cycles",
+  "numeric_runtime_exit": 0,
+  "stack_fault_fixed_exit": 0,
+  "prior_stack_fault_fail_preserved": "../transport_r2/stack_gate_r5_faultfail",
+  "full_token_measured": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_numeric_memory.sv": "6179d3802cc4482ae527e3ad51f755aa1deaea6af58bac53421a4a01f3cd2106",
+    "rtl/hdc/kv/ot_qwen_s4_transport_context.sv": "eef5b45a589b6900977fbc96e7e9b6b1b14f64a38c3c6f24bab977aafbf90365",
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "695aabf92cfe0c42fa8650e22f98e309b93c9d22c70ce260980d4d6410e47d5f",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_numeric_memory.sv": "8e8a1931a6ed9fe9926af80a0e0e005abd843a5fbe0c4b04f3df775b901d0f32",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv": "4a92ef2f79a131463f7eedb0eaab36873c6c60671b7730e95823a615cea6712f",
+    "tools/qwen_stream4_transport_model.py": "b5511047070726eb5f6a332cbe9231536ac850e0dd18a03c84526161416b3e08",
+    "tools/qwen_stream4_numeric/backing.hpp": "9cccc4ce62c1d52122794c5dacdb127107442b951822ca5f46726d471e8f238e"
+  }
+}

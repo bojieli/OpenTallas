@@ -1,0 +1,47 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+2 27% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_1_place_gp_skip_io.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb            2            301 c16458e9eded37b0f482
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M6 -ver_layers M7
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 2368
+[INFO PPL-0002] Number of I/O             236
+[INFO PPL-0003] Number of I/O w/sink      236
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 6652.17 um.
+Design area 507 um^2 27% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_2_place_iop.odb
+source /work/hooks/post_io_placement_pins_and_regions.tcl
+Error: io_placement.tcl, 23 Invalid method. Must be one of: configure cget -acquire -disown -delete getName getRegionType setRegionType getRegionInsts setInvalid isInvalid getBoundaries getOverlapArea addInst removeInst removeGroup addGroup getGroups getBlock getObjectType getDb getId isValid getDebugName
+
+Elapsed time: 0:02.08[h:]min:sec. CPU time: user 1.98 sys 0.10 (100%). Peak memory: 305080KB.
+Elapsed time: 0:02.94[h:]min:sec. CPU time: user 3.00 sys 0.53 (120%). Peak memory: 328132KB.
+Elapsed time: 0:02.04[h:]min:sec. CPU time: user 1.95 sys 0.09 (100%). Peak memory: 300240KB.
+Elapsed time: 0:02.07[h:]min:sec. CPU time: user 1.97 sys 0.10 (100%). Peak memory: 303836KB.
+Elapsed time: 0:01.86[h:]min:sec. CPU time: user 1.77 sys 0.09 (100%). Peak memory: 304928KB.
+Elapsed time: 0:02.34[h:]min:sec. CPU time: user 9.27 sys 0.11 (400%). Peak memory: 308552KB.
+Elapsed time: 0:01.82[h:]min:sec. CPU time: user 1.73 sys 0.09 (99%). Peak memory: 302292KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/3_2_place_iop.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/pg_retry_r4/physical.json

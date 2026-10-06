@@ -1,0 +1,10 @@
+{
+  "status": "SOURCE_IMPLEMENTATION_WRITE_CAPACITY_CORRECTION",
+  "source_pin": "1442ca0ee9e8b67a346515ba36bcac4b2d1162c3",
+  "accepted_lanes": 32,
+  "maximum_bytes_per_accepted_lane": 32,
+  "aggregate_write_port_capacity_bytes_per_cycle": 2112,
+  "max_actual_write_bytes_per_cycle": 1024,
+  "physical_adoption": false,
+  "note": "Full 68-port implementation retained and priced. At most 32 accepted input lanes can write on an edge; the 16-byte scale port is already below the conservative 32-byte lane bound. Original prebuild evidence remains unchanged. No area, latency, RTL or exactness change."
+}

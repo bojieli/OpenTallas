@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS_FULLWIDTH_MUX32_EXACT",
+  "NSM": 32,
+  "NL": 128,
+  "cycles": 2048,
+  "grants": 209,
+  "mismatches": 0,
+  "added_cycles": 0,
+  "directed_stimulus": "first256 cycles offer each of32 owners for8cycles, then random/backpressure",
+  "qualified_scope": "one full-width mux; actual selected-die corridor/codec/clock still unqualified",
+  "adoption": false,
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux.sv": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv": "cd641683b29687801af91fdd5edafd89d05007a86386abea2f52e40af349e2ac",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "results/rtl/hbm_item9_closure_20261005/tb_item9_mux32_ls.sv": "df7e56caa9bcec39b55037836e09cd8494fd70985ee225e5cf442a74b351708a",
+    "tools/hbm_item9_mux32_exact.sh": "348e0506d6e34a78c3672b6a0985a49a3505af30a0a775c1d99465a149fe2948"
+  }
+}

@@ -1,0 +1,12 @@
+{"load1": 50.8271484375, "idle_cpu": 94.97773959228306, "available_RAM_GiB": 719.0147514343262, "available_disk_GiB": 2230.7442741394043, "workers": 4, "expected_peak_GiB": 16}
+{"load1": 49.3994140625, "idle_cpu": 94.77115204495786, "available_RAM_GiB": 718.8416328430176, "available_disk_GiB": 2230.722816467285, "workers": 4, "expected_peak_GiB": 16}
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/tools/dsrom_reindex_production_gate.py", line 35, in <module>
+    if __name__=='__main__':main()
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/tools/dsrom_reindex_production_gate.py", line 26, in main
+    try:gate.cmd_gather(a)
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/tools/dsrom_reindex_candidates.py", line 174, in cmd_gather
+    runs[name] = kg_run(b, out / name, rank_lists(blk, r))
+  File "/srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/tools/dsrom_reindex_production_gate.py", line 23, in run
+    if not result.get('pass_'):raise RuntimeError('exact gate failed: '+str(out))
+RuntimeError: exact gate failed: /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/gather_debug_r3/real_rank0_p1
