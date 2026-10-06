@@ -1,7 +1,7 @@
 `timescale 1ps/1fs
 // Additive sole-calendar row caller/codec/receiver context for the P2 fetch.
 // No private REFpb owner or row_gnt tie exists here. External provider_issue_v
-// is the actual accepted/prepaid READ reservation, once per PC per service edge;
+// is the actual PHY READ acceptance, once per PC per service edge;
 // the adapter seals provider_next_ordinal with its held job and returns that
 // ordinal with rsp_data. Arbitrary readiness, writes and raw return arrivals
 // are not issue receipts. Provider must reserve at most CRED32 reads per PC.
@@ -17,7 +17,7 @@
 // returns carry the ordinal of the actual column command, not a made-up tag.
 // This component owns payload capture, not the enclosing RF/task lease.
 module ot_hbm_accel_expert_stack_shared_p2 #(
- parameter ENABLE=0, REF_MODE=1, PHASE=0
+ parameter ENABLE=0, PROVIDER_FRAME_CHECK=0, REF_MODE=1, PHASE=0
 )(
  input wire stream_clk,service_clk,por_n,
  input wire cfg_v,output wire cfg_r,input wire[127:0] cfg_lines,
@@ -28,6 +28,10 @@ module ot_hbm_accel_expert_stack_shared_p2 #(
  output wire[607:0] desc_row,output wire[351:0] desc_n,
  output wire[31:0] calendar_notice,output wire[95:0] credit_return,
  input wire[31:0] provider_busy,provider_fault,provider_issue_v,
+ // Selected with Gibbs P2_READ_RETURN=1. Actual protected caller full73,
+ // held through native AND consumer drain, not reconstructed from row/expert.
+ input wire provider_frame_valid,input wire[72:0] provider_frame,
+ input wire[511:0] provider_issue_ordinal,input wire[2335:0] rsp_frame,
  output wire[511:0] provider_next_ordinal,
  output wire fetch_stream_reset_n,fetch_service_reset_n,
  input wire[31:0] rsp_v,input wire[8191:0] rsp_data,input wire[511:0] rsp_ordinal,
@@ -78,7 +82,8 @@ module ot_hbm_accel_expert_stack_shared_p2 #(
   // Actual router caller register: one elastic coded expert descriptor.
   (* keep=1 *) reg ev,ev_n;(* keep=1 *) reg[71:0] expert_word;
   wire er;wire ev_bad=ev!=~ev_n;
-  assign e_ready=creset_n&&!core_bad&&!ev_bad&&(!ev||er);
+  assign e_ready=creset_n&&!core_bad&&!ev_bad&&(!ev||er)&&
+      (!PROVIDER_FRAME_CHECK||provider_frame_valid);
   always @(posedge stream_clk or negedge por_n)
    if(!por_n)begin ev<=0;ev_n<=1;expert_word<=0;end
    else if(!core_bad&&!ev_bad&&(!ev||er))begin
@@ -90,7 +95,23 @@ module ot_hbm_accel_expert_stack_shared_p2 #(
   always @(posedge service_clk or negedge por_n)
    if(!por_n)begin notice_q<=0;notice_n<=1;end
    else begin notice_q<=notice;notice_n<=~notice;end
-  wire[31:0] pc_bad;wire hbad=(hr1!=~hr1_n)||(hr2!=~hr2_n)||(|pc_bad)||(|provider_fault)||(notice_q!=~notice_n)||cbad2||(cbad2!=~cbad2_n);
+  wire[31:0] accepted_issue,accepted_return;
+  wire[511:0] checked_ordinal;wire[8191:0] checked_data;wire join_fault;
+  if(PROVIDER_FRAME_CHECK)begin:provider_join
+   ot_hbm_accel_expert_provider_join_p2 #(.ENABLE(1)) receipt(
+    .service_clk(service_clk),.por_n(por_n),
+    .held_frame_valid(provider_frame_valid),.held_frame(provider_frame),
+    .provider_fault(|provider_fault),.provider_issue_v(provider_issue_v),
+    .provider_return_v(rsp_v),.provider_next_ordinal(provider_issue_ordinal),
+    .caller_next_ordinal(provider_next_ordinal),.provider_return_ordinal(rsp_ordinal),
+    .provider_return_frame(rsp_frame),.provider_return_data(rsp_data),
+    .issue_v(accepted_issue),.rsp_v(accepted_return),.rsp_ordinal(checked_ordinal),
+    .rsp_data(checked_data),.fault(join_fault));
+  end else begin:legacy_exposure
+   assign accepted_issue=provider_issue_v;assign accepted_return=rsp_v;
+   assign checked_ordinal=rsp_ordinal;assign checked_data=rsp_data;assign join_fault=0;
+  end
+  wire[31:0] pc_bad;wire hbad=(hr1!=~hr1_n)||(hr2!=~hr2_n)||(|pc_bad)||(|provider_fault)||join_fault||(notice_q!=~notice_n)||cbad2||(cbad2!=~cbad2_n);
   (* async_reg="true",keep=1 *) reg hbad1,hbad1_n,hbad2,hbad2_n,cbad1,cbad1_n,cbad2,cbad2_n;
   always @(posedge stream_clk or negedge por_n)
    if(!por_n)begin hbad1<=0;hbad1_n<=1;hbad2<=0;hbad2_n<=1;end
@@ -107,8 +128,8 @@ module ot_hbm_accel_expert_stack_shared_p2 #(
    (* keep=1 *) reg poison,poison_n,v,v_n;(* keep=1 *) reg[359:0] code;
    wire[15:0] debt=issued-returned;
    wire state_bad=(issued!=~issued_n)||(returned!=~returned_n)||(poison!=~poison_n)||(v!=~v_n);
-   wire response_bad=rsp_v[p]&&(debt==0||debt>32||rsp_ordinal[p*16+:16]!=returned);
-   wire issue_bad=provider_issue_v[p]&&(!hreset_n||(debt>=32&&!rsp_v[p]));
+   wire response_bad=accepted_return[p]&&(debt==0||debt>32||checked_ordinal[p*16+:16]!=returned);
+   wire issue_bad=accepted_issue[p]&&(!hreset_n||(debt>=32&&!accepted_return[p]));
    assign pc_bad[p]=poison||state_bad||response_bad||issue_bad;
    assign provider_next_ordinal[p*16+:16]=issued;
    assign rv[p]=v&&!pc_bad[p]&&!hbad;
@@ -116,12 +137,12 @@ module ot_hbm_accel_expert_stack_shared_p2 #(
    always @(posedge service_clk or negedge por_n)
     if(!por_n)begin issued<=0;issued_n<='1;returned<=0;returned_n<='1;poison<=0;poison_n<=1;v<=0;v_n<=1;code<=0;end
     else begin
-     v<=rsp_v[p]&&!pc_bad[p]&&!hbad;v_n<=~(rsp_v[p]&&!pc_bad[p]&&!hbad);
-     if(provider_issue_v[p]&&!hbad)begin issued<=issued+1'b1;issued_n<=~(issued+1'b1);end
-     if(rsp_v[p]&&!pc_bad[p]&&!hbad)begin
+     v<=accepted_return[p]&&!pc_bad[p]&&!hbad;v_n<=~(accepted_return[p]&&!pc_bad[p]&&!hbad);
+     if(accepted_issue[p]&&!hbad)begin issued<=issued+1'b1;issued_n<=~(issued+1'b1);end
+     if(accepted_return[p]&&!pc_bad[p]&&!hbad)begin
       returned<=returned+1'b1;returned_n<=~(returned+1'b1);
-      for(integer k=0;k<4;k++)code[k*72+:72]<=encode64(rsp_data[p*256+k*64+:64]);
-      code[288+:72]<=encode64({43'd0,5'(p),rsp_ordinal[p*16+:16]});
+      for(integer k=0;k<4;k++)code[k*72+:72]<=encode64(checked_data[p*256+k*64+:64]);
+      code[288+:72]<=encode64({43'd0,5'(p),checked_ordinal[p*16+:16]});
      end
      if(pc_bad[p]||hbad)begin poison<=1;poison_n<=0;end
     end

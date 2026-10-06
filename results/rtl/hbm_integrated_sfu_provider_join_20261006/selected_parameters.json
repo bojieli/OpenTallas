@@ -24,7 +24,15 @@
     "TW": 17,
     "PW": 20,
     "IMW": 14,
-    "SFU_C12_ENABLE": 1
+    "SFU_C12_ENABLE": 1,
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "NORM_C12_ENABLE": 1,
+    "NORM_KIND": 0,
+    "NORM_N": 64,
+    "NORM_D": 5120,
+    "NORM_RD": 0,
+    "NORM_AW": 24,
+    "NORM_PUBLISH_QUANT": 1
   },
   "source_list": "rtl/hbm_accel/integrated_20261006/sfu_c12_selected_parent.files.f",
   "protected_full_frame_bits": 73,
@@ -40,5 +48,24 @@
     "sfu_allocation_* from accepted exclusive allocation",
     "sfu_publication_owner and positive consumption"
   ],
-  "sole_existing_parent_compile": "E2 r7 PID2914466 preserved; not this successor/no SFU flag"
+  "sole_existing_parent_compile": "E2 r7 PID2914466 preserved; not this successor/no SFU flag",
+  "native_VM_selected_successor_flags": {
+    "ENABLE": 1,
+    "COMBINED_ENABLE": 1,
+    "SFU_C12_ENABLE": 1,
+    "SFU_NATIVE_VM_ENABLE": 1,
+    "TW": 17,
+    "PW": 20
+  },
+  "native_VM_numerical_qualified": false,
+  "norm_c12": {
+    "LM": 5,
+    "LA": 6,
+    "RXS": 1,
+    "SXC": 1,
+    "FREG": 1,
+    "HOLD_COMPLETION": 1,
+    "functional_parent_qualified": false,
+    "supplier_binding": "clock-held 4*N FP32 read ports; explicit allocation and checked publication full73 required"
+  }
 }

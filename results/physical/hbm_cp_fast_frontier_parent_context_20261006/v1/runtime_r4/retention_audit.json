@@ -1,0 +1,18 @@
+{
+  "source_RTL_commit": "e0e05a19e",
+  "flow": "ORFS retained canonical RTLIL then ABC mapping; not run_abi3 native synth export line700",
+  "canonical_sha256": "c6703f4588be772c0429638cbdc2afd741dd9a7c66f691004b4bba5216f26aaf",
+  "mapped_sha256": "88f8f668e7da5d46cca108a7d12ff0e89afa16da398ca11f2e76020e4cb3cf82",
+  "canonical_keep_hierarchy_attributes": 11,
+  "mapped_keep_hierarchy_attributes": 11,
+  "mapped_frontier_module_declarations": [
+    "module \\$paramod\\ot_hbm_cp_frontier_and12\\FAST=s32'00000000000000000000000000000001 (bits, result);",
+    "module ot_hbm_cp_frontier_entry(pc, entry);",
+    "module ot_hbm_cp_frontier_equal64(held_n, live, equal);",
+    "module ot_hbm_cp_frontier_nand3(bits, result);",
+    "module ot_hbm_cp_frontier_nor3(bits, result);"
+  ],
+  "exact_logic_changed": false,
+  "exact_gate_replayed": false,
+  "qualification_scope": "attributes preserved into retained mapping; actual context timing still required"
+}

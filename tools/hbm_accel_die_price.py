@@ -304,19 +304,22 @@ def _price(m, rp, cm, key):
     def hubmax(rx):
         v = [e[key] for k_, e in cm.items() if re.fullmatch(rx, k_)]
         return max(v) if v else 0
+    fwd = m['variant'].get('fwd')
     S = dict(
         xbcast=st('xbcast') + hubmax(r'hub_su_\w+_vm') + MESO_CYC,
         control=st('control') + MESO_CYC,
         result=st('result') + MESO_CYC,
-        weight=st('weight'),
+        weight=st('weight') + (MESO_CYC if fwd else 0),       # r15: row-1 lines end in a meso station
         expert_req=st('expert_req') + MESO_CYC,
         kv=st('kv') + MESO_CYC,
         ik=st('ik') + MESO_CYC,
-        link=st('link'),
+        link=st('link') + (MESO_CYC if fwd else 0),           # r15: meso into the macro / endpoint pclk
         su_coll=hubmax(r'hub_su_\w+_coll'),
         coll_su=hubmax(r'hub_coll_su_\w+'),
         attn_out=st('attn_out'),
     )
+    if 'attn_q' in cm:      # r15 attn_rtl: the query operand VM -> farthest tile (r1-r14b had no query net)
+        S['attn_q'] = st('attn_q') + MESO_CYC
     comps = {}
     for tag, rel in (('ds_matched', F.MATCHED), ('ds_inherited', F.ALLMEAS)):
         comp = json.loads((ROOT / rel).read_text())
@@ -347,6 +350,9 @@ def _price(m, rp, cm, key):
             'stream service -> scan quadrant (near-HBM attention) per first-access KV / window / embedding read')
         add('index_keys_wire', n.get('index_scores', 0), S['ik'], 'stream service -> index quarter per index scan')
         add('attn_out_wire', n.get('attn', 0), S['attn_out'], 'tile row end -> index quarter -> SU per attention step')
+        if 'attn_q' in S:
+            add('attn_q_wire', n.get('attn', 0), S['attn_q'],
+                'VM -> corner tile query chain + packet hops to the farthest tile + meso, per attention step (r15)')
         tot_us = round(sum(v['us'] for v in terms.values()), 3)
         rows = {}
         if tag == 'ds_matched':
