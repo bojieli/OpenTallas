@@ -22,6 +22,7 @@ BANK = 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_vet
 STATION = Q+'/ot_hbm_native_frame_station_rb.sv'
 CHAIN = Q+'/ot_hbm_native_quarter_chain_rb.sv'
 BANK_TB = 'rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv'
+VETO_TB = 'rtl/test/hbm_accel/w2_rb_veto_20261006/tb_w2_rb_cross_bank_veto.sv'
 PKG = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv', 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv']
 CAL = ('module tb_native_quarter_publication;',
  'module tb_native_quarter_publication;\n integer edge_count=0; always @(posedge clk_sm) edge_count<=edge_count+1;\n'
@@ -99,6 +100,23 @@ def bank_bench(out, tag, stage, dist, mutant=None, red=1):
                 summary=[l for l in text.splitlines() if l.startswith(('PASS', 'CE_REPAIR', 'FATAL', 'VETO'))][-3:])
 
 
+def veto_bench(out, tag, mutant=None):
+    """Station cross-bank veto bench: a station rail upset with healthy banks."""
+    files = [str(ROOT/p) for p in PKG+[BANK, 'rtl/common/ot_fwd_link_stage.sv', STATION, VETO_TB]]
+    files = mutate(out, mutant, files)
+    vvp = out/f'{tag}.vvp'
+    rc = run(['iverilog', '-g2012', '-s', 'tb_w2_rb_cross_bank_veto', '-o', str(vvp), *files], out/f'{tag}.compile.log')
+    if rc:
+        return dict(compile_exit=rc, passed=False)
+    rc = run(['vvp', str(vvp)], out/f'{tag}.run.log')
+    text = (out/f'{tag}.run.log').read_text()
+    return dict(compile_exit=0, runtime_exit=rc, passed=rc == 0 and 'PASS_W2_RB_CROSS_BANK_VETO' in text,
+                summary=[l for l in text.splitlines() if l.startswith(('PASS', 'FATAL'))][-2:])
+
+
+VETO_MUTANTS = ('S6_cross_bank_veto_removed',)
+
+
 def quarter_bench(out, tag, rb=True, mutant=None):
     srcs = (ROOT/Q/'sources.f').read_text().split()
     files = [str(ROOT/s) for s in srcs]
@@ -132,7 +150,8 @@ def quarter_bench(out, tag, rb=True, mutant=None):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True)
+    ap.add_argument('--skip-legacy', action='store_true', help='calendar baseline already recorded (r1)'); a = ap.parse_args()
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=False)
     res = dict(bank={}, quarter={}, negative_controls={})
     res['bank']['payload_STAGE0_DIST1'] = bank_bench(out, 'bank_s0d1', 0, 1)
@@ -140,18 +159,21 @@ def main():
     res['bank']['small_STAGE1_DIST0_RED0'] = bank_bench(out, 'bank_s1d0_red0', 1, 0, red=0)
     res['bank']['payload_STAGE0_DIST1_RED0'] = bank_bench(out, 'bank_s0d1_red0', 0, 1, red=0)
     res['quarter']['rb'] = quarter_bench(out, 'quarter_rb', True)
-    res['quarter']['legacy_same_bench'] = quarter_bench(out, 'quarter_legacy', False)
+    res['veto'] = {'rb': veto_bench(out, 'veto_rb')}
+    if not a.skip_legacy:
+        res['quarter']['legacy_same_bench'] = quarter_bench(out, 'quarter_legacy', False)
     for name in BANK_MUTANTS:
         r = bank_bench(out, 'neg_'+name, 0, 1, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
     for name in CHAIN_MUTANTS:
-        r = quarter_bench(out, 'neg_'+name, True, name)
+        r = veto_bench(out, 'neg_'+name, name) if name in VETO_MUTANTS else quarter_bench(out, 'neg_'+name, True, name)
         res['negative_controls'][name] = dict(expected='FAIL', failed=not r['passed'], **r)
-    rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter']['legacy_same_bench'].get('calendar', {})
+    rb, leg = res['quarter']['rb'].get('calendar', {}), res['quarter'].get('legacy_same_bench', {}).get('calendar', {})
     res['calendar_delta_edges_vs_legacy'] = {k: rb[k]-leg[k] for k in rb if k in leg}
     res['bench_edits'] = [e[2] for e in BENCH_EDITS]
-    res['source_pins'] = {p: sha(ROOT/p) for p in [BANK, STATION, CHAIN, BANK_TB, Q+'/tb_native_quarter_publication.sv', *PKG]}
+    res['source_pins'] = {p: sha(ROOT/p) for p in [BANK, STATION, CHAIN, BANK_TB, VETO_TB, Q+'/tb_native_quarter_publication.sv', *PKG]}
     res['passed'] = (all(v['passed'] for v in res['bank'].values()) and all(v['passed'] for v in res['quarter'].values())
+                     and res['veto']['rb']['passed']
                      and all(v['failed'] for v in res['negative_controls'].values()))
     (out/'terminal.json').write_text(json.dumps(res, indent=2)+'\n')
     for p in out.glob('*.vvp'):
