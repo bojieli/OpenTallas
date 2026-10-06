@@ -171,6 +171,11 @@ module tb_norm_quant_native_publication;
   $readmemh({dir,"/x.mem"},xgold);$readmemh({dir,"/w.mem"},wgold);
   $readmemh({dir,"/ey.mem"},ey);$readmemh({dir,"/eqc.mem"},eqc);
   $readmemh({dir,"/eqe.mem"},eqe);$readmemh({dir,"/eqy.mem"},eqy);$readmemh({dir,"/cfg.mem"},cfg);
+  // Retained scales are signed16; the literal adapter carries signed10.
+  // Preserve the two's-complement bits, and reject a noncanonical narrowing.
+  for(j=0;j<160;j=j+1)
+   if(eqe[j] !== {{6{eqe[j][9]}},eqe[j][9:0]})
+    $fatal(1,"RETAINED_SCALE_SIGN_EXTENSION block=%0d scale16=%h scale10=%h",j,eqe[j],eqe[j][9:0]);
   frame={20'hfffff,17'h10001,4'h9,32'h9234abcd};publication_owner=frame;
   phase=1;repeat(3)tick();negstep();
   // Initialize the actual existing behavioural HBM backing, after its own
