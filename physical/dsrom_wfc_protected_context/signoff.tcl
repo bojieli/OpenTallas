@@ -39,3 +39,10 @@ puts $coverage_file "OUTPUT_BIT_PORT_COUNT [llength [all_outputs]]"
 foreach port [all_inputs] {puts $coverage_file "INPUT [get_full_name $port]"}
 foreach port [all_outputs] {puts $coverage_file "OUTPUT [get_full_name $port]"}
 close $coverage_file
+
+if {[info exists ::env(WFC_DISTRIBUTED_CMD)] && $::env(WFC_DISTRIBUTED_CMD)==1} {
+  source /src/physical/dsrom_protected_vm_context/distributed_address_loads.tcl
+  source /src/physical/dsrom_wfc_protected_context/distributed_retention.tcl
+  ds_vm_check_distributed_addresses u_r4.u_memory.g_live.u_backend
+  ds_wfc_check_distributed_retention u_r4.u_memory.g_live.u_backend
+}

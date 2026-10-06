@@ -1,0 +1,9 @@
+{
+ "schema": "hbm.attn.h16_registered_tile.lockstep.v1",
+ "dut": "ot_attn_tile_m6h1r (rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m6h1r.sv, 040d9c5cc): 16 x ot_attn_hgrp_m6h1 (FPL 6, FML 8, F12, HG 1, NBANK 5) behind ROOT -> COL x2 -> HC x4 input registers and a per-leaf output capture",
+ "reference": "ot_hdc_v41x_attn_tile_l (H 16, TD 32, NBANK 5, BW 3, PWORDS 2, FPL 6, FML 6) on every input incl. rst_n delayed 3 cycles, outputs delayed 2 (FML 8 vs 6) + 1",
+ "bench": "rtl/test/tb_hdc_v41x_attn_tile_m6h1r_lockstep.sv, Verilator 5.050 (lockr.sh), random loads in both modes, random banks/groups, random issue beats with pads/NaN codes/extreme scales, every output compared every cycle",
+ "positive": {"cycles": 6000, "mismatches": 0, "valid_outputs_compared": 4444, "rc": 0},
+ "negative_control": {"mutation": "NEG=1 swaps heads 0/1 oy slots in the compare", "mismatches": 5921, "rc": 1},
+ "added_cycles": "+3 on the input side (ROOT, COL, HC), +1 on the output side (OC): +4 cycles on the tile latency"
+}

@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--fast-owner', action='store_true')
     parser.add_argument('--phase-parallel', action='store_true', help='Changed exact18-bit phase validation; one contextual source vehicle')
+    parser.add_argument('--control-tail', action='store_true', help='Changed-source retained CP control/output-tail cut; requires finite pin/via repair')
     parser.add_argument('--gpl-repair', action='store_true', help='One source-identical GPL0307 continuation from retained IO')
     parser.add_argument('--variant', type=int, choices=(1,2,3), default=1,
                         help='Distinct installed GPL/DRT seeds, unchanged constraints and density')
@@ -36,8 +37,8 @@ def main():
     # the pinned clean source checkout during physical execution.
     from hbm_cp_source_validation import hbm_cp_validate_allocated_sources
     cp = json.loads((ROOT/context.CONTRACT).read_text())['CP']
-    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner,phase_parallel=args.phase_parallel)
-    input_path=ROOT/('physical/hbm_cp_parent_context_20261005/phase_parallel_inputs.json' if args.phase_parallel else 'physical/hbm_cp_parent_context_20261005/inputs.json')
+    checked = hbm_cp_validate_allocated_sources(ROOT, cp, fourcut=True,fast_owner=args.fast_owner,phase_parallel=args.phase_parallel,control_tail=args.control_tail)
+    input_path=ROOT/('physical/hbm_cp_parent_context_20261005/control_tail_inputs.json' if args.control_tail else ('physical/hbm_cp_parent_context_20261005/phase_parallel_inputs.json' if args.phase_parallel else 'physical/hbm_cp_parent_context_20261005/inputs.json'))
     inputs = json.loads(input_path.read_text())
     assert inputs['parameters']['SU_FOUR_COMBINATIONAL_CUTS'] == 1
     assert inputs['checked_sources'] == checked
@@ -85,6 +86,27 @@ def main():
             assert not (args.resume_canonical or args.resume_cts_sha256 or args.resume_io_sha256 or args.resume_resized_sha256), "Changed RTL needs fresh synthesis"
         argv += ['--param','SU_PARALLEL_PHASE_VALIDATION=1']
         argv[argv.index('--nickname-tag')+1]='harvey_cp_phase_parallel_context_r1'
+    if args.control_tail:
+        assert args.fast_owner and args.phase_parallel and args.variant==1 and not args.gpl_repair
+        assert not (args.resume_canonical or args.resume_cts_sha256 or args.resume_io_sha256 or args.resume_resized_sha256), 'Changed control-tail RTL requires synthesis'
+        assert inputs['parameters']['SU_CONTROL_TAIL_CUT']==1
+        assert model['charged_body_upper_um2']<=model['conservative_body_budget_um2']
+        argv += ['--param','SU_CONTROL_TAIL_CUT=1','--orfs-var','MAX_PLACE_STEP_COEF=1.01']
+        argv[argv.index('--place-density')+1]='0.55'
+        argv[argv.index('--nickname-tag')+1]='harvey_cp_control_tail_context_r1'
+        access=inputs['finite_pin_via_repair_contract']
+        assert sha(ROOT/access['allocation_path'])==access['allocation_sha256']
+        canonical_access=json.loads((ROOT/access['allocation_path']).read_text())
+        assert canonical_access['allocation_accepted'] and canonical_access['conditional_defect_hunt_ready']
+        assert canonical_access['used']==236 and canonical_access['private_factor_bits']==12
+        for path,digest in canonical_access['hashes'].items():
+            assert sha(ROOT/path)==digest, 'Canonical access dependency changed: '+path
+        assert access['all_pins']==236 and access['minimum_pitch_um']==0.128
+        for path,digest in access['hooks_sha256'].items():
+            assert sha(ROOT/path)==digest, 'Pin access hook changed: '+path
+        index=argv.index('--step-tcl')+1
+        assert argv[index]=='POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/fast_frontier_post_io.tcl'
+        argv[index]='POST_IO_PLACEMENT=physical/hbm_die_abstracts_20261006/integration/cp_control_tail_access/post_io.tcl'
     argv += ['--param', 'SU_FOUR_COMBINATIONAL_CUTS=1',
              '--step-tcl', 'PRE_DETAIL_PLACE=physical/hbm_cp_parent_context_20261005/cts_membership.tcl']
     if finite:
@@ -130,6 +152,14 @@ def main():
         for child in children:
             if child not in dependencies:dependencies.add(child);pending.append(child)
     record['physical_dependencies_sha256']={path:sha(ROOT/path) for path in sorted(dependencies)}
+    if args.control_tail:
+        record.update(control_tail=True,explicit_modeled_density=0.55,gpl_max_phi_coef=1.01,
+            physical_ready=inputs.get('finite_pin_via_repair_ready',False),
+            physical_blocker=None if inputs.get('finite_pin_via_repair_ready',False) else 'Turing canonical CP236 pin-access acceptance pending',
+            pin_access=inputs['finite_pin_via_repair_contract'],pins_changed=True,
+            parent_IR_budget_conditional=True)
+        if not args.prepare_only and not record['physical_ready']:
+            raise ValueError(record['physical_blocker'])
     if args.gpl_repair:
         assert args.phase_parallel and args.fast_owner and args.variant==1
         assert args.resume_io_sha256 and not (args.resume_canonical or args.resume_cts_sha256 or args.resume_resized_sha256)
@@ -216,7 +246,7 @@ assert s.count(needle)==2, 'Installed GRT repair legalization API changed'
 s=s.replace(needle,'    source /src/physical/hbm_cp_parent_context_20261005/fast_frontier_membership.tcl'+chr(10)+needle)
 p.write_text(s)
 '''
-    if args.gpl_repair:
+    if args.gpl_repair or args.control_tail:
         patch="""from pathlib import Path
 import hashlib
 p=Path('/OpenROAD-flow-scripts/flow/scripts/global_place.tcl')

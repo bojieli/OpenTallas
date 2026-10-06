@@ -1,0 +1,23 @@
+{
+  "verdict": "INCOMPLETE_ROUTE_INPUT_BUFFER_REPAIR_DONT_TOUCH_ERROR",
+  "terminal_exit": 2,
+  "supervisor_exit": 2,
+  "finished_utc": "2026-10-06T09:37:39.256835076Z",
+  "OOMKilled": false,
+  "live_children": false,
+  "failed_stage": "3_3_place_gp",
+  "error": "RSZ-3006 / ODB-1211 cannot insert buffer before dont_touch bookROM ce_in",
+  "actual_pin": "u_r4.u_whole.g_live.g_rank\\[0\\].u_book/ce_in",
+  "net": "_090116_",
+  "last_GPL_iteration": 225,
+  "last_overflow": 0.634,
+  "PDN_and_macro_binding_completed": true,
+  "actual_macro_count": 306,
+  "source_RTL_unchanged": true,
+  "synth_replayed": false,
+  "CTS_completed": false,
+  "final_SSFF": null,
+  "final_DRC": null,
+  "retained": "source/failed3_3ODB/PDN2_4ODB/all original logs and mapped/canonical objects in original root",
+  "scope": "COND_BODY_DIAGNOSTIC external source/fault/reset/engineIO unqualified; no safe-reset/headline"
+}

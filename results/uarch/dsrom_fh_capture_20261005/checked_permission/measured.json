@@ -15,7 +15,7 @@
   "capture_FF_bits": 8196,
   "head_warm_once_fault_metadata_FF_bits": 22,
   "FF_total": 8554,
-  "architectural_added_cycles": 10,
+  "architectural_added_cycles": 13,
   "clock": {
     "fast_period_ps": 833.3333333333334,
     "backend_period_ps": 1111.111111111111,
@@ -70,6 +70,7 @@
   "capture_bank_bits": 32,
   "capture_banks": 129,
   "extra_control_FF_bits": 336,
+  "check_pipeline_edges": 10,
   "flow_control": "One native held request and one held checked reply; busy until matching checked publication; no payload overwrite, no early or repeated warm ACK; new accept while held quarantines.",
   "slot_added_area_proxy_um2": 97.97760000000001,
   "routing_tracks_added": 266,

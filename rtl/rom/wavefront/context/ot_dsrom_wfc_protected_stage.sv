@@ -8,7 +8,7 @@
 // XB must hold its tuple until xb_v&&xb_ready and consume its protected reply;
 // neither whole-stage ACK nor row visibility alone retires provider debt.
 module ot_dsrom_wfc_protected_stage #(
- parameter ENABLE=0, STRUCTURAL=0,
+ parameter ENABLE=0, STRUCTURAL=0, DISTRIBUTED_CMD=0,
  parameter string BOOK0="results/uarch/dsrom_wfc_producers_20261005/book/rank0.viamap.hex",
  parameter string BOOK1="results/uarch/dsrom_wfc_producers_20261005/book/rank1.viamap.hex",
  parameter string BOOK2="results/uarch/dsrom_wfc_producers_20261005/book/rank2.viamap.hex",
@@ -166,7 +166,7 @@ module ot_dsrom_wfc_protected_stage #(
   .port_retired(vm_port_retired),.pending(vm_pending),.provider_fault(vm_fault),.initializing(vm_initializing),
   .consume_v(provider_consume_v),.consume_owner(provider_consume_owner),.allcopies_fenced(provider_allcopies_fenced),
   .fault(adapter_fault),.phase(vm_phase));
- ot_dsrom_protected_vm #(.ENABLE(ENABLE)) u_memory(
+ ot_dsrom_protected_vm #(.ENABLE(ENABLE),.DISTRIBUTED_CMD(DISTRIBUTED_CMD)) u_memory(
   .fast_clk(fast_clk),.slow_clk(slow_clk),.cold_n(cold_n),.fast_rst_n(fast_rst_n),.slow_rst_n(slow_rst_n),
   .request_v(provider_request_v),.request_ready(provider_request_ready),.request_owner(provider_request_owner),
   .read_enable(provider_read_enable),.read_addr(provider_read_addr),.write_enable(provider_write_enable),

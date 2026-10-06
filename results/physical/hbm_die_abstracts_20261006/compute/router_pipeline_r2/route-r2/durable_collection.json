@@ -1,0 +1,29 @@
+{
+  "status": "ACTUAL_DURABLE_COLLECTOR_AND_TERMINAL_PUBLISHER_LIVE",
+  "route_supervisor": 4043603,
+  "route_docker": "ad31d425b8fb",
+  "route_root": "/srv/opentallas-scratch/codex/carson-router-successor-20261006/route-r2",
+  "collector_pid": 591065,
+  "publisher_pid": 593030,
+  "daemon_parent_pid": 1,
+  "collector_log": "/tmp/carson-router-successor-collector-20261006.log",
+  "publisher_log": "/tmp/carson-router-successor-publisher-20261006.log",
+  "workers_host": "localhost read-only orchestration; no heavy work",
+  "terminal_output": "route-r2/terminal",
+  "physical_closed": false,
+  "parent_qualified": false,
+  "no_new_route_or_gate": true,
+  "remote_objects_preserved": true,
+  "own_worktree_active": "/home/ubuntu/wt-hbm-router-successor-20261006",
+  "publisher_actions": [
+    "verify supervisor terminal and collect existing corner/native reports",
+    "audit actual final SDC boundary",
+    "commit explicit own evidence paths",
+    "selfmerge under central lock preserving dirty scoreboard",
+    "normal push and direct Kant/Turing/Gibbs verdict"
+  ],
+  "source_file_sha256": {
+    "tools/hbm_router_successor_collect_20261006.py": "ba207ee60caad08feffbe863a7703e26144e1528e2923f65ff15f4cb5704ee59",
+    "tools/hbm_router_successor_publish_20261006.py": "1beae990e8e4b108cb451c49f99c097aea4fc70b9e186cf6caa1bc5bcb5a9d1f"
+  }
+}

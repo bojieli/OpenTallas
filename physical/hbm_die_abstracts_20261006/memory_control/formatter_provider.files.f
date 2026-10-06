@@ -123,3 +123,6 @@ rtl/hdc/v41x/ot_dsrom_aq12.sv
 rtl/hdc/v41x/ot_dsrom_divc.sv
 rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
 rtl/hbm_accel/integrated_20261006/ot_hbm_norm_native_vm_adapter.sv
+physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall.sv
+physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_preinstall_gather_owner.sv
+physical/hbm_die_abstracts_20261006/memory_control/ot_hbm_formatter_install_consumer.sv

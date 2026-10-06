@@ -232,7 +232,8 @@ def dsrom_fh_native_vm_endpoint_model(distributed_check=False):
         result.update(parameter='CHECK_PIPE', capture_bank_bits=32,
             capture_banks=banks, extra_control_FF_bits=extra,
             FF_total=result['FF_total']+extra,
-            architectural_added_cycles=10,
+            architectural_added_cycles=13,
+            check_pipeline_edges=10,
             latency=dict(request_check_cycles=5,reply_check_cycles=5,
                 candidate_extra_cycles_per_warm_chain=10,
                 candidate_extra_five_chain_cycles=50,
@@ -9534,7 +9535,8 @@ def hbm_w2_publication_model():
         raise ValueError('Station CE-tree exact gate has not passed')
     paths += [root/tree_source,root/tree_rel/'terminal.json',root/tree_rel/'source.json']
     current_terminals=['results/rtl/w2_transaction_pipeline_20261005/current_station_r1/terminal.json',
-                       'results/rtl/w2_transaction_pipeline_20261005/current_bank_r1/terminal.json']
+                       'results/rtl/w2_transaction_pipeline_20261005/current_bank_r1/terminal.json',
+                       'results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json']
     for rel in current_terminals:
         current_terminal=json.loads((root/rel).read_text())
         if not current_terminal['passed'] or current_terminal['compile_exit']!=0 or current_terminal['runtime_exit']!=0:
@@ -9662,9 +9664,68 @@ def hbm_w2_publication_model():
             parent_transport_budget_for_8_provider_transactions_edges=8*finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
             transport_budget_installed_and_minimum_measured=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        station_CHECK_pipeline_successor=dict(
+            implementation='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_check_pipeline.sv',
+            parameter='REGISTERED_CHECK',default=0,
+            rejected_parent_source='9a09d4a58',rejected_station_R2_SS_setup_ps=-1785.59,
+            rejected_station_R2_utilisation_percent=52.89,rejected_station_R2_GRT_overflow=11199,
+            source_cone='physical/hbm_w2_current_station_20261006/bank_current_static.sv:64-95',
+            cut='CHECK snapshot/syndrome; VERIFY protected checker inputs and verdict in local stripe registers; EVAL bound protected verdict/reduction; REPAIR then CHECK/VERIFY again',
+            representation='per stripe72current+144snapshot+72syndrome+216exact checked-input W6 mirror+72W6 verdict; bank72W6 phase and failed pair',
+            source_FF_bits_per_word=576,source_bank_control_FF_bits=74,
+            actual_packet_bits=2329,actual_packet_words=37,
+            packet_bank_source_FF_bits=37*576+74,
+            added_packet_source_FF_bits_vs_R2=37*288,
+            NO2_source_FF_bits=52*576+6*74,NO3_source_FF_bits=56*576+7*74,
+            quarter_source_FF_bits=3*(56*576+7*74)+(52*576+6*74),
+            quarter_added_source_FF_bits_vs_R2=(3*56+52)*288,
+            source_bits_are_preoptimisation_upper=True,
+            actual_R2_mapping='results/physical/hbm_w2_current_station_20261006/r2/mapped_inventory.json',
+            actual_R2_mapped_sequential_cells=8870,
+            credit_for_independent_triplicated_RTL_copies=False,
+            mapped_successor_FF_bits=None,
+            added_load_check_edges_vs_R2=1,total_load_check_edges_vs_legacy=2,
+            transient_CE_repair_edges=7,added_CE_edges_vs_R2=2,
+            actual_chain_fanouts=[3,3,3,2],
+            chain_incremental_added_edges_upper_vs_R2=68,
+            chain_total_added_edges_upper_vs_legacy=136,
+            chain_incremental_latency_upper_ns=68/1.2,
+            load_count_basis='per station2payload+(2+2NO)permission+2NO ACK+2receipt; actual four stations3/3/3/2; one VERIFY edge per load; simultaneous loads overlap',
+            repeated_injection_stall_bound=None,
+            boundary_bits_unchanged=2328,new_external_memory_ports=0,new_boundary_tracks=0,MACs_per_cycle=0,
+            per_stripe_checker_fanout=1,
+            CHECK_enable_FF_fanout_upper=37*216+72,
+            VERIFY_enable_FF_fanout_upper=37*288+72,
+            bank_load_FF_fanout_upper=37*72+72,
+            added_clock_cap_fF_SS=37*288*.433982,added_clock_cap_fF_FF=37*288*.503152,
+            added_flop_area_upper_um2=37*288*.37908,
+            extra_checker_binding_logic_area_upper_um2=37*(216+384)*.2916,
+            area_basis='same pinned ASAP7 DFFASRHQN .37908um2/SS .433982fF/FF .503152fF; pessimistic .2916um2/gate codec/equality upper; constant bits optimise, no mapped fit credit',
+            parent_cost_owner='Turing; consume actual NO2/NO3 bank counts and incremental68edge upper before composition',
+            physical_vehicle_owner='Descartes; existing station slot/receiver/root/tie source only',
+            target_clock_ps=833.333,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+            inherited_NO2_core_um2=36469.79964,inherited_NO2_core_width_um=382.644,inherited_NO2_core_height_um=95.31,
+            inherited_NO2_placed_cell_area_um2=19288.42145995861,
+            NO2_added_flop_area_upper_um2=52*288*.37908,
+            NO2_added_binding_logic_area_upper_um2=52*(216+384)*.2916,
+            inherited_core_body_plus_added_upper_um2=19288.42145995861+52*288*.37908+52*(216+384)*.2916,
+            bare_core_area_upper_is_not_placement_or_route_fit=True,
+            internal_added_mirror_tracks_per_stripe=216,internal_channel_capacity=None,
+            current_gate_CE_edges=7,current_gate_checker_checks=36,current_gate_parent_checks=19,
+            current_gate_quarter_ACK_edge=94,current_gate_parent_release_edge=99,
+            calendar_origin='counter minus auxiliary completion edge; cold starts after a posedge rather than initial time0, so raw +9 vs R2 is not a same-origin latency delta',
+            measured_chain_delta_vs_R2=None,
+            actual_slot_fit=None,actual_loaded_clock=None,
+            normal='EVAL only with clean protected verdict, exact mirrored checker-input binding and CURRENT code equality',
+            fault='checker-input or verdict mutation fails closed; DUE and changed repair identity refused; rootPOR only clears sticky failure',
+            gate_passed=True,gate_terminal='results/rtl/w2_transaction_pipeline_20261005/check_station_r2/terminal.json',
+            physical_qualified=False,headline_rate_credit=False),
         station_CURRENT_pipeline_successor=dict(
             implementation='rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_current_pipeline.sv',
             parameter='REGISTERED_CURRENT',default=0,
+            hardware_verdict='REJECT_SS_SETUP_AND_GRT_CONGESTION',
+            actual_NO2_CTS_SS_setup_ps=-1785.59,actual_NO2_GRT_overflow=11199,
+            immutable_failed_terminal='results/physical/hbm_w2_current_station_20261006/r2/terminal_result.json',
             actual_packet_bits=2329,actual_words=37,
             representation='one72bit current word + two72bit protected snapshot words + one72bit syndrome word per stripe; one72bit phase plus failed complementary pair',
             bank_FF_bits=37*288+74,old_bank_FF_bits=42*72+2,
@@ -10485,15 +10546,21 @@ def dsrom_window_full_block_pipeline_model():
     merge_read_address_FF = 21
     merge_accepted_identity_FF = 21
     merge_control_FF = merge_read_address_FF+merge_accepted_identity_FF
+    # Writer status-only counters retain their same-edge modulo-2^32 value.
+    # Three registered lower-byte carry predicates per counter limit each
+    # increment to eight bits; these predicates never authorize a transaction.
+    writer_stat_counters, writer_stat_chunk_bits = 4, 8
+    writer_stat_carry_FF = writer_stat_counters*3
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
              read_extra + read_qualification_extra + merge_control_FF +
-             writer_control_upper + job_control_upper)
+             writer_control_upper + job_control_upper + writer_stat_carry_FF)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
     merge_reset_FF_extra = merge_read_address_FF*(.37908-DFF_UM2)
-    ff_area = added*DFF_UM2+merge_reset_FF_extra
+    writer_stat_reset_FF_extra = writer_stat_carry_FF*(.37908-DFF_UM2)
+    ff_area = added*DFF_UM2+merge_reset_FF_extra+writer_stat_reset_FF_extra
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
@@ -10503,9 +10570,11 @@ def dsrom_window_full_block_pipeline_model():
     read_snapshot_enable_mux = read_snapshot_gross*4*.08748
     merge_increment_logic = 21*2*12*.08748
     merge_enable_and_lane_decode = (merge_control_FF*4+banks*3)*.08748
+    writer_stat_logic = (writer_stat_counters*32*12 +
+                         writer_stat_counters*(7+15+23) + writer_stat_carry_FF*4)*.08748
     cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
                    read_snapshot_enable_mux+merge_increment_logic+
-                   merge_enable_and_lane_decode)
+                   merge_enable_and_lane_decode+writer_stat_logic)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10526,6 +10595,10 @@ def dsrom_window_full_block_pipeline_model():
             winner_FF_bits=winner, column_payload_FF_bits=column_payload,
             row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
             extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            writer_stat_carry_FF_upper_bits=writer_stat_carry_FF,
+            writer_stat_counter_bits=32, writer_stat_chunk_bits=writer_stat_chunk_bits,
+            writer_stat_counters=writer_stat_counters,
+            writer_stat_same_edge_modular_value_preserved=True,
             read_wanted_snapshot_FF_bits=read_wanted_snapshot,
             read_owner_range_user_snapshot_FF_bits=read_owner_snapshot,
             read_completion_group_snapshot_FF_bits=read_completion_snapshot,
@@ -10555,6 +10628,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_extra_external_ports=0, merge_extra_memory_ports=0,
             merge_static_lane_decode_replicas=banks,
             merge_per_lane_write_enable_fanout=16*265,
+            writer_stat_comparator_input_bit_routes=writer_stat_counters*(8+16+24),
+            writer_stat_flag_receiver_upper_fanout=8,
+            writer_stat_flag_directed_receiver_routes=writer_stat_carry_FF*8,
+            writer_stat_extra_external_ports=0, writer_stat_extra_memory_ports=0,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
@@ -10567,12 +10644,16 @@ def dsrom_window_full_block_pipeline_model():
             merge_increment_logic_allowance_um2=merge_increment_logic,
             merge_enable_and_static_lane_decode_allowance_um2=merge_enable_and_lane_decode,
             merge_removed_mux_or_adder_savings_credit_um2=0,
+            writer_stat_new_FF_upper_um2=writer_stat_carry_FF*.37908,
+            writer_stat_local_increment_compare_enable_allowance_um2=writer_stat_logic,
+            writer_stat_removed_increment_savings_credit_um2=0,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
             read_added_cycles=1, read_qualification_added_cycles=0, merge_added_cycles=0,
+            writer_stat_added_cycles=0,
             existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
@@ -10593,6 +10674,10 @@ def dsrom_window_full_block_pipeline_model():
             merge_sink_clock_cap_fF={
                 'SS':21*(.433982+.446638), 'FF':21*(.503152+.52201)},
             merge_clock_cap_basis='21 DFFASRHQN address lookahead +21 DFFHQN independently captured accepted identity; pinned SS/FF CLK cap, not root loading',
+            writer_stat_new_clock_sink_upper=writer_stat_carry_FF,
+            writer_stat_sink_clock_cap_upper_fF={
+                'SS':writer_stat_carry_FF*.433982, 'FF':writer_stat_carry_FF*.503152},
+            writer_stat_clock_basis='four existing 32-bit status counters, three ASR carry predicates each; bound includes counters unreachable in the write/prime caller, no pruning credit. Sink sum is not parent root CTS.',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
@@ -11316,8 +11401,11 @@ def dsrom_window_parent_boundary_model():
     import re
     leaf_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/tt_synthesis_inventory.json'
     ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/r1/ss_synthesis_inventory.json'
+    changed_ss_inventory_path = ROOT / 'results/physical/dsrom_window_pipeline_20261005/ssmap_r5/ss_synthesis_inventory.json'
     if ss_inventory_path.is_file():
         leaf_inventory_path = ss_inventory_path
+    if changed_ss_inventory_path.is_file():
+        leaf_inventory_path = changed_ss_inventory_path
     leaf_inventory = (json.loads(leaf_inventory_path.read_text())
                       if leaf_inventory_path.is_file() else None)
     leaf_ff_types = (leaf_inventory or {}).get('FF_cells_by_type', {})
@@ -11907,6 +11995,14 @@ def hbm_cp_phase_parallel_model():
         "results/uarch/hbm_cp_phase_parallel_20261006/model.json").read_text())
 
 
+def hbm_cp_control_tail_model():
+    """Bounded exact CP output-tail price before RTL; no added latency."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1]/
+        "results/uarch/hbm_cp_control_tail_20261006/model.json").read_text())
+
+
 def dsrom_wfc_enclosing_stage_price():
     """Minimum actual enclosing receiver/held-job context, before source build.
 
@@ -12315,11 +12411,12 @@ def hbm_integrated_gu_wide_launch_model():
         whole_token=False,physical_admitted=False,adopted=False)
 
 
-def dsrom_wfc_protected_context_physical_price():
+def dsrom_wfc_protected_context_physical_price(distributed_cmd=False):
     """Actual minimum R4 WFC/producer/C8/protected VM, no whole S81 array."""
     import json
     from pathlib import Path
-    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005/protected_context_physical_model.json').read_text())
+    name='protected_context_distributed_physical_model.json' if distributed_cmd else 'protected_context_physical_model.json'
+    return json.loads((Path(__file__).resolve().parents[1]/'results/uarch/dsrom_wfc_enclosing_stage_20261005'/name).read_text())
 
 
 def dsrom_wfc_native_two_lease_price():
@@ -12375,6 +12472,42 @@ def dsrom_protected_vm_model(distributed_cmd=False):
     """Finite protected xa/xb VM; optional registered macro command service."""
     from dsrom_protected_vm import model, distributed_model
     return distributed_model() if distributed_cmd else model()
+
+
+def hbm_native_selected_result_model():
+    """One installed formatter sink scalar consumed by the existing native SM."""
+    return dict(schema='opentallas.hbm.native_selected_result.v1',default_enabled=False,
+        source='rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_simt_sm20.sv',
+        program='tools/gpu_sys/hbm_selected_result_program.py',
+        producer_owner='Gauss global512 merge/protected landing/checked sink writer',
+        parent_owner='Gibbs selected parent/native shared route/CP admission',
+        actual_sink_byte_base=0x70000,actual_sink_byte_limit=0x70800,
+        selected_IDs=512,sink_U32_bytes=2048,checked_kind4_rows=32,
+        final_sink_row_byte_address=0x707c0,
+        operation='read stored selected-ID ordinal0, publish full U32 SM RESULT; not a full-token inference claim',
+        instructions=['UMOVI U4,0x70000','LDG V0,U4,F32bits,count1','UFROMV U5,V0,lane0','RESULT U5','EXIT'],
+        instruction_words=5,instruction_bytes=40,command_words=2,command_bytes=16,
+        uniform_registers_used=[4,5],vector_registers_used=[0],
+        input_TOKEN_UR0_used_as_payload=False,payload_immediates=0,
+        new_FF_bits=0,new_SRAM_bits=0,new_arithmetic=0,new_MACs_per_cycle=0,
+        additional_memory_ports=0,actual_memory_read_bytes=4,native_sector_read_bytes=32,
+        native_sector_requests=1,native_sector_returns=1,
+        native_boundary_fields=dict(req=['valid','ready','we','addr32','wdata256','wstrb32','tag16'],
+                                    rsp=['valid','ready','we','data256','tag16']),
+        native_request_bits_including_valid_ready=339,
+        native_response_bits_including_valid_ready=275,
+        transport='existing a_req/a_rsp native LSU -> shared SM0 route -> existing AW3 CDC -> same HBM bank; kind3 arena-only read forbidden',
+        register_mux_or_fanout_added=0,area_delta_um2=0,slot='existing instruction/command memories, caller must reserve five contiguous instruction words and two commands',
+        ideal_instruction_issue_edges=5,LSU_completion_edges=None,
+        actual_native_provider_RTT_edges=None,CP_launch_END_edges=None,
+        composed_latency='five actual instructions plus native LSU blocking request/return and B_DRAIN/CP launch-END overhead; RTT/context calendar must be measured in existing parent',
+        composed_latency_bound=False,clock='actual clk_sm, existing inherited boundary; no clock or uncertainty change',
+        required_launch_fence='all32 full73 checked kind4 responses accepted, sink ACK/debt drained, actual consumer/source reverse and shared borrower release, same-frame sink allocation remains retained until native LSU return and SM/CP completion',
+        real_postrelease_allocation_source=None,
+        parent_condition='current preinstall RELEASE and old install_consumer retirement clear book/frame; owner must bind an actual persistent allocation in current CP context, not cached readiness',
+        entry_PC_bound=False,production_book_bound=False,
+        CP_RESULT_contract='SM full32bits preserved; CP END checks (res_q>>TW)==0 with TW17, otherwise status3; no ID truncation or TOKEN echo waiver',
+        RTL_numerical_gate_passed=False,parent_joined=False,physical_qualified=False,headline_rate_credit=False)
 
 
 def hbm_vm_publication_parent_model():
