@@ -20,7 +20,8 @@ add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
 # hfd_cmdproc: the command-memory SRAM macros (ot_sram_2rw_512x64_m4_r2c2, PG pins on M4) get M5 straps over the macro
 # connected down to their M4 PG pins and up to the M6 straps of the top grid.
-define_pdn_grid -macro -cells {ot_sram_2rw_512x64_m4_r2c2} -halo {5 5 5 5} -voltage_domains {CORE} -name {sram}
+define_pdn_grid -macro -cells {ot_sram_2rw_512x64_m4_r2c2} -halo {2 2 2 2} -voltage_domains {CORE} -name {sram}
 add_pdn_stripe -grid {sram} -layer {M5} -width {0.12} -spacing {0.072} -pitch {5.4} -offset {0.300}
 add_pdn_connect -grid {sram} -layers {M4 M5}
 add_pdn_connect -grid {sram} -layers {M5 M6}
+# halo 2: cp9_pd55 PDN-0008 (the macro sits within 2.02 um of a row end; halo 5 overlapped 296 rows)
