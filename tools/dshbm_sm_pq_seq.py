@@ -56,12 +56,12 @@ STRESS = [("s bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("s fp4 K2304 R2 (G2)",
           ("s fp4 K2304 R2 (G2) b", "fp4", 2304, 2, 1), ("s bf16 K512 R32 (G1) b", "bf16", 512, 32, 1)]
 
 # directed retire-order hazard (the HAZ = 0 negative must fail on the deeper smh pipeline): a deep-D op (BF16 G10:
-# D = DBF + 4 SLAT = 38) followed at once by a shallow one (block-dot G1: D = 0, 8 lines a row), so the second op's
-# first row would reach the stack output ~15 + 8 cycles after the first op's last issue, inside its 38-cycle drain.
-# The stress sequence's follow-ups (G2/G3, 30+ lines a row) drain later than the bf16 row on smh by themselves.
-HAZSEQ = [("h bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("h fp8 K512 R8 (G1)", "fp8", 512, 8, 1),
-          ("h bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("h fp4 K512 R8 (G1)", "fp4", 512, 8, 1),
-          ("h bf16 K5120 R2 (G10)", "bf16", 5120, 2, 1), ("h fp8 K512 R4 (G1) b", "fp8", 512, 4, 1)]
+# D = DBF + 4 SLAT = 39) followed at once by a SINGLE-ROW shallow one (block-dot G1: D = 0, 8 lines), whose row
+# drains ~81 cycles after its last line: 15 + 8 + 81 < 120, inside the BF16 row's drain.  (sim15: with R8 / R4
+# followers the eight interleaved rows finished with the op's last line, after the BF16 row, and HAZ = 0 passed.)
+HAZSEQ = [("h bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("h fp8 K512 R1 (G1)", "fp8", 512, 1, 1),
+          ("h bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("h fp4 K512 R1 (G1)", "fp4", 512, 1, 1),
+          ("h bf16 K5120 R2 (G10)", "bf16", 5120, 2, 1), ("h fp8 K512 R1 (G1) b", "fp8", 512, 1, 1)]
 
 
 def seq_ops(name, serial):
