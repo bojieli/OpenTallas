@@ -426,7 +426,7 @@ proc ::ot_pin_place_auto {re depth} {
                         set x $c; lset cur $r [expr {$c + $w2}]
                     } else {
                         if {$c - $w2 < $lo} { continue }
-                        set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                        set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
                     }
                     place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                     set done 1; incr placed; break
@@ -593,7 +593,7 @@ proc ::ot_pin_place {re side xoff xw} {
                     set x $c; lset cur $r [expr {$c + $w2}]
                 } else {
                     if {$c - $w2 < $lo} { continue }
-                    set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                    set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
                 }
                 set rr [lindex $rows $r]
                 place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
@@ -762,7 +762,7 @@ proc ::ot_pin_place_auto {re depth} {
                         set x $c; lset cur $r [expr {$c + $w2}]
                     } else {
                         if {$c - $w2 < $lo} { continue }
-                        set x [expr {$c - $w}]; lset cur $r [expr {$c - $w2}]
+                        set x [expr {$c - $w2}]; lset cur $r [expr {$c - $w2}]   ;# upsizing grows rightwards: keep the room on the pin side
                     }
                     place_inst -name [$inst getName] -location [list [expr {double($x) / $dbu}] [expr {double([lindex $rr 0]) / $dbu}]] -orientation [lindex $rr 1] -status FIRM
                     set done 1; incr placed; break
