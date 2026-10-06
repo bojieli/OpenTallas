@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SFU_C12_ENABLE=0,SFU_NATIVE_VM_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,SU_FOUR_COMBINATIONAL_CUTS=0,SU_FAST_OWNER_FRONTIER=0,SU_PARALLEL_PHASE_VALIDATION=0,SU_PROVIDER_ADAPTER=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
  parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1,
@@ -39,6 +39,73 @@ module ot_ds_hbm_cluster20_integrated #(
  input wire [ND*12-1:0] sfu_row,input wire [ND*3-1:0] sfu_fn,
  output wire [ND-1:0] sfu_enroll_r,sfu_publication_v,sfu_retained,sfu_fault,sfu_warm_ack,
  output wire [ND*73-1:0] sfu_held_frame,
+ // Native VM root caller ABI, one existing 32-SRAM root per die.
+ input wire [ND*1-1:0] sfu_vm_bind_v,
+ output wire [ND*1-1:0] sfu_vm_bind_r,
+ input wire [ND*73-1:0] sfu_vm_bind_frame,
+ input wire [ND*7-1:0] sfu_vm_bind_rank,
+ input wire [ND*32-1:0] sfu_vm_bind_base,
+ input wire [ND*32-1:0] sfu_vm_bind_span,
+ input wire [ND*1-1:0] sfu_vm_retire_v,
+ output wire [ND*1-1:0] sfu_vm_retire_r,
+ input wire [ND*73-1:0] sfu_vm_retire_frame,
+ output wire [ND*73-1:0] sfu_vm_held_frame,
+ output wire [ND*1-1:0] sfu_vm_retained,
+ output wire [ND*1-1:0] sfu_vm_warm_ack,
+ output wire [ND*1-1:0] sfu_vm_fault,
+ input wire [ND*1-1:0] sfu_vm_activation_wr_v,
+ output wire [ND*1-1:0] sfu_vm_activation_wr_r,
+ input wire [ND*73-1:0] sfu_vm_activation_wr_frame,
+ input wire [ND*1-1:0] sfu_vm_activation_wr_bank,
+ input wire [ND*7-1:0] sfu_vm_activation_wr_addr,
+ input wire [ND*2063-1:0] sfu_vm_activation_wr_data,
+ input wire [ND*192-1:0] sfu_vm_activation_wr_owner,
+ output wire [ND*1-1:0] sfu_vm_activation_ACK_v,
+ input wire [ND*1-1:0] sfu_vm_activation_ACK_r,
+ output wire [ND*73-1:0] sfu_vm_activation_ACK_frame,
+ output wire [ND*192-1:0] sfu_vm_activation_ACK_owner,
+ input wire [ND*1-1:0] sfu_vm_activation_rd_v,
+ output wire [ND*1-1:0] sfu_vm_activation_rd_r,
+ input wire [ND*73-1:0] sfu_vm_activation_rd_frame,
+ input wire [ND*1-1:0] sfu_vm_activation_rd_bank,
+ input wire [ND*7-1:0] sfu_vm_activation_rd_addr,
+ input wire [ND*192-1:0] sfu_vm_activation_rd_owner,
+ output wire [ND*4-1:0] sfu_vm_tap_v,
+ input wire [ND*4-1:0] sfu_vm_tap_r,
+ output wire [ND*8252-1:0] sfu_vm_tap_data,
+ output wire [ND*768-1:0] sfu_vm_tap_owner,
+ output wire [ND*292-1:0] sfu_vm_tap_frame,
+ output wire [ND*4-1:0] sfu_vm_tap_source_clk,
+ input wire [ND*4-1:0] sfu_vm_tap_ACK_v,
+ output wire [ND*4-1:0] sfu_vm_tap_ACK_r,
+ input wire [ND*768-1:0] sfu_vm_tap_ACK_owner,
+ input wire [ND*292-1:0] sfu_vm_tap_ACK_frame,
+ output wire [ND*1-1:0] sfu_vm_activation_release,
+ input wire [ND*1-1:0] sfu_vm_activation_release_r,
+ output wire [ND*73-1:0] sfu_vm_activation_release_frame,
+ output wire [ND*192-1:0] sfu_vm_activation_release_owner,
+ input wire [ND*1-1:0] sfu_vm_su_pub_v,
+ output wire [ND*1-1:0] sfu_vm_su_pub_r,
+ input wire [ND*73-1:0] sfu_vm_su_pub_frame,
+ input wire [ND*32-1:0] sfu_vm_su_pub_addr,
+ input wire [ND*1024-1:0] sfu_vm_su_pub_data,
+ output wire [ND*1-1:0] sfu_vm_su_ACK_v,
+ input wire [ND*1-1:0] sfu_vm_su_ACK_r,
+ output wire [ND*32-1:0] sfu_vm_publication_ACK_addr,
+ output wire [ND*73-1:0] sfu_vm_publication_ACK_frame,
+ input wire [ND*1-1:0] sfu_vm_index_read_v,
+ output wire [ND*1-1:0] sfu_vm_index_read_r,
+ input wire [ND*73-1:0] sfu_vm_index_read_frame,
+ input wire [ND*7-1:0] sfu_vm_index_read_rank,
+ input wire [ND*32-1:0] sfu_vm_index_read_addr,
+ input wire [ND*6-1:0] sfu_vm_index_read_words,
+ input wire [ND*8-1:0] sfu_vm_index_read_tag,
+ output wire [ND*1-1:0] sfu_vm_index_rsp_v,
+ input wire [ND*1-1:0] sfu_vm_index_rsp_r,
+ output wire [ND*1024-1:0] sfu_vm_index_rsp_data,
+ output wire [ND*8-1:0] sfu_vm_index_rsp_tag,
+ output wire [ND*73-1:0] sfu_vm_index_rsp_frame,
+ output wire [ND*7-1:0] sfu_vm_index_rsp_rank,
  // Owned combined callbacks. Descriptor/GO must originate from the actual
  // installed recipe; absent 96x512 source/entry remains compiler-failclosed.
  input wire [ND-1:0] gather_desc_v,gather_start_v,gather_book_valid,gather_req_v,gather_rsp_r,
@@ -90,6 +157,7 @@ module ot_ds_hbm_cluster20_integrated #(
  output wire [ND*1088-1:0] w2_native_rsp_data,
  output wire rst_sm_n, output wire sys_fault
 );
+initial if(SFU_NATIVE_VM_ENABLE&&!SFU_C12_ENABLE) $fatal(1,"native VM requires actual SFUc12 stage");
 initial if(SFU_C12_ENABLE && (!COMBINED_ENABLE||!ENABLE||TW!=17||PW!=20))
  $fatal(1,"SFU c12 requires enabled combined full73 parent");
 initial if(COMBINED_ENABLE && (TW!=17 || PW!=20 || NSM!=2 || IMW!=14 || NS!=2 || NPC!=2 || USE_W2!=0))
@@ -106,6 +174,36 @@ generate if(COMBINED_ENABLE==0) begin:g_original
   .cpl_v(cpl_v),.cpl_rdy(cpl_rdy),.cpl_data(cpl_data),.im_we(im_we),.im_addr(im_addr),.im_data(im_data),
   .rst_sm_n(rst_sm_n),.sys_fault(sys_fault));
 
+ assign sfu_vm_bind_r=0;
+ assign sfu_vm_retire_r=0;
+ assign sfu_vm_held_frame=0;
+ assign sfu_vm_retained=0;
+ assign sfu_vm_warm_ack=0;
+ assign sfu_vm_fault=0;
+ assign sfu_vm_activation_wr_r=0;
+ assign sfu_vm_activation_ACK_v=0;
+ assign sfu_vm_activation_ACK_frame=0;
+ assign sfu_vm_activation_ACK_owner=0;
+ assign sfu_vm_activation_rd_r=0;
+ assign sfu_vm_tap_v=0;
+ assign sfu_vm_tap_data=0;
+ assign sfu_vm_tap_owner=0;
+ assign sfu_vm_tap_frame=0;
+ assign sfu_vm_tap_source_clk=0;
+ assign sfu_vm_tap_ACK_r=0;
+ assign sfu_vm_activation_release=0;
+ assign sfu_vm_activation_release_frame=0;
+ assign sfu_vm_activation_release_owner=0;
+ assign sfu_vm_su_pub_r=0;
+ assign sfu_vm_su_ACK_v=0;
+ assign sfu_vm_publication_ACK_addr=0;
+ assign sfu_vm_publication_ACK_frame=0;
+ assign sfu_vm_index_read_r=0;
+ assign sfu_vm_index_rsp_v=0;
+ assign sfu_vm_index_rsp_data=0;
+ assign sfu_vm_index_rsp_tag=0;
+ assign sfu_vm_index_rsp_frame=0;
+ assign sfu_vm_index_rsp_rank=0;
  assign sfu_enroll_r=0;assign sfu_publication_v=0;assign sfu_retained=0;assign sfu_fault=0;assign sfu_warm_ack=0;assign sfu_held_frame=0;
  assign normal_busy=0;assign normal_done=0;assign normal_vm_re=0;assign normal_vm_raddr=0;
  assign normal_e_valid=0;assign normal_e_data=0;assign normal_e_last=0;assign normal_e_mode=0;assign normal_e_tag=0;assign normal_o_ready=0;
@@ -121,6 +219,36 @@ generate if(COMBINED_ENABLE==0) begin:g_original
 end else if(ENABLE==0) begin:g_off
  assign db_rdy=0; assign cpl_v=0; assign cpl_data=0;
  assign rst_sm_n=0; assign sys_fault=0;
+ assign sfu_vm_bind_r=0;
+ assign sfu_vm_retire_r=0;
+ assign sfu_vm_held_frame=0;
+ assign sfu_vm_retained=0;
+ assign sfu_vm_warm_ack=0;
+ assign sfu_vm_fault=0;
+ assign sfu_vm_activation_wr_r=0;
+ assign sfu_vm_activation_ACK_v=0;
+ assign sfu_vm_activation_ACK_frame=0;
+ assign sfu_vm_activation_ACK_owner=0;
+ assign sfu_vm_activation_rd_r=0;
+ assign sfu_vm_tap_v=0;
+ assign sfu_vm_tap_data=0;
+ assign sfu_vm_tap_owner=0;
+ assign sfu_vm_tap_frame=0;
+ assign sfu_vm_tap_source_clk=0;
+ assign sfu_vm_tap_ACK_r=0;
+ assign sfu_vm_activation_release=0;
+ assign sfu_vm_activation_release_frame=0;
+ assign sfu_vm_activation_release_owner=0;
+ assign sfu_vm_su_pub_r=0;
+ assign sfu_vm_su_ACK_v=0;
+ assign sfu_vm_publication_ACK_addr=0;
+ assign sfu_vm_publication_ACK_frame=0;
+ assign sfu_vm_index_read_r=0;
+ assign sfu_vm_index_rsp_v=0;
+ assign sfu_vm_index_rsp_data=0;
+ assign sfu_vm_index_rsp_tag=0;
+ assign sfu_vm_index_rsp_frame=0;
+ assign sfu_vm_index_rsp_rank=0;
  assign sfu_enroll_r=0;assign sfu_publication_v=0;assign sfu_retained=0;assign sfu_fault=0;assign sfu_warm_ack=0;assign sfu_held_frame=0;
  assign normal_busy=0;assign normal_done=0;assign normal_vm_re=0;assign normal_vm_raddr=0;
  assign normal_e_valid=0;assign normal_e_data=0;assign normal_e_last=0;assign normal_e_mode=0;assign normal_e_tag=0;assign normal_o_ready=0;
@@ -189,7 +317,7 @@ end else begin:g_on
         wire all_prior_quiet=!(|busy)&&!(|launch_v)&&!(|a_req_v)&&!(|a_rsp_v)&&
                              !(|obs_req)&&!(|obs_rsp);
         wire all_routes_drained=native_credit_empty&&shared_idle&&!su_pending&&!su_owned&&
-                                !gather_retained[d]&&!fmt_retained&&!sfu_retained[d]&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
+                                !gather_retained[d]&&!fmt_retained&&!sfu_retained[d]&&(!SFU_NATIVE_VM_ENABLE||!sfu_vm_retained[d])&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
         assign db_rdy[d]=cp_idle&&all_routes_drained&&!cp_reset_wait;
         assign cpl_v[d]=cp_cpl_v&&all_routes_drained;
         assign cp_retire_ready=cpl_rdy[d]&&all_routes_drained;
@@ -439,8 +567,129 @@ end else begin:g_on
          .m_req_v(c_req_v[0]),.m_req_rdy(c_req_rdy[0]),.m_req_we(c_req_we[0]),.m_req_addr(c_req_addr[31:0]),
          .m_req_wdata(c_req_wdata[255:0]),.m_req_wstrb(c_req_wstrb[31:0]),.m_req_tag(c_req_tag[15:0]),
          .m_rsp_v(c_rsp_v[0]),.m_rsp_rdy(c_rsp_rdy[0]),.m_rsp_we(c_rsp_we[0]),.m_rsp_tag(c_rsp_tag[15:0]),.m_rsp_data(c_rsp_data[255:0]));
-        ot_hbm_integrated_sfu_provider_join #(.ENABLE(SFU_C12_ENABLE)) u_sfu_c12(
-         .clk(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]),.warm_ack(sfu_warm_ack[d]),
+        wire sfu_stage_warm_ack;
+        assign sfu_warm_ack[d]=sfu_stage_warm_ack&&(!SFU_NATIVE_VM_ENABLE||sfu_vm_warm_ack[d]);
+        wire nv_enroll_v,nv_enroll_r,nv_tx_v,nv_tx_r,nv_tx_last,nv_done,nv_complete_v,nv_complete_r,nv_drained,nv_fault;
+        wire [1023:0] nv_tx_d;wire [72:0] nv_tx_owner,nv_complete_frame;wire [3:0] nv_tx_index;wire [31:0] nv_complete_tag;
+        wire nv_source_owned=sfu_allocation_valid[d]&&sfu_allocation_frame[d*73+:73]==actual_cp_frame;
+        if(SFU_NATIVE_VM_ENABLE)begin:g_sfu_native_vm
+         wire vm_bind_ready,vm_activation_wr_ready,vm_activation_rd_ready,vm_su_pub_ready,vm_index_read_ready,vm_retire_ready;
+         assign sfu_vm_bind_r[d]=vm_bind_ready&&!cp_reset_req[d];
+         assign sfu_vm_activation_wr_r[d]=vm_activation_wr_ready&&!cp_reset_req[d];
+         assign sfu_vm_activation_rd_r[d]=vm_activation_rd_ready&&!cp_reset_req[d];
+         assign sfu_vm_su_pub_r[d]=vm_su_pub_ready&&!cp_reset_req[d];
+         assign sfu_vm_index_read_r[d]=vm_index_read_ready&&!cp_reset_req[d];
+         assign sfu_vm_retire_r[d]=vm_retire_ready&&!sfu_retained[d];
+         ot_hbm_die_vm_sfu_publication_root #(.ENABLE(1)) u_vm(
+          .clk_sm(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]&&nv_drained),
+          .bind_v(sfu_vm_bind_v[d]&&!cp_reset_req[d]),
+          .bind_r(vm_bind_ready),
+          .bind_frame(sfu_vm_bind_frame[d*73+:73]),
+          .bind_rank(sfu_vm_bind_rank[d*7+:7]),
+          .bind_base(sfu_vm_bind_base[d*32+:32]),
+          .bind_span(sfu_vm_bind_span[d*32+:32]),
+          .retire_v(sfu_vm_retire_v[d]&&!sfu_retained[d]),
+          .retire_r(vm_retire_ready),
+          .retire_frame(sfu_vm_retire_frame[d*73+:73]),
+          .held_frame(sfu_vm_held_frame[d*73+:73]),
+          .retained(sfu_vm_retained[d]),
+          .warm_ack(sfu_vm_warm_ack[d]),
+          .fault(sfu_vm_fault[d]),
+          .activation_wr_v(sfu_vm_activation_wr_v[d]&&!cp_reset_req[d]),
+          .activation_wr_r(vm_activation_wr_ready),
+          .activation_wr_frame(sfu_vm_activation_wr_frame[d*73+:73]),
+          .activation_wr_bank(sfu_vm_activation_wr_bank[d]),
+          .activation_wr_addr(sfu_vm_activation_wr_addr[d*7+:7]),
+          .activation_wr_data(sfu_vm_activation_wr_data[d*2063+:2063]),
+          .activation_wr_owner(sfu_vm_activation_wr_owner[d*192+:192]),
+          .activation_ACK_v(sfu_vm_activation_ACK_v[d]),
+          .activation_ACK_r(sfu_vm_activation_ACK_r[d]),
+          .activation_ACK_frame(sfu_vm_activation_ACK_frame[d*73+:73]),
+          .activation_ACK_owner(sfu_vm_activation_ACK_owner[d*192+:192]),
+          .activation_rd_v(sfu_vm_activation_rd_v[d]&&!cp_reset_req[d]),
+          .activation_rd_r(vm_activation_rd_ready),
+          .activation_rd_frame(sfu_vm_activation_rd_frame[d*73+:73]),
+          .activation_rd_bank(sfu_vm_activation_rd_bank[d]),
+          .activation_rd_addr(sfu_vm_activation_rd_addr[d*7+:7]),
+          .activation_rd_owner(sfu_vm_activation_rd_owner[d*192+:192]),
+          .tap_v(sfu_vm_tap_v[d*4+:4]),
+          .tap_r(sfu_vm_tap_r[d*4+:4]),
+          .tap_data(sfu_vm_tap_data[d*8252+:8252]),
+          .tap_owner(sfu_vm_tap_owner[d*768+:768]),
+          .tap_frame(sfu_vm_tap_frame[d*292+:292]),
+          .tap_source_clk(sfu_vm_tap_source_clk[d*4+:4]),
+          .tap_ACK_v(sfu_vm_tap_ACK_v[d*4+:4]),
+          .tap_ACK_r(sfu_vm_tap_ACK_r[d*4+:4]),
+          .tap_ACK_owner(sfu_vm_tap_ACK_owner[d*768+:768]),
+          .tap_ACK_frame(sfu_vm_tap_ACK_frame[d*292+:292]),
+          .activation_release(sfu_vm_activation_release[d]),
+          .activation_release_r(sfu_vm_activation_release_r[d]),
+          .activation_release_frame(sfu_vm_activation_release_frame[d*73+:73]),
+          .activation_release_owner(sfu_vm_activation_release_owner[d*192+:192]),
+          .su_pub_v(sfu_vm_su_pub_v[d]&&!cp_reset_req[d]),
+          .su_pub_r(vm_su_pub_ready),
+          .su_pub_frame(sfu_vm_su_pub_frame[d*73+:73]),
+          .su_pub_addr(sfu_vm_su_pub_addr[d*32+:32]),
+          .su_pub_data(sfu_vm_su_pub_data[d*1024+:1024]),
+          .su_ACK_v(sfu_vm_su_ACK_v[d]),
+          .su_ACK_r(sfu_vm_su_ACK_r[d]),
+          .publication_ACK_addr(sfu_vm_publication_ACK_addr[d*32+:32]),
+          .publication_ACK_frame(sfu_vm_publication_ACK_frame[d*73+:73]),
+          .index_read_v(sfu_vm_index_read_v[d]&&!cp_reset_req[d]),
+          .index_read_r(vm_index_read_ready),
+          .index_read_frame(sfu_vm_index_read_frame[d*73+:73]),
+          .index_read_rank(sfu_vm_index_read_rank[d*7+:7]),
+          .index_read_addr(sfu_vm_index_read_addr[d*32+:32]),
+          .index_read_words(sfu_vm_index_read_words[d*6+:6]),
+          .index_read_tag(sfu_vm_index_read_tag[d*8+:8]),
+          .index_rsp_v(sfu_vm_index_rsp_v[d]),
+          .index_rsp_r(sfu_vm_index_rsp_r[d]),
+          .index_rsp_data(sfu_vm_index_rsp_data[d*1024+:1024]),
+          .index_rsp_tag(sfu_vm_index_rsp_tag[d*8+:8]),
+          .index_rsp_frame(sfu_vm_index_rsp_frame[d*73+:73]),
+          .index_rsp_rank(sfu_vm_index_rsp_rank[d*7+:7]),
+          .sfu_source_owned(nv_source_owned),.sfu_enroll_v(nv_enroll_v),.sfu_enroll_r(nv_enroll_r),
+          .sfu_enroll_frame(sfu_enroll_frame[d*73+:73]),.sfu_base_word(sfu_dest_addr[d*32+:32]>>2),.sfu_tag(sfu_local_tag[d*32+:32]),
+          .sfu_rx_v(nv_tx_v),.sfu_rx_r(nv_tx_r),.sfu_rx_data(nv_tx_d),.sfu_rx_frame(nv_tx_owner),.sfu_rx_index(nv_tx_index),.sfu_rx_last(nv_tx_last),
+          .sfu_publication_done(nv_done),.sfu_complete_v(nv_complete_v),.sfu_complete_r(nv_complete_r),
+          .sfu_complete_frame(nv_complete_frame),.sfu_complete_tag(nv_complete_tag),.sfu_retained(),.sfu_drained());
+         assign nv_fault=sfu_vm_fault[d];
+        end else begin:g_no_sfu_native_vm
+         assign sfu_vm_bind_r[d*1+:1]=0;
+         assign sfu_vm_retire_r[d*1+:1]=0;
+         assign sfu_vm_held_frame[d*73+:73]=0;
+         assign sfu_vm_retained[d*1+:1]=0;
+         assign sfu_vm_warm_ack[d*1+:1]=0;
+         assign sfu_vm_fault[d*1+:1]=0;
+         assign sfu_vm_activation_wr_r[d*1+:1]=0;
+         assign sfu_vm_activation_ACK_v[d*1+:1]=0;
+         assign sfu_vm_activation_ACK_frame[d*73+:73]=0;
+         assign sfu_vm_activation_ACK_owner[d*192+:192]=0;
+         assign sfu_vm_activation_rd_r[d*1+:1]=0;
+         assign sfu_vm_tap_v[d*4+:4]=0;
+         assign sfu_vm_tap_data[d*8252+:8252]=0;
+         assign sfu_vm_tap_owner[d*768+:768]=0;
+         assign sfu_vm_tap_frame[d*292+:292]=0;
+         assign sfu_vm_tap_source_clk[d*4+:4]=0;
+         assign sfu_vm_tap_ACK_r[d*4+:4]=0;
+         assign sfu_vm_activation_release[d*1+:1]=0;
+         assign sfu_vm_activation_release_frame[d*73+:73]=0;
+         assign sfu_vm_activation_release_owner[d*192+:192]=0;
+         assign sfu_vm_su_pub_r[d*1+:1]=0;
+         assign sfu_vm_su_ACK_v[d*1+:1]=0;
+         assign sfu_vm_publication_ACK_addr[d*32+:32]=0;
+         assign sfu_vm_publication_ACK_frame[d*73+:73]=0;
+         assign sfu_vm_index_read_r[d*1+:1]=0;
+         assign sfu_vm_index_rsp_v[d*1+:1]=0;
+         assign sfu_vm_index_rsp_data[d*1024+:1024]=0;
+         assign sfu_vm_index_rsp_tag[d*8+:8]=0;
+         assign sfu_vm_index_rsp_frame[d*73+:73]=0;
+         assign sfu_vm_index_rsp_rank[d*7+:7]=0;
+         assign nv_enroll_r=0;assign nv_tx_r=0;assign nv_done=0;assign nv_complete_v=0;
+         assign nv_complete_frame=0;assign nv_complete_tag=0;assign nv_fault=0;
+        end
+        ot_hbm_integrated_sfu_provider_join #(.ENABLE(SFU_C12_ENABLE),.NATIVE_VM_PUBLICATION(SFU_NATIVE_VM_ENABLE)) u_sfu_c12(
+         .clk(clk_sm),.por_n(rst_sm_n),.warm_req(cp_reset_req[d]),.warm_ack(sfu_stage_warm_ack),
          .enroll_v(sfu_enroll_v[d]&&sfu_admit),.enroll_r(sfu_offer_r),
          .enroll_frame(sfu_enroll_frame[d*73+:73]),.enroll_pc(sfu_pc[d*32+:32]),.enroll_op(sfu_op[d*32+:32]),
          .enroll_source(sfu_source[d*16+:16]),.enroll_expert(sfu_expert[d*9+:9]),.enroll_matrix(sfu_matrix[d]),
@@ -456,6 +705,10 @@ end else begin:g_on
          .req_v(sfu_req_v),.req_r(p_req_rdy[1]&&sfu_route),.req(sfu_req),
          .rsp_v(p_rsp_v[1]&&sfu_route),.rsp_r(sfu_rsp_r),
          .rsp({p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]}),
+         .native_enroll_v(nv_enroll_v),.native_enroll_r(nv_enroll_r),
+         .native_tx_v(nv_tx_v),.native_tx_r(nv_tx_r),.native_tx_d(nv_tx_d),.native_tx_owner(nv_tx_owner),.native_tx_index(nv_tx_index),.native_tx_last(nv_tx_last),
+         .native_publication_done(nv_done),.native_complete_v(nv_complete_v),.native_fault(nv_fault),
+         .native_complete_frame(nv_complete_frame),.native_complete_tag(nv_complete_tag),.native_complete_r(nv_complete_r),.native_producer_drained(nv_drained),
          .publication_v(sfu_publication_v[d]),.publication_r(sfu_publication_r[d]),
          .publication_owner(sfu_publication_owner[d*73+:73]),
          .held_frame(sfu_held_frame[d*73+:73]),.retained(sfu_retained[d]),.fault(sfu_fault[d]),.ce(),.due());

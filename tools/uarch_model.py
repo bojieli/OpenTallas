@@ -10358,13 +10358,18 @@ def dsrom_window_full_block_pipeline_model():
     read_completion_snapshot = banks*4
     read_snapshot_gross = read_wanted_snapshot+read_owner_snapshot+read_completion_snapshot
     read_qualification_extra = read_snapshot_gross-banks
+    merge_read_address_FF = 21
+    merge_accepted_identity_FF = 21
+    merge_control_FF = merge_read_address_FF+merge_accepted_identity_FF
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
-             read_extra + read_qualification_extra + writer_control_upper + job_control_upper)
+             read_extra + read_qualification_extra + merge_control_FF +
+             writer_control_upper + job_control_upper)
     # Real screen is a conservative retained baseline, including its boundary FFs.
     baseline = 568089.142192
-    ff_area = added*DFF_UM2
+    merge_reset_FF_extra = merge_read_address_FF*(.37908-DFF_UM2)
+    ff_area = added*DFF_UM2+merge_reset_FF_extra
     mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
     # Positive allowance for the captured end adder and four end comparisons;
     # do not credit removal of the old relative-row subtraction/comparisons.
@@ -10372,8 +10377,11 @@ def dsrom_window_full_block_pipeline_model():
     # Each new witness holds when req_v is low. Reserve four NAND2 cell areas
     # per enable mux, with no removed-enable or shared-inverter savings credit.
     read_snapshot_enable_mux = read_snapshot_gross*4*.08748
+    merge_increment_logic = 21*2*12*.08748
+    merge_enable_and_lane_decode = (merge_control_FF*4+banks*3)*.08748
     cell_budget = (baseline+ff_area+mux_area_upper+read_qualification_logic+
-                   read_snapshot_enable_mux)
+                   read_snapshot_enable_mux+merge_increment_logic+
+                   merge_enable_and_lane_decode)
     placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
     clock = 1.2e9
     return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
@@ -10399,6 +10407,11 @@ def dsrom_window_full_block_pipeline_model():
             read_completion_group_snapshot_FF_bits=read_completion_snapshot,
             removed_direct_bank_ok_FF_bits=banks,
             read_qualification_added_FF_bits=read_qualification_extra,
+            merge_read_address_FF_bits=merge_read_address_FF,
+            merge_accepted_identity_FF_bits=merge_accepted_identity_FF,
+            merge_added_payload_FF_bits=0,
+            merge_address_lookahead='advance only with original next_row transitions; snapshot expected accepted WB first independently from wbase+next_row, not from lookahead address',
+            merge_lane_writes='four fixed 4240-bit lanes decoded from registered nlanes; no variable part-select multiplication or shift',
             read_qualification='fresh accepted-request operands and preedge completion captured with payload; qualification at existing second read edge, not reused permission',
             job_control_upper_bits=job_control_upper, added_FF_upper_bits=added,
             qualified_ready='current elastic occupancy and downstream transfer; never permission cached across mutation',
@@ -10413,6 +10426,11 @@ def dsrom_window_full_block_pipeline_model():
             read_control_route_tracks_lower_bound=read_owner_snapshot*banks+read_wanted_snapshot+read_completion_snapshot,
             read_snapshot_enable_additional_sinks=read_snapshot_gross,
             read_control_extra_external_ports=0, read_control_extra_memory_ports=0,
+            merge_control_internal_bits_per_cycle=merge_control_FF,
+            merge_control_route_tracks_lower_bound=merge_control_FF,
+            merge_extra_external_ports=0, merge_extra_memory_ports=0,
+            merge_static_lane_decode_replicas=banks,
+            merge_per_lane_write_enable_fanout=16*265,
             replicas=banks*cols, per_column_winner_inputs=npc,
             landing_mux_2to1_bits=column_payload*(npc-1),
             writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
@@ -10421,12 +10439,17 @@ def dsrom_window_full_block_pipeline_model():
         area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
             read_qualification_logic_allowance_um2=read_qualification_logic,
             read_snapshot_enable_mux_allowance_um2=read_snapshot_enable_mux,
+            merge_reset_FF_extra_um2=merge_reset_FF_extra,
+            merge_increment_logic_allowance_um2=merge_increment_logic,
+            merge_enable_and_static_lane_decode_allowance_um2=merge_enable_and_lane_decode,
+            merge_removed_mux_or_adder_savings_credit_um2=0,
             read_qualification_logic_savings_credit_um2=0,
             mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
             physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
             parent_slot_fit=False),
         latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
-            read_added_cycles=1, read_qualification_added_cycles=0, existing_stream_validation_tail_cycles_upper=8,
+            read_added_cycles=1, read_qualification_added_cycles=0, merge_added_cycles=0,
+            existing_stream_validation_tail_cycles_upper=8,
             writer_added_cycles_per_block_upper=8,
             rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
             added_layer_cycles_upper=4+7+32+128+8,
@@ -10442,6 +10465,10 @@ def dsrom_window_full_block_pipeline_model():
             read_snapshot_gross_sink_clock_cap_fF={
                 'SS':read_snapshot_gross*.446638, 'FF':read_snapshot_gross*.52201},
             read_snapshot_clock_cap_basis='pinned ORFS DFFHQNx1 SS/FF CLK capacitance in fF; no removed-sink credit, buffer/wire cost and root pin capacitance require actual CTS',
+            merge_new_clock_sinks=merge_control_FF,
+            merge_sink_clock_cap_fF={
+                'SS':21*(.433982+.446638), 'FF':21*(.503152+.52201)},
+            merge_clock_cap_basis='21 DFFASRHQN address lookahead +21 DFFHQN independently captured accepted identity; pinned SS/FF CLK cap, not root loading',
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
@@ -10723,6 +10750,42 @@ def hbm_r5a_external_calendar_context_model():
             warm_debt_clear_allowed=False),
         gates=dict(syntax=False, exact=False, protection=False, physical=False,
             performance=False, adopted=False))
+
+def hbm_r5a_provider_return_join_model():
+    """Consumer-only identity check on Gibbs's actual service READ hook.
+
+    Reuse the externally held protected full73, not a new owner ledger. The
+    provider's 2448 coded bits are already priced by its existing model.
+    """
+    gate_path=ROOT/'results/rtl/hbm_r5a_provider_join_20261006/r1_PASS/result.json'
+    gate=json.loads(gate_path.read_text()) if gate_path.exists() else {}
+    checker='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv'
+    changed_pass=(gate.get('status')=='PASS' and gate.get('exit')==0 and
+        gate.get('source_sha256',{}).get(checker)==hashlib.sha256((ROOT/checker).read_bytes()).hexdigest()) if (ROOT/checker).exists() else False
+    return dict(item=6,default_OFF=True,PCs=32,MACs_per_cycle=0,
+        source='rtl/hbm_accel/service/ot_hbm_accel_expert_provider_join_p2.sv',
+        caller='rtl/hbm_accel/service/ot_hbm_accel_expert_stack_shared_p2.sv',
+        provider_source='rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv',
+        provider_source_step='56d07d0e8',provider_mode='P2_READ_RETURN=1',
+        calendar_instances_added=0,owner_copies_added=0,payload_storage_added=0,
+        sticky_fault_complement_FF=2,minimum_added_FF_area_um2=2*.2916,
+        compare_bits=dict(issue_ordinal=32*16,return_frame=32*73),
+        additional_input_bits=1+73+32*16+32*73,
+        bytes_per_service_edge=32*32,SM_bits_per_stream_edge=8*1024,
+        added_memory_ports=0,added_codec_instances=0,added_pipeline_edges=0,
+        replica_count=1,mux_demux_added=0,full73_fanout=32,
+        routing_tracks_added=1+73+32*16+32*73,channel_capacity=None,
+        parent_slot_fit=False,physical_comparator_buffer_area_pending=True,
+        provider_coded_FF_already_priced=2448,provider_area_double_counted=False,
+        clock_ps=dict(service=1024,stream=2500/3),
+        composed_latency=dict(existing_context_ns=3.334,additional_join_edges=0,
+            loaded_comparator_timing_pending=True,first_access_FAIL_ns=153.757,
+            target_ns=140,full_off_package_FEC='consume actual DS-RACK fullFEC handoff'),
+        held_frame='actual protected accepted CP/source full73, service-stable through consumer drain; no producer/IRS alias',
+        warm='blocks new enrollment upstream; existing issue/return/freed debt drains, no warm POR',
+        measured_join=dict(record=str(gate_path.relative_to(ROOT)),READs=64,
+            PCs=32,scope='actual Gibbs coded return hook plus new consumer checker only; full expert numerical gate not inferred'),
+        gates=dict(changed_join=changed_pass,physical=False,performance=False,adopted=False))
 
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
@@ -12225,3 +12288,20 @@ def hbm_pcwb_p2_return_binding_model():
         PHY_contract='ordered untagged returns per PC; local ordinal minted at actual READ acceptance, not at descriptor/read-ready',
         full73_source='explicit accepted owner_frame73 input; no producer/transport/IRS or job-only alias',
         physical_closed=False,SS_uncertainty_ps=60,FF_uncertainty_ps=25,token_rate_credit=0)
+
+
+def dsrom_wfc_common_clock_source_model():
+    """Missing W18 common-root /3,/4 producer, additive integration only."""
+    return dict(default=0, replica_count=1, MACs_per_cycle=0,
+        memory_port_bytes_per_cycle=0, communication_intensity=0,
+        boundary_bits_per_cycle=dict(clock_inputs=1, clock_outputs=2, cold_reset=1, fault=1),
+        state_FF_bits=16, FF_area_floor_um2=16*DFF_UM2, fast_clock_OR_gates=1,
+        combinational_area_um2=None, actual_mapped_loads_required=True,
+        root_period_ps=2500/9, fast_period_ps=2500/3, slow_period_ps=10000/9,
+        generated_clock_edges=dict(fast=[1,4,7], slow=[1,5,9]),
+        replica_mux_demux_cost=0, added_pipeline_cycles=0,
+        latency_contribution='Existing model W18 /3,/4 domains; no new data pipeline. Source clkQ, clock-wire, reset-release, phase/skew and PLL jitter must be measured.',
+        routing_tracks_needed=dict(root_clock=1, generated_clocks=2, POR=1, fault=1),
+        channel_capacity=None, floorplan_slot_fit=False,
+        protection='Dual-rail counters/output shadows/sticky failure. Mismatch stops divider outputs on next master edge, fault prevents enrollment until cold POR. No warm reset or live phase change.',
+        physical_closed=False, PLL_IP_qualified=False)

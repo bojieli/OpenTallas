@@ -1,0 +1,56 @@
+{"utc": "2026-10-06T05:35:57Z", "phase": "preguard", "load": 65.5888671875, "idleCPU": 65.51637190257867, "memory_available": 259058884608, "disk_free": 1919249530880, "requiredCPU": 16, "expected_memory_GiB": 8, "disk_estimate_bytes": 1073741824, "inventory_source_bytes": 2726255, "existing_same_shape_work_bytes": 87940834}
+{"utc": "2026-10-06T05:36:02Z", "phase": "postguard", "load": 65.22119140625, "idleCPU": 68.17372053343522, "memory_available": 257616924672, "disk_free": 1919243157504, "requiredCPU": 16, "expected_memory_GiB": 8, "disk_estimate_bytes": 1073741824, "inventory_source_bytes": 2726255, "existing_same_shape_work_bytes": 87940834}
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ (cp_association)
+       80 |   0.9743 |  3.857506e+03 |   +0.10% |  6.63e-12 |  (cp_body)
+       80 |   0.2753 |  3.857506e+03 |   +0.10% |  5.91e-09 |  (cp_association)
+       90 |   0.9742 |  3.860353e+03 |   +0.07% |  1.08e-11 |  (cp_body)
+       90 |   0.2753 |  3.860353e+03 |   +0.07% |  8.70e-09 |  (cp_association)
+      100 |   0.9742 |  3.860988e+03 |   +0.02% |  1.76e-11 |  (cp_body)
+      100 |   0.2753 |  3.860988e+03 |   +0.02% |  1.28e-08 |  (cp_association)
+      110 |   0.9741 |  3.861960e+03 |   +0.03% |  2.87e-11 |  (cp_body)
+      110 |   0.2753 |  3.861960e+03 |   +0.03% |  1.89e-08 |  (cp_association)
+      120 |   0.9739 |  3.866871e+03 |   +0.13% |  4.67e-11 |  (cp_body)
+      120 |   0.2753 |  3.866871e+03 |   +0.13% |  2.78e-08 |  (cp_association)
+      130 |   0.9737 |  3.875873e+03 |   +0.23% |  7.60e-11 |  (cp_body)
+      130 |   0.2753 |  3.875873e+03 |   +0.23% |  4.10e-08 |  (cp_association)
+      140 |   0.9733 |  3.891213e+03 |   +0.40% |  1.24e-10 |  (cp_body)
+      140 |   0.2753 |  3.891213e+03 |   +0.40% |  6.04e-08 |  (cp_association)
+      150 |   0.9729 |  3.918913e+03 |   +0.71% |  2.02e-10 |  (cp_body)
+      150 |   0.2753 |  3.918913e+03 |   +0.71% |  8.89e-08 |  (cp_association)
+      160 |   0.9707 |  3.974114e+03 |   +1.41% |  3.29e-10 |  (cp_body)
+      160 |   0.2753 |  3.974114e+03 |   +1.41% |  1.31e-07 |  (cp_association)
+      170 |   0.9683 |  4.080798e+03 |   +2.68% |  5.35e-10 |  (cp_body)
+      170 |   0.2753 |  4.080798e+03 |   +2.68% |  1.93e-07 |  (cp_association)
+      180 |   0.9632 |  4.279954e+03 |   +4.88% |  8.72e-10 |  (cp_body)
+      180 |   0.2753 |  4.279954e+03 |   +4.88% |  2.84e-07 |  (cp_association)
+      190 |   0.9540 |  4.602897e+03 |   +7.55% |  1.42e-09 |  (cp_body)
+      190 |   0.2753 |  4.602897e+03 |   +7.55% |  4.19e-07 |  (cp_association)
+[INFO GPL-0038] Routability snapshot saved at iter = 195
+      194 |   0.5829 |  4.779674e+03 |          |           |      
+      200 |   0.9439 |  5.031628e+03 |   +9.31% |  2.31e-09 |  (cp_body)
+      200 |   0.2103 |  5.031628e+03 |   +9.31% |  6.17e-07 |  (cp_association)
+      210 |   0.9282 |  5.580079e+03 |  +10.90% |  3.77e-09 |  (cp_body)
+      210 |   0.1988 |  5.580079e+03 |  +10.90% |  9.09e-07 |  (cp_association)
+[WARNING GPL-0323] Divergence detected between consecutive iterations
+Divergence occured in 1 regions.
+[INFO GPL-1011] Original area (um^2): 803.51
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 16.98 (+2.11%)
+[INFO GPL-1014] Final placement area: 820.49 (+2.11%)
+[ERROR GPL-0307] RePlAce divergence detected: Current overflow is low and increasing relative to minimum,and the HPWL has significantly worsened. Consider re-running with a smaller max_phi_cof value.
+write_db /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_phase_parallel_context_r1/base/3_3_place_gp-failed.odb
+Error: global_place.tcl, 70 GPL-0307
+
+Elapsed time: 0:02.15[h:]min:sec. CPU time: user 2.04 sys 0.11 (99%). Peak memory: 309908KB.
+Elapsed time: 0:03.72[h:]min:sec. CPU time: user 4.03 sys 0.66 (126%). Peak memory: 336388KB.
+Elapsed time: 0:02.34[h:]min:sec. CPU time: user 2.22 sys 0.11 (100%). Peak memory: 304228KB.
+Elapsed time: 0:02.01[h:]min:sec. CPU time: user 1.92 sys 0.09 (99%). Peak memory: 306480KB.
+Elapsed time: 0:02.05[h:]min:sec. CPU time: user 1.95 sys 0.10 (100%). Peak memory: 309220KB.
+Elapsed time: 0:02.64[h:]min:sec. CPU time: user 12.11 sys 0.11 (463%). Peak memory: 312176KB.
+Elapsed time: 0:02.15[h:]min:sec. CPU time: user 2.05 sys 0.10 (99%). Peak memory: 325080KB.
+Elapsed time: 0:04.18[h:]min:sec. CPU time: user 11.17 sys 0.85 (287%). Peak memory: 362916KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1
+make: *** [Makefile:499: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_phase_parallel_context_r1/base/3_3_place_gp.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/jobs/harvey-cp-phase-parallel-parent-context-r2/physical.json
