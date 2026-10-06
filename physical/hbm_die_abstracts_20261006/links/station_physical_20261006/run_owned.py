@@ -24,6 +24,18 @@ def mapped(block,work,case):
  if os.environ.get('GAUSS_SOURCE_LOCAL_SDC'):
   shutil.copyfile(os.environ['GAUSS_SOURCE_LOCAL_SDC'],case/'source_local.sdc')
  return {'mapped_netlist_sha256':driver.sha256_file(net),'basis':'Gauss exact attribute-preserving mapped single-station input; legacy filename only, no W11 guard/claim'}
+# OpenROAD constraint reader accepts port glob patterns. Returning thousands of
+# BTerm strings causes its own bracket quoting to quote bus names twice.
+def pin_constraints(regions):
+ lines=['# Owned actual ABI pin-face constraints; glob binding includes bus bits.']
+ for region in regions:
+  edge=region['edge']+':*'
+  patterns={'^(clk_sm|por_n|in_.*|release_.*)$':'clk_sm por_n in_* release_*',
+            '^(fclk_o|out_.*|ACK_.*)$':'fclk_o out_* ACK_*'}
+  assert region['regex'] in patterns
+  lines.append('set_io_pin_constraint -group -order -region '+edge+' -pin_names {'+patterns[region['regex']]+'}')
+ return '\n'.join(lines)+'\n'
+driver.io_constraints_tcl=pin_constraints
 driver.prepare_w11_orfs_endpoint_netlist=mapped
 if a.reuse_synthesis_dir:
  cached=a.reuse_synthesis_dir.resolve()
